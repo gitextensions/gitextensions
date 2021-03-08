@@ -5,6 +5,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.Config;
 using GitCommands.Remotes;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
@@ -338,7 +339,7 @@ namespace GitCommandsTests.Remote
         private IGitRef CreateSubstituteRef(string guid, string completeName, string remote)
         {
             var isRemote = !string.IsNullOrEmpty(remote);
-            var name = (isRemote ? remote + "/" : "") + completeName.Split('/').LastOrDefault();
+            var name = (isRemote ? remote + "/" : "") + completeName.LazySplit('/').LastOrDefault();
             var isTag = completeName.StartsWith("refs/tags/", StringComparison.InvariantCultureIgnoreCase);
             var gitRef = Substitute.For<IGitRef>();
             gitRef.Module.Returns(_module);

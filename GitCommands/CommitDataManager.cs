@@ -74,7 +74,7 @@ namespace GitCommands
             // commit message
             // ...
 
-            var lines = data.Split('\n');
+            var lines = data.Split(Delimiters.Newline);
 
             var guid = lines[0];
             var commitEncoding = lines[1];
@@ -134,7 +134,7 @@ namespace GitCommands
             // diff notes
             // ...
 
-            var lines = data.Split('\n');
+            var lines = data.Split(Delimiters.Newline);
 
             var guid = ObjectId.Parse(lines[0]);
 
@@ -142,7 +142,7 @@ namespace GitCommands
             var treeGuid = ObjectId.Parse(lines[1]);
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            var parentIds = lines[2].Split(' ').Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => ObjectId.Parse(id)).ToList();
+            var parentIds = lines[2].LazySplit(' ').Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => ObjectId.Parse(id)).ToList();
             var author = module.ReEncodeStringFromLossless(lines[3]);
             var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
             var committer = module.ReEncodeStringFromLossless(lines[5]);

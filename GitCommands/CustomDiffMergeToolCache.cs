@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Config;
+using GitExtUtils;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 
@@ -95,7 +96,7 @@ namespace GitCommands
 
             // The sections to parse in the text has a 'header', then break parsing at first non match
 
-            foreach (var l in output.Split('\n'))
+            foreach (var l in output.LazySplit('\n'))
             {
                 if (l == "The following tools are valid, but not currently available:")
                 {

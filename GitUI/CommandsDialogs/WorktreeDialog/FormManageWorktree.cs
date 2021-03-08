@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
@@ -63,22 +64,21 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void Initialize()
         {
-            var lines = Module.GitExecutable.GetOutput("worktree list --porcelain").Split('\n').GetEnumerator();
+            var lines = Module.GitExecutable.GetOutput("worktree list --porcelain");
 
             _worktrees = new List<WorkTree>();
             WorkTree? currentWorktree = null;
-            while (lines.MoveNext())
+            foreach (var line in lines.LazySplit('\n'))
             {
-                var current = (string)lines.Current;
-                if (string.IsNullOrWhiteSpace(current))
+                if (string.IsNullOrWhiteSpace(line))
                 {
                     continue;
                 }
 
-                var strings = current.Split(' ');
+                var strings = line.Split(' ');
                 if (strings[0] == "worktree")
                 {
-                    currentWorktree = new WorkTree { Path = current.Substring(9) };
+                    currentWorktree = new WorkTree { Path = line.Substring(9) };
                     currentWorktree.IsDeleted = !Directory.Exists(currentWorktree.Path);
                     _worktrees.Add(currentWorktree);
                 }

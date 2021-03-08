@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -1375,7 +1376,7 @@ namespace GitCommands
         {
             get
             {
-                return GetString("uithemevariations", string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                return GetString("uithemevariations", string.Empty).Split(Delimiters.Comma, StringSplitOptions.RemoveEmptyEntries);
             }
             set
             {
@@ -2027,7 +2028,7 @@ namespace GitCommands
             else
             {
                 var utf8 = new UTF8Encoding(false);
-                foreach (var encodingName in availableEncodings.Split(';'))
+                foreach (var encodingName in availableEncodings.LazySplit(';'))
                 {
                     if (encodingName == Encoding.UTF7.HeaderName)
                     {

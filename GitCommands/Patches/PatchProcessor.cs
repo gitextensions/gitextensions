@@ -37,7 +37,7 @@ namespace GitCommands.Patches
         {
             // TODO encoding for each file in patch should be obtained separately from .gitattributes
 
-            string[] lines = patchText.Split('\n');
+            string[] lines = patchText.Split(Delimiters.Newline);
             int i = 0;
 
             // skip email header

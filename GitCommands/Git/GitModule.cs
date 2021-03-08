@@ -536,7 +536,7 @@ namespace GitCommands
             }
 
             // Parse temporary file name from command line result
-            var splitResult = output.Split(new[] { "\t", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
+            var splitResult = output.Split(Delimiters.TabAndNewlineAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
             if (splitResult.Length != 2)
             {
                 return false;
@@ -696,7 +696,7 @@ namespace GitCommands
             var unmerged = (await _gitExecutable
                 .GetOutputAsync(args)
                 .ConfigureAwait(false))
-                .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                .Split(Delimiters.NullAndNewline, StringSplitOptions.RemoveEmptyEntries);
 
             var item = new ConflictedFileData[3];
 
@@ -803,7 +803,7 @@ namespace GitCommands
             };
             var output = _gitExecutable.GetOutput(args, cache: GitCommandCache);
 
-            var counts = output.Split('\t');
+            var counts = output.Split(Delimiters.Tab);
             if (counts.Length == 2 && int.TryParse(counts[0], out var first) && int.TryParse(counts[1], out var second))
             {
                 return (first, second);
@@ -928,12 +928,12 @@ namespace GitCommands
             var revInfo = _gitExecutable.GetOutput(args, cache: GitCommandCache, outputEncoding: LosslessEncoding);
 
             // TODO improve parsing to reduce temporary string (see similar code in RevisionReader)
-            string[] lines = revInfo.Split('\n');
+            string[] lines = revInfo.Split(Delimiters.Newline);
 
             var revision = new GitRevision(ObjectId.Parse(lines[0]))
             {
                 TreeGuid = ObjectId.Parse(lines[1]),
-                ParentIds = lines[2].SplitBySpace().Select(line => ObjectId.Parse(line)).ToList(),
+                ParentIds = lines[2].LazySplit(' ', StringSplitOptions.RemoveEmptyEntries).Select(line => ObjectId.Parse(line)).ToList(),
                 Author = ReEncodeStringFromLossless(lines[3]),
                 AuthorEmail = ReEncodeStringFromLossless(lines[4]),
                 Committer = ReEncodeStringFromLossless(lines[6]),
@@ -1007,7 +1007,7 @@ namespace GitCommands
             };
             return _gitExecutable
                 .GetOutput(args)
-                .SplitBySpace()
+                .LazySplit(' ', StringSplitOptions.RemoveEmptyEntries)
                 .Select(line => ObjectId.Parse(line))
                 .ToList();
         }
@@ -1088,7 +1088,7 @@ namespace GitCommands
                 SubmodulePath.Quote()
             };
             var output = await SuperprojectModule.GitExecutable.GetOutputAsync(args).ConfigureAwait(false);
-            var lines = output.Split('\n');
+            var lines = output.Split(Delimiters.Newline);
 
             if (lines.Length == 0)
             {
@@ -1126,7 +1126,7 @@ namespace GitCommands
             static bool IsTwoSha1Hashes(string parents)
             {
                 // TODO use Regex here to avoid allocations
-                string[] tab = parents.Split(' ');
+                string[] tab = parents.Split(Delimiters.Space);
                 return tab.Length > 2 && tab.All(parent => GitRevision.Sha1HashRegex.IsMatch(parent));
             }
         }
@@ -1903,7 +1903,7 @@ namespace GitCommands
         public IReadOnlyList<PatchFile> GetInteractiveRebasePatchFiles()
         {
             string todoFile = RebaseTodoFilePath;
-            string[]? todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries) : null;
+            string[]? todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(Delimiters.NewlineAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries) : null;
 
             var patchFiles = new List<PatchFile>();
 
@@ -1920,7 +1920,7 @@ namespace GitCommands
                         continue;
                     }
 
-                    string[] parts = todoCommit.Split(' ');
+                    string[] parts = todoCommit.Split(Delimiters.Space);
 
                     if (parts.Length < 3)
                     {
@@ -2251,7 +2251,7 @@ namespace GitCommands
         public IReadOnlyList<GitStash> GetStashes(bool noLocks = false)
         {
             var args = GetStashesCmd(noLocks);
-            var lines = _gitExecutable.GetOutput(args).Split('\n');
+            var lines = _gitExecutable.GetOutput(args).Split(Delimiters.Newline);
 
             var stashes = new List<GitStash>(lines.Length);
 
@@ -2545,8 +2545,8 @@ namespace GitCommands
         private static IReadOnlyList<GitItemStatus> GetAssumeUnchangedFilesFromString(string lsString)
         {
             var result = new List<GitItemStatus>();
-            string[] lines = lsString.SplitLines();
-            foreach (string line in lines)
+
+            foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
             {
                 char statusCharacter = line[0];
                 if (char.IsUpper(statusCharacter))
@@ -2566,8 +2566,8 @@ namespace GitCommands
         private static IReadOnlyList<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString)
         {
             var result = new List<GitItemStatus>();
-            string[] lines = lsString.SplitLines();
-            foreach (string line in lines)
+
+            foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
             {
                 char statusCharacter = line[0];
 
@@ -2944,13 +2944,13 @@ namespace GitCommands
             => (await _gitExecutable
                 .GetOutputAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit))
                 .ConfigureAwait(false))
-                .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                .Split(Delimiters.Newline, StringSplitOptions.RemoveEmptyEntries);
 
-        public IReadOnlyList<string> GetMergedBranches(bool includeRemote = false)
+        public IEnumerable<string> GetMergedBranches(bool includeRemote = false)
         {
             return _gitExecutable
                 .GetOutput(GitCommandHelpers.MergedBranchesCmd(includeRemote))
-                .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                .LazySplit('\n', StringSplitOptions.RemoveEmptyEntries);
         }
 
         public IReadOnlyList<string> GetMergedRemoteBranches()
@@ -3157,7 +3157,7 @@ namespace GitCommands
                 // filter duplicates out of the result because options -c and -m may return
                 // same files at times
                 return _gitExecutable.GetOutput($"ls-files -z -o -m -c -i {excludeParams}")
-                    .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(Delimiters.NullAndNewline, StringSplitOptions.RemoveEmptyEntries)
                     .Distinct()
                     .ToList();
             }
@@ -3172,7 +3172,7 @@ namespace GitCommands
             return _gitExecutable.GetOutput(
                     $"ls-tree -z -r --name-only {id}",
                     cache: GitCommandCache)
-                .Split('\0', '\n');
+                .Split(Delimiters.NullAndNewline);
         }
 
         public IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full)
@@ -3303,7 +3303,7 @@ namespace GitCommands
 
             Reset();
 
-            foreach (var line in output.Split('\n').Select(l => l.TrimEnd('\r')))
+            foreach (var line in output.LazySplit('\n').Select(l => l.TrimEnd('\r')))
             {
                 var match = headerRegex.Match(line);
 
@@ -3477,7 +3477,7 @@ namespace GitCommands
                 };
 
                 // index
-                var lines = _gitExecutable.GetOutput(args).Split(' ', '\t');
+                var lines = _gitExecutable.GetOutput(args).Split(Delimiters.TabAndSpace);
 
                 if (lines.Length >= 2)
                 {
@@ -3493,7 +3493,7 @@ namespace GitCommands
                     { !string.IsNullOrWhiteSpace(fileName), "--" },
                     fileName.QuoteNE()
                 };
-                var lines = _gitExecutable.GetOutput(args).Split(' ', '\t');
+                var lines = _gitExecutable.GetOutput(args).Split(Delimiters.TabAndSpace);
                 if (lines.Length >= 3)
                 {
                     return ObjectId.Parse(lines[2]);
@@ -3541,7 +3541,7 @@ namespace GitCommands
 
             var messages = _gitExecutable.GetOutput(
                 args,
-                outputEncoding: LosslessEncoding).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+                outputEncoding: LosslessEncoding).Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
 
             if (messages.Length == 0)
             {
@@ -3799,18 +3799,18 @@ namespace GitCommands
 
             // Get processes by "ps" command.
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
-            var lines = new Executable(cmd).GetOutput("x").Split('\n');
+            var lines = new Executable(cmd).GetOutput("x").Split(Delimiters.Newline);
 
             if (lines.Length <= 2)
             {
                 return false;
             }
 
-            var headers = lines[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            var commandIndex = Array.IndexOf(headers, "COMMAND");
+            var headers = lines[0].LazySplit(' ', StringSplitOptions.RemoveEmptyEntries);
+            var commandIndex = headers.IndexOf(header => header == "COMMAND");
             for (int i = 1; i < lines.Length; i++)
             {
-                var columns = lines[i].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var columns = lines[i].Split(Delimiters.Space, StringSplitOptions.RemoveEmptyEntries);
                 if (commandIndex < columns.Length)
                 {
                     var command = columns[commandIndex];
@@ -4086,7 +4086,7 @@ namespace GitCommands
                 return Array.Empty<GitItemStatus>();
             }
 
-            var files = fileList.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            var files = fileList.LazySplit('\0', StringSplitOptions.RemoveEmptyEntries);
 
             return files.Select(
                 file => new GitItemStatus(name: file)

@@ -68,7 +68,7 @@ namespace GitUI.BranchTreePanel
                 // Extract submodule name and branch
                 // e.g. Info.Text = "Externals/conemu-inside [no branch]"
                 // Note that the branch portion won't be there if the user hasn't yet init'd + updated the submodule.
-                var pathAndBranch = Info.Text.Split(new char[] { ' ' }, 2);
+                var pathAndBranch = Info.Text.Split(Delimiters.Space, 2);
                 Trace.Assert(pathAndBranch.Length >= 1);
                 SubmoduleName = pathAndBranch[0].SubstringAfterLast('/'); // Remove path
                 BranchText = pathAndBranch.Length == 2 ? " " + pathAndBranch[1] : "";
@@ -477,7 +477,7 @@ namespace GitUI.BranchTreePanel
                 // Create and add missing SubmoduleFolderNodes
                 foreach (var node in submoduleNodes)
                 {
-                    var parts = GetNodeRelativePath(topModule, node).Split('/');
+                    var parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
                     for (int i = 0; i < parts.Length - 1; ++i)
                     {
                         var path = string.Join("/", parts.Take(i + 1));
@@ -494,7 +494,7 @@ namespace GitUI.BranchTreePanel
                 foreach (var node in submoduleNodes)
                 {
                     Node parentNode = rootNode;
-                    var parts = GetNodeRelativePath(topModule, node).Split('/');
+                    var parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
                     for (int i = 0; i < parts.Length; ++i)
                     {
                         var path = string.Join("/", parts.Take(i + 1));

@@ -774,7 +774,7 @@ namespace GitUI.Editor
                     code = " " + code;
                 }
 
-                var lines = code.Split('\n')
+                var lines = code.LazySplit('\n')
                     .Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
                 var hpos = fileText.IndexOf("\n@@");
 
@@ -1637,9 +1637,7 @@ namespace GitUI.Editor
                         }
                     }
 
-                    string[] lines = code.Split('\n');
-                    lines.Transform(RemovePrefix);
-                    code = string.Join("\n", lines);
+                    code = string.Join("\n", code.LazySplit('\n').Select(RemovePrefix));
                 }
             }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 
 using GitCommands;
+using GitExtUtils;
 using GitUI.HelperDialogs;
 
 namespace GitUI.CommandsDialogs
@@ -215,7 +216,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // Now check the rules, the well-known recommendation is to have the single "/*" rule active
-            List<string> rulelines = RulesText.SplitLines().Select(l => l.Trim()).Where(l => (!string.IsNullOrEmpty(l)) && (l[0] != '#')).ToList(); // All nonempty and non-comment lines
+            List<string> rulelines = RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => (!string.IsNullOrEmpty(l)) && (l[0] != '#')).ToList(); // All nonempty and non-comment lines
             if (rulelines.All(l => l == "/*"))
             {
                 return; // Rules OK for turning off
@@ -231,7 +232,7 @@ namespace GitUI.CommandsDialogs
 
             // Adjust the rules
             // Comment out all existing nonempty lines, add the single “/*” line to make a total pass filter
-            RulesText = new[] { "/*" }.Concat(RulesText.SplitLines().Select(l => (string.IsNullOrWhiteSpace(l) || (l[0] == '#')) ? l : "#" + l)).Join(Environment.NewLine);
+            RulesText = new[] { "/*" }.Concat(RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => (string.IsNullOrWhiteSpace(l) || (l[0] == '#')) ? l : "#" + l)).Join(Environment.NewLine);
         }
 
         /// <summary>

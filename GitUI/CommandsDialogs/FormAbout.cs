@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using GitCommands;
+using GitExtUtils;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
@@ -66,7 +67,7 @@ namespace GitUI.CommandsDialogs
             {
                 return new[] { Resources.Team, Resources.Coders, Resources.Translators, Resources.Designers }
                     .Select(c => c.Replace(Environment.NewLine, ""))
-                    .SelectMany(line => line.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+                    .SelectMany(line => line.LazySplit(',', StringSplitOptions.RemoveEmptyEntries))
                     .Select(contributor => contributor.Trim())
                     .ToList();
             }

@@ -11,9 +11,6 @@ namespace System
 {
     public static class StringExtensions
     {
-        private static readonly char[] _newLine = { '\n' };
-        private static readonly char[] _space = { ' ' };
-
         // NOTE ordinal string comparison is the default as most string comparison in GE is against static ASCII output from git.exe
 
         /// <summary>
@@ -231,7 +228,7 @@ namespace System
 
             var sb = new StringBuilder(capacity: value.Length);
 
-            foreach (var line in value.Split('\n'))
+            foreach (var line in value.LazySplit('\n'))
             {
                 if (!shouldRemoveLine(line))
                 {
@@ -241,14 +238,6 @@ namespace System
 
             return sb.ToString();
         }
-
-        /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
-        [Pure]
-        public static string[] SplitLines(this string value) => value.Split(_newLine, StringSplitOptions.RemoveEmptyEntries);
-
-        /// <summary>Split a string, delimited by the space character, excluding empty entries.</summary>
-        [Pure]
-        public static string[] SplitBySpace(this string value) => value.Split(_space, StringSplitOptions.RemoveEmptyEntries);
 
         /// <summary>
         /// Shortens <paramref name="str"/> if necessary, so that the resulting string has fewer than <paramref name="maxLength"/> characters.

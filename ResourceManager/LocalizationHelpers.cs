@@ -159,7 +159,7 @@ namespace ResourceManager
                         sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" +
                                       GetFullDateString(oldCommitData.CommitDate) + ")");
                         var delimiter = new[] { '\n', '\r' };
-                        var lines = oldCommitData.Body.Trim(delimiter).Split(new[] { "\r\n" }, 0);
+                        var lines = oldCommitData.Body.Trim(delimiter).Split(new[] { "\r\n" }, StringSplitOptions.None);
                         foreach (var line in lines)
                         {
                             sb.AppendLine("\t\t" + line);
@@ -191,7 +191,7 @@ namespace ResourceManager
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" +
                                   GetFullDateString(commitData.CommitDate) + ")");
                     var delimiter = new[] { '\n', '\r' };
-                    var lines = commitData.Body.Trim(delimiter).Split(new[] { "\r\n" }, 0);
+                    var lines = commitData.Body.Trim(delimiter).Split(new[] { "\r\n" }, StringSplitOptions.None);
                     foreach (var line in lines)
                     {
                         sb.AppendLine("\t\t" + line);
@@ -271,7 +271,7 @@ namespace ResourceManager
                         sb.AppendLine("\nStatus:");
                         if (limitOutput)
                         {
-                            var txt = statusText.SplitLines();
+                            var txt = statusText.Split(Delimiters.Newline, StringSplitOptions.RemoveEmptyEntries);
                             if (txt.Length > maxLimitedLines)
                             {
                                 statusText = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +
@@ -298,7 +298,7 @@ namespace ResourceManager
                     sb.AppendLine("\nDifferences:");
                     if (limitOutput)
                     {
-                        var txt = diffs.SplitLines();
+                        var txt = diffs.Split(Delimiters.Newline, StringSplitOptions.RemoveEmptyEntries);
                         if (txt.Length > maxLimitedLines)
                         {
                             diffs = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +

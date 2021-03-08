@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Remotes;
+using GitExtUtils;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using GitUI.UserControls.RevisionGrid;
@@ -218,7 +219,7 @@ namespace GitUI.BranchTreePanel
 
             private RemoteBranchInfo GetRemoteBranchInfo()
             {
-                var remote = FullPath.Split('/').First();
+                var remote = FullPath.LazySplit('/').First();
                 var branch = FullPath.Substring(remote.Length + 1);
                 return new RemoteBranchInfo(remote, branch);
             }

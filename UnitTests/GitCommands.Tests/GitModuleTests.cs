@@ -802,7 +802,7 @@ namespace GitCommandsTests
 
             // Commit in submodule
             moduleSub.GitExecutable.GetOutput(@"commit --allow-empty -am ""First commit""");
-            string commitRef = moduleSub.GitExecutable.GetOutput("show HEAD").Split('\n')[0].Split(' ')[1];
+            string commitRef = moduleSub.GitExecutable.GetOutput("show HEAD").LazySplit('\n').First().LazySplit(' ').Skip(1).First();
 
             // Update ref in superproject
             moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"add ""sub repo""");

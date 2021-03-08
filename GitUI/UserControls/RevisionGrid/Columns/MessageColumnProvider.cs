@@ -484,6 +484,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         }
 
         private static string[] GetCommitMessageLines(GitRevision revision) =>
-            (revision.Body?.Trim() ?? revision.Subject).SplitLines();
+            (revision.Body?.Trim() ?? revision.Subject).Split(Delimiters.Newline, StringSplitOptions.RemoveEmptyEntries);
     }
 }

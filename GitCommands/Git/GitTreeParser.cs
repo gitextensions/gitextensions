@@ -38,7 +38,7 @@ namespace GitCommands.Git
             // 100644 blob 5b0965cd097b8c48b66dd456337852640fa429c8    stylecop.json
 
             // Split on \0 too, as GitModule.GetTree uses `ls-tree -z` which uses null terminators
-            var items = tree.Split('\0', '\n');
+            var items = tree.Split(Delimiters.NullAndNewline);
 
             return items.Select(ParseSingle).Where(item => item is not null)!;
         }

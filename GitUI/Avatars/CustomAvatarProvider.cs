@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
+using GitExtUtils;
 
 namespace GitUI.Avatars
 {
@@ -60,7 +61,7 @@ namespace GitUI.Avatars
             }
 
             var providerParts = customProviderTemplates
-                .Split(';')
+                .LazySplit(';')
                 .Select(p => p.Trim())
                 .Select(p => FromTemplateSegment(downloader, p))
                 .WhereNotNull()

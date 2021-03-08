@@ -3,6 +3,9 @@
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\GitExtUtils\Delimiters.cs" Link="Delimiters.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\..\GitExtUtils\Annotations.cs" Link="Annotations.cs" />

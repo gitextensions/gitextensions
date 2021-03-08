@@ -200,7 +200,7 @@ namespace GitExtensions.Plugins.GitImpact
                         continue;
                     }
 
-                    string[] fileLine = line.Split('\t');
+                    string[] fileLine = line.Split(Delimiters.Tab);
                     if (fileLine.Length >= 2)
                     {
                         if (fileLine[0] != "-")

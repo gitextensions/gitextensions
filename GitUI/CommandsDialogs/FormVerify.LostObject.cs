@@ -117,7 +117,7 @@ namespace GitUI.CommandsDialogs
                         result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
                         if (logPatternMatch.Groups.Count >= 5)
                         {
-                            var parentId = logPatternMatch.Groups[5].Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                            var parentId = logPatternMatch.Groups[5].Value.LazySplit(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
                             if (parentId is not null)
                             {
                                 result.Parent = ObjectId.Parse(parentId);
