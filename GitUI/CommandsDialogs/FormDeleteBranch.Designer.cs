@@ -28,117 +28,95 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDeleteBranch));
             this.Delete = new System.Windows.Forms.Button();
             this.labelSelectBranches = new System.Windows.Forms.Label();
-            this.labelDeleteBranchWarning = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.ForceDelete = new System.Windows.Forms.CheckBox();
             this.Branches = new GitUI.BranchComboBox();
-            this.gotoUserManualControl1 = new GitUI.UserControls.GotoUserManualControl();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
+            this.MainPanel.SuspendLayout();
+            this.tlpnlMain.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // MainPanel
+            // 
+            this.MainPanel.Controls.Add(this.tlpnlMain);
+            this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
+            this.MainPanel.Size = new System.Drawing.Size(394, 58);
             // 
             // Delete
             // 
             this.Delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.Delete.AutoSize = true;
+            this.Delete.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Delete.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Delete.Image = global::GitUI.Properties.Images.BranchDelete;
-            this.Delete.Location = new System.Drawing.Point(439, 65);
+            this.Delete.Location = new System.Drawing.Point(310, 65);
+            this.Delete.MinimumSize = new System.Drawing.Size(75, 23);
             this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(120, 25);
-            this.Delete.TabIndex = 4;
-            this.Delete.Text = "Delete";
-            this.Delete.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.Delete.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.Delete.Size = new System.Drawing.Size(75, 23);
+            this.Delete.TabIndex = 2;
+            this.Delete.Text = "&Delete";
             this.Delete.UseVisualStyleBackColor = true;
-            this.Delete.Click += new System.EventHandler(this.OkClick);
+            this.Delete.Click += new System.EventHandler(this.Delete_Click);
             // 
             // labelSelectBranches
             // 
             this.labelSelectBranches.AutoSize = true;
+            this.labelSelectBranches.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelSelectBranches.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelSelectBranches.Location = new System.Drawing.Point(9, 9);
+            this.labelSelectBranches.Location = new System.Drawing.Point(3, 0);
             this.labelSelectBranches.Name = "labelSelectBranches";
-            this.labelSelectBranches.Size = new System.Drawing.Size(99, 16);
-            this.labelSelectBranches.TabIndex = 1;
-            this.labelSelectBranches.Text = "Select branches";
-            // 
-            // labelDeleteBranchWarning
-            // 
-            this.labelDeleteBranchWarning.AutoSize = true;
-            this.labelDeleteBranchWarning.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelDeleteBranchWarning.Location = new System.Drawing.Point(39, 116);
-            this.labelDeleteBranchWarning.MaximumSize = new System.Drawing.Size(500, 0);
-            this.labelDeleteBranchWarning.Name = "labelDeleteBranchWarning";
-            this.labelDeleteBranchWarning.Size = new System.Drawing.Size(490, 64);
-            this.labelDeleteBranchWarning.TabIndex = 5;
-            this.labelDeleteBranchWarning.Text = resources.GetString("labelDeleteBranchWarning.Text");
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::GitUI.Properties.Images.Warning;
-            this.pictureBox1.InitialImage = global::GitUI.Properties.Images.Warning;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 142);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(21, 20);
-            this.pictureBox1.TabIndex = 7;
-            this.pictureBox1.TabStop = false;
-            // 
-            // ForceDelete
-            // 
-            this.ForceDelete.AutoSize = true;
-            this.ForceDelete.Location = new System.Drawing.Point(12, 69);
-            this.ForceDelete.Name = "ForceDelete";
-            this.ForceDelete.Size = new System.Drawing.Size(98, 20);
-            this.ForceDelete.TabIndex = 3;
-            this.ForceDelete.Text = "Force delete";
-            this.ForceDelete.UseVisualStyleBackColor = true;
+            this.labelSelectBranches.Size = new System.Drawing.Size(84, 28);
+            this.labelSelectBranches.TabIndex = 0;
+            this.labelSelectBranches.Text = "Select &branches";
+            this.labelSelectBranches.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Branches
             // 
-            this.Branches.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.Branches.BranchesToSelect = null;
-            this.Branches.Location = new System.Drawing.Point(12, 35);
+            this.Branches.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Branches.Location = new System.Drawing.Point(90, 0);
             this.Branches.Margin = new System.Windows.Forms.Padding(0);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(550, 21);
-            this.Branches.TabIndex = 2;
+            this.Branches.Size = new System.Drawing.Size(286, 28);
+            this.Branches.TabIndex = 1;
             // 
-            // gotoUserManualControl1
+            // tlpnlMain
             // 
-            this.gotoUserManualControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.gotoUserManualControl1.AutoSize = true;
-            this.gotoUserManualControl1.Location = new System.Drawing.Point(10, 211);
-            this.gotoUserManualControl1.ManualSectionAnchorName = "delete-branch";
-            this.gotoUserManualControl1.ManualSectionSubfolder = "branches";
-            this.gotoUserManualControl1.MinimumSize = new System.Drawing.Size(70, 20);
-            this.gotoUserManualControl1.Name = "gotoUserManualControl1";
-            this.gotoUserManualControl1.Size = new System.Drawing.Size(70, 20);
-            this.gotoUserManualControl1.TabIndex = 8;
+            this.tlpnlMain.ColumnCount = 2;
+            this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpnlMain.Controls.Add(this.labelSelectBranches, 0, 0);
+            this.tlpnlMain.Controls.Add(this.Branches, 1, 0);
+            this.tlpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpnlMain.Location = new System.Drawing.Point(9, 9);
+            this.tlpnlMain.Margin = new System.Windows.Forms.Padding(0);
+            this.tlpnlMain.Name = "tlpnlMain";
+            this.tlpnlMain.RowCount = 2;
+            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlMain.Size = new System.Drawing.Size(376, 40);
+            this.tlpnlMain.TabIndex = 0;
             // 
             // FormDeleteBranch
             // 
             this.AcceptButton = this.Delete;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(579, 236);
-            this.Controls.Add(this.gotoUserManualControl1);
-            this.Controls.Add(this.Branches);
-            this.Controls.Add(this.ForceDelete);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.labelDeleteBranchWarning);
+            this.ClientSize = new System.Drawing.Size(394, 90);
             this.Controls.Add(this.Delete);
-            this.Controls.Add(this.labelSelectBranches);
+            this.HelpButton = true;
+            this.ManualSectionAnchorName = "delete-branch";
+            this.ManualSectionSubfolder = "branches";
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(525, 270);
+            this.MinimumSize = new System.Drawing.Size(410, 129);
             this.Name = "FormDeleteBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete branch";
-            this.Load += new System.EventHandler(this.FormDeleteBranchLoad);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.Controls.SetChildIndex(this.Delete, 0);
+            this.Controls.SetChildIndex(this.MainPanel, 0);
+            this.MainPanel.ResumeLayout(false);
+            this.tlpnlMain.ResumeLayout(false);
+            this.tlpnlMain.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,10 +126,7 @@
 
         private System.Windows.Forms.Button Delete;
         private System.Windows.Forms.Label labelSelectBranches;
-        private System.Windows.Forms.Label labelDeleteBranchWarning;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.CheckBox ForceDelete;
         private BranchComboBox Branches;
-        private UserControls.GotoUserManualControl gotoUserManualControl1;
+        private System.Windows.Forms.TableLayoutPanel tlpnlMain;
     }
 }

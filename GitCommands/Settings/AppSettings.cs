@@ -986,6 +986,12 @@ namespace GitCommands
             set => SetBool("DontConfirmAmend", value);
         }
 
+        public static bool DontConfirmDeleteBranch
+        {
+            get => GetBool("DontConfirmDeleteBranch", false);
+            set => SetBool("DontConfirmDeleteBranch", value);
+        }
+
         public static bool DontConfirmCommitIfNoBranch
         {
             get => GetBool("DontConfirmCommitIfNoBranch", false);
