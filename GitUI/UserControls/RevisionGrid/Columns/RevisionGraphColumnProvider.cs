@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -19,7 +20,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private static readonly int LaneLineWidth = DpiUtil.Scale(2);
         private static readonly int LaneWidth = DpiUtil.Scale(16);
-        private static readonly int NodeDimension = DpiUtil.Scale(10);
+        private static readonly int NodeDimension = DpiUtil.Scale(12);
 
         private readonly LaneInfoProvider _laneInfoProvider;
         private readonly RevisionGridControl _grid;
@@ -314,12 +315,33 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             if (square)
                             {
                                 g.SmoothingMode = SmoothingMode.None;
+
                                 g.FillRectangle(brush, nodeRect);
+
+                                g.SmoothingMode = SmoothingMode.AntiAlias;
+
+                                nodeRect.Inflate(-3, -3);
+                                g.DrawRectangle(new Pen(Color.White.AdaptBackColor(), 2), nodeRect);
+                                nodeRect.Inflate(3, 3);
                             }
                             else //// Circle
                             {
                                 g.SmoothingMode = SmoothingMode.AntiAlias;
+
                                 g.FillEllipse(brush, nodeRect);
+
+                                if (currentRow.Revision.GitRevision?.IsArtificial is true)
+                                {
+                                    nodeRect.Inflate(-2, -2);
+                                    g.FillEllipse(new SolidBrush(Color.White.AdaptBackColor()), nodeRect);
+                                    nodeRect.Inflate(2, 2);
+                                }
+                                else
+                                {
+                                    nodeRect.Inflate(-3, -3);
+                                    g.DrawEllipse(new Pen(Color.White.AdaptBackColor(), 2), nodeRect);
+                                    nodeRect.Inflate(3, 3);
+                                }
                             }
 
                             if (hasOutline)
@@ -332,12 +354,18 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                 if (square)
                                 {
                                     g.SmoothingMode = SmoothingMode.None;
-                                    g.DrawRectangle(pen, nodeRect);
+
+                                    nodeRect.Inflate(-2, -2);
+                                    g.FillRectangle(brush, nodeRect);
+                                    nodeRect.Inflate(2, 2);
                                 }
                                 else //// Circle
                                 {
                                     g.SmoothingMode = SmoothingMode.AntiAlias;
-                                    g.DrawEllipse(pen, nodeRect);
+
+                                    nodeRect.Inflate(-2, -2);
+                                    g.FillEllipse(brush, nodeRect);
+                                    nodeRect.Inflate(2, 2);
                                 }
                             }
                         }
