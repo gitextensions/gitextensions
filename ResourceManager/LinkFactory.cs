@@ -81,11 +81,11 @@ namespace ResourceManager
             {
                 if (objectId == ObjectId.WorkTreeId)
                 {
-                    linkText = ResourceManager.Strings.Workspace;
+                    linkText = TranslatedStrings.Workspace;
                 }
                 else if (objectId == ObjectId.IndexId)
                 {
-                    linkText = ResourceManager.Strings.Index;
+                    linkText = TranslatedStrings.Index;
                 }
                 else if (preserveGuidInLinkText)
                 {
@@ -101,7 +101,7 @@ namespace ResourceManager
         }
 
         public string CreateShowAllLink(string what)
-            => AddLink($"[ {Strings.ShowAll} ]", $"{InternalScheme}://{ShowAll}/{what}");
+            => AddLink($"[ {TranslatedStrings.ShowAll} ]", $"{InternalScheme}://{ShowAll}/{what}");
 
         public void ExecuteLink(string linkText, Action<CommandEventArgs>? handleInternalLink = null, Action<string?>? showAll = null)
         {

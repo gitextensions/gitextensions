@@ -38,7 +38,7 @@ namespace GitUI.CommitInfo
             }
 
             var (formattedBranches, truncated) = FilterAndFormatBranches(branches, showAsLinks, limit);
-            return ToString(formattedBranches, Strings.ContainedInBranches, Strings.ContainedInNoBranch, "branches", truncated);
+            return ToString(formattedBranches, TranslatedStrings.ContainedInBranches, TranslatedStrings.ContainedInNoBranch, "branches", truncated);
         }
 
         public string FormatTags(IReadOnlyList<string> tags, bool showAsLinks, bool limit)
@@ -50,7 +50,7 @@ namespace GitUI.CommitInfo
 
             bool truncate = limit && tags.Count > MaximumDisplayedLinesIfLimited;
             var formattedTags = FormatTags(truncate ? tags.Take(MaximumDisplayedRefsIfLimited) : tags);
-            return ToString(formattedTags, Strings.ContainedInTags, Strings.ContainedInNoTag, "tags", truncate);
+            return ToString(formattedTags, TranslatedStrings.ContainedInTags, TranslatedStrings.ContainedInNoTag, "tags", truncate);
 
             IEnumerable<string> FormatTags(IEnumerable<string> selectedTags)
             {

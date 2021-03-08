@@ -154,8 +154,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
 
             AppSettings.Translation = Language.Text;
-            ResourceManager.Strings.Reinitialize();
-            Strings.Reinitialize();
+            ResourceManager.TranslatedStrings.Reinitialize();
+            TranslatedStrings.Reinitialize();
 
             AppSettings.AvatarProvider = (AvatarProvider)AvatarProvider.SelectedValue;
 
@@ -204,7 +204,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             catch
             {
-                MessageBox.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

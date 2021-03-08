@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             var body = _bodyTB.Text.Trim();
             if (title.Length == 0)
             {
-                MessageBox.Show(this, _strYouMustSpecifyATitle.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _strYouMustSpecifyATitle.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             catch (Exception ex)
             {
                 MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
-                    ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

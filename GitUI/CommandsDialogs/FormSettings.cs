@@ -261,7 +261,7 @@ namespace GitUI.CommandsDialogs
                     OwnerWindowHandle = Handle,
                     Text = ex.InnerException.Message,
                     InstructionText = _cantSaveSettings.Text,
-                    Caption = Strings.Error,
+                    Caption = TranslatedStrings.Error,
                     StandardButtons = TaskDialogStandardButtons.Ok,
                     Icon = TaskDialogStandardIcon.Error,
                     Cancelable = true,

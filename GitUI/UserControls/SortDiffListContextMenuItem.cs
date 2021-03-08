@@ -22,7 +22,7 @@ namespace GitUI.UserControls
         {
             _sortService = sortService ?? throw new ArgumentNullException(nameof(sortService));
             Image = Images.SortBy;
-            Text = Strings.SortBy;
+            Text = TranslatedStrings.SortBy;
 
             _filePathSortItem = new ToolStripMenuItem()
             {

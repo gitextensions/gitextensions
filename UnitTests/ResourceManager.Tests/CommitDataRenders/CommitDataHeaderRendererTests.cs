@@ -40,16 +40,16 @@ namespace ResourceManagerTests.CommitDataRenders
         public void Setup()
         {
             _labelFormatter = Substitute.For<IHeaderLabelFormatter>();
-            _labelFormatter.FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>()).Returns(x => "Author:        ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>()).Returns(x => "Committer:     ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>()).Returns(x => "Date:          ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>()).Returns(x => "Author date:   ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>()).Returns(x => "Commit date:   ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>()).Returns(x => "Commit hash:   ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.GetParents(1), Arg.Any<int>()).Returns(x => "Parent:        ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.GetParents(Arg.Any<int>()), Arg.Any<int>()).Returns(x => "Parents:       ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.GetChildren(1), Arg.Any<int>()).Returns(x => "Child:         ");
-            _labelFormatter.FormatLabel(ResourceManager.Strings.GetChildren(Arg.Any<int>()), Arg.Any<int>()).Returns(x => "Children:      ");
+            _labelFormatter.FormatLabel(TranslatedStrings.Author, Arg.Any<int>()).Returns(x => "Author:        ");
+            _labelFormatter.FormatLabel(TranslatedStrings.Committer, Arg.Any<int>()).Returns(x => "Committer:     ");
+            _labelFormatter.FormatLabel(TranslatedStrings.Date, Arg.Any<int>()).Returns(x => "Date:          ");
+            _labelFormatter.FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>()).Returns(x => "Author date:   ");
+            _labelFormatter.FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>()).Returns(x => "Commit date:   ");
+            _labelFormatter.FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>()).Returns(x => "Commit hash:   ");
+            _labelFormatter.FormatLabel(TranslatedStrings.GetParents(1), Arg.Any<int>()).Returns(x => "Parent:        ");
+            _labelFormatter.FormatLabel(TranslatedStrings.GetParents(Arg.Any<int>()), Arg.Any<int>()).Returns(x => "Parents:       ");
+            _labelFormatter.FormatLabel(TranslatedStrings.GetChildren(1), Arg.Any<int>()).Returns(x => "Child:         ");
+            _labelFormatter.FormatLabel(TranslatedStrings.GetChildren(Arg.Any<int>()), Arg.Any<int>()).Returns(x => "Children:      ");
 
             _headerRendererStyleProvider = Substitute.For<IHeaderRenderStyleProvider>();
             _linkFactory = Substitute.For<ILinkFactory>();
@@ -102,12 +102,12 @@ namespace ResourceManagerTests.CommitDataRenders
             var result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>());
         }
 
         [Test]
@@ -131,12 +131,12 @@ namespace ResourceManagerTests.CommitDataRenders
             var result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Committer:     John Doe <John.Doe@test.com>{Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>());
         }
 
         [Test]
@@ -160,12 +160,12 @@ namespace ResourceManagerTests.CommitDataRenders
             var result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Author date:   6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit date:   2 months ago (10/23/2017 12:17:11){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
         }
 
         [Test]
@@ -192,12 +192,12 @@ namespace ResourceManagerTests.CommitDataRenders
                 $"Children:      {_childrenHashes[0].ToShortString()} " +
                 $"{_childrenHashes[1].ToShortString()} " +
                 $"{_childrenHashes[2].ToShortString()}");
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>());
         }
 
         [Test]
@@ -221,12 +221,12 @@ namespace ResourceManagerTests.CommitDataRenders
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c{Environment.NewLine}" +
                 $"Parents:       {_parentHashes[0].ToShortString()} {_parentHashes[1].ToShortString()} {_parentHashes[2].ToShortString()}");
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>());
         }
 
         [TestCase(GitRevision.IndexGuid)]
@@ -250,12 +250,12 @@ namespace ResourceManagerTests.CommitDataRenders
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}" +
                                $"Parents:       {_parentHashes[0].ToShortString()} {_parentHashes[1].ToShortString()} {_parentHashes[2].ToShortString()}");
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>());
         }
 
         [Test]
@@ -284,12 +284,12 @@ namespace ResourceManagerTests.CommitDataRenders
             var result = _renderer.RenderPlain(data);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>());
         }
 
         [Test]
@@ -313,12 +313,12 @@ namespace ResourceManagerTests.CommitDataRenders
             var result = _renderer.RenderPlain(data);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Committer:     John Doe <John.Doe@test.com>{Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>());
         }
 
         [Test]
@@ -342,12 +342,12 @@ namespace ResourceManagerTests.CommitDataRenders
             var result = _renderer.RenderPlain(data);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Author date:   6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit date:   2 months ago (10/23/2017 12:17:11){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.Author, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.AuthorDate, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitDate, Arg.Any<int>());
-            _labelFormatter.Received(1).FormatLabel(ResourceManager.Strings.CommitHash, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Date, Arg.Any<int>());
-            _labelFormatter.DidNotReceive().FormatLabel(ResourceManager.Strings.Committer, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.Author, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.AuthorDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitDate, Arg.Any<int>());
+            _labelFormatter.Received(1).FormatLabel(TranslatedStrings.CommitHash, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
+            _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
         }
     }
 }

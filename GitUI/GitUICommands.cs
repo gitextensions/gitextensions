@@ -178,7 +178,7 @@ namespace GitUI
             var objectId = Module.RevParse(branch);
             if (objectId is null)
             {
-                MessageBox.Show($"Branch \"{branch}\" could not be resolved.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -404,7 +404,7 @@ namespace GitUI
             var objectId = Module.RevParse(branch);
             if (objectId is null)
             {
-                MessageBox.Show($"Branch \"{branch}\" could not be resolved.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -587,7 +587,7 @@ namespace GitUI
             bool Action()
             {
                 using var viewPatch = new FormViewPatch(this);
-                if (!GitExtUtils.Strings.IsNullOrEmpty(patchFile))
+                if (!Strings.IsNullOrEmpty(patchFile))
                 {
                     viewPatch.LoadPatch(patchFile);
                 }
@@ -736,13 +736,13 @@ namespace GitUI
                         }
                         catch (Exception ex)
                         {
-                            errorCaption = Strings.ErrorCaptionFailedDeleteFile;
+                            errorCaption = TranslatedStrings.ErrorCaptionFailedDeleteFile;
                             errorMessage = ex.Message;
                         }
                     }
                     else
                     {
-                        errorCaption = Strings.ErrorCaptionFailedDeleteFolder;
+                        errorCaption = TranslatedStrings.ErrorCaptionFailedDeleteFolder;
                         path.TryDeleteDirectory(out errorMessage);
                     }
 
@@ -1143,14 +1143,14 @@ namespace GitUI
 
             if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out var firstRevision, out var secondRevision, out var error))
             {
-                MessageBox.Show(owner, error, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, error, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
                 string output = Module.OpenWithDifftool(fileName, oldFileName, firstRevision, secondRevision, isTracked: isTracked, customTool: customTool);
                 if (!string.IsNullOrEmpty(output))
                 {
-                    MessageBox.Show(owner, output, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(owner, output, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1285,7 +1285,7 @@ namespace GitUI
 
         public void StartCloneForkFromHoster(IWin32Window? owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged)
         {
-            WrapRepoHostingCall(Strings.ForkCloneRepo, gitHoster, gh =>
+            WrapRepoHostingCall(TranslatedStrings.ForkCloneRepo, gitHoster, gh =>
             {
                 using var frm = new ForkAndCloneForm(gitHoster, gitModuleChanged);
                 frm.ShowDialog(owner);
@@ -1294,7 +1294,7 @@ namespace GitUI
 
         internal void StartPullRequestsDialog(IWin32Window? owner, IRepositoryHostPlugin gitHoster)
         {
-            WrapRepoHostingCall(Strings.ViewPullRequest, gitHoster,
+            WrapRepoHostingCall(TranslatedStrings.ViewPullRequest, gitHoster,
                                 gh =>
                                 {
                                     var frm = new ViewPullRequestsForm(this, gitHoster) { ShowInTaskbar = true };
@@ -1309,7 +1309,7 @@ namespace GitUI
 
             if (relevantHosts.Count == 0)
             {
-                MessageBox.Show(owner, "Could not find any repo hosts for current working directory", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, "Could not find any repo hosts for current working directory", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else if (relevantHosts.Count == 1)
             {
@@ -1317,14 +1317,14 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show("StartCreatePullRequest:Selection not implemented!", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("StartCreatePullRequest:Selection not implemented!", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         public void StartCreatePullRequest(IWin32Window? owner, IRepositoryHostPlugin gitHoster, string? chooseRemote = null, string? chooseBranch = null)
         {
             WrapRepoHostingCall(
-                Strings.CreatePullRequest,
+                TranslatedStrings.CreatePullRequest,
                 gitHoster,
                 gh =>
                 {

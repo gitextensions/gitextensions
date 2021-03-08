@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Patches;
+using GitExtUtils;
 using GitUI.Editor;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -107,8 +108,8 @@ namespace GitUI
                     var diffOfConflict = fileViewer.Module.GetCombinedDiffContent(selectedId, file.Name,
                         fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
 
-                    return GitExtUtils.Strings.IsNullOrWhiteSpace(diffOfConflict)
-                        ? Strings.UninterestingDiffOmitted
+                    return Strings.IsNullOrWhiteSpace(diffOfConflict)
+                        ? TranslatedStrings.UninterestingDiffOmitted
                         : diffOfConflict;
                 }
 

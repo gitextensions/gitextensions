@@ -165,7 +165,7 @@ namespace GitUI.BranchTreePanel
 
                     if (_isMerged && Visible)
                     {
-                        TreeViewNode.ToolTipText = string.Format(Strings.ContainedInCurrentCommit, Name);
+                        TreeViewNode.ToolTipText = string.Format(TranslatedStrings.ContainedInCurrentCommit, Name);
                     }
                 }
             }
@@ -182,7 +182,7 @@ namespace GitUI.BranchTreePanel
                         : nameof(Images.EyeClosed);
                 if (!Visible)
                 {
-                    TreeViewNode.ToolTipText = string.Format(Strings.InvisibleCommit, FullPath);
+                    TreeViewNode.ToolTipText = string.Format(TranslatedStrings.InvisibleCommit, FullPath);
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace GitUI.BranchTreePanel
                 base.ApplyStyle();
 
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey =
-                    FullPath == Strings.Inactive ? nameof(Images.EyeClosed) : nameof(Images.BranchFolder);
+                    FullPath == TranslatedStrings.Inactive ? nameof(Images.EyeClosed) : nameof(Images.BranchFolder);
             }
         }
 

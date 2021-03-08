@@ -3,6 +3,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using GitCommands;
+using GitExtUtils;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
@@ -95,7 +96,7 @@ namespace GitUI.CommandsDialogs
                     : item.Item.Name)
                 ?.ToPosixPath();
             var id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId;
-            if (GitExtUtils.Strings.IsNullOrWhiteSpace(name) || id is null)
+            if (Strings.IsNullOrWhiteSpace(name) || id is null)
             {
                 return null;
             }

@@ -93,7 +93,7 @@ namespace GitUI.Editor
             this.stageSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
             this.stageSelectedLinesToolStripMenuItem.Name = "stageSelectedLinesToolStripMenuItem";
             this.stageSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.stageSelectedLinesToolStripMenuItem.Text = Strings.StageSelectedLines;
+            this.stageSelectedLinesToolStripMenuItem.Text = TranslatedStrings.StageSelectedLines;
             this.stageSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.stageSelectedLinesToolStripMenuItem_Click);
             // 
             // unstageSelectedLinesToolStripMenuItem
@@ -101,7 +101,7 @@ namespace GitUI.Editor
             this.unstageSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.Unstage;
             this.unstageSelectedLinesToolStripMenuItem.Name = "chunstageSelectedLinesToolStripMenuItemerrypickSelectedLinesToolStripMenuItem";
             this.unstageSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.unstageSelectedLinesToolStripMenuItem.Text = Strings.UnstageSelectedLines;
+            this.unstageSelectedLinesToolStripMenuItem.Text = TranslatedStrings.UnstageSelectedLines;
             this.unstageSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.unstageSelectedLinesToolStripMenuItem_Click);
             // 
             // resetSelectedLinesToolStripMenuItem
@@ -109,7 +109,7 @@ namespace GitUI.Editor
             this.resetSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
             this.resetSelectedLinesToolStripMenuItem.Name = "resetSelectedLinesToolStripMenuItem";
             this.resetSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.resetSelectedLinesToolStripMenuItem.Text = Strings.ResetSelectedLines;
+            this.resetSelectedLinesToolStripMenuItem.Text = TranslatedStrings.ResetSelectedLines;
             this.resetSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.resetSelectedLinesToolStripMenuItem_Click);
             // 
             // copyToolStripMenuItem

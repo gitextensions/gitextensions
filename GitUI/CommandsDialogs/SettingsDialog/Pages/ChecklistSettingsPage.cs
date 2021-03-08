@@ -9,6 +9,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Utils;
+using GitExtUtils;
 using Microsoft;
 using Microsoft.Win32;
 using ResourceManager;
@@ -258,7 +259,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         }
                         else
                         {
-                            MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -269,7 +270,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             else
             {
-                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             CheckSettings();
@@ -363,7 +364,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     }
                     catch (Exception e)
                     {
-                        MessageBox.Show(this, e.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, e.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
 
@@ -592,7 +593,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var installDir = AppSettings.GetInstallDir();
 
-            if (GitExtUtils.Strings.IsNullOrEmpty(installDir))
+            if (Strings.IsNullOrEmpty(installDir))
             {
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsMissing.Text);
                 return false;

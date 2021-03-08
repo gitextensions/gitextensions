@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using ResourceManager;
 
@@ -52,7 +53,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 directories.Add(AppSettings.DefaultCloneDestinationPath.EnsureTrailingPathSeparator());
             }
 
-            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(currentModule?.WorkingDir))
+            if (!Strings.IsNullOrWhiteSpace(currentModule?.WorkingDir))
             {
                 var di = new DirectoryInfo(currentModule.WorkingDir);
                 if (di.Parent is not null)
@@ -65,7 +66,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (directories.Count == 0)
             {
-                if (!GitExtUtils.Strings.IsNullOrWhiteSpace(AppSettings.RecentWorkingDir))
+                if (!Strings.IsNullOrWhiteSpace(AppSettings.RecentWorkingDir))
                 {
                     directories.Add(AppSettings.RecentWorkingDir.EnsureTrailingPathSeparator());
                 }
@@ -98,7 +99,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            MessageBox.Show(this, _warningOpenFailed.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, _warningOpenFailed.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void DirectoryKeyPress(object sender, KeyPressEventArgs e)

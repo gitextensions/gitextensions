@@ -251,7 +251,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     }
                     else
                     {
-                        MessageBox.Show(this, $@"{_deleteWorktreeFailedText.Text}: {workTree.Path}{Environment.NewLine}{errorMessage}", Strings.Error,
+                        MessageBox.Show(this, $@"{_deleteWorktreeFailedText.Text}: {workTree.Path}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error,
                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }

@@ -273,7 +273,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (string.IsNullOrEmpty(Branches.Text))
                 {
-                    MessageBox.Show(this, _noBranchSelectedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _noBranchSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 

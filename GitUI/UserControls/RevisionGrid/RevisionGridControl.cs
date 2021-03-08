@@ -1069,7 +1069,7 @@ namespace GitUI
                         Committer = userName,
                         CommitDate = DateTime.MaxValue,
                         CommitterEmail = userEmail,
-                        Subject = ResourceManager.Strings.Workspace,
+                        Subject = ResourceManager.TranslatedStrings.Workspace,
                         ParentIds = new[] { ObjectId.IndexId },
                         HasNotes = true
                     };
@@ -1084,7 +1084,7 @@ namespace GitUI
                         Committer = userName,
                         CommitDate = DateTime.MaxValue,
                         CommitterEmail = userEmail,
-                        Subject = ResourceManager.Strings.Index,
+                        Subject = ResourceManager.TranslatedStrings.Index,
                         ParentIds = new[] { filteredCurrentCheckout },
                         HasNotes = true
                     };
@@ -2322,7 +2322,7 @@ namespace GitUI
         {
             if (_revisionReader is not null)
             {
-                MessageBox.Show(_cannotHighlightSelectedBranch.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_cannotHighlightSelectedBranch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2394,7 +2394,7 @@ namespace GitUI
             var mergeBaseCommitId = UICommands.GitModule.GitExecutable.GetOutput(args).TrimEnd('\n');
             if (string.IsNullOrWhiteSpace(mergeBaseCommitId))
             {
-                MessageBox.Show(_noMergeBaseCommit.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_noMergeBaseCommit.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2421,7 +2421,7 @@ namespace GitUI
 
         public void GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection = false)
         {
-            if (GitExtUtils.Strings.IsNullOrEmpty(refName))
+            if (Strings.IsNullOrEmpty(refName))
             {
                 return;
             }
@@ -2442,7 +2442,7 @@ namespace GitUI
             }
             else if (showNoRevisionMsg)
             {
-                MessageBox.Show(this, _noRevisionFoundError.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noRevisionFoundError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2490,7 +2490,7 @@ namespace GitUI
             var headBranch = Module.GetSelectedBranch(setDefaultIfEmpty: false);
             if (string.IsNullOrWhiteSpace(headBranch))
             {
-                MessageBox.Show(this, "No branch is currently selected", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "No branch is currently selected", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2518,7 +2518,7 @@ namespace GitUI
         {
             if (_baseCommitToCompare is null)
             {
-                MessageBox.Show(this, _baseForCompareNotSelectedError.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _baseForCompareNotSelectedError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2541,7 +2541,7 @@ namespace GitUI
 
             if (baseCommit.ObjectId == ObjectId.WorkTreeId)
             {
-                MessageBox.Show(this, "Cannot diff working directory to itself", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Cannot diff working directory to itself", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2562,7 +2562,7 @@ namespace GitUI
             }
             else
             {
-                MessageBox.Show(this, "You must have two commits selected to compare", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "You must have two commits selected to compare", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2598,7 +2598,7 @@ namespace GitUI
         {
             var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (revision is not null && !GitExtUtils.Strings.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
+            if (revision is not null && !Strings.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
             {
                 OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.Url);
             }
@@ -2608,7 +2608,7 @@ namespace GitUI
         {
             var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (revision is not null && !GitExtUtils.Strings.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
+            if (revision is not null && !Strings.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
             {
                 OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.PullRequestUrl);
             }
@@ -2653,7 +2653,7 @@ namespace GitUI
                 if (fileNameArray.Length > 10)
                 {
                     // Some users need to be protected against themselves!
-                    MessageBox.Show(this, _droppingFilesBlocked.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _droppingFilesBlocked.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -2661,7 +2661,7 @@ namespace GitUI
                 {
                     var fileName = fileNameObject as string;
 
-                    if (!GitExtUtils.Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    if (!Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
                         // Start apply patch dialog for each dropped patch file...
                         UICommands.StartApplyPatchDialog(ParentForm, fileName);
@@ -2678,7 +2678,7 @@ namespace GitUI
                 {
                     var fileName = fileNameObject as string;
 
-                    if (!GitExtUtils.Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    if (!Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
                         // Allow drop (copy, not move) patch files
                         e.Effect = DragDropEffects.Copy;

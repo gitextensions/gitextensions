@@ -96,8 +96,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                     contextMenu.Items[--count].Text.Should().Be("Collapse");
                     contextMenu.Items[--count].Text.Should().Be("Expand");
                     contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();
-                    contextMenu.Items[--count].Text.Should().Be(GitUI.Strings.SortOrder);
-                    contextMenu.Items[--count].Text.Should().Be(GitUI.Strings.SortBy);
+                    contextMenu.Items[--count].Text.Should().Be(TranslatedStrings.SortOrder);
+                    contextMenu.Items[--count].Text.Should().Be(TranslatedStrings.SortBy);
                     contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();
                 });
         }

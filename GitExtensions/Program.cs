@@ -118,8 +118,8 @@ namespace GitExtensions
 
             AppSettings.TelemetryEnabled ??= MessageBox.Show(
                 null,
-                ResourceManager.Strings.TelemetryPermissionMessage,
-                ResourceManager.Strings.TelemetryPermissionCaption,
+                ResourceManager.TranslatedStrings.TelemetryPermissionMessage,
+                ResourceManager.TranslatedStrings.TelemetryPermissionCaption,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question) == DialogResult.Yes;
 
@@ -313,18 +313,18 @@ namespace GitExtensions
 
             using var dialog1 = new TaskDialog
             {
-                InstructionText = ResourceManager.Strings.GitExecutableNotFound,
+                InstructionText = ResourceManager.TranslatedStrings.GitExecutableNotFound,
                 Icon = TaskDialogStandardIcon.Error,
                 StandardButtons = TaskDialogStandardButtons.Cancel,
                 Cancelable = true,
             };
-            var btnFindGitExecutable = new TaskDialogCommandLink("FindGitExecutable", null, ResourceManager.Strings.FindGitExecutable);
+            var btnFindGitExecutable = new TaskDialogCommandLink("FindGitExecutable", null, ResourceManager.TranslatedStrings.FindGitExecutable);
             btnFindGitExecutable.Click += (s, e) =>
             {
                 dialogResult = 0;
                 dialog1.Close();
             };
-            var btnInstallGitInstructions = new TaskDialogCommandLink("InstallGitInstructions", null, ResourceManager.Strings.InstallGitInstructions);
+            var btnInstallGitInstructions = new TaskDialogCommandLink("InstallGitInstructions", null, ResourceManager.TranslatedStrings.InstallGitInstructions);
             btnInstallGitInstructions.Click += (s, e) =>
             {
                 dialogResult = 1;

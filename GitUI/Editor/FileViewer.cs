@@ -153,7 +153,7 @@ namespace GitUI.Editor
             ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff;
             showSyntaxHighlighting.Image = Resources.SyntaxHighlighting.AdaptLightness();
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
-            automaticContinuousScrollToolStripMenuItem.Text = Strings.ContScrollToNextFileOnlyWithAlt;
+            automaticContinuousScrollToolStripMenuItem.Text = TranslatedStrings.ContScrollToNextFileOnlyWithAlt;
 
             IsReadOnly = true;
 
@@ -876,7 +876,7 @@ namespace GitUI.Editor
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, $"{ex.Message}{Environment.NewLine}{fileName}", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, $"{ex.Message}{Environment.NewLine}{fileName}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 // If the file does not exist, it doesn't matter what size we
@@ -977,7 +977,7 @@ namespace GitUI.Editor
             _viewMode = viewMode;
             _viewItem = item;
             if (_viewMode == ViewMode.Text
-                && !GitExtUtils.Strings.IsNullOrEmpty(fileName)
+                && !Strings.IsNullOrEmpty(fileName)
                 && (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                     || fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase)))
             {
@@ -1470,7 +1470,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            if (MessageBox.Show(this, Strings.ResetSelectedLinesConfirmation, Strings.ResetChangesCaption,
+            if (MessageBox.Show(this, TranslatedStrings.ResetSelectedLinesConfirmation, TranslatedStrings.ResetChangesCaption,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
             {
                 return;
@@ -1592,7 +1592,7 @@ namespace GitUI.Editor
             {
                 if (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false))
                 {
-                    MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 

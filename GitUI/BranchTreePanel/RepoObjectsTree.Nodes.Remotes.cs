@@ -132,7 +132,7 @@ namespace GitUI.BranchTreePanel
                         disabledRemoteRepoNodes.Add(node);
                     }
 
-                    var disabledFolderNode = new RemoteRepoFolderNode(this, Strings.Inactive);
+                    var disabledFolderNode = new RemoteRepoFolderNode(this, TranslatedStrings.Inactive);
                     disabledRemoteRepoNodes
                         .OrderBy(node => node.FullPath)
                         .ForEach(node => disabledFolderNode.Nodes.AddNode(node));

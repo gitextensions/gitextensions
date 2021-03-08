@@ -184,7 +184,7 @@
             this.openSubmoduleMenuItem.Image = global::GitUI.Properties.Images.GitExtensionsLogo16;
             this.openSubmoduleMenuItem.Name = "openSubmoduleMenuItem";
             this.openSubmoduleMenuItem.Size = new System.Drawing.Size(325, 22);
-            this.openSubmoduleMenuItem.Text = Strings.OpenWithGitExtensions;
+            this.openSubmoduleMenuItem.Text = TranslatedStrings.OpenWithGitExtensions;
             this.openSubmoduleMenuItem.Click += new System.EventHandler(this.openSubmoduleMenuItem_Click);
             // 
             // copyFilenameToClipboardToolStripMenuItem

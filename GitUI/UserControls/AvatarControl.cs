@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
 using GitUI.Properties;
@@ -129,7 +130,7 @@ namespace GitUI
 
             var email = Email;
 
-            if (!AppSettings.ShowAuthorAvatarInCommitInfo || GitExtUtils.Strings.IsNullOrWhiteSpace(email))
+            if (!AppSettings.ShowAuthorAvatarInCommitInfo || Strings.IsNullOrWhiteSpace(email))
             {
                 RefreshImage(Images.User80);
                 return;

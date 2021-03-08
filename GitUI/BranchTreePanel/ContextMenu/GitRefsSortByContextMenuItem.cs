@@ -17,7 +17,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
             _onSortByChanged = onSortByChanged;
 
             Image = Images.SortBy;
-            Text = Strings.SortBy;
+            Text = TranslatedStrings.SortBy;
 
             foreach (var option in EnumHelper.GetValues<GitRefsSortBy>().Select(e => (Text: e.GetDescription(), Value: e)))
             {

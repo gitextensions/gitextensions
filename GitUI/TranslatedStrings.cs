@@ -4,7 +4,7 @@ using ResourceManager;
 
 namespace GitUI
 {
-    internal sealed class Strings : Translate
+    internal sealed class TranslatedStrings : Translate
     {
         private readonly TranslationString _error = new("Error");
         private readonly TranslationString _warning = new("Warning");
@@ -104,18 +104,18 @@ namespace GitUI
         private readonly TranslationString _reportBugText = new("If you think this was caused by Git Extensions, you can report a bug for the team to investigate.");
 
         // public only because of FormTranslate
-        public Strings()
+        public TranslatedStrings()
         {
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        private static Lazy<Strings> _instance = new Lazy<Strings>();
+        private static Lazy<TranslatedStrings> _instance = new Lazy<TranslatedStrings>();
 
         public static void Reinitialize()
         {
             if (_instance.IsValueCreated)
             {
-                _instance = new Lazy<Strings>();
+                _instance = new Lazy<TranslatedStrings>();
             }
         }
 

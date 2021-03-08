@@ -127,7 +127,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Any(n => n.Text == GitUI.Strings.Inactive).Should().BeFalse();
+                    remotesNode.Nodes.OfType<TreeNode>().Any(n => n.Text == TranslatedStrings.Inactive).Should().BeFalse();
                 });
         }
 
@@ -144,7 +144,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Count(n => n.Text == GitUI.Strings.Inactive).Should().Be(1);
+                    remotesNode.Nodes.OfType<TreeNode>().Count(n => n.Text == TranslatedStrings.Inactive).Should().Be(1);
                 });
         }
 
@@ -161,7 +161,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Last().Text.Should().Be(GitUI.Strings.Inactive);
+                    remotesNode.Nodes.OfType<TreeNode>().Last().Text.Should().Be(TranslatedStrings.Inactive);
                 });
         }
 
@@ -195,7 +195,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         private TreeNode GetRemoteNode(FormBrowse form)
         {
             var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
-            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == GitUI.Strings.Remotes);
+            var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
             remotesNode.Should().NotBeNull();
             return remotesNode;
         }

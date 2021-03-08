@@ -45,14 +45,14 @@ namespace GitUI.CommandsDialogs
                 if (_diffSelectedRevision is null)
                 {
                     const string defaultString = "...";
-                    labelDateCaption.Text = $"{ResourceManager.Strings.CommitDate}:";
+                    labelDateCaption.Text = $"{ResourceManager.TranslatedStrings.CommitDate}:";
                     labelAuthor.Text = defaultString;
                     gbDiffRevision.Text = defaultString;
                     labelMessage.Text = defaultString;
                 }
                 else
                 {
-                    labelDateCaption.Text = $"{ResourceManager.Strings.CommitDate}: {_diffSelectedRevision.CommitDate}";
+                    labelDateCaption.Text = $"{ResourceManager.TranslatedStrings.CommitDate}: {_diffSelectedRevision.CommitDate}";
                     labelAuthor.Text = _diffSelectedRevision.Author;
                     gbDiffRevision.Text = _diffSelectedRevision.ObjectId.ToShortString();
                     labelMessage.Text = _diffSelectedRevision.Subject;
@@ -113,7 +113,7 @@ namespace GitUI.CommandsDialogs
         {
             if (checkboxRevisionFilter.Checked && DiffSelectedRevision is null)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(this, _noRevisionSelected.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 

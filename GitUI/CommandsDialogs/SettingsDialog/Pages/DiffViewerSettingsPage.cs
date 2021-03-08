@@ -11,9 +11,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Diff Viewer";
             InitializeComplete();
 
-            chkShowDiffForAllParents.Text = Strings.ShowDiffForAllParentsText;
-            chkShowDiffForAllParents.ToolTipText = Strings.ShowDiffForAllParentsTooltip;
-            chkContScrollToNextFileOnlyWithAlt.Text = Strings.ContScrollToNextFileOnlyWithAlt;
+            chkShowDiffForAllParents.Text = TranslatedStrings.ShowDiffForAllParentsText;
+            chkShowDiffForAllParents.ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip;
+            chkContScrollToNextFileOnlyWithAlt.Text = TranslatedStrings.ContScrollToNextFileOnlyWithAlt;
         }
 
         protected override void SettingsToPage()

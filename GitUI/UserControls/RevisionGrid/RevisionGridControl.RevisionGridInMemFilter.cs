@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitUI
@@ -66,7 +67,7 @@ namespace GitUI
             {
                 if (string.IsNullOrEmpty(authorFilter) &&
                     string.IsNullOrEmpty(committerFilter) &&
-                    (GitExtUtils.Strings.IsNullOrEmpty(messageFilter) ||
+                    (Strings.IsNullOrEmpty(messageFilter) ||
                      !ObjectId.IsValidPartial(messageFilter, minLength: 5)))
                 {
                     return null;

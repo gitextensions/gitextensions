@@ -85,7 +85,7 @@ namespace GitUI
                         menu.MenuItem.DropDown.Items.Add(new ToolStripSeparator());
                         var disableItem = new ToolStripMenuItem
                         {
-                            Text = ResourceManager.Strings.DisableMenuItem
+                            Text = ResourceManager.TranslatedStrings.DisableMenuItem
                         };
 
                         disableItem.Click += (o, s) =>

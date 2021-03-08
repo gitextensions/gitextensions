@@ -64,13 +64,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             string toolTip;
             if (revision.Author == revision.Committer && revision.AuthorEmail == revision.CommitterEmail)
             {
-                toolTip = $"{revision.Author} <{revision.AuthorEmail}> {Strings.AuthoredAndCommitted}";
+                toolTip = $"{revision.Author} <{revision.AuthorEmail}> {TranslatedStrings.AuthoredAndCommitted}";
             }
             else
             {
                 toolTip =
-                    $"{revision.Author} <{revision.AuthorEmail}> {Strings.Authored}\n" +
-                    $"{revision.Committer} <{revision.CommitterEmail}> {Strings.Committed}";
+                    $"{revision.Author} <{revision.AuthorEmail}> {TranslatedStrings.Authored}\n" +
+                    $"{revision.Committer} <{revision.CommitterEmail}> {TranslatedStrings.Committed}";
             }
 
             return toolTip;

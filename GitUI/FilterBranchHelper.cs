@@ -20,7 +20,7 @@ namespace GitUI
         private readonly ToolStripMenuItem _remoteToolStripMenuItem;
         private GitModule Module => _NO_TRANSLATE_RevisionGrid.Module;
 
-        private static readonly string[] _noResultsFound = { Strings.NoResultsFound };
+        private static readonly string[] _noResultsFound = { TranslatedStrings.NoResultsFound };
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGridControl revisionGrid)
         {
@@ -32,7 +32,7 @@ namespace GitUI
                 Checked = true,
                 CheckOnClick = true,
                 Name = "localToolStripMenuItem",
-                Text = Strings.Local
+                Text = TranslatedStrings.Local
             };
 
             //
@@ -42,7 +42,7 @@ namespace GitUI
             {
                 CheckOnClick = true,
                 Name = "tagToolStripMenuItem",
-                Text = Strings.Tag
+                Text = TranslatedStrings.Tag
             };
 
             //
@@ -53,7 +53,7 @@ namespace GitUI
                 CheckOnClick = true,
                 Name = "remoteToolStripMenuItem",
                 Size = new System.Drawing.Size(115, 22),
-                Text = Strings.Remote
+                Text = TranslatedStrings.Remote
             };
 
             _NO_TRANSLATE_toolStripBranches = toolStripBranches;
@@ -190,7 +190,7 @@ namespace GitUI
             {
                 string filter = _NO_TRANSLATE_toolStripBranches.Items.Count > 0 ? _NO_TRANSLATE_toolStripBranches.Text : string.Empty;
 
-                if (filter == Strings.NoResultsFound)
+                if (filter == TranslatedStrings.NoResultsFound)
                 {
                     filter = string.Empty;
                 }

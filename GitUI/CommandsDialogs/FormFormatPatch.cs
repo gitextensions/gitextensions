@@ -86,25 +86,25 @@ namespace GitUI.CommandsDialogs
         {
             if (SaveToDir.Checked && string.IsNullOrEmpty(OutputPath.Text))
             {
-                MessageBox.Show(this, _noOutputPathEnteredText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noOutputPathEnteredText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(MailTo.Text))
             {
-                MessageBox.Show(this, _noEmailEnteredText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noEmailEnteredText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(MailSubject.Text))
             {
-                MessageBox.Show(this, _noSubjectEnteredText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noSubjectEnteredText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!SaveToDir.Checked && string.IsNullOrEmpty(AppSettings.SmtpServer))
             {
-                MessageBox.Show(this, _wrongSmtpSettingsText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _wrongSmtpSettingsText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -207,7 +207,7 @@ namespace GitUI.CommandsDialogs
 
                 if (string.IsNullOrEmpty(from))
                 {
-                    MessageBox.Show(this, _noGitMailConfigured.Text, Strings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, _noGitMailConfigured.Text, TranslatedStrings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 string to = MailTo.Text;
@@ -240,7 +240,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 

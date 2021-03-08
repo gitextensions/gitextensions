@@ -830,7 +830,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                     if (!module.IsValidGitWorkingDir())
                     {
-                        MessageBox.Show(this, Strings.DirectoryInvalidRepository,
+                        MessageBox.Show(this, TranslatedStrings.DirectoryInvalidRepository,
                             _cannotOpenTheFolder.Text, MessageBoxButtons.OK,
                             MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                         return;

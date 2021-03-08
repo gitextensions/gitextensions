@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
@@ -88,7 +89,7 @@ namespace GitUI.Script
 
         public static (string? arguments, bool abort) Parse(string? arguments, IGitModule module, IWin32Window owner, IScriptHostControl? scriptHostControl)
         {
-            if (GitExtUtils.Strings.IsNullOrWhiteSpace(arguments))
+            if (Strings.IsNullOrWhiteSpace(arguments))
             {
                 return (arguments, abort: false);
             }

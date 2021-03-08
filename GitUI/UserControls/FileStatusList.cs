@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
@@ -683,7 +684,7 @@ namespace GitUI
                 new FileStatusWithDescription(
                     firstRev: firstRev,
                     secondRev: secondRev,
-                    summary: Strings.DiffWithParent + GetDescriptionForRevision(firstRev?.ObjectId),
+                    summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev?.ObjectId),
                     statuses: items)
             };
         }
@@ -769,7 +770,7 @@ namespace GitUI
             {
                 Name = "openSubmoduleMenuItem",
                 Tag = "1",
-                Text = Strings.OpenWithGitExtensions,
+                Text = TranslatedStrings.OpenWithGitExtensions,
                 Image = Images.GitExtensionsLogo16
             };
             item.Click += (s, ea) => { ThreadHelper.JoinableTaskFactory.RunAsync(() => OpenSubmoduleAsync()); };
@@ -1240,10 +1241,10 @@ namespace GitUI
                     Name = separatorKey,
                     Visible = mayBeMultipleRevs
                 });
-                var showAllDiferencesItem = new ToolStripMenuItem(Strings.ShowDiffForAllParentsText)
+                var showAllDiferencesItem = new ToolStripMenuItem(TranslatedStrings.ShowDiffForAllParentsText)
                 {
                     Checked = AppSettings.ShowDiffForAllParents,
-                    ToolTipText = Strings.ShowDiffForAllParentsTooltip,
+                    ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip,
                     Name = showAllDifferencesItemName,
                     CheckOnClick = true,
                     Visible = mayBeMultipleRevs
@@ -1324,7 +1325,7 @@ namespace GitUI
                     ? SystemColors.HighlightText
                     : SystemColors.WindowText;
 
-                if (!GitExtUtils.Strings.IsNullOrEmpty(prefix))
+                if (!Strings.IsNullOrEmpty(prefix))
                 {
                     DrawString(textRect, prefix, grayTextColor);
                     var prefixSize = formatter.MeasureString(prefix);
@@ -1333,7 +1334,7 @@ namespace GitUI
 
                 DrawString(textRect, text, textColor);
 
-                if (!GitExtUtils.Strings.IsNullOrEmpty(suffix))
+                if (!Strings.IsNullOrEmpty(suffix))
                 {
                     var textSize = formatter.MeasureString(text);
                     textRect.Offset(textSize.Width, 0);

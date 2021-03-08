@@ -4,6 +4,7 @@ using System.IO;
 using GitCommands;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using Microsoft.Win32;
 
@@ -59,7 +60,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             string gitpath = AppSettings.GitCommandValue;
-            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(possibleNewPath))
+            if (!Strings.IsNullOrWhiteSpace(possibleNewPath))
             {
                 gitpath = possibleNewPath.Trim();
             }

@@ -424,7 +424,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
             else
             {
-                MessageBox.Show(_revisionGrid, _noRevisionFoundError.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_revisionGrid, _noRevisionFoundError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

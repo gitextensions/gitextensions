@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Config;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -36,7 +37,7 @@ namespace GitUI.UserControls
 
         public bool IsHighlighted(GitRevision? revision)
         {
-            if (GitExtUtils.Strings.IsNullOrWhiteSpace(revision?.AuthorEmail))
+            if (Strings.IsNullOrWhiteSpace(revision?.AuthorEmail))
             {
                 return false;
             }

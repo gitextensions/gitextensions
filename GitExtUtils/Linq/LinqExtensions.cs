@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GitExtUtils;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -228,7 +229,7 @@ namespace System.Linq
         {
             foreach (var item in source)
             {
-                if (!GitExtUtils.Strings.IsNullOrWhiteSpace(item))
+                if (!Strings.IsNullOrWhiteSpace(item))
                 {
                     yield return item;
                 }
