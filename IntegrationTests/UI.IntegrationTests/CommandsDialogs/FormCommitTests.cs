@@ -468,23 +468,13 @@ namespace GitExtensions.UITests.CommandsDialogs
             UITest.RunForm(
                 showForm: () =>
                 {
-                    switch (commitKind)
+                    Assert.True(commitKind switch
                     {
-                        case CommitKind.Normal:
-                            Assert.True(_commands.StartCommitDialog(owner: null));
-                            break;
-
-                        case CommitKind.Squash:
-                            Assert.True(_commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision()));
-                            break;
-
-                        case CommitKind.Fixup:
-                            Assert.True(_commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision()));
-                            break;
-
-                        default:
-                            throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind));
-                    }
+                        CommitKind.Normal => _commands.StartCommitDialog(owner: null),
+                        CommitKind.Squash => _commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),
+                        CommitKind.Fixup => _commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),
+                        _ => throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind))
+                    });
                 },
                 testDriverAsync);
         }

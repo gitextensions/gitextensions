@@ -75,15 +75,11 @@ namespace GitUI.Theming
 
         private static Point[] GetArrowPolygon(State.SortArrow stateId, Rectangle prect)
         {
-            switch (stateId)
+            return stateId switch
             {
-                case State.SortArrow.HSAS_SORTEDUP:
-                    return GetUpArrowPolygon(prect);
-
-                // case State.SortArrow.HSAS_SORTEDDOWN:
-                default:
-                    return GetDownArrowPolygon(prect);
-            }
+                State.SortArrow.HSAS_SORTEDUP => GetUpArrowPolygon(prect),
+                _ => GetDownArrowPolygon(prect)
+            };
         }
 
         private static Brush GetBackBrush(State.Item stateId)

@@ -8,34 +8,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     {
         public int Compare(IGitItem x, IGitItem y)
         {
-            var xGitItem = x as GitItem;
-            var yGitItem = y as GitItem;
-            if (xGitItem is null && yGitItem is null)
+            return (x as GitItem, y as GitItem) switch
             {
-                return 0;
-            }
-
-            if (xGitItem is null)
-            {
-                return 1;
-            }
-
-            if (yGitItem is null)
-            {
-                return -1;
-            }
-
-            if ((xGitItem.ObjectType == GitObjectType.Tree || xGitItem.ObjectType == GitObjectType.Commit) && yGitItem.ObjectType == GitObjectType.Blob)
-            {
-                return -1;
-            }
-
-            if (xGitItem.ObjectType == GitObjectType.Blob && (yGitItem.ObjectType == GitObjectType.Tree || yGitItem.ObjectType == GitObjectType.Commit))
-            {
-                return 1;
-            }
-
-            return xGitItem.Name.CompareTo(yGitItem.Name);
+                (null, null) => 0,
+                (null, _) => 1,
+                (_, null) => -1,
+                var (xGitItem, yGitItem) => (xGitItem.ObjectType, yGitItem.ObjectType) switch
+                {
+                    (GitObjectType.Tree or GitObjectType.Commit, GitObjectType.Blob) => -1,
+                    (GitObjectType.Blob, GitObjectType.Tree or GitObjectType.Commit) => 1,
+                    _ => xGitItem.Name.CompareTo(yGitItem.Name)
+                }
+            };
         }
     }
 }

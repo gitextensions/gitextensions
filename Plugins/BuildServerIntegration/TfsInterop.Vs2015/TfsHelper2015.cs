@@ -201,36 +201,25 @@ namespace TfsInterop
 
         private static string GetStatusDescription(Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus status)
         {
-            if (status == Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded)
+            return status switch
             {
-                return "OK";
-            }
-
-            if (status == Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Failed)
-            {
-                return "KO";
-            }
-
-            return "-";
+                Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Succeeded => "OK",
+                Microsoft.TeamFoundation.Build.Client.BuildPhaseStatus.Failed => "KO",
+                _ => "-"
+            };
         }
 
         private static BuildStatus ConvertStatus(Microsoft.TeamFoundation.Build.Client.BuildStatus status)
         {
-            switch (status)
+            return status switch
             {
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.Succeeded:
-                    return BuildStatus.Success;
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.Stopped:
-                    return BuildStatus.Stopped;
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.Failed:
-                    return BuildStatus.Failure;
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.PartiallySucceeded:
-                    return BuildStatus.Unstable;
-                case Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress:
-                    return BuildStatus.InProgress;
-                default:
-                    return BuildStatus.Unknown;
-            }
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.Succeeded => BuildStatus.Success,
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.Stopped => BuildStatus.Stopped,
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.Failed => BuildStatus.Failure,
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.PartiallySucceeded => BuildStatus.Unstable,
+                Microsoft.TeamFoundation.Build.Client.BuildStatus.InProgress => BuildStatus.InProgress,
+                _ => BuildStatus.Unknown
+            };
         }
 
         public bool IsDependencyOk2015()
@@ -374,50 +363,18 @@ namespace TfsInterop
 
         private static string GetStatus2015(Build build)
         {
-            if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.NotStarted)
+            return build.Status switch
             {
-                return "Not started";
-            }
-
-            if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress)
-            {
-                return "In progress...";
-            }
-
-            if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.None)
-            {
-                return "No status";
-            }
-
-            if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Postponed)
-            {
-                return "Postponed";
-            }
-
-            if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Cancelling)
-            {
-                return "Cancelling";
-            }
-
-            if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed)
-            {
-                if (build.Result.Value == BuildResult.Failed)
-                {
-                    return "KO";
-                }
-
-                if (build.Result.Value == BuildResult.PartiallySucceeded)
-                {
-                    return "Partially Succeeded";
-                }
-
-                if (build.Result.Value == BuildResult.Succeeded)
-                {
-                    return "OK";
-                }
-            }
-
-            return "-";
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.NotStarted => "Not started",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress => "In progress...",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.None => "No status",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Postponed => "Postponed",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Cancelling => "Cancelling",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Failed => "KO",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.PartiallySucceeded => "Partially Succeeded",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Succeeded => "OK",
+                _ => "-"
+            };
         }
 
         ////private static string GetStatusDescription(BuildPhaseStatus status)
@@ -431,35 +388,15 @@ namespace TfsInterop
 
         private static BuildStatus ConvertStatus2015(Build build)
         {
-            if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress)
+            return build.Status switch
             {
-                return BuildStatus.InProgress;
-            }
-
-            if (build.Status == Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed)
-            {
-                if (build.Result.Value == BuildResult.Failed)
-                {
-                    return BuildStatus.Failure;
-                }
-
-                if (build.Result.Value == BuildResult.Succeeded)
-                {
-                    return BuildStatus.Success;
-                }
-
-                if (build.Result.Value == BuildResult.Canceled)
-                {
-                    return BuildStatus.Stopped;
-                }
-
-                if (build.Result.Value == BuildResult.PartiallySucceeded)
-                {
-                    return BuildStatus.Unstable;
-                }
-            }
-
-            return BuildStatus.Unknown;
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress => BuildStatus.InProgress,
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Failed => BuildStatus.Failure,
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Succeeded => BuildStatus.Success,
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Canceled => BuildStatus.Stopped,
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.PartiallySucceeded => BuildStatus.Unstable,
+                _ => BuildStatus.Unknown
+            };
         }
 
         private static string GetDuration(TimeSpan duration)

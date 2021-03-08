@@ -101,12 +101,12 @@ namespace GitCommands.DiffMergeTools
 
             var config = LoadDiffMergeToolConfig(toolName, null);
 
-            switch (toolType)
+            return toolType switch
             {
-                case DiffMergeToolType.Diff: return config.FullDiffCommand;
-                case DiffMergeToolType.Merge: return config.FullMergeCommand;
-                default: throw new NotSupportedException();
-            }
+                DiffMergeToolType.Diff => config.FullDiffCommand,
+                DiffMergeToolType.Merge => config.FullMergeCommand,
+                _ => throw new NotSupportedException()
+            };
         }
 
         /// <summary>
@@ -187,16 +187,12 @@ namespace GitCommands.DiffMergeTools
 
         private (string toolKey, string prefix) GetInfo(DiffMergeToolType toolType)
         {
-            switch (toolType)
+            return toolType switch
             {
-                case DiffMergeToolType.Diff:
-                    return (SettingKeyString.DiffToolKey, "difftool");
-
-                case DiffMergeToolType.Merge:
-                    return (SettingKeyString.MergeToolKey, "mergetool");
-
-                default: throw new NotSupportedException();
-            }
+                DiffMergeToolType.Diff => (SettingKeyString.DiffToolKey, "difftool"),
+                DiffMergeToolType.Merge => (SettingKeyString.MergeToolKey, "mergetool"),
+                _ => throw new NotSupportedException()
+            };
         }
 
         private string? GetToolSetting(string? toolName, DiffMergeToolType toolType, string settingSuffix)

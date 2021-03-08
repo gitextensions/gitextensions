@@ -113,15 +113,12 @@ namespace GitUI
 
                 int GetSelectionStart()
                 {
-                    switch (sender)
+                    return sender switch
                     {
-                        case TextBoxBase t:
-                            return t.SelectionStart;
-                        case ComboBox cb:
-                            return cb.SelectionStart;
-                        default:
-                            throw new NotSupportedException();
-                    }
+                        TextBoxBase t => t.SelectionStart,
+                        ComboBox cb => cb.SelectionStart,
+                        _ => throw new NotSupportedException()
+                    };
                 }
 
                 void SetSelectionStart(int value)
@@ -141,15 +138,12 @@ namespace GitUI
 
                 int GetSelectionLength()
                 {
-                    switch (sender)
+                    return sender switch
                     {
-                        case TextBoxBase t:
-                            return t.SelectionLength;
-                        case ComboBox cb:
-                            return cb.SelectionLength;
-                        default:
-                            throw new NotSupportedException();
-                    }
+                        TextBoxBase t => t.SelectionLength,
+                        ComboBox cb => cb.SelectionLength,
+                        _ => throw new NotSupportedException()
+                    };
                 }
 
                 void SetSelectionLength(int value)
@@ -193,15 +187,12 @@ namespace GitUI
 
         private static bool IsReadOnly(object sender)
         {
-            switch (sender)
+            return sender switch
             {
-                case TextBoxBase textBox:
-                    return textBox.ReadOnly;
-                case ComboBox comboBox:
-                    return comboBox.DropDownStyle == ComboBoxStyle.DropDownList;
-                default:
-                    throw new NotSupportedException();
-            }
+                TextBoxBase textBox => textBox.ReadOnly,
+                ComboBox comboBox => comboBox.DropDownStyle == ComboBoxStyle.DropDownList,
+                _ => throw new NotSupportedException()
+            };
         }
 
         private static readonly MethodInfo _beginUpdateMethod =

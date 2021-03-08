@@ -147,36 +147,23 @@ namespace GitUI.BranchTreePanel
 
                 return;
 
-                // NOTE: Copied and adapated from FormBrowse.GetSubmoduleItemImage
+                // NOTE: Copied and adapted from FormBrowse.GetSubmoduleItemImage
                 static string GetSubmoduleItemImage(DetailedSubmoduleInfo? details)
                 {
-                    if (details?.Status is null)
+                    return (details?.Status, details?.IsDirty) switch
                     {
-                        return nameof(Images.FolderSubmodule);
-                    }
-
-                    if (details.Status == SubmoduleStatus.FastForward)
-                    {
-                        return details.IsDirty ? nameof(Images.SubmoduleRevisionUpDirty) : nameof(Images.SubmoduleRevisionUp);
-                    }
-
-                    if (details.Status == SubmoduleStatus.Rewind)
-                    {
-                        return details.IsDirty ? nameof(Images.SubmoduleRevisionDownDirty) : nameof(Images.SubmoduleRevisionDown);
-                    }
-
-                    if (details.Status == SubmoduleStatus.NewerTime)
-                    {
-                        return details.IsDirty ? nameof(Images.SubmoduleRevisionSemiUpDirty) : nameof(Images.SubmoduleRevisionSemiUp);
-                    }
-
-                    if (details.Status == SubmoduleStatus.OlderTime)
-                    {
-                        return details.IsDirty ? nameof(Images.SubmoduleRevisionSemiDownDirty) : nameof(Images.SubmoduleRevisionSemiDown);
-                    }
-
-                    // Unknown
-                    return details.IsDirty ? nameof(Images.SubmoduleDirty) : nameof(Images.FileStatusModified);
+                        (SubmoduleStatus.FastForward, true) => nameof(Images.SubmoduleRevisionUpDirty),
+                        (SubmoduleStatus.FastForward, false) => nameof(Images.SubmoduleRevisionUp),
+                        (SubmoduleStatus.Rewind, true) => nameof(Images.SubmoduleRevisionDownDirty),
+                        (SubmoduleStatus.Rewind, false) => nameof(Images.SubmoduleRevisionDown),
+                        (SubmoduleStatus.NewerTime, true) => nameof(Images.SubmoduleRevisionSemiUpDirty),
+                        (SubmoduleStatus.NewerTime, false) => nameof(Images.SubmoduleRevisionSemiUp),
+                        (SubmoduleStatus.OlderTime, true) => nameof(Images.SubmoduleRevisionSemiDownDirty),
+                        (SubmoduleStatus.OlderTime, false) => nameof(Images.SubmoduleRevisionSemiDown),
+                        (_, true) => nameof(Images.SubmoduleDirty),
+                        (_, false) => nameof(Images.FileStatusModified),
+                        _ => nameof(Images.FolderSubmodule)
+                    };
                 }
             }
 

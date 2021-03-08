@@ -50,24 +50,14 @@ namespace GitUI.Theming
                 case Parts.SBP_THUMBBTNVERT:
                 case Parts.SBP_GRIPPERHORZ:
                 case Parts.SBP_GRIPPERVERT:
-                    switch ((States.TrackThumb)stateId)
+                    return (States.TrackThumb)stateId switch
                     {
-                        case States.TrackThumb.SCRBS_NORMAL:
-                            return SystemBrushes.ScrollBar;
-
-                        case States.TrackThumb.SCRBS_HOVER:
-                            return SystemBrushes.ControlLight;
-
-                        case States.TrackThumb.SCRBS_HOT:
-                            return SystemBrushes.ControlDark;
-
-                        case States.TrackThumb.SCRBS_PRESSED:
-                            return SystemBrushes.ControlDarkDark;
-
-                        // case States.TrackThumb.SCRBS_DISABLED:
-                        default:
-                            return SystemBrushes.Control;
-                    }
+                        States.TrackThumb.SCRBS_NORMAL => SystemBrushes.ScrollBar,
+                        States.TrackThumb.SCRBS_HOVER => SystemBrushes.ControlLight,
+                        States.TrackThumb.SCRBS_HOT => SystemBrushes.ControlDark,
+                        States.TrackThumb.SCRBS_PRESSED => SystemBrushes.ControlDarkDark,
+                        _ => SystemBrushes.Control
+                    };
 
                 // case Parts.SBP_LOWERTRACKHORZ:
                 // case Parts.SBP_LOWERTRACKVERT:
@@ -75,16 +65,10 @@ namespace GitUI.Theming
                 // case Parts.SBP_UPPERTRACKVERT:
                 // case Parts.SBP_SIZEBOX:
                 default:
-                    switch ((States.TrackThumb)stateId)
+                    return (States.TrackThumb)stateId switch
                     {
-                        // case States.TrackThumb.SCRBS_NORMAL:
-                        // case States.TrackThumb.SCRBS_HOVER:
-                        // case States.TrackThumb.SCRBS_HOT:
-                        // case States.TrackThumb.SCRBS_PRESSED:
-                        // case States.TrackThumb.SCRBS_DISABLED:
-                        default:
-                            return SystemBrushes.Control;
-                    }
+                        _ => SystemBrushes.Control
+                    };
             }
         }
 

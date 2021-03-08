@@ -512,22 +512,22 @@ namespace GitUI.Script
 
         private static string SelectOne(IList<IGitRef> refs, IScriptHostControl? scriptHostControl)
         {
-            switch (refs.Count)
+            return refs.Count switch
             {
-                case 0: return string.Empty;
-                case 1: return refs[0].Name;
-                default: return AskToSpecify(refs, scriptHostControl);
-            }
+                0 => string.Empty,
+                1 => refs[0].Name,
+                _ => AskToSpecify(refs, scriptHostControl)
+            };
         }
 
         private static string SelectOne(IList<string> strings, IScriptHostControl? scriptHostControl)
         {
-            switch (strings.Count)
+            return strings.Count switch
             {
-                case 0: return string.Empty;
-                case 1: return strings[0];
-                default: return AskToSpecify(strings, scriptHostControl);
-            }
+                0 => string.Empty,
+                1 => strings[0],
+                _ => AskToSpecify(strings, scriptHostControl)
+            };
         }
 
         private static string StripRemoteName(string remoteBranchName)

@@ -43,26 +43,15 @@ namespace GitUI.Theming
             NativeMethods.RECTCLS pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
-            switch ((Parts)partid)
+            return (Parts)partid switch
             {
-                case Parts.LVP_GROUPHEADERLINE:
-                    return RenderGroupHeaderLine(ctx, prect);
-
-                case Parts.LVP_EXPANDBUTTON:
-                    return RenderExpandButton(ctx, (State.ExpandButton)stateid, prect);
-
-                case Parts.LVP_COLLAPSEBUTTON:
-                    return RenderCollapseButton(ctx, (State.CollapseButton)stateid, prect);
-
-                case Parts.LVP_LISTITEM:
-                    return RenderItemBackground(ctx, (State.ListItem)stateid, prect);
-
-                case Parts.LVP_COLUMNDETAIL:
-                    return RenderColumnDetail(ctx, prect);
-
-                default:
-                    return Unhandled;
-            }
+                Parts.LVP_GROUPHEADERLINE => RenderGroupHeaderLine(ctx, prect),
+                Parts.LVP_EXPANDBUTTON => RenderExpandButton(ctx, (State.ExpandButton)stateid, prect),
+                Parts.LVP_COLLAPSEBUTTON => RenderCollapseButton(ctx, (State.CollapseButton)stateid, prect),
+                Parts.LVP_LISTITEM => RenderItemBackground(ctx, (State.ListItem)stateid, prect),
+                Parts.LVP_COLUMNDETAIL => RenderColumnDetail(ctx, prect),
+                _ => Unhandled
+            };
         }
 
         private int RenderColumnDetail(Context ctx, Rectangle prect)

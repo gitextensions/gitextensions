@@ -788,25 +788,14 @@ namespace GitUI.CommandsDialogs
             string remoteSide = GetRemoteSideString();
             string localSide = GetLocalSideString();
 
-            if (baseFileExists && localFileExists && remoteFileExists)
+            conflictDescription.Text = (baseFileExists, localFileExists, remoteFileExists) switch
             {
-                conflictDescription.Text = string.Format(_fileChangeLocallyAndRemotely.Text, localSide, remoteSide);
-            }
-
-            if (!baseFileExists && localFileExists && remoteFileExists)
-            {
-                conflictDescription.Text = string.Format(_fileCreatedLocallyAndRemotely.Text, localSide, remoteSide);
-            }
-
-            if (baseFileExists && !localFileExists && remoteFileExists)
-            {
-                conflictDescription.Text = string.Format(_fileDeletedLocallyAndModifiedRemotely.Text, localSide, remoteSide);
-            }
-
-            if (baseFileExists && localFileExists && !remoteFileExists)
-            {
-                conflictDescription.Text = string.Format(_fileModifiedLocallyAndDeletedRemotely.Text, localSide, remoteSide);
-            }
+                (true, true, true) => string.Format(_fileChangeLocallyAndRemotely.Text, localSide, remoteSide),
+                (false, true, true) => string.Format(_fileCreatedLocallyAndRemotely.Text, localSide, remoteSide),
+                (true, false, true) => string.Format(_fileDeletedLocallyAndModifiedRemotely.Text, localSide, remoteSide),
+                (true, true, false) => string.Format(_fileModifiedLocallyAndDeletedRemotely.Text, localSide, remoteSide),
+                _ => conflictDescription.Text
+            };
 
             baseFileName.Text = baseFileExists ? item.Base.Filename : _noBase.Text;
             localFileName.Text = localFileExists ? item.Local.Filename : _deleted.Text;

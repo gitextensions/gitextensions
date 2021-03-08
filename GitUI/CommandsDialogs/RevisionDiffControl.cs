@@ -269,17 +269,12 @@ namespace GitUI.CommandsDialogs
         /// <returns>A description of the selected parent</returns>
         private string? DescribeRevision(List<GitRevision> parents)
         {
-            if (parents.Count == 1)
+            return parents.Count switch
             {
-                return DescribeRevision(parents.FirstOrDefault()?.ObjectId, 50);
-            }
-
-            if (parents.Count > 1)
-            {
-                return _multipleDescription.Text;
-            }
-
-            return null;
+                1 => DescribeRevision(parents.FirstOrDefault()?.ObjectId, 50),
+                > 1 => _multipleDescription.Text,
+                _ => null
+            };
         }
 
         private bool GetNextPatchFile(bool searchBackward, bool loop, out int fileIndex, out Task loadFileContent)

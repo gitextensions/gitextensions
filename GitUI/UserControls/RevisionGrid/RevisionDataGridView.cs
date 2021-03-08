@@ -712,14 +712,12 @@ namespace GitUI.UserControls.RevisionGrid
                 int currentIndex = HorizontalScrollingOffset;
                 int scrollLines = DpiUtil.Scale(32);
 
-                if (e.Delta > 0)
+                HorizontalScrollingOffset = e.Delta switch
                 {
-                    HorizontalScrollingOffset = Math.Max(0, currentIndex - scrollLines);
-                }
-                else if (e.Delta < 0)
-                {
-                    HorizontalScrollingOffset = currentIndex + scrollLines;
-                }
+                    > 0 => Math.Max(0, currentIndex - scrollLines),
+                    < 0 => currentIndex + scrollLines,
+                    _ => HorizontalScrollingOffset
+                };
             }
             else
             {

@@ -639,18 +639,12 @@ namespace GitUI.Editor.RichTextBoxExtension
         public static string GetUrl(this LinkClickedEventArgs e)
         {
             var v = e.LinkText.Split(new[] { '#' }, 2);
-            if (v.Length == 0)
+            return v.Length switch
             {
-                return "";
-            }
-            else if (v.Length == 1)
-            {
-                return v[0];
-            }
-            else
-            {
-                return v[1];
-            }
+                0 => "",
+                1 => v[0],
+                _ => v[1]
+            };
         }
 
         public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)

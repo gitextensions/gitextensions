@@ -11,16 +11,12 @@ namespace GitUI.Theming
             NativeMethods.RECTCLS pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
-            switch ((Parts)partid)
+            return (Parts)partid switch
             {
-                case Parts.EP_EDITTEXT:
-                    return RenderEditText(ctx, stateid, prect);
-
-                case Parts.EP_EDITBORDER_NOSCROLL:
-                    return RenderEditBorderNoScroll(ctx, stateid, prect);
-            }
-
-            return Unhandled;
+                Parts.EP_EDITTEXT => RenderEditText(ctx, stateid, prect),
+                Parts.EP_EDITBORDER_NOSCROLL => RenderEditBorderNoScroll(ctx, stateid, prect),
+                _ => Unhandled
+            };
         }
 
         public override int GetThemeColor(int ipartid, int istateid, int ipropid, out int pcolor)

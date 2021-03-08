@@ -61,21 +61,14 @@ namespace GitUI
                     int.TryParse(version.ToString().Split('.')[0], out browserVersion);
                 }
 
-                switch (browserVersion)
+                emulationMode = browserVersion switch
                 {
-                    case 7:
-                        emulationMode = 7000; // Webpages containing standards-based !DOCTYPE directives are displayed in IE7 Standards mode.
-                        break;
-                    case 8:
-                        emulationMode = 8000; // Webpages containing standards-based !DOCTYPE directives are displayed in IE8 mode.
-                        break;
-                    case 9:
-                        emulationMode = 9000; // Internet Explorer 9. Webpages containing standards-based !DOCTYPE directives are displayed in IE9 mode.
-                        break;
-                    case 10:
-                        emulationMode = 10000; // Internet Explorer 10.
-                        break;
-                }
+                    7 => 7000, // Webpages containing standards-based !DOCTYPE directives are displayed in IE7 Standards mode.
+                    8 => 8000, // Webpages containing standards-based !DOCTYPE directives are displayed in IE8 mode.
+                    9 => 9000, // Internet Explorer 9. Webpages containing standards-based !DOCTYPE directives are displayed in IE9 mode.
+                    10 => 10000, // Internet Explorer 10.
+                    _ => emulationMode
+                };
 
                 return true;
             }

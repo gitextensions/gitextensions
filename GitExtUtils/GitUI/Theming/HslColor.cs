@@ -137,22 +137,13 @@ namespace GitExtUtils.GitUI.Theming
                     t--;
                 }
 
-                if (t < 1 / 6d)
+                return t switch
                 {
-                    return p + ((q - p) * 6 * t);
-                }
-
-                if (t < 1 / 2d)
-                {
-                    return q;
-                }
-
-                if (t < 2 / 3d)
-                {
-                    return p + ((q - p) * ((2 / 3d) - t) * 6);
-                }
-
-                return p;
+                    < 1 / 6d => p + ((q - p) * 6 * t),
+                    < 1 / 2d => q,
+                    < 2 / 3d => p + ((q - p) * ((2 / 3d) - t) * 6),
+                    _ => p
+                };
             }
         }
 

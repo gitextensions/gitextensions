@@ -13,20 +13,13 @@ namespace GitUI.Theming
             NativeMethods.RECTCLS pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
-            switch ((Parts)partid)
+            return (Parts)partid switch
             {
-                case Parts.TVP_GLYPH:
-                    return RenderGlyph(ctx, (State.Glyph)stateid, prect);
-
-                case Parts.TVP_HOTGLYPH:
-                    return RenderHotTrackedGlyph(ctx, (State.HotGlyph)stateid, prect);
-
-                case Parts.TVP_TREEITEM:
-                    return RenderItemBackground(ctx, (State.Item)stateid, prect);
-
-                default:
-                    return Unhandled;
-            }
+                Parts.TVP_GLYPH => RenderGlyph(ctx, (State.Glyph)stateid, prect),
+                Parts.TVP_HOTGLYPH => RenderHotTrackedGlyph(ctx, (State.HotGlyph)stateid, prect),
+                Parts.TVP_TREEITEM => RenderItemBackground(ctx, (State.Item)stateid, prect),
+                _ => Unhandled
+            };
         }
 
         public override int RenderTextEx(IntPtr htheme, IntPtr hdc, int partid, int stateid,

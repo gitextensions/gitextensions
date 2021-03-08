@@ -53,22 +53,15 @@ namespace GitUI.UserControls
 
             var workTreeCount = allChangedFiles.Count - indexCount;
 
-            if (indexCount == 0 && workTreeCount == 0)
+            return (indexCount, workTreeCount) switch
             {
-                return Clean;
-            }
-
-            if (indexCount == 0)
-            {
-                if (notTrackedCount == workTreeCount)
-                {
-                    return UntrackedOnly;
-                }
-
-                return workTreeCount != workTreeSubmodulesCount ? Dirty : DirtySubmodules;
-            }
-
-            return workTreeCount == 0 ? Staged : Mixed;
+                (0, 0) => Clean,
+                (0, _) when workTreeCount == notTrackedCount => UntrackedOnly,
+                (0, _) when workTreeCount != workTreeSubmodulesCount => Dirty,
+                (0, _) => DirtySubmodules,
+                (_, 0) => Staged,
+                (_, _) => Mixed
+            };
         }
     }
 }

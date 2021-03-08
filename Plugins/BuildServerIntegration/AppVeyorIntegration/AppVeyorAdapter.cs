@@ -239,19 +239,15 @@ namespace AppVeyorIntegration
 
             static string BuildPullRequetUrl(string repositoryType, string repositoryName, string pullRequestId)
             {
-                switch (repositoryType.ToLowerInvariant())
+                return repositoryType.ToLowerInvariant() switch
                 {
-                    case "bitbucket":
-                        return $"https://bitbucket.org/{repositoryName}/pull-requests/{pullRequestId}";
-                    case "github":
-                        return $"https://github.com/{repositoryName}/pull/{pullRequestId}";
-                    case "gitlab":
-                        return $"https://gitlab.com/{repositoryName}/merge_requests/{pullRequestId}";
-                    case "vso":
-                    case "git":
-                    default:
-                        return null;
-                }
+                    "bitbucket" => $"https://bitbucket.org/{repositoryName}/pull-requests/{pullRequestId}",
+                    "github" => $"https://github.com/{repositoryName}/pull/{pullRequestId}",
+                    "gitlab" => $"https://gitlab.com/{repositoryName}/merge_requests/{pullRequestId}",
+                    "vso" => null,
+                    "git" => null,
+                    _ => null
+                };
             }
         }
 
@@ -421,22 +417,16 @@ namespace AppVeyorIntegration
             }
         }
 
-        private BuildInfo.BuildStatus ParseBuildStatus(string statusValue)
+        private static BuildInfo.BuildStatus ParseBuildStatus(string statusValue)
         {
-            switch (statusValue)
+            return statusValue switch
             {
-                case "success":
-                    return BuildInfo.BuildStatus.Success;
-                case "failed":
-                    return BuildInfo.BuildStatus.Failure;
-                case "cancelled":
-                    return BuildInfo.BuildStatus.Stopped;
-                case "queued":
-                case "running":
-                    return BuildInfo.BuildStatus.InProgress;
-                default:
-                    return BuildInfo.BuildStatus.Unknown;
-            }
+                "success" => BuildInfo.BuildStatus.Success,
+                "failed" => BuildInfo.BuildStatus.Failure,
+                "cancelled" => BuildInfo.BuildStatus.Stopped,
+                "queued" or "running" => BuildInfo.BuildStatus.InProgress,
+                _ => BuildInfo.BuildStatus.Unknown
+            };
         }
 
         private Task<Stream> GetStreamAsync(HttpClient httpClient, string restServicePath, CancellationToken cancellationToken)

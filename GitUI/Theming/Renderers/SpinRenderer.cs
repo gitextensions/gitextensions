@@ -12,17 +12,12 @@ namespace GitUI.Theming
             NativeMethods.RECTCLS pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
-            switch ((Parts)partId)
+            return (Parts)partId switch
             {
-                case Parts.SPNP_UP:
-                    return RenderUpButton(ctx, stateId, prect);
-
-                case Parts.SPNP_DOWN:
-                    return RenderDownButton(ctx, stateId, prect);
-
-                default:
-                    return Unhandled;
-            }
+                Parts.SPNP_UP => RenderUpButton(ctx, stateId, prect),
+                Parts.SPNP_DOWN => RenderDownButton(ctx, stateId, prect),
+                _ => Unhandled
+            };
         }
 
         private static int RenderDownButton(Context ctx, int stateId, Rectangle prect)
@@ -45,70 +40,42 @@ namespace GitUI.Theming
 
         private static Brush GetBackBrush(State.Up stateId)
         {
-            switch (stateId)
+            return stateId switch
             {
-                case State.Up.UPS_HOT:
-                    return SystemBrushes.ControlDark;
-
-                case State.Up.UPS_PRESSED:
-                    return SystemBrushes.ControlDarkDark;
-
-                // case States.Up.UPS_NORMAL:
-                // case States.Up.UPS_DISABLED:
-                default:
-                    return SystemBrushes.Control;
-            }
+                State.Up.UPS_HOT => SystemBrushes.ControlDark,
+                State.Up.UPS_PRESSED => SystemBrushes.ControlDarkDark,
+                _ => SystemBrushes.Control
+            };
         }
 
         private static Brush GetBackBrush(State.Down stateId)
         {
-            switch (stateId)
+            return stateId switch
             {
-                case State.Down.DNS_HOT:
-                    return SystemBrushes.ControlDark;
-
-                case State.Down.DNS_PRESSED:
-                    return SystemBrushes.ControlDarkDark;
-
-                // case States.Down.DNS_NORMAL:
-                // case States.Down.DNS_DISABLED:
-                default:
-                    return SystemBrushes.Control;
-            }
+                State.Down.DNS_HOT => SystemBrushes.ControlDark,
+                State.Down.DNS_PRESSED => SystemBrushes.ControlDarkDark,
+                _ => SystemBrushes.Control
+            };
         }
 
         private static Color GetForeColor(State.Up stateId)
         {
-            switch (stateId)
+            return stateId switch
             {
-                case State.Up.UPS_PRESSED:
-                    return SystemColors.Control;
-
-                case State.Up.UPS_DISABLED:
-                    return SystemColors.ControlDark;
-
-                // case States.Up.UPS_NORMAL:
-                // case States.Up.UPS_HOT:
-                default:
-                    return SystemColors.ControlDarkDark;
-            }
+                State.Up.UPS_PRESSED => SystemColors.Control,
+                State.Up.UPS_DISABLED => SystemColors.ControlDark,
+                _ => SystemColors.ControlDarkDark
+            };
         }
 
         private static Color GetForeColor(State.Down stateId)
         {
-            switch (stateId)
+            return stateId switch
             {
-                case State.Down.DNS_PRESSED:
-                    return SystemColors.Control;
-
-                case State.Down.DNS_DISABLED:
-                    return SystemColors.ControlDark;
-
-                // case States.Down.DNS_NORMAL:
-                // case States.Down.DNS_HOT:
-                default:
-                    return SystemColors.ControlDarkDark;
-            }
+                State.Down.DNS_PRESSED => SystemColors.Control,
+                State.Down.DNS_DISABLED => SystemColors.ControlDark,
+                _ => SystemColors.ControlDarkDark
+            };
         }
 
         private static Point[] GetArrowPolygon(Rectangle prect, bool down)

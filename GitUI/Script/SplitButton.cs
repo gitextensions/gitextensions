@@ -758,31 +758,21 @@ namespace GitUI.Script
             int x = 0;
             int y = 0;
 
-            if (align is (ContentAlignment.BottomLeft or ContentAlignment.MiddleLeft or ContentAlignment.TopLeft))
+            x = align switch
             {
-                x = outer.X;
-            }
-            else if (align is (ContentAlignment.BottomCenter or ContentAlignment.MiddleCenter or ContentAlignment.TopCenter))
-            {
-                x = Math.Max(outer.X + ((outer.Width - inner.Width) / 2), outer.Left);
-            }
-            else if (align is (ContentAlignment.BottomRight or ContentAlignment.MiddleRight or ContentAlignment.TopRight))
-            {
-                x = outer.Right - inner.Width;
-            }
+                (ContentAlignment.BottomLeft or ContentAlignment.MiddleLeft or ContentAlignment.TopLeft) => outer.X,
+                (ContentAlignment.BottomCenter or ContentAlignment.MiddleCenter or ContentAlignment.TopCenter) => Math.Max(outer.X + ((outer.Width - inner.Width) / 2), outer.Left),
+                (ContentAlignment.BottomRight or ContentAlignment.MiddleRight or ContentAlignment.TopRight) => outer.Right - inner.Width,
+                _ => x
+            };
 
-            if (align is (ContentAlignment.TopCenter or ContentAlignment.TopLeft or ContentAlignment.TopRight))
+            y = align switch
             {
-                y = outer.Y;
-            }
-            else if (align is (ContentAlignment.MiddleCenter or ContentAlignment.MiddleLeft or ContentAlignment.MiddleRight))
-            {
-                y = outer.Y + ((outer.Height - inner.Height) / 2);
-            }
-            else if (align is (ContentAlignment.BottomCenter or ContentAlignment.BottomRight or ContentAlignment.BottomLeft))
-            {
-                y = outer.Bottom - inner.Height;
-            }
+                (ContentAlignment.TopCenter or ContentAlignment.TopLeft or ContentAlignment.TopRight) => outer.Y,
+                (ContentAlignment.MiddleCenter or ContentAlignment.MiddleLeft or ContentAlignment.MiddleRight) => outer.Y + ((outer.Height - inner.Height) / 2),
+                (ContentAlignment.BottomCenter or ContentAlignment.BottomRight or ContentAlignment.BottomLeft) => outer.Bottom - inner.Height,
+                _ => y
+            };
 
             return new Rectangle(x, y, Math.Min(inner.Width, outer.Width), Math.Min(inner.Height, outer.Height));
         }

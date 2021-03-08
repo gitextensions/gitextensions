@@ -347,16 +347,13 @@ namespace GitCommands.Patches
                 diff = diff.Combine("\n", line.Text);
             }
 
-            // stage no new line at the end only if last +- line is selected
-            if (PostContext.Count == 0 && (selectedLastAddedLine || isIndex || isWholeFile))
+            diff = PostContext.Count switch
             {
-                diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
-            }
-
-            if (PostContext.Count > 0)
-            {
-                diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
-            }
+                // stage no new line at the end only if last +- line is selected
+                0 when selectedLastAddedLine || isIndex || isWholeFile => diff.Combine("\n", IsNoNewLineAtTheEnd),
+                > 0 => diff.Combine("\n", WasNoNewLineAtTheEnd),
+                _ => diff
+            };
 
             return diff;
         }
@@ -586,19 +583,12 @@ namespace GitCommands.Patches
 
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
-            string eol;
-            if (gitEol == "crlf")
+            string eol = gitEol switch
             {
-                eol = "\r\n";
-            }
-            else if (gitEol == "native")
-            {
-                eol = Environment.NewLine;
-            }
-            else
-            {
-                eol = "\n";
-            }
+                "crlf" => "\r\n",
+                "native" => Environment.NewLine,
+                _ => "\n"
+            };
 
             int eolLength = eol.Length;
 
