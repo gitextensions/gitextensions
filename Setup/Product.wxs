@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:VSExtension="http://schemas.microsoft.com/wix/VSExtension">
   <?include Config.wxi?>
   <Product Id="*" UpgradeCode="$(var.UpgradeCode)" Name="$(var.ProductName) $(var.Version)" Manufacturer="$(var.Manufacturer)" Version="$(var.NumericVersion)" Language="1033">
@@ -781,24 +781,6 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="TranslationsDir">
-      <Component Id="Czech.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.gif" />
-      </Component>
-      <Component Id="Czech.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.xlf" />
-      </Component>
-      <Component Id="Czech.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Czech.Plugins.xlf" />
-      </Component>
-      <Component Id="Dutch.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.gif" />
-      </Component>
-      <Component Id="Dutch.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.xlf" />
-      </Component>
-      <Component Id="Dutch.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.Plugins.xlf" />
-      </Component>
       <Component Id="English.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\English.gif" />
       </Component>
@@ -807,15 +789,6 @@
       </Component>
       <Component Id="English.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\English.Plugins.xlf" />
-      </Component>
-      <Component Id="French.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\French.gif" />
-      </Component>
-      <Component Id="French.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\French.xlf" />
-      </Component>
-      <Component Id="French.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\French.Plugins.xlf" />
       </Component>
       <Component Id="German.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\German.gif" />
@@ -835,41 +808,14 @@
       <Component Id="Japanese.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.Plugins.xlf" />
       </Component>
-      <Component Id="Polish.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.gif" />
+      <Component Id="Korean.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.gif" />
       </Component>
-      <Component Id="Polish.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.xlf" />
+      <Component Id="Korean.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.xlf" />
       </Component>
-      <Component Id="Polish.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.Plugins.xlf" />
-      </Component>
-      <Component Id="Russian.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.gif" />
-      </Component>
-      <Component Id="Russian.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.xlf" />
-      </Component>
-      <Component Id="Russian.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.Plugins.xlf" />
-      </Component>
-      <Component Id="SimplifiedChinese.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.gif" />
-      </Component>
-      <Component Id="SimplifiedChinese.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.xlf" />
-      </Component>
-      <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.Plugins.xlf" />
-      </Component>
-      <Component Id="Spanish.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.gif" />
-      </Component>
-      <Component Id="Spanish.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.xlf" />
-      </Component>
-      <Component Id="Spanish.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.Plugins.xlf" />
+      <Component Id="Korean.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.Plugins.xlf" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PuttyDir">
@@ -1730,21 +1676,6 @@
         </Feature>
       </Feature>
       <Feature Id="Translation" Title="Translations" Level="1">
-        <Feature Id="Czech" Title="Czech" Level="1">
-          <ComponentRef Id="Czech.xlf" />
-          <ComponentRef Id="Czech.Plugins.xlf" />
-          <ComponentRef Id="Czech.gif" />
-        </Feature>
-        <Feature Id="Dutch" Title="Dutch" Level="1">
-          <ComponentRef Id="Dutch.xlf" />
-          <ComponentRef Id="Dutch.Plugins.xlf" />
-          <ComponentRef Id="Dutch.gif" />
-        </Feature>
-        <Feature Id="French" Title="French" Level="1">
-          <ComponentRef Id="French.xlf" />
-          <ComponentRef Id="French.Plugins.xlf" />
-          <ComponentRef Id="French.gif" />
-        </Feature>
         <Feature Id="German" Title="German" Level="1">
           <ComponentRef Id="German.xlf" />
           <ComponentRef Id="German.Plugins.xlf" />
@@ -1755,25 +1686,10 @@
           <ComponentRef Id="Japanese.Plugins.xlf" />
           <ComponentRef Id="Japanese.gif" />
         </Feature>
-        <Feature Id="Polish" Title="Polish" Level="1">
-          <ComponentRef Id="Polish.xlf" />
-          <ComponentRef Id="Polish.Plugins.xlf" />
-          <ComponentRef Id="Polish.gif" />
-        </Feature>
-        <Feature Id="Russian" Title="Russian" Level="1">
-          <ComponentRef Id="Russian.xlf" />
-          <ComponentRef Id="Russian.Plugins.xlf" />
-          <ComponentRef Id="Russian.gif" />
-        </Feature>
-        <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
-          <ComponentRef Id="SimplifiedChinese.xlf" />
-          <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
-          <ComponentRef Id="SimplifiedChinese.gif" />
-        </Feature>
-        <Feature Id="Spanish" Title="Spanish" Level="1">
-          <ComponentRef Id="Spanish.xlf" />
-          <ComponentRef Id="Spanish.Plugins.xlf" />
-          <ComponentRef Id="Spanish.gif" />
+        <Feature Id="Korean" Title="Korean" Level="1">
+          <ComponentRef Id="Korean.xlf" />
+          <ComponentRef Id="Korean.Plugins.xlf" />
+          <ComponentRef Id="Korean.gif" />
         </Feature>
       </Feature>
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">

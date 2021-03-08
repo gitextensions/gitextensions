@@ -156,8 +156,8 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="AvatarProvider.Text">
-        <source>Gravatar</source>
-        <target>아바타 설정</target>
+        <source>Default</source>
+        <target>기본값</target>
         
       </trans-unit>
       <trans-unit id="ClearImageCache.Text">
@@ -180,6 +180,15 @@ This action will be performed without warning while checking out branch.</source
         <target>작성자 날짜별로 정렬하면 리비전 그래프의 렌더링이 지연될 수 있습니다.</target>
         
       </trans-unit>
+      <trans-unit id="_avatarProviderTooltip.Text">
+        <source>The avatar provider defines the source for user-defined avatar images.
+The &quot;Default&quot; provider uses GitHub and Gravatar,
+the &quot;Custom&quot; provider allows you to set custom provider URLs and
+&quot;None&quot; disables user-defined avatars.
+
+Click this info icon for more details.</source>
+        
+      </trans-unit>
       <trans-unit id="_noDictFile.Text">
         <source>None</source>
         <target>없음</target>
@@ -191,11 +200,9 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="_noImageServiceTooltip.Text">
-        <source>A default image, if an email address has no matching Gravatar image.
-See http://en.gravatar.com/site/implement/images#default-image for more details.</source>
-        <target>이메일 주소에 그라바타 이미지가 없는 경우, 기본 이미지가 제공됩니다.
-자세한 내용은 아래 주소를 참조하십시오.
-http://en.gravatar.com/site/implement/images#default-image</target>
+        <source>A default image, if the provider has no image for the email address.
+
+Click this info icon for more details.</source>
         
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -268,6 +275,10 @@ http://en.gravatar.com/site/implement/images#default-image</target>
         <target>임시 저장(며칠)</target>
         
       </trans-unit>
+      <trans-unit id="lblCustomAvatarTemplate.Text">
+        <source>Custom avatar template</source>
+        
+      </trans-unit>
       <trans-unit id="lblLanguage.Text">
         <source>Language (restart required)</source>
         <target>언어 (재시작 필요)</target>
@@ -314,7 +325,7 @@ http://en.gravatar.com/site/implement/images#default-image</target>
     <body>
       <trans-unit id="avatarProviderToolStripMenuItem.Text">
         <source>Avatar provider</source>
-        <target>아바타 이미지 생성자</target>
+        <target>아바타 이미지 생성 프로그램</target>
         
       </trans-unit>
       <trans-unit id="clearImagecacheToolStripMenuItem.Text">
@@ -524,7 +535,7 @@ A valid GitHub account is required</source>
       </trans-unit>
       <trans-unit id="nameColumnHeader.Text">
         <source>Name</source>
-        <target>ID</target>
+        <target>이름</target>
         
       </trans-unit>
       <trans-unit id="previewLabel.Text">
@@ -578,7 +589,7 @@ A valid GitHub account is required</source>
       </trans-unit>
       <trans-unit id="checkBoxEnableBuildServerIntegration.Text">
         <source>Enable build server integration</source>
-        <target>빌드 서버 기반을 황성화 여부</target>
+        <target>빌드 서버 기반을 황성화</target>
         
       </trans-unit>
       <trans-unit id="checkBoxShowBuildResultPage.Text">
@@ -1523,6 +1534,15 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>'구문 강조 표시'  설정 저장하기</target>
         
       </trans-unit>
+      <trans-unit id="chkShowAllCustomDiffTools.Text">
+        <source>Show all available difftools</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowAllCustomDiffTools.ToolTipText">
+        <source>Show all configured difftools in a dropdown.
+The primary difftool can still be selected by clicking the main menu entry.</source>
+        
+      </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target>브라우저 기록에서 모든 부모 노드에 대한 파일 차이 표시</target>
@@ -1582,7 +1602,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_deleteMenuItemText.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_dictionaryText.Text">
@@ -1739,7 +1759,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="ignoreWhiteSpaces.ToolTipText">
         <source>Ignore changes in amount of whitespace</source>
-        <target>공백의 양 변경 무시</target>
+        <target>공백의 수 변경 무시</target>
         
       </trans-unit>
       <trans-unit id="ignoreWhitespaceAtEol.ToolTipText">
@@ -2064,7 +2084,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="columnHeaderMyReposIsFork.Text">
         <source>Is fork</source>
-        <target>Fork가 맞나요?</target>
+        <target>Fork 인가요?</target>
         
       </trans-unit>
       <trans-unit id="columnHeaderMyReposIsPrivate.Text">
@@ -2074,7 +2094,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="columnHeaderMyReposName.Text">
         <source>Name</source>
-        <target>ID</target>
+        <target>이름</target>
         
       </trans-unit>
       <trans-unit id="columnHeaderSearchForks.Text">
@@ -2089,7 +2109,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="columnHeaderSearchName.Text">
         <source>Name</source>
-        <target>ID</target>
+        <target>이름</target>
         
       </trans-unit>
       <trans-unit id="columnHeaderSearchOwner.Text">
@@ -2481,7 +2501,8 @@ You will have push access. {2}</source>
       <trans-unit id="label2.Text">
         <source>Choose another
 revision:</source>
-        <target>리비전 선택:</target>
+        <target>리비전 변경
+리비전:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
@@ -2594,7 +2615,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="CommitInfoTabPage.Text">
         <source>Commit</source>
-        <target>커밋 정보</target>
+        <target>커밋</target>
         
       </trans-unit>
       <trans-unit id="DiffTabPage.Text">
@@ -3188,7 +3209,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.Text">
         <source>Stash</source>
-        <target>Stash 보관</target>
+        <target>Stash</target>
         
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.ToolTipText">
@@ -3252,7 +3273,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="toolStripLabel1.Text">
         <source>Branches:</source>
-        <target>브랜치:</target>
+        <target>Branches:</target>
         
       </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
@@ -4068,7 +4089,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteSelectedFilesCaption.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_deleteUntrackedFiles.Text">
@@ -4414,11 +4435,6 @@ You can unset the template:
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
         <target>폴더에 표시</target>
-        
-      </trans-unit>
-      <trans-unit id="openDiffMenuItem.Text">
-        <source>Open with difftool</source>
-        <target>파일비교툴로 열기</target>
         
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
@@ -4937,12 +4953,12 @@ You can unset the template:
     <body>
       <trans-unit id="$this.Text">
         <source>Delete branch</source>
-        <target>브랜치 제거</target>
+        <target>브런치 삭제</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="ForceDelete.Text">
@@ -5046,7 +5062,7 @@ in order to recover the lost commits.</source>
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="deleteTag.Text">
@@ -6109,7 +6125,7 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       </trans-unit>
       <trans-unit id="Delete.HeaderText">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="IsDeleted.HeaderText">
@@ -6413,7 +6429,7 @@ subtree
       </trans-unit>
       <trans-unit id="AutoStash.Text">
         <source>Auto stash</source>
-        <target>자동 Stash</target>
+        <target>Auto stash</target>
         
       </trans-unit>
       <trans-unit id="Fetch.Text">
@@ -7601,7 +7617,7 @@ Push / Pull 할 수 있는 기본 저장소로 설정하시겠습니까?</target
       </trans-unit>
       <trans-unit id="_questionDeleteRemoteCaption.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_remoteBranchDataError.Text">
@@ -7633,7 +7649,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Name</source>
-        <target>ID</target>
+        <target>이름</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -8737,7 +8753,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Name</source>
-        <target>ID</target>
+        <target>이름</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -8767,7 +8783,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>ID</target>
+        <target>이름</target>
         
       </trans-unit>
     </body>
@@ -9252,9 +9268,17 @@ Context menu for additional operations</source>
         <target>파일 선택</target>
         
       </trans-unit>
+      <trans-unit id="btnCommitTemplateBrowse.AccessibleName">
+        <source>Browse Path to commit template</source>
+        
+      </trans-unit>
       <trans-unit id="btnCommitTemplateBrowse.Text">
         <source>Browse</source>
         <target>찾기</target>
+        
+      </trans-unit>
+      <trans-unit id="btnDiffToolBrowse.AccessibleName">
+        <source>Browse Difftool command</source>
         
       </trans-unit>
       <trans-unit id="btnDiffToolBrowse.Text">
@@ -9262,14 +9286,26 @@ Context menu for additional operations</source>
         <target>찾기</target>
         
       </trans-unit>
+      <trans-unit id="btnDiffToolCommandSuggest.AccessibleName">
+        <source>Suggest Difftool command</source>
+        
+      </trans-unit>
       <trans-unit id="btnDiffToolCommandSuggest.Text">
         <source>Suggest</source>
         <target>제안하기</target>
         
       </trans-unit>
+      <trans-unit id="btnMergeToolBrowse.AccessibleName">
+        <source>Browse Path to mergetool</source>
+        
+      </trans-unit>
       <trans-unit id="btnMergeToolBrowse.Text">
         <source>Browse</source>
         <target>찾기</target>
+        
+      </trans-unit>
+      <trans-unit id="btnMergeToolCommandSuggest.AccessibleName">
+        <source>Suggest Mergetool command</source>
         
       </trans-unit>
       <trans-unit id="btnMergeToolCommandSuggest.Text">
@@ -9794,7 +9830,7 @@ help</source>
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="Merge.Text">
@@ -9940,7 +9976,7 @@ This will just checkout on the submodule the commit determined by the superproje
     <body>
       <trans-unit id="FileName.HeaderText">
         <source>Name</source>
-        <target>ID</target>
+        <target>이름</target>
         
       </trans-unit>
       <trans-unit id="Status.HeaderText">
@@ -10328,6 +10364,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnMoveDown.ToolTipText">
         <source>Move node down</source>
+        <target>노드를 아래로</target>
         
       </trans-unit>
       <trans-unit id="mnubtnMoveUp.Text">
@@ -10337,14 +10374,17 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnMoveUp.ToolTipText">
         <source>Move node up</source>
+        <target>노드를 위로</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenGESubmodule.Text">
         <source>O&amp;pen</source>
+        <target>열기 (&amp;O)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenGESubmodule.ToolTipText">
         <source>Open selected submodule in a new instance</source>
+        <target>선택된 서브모듈을 새 인스턴스로 열기</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
@@ -10354,6 +10394,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.ToolTipText">
         <source>Open selected submodule</source>
+        <target>선택된 서브모듈 열기</target>
         
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
@@ -10373,6 +10414,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.Text">
         <source>&amp;Reset</source>
+        <target>리셋 (&amp;R)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.ToolTipText">
@@ -10465,12 +10507,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="_deleteSelectedFiles.Text">
         <source>Are you sure you want to delete the selected file(s)?</source>
-        <target>선택된 파일을 삭제하시겠습니까?</target>
+        <target>선택된 파일(들)을 삭제하시겠습니까?</target>
         
       </trans-unit>
       <trans-unit id="_deleteSelectedFilesCaption.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
@@ -10596,11 +10638,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
         <target>폴더에 표시</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithCustomDifftoolToolStripMenuItem.Text">
-        <source>First -&gt; Second...</source>
-        <target>First -&gt; Second...</target>
         
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
@@ -11141,7 +11178,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_strLoading.Text">
         <source>Loading</source>
-        <target>로딩 중</target>
+        <target>로딩</target>
         
       </trans-unit>
       <trans-unit id="archiveRevisionToolStripMenuItem.Text">
@@ -11183,6 +11220,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="compareToolStripMenuItem.Text">
         <source>Com&amp;pare</source>
+        <target>비교 (&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="compareWithCurrentBranchToolStripMenuItem.Text">
@@ -11204,14 +11242,17 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="deleteBranchToolStripMenuItem.Text">
         <source>&amp;Delete branch...</source>
+        <target>브런치 삭제 (&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">
         <source>De&amp;lete tag...</source>
+        <target>태그 제거 (&amp;L)</target>
         
       </trans-unit>
       <trans-unit id="editCommitToolStripMenuItem.Text">
         <source>&amp;Edit commit</source>
+        <target>커밋 편집 (&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
@@ -11224,6 +11265,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="manipulateCommitToolStripMenuItem.Text">
         <source>&amp;Advanced</source>
+        <target>고급설정(&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="markRevisionAsBadToolStripMenuItem.Text">
@@ -11242,6 +11284,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
         <source>&amp;Navigate</source>
+        <target>탐색(&amp;N)</target>
         
       </trans-unit>
       <trans-unit id="openBuildReportToolStripMenuItem.Text">
@@ -11267,42 +11310,52 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem.Text">
         <source>&amp;Selected commit</source>
+        <target>커밋 선택 (&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="rebaseWithAdvOptionsToolStripMenuItem.Text">
         <source>Selected commit with &amp;advanced options...</source>
+        <target>고급 옵션으로 선택된 커밋...(&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="renameBranchToolStripMenuItem.Text">
         <source>R&amp;ename branch...</source>
+        <target>브랜치 이름 변경 (&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="resetAnotherBranchToHereToolStripMenuItem.Text">
         <source>Reset an&amp;other branch to here...</source>
+        <target>다른 브랜치를 여기로 리셋 (&amp;O)</target>
         
       </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
         <source>Reset c&amp;urrent branch to here...</source>
+        <target>현재 브랜치를 여기로 리셋 (&amp;U)</target>
         
       </trans-unit>
       <trans-unit id="revertCommitToolStripMenuItem.Text">
         <source>Re&amp;vert this commit...</source>
+        <target>이 커밋 되돌리기 (&amp;V)</target>
         
       </trans-unit>
       <trans-unit id="rewordCommitToolStripMenuItem.Text">
         <source>&amp;Reword commit</source>
+        <target>커밋 메세지 변경 (&amp;R)</target>
         
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run &amp;script</source>
+        <target>스크립트 실행하기 (&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="selectAsBaseToolStripMenuItem.Text">
         <source>Select &amp;as BASE to compare</source>
+        <target>비교할 BASE로 선택 (&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
         <source>Create a &amp;squash commit...</source>
+        <target>Squash 커밋 생성... (&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
@@ -11391,7 +11444,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Name</source>
-        <target>ID</target>
+        <target>이름</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -11810,6 +11863,7 @@ OpenSSH가 사용될 경우, 명령실행창(cmd)이 표시됩니다!
     <body>
       <trans-unit id="_argumentsText.Text">
         <source>Arguments</source>
+        <target>인자값</target>
         
       </trans-unit>
       <trans-unit id="_authorDateText.Text">
@@ -11860,6 +11914,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_buttonCloseApp.Text">
         <source>Close application</source>
+        <target>응용 닫기</target>
         
       </trans-unit>
       <trans-unit id="_buttonContinue.Text">
@@ -11879,6 +11934,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_buttonReportBug.Text">
         <source>Report bug!</source>
+        <target>버그를 리포트!</target>
         
       </trans-unit>
       <trans-unit id="_cancelText.Text">
@@ -11888,6 +11944,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_captionFailedExecute.Text">
         <source>Failed to execute</source>
+        <target>실행 실패</target>
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
@@ -12005,6 +12062,10 @@ Select this commit to populate the full message.</source>
         <target>선택한 항목은 올바른 git 저장소가 아닙니다.</target>
         
       </trans-unit>
+      <trans-unit id="_disableMenuItem.Text">
+        <source>Disable this dropdown</source>
+        
+      </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
         <target>에러</target>
@@ -12067,6 +12128,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_instructionOperationFailed.Text">
         <source>Operation failed</source>
+        <target>작업 실패</target>
         
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
@@ -12156,7 +12218,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>{0:Parent|Parents}</source>
-        <target>{0:부모노드 또는 여러 부모노드들}</target>
+        <target>{0:부모노드|부모노드들}</target>
         
       </trans-unit>
       <trans-unit id="_remote.Text">
@@ -12181,6 +12243,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_reportBugText.Text">
         <source>If you think this was caused by Git Extensions, you can report a bug for the team to investigate.</source>
+        <target>Git Extensions에 의해서 오류가 발생했다고 생각되면 버그를 리포트 해 주십시오. </target>
         
       </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
@@ -12205,10 +12268,12 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_scriptConfirmExecuteText.Text">
         <source>Do you want to execute script</source>
+        <target>스크립트를 실행하겠습니까?</target>
         
       </trans-unit>
       <trans-unit id="_scriptErrorCantFindText.Text">
         <source>Unable to find script</source>
+        <target>스크립트를 찾을 수 없음</target>
         
       </trans-unit>
       <trans-unit id="_scriptErrorFailedToExecuteText.Text">
@@ -12218,14 +12283,17 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_scriptErrorOptionWithoutRevisionGridText.Text">
         <source>option is only supported when invoked from the revision grid</source>
+        <target>이 옵션은 리비젼 그리드에서 실행한 경우에만 지원됩니다. </target>
         
       </trans-unit>
       <trans-unit id="_scriptErrorOptionWithoutRevisionText.Text">
         <source>A valid revision is required to substitute the argument options</source>
+        <target>인자 옵션을 변경하기 위해서는 유효한 리비젼이 필요합니다. </target>
         
       </trans-unit>
       <trans-unit id="_scriptText.Text">
         <source>Script</source>
+        <target>스크립트</target>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">

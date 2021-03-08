@@ -1300,7 +1300,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>無視するディレクトリ (EndsWith)</target>
+        <target>無視するディレクトリ (後方一致)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
