@@ -12,6 +12,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
+using GitUI.NBugReports;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -329,10 +330,17 @@ See the changes in the commit form.");
                 !string.IsNullOrWhiteSpace(gitItem.FileName))
             {
                 var fileName = gitItem.FileName.SubstringAfterLast('/').SubstringAfterLast('\\');
-
                 fileName = (Path.GetTempPath() + fileName).ToNativePath();
-                Module.SaveBlobAs(fileName, gitItem.Guid);
-                return fileName;
+
+                try
+                {
+                    Module.SaveBlobAs(fileName, gitItem.Guid);
+                    return fileName;
+                }
+                catch (Exception ex)
+                {
+                    ThrowUserExternalOperationException(ex.Message, command: null, arguments: gitItem.FileName, ex);
+                }
             }
 
             return null;
@@ -736,7 +744,14 @@ See the changes in the commit form.");
                 fileDialog.Filter = $@"{_saveFileFilterCurrentFormat.Text}(*{extension})|*{extension}| {_saveFileFilterAllFiles.Text} (*.*)|*.*";
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    Module.SaveBlobAs(fileDialog.FileName, gitItem.Guid);
+                    try
+                    {
+                        Module.SaveBlobAs(fileDialog.FileName, gitItem.Guid);
+                    }
+                    catch (Exception ex)
+                    {
+                        ThrowUserExternalOperationException(ex.Message, command: null, arguments: gitItem.FileName, ex);
+                    }
                 }
             }
         }
