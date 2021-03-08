@@ -87,7 +87,7 @@
     <value>Andréj Telle, Oliver Friedrich</value>
   </data>
   <data name="Coders" xml:space="preserve">
-    <value>Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
+    <value>Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
 Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington,
 Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick,
 Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl,
@@ -100,7 +100,7 @@ nitoyon, iamxail, Basewq, Edward Brey, Sergey, Nils Fenner, Burim Kameri, Philli
 Alex Ford, Arne Janbu, Dan Rigby, pravic, Linquize, Clinton Daniel, Reto Schoening, mabako, Tal952, Aviad Pineles,
 Markus Stein, Marcus Bauer, Nay, Joe Phillips, Cameron Will, Donatas Mačiūnas, Jesse Bartley, Dave Brotherstone,
 Pieter van Ginkel, australiensun, Vincent Gravade, Hiroyuki Sato, Isaac Devine, Konstantin Tenzin, Stefan Laut,
-Jeromy Johnson, Kate von Roeder, Tor Arvid Lund, jberger, kunigaku, Jay Asbury, Philippe Miossec, Pedro Pombeiro,
+Jeromy Johnson, Kate von Roeder, Tor Arvid Lund, jberger, kunigaku, Jay Asbury, Pedro Pombeiro,
 Vincent Meurisse, itori, Greg Sohl, Daniel Bradley, Robert Schroeder, Birunthan Mohanathas, Christopher Buxenstein,
 Gordon Tyler, Dean Herbert, Jacob Berger, slaut, Gorbach Alexey, Michael Naumov, Zbigniew Lis, Desterly, gor,
 Kyle Nicholls, Olmo del Corral, TheGeoist, Cahyadi Hendrawan, Christian Schuster, Christopher R. Wedman, Dandalf,
@@ -120,21 +120,24 @@ Katelyn Gigante, Levente Koncz, Lucas Trzesniewski, Lysogorskiy Aleksey, Matt Si
 Oleksandr Redko, Ondrej Novak, Orgad Shaneh, RaMMicHaeL, Rui Lopes, Sebastien ROBERT, Tao Gomez Gil,
 agabden, crypto_rsa, gpongelli, ierof, leak, liiws, mserfli, palver123, Alex Povar, Andrey Helldar,
 David Warner, Duncan Ogilvie, Eric Wieser, Evgeny Morozov, Fabrizio Mancin, Fisher Tsai, Glen Nicol,
-Hans F. Nordhaug, IEVin, Ilya Mokin, Ivan Vinogradov, Johan Henkens, Markas Gedminas, Michael Seibt, 
-Michael Werle, Mihai Pantea, Mohamed Hamdy, Nikolay Hidalgo Diaz, NikolayHD, Nikos Polideropoulos,
+Hans F. Nordhaug, IEVin, Ilya Mokin, Ivan Vinogradov, Johan Henkens, Markas Gedminas, 
+Michael Werle, Mihai Pantea, Mohamed Hamdy, Nikos Polideropoulos,
 Ori Ashual, Paul McSweeney, SamuelLongchamps, Szali Szali, Thomas Butz, Thomas Levesque, Vladimir Shimanskiy,
 aivanov-oneinc, chun, oriash93, pmme, szaliszali, Ákos Szabados, Antonio Maiorano, Christian Dreier,
 Lee Richardson, Logan Higinbotham, Marek Fišera, Mark Bell, Peter Hultqvist, anaplian, olegivo, rbares,
 tank09, yiabiten, Dzmitry Mikhalap, Matthijs ter Woord, NN, Noah Lerner, Novak Ondrej, RSchwoerer,
 Andrei.Matsiashkoits, Carl-Hugo Marcotte, Corey Smith, Curtis Carter, DCFerg, Dmitry Zhelnin,
-DmitryZhelnin, Fabian Schmied, Ignacio Errico, Ivan Grek, Ivan Sterkhov, Jan Rysavy, Leo Rohr,
+DmitryZhelnin, Fabian Schmied, Ignacio Errico, Ivan Sterkhov, Jan Rysavy, Leo Rohr,
 Marcin Wachulski, Marko, Martin Steinisch, Onur Safak, Oskari Leppäaho, Yaroslav Veremenko, olegl,
 realkompot, seshonaar, Crystal Hammer, Jonathon Aroutsidis, Karsten, KarstenRa, asfarley, cryham,
 manuelspezzani, Emmanuel Counasse, Igor Melnikov, Ivan Kochurkin, phdussud, Andrew Cartwright, Hieu Do,
 Karsten Rathlev, Kasper B. Graversen, Le Garrec Vincent, Manish Kungwani, R0nd, Ralph J Smart, Roland Gneev,
 Ruslan Lekhman, manishkungwani, rickaas, Aaron Sherber, Aleksandr Kostikov, Alexei Skachykhin, Chris Oliver,
 Giorgi Tsouvaltzis, Itamar Shoham, Jörg Pichler, LE GARREC Vincent, MarkJ74, Miloš Havlíček, Nick Bulleid,
-dfev77, dimfish, Jean-Jacques Lafay, bstecisa</value>
+dfev77, dimfish, Jean-Jacques Lafay, bstecisa, Adam Shakhabov, Artem Eliseev, Borja Serrano, Brian Freeman,
+Bruno Colaço, Christian Wischenbart, Evgeny Vrublevsky, George Tisdelle, GintasS, Guy Barker (CELA),
+Jurjen Biewenga, Kevin Yockey, Matyáš Bach, Mihaly Hobor, Otis Hix, Ricardo K, Vincent Legarrec,
+blitzmann, keco2, n.idalgo, wischi, NikolayHD</value>
   </data>
   <data name="FileStatusRemoved" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\FileStatusRemoved.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -143,7 +146,8 @@ dfev77, dimfish, Jean-Jacques Lafay, bstecisa</value>
     <value>../Resources/ChangeLog.md;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="Team" xml:space="preserve">
-    <value>Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, Igor Velikorossov aka RussKie, Gerhard Olsson, Drew Noakes</value>
+    <value>Igor Velikorossov aka RussKie, Gerhard Olsson, Michael Seibt, Nikolay Hidalgo Diaz aka NikolayXHD, Philippe Miossec, Ivan Grek, Drew Noakes
+    </value>
   </data>
   <data name="information" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\information.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
