@@ -95,9 +95,12 @@ namespace GitCommandsTests.Git
             _file.Exists(_indexLockFile).Returns(true);
             _file.When(x => x.Delete(_indexLockFile)).Throw(new DivideByZeroException("boom"));
 
-            var ex = Assert.Throws<FileDeleteException>(() => _manager.UnlockIndex(false));
+            var ex = Assert.Throws<ExternalOperationException>(() => _manager.UnlockIndex(false));
 
-            ex.FileName.Should().Be(_indexLockFile);
+            ex.Operation.Should().Be("Delete");
+            ex.Object.Should().Be(_indexLockFile);
+            ex.Arguments.Should().BeNull();
+            ex.Directory.Should().BeEmpty();
             _module.DidNotReceive().GetSubmodulesLocalPaths();
             _file.Received(1).Delete(Arg.Any<string>());
             _file.Received(1).Delete(_indexLockFile);

@@ -87,9 +87,9 @@ namespace GitExtensions.UITests.Script
             var ex = ((Action)(() => ExecuteRunScript(null, _module, invalidScriptKey, uiCommands: null, revisionGrid: null))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Unable to find script: '{invalidScriptKey}'");
-            ex.And.Command.Should().BeNull();
+            ex.And.Operation.Should().BeNull();
             ex.And.Arguments.Should().BeNull();
-            ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
+            ex.And.Directory.Should().Be(_module.WorkingDir);
         }
 
         [Test]
@@ -149,9 +149,9 @@ namespace GitExtensions.UITests.Script
             var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
-            ex.And.Command.Should().Be(_exampleScript.Command);
+            ex.And.Operation.Should().Be(_exampleScript.Command);
             ex.And.Arguments.Should().Be(_exampleScript.Arguments);
-            ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
+            ex.And.Directory.Should().Be(_module.WorkingDir);
         }
 
         [Test]
@@ -163,9 +163,9 @@ namespace GitExtensions.UITests.Script
             var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, uiCommands: null, revisionGrid: null))).Should()
                 .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\n'sHash' option is only supported when invoked from the revision grid");
-            ex.And.Command.Should().Be(_exampleScript.Command);
+            ex.And.Operation.Should().Be(_exampleScript.Command);
             ex.And.Arguments.Should().Be(_exampleScript.Arguments);
-            ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
+            ex.And.Directory.Should().Be(_module.WorkingDir);
         }
 
         [Test]
@@ -183,9 +183,9 @@ namespace GitExtensions.UITests.Script
                 var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl))).Should()
                     .Throw<UserExternalOperationException>();
                 ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
-                ex.And.Command.Should().Be(_exampleScript.Command);
+                ex.And.Operation.Should().Be(_exampleScript.Command);
                 ex.And.Arguments.Should().Be(_exampleScript.Arguments);
-                ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
+                ex.And.Directory.Should().Be(_module.WorkingDir);
             });
         }
 

@@ -114,7 +114,7 @@ namespace GitCommands
                     Dispose();
 
                     _logOperation.LogProcessEnd(ex);
-                    throw new ExternalOperationException(fileName, arguments, workDir, ex);
+                    throw new ExternalOperationException(operation: "Start", obj: fileName, arguments, workDir, ex);
                 }
             }
 
