@@ -405,9 +405,9 @@ namespace GitUI.Editor
         /// <param name="item">The gitItem to present.</param>
         /// <param name="text">The patch text.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
-        public async Task ViewPatchAsync(FileStatusItem item, string text, Action? openWithDifftool)
+        public Task ViewPatchAsync(FileStatusItem item, string text, Action? openWithDifftool)
         {
-            await ShowOrDeferAsync(
+            return ShowOrDeferAsync(
                text.Length,
                () =>
                {
@@ -433,11 +433,11 @@ namespace GitUI.Editor
                 () => ViewPrivateAsync(fileName, text, openWithDifftool, ViewMode.FixedDiff));
         }
 
-        public async Task ViewFixedPatchAsync(string fileName, string text, Action? openWithDifftool = null)
-            => await ViewPrivateAsync(fileName, text, openWithDifftool, ViewMode.FixedDiff);
+        public Task ViewFixedPatchAsync(string fileName, string text, Action? openWithDifftool = null)
+            => ViewPrivateAsync(fileName, text, openWithDifftool, ViewMode.FixedDiff);
 
-        public async Task ViewRangeDiffAsync(string fileName, string text)
-            => await ViewPrivateAsync(fileName, text, openWithDifftool: null, ViewMode.RangeDiff);
+        public Task ViewRangeDiffAsync(string fileName, string text)
+            => ViewPrivateAsync(fileName, text, openWithDifftool: null, ViewMode.RangeDiff);
 
         public void ViewText(string? fileName,
             string text,
@@ -447,10 +447,10 @@ namespace GitUI.Editor
                 () => ViewTextAsync(fileName, text, openWithDifftool));
         }
 
-        public async Task ViewTextAsync(string? fileName, string text,
+        public Task ViewTextAsync(string? fileName, string text,
             Action? openWithDifftool = null, bool checkGitAttributes = false)
         {
-            await ShowOrDeferAsync(
+            return ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
@@ -740,9 +740,9 @@ namespace GitUI.Editor
             return viewMode is (ViewMode.Diff or ViewMode.FixedDiff or ViewMode.RangeDiff);
         }
 
-        private async Task ViewPrivateAsync(string? fileName, string text, Action? openWithDifftool, ViewMode viewMode = ViewMode.Diff)
+        private Task ViewPrivateAsync(string? fileName, string text, Action? openWithDifftool, ViewMode viewMode = ViewMode.Diff)
         {
-            await ShowOrDeferAsync(
+            return ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
