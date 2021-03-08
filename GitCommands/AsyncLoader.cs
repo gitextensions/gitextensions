@@ -30,20 +30,20 @@ namespace GitCommands
         public async Task LoadAsync(Action<CancellationToken> loadContent, Action onLoaded)
         {
             await LoadAsync(
-                (token) =>
+                token =>
                 {
                     loadContent(token);
-                    return string.Empty;
+                    return (object?)null;
                 },
                 _ => onLoaded());
         }
 
-        public Task<T?> LoadAsync<T>(Func<T> loadContent, Action<T?> onLoaded)
+        public Task<T?> LoadAsync<T>(Func<T> loadContent, Action<T> onLoaded)
         {
             return LoadAsync(token => loadContent(), onLoaded);
         }
 
-        public async Task<T?> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T?> onLoaded)
+        public async Task<T?> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
             if (Volatile.Read(ref _disposed) != 0)
             {
@@ -73,13 +73,11 @@ namespace GitCommands
                 // Bail early if cancelled, returning default value for type
                 if (token.IsCancellationRequested)
                 {
-                    result = default;
+                    return default;
                 }
-                else
-                {
-                    // Load content
-                    result = loadContent(token);
-                }
+
+                // Load content
+                result = loadContent(token);
             }
             catch (Exception e)
             {

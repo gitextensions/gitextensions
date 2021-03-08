@@ -175,14 +175,8 @@ namespace GitUI.CommandsDialogs
             View.ScrollToTop();
         }
 
-        private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus>? gitItemStatuses)
+        private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
-            if (gitItemStatuses is null)
-            {
-                // cancelled
-                return;
-            }
-
             GitStash gitStash = (GitStash)Stashes.SelectedItem;
             if (gitStash == _currentWorkingDirStashItem)
             {

@@ -826,7 +826,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private void ComputeUnstagedFiles(Action<IReadOnlyList<GitItemStatus>?> onComputed, bool doAsync)
+        private void ComputeUnstagedFiles(Action<IReadOnlyList<GitItemStatus>> onComputed, bool doAsync)
         {
             IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
             {
@@ -855,12 +855,6 @@ namespace GitUI.CommandsDialogs
         {
             ComputeUnstagedFiles(allChangedFiles =>
                 {
-                    if (allChangedFiles is null)
-                    {
-                        // cancelled
-                        return;
-                    }
-
                     if (allChangedFiles.Count > 0)
                     {
                         LoadUnstagedOutput(allChangedFiles);
@@ -982,14 +976,8 @@ namespace GitUI.CommandsDialogs
         ///   This method is passed in to the SetTextCallBack delegate
         ///   to set the Text property of textBox1.
         /// </summary>
-        private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus>? allChangedFiles)
+        private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
-            if (allChangedFiles is null)
-            {
-                // cancelled
-                return;
-            }
-
             var lastSelection = _currentFilesList is not null
                 ? _currentSelection ?? Array.Empty<GitItemStatus>()
                 : Array.Empty<GitItemStatus>();

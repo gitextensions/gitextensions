@@ -407,15 +407,9 @@ namespace GitUI.CommandsDialogs
 
         private readonly AsyncLoader _branchListLoader = new();
 
-        private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>>? branchList)
+        private void UpdateBranches(RemoteActionResult<IReadOnlyList<IGitRef>> branchList)
         {
             Cursor = Cursors.Default;
-
-            if (branchList is null)
-            {
-                // cancelled
-                return;
-            }
 
             if (branchList.HostKeyFail)
             {

@@ -83,12 +83,6 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 },
                 hostedRemotes =>
                 {
-                    if (hostedRemotes is null)
-                    {
-                        // cancelled
-                        return;
-                    }
-
                     _hostedRemotes = hostedRemotes;
                     _selectHostedRepoCB.Items.Clear();
                     foreach (var hostedRepo in _hostedRemotes)

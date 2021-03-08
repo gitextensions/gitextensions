@@ -73,14 +73,8 @@ namespace GitUI.CommandsDialogs
             set => txtSearchBox.BorderFocusedColor = value;
         }
 
-        private void SearchForCandidates(IEnumerable<T>? candidates)
+        private void SearchForCandidates(IEnumerable<T> candidates)
         {
-            if (candidates is null)
-            {
-                // cancelled
-                return;
-            }
-
             var selectionStart = txtSearchBox.SelectionStart;
             var selectionLength = txtSearchBox.SelectionLength;
             listBoxSearchResult.BeginUpdate();
