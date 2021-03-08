@@ -794,7 +794,7 @@ namespace GitUI.CommandsDialogs
                 (false, true, true) => string.Format(_fileCreatedLocallyAndRemotely.Text, localSide, remoteSide),
                 (true, false, true) => string.Format(_fileDeletedLocallyAndModifiedRemotely.Text, localSide, remoteSide),
                 (true, true, false) => string.Format(_fileModifiedLocallyAndDeletedRemotely.Text, localSide, remoteSide),
-                _ => null
+                _ => conflictDescription.Text
             };
 
             baseFileName.Text = baseFileExists ? item.Base.Filename : _noBase.Text;
