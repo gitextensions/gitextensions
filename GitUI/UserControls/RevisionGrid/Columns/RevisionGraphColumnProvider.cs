@@ -218,7 +218,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     DrawItem();
 
-                    // Reset graphics options
+                    // Restore graphics options
                     g.Clip = oldClip;
                     g.SmoothingMode = oldSmoothingMode;
 
