@@ -1,12 +1,6 @@
 <Project>
   <Import Project="..\..\Directory.Build.props" />
 
-  <ItemGroup>
-    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-  </ItemGroup>
-
   <!--
       Direct plugins artifacts to be placed under GitExtensions/Plugins folder
     -->
