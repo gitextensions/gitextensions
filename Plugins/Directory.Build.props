@@ -3,7 +3,6 @@
   <Import Project="..\Directory.Build.props" />
  
   <PropertyGroup>
-    <CodeAnalysisRuleSet>..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>

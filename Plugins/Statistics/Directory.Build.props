@@ -1,10 +1,6 @@
 <Project>
   <Import Project="..\..\Directory.Build.props" />
 
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>..\..\..\GitExtensions.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="..\..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
