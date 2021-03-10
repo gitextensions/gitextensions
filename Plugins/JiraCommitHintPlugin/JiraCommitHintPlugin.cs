@@ -11,6 +11,7 @@ using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.UserControls;
 using JiraCommitHintPlugin.Properties;
+using Microsoft;
 using NString;
 using ResourceManager;
 
@@ -29,8 +30,8 @@ namespace JiraCommitHintPlugin
         private static readonly TranslationString EmptyQueryResultCaption = new("First Task Preview");
 
         private const string DefaultFormat = "{Key} {Summary}";
-        private Jira _jira;
-        private string _query;
+        private Jira? _jira;
+        private string? _query;
         private string _stringTemplate = DefaultFormat;
         private readonly BoolSetting _enabledSettings = new("Jira hint plugin enabled", false);
         private readonly StringSetting _urlSettings = new("Jira URL", @"https://jira.atlassian.com");
@@ -40,9 +41,9 @@ namespace JiraCommitHintPlugin
         private readonly StringSetting _jqlQuerySettings = new("JDL Query", "JQL Query", "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC", true);
         private readonly StringSetting _stringTemplateSetting = new("Jira Message Template", "Message Template", DefaultFormat, true);
         private readonly string _jiraFields = $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}";
-        private IGitModule _gitModule;
-        private JiraTaskDTO[] _currentMessages;
-        private Button _btnPreview;
+        private IGitModule? _gitModule;
+        private JiraTaskDTO[]? _currentMessages;
+        private Button? _btnPreview;
 
         public JiraCommitHintPlugin() : base(true)
         {
@@ -61,7 +62,7 @@ namespace JiraCommitHintPlugin
                 return false;
             }
 
-            if (_jira is null)
+            if (_jira is null || _query is null)
             {
                 return false;
             }
@@ -118,6 +119,7 @@ namespace JiraCommitHintPlugin
 
         private void QueryHelperLink_Click(object sender, EventArgs e)
         {
+            Validates.NotNull(_urlSettings.CustomControl);
             if (string.IsNullOrWhiteSpace(_urlSettings.CustomControl.Text))
             {
                 MessageBox.Show(null, InvalidUrlMessage.Text, InvalidUrlCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -136,8 +138,15 @@ namespace JiraCommitHintPlugin
 
         private void btnPreviewClick(object sender, EventArgs eventArgs)
         {
+            Validates.NotNull(_btnPreview);
+
             try
             {
+                Validates.NotNull(_urlSettings.CustomControl);
+                Validates.NotNull(_credentialsSettings.CustomControl);
+                Validates.NotNull(_jqlQuerySettings.CustomControl);
+                Validates.NotNull(_stringTemplateSetting.CustomControl);
+
                 _btnPreview.Enabled = false;
 
                 var localJira = Jira.CreateRestClient(_urlSettings.CustomControl.Text, _credentialsSettings.CustomControl.UserName,
@@ -223,7 +232,7 @@ namespace JiraCommitHintPlugin
                 return;
             }
 
-            if (_jira?.Issues is null)
+            if (_jira?.Issues is null || _query is null)
             {
                 return;
             }

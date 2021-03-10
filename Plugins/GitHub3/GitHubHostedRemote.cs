@@ -4,7 +4,7 @@ namespace GitHub3
 {
     internal class GitHubHostedRemote : IHostedRemote
     {
-        private GitHubRepo _repo;
+        private GitHubRepo? _repo;
 
         public GitHubHostedRemote(string name, string owner, string remoteRepositoryName, string url)
         {

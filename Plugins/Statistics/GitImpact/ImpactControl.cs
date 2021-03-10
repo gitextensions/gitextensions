@@ -11,7 +11,7 @@ using GitUIPluginInterfaces;
 
 namespace GitExtensions.Plugins.GitImpact
 {
-    public class ImpactControl : UserControl
+    public partial class ImpactControl : UserControl
     {
         private static readonly int BlockWidth = DpiUtil.Scale(60);
         private static readonly int TransitionWidth = DpiUtil.Scale(50);
@@ -21,30 +21,28 @@ namespace GitExtensions.Plugins.GitImpact
 
         private readonly object _dataLock = new();
 
-        private ImpactLoader _impactLoader;
+        private ImpactLoader? _impactLoader;
 
         // <Author, <Commits, Added Lines, Deleted Lines>>
-        private Dictionary<string, ImpactLoader.DataPoint> _authors;
+        private readonly Dictionary<string, ImpactLoader.DataPoint> _authors = new();
 
         // <First weekday of commit date, <Author, <Commits, Added Lines, Deleted Lines>>>
-        private SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>> _impact;
+        private SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>> _impact = new();
 
         // List of authors that determines the drawing order
-        private List<string> _authorStack;
+        private readonly List<string> _authorStack = new();
 
         // The paths for each author
-        private Dictionary<string, GraphicsPath> _paths;
+        private readonly Dictionary<string, GraphicsPath> _paths = new();
 
         // The brush for each author
-        private Dictionary<string, SolidBrush> _brushes;
+        private readonly Dictionary<string, SolidBrush> _brushes = new();
 
         // The changed-lines-labels for each author
-        private Dictionary<string, List<(PointF point, int size)>> _lineLabels;
+        private readonly Dictionary<string, List<(PointF point, int size)>> _lineLabels = new();
 
         // The week-labels
-        private List<(PointF point, DateTime date)> _weekLabels;
-
-        private HScrollBar _scrollBar;
+        private readonly List<(PointF point, DateTime date)> _weekLabels = new();
 
         public ImpactControl()
         {
@@ -74,14 +72,14 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                _authors = new Dictionary<string, ImpactLoader.DataPoint>();
-                _impact = new SortedDictionary<DateTime, Dictionary<string, ImpactLoader.DataPoint>>();
+                _authors.Clear();
+                _impact.Clear();
 
-                _authorStack = new List<string>();
-                _paths = new Dictionary<string, GraphicsPath>();
-                _brushes = new Dictionary<string, SolidBrush>();
-                _lineLabels = new Dictionary<string, List<(PointF, int)>>();
-                _weekLabels = new List<(PointF, DateTime)>();
+                _authorStack.Clear();
+                _paths.Clear();
+                _brushes.Clear();
+                _lineLabels.Clear();
+                _weekLabels.Clear();
             }
         }
 
@@ -175,29 +173,6 @@ namespace GitExtensions.Plugins.GitImpact
                 Clear();
                 UpdateData();
             }
-        }
-
-        private void InitializeComponent()
-        {
-            SuspendLayout();
-
-            _scrollBar = new HScrollBar
-            {
-                Dock = DockStyle.Bottom,
-                LargeChange = 0,
-                Location = new Point(0, 133),
-                Maximum = 0,
-                Name = "_scrollBar",
-                SmallChange = 0,
-                TabIndex = 0
-            };
-            _scrollBar.Scroll += OnScroll;
-
-            Controls.Add(_scrollBar);
-            Name = "ImpactControl";
-            Paint += OnPaint;
-            Resize += OnResize;
-            ResumeLayout(false);
         }
 
         private int GetGraphWidth()

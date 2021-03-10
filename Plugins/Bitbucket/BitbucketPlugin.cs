@@ -26,7 +26,7 @@ namespace Bitbucket
 
         public override bool Execute(GitUIEventArgs args)
         {
-            Settings settings = Bitbucket.Settings.Parse(args.GitModule, Settings, this);
+            Settings? settings = Bitbucket.Settings.Parse(args.GitModule, Settings, this);
             if (settings is null)
             {
                 MessageBox.Show(args.OwnerForm,

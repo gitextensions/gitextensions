@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
 
 namespace AzureDevOpsIntegration.Settings
 {
@@ -71,7 +70,7 @@ namespace AzureDevOpsIntegration.Settings
         /// <returns>
         /// A tuple that contains whether a matching pattern could be found and the string that resulted from the transformation.
         /// </returns>
-        private static (bool success, string result) TryTransformString(string value, Dictionary<Regex, Func<Match, string>> lookupDictionary)
+        private static (bool success, string? result) TryTransformString(string? value, Dictionary<Regex, Func<Match, string>> lookupDictionary)
         {
             if (value is null)
             {
@@ -102,7 +101,7 @@ namespace AzureDevOpsIntegration.Settings
         /// <returns>
         /// A tuple that contains whether a Azure DevOps / TFS project could be recognized from the given url and the resulting home page url of the project.
         /// </returns>
-        public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrl([CanBeNull] string remoteUrl)
+        public static (bool success, string? projectUrl) TryDetectProjectFromRemoteUrl(string? remoteUrl)
         {
             if (remoteUrl is null && !BuildServerSettingsHelper.IsUrlValid(remoteUrl))
             {
@@ -121,7 +120,7 @@ namespace AzureDevOpsIntegration.Settings
         /// <returns>
         /// A tuple that contains whether a Azure DevOps / TFS project could be recognized from the given list and the resulting home page url of the project.
         /// </returns>
-        public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrls([ItemCanBeNull] IEnumerable<string> remoteUrls)
+        public static (bool success, string? projectUrl) TryDetectProjectFromRemoteUrls(IEnumerable<string?> remoteUrls)
         {
             return remoteUrls.Select(TryDetectProjectFromRemoteUrl).FirstOrDefault(r => r.success);
         }
@@ -131,7 +130,7 @@ namespace AzureDevOpsIntegration.Settings
         /// whether <paramref name="projectUrl"/> actually points to a Azure DevOps / TFS instance.
         /// </summary>
         /// <remarks>
-        /// TryGetTokenManagementUrlFromProject will happlily convert anything that somewhat looks like a project url
+        /// TryGetTokenManagementUrlFromProject will happily convert anything that somewhat looks like a project url
         /// in favor of better availability for on premise installations of TFS
         /// </remarks>
         /// <param name="projectUrl">
@@ -140,7 +139,7 @@ namespace AzureDevOpsIntegration.Settings
         /// <returns>
         /// A tuple that contains whether the token management url could be recognized from the given project url and the resulting url.
         /// </returns>
-        public static (bool success, string tokenManagementUrl) TryGetTokenManagementUrlFromProject(string projectUrl)
+        public static (bool success, string? tokenManagementUrl) TryGetTokenManagementUrlFromProject(string? projectUrl)
         {
             if (projectUrl is null && !BuildServerSettingsHelper.IsUrlValid(projectUrl))
             {
@@ -159,7 +158,7 @@ namespace AzureDevOpsIntegration.Settings
         /// <returns>
         /// A tuple that contains whether the project and build id could be detected from the given url, as well as both informations.
         /// </returns>
-        public static (bool success, string projectUrl, int buildId) TryParseBuildUrl(string buildUrl)
+        public static (bool success, string? projectUrl, int buildId) TryParseBuildUrl(string? buildUrl)
         {
             if (buildUrl is null && !BuildServerSettingsHelper.IsUrlValid(buildUrl))
             {

@@ -21,7 +21,7 @@ namespace Gource
             InitializeComplete();
             PathToGource = pathToGource;
             GitUIArgs = gitUIArgs;
-            GitWorkingDir = gitUIArgs?.GitModule.WorkingDir;
+            GitWorkingDir = gitUIArgs.GitModule.WorkingDir;
             GourceArguments = gourceArguments;
 
             WorkingDir.Text = GitWorkingDir;
@@ -33,7 +33,7 @@ namespace Gource
 
         public string PathToGource { get; set; }
 
-        public string GitWorkingDir { get; set; }
+        public string? GitWorkingDir { get; set; }
 
         public string GourceArguments { get; set; }
 
@@ -116,7 +116,7 @@ namespace Gource
                     var image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
                     var filename = author.name + ".png";
 
-                    if (filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+                    if (image is null || filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
                     {
                         return;
                     }

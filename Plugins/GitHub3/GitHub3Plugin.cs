@@ -11,15 +11,16 @@ using GitCommands.Remotes;
 using GitHub3.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
+using Microsoft;
 using ResourceManager;
 
 namespace GitHub3
 {
     internal static class GitHubLoginInfo
     {
-        private static string _username;
+        private static string? _username;
 
-        public static string Username
+        public static string? Username
         {
             get
             {
@@ -80,12 +81,12 @@ namespace GitHub3
         public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
         public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
 
-        internal static GitHub3Plugin Instance;
-        internal static Client _gitHub;
+        internal static GitHub3Plugin Instance = null!;
+        internal static Client? _gitHub;
         internal static Client GitHub => _gitHub ??= new(Instance.GitHubApiEndpoint);
 
-        private IGitUICommands _currentGitUiCommands;
-        private IReadOnlyList<IHostedRemote> _hostedRemotesForModule;
+        private IGitUICommands? _currentGitUiCommands;
+        private IReadOnlyList<IHostedRemote>? _hostedRemotesForModule;
 
         public GitHub3Plugin() : base(true)
         {
@@ -152,10 +153,12 @@ namespace GitHub3
 
         public bool ConfigurationOk => !string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken);
 
-        public string OwnerLogin => GitHub.getCurrentUser()?.Login;
+        public string? OwnerLogin => GitHub.getCurrentUser()?.Login;
 
-        public async Task<string> AddUpstreamRemoteAsync()
+        public async Task<string?> AddUpstreamRemoteAsync()
         {
+            Validates.NotNull(_currentGitUiCommands);
+
             var gitModule = _currentGitUiCommands.GitModule;
             var hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
             if (hostedRemote is null)

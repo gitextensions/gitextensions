@@ -14,7 +14,7 @@ namespace GitCommands
         public string Text { get; set; }
         public Image? Icon { get; set; }
 
-        public CommitTemplateItem(string name, string text, Image icon)
+        public CommitTemplateItem(string name, string text, Image? icon)
         {
             Name = name;
             Text = text;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -27,7 +28,7 @@ namespace GitFlow
 
         public bool IsRefreshNeeded { get; set; }
 
-        private string CurrentBranch { get; set; }
+        private string? CurrentBranch { get; set; }
 
         private enum Branch
         {
@@ -66,10 +67,7 @@ namespace GitFlow
             lblPrefixManage.Text = string.Empty;
             ttGitFlow.SetToolTip(lnkGitFlow, _gitFlowTooltip.Text);
 
-            if (_gitUiCommands is not null)
-            {
-                Init();
-            }
+            Init();
         }
 
         private void Init()
@@ -105,7 +103,7 @@ namespace GitFlow
             }
         }
 
-        private static bool TryExtractBranchFromHead(string currentRef, out string branchType, out string branchName)
+        private static bool TryExtractBranchFromHead(string currentRef, [NotNullWhen(returnValue: true)] out string? branchType, [NotNullWhen(returnValue: true)] out string? branchName)
         {
             foreach (Branch branch in Enum.GetValues(typeof(Branch)))
             {

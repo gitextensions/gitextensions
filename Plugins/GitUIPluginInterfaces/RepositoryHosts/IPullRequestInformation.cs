@@ -32,14 +32,14 @@ namespace GitUIPluginInterfaces.RepositoryHosts
 
     public interface IDiscussionEntry
     {
-        string Author { get; }
+        string? Author { get; }
         DateTime Created { get; }
-        string Body { get; }
+        string? Body { get; }
     }
 
     public interface ICommitDiscussionEntry : IDiscussionEntry
     {
-        string Sha { get; }
+        string? Sha { get; }
     }
 
     public interface IPullRequestDiscussion

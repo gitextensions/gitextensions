@@ -1,21 +1,19 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using JetBrains.Annotations;
 
 namespace ReleaseNotesGenerator
 {
     public interface IGitLogLineParser
     {
-        LogLine Parse(string line);
-        IEnumerable<LogLine> Parse(IEnumerable<string> lines);
+        LogLine? Parse(string line);
+        IEnumerable<LogLine> Parse(IEnumerable<string>? lines);
     }
 
     public sealed class GitLogLineParser : IGitLogLineParser
     {
         private static readonly Regex LogLineRegex = new("^([a-zA-Z0-9]{1,})@(.*)", RegexOptions.Compiled);
 
-        [CanBeNull]
-        public LogLine Parse(string line)
+        public LogLine? Parse(string line)
         {
             if (string.IsNullOrWhiteSpace(line))
             {
@@ -32,7 +30,7 @@ namespace ReleaseNotesGenerator
             return logLine;
         }
 
-        public IEnumerable<LogLine> Parse(IEnumerable<string> lines)
+        public IEnumerable<LogLine> Parse(IEnumerable<string>? lines)
         {
             var resultList = new List<LogLine>();
             if (lines is null)
@@ -40,7 +38,7 @@ namespace ReleaseNotesGenerator
                 return resultList;
             }
 
-            LogLine logLineCurrent = null;
+            LogLine? logLineCurrent = null;
             foreach (string line in lines)
             {
                 var logLine1 = Parse(line);

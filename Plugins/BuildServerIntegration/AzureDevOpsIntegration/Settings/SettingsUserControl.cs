@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
+using Microsoft;
 using ResourceManager;
 
 namespace AzureDevOpsIntegration.Settings
@@ -24,8 +24,8 @@ namespace AzureDevOpsIntegration.Settings
         private readonly TranslationString _infoNoApiTokenMessage = new("Unable to retrieve build definition information without API token. Field will be left blank.");
         private readonly TranslationString _failToExtractDataFromClipboardCaption = new("Could not extract data");
 
-        private string _defaultProjectName;
-        [ItemCanBeNull] private IEnumerable<string> _remotes;
+        private string? _defaultProjectName;
+        private IEnumerable<string?>? _remotes;
 
         private bool _isUpdating;
         private IntegrationSettings _currentSettings = new();
@@ -39,9 +39,9 @@ namespace AzureDevOpsIntegration.Settings
             UpdateView();
         }
 
-        private string TokenManagementUrl => ProjectUrlHelper.TryGetTokenManagementUrlFromProject(_currentSettings.ProjectUrl).tokenManagementUrl;
+        private string? TokenManagementUrl => ProjectUrlHelper.TryGetTokenManagementUrlFromProject(_currentSettings.ProjectUrl).tokenManagementUrl;
 
-        public void Initialize(string defaultProjectName, IEnumerable<string> remotes)
+        public void Initialize(string defaultProjectName, IEnumerable<string?> remotes)
         {
             _defaultProjectName = defaultProjectName;
             _remotes = remotes;
@@ -97,10 +97,12 @@ namespace AzureDevOpsIntegration.Settings
 
             if (string.IsNullOrWhiteSpace(settings.ProjectUrl))
             {
+                Validates.NotNull(_remotes);
+
                 var (vstsOrTfsProjectFound, autoDetectedProjectUrl) = ProjectUrlHelper.TryDetectProjectFromRemoteUrls(_remotes);
                 if (vstsOrTfsProjectFound)
                 {
-                    settings.ProjectUrl = autoDetectedProjectUrl;
+                    settings.ProjectUrl = autoDetectedProjectUrl!;
                 }
             }
 
@@ -135,6 +137,8 @@ namespace AzureDevOpsIntegration.Settings
                 var (success, projectUrl, buildId) = ProjectUrlHelper.TryParseBuildUrl(buildUrl);
                 if (success)
                 {
+                    Validates.NotNull(projectUrl);
+
                     string buildDefinitionName;
                     if (!string.IsNullOrWhiteSpace(_currentSettings.ApiToken))
                     {

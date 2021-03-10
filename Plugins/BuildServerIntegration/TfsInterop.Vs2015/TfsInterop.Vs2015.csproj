@@ -1,6 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Include="..\..\..\GitExtUtils\Annotations.cs" Link="Annotations.cs" />
+    <Compile Include="..\..\..\GitExtUtils\Validates.cs" Link="Validates.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.TeamFoundation.Build.Client" Version="11.0.60610.1" />
     <PackageReference Include="Microsoft.TeamFoundation.Client-final" Version="12.0.21005.1" />
     <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="15.112.1" />

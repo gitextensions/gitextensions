@@ -12,6 +12,7 @@ using AzureDevOpsIntegration.Settings;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
@@ -39,19 +40,19 @@ namespace AzureDevOpsIntegration
         public const string PluginName = "Azure DevOps and Team Foundation Server (since TFS2015)";
 
         private bool _firstCallForFinishedBuildsWasIgnored = false;
-        private IBuildServerWatcher _buildServerWatcher;
-        private IntegrationSettings _settings;
-        private ApiClient _apiClient;
+        private IBuildServerWatcher? _buildServerWatcher;
+        private IntegrationSettings? _settings;
+        private ApiClient? _apiClient;
         private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
-        private JoinableTask<string> _buildDefinitionsTask;
-        private string _projectUrl;
-        private string _buildDefinitions;
+        private JoinableTask<string?>? _buildDefinitionsTask;
+        private string? _projectUrl;
+        private string? _buildDefinitions;
 
         // Static variable used to convey the data between the different instances of the class but that doesn't necessarily require synchronisation because:
         // * there is only one instance at every given time (link to the revision grid and recreated on revision grid refresh)
         // * data is created by the first instance and used in readonly by the later instances
-        private static CacheAzureDevOps CacheAzureDevOps = null;
-        private static string ProjectOnErrorKey = null;
+        private static CacheAzureDevOps? CacheAzureDevOps = null;
+        private static string? ProjectOnErrorKey = null;
 
         private readonly TranslationString _buildIntegrationErrorCaption = new("Azure DevOps error");
         private readonly TranslationString _badTokenErrorMessage = new(@"The personal access token is invalid or has expired. Update it in the 'Build server integration' settings.
@@ -63,10 +64,17 @@ As a consequence, the build server integration has been disabled for this sessio
 
 Detail of the error:");
 
-        private Action _openSettings;
-        private string CacheKey => _projectUrl + "|" + _settings.BuildDefinitionFilter;
+        private Action? _openSettings;
+        private string CacheKey
+        {
+            get
+            {
+                Validates.NotNull(_settings);
+                return _projectUrl + "|" + _settings.BuildDefinitionFilter;
+            }
+        }
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher is not null)
             {
@@ -141,6 +149,8 @@ Detail of the error:");
                 {
                     try
                     {
+                        Validates.NotNull(_buildDefinitionsTask);
+
                         _buildDefinitions = await _buildDefinitionsTask.JoinAsync();
 
                         if (_buildDefinitions is null)
@@ -178,6 +188,7 @@ Detail of the error:");
                             if (result == TaskDialogResult.Yes)
                             {
                                 ProjectOnErrorKey = null;
+                                Validates.NotNull(_openSettings);
                                 _openSettings.Invoke();
                             }
                         }
@@ -273,6 +284,8 @@ Detail of the error:");
                 }
             }
 
+            Validates.NotNull(buildDetail.SourceVersion);
+
             var buildInfo = new BuildInfo
             {
                 Id = buildDetail.BuildNumber,
@@ -281,14 +294,14 @@ Detail of the error:");
                 Description = duration + " " + buildDetail.BuildNumber,
                 Tooltip = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + Environment.NewLine + duration + Environment.NewLine + buildDetail.BuildNumber,
                 CommitHashList = new[] { ObjectId.Parse(buildDetail.SourceVersion) },
-                Url = buildDetail._links.Web.Href,
+                Url = buildDetail._links?.Web?.Href,
                 ShowInBuildReportTab = false
             };
 
             return buildInfo;
         }
 
-        private static BuildInfo.BuildStatus MapResult(string status)
+        private static BuildInfo.BuildStatus MapResult(string? status)
         {
             return status switch
             {
@@ -321,6 +334,5 @@ Detail of the error:");
             public IEnumerable<Build> FilterRunningBuilds(IList<Build> runningBuilds) => AzureDevOpsAdapter.FilterRunningBuilds(runningBuilds);
         }
         #endregion
-
     }
 }

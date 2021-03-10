@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitUI;
+using Microsoft;
 using Microsoft.TeamFoundation.Build.Client;
 using Microsoft.TeamFoundation.Build.WebApi;
 using Microsoft.TeamFoundation.Client;
@@ -17,27 +18,27 @@ namespace TfsInterop
 {
     public class BuildInfo : IBuild
     {
-        public string Id { get; set; }
-        public string Label { get; set; }
+        public string? Id { get; set; }
+        public string? Label { get; set; }
         public DateTime StartDate { get; set; }
         public BuildStatus Status { get; set; }
         public bool IsFinished { get; set; }
-        public string Description { get; set; }
-        public string Revision { get; set; }
-        public string Url { get; set; }
+        public string? Description { get; set; }
+        public string? Revision { get; set; }
+        public string? Url { get; set; }
     }
 
     public class TfsHelper : ITfsHelper
     {
-        private DefinitionReference[] _buildDefinitions2015;
-        private IBuildDefinition[] _buildDefinitions;
-        private string _hostname;
+        private DefinitionReference[]? _buildDefinitions2015;
+        private IBuildDefinition[]? _buildDefinitions;
+        private string? _hostname;
         private bool _isWebServer;
-        private string _urlPrefix;
-        private IBuildServer _buildServer;
-        private TfsTeamProjectCollection _tfsCollection;
-        private BuildHttpClient _buildClient;
-        private string _projectName;
+        private string? _urlPrefix;
+        private IBuildServer? _buildServer;
+        private TfsTeamProjectCollection? _tfsCollection;
+        private BuildHttpClient? _buildClient;
+        private string? _projectName;
 
         public bool IsDependencyOk()
         {
@@ -52,7 +53,7 @@ namespace TfsInterop
             }
         }
 
-        public void ConnectToTfsServer(string hostname, string teamCollection, string projectName, Regex buildDefinitionNameFilter = null)
+        public void ConnectToTfsServer(string hostname, string teamCollection, string projectName, Regex? buildDefinitionNameFilter = null)
         {
             _hostname = hostname;
 
@@ -80,7 +81,7 @@ namespace TfsInterop
 
                 if (buildDefinitions.Length != 0)
                 {
-                    _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
+                    _buildDefinitions = buildDefinitionNameFilter == null || string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
                         ? buildDefinitions
                         : buildDefinitions.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).ToArray();
                 }
@@ -95,9 +96,13 @@ namespace TfsInterop
 
         public IReadOnlyList<IBuild> QueryBuilds(DateTime? sinceDate, bool? running)
         {
+            Validates.NotNull(_buildDefinitions);
+
             var result = new List<IBuild>();
             foreach (var buildDefinition in _buildDefinitions)
             {
+                Validates.NotNull(_buildServer);
+
                 var buildSpec = _buildServer.CreateBuildDetailSpec(buildDefinition);
                 buildSpec.InformationTypes = null;
                 if (sinceDate.HasValue)
@@ -235,7 +240,7 @@ namespace TfsInterop
             }
         }
 
-        public async Task ConnectToTfsServer2015Async(string hostname, string teamCollection, string projectName, Regex buildDefinitionNameFilter = null)
+        public async Task ConnectToTfsServer2015Async(string hostname, string teamCollection, string projectName, Regex? buildDefinitionNameFilter = null)
         {
             _hostname = hostname;
 
@@ -264,7 +269,7 @@ namespace TfsInterop
 
                 foreach (var def in definitions)
                 {
-                    if (string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString()) || buildDefinitionNameFilter.IsMatch(def.Name))
+                    if (buildDefinitionNameFilter == null || string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString()) || buildDefinitionNameFilter.IsMatch(def.Name))
                     {
                         buildDefinitions.Add(def);
                     }
@@ -294,6 +299,8 @@ namespace TfsInterop
             {
                 statusFilter = Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress;
             }
+
+            Validates.NotNull(_buildClient);
 
             ////List<Build> builds = Vs2015.AsyncHelpers.RunSync<List<Build>(()=>_buildClient.GetBuildsAsync(definitions: new int[] { buildDefinition.Id },
             ////                                       minFinishTime: sinceDate,
@@ -370,9 +377,9 @@ namespace TfsInterop
                 Microsoft.TeamFoundation.Build.WebApi.BuildStatus.None => "No status",
                 Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Postponed => "Postponed",
                 Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Cancelling => "Cancelling",
-                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Failed => "KO",
-                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.PartiallySucceeded => "Partially Succeeded",
-                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Succeeded => "OK",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result == BuildResult.Failed => "KO",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result == BuildResult.PartiallySucceeded => "Partially Succeeded",
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result == BuildResult.Succeeded => "OK",
                 _ => "-"
             };
         }
@@ -391,10 +398,10 @@ namespace TfsInterop
             return build.Status switch
             {
                 Microsoft.TeamFoundation.Build.WebApi.BuildStatus.InProgress => BuildStatus.InProgress,
-                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Failed => BuildStatus.Failure,
-                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Succeeded => BuildStatus.Success,
-                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.Canceled => BuildStatus.Stopped,
-                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result.Value == BuildResult.PartiallySucceeded => BuildStatus.Unstable,
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result == BuildResult.Failed => BuildStatus.Failure,
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result == BuildResult.Succeeded => BuildStatus.Success,
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result == BuildResult.Canceled => BuildStatus.Stopped,
+                Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed when build.Result == BuildResult.PartiallySucceeded => BuildStatus.Unstable,
                 _ => BuildStatus.Unknown
             };
         }

@@ -17,10 +17,10 @@ namespace Bitbucket
             };
         }
 
-        public string Id { get; set; }
-        public string ProjectKey { get; set; }
-        public string ProjectName { get; set; }
-        public string RepoName { get; set; }
+        public string? Id { get; set; }
+        public string? ProjectKey { get; set; }
+        public string? ProjectName { get; set; }
+        public string? RepoName { get; set; }
         public string DisplayName => string.Format("{0}/{1}", ProjectName, RepoName);
     }
 
@@ -30,7 +30,7 @@ namespace Bitbucket
         {
         }
 
-        protected override object RequestBody => null;
+        protected override object? RequestBody => null;
 
         protected override Method RequestMethod => Method.GET;
 

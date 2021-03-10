@@ -2,4 +2,4 @@
 using System.Runtime.CompilerServices;
 
 [assembly: AssemblyDescription("GitExtensions plugin for integration with AppVeyor build server")]
-[assembly:InternalsVisibleTo("AppVeyorIntegration.Tests")]
+[assembly: InternalsVisibleTo("AppVeyorIntegration.Tests")]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using Microsoft;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
@@ -20,7 +21,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         ///   Array of ordered pie slices constituting the chart, starting from
         ///   270 degrees axis.
         /// </summary>
-        protected PieSlice[] PieSlices;
+        protected PieSlice[] PieSlices = Array.Empty<PieSlice>();
 
         /// <summary>
         ///   Collection of reordered pie slices mapped to original order.
@@ -347,10 +348,11 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// <summary>
         ///   Sets values to be displayed on the chart.
         /// </summary>
-        public void SetValues(decimal[] value)
+        public void SetValues(decimal[] values)
         {
-            Debug.Assert(value is not null && value.Length > 0, "value is not null && value.Length > 0");
-            Values = value;
+            Requires.NotNullOrEmpty(values, nameof(values));
+
+            Values = values;
         }
 
         /// <summary>
@@ -573,7 +575,8 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         private static int GetForemostPieSlice(IReadOnlyList<PieSlice> pieSlices)
         {
-            Debug.Assert(pieSlices is not null && pieSlices.Count > 0, "pieSlices is not null && pieSlices.Count > 0");
+            Requires.NotNullOrEmpty(pieSlices, nameof(pieSlices));
+
             for (var i = 0; i < pieSlices.Count; ++i)
             {
                 var pieSlice = pieSlices[i];

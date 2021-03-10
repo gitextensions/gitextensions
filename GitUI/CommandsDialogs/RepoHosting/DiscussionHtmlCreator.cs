@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             return html.ToString();
         }
 
-        private static void AddLine(StringBuilder html, string input, params object[] p)
+        private static void AddLine(StringBuilder html, string input, params object?[] p)
         {
             html.AppendFormat(input + "\r\n", (from el in p select (el is null) ? "[UNKNOWN]" : el.ToString().Replace("\r", "").Replace("\n", "<br/>\n").Replace("\"", "&quot;")).ToArray());
         }

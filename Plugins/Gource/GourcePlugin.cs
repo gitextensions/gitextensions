@@ -181,7 +181,7 @@ namespace Gource
 
             // Assign values to these objects here so that they can
             // be referenced in the finally block
-            Stream localStream = null;
+            Stream? localStream = null;
 
             // Use a try/catch/finally block as both the WebRequest and Stream
             // classes throw exceptions upon error

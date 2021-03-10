@@ -13,7 +13,7 @@ namespace TfsIntegration.Settings
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class TfsSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
-        private string _defaultProjectName;
+        private string? _defaultProjectName;
 
         public TfsSettingsUserControl()
         {
@@ -23,20 +23,17 @@ namespace TfsIntegration.Settings
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
         }
 
-        public void Initialize(string defaultProjectName, IEnumerable<string> remotes)
+        public void Initialize(string defaultProjectName, IEnumerable<string?> remotes)
         {
             _defaultProjectName = defaultProjectName;
         }
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            if (buildServerConfig is not null)
-            {
-                TfsServer.Text = buildServerConfig.GetString("TfsServer", string.Empty);
-                TfsTeamCollectionName.Text = buildServerConfig.GetString("TfsTeamCollectionName", "DefaultCollection");
-                TfsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
-                TfsBuildDefinitionNameFilter.Text = buildServerConfig.GetString("TfsBuildDefinitionName", string.Empty);
-            }
+            TfsServer.Text = buildServerConfig.GetString("TfsServer", string.Empty);
+            TfsTeamCollectionName.Text = buildServerConfig.GetString("TfsTeamCollectionName", "DefaultCollection");
+            TfsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
+            TfsBuildDefinitionNameFilter.Text = buildServerConfig.GetString("TfsBuildDefinitionName", string.Empty);
         }
 
         public void SaveSettings(ISettingsSource buildServerConfig)

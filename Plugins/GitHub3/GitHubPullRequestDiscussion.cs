@@ -46,13 +46,13 @@ namespace GitHub3
 
     internal class GitHubDiscussionComment : IDiscussionEntry
     {
-        public string Author { get; internal set; }
+        public string? Author { get; internal set; }
         public DateTime Created { get; internal set; }
-        public string Body { get; internal set; }
+        public string? Body { get; internal set; }
     }
 
     internal class GitHubDiscussionCommit : GitHubDiscussionComment, ICommitDiscussionEntry
     {
-        public string Sha { get; internal set; }
+        public string? Sha { get; internal set; }
     }
 }
