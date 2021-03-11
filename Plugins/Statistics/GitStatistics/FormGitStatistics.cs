@@ -83,7 +83,7 @@ namespace GitExtensions.Plugins.GitStatistics
             InitializeComplete();
         }
 
-        private void FormGitStatisticsSizeChanged(object? sender, EventArgs? e)
+        private void FormGitStatisticsSizeChanged(object? sender, EventArgs e)
         {
             SetPieStyle(CommitCountPie);
             SetPieStyle(LinesOfCodeExtensionPie);
@@ -292,13 +292,13 @@ namespace GitExtensions.Plugins.GitStatistics
             Tabs.Visible = true;
             LoadingLabel.Visible = false;
 
-            FormGitStatisticsSizeChanged(null, null);
+            FormGitStatisticsSizeChanged(sender, EventArgs.Empty);
             SizeChanged += FormGitStatisticsSizeChanged;
         }
 
         private void TabsSelectedIndexChanged(object sender, EventArgs e)
         {
-            FormGitStatisticsSizeChanged(null, null);
+            FormGitStatisticsSizeChanged(sender, EventArgs.Empty);
         }
 
         private void FormGitStatistics_FormClosing(object sender, FormClosingEventArgs e)
