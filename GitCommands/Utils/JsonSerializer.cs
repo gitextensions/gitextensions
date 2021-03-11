@@ -5,7 +5,7 @@ namespace GitCommands.Utils
 {
     public static class JsonSerializer
     {
-        public static string Serialize<T>(T myObject)
+        public static string Serialize<T>(T? myObject) where T : class
         {
             var json = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
             var stream = new MemoryStream();
@@ -13,11 +13,11 @@ namespace GitCommands.Utils
             return Encoding.UTF8.GetString(stream.ToArray());
         }
 
-        public static T Deserialize<T>(string myString)
+        public static T? Deserialize<T>(string myString) where T : class
         {
             var json = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(myString));
-            return (T)json.ReadObject(stream);
+            return (T?)json.ReadObject(stream);
         }
     }
 }

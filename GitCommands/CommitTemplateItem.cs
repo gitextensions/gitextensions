@@ -42,8 +42,8 @@ namespace GitCommands
 
         public static void SaveToSettings(CommitTemplateItem[]? items)
         {
-            string? strVal = SerializeCommitTemplates(items);
-            AppSettings.CommitTemplates = strVal ?? string.Empty;
+            string strVal = SerializeCommitTemplates(items);
+            AppSettings.CommitTemplates = strVal;
         }
 
         public static CommitTemplateItem[]? LoadFromSettings()
@@ -58,7 +58,7 @@ namespace GitCommands
             return templates;
         }
 
-        private static string? SerializeCommitTemplates(CommitTemplateItem[]? items)
+        private static string SerializeCommitTemplates(CommitTemplateItem[]? items)
         {
             return JsonSerializer.Serialize(items);
         }
@@ -110,7 +110,7 @@ namespace GitCommands
         private const string OldNamespace = "GitUI.CommandsDialogs.CommitDialog";
         private const string NewNamespace = "GitCommands";
 
-        public override Type BindToType(string assemblyName, string typeName)
+        public override Type? BindToType(string assemblyName, string typeName)
         {
             typeName = typeName.Replace(OldNamespace, NewNamespace);
 
