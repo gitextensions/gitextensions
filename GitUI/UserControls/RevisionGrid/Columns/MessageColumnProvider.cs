@@ -177,7 +177,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 RefArrowType.None,
                 messageBounds,
                 e.Graphics,
-                dashedLine: false);
+                dashedLine: false,
+                fill: AppSettings.FillRefLabels);
 
             var max = Math.Max(
                 TextRenderer.MeasureText(ResourceManager.TranslatedStrings.Workspace, style.NormalFont).Width,
@@ -326,7 +327,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 arrowType,
                 messageBounds,
                 e.Graphics,
-                dashedLine: superprojectRef is not null);
+                dashedLine: superprojectRef is not null,
+                fill: AppSettings.FillRefLabels);
         }
 
         private void DrawImage(

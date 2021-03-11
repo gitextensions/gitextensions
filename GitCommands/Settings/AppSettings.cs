@@ -1517,6 +1517,12 @@ namespace GitCommands
             set { SetBool("highlightauthoredrevisions", value); }
         }
 
+        public static bool FillRefLabels
+        {
+            get => GetBool("FillRefLabels", false);
+            set => SetBool("FillRefLabels", value);
+        }
+
         public static string LastFormatPatchDir
         {
             get => GetString("lastformatpatchdir", "");

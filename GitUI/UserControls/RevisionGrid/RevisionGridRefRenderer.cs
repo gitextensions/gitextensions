@@ -16,13 +16,13 @@ namespace GitUI
         private static readonly float[] _dashPattern = { 4, 4 };
         private static readonly PointF[] _arrowPoints = new PointF[4];
 
-        public static void DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false)
+        public static void DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false)
         {
             var paddingLeftRight = !string.IsNullOrEmpty(name) ? DpiUtil.Scale(4) : DpiUtil.Scale(1);
             var paddingTopBottom = DpiUtil.Scale(2);
             var marginRight = DpiUtil.Scale(7);
 
-            var textColor = ColorHelper.Lerp(headColor, Color.Black, 0.25F);
+            var textColor = fill ? headColor : ColorHelper.Lerp(headColor, Color.Black, 0.25F);
 
             Size textSize = !string.IsNullOrEmpty(name)
                 ? TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding)
@@ -49,7 +49,7 @@ namespace GitUI
                 graphics,
                 headColor,
                 rect,
-                radius: 3, arrowType, dashedLine);
+                radius: 3, arrowType, dashedLine, fill);
 
             Rectangle textBounds = new(
                 rect.X + arrowWidth + paddingLeftRight,
@@ -62,7 +62,7 @@ namespace GitUI
             offset += rect.Width + marginRight;
         }
 
-        private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, int radius, RefArrowType arrowType, bool dashedLine)
+        private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, int radius, RefArrowType arrowType, bool dashedLine, bool fill)
         {
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -70,14 +70,20 @@ namespace GitUI
             try
             {
                 using var path = CreateRoundRectPath(bounds, radius);
-
-                if (isRowSelected)
+                if (fill)
+                {
+                    var color1 = ColorHelper.Lerp(color, SystemColors.Window, 0.92F);
+                    var color2 = ColorHelper.Lerp(color1, SystemColors.Window, 0.9f);
+                    using var brush = new LinearGradientBrush(bounds, color1, color2, angle: 90);
+                    graphics.FillPath(brush, path);
+                }
+                else if (isRowSelected)
                 {
                     graphics.FillPath(SystemBrushes.Window, path);
                 }
 
                 // frame
-                using Pen pen = new(ColorHelper.Lerp(color, SystemColors.Window, 0.5F));
+                using Pen pen = new(ColorHelper.Lerp(color, SystemColors.Window, fill ? 0.83F : 0.5F));
                 if (dashedLine)
                 {
                     pen.DashPattern = _dashPattern;
