@@ -54,7 +54,6 @@ namespace GitUIPluginInterfaces
 
             string defaultPluginsPath = Path.Combine(new FileInfo(Application.ExecutablePath).Directory.FullName, "Plugins");
             string? userPluginsPath = UserPluginsPath;
-            Validates.NotNull(userPluginsPath);
 
             var pluginFiles = PluginsPathScanner.GetFiles(defaultPluginsPath, userPluginsPath);
 #if !CI_BUILD
