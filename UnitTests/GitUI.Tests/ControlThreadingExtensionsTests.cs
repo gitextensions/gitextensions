@@ -8,7 +8,6 @@ using Microsoft.VisualStudio.Threading;
 using NUnit.Framework;
 
 // This diagnostic is unnecessarily noisy when testing async patterns
-#pragma warning disable VSTHRD104 // Offer async methods
 
 namespace GitUITests
 {
@@ -178,14 +177,12 @@ namespace GitUITests
             await TaskScheduler.Default;
 
             var awaitable = form.SwitchToMainThreadAsync();
-
-#pragma warning disable VSTHRD103 // Call async methods when in an async method (this is intentional for the test)
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-#pragma warning restore VSTHRD103 // Call async methods when in an async method
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                form.Dispose();
-            });
+            ThreadHelper.JoinableTaskFactory.Run(
+                async () =>
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    form.Dispose();
+                });
 
             Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
             await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await awaitable);

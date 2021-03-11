@@ -278,8 +278,6 @@ namespace GitUITests.CommandsDialogs
             Assert.AreEqual(@"folder1\subfolder1\subfolder2\file2", nativeTreeView.SelectedNode.FullPath);
         }
 
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
-        [SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
         private class MockGitItem : INamedGitItem
         {
             public MockGitItem(string name)

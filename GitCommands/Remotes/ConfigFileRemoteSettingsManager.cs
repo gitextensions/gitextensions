@@ -101,7 +101,6 @@ namespace GitCommands.Remotes
         }
 
         // TODO: moved verbatim from FormRemotes.cs, perhaps needs refactoring
-        [SuppressMessage("ReSharper", "RedundantArgumentDefaultValue")]
         public void ConfigureRemotes(string remoteName)
         {
             var module = GetModule();

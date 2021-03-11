@@ -51,9 +51,7 @@ namespace GitUI
         public GitModule Module => UICommands.Module;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         protected GitModuleForm()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             if (LicenseManager.UsageMode != LicenseUsageMode.Designtime && !IsUnitTestActive)
             {

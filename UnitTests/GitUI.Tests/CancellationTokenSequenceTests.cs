@@ -109,7 +109,6 @@ namespace GitUITests
         }
 
         [Test]
-        [SuppressMessage("ReSharper", "MethodSupportsCancellation")]
         public async Task Concurrent_callers_to_Next_only_result_in_one_non_cancelled_token_being_issued()
         {
             const int loopCount = 10000;
