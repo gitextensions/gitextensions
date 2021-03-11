@@ -33,7 +33,7 @@ namespace TfsIntegration
                     return null;
                 }
 
-                return ".Net 4 full framework required";
+                return ".NET Framework 4 or higher required";
             }
         }
     }
