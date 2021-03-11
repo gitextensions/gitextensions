@@ -444,7 +444,7 @@ namespace AppVeyorIntegration
             };
         }
 
-        private Task<Stream> GetStreamAsync(HttpClient httpClient, string restServicePath, CancellationToken cancellationToken)
+        private Task<Stream?> GetStreamAsync(HttpClient httpClient, string restServicePath, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -457,7 +457,7 @@ namespace AppVeyorIntegration
                              .Unwrap();
         }
 
-        private Task<Stream>? GetStreamFromHttpResponseAsync(HttpClient httpClient, Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
+        private Task<Stream?> GetStreamFromHttpResponseAsync(HttpClient httpClient, Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
             var retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
 
@@ -471,7 +471,7 @@ namespace AppVeyorIntegration
                 return task.CompletedResult().Content.ReadAsStreamAsync();
             }
 
-            return null; // TODO NULLABLE returning a null Task is a no no
+            return Task.FromResult<Stream?>(null);
         }
 
         private Task<string> GetResponseAsync(HttpClient httpClient, string relativePath, CancellationToken cancellationToken)
@@ -488,6 +488,12 @@ namespace AppVeyorIntegration
                     }
 
                     using var responseStream = task.Result;
+
+                    if (responseStream is null)
+                    {
+                        return "";
+                    }
+
                     return new StreamReader(responseStream).ReadToEnd();
                 },
                 cancellationToken,
