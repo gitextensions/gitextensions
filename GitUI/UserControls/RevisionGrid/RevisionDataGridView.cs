@@ -313,7 +313,6 @@ namespace GitUI.UserControls.RevisionGrid
             UpdateVisibleRowRange();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         public void Clear()
         {
             _backgroundScrollTo = 0;
@@ -439,7 +438,6 @@ namespace GitUI.UserControls.RevisionGrid
             SelectRowsIfReady(rowCount);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private async Task RunBackgroundAsync(CancellationToken cancellationToken)
         {
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)

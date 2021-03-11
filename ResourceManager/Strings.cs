@@ -2,8 +2,6 @@ using System;
 using GitCommands;
 using SmartFormat;
 
-#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
-
 namespace ResourceManager
 {
     /// <summary>Contains common string literals which are translated.</summary>

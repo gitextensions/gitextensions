@@ -2,7 +2,6 @@
 
 namespace GitCommands.Settings
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum AutoCRLFType
     {
         @true,

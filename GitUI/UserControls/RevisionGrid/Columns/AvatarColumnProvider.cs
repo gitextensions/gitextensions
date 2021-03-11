@@ -57,9 +57,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (imageTask.Status == TaskStatus.RanToCompletion)
             {
-                #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
                 image = imageTask.Result;
-                #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
             }
             else
             {

@@ -161,9 +161,7 @@ namespace CommonTestUtils
                     _failedTransfer.Value = ExceptionDispatchInfo.Capture(e);
                 }
 
-#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
                 (_underlyingContext ?? new SynchronizationContext()).Post(d, state);
-#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
             }
 
             public override void Send(SendOrPostCallback d, object state)
@@ -180,9 +178,7 @@ namespace CommonTestUtils
                     _failedTransfer.Value = ExceptionDispatchInfo.Capture(e);
                 }
 
-#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
                 (_underlyingContext ?? new SynchronizationContext()).Send(d, state);
-#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
             }
 
             public override SynchronizationContext CreateCopy()

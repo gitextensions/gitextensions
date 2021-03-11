@@ -37,8 +37,6 @@ namespace GitExtUtils.GitUI
             public static extern IntPtr LoadCursor(IntPtr hInstance, IDC lpCursorName);
         }
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private enum IDC
         {
             ARROW = 32512,

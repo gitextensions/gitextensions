@@ -279,7 +279,6 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        [SuppressMessage("ReSharper", "ReturnValueOfPureMethodIsNotUsed")]
         public void ToShortString()
         {
             const string s = "0102030405060708091011121314151617181920";

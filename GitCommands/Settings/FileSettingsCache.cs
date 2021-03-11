@@ -68,8 +68,6 @@ namespace GitCommands.Settings
             FileChanged();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "SaveTimer", Justification = "SaveTimer is disposed inside lambda but Code Analysis could not determine that")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_fileWatcher", Justification = "_fileWtcher is disposed inside lambda but Code Analysis could not determine that")]
         protected override void Dispose(bool disposing)
         {
             if (disposing)
