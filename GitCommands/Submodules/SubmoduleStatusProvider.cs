@@ -99,7 +99,7 @@ namespace GitCommands.Submodules
             }
 
             // Structure is updated
-            OnStatusUpdated(result, cancelToken);
+            OnStatusUpdated(result, structureUpdated: true, cancelToken);
 
             if (updateStatus && currentModule.SuperprojectModule is not null)
             {
@@ -126,7 +126,7 @@ namespace GitCommands.Submodules
                 // Ignore if possible or at least delay the pending git-status trigger
                 _previousSubmoduleUpdateTime = DateTime.Now;
                 _submodulesStatusSequence.Next();
-                OnStatusUpdated(result, cancelToken);
+                OnStatusUpdated(result, structureUpdated: false, cancelToken);
             }
 
             _submoduleInfoResult = result;
@@ -164,7 +164,7 @@ namespace GitCommands.Submodules
             var currentModule = new GitModule(workingDirectory);
             await UpdateSubmodulesStatusAsync(currentModule, gitStatus, cancelToken);
 
-            OnStatusUpdated(_submoduleInfoResult, cancelToken);
+            OnStatusUpdated(_submoduleInfoResult, structureUpdated: false, cancelToken);
         }
 
         private void OnStatusUpdating()
@@ -172,10 +172,10 @@ namespace GitCommands.Submodules
             StatusUpdating?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnStatusUpdated(SubmoduleInfoResult info, CancellationToken token)
+        private void OnStatusUpdated(SubmoduleInfoResult info, bool structureUpdated, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
-            StatusUpdated?.Invoke(this, new SubmoduleStatusEventArgs(info, token));
+            StatusUpdated?.Invoke(this, new SubmoduleStatusEventArgs(info, structureUpdated, token));
         }
 
         /// <summary>
