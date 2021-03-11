@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GitStatistics.PieChart
+namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
     public class SliceSelectedArgs : EventArgs
     {

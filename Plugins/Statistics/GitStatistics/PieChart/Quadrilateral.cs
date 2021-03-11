@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace GitStatistics.PieChart
+namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
     /// <summary>
     ///   Quadrilateral object.

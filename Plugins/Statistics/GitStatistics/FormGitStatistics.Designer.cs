@@ -1,6 +1,6 @@
-﻿using GitStatistics.PieChart;
+﻿using GitExtensions.Plugins.GitStatistics.PieChart;
 
-namespace GitStatistics
+namespace GitExtensions.Plugins.GitStatistics
 {
     partial class FormGitStatistics
     {
@@ -26,25 +26,25 @@ namespace GitStatistics
             this.TotalCommits = new System.Windows.Forms.Label();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.CommitStatistics = new System.Windows.Forms.Label();
-            this.CommitCountPie = new GitStatistics.PieChart.PieChartControl();
+            this.CommitCountPie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.TotalLinesOfCode = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.LinesOfCodePerLanguageText = new System.Windows.Forms.Label();
-            this.LinesOfCodeExtensionPie = new GitStatistics.PieChart.PieChartControl();
+            this.LinesOfCodeExtensionPie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.splitContainer5 = new System.Windows.Forms.SplitContainer();
             this.TotalLinesOfCode2 = new System.Windows.Forms.Label();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
             this.LinesOfCodePerTypeText = new System.Windows.Forms.Label();
-            this.LinesOfCodePie = new GitStatistics.PieChart.PieChartControl();
+            this.LinesOfCodePie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
             this.TotalLinesOfTestCode = new System.Windows.Forms.Label();
             this.splitContainer8 = new System.Windows.Forms.SplitContainer();
             this.TestCodeText = new System.Windows.Forms.Label();
-            this.TestCodePie = new GitStatistics.PieChart.PieChartControl();
+            this.TestCodePie = new global::GitExtensions.Plugins.GitStatistics.PieChart.PieChartControl();
             this.LoadingLabel = new System.Windows.Forms.Label();
             this.Tabs.SuspendLayout();
             this.tabPage2.SuspendLayout();

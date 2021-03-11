@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace GitStatistics.PieChart
+namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
     /// <summary>
     ///   Structure with graphics utility methods.

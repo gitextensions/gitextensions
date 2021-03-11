@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace GitStatistics
+namespace GitExtensions.Plugins.GitStatistics
 {
     public readonly struct CodeFile
     {

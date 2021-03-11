@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Plugins.GitStatistics.PieChart;
 using GitExtUtils.GitUI;
-using GitStatistics.PieChart;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
-namespace GitStatistics
+namespace GitExtensions.Plugins.GitStatistics
 {
     public partial class FormGitStatistics : GitExtensionsFormBase
     {
