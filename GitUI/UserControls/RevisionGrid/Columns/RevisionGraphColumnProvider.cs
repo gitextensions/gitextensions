@@ -106,7 +106,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     }
                 }
 
-                var newRows = _graphCache.Count < _graphCache.Capacity
+                int newRows = _graphCache.Count < _graphCache.Capacity
                     ? (rowIndex - _graphCache.Count) + 1
                     : 0;
 
@@ -143,17 +143,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     return true;
                 }
 
-                if (!DrawVisibleGraph())
-                {
-                    return false;
-                }
-
+                DrawVisibleGraph();
                 CreateRectangle();
                 return true;
 
                 void CreateRectangle()
                 {
-                    var cellRect = new Rectangle(
+                    Rectangle cellRect = new(
                         0,
                         ((_graphCache.HeadRow + rowIndex - _graphCache.Head) % _graphCache.Capacity) * rowHeight,
                         width,
@@ -166,19 +162,22 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         GraphicsUnit.Pixel);
                 }
 
-                bool DrawVisibleGraph()
+                void DrawVisibleGraph()
                 {
-                    for (var index = start; index < end; index++)
+                    // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
+                    _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
+
+                    for (int index = start; index < end; index++)
                     {
                         // Get the x,y value of the current item's upper left in the cache
-                        var curCacheRow = (_graphCache.HeadRow + index - _graphCache.Head) % _graphCache.Capacity;
-                        var x = ColumnLeftMargin;
-                        var y = curCacheRow * rowHeight;
+                        int curCacheRow = (_graphCache.HeadRow + index - _graphCache.Head) % _graphCache.Capacity;
+                        int x = ColumnLeftMargin;
+                        int y = curCacheRow * rowHeight;
 
                         Validates.NotNull(_graphCache.GraphBitmapGraphics);
 
-                        var laneRect = new Rectangle(0, y, width, rowHeight);
-                        var oldClip = _graphCache.GraphBitmapGraphics.Clip;
+                        Rectangle laneRect = new(0, y, width, rowHeight);
+                        Region oldClip = _graphCache.GraphBitmapGraphics.Clip;
 
                         if (index > 0 && (index == start || curCacheRow == 0))
                         {
@@ -199,52 +198,51 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                         _graphCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, y);
 
-                        var success = DrawItem(_graphCache.GraphBitmapGraphics, index);
+                        DrawItem(_graphCache.GraphBitmapGraphics, index);
 
                         _graphCache.GraphBitmapGraphics.Clip = oldClip;
-
-                        if (!success)
-                        {
-                            _graphCache.Reset();
-                            return false;
-                        }
                     }
-
-                    return true;
                 }
 
-                bool DrawItem(Graphics g, int index)
+                void DrawItem(Graphics g, int index)
                 {
-                    // Clip to the area we're drawing in, but draw 1 pixel past so
-                    // that the top/bottom of the line segment's anti-aliasing isn't
-                    // visible in the final rendering.
-                    int top = g.RenderingOrigin.Y; //// + rowHeight;
-                    var laneRect = new Rectangle(0, top, width, rowHeight);
+                    SmoothingMode oldSmoothingMode = g.SmoothingMode;
                     Region oldClip = g.Clip;
-                    var newClip = new Region(laneRect);
+
+                    int top = g.RenderingOrigin.Y;
+                    Rectangle laneRect = new(0, top, width, rowHeight);
+                    Region newClip = new(laneRect);
                     newClip.Intersect(oldClip);
                     g.Clip = newClip;
                     g.Clear(Color.Transparent);
 
-                    if (index > _revisionGraph.GetCachedCount())
+                    DrawItem();
+
+                    // Restore graphics options
+                    g.Clip = oldClip;
+                    g.SmoothingMode = oldSmoothingMode;
+
+                    return;
+
+                    void DrawItem()
                     {
-                        return true;
-                    }
+                        if (index > _revisionGraph.GetCachedCount())
+                        {
+                            return;
+                        }
 
-                    // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
-                    _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
+                        IRevisionGraphRow? currentRow = _revisionGraph.GetSegmentsForRow(index);
+                        if (currentRow is null)
+                        {
+                            return;
+                        }
 
-                    var oldSmoothingMode = g.SmoothingMode;
+                        IRevisionGraphRow? previousRow = _revisionGraph.GetSegmentsForRow(Math.Max(0, index - 1));
+                        IRevisionGraphRow? nextRow = _revisionGraph.GetSegmentsForRow(index + 1);
 
-                    var previousRow = _revisionGraph.GetSegmentsForRow(Math.Max(0, index - 1));
-                    var currentRow = _revisionGraph.GetSegmentsForRow(index);
-                    var nextRow = _revisionGraph.GetSegmentsForRow(index + 1);
-
-                    if (currentRow is not null)
-                    {
-                        int startY = top - rowHeight + (rowHeight / 2);
                         int centerY = top + (rowHeight / 2);
-                        int endY = top + rowHeight + (rowHeight / 2);
+                        int startY = centerY - rowHeight;
+                        int endY = centerY + rowHeight;
 
                         foreach (RevisionGraphSegment revisionGraphRevision in currentRow.Segments.Reverse().OrderBy(s => s.Child.IsRelative))
                         {
@@ -292,15 +290,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                 brush = GetBrushForRevision(revisionGraphRevision.Parent, revisionGraphRevision.Child.IsRelative);
                             }
 
-                            // EndLane
                             if (startLane >= 0 && centerLane >= 0 && (startLane <= MaxLanes || centerLane <= MaxLanes))
                             {
+                                // EndSegment
                                 DrawSegment(g, brush, startX, startY, centerX, centerY);
                             }
 
-                            // StartLane
                             if (endLane >= 0 && centerLane >= 0 && (endLane <= MaxLanes || centerLane <= MaxLanes))
                             {
+                                // StartSegment
                                 DrawSegment(g, brush, centerX, centerY, endX, endY);
                             }
                         }
@@ -310,8 +308,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             int centerX = g.RenderingOrigin.X + (int)((currentRow.GetCurrentRevisionLane() + 0.5) * LaneWidth);
                             Rectangle nodeRect = new(centerX - (NodeDimension / 2), centerY - (NodeDimension / 2), NodeDimension, NodeDimension);
 
-                            var square = currentRow.Revision.HasRef;
-                            var hasOutline = currentRow.Revision.IsCheckedOut;
+                            bool square = currentRow.Revision.HasRef;
+                            bool hasOutline = currentRow.Revision.IsCheckedOut;
 
                             Brush brush = GetBrushForRevision(currentRow.Revision, currentRow.Revision.IsRelative);
                             if (square)
@@ -329,9 +327,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             {
                                 nodeRect.Inflate(1, 1);
 
-                                var outlineColor = SystemColors.WindowText;
+                                Color outlineColor = SystemColors.WindowText;
 
-                                using var pen = new Pen(outlineColor, 2);
+                                using Pen pen = new(outlineColor, 2);
                                 if (square)
                                 {
                                     g.SmoothingMode = SmoothingMode.None;
@@ -345,13 +343,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             }
                         }
                     }
-
-                    // Reset graphics options
-                    g.Clip = oldClip;
-
-                    g.SmoothingMode = oldSmoothingMode;
-
-                    return true;
                 }
             }
         }
@@ -383,10 +374,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private void DrawSegment(Graphics g, Brush laneBrush, int x0, int y0, int x1, int y1)
         {
-            var p0 = new Point(x0, y0);
-            var p1 = new Point(x1, y1);
+            Point p0 = new(x0, y0);
+            Point p1 = new(x1, y1);
 
-            using var lanePen = new Pen(laneBrush, LaneLineWidth);
+            using Pen lanePen = new(laneBrush, LaneLineWidth);
             if (x0 == x1)
             {
                 g.SmoothingMode = SmoothingMode.None;
@@ -399,11 +390,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 const float offset = -1f / 8f;
 
-                var yMid = (y0 + y1) / 2f;
-                var c0 = new PointF(offset + p0.X, offset + yMid);
-                var c1 = new PointF(offset + p1.X, offset + yMid);
-                var e0 = new PointF(offset + p0.X, offset + p0.Y);
-                var e1 = new PointF(offset + p1.X, offset + p1.Y);
+                float yMid = (y0 + y1) / 2f;
+                PointF c0 = new(offset + p0.X, offset + yMid);
+                PointF c1 = new(offset + p1.X, offset + yMid);
+                PointF e0 = new(offset + p0.X, offset + p0.Y);
+                PointF e1 = new(offset + p1.X, offset + p1.Y);
                 g.DrawBezier(lanePen, e0, c0, c1, e1);
             }
         }
@@ -464,7 +455,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                  .Max();
 
             laneCount = Math.Min(laneCount, MaxLanes);
-            var columnWidth = (LaneWidth * laneCount) + ColumnLeftMargin;
+            int columnWidth = (LaneWidth * laneCount) + ColumnLeftMargin;
             if (columnWidth > minimumWidth)
             {
                 return columnWidth;
