@@ -1,5 +1,5 @@
-﻿using DeleteUnusedBranches;
-using FluentAssertions;
+﻿using FluentAssertions;
+using GitExtensions.Plugins.DeleteUnusedBranches;
 using NUnit.Framework;
 
 namespace DeleteUnusedBranchesTests

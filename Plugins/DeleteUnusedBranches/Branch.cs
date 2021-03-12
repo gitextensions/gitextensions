@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DeleteUnusedBranches
+namespace GitExtensions.Plugins.DeleteUnusedBranches
 {
     public sealed class Branch
     {

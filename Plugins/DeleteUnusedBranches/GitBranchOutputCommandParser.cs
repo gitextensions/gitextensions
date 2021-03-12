@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace DeleteUnusedBranches
+namespace GitExtensions.Plugins.DeleteUnusedBranches
 {
     public class GitBranchOutputCommandParser
     {

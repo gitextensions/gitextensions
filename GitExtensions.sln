@@ -61,7 +61,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager", "Resource
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gource", "Plugins\Gource\Gource.csproj", "{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeleteUnusedBranches", "Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj", "{921F0443-C3A1-4A09-82E8-C4AFB9654943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.DeleteUnusedBranches", "Plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.csproj", "{921F0443-C3A1-4A09-82E8-C4AFB9654943}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpellChecker", "Externals\NetSpell.SpellChecker\SpellChecker.csproj", "{A426EE0B-E52E-4D74-AF24-06797142D7B2}"
 EndProject

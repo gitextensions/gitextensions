@@ -607,7 +607,7 @@
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
       <Component Id="DeleteUnusedBranches.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\DeleteUnusedBranches.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.DeleteUnusedBranches.dll" />
       </Component>
       <Component Id="AutoCompileSubmodules.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.AutoCompileSubmodules.dll" />
