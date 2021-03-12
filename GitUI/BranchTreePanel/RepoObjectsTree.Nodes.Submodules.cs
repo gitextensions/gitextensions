@@ -47,7 +47,7 @@ namespace GitUI.BranchTreePanel
         // Node representing a submodule
         private class SubmoduleNode : Node
         {
-            public SubmoduleInfo Info { get; }
+            public SubmoduleInfo Info { get; set; }
             public bool IsCurrent { get; }
             public IReadOnlyList<GitItemStatus> GitStatus { get; }
             public string LocalPath { get; }
@@ -75,10 +75,7 @@ namespace GitUI.BranchTreePanel
 
             public void RefreshDetails()
             {
-                if (Info.Detailed is not null && Tree.TreeViewNode.TreeView is not null)
-                {
-                    ApplyStatus();
-                }
+                ApplyStatus();
             }
 
             public bool CanOpen => !IsCurrent;
@@ -135,15 +132,14 @@ namespace GitUI.BranchTreePanel
                     TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
                 }
 
-                TreeViewNode.ToolTipText = DisplayText();
-
                 // Note that status is applied also after the tree is created, when status is applied
                 ApplyStatus();
             }
 
             private void ApplyStatus()
             {
-                TreeViewNode.ImageKey = GetSubmoduleItemImage(Info.Detailed);
+                TreeViewNode.ToolTipText = DisplayText();
+                TreeViewNode.ImageKey = GetSubmoduleItemImage(Info?.Detailed);
                 TreeViewNode.SelectedImageKey = TreeViewNode.ImageKey;
 
                 return;
@@ -222,10 +218,12 @@ namespace GitUI.BranchTreePanel
         private sealed class SubmoduleTree : Tree
         {
             private SubmoduleStatusEventArgs _currentSubmoduleInfo;
+            private Nodes _currentNodes = null;
 
             public SubmoduleTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
+                SubmoduleStatusProvider.Default.StatusUpdating += Provider_StatusUpdating;
                 SubmoduleStatusProvider.Default.StatusUpdated += Provider_StatusUpdated;
             }
 
@@ -238,6 +236,11 @@ namespace GitUI.BranchTreePanel
                 }
 
                 return Task.CompletedTask;
+            }
+
+            private void Provider_StatusUpdating(object sender, EventArgs e)
+            {
+                _currentNodes = null;
             }
 
             private void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
@@ -256,23 +259,65 @@ namespace GitUI.BranchTreePanel
                 {
                     CancellationTokenSource cts = null;
                     Task<Nodes> loadNodesTask = null;
-                    await ReloadNodesAsync(token =>
+                    if (e.StructureUpdated)
                     {
-                        cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
-                        loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
-                        return loadNodesTask;
-                    }).ConfigureAwait(false);
+                        _currentNodes = null;
+                    }
+
+                    if (_currentNodes is not null)
+                    {
+                        // Structure is up-to-date, update status
+                        var infos = e.Info.AllSubmodules.ToDictionary(info => info.Path, info => info);
+                        infos[e.Info.TopProject.Path] = e.Info.TopProject;
+                        var nodes = _currentNodes.DepthEnumerator<SubmoduleNode>().ToList();
+                        foreach (var node in nodes)
+                        {
+                            if (infos.ContainsKey(node.Info.Path))
+                            {
+                                node.Info = infos[node.Info.Path];
+                                infos.Remove(node.Info.Path);
+                            }
+                            else
+                            {
+                                // structure no longer matching
+                                Debug.Assert(true, $"Status info with {1 + e.Info.AllSubmodules.Count} records do not match current nodes ({nodes.Count})");
+                                _currentNodes = null;
+                                break;
+                            }
+                        }
+
+                        if (infos.Count > 0)
+                        {
+                            Debug.Fail($"{infos.Count} status info records remains after matching current nodes, structure seem to mismatch ({nodes.Count}/{e.Info.AllSubmodules.Count})");
+                            _currentNodes = null;
+                        }
+                    }
+
+                    if (_currentNodes is null)
+                    {
+                        await ReloadNodesAsync(token =>
+                        {
+                            cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
+                            loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
+                            return loadNodesTask;
+                        }).ConfigureAwait(false);
+                    }
 
                     if (cts is not null && loadNodesTask is not null)
                     {
-                        var loadedNodes = await loadNodesTask;
-                        await LoadNodeDetailsAsync(loadedNodes, cts.Token).ConfigureAwaitRunInline();
-                        LoadNodeToolTips(loadedNodes, cts.Token);
+                        _currentNodes = await loadNodesTask;
+                    }
+
+                    if (_currentNodes is not null)
+                    {
+                        var token = cts?.Token ?? e.Token;
+                        await LoadNodeDetailsAsync(_currentNodes, token).ConfigureAwaitRunInline();
+                        LoadNodeToolTips(_currentNodes, token);
                     }
 
                     Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
-                }).FileAndForget();
-            }
+            }).FileAndForget();
+        }
 
             private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)
             {
