@@ -4,7 +4,7 @@ using GitCommands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
-namespace CreateLocalBranches
+namespace GitExtensions.Plugins.CreateLocalBranches
 {
     public partial class CreateLocalBranchesForm : ResourceManager.GitExtensionsFormBase
     {

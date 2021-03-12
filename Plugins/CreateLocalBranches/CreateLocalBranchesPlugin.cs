@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.Composition;
-using CreateLocalBranches.Properties;
+using GitExtensions.Plugins.CreateLocalBranches.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace CreateLocalBranches
+namespace GitExtensions.Plugins.CreateLocalBranches
 {
     [Export(typeof(IGitPlugin))]
     public class CreateLocalBranchesPlugin : GitPluginBase, IGitPluginForRepository

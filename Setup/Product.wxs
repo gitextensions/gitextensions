@@ -616,7 +616,7 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.BackgroundFetch.dll" />
       </Component>
       <Component Id="CreateLocalBranches.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\CreateLocalBranches.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.CreateLocalBranches.dll" />
       </Component>
       <Component Id="GitStatistics.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitStatistics.dll" />

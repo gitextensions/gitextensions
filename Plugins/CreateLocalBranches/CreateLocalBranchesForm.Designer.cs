@@ -1,4 +1,4 @@
-﻿namespace CreateLocalBranches
+﻿namespace GitExtensions.Plugins.CreateLocalBranches
 {
     partial class CreateLocalBranchesForm
     {
