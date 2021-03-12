@@ -59,17 +59,18 @@ namespace GitUI.CommandsDialogs
             if (e.KeyCode == Keys.Escape && e.Modifiers == Keys.None)
             {
                 var focusedControl = this.FindFocusedControl();
-                if (focusedControl is ComboBox comboBox && comboBox.DroppedDown)
+
+                switch (focusedControl)
                 {
-                    comboBox.DroppedDown = false;
-                }
-                else if (focusedControl is TextBoxBase textBox && textBox.SelectionLength > 0)
-                {
-                    textBox.SelectionLength = 0;
-                }
-                else
-                {
-                    DialogResult = DialogResult.Cancel;
+                    case ComboBox { DroppedDown: true } comboBox:
+                        comboBox.DroppedDown = false;
+                        break;
+                    case TextBoxBase { SelectionLength: > 0 } textBox:
+                        textBox.SelectionLength = 0;
+                        break;
+                    default:
+                        DialogResult = DialogResult.Cancel;
+                        break;
                 }
 
                 // do not let the modal form react itself on this preview of the Escape key press
