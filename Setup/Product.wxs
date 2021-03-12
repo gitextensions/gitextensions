@@ -610,7 +610,7 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\DeleteUnusedBranches.dll" />
       </Component>
       <Component Id="AutoCompileSubmodules.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\AutoCompileSubmodules.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.AutoCompileSubmodules.dll" />
       </Component>
       <Component Id="BackgroundFetch.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\BackgroundFetch.dll" />
