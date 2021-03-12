@@ -631,7 +631,7 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitHub3.dll" />
       </Component>
       <Component Id="GitFlow.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitFlow.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitFlow.dll" />
       </Component>
       <Component Id="ReleaseNotesGenerator.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\ReleaseNotesGenerator.dll" />

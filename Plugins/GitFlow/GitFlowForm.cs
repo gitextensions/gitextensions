@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtensions.Plugins.GitFlow.Properties;
 using GitExtUtils;
 using GitExtUtils.GitUI;
-using GitFlow.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace GitFlow
+namespace GitExtensions.Plugins.GitFlow
 {
     public partial class GitFlowForm : GitExtensionsFormBase
     {
