@@ -11,7 +11,7 @@ using GitUI;
 using GitUI.Avatars;
 using GitUIPluginInterfaces;
 
-namespace Gource
+namespace GitExtensions.Plugins.Gource
 {
     public partial class GourceStart : ResourceManager.GitExtensionsFormBase
     {

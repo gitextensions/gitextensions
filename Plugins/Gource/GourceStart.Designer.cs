@@ -1,4 +1,4 @@
-﻿namespace Gource
+﻿namespace GitExtensions.Plugins.Gource
 {
     partial class GourceStart
     {

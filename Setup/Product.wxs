@@ -625,7 +625,7 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitImpact.dll" />
       </Component>
       <Component Id="Gource.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\Gource.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.Gource.dll" />
       </Component>
       <Component Id="Github3.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitHub3.dll" />
