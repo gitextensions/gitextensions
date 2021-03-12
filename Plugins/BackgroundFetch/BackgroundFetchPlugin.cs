@@ -4,13 +4,13 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using BackgroundFetch.Properties;
 using GitCommands;
+using GitExtensions.Plugins.BackgroundFetch.Properties;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace BackgroundFetch
+namespace GitExtensions.Plugins.BackgroundFetch
 {
     [Export(typeof(IGitPlugin))]
     public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
