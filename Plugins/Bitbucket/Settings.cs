@@ -4,7 +4,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 
-namespace Bitbucket
+namespace GitExtensions.Plugins.Bitbucket
 {
     public class Settings
     {

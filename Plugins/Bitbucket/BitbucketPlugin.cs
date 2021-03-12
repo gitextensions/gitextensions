@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows.Forms;
-using Bitbucket.Properties;
+using GitExtensions.Plugins.Bitbucket.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace Bitbucket
+namespace GitExtensions.Plugins.Bitbucket
 {
     [Export(typeof(IGitPlugin))]
     public class BitbucketPlugin : GitPluginBase
