@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AutoCompileSubmodules.Properties {
+namespace GitExtensions.Plugins.AutoCompileSubmodules.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace AutoCompileSubmodules.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AutoCompileSubmodules.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("GitExtensions.Plugins.AutoCompileSubmodules.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

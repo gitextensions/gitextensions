@@ -3,11 +3,11 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using AutoCompileSubmodules.Properties;
+using GitExtensions.Plugins.AutoCompileSubmodules.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace AutoCompileSubmodules
+namespace GitExtensions.Plugins.AutoCompileSubmodules
 {
     [Export(typeof(IGitPlugin))]
     public class AutoCompileSubModulesPlugin : GitPluginBase, IGitPluginForRepository
