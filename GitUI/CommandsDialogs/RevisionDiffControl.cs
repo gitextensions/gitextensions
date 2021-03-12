@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitExtUtils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
@@ -248,7 +249,7 @@ namespace GitUI.CommandsDialogs
             if (objectId is null)
             {
                 // No parent at all, present as working directory
-                return ResourceManager.Strings.Workspace;
+                return ResourceManager.TranslatedStrings.Workspace;
             }
 
             Validates.NotNull(_revisionGrid);
@@ -534,7 +535,7 @@ namespace GitUI.CommandsDialogs
             saveAsToolStripMenuItem1.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectionInfo);
             openContainingFolderToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFolder(selectionInfo);
             diffEditWorkingDirectoryFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
-            diffDeleteFileToolStripMenuItem.Text = ResourceManager.Strings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
+            diffDeleteFileToolStripMenuItem.Text = ResourceManager.TranslatedStrings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
             diffDeleteFileToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
             diffDeleteFileToolStripMenuItem.Visible = diffDeleteFileToolStripMenuItem.Enabled;
 
@@ -764,7 +765,7 @@ namespace GitUI.CommandsDialogs
                 firstRev: DiffFiles.SelectedItem.SecondRevision,
                 secondRev: DiffFiles.SelectedItem.FirstRevision,
                 item: DiffFiles.SelectedItem.Item);
-            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(DiffFiles.SelectedItem.Item.OldName))
+            if (!Strings.IsNullOrWhiteSpace(DiffFiles.SelectedItem.Item.OldName))
             {
                 var name = DiffFiles.SelectedItem.Item.OldName;
                 DiffFiles.SelectedItem.Item.OldName = DiffFiles.SelectedItem.Item.Name;
@@ -905,7 +906,7 @@ namespace GitUI.CommandsDialogs
                 && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(diffFiles[0]);
             diffWithRememberedDifftoolToolStripMenuItem.Text =
                 _rememberFileContextMenuController.RememberedDiffFileItem is not null
-                    ? string.Format(Strings.DiffSelectedWithRememberedFile, _rememberFileContextMenuController.RememberedDiffFileItem.Item.Name)
+                    ? string.Format(TranslatedStrings.DiffSelectedWithRememberedFile, _rememberFileContextMenuController.RememberedDiffFileItem.Item.Name)
                     : string.Empty;
 
             rememberSecondRevDiffToolStripMenuItem.Visible = diffFiles.Count == 1;
@@ -1033,7 +1034,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 

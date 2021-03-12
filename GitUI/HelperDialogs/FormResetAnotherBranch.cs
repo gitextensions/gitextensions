@@ -18,7 +18,7 @@ namespace GitUI.HelperDialogs
         private readonly TranslationString _localRefInvalid = new("The entered value '{0}' is not the name of an existing local branch.");
 
         public static FormResetAnotherBranch Create(GitUICommands gitUiCommands, GitRevision revision)
-            => new FormResetAnotherBranch(gitUiCommands, revision ?? throw new NotSupportedException(Strings.NoRevision));
+            => new FormResetAnotherBranch(gitUiCommands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision));
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -90,7 +90,7 @@ namespace GitUI.HelperDialogs
             var gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
             if (gitRefToReset is null)
             {
-                MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

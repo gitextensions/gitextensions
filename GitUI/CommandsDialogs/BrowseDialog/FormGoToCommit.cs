@@ -73,7 +73,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private Task LoadTagsAsync()
         {
-            comboBoxTags.Text = Strings.LoadingData;
+            comboBoxTags.Text = TranslatedStrings.LoadingData;
             return _tagsLoader.LoadAsync(
                 () => Module.GetRefs(tags: true, branches: false).ToList(),
                 list =>
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private Task LoadBranchesAsync()
         {
-            comboBoxBranches.Text = Strings.LoadingData;
+            comboBoxBranches.Text = TranslatedStrings.LoadingData;
             return _branchesLoader.LoadAsync(
                 () => Module.GetRefs(tags: false, branches: true).ToList(),
                 list =>

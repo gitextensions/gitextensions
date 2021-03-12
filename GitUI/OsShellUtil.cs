@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using Microsoft.WindowsAPICodePack.Dialogs;
 namespace GitUI
 {
@@ -46,7 +47,7 @@ namespace GitUI
         /// </summary>
         public static void OpenUrlInDefaultBrowser(string? url)
         {
-            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(url))
+            if (!Strings.IsNullOrWhiteSpace(url))
             {
                 new Executable(url).Start(useShellExecute: true);
             }

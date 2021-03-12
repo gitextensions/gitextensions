@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs
         private WebBrowserControl? _buildReportWebBrowser;
         private GitRevision? _selectedGitRevision;
         private string? _url;
-        private readonly LinkLabel _openReportLink = new LinkLabel { AutoSize = false, Text = Strings.OpenReport, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
+        private readonly LinkLabel _openReportLink = new LinkLabel { AutoSize = false, Text = TranslatedStrings.OpenReport, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Fill };
 
         public Control? Control { get; private set; } // for focusing
 

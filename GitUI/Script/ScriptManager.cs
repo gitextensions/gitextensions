@@ -7,6 +7,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
+using GitExtUtils;
 
 namespace GitUI.Script
 {
@@ -78,7 +79,7 @@ namespace GitUI.Script
         private static BindingList<ScriptInfo> DeserializeFromXml(string? xml)
         {
             // When there is nothing to deserialize, add default scripts
-            if (GitExtUtils.Strings.IsNullOrEmpty(xml))
+            if (Strings.IsNullOrEmpty(xml))
             {
                 return GetDefaultScripts();
             }

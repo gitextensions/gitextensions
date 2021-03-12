@@ -51,7 +51,7 @@ namespace GitUI
                 var gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
                 if (gitHead is null)
                 {
-                    MessageBox.Show(string.Format(_branchCheckoutError.Text, branch), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format(_branchCheckoutError.Text, branch), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {

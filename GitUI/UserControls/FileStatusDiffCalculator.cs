@@ -52,7 +52,7 @@ namespace GitUI
                             new FileStatusWithDescription(
                                 firstRev: new GitRevision(parentId),
                                 secondRev: selectedRev,
-                                summary: Strings.DiffWithParent + GetDescriptionForRevision(describeRevision, parentId),
+                                summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(describeRevision, parentId),
                                 statuses: module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, selectedRev.FirstParentId))));
                 }
 
@@ -65,7 +65,7 @@ namespace GitUI
                     {
                         // Create an artificial commit
                         fileStatusDescs.Add(new FileStatusWithDescription(
-                            firstRev: new GitRevision(ObjectId.CombinedDiffId), secondRev: selectedRev, summary: Strings.CombinedDiff, statuses: conflicts));
+                            firstRev: new GitRevision(ObjectId.CombinedDiffId), secondRev: selectedRev, summary: TranslatedStrings.CombinedDiff, statuses: conflicts));
                     }
                 }
 
@@ -85,7 +85,7 @@ namespace GitUI
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: firstRev,
                 secondRev: selectedRev,
-                summary: Strings.DiffWithParent + GetDescriptionForRevision(describeRevision, firstRev.ObjectId),
+                summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(describeRevision, firstRev.ObjectId),
                 statuses: module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId)));
 
             if (!AppSettings.ShowDiffForAllParents || revisions.Count > maxMultiCompare)
@@ -146,7 +146,7 @@ namespace GitUI
                         .Select(rev => new FileStatusWithDescription(
                             firstRev: rev,
                             secondRev: selectedRev,
-                            summary: Strings.DiffWithParent + GetDescriptionForRevision(describeRevision, rev.ObjectId),
+                            summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(describeRevision, rev.ObjectId),
                             statuses: module.GetDiffFilesWithSubmodulesStatus(rev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId))));
 
                 return fileStatusDescs;
@@ -166,26 +166,26 @@ namespace GitUI
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: selectedRev,
-                summary: Strings.DiffBaseToB + GetDescriptionForRevision(describeRevision, selectedRev.ObjectId),
+                summary: TranslatedStrings.DiffBaseToB + GetDescriptionForRevision(describeRevision, selectedRev.ObjectId),
                 statuses: allBaseToB.Except(commonBaseToAandB, comparer).ToList()));
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: firstRev,
-                summary: Strings.DiffBaseToB + GetDescriptionForRevision(describeRevision, firstRev.ObjectId),
+                summary: TranslatedStrings.DiffBaseToB + GetDescriptionForRevision(describeRevision, firstRev.ObjectId),
                 statuses: allBaseToA.Except(commonBaseToAandB, comparer).ToList()));
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: selectedRev,
-                summary: Strings.DiffCommonBase + GetDescriptionForRevision(describeRevision, baseRevGuid),
+                summary: TranslatedStrings.DiffCommonBase + GetDescriptionForRevision(describeRevision, baseRevGuid),
                 statuses: commonBaseToAandB));
 
             // Add rangeDiff as a separate group (range is not the same as diff with artificial commits)
-            var statuses = new List<GitItemStatus> { new GitItemStatus(name: Strings.DiffRange) { IsRangeDiff = true } };
+            var statuses = new List<GitItemStatus> { new GitItemStatus(name: TranslatedStrings.DiffRange) { IsRangeDiff = true } };
             var first = firstRev.ObjectId == firstRevHead ? firstRev : new GitRevision(firstRevHead);
             var selected = selectedRev.ObjectId == selectedRevHead ? selectedRev : new GitRevision(selectedRevHead);
             var (baseToFirstCount, baseToSecondCount) = module.GetCommitRangeDiffCount(first.ObjectId, selected.ObjectId);
             const int rangeDiffCommitLimit = 100;
-            var desc = $"{Strings.DiffRange} {baseToFirstCount ?? rangeDiffCommitLimit}↓ {baseToSecondCount ?? rangeDiffCommitLimit}↑";
+            var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? rangeDiffCommitLimit}↓ {baseToSecondCount ?? rangeDiffCommitLimit}↑";
 
             var rangeDiff = new FileStatusWithDescription(
                 firstRev: first,

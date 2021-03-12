@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
@@ -174,7 +175,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
         {
-            e.Value = !GitExtUtils.Strings.IsNullOrEmpty(revision.BuildStatus?.Description)
+            e.Value = !Strings.IsNullOrEmpty(revision.BuildStatus?.Description)
                 ? revision.BuildStatus.Description
                 : "";
             e.FormattingApplied = true;

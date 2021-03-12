@@ -122,7 +122,7 @@ See the changes in the commit form.");
             {
                 if (isIncompleteMatch)
                 {
-                    MessageBox.Show(_nodeNotFoundNextAvailableParentSelected.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(_nodeNotFoundNextAvailableParentSelected.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 tvGitTree.SelectedNode = foundNode;
@@ -130,7 +130,7 @@ See the changes in the commit form.");
             }
             else
             {
-                MessageBox.Show(_nodeNotFoundSelectionNotChanged.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_nodeNotFoundSelectionNotChanged.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -462,7 +462,7 @@ See the changes in the commit form.");
                 selectedItem = searchWindow.SelectedItem;
             }
 
-            if (GitExtUtils.Strings.IsNullOrEmpty(selectedItem))
+            if (Strings.IsNullOrEmpty(selectedItem))
             {
                 return;
             }
@@ -585,7 +585,7 @@ See the changes in the commit form.");
                                                                          && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(fsi);
             diffWithRememberedFileToolStripMenuItem.Text =
                 _rememberFileContextMenuController.RememberedDiffFileItem is not null
-                    ? string.Format(Strings.DiffSelectedWithRememberedFile, _rememberFileContextMenuController.RememberedDiffFileItem.Item.Name)
+                    ? string.Format(TranslatedStrings.DiffSelectedWithRememberedFile, _rememberFileContextMenuController.RememberedDiffFileItem.Item.Name)
                     : string.Empty;
 
             rememberFileStripMenuItem.Visible = isFile;
@@ -777,7 +777,7 @@ See the changes in the commit form.");
 
             if (wereErrors)
             {
-                MessageBox.Show(string.Format(_assumeUnchangedFail.Text, itemStatus.Name), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(_assumeUnchangedFail.Text, itemStatus.Name), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
@@ -806,7 +806,7 @@ See the changes in the commit form.");
             }
             else
             {
-                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

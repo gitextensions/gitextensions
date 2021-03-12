@@ -46,10 +46,10 @@ namespace GitUITests.UserControls.CommitInfo
             IReadOnlyList<string> refs = new List<string>();
 
             _refsFormatter.FormatBranches(refs, showAsLinks, limit)
-                .Should().Be(GitUI.Strings.ContainedInNoBranch);
+                .Should().Be(GitUI.TranslatedStrings.ContainedInNoBranch);
 
             _refsFormatter.FormatTags(refs, showAsLinks, limit)
-                .Should().Be(GitUI.Strings.ContainedInNoTag);
+                .Should().Be(GitUI.TranslatedStrings.ContainedInNoTag);
         }
 
         [Test]
@@ -61,12 +61,12 @@ namespace GitUITests.UserControls.CommitInfo
             IEnumerable<string> formattedTags = refs.Select(r => FormatRef(r, "tag", showAsLinks));
 
             _refsFormatter.FormatBranches(refs, showAsLinks, limit)
-                .Should().Be(GitUI.Strings.ContainedInBranches
+                .Should().Be(GitUI.TranslatedStrings.ContainedInBranches
                              + Environment.NewLine
                              + formattedBranches.Join(Environment.NewLine));
 
             _refsFormatter.FormatTags(refs, showAsLinks, limit)
-                .Should().Be(GitUI.Strings.ContainedInTags
+                .Should().Be(GitUI.TranslatedStrings.ContainedInTags
                              + Environment.NewLine
                              + formattedTags.Join(Environment.NewLine));
         }
@@ -78,13 +78,13 @@ namespace GitUITests.UserControls.CommitInfo
             IEnumerable<string> formattedTags = _refs.Take(10).Select(r => FormatRef(r, "tag", showAsLinks));
 
             _refsFormatter.FormatBranches(_refs, showAsLinks, limit: true)
-                .Should().Be(GitUI.Strings.ContainedInBranches
+                .Should().Be(GitUI.TranslatedStrings.ContainedInBranches
                              + Environment.NewLine
                              + formattedBranches.Join(Environment.NewLine)
                              + GetShowAllLink("branches"));
 
             _refsFormatter.FormatTags(_refs, showAsLinks, limit: true)
-                .Should().Be(GitUI.Strings.ContainedInTags
+                .Should().Be(GitUI.TranslatedStrings.ContainedInTags
                              + Environment.NewLine
                              + formattedTags.Join(Environment.NewLine)
                              + GetShowAllLink("tags"));
@@ -97,7 +97,7 @@ namespace GitUITests.UserControls.CommitInfo
 
         private string GetShowAllLink(string type)
         {
-            return $"{Environment.NewLine}<a href='gitext://showall/{type}'>[ {Strings.ShowAll} ]</a>{Environment.NewLine}";
+            return $"{Environment.NewLine}<a href='gitext://showall/{type}'>[ {TranslatedStrings.ShowAll} ]</a>{Environment.NewLine}";
         }
     }
 }

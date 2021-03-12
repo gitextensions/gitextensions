@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _cannotOpenFile.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _cannotOpenFile.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
         }
@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs
                         }
                         catch (Exception ex)
                         {
-                            if (MessageBox.Show(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}", Strings.Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                            if (MessageBox.Show(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}", TranslatedStrings.Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
                             {
                                 e.Cancel = true;
                                 return;
@@ -133,7 +133,7 @@ namespace GitUI.CommandsDialogs
 
         private void SaveChanges()
         {
-            if (!GitExtUtils.Strings.IsNullOrEmpty(_fileName))
+            if (!Strings.IsNullOrEmpty(_fileName))
             {
                 if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
                 {

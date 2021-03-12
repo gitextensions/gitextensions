@@ -118,7 +118,7 @@ namespace GitUI
         {
             _label.Visible = true;
             _label.BringToFront();
-            _label.Text = Strings.SearchingFor + _quickSearchString;
+            _label.Text = TranslatedStrings.SearchingFor + _quickSearchString;
             _label.AutoSize = true;
         }
 

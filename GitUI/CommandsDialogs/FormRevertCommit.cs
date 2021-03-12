@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (ParentsList.SelectedItems.Count != 1)
                 {
-                    MessageBox.Show(this, _noneParentSelectedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _noneParentSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 else

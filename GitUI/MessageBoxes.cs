@@ -64,9 +64,9 @@ namespace GitUI
 
         public static void ShowGitConfigurationExceptionMessage(IWin32Window? owner, GitConfigurationException exception)
             => Show(owner,
-                    string.Format(ResourceManager.Strings.GeneralGitConfigExceptionMessage,
+                    string.Format(ResourceManager.TranslatedStrings.GeneralGitConfigExceptionMessage,
                                   exception.ConfigPath, Environment.NewLine, (exception.InnerException ?? exception).Message),
-                    ResourceManager.Strings.GeneralGitConfigExceptionCaption,
+                    ResourceManager.TranslatedStrings.GeneralGitConfigExceptionCaption,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
@@ -120,7 +120,7 @@ namespace GitUI
             => ShowError(owner, Instance._shellNotFound.Text, Instance._shellNotFoundCaption.Text);
 
         public static void ShowError(IWin32Window? owner, string text, string? caption = null)
-            => Show(owner, text, caption ?? Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            => Show(owner, text, caption ?? TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
         private static bool Confirm(IWin32Window? owner, string text, string caption)
             => Show(owner, text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;

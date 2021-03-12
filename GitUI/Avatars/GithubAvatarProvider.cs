@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using GitExtUtils;
 using JetBrains.Annotations;
 
 namespace GitUI.Avatars
@@ -88,7 +89,7 @@ namespace GitUI.Avatars
                     var client = new Git.hub.Client();
                     var userProfile = await client.GetUserAsync(username);
 
-                    if (GitExtUtils.Strings.IsNullOrEmpty(userProfile?.AvatarUrl))
+                    if (Strings.IsNullOrEmpty(userProfile?.AvatarUrl))
                     {
                         return null;
                     }

@@ -271,7 +271,7 @@ namespace GitUI.CommandsDialogs
 
                     foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
                     {
-                        if (!GitExtUtils.Strings.IsNullOrEmpty(line) && setOfFileNames.Add(line))
+                        if (!Strings.IsNullOrEmpty(line) && setOfFileNames.Add(line))
                         {
                             listOfFileNames.Append(" \"");
                             listOfFileNames.Append(line);
@@ -356,7 +356,7 @@ namespace GitUI.CommandsDialogs
 
             var fileName = revision.Name;
 
-            if (GitExtUtils.Strings.IsNullOrEmpty(fileName))
+            if (Strings.IsNullOrEmpty(fileName))
             {
                 fileName = FileName;
             }
@@ -472,13 +472,13 @@ namespace GitUI.CommandsDialogs
             {
                 string? orgFileName = selectedRows[0].Name;
 
-                if (GitExtUtils.Strings.IsNullOrEmpty(orgFileName))
+                if (Strings.IsNullOrEmpty(orgFileName))
                 {
                     orgFileName = FileName;
                 }
 
                 string? fullName = _fullPathResolver.Resolve(orgFileName);
-                if (GitExtUtils.Strings.IsNullOrWhiteSpace(fullName))
+                if (Strings.IsNullOrWhiteSpace(fullName))
                 {
                     return;
                 }

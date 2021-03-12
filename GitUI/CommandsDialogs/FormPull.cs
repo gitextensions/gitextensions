@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
             _NO_TRANSLATE_Remotes.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
-            if (GitExtUtils.Strings.IsNullOrEmpty(selectedRemoteName))
+            if (Strings.IsNullOrEmpty(selectedRemoteName))
             {
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _branch));
             }
@@ -242,7 +242,7 @@ namespace GitUI.CommandsDialogs
             if (pullAction == AppSettings.PullAction.FetchPruneAll)
             {
                 string messageBoxTitle;
-                if (GitExtUtils.Strings.IsNullOrEmpty(remote))
+                if (Strings.IsNullOrEmpty(remote))
                 {
                     messageBoxTitle = string.Format(_pruneFromCaption.Text, AllRemotes);
                 }
@@ -378,19 +378,19 @@ namespace GitUI.CommandsDialogs
                 {
                     OwnerWindowHandle = owner?.Handle ?? default,
                     Text = _notOnBranch.Text,
-                    InstructionText = Strings.ErrorInstructionNotOnBranch,
-                    Caption = Strings.ErrorCaptionNotOnBranch,
+                    InstructionText = TranslatedStrings.ErrorInstructionNotOnBranch,
+                    Caption = TranslatedStrings.ErrorCaptionNotOnBranch,
                     StandardButtons = TaskDialogStandardButtons.Cancel,
                     Icon = TaskDialogStandardIcon.Error,
                     Cancelable = true,
                 };
-                var btnCheckout = new TaskDialogCommandLink("Checkout", null, Strings.ButtonCheckoutBranch);
+                var btnCheckout = new TaskDialogCommandLink("Checkout", null, TranslatedStrings.ButtonCheckoutBranch);
                 btnCheckout.Click += (s, e) =>
                 {
                     dialogResult = 0;
                     dialog.Close();
                 };
-                var btnContinue = new TaskDialogCommandLink("Continue", null, Strings.ButtonContinue);
+                var btnContinue = new TaskDialogCommandLink("Continue", null, TranslatedStrings.ButtonContinue);
                 btnContinue.Click += (s, e) =>
                 {
                     dialogResult = 1;
@@ -481,19 +481,19 @@ namespace GitUI.CommandsDialogs
             {
                 if (PullFromUrl.Checked && string.IsNullOrEmpty(comboBoxPullSource.Text))
                 {
-                    MessageBox.Show(this, _selectSourceDirectory.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _selectSourceDirectory.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
                 if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text) && !IsPullAll())
                 {
-                    MessageBox.Show(this, _selectRemoteRepository.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _selectRemoteRepository.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
                 if (!Fetch.Checked && Branches.Text == "*")
                 {
-                    MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
 
@@ -934,7 +934,7 @@ namespace GitUI.CommandsDialogs
                 {
                     foreach (var remote in (IEnumerable<ConfigFileRemote>)_NO_TRANSLATE_Remotes.DataSource)
                     {
-                        if (!GitExtUtils.Strings.IsNullOrWhiteSpace(remote.Name) && remote.Name != AllRemotes)
+                        if (!Strings.IsNullOrWhiteSpace(remote.Name) && remote.Name != AllRemotes)
                         {
                             yield return remote.Name;
                         }

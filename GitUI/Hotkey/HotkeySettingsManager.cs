@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GitCommands;
+using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Script;
@@ -162,7 +163,7 @@ namespace GitUI.Hotkey
         {
             MigrateSettings();
 
-            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
+            if (!Strings.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
             {
                 return LoadSerializedSettings(AppSettings.SerializedHotkeys);
             }

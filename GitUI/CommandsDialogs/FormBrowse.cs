@@ -889,7 +889,7 @@ namespace GitUI.CommandsDialogs
                 toolPanel.ContentPanel.Controls.Add(_dashboard);
             }
 
-            Text = _appTitleGenerator.Generate(branchName: Strings.NoBranch);
+            Text = _appTitleGenerator.Generate(branchName: TranslatedStrings.NoBranch);
 
             _dashboard.RefreshContent();
             _dashboard.Visible = true;
@@ -1114,7 +1114,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 RefreshWorkingDirComboText();
-                var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : Strings.NoBranch;
+                var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : TranslatedStrings.NoBranch;
                 Text = _appTitleGenerator.Generate(Module.WorkingDir, validBrowseDir, branchName);
 
                 OnActivate();
@@ -2162,7 +2162,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(this, _noReposHostPluginLoaded.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2208,7 +2208,7 @@ namespace GitUI.CommandsDialogs
             repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
             if (repoHost is null)
             {
-                MessageBox.Show(this, _noReposHostFound.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noReposHostFound.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -2482,7 +2482,7 @@ namespace GitUI.CommandsDialogs
             {
                 string? filePath = PathUtil.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
 
-                if (!GitExtUtils.Strings.IsNullOrWhiteSpace(filePath))
+                if (!Strings.IsNullOrWhiteSpace(filePath))
                 {
                     FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
                 }
@@ -2796,7 +2796,7 @@ namespace GitUI.CommandsDialogs
                 try
                 {
                     await TaskScheduler.Default;
-                    await _submoduleStatusProvider.UpdateSubmodulesStructureAsync(Module.WorkingDir, Strings.NoBranch, updateStatus);
+                    await _submoduleStatusProvider.UpdateSubmodulesStructureAsync(Module.WorkingDir, TranslatedStrings.NoBranch, updateStatus);
                 }
                 catch (GitConfigurationException ex)
                 {
@@ -3049,7 +3049,7 @@ namespace GitUI.CommandsDialogs
                 catch (InvalidOperationException)
                 {
 #if DEBUG
-                    MessageBox.Show(@"ConEmu appears to be missing. Please perform a full rebuild and try again.", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@"ConEmu appears to be missing. Please perform a full rebuild and try again.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                     throw;
 #endif

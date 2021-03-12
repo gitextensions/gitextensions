@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GitExtUtils;
 
 namespace ResourceManager
 {
@@ -16,7 +17,7 @@ namespace ResourceManager
 
         public static void AddTranslationItemsFromFields(string? category, object obj, ITranslation translation)
         {
-            if (!GitExtUtils.Strings.IsNullOrEmpty(category))
+            if (!Strings.IsNullOrEmpty(category))
             {
                 Xliff.TranslationUtil.AddTranslationItemsFromFields(category, obj, translation);
             }
@@ -39,7 +40,7 @@ namespace ResourceManager
 
         public static void TranslateItemsFromFields(string? category, object obj, ITranslation translation)
         {
-            if (!GitExtUtils.Strings.IsNullOrEmpty(category))
+            if (!Strings.IsNullOrEmpty(category))
             {
                 Xliff.TranslationUtil.TranslateItemsFromFields(category, obj, translation);
             }

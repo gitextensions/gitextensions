@@ -62,10 +62,10 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(4);
 
-            _copyContextMenuItem.DropDownItems[0].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetCommitHash(1), 'C'));
-            _copyContextMenuItem.DropDownItems[1].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetMessage(1), 'M'));
-            _copyContextMenuItem.DropDownItems[2].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetAuthor(1), 'A'));
-            _copyContextMenuItem.DropDownItems[3].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.Date, 'D'));
+            _copyContextMenuItem.DropDownItems[0].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetCommitHash(1), 'C'));
+            _copyContextMenuItem.DropDownItems[1].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetMessage(1), 'M'));
+            _copyContextMenuItem.DropDownItems[2].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetAuthor(1), 'A'));
+            _copyContextMenuItem.DropDownItems[3].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.Date, 'D'));
         }
 
         [Test]
@@ -84,14 +84,14 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _copyContextMenuItem.ShowDropDown();
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(8);
-            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(GitUI.Strings.Branches);
+            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(TranslatedStrings.Branches);
             _copyContextMenuItem.DropDownItems[1].Text.Should().EndWith("branch1");
             _copyContextMenuItem.DropDownItems[2].Text.Should().EndWith("branch2");
             _copyContextMenuItem.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
-            _copyContextMenuItem.DropDownItems[4].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetCommitHash(1), 'C'));
-            _copyContextMenuItem.DropDownItems[5].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetMessage(1), 'M'));
-            _copyContextMenuItem.DropDownItems[6].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetAuthor(1), 'A'));
-            _copyContextMenuItem.DropDownItems[7].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.Date, 'D'));
+            _copyContextMenuItem.DropDownItems[4].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetCommitHash(1), 'C'));
+            _copyContextMenuItem.DropDownItems[5].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetMessage(1), 'M'));
+            _copyContextMenuItem.DropDownItems[6].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetAuthor(1), 'A'));
+            _copyContextMenuItem.DropDownItems[7].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.Date, 'D'));
         }
 
         [Test]
@@ -110,14 +110,14 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _copyContextMenuItem.ShowDropDown();
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(8);
-            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(GitUI.Strings.Tags);
+            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(TranslatedStrings.Tags);
             _copyContextMenuItem.DropDownItems[1].Text.Should().EndWith("tag1");
             _copyContextMenuItem.DropDownItems[2].Text.Should().EndWith("tag2");
             _copyContextMenuItem.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
-            _copyContextMenuItem.DropDownItems[4].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetCommitHash(1), 'C'));
-            _copyContextMenuItem.DropDownItems[5].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetMessage(1), 'M'));
-            _copyContextMenuItem.DropDownItems[6].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetAuthor(1), 'A'));
-            _copyContextMenuItem.DropDownItems[7].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.Date, 'D'));
+            _copyContextMenuItem.DropDownItems[4].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetCommitHash(1), 'C'));
+            _copyContextMenuItem.DropDownItems[5].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetMessage(1), 'M'));
+            _copyContextMenuItem.DropDownItems[6].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetAuthor(1), 'A'));
+            _copyContextMenuItem.DropDownItems[7].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.Date, 'D'));
         }
 
         [Test]
@@ -138,18 +138,18 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _copyContextMenuItem.ShowDropDown();
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(12);
-            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(GitUI.Strings.Branches);
+            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(TranslatedStrings.Branches);
             _copyContextMenuItem.DropDownItems[1].Text.Should().EndWith("branch1");
             _copyContextMenuItem.DropDownItems[2].Text.Should().EndWith("branch2");
             _copyContextMenuItem.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
-            _copyContextMenuItem.DropDownItems[4].Text.Should().Be(GitUI.Strings.Tags);
+            _copyContextMenuItem.DropDownItems[4].Text.Should().Be(TranslatedStrings.Tags);
             _copyContextMenuItem.DropDownItems[5].Text.Should().EndWith("tag1");
             _copyContextMenuItem.DropDownItems[6].Text.Should().EndWith("tag2");
             _copyContextMenuItem.DropDownItems[7].Should().BeOfType<ToolStripSeparator>();
-            _copyContextMenuItem.DropDownItems[8].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetCommitHash(1), 'C'));
-            _copyContextMenuItem.DropDownItems[9].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetMessage(1), 'M'));
-            _copyContextMenuItem.DropDownItems[10].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetAuthor(1), 'A'));
-            _copyContextMenuItem.DropDownItems[11].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.Date, 'D'));
+            _copyContextMenuItem.DropDownItems[8].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetCommitHash(1), 'C'));
+            _copyContextMenuItem.DropDownItems[9].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetMessage(1), 'M'));
+            _copyContextMenuItem.DropDownItems[10].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetAuthor(1), 'A'));
+            _copyContextMenuItem.DropDownItems[11].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.Date, 'D'));
         }
 
         [Test]
@@ -181,11 +181,11 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(5);
 
-            _copyContextMenuItem.DropDownItems[0].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetCommitHash(revisions.Length), 'C'));
-            _copyContextMenuItem.DropDownItems[1].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetMessage(revisions.Length), 'M'));
-            _copyContextMenuItem.DropDownItems[2].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetAuthor(revisions.Length), 'A'));
-            _copyContextMenuItem.DropDownItems[3].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetAuthorDate(revisions.Length), 'T'));
-            _copyContextMenuItem.DropDownItems[4].Text.Should().StartWith(AddHotKey(ResourceManager.Strings.GetCommitDate(revisions.Length), 'D'));
+            _copyContextMenuItem.DropDownItems[0].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetCommitHash(revisions.Length), 'C'));
+            _copyContextMenuItem.DropDownItems[1].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetMessage(revisions.Length), 'M'));
+            _copyContextMenuItem.DropDownItems[2].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetAuthor(revisions.Length), 'A'));
+            _copyContextMenuItem.DropDownItems[3].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetAuthorDate(revisions.Length), 'T'));
+            _copyContextMenuItem.DropDownItems[4].Text.Should().StartWith(AddHotKey(ResourceManager.TranslatedStrings.GetCommitDate(revisions.Length), 'D'));
         }
 
         private string AddHotKey(string label, char? hotkey)

@@ -13,6 +13,7 @@ using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUI.Script;
@@ -239,7 +240,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndexChanged += RemotesUpdated;
             _NO_TRANSLATE_Remotes.TextUpdate += RemotesUpdated;
 
-            if (GitExtUtils.Strings.IsNullOrEmpty(selectedRemoteName))
+            if (Strings.IsNullOrEmpty(selectedRemoteName))
             {
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _currentBranchName));
             }
@@ -288,7 +289,7 @@ namespace GitUI.CommandsDialogs
             ErrorOccurred = false;
             if (PushToUrl.Checked && !PathUtil.IsUrl(PushDestination.Text))
             {
-                MessageBox.Show(owner, _selectDestinationDirectory.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, _selectDestinationDirectory.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -302,7 +303,7 @@ namespace GitUI.CommandsDialogs
             var selectedRemoteName = _selectedRemote.Name;
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text))
             {
-                MessageBox.Show(owner, _selectTag.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, _selectTag.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 

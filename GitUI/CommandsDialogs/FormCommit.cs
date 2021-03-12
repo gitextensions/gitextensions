@@ -1256,25 +1256,25 @@ namespace GitUI.CommandsDialogs
                     {
                         OwnerWindowHandle = Handle,
                         Text = _notOnBranch.Text,
-                        InstructionText = Strings.ErrorInstructionNotOnBranch,
-                        Caption = Strings.ErrorCaptionNotOnBranch,
+                        InstructionText = TranslatedStrings.ErrorInstructionNotOnBranch,
+                        Caption = TranslatedStrings.ErrorCaptionNotOnBranch,
                         StandardButtons = TaskDialogStandardButtons.Cancel,
                         Icon = TaskDialogStandardIcon.Error,
                         Cancelable = true,
                     };
-                    var btnCheckout = new TaskDialogCommandLink("Checkout", null, Strings.ButtonCheckoutBranch);
+                    var btnCheckout = new TaskDialogCommandLink("Checkout", null, TranslatedStrings.ButtonCheckoutBranch);
                     btnCheckout.Click += (s, e) =>
                     {
                         dialogResult = 0;
                         dialog.Close();
                     };
-                    var btnCreate = new TaskDialogCommandLink("Create", null, Strings.ButtonCreateBranch);
+                    var btnCreate = new TaskDialogCommandLink("Create", null, TranslatedStrings.ButtonCreateBranch);
                     btnCreate.Click += (s, e) =>
                     {
                         dialogResult = 1;
                         dialog.Close();
                     };
-                    var btnContinue = new TaskDialogCommandLink("Continue", null, Strings.ButtonContinue);
+                    var btnContinue = new TaskDialogCommandLink("Continue", null, TranslatedStrings.ButtonContinue);
                     btnContinue.Click += (s, e) =>
                     {
                         dialogResult = 2;
@@ -1364,7 +1364,7 @@ namespace GitUI.CommandsDialogs
 
                     if (pushCompleted && Module.SuperprojectModule is not null &&
                         AppSettings.StageInSuperprojectAfterCommit &&
-                        !GitExtUtils.Strings.IsNullOrWhiteSpace(Module.SubmodulePath))
+                        !Strings.IsNullOrWhiteSpace(Module.SubmodulePath))
                     {
                         Module.SuperprojectModule.StageFile(Module.SubmodulePath);
                     }
@@ -1392,7 +1392,7 @@ namespace GitUI.CommandsDialogs
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(this, $"Exception: {e.Message}", Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, $"Exception: {e.Message}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 return;
@@ -2103,7 +2103,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!string.IsNullOrEmpty(output.ToString()))
                 {
-                    MessageBox.Show(this, output.ToString(), Strings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             finally
@@ -2146,7 +2146,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2175,7 +2175,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             Initialize();
@@ -2183,7 +2183,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResetSelectedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, _resetSelectedChangesText.Text, Strings.ResetChangesCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
+            if (MessageBox.Show(this, _resetSelectedChangesText.Text, TranslatedStrings.ResetChangesCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
                 DialogResult.Yes)
             {
                 return;
@@ -2743,7 +2743,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(this, _selectOnlyOneFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _selectOnlyOneFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -3288,7 +3288,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

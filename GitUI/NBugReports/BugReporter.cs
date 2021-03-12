@@ -23,23 +23,23 @@ namespace GitExtensions
             // Command: <command>
             if (!string.IsNullOrWhiteSpace(exception.Command))
             {
-                sb.AppendLine($"{GitUI.Strings.Command}: {exception.Command}");
+                sb.AppendLine($"{TranslatedStrings.Command}: {exception.Command}");
             }
 
             // Arguments: <args>
             if (!string.IsNullOrWhiteSpace(exception.Arguments))
             {
-                sb.AppendLine($"{GitUI.Strings.Arguments}: {exception.Arguments}");
+                sb.AppendLine($"{TranslatedStrings.Arguments}: {exception.Arguments}");
             }
 
             // Working directory: <working dir>
-            sb.AppendLine($"{GitUI.Strings.WorkingDirectory}: {exception.WorkingDirectory}");
+            sb.AppendLine($"{TranslatedStrings.WorkingDirectory}: {exception.WorkingDirectory}");
 
             if (canRaiseBug)
             {
                 // Directions to raise a bug
                 sb.AppendLine();
-                sb.AppendLine(GitUI.Strings.ReportBug);
+                sb.AppendLine(TranslatedStrings.ReportBug);
             }
 
             return sb.ToString();
@@ -68,7 +68,7 @@ namespace GitExtensions
         private static void ReportAppException(ExternalOperationException exception, bool isTerminating)
         {
             // UserExternalOperationException wraps an actual exception, but be cautious just in case
-            string instructionText = exception.InnerException?.Message ?? GitUI.Strings.InstructionOperationFailed;
+            string instructionText = exception.InnerException?.Message ?? TranslatedStrings.InstructionOperationFailed;
 
             ShowException(FormatText(exception, canRaiseBug: true), instructionText, exception, isTerminating);
         }
@@ -82,7 +82,7 @@ namespace GitExtensions
                 moreInfo += Environment.NewLine + Environment.NewLine;
             }
 
-            ShowException($"{moreInfo}{GitUI.Strings.ReportBug}", exception.Message, exception, isTerminating);
+            ShowException($"{moreInfo}{TranslatedStrings.ReportBug}", exception.Message, exception, isTerminating);
         }
 
         private static void ReportUserException(UserExternalOperationException exception, bool isTerminating)
@@ -95,14 +95,14 @@ namespace GitExtensions
                 OwnerWindowHandle = OwnerFormHandle,
                 Text = text,
                 InstructionText = instructionText,
-                Caption = GitUI.Strings.Error,
+                Caption = TranslatedStrings.Error,
                 Icon = TaskDialogStandardIcon.Error,
                 Cancelable = true,
             };
 
             if (exception is not null)
             {
-                var btnReport = new TaskDialogCommandLink("Report", GitUI.Strings.ButtonReportBug);
+                var btnReport = new TaskDialogCommandLink("Report", TranslatedStrings.ButtonReportBug);
                 btnReport.Click += (s, e) =>
                 {
                     dialog.Close();
@@ -112,7 +112,7 @@ namespace GitExtensions
                 dialog.Controls.Add(btnReport);
             }
 
-            var btnIgnoreOrClose = new TaskDialogCommandLink("IgnoreOrClose", isTerminating ? GitUI.Strings.ButtonCloseApp : GitUI.Strings.ButtonIgnore);
+            var btnIgnoreOrClose = new TaskDialogCommandLink("IgnoreOrClose", isTerminating ? TranslatedStrings.ButtonCloseApp : TranslatedStrings.ButtonIgnore);
             btnIgnoreOrClose.Click += (s, e) =>
             {
                 dialog.Close();

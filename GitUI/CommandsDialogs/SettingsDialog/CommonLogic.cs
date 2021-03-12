@@ -83,7 +83,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show(_cantReadRegistry.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_cantReadRegistry.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return value ?? "";

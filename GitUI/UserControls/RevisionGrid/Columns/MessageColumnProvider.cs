@@ -105,7 +105,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 var initialLength = (bodySummary?.Length ?? 50) + 10;
                 _toolTipBuilder.EnsureCapacity(initialLength);
 
-                _toolTipBuilder.Append(bodySummary ?? revision.Subject + Strings.BodyNotLoaded);
+                _toolTipBuilder.Append(bodySummary ?? revision.Subject + TranslatedStrings.BodyNotLoaded);
 
                 if (revision.Refs.Count != 0)
                 {
@@ -119,11 +119,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     {
                         if (gitRef.IsBisectGood)
                         {
-                            _toolTipBuilder.AppendLine(Strings.MarkBisectAsGood);
+                            _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsGood);
                         }
                         else if (gitRef.IsBisectBad)
                         {
-                            _toolTipBuilder.AppendLine(Strings.MarkBisectAsBad);
+                            _toolTipBuilder.AppendLine(TranslatedStrings.MarkBisectAsBad);
                         }
                         else
                         {
@@ -172,8 +172,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 dashedLine: false);
 
             var max = Math.Max(
-                TextRenderer.MeasureText(ResourceManager.Strings.Workspace, style.NormalFont).Width,
-                TextRenderer.MeasureText(ResourceManager.Strings.Index, style.NormalFont).Width);
+                TextRenderer.MeasureText(ResourceManager.TranslatedStrings.Workspace, style.NormalFont).Width,
+                TextRenderer.MeasureText(ResourceManager.TranslatedStrings.Index, style.NormalFont).Width);
 
             offset = baseOffset + max + DpiUtil.Scale(6);
 

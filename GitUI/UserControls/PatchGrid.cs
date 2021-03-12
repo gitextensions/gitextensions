@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Patches;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using Microsoft;
@@ -140,9 +141,9 @@ namespace GitUI
                 return;
             }
 
-            if (GitExtUtils.Strings.IsNullOrEmpty(patchFile.FullName))
+            if (Strings.IsNullOrEmpty(patchFile.FullName))
             {
-                MessageBox.Show(_unableToShowPatchDetails.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_unableToShowPatchDetails.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

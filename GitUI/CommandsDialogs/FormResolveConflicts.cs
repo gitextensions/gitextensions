@@ -352,7 +352,7 @@ namespace GitUI.CommandsDialogs
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "Merge using script failed.\n" + ex, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Merge using script failed.\n" + ex, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return false;
@@ -508,7 +508,7 @@ namespace GitUI.CommandsDialogs
                     if (FileHelper.IsBinaryFileName(Module, item.Local.Filename))
                     {
                         if (MessageBox.Show(this, string.Format(_fileIsBinary.Text, _mergetool),
-                                Strings.Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
+                                TranslatedStrings.Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                                 MessageBoxDefaultButton.Button2) == DialogResult.No)
                         {
                             BinaryFilesChooseLocalBaseRemote(item);
@@ -516,7 +516,7 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    if (GitExtUtils.Strings.IsNullOrWhiteSpace(_mergetoolCmd) || GitExtUtils.Strings.IsNullOrWhiteSpace(_mergetoolPath))
+                    if (Strings.IsNullOrWhiteSpace(_mergetoolCmd) || Strings.IsNullOrWhiteSpace(_mergetoolPath))
                     {
                         // mergetool is set, but arguments cannot be manipulated
                         Module.RunMergeTool(item.Filename);
@@ -625,7 +625,7 @@ namespace GitUI.CommandsDialogs
 
             if (string.IsNullOrEmpty(_mergetool))
             {
-                MessageBox.Show(this, _noMergeTool.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _noMergeTool.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -662,7 +662,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!PathUtil.TryFindFullPath(_mergetoolPath, out string? fullPath))
                 {
-                    MessageBox.Show(this, _noMergeToolConfigured.Text, Strings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, _noMergeToolConfigured.Text, TranslatedStrings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return false;
                 }
 
@@ -836,7 +836,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.HandleConflictSelectSide(fileName, "BASE"))
             {
-                MessageBox.Show(this, _chooseBaseFileFailedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _chooseBaseFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -865,7 +865,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
             {
-                MessageBox.Show(this, _chooseLocalFileFailedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _chooseLocalFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -894,7 +894,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
             {
-                MessageBox.Show(this, _chooseRemoteFileFailedText.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _chooseRemoteFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1297,7 +1297,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileName, side))
                 {
-                    MessageBox.Show(this, _failureWhileOpenFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, _failureWhileOpenFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 OsShellUtil.OpenAs(fileName);
@@ -1352,7 +1352,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
                     {
-                        MessageBox.Show(this, _failureWhileSaveFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, _failureWhileSaveFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

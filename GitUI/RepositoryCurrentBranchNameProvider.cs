@@ -20,7 +20,7 @@ namespace GitUI
             string branchName = GitModule.GetSelectedBranchFast(repositoryPath);
             if (string.IsNullOrWhiteSpace(branchName) || branchName == DetachedHeadParser.DetachedBranch)
             {
-                branchName = $"({Strings.NoBranch})";
+                branchName = $"({TranslatedStrings.NoBranch})";
             }
 
             return branchName;

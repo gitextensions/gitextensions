@@ -5,7 +5,7 @@ using SmartFormat;
 namespace ResourceManager
 {
     /// <summary>Contains common string literals which are translated.</summary>
-    public sealed class Strings : Translate
+    public sealed class TranslatedStrings : Translate
     {
         private readonly TranslationString _secondsAgo = new("{0} {1:second|seconds} ago");
         private readonly TranslationString _minutesAgo = new("{0} {1:minute|minutes} ago");
@@ -49,18 +49,18 @@ Yes, I allow telemetry!");
         private readonly TranslationString _disableMenuItem = new TranslationString("Disable this dropdown");
 
         // public only because of FormTranslate
-        public Strings()
+        public TranslatedStrings()
         {
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        private static Lazy<Strings> _instance = new Lazy<Strings>();
+        private static Lazy<TranslatedStrings> _instance = new Lazy<TranslatedStrings>();
 
         public static void Reinitialize()
         {
             if (_instance.IsValueCreated)
             {
-                _instance = new Lazy<Strings>();
+                _instance = new Lazy<TranslatedStrings>();
             }
         }
 

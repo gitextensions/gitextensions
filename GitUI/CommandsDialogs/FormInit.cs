@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
 
             if (File.Exists(directoryPath))
             {
-                MessageBox.Show(this, _chooseDirectoryNotFile.Text, Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, _chooseDirectoryNotFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

@@ -5,6 +5,7 @@ using System.Drawing.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
+using GitExtUtils;
 
 namespace GitUI.Avatars
 {
@@ -44,12 +45,12 @@ namespace GitUI.Avatars
 
         private static (string? name, char[]? separator) NameSelector(string? name, string? email)
         {
-            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(name))
+            if (!Strings.IsNullOrWhiteSpace(name))
             {
                 return (name.Trim(), null);
             }
 
-            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(email))
+            if (!Strings.IsNullOrWhiteSpace(email))
             {
                 var withoutDomain = email.Split('@')[0].TrimStart();
                 return (withoutDomain, _emailInitialSeparator);

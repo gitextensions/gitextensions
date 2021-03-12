@@ -196,7 +196,7 @@ namespace GitUI.CommandsDialogs
                 };
                 var indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
                 var workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
-                Stashed.SetStashDiffs(headRev, indexRev, ResourceManager.Strings.Index, indexItems, workTreeRev, ResourceManager.Strings.Workspace, workTreeItems);
+                Stashed.SetStashDiffs(headRev, indexRev, ResourceManager.TranslatedStrings.Index, indexItems, workTreeRev, ResourceManager.TranslatedStrings.Workspace, workTreeItems);
             }
             else
             {

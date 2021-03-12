@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using GitExtUtils;
 
 namespace GitUI.NBugReports
 {
@@ -45,7 +46,7 @@ namespace GitUI.NBugReports
             sb.AppendLine();
             sb.AppendLine();
 
-            if (!GitExtUtils.Strings.IsNullOrWhiteSpace(additionalInfo))
+            if (!Strings.IsNullOrWhiteSpace(additionalInfo))
             {
                 sb.AppendLine("## Additional information");
                 sb.AppendLine(additionalInfo.Trim());
@@ -57,7 +58,7 @@ namespace GitUI.NBugReports
             {
                 sb.AppendLine("## Environment");
 
-                if (!GitExtUtils.Strings.IsNullOrWhiteSpace(environmentInfo))
+                if (!Strings.IsNullOrWhiteSpace(environmentInfo))
                 {
                     sb.AppendLine(environmentInfo);
                 }
