@@ -156,11 +156,12 @@ namespace GitUI.CommandsDialogs
                     key = toolbarItem.Name;
                 }
 
-                toolbarItem.Visible = LoadVisibilitySetting(key);
+                bool visible = LoadVisibilitySetting(key);
+                toolbarItem.Visible = visible;
 
                 ToolStripMenuItem menuToolbarItem = new(toolbarItem.ToolTipText)
                 {
-                    Checked = toolbarItem.Visible,
+                    Checked = visible,
                     CheckOnClick = true,
                     Tag = toolbarItem,
                     Image = toolbarItem.Image
