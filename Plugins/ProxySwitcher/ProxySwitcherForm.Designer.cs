@@ -1,4 +1,4 @@
-﻿namespace ProxySwitcher
+﻿namespace GitExtensions.Plugins.ProxySwitcher
 {
     partial class ProxySwitcherForm
     {

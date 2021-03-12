@@ -668,7 +668,7 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.FindLargeFiles.dll" />
       </Component>
       <Component Id="ProxySwitcher.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\ProxySwitcher.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ProxySwitcher.dll" />
       </Component>
       <Component Id="Bitbucket.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.Bitbucket.dll" />

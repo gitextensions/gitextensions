@@ -73,7 +73,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.FindL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.GitHub3", "Plugins\GitHub3\GitExtensions.Plugins.GitHub3.csproj", "{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxySwitcher", "Plugins\ProxySwitcher\ProxySwitcher.csproj", "{274F449F-7472-4248-9A57-8CA665A75B5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.ProxySwitcher", "Plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.csproj", "{274F449F-7472-4248-9A57-8CA665A75B5D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReleaseNotesGenerator", "Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj", "{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}"
 EndProject
