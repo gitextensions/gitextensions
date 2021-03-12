@@ -8,13 +8,13 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
 using GitCommands.Remotes;
-using GitHub3.Properties;
+using GitExtensions.Plugins.GitHub3.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
 using ResourceManager;
 
-namespace GitHub3
+namespace GitExtensions.Plugins.GitHub3
 {
     internal static class GitHubLoginInfo
     {

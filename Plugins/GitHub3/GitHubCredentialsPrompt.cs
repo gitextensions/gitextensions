@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using Strings = GitExtUtils.Strings;
 
-namespace GitHub3
+namespace GitExtensions.Plugins.GitHub3
 {
     public partial class GitHubCredentialsPrompt : Form
     {

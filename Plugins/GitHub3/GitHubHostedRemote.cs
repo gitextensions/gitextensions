@@ -1,6 +1,6 @@
 ﻿using GitUIPluginInterfaces.RepositoryHosts;
 
-namespace GitHub3
+namespace GitExtensions.Plugins.GitHub3
 {
     internal class GitHubHostedRemote : IHostedRemote
     {
