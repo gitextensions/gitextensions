@@ -5,7 +5,7 @@ using GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace GitImpact
+namespace GitExtensions.Plugins.GitImpact
 {
     public sealed partial class FormImpact : GitExtensionsFormBase
     {

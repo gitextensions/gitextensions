@@ -1,4 +1,4 @@
-﻿namespace GitImpact
+﻿namespace GitExtensions.Plugins.GitImpact
 {
     partial class FormImpact
     {

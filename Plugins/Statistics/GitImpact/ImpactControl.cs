@@ -9,7 +9,7 @@ using GitCommands.Statistics;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
-namespace GitImpact
+namespace GitExtensions.Plugins.GitImpact
 {
     public class ImpactControl : UserControl
     {
