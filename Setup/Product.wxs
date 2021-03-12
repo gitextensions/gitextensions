@@ -640,7 +640,7 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\Newtonsoft.Json.dll" />
       </Component>
       <Component Id="JiraCommitHintPlugin.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\JiraCommitHintPlugin.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.JiraCommitHintPlugin.dll" />
       </Component>
       <Component Id="Atlassian.Jira.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\Atlassian.Jira.dll" />

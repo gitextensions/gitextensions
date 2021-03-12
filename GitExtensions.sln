@@ -129,7 +129,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReleaseNotesGenerator.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager.Tests", "UnitTests\ResourceManager.Tests\ResourceManager.Tests.csproj", "{D9C9D8EF-E0BC-4CCD-829D-3523E750D0FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraCommitHintPlugin", "Plugins\JiraCommitHintPlugin\JiraCommitHintPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.JiraCommitHintPlugin", "Plugins\JiraCommitHintPlugin\GitExtensions.Plugins.JiraCommitHintPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTestUtils", "UnitTests\CommonTestUtils\CommonTestUtils.csproj", "{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}"
 EndProject

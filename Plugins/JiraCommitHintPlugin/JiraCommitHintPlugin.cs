@@ -6,16 +6,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Atlassian.Jira;
+using GitExtensions.Plugins.JiraCommitHintPlugin.Properties;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.UserControls;
-using JiraCommitHintPlugin.Properties;
 using Microsoft;
 using NString;
 using ResourceManager;
 
-namespace JiraCommitHintPlugin
+namespace GitExtensions.Plugins.JiraCommitHintPlugin
 {
     [Export(typeof(IGitPlugin))]
     public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForRepository
