@@ -10,7 +10,7 @@ using GitExtUtils;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace ReleaseNotesGenerator
+namespace GitExtensions.Plugins.ReleaseNotesGenerator
 {
     /// <summary>
     /// Test on GE repository from "2.00" to "2.10". Should display 687 items.

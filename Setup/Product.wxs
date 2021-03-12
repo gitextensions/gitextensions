@@ -634,7 +634,7 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitFlow.dll" />
       </Component>
       <Component Id="ReleaseNotesGenerator.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\ReleaseNotesGenerator.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ReleaseNotesGenerator.dll" />
       </Component>
       <Component Id="Newtonsoft.Json.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\Newtonsoft.Json.dll" />

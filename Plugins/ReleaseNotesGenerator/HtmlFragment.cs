@@ -7,7 +7,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace ReleaseNotesGenerator
+namespace GitExtensions.Plugins.ReleaseNotesGenerator
 {
     /// <summary>
     /// Helper class to decode HTML from the clipboard.
