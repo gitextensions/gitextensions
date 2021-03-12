@@ -12,7 +12,7 @@ using GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace FindLargeFiles
+namespace GitExtensions.Plugins.FindLargeFiles
 {
     public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
     {

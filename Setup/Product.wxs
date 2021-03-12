@@ -665,7 +665,7 @@
         <RemoveFile Name="Gerrit.dll" Id="Gerrit.dll" On="both" />
       </Component>
       <Component Id="FindLargeFiles.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\FindLargeFiles.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.FindLargeFiles.dll" />
       </Component>
       <Component Id="ProxySwitcher.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\ProxySwitcher.dll" />

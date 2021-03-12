@@ -1,4 +1,4 @@
-﻿namespace FindLargeFiles
+﻿namespace GitExtensions.Plugins.FindLargeFiles
 {
     partial class FindLargeFilesForm
     {

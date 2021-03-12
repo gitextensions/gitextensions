@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Windows.Forms;
 
-namespace FindLargeFiles
+namespace GitExtensions.Plugins.FindLargeFiles
 {
     /// <summary>
     /// Custom sortable binding branches list, use for support user-defined sorting in <see cref="DataGridView"/>.
