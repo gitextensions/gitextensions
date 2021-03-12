@@ -188,8 +188,8 @@ namespace GitUI
             // to avoid that GE seem to hang when selecting the range diff
             int count = (baseA is null || baseB is null
                 ? baseToFirstCount + baseToSecondCount
-                : module.GetCommitDiffCount(baseA, firstRevHead)
-                + module.GetCommitDiffCount(baseB, selectedRevHead))
+                : module.GetCommitCount(firstRevHead.ToString(), baseA.ToString(), cache: true)
+                + module.GetCommitCount(selectedRevHead.ToString(), baseB.ToString(), cache: true))
                 ?? rangeDiffCommitLimit;
             if (!GitVersion.Current.SupportRangeDiffTool || count >= rangeDiffCommitLimit)
             {
@@ -210,7 +210,11 @@ namespace GitUI
             return fileStatusDescs;
 
             static ObjectId GetRevisionOrHead(GitRevision rev, Lazy<ObjectId> head)
-                => rev.IsArtificial ? head.Value : rev.ObjectId;
+                => rev.ObjectId == ObjectId.IndexId
+                ? rev.FirstParentId!
+                : rev.IsArtificial
+                ? head.Value
+                : rev.ObjectId;
 
             static string GetDescriptionForRevision(Func<ObjectId, string> describeRevision, ObjectId objectId)
                 => describeRevision is not null ? describeRevision(objectId) : objectId?.ToShortString();
