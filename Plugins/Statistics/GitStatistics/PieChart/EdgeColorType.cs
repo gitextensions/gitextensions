@@ -1,4 +1,4 @@
-﻿namespace GitStatistics.PieChart
+﻿namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
     /// <summary>
     ///   Enumeration for edge color types.

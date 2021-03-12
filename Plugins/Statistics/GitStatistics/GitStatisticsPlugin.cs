@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using GitStatistics.Properties;
+using GitExtensions.Plugins.GitStatistics.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace GitStatistics
+namespace GitExtensions.Plugins.GitStatistics
 {
     [Export(typeof(IGitPlugin))]
     public class GitStatisticsPlugin : GitPluginBase, IGitPluginForRepository

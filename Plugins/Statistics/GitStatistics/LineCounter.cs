@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using GitCommands;
 
-namespace GitStatistics
+namespace GitExtensions.Plugins.GitStatistics
 {
     public sealed class LineCounter
     {

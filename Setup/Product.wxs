@@ -619,7 +619,7 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\CreateLocalBranches.dll" />
       </Component>
       <Component Id="GitStatistics.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitStatistics.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitStatistics.dll" />
       </Component>
       <Component Id="GitImpact.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitImpact.dll" />
