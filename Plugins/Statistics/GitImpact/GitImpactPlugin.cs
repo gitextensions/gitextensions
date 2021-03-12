@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.Composition;
-using GitImpact.Properties;
+using GitExtensions.Plugins.GitImpact.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace GitImpact
+namespace GitExtensions.Plugins.GitImpact
 {
     [Export(typeof(IGitPlugin))]
     public class GitImpactPlugin : GitPluginBase, IGitPluginForRepository
