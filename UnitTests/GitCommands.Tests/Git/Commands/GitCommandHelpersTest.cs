@@ -652,6 +652,7 @@ namespace GitCommandsTests.Git.Commands
                         string sortCondition;
                         string sortConditionRef;
                         string format = @" --format=""%(if)%(authordate)%(then)%(objectname) %(refname)%(else)%(*objectname) %(*refname)%(end)""";
+                        string formatNoTag = @" --format=""%(objectname) %(refname)""";
                         if (sortBy == GitRefsSortBy.Default)
                         {
                             sortCondition = sortConditionRef = string.Empty;
@@ -663,23 +664,30 @@ namespace GitCommandsTests.Git.Commands
                             sortConditionRef = $" --sort={prefix}*{sortBy}";
                         }
 
-                        yield return new TestCaseData(/* tags */ true, /* branches */ true, /* noLocks */ false, sortBy, sortOrder,
+                        yield return new TestCaseData(GetRefsEnum.Tags | GetRefsEnum.Branches | GetRefsEnum.Remotes, /* noLocks */ false, sortBy, sortOrder,
                             /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
-                        yield return new TestCaseData(/* tags */ true, /* branches */ false, /* noLocks */ false, sortBy, sortOrder,
+                        yield return new TestCaseData(GetRefsEnum.Tags, /* noLocks */ false, sortBy, sortOrder,
                             /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/");
-                        yield return new TestCaseData(/* tags */ false, /* branches */ true, /* noLocks */ false, sortBy, sortOrder,
-                            /* expected */ $@"for-each-ref{sortCondition} --format=""%(objectname) %(refname)"" refs/heads/");
-                        yield return new TestCaseData(/* tags */ false, /* branches */ true, /* noLocks */ true, sortBy, sortOrder,
-                            /* expected */ $@"--no-optional-locks for-each-ref{sortCondition} --format=""%(objectname) %(refname)"" refs/heads/");
+                        yield return new TestCaseData(GetRefsEnum.Branches, /* noLocks */ false, sortBy, sortOrder,
+                            /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        yield return new TestCaseData(GetRefsEnum.Branches, /* noLocks */ true, sortBy, sortOrder,
+                            /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/");
+                        yield return new TestCaseData(GetRefsEnum.Remotes, /* noLocks */ false, sortBy, sortOrder,
+                            /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/");
+
+                        yield return new TestCaseData(GetRefsEnum.All, /* noLocks */ true, sortBy, sortOrder,
+                            /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}");
+                        yield return new TestCaseData(GetRefsEnum.Tags | GetRefsEnum.Branches | GetRefsEnum.Remotes | GetRefsEnum.All, /* noLocks */ true, sortBy, sortOrder,
+                            /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}");
                     }
                 }
             }
         }
 
         [TestCaseSource(nameof(GetRefsCommandTestData))]
-        public void GetRefsCmd(bool tags, bool branches, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, string expected)
+        public void GetRefsCmd(GetRefsEnum getRefs, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, string expected)
         {
-            Assert.AreEqual(expected, GitCommandHelpers.GetRefsCmd(tags, branches, noLocks, sortBy, sortOrder).ToString());
+            Assert.AreEqual(expected, GitCommandHelpers.GetRefsCmd(getRefs, noLocks, sortBy, sortOrder).ToString());
         }
     }
 }
