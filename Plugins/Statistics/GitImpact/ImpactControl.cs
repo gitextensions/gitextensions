@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands.Statistics;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
