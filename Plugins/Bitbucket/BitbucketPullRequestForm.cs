@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ using GitCommands.Git;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -27,10 +26,10 @@ namespace Bitbucket
         private readonly string _NO_TRANSLATE_LinkCreatePullNoBranch = "pull-requests?create";
         private readonly string _NO_TRANSLATE_LinkViewPull = "pull-requests";
 
-        [CanBeNull] private readonly Settings _settings;
+        private readonly Settings? _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
 
-        public BitbucketPullRequestForm([CanBeNull] Settings settings, IGitModule module)
+        public BitbucketPullRequestForm(Settings? settings, IGitModule? module)
         {
             InitializeComponent();
 
@@ -86,11 +85,15 @@ namespace Bitbucket
 
             async Task<List<Repository>> GetRepositoriesAsync()
             {
+                Validates.NotNull(_settings.ProjectKey);
+                Validates.NotNull(_settings.RepoSlug);
+
                 var list = new List<Repository>();
                 var getDefaultRepo = new GetRepoRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
                 var defaultRepo = await getDefaultRepo.SendAsync().ConfigureAwait(false);
                 if (defaultRepo.Success)
                 {
+                    Validates.NotNull(defaultRepo.Result);
                     list.Add(defaultRepo.Result);
                 }
 
@@ -117,6 +120,9 @@ namespace Bitbucket
 
             async Task<List<PullRequest>> GetPullRequestsAsync()
             {
+                Validates.NotNull(_settings.ProjectKey);
+                Validates.NotNull(_settings.RepoSlug);
+
                 var list = new List<PullRequest>();
                 var getPullRequests = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
                 var result = await getPullRequests.SendAsync().ConfigureAwait(false);
@@ -153,6 +159,7 @@ namespace Bitbucket
                     TargetRepo = (Repository)ddlRepositoryTarget.SelectedValue,
                     Reviewers = _reviewers
                 };
+                Validates.NotNull(_settings);
                 var pullRequest = new CreatePullRequestRequest(_settings, info);
                 var response = await pullRequest.SendAsync();
                 await this.SwitchToMainThreadAsync();
@@ -180,11 +187,14 @@ namespace Bitbucket
                 }
             }
 
+            Validates.NotNull(_settings);
+
             var list = new List<string>();
             var getBranches = new GetBranchesRequest(selectedRepo, _settings);
             var result = await getBranches.SendAsync().ConfigureAwait(false);
             if (result.Success)
             {
+                Validates.NotNull(result.Result);
                 foreach (var value in result.Result["values"])
                 {
                     list.Add(value["displayId"].ToString());
@@ -257,20 +267,20 @@ namespace Bitbucket
             });
         }
 
-        [ItemCanBeNull]
-        private async Task<Commit> GetCommitInfoAsync(Repository repo, string branch)
+        private async Task<Commit?> GetCommitInfoAsync(Repository? repo, string branch)
         {
             if (repo is null || string.IsNullOrWhiteSpace(branch))
             {
                 return null;
             }
 
+            Validates.NotNull(_settings);
             var getCommit = new GetHeadCommitRequest(repo, branch, _settings);
             var result = await getCommit.SendAsync().ConfigureAwait(false);
             return result.Success ? result.Result : null;
         }
 
-        private void UpdateCommitInfo(Label label, Commit commit)
+        private void UpdateCommitInfo(Label label, Commit? commit)
         {
             if (commit is null)
             {
@@ -294,6 +304,8 @@ namespace Bitbucket
                 return;
             }
 
+            Validates.NotNull(_settings);
+
             var getCommitsInBetween = new GetInBetweenCommitsRequest(
                 (Repository)ddlRepositorySource.SelectedValue,
                 (Repository)ddlRepositoryTarget.SelectedValue,
@@ -304,6 +316,8 @@ namespace Bitbucket
             var result = await getCommitsInBetween.SendAsync();
             if (result.Success)
             {
+                Validates.NotNull(result.Result);
+
                 await this.SwitchToMainThreadAsync();
 
                 var sb = new StringBuilder();
@@ -334,6 +348,8 @@ namespace Bitbucket
             lblPRDestRepo.Text = curItem.DestDisplayName;
             lblPRDestBranch.Text = curItem.DestBranch;
 
+            Validates.NotNull(_settings);
+
             _NO_TRANSLATE_lblLinkViewPull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests/{3}/overview",
                 _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug, curItem.Id);
         }
@@ -349,6 +365,8 @@ namespace Bitbucket
                     ProjectKey = curItem.DestProjectKey,
                     TargetRepo = curItem.DestRepo,
                 };
+
+                Validates.NotNull(_settings);
 
                 // Merge
                 var mergeRequest = new MergePullRequest(_settings, mergeInfo);
@@ -378,6 +396,8 @@ namespace Bitbucket
                     ProjectKey = curItem.DestProjectKey,
                     TargetRepo = curItem.DestRepo,
                 };
+
+                Validates.NotNull(_settings);
 
                 // Approve
                 var approveRequest = new ApprovePullRequest(_settings, mergeInfo);

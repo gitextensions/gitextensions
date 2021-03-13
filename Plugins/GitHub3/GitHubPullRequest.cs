@@ -25,7 +25,7 @@ namespace GitHub3
 
         public DateTime Created => _pullRequest.CreatedAt;
 
-        private string _diffData;
+        private string? _diffData;
 
         public async Task<string> GetDiffDataAsync()
         {
@@ -40,10 +40,10 @@ namespace GitHub3
             return _diffData;
         }
 
-        private IHostedRepository _baseRepo;
+        private IHostedRepository? _baseRepo;
         public IHostedRepository BaseRepo => _baseRepo ??= new GitHubRepo(_pullRequest.Base.Repo);
 
-        private IHostedRepository _headRepo;
+        private IHostedRepository? _headRepo;
         public IHostedRepository HeadRepo => _headRepo ??= new GitHubRepo(_pullRequest.Head.Repo);
 
         public string BaseSha => _pullRequest.Base.Sha;
@@ -64,7 +64,7 @@ namespace GitHub3
             _pullRequest.Close();
         }
 
-        private IPullRequestDiscussion _discussion;
+        private IPullRequestDiscussion? _discussion;
 
         public IPullRequestDiscussion GetDiscussion()
         {

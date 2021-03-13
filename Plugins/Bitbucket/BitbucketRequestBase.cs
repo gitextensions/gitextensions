@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using JetBrains.Annotations;
+using Microsoft;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -13,8 +13,8 @@ namespace Bitbucket
     internal class BitbucketResponse<T>
     {
         public bool Success { get; set; }
-        public IEnumerable<string> Messages { get; set; }
-        public T Result { get; set; }
+        public IEnumerable<string>? Messages { get; set; }
+        public T? Result { get; set; }
     }
 
     internal abstract class BitbucketRequestBase<T>
@@ -32,6 +32,10 @@ namespace Bitbucket
             {
                 System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             }
+
+            Validates.NotNull(Settings.BitbucketUrl);
+            Validates.NotNull(Settings.Username);
+            Validates.NotNull(Settings.Password);
 
             var client = new RestClient
             {
@@ -70,8 +74,7 @@ namespace Bitbucket
             };
         }
 
-        [CanBeNull]
-        protected abstract object RequestBody { get; }
+        protected abstract object? RequestBody { get; }
         protected abstract Method RequestMethod { get; }
         protected abstract string ApiUrl { get; }
         protected abstract T ParseResponse(JObject json);

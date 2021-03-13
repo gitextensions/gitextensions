@@ -15,7 +15,7 @@ namespace GitHub3
             _repo = repo;
         }
 
-        public string Owner => _repo.Owner?.Login;
+        public string? Owner => _repo.Owner?.Login;
         public string Name => _repo.Name;
         public string Description => _repo.Description;
         public bool IsAFork => _repo.Fork;
@@ -24,7 +24,7 @@ namespace GitHub3
         public int Forks => _repo.Forks;
         public string Homepage => _repo.Homepage;
 
-        public string ParentReadOnlyUrl
+        public string? ParentReadOnlyUrl
         {
             get
             {
@@ -47,7 +47,7 @@ namespace GitHub3
             }
         }
 
-        public string ParentOwner
+        public string? ParentOwner
         {
             get
             {

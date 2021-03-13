@@ -8,6 +8,7 @@ using GitCommands;
 using GitExtensions.Plugins.BackgroundFetch.Properties;
 using GitExtUtils;
 using GitUIPluginInterfaces;
+using Microsoft;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.BackgroundFetch
@@ -22,8 +23,8 @@ namespace GitExtensions.Plugins.BackgroundFetch
             Icon = Resources.IconBackgroundFetch;
         }
 
-        private IDisposable _cancellationToken;
-        private IGitUICommands _currentGitUiCommands;
+        private IDisposable? _cancellationToken;
+        private IGitUICommands? _currentGitUiCommands;
 
         private readonly PseudoSetting _warningForceWithLease = new("WARNING: be careful when force push with lease having the periodic background fetch enabled but chose not to auto-refresh after each fetch.\r\n\r\nYou could lose new commits pushed by others to the remote branch.\r\n\r\nBe sure to refresh the revision grid before doing a force push with lease.", textboxSettings: tb =>
         {
@@ -65,6 +66,8 @@ namespace GitExtensions.Plugins.BackgroundFetch
             CancelBackgroundOperation();
 
             int fetchInterval = _fetchInterval.ValueOrDefault(Settings);
+
+            Validates.NotNull(_currentGitUiCommands);
 
             var gitModule = _currentGitUiCommands.GitModule;
             if (fetchInterval > 0 && gitModule.IsValidGitWorkingDir())

@@ -28,6 +28,10 @@ namespace ProxySwitcher
         public ProxySwitcherForm()
         {
             InitializeComponent();
+
+            _plugin = null!;
+            _settings = null!;
+            _gitCommands = null!;
         }
 
         public ProxySwitcherForm(ProxySwitcherPlugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)

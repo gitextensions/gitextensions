@@ -10,10 +10,11 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
+using Microsoft;
 using Newtonsoft.Json.Linq;
 
 namespace AppVeyorIntegration
@@ -27,7 +28,7 @@ namespace AppVeyorIntegration
         {
         }
 
-        public override string CanBeLoaded
+        public override string? CanBeLoaded
         {
             get
             {
@@ -36,7 +37,7 @@ namespace AppVeyorIntegration
                     return null;
                 }
 
-                return ".Net 4 full framework required";
+                return ".NET Framework 4 or higher required";
             }
         }
     }
@@ -51,20 +52,20 @@ namespace AppVeyorIntegration
         private const string WebSiteUrl = "https://ci.appveyor.com";
         private const string ApiBaseUrl = WebSiteUrl + "/api/projects/";
 
-        private IBuildServerWatcher _buildServerWatcher;
+        private IBuildServerWatcher? _buildServerWatcher;
 
-        private HttpClient _httpClientAppVeyor;
+        private HttpClient? _httpClientAppVeyor;
 
-        private List<AppVeyorBuildInfo> _allBuilds = new List<AppVeyorBuildInfo>();
-        private HashSet<ObjectId> _fetchBuilds;
-        private Func<ObjectId, bool> _isCommitInRevisionGrid;
+        private List<AppVeyorBuildInfo>? _allBuilds = new List<AppVeyorBuildInfo>();
+        private HashSet<ObjectId>? _fetchBuilds;
+        private Func<ObjectId, bool>? _isCommitInRevisionGrid;
         private bool _shouldLoadTestResults;
 
         public void Initialize(
             IBuildServerWatcher buildServerWatcher,
             ISettingsSource config,
             Action openSettings,
-            Func<ObjectId, bool> isCommitInRevisionGrid = null)
+            Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher is not null)
             {
@@ -73,8 +74,8 @@ namespace AppVeyorIntegration
 
             _buildServerWatcher = buildServerWatcher;
             _isCommitInRevisionGrid = isCommitInRevisionGrid;
-            string accountName = config.GetString("AppVeyorAccountName", null);
-            string accountToken = config.GetString("AppVeyorAccountToken", null);
+            string? accountName = config.GetString("AppVeyorAccountName", null);
+            string? accountToken = config.GetString("AppVeyorAccountToken", null);
             _shouldLoadTestResults = config.GetBool("AppVeyorLoadTestsResults", false);
 
             _fetchBuilds = new HashSet<ObjectId>();
@@ -87,8 +88,8 @@ namespace AppVeyorIntegration
             string projectNamesSetting = config.GetString("AppVeyorProjectName", "");
             var projectNames = _buildServerWatcher.ReplaceVariables(projectNamesSetting)
                 .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(p => p.Contains("/") || !string.IsNullOrEmpty(accountName))
-                .Select(p => p.Contains("/") ? p : accountName.Combine("/", p))
+                .Where(p => p.Contains("/") || !Strings.IsNullOrEmpty(accountName))
+                .Select(p => p.Contains("/") ? p : accountName.Combine("/", p)!)
                 .ToList();
 
             if (projectNames.Count == 0)
@@ -105,7 +106,7 @@ namespace AppVeyorIntegration
                     {
                         // v2 tokens requires a separate prefix
                         // (Documentation specifies that this is applicable for all requests, not the case though)
-                        string apiBaseUrl = !string.IsNullOrWhiteSpace(accountName) && !string.IsNullOrWhiteSpace(accountToken) && accountToken.StartsWith("v2.")
+                        string apiBaseUrl = !Strings.IsNullOrWhiteSpace(accountName) && !Strings.IsNullOrWhiteSpace(accountToken) && accountToken.StartsWith("v2.")
                             ? $"{WebSiteUrl}/api/account/{accountName}/projects/"
                             : ApiBaseUrl;
 
@@ -121,7 +122,7 @@ namespace AppVeyorIntegration
                         {
                             // "slug" and "name" are normally the same
                             var repoName = project["slug"].ToString();
-                            var projectId = accountName.Combine("/", repoName);
+                            var projectId = accountName.Combine("/", repoName)!;
                             projectNames.Add(projectId);
                         }
                     });
@@ -131,7 +132,7 @@ namespace AppVeyorIntegration
 
             return;
 
-            static HttpClient GetHttpClient(string baseUrl, string accountToken)
+            static HttpClient GetHttpClient(string baseUrl, string? accountToken)
             {
                 var httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true })
                 {
@@ -139,12 +140,28 @@ namespace AppVeyorIntegration
                     BaseAddress = new Uri(baseUrl, UriKind.Absolute),
                 };
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                if (!string.IsNullOrWhiteSpace(accountToken))
+                if (!Strings.IsNullOrWhiteSpace(accountToken))
                 {
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accountToken);
                 }
 
                 return httpClient;
+            }
+
+            List<AppVeyorBuildInfo> FilterBuilds(IEnumerable<AppVeyorBuildInfo> allBuilds)
+            {
+                var filteredBuilds = new List<AppVeyorBuildInfo>();
+                foreach (var build in allBuilds.OrderByDescending(b => b.StartDate))
+                {
+                    Validates.NotNull(build.CommitId);
+                    if (!_fetchBuilds.Contains(build.CommitId))
+                    {
+                        filteredBuilds.Add(build);
+                        _fetchBuilds.Add(build.CommitId);
+                    }
+                }
+
+                return filteredBuilds;
             }
         }
 
@@ -152,6 +169,7 @@ namespace AppVeyorIntegration
         {
             try
             {
+                Validates.NotNull(_httpClientAppVeyor);
                 return ThreadHelper.JoinableTaskFactory.Run(
                     async () =>
                     {
@@ -167,12 +185,14 @@ namespace AppVeyorIntegration
             }
         }
 
-        internal IEnumerable<AppVeyorBuildInfo> ExtractBuildInfo(string projectId, string result)
+        internal IEnumerable<AppVeyorBuildInfo> ExtractBuildInfo(string projectId, string? result)
         {
-            if (string.IsNullOrWhiteSpace(result))
+            if (Strings.IsNullOrWhiteSpace(result))
             {
                 return Enumerable.Empty<AppVeyorBuildInfo>();
             }
+
+            Validates.NotNull(_isCommitInRevisionGrid);
 
             var content = JObject.Parse(result);
 
@@ -237,7 +257,7 @@ namespace AppVeyorIntegration
 
             return buildDetails;
 
-            static string BuildPullRequetUrl(string repositoryType, string repositoryName, string pullRequestId)
+            static string? BuildPullRequetUrl(string repositoryType, string repositoryName, string pullRequestId)
             {
                 return repositoryType.ToLowerInvariant() switch
                 {
@@ -254,7 +274,14 @@ namespace AppVeyorIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey => _httpClientAppVeyor.BaseAddress.Host;
+        public string UniqueKey
+        {
+            get
+            {
+                Validates.NotNull(_httpClientAppVeyor);
+                return _httpClientAppVeyor.BaseAddress.Host;
+            }
+        }
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -335,21 +362,6 @@ namespace AppVeyorIntegration
             observer.OnNext(build);
         }
 
-        private List<AppVeyorBuildInfo> FilterBuilds(IEnumerable<AppVeyorBuildInfo> allBuilds)
-        {
-            var filteredBuilds = new List<AppVeyorBuildInfo>();
-            foreach (var build in allBuilds.OrderByDescending(b => b.StartDate))
-            {
-                if (!_fetchBuilds.Contains(build.CommitId))
-                {
-                    filteredBuilds.Add(build);
-                    _fetchBuilds.Add(build.CommitId);
-                }
-            }
-
-            return filteredBuilds;
-        }
-
         private void UpdateDescription(AppVeyorBuildInfo buildDetails, CancellationToken cancellationToken)
         {
             var buildDetailsParsed = ThreadHelper.JoinableTaskFactory.Run(() => FetchBuildDetailsManagingVersionUpdateAsync(buildDetails, cancellationToken));
@@ -399,8 +411,11 @@ namespace AppVeyorIntegration
 
         private async Task<JObject> FetchBuildDetailsManagingVersionUpdateAsync(AppVeyorBuildInfo buildDetails, CancellationToken cancellationToken)
         {
+            Validates.NotNull(_httpClientAppVeyor);
+
             try
             {
+                Validates.NotNull(buildDetails.AppVeyorBuildReportUrl);
                 return JObject.Parse(await GetResponseAsync(_httpClientAppVeyor, buildDetails.AppVeyorBuildReportUrl, cancellationToken).ConfigureAwait(false));
             }
             catch
@@ -429,7 +444,7 @@ namespace AppVeyorIntegration
             };
         }
 
-        private Task<Stream> GetStreamAsync(HttpClient httpClient, string restServicePath, CancellationToken cancellationToken)
+        private Task<Stream?> GetStreamAsync(HttpClient httpClient, string restServicePath, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -442,7 +457,7 @@ namespace AppVeyorIntegration
                              .Unwrap();
         }
 
-        private Task<Stream> GetStreamFromHttpResponseAsync(HttpClient httpClient, Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
+        private Task<Stream?> GetStreamFromHttpResponseAsync(HttpClient httpClient, Task<HttpResponseMessage> task, string restServicePath, CancellationToken cancellationToken)
         {
             var retry = task.IsCanceled && !cancellationToken.IsCancellationRequested;
 
@@ -456,7 +471,7 @@ namespace AppVeyorIntegration
                 return task.CompletedResult().Content.ReadAsStreamAsync();
             }
 
-            return null;
+            return Task.FromResult<Stream?>(null);
         }
 
         private Task<string> GetResponseAsync(HttpClient httpClient, string relativePath, CancellationToken cancellationToken)
@@ -473,6 +488,12 @@ namespace AppVeyorIntegration
                     }
 
                     using var responseStream = task.Result;
+
+                    if (responseStream is null)
+                    {
+                        return "";
+                    }
+
                     return new StreamReader(responseStream).ReadToEnd();
                 },
                 cancellationToken,

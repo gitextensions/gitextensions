@@ -11,6 +11,7 @@ using GitExtensions.Plugins.GitStatistics.PieChart;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -34,7 +35,7 @@ namespace GitExtensions.Plugins.GitStatistics
         private readonly bool _countSubmodules;
         private readonly IGitModule _module;
 
-        private LineCounter _lineCounter;
+        private LineCounter? _lineCounter;
 
         protected Color[] DecentColors { get; } =
                 {
@@ -53,7 +54,7 @@ namespace GitExtensions.Plugins.GitStatistics
                     Color.Purple
                 };
 
-        public string DirectoriesToIgnore { get; set; }
+        public string DirectoriesToIgnore { get; set; } = "";
 
         public FormGitStatistics(IGitModule module, string codeFilePattern, bool countSubmodules)
         {
@@ -82,7 +83,7 @@ namespace GitExtensions.Plugins.GitStatistics
             InitializeComplete();
         }
 
-        private void FormGitStatisticsSizeChanged(object sender, EventArgs e)
+        private void FormGitStatisticsSizeChanged(object? sender, EventArgs e)
         {
             SetPieStyle(CommitCountPie);
             SetPieStyle(LinesOfCodeExtensionPie);
@@ -165,42 +166,44 @@ namespace GitExtensions.Plugins.GitStatistics
             _lineCounter.Updated += OnLineCounterUpdated;
 
             Task.Run(() => LoadLinesOfCode());
-        }
 
-        public void LoadLinesOfCode()
-        {
-            LoadLinesOfCodeForModule(_module);
-
-            if (_countSubmodules)
+            void LoadLinesOfCode()
             {
-                var submodules = _module.GetSubmodulesInfo()
-                    .Where(submodule => submodule is not null)
-                    .Select(submodule => new GitModule(Path.Combine(_module.WorkingDir, submodule.LocalPath)));
+                LoadLinesOfCodeForModule(_module);
 
-                foreach (var submodule in submodules)
+                if (_countSubmodules)
                 {
-                    LoadLinesOfCodeForModule(submodule);
+                    var submodules = _module.GetSubmodulesInfo()
+                        .WhereNotNull()
+                        .Select(submodule => new GitModule(Path.Combine(_module.WorkingDir, submodule.LocalPath)));
+
+                    foreach (var submodule in submodules)
+                    {
+                        LoadLinesOfCodeForModule(submodule);
+                    }
                 }
-            }
 
-            // Send 'changed' event when done
-            OnLineCounterUpdated(_lineCounter, EventArgs.Empty);
+                // Send 'changed' event when done
+                OnLineCounterUpdated(_lineCounter, EventArgs.Empty);
 
-            return;
+                return;
 
-            void LoadLinesOfCodeForModule(IGitModule module)
-            {
-                var filesToCheck = module
-                    .GetTree(module.RevParse("HEAD"), full: true)
-                    .Select(file => Path.Combine(module.WorkingDir, file.Name))
-                    .ToList();
+                void LoadLinesOfCodeForModule(IGitModule module)
+                {
+                    var filesToCheck = module
+                        .GetTree(module.RevParse("HEAD"), full: true)
+                        .Select(file => Path.Combine(module.WorkingDir, file.Name))
+                        .ToList();
 
-                _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore, filesToCheck);
+                    _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore, filesToCheck);
+                }
             }
         }
 
         private void OnLineCounterUpdated(object sender, EventArgs e)
         {
+            Validates.NotNull(_lineCounter);
+
             // Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
             var extensionValues = new decimal[_lineCounter.LinesOfCodePerExtension.Count];
             var extensionLabels = new string[_lineCounter.LinesOfCodePerExtension.Count];
@@ -289,18 +292,21 @@ namespace GitExtensions.Plugins.GitStatistics
             Tabs.Visible = true;
             LoadingLabel.Visible = false;
 
-            FormGitStatisticsSizeChanged(null, null);
+            FormGitStatisticsSizeChanged(sender, EventArgs.Empty);
             SizeChanged += FormGitStatisticsSizeChanged;
         }
 
         private void TabsSelectedIndexChanged(object sender, EventArgs e)
         {
-            FormGitStatisticsSizeChanged(null, null);
+            FormGitStatisticsSizeChanged(sender, EventArgs.Empty);
         }
 
         private void FormGitStatistics_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _lineCounter.Updated -= OnLineCounterUpdated;
+            if (_lineCounter is not null)
+            {
+                _lineCounter.Updated -= OnLineCounterUpdated;
+            }
         }
     }
 }

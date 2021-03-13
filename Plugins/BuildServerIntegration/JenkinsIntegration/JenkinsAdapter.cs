@@ -14,10 +14,11 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json.Linq;
 
@@ -32,7 +33,7 @@ namespace JenkinsIntegration
         {
         }
 
-        public override string CanBeLoaded
+        public override string? CanBeLoaded
         {
             get
             {
@@ -41,7 +42,7 @@ namespace JenkinsIntegration
                     return null;
                 }
 
-                return ".Net 4 full framework required";
+                return ".NET Framework 4 or higher required";
             }
         }
     }
@@ -53,15 +54,15 @@ namespace JenkinsIntegration
     {
         public const string PluginName = "Jenkins";
         private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
-        private IBuildServerWatcher _buildServerWatcher;
+        private IBuildServerWatcher? _buildServerWatcher;
 
-        private HttpClient _httpClient;
+        private HttpClient? _httpClient;
 
         // last known build per project
         private readonly Dictionary<string, long> _lastProjectBuildTime = new Dictionary<string, long>();
-        private Regex _ignoreBuilds;
+        private Regex? _ignoreBuilds;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher is not null)
             {
@@ -73,7 +74,7 @@ namespace JenkinsIntegration
             var projectName = config.GetString("ProjectName", null);
             var hostName = config.GetString("BuildServerUrl", null);
 
-            if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(projectName))
+            if (!Strings.IsNullOrEmpty(hostName) && !Strings.IsNullOrEmpty(projectName))
             {
                 var baseAddress = hostName.Contains("://")
                     ? new Uri(hostName, UriKind.Absolute)
@@ -104,18 +105,25 @@ namespace JenkinsIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey => _httpClient.BaseAddress.Host;
+        public string UniqueKey
+        {
+            get
+            {
+                Validates.NotNull(_httpClient);
+                return _httpClient.BaseAddress.Host;
+            }
+        }
 
         private class ResponseInfo
         {
-            public string Url { get; set; }
+            public string? Url { get; set; }
             public long Timestamp { get; set; }
-            public IEnumerable<JToken> JobDescription { get; set; }
+            public IEnumerable<JToken>? JobDescription { get; set; }
         }
 
         private async Task<ResponseInfo> GetBuildInfoTaskAsync(string projectUrl, bool fullInfo, CancellationToken cancellationToken)
         {
-            string t;
+            string? t;
             long timestamp = 0;
             IEnumerable<JToken> s = Enumerable.Empty<JToken>();
 
@@ -227,11 +235,15 @@ namespace JenkinsIntegration
                 // Similar, the build results could be cached so they are available when switching repos
                 foreach (var info in latestBuildInfos.Where(info => !info.Task.IsFaulted))
                 {
-                    if (info.Join().Timestamp > _lastProjectBuildTime[info.Join().Url])
+                    ResponseInfo responseInfo = info.Join();
+
+                    Validates.NotNull(responseInfo.Url);
+
+                    if (responseInfo.Timestamp > _lastProjectBuildTime[responseInfo.Url])
                     {
                         // The info has at least one newer job, query the status
                         allBuildInfos.Add(ThreadHelper.JoinableTaskFactory.RunAsync(() =>
-                            GetBuildInfoTaskAsync(info.Task.CompletedResult().Url, true, cancellationToken)));
+                            GetBuildInfoTaskAsync(responseInfo.Url, true, cancellationToken)));
                     }
                 }
 
@@ -258,6 +270,9 @@ namespace JenkinsIntegration
                         // No valid information received for the build
                         continue;
                     }
+
+                    Validates.NotNull(buildResponse.Url);
+                    Validates.NotNull(buildResponse.JobDescription);
 
                     _lastProjectBuildTime[buildResponse.Url] = buildResponse.Timestamp;
 
@@ -365,8 +380,7 @@ namespace JenkinsIntegration
 
         private const string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1,branch[name]],totalCount,failCount,skipCount],building,duration";
 
-        [CanBeNull]
-        private BuildInfo CreateBuildInfo(JObject buildDescription)
+        private BuildInfo? CreateBuildInfo(JObject buildDescription)
         {
             var idValue = buildDescription["number"].ToObject<string>();
             var statusValue = buildDescription["result"].ToObject<string>();
@@ -468,15 +482,17 @@ namespace JenkinsIntegration
             };
         }
 
-        private async Task<Stream> GetStreamAsync(string restServicePath, CancellationToken cancellationToken)
+        private async Task<Stream?> GetStreamAsync(string restServicePath, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+
+            Validates.NotNull(_httpClient);
 
             var response = await _httpClient.GetAsync(restServicePath, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
             return await GetStreamFromHttpResponseAsync(response);
 
-            async Task<Stream> GetStreamFromHttpResponseAsync(HttpResponseMessage resp)
+            async Task<Stream?> GetStreamFromHttpResponseAsync(HttpResponseMessage resp)
             {
                 bool unauthorized = resp.StatusCode == HttpStatusCode.Unauthorized;
 
@@ -509,6 +525,8 @@ namespace JenkinsIntegration
                     throw new HttpRequestException(resp.ReasonPhrase);
                 }
 
+                Validates.NotNull(_buildServerWatcher);
+
                 var buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, false);
 
                 if (buildServerCredentials is null)
@@ -522,12 +540,20 @@ namespace JenkinsIntegration
             }
         }
 
-        private void UpdateHttpClientOptions(IBuildServerCredentials buildServerCredentials)
+        private void UpdateHttpClientOptions(IBuildServerCredentials? buildServerCredentials)
         {
-            var useGuestAccess = buildServerCredentials is null || buildServerCredentials.UseGuestAccess;
+            Validates.NotNull(_httpClient);
 
-            _httpClient.DefaultRequestHeaders.Authorization = useGuestAccess
-                ? null : CreateBasicHeader(buildServerCredentials.Username, buildServerCredentials.Password);
+            if (buildServerCredentials is null || buildServerCredentials.UseGuestAccess)
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = null;
+            }
+            else
+            {
+                Validates.NotNull(buildServerCredentials.Username);
+                Validates.NotNull(buildServerCredentials.Password);
+                _httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(buildServerCredentials.Username, buildServerCredentials.Password);
+            }
         }
 
         private async Task<string> GetResponseAsync(string relativePath, CancellationToken cancellationToken)

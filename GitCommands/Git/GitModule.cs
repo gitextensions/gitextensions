@@ -2113,7 +2113,7 @@ namespace GitCommands
             return _gitExecutable.GetOutput(args);
         }
 
-        public string AddRemote(string? name, string path)
+        public string AddRemote(string? name, string? path)
         {
             if (string.IsNullOrEmpty(name))
             {

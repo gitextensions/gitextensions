@@ -8,7 +8,7 @@ namespace GitExtensions.Plugins.GitStatistics
 {
     public sealed class LineCounter
     {
-        public event EventHandler Updated;
+        public event EventHandler? Updated;
 
         public int CommentLineCount { get; private set; }
         public int TotalLineCount { get; private set; }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
+using Microsoft;
 using TfsInterop.Interface;
 
 namespace TfsIntegration
@@ -24,7 +24,7 @@ namespace TfsIntegration
         {
         }
 
-        public override string CanBeLoaded
+        public override string? CanBeLoaded
         {
             get
             {
@@ -33,7 +33,7 @@ namespace TfsIntegration
                     return null;
                 }
 
-                return ".Net 4 full framework required";
+                return ".NET Framework 4 or higher required";
             }
         }
     }
@@ -44,14 +44,14 @@ namespace TfsIntegration
     internal class TfsAdapter : IBuildServerAdapter
     {
         public const string PluginName = "Team Foundation Server";
-        private IBuildServerWatcher _buildServerWatcher;
-        private ITfsHelper _tfsHelper;
-        private string _tfsServer;
-        private string _tfsTeamCollectionName;
-        private string _projectName;
-        private Regex _tfsBuildDefinitionNameFilter;
+        private IBuildServerWatcher? _buildServerWatcher;
+        private ITfsHelper? _tfsHelper;
+        private string? _tfsServer;
+        private string? _tfsTeamCollectionName;
+        private string? _projectName;
+        private Regex? _tfsBuildDefinitionNameFilter;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher is not null)
             {
@@ -62,7 +62,7 @@ namespace TfsIntegration
 
             _tfsServer = config.GetString("TfsServer", null);
             _tfsTeamCollectionName = config.GetString("TfsTeamCollectionName", null);
-            _projectName = _buildServerWatcher.ReplaceVariables(config.GetString("ProjectName", null));
+            _projectName = _buildServerWatcher.ReplaceVariables(config.GetString("ProjectName", null) ?? "");
             var tfsBuildDefinitionNameFilterSetting = config.GetString("TfsBuildDefinitionName", "");
             if (!BuildServerSettingsHelper.IsRegexValid(tfsBuildDefinitionNameFilterSetting))
             {
@@ -86,8 +86,7 @@ namespace TfsIntegration
             }
         }
 
-        [CanBeNull]
-        private ITfsHelper LoadAssemblyAndConnectToServer(string assembly)
+        private ITfsHelper? LoadAssemblyAndConnectToServer(string assembly)
         {
             try
             {
@@ -98,6 +97,10 @@ namespace TfsIntegration
 
                 if (tfsHelper is not null && tfsHelper.IsDependencyOk())
                 {
+                    Validates.NotNull(_tfsServer);
+                    Validates.NotNull(_tfsTeamCollectionName);
+                    Validates.NotNull(_projectName);
+
                     tfsHelper.ConnectToTfsServer(_tfsServer, _tfsTeamCollectionName, _projectName, _tfsBuildDefinitionNameFilter);
                     Trace.WriteLine("Connection... OK");
                     return tfsHelper;
@@ -142,6 +145,7 @@ namespace TfsIntegration
         {
             try
             {
+                Validates.NotNull(_tfsHelper);
                 var builds = _tfsHelper.QueryBuilds(sinceDate, running);
 
                 Parallel.ForEach(builds, detail => { observer.OnNext(CreateBuildInfo(detail)); });
@@ -158,6 +162,8 @@ namespace TfsIntegration
 
         private static BuildInfo CreateBuildInfo(IBuild buildDetail)
         {
+            Validates.NotNull(buildDetail.Revision);
+
             var objectId = ObjectId.Parse(buildDetail.Revision.SubstringAfter(':'));
 
             return new BuildInfo

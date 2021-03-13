@@ -17,10 +17,11 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using JetBrains.Annotations;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
 namespace TeamCityIntegration
@@ -34,7 +35,7 @@ namespace TeamCityIntegration
         {
         }
 
-        public override string CanBeLoaded
+        public override string? CanBeLoaded
         {
             get
             {
@@ -44,7 +45,7 @@ namespace TeamCityIntegration
                 }
                 else
                 {
-                    return ".Net 4 full framework required";
+                    return ".NET Framework 4 or higher required";
                 }
             }
         }
@@ -56,24 +57,24 @@ namespace TeamCityIntegration
     internal class TeamCityAdapter : IBuildServerAdapter
     {
         public const string PluginName = "TeamCity";
-        private IBuildServerWatcher _buildServerWatcher;
+        private IBuildServerWatcher? _buildServerWatcher;
 
-        private HttpClientHandler _httpClientHandler;
-        private HttpClient _httpClient;
+        private HttpClientHandler? _httpClientHandler;
+        private HttpClient? _httpClient;
 
-        private string _httpClientHostSuffix;
+        private string? _httpClientHostSuffix;
 
         private readonly List<JoinableTask<IEnumerable<string>>> _getBuildTypesTask = new List<JoinableTask<IEnumerable<string>>>();
 
-        private CookieContainer _teamCityNtlmAuthCookie;
+        private CookieContainer? _teamCityNtlmAuthCookie;
 
-        private string HostName { get; set; }
+        private string? HostName { get; set; }
 
-        private string[] ProjectNames { get; set; }
+        private string[]? ProjectNames { get; set; }
 
-        private Regex BuildIdFilter { get; set; }
+        private Regex? BuildIdFilter { get; set; }
 
-        private CookieContainer GetTeamCityNtlmAuthCookie(string serverUrl, IBuildServerCredentials buildServerCredentials)
+        private CookieContainer GetTeamCityNtlmAuthCookie(string serverUrl, IBuildServerCredentials? buildServerCredentials)
         {
             if (_teamCityNtlmAuthCookie is not null)
             {
@@ -103,9 +104,9 @@ namespace TeamCityIntegration
             return _teamCityNtlmAuthCookie;
         }
 
-        public string LogAsGuestUrlParameter { get; set; }
+        public string? LogAsGuestUrlParameter { get; set; }
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool> isCommitInRevisionGrid = null)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher is not null)
             {
@@ -127,7 +128,7 @@ namespace TeamCityIntegration
             HostName = config.GetString("BuildServerUrl", null);
             LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;
 
-            if (!string.IsNullOrEmpty(HostName))
+            if (!Strings.IsNullOrEmpty(HostName))
             {
                 InitializeHttpClient(HostName);
                 if (ProjectNames.Length > 0)
@@ -168,7 +169,14 @@ namespace TeamCityIntegration
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey => _httpClient.BaseAddress.Host;
+        public string UniqueKey
+        {
+            get
+            {
+                Validates.NotNull(_httpClient);
+                return _httpClient.BaseAddress.Host;
+            }
+        }
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -182,7 +190,7 @@ namespace TeamCityIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (_httpClient is null || _httpClient.BaseAddress is null || ProjectNames.Length == 0)
+            if (_httpClient is null || _httpClient.BaseAddress is null || ProjectNames == null || ProjectNames.Length == 0)
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }
@@ -200,6 +208,8 @@ namespace TeamCityIntegration
                 {
                     return;
                 }
+
+                Validates.NotNull(BuildIdFilter);
 
                 var localObserver = observer;
                 var buildTypes = _getBuildTypesTask.SelectMany(t => t.Join()).Where(id => BuildIdFilter.IsMatch(id));
@@ -353,6 +363,8 @@ namespace TeamCityIntegration
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            Validates.NotNull(_httpClient);
+
             return _httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                              .ContinueWith(
                                  task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
@@ -398,13 +410,15 @@ namespace TeamCityIntegration
 
             if (unauthorized)
             {
+                Validates.NotNull(_buildServerWatcher);
+
                 var buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, true);
                 var useBuildServerCredentials = buildServerCredentials is not null
                                                 && !buildServerCredentials.UseGuestAccess
                                                 && (string.IsNullOrWhiteSpace(buildServerCredentials.Username) && string.IsNullOrWhiteSpace(buildServerCredentials.Password));
                 if (useBuildServerCredentials)
                 {
-                    UpdateHttpClientOptionsCredentialsAuth(buildServerCredentials);
+                    UpdateHttpClientOptionsCredentialsAuth(buildServerCredentials!);
                     return GetStreamAsync(restServicePath, cancellationToken);
                 }
                 else
@@ -417,10 +431,14 @@ namespace TeamCityIntegration
             throw new HttpRequestException(task.CompletedResult().ReasonPhrase);
         }
 
-        public void UpdateHttpClientOptionsNtlmAuth(IBuildServerCredentials buildServerCredentials)
+        public void UpdateHttpClientOptionsNtlmAuth(IBuildServerCredentials? buildServerCredentials)
         {
             try
             {
+                Validates.NotNull(_httpClient);
+                Validates.NotNull(_httpClientHandler);
+                Validates.NotNull(HostName);
+
                 _httpClient.Dispose();
                 _httpClientHandler.Dispose();
 
@@ -437,12 +455,18 @@ namespace TeamCityIntegration
 
         public void UpdateHttpClientOptionsGuestAuth()
         {
+            Validates.NotNull(_httpClient);
+
             _httpClientHostSuffix = "guestAuth";
             _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
         private void UpdateHttpClientOptionsCredentialsAuth(IBuildServerCredentials buildServerCredentials)
         {
+            Validates.NotNull(_httpClient);
+            Validates.NotNull(buildServerCredentials.Username);
+            Validates.NotNull(buildServerCredentials.Password);
+
             _httpClientHostSuffix = "httpAuth";
             _httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(buildServerCredentials.Username, buildServerCredentials.Password);
         }
@@ -542,8 +566,7 @@ namespace TeamCityIntegration
             _httpClient?.Dispose();
         }
 
-        [CanBeNull]
-        public Project GetProjectsTree()
+        public Project? GetProjectsTree()
         {
             var projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectsResponseAsync(CancellationToken.None));
             var projects = projectsRootElement.Root.Elements().Where(e => (string)e.Attribute("archived") != "true").Select(e => new Project
@@ -556,12 +579,14 @@ namespace TeamCityIntegration
 
             var projectDictionary = projects.ToDictionary(p => p.Id, p => p);
 
-            Project rootProject = null;
+            Project? rootProject = null;
             foreach (var project in projects)
             {
                 if (project.ParentProject is not null)
                 {
-                    projectDictionary[project.ParentProject].SubProjects.Add(project);
+                    Project parentProject = projectDictionary[project.ParentProject];
+                    Validates.NotNull(parentProject.SubProjects);
+                    parentProject.SubProjects.Add(project);
                 }
                 else
                 {
@@ -598,18 +623,18 @@ namespace TeamCityIntegration
 
     public class Project
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string ParentProject { get; set; }
-        public IList<Project> SubProjects { get; set; }
-        public IList<Build> Builds { get; set; }
+        public string? Id { get; set; }
+        public string? Name { get; set; }
+        public string? ParentProject { get; set; }
+        public IList<Project>? SubProjects { get; set; }
+        public IList<Build>? Builds { get; set; }
     }
 
     public class Build
     {
-        public string ParentProject { get; set; }
-        public string Id { get; set; }
-        public string Name { get; set; }
+        public string? ParentProject { get; set; }
+        public string? Id { get; set; }
+        public string? Name { get; set; }
         public string DisplayName => Name + " (" + Id + ")";
     }
 }

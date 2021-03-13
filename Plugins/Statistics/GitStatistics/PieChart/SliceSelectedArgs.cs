@@ -4,21 +4,21 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
     public class SliceSelectedArgs : EventArgs
     {
-        public object Tag;
-        public string Tooltip;
-        public decimal Value;
+        public object? Tag { get; }
+        public string ToolTip { get; }
+        public decimal Value { get; }
 
-        public SliceSelectedArgs(decimal val, string hint)
+        public SliceSelectedArgs(decimal value, string toolTip)
         {
-            Value = val;
-            Tooltip = hint;
+            Value = value;
+            ToolTip = toolTip;
         }
 
-        public SliceSelectedArgs(decimal val, string hint, object t)
+        public SliceSelectedArgs(decimal value, string toolTip, object? tag)
         {
-            Value = val;
-            Tooltip = hint;
-            Tag = t;
+            Value = value;
+            ToolTip = toolTip;
+            Tag = tag;
         }
     }
 }

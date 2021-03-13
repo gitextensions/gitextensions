@@ -6,7 +6,7 @@ namespace GitUIPluginInterfaces
 {
     public class CredentialsSetting : CredentialsManager, ISetting
     {
-        public CredentialsSetting(string name, string caption, Func<string> getWorkingDir)
+        public CredentialsSetting(string name, string caption, Func<string?> getWorkingDir)
             : base(getWorkingDir)
         {
             Name = name;

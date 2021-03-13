@@ -2,13 +2,14 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Microsoft;
 
 namespace TeamCityIntegration.Settings
 {
     public partial class TeamCityBuildChooser : Form
     {
         private readonly TeamCityAdapter _teamCityAdapter = new();
-        private TreeNode _previouslySelectedProject;
+        private TreeNode? _previouslySelectedProject;
         public string TeamCityProjectName { get; private set; }
         public string TeamCityBuildIdFilter { get; private set; }
 
@@ -21,9 +22,13 @@ namespace TeamCityIntegration.Settings
             _teamCityAdapter.InitializeHttpClient(teamCityServerUrl);
 
             var rootProject = _teamCityAdapter.GetProjectsTree();
-            var rootTreeNode = LoadTreeView(treeViewTeamCityProjects, rootProject);
 
-            rootTreeNode.Expand();
+            if (rootProject is not null)
+            {
+                var rootTreeNode = LoadTreeView(treeViewTeamCityProjects, rootProject);
+
+                rootTreeNode.Expand();
+            }
         }
 
         private void TeamCityBuildChooser_Load(object sender, EventArgs e)
@@ -83,6 +88,8 @@ namespace TeamCityIntegration.Settings
             var project = (Project)treeNode.Tag;
             if (project.Builds is null)
             {
+                Validates.NotNull(project.Id);
+
                 project.Builds = _teamCityAdapter.GetProjectBuilds(project.Id);
 
                 // Remove "Loading..." node
@@ -115,6 +122,9 @@ namespace TeamCityIntegration.Settings
         {
             if (treeViewTeamCityProjects.SelectedNode?.Tag is Build build)
             {
+                Validates.NotNull(build.ParentProject);
+                Validates.NotNull(build.Id);
+
                 TeamCityProjectName = build.ParentProject;
                 TeamCityBuildIdFilter = build.Id;
 

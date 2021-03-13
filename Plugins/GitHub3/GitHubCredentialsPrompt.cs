@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using GitCommands.Utils;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using Strings = GitExtUtils.Strings;
 
 namespace GitHub3
 {
@@ -36,7 +37,7 @@ namespace GitHub3
         {
             var token = _joinableTaskFactory.Run(async () =>
                 await GenerateOAuthTokenAsync(txtGitHubLogin.Text, txtGitHubPassword.Text, txtSecondFactor.Text));
-            if (!string.IsNullOrWhiteSpace(token))
+            if (!Strings.IsNullOrWhiteSpace(token))
             {
                 GitHubLoginInfo.OAuthToken = token;
 
@@ -65,10 +66,10 @@ namespace GitHub3
 
         public class GitHubToken
         {
-            public string token { get; set; }
+            public string? token { get; set; }
         }
 
-        private async Task<string> GenerateOAuthTokenAsync(string login, string password, string secondFactorOtp)
+        private async Task<string?> GenerateOAuthTokenAsync(string login, string password, string secondFactorOtp)
         {
             // https://developer.github.com/v3/auth/#using-the-oauth-authorizations-api-with-two-factor-authentication
             const string otpHeaderKey = "X-GitHub-OTP";

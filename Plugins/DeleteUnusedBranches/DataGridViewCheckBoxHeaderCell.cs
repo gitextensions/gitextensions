@@ -25,10 +25,6 @@ namespace DeleteUnusedBranches
             }
         }
 
-        public DataGridViewCheckBoxHeaderCell()
-        {
-        }
-
         protected override void Paint(Graphics graphics,
             Rectangle clipBounds,
             Rectangle cellBounds,
@@ -91,6 +87,6 @@ namespace DeleteUnusedBranches
             CheckBoxClicked?.Invoke(this, e);
         }
 
-        public event EventHandler<CheckBoxHeaderCellEventArgs> CheckBoxClicked;
+        public event EventHandler<CheckBoxHeaderCellEventArgs>? CheckBoxClicked;
     }
 }

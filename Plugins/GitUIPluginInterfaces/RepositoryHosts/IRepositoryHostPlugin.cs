@@ -18,8 +18,8 @@ namespace GitUIPluginInterfaces.RepositoryHosts
 
         bool GitModuleIsRelevantToMe();
         IReadOnlyList<IHostedRemote> GetHostedRemotesForModule();
-        string OwnerLogin { get; }
+        string? OwnerLogin { get; }
 
-        Task<string> AddUpstreamRemoteAsync();
+        Task<string?> AddUpstreamRemoteAsync();
     }
 }

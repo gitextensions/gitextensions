@@ -12,7 +12,7 @@ namespace JenkinsIntegration.Settings
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class JenkinsSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
-        private string _defaultProjectName;
+        private string? _defaultProjectName;
 
         public JenkinsSettingsUserControl()
         {
@@ -22,19 +22,16 @@ namespace JenkinsIntegration.Settings
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
         }
 
-        public void Initialize(string defaultProjectName, IEnumerable<string> remotes)
+        public void Initialize(string defaultProjectName, IEnumerable<string?> remotes)
         {
             _defaultProjectName = defaultProjectName;
         }
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            if (buildServerConfig is not null)
-            {
-                JenkinsServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
-                JenkinsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
-                IgnoreBuildBranch.Text = buildServerConfig.GetString("IgnoreBuildBranch", string.Empty);
-            }
+            JenkinsServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
+            JenkinsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
+            IgnoreBuildBranch.Text = buildServerConfig.GetString("IgnoreBuildBranch", string.Empty);
         }
 
         public void SaveSettings(ISettingsSource buildServerConfig)

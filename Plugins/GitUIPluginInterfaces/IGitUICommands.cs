@@ -24,8 +24,8 @@ namespace GitUIPluginInterfaces
         /// </summary>
         ILockableNotifier RepoChangedNotifier { get; }
 
-        void StartCommandLineProcessDialog(IWin32Window owner, string command, ArgumentString arguments);
-        bool StartCommandLineProcessDialog(IWin32Window owner, IGitCommand command);
+        void StartCommandLineProcessDialog(IWin32Window? owner, string command, ArgumentString arguments);
+        bool StartCommandLineProcessDialog(IWin32Window? owner, IGitCommand command);
         void StartBatchFileProcessDialog(string batchFile);
 
         /// <summary>
@@ -33,11 +33,11 @@ namespace GitUIPluginInterfaces
         /// </summary>
         /// <param name="preselectRemote">Makes the FormRemotes initially select the given remote.</param>
         /// <param name="preselectLocal">Makes the FormRemotes initially show the tab "Default push behavior" and select the given local.</param>
-        bool StartRemotesDialog(IWin32Window owner, string? preselectRemote = null, string? preselectLocal = null);
+        bool StartRemotesDialog(IWin32Window? owner, string? preselectRemote = null, string? preselectLocal = null);
 
         bool StartSettingsDialog(Type pageType);
         bool StartSettingsDialog(IGitPlugin gitPlugin);
-        void AddCommitTemplate(string key, Func<string> addingText, Image icon);
+        void AddCommitTemplate(string key, Func<string> addingText, Image? icon);
         void RemoveCommitTemplate(string key);
     }
 }

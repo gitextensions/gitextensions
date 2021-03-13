@@ -153,7 +153,7 @@ namespace GitUIPluginInterfaces
         /// </remarks>
         /// <param name="s">The string to try parsing from.</param>
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
-        /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
+        /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash, or <paramref name="s"/> is <see langword="null"/>.</exception>
         [MustUseReturnValue]
         public static ObjectId Parse(string s)
         {
@@ -176,7 +176,7 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to try parsing from.</param>
         /// <param name="offset">The position within <paramref name="s"/> to start parsing from.</param>
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
-        /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
+        /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash, or <paramref name="s"/> is <see langword="null"/>.</exception>
         [MustUseReturnValue]
         public static ObjectId Parse(string s, int offset)
         {

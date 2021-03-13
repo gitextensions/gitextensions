@@ -22,7 +22,7 @@ namespace FindLargeFiles
         private readonly float _threshold;
         private readonly GitUIEventArgs _gitUiCommands;
         private readonly IGitModule _gitCommands;
-        private string[] _revList;
+        private string[] _revList = Array.Empty<string>();
         private readonly Dictionary<string, GitObject> _list = new Dictionary<string, GitObject>();
         private readonly SortableObjectsList _gitObjects = new();
 
@@ -47,7 +47,7 @@ namespace FindLargeFiles
 
             _threshold = threshold;
             _gitUiCommands = gitUiEventArgs;
-            _gitCommands = gitUiEventArgs?.GitModule;
+            _gitCommands = gitUiEventArgs.GitModule;
         }
 
         private void FindLargeFilesFunction()

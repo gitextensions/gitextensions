@@ -629,7 +629,7 @@ namespace GitUI
             return DoActionOnRepo(owner, Action, changesRepo: false);
         }
 
-        public void AddCommitTemplate(string key, Func<string> addingText, Image icon)
+        public void AddCommitTemplate(string key, Func<string> addingText, Image? icon)
         {
             _commitTemplateManager.Register(key, addingText, icon);
         }

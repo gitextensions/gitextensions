@@ -11,6 +11,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;
+using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 namespace DeleteUnusedBranches
@@ -33,12 +34,12 @@ namespace DeleteUnusedBranches
 
         private readonly SortableBranchesList _branches = new();
         private readonly IGitModule _gitCommands;
-        private readonly IGitUICommands _gitUiCommands;
+        private readonly IGitUICommands? _gitUiCommands;
         private readonly IGitPlugin _gitPlugin;
         private readonly GitBranchOutputCommandParser _commandOutputParser;
-        private CancellationTokenSource _refreshCancellation;
+        private CancellationTokenSource? _refreshCancellation;
 
-        public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands gitUiCommands, IGitPlugin gitPlugin)
+        public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands? gitUiCommands, IGitPlugin gitPlugin)
         {
             _settings = settings;
             _gitCommands = gitCommands;
@@ -211,6 +212,7 @@ namespace DeleteUnusedBranches
                     _gitCommands.GitExecutable.GetOutput(args);
                 }
 
+                Validates.NotNull(_gitUiCommands);
                 _gitUiCommands.RepoChangedNotifier.Notify();
 
                 await this.SwitchToMainThreadAsync();
@@ -224,6 +226,7 @@ namespace DeleteUnusedBranches
         {
             Hide();
             Close();
+            Validates.NotNull(_gitUiCommands);
             _gitUiCommands.StartSettingsDialog(_gitPlugin);
         }
 
@@ -280,12 +283,16 @@ namespace DeleteUnusedBranches
 
         private async Task RefreshObsoleteBranchesAsync()
         {
+            Validates.NotNull(_refreshCancellation);
+
             if (IsRefreshing)
             {
                 _refreshCancellation.Cancel();
                 IsRefreshing = false;
                 return;
             }
+
+            Validates.NotNull(_gitUiCommands);
 
             IsRefreshing = true;
             var curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
@@ -358,7 +365,7 @@ namespace DeleteUnusedBranches
         private readonly struct RefreshContext
         {
             public RefreshContext(IGitModule commands, bool includeRemotes, bool includeUnmerged, string referenceBranch,
-                string remoteRepositoryName, string regexFilter, bool regexIgnoreCase, bool regexDoesNotMatch,
+                string remoteRepositoryName, string? regexFilter, bool regexIgnoreCase, bool regexDoesNotMatch,
                 TimeSpan obsolescenceDuration, CancellationToken cancellationToken)
             {
                 Commands = commands;
@@ -378,7 +385,7 @@ namespace DeleteUnusedBranches
             public bool IncludeUnmerged { get; }
             public string ReferenceBranch { get; }
             public string RemoteRepositoryName { get; }
-            public string RegexFilter { get; }
+            public string? RegexFilter { get; }
             public bool RegexIgnoreCase { get; }
             public bool RegexDoesNotMatch { get; }
             public TimeSpan ObsolescenceDuration { get; }

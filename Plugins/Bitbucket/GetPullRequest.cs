@@ -35,14 +35,11 @@ namespace Bitbucket
             }
             else
             {
+                request.Reviewers = "";
+
                 foreach (var reviewer in reviewers)
                 {
                     request.Reviewers += reviewer["user"]["displayName"] + " (" + reviewer["approved"] + ")" + Environment.NewLine;
-                }
-
-                if (request.Reviewers.EndsWith(", "))
-                {
-                    request.Reviewers = request.Reviewers.Substring(0, request.Reviewers.Length - 2);
                 }
             }
 
@@ -52,35 +49,32 @@ namespace Bitbucket
             }
             else
             {
+                request.Participants = "";
+
                 foreach (var participant in participants)
                 {
                     request.Participants += participant["user"]["displayName"] + " (" + participant["approved"] + ")" + Environment.NewLine;
-                }
-
-                if (request.Participants.EndsWith(", "))
-                {
-                    request.Participants = request.Participants.Substring(0, request.Participants.Length - 2);
                 }
             }
 
             return request;
         }
 
-        public string Id { get; set; }
-        public string Version { get; set; }
-        public string DestProjectKey { get; set; }
-        public string State { get; set; }
-        public string SrcProjectName { get; set; }
-        public string DestProjectName { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Reviewers { get; set; }
-        public string Participants { get; set; }
-        public string Author { get; set; }
-        public string SrcRepo { get; set; }
-        public string SrcBranch { get; set; }
-        public string DestRepo { get; set; }
-        public string DestBranch { get; set; }
+        public string? Id { get; set; }
+        public string? Version { get; set; }
+        public string? DestProjectKey { get; set; }
+        public string? State { get; set; }
+        public string? SrcProjectName { get; set; }
+        public string? DestProjectName { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
+        public string? Reviewers { get; set; }
+        public string? Participants { get; set; }
+        public string? Author { get; set; }
+        public string? SrcRepo { get; set; }
+        public string? SrcBranch { get; set; }
+        public string? DestRepo { get; set; }
+        public string? DestBranch { get; set; }
         public double CreatedDate { get; set; }
 
         public string SrcDisplayName => $"{SrcProjectName}/{SrcRepo}";
@@ -106,7 +100,7 @@ namespace Bitbucket
             _repoName = repoName;
         }
 
-        protected override object RequestBody => null;
+        protected override object? RequestBody => null;
 
         protected override Method RequestMethod => Method.GET;
 

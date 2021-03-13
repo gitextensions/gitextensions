@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
@@ -6,13 +7,13 @@ namespace Bitbucket
 {
     internal class PullRequestInfo
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public Repository SourceRepo { get; set; }
-        public Repository TargetRepo { get; set; }
-        public string SourceBranch { get; set; }
-        public string TargetBranch { get; set; }
-        public IEnumerable<BitbucketUser> Reviewers { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
+        public Repository? SourceRepo { get; set; }
+        public Repository? TargetRepo { get; set; }
+        public string? SourceBranch { get; set; }
+        public string? TargetBranch { get; set; }
+        public IEnumerable<BitbucketUser>? Reviewers { get; set; }
     }
 
     internal class CreatePullRequestRequest : BitbucketRequestBase<JObject>
@@ -29,8 +30,16 @@ namespace Bitbucket
 
         protected override Method RequestMethod => Method.POST;
 
-        protected override string ApiUrl => string.Format("/projects/{0}/repos/{1}/pull-requests",
-            _info.TargetRepo.ProjectKey, _info.TargetRepo.RepoName);
+        protected override string ApiUrl
+        {
+            get
+            {
+                Validates.NotNull(_info.TargetRepo);
+                return string.Format(
+                    "/projects/{0}/repos/{1}/pull-requests",
+                    _info.TargetRepo.ProjectKey, _info.TargetRepo.RepoName);
+            }
+        }
 
         protected override JObject ParseResponse(JObject json)
         {
@@ -39,6 +48,16 @@ namespace Bitbucket
 
         private string GetPullRequestBody()
         {
+            Validates.NotNull(_info.SourceRepo);
+            Validates.NotNull(_info.SourceRepo.ProjectKey);
+            Validates.NotNull(_info.SourceRepo.RepoName);
+            Validates.NotNull(_info.SourceBranch);
+            Validates.NotNull(_info.TargetRepo);
+            Validates.NotNull(_info.TargetRepo.ProjectKey);
+            Validates.NotNull(_info.TargetRepo.RepoName);
+            Validates.NotNull(_info.TargetBranch);
+            Validates.NotNull(_info.Reviewers);
+
             var resource = new JObject();
             resource["title"] = _info.Title;
             resource["description"] = _info.Description;

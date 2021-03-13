@@ -16,13 +16,13 @@ namespace GitUIPluginInterfaces
     public class CredentialsManager : ICredentialsManager
     {
         private static ConcurrentDictionary<string, NetworkCredential?> Credentials { get; } = new ConcurrentDictionary<string, NetworkCredential?>();
-        private readonly Func<string>? _getWorkingDir;
+        private readonly Func<string?>? _getWorkingDir;
 
         public CredentialsManager()
         {
         }
 
-        protected CredentialsManager(Func<string> getWorkingDir)
+        protected CredentialsManager(Func<string?> getWorkingDir)
         {
             _getWorkingDir = getWorkingDir;
         }

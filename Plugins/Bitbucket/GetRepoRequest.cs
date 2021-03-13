@@ -14,7 +14,7 @@ namespace Bitbucket
             _repoName = repoName;
         }
 
-        protected override object RequestBody => null;
+        protected override object? RequestBody => null;
 
         protected override Method RequestMethod => Method.GET;
 

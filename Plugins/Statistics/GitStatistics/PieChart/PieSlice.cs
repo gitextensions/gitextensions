@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Microsoft;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
@@ -38,27 +39,27 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// <summary>
         ///   <c>Brush</c> used to render slice ending cut side.
         /// </summary>
-        protected Brush BrushEndSide;
+        protected Brush? BrushEndSide;
 
         /// <summary>
         ///   <c>Brush</c> used to render pie slice periphery (cylinder outer surface).
         /// </summary>
-        protected Brush BrushPeripherySurface;
+        protected Brush? BrushPeripherySurface;
 
         /// <summary>
         ///   <c>Brush</c> used to render slice starting cut side.
         /// </summary>
-        protected Brush BrushStartSide;
+        protected Brush? BrushStartSide;
 
         /// <summary>
         ///   <c>Brush</c> used to render slice top surface.
         /// </summary>
-        protected Brush BrushSurface;
+        protected Brush? BrushSurface;
 
         /// <summary>
         ///   <c>Brush</c> used to render slice top surface when highlighted.
         /// </summary>
-        protected Brush BrushSurfaceHighlighted;
+        protected Brush? BrushSurfaceHighlighted;
 
         /// <summary>
         ///   <c>PointF</c> corresponding to pie slice center.
@@ -78,7 +79,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// <summary>
         ///   <c>Pen</c> object used to draw pie slice edges.
         /// </summary>
-        protected Pen Pen;
+        protected Pen? Pen;
 
         /// <summary>
         ///   <c>PointF</c> on the periphery corresponding to the end cut
@@ -285,7 +286,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect,
                 sliceHeight, startAngle, sweepAngle, surfaceColor, shadowStyle, edgeColorType)
         {
-            Pen.Width = edgeLineWidth;
+            Pen!.Width = edgeLineWidth;
         }
 
         /// <summary>
@@ -469,7 +470,9 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </param>
         internal void DrawVisibleStartSide(Graphics graphics)
         {
-            StartSide?.Draw(graphics, Pen, BrushStartSide);
+            Validates.NotNull(Pen);
+            Validates.NotNull(BrushStartSide);
+            StartSide.Draw(graphics, Pen, BrushStartSide);
         }
 
         /// <summary>
@@ -480,7 +483,9 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </param>
         internal void DrawVisibleEndSide(Graphics graphics)
         {
-            EndSide?.Draw(graphics, Pen, BrushEndSide);
+            Validates.NotNull(Pen);
+            Validates.NotNull(BrushEndSide);
+            EndSide.Draw(graphics, Pen, BrushEndSide);
         }
 
         /// <summary>
@@ -491,6 +496,8 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </param>
         internal void DrawVisiblePeriphery(Graphics graphics)
         {
+            Validates.NotNull(Pen);
+            Validates.NotNull(BrushPeripherySurface);
             var peripherySurfaceBounds = GetVisiblePeripherySurfaceBounds();
             foreach (var surfaceBounds in peripherySurfaceBounds)
             {
@@ -513,6 +520,9 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </param>
         internal void DrawTop(Graphics graphics)
         {
+            Validates.NotNull(BrushSurface);
+            Validates.NotNull(Pen);
+
             graphics.FillPie(
                 BrushSurface,
                 BoundingRectangle.X,

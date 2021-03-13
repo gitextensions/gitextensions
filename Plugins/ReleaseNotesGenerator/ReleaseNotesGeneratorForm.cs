@@ -24,7 +24,7 @@ namespace ReleaseNotesGenerator
 
         private const string MostRecentHint = "most recent changes are listed on top";
         private readonly GitUIEventArgs _gitUiCommands;
-        private IEnumerable<LogLine> _lastGeneratedLogLines;
+        private IEnumerable<LogLine> _lastGeneratedLogLines = Enumerable.Empty<LogLine>();
         private readonly IGitLogLineParser _gitLogLineParser;
 
         public ReleaseNotesGeneratorForm(GitUIEventArgs gitUiCommands)
@@ -39,7 +39,7 @@ namespace ReleaseNotesGenerator
         private void ReleaseNotesGeneratorForm_Load(object sender, EventArgs e)
         {
             Icon = Owner?.Icon;
-            textBoxResult_TextChanged(null, null);
+            textBoxResult_TextChanged(sender, e);
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)
@@ -83,7 +83,7 @@ namespace ReleaseNotesGenerator
                 labelRevCount.Text = "n/a";
             }
 
-            textBoxResult_TextChanged(null, null);
+            textBoxResult_TextChanged(sender, e);
         }
 
         private void textBoxResult_TextChanged(object sender, EventArgs e)

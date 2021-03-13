@@ -21,7 +21,7 @@ namespace Bitbucket
             _targetCommit = targetCommit;
         }
 
-        protected override object RequestBody => null;
+        protected override object? RequestBody => null;
 
         protected override Method RequestMethod => Method.GET;
 

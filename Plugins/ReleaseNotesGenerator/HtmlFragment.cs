@@ -130,23 +130,23 @@ namespace ReleaseNotesGenerator
         /// <summary>
         /// Get the Version of the html. Usually something like "1.0".
         /// </summary>
-        public string Version { get; }
+        public string? Version { get; }
 
         /// <summary>
         /// Get the full text (context) of the HTML fragment. This includes tags that the HTML is enclosed in.
         /// May be null if context is not specified.
         /// </summary>
-        public string Context { get; }
+        public string? Context { get; }
 
         /// <summary>
         /// Get just the fragment of HTML text.
         /// </summary>
-        public string Fragment { get; }
+        public string? Fragment { get; }
 
         /// <summary>
         /// Get the Source URL of the HTML. May be null if no SourceUrl is specified. This is useful for resolving relative urls.
         /// </summary>
-        public Uri SourceUrl { get; }
+        public Uri? SourceUrl { get; }
 
         #endregion
 
@@ -162,7 +162,7 @@ namespace ReleaseNotesGenerator
         /// <param name="htmlFragment">a html fragment</param>
         /// <param name="title">optional title of the HTML document (can be null)</param>
         /// <param name="sourceUri">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
-        public static void CopyToClipboard(string htmlFragment, string title = null, Uri sourceUri = null)
+        public static void CopyToClipboard(string htmlFragment, string? title = null, Uri? sourceUri = null)
         {
             var dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, title, sourceUri);
 
@@ -173,7 +173,7 @@ namespace ReleaseNotesGenerator
             // or as table to MS Word or LibreOffice Writer
         }
 
-        internal static DataObject CreateHtmlFormatClipboardDataObject(string htmlFragment, string title = "From Clipboard", Uri sourceUri = null)
+        internal static DataObject CreateHtmlFormatClipboardDataObject(string htmlFragment, string? title = "From Clipboard", Uri? sourceUri = null)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
