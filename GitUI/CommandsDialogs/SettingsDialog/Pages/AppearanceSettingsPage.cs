@@ -13,8 +13,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceSettingsPage : SettingsPageWithHeader
     {
-        private const string _customAvatarTemplateURL = "https://git-extensions-documentation.readthedocs.io/settings.html#git-extensions-appearance-author-images-avatar-provider";
-        private const string _gravatarDefaultImageURL = "https://git-extensions-documentation.readthedocs.io/settings.html#git-extensions-appearance-author-images-avatar-fallback";
+        private const string _customAvatarTemplateURL = "https://git-extensions-documentation.readthedocs.io/en/master/settings.html#git-extensions-appearance-author-images-avatar-provider";
+        private const string _gravatarDefaultImageURL = "https://git-extensions-documentation.readthedocs.io/en/master/settings.html#git-extensions-appearance-author-images-avatar-fallback";
         private const string _spellingWikiURL = "https://github.com/gitextensions/gitextensions/wiki/Spelling";
         private const string _translationsWikiURL = "https://github.com/gitextensions/gitextensions/wiki/Translations";
 

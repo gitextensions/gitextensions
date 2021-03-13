@@ -15,7 +15,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--text', default=None,
                        help='text product version')
     args = parser.parse_args()
-    
+
     if not args.version:
         parser.print_help()
         exit(1)
@@ -34,7 +34,21 @@ if __name__ == '__main__':
 
     if not args.text:
       args.text = args.version
-    
+
+    filenames = [
+        "../GitUI/CommandsDialogs/FormBrowse.cs",
+        "../GitUI/CommandsDialogs/SettingsDialog/Pages/AppearanceSettingsPage.cs",
+        "../GitUI/UserManual/StandardHtmlUserManual.cs"
+    ]
+    for filename in filenames:
+        pattern = re.compile(r'(git-extensions-documentation.readthedocs.org/en)(/\w+)', re.IGNORECASE)
+        commonAssemblyInfo = open(filename, "r").readlines()
+        o = ""
+        for i in commonAssemblyInfo:
+            o += pattern.sub(r"\1/release-%s" % (short_version), i)
+        outfile = open(filename, "w")
+        outfile.writelines(o)
+
     submodules = glob.glob("..\Externals\**\AssemblyInfo.cs", recursive=True)
     filenames = [ "..\CommonAssemblyInfo.cs", "..\CommonAssemblyInfoExternals.cs" ]
     combined = filenames + submodules
@@ -56,7 +70,7 @@ if __name__ == '__main__':
             o += line
         outfile = open(filename, "w")
         outfile.writelines(o)
-    
+
     filename = "..\GitExtensionsShellEx\GitExtensionsShellEx.rc"
     gitExtensionsShellEx = open(filename, "r").readlines()
     o = ""
@@ -81,7 +95,7 @@ if __name__ == '__main__':
         o += line
     outfile = open(filename, "w")
     outfile.writelines(o)
-    
+
     filename = "..\GitExtSshAskPass\SshAskPass.rc2"
     gitExtSshAskPass = open(filename, "r").readlines()
     o = ""
