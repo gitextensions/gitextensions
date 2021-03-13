@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace GitImpact
+namespace GitExtensions.Plugins.GitImpact
 {
     partial class ImpactControl
     {
