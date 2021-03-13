@@ -1340,7 +1340,7 @@ namespace GitCommands
 
             // Run batch arguments to work around max command line length on Windows. Fix #6593
             // 3: double quotes + ' '
-            // See https://referencesource.microsoft.com/#system/services/monitoring/system/diagnosticts/Process.cs,1952
+            // See https://referencesource.microsoft.com/#system/services/monitoring/system/diagnostics/Process.cs,1952
             _gitExecutable.RunBatchCommand(new GitArgumentBuilder("checkout")
                 {
                     { force, "--force" },
@@ -2797,7 +2797,7 @@ namespace GitCommands
         /// Gets the current branch.
         /// </summary>
         /// <param name="setDefaultIfEmpty">Return "(no branch)" if detached.</param>
-        /// <returns>Current branchname.</returns>
+        /// <returns>Current branch name.</returns>
         public string GetSelectedBranch(bool setDefaultIfEmpty)
         {
             string head = GetSelectedBranchFast(WorkingDir, setDefaultIfEmpty);
@@ -3745,7 +3745,7 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(branchName));
             }
 
-            string? fullBranchName = GitRefName.GetFullBranchName(branchName);
+            string fullBranchName = GitRefName.GetFullBranchName(branchName);
 
             if (RevParse(fullBranchName) is null)
             {
@@ -3999,7 +3999,7 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetCombinedDiffFileList(string shaOfMergeCommit)
         {
-            GitArgumentBuilder args = new($"diff-tree")
+            GitArgumentBuilder args = new("diff-tree")
             {
                 "--name-only",
                 "-z",

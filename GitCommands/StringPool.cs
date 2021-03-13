@@ -181,7 +181,7 @@ namespace GitCommands
             {
                 fixed (char* ps = source)
                 {
-                    // Create writeable pointers to equivalent positions in each string
+                    // Create writable pointers to equivalent positions in each string
                     var c = pc;
                     var s = &ps[index];
 

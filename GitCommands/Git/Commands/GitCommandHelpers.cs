@@ -134,8 +134,8 @@ namespace GitCommands.Git.Commands
                 }
 
                 // ...however, if we're interested in tags, tags may be simple (in which case they are point to commits directly),
-                // or "dereferences" (i.e. commits that contian metadata and point to other commits, "^{}").
-                // Derefence commits do not contain date information, so we need to find information from the referenced commits (those with '*').
+                // or "dereferences" (i.e. commits that contain metadata and point to other commits, "^{}").
+                // Dereference commits do not contain date information, so we need to find information from the referenced commits (those with '*').
                 // So the following format is as follows:
                 //      If (there is a 'authordate' information, then this is a simple tag/direct commit)
                 //      Then

@@ -153,7 +153,7 @@ namespace GitUI.Editor
         public Action? OpenWithDifftool { get; private set; }
 
         /// <summary>
-        /// Move the file viewer cursor position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>.
+        /// Move the file viewer cursor position to the next TextMarker found in the document that matches the AppColor.HighlightAllOccurences.
         /// </summary>
         public void GoToNextOccurrence()
         {
@@ -172,7 +172,7 @@ namespace GitUI.Editor
         }
 
         /// <summary>
-        /// Move the file viewer cursor position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences/>.
+        /// Move the file viewer cursor position to the previous TextMarker found in the document that matches the AppColor.HighlightAllOccurences.
         /// </summary>
         public void GoToPreviousOccurrence()
         {

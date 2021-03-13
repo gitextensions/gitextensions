@@ -24,17 +24,17 @@ namespace TranslationApp
                 ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
             }
 
-            // force load into the appdomain
+            // Force load into the appdomain
             using (BugReportForm dummy = new())
             {
             }
 
-            // required for translation
+            // Required for translation
             PluginRegistry.Initialize();
 
-            // we will be instantiating a number of forms using their default .ctors
-            // this would lead to InvalidOperationException thrown in GitModuleForm()
-            // set the flag that will stop this from happening
+            // We will be instantiating a number of forms using their default constructors.
+            // This would lead to InvalidOperationException thrown in GitModuleForm().
+            // Set the flag that will stop this from happening.
             GitModuleForm.IsUnitTestActive = true;
 
             var neutralItems = TranslationHelpers.LoadNeutralItems();

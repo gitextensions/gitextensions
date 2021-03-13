@@ -592,17 +592,17 @@ namespace GitCommands
         /// crashes at <see cref="SettingsCache.TryGetValue{T}(string, T, Func{string, T}, out T)"/>
         /// if the type that is requested doesn't match the cached type.
         /// </remarks>
-        private static TEnum GetEnumViaString<TEnum>(string settingName, TEnum defaulValue)
+        private static TEnum GetEnumViaString<TEnum>(string settingName, TEnum defaultValue)
             where TEnum : struct
         {
-            var settingStringValue = GetString(settingName, defaulValue.ToString());
+            var settingStringValue = GetString(settingName, defaultValue.ToString());
 
             if (Enum.TryParse(settingStringValue, out TEnum settingEnumValue))
             {
                 return settingEnumValue;
             }
 
-            return defaulValue;
+            return defaultValue;
         }
 
         private static void MigrateAvatarSettings()

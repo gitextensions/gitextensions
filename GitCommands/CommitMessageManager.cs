@@ -45,7 +45,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="commitMessage">The commit message to write out.</param>
         /// <param name="messageType">The type of message to write out.</param>
-        /// <param name="usingCommitTemplate">The indicator whether a commit tempate is used.</param>
+        /// <param name="usingCommitTemplate">The indicator whether a commit template is used.</param>
         /// <param name="ensureCommitMessageSecondLineEmpty">The indicator whether empty second line is enforced.</param>
         void WriteCommitMessageToFile(string commitMessage, CommitMessageType messageType, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty);
     }

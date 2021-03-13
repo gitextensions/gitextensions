@@ -46,7 +46,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Load the availble DiffMerge tools and apply to the menus
+        /// Load the available DiffMerge tools and apply to the menus
         /// </summary>
         /// <param name="module">The Git module</param>
         /// <param name="delay">The delay before starting the operation</param>
@@ -109,7 +109,7 @@ namespace GitCommands
                     continue;
                 }
 
-                // two tabs, then toolname, cmd (if split in 3) in second
+                // two tabs, then tool name, cmd (if split in 3) in second
                 // cmd is unreliable for diff and not needed but could be used for mergetool special handling
                 string[] delimit = { " ", ".cmd" };
                 var tool = l.Substring(2).Split(delimit, 2, StringSplitOptions.None);
