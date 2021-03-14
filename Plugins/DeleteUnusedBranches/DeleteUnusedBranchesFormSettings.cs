@@ -1,4 +1,4 @@
-﻿namespace DeleteUnusedBranches
+﻿namespace GitExtensions.Plugins.DeleteUnusedBranches
 {
     public class DeleteUnusedBranchesFormSettings
     {

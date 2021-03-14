@@ -4,7 +4,7 @@ using System.Linq;
 using Git.hub;
 using GitUIPluginInterfaces.RepositoryHosts;
 
-namespace GitHub3
+namespace GitExtensions.Plugins.GitHub3
 {
     public class GitHubRepo : IHostedRepository
     {

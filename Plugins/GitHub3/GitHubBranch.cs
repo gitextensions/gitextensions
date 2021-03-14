@@ -2,7 +2,7 @@
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 
-namespace GitHub3
+namespace GitExtensions.Plugins.GitHub3
 {
     internal sealed class GitHubBranch : IHostedBranch
     {

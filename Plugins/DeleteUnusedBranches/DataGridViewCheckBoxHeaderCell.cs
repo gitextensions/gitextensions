@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
-namespace DeleteUnusedBranches
+namespace GitExtensions.Plugins.DeleteUnusedBranches
 {
     public class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCell
     {

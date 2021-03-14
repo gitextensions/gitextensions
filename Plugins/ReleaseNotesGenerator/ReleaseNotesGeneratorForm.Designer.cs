@@ -1,4 +1,4 @@
-﻿namespace ReleaseNotesGenerator
+﻿namespace GitExtensions.Plugins.ReleaseNotesGenerator
 {
     partial class ReleaseNotesGeneratorForm
     {

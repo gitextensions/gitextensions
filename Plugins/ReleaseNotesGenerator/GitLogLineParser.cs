@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace ReleaseNotesGenerator
+namespace GitExtensions.Plugins.ReleaseNotesGenerator
 {
     public interface IGitLogLineParser
     {

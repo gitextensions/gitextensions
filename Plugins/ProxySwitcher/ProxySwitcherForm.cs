@@ -7,7 +7,7 @@ using GitExtUtils;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace ProxySwitcher
+namespace GitExtensions.Plugins.ProxySwitcher
 {
     public partial class ProxySwitcherForm : GitExtensionsFormBase
     {

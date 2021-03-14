@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.Composition;
-using DeleteUnusedBranches.Properties;
+using GitExtensions.Plugins.DeleteUnusedBranches.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace DeleteUnusedBranches
+namespace GitExtensions.Plugins.DeleteUnusedBranches
 {
     [Export(typeof(IGitPlugin))]
     public class DeleteUnusedBranchesPlugin : GitPluginBase, IGitPluginForRepository

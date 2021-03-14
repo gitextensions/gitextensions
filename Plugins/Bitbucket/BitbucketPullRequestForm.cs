@@ -13,7 +13,7 @@ using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
-namespace Bitbucket
+namespace GitExtensions.Plugins.Bitbucket
 {
     public partial class BitbucketPullRequestForm : GitExtensionsFormBase
     {

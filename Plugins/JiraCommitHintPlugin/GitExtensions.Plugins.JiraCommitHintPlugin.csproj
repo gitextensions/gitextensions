@@ -6,20 +6,35 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
-    <PackageReference Include="RestSharp" Version="$(RestSharpVersion)" />
-    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
+    <PackageReference Include="Atlassian.SDK" Version="12.1.1" />
+    <PackageReference Include="NString" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Newtonsoft.Json.dll'))" />
+    <None Include="app.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Resources\IconJira.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'Atlassian.Jira.dll'))" />
+    <PluginAssembly Include="$([System.IO.Path]::Combine('$(TargetDir)', 'NString.dll'))" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

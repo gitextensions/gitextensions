@@ -5,8 +5,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DeleteUnusedBranches.Properties;
 using GitCommands;
+using GitExtensions.Plugins.DeleteUnusedBranches.Properties;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
@@ -14,7 +14,8 @@ using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
-namespace DeleteUnusedBranches
+
+namespace GitExtensions.Plugins.DeleteUnusedBranches
 {
     public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
     {

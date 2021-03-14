@@ -59,23 +59,23 @@ Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Setup", "Setup\Setup.wixpro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager", "ResourceManager\ResourceManager.csproj", "{D3440FD7-AFC5-4351-8741-6CDBF15CE944}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gource", "Plugins\Gource\Gource.csproj", "{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.Gource", "Plugins\Gource\GitExtensions.Plugins.Gource.csproj", "{687A73BB-12A0-4AF7-B420-4A9C47DB75CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeleteUnusedBranches", "Plugins\DeleteUnusedBranches\DeleteUnusedBranches.csproj", "{921F0443-C3A1-4A09-82E8-C4AFB9654943}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.DeleteUnusedBranches", "Plugins\DeleteUnusedBranches\GitExtensions.Plugins.DeleteUnusedBranches.csproj", "{921F0443-C3A1-4A09-82E8-C4AFB9654943}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpellChecker", "Externals\NetSpell.SpellChecker\SpellChecker.csproj", "{A426EE0B-E52E-4D74-AF24-06797142D7B2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.GitImpact", "Plugins\Statistics\GitImpact\GitExtensions.Plugins.GitImpact.csproj", "{0B131F9D-BB10-4C3E-9656-5AB858158DE5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateLocalBranches", "Plugins\CreateLocalBranches\CreateLocalBranches.csproj", "{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.CreateLocalBranches", "Plugins\CreateLocalBranches\GitExtensions.Plugins.CreateLocalBranches.csproj", "{31D96116-16A6-45C2-9A6D-6DD5A1FC5F20}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FindLargeFiles", "Plugins\FindLargeFiles\FindLargeFiles.csproj", "{F261BCD1-F5F7-4664-A229-E52032E6E9FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.FindLargeFiles", "Plugins\FindLargeFiles\GitExtensions.Plugins.FindLargeFiles.csproj", "{F261BCD1-F5F7-4664-A229-E52032E6E9FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHub3", "Plugins\GitHub3\GitHub3.csproj", "{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.GitHub3", "Plugins\GitHub3\GitExtensions.Plugins.GitHub3.csproj", "{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProxySwitcher", "Plugins\ProxySwitcher\ProxySwitcher.csproj", "{274F449F-7472-4248-9A57-8CA665A75B5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.ProxySwitcher", "Plugins\ProxySwitcher\GitExtensions.Plugins.ProxySwitcher.csproj", "{274F449F-7472-4248-9A57-8CA665A75B5D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReleaseNotesGenerator", "Plugins\ReleaseNotesGenerator\ReleaseNotesGenerator.csproj", "{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.ReleaseNotesGenerator", "Plugins\ReleaseNotesGenerator\GitExtensions.Plugins.ReleaseNotesGenerator.csproj", "{8B3778F2-6049-4D4C-B94F-D5FF3A5DC7F8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TranslationApp", "TranslationApp\TranslationApp.csproj", "{7C106FAC-CB81-4D37-BE98-E7F6A5BDD143}"
 EndProject
@@ -83,7 +83,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.Backg
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.AutoCompileSubmodules", "Plugins\AutoCompileSubmodules\GitExtensions.Plugins.AutoCompileSubmodules.csproj", "{7E5433F4-DD13-4D8E-95B2-59B4FFE7D636}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitFlow", "Plugins\GitFlow\GitFlow.csproj", "{D4628A13-CD53-401F-A645-CB16FD15ABBB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.GitFlow", "Plugins\GitFlow\GitExtensions.Plugins.GitFlow.csproj", "{D4628A13-CD53-401F-A645-CB16FD15ABBB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamCityIntegration", "Plugins\BuildServerIntegration\TeamCityIntegration\TeamCityIntegration.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
 EndProject
@@ -96,7 +96,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Git.hub", "Externals\Git.hub\Git.hub\Git.hub.csproj", "{F50B1DBF-1C9F-4437-87EC-7ABA805CC446}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bitbucket", "Plugins\Bitbucket\Bitbucket.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.Bitbucket", "Plugins\Bitbucket\GitExtensions.Plugins.Bitbucket.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JenkinsIntegration", "Plugins\BuildServerIntegration\JenkinsIntegration\JenkinsIntegration.csproj", "{E6AAC693-815B-4D1A-83D7-F4DE36072793}"
 EndProject
@@ -129,7 +129,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReleaseNotesGenerator.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResourceManager.Tests", "UnitTests\ResourceManager.Tests\ResourceManager.Tests.csproj", "{D9C9D8EF-E0BC-4CCD-829D-3523E750D0FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraCommitHintPlugin", "Plugins\JiraCommitHintPlugin\JiraCommitHintPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.JiraCommitHintPlugin", "Plugins\JiraCommitHintPlugin\GitExtensions.Plugins.JiraCommitHintPlugin.csproj", "{626CA9EB-DB83-4BEB-87D5-15E3B397EF57}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTestUtils", "UnitTests\CommonTestUtils\CommonTestUtils.csproj", "{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}"
 EndProject

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using FindLargeFiles.Properties;
+using GitExtensions.Plugins.FindLargeFiles.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace FindLargeFiles
+namespace GitExtensions.Plugins.FindLargeFiles
 {
     [Export(typeof(IGitPlugin))]
     public class FindLargeFilesPlugin : GitPluginBase, IGitPluginForRepository

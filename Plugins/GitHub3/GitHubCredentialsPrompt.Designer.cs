@@ -1,4 +1,4 @@
-﻿namespace GitHub3
+﻿namespace GitExtensions.Plugins.GitHub3
 {
     partial class GitHubCredentialsPrompt
     {

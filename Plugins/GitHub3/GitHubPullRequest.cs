@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Git.hub;
 using GitUIPluginInterfaces.RepositoryHosts;
 
-namespace GitHub3
+namespace GitExtensions.Plugins.GitHub3
 {
     internal class GitHubPullRequest : IPullRequestInformation
     {

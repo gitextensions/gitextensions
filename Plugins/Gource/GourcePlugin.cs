@@ -6,12 +6,12 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitExtensions.Plugins.Gource.Properties;
 using GitUIPluginInterfaces;
-using Gource.Properties;
 using ICSharpCode.SharpZipLib.Zip;
 using ResourceManager;
 
-namespace Gource
+namespace GitExtensions.Plugins.Gource
 {
     [Export(typeof(IGitPlugin))]
     public class GourcePlugin : GitPluginBase, IGitPluginForRepository

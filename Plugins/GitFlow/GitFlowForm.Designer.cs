@@ -1,4 +1,4 @@
-﻿namespace GitFlow
+﻿namespace GitExtensions.Plugins.GitFlow
 {
     partial class GitFlowForm
     {

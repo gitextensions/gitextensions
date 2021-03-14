@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Windows.Forms;
 
-namespace DeleteUnusedBranches
+namespace GitExtensions.Plugins.DeleteUnusedBranches
 {
     /// <summary>
     /// Custom sortable binding branches list, use for support user-defined sorting in <see cref="DataGridView"/>.

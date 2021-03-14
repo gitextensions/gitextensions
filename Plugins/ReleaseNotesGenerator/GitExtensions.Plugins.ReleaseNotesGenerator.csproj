@@ -3,17 +3,24 @@
   <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
-    <ProjectReference Include="..\..\GitUI\GitUI.csproj" />
     <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Properties\DataSources\GitObject.datasource" />
+    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Resources\IconFindLargeFiles.png" />
+    <None Include="Resources\IconReleaseNotesGenerator.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

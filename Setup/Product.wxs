@@ -607,7 +607,7 @@
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
       <Component Id="DeleteUnusedBranches.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\DeleteUnusedBranches.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.DeleteUnusedBranches.dll" />
       </Component>
       <Component Id="AutoCompileSubmodules.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.AutoCompileSubmodules.dll" />
@@ -616,7 +616,7 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.BackgroundFetch.dll" />
       </Component>
       <Component Id="CreateLocalBranches.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\CreateLocalBranches.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.CreateLocalBranches.dll" />
       </Component>
       <Component Id="GitStatistics.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitStatistics.dll" />
@@ -625,22 +625,22 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitImpact.dll" />
       </Component>
       <Component Id="Gource.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\Gource.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.Gource.dll" />
       </Component>
       <Component Id="Github3.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitHub3.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitHub3.dll" />
       </Component>
       <Component Id="GitFlow.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitFlow.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitFlow.dll" />
       </Component>
       <Component Id="ReleaseNotesGenerator.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\ReleaseNotesGenerator.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ReleaseNotesGenerator.dll" />
       </Component>
       <Component Id="Newtonsoft.Json.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\Newtonsoft.Json.dll" />
       </Component>
       <Component Id="JiraCommitHintPlugin.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\JiraCommitHintPlugin.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.JiraCommitHintPlugin.dll" />
       </Component>
       <Component Id="Atlassian.Jira.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\Atlassian.Jira.dll" />
@@ -665,13 +665,13 @@
         <RemoveFile Name="Gerrit.dll" Id="Gerrit.dll" On="both" />
       </Component>
       <Component Id="FindLargeFiles.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\FindLargeFiles.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.FindLargeFiles.dll" />
       </Component>
       <Component Id="ProxySwitcher.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\ProxySwitcher.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ProxySwitcher.dll" />
       </Component>
       <Component Id="Bitbucket.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\Bitbucket.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.Bitbucket.dll" />
         <!--Renamed dll, installed in versions <= 2.50.02-->
         <RemoveFile Name="Stash.dll" Id="Stash.dll" On="both" />
       </Component>

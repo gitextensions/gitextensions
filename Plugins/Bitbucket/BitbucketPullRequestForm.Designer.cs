@@ -1,4 +1,4 @@
-﻿namespace Bitbucket
+﻿namespace GitExtensions.Plugins.Bitbucket
 {
     partial class BitbucketPullRequestForm
     {

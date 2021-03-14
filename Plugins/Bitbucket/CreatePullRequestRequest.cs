@@ -3,7 +3,7 @@ using Microsoft;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace Bitbucket
+namespace GitExtensions.Plugins.Bitbucket
 {
     internal class PullRequestInfo
     {
