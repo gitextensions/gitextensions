@@ -10,7 +10,7 @@ namespace GitExtensions.Plugins.CreateLocalBranches
     {
         public CreateLocalBranchesPlugin() : base(false)
         {
-            SetNameAndDescription("Create local tracking branches");
+            Name = "Create local tracking branches";
             Translate();
             Icon = Resources.IconCreateLocalBranches;
         }

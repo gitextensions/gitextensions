@@ -11,7 +11,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
     {
         public ReleaseNotesGeneratorPlugin() : base(false)
         {
-            SetNameAndDescription("Release Notes Generator");
+            Name = "Release Notes Generator";
             Translate();
             Icon = Resources.IconReleaseNotesGenerator;
         }

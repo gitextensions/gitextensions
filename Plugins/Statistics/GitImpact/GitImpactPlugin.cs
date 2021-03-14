@@ -10,7 +10,7 @@ namespace GitExtensions.Plugins.GitImpact
     {
         public GitImpactPlugin() : base(false)
         {
-            SetNameAndDescription("Impact Graph");
+            Name = "Impact Graph";
             Translate();
             Icon = Resources.IconGitImpact;
         }

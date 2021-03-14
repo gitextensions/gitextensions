@@ -10,7 +10,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
     {
         public DeleteUnusedBranchesPlugin() : base(true)
         {
-            SetNameAndDescription("Delete obsolete branches");
+            Name = "Delete obsolete branches";
             Translate();
             Icon = Resources.IconDeleteUnusedBranches;
         }

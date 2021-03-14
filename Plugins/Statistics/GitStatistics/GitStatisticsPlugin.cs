@@ -19,7 +19,7 @@ namespace GitExtensions.Plugins.GitStatistics
 
         public GitStatisticsPlugin() : base(true)
         {
-            SetNameAndDescription("Statistics");
+            Name = "Statistics";
             Translate();
             Icon = Resources.IconGitStatistics;
         }

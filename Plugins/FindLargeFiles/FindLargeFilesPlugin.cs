@@ -11,7 +11,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
     {
         public FindLargeFilesPlugin() : base(true)
         {
-            SetNameAndDescription("Find large files");
+            Name = "Find large files";
             Translate();
             Icon = Resources.IconFindLargeFiles;
         }

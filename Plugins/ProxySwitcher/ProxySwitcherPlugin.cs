@@ -15,7 +15,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         public ProxySwitcherPlugin() : base(true)
         {
-            SetNameAndDescription("Proxy Switcher");
+            Name = "Proxy Switcher";
             Translate();
             Icon = Resources.IconProxySwitcher;
         }

@@ -47,7 +47,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
         public JiraCommitHintPlugin() : base(true)
         {
-            SetNameAndDescription("Jira Commit Hint");
+            Name = "Jira Commit Hint";
             Translate();
             Icon = Resources.IconJira;
 

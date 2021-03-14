@@ -18,7 +18,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
         public BitbucketPlugin() : base(true)
         {
-            SetNameAndDescription("Bitbucket Server");
+            Name = "Bitbucket Server";
             Translate();
 
             Icon = Resources.IconPluginBitbucket;

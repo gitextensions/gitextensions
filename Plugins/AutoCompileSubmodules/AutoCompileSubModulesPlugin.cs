@@ -19,7 +19,7 @@ namespace GitExtensions.Plugins.AutoCompileSubmodules
 
         public AutoCompileSubModulesPlugin() : base(true)
         {
-            SetNameAndDescription("Auto compile SubModules");
+            Name = "Auto compile SubModules";
             Translate();
             Icon = Resources.IconAutoCompileSubmodules;
         }

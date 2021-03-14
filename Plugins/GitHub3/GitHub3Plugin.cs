@@ -90,7 +90,7 @@ namespace GitExtensions.Plugins.GitHub3
 
         public GitHub3Plugin() : base(true)
         {
-            SetNameAndDescription("GitHub");
+            Name = "GitHub";
             Translate();
 
             Instance ??= this;

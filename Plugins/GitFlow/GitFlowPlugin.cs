@@ -10,7 +10,7 @@ namespace GitExtensions.Plugins.GitFlow
     {
         public GitFlowPlugin() : base(false)
         {
-            SetNameAndDescription("GitFlow");
+            Name = "GitFlow";
             Translate();
             Icon = Resource.IconGitFlow;
         }

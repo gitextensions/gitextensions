@@ -18,7 +18,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
     {
         public BackgroundFetchPlugin() : base(true)
         {
-            SetNameAndDescription("Periodic background fetch");
+            Name = "Periodic background fetch";
             Translate();
             Icon = Resources.IconBackgroundFetch;
         }
