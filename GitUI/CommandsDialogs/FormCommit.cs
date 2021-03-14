@@ -3221,8 +3221,8 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.CommitAndPushForcedWhenAmend)
             {
                 CommitAndPush.BackColor = Amend.Checked
-                    ? AppColor.Branch.GetThemeColor()
-                    : SystemColors.ButtonFace;
+                    ? OtherColors.AmendButtonForcedColor
+                    : SystemColors.ButtonFace.AdaptBackColor();
 
                 CommitAndPush.SetForeColorForBackColor();
             }
