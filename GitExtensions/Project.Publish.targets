@@ -78,6 +78,9 @@
     -->
   <Target Name="CreatePortable" BeforeTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_PublishExtraDependecies;_DownloadPluginManager">
     <PropertyGroup>
+      <_UserDictionariesSourceDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'Bin', 'Dictionaries'))</_UserDictionariesSourceDir>
+      <_UserDictionariesPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Dictionaries'))</_UserDictionariesPublishDir>
+
       <_AppPluginsPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Plugins'))</_AppPluginsPublishDir>
       <_AppUserPluginsPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'UserPlugins'))</_AppUserPluginsPublishDir>
 
@@ -109,6 +112,10 @@
     </_GetPluginAssembliesCodeTask>
 
     <ItemGroup>
+      <UserDictionaries Include="$(_UserDictionariesSourceDir)\*.dic" />
+    </ItemGroup>
+
+    <ItemGroup>
       <!-- Collect plugin and their direct reference -->
       <PluginAssemblies Include="@(CollectedPluginAssemblies)" />
       <PluginAssemblies Remove="@(PluginAssemblies)" Condition="$([System.String]::Copy('%(Filename)').EndsWith('.resources'))" />
@@ -123,6 +130,13 @@
       <!-- Collect resources for UserPlugins -->
       <UserPluginResources Include="$(_PluginManagerBinPath)\**\*.*" />
     </ItemGroup>
+
+    <!-- Copy the dictionaries to the Dictionaries folder -->
+    <Copy
+            SourceFiles="@(UserDictionaries)"
+            DestinationFolder="$(_UserDictionariesPublishDir)"
+            ContinueOnError="ErrorAndStop"
+          />
 
     <!-- Copy the plugins to the Plugins folder -->
     <Copy
