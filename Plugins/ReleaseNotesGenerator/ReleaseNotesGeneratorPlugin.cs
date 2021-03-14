@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using GitExtensions.Plugins.ReleaseNotesGenerator.Properties;
 using GitUIPluginInterfaces;
@@ -11,6 +12,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
     {
         public ReleaseNotesGeneratorPlugin() : base(false)
         {
+            Id = new Guid("49E7F2D6-AD79-489E-80A4-5CD212AE6DF3");
             Name = "Release Notes Generator";
             Translate();
             Icon = Resources.IconReleaseNotesGenerator;

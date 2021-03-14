@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using GitExtensions.Plugins.GitStatistics.Properties;
 using GitUIPluginInterfaces;
@@ -19,6 +20,7 @@ namespace GitExtensions.Plugins.GitStatistics
 
         public GitStatisticsPlugin() : base(true)
         {
+            Id = new Guid("17D1507D-C00D-4A10-AB75-DECB2EA5FCBF");
             Name = "Statistics";
             Translate();
             Icon = Resources.IconGitStatistics;
