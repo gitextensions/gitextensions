@@ -42,6 +42,8 @@ namespace GitExtensions
             // There's no perf hit calling Initialise() multiple times.
             UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
 
+            AppSettings.SetDocumentationBaseUrl(ThisAssembly.Git.Branch);
+
             ThemeModule.Load();
             Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 

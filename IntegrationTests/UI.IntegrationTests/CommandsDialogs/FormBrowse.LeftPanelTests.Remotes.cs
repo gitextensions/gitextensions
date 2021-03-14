@@ -118,7 +118,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Any(n => n.Text == Strings.Inactive).Should().BeFalse();
+                    remotesNode.Nodes.OfType<TreeNode>().Any(n => n.Text == GitUI.Strings.Inactive).Should().BeFalse();
                 });
         }
 
@@ -135,7 +135,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Count(n => n.Text == Strings.Inactive).Should().Be(1);
+                    remotesNode.Nodes.OfType<TreeNode>().Count(n => n.Text == GitUI.Strings.Inactive).Should().Be(1);
                 });
         }
 
@@ -152,7 +152,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Last().Text.Should().Be(Strings.Inactive);
+                    remotesNode.Nodes.OfType<TreeNode>().Last().Text.Should().Be(GitUI.Strings.Inactive);
                 });
         }
 

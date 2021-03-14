@@ -1,11 +1,10 @@
 ﻿using System;
+using GitCommands;
 
 namespace GitUI.UserManual
 {
     public class StandardHtmlUserManual : IProvideUserManual
     {
-        private const string _location = @"https://git-extensions-documentation.readthedocs.org/";
-
         private readonly string _subFolder;
         private readonly string _anchorName;
 
@@ -19,7 +18,7 @@ namespace GitUI.UserManual
         {
             var subFolder = string.IsNullOrEmpty(_subFolder) ? string.Empty : _subFolder + ".html";
 
-            return (_location + subFolder).Combine("#", _anchorName);
+            return (AppSettings.DocumentationBaseUrl + subFolder).Combine("#", _anchorName);
         }
     }
 }
