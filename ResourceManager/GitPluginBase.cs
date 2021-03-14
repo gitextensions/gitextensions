@@ -12,6 +12,8 @@ namespace ResourceManager
     [UsedImplicitly]
     public abstract class GitPluginBase : IGitPlugin, ITranslate
     {
+        public Guid Id { get; protected set; }
+
         public string? Description { get; protected set; }
         public string? Name { get; protected set; }
         public Image? Icon { get; protected set; }
