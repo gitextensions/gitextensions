@@ -949,7 +949,7 @@ namespace GitUI.CommandsDialogs
 
                     var item = new ToolStripMenuItem
                     {
-                        Text = plugin.Description,
+                        Text = plugin.Name,
                         Image = plugin.Icon,
                         Tag = plugin
                     };
@@ -990,7 +990,7 @@ namespace GitUI.CommandsDialogs
             _repositoryHostsToolStripMenuItem.Visible = PluginRegistry.GitHosters.Count > 0;
             if (PluginRegistry.GitHosters.Count == 1)
             {
-                _repositoryHostsToolStripMenuItem.Text = PluginRegistry.GitHosters[0].Description;
+                _repositoryHostsToolStripMenuItem.Text = PluginRegistry.GitHosters[0].Name;
             }
 
             UpdatePluginMenu(Module.IsValidGitWorkingDir());

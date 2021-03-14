@@ -117,7 +117,7 @@ namespace GitUI.Script
                 {
                     foreach (var plugin in PluginRegistry.Plugins)
                     {
-                        if (string.Equals(plugin.Description, command, StringComparison.CurrentCultureIgnoreCase))
+                        if (string.Equals(plugin.Name, command, StringComparison.CurrentCultureIgnoreCase))
                         {
                             var eventArgs = new GitUIEventArgs(owner, uiCommands);
                             return new CommandStatus(executed: true, needsGridRefresh: plugin.Execute(eventArgs));

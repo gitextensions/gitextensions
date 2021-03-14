@@ -30,7 +30,6 @@ namespace ResourceManager
         protected void SetNameAndDescription(string name)
         {
             Name = name;
-            Description = name;
         }
 
         void IDisposable.Dispose()

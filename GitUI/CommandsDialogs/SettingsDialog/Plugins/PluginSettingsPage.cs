@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         public override string GetTitle()
         {
-            return _gitPlugin?.Description ?? string.Empty;
+            return _gitPlugin?.Name ?? string.Empty;
         }
 
         private IEnumerable<ISetting> GetSettings()

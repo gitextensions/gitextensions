@@ -282,7 +282,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             }
             catch (Exception ex)
             {
-                return new[] { new JiraTaskDTO($"{Description} error", ex.ToString()) };
+                return new[] { new JiraTaskDTO($"{Name} error", ex.ToString()) };
             }
         }
 

@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 });
             }
 
-            Text = _gitHoster.Description + ": " + Text;
+            Text = $"{_gitHoster.Name}: {Text}";
 
             UpdateCloneInfo();
             UpdateMyRepos();
@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         await this.SwitchToMainThreadAsync();
 
                         myReposLV.Items.Clear();
-                        helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Description) +
+                        helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Name) +
                                             "\r\n\r\nException: " + ex.Message + "\r\n\r\n" + helpTextLbl.Text;
                     }
                 })
