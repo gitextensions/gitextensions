@@ -10,7 +10,7 @@
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Auto compile SubModules</source>
         <target>Autocompilar submódulos</target>
         
@@ -48,7 +48,7 @@
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Periodic background fetch</source>
         <target>Ejecuta fetch periódicamente en segundo plano</target>
         
@@ -97,7 +97,7 @@
         <target>Nombre de usuario de Bitbucket</target>
         
       </trans-unit>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Bitbucket Server</source>
         <target>Servidor Bitbucket</target>
         
@@ -296,7 +296,7 @@
   </file>
   <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Create local tracking branches</source>
         <target>Crear ramas locales de tracking</target>
         
@@ -457,7 +457,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Delete obsolete branches</source>
         <target>Eliminar ramas obsoletas</target>
         
@@ -580,7 +580,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
   </file>
   <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Find large files</source>
         <target>Encontrar archivos grandes</target>
         
@@ -1029,7 +1029,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Gerrit Code Review</source>
         <target>Revisión de código Gerrit</target>
         
@@ -1241,7 +1241,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitFlow</source>
         <target>GitFlow</target>
         
@@ -1250,7 +1250,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitHub</source>
         <target>GitHub</target>
         
@@ -1279,7 +1279,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Impact Graph</source>
         <target>Gráfico de Impacto</target>
         
@@ -1288,7 +1288,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Statistics</source>
         <target>Estadísticas</target>
         
@@ -1312,7 +1312,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Gource</source>
         <target>Gource</target>
         
@@ -1459,7 +1459,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Jira Commit Hint</source>
         <target>Pista del commit de Jira</target>
         
@@ -1577,7 +1577,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Proxy Switcher</source>
         <target>Cambiador de proxy</target>
         
@@ -1733,7 +1733,7 @@ nombres de ramas, ó nombres de tags)</target>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Release Notes Generator</source>
         <target>Generador de Notas de Versión.</target>
         

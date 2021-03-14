@@ -90,7 +90,7 @@ namespace ResourceManager
         public virtual void TranslateItems(ITranslation translation)
         {
             string name = GetType().Name;
-            TranslationUtils.TranslateProperty(name, this, "Description", translation);
+            TranslationUtils.TranslateProperty(name, this, nameof(Name), translation);
             TranslationUtils.TranslateItemsFromFields(name, this, translation);
         }
     }

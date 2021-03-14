@@ -10,7 +10,7 @@
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Auto compile SubModules</source>
         <target>Untermodule automatisch kompilieren</target>
         
@@ -48,7 +48,7 @@
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Periodic background fetch</source>
         <target>Periodischer fetch im Hintergrund</target>
         
@@ -97,7 +97,7 @@
         <target>Bitbucket Benutzername</target>
         
       </trans-unit>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Bitbucket Server</source>
         <target>Bitbucket Server</target>
         
@@ -296,7 +296,7 @@
   </file>
   <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Create local tracking branches</source>
         <target>Erzeuge lokale Branches zur Verfolgung</target>
         
@@ -458,7 +458,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Delete obsolete branches</source>
         <target>Obsolete Branches löschen</target>
         
@@ -581,7 +581,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
   </file>
   <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Find large files</source>
         <target>Finde große Dateien</target>
         
@@ -1031,7 +1031,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Gerrit Code Review</source>
         <target>Gerrit Code Review</target>
         
@@ -1243,7 +1243,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitFlow</source>
         <target>GitFlow</target>
         
@@ -1252,7 +1252,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitHub</source>
         <target>GitHub</target>
         
@@ -1281,7 +1281,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Impact Graph</source>
         <target>Darstellung der Abhängigkeiten</target>
         
@@ -1290,7 +1290,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Statistics</source>
         <target>Statistiken</target>
         
@@ -1314,7 +1314,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Gource</source>
         <target>Gource</target>
         
@@ -1462,7 +1462,7 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
   </file>
   <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Jira Commit Hint</source>
         <target>JIRA Commit Hinweis</target>
         
@@ -1580,7 +1580,7 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
   </file>
   <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Proxy Switcher</source>
         <target>Proxy Wechsler</target>
         
@@ -1737,7 +1737,7 @@ Branchnamen oder Tag-Namen sein.)</target>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Release Notes Generator</source>
         <target>Release Notes Generator</target>
         
