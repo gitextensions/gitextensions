@@ -44,18 +44,18 @@ namespace GitExtensions
             if (exception is ExternalOperationException externalOperationException)
             {
                 // Command: <command>
-                AppendUnlessEmpty(externalOperationException.Command, GitUI.Strings.Command);
+                AppendIfNotEmpty(externalOperationException.Command, GitUI.Strings.Command);
 
                 // Arguments: <args>
-                AppendUnlessEmpty(externalOperationException.Arguments, GitUI.Strings.Arguments);
+                AppendIfNotEmpty(externalOperationException.Arguments, GitUI.Strings.Arguments);
 
                 // Directory: <dir>
-                AppendUnlessEmpty(externalOperationException.WorkingDirectory, GitUI.Strings.WorkingDirectory);
+                AppendIfNotEmpty(externalOperationException.WorkingDirectory, GitUI.Strings.WorkingDirectory);
             }
 
             return rootError;
 
-            void AppendUnlessEmpty(string? value, string designation)
+            void AppendIfNotEmpty(string? value, string designation)
             {
                 if (!string.IsNullOrWhiteSpace(value))
                 {
