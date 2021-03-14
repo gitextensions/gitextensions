@@ -316,7 +316,7 @@ namespace GitUI.CommandsDialogs
             SelectedDiff.BottomScrollReached += FileViewer_BottomScrollReached;
             SelectedDiff.LinePatchingBlocksUntilReload = true;
 
-            SolveMergeconflicts.BackColor = AppColor.Branch.GetThemeColor();
+            SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeconflicts.SetForeColorForBackColor();
 
             toolStripStatusBranchIcon.AdaptImageLightness();
