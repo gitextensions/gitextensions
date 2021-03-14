@@ -27,10 +27,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
 
         private void Init(IGitPlugin gitPlugin)
         {
-            Validates.NotNull(gitPlugin.Name);
+            Validates.NotNull(gitPlugin.Description);
 
             _gitPlugin = gitPlugin;
-            _settingsContainer = new GitPluginSettingsContainer(gitPlugin.Name);
+
+            // Description for old plugin setting processing as key
+            _settingsContainer = new GitPluginSettingsContainer(gitPlugin.Id, gitPlugin.Description);
             CreateSettingsControls();
             InitializeComplete();
         }

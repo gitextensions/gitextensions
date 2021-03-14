@@ -79,6 +79,8 @@ namespace ResourceManager
 
         protected void Translate()
         {
+            // Description for old plugin setting processing as key
+            Description = Name;
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
