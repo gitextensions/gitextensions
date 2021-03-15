@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs
         {
             _fileName = fileName;
             InitializeComponent();
-            panelMessage.BackColor = AppColor.Branch.GetThemeColor();
+            panelMessage.BackColor = OtherColors.PanelMessageWarningColor;
             panelMessage.SetForeColorForBackColor();
             InitializeComplete();
 

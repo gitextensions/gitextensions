@@ -316,7 +316,7 @@ namespace GitUI.CommandsDialogs
             SelectedDiff.BottomScrollReached += FileViewer_BottomScrollReached;
             SelectedDiff.LinePatchingBlocksUntilReload = true;
 
-            SolveMergeconflicts.BackColor = AppColor.Branch.GetThemeColor();
+            SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeconflicts.SetForeColorForBackColor();
 
             toolStripStatusBranchIcon.AdaptImageLightness();
@@ -3221,8 +3221,8 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.CommitAndPushForcedWhenAmend)
             {
                 CommitAndPush.BackColor = Amend.Checked
-                    ? AppColor.Branch.GetThemeColor()
-                    : SystemColors.ButtonFace;
+                    ? OtherColors.AmendButtonForcedColor
+                    : SystemColors.ButtonFace.AdaptBackColor();
 
                 CommitAndPush.SetForeColorForBackColor();
             }

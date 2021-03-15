@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
 
             patchGrid1.SetSkipped(Skipped);
 
-            SolveMergeConflicts.BackColor = AppColor.Branch.GetThemeColor();
+            SolveMergeConflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeConflicts.SetForeColorForBackColor();
         }
 
