@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
-namespace GitCommands.Statistics
+namespace GitExtensions.Plugins.GitImpact
 {
     public sealed class ImpactLoader : IDisposable
     {
