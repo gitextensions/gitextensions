@@ -18,123 +18,119 @@ namespace GitExtensions
         private static IntPtr OwnerFormHandle
             => OwnerForm?.Handle ?? IntPtr.Zero;
 
-        private static string FormatText(ExternalOperationException exception, bool canRaiseBug)
+        /// <summary>
+        /// Appends the exception data and gets the root error.
+        /// </summary>
+        /// <param name="text">A StringBuilder to which the exception data is appended.</param>
+        /// <param name="exception">An Exception to describe.</param>
+        /// <returns>The inner-most exception message.</returns>
+        internal static string Append(StringBuilder text, Exception exception)
         {
-            StringBuilder sb = new();
-
-            // Command: <command>
-            if (!string.IsNullOrWhiteSpace(exception.Command))
+            string rootError = exception.Message;
+            for (Exception innerException = exception.InnerException; innerException is not null; innerException = innerException.InnerException)
             {
-                sb.AppendLine($"{Strings.Command}: {exception.Command}");
+                if (!string.IsNullOrEmpty(innerException.Message))
+                {
+                    rootError = innerException.Message;
+                }
             }
 
-            // Arguments: <args>
-            if (!string.IsNullOrWhiteSpace(exception.Arguments))
+            if (exception is UserExternalOperationException userExternalOperationException && !string.IsNullOrWhiteSpace(userExternalOperationException.Context))
             {
-                sb.AppendLine($"{Strings.Arguments}: {exception.Arguments}");
+                // Context contains an error message as UserExternalOperationException is currently used. So append just "<context>"
+                text.AppendLine(userExternalOperationException.Context);
             }
 
-            // Working directory: <working dir>
-            sb.AppendLine($"{Strings.WorkingDirectory}: {exception.WorkingDirectory}");
-
-            if (canRaiseBug)
+            if (exception is ExternalOperationException externalOperationException)
             {
-                // Directions to raise a bug
-                sb.AppendLine();
-                sb.AppendLine(Strings.ReportBug);
+                // Command: <command>
+                AppendIfNotEmpty(externalOperationException.Command, GitUI.Strings.Command);
+
+                // Arguments: <args>
+                AppendIfNotEmpty(externalOperationException.Arguments, GitUI.Strings.Arguments);
+
+                // Directory: <dir>
+                AppendIfNotEmpty(externalOperationException.WorkingDirectory, GitUI.Strings.WorkingDirectory);
             }
 
-            return sb.ToString();
+            return rootError;
+
+            void AppendIfNotEmpty(string? value, string designation)
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    text.Append(designation).Append(": ").AppendLine(value);
+                }
+            }
         }
 
         public static void Report(Exception exception, bool isTerminating)
         {
-            if (exception is UserExternalOperationException userExternalException)
-            {
-                // Something happened that was likely caused by the user
-                ReportUserException(userExternalException, isTerminating);
-                return;
-            }
+            bool isUserExternalOperation = exception is UserExternalOperationException;
+            bool isExternalOperation = exception is ExternalOperationException;
 
-            if (exception is ExternalOperationException externalException)
-            {
-                // Something happened either in the app - can submit the bug to GitHub
-                ReportAppException(externalException, isTerminating);
-                return;
-            }
+            StringBuilder text = new();
+            string rootError = Append(text, exception);
 
-            // Report any other exceptions
-            ReportGenericException(exception, isTerminating);
-        }
-
-        private static void ReportAppException(ExternalOperationException exception, bool isTerminating)
-        {
-            // UserExternalOperationException wraps an actual exception, but be cautious just in case
-            string instructionText = exception.InnerException?.Message ?? Strings.InstructionOperationFailed;
-
-            ShowException(FormatText(exception, canRaiseBug: true), instructionText, exception, isTerminating);
-        }
-
-        private static void ReportGenericException(Exception exception, bool isTerminating)
-        {
-            // This exception is arbitrary, see if there's additional information
-            string? moreInfo = exception.InnerException?.Message;
-            if (moreInfo is not null)
-            {
-                moreInfo += Environment.NewLine + Environment.NewLine;
-            }
-
-            ShowException($"{moreInfo}{Strings.ReportBug}", exception.Message, exception, isTerminating);
-        }
-
-        private static void ReportUserException(UserExternalOperationException exception, bool isTerminating)
-            => ShowException(FormatText(exception, canRaiseBug: false), exception.Context, exception: null, isTerminating);
-
-        private static void ShowException(string text, string instructionText, Exception? exception, bool isTerminating)
-        {
-            using var dialog = new TaskDialog
+            using var taskDialog = new TaskDialog
             {
                 OwnerWindowHandle = OwnerFormHandle,
-                Text = text,
-                InstructionText = instructionText,
-                Caption = Strings.Error,
                 Icon = TaskDialogStandardIcon.Error,
+                Caption = GitUI.Strings.Error,
+                InstructionText = rootError,
                 Cancelable = true,
             };
 
-            if (exception is not null)
+            // prefer to ignore failed external operations
+            if (isExternalOperation)
             {
-                var btnReport = new TaskDialogCommandLink("Report", Strings.ButtonReportBug);
-                btnReport.Click += (s, e) =>
-                {
-                    dialog.Close();
-                    ShowNBug(OwnerForm, exception, isTerminating);
-                };
-
-                dialog.Controls.Add(btnReport);
+                AddIgnoreOrCloseButton();
             }
 
-            var btnIgnoreOrClose = new TaskDialogCommandLink("IgnoreOrClose", isTerminating ? Strings.ButtonCloseApp : Strings.ButtonIgnore);
-            btnIgnoreOrClose.Click += (s, e) =>
+            // no bug reports for user configured operations
+            if (!isUserExternalOperation)
             {
-                dialog.Close();
-            };
-            dialog.Controls.Add(btnIgnoreOrClose);
+                // directions and button to raise a bug
+                text.AppendLine().AppendLine(GitUI.Strings.ReportBug);
+            }
 
-            dialog.Show();
+            string buttonText = isUserExternalOperation ? GitUI.Strings.ButtonViewDetails : GitUI.Strings.ButtonReportBug;
+            TaskDialogCommandLink taskDialogCommandLink = new(buttonText, buttonText);
+            taskDialogCommandLink.Click += (s, e) =>
+                {
+                    taskDialog.Close();
+                    ShowNBug(OwnerForm, exception, isTerminating);
+                };
+            taskDialog.Controls.Add(taskDialogCommandLink);
+
+            // let the user decide whether to report the bug
+            if (!isExternalOperation)
+            {
+                AddIgnoreOrCloseButton();
+            }
+
+            taskDialog.Text = text.ToString().Trim();
+            taskDialog.Show();
+            return;
+
+            void AddIgnoreOrCloseButton()
+            {
+                string buttonText = isTerminating ? GitUI.Strings.ButtonCloseApp : GitUI.Strings.ButtonIgnore;
+                TaskDialogCommandLink taskDialogCommandLink = new(buttonText, buttonText);
+                taskDialogCommandLink.Click += (s, e) => taskDialog.Close();
+                taskDialog.Controls.Add(taskDialogCommandLink);
+            }
         }
 
         private static void ShowNBug(IWin32Window? owner, Exception exception, bool isTerminating)
         {
             var envInfo = UserEnvironmentInformation.GetInformation();
 
-            using (var form = new GitUI.NBugReports.BugReportForm())
+            using var form = new GitUI.NBugReports.BugReportForm();
+            var result = form.ShowDialog(owner, exception, envInfo);
+            if (isTerminating || result == DialogResult.Abort)
             {
-                var result = form.ShowDialog(owner, exception, envInfo);
-                if (isTerminating || result == DialogResult.Abort)
-                {
-                    Environment.Exit(-1);
-                }
+                Environment.Exit(-1);
             }
         }
     }
