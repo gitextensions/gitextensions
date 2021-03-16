@@ -152,3 +152,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/01/24, bcolaco, Bruno Colaço, bcolaco[@)gmail.com
 2021/01/25, guybark, Guy Barker, guybark(at)microsoft.com
 2021/02/10, mabako, Marcus Bauer, mabako(at)gmail.com
+2021/03/16, JuPrgn, Julien Peyregne, julienprgn(at)gmail.com
