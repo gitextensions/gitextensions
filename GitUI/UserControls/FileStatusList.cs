@@ -36,6 +36,8 @@ namespace GitUI
         private bool _enableSelectedIndexChangeEvent = true;
         private bool _mouseEntered;
         private readonly ToolStripItem _openSubmoduleMenuItem;
+        private readonly ToolStripItem _openInVisualStudioSeparator = new ToolStripSeparator();
+        private readonly ToolStripItem _openInVisualStudioMenuItem;
         private Rectangle _dragBoxFromMouseDown;
         private IReadOnlyList<FileStatusWithDescription> _itemsWithDescription = new List<FileStatusWithDescription>();
         private IDisposable? _selectedIndexChangeSubscription;
@@ -70,6 +72,7 @@ namespace GitUI
             InitializeComponent();
             InitialiseFiltering();
             _openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
+            _openInVisualStudioMenuItem = CreateOpenInVisualStudioMenuItem();
             _sortByContextMenu = new SortDiffListContextMenuItem(DiffListSortService.Instance)
             {
                 Name = "sortListByContextMenuItem"
@@ -159,6 +162,57 @@ namespace GitUI
 
                     return scaled;
                 }
+            }
+
+            ToolStripMenuItem CreateOpenSubmoduleMenuItem()
+            {
+                var item = new ToolStripMenuItem
+                {
+                    Name = "openSubmoduleMenuItem",
+                    Tag = "1",
+                    Text = TranslatedStrings.OpenWithGitExtensions,
+                    Image = Images.GitExtensionsLogo16
+                };
+                item.Click += (_, _) => { ThreadHelper.JoinableTaskFactory.RunAsync(OpenSubmoduleAsync); };
+                return item;
+            }
+
+            ToolStripMenuItem CreateOpenInVisualStudioMenuItem()
+            {
+                var item = new ToolStripMenuItem
+                {
+                    Name = "openInVisualStudioMenuItem",
+                    Text = TranslatedStrings.OpenInVisualStudio,
+                    Image = Images.VisualStudio16
+                };
+                item.Click += (_, _) =>
+                {
+                    var itemName = SelectedItemAbsolutePath;
+                    if (itemName != null && !VisualStudioIntegration.TryOpenFile(itemName))
+                    {
+                        MessageBox.Show(
+                            TranslatedStrings.OpenInVisualStudioFailureText,
+                            TranslatedStrings.OpenInVisualStudioFailureCaption,
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
+                };
+                return item;
+            }
+        }
+
+        private string? SelectedItemAbsolutePath
+        {
+            get
+            {
+                var itemName = SelectedItem?.Item.Name;
+
+                if (itemName == null)
+                {
+                    return null;
+                }
+
+                return Path.Combine(Module.WorkingDir, itemName).NormalizePath();
             }
         }
 
@@ -737,8 +791,6 @@ namespace GitUI
             _nextIndexToSelect = _nextIndexToSelect - FileStatusListView.SelectedIndices.Count + 1;
         }
 
-        // Protected methods
-
         protected override void DisposeCustomResources()
         {
             try
@@ -760,21 +812,6 @@ namespace GitUI
             }
 
             base.WndProc(ref m);
-        }
-
-        // Private methods
-
-        private ToolStripMenuItem CreateOpenSubmoduleMenuItem()
-        {
-            var item = new ToolStripMenuItem
-            {
-                Name = "openSubmoduleMenuItem",
-                Tag = "1",
-                Text = TranslatedStrings.OpenWithGitExtensions,
-                Image = Images.GitExtensionsLogo16
-            };
-            item.Click += (s, ea) => { ThreadHelper.JoinableTaskFactory.RunAsync(() => OpenSubmoduleAsync()); };
-            return item;
         }
 
         private static string AppendItemSubmoduleStatus(string text, GitItemStatus item)
@@ -1220,6 +1257,15 @@ namespace GitUI
                     ? new Font(_openSubmoduleMenuItem.Font, FontStyle.Bold)
                     : new Font(_openSubmoduleMenuItem.Font, FontStyle.Regular);
             }
+
+            if (!cm.Items.Find(_openInVisualStudioMenuItem.Name, true).Any())
+            {
+                cm.Items.Add(_openInVisualStudioSeparator);
+                cm.Items.Add(_openInVisualStudioMenuItem);
+            }
+
+            _openInVisualStudioMenuItem.Visible = _openInVisualStudioSeparator.Visible = VisualStudioIntegration.IsVisualStudioRunning;
+            _openInVisualStudioMenuItem.Enabled = File.Exists(SelectedItemAbsolutePath);
 
             if (!cm.Items.Find(_sortByContextMenu.Name, true).Any())
             {

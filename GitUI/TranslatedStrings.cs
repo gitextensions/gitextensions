@@ -47,6 +47,7 @@ namespace GitUI
         private readonly TranslationString _tag = new("Tag");
         private readonly TranslationString _remote = new("Remote");
         private readonly TranslationString _openWithGitExtensions = new("Open with Git Extensions");
+        private readonly TranslationString _openInVisualStudio = new("Open in Visual Studio");
         private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new("Enable automatic continuous scroll (without ALT button)");
         private readonly TranslationString _noRevision = new("No revision");
 
@@ -102,6 +103,9 @@ namespace GitUI
         private readonly TranslationString _commandText = new("Command");
         private readonly TranslationString _workingDirectoryText = new("Working directory");
         private readonly TranslationString _reportBugText = new("If you think this was caused by Git Extensions, you can report a bug for the team to investigate.");
+
+        private readonly TranslationString _openInVisualStudioFailureText = new("Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.");
+        private readonly TranslationString _openInVisualStudioFailureCaption = new("Unable to open file");
 
         // public only because of FormTranslate
         public TranslatedStrings()
@@ -163,6 +167,7 @@ namespace GitUI
         public static string Tag => _instance.Value._tag.Text;
         public static string Remote => _instance.Value._remote.Text;
         public static string OpenWithGitExtensions => _instance.Value._openWithGitExtensions.Text;
+        public static string OpenInVisualStudio => _instance.Value._openInVisualStudio.Text;
         public static string ContScrollToNextFileOnlyWithAlt => _instance.Value._contScrollToNextFileOnlyWithAlt.Text;
         public static string NoRevision => _instance.Value._noRevision.Text;
 
@@ -211,6 +216,9 @@ namespace GitUI
         public static string Command => _instance.Value._commandText.Text;
         public static string WorkingDirectory => _instance.Value._workingDirectoryText.Text;
         public static string ReportBug => _instance.Value._reportBugText.Text;
+
+        public static string OpenInVisualStudioFailureText => _instance.Value._openInVisualStudioFailureText.Text;
+        public static string OpenInVisualStudioFailureCaption => _instance.Value._openInVisualStudioFailureCaption.Text;
 
         #region Scripts
 

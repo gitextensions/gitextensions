@@ -835,4 +835,7 @@
   <data name="UnstageAllFiltered" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\UnstageAllFiltered.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="VisualStudio16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\VisualStudio16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
