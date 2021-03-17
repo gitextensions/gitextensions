@@ -3213,10 +3213,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <source>&amp;Commit</source>
         <target />
       </trans-unit>
-      <trans-unit id="CommitAndPush.Text">
-        <source>Commit &amp;&amp; &amp;push</source>
-        <target />
-      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Commit</source>
         <target />
@@ -3261,6 +3257,10 @@ Do you want to continue?</source>
         <source>Tell git to not check the status of this file for performance benefits.
 Use this feature when a file is big and never change.
 Git will never check if the file has changed that will improve status check performance.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_commitAndPush.Text">
+        <source>Commit &amp;&amp; &amp;push</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
@@ -5423,10 +5423,6 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="Pull.Text">
         <source>Pull</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Push.Text">
-        <source>&amp;Push</source>
         <target />
       </trans-unit>
       <trans-unit id="PushColumn.HeaderText">
@@ -9571,6 +9567,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_buttonIgnore.Text">
         <source>Ignore</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_buttonPush.Text">
+        <source>&amp;Push</source>
         <target />
       </trans-unit>
       <trans-unit id="_buttonReportBug.Text">

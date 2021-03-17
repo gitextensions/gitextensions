@@ -27,8 +27,7 @@ Yes, I allow telemetry!");
 
         private readonly TranslationString _installGitInstructions = new("Install git...");
         private readonly TranslationString _findGitExecutable = new("Find git...");
-        private readonly TranslationString _gitExecutableNotFoundText =
-            new TranslationString("The Git executable could not be located on your system.");
+        private readonly TranslationString _gitExecutableNotFoundText = new("The Git executable could not be located on your system.");
         private readonly TranslationString _authorDateText = new("{0:Author date|Author dates}");
         private readonly TranslationString _committerText = new("Committer");
         private readonly TranslationString _commitDateText = new("{0:Commit date|Commit dates}");
@@ -46,7 +45,7 @@ Yes, I allow telemetry!");
         private readonly TranslationString _generalGitConfigExceptionMessage = new("Failed to read \"{0}\" due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.");
         private readonly TranslationString _generalGitConfigExceptionCaption = new("Repository Configuration Error");
 
-        private readonly TranslationString _disableMenuItem = new TranslationString("Disable this dropdown");
+        private readonly TranslationString _disableMenuItem = new("Disable this dropdown");
 
         // public only because of FormTranslate
         public TranslatedStrings()
@@ -54,13 +53,13 @@ Yes, I allow telemetry!");
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        private static Lazy<TranslatedStrings> _instance = new Lazy<TranslatedStrings>();
+        private static Lazy<TranslatedStrings> _instance = new();
 
         public static void Reinitialize()
         {
             if (_instance.IsValueCreated)
             {
-                _instance = new Lazy<TranslatedStrings>();
+                _instance = new();
             }
         }
 
