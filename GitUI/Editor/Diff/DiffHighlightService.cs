@@ -164,8 +164,7 @@ namespace GitUI.Editor.Diff
                 endLine = document.GetLineSegment(line);
             }
 
-            line--;
-            line--;
+            line = Math.Max(0, line - 2);
             endLine = document.GetLineSegment(line);
 
             document.MarkerStrategy.AddMarker(new TextMarker(lineSegment.Offset,
