@@ -46,7 +46,7 @@ namespace GitCommands.Settings
                 dir = null;
             }
 
-            if (Directory.Exists(dir))
+            if (Directory.Exists(dir) && File.Exists(SettingsFilePath))
             {
                 _fileWatcher.Path = dir;
                 _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
