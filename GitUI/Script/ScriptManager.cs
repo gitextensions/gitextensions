@@ -54,12 +54,18 @@ namespace GitUI.Script
             return null;
         }
 
-        public static void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
+        public static bool RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
         {
             foreach (var script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                ScriptRunner.RunScript(form, form.Module, script.Name, form.UICommands, revisionGrid: null);
+                var result = ScriptRunner.RunScript(form, form.Module, script.Name, form.UICommands, revisionGrid: null);
+                if (!result.Executed)
+                {
+                    return false;
+                }
             }
+
+            return true;
         }
 
         public static string? SerializeIntoXml()

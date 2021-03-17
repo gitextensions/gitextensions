@@ -151,7 +151,11 @@ namespace GitUI.Script
 
             if (!scriptInfo.RunInBackground)
             {
-                FormProcess.ShowDialog(owner, command, argument, module.WorkingDir, null, true);
+                bool success = FormProcess.ShowDialog(owner, command, argument, module.WorkingDir, null, true);
+                if (!success)
+                {
+                    return false;
+                }
             }
             else
             {
