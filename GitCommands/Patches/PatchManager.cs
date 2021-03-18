@@ -512,7 +512,7 @@ namespace GitCommands.Patches
 
         public static Chunk? ParseChunk(string chunkStr, int currentPos, int selectionPosition, int selectionLength)
         {
-            string[] lines = chunkStr.Split(Delimiters.Newline);
+            string[] lines = chunkStr.Split(Delimiters.LineFeed);
             if (lines.Length < 2)
             {
                 return null;

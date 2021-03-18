@@ -120,7 +120,7 @@ namespace GitUI.AutoCompletion
             }
 
             using var sr = new StreamReader(s);
-            return sr.ReadToEnd().Split(Delimiters.NewlineAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
+            return sr.ReadToEnd().Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static Dictionary<string, Regex> ParseRegexes()

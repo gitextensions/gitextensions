@@ -74,7 +74,7 @@ namespace GitCommands
             // commit message
             // ...
 
-            var lines = data.Split(Delimiters.Newline);
+            var lines = data.Split(Delimiters.LineFeed);
 
             var guid = lines[0];
             var commitEncoding = lines[1];
@@ -134,7 +134,7 @@ namespace GitCommands
             // diff notes
             // ...
 
-            var lines = data.Split(Delimiters.Newline);
+            var lines = data.Split(Delimiters.LineFeed);
 
             var guid = ObjectId.Parse(lines[0]);
 

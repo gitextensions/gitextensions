@@ -271,7 +271,7 @@ namespace ResourceManager
                         sb.AppendLine("\nStatus:");
                         if (limitOutput)
                         {
-                            var txt = statusText.Split(Delimiters.Newline, StringSplitOptions.RemoveEmptyEntries);
+                            var txt = statusText.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
                             if (txt.Length > maxLimitedLines)
                             {
                                 statusText = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +
@@ -298,7 +298,7 @@ namespace ResourceManager
                     sb.AppendLine("\nDifferences:");
                     if (limitOutput)
                     {
-                        var txt = diffs.Split(Delimiters.Newline, StringSplitOptions.RemoveEmptyEntries);
+                        var txt = diffs.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
                         if (txt.Length > maxLimitedLines)
                         {
                             diffs = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +

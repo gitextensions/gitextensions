@@ -536,7 +536,7 @@ namespace GitCommands
             }
 
             // Parse temporary file name from command line result
-            var splitResult = output.Split(Delimiters.TabAndNewlineAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
+            var splitResult = output.Split(Delimiters.TabAndLineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
             if (splitResult.Length != 2)
             {
                 return false;
@@ -696,7 +696,7 @@ namespace GitCommands
             var unmerged = (await _gitExecutable
                 .GetOutputAsync(args)
                 .ConfigureAwait(false))
-                .Split(Delimiters.NullAndNewline, StringSplitOptions.RemoveEmptyEntries);
+                .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries);
 
             var item = new ConflictedFileData[3];
 
@@ -928,7 +928,7 @@ namespace GitCommands
             var revInfo = _gitExecutable.GetOutput(args, cache: GitCommandCache, outputEncoding: LosslessEncoding);
 
             // TODO improve parsing to reduce temporary string (see similar code in RevisionReader)
-            string[] lines = revInfo.Split(Delimiters.Newline);
+            string[] lines = revInfo.Split(Delimiters.LineFeed);
 
             var revision = new GitRevision(ObjectId.Parse(lines[0]))
             {
@@ -1088,7 +1088,7 @@ namespace GitCommands
                 SubmodulePath.Quote()
             };
             var output = await SuperprojectModule.GitExecutable.GetOutputAsync(args).ConfigureAwait(false);
-            var lines = output.Split(Delimiters.Newline);
+            var lines = output.Split(Delimiters.LineFeed);
 
             if (lines.Length == 0)
             {
@@ -1903,7 +1903,7 @@ namespace GitCommands
         public IReadOnlyList<PatchFile> GetInteractiveRebasePatchFiles()
         {
             string todoFile = RebaseTodoFilePath;
-            string[]? todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(Delimiters.NewlineAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries) : null;
+            string[]? todoCommits = File.Exists(todoFile) ? File.ReadAllText(todoFile).Trim().Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries) : null;
 
             var patchFiles = new List<PatchFile>();
 
@@ -2251,7 +2251,7 @@ namespace GitCommands
         public IReadOnlyList<GitStash> GetStashes(bool noLocks = false)
         {
             var args = GetStashesCmd(noLocks);
-            var lines = _gitExecutable.GetOutput(args).Split(Delimiters.Newline);
+            var lines = _gitExecutable.GetOutput(args).Split(Delimiters.LineFeed);
 
             var stashes = new List<GitStash>(lines.Length);
 
@@ -2944,7 +2944,7 @@ namespace GitCommands
             => (await _gitExecutable
                 .GetOutputAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit))
                 .ConfigureAwait(false))
-                .Split(Delimiters.Newline, StringSplitOptions.RemoveEmptyEntries);
+                .Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
 
         public IEnumerable<string> GetMergedBranches(bool includeRemote = false)
         {
@@ -3157,7 +3157,7 @@ namespace GitCommands
                 // filter duplicates out of the result because options -c and -m may return
                 // same files at times
                 return _gitExecutable.GetOutput($"ls-files -z -o -m -c -i {excludeParams}")
-                    .Split(Delimiters.NullAndNewline, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries)
                     .Distinct()
                     .ToList();
             }
@@ -3172,7 +3172,7 @@ namespace GitCommands
             return _gitExecutable.GetOutput(
                     $"ls-tree -z -r --name-only {id}",
                     cache: GitCommandCache)
-                .Split(Delimiters.NullAndNewline);
+                .Split(Delimiters.NullAndLineFeed);
         }
 
         public IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full)
@@ -3799,7 +3799,7 @@ namespace GitCommands
 
             // Get processes by "ps" command.
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
-            var lines = new Executable(cmd).GetOutput("x").Split(Delimiters.Newline);
+            var lines = new Executable(cmd).GetOutput("x").Split(Delimiters.LineFeed);
 
             if (lines.Length <= 2)
             {

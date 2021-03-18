@@ -19,7 +19,7 @@ namespace GitUI.Editor.Diff
             var leftLineNum = DiffLineInfo.NotApplicableLineNum;
             var rightLineNum = DiffLineInfo.NotApplicableLineNum;
             var isHeaderLineLocated = false;
-            string[] lines = diffContent.Split(Delimiters.Newline);
+            string[] lines = diffContent.Split(Delimiters.LineFeed);
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
