@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using FluentAssertions;
 using GitCommands;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 
@@ -15,6 +15,27 @@ namespace GitCommandsTests.Settings
     internal sealed class AppSettingsTests
     {
         private const string SettingsFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?><dictionary />";
+
+        [TestCase(null, "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("\t", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("master", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("feature/test/mystuff", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("releases", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("releases/4.5", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("release", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("release/a", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("release/5", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("release/a4.5", "https://git-extensions-documentation.readthedocs.org/en/main/")]
+        [TestCase("release/4.5", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
+        [TestCase("release/40.501", "https://git-extensions-documentation.readthedocs.org/en/release-40.501/")]
+        public void SetDocumentationBaseUrl_should_currectly_append_verison(string currentGitBranch, string expected)
+        {
+            AppSettings.GetTestAccessor().ResetDocumentationBaseUrl();
+
+            AppSettings.SetDocumentationBaseUrl(currentGitBranch);
+            AppSettings.DocumentationBaseUrl.Should().Be(expected);
+        }
 
         [Test]
         [TestCaseSource(nameof(TestCases))]

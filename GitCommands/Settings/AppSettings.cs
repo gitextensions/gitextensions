@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Settings;
 using GitCommands.Utils;
@@ -62,6 +63,7 @@ namespace GitCommands
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
         private static string _applicationExecutablePath = Application.ExecutablePath;
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
+        private static string? _documentationBaseUrl;
 
         public static Lazy<string?> ApplicationDataPath { get; private set; }
         public static readonly Lazy<string?> LocalApplicationDataPath;
@@ -115,6 +117,41 @@ namespace GitCommands
             }
 
             MigrateAvatarSettings();
+        }
+
+        /// <summary>
+        /// Gets the base part of the documentation link for the current application version,
+        /// which looks something like "https://git-extensions-documentation.readthedocs.org/en/main/"
+        /// for the master branch, and "https://git-extensions-documentation.readthedocs.org/en/release-X.Y/"
+        /// for a release/X.Y branch.
+        ///
+        /// TODO: We currently use only EN language, but should maybe consider using the user's preferred language.
+        /// </summary>
+        public static string DocumentationBaseUrl
+        {
+            get => _documentationBaseUrl ?? throw new InvalidOperationException($"Call {nameof(SetDocumentationBaseUrl)} first to set the documentation base URL.");
+        }
+
+        internal static void SetDocumentationBaseUrl(string currentGitBranch)
+        {
+            if (_documentationBaseUrl is not null)
+            {
+                throw new InvalidOperationException("Documentation base URL can only be set once");
+            }
+
+            string? docVersion = "en/main/";
+
+            if (!string.IsNullOrWhiteSpace(currentGitBranch))
+            {
+                // We expect current branch to be something line "release/X.Y"
+                Match match = Regex.Match(currentGitBranch, "release/\\d*\\.\\d*");
+                if (match.Success)
+                {
+                    docVersion = $"en/{currentGitBranch.Replace("/", "-")}/";
+                }
+            }
+
+            _documentationBaseUrl = $"https://git-extensions-documentation.readthedocs.org/{docVersion}";
         }
 
         public static bool? TelemetryEnabled
@@ -2041,6 +2078,8 @@ namespace GitCommands
                 get => AppSettings.ApplicationDataPath;
                 set => AppSettings.ApplicationDataPath = value;
             }
+
+            public void ResetDocumentationBaseUrl() => AppSettings._documentationBaseUrl = null;
         }
     }
 

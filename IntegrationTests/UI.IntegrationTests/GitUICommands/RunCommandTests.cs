@@ -48,6 +48,12 @@ namespace GitUITests.GitUICommandsTests
             _commands = new GitUICommands(_referenceRepository.Module);
         }
 
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            AppSettings.SetDocumentationBaseUrl("master");
+        }
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
