@@ -2934,7 +2934,26 @@ namespace GitCommands
             return result;
         }
 
+        /// <summary>
+        /// Get the Git refs.
+        /// </summary>
+        /// <param name="tags">Include tags.</param>
+        /// <param name="branches">Include local branches, also remote branches if <see paramref="tags"/> is set.</param>
+        /// <returns>All Git refs.</returns>
         public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
+        {
+            return GetRefs(
+                (tags ? GetRefsEnum.Tags : GetRefsEnum.None)
+                | (branches ? GetRefsEnum.Branches : GetRefsEnum.None)
+                | (tags && branches ? GetRefsEnum.Remotes : GetRefsEnum.None));
+        }
+
+        /// <summary>
+        /// Get the Git refs.
+        /// </summary>
+        /// <param name="getRef">Combined refs to search for.</param>
+        /// <returns>All Git refs.</returns>
+        public IReadOnlyList<IGitRef> GetRefs(GetRefsEnum getRef)
         {
             // We do not want to lock the repo for background operations.
             // The primary use of 'noLocks' is to run git-status the commit count as a background operation,
@@ -2943,7 +2962,7 @@ namespace GitCommands
             // Assume that all GetRefs() are done in the background, which may not be correct in the future.
             const bool noLocks = true;
 
-            var cmd = GitCommandHelpers.GetRefsCmd(tags: tags, branches: branches, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
+            var cmd = GitCommandHelpers.GetRefsCmd(getRef, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
             var refList = _gitExecutable.GetOutput(cmd);
             return ParseRefs(refList);
         }

@@ -967,7 +967,7 @@ namespace GitUI
                     _revisionReader = new RevisionReader();
                 }
 
-                var refs = Module.GetRefs();
+                var refs = Module.GetRefs(GetRefsEnum.All);
                 _ambiguousRefs = GitRef.GetAmbiguousRefNames(refs);
 
                 _gridView.SuspendLayout();
