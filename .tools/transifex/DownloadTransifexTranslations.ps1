@@ -10,12 +10,12 @@ try {
         Remove-Item -Force;
 
     # 2. download updated plugin translations
-    ./tx.exe pull -a --parallel --minimum-perc 75 -f -r git-extensions.plugins-master
-    ./tx.exe pull -a --parallel --minimum-perc 75 -f -r git-extensions.plugins-master --pseudo
+    ./tx.exe pull -a --parallel --minimum-perc 75 -f -r git-extensions.gitui-translation-english-plugins-xlf--master
+    ./tx.exe pull -a --parallel --minimum-perc 75 -f -r git-extensions.gitui-translation-english-plugins-xlf--master --pseudo
 
     # 3. download updated translations
-    ./tx.exe pull -a --parallel --minimum-perc 75 -f -r git-extensions.ui-master
-    ./tx.exe pull -a --parallel --minimum-perc 75 -f -r git-extensions.ui-master --pseudo
+    ./tx.exe pull -a --parallel --minimum-perc 75 -f -r git-extensions.gitui-translation-english-xlf--master
+    ./tx.exe pull -a --parallel --minimum-perc 75 -f -r git-extensions.gitui-translation-english-xlf--master --pseudo
 
     # 4. remove plugins translations without a main translation companion
     Get-ChildItem -Path ./* -Include *.Plugins.xlf  -Exclude '*pseudo*' | `

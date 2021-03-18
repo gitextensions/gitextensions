@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[git-extensions.ui-master]
+[git-extensions.gitui-translation-english-xlf--master]
 file_filter = <lang>.xlf
 source_file = English.xlf
 source_lang = en
@@ -25,7 +25,7 @@ trans.zh-Hans = Simplified Chinese.xlf
 trans.zh-Hant = Traditional Chinese.xlf
 type = XLIFF
 
-[git-extensions.plugins-master]
+[git-extensions.gitui-translation-english-plugins-xlf--master]
 file_filter = <lang>.Plugins.xlf
 source_file = English.Plugins.xlf
 source_lang = en
