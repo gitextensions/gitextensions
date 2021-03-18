@@ -79,10 +79,11 @@ namespace GitCommands.Git.Commands
                 };
         }
 
-        public static ArgumentString GetRefsCmd(bool tags, bool branches, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder)
+        public static ArgumentString GetRefsCmd(GetRefsEnum getRef, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder)
         {
             string format;
-            if (!tags)
+            bool hasTags = (getRef & GetRefsEnum.All) != 0 || (getRef & GetRefsEnum.Tags) != 0;
+            if (!hasTags)
             {
                 // If we don't need tags, it is easy.
                 format = @"--format=""%(objectname) %(refname)""";
@@ -107,14 +108,17 @@ namespace GitCommands.Git.Commands
                     ? (ArgumentString)"--no-optional-locks"
                     : default)
             {
-                { sortBy != GitRefsSortBy.Default, GetSortCriteria(tags, sortBy, sortOrder), string.Empty },
+                { sortBy != GitRefsSortBy.Default, GetSortCriteria(hasTags, sortBy, sortOrder), string.Empty },
                 format,
-                { branches, "refs/heads/", string.Empty },
-                { branches && tags, "refs/remotes/", string.Empty },
-                { tags, "refs/tags/", string.Empty },
+                { HasFlag(getRef, GetRefsEnum.Branches), "refs/heads/", string.Empty },
+                { HasFlag(getRef, GetRefsEnum.Remotes), "refs/remotes/", string.Empty },
+                { HasFlag(getRef, GetRefsEnum.Tags), "refs/tags/", string.Empty },
             };
 
             return cmd;
+
+            static bool HasFlag(GetRefsEnum requested, GetRefsEnum flag)
+                => (requested & GetRefsEnum.All) == 0 && (requested & flag) != 0;
 
             static string GetSortCriteria(bool needTags, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder)
             {
