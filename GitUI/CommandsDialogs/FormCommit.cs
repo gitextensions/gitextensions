@@ -1320,7 +1320,12 @@ namespace GitUI.CommandsDialogs
                                                                        ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty);
                     }
 
-                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
+                    bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
+
+                    if (!success)
+                    {
+                        return;
+                    }
 
                     var commitCmd = Module.CommitCmd(
                         amend,
@@ -1331,7 +1336,7 @@ namespace GitUI.CommandsDialogs
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
                         toolStripGpgKeyTextBox.Text);
 
-                    bool success = FormProcess.ShowDialog(this, process: null, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                    success = FormProcess.ShowDialog(this, process: null, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
 
                     UICommands.RepoChangedNotifier.Notify();
 
