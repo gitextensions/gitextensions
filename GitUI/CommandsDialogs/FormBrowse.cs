@@ -1881,7 +1881,7 @@ namespace GitUI.CommandsDialogs
         private void UserManualToolStripMenuItemClick(object sender, EventArgs e)
         {
             // Point to the default documentation, will work also if the old doc version is removed
-            OsShellUtil.OpenUrlInDefaultBrowser(@"https://git-extensions-documentation.readthedocs.org");
+            OsShellUtil.OpenUrlInDefaultBrowser(AppSettings.DocumentationBaseUrl);
         }
 
         private void CleanupToolStripMenuItemClick(object sender, EventArgs e)

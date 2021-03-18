@@ -84,7 +84,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _copyContextMenuItem.ShowDropDown();
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(8);
-            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(Strings.Branches);
+            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(GitUI.Strings.Branches);
             _copyContextMenuItem.DropDownItems[1].Text.Should().EndWith("branch1");
             _copyContextMenuItem.DropDownItems[2].Text.Should().EndWith("branch2");
             _copyContextMenuItem.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
@@ -110,7 +110,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _copyContextMenuItem.ShowDropDown();
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(8);
-            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(Strings.Tags);
+            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(GitUI.Strings.Tags);
             _copyContextMenuItem.DropDownItems[1].Text.Should().EndWith("tag1");
             _copyContextMenuItem.DropDownItems[2].Text.Should().EndWith("tag2");
             _copyContextMenuItem.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
@@ -138,11 +138,11 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _copyContextMenuItem.ShowDropDown();
 
             _copyContextMenuItem.DropDownItems.Count.Should().Be(12);
-            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(Strings.Branches);
+            _copyContextMenuItem.DropDownItems[0].Text.Should().Be(GitUI.Strings.Branches);
             _copyContextMenuItem.DropDownItems[1].Text.Should().EndWith("branch1");
             _copyContextMenuItem.DropDownItems[2].Text.Should().EndWith("branch2");
             _copyContextMenuItem.DropDownItems[3].Should().BeOfType<ToolStripSeparator>();
-            _copyContextMenuItem.DropDownItems[4].Text.Should().Be(Strings.Tags);
+            _copyContextMenuItem.DropDownItems[4].Text.Should().Be(GitUI.Strings.Tags);
             _copyContextMenuItem.DropDownItems[5].Text.Should().EndWith("tag1");
             _copyContextMenuItem.DropDownItems[6].Text.Should().EndWith("tag2");
             _copyContextMenuItem.DropDownItems[7].Should().BeOfType<ToolStripSeparator>();
