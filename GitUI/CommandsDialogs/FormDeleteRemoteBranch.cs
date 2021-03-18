@@ -79,7 +79,11 @@ namespace GitUI.CommandsDialogs
 
                     var cmd = new GitDeleteRemoteBranchesCmd(remote, branches.Select(x => x.LocalName));
 
-                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+                    bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+                    if (!success)
+                    {
+                        return;
+                    }
 
                     using var form = new FormRemoteProcess(UICommands, process: null, cmd.Arguments)
                     {

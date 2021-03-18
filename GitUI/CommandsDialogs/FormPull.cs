@@ -428,7 +428,10 @@ namespace GitUI.CommandsDialogs
                 return DialogResult.No;
             }
 
-            executeBeforeScripts();
+            if (!executeBeforeScripts())
+            {
+                return DialogResult.No;
+            }
 
             var stashed = CalculateStashedValue(owner);
 
@@ -596,15 +599,19 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            void executeBeforeScripts()
+            bool executeBeforeScripts()
             {
                 // Request to pull/merge in addition to the fetch
                 if (!Fetch.Checked)
                 {
-                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+                    bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+                    if (!success)
+                    {
+                        return false;
+                    }
                 }
 
-                ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
+                return ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
             }
 
             void executeAfterScripts()
