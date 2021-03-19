@@ -2080,11 +2080,11 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="Bad.Text">
-        <source>Mark current revision bad</source>
+        <source>Mark current revision &amp;bad</source>
         <target />
       </trans-unit>
       <trans-unit id="Good.Text">
-        <source>Mark current revision good</source>
+        <source>Mark current revision &amp;good</source>
         <target />
       </trans-unit>
       <trans-unit id="Start.Text">
@@ -2100,7 +2100,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="btnSkip.Text">
-        <source>Skip current revision</source>
+        <source>&amp;Skip current revision</source>
         <target />
       </trans-unit>
     </body>
