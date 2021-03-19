@@ -28,7 +28,6 @@ using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.SpellChecker;
-using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -51,6 +50,8 @@ namespace GitUI.CommandsDialogs
                                   Environment.NewLine + "Do you want to continue?");
 
         private readonly TranslationString _amendCommitCaption = new("Amend commit");
+
+        private readonly TranslationString _commitAndPush = new("Commit && &push");
 
         private readonly TranslationString _deleteFailed = new("Delete file failed");
 
@@ -212,6 +213,8 @@ namespace GitUI.CommandsDialogs
             _editedCommit = editedCommit;
 
             InitializeComponent();
+
+            CommitAndPush.Text = _commitAndPush.Text;
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
 
@@ -1028,6 +1031,7 @@ namespace GitUI.CommandsDialogs
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
+            CommitAndPush.Text = doChangesExist ? _commitAndPush.Text : TranslatedStrings.ButtonPush;
             Amend.Enabled = true;
             Reset.Enabled = doChangesExist;
 
@@ -2703,6 +2707,12 @@ namespace GitUI.CommandsDialogs
 
         private void CommitAndPush_Click(object sender, EventArgs e)
         {
+            if (CommitAndPush.Text == TranslatedStrings.ButtonPush)
+            {
+                UICommands.StartPushDialog(this, pushOnShow: true);
+                return;
+            }
+
             CheckForStagedAndCommit(Amend.Checked, push: true);
         }
 

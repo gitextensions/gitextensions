@@ -143,7 +143,6 @@
             this.Push.Name = "Push";
             this.Push.Size = new System.Drawing.Size(101, 25);
             this.Push.TabIndex = 4;
-            this.Push.Text = "&Push";
             this.Push.UseVisualStyleBackColor = true;
             this.Push.Click += new System.EventHandler(this.PushClick);
             // 

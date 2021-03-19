@@ -18,6 +18,7 @@ namespace GitUI
         private readonly TranslationString _buttonCloseApp = new("Close application");
         private readonly TranslationString _buttonCreateBranch = new("Create branch");
         private readonly TranslationString _buttonIgnore = new("Ignore");
+        private readonly TranslationString _buttonPush = new("&Push");
         private readonly TranslationString _buttonReportBug = new("Report bug!");
 
         private readonly TranslationString _captionFailedExecute = new("Failed to execute");
@@ -109,13 +110,13 @@ namespace GitUI
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        private static Lazy<TranslatedStrings> _instance = new Lazy<TranslatedStrings>();
+        private static Lazy<TranslatedStrings> _instance = new();
 
         public static void Reinitialize()
         {
             if (_instance.IsValueCreated)
             {
-                _instance = new Lazy<TranslatedStrings>();
+                _instance = new();
             }
         }
 
@@ -131,6 +132,7 @@ namespace GitUI
         public static string ButtonCloseApp => _instance.Value._buttonCloseApp.Text;
         public static string ButtonCreateBranch => _instance.Value._buttonCreateBranch.Text;
         public static string ButtonIgnore => _instance.Value._buttonIgnore.Text;
+        public static string ButtonPush => _instance.Value._buttonPush.Text;
         public static string ButtonReportBug => _instance.Value._buttonReportBug.Text;
 
         public static string CaptionFailedExecute => _instance.Value._captionFailedExecute.Text;
