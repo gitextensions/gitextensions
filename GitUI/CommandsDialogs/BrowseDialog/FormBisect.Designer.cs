@@ -54,8 +54,8 @@
             this.Good.Location = new System.Drawing.Point(12, 70);
             this.Good.Name = "Good";
             this.Good.Size = new System.Drawing.Size(224, 25);
-            this.Good.TabIndex = 1;
-            this.Good.Text = "Mark current revision good";
+            this.Good.TabIndex = 2;
+            this.Good.Text = "Mark current revision &good";
             this.Good.UseVisualStyleBackColor = true;
             this.Good.Click += new System.EventHandler(this.Good_Click);
             // 
@@ -66,8 +66,8 @@
             this.Bad.Location = new System.Drawing.Point(12, 41);
             this.Bad.Name = "Bad";
             this.Bad.Size = new System.Drawing.Size(224, 25);
-            this.Bad.TabIndex = 2;
-            this.Bad.Text = "Mark current revision bad";
+            this.Bad.TabIndex = 1;
+            this.Bad.Text = "Mark current revision &bad";
             this.Bad.UseVisualStyleBackColor = true;
             this.Bad.Click += new System.EventHandler(this.Bad_Click);
             // 
@@ -79,7 +79,7 @@
             this.Stop.Margin = new System.Windows.Forms.Padding(3, 3, 3, 12);
             this.Stop.Name = "Stop";
             this.Stop.Size = new System.Drawing.Size(224, 25);
-            this.Stop.TabIndex = 3;
+            this.Stop.TabIndex = 4;
             this.Stop.Text = "Stop bisect";
             this.Stop.UseVisualStyleBackColor = true;
             this.Stop.Click += new System.EventHandler(this.Stop_Click);
@@ -91,8 +91,8 @@
             this.btnSkip.Location = new System.Drawing.Point(12, 101);
             this.btnSkip.Name = "btnSkip";
             this.btnSkip.Size = new System.Drawing.Size(224, 25);
-            this.btnSkip.TabIndex = 4;
-            this.btnSkip.Text = "Skip current revision";
+            this.btnSkip.TabIndex = 3;
+            this.btnSkip.Text = "&Skip current revision";
             this.btnSkip.UseVisualStyleBackColor = true;
             this.btnSkip.Click += new System.EventHandler(this.btnSkip_Click);
             // 
