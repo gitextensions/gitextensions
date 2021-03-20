@@ -85,7 +85,7 @@ namespace GitCommands.UserRepositoryHistory
                 throw new ArgumentException(nameof(repositoryPath));
             }
 
-            if (PathUtil.IsUrl(repositoryPath))
+            if (Uri.IsWellFormedUriString(repositoryPath, UriKind.Absolute))
             {
                 // TODO: throw a specific exception
                 throw new NotSupportedException();
