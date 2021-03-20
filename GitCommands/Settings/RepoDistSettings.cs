@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using GitUIPluginInterfaces;
 
@@ -8,8 +9,10 @@ namespace GitCommands.Settings
     /// Settings that can be distributed with repository.
     /// They can be overridden for a particular repository.
     /// </summary>
-    public class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
+    public sealed class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
     {
+        private static Dictionary<(SettingLevel settingLevel, bool allowCache), (string path, RepoDistSettings settingsContainer)> CachedSettingsContainers = new();
+
         public RepoDistSettings(RepoDistSettings? lowerPriority, GitExtSettingsCache settingsCache, SettingLevel settingLevel)
             : base(lowerPriority, settingsCache)
         {
@@ -22,39 +25,52 @@ namespace GitCommands.Settings
 
         public static RepoDistSettings CreateEffective(GitModule module)
         {
-            return CreateLocal(module, CreateDistributed(module, CreateGlobal()), SettingLevel.Effective);
-        }
+            var globalSettingsContainer = CreateGlobal();
+            var distributedSettingsContainer = CreateDistributed(module, lowerPriority: globalSettingsContainer);
 
-        private static RepoDistSettings CreateLocal(GitModule module, RepoDistSettings? lowerPriority,
-            SettingLevel settingLevel, bool allowCache = true)
-        {
-            ////if (module.IsBareRepository()
-            return new RepoDistSettings(lowerPriority,
-                GitExtSettingsCache.Create(Path.Combine(module.GitCommonDirectory, AppSettings.SettingsFileName), allowCache),
-                settingLevel);
-        }
+            string settingsFilePath = Path.Combine(module.GitCommonDirectory, AppSettings.SettingsFileName);
 
-        public static RepoDistSettings CreateLocal(GitModule module, bool allowCache = true)
-        {
-            return CreateLocal(module, null, SettingLevel.Local, allowCache);
-        }
-
-        private static RepoDistSettings CreateDistributed(GitModule module, RepoDistSettings? lowerPriority, bool allowCache = true)
-        {
-            return new RepoDistSettings(lowerPriority,
-                GitExtSettingsCache.Create(Path.Combine(module.WorkingDir, AppSettings.SettingsFileName), allowCache),
-                SettingLevel.Distributed);
-        }
-
-        public static RepoDistSettings CreateDistributed(GitModule module, bool allowCache = true)
-        {
-            return CreateDistributed(module, null, allowCache);
+            return new RepoDistSettings(
+                lowerPriority: distributedSettingsContainer,
+                settingsCache: GitExtSettingsCache.Create(settingsFilePath, allowCache: true),
+                settingLevel: SettingLevel.Effective);
         }
 
         public static RepoDistSettings CreateGlobal(bool allowCache = true)
         {
-            return new RepoDistSettings(null, GitExtSettingsCache.Create(AppSettings.SettingsFilePath, allowCache),
-                SettingLevel.Global);
+            string settingsFilePath = AppSettings.SettingsFilePath;
+
+            return CreateSettingsContainer(SettingLevel.Global, settingsFilePath, allowCache);
+        }
+
+        public static RepoDistSettings CreateDistributed(GitModule module, bool allowCache = true, RepoDistSettings? lowerPriority = null)
+        {
+            string settingsFilePath = Path.Combine(module.WorkingDir, AppSettings.SettingsFileName);
+
+            return CreateSettingsContainer(SettingLevel.Distributed, settingsFilePath, allowCache, lowerPriority);
+        }
+
+        public static RepoDistSettings CreateLocal(GitModule module, bool allowCache = true, RepoDistSettings? lowerPriority = null)
+        {
+            string settingsFilePath = Path.Combine(module.GitCommonDirectory, AppSettings.SettingsFileName);
+
+            return CreateSettingsContainer(SettingLevel.Local, settingsFilePath, allowCache, lowerPriority);
+        }
+
+        private static RepoDistSettings CreateSettingsContainer(SettingLevel settingLevel, string settingsFilePath, bool allowCache, RepoDistSettings? lowerPriority = null)
+        {
+            if (!CachedSettingsContainers.TryGetValue((settingLevel, allowCache), out var settingsContainerWithPath)
+                || settingsContainerWithPath.path != settingsFilePath)
+            {
+                var settingsContainer = new RepoDistSettings(
+                    lowerPriority,
+                    settingsCache: GitExtSettingsCache.Create(settingsFilePath, allowCache),
+                    settingLevel);
+
+                CachedSettingsContainers[(settingLevel, allowCache)] = (settingsFilePath, settingsContainer);
+            }
+
+            return CachedSettingsContainers[(settingLevel, allowCache)].settingsContainer;
         }
 
         #endregion
