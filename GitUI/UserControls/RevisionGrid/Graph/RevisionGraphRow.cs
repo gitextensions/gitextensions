@@ -52,13 +52,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // We do not want SegementLanes to be build multiple times. Lock it.
             lock (Revision)
             {
-                // Another thread could be waiting for the lock, while the segmentlanes where being build. Check again if segmentslanes is null.
+                // Another thread could be waiting for the lock, while the segmentlanes were being built. Check again if segmentslanes is null.
                 if (_segmentLanes is not null)
                 {
                     return;
                 }
 
-                Dictionary<RevisionGraphSegment, int> newSegmentLanes = new Dictionary<RevisionGraphSegment, int>();
+                Dictionary<RevisionGraphSegment, int> newSegmentLanes = new();
 
                 int currentRevisionLane = -1;
                 int laneIndex = 0;

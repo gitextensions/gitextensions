@@ -73,7 +73,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
         /// <summary>
-        /// Builds the revision graph cache. There are two caches that are build in this method.
+        /// Builds the revision graph cache. There are two caches that are built in this method.
         /// <para>Cache 1: an ordered list of the revisions. This is very cheap to build. (_orderedNodesCache).</para>
         /// <para>Cache 2: an ordered list of all prepared graph rows. This is expensive to build. (_orderedRowCache).</para>
         /// </summary>
@@ -81,7 +81,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// The row that needs to be displayed. This ensures the ordered revisions are available up to this index.
         /// </param>
         /// <param name="lastToCacheRowIndex">
-        /// The graph can be build per x rows. This defines the last row index that the graph will build cache to.
+        /// The graph can be built per x rows. This defines the last row index that the graph will build cache to.
         /// </param>
         public void CacheTo(int currentRowIndex, int lastToCacheRowIndex)
         {
@@ -249,21 +249,21 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private void BuildOrderedRowCache(IList<RevisionGraphRevision> orderedNodesCache, int currentRowIndex, int lastToCacheRowIndex)
         {
             // Ensure we keep using the same instance of the rowcache from here on
-            var localOrderedRowCache = _orderedRowCache;
+            IList<RevisionGraphRow>? localOrderedRowCache = _orderedRowCache;
 
             if (localOrderedRowCache is null || CheckRowCacheIsDirty(localOrderedRowCache, orderedNodesCache))
             {
                 localOrderedRowCache = new List<RevisionGraphRow>(currentRowIndex);
             }
 
-            int nextIndex = localOrderedRowCache.Count;
-            if (nextIndex > lastToCacheRowIndex)
+            lastToCacheRowIndex = Math.Min(lastToCacheRowIndex, orderedNodesCache.Count - 1);
+            int startIndex = localOrderedRowCache.Count;
+            if (startIndex > lastToCacheRowIndex)
             {
                 return;
             }
 
-            int cacheCount = orderedNodesCache.Count;
-            while (nextIndex <= lastToCacheRowIndex && cacheCount > nextIndex)
+            for (int nextIndex = startIndex; nextIndex <= lastToCacheRowIndex; ++nextIndex)
             {
                 bool startSegmentsAdded = false;
 
@@ -308,7 +308,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 }
 
                 localOrderedRowCache.Add(new RevisionGraphRow(revision, segments));
-                nextIndex++;
             }
 
             // Overwrite the global instance at the end, to prevent flickering
