@@ -1,204 +1,229 @@
 Changelog
 =========
 
-### Version 3.5 (14 Feb 2021)
+
+### Version 3.5-RC1 (21 March 2021)
 
 #### Changes:
-* [#8908] RevDiff: Request GitStatus updates at file manipulations 3.5
-* [#8893] Remove /en/latest from Doc links 3.5
-* [#8892] Submodule status updated too often 3.5
-* [#8874] Left panel: Make "Expand all" and "Collapse all" based on selected node
-* [#8861] Fix ownership of FormUpdates
-* [#8856] 3.5 AppVeyor: Handle v2 tokens
-* [#8849] Add borders in Commit Form and set splitter width like in VS
-* [#8845] Notify of repo changes when unused branches were deleted
-* [#8840] Check if path exists before creating FileInfo
-* [#8833] Jenkins: requery new running jobs
-* [#8826] Restore/expose IGitUICommands.StartRemotesDialog
-* [#8824] Reset Another branch: prevent special characters in path to fail command
-* [#8821] Incorrect colors for left panel icons
-* [#8820] Fix dark theme visually corrupt after dpi change
-* [#8815] Fix tab control border in high dpi
-* [#8812] Prioritize main as master in CommitInfo
-* [#8807] Fix toolbar order (revisited)
-* [#8806] ImageView: View failures as dump
-* [#8805] Increase the number of commit templates
-* [#8801] Fix filter by branch with globbing characters *?[]
-* [#8786] Update open directory
-* [#8775] Pass 'skip' parameter
-* [#8763] Review feedback on PR #8731 (StageAll,UnstageAll)
-* [#8761] Change TextImageRelation For "Reset All" Button
-* [#8756] Translate ToolTips
-* [#8754] FileViewer: Return inapplicable hotkeys as unhandled
-* [#8751] Show both bisect and git operation notifications
-* [#8748] fix: Select diff when there are staged and unstaged files
-* [#8738] Use Executable for launching new GE instances
-* [#8736] fix crash on refresh when submodule nodes selected
-* [#8731] StageAll and UnstageAll improvement when Filter active #8596
-* [#8727] ResolveConflicts: Incorrect evaluation of mergetool path
-* [#8726] Sidepanel submodule improvements
-* [#8725] Verb "open" for ShellExecute
-* [#8721] Process.Start with ExternalOperationException
-* [#8719] Revert ability for move and show/hide toolbars
-* [#8718] Handle external I/O exceptions that user can fix
-* [#8716] Fix high CPU usage of TeamCityAdapter
-* [#8713] TranslationApp: Include "AccessibleName"
-* [#8708] FileViewer: Consistently use Stage/Reset  Lines
-* [#8703]  Submodule browse: Select both first/second commits
-* [#8697] Handle multi-part names for author initials
-* [#8690] FormResolveConflict: Allow open without cmd/path
-* [#8687] GitStatusMonitor: Display when inactive
-* [#8682] A variety of accessibility-related fixes for the contents of the main pane on the Config page 
-* [#8679] Don't persist or restore the state of the main menu
-* [#8678] Improve handling of Drag and drop
-* [#8667] Left panel enhancement
-* [#8661] Remove support for UTF-7
-* [#8660] Custom mergetool
-* [#8659] Render tabs in the text viewer
-* [#8648] Interactive rebase: Highlight 4 byte sha
-* [#8646] Submodule context menus: Only show if dir exists
-* [#8644] Default debug startup arguments
-* [#8639] FormResetAnotherBranch: display local tracking branches first
-* [#8638] Fix rebase status displayed during a rebase
-* [#8631] Fix #8630: better handle "forbidden" filename
-* [#8628] RangeDiff: Commit count in name
-* [#8627] FileHistory: Git command log
-* [#8626] Blame: Spinner not dismissed for empty files and errors
-* [#8622] Prefer correct local and remote branches sort to tags
-* [#8619] Fix left panel broken sort and filtering
-* [#8616] Exception closing GE when shutting down Windows
-* [#8615] diffmerge updates
-* [#8604] RevDiff context menu for cherry-pick
-* [#8601] Fix Open with Diff Tool does not work with staged renamed file in FormCommit dialog
-* [#8594] FormPush: fix tracked branches selection
-* [#8593] FormGoToCommit: set focus on commit textbox when no control has focus
-* [#8587] Do not  throw if Git is upgraded  while GE is started
-* [#8576] fix background / foreground contrast for gray text
-* [#8575] FullPathResolver: Avoid exception for illegal characters
-* [#8573] FormPush show ahead/behind for  multiple branches
-* [#8572] Break the toolstrip
-* [#8568] Reduced the number of draw calls on the commit info panel.
-* [#8564] Implement custom avatar providers and refactor avatar handling.
-* [#8563] Draw a separator line at the top of the footer panel, similar to what Task Dialog does
-* [#8562] Ahead/behind show up-to-date and gone
-* [#8559] Add dialog help that navigates to the docs
-* [#8557] Add paddings and borders for panels
-* [#8556] Fixes #7557 - Dashboard: GitHub clone shortcut missing at initial load
-* [#8555] update button mnemonic for Reset button on Reset Form to "E"
-* [#8550] gray additional commit lines in revision grid
-* [#8549] FormPush multiple: force-with-lease if rejected
-* [#8543] Add ability to show "Add submodule" Dialog on taskbar.
-* [#8541] Fixes #8327 push commit does clear commit message
-* [#8537] Fixes #8146 "Keyboard navigation : Enter Key should open a recent repository"
-* [#8534] RevisionGrid: Prevent inopportune crash
-* [#8533] BackgroundFetch & push --force-with-lease : add a warning message
-* [#8532] Detect when Azure DevOps token is invalid/expired
-* [#8529] Fix #8188: cannot force push tags
-* [#8528] Use SelectedNode property to track target for context menu
-* [#8527] updated removeFiles to use GetBatchOutput and added unit tests
-* [#8525] Submodules window now keeps the splitter position
-* [#8524] Ensure focus is on cancel button for Reset Form
-* [#8523] [#5499] Fix invisible row selection in the file status list control.
-* [#8520] FormPush: Add context menu to easily manage multiple push selection
-* [#8516] range-diff presentation
-* [#8515] Push multiple: Set default push to false
-* [#8511] Don't refresh revision grid invoking toolstrip actions
-* [#8510] Update layout
-* [#8509] Longer GPG key input box (8 chars -> 16 chars)
-* [#8506] FormEditor SaveCanges Changes
-* [#8504] Parallelized Repo Validity Checks during Startup
-* [#8503] Correct Sort context menu placement
-* [#8502] Add a button to be able to open Application and User theme folders
-* [#8501] Apply action to all selected files in solve merge conflict
-* [#8499] Fix JumpList being created too soon
-* [#8496] FileViewer: ViewMode to track what is currently displayed
-* [#8494] fix: Write and read enum setting as string not number
-* [#8491] Improve `FormCreateBranch` information
-* [#8490] Dialogs layout alignment - `FormCreateBranch`
-* [#8489] Reset filter when switch repos
-* [#8488] Add script options {sSubject} and {cSubject}
-* [#8487] fix: Resolve script "c"-variables
-* [#8485] fix: Branch filter isn't truly reset
-* [#8482] Show empty diffs as patch, not text
-* [#8471] support for range-diff
-* [#8469] Add tests for AppSettings
-* [#8465] Prevent adding "--prune --prune-tags" when run from toolbar
-* [#8458] Don't use "AddSettingBinding" in "FormBrowseRepoSettingsPage"
-* [#8456] Settings [cleanup]
-* [#8454] Fix 8351 - "Araxis does not show up in Mergetool/Difftool dropdown box"
-* [#8451] Settings updated event [cleanup]
-* [#8450] AppSettings Updated event
-* [#8449] Don't expand branches node on refresh
-* [#8444] Jenkins: Present most recent interesting build info
-* [#8435] Dark titlebar when using a dark theme on a recent Win10
-* [#8434] Cleanup `GitCommandHelpers`
-* [#8433] Add checkbox to prune tags
-* [#8427] Fix 6310 Provide ability to sort/order branches and tags
-* [#8426] Colorblind syntax colors
-* [#8424] .css inheritance in themes
-* [#8414] Filter out hidden branches
-* [#8413] Dont refresh after `FormInit` cancels
-* [#8409] Ensure consistent margins
-* [#8408] Theme variations for colorblindness
-* [#8405] Add 'Run script' command to branches pane context menu
-* [#8385] Fix up splitter positions
-* [#8384] Fixes #8348. Allow to create patch for the root commit.
-* [#8372] Optimise `FormSettings` load
-* [#8371] Added support for showing multi-line commit messages in the revision graph
-* [#8362] Update instructions for portable in README.md
-* [#8359] Dialogs layout alignment `FormCheckoutBranch`
-* [#8358] Better exception presentation
-* [#8357] fix test: SaveImpl_should_throw_if_invalid_path
-* [#8341] Constrain child windows to monitor bounds
-* [#8336] Avoid round brackets in testcase argument strings
-* [#8335] DiffTools: add 'tortoisediff' as a tool alias
-* [#8334] SubmoduleTests: Setup repos once for all tests
-* [#8322] Fix Gource avatar feature
-* [#8313] Add missing early return from OnRebaseInteractivelyClicked
-* [#8311] Clean up of status reporting of failed operations
-* [#8308] Avoid IEnumerable<> in test case signature
-* [#8307] Introduce a new console styles settings page under Appearance
-* [#8305] Refactor to replace magic hash string with variable
-* [#8303] Rework FormStatus, FormProgress and FormRemoteProgress
-* [#8298] Customise GitHub issue templates
-* [#8295] Refactor MessageBoxes
-* [#8294] Improve CommandLog
-* [#8292] Dialogs layout alignment
-* [#8291] Use TaskDialog from Microsoft.WindowsAPICodePack
-* [#8289] Add "Ignore Date" and "Committer Date Is Author Date" options to rebase dialog
-* [#8275] RevFile: Diff any two files
-* [#8273] Add a hint regarding updates of portable builds
-* [#8254] RevDiff: Remove parent diff
-* [#8239] RevDiff: Add hotkeys to stage/unstage/reset
-* [#8216] fix ignoring app.manifest
-* [#8215] Apply also font size setting to the ConEmu popup
-* [#8213] FormBrowse: Add all supported shells to the toolbar
-* [#8200] Use DataGridViewCellMouseEventArgs.RowIndex
-* [#8195] Do not use Cursor.Position in Mouse event handlers
-* [#8194] RevDiff custom difftool
-* [#8193] RevDiff: compare any two files
-* [#8157] Tooltip for merged branches
-* [#8130] Support 0 options in ScriptOptionsParser.AskToSpecify
-* [#8124] Restore splitter positions
-* [#8119] Submodule status: Throttle instead of drop frequent updates
-* [#8117] Submodule status: Present dirty submodules
-* [#8116] Bugfix/i8115 submodule gitstatus
-* [#8111] Fix/script without icon
-* [#8101] Limit number of diff revisions
-* [#8086] RevDiff: FirstRevision is null for the initial commit
-* [#8084] Improve "Limit number of commits" option
-* [#8078] Improve tooltip for diff selection
-* [#8076] Run FormFileHistory in a separate GE instance
-* [#8075] Catch all types of exception thrown by ReadAllText
-* [#8067] Fix 8055 add sign-off to FormApplyPatch 
-* [#8065] Align folder/copy for submodule
-* [#8049] Fix 7097 crash invalid escape character in .gitmodule
-* [#8038] Fix for #8030 URL in "Edit Remote Details"is case insensitive
-* [#8035] Indicate merged branches in left panel
-* [#7825] RevisionDiff: Stage/Unstage selected lines
-* [#6339] Add ability to Copy to Clipboard, similar to commit context menu from left panel
+* [9017] Push from empty FormCommit
+* [9012] #8684 Avatars are misaligned in blame form
+* [9006] Avoid invalid line number in DiffHighlightService
+* [9003] FileSettingsCache: No exception if Git config is inaccessible
+* [9001] Check BeforeCommit script failure to abort commit
+* [8992] Include spelling dictionaries
+* [8991] Inject current branch slug into the documentation link
+* [8988] Improve display of exceptions 3.5
+* [8987] #8684 Avatars are misaligned in blame form
+* [8979] GitStatusMonitor increase minimum time between updates 3.5
+* [8978] Submodule: Recreate tree only at structure changes 3.5
+* [8953] RevDiff: Show worktree/index changes similar to FormCommit
+* [8908] RevDiff: Request GitStatus updates at file manipulations 3.5
+* [8893] Remove /en/latest from Doc links 3.5
+* [8892] Submodule status updated too often 3.5
+* [8874] Left panel: Make "Expand all" and "Collapse all" based on selected node
+* [8861] Fix ownership of FormUpdates
+* [8856] 3.5 AppVeyor: Handle v2 tokens
+* [8849] Add borders in Commit Form and set splitter width like in VS
+* [8845] Notify of repo changes when unused branches were deleted
+* [8840] Check if path exists before creating FileInfo
+* [8833] Jenkins: requery new running jobs
+* [8826] Restore/expose IGitUICommands.StartRemotesDialog
+* [8824] Reset Another branch: prevent special characters in path to fail command
+* [8821] Incorrect colors for left panel icons
+* [8820] Fix dark theme visually corrupt after dpi change
+* [8815] Fix tab control border in high dpi
+* [8812] Prioritize main as master in CommitInfo
+* [8807] Fix toolbar order (revisited)
+* [8806] ImageView: View failures as dump
+* [8805] Increase the number of commit templates
+* [8801] Fix filter by branch with globbing characters *?[]
+* [8786] Update open directory
+* [8775] Pass 'skip' parameter
+* [8763] Review feedback on PR #8731 (StageAll,UnstageAll)
+* [8761] Change TextImageRelation For "Reset All" Button
+* [8756] Translate ToolTips
+* [8754] FileViewer: Return inapplicable hotkeys as unhandled
+* [8751] Show both bisect and git operation notifications
+* [8748] fix: Select diff when there are staged and unstaged files
+* [8738] Use Executable for launching new GE instances
+* [8736] fix crash on refresh when submodule nodes selected
+* [8731] StageAll and UnstageAll improvement when Filter active #8596
+* [8727] ResolveConflicts: Incorrect evaluation of mergetool path
+* [8726] Sidepanel submodule improvements
+* [8725] Verb "open" for ShellExecute
+* [8721] Process.Start with ExternalOperationException
+* [8719] Revert ability for move and show/hide toolbars
+* [8718] Handle external I/O exceptions that user can fix
+* [8716] Fix high CPU usage of TeamCityAdapter
+* [8713] TranslationApp: Include "AccessibleName"
+* [8708] FileViewer: Consistently use Stage/Reset  Lines
+* [8703]  Submodule browse: Select both first/second commits
+* [8697] Handle multi-part names for author initials
+* [8690] FormResolveConflict: Allow open without cmd/path
+* [8687] GitStatusMonitor: Display when inactive
+* [8682] A variety of accessibility-related fixes for the contents of the main pane on the Config page 
+* [8679] Don't persist or restore the state of the main menu
+* [8678] Improve handling of Drag and drop
+* [8667] Left panel enhancement
+* [8661] Remove support for UTF-7
+* [8660] Custom mergetool
+* [8659] Render tabs in the text viewer
+* [8648] Interactive rebase: Highlight 4 byte sha
+* [8646] Submodule context menus: Only show if dir exists
+* [8644] Default debug startup arguments
+* [8639] FormResetAnotherBranch: display local tracking branches first
+* [8638] Fix rebase status displayed during a rebase
+* [8631] Fix #8630: better handle "forbidden" filename
+* [8628] RangeDiff: Commit count in name
+* [8627] FileHistory: Git command log
+* [8626] Blame: Spinner not dismissed for empty files and errors
+* [8622] Prefer correct local and remote branches sort to tags
+* [8619] Fix left panel broken sort and filtering
+* [8616] Exception closing GE when shutting down Windows
+* [8615] diffmerge updates
+* [8604] RevDiff context menu for cherry-pick
+* [8601] Fix Open with Diff Tool does not work with staged renamed file in FormCommit dialog
+* [8594] FormPush: fix tracked branches selection
+* [8593] FormGoToCommit: set focus on commit textbox when no control has focus
+* [8587] Do not  throw if Git is upgraded  while GE is started
+* [8576] fix background / foreground contrast for gray text
+* [8575] FullPathResolver: Avoid exception for illegal characters
+* [8573] FormPush show ahead/behind for  multiple branches
+* [8572] Break the toolstrip
+* [8568] Reduced the number of draw calls on the commit info panel.
+* [8564] Implement custom avatar providers and refactor avatar handling.
+* [8563] Draw a separator line at the top of the footer panel, similar to what Task Dialog does
+* [8562] Ahead/behind show up-to-date and gone
+* [8559] Add dialog help that navigates to the docs
+* [8557] Add paddings and borders for panels
+* [8556] Fixes #7557 - Dashboard: GitHub clone shortcut missing at initial load
+* [8555] update button mnemonic for Reset button on Reset Form to "E"
+* [8550] gray additional commit lines in revision grid
+* [8549] FormPush multiple: force-with-lease if rejected
+* [8543] Add ability to show "Add submodule" Dialog on taskbar.
+* [8541] Fixes #8327 push commit does clear commit message
+* [8537] Fixes #8146 "Keyboard navigation : Enter Key should open a recent repository"
+* [8534] RevisionGrid: Prevent inopportune crash
+* [8533] BackgroundFetch & push --force-with-lease : add a warning message
+* [8532] Detect when Azure DevOps token is invalid/expired
+* [8529] Fix #8188: cannot force push tags
+* [8528] Use SelectedNode property to track target for context menu
+* [8527] updated removeFiles to use GetBatchOutput and added unit tests
+* [8525] Submodules window now keeps the splitter position
+* [8524] Ensure focus is on cancel button for Reset Form
+* [8523] [#5499] Fix invisible row selection in the file status list control.
+* [8520] FormPush: Add context menu to easily manage multiple push selection
+* [8516] range-diff presentation
+* [8515] Push multiple: Set default push to false
+* [8511] Don't refresh revision grid invoking toolstrip actions
+* [8510] Update layout
+* [8509] Longer GPG key input box (8 chars -> 16 chars)
+* [8506] FormEditor SaveCanges Changes
+* [8504] Parallelized Repo Validity Checks during Startup
+* [8503] Correct Sort context menu placement
+* [8502] Add a button to be able to open Application and User theme folders
+* [8501] Apply action to all selected files in solve merge conflict
+* [8499] Fix JumpList being created too soon
+* [8496] FileViewer: ViewMode to track what is currently displayed
+* [8494] fix: Write and read enum setting as string not number
+* [8491] Improve `FormCreateBranch` information
+* [8490] Dialogs layout alignment - `FormCreateBranch`
+* [8489] Reset filter when switch repos
+* [8488] Add script options {sSubject} and {cSubject}
+* [8487] fix: Resolve script "c"-variables
+* [8485] fix: Branch filter isn't truly reset
+* [8482] Show empty diffs as patch, not text
+* [8471] support for range-diff
+* [8469] Add tests for AppSettings
+* [8465] Prevent adding "--prune --prune-tags" when run from toolbar
+* [8458] Don't use "AddSettingBinding" in "FormBrowseRepoSettingsPage"
+* [8456] Settings [cleanup]
+* [8454] Fix 8351 - "Araxis does not show up in Mergetool/Difftool dropdown box"
+* [8451] Settings updated event [cleanup]
+* [8450] AppSettings Updated event
+* [8449] Don't expand branches node on refresh
+* [8444] Jenkins: Present most recent interesting build info
+* [8435] Dark titlebar when using a dark theme on a recent Win10
+* [8434] Cleanup `GitCommandHelpers`
+* [8433] Add checkbox to prune tags
+* [8427] Fix 6310 Provide ability to sort/order branches and tags
+* [8426] Colorblind syntax colors
+* [8424] .css inheritance in themes
+* [8414] Filter out hidden branches
+* [8413] Dont refresh after `FormInit` cancels
+* [8409] Ensure consistent margins
+* [8408] Theme variations for colorblindness
+* [8405] Add 'Run script' command to branches pane context menu
+* [8385] Fix up splitter positions
+* [8384] Fixes #8348. Allow to create patch for the root commit.
+* [8372] Optimise `FormSettings` load
+* [8371] Added support for showing multi-line commit messages in the revision graph
+* [8362] Update instructions for portable in README.md
+* [8359] Dialogs layout alignment `FormCheckoutBranch`
+* [8358] Better exception presentation
+* [8357] fix test: SaveImpl_should_throw_if_invalid_path
+* [8341] Constrain child windows to monitor bounds
+* [8336] Avoid round brackets in testcase argument strings
+* [8335] DiffTools: add 'tortoisediff' as a tool alias
+* [8334] SubmoduleTests: Setup repos once for all tests
+* [8322] Fix Gource avatar feature
+* [8313] Add missing early return from OnRebaseInteractivelyClicked
+* [8311] Clean up of status reporting of failed operations
+* [8308] Avoid IEnumerable<> in test case signature
+* [8307] Introduce a new console styles settings page under Appearance
+* [8305] Refactor to replace magic hash string with variable
+* [8303] Rework FormStatus, FormProgress and FormRemoteProgress
+* [8298] Customise GitHub issue templates
+* [8295] Refactor MessageBoxes
+* [8294] Improve CommandLog
+* [8292] Dialogs layout alignment
+* [8291] Use TaskDialog from Microsoft.WindowsAPICodePack
+* [8289] Add "Ignore Date" and "Committer Date Is Author Date" options to rebase dialog
+* [8275] RevFile: Diff any two files
+* [8273] Add a hint regarding updates of portable builds
+* [8254] RevDiff: Remove parent diff
+* [8239] RevDiff: Add hotkeys to stage/unstage/reset
+* [8216] fix ignoring app.manifest
+* [8215] Apply also font size setting to the ConEmu popup
+* [8213] FormBrowse: Add all supported shells to the toolbar
+* [8200] Use DataGridViewCellMouseEventArgs.RowIndex
+* [8195] Do not use Cursor.Position in Mouse event handlers
+* [8194] RevDiff custom difftool
+* [8193] RevDiff: compare any two files
+* [8157] Tooltip for merged branches
+* [8130] Support 0 options in ScriptOptionsParser.AskToSpecify
+* [8124] Restore splitter positions
+* [8119] Submodule status: Throttle instead of drop frequent updates
+* [8117] Submodule status: Present dirty submodules
+* [8116] Bugfix/i8115 submodule gitstatus
+* [8111] Fix/script without icon
+* [8101] Limit number of diff revisions
+* [8086] RevDiff: FirstRevision is null for the initial commit
+* [8084] Improve "Limit number of commits" option
+* [8078] Improve tooltip for diff selection
+* [8076] Run FormFileHistory in a separate GE instance
+* [8075] Catch all types of exception thrown by ReadAllText
+* [8067] Fix 8055 add sign-off to FormApplyPatch 
+* [8065] Align folder/copy for submodule
+* [8049] Fix 7097 crash invalid escape character in .gitmodule
+* [8038] Fix for #8030 URL in "Edit Remote Details"is case insensitive
+* [8035] Indicate merged branches in left panel
+* [7825] RevisionDiff: Stage/Unstage selected lines
+* [6339] Add ability to Copy to Clipboard, similar to commit context menu from left panel
 
 
+[9017]:https://github.com/gitextensions/gitextensions/pull/9017
+[9012]:https://github.com/gitextensions/gitextensions/pull/9012
+[9006]:https://github.com/gitextensions/gitextensions/pull/9006
+[9003]:https://github.com/gitextensions/gitextensions/pull/9003
+[9001]:https://github.com/gitextensions/gitextensions/pull/9001
+[8992]:https://github.com/gitextensions/gitextensions/pull/8992
+[8991]:https://github.com/gitextensions/gitextensions/pull/8991
+[8988]:https://github.com/gitextensions/gitextensions/pull/8988
+[8987]:https://github.com/gitextensions/gitextensions/pull/8987
+[8979]:https://github.com/gitextensions/gitextensions/pull/8979
+[8978]:https://github.com/gitextensions/gitextensions/pull/8978
+[8953]:https://github.com/gitextensions/gitextensions/pull/8953
 [8908]:https://github.com/gitextensions/gitextensions/pull/8908
 [8893]:https://github.com/gitextensions/gitextensions/pull/8893
 [8892]:https://github.com/gitextensions/gitextensions/pull/8892
