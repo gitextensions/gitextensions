@@ -902,9 +902,8 @@ namespace GitUI
         {
             bool Action()
             {
-                FormSettings.ShowSettingsDialog(this, owner, initialPage);
-
-                return true;
+                return FormSettings.ShowSettingsDialog(this, owner, initialPage)
+                    is DialogResult.OK;
             }
 
             return DoActionOnRepo(owner, Action, requiresValidWorkingDir: false, postEvent: PostSettings);
