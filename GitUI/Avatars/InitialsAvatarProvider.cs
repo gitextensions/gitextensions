@@ -45,12 +45,12 @@ namespace GitUI.Avatars
 
         private static (string? name, char[]? separator) NameSelector(string? name, string? email)
         {
-            if (!Strings.IsNullOrWhiteSpace(name))
+            if (!string.IsNullOrWhiteSpace(name))
             {
                 return (name.Trim(), null);
             }
 
-            if (!Strings.IsNullOrWhiteSpace(email))
+            if (!string.IsNullOrWhiteSpace(email))
             {
                 var withoutDomain = email.LazySplit('@').First().TrimStart();
                 return (withoutDomain, _emailInitialSeparator);

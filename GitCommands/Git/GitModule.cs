@@ -100,7 +100,7 @@ namespace GitCommands
                     }
                 }
 
-                if (!Strings.IsNullOrEmpty(superprojectPath) && currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
+                if (!string.IsNullOrEmpty(superprojectPath) && currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
                 {
                     var submodulePath = currentPath.Substring(superprojectPath.Length).ToPosixPath();
                     var configFile = new ConfigFile(Path.Combine(superprojectPath, ".gitmodules"), local: true);
@@ -274,7 +274,7 @@ namespace GitCommands
         /// <summary>Indicates whether the specified directory contains a git repository.</summary>
         public static bool IsValidGitWorkingDir(string? dir)
         {
-            if (Strings.IsNullOrEmpty(dir))
+            if (string.IsNullOrEmpty(dir))
             {
                 return false;
             }
@@ -1454,7 +1454,7 @@ namespace GitCommands
 
             string branchArguments = "";
 
-            if (!Strings.IsNullOrEmpty(remoteBranch))
+            if (!string.IsNullOrEmpty(remoteBranch))
             {
                 if (remoteBranch.StartsWith("+"))
                 {
@@ -2760,7 +2760,7 @@ namespace GitCommands
         /// <summary>Dirty but fast. This sometimes fails.</summary>
         public static string GetSelectedBranchFast(string? repositoryPath, bool setDefaultIfEmpty = true)
         {
-            if (Strings.IsNullOrEmpty(repositoryPath))
+            if (string.IsNullOrEmpty(repositoryPath))
             {
                 return string.Empty;
             }
@@ -3084,7 +3084,7 @@ namespace GitCommands
         /// </summary>
         public string? GetTagMessage(string? tag)
         {
-            if (Strings.IsNullOrWhiteSpace(tag))
+            if (string.IsNullOrWhiteSpace(tag))
             {
                 return null;
             }
@@ -3593,14 +3593,14 @@ namespace GitCommands
         /// <returns>empty string, or null if either input is null.</returns>
         public string? OpenFilesWithDifftool(string? firstGitCommit, string? secondGitCommit, string? customTool = null)
         {
-            if (Strings.IsNullOrWhiteSpace(firstGitCommit) || Strings.IsNullOrWhiteSpace(secondGitCommit))
+            if (string.IsNullOrWhiteSpace(firstGitCommit) || string.IsNullOrWhiteSpace(secondGitCommit))
             {
                 return null;
             }
 
             _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
             {
-                { Strings.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
+                { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
                 "--no-prompt",
                 "-M -C",
                 firstGitCommit.QuoteNE(),
@@ -3612,7 +3612,7 @@ namespace GitCommands
 
         public ObjectId? RevParse(string? revisionExpression)
         {
-            if (Strings.IsNullOrWhiteSpace(revisionExpression) || revisionExpression.Length > 260)
+            if (string.IsNullOrWhiteSpace(revisionExpression) || revisionExpression.Length > 260)
             {
                 return null;
             }
@@ -3924,7 +3924,7 @@ namespace GitCommands
 
             if (isABug)
             {
-                if (Strings.IsNullOrEmpty(encodingName))
+                if (string.IsNullOrEmpty(encodingName))
                 {
                     return Encoding.UTF8;
                 }
@@ -3958,7 +3958,7 @@ namespace GitCommands
         [return: NotNullIfNotNull("s")]
         public string? ReEncodeShowString(string? s)
         {
-            if (Strings.IsNullOrEmpty(s))
+            if (string.IsNullOrEmpty(s))
             {
                 return s;
             }

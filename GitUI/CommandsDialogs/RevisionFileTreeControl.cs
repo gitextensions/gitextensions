@@ -462,7 +462,7 @@ See the changes in the commit form.");
                 selectedItem = searchWindow.SelectedItem;
             }
 
-            if (Strings.IsNullOrEmpty(selectedItem))
+            if (string.IsNullOrEmpty(selectedItem))
             {
                 return;
             }

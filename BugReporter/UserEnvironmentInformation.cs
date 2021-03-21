@@ -49,7 +49,7 @@ namespace BugReporter
 
         public static string GetGitVersionInfo(string? gitVersion, GitVersion lastSupportedVersion, GitVersion recommendedVersion)
         {
-            if (Strings.IsNullOrWhiteSpace(gitVersion))
+            if (string.IsNullOrWhiteSpace(gitVersion))
             {
                 return $"- (minimum: {lastSupportedVersion}, recommended: {recommendedVersion})";
             }

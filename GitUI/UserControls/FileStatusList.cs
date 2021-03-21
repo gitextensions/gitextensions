@@ -1353,7 +1353,7 @@ namespace GitUI
                     ? SystemColors.HighlightText
                     : SystemColors.WindowText;
 
-                if (!Strings.IsNullOrEmpty(prefix))
+                if (!string.IsNullOrEmpty(prefix))
                 {
                     DrawString(textRect, prefix, grayTextColor);
                     var prefixSize = formatter.MeasureString(prefix);
@@ -1362,7 +1362,7 @@ namespace GitUI
 
                 DrawString(textRect, text, textColor);
 
-                if (!Strings.IsNullOrEmpty(suffix))
+                if (!string.IsNullOrEmpty(suffix))
                 {
                     var textSize = formatter.MeasureString(text);
                     textRect.Offset(textSize.Width, 0);

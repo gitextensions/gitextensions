@@ -765,7 +765,7 @@ namespace GitUI.CommandsDialogs
                 firstRev: DiffFiles.SelectedItem.SecondRevision,
                 secondRev: DiffFiles.SelectedItem.FirstRevision,
                 item: DiffFiles.SelectedItem.Item);
-            if (!Strings.IsNullOrWhiteSpace(DiffFiles.SelectedItem.Item.OldName))
+            if (!string.IsNullOrWhiteSpace(DiffFiles.SelectedItem.Item.OldName))
             {
                 var name = DiffFiles.SelectedItem.Item.OldName;
                 DiffFiles.SelectedItem.Item.OldName = DiffFiles.SelectedItem.Item.Name;

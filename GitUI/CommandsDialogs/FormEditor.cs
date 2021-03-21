@@ -132,7 +132,7 @@ namespace GitUI.CommandsDialogs
 
         private void SaveChanges()
         {
-            if (!Strings.IsNullOrEmpty(_fileName))
+            if (!string.IsNullOrEmpty(_fileName))
             {
                 if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
                 {

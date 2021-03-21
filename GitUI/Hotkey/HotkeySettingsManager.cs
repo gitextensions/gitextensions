@@ -163,7 +163,7 @@ namespace GitUI.Hotkey
         {
             MigrateSettings();
 
-            if (!Strings.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
+            if (!string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
             {
                 return LoadSerializedSettings(AppSettings.SerializedHotkeys);
             }

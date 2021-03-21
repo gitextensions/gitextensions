@@ -962,7 +962,7 @@ namespace GitUI.Editor
             _viewMode = viewMode;
             _viewItem = item;
             if (_viewMode == ViewMode.Text
-                && !Strings.IsNullOrEmpty(fileName)
+                && !string.IsNullOrEmpty(fileName)
                 && (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                     || fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase)))
             {

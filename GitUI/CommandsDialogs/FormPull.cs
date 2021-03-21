@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
             _NO_TRANSLATE_Remotes.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
-            if (Strings.IsNullOrEmpty(selectedRemoteName))
+            if (string.IsNullOrEmpty(selectedRemoteName))
             {
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _branch));
             }
@@ -242,7 +242,7 @@ namespace GitUI.CommandsDialogs
             if (pullAction == AppSettings.PullAction.FetchPruneAll)
             {
                 string messageBoxTitle;
-                if (Strings.IsNullOrEmpty(remote))
+                if (string.IsNullOrEmpty(remote))
                 {
                     messageBoxTitle = string.Format(_pruneFromCaption.Text, AllRemotes);
                 }
@@ -941,7 +941,7 @@ namespace GitUI.CommandsDialogs
                 {
                     foreach (var remote in (IEnumerable<ConfigFileRemote>)_NO_TRANSLATE_Remotes.DataSource)
                     {
-                        if (!Strings.IsNullOrWhiteSpace(remote.Name) && remote.Name != AllRemotes)
+                        if (!string.IsNullOrWhiteSpace(remote.Name) && remote.Name != AllRemotes)
                         {
                             yield return remote.Name;
                         }

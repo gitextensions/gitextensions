@@ -89,7 +89,7 @@ namespace GitUI.Avatars
                     var client = new Git.hub.Client();
                     var userProfile = await client.GetUserAsync(username);
 
-                    if (Strings.IsNullOrEmpty(userProfile?.AvatarUrl))
+                    if (string.IsNullOrEmpty(userProfile?.AvatarUrl))
                     {
                         return null;
                     }

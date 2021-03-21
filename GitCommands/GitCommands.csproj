@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -6,11 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\GitExtUtils\Annotations.cs" Link="Annotations.cs" />
     <Compile Include="..\GitExtUtils\Delimiters.cs" Link="Utils\Delimiters.cs" />
     <Compile Include="..\GitExtUtils\LazyStringSplit.cs" Link="Utils\LazyStringSplit.cs" />
-    <Compile Include="..\GitExtUtils\Strings.cs" Link="Strings.cs" />
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
 
     <!-- Settings -->
     <None Update="Properties\Settings.settings" Generator="SettingsSingleFileGenerator" LastGenOutput="Settings.Designer.cs" />

@@ -244,7 +244,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndexChanged += RemotesUpdated;
             _NO_TRANSLATE_Remotes.TextUpdate += RemotesUpdated;
 
-            if (Strings.IsNullOrEmpty(selectedRemoteName))
+            if (string.IsNullOrEmpty(selectedRemoteName))
             {
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _currentBranchName));
             }

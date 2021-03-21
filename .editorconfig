@@ -91,10 +91,10 @@ dotnet_code_quality_unused_parameters = all:suggestion
 
 #### C# Coding Conventions ####
 
-# var preferences
-csharp_style_var_elsewhere = false:silent
-csharp_style_var_for_built_in_types = false:silent
-csharp_style_var_when_type_is_apparent = true:silent
+# Avoid var
+csharp_style_var_for_built_in_types = false:suggestion
+csharp_style_var_when_type_is_apparent = false:suggestion
+csharp_style_var_elsewhere = false:suggestion
 
 # Expression-bodied members
 csharp_style_expression_bodied_accessors = true:silent

@@ -141,7 +141,7 @@ namespace GitUI
                 return;
             }
 
-            if (Strings.IsNullOrEmpty(patchFile.FullName))
+            if (string.IsNullOrEmpty(patchFile.FullName))
             {
                 MessageBox.Show(_unableToShowPatchDetails.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

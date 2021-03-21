@@ -229,7 +229,7 @@ namespace System.Linq
         {
             foreach (var item in source)
             {
-                if (!Strings.IsNullOrWhiteSpace(item))
+                if (!string.IsNullOrWhiteSpace(item))
                 {
                     yield return item;
                 }

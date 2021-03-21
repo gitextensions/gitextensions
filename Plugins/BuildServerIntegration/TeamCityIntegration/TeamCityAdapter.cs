@@ -128,7 +128,7 @@ namespace TeamCityIntegration
             HostName = config.GetString("BuildServerUrl", null);
             LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;
 
-            if (!Strings.IsNullOrEmpty(HostName))
+            if (!string.IsNullOrEmpty(HostName))
             {
                 InitializeHttpClient(HostName);
                 if (ProjectNames.Length > 0)

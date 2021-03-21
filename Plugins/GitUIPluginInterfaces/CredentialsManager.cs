@@ -53,7 +53,7 @@ namespace GitUIPluginInterfaces
         protected NetworkCredential GetCredentialOrDefault(SettingLevel settingLevel, string name, NetworkCredential defaultValue)
         {
             var targetName = GetWindowsCredentialsTarget(name, settingLevel);
-            if (Strings.IsNullOrWhiteSpace(targetName))
+            if (string.IsNullOrWhiteSpace(targetName))
             {
                 return defaultValue;
             }
@@ -82,7 +82,7 @@ namespace GitUIPluginInterfaces
 
             Validates.NotNull(_getWorkingDir);
             var suffix = _getWorkingDir();
-            return Strings.IsNullOrWhiteSpace(suffix) ? null : $"{name}_{suffix}";
+            return string.IsNullOrWhiteSpace(suffix) ? null : $"{name}_{suffix}";
         }
 
         private static class AdysTechCredentialManagerWrapper

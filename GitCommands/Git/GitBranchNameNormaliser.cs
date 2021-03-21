@@ -79,7 +79,7 @@ namespace GitCommands.Git
         /// <returns>Normalised branch name.</returns>
         public string Normalise(string? branchName, GitBranchNameOptions options)
         {
-            if (Strings.IsNullOrWhiteSpace(branchName))
+            if (string.IsNullOrWhiteSpace(branchName))
             {
                 return string.Empty;
             }

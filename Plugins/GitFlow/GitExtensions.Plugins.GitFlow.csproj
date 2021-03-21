@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Compile Include="..\..\GitExtUtils\Annotations.cs" Link="Annotations.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
     <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />

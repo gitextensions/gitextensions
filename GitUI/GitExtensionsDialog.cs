@@ -60,7 +60,7 @@ namespace GitUI
         protected override void OnHelpButtonClicked(CancelEventArgs e)
         {
             // If we show the Help button but we have failed to specify where the docs are -> hide the button, and exit
-            if (Strings.IsNullOrWhiteSpace(ManualSectionAnchorName) || Strings.IsNullOrWhiteSpace(ManualSectionSubfolder))
+            if (string.IsNullOrWhiteSpace(ManualSectionAnchorName) || string.IsNullOrWhiteSpace(ManualSectionSubfolder))
             {
                 HelpButton = false;
                 e.Cancel = true;

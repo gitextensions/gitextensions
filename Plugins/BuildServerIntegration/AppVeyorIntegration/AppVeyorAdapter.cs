@@ -88,7 +88,7 @@ namespace AppVeyorIntegration
             string projectNamesSetting = config.GetString("AppVeyorProjectName", "");
             var projectNames = _buildServerWatcher.ReplaceVariables(projectNamesSetting)
                 .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(p => p.Contains("/") || !Strings.IsNullOrEmpty(accountName))
+                .Where(p => p.Contains("/") || !string.IsNullOrEmpty(accountName))
                 .Select(p => p.Contains("/") ? p : accountName.Combine("/", p)!)
                 .ToList();
 
@@ -106,7 +106,7 @@ namespace AppVeyorIntegration
                     {
                         // v2 tokens requires a separate prefix
                         // (Documentation specifies that this is applicable for all requests, not the case though)
-                        string apiBaseUrl = !Strings.IsNullOrWhiteSpace(accountName) && !Strings.IsNullOrWhiteSpace(accountToken) && accountToken.StartsWith("v2.")
+                        string apiBaseUrl = !string.IsNullOrWhiteSpace(accountName) && !string.IsNullOrWhiteSpace(accountToken) && accountToken.StartsWith("v2.")
                             ? $"{WebSiteUrl}/api/account/{accountName}/projects/"
                             : ApiBaseUrl;
 
@@ -140,7 +140,7 @@ namespace AppVeyorIntegration
                     BaseAddress = new Uri(baseUrl, UriKind.Absolute),
                 };
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                if (!Strings.IsNullOrWhiteSpace(accountToken))
+                if (!string.IsNullOrWhiteSpace(accountToken))
                 {
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accountToken);
                 }
@@ -187,7 +187,7 @@ namespace AppVeyorIntegration
 
         internal IEnumerable<AppVeyorBuildInfo> ExtractBuildInfo(string projectId, string? result)
         {
-            if (Strings.IsNullOrWhiteSpace(result))
+            if (string.IsNullOrWhiteSpace(result))
             {
                 return Enumerable.Empty<AppVeyorBuildInfo>();
             }

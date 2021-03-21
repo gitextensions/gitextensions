@@ -39,7 +39,7 @@ namespace GitCommands
         {
             string? pathVariable = _environment.GetEnvironmentVariable("PATH");
 
-            if (Strings.IsNullOrWhiteSpace(pathVariable))
+            if (string.IsNullOrWhiteSpace(pathVariable))
             {
                 yield break;
             }

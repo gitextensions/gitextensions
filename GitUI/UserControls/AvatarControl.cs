@@ -130,7 +130,7 @@ namespace GitUI
 
             var email = Email;
 
-            if (!AppSettings.ShowAuthorAvatarInCommitInfo || Strings.IsNullOrWhiteSpace(email))
+            if (!AppSettings.ShowAuthorAvatarInCommitInfo || string.IsNullOrWhiteSpace(email))
             {
                 RefreshImage(Images.User80);
                 return;

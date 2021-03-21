@@ -137,7 +137,7 @@ namespace GitCommands
             get => GetTrackingRemote(Module.LocalConfigFile);
             set
             {
-                if (Strings.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     Module.UnsetSetting(_remoteSettingName);
                 }
@@ -166,7 +166,7 @@ namespace GitCommands
             get => GetMergeWith(Module.LocalConfigFile);
             set
             {
-                if (Strings.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     Module.UnsetSetting(_mergeSettingName);
                 }

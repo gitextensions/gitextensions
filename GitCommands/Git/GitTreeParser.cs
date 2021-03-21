@@ -22,7 +22,7 @@ namespace GitCommands.Git
 
         public IEnumerable<GitItem> Parse(string? tree)
         {
-            if (Strings.IsNullOrWhiteSpace(tree))
+            if (string.IsNullOrWhiteSpace(tree))
             {
                 return Enumerable.Empty<GitItem>();
             }

@@ -108,7 +108,7 @@ namespace GitUI
                     var diffOfConflict = fileViewer.Module.GetCombinedDiffContent(selectedId, file.Name,
                         fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
 
-                    return Strings.IsNullOrWhiteSpace(diffOfConflict)
+                    return string.IsNullOrWhiteSpace(diffOfConflict)
                         ? TranslatedStrings.UninterestingDiffOmitted
                         : diffOfConflict;
                 }

@@ -45,7 +45,7 @@ namespace GitCommands.UserRepositoryHistory
             }
 
             string? desc = ReadRepositoryDescription(repositoryDir);
-            if (!Strings.IsNullOrWhiteSpace(desc))
+            if (!string.IsNullOrWhiteSpace(desc))
             {
                 return desc;
             }

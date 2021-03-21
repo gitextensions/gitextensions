@@ -88,13 +88,13 @@ namespace GitCommands.DiffMergeTools
         /// <returns>The command for the diff/merge tool configured in the effective config. </returns>
         public string GetToolCommand(string? toolName, DiffMergeToolType toolType)
         {
-            if (Strings.IsNullOrWhiteSpace(toolName))
+            if (string.IsNullOrWhiteSpace(toolName))
             {
                 return string.Empty;
             }
 
             var command = GetToolSetting(toolName, toolType, "cmd");
-            if (!Strings.IsNullOrWhiteSpace(command))
+            if (!string.IsNullOrWhiteSpace(command))
             {
                 return command;
             }
@@ -117,13 +117,13 @@ namespace GitCommands.DiffMergeTools
         /// <returns>The path to the diff/merge tool configured in the effective config. </returns>
         public string GetToolPath(string? toolName, DiffMergeToolType toolType)
         {
-            if (Strings.IsNullOrWhiteSpace(toolName))
+            if (string.IsNullOrWhiteSpace(toolName))
             {
                 return string.Empty;
             }
 
             var path = GetToolSetting(toolName, toolType, "path");
-            if (!Strings.IsNullOrWhiteSpace(path))
+            if (!string.IsNullOrWhiteSpace(path))
             {
                 return path;
             }
@@ -144,7 +144,7 @@ namespace GitCommands.DiffMergeTools
             if (diffTool is null)
             {
                 var exeName = toolName + ".exe";
-                if (!Strings.IsNullOrWhiteSpace(userSuppliedPath))
+                if (!string.IsNullOrWhiteSpace(userSuppliedPath))
                 {
                     fullPath = userSuppliedPath;
                 }
@@ -156,7 +156,7 @@ namespace GitCommands.DiffMergeTools
                 return new DiffMergeToolConfiguration(exeName, fullPath ?? string.Empty, null, null);
             }
 
-            if (!Strings.IsNullOrWhiteSpace(userSuppliedPath))
+            if (!string.IsNullOrWhiteSpace(userSuppliedPath))
             {
                 fullPath = userSuppliedPath;
             }
@@ -199,19 +199,19 @@ namespace GitCommands.DiffMergeTools
         {
             (string toolKey, string prefix) = GetInfo(toolType);
 
-            if (Strings.IsNullOrWhiteSpace(toolName))
+            if (string.IsNullOrWhiteSpace(toolName))
             {
                 toolName = _getFileSettings()?.GetValue(toolKey);
             }
 
-            return Strings.IsNullOrWhiteSpace(toolName) ?
+            return string.IsNullOrWhiteSpace(toolName) ?
                 string.Empty :
                 _getFileSettings()?.GetValue(string.Concat(prefix, ".", toolName, ".", settingSuffix));
         }
 
         private static string? UnquoteString(string? str)
         {
-            if (Strings.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
                 return str;
             }

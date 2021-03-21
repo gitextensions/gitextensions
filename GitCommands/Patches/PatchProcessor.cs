@@ -295,7 +295,7 @@ namespace GitCommands.Patches
         {
             // diff --combined describe.c
             // diff --cc describe.c
-            return !Strings.IsNullOrWhiteSpace(diff) &&
+            return !string.IsNullOrWhiteSpace(diff) &&
                    (diff.StartsWith("diff --cc") || diff.StartsWith("diff --combined"));
         }
 

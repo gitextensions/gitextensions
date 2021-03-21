@@ -518,7 +518,7 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    if (Strings.IsNullOrWhiteSpace(_mergetoolCmd) || Strings.IsNullOrWhiteSpace(_mergetoolPath))
+                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
                     {
                         // mergetool is set, but arguments cannot be manipulated
                         Module.RunMergeTool(item.Filename);

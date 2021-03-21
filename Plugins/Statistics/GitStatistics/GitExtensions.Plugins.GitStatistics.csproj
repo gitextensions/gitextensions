@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <Compile Include="..\..\..\GitExtUtils\Annotations.cs" Link="Annotations.cs" />
     <Compile Include="..\..\..\GitExtUtils\Validates.cs" Link="Validates.cs" />
   </ItemGroup>
 

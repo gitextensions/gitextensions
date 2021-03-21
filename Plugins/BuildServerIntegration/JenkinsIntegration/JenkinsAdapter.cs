@@ -74,7 +74,7 @@ namespace JenkinsIntegration
             var projectName = config.GetString("ProjectName", null);
             var hostName = config.GetString("BuildServerUrl", null);
 
-            if (!Strings.IsNullOrEmpty(hostName) && !Strings.IsNullOrEmpty(projectName))
+            if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(projectName))
             {
                 var baseAddress = hostName.Contains("://")
                     ? new Uri(hostName, UriKind.Absolute)

@@ -130,7 +130,7 @@ namespace System
         [Pure]
         public static string CommonPrefix(this string? s, string? other)
         {
-            if (Strings.IsNullOrEmpty(s) || Strings.IsNullOrEmpty(other))
+            if (string.IsNullOrEmpty(s) || string.IsNullOrEmpty(other))
             {
                 return string.Empty;
             }
@@ -216,7 +216,7 @@ namespace System
         [return: NotNullIfNotNull("value")]
         public static string? RemoveLines(this string? value, Func<string, bool> shouldRemoveLine)
         {
-            if (Strings.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 return value;
             }
@@ -245,7 +245,7 @@ namespace System
         /// </summary>
         public static string ShortenTo(this string? str, int maxLength)
         {
-            if (Strings.IsNullOrEmpty(str))
+            if (string.IsNullOrEmpty(str))
             {
                 return string.Empty;
             }

@@ -77,7 +77,7 @@ namespace GitUIPluginInterfaces
 
         private static object? ConvertFromString(string value)
         {
-            if (Strings.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 return null;
             }
