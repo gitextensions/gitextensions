@@ -1147,7 +1147,6 @@ namespace GitUI.CommandsDialogs
             this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
             this.CommitAndPush.TabIndex = 9;
             this.CommitAndPush.TabStop = false;
-            this.CommitAndPush.Text = "Commit && &push";
             this.CommitAndPush.UseVisualStyleBackColor = true;
             this.CommitAndPush.Click += new System.EventHandler(this.CommitAndPush_Click);
             //

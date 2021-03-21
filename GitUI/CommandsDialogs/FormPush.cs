@@ -101,6 +101,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
 
+            Push.Text = Strings.ButtonPush;
+
             NewColumn.Width = DpiUtil.Scale(97);
             PushColumn.Width = DpiUtil.Scale(36);
             ForceColumn.Width = DpiUtil.Scale(101);
