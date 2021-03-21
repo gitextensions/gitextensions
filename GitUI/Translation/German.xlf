@@ -2585,13 +2585,11 @@ mit erster zu vergleichen:</target>
         
       </trans-unit>
       <trans-unit id="Bad.Text">
-        <source>Mark current revision bad</source>
-        <target>Revision als Schlecht markieren</target>
+        <source>Mark current revision &amp;bad</source>
         
       </trans-unit>
       <trans-unit id="Good.Text">
-        <source>Mark current revision good</source>
-        <target>Revision als Gut markieren</target>
+        <source>Mark current revision &amp;good</source>
         
       </trans-unit>
       <trans-unit id="Start.Text">
@@ -2610,8 +2608,7 @@ mit erster zu vergleichen:</target>
         
       </trans-unit>
       <trans-unit id="btnSkip.Text">
-        <source>Skip current revision</source>
-        <target>Aktuelle Revision überspringen</target>
+        <source>&amp;Skip current revision</source>
         
       </trans-unit>
     </body>
@@ -3276,9 +3273,18 @@ Wollen Sie weiter machen?</target>
         <target>Geteilte Ansicht wechseln</target>
         
       </trans-unit>
+      <trans-unit id="toolStripBranchFilterDropDownButton.Text">
+        <source>Branch type</source>
+        
+      </trans-unit>
       <trans-unit id="toolStripButtonCommit.Text">
         <source>Commit</source>
         <target>Committen</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripButtonLevelUp.ToolTipText">
+        <source>Submodules</source>
+        <target>Untermodule</target>
         
       </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">
@@ -3301,6 +3307,10 @@ Wollen Sie weiter machen?</target>
         <target>Branches:</target>
         
       </trans-unit>
+      <trans-unit id="toolStripLabel1.ToolTipText">
+        <source>Branch filter</source>
+        
+      </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
         <source>Show reflog...</source>
         <target>Reflog anzeigen ...</target>
@@ -3311,9 +3321,17 @@ Wollen Sie weiter machen?</target>
         <target>Worktrees</target>
         
       </trans-unit>
+      <trans-unit id="toolStripRevisionFilterDropDownButton.Text">
+        <source>Filter type</source>
+        
+      </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
         <target>Filter:</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripRevisionFilterLabel.ToolTipText">
+        <source>Text filter</source>
         
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
@@ -3971,11 +3989,6 @@ gitex.cmd / gitex (befinden sich im gleichen Ordner wie GitExtensions.exe):</tar
         <target>&amp;Committen</target>
         
       </trans-unit>
-      <trans-unit id="CommitAndPush.Text">
-        <source>Commit &amp;&amp; &amp;push</source>
-        <target>Comitten &amp;&amp; &amp;Pushen</target>
-        
-      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Commit</source>
         <target>Committen</target>
@@ -4036,6 +4049,11 @@ Git will never check if the file has changed that will improve status check perf
         <target>Weise Git an den Status dieser einen Datei für bessere Performance nicht zu prüfen.
 Verwenden Sie dieses Feature wenn eine Datei groß ist und sich nicht ändern wird.
 Git wird niemals prüfen, ob diese Datei sich verändert und das führt zu einer besseren Performance bei der Prüfung des Status.</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitAndPush.Text">
+        <source>Commit &amp;&amp; &amp;push</source>
+        <target>Comitten &amp;&amp; &amp;Pushen</target>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
@@ -6814,11 +6832,6 @@ Dies wird alle Untermodule rekursiv initialisieren und aktualisieren.</target>
       <trans-unit id="Pull.Text">
         <source>Pull</source>
         <target>Pull</target>
-        
-      </trans-unit>
-      <trans-unit id="Push.Text">
-        <source>&amp;Push</source>
-        <target>&amp;Push</target>
         
       </trans-unit>
       <trans-unit id="PushColumn.HeaderText">
@@ -10298,14 +10311,12 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
         <target>Alle Remotes fetchen und prunen</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.Text">
-        <source>Collapse All</source>
-        <target>Alles zuklappen</target>
+      <trans-unit id="mnubtnCollapse.Text">
+        <source>Collapse</source>
         
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
-        <target>Alle Knoten zuklappen</target>
+      <trans-unit id="mnubtnCollapse.ToolTipText">
+        <source>Collapse all subnodes</source>
         
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.Text">
@@ -10353,14 +10364,12 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
         <target>A&amp;ktivieren und fetchen</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.Text">
-        <source>Expand All</source>
-        <target>Alles aufklappen</target>
+      <trans-unit id="mnubtnExpand.Text">
+        <source>Expand</source>
         
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.ToolTipText">
-        <source>Expand all nodes</source>
-        <target>Alles aufklappen</target>
+      <trans-unit id="mnubtnExpand.ToolTipText">
+        <source>Expand all subnodes</source>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
@@ -10543,8 +10552,7 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
         
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
-        <target>Alle Knoten zuklappen</target>
+        <source>Collapse all subnodes</source>
         
       </trans-unit>
       <trans-unit id="tsbShowBranches.Text">
@@ -10878,7 +10886,7 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
         
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Collapse all</source>
+        <source>Collapse All</source>
         <target>Alles zuklappen</target>
         
       </trans-unit>
@@ -10892,14 +10900,8 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
         <target>Bearbeite Datei im Arbeitsverzeichnis</target>
         
       </trans-unit>
-      <trans-unit id="expandAllToolStripMenuItem.Text">
-        <source>Expand all (takes a while on large trees)</source>
-        <target>Alles aufklappen (kann bei großen Bäumen etwas dauern)</target>
-        
-      </trans-unit>
-      <trans-unit id="expandSubtreeToolStripMenuItem.Text">
-        <source>Expand subtree (takes a while on large subtrees)</source>
-        <target>Unterbaum aufklappen (dauert etwas bei tiefen Unterbäumen)</target>
+      <trans-unit id="expandToolStripMenuItem.Text">
+        <source>Expand</source>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -12042,19 +12044,23 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
         <target>Ignorieren</target>
         
       </trans-unit>
+      <trans-unit id="_buttonPush.Text">
+        <source>&amp;Push</source>
+        <target>&amp;Push</target>
+        
+      </trans-unit>
       <trans-unit id="_buttonReportBug.Text">
         <source>Report bug!</source>
         <target>Bug melden!</target>
         
       </trans-unit>
+      <trans-unit id="_buttonViewDetails.Text">
+        <source>View details</source>
+        
+      </trans-unit>
       <trans-unit id="_cancelText.Text">
         <source>Cancel</source>
         <target>Abbrechen</target>
-        
-      </trans-unit>
-      <trans-unit id="_captionFailedExecute.Text">
-        <source>Failed to execute</source>
-        <target>Ausführung fehlgeschlagen</target>
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
@@ -12234,11 +12240,6 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       <trans-unit id="_installGitInstructions.Text">
         <source>Install git...</source>
         <target>Git installieren...</target>
-        
-      </trans-unit>
-      <trans-unit id="_instructionOperationFailed.Text">
-        <source>Operation failed</source>
-        <target>Operation fehlgeschlagen</target>
         
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">

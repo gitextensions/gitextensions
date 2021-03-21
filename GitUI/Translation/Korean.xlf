@@ -2566,13 +2566,11 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="Bad.Text">
-        <source>Mark current revision bad</source>
-        <target>비추천으로 표시하기</target>
+        <source>Mark current revision &amp;bad</source>
         
       </trans-unit>
       <trans-unit id="Good.Text">
-        <source>Mark current revision good</source>
-        <target>추천으로 표시하기</target>
+        <source>Mark current revision &amp;good</source>
         
       </trans-unit>
       <trans-unit id="Start.Text">
@@ -2591,8 +2589,7 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="btnSkip.Text">
-        <source>Skip current revision</source>
-        <target>현재 리비전 무시</target>
+        <source>&amp;Skip current revision</source>
         
       </trans-unit>
     </body>
@@ -3251,9 +3248,18 @@ Do you want to continue?</source>
         <target>분할 창 토글</target>
         
       </trans-unit>
+      <trans-unit id="toolStripBranchFilterDropDownButton.Text">
+        <source>Branch type</source>
+        
+      </trans-unit>
       <trans-unit id="toolStripButtonCommit.Text">
         <source>Commit</source>
         <target>커밋</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripButtonLevelUp.ToolTipText">
+        <source>Submodules</source>
+        <target>서브모듈들</target>
         
       </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">
@@ -3276,6 +3282,10 @@ Do you want to continue?</source>
         <target>Branches:</target>
         
       </trans-unit>
+      <trans-unit id="toolStripLabel1.ToolTipText">
+        <source>Branch filter</source>
+        
+      </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
         <source>Show reflog...</source>
         <target>참조 기록 보기...</target>
@@ -3286,9 +3296,17 @@ Do you want to continue?</source>
         <target>작업 트리</target>
         
       </trans-unit>
+      <trans-unit id="toolStripRevisionFilterDropDownButton.Text">
+        <source>Filter type</source>
+        
+      </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
         <target>필터:</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripRevisionFilterLabel.ToolTipText">
+        <source>Text filter</source>
         
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
@@ -3946,11 +3964,6 @@ gitex.cmd / gitex (GitExtensions.ex 와 같은 폴더에 있음)</target>
         <target>커밋 (&amp;C)</target>
         
       </trans-unit>
-      <trans-unit id="CommitAndPush.Text">
-        <source>Commit &amp;&amp; &amp;push</source>
-        <target>커밋 남기고 푸쉬하기</target>
-        
-      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Commit</source>
         <target>커밋</target>
@@ -4011,6 +4024,11 @@ Git will never check if the file has changed that will improve status check perf
         <target>git이 이 파일의 성능 상태를 확인하는 걸 체크하지 않게 하십시오.
 파일이 크고 변경되지 않는 경우에 이 기능을 사용합니다.
 Git는 이 파일이 성능을 향상시키는 변경 사항이 있었는 지 결코 체크하지 않을 것입니다.</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitAndPush.Text">
+        <source>Commit &amp;&amp; &amp;push</source>
+        <target>커밋 남기고 푸쉬하기</target>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
@@ -6761,11 +6779,6 @@ This will initialize and update all submodules recursive.</source>
       <trans-unit id="Pull.Text">
         <source>Pull</source>
         <target>Pull</target>
-        
-      </trans-unit>
-      <trans-unit id="Push.Text">
-        <source>&amp;Push</source>
-        <target>&amp;Push</target>
         
       </trans-unit>
       <trans-unit id="PushColumn.HeaderText">
@@ -10222,13 +10235,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target>모든 원격 브랜치 Fetch 및 Prune</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.Text">
-        <source>Collapse All</source>
-        <target>Collapse All</target>
+      <trans-unit id="mnubtnCollapse.Text">
+        <source>Collapse</source>
         
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
+      <trans-unit id="mnubtnCollapse.ToolTipText">
+        <source>Collapse all subnodes</source>
         
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.Text">
@@ -10273,13 +10285,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target>&amp;활성화하고 Fetch</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.Text">
-        <source>Expand All</source>
-        <target>전부 펼치기</target>
+      <trans-unit id="mnubtnExpand.Text">
+        <source>Expand</source>
         
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.ToolTipText">
-        <source>Expand all nodes</source>
+      <trans-unit id="mnubtnExpand.ToolTipText">
+        <source>Expand all subnodes</source>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
@@ -10453,7 +10464,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
+        <source>Collapse all subnodes</source>
         
       </trans-unit>
       <trans-unit id="tsbShowBranches.Text">
@@ -10786,8 +10797,8 @@ See the changes in the commit form.</source>
         
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Collapse all</source>
-        <target>모두 모으기</target>
+        <source>Collapse All</source>
+        <target>Collapse All</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem.Text">
@@ -10800,14 +10811,8 @@ See the changes in the commit form.</source>
         <target>작업 폴더 수정하기</target>
         
       </trans-unit>
-      <trans-unit id="expandAllToolStripMenuItem.Text">
-        <source>Expand all (takes a while on large trees)</source>
-        <target>모두 펼치기 (느려질 수 있음)</target>
-        
-      </trans-unit>
-      <trans-unit id="expandSubtreeToolStripMenuItem.Text">
-        <source>Expand subtree (takes a while on large subtrees)</source>
-        <target>서브트리 확장(대규모 서브트리에서 시간이 많이 소요될 수 있습니다)</target>
+      <trans-unit id="expandToolStripMenuItem.Text">
+        <source>Expand</source>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -11932,19 +11937,23 @@ Select this commit to populate the full message.</source>
         <target>무시</target>
         
       </trans-unit>
+      <trans-unit id="_buttonPush.Text">
+        <source>&amp;Push</source>
+        <target>&amp;Push</target>
+        
+      </trans-unit>
       <trans-unit id="_buttonReportBug.Text">
         <source>Report bug!</source>
         <target>버그를 리포트!</target>
         
       </trans-unit>
+      <trans-unit id="_buttonViewDetails.Text">
+        <source>View details</source>
+        
+      </trans-unit>
       <trans-unit id="_cancelText.Text">
         <source>Cancel</source>
         <target>취소</target>
-        
-      </trans-unit>
-      <trans-unit id="_captionFailedExecute.Text">
-        <source>Failed to execute</source>
-        <target>실행 실패</target>
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
@@ -12124,11 +12133,6 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_installGitInstructions.Text">
         <source>Install git...</source>
         <target>깃 설치...</target>
-        
-      </trans-unit>
-      <trans-unit id="_instructionOperationFailed.Text">
-        <source>Operation failed</source>
-        <target>작업 실패</target>
         
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">

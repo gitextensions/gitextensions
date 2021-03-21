@@ -2586,13 +2586,11 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="Bad.Text">
-        <source>Mark current revision bad</source>
-        <target>現在のリビジョンは問題あり</target>
+        <source>Mark current revision &amp;bad</source>
         
       </trans-unit>
       <trans-unit id="Good.Text">
-        <source>Mark current revision good</source>
-        <target>現在のリビジョンは問題なし</target>
+        <source>Mark current revision &amp;good</source>
         
       </trans-unit>
       <trans-unit id="Start.Text">
@@ -2611,8 +2609,7 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="btnSkip.Text">
-        <source>Skip current revision</source>
-        <target>現在のリビジョンをスキップ</target>
+        <source>&amp;Skip current revision</source>
         
       </trans-unit>
     </body>
@@ -3277,9 +3274,19 @@ Do you want to continue?</source>
         <target>ウィンドウ分割を切り替え</target>
         
       </trans-unit>
+      <trans-unit id="toolStripBranchFilterDropDownButton.Text">
+        <source>Branch type</source>
+        <target>ブランチの種類</target>
+        
+      </trans-unit>
       <trans-unit id="toolStripButtonCommit.Text">
         <source>Commit</source>
         <target>コミット</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripButtonLevelUp.ToolTipText">
+        <source>Submodules</source>
+        <target>サブモジュール</target>
         
       </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">
@@ -3302,6 +3309,11 @@ Do you want to continue?</source>
         <target>ブランチ:</target>
         
       </trans-unit>
+      <trans-unit id="toolStripLabel1.ToolTipText">
+        <source>Branch filter</source>
+        <target>ブランチで絞り込み</target>
+        
+      </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
         <source>Show reflog...</source>
         <target>reflogを表示...</target>
@@ -3312,9 +3324,19 @@ Do you want to continue?</source>
         <target>ワークツリー</target>
         
       </trans-unit>
+      <trans-unit id="toolStripRevisionFilterDropDownButton.Text">
+        <source>Filter type</source>
+        <target>フィルタの種類</target>
+        
+      </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
         <source>Filter:</source>
         <target>フィルタ:</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripRevisionFilterLabel.ToolTipText">
+        <source>Text filter</source>
+        <target>テキストで絞り込み</target>
         
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
@@ -3970,11 +3992,6 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target>コミット(&amp;C)</target>
         
       </trans-unit>
-      <trans-unit id="CommitAndPush.Text">
-        <source>Commit &amp;&amp; &amp;push</source>
-        <target>コミットしてプッシュ(&amp;P)</target>
-        
-      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Commit</source>
         <target>コミット</target>
@@ -4035,6 +4052,11 @@ Git will never check if the file has changed that will improve status check perf
         <target>パフォーマンス向上のため、このファイルの状態をチェックしないようにします。
 この機能は、ファイルが大きくかつ変更しない場合に使用します。
 Gitはファイルの変更をチェックしないため、ステータスチェックのパフォーマンスが向上します。</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitAndPush.Text">
+        <source>Commit &amp;&amp; &amp;push</source>
+        <target>コミットしてプッシュ(&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
@@ -6794,11 +6816,6 @@ submoduleを使えるようにしますか？
       <trans-unit id="Pull.Text">
         <source>Pull</source>
         <target>プル</target>
-        
-      </trans-unit>
-      <trans-unit id="Push.Text">
-        <source>&amp;Push</source>
-        <target>プッシュ(&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="PushColumn.HeaderText">
@@ -10260,14 +10277,14 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target>リモートをすべてフェッチしてプルーン</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.Text">
-        <source>Collapse All</source>
-        <target>すべてたたむ</target>
+      <trans-unit id="mnubtnCollapse.Text">
+        <source>Collapse</source>
+        <target>たたむ</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
-        <target>ノードをすべてたたむ</target>
+      <trans-unit id="mnubtnCollapse.ToolTipText">
+        <source>Collapse all subnodes</source>
+        <target>サブノードをすべてたたむ</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.Text">
@@ -10315,14 +10332,14 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target>有効化してフェッチ(&amp;C)</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.Text">
-        <source>Expand All</source>
-        <target>すべて展開</target>
+      <trans-unit id="mnubtnExpand.Text">
+        <source>Expand</source>
+        <target>展開</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.ToolTipText">
-        <source>Expand all nodes</source>
-        <target>ノードをすべて展開</target>
+      <trans-unit id="mnubtnExpand.ToolTipText">
+        <source>Expand all subnodes</source>
+        <target>サブノードをすべて展開</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
@@ -10505,8 +10522,8 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
-        <target>ノードをすべてたたむ</target>
+        <source>Collapse all subnodes</source>
+        <target>サブノードをすべてたたむ</target>
         
       </trans-unit>
       <trans-unit id="tsbShowBranches.Text">
@@ -10839,7 +10856,7 @@ See the changes in the commit form.</source>
         
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Collapse all</source>
+        <source>Collapse All</source>
         <target>すべてたたむ</target>
         
       </trans-unit>
@@ -10853,14 +10870,9 @@ See the changes in the commit form.</source>
         <target>作業ディレクトリのファイルを編集</target>
         
       </trans-unit>
-      <trans-unit id="expandAllToolStripMenuItem.Text">
-        <source>Expand all (takes a while on large trees)</source>
-        <target>すべて展開 (ファイル数が多い場合は時間がかかります)</target>
-        
-      </trans-unit>
-      <trans-unit id="expandSubtreeToolStripMenuItem.Text">
-        <source>Expand subtree (takes a while on large subtrees)</source>
-        <target>サブツリーを展開 (ファイル数が多い場合は時間がかかります)</target>
+      <trans-unit id="expandToolStripMenuItem.Text">
+        <source>Expand</source>
+        <target>展開</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -12002,19 +12014,23 @@ Select this commit to populate the full message.</source>
         <target>無視</target>
         
       </trans-unit>
+      <trans-unit id="_buttonPush.Text">
+        <source>&amp;Push</source>
+        <target>プッシュ(&amp;P)</target>
+        
+      </trans-unit>
       <trans-unit id="_buttonReportBug.Text">
         <source>Report bug!</source>
         <target>バグを報告</target>
         
       </trans-unit>
+      <trans-unit id="_buttonViewDetails.Text">
+        <source>View details</source>
+        
+      </trans-unit>
       <trans-unit id="_cancelText.Text">
         <source>Cancel</source>
         <target>キャンセル</target>
-        
-      </trans-unit>
-      <trans-unit id="_captionFailedExecute.Text">
-        <source>Failed to execute</source>
-        <target>実行に失敗しました</target>
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
@@ -12195,11 +12211,6 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_installGitInstructions.Text">
         <source>Install git...</source>
         <target>gitをインストール...</target>
-        
-      </trans-unit>
-      <trans-unit id="_instructionOperationFailed.Text">
-        <source>Operation failed</source>
-        <target>操作が失敗しました</target>
         
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
