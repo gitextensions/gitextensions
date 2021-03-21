@@ -31,7 +31,7 @@
             this.Preview = new System.Windows.Forms.Button();
             this.AddPath = new System.Windows.Forms.Button();
             this.Cleanup = new System.Windows.Forms.Button();
-            this.Cancel = new System.Windows.Forms.Button();
+            this._NO_TRANSLATE_Close = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.RemoveIgnored = new System.Windows.Forms.RadioButton();
             this.RemoveNonIgnored = new System.Windows.Forms.RadioButton();
@@ -83,17 +83,17 @@
             this.Cleanup.UseVisualStyleBackColor = true;
             this.Cleanup.Click += new System.EventHandler(this.Cleanup_Click);
             // 
-            // Cancel
+            // _NO_TRANSLATE_Close
             // 
-            this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(302, 278);
-            this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(120, 25);
-            this.Cancel.TabIndex = 2;
-            this.Cancel.Text = "Cancel";
-            this.Cancel.UseVisualStyleBackColor = true;
-            this.Cancel.Click += new System.EventHandler(this.Cancel_Click);
+            this._NO_TRANSLATE_Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_Close.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this._NO_TRANSLATE_Close.Location = new System.Drawing.Point(302, 278);
+            this._NO_TRANSLATE_Close.Name = "Close";
+            this._NO_TRANSLATE_Close.Size = new System.Drawing.Size(120, 25);
+            this._NO_TRANSLATE_Close.TabIndex = 2;
+            this._NO_TRANSLATE_Close.Text = TranslatedStrings.Close;
+            this._NO_TRANSLATE_Close.UseVisualStyleBackColor = true;
+            this._NO_TRANSLATE_Close.Click += new System.EventHandler(this.Close_Click);
             // 
             // groupBox1
             // 
@@ -212,7 +212,7 @@
             this.AcceptButton = this.AddPath;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.CancelButton = this.Cancel;
+            this.CancelButton = this._NO_TRANSLATE_Close;
             this.ClientSize = new System.Drawing.Size(434, 442);
             this.Controls.Add(this.labelPathHint);
             this.Controls.Add(this.textBoxPaths);
@@ -221,7 +221,7 @@
             this.Controls.Add(this.PreviewOutput);
             this.Controls.Add(this.RemoveDirectories);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.Cancel);
+            this.Controls.Add(this._NO_TRANSLATE_Close);
             this.Controls.Add(this.Cleanup);
             this.Controls.Add(this.Preview);
             this.Controls.Add(this.AddPath);
@@ -243,7 +243,7 @@
         private System.Windows.Forms.Button Preview;
         private System.Windows.Forms.Button AddPath;
         private System.Windows.Forms.Button Cleanup;
-        private System.Windows.Forms.Button Cancel;
+        private System.Windows.Forms.Button _NO_TRANSLATE_Close;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton RemoveIgnored;
         private System.Windows.Forms.RadioButton RemoveNonIgnored;
