@@ -15,6 +15,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // The RevisionGraph contains all the basic structures needed to render the graph.
     public class RevisionGraph : IRevisionGraphRowProvider
     {
+        private const int _straightenLanesLookAhead = 1;
+
         // Some unordered collections with raw data
         private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
         private ImmutableList<RevisionGraphRevision> _nodes = ImmutableList<RevisionGraphRevision>.Empty;
@@ -85,6 +87,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </param>
         public void CacheTo(int currentRowIndex, int lastToCacheRowIndex)
         {
+            currentRowIndex += _straightenLanesLookAhead;
             List<RevisionGraphRevision> orderedNodesCache = BuildOrderedNodesCache(currentRowIndex);
 
             BuildOrderedRowCache(orderedNodesCache, currentRowIndex, lastToCacheRowIndex);
@@ -310,10 +313,59 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 localOrderedRowCache.Add(new RevisionGraphRow(revision, segments));
             }
 
+            StraightenLanes(startIndex - 1, lastToCacheRowIndex, localOrderedRowCache);
+
             // Overwrite the global instance at the end, to prevent flickering
             _orderedRowCache = localOrderedRowCache;
 
             Updated?.Invoke();
+
+            return;
+
+            static void StraightenLanes(int startIndex, int lastIndex, IList<RevisionGraphRow> localOrderedRowCache)
+            {
+                // Try to detect this:
+                // | | |<-- previous lane
+                // |/ /
+                // * |<---- current lane
+                // |\ \
+                // | | |<-- next lane
+                //
+                // And change it into this:
+                // | | |
+                // |/  |
+                // *   |
+                // |\  |
+                // | | |
+                //
+                // also if the distance is > 1 but only if the other distance is exactly 1
+                startIndex = Math.Max(1, startIndex);
+                for (int currentIndex = startIndex; currentIndex < lastIndex;)
+                {
+                    bool moved = false;
+                    IRevisionGraphRow previousRow = localOrderedRowCache[currentIndex - 1];
+                    IRevisionGraphRow currentRow = localOrderedRowCache[currentIndex];
+                    IRevisionGraphRow nextRow = localOrderedRowCache[currentIndex + 1];
+                    foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments)
+                    {
+                        int previousLane = previousRow.GetLaneIndexForSegment(revisionGraphSegment);
+                        int currentLane = currentRow.GetLaneIndexForSegment(revisionGraphSegment);
+                        if (previousLane > currentLane)
+                        {
+                            int straightenedCurrentLane = currentLane + 1;
+                            int nextLane = nextRow.GetLaneIndexForSegment(revisionGraphSegment);
+                            if ((nextLane == straightenedCurrentLane) || (nextLane > straightenedCurrentLane && previousLane == straightenedCurrentLane))
+                            {
+                                currentRow.MoveLanesRight(currentLane);
+                                moved = true;
+                            }
+                        }
+                    }
+
+                    // if moved, check again whether the lanes of the previous row can be moved, too
+                    currentIndex = moved ? Math.Max(currentIndex - 1, startIndex) : currentIndex + 1;
+                }
+            }
         }
 
         private List<RevisionGraphRevision> BuildOrderedNodesCache(int currentRowIndex)
