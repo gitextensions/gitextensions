@@ -252,6 +252,8 @@ namespace GitUI.CommandsDialogs
                 // TODO: this method has a generic sounding name but only saves some specific settings
                 AppSettings.SaveSettings();
 
+                DialogResult = DialogResult.OK;
+
                 return true;
             }
             catch (SaveSettingsException ex) when (ex.InnerException is not null)
