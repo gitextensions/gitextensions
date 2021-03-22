@@ -17,9 +17,9 @@ namespace AzureDevOpsIntegration.Settings
         /// </summary>
         public static IntegrationSettings ReadFrom(ISettingsSource config)
         {
-            var projectUrl = config?.GetString(ProjectUrlKey, "") ?? "";
-            var buildDefinitionFilter = config?.GetString(BuildDefinitionFilterKey, "") ?? "";
-            var apiToken = config?.GetString(ApiTokenKey, "") ?? "";
+            var projectUrl = config?.GetValue(ProjectUrlKey, "") ?? "";
+            var buildDefinitionFilter = config?.GetValue(BuildDefinitionFilterKey, "") ?? "";
+            var apiToken = config?.GetValue(ApiTokenKey, "") ?? "";
 
             return new IntegrationSettings()
             {
@@ -49,9 +49,9 @@ namespace AzureDevOpsIntegration.Settings
         /// </summary>
         public void WriteTo(ISettingsSource config)
         {
-            config.SetString(ProjectUrlKey, ProjectUrl);
-            config.SetString(BuildDefinitionFilterKey, BuildDefinitionFilter);
-            config.SetString(ApiTokenKey, ApiToken);
+            config.SetValue(ProjectUrlKey, ProjectUrl);
+            config.SetValue(BuildDefinitionFilterKey, BuildDefinitionFilter);
+            config.SetValue(ApiTokenKey, ApiToken);
         }
 
         /// <summary>

@@ -30,20 +30,20 @@ namespace TfsIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            TfsServer.Text = buildServerConfig.GetString("TfsServer", string.Empty);
-            TfsTeamCollectionName.Text = buildServerConfig.GetString("TfsTeamCollectionName", "DefaultCollection");
-            TfsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
-            TfsBuildDefinitionNameFilter.Text = buildServerConfig.GetString("TfsBuildDefinitionName", string.Empty);
+            TfsServer.Text = buildServerConfig.GetValue("TfsServer", string.Empty);
+            TfsTeamCollectionName.Text = buildServerConfig.GetValue("TfsTeamCollectionName", "DefaultCollection");
+            TfsProjectName.Text = buildServerConfig.GetValue("ProjectName", _defaultProjectName ?? string.Empty);
+            TfsBuildDefinitionNameFilter.Text = buildServerConfig.GetValue("TfsBuildDefinitionName", string.Empty);
         }
 
         public void SaveSettings(ISettingsSource buildServerConfig)
         {
             if (BuildServerSettingsHelper.IsRegexValid(TfsBuildDefinitionNameFilter.Text))
             {
-                buildServerConfig.SetString("TfsServer", TfsServer.Text);
-                buildServerConfig.SetString("TfsTeamCollectionName", TfsTeamCollectionName.Text);
-                buildServerConfig.SetString("ProjectName", TfsProjectName.Text);
-                buildServerConfig.SetString("TfsBuildDefinitionName", TfsBuildDefinitionNameFilter.Text);
+                buildServerConfig.SetValue("TfsServer", TfsServer.Text);
+                buildServerConfig.SetValue("TfsTeamCollectionName", TfsTeamCollectionName.Text);
+                buildServerConfig.SetValue("ProjectName", TfsProjectName.Text);
+                buildServerConfig.SetValue("TfsBuildDefinitionName", TfsBuildDefinitionNameFilter.Text);
             }
         }
 

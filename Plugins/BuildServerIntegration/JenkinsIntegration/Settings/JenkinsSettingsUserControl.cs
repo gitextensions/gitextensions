@@ -29,16 +29,16 @@ namespace JenkinsIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            JenkinsServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
-            JenkinsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
-            IgnoreBuildBranch.Text = buildServerConfig.GetString("IgnoreBuildBranch", string.Empty);
+            JenkinsServerUrl.Text = buildServerConfig.GetValue("BuildServerUrl", string.Empty);
+            JenkinsProjectName.Text = buildServerConfig.GetValue("ProjectName", _defaultProjectName ?? string.Empty);
+            IgnoreBuildBranch.Text = buildServerConfig.GetValue("IgnoreBuildBranch", string.Empty);
         }
 
         public void SaveSettings(ISettingsSource buildServerConfig)
         {
-            buildServerConfig.SetString("BuildServerUrl", JenkinsServerUrl.Text);
-            buildServerConfig.SetString("ProjectName", JenkinsProjectName.Text);
-            buildServerConfig.SetString("IgnoreBuildBranch", IgnoreBuildBranch.Text);
+            buildServerConfig.SetValue("BuildServerUrl", JenkinsServerUrl.Text);
+            buildServerConfig.SetValue("ProjectName", JenkinsProjectName.Text);
+            buildServerConfig.SetValue("IgnoreBuildBranch", IgnoreBuildBranch.Text);
         }
     }
 }

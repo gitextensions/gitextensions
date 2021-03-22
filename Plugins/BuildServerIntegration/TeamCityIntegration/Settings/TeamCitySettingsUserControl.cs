@@ -41,10 +41,10 @@ namespace TeamCityIntegration.Settings
         {
             if (buildServerConfig is not null)
             {
-                TeamCityServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
-                TeamCityProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
-                TeamCityBuildIdFilter.Text = buildServerConfig.GetString("BuildIdFilter", string.Empty);
-                CheckBoxLogAsGuest.Checked = buildServerConfig.GetBool("LogAsGuest", false);
+                TeamCityServerUrl.Text = buildServerConfig.GetValue("BuildServerUrl", string.Empty);
+                TeamCityProjectName.Text = buildServerConfig.GetValue("ProjectName", _defaultProjectName ?? string.Empty);
+                TeamCityBuildIdFilter.Text = buildServerConfig.GetValue("BuildIdFilter", string.Empty);
+                CheckBoxLogAsGuest.Checked = buildServerConfig.GetValue("LogAsGuest", false);
             }
         }
 
@@ -52,10 +52,10 @@ namespace TeamCityIntegration.Settings
         {
             if (BuildServerSettingsHelper.IsRegexValid(TeamCityBuildIdFilter.Text))
             {
-                buildServerConfig.SetString("BuildServerUrl", TeamCityServerUrl.Text);
-                buildServerConfig.SetString("ProjectName", TeamCityProjectName.Text);
-                buildServerConfig.SetString("BuildIdFilter", TeamCityBuildIdFilter.Text);
-                buildServerConfig.SetBool("LogAsGuest", CheckBoxLogAsGuest.Checked);
+                buildServerConfig.SetValue("BuildServerUrl", TeamCityServerUrl.Text);
+                buildServerConfig.SetValue("ProjectName", TeamCityProjectName.Text);
+                buildServerConfig.SetValue("BuildIdFilter", TeamCityBuildIdFilter.Text);
+                buildServerConfig.SetValue("LogAsGuest", CheckBoxLogAsGuest.Checked);
             }
         }
 

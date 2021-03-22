@@ -115,18 +115,18 @@ namespace TeamCityIntegration
 
             _buildServerWatcher = buildServerWatcher;
 
-            ProjectNames = buildServerWatcher.ReplaceVariables(config.GetString("ProjectName", ""))
+            ProjectNames = buildServerWatcher.ReplaceVariables(config.GetValue("ProjectName", ""))
                 .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var buildIdFilerSetting = config.GetString("BuildIdFilter", "");
+            var buildIdFilerSetting = config.GetValue("BuildIdFilter", "");
             if (!BuildServerSettingsHelper.IsRegexValid(buildIdFilerSetting))
             {
                 return;
             }
 
             BuildIdFilter = new Regex(buildIdFilerSetting, RegexOptions.Compiled);
-            HostName = config.GetString("BuildServerUrl", null);
-            LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;
+            HostName = config.GetValue<string?>("BuildServerUrl", null);
+            LogAsGuestUrlParameter = config.GetValue("LogAsGuest", false) ? "&guest=1" : string.Empty;
 
             if (!Strings.IsNullOrEmpty(HostName))
             {

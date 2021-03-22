@@ -120,8 +120,8 @@ namespace CommonTestUtils
         /// </summary>
         private void SetDummyUserEmail(GitModule module)
         {
-            module.LocalConfigFile.SetString(SettingKeyString.UserName, "author");
-            module.LocalConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
+            module.LocalConfigFile.SetValue(SettingKeyString.UserName, "author");
+            module.LocalConfigFile.SetValue(SettingKeyString.UserEmail, "author@mail.com");
             module.LocalConfigFile.FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
             module.LocalConfigFile.Save();
         }

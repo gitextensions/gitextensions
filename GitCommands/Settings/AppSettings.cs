@@ -206,7 +206,7 @@ namespace GitCommands
                         SettingsContainer = oldSC;
 
                         // refresh settings if needed
-                        SettingsContainer.GetString(string.Empty, null);
+                        SettingsContainer.GetValue<string?>(string.Empty, null);
                     }
                 });
         }
@@ -448,17 +448,17 @@ namespace GitCommands
 
         public static CommitInfoPosition CommitInfoPosition
         {
-            get => DetailedSettingsPath.GetNullableEnum<CommitInfoPosition>("CommitInfoPosition") ?? (
-                DetailedSettingsPath.GetBool("ShowRevisionInfoNextToRevisionGrid") == true // legacy setting
+            get => DetailedSettingsPath.GetValue<CommitInfoPosition?>("CommitInfoPosition") ?? (
+                DetailedSettingsPath.GetValue<bool?>("ShowRevisionInfoNextToRevisionGrid") == true // legacy setting
                     ? CommitInfoPosition.RightwardFromList
                     : CommitInfoPosition.BelowList);
-            set => DetailedSettingsPath.SetEnum("CommitInfoPosition", value);
+            set => DetailedSettingsPath.SetValue("CommitInfoPosition", value);
         }
 
         public static bool ShowSplitViewLayout
         {
-            get => DetailedSettingsPath.GetBool("ShowSplitViewLayout", true);
-            set => DetailedSettingsPath.SetBool("ShowSplitViewLayout", value);
+            get => DetailedSettingsPath.GetValue("ShowSplitViewLayout", true);
+            set => DetailedSettingsPath.SetValue("ShowSplitViewLayout", value);
         }
 
         public static bool ProvideAutocompletion
@@ -1894,94 +1894,94 @@ namespace GitCommands
 
         public static bool? GetBool(string name)
         {
-            return SettingsContainer.GetBool(name);
+            return SettingsContainer.GetValue<bool?>(name);
         }
 
         public static bool GetBool(string name, bool defaultValue)
         {
-            return SettingsContainer.GetBool(name, defaultValue);
+            return SettingsContainer.GetValue(name, defaultValue);
         }
 
         public static void SetBool(string name, bool? value)
         {
-            SettingsContainer.SetBool(name, value);
+            SettingsContainer.SetValue(name, value);
         }
 
         public static void SetInt(string name, int? value)
         {
-            SettingsContainer.SetInt(name, value);
+            SettingsContainer.SetValue(name, value);
         }
 
         public static int? GetInt(string name)
         {
-            return SettingsContainer.GetInt(name);
+            return SettingsContainer.GetValue<int?>(name);
         }
 
         public static DateTime GetDate(string name, DateTime defaultValue)
         {
-            return SettingsContainer.GetDate(name, defaultValue);
+            return SettingsContainer.GetValue(name, defaultValue);
         }
 
         public static void SetDate(string name, DateTime? value)
         {
-            SettingsContainer.SetDate(name, value);
+            SettingsContainer.SetValue(name, value);
         }
 
         public static DateTime? GetDate(string name)
         {
-            return SettingsContainer.GetDate(name);
+            return SettingsContainer.GetValue<DateTime?>(name);
         }
 
         public static int GetInt(string name, int defaultValue)
         {
-            return SettingsContainer.GetInt(name, defaultValue);
+            return SettingsContainer.GetValue(name, defaultValue);
         }
 
         public static void SetFont(string name, Font value)
         {
-            SettingsContainer.SetFont(name, value);
+            SettingsContainer.SetValue(name, value);
         }
 
         public static Font GetFont(string name, Font defaultValue)
         {
-            return SettingsContainer.GetFont(name, defaultValue);
+            return SettingsContainer.GetValue(name, defaultValue);
         }
 
         [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is")]
         public static Color GetColor(AppColor name)
         {
-            return SettingsContainer.GetColor(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));
+            return SettingsContainer.GetValue(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));
         }
 
         public static void SetEnum<T>(string name, T value) where T : Enum
         {
-            SettingsContainer.SetEnum(name, value);
+            SettingsContainer.SetValue(name, value);
         }
 
         public static T GetEnum<T>(string name, T defaultValue) where T : struct, Enum
         {
-            return SettingsContainer.GetEnum(name, defaultValue);
+            return SettingsContainer.GetValue(name, defaultValue);
         }
 
         public static void SetNullableEnum<T>(string name, T? value) where T : struct, Enum
         {
-            SettingsContainer.SetNullableEnum(name, value);
+            SettingsContainer.SetValue(name, value);
         }
 
         public static T? GetNullableEnum<T>(string name) where T : struct
         {
-            return SettingsContainer.GetNullableEnum<T>(name);
+            return SettingsContainer.GetValue<T?>(name);
         }
 
         public static void SetString(string name, string value)
         {
-            SettingsContainer.SetString(name, value);
+            SettingsContainer.SetValue(name, value);
         }
 
         [return: NotNullIfNotNull("defaultValue")]
         public static string? GetString(string name, string? defaultValue)
         {
-            return SettingsContainer.GetString(name, defaultValue);
+            return SettingsContainer.GetValue<string?>(name, defaultValue);
         }
 
         private static void LoadEncodings()

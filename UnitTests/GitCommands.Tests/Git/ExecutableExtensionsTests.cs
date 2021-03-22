@@ -30,7 +30,7 @@ namespace GitCommandsTests.Git
             var userAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var settingPath = Path.Combine(userAppDataPath, "GitExtensions\\GitExtensions\\GitExtensions.settings");
             var settingContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(settingPath), SettingLevel.Unknown);
-            _appPath = Path.Combine(settingContainer.GetString("gitbindir", ""), "git.exe");
+            _appPath = Path.Combine(settingContainer.GetValue("gitbindir", ""), "git.exe");
 
             // Execute process in GitExtension working directory, so that git will return success exit-code
             // git always return non-zero exit code when run git reset outside of git repository

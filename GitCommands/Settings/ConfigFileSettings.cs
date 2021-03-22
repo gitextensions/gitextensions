@@ -87,7 +87,7 @@ namespace GitCommands.Settings
                 value = null;
             }
 
-            SetString(setting, value);
+            base.SetValue(setting, value);
         }
 
         public void SetPathValue(string setting, string? value)

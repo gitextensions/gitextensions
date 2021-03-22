@@ -74,9 +74,9 @@ namespace AppVeyorIntegration
 
             _buildServerWatcher = buildServerWatcher;
             _isCommitInRevisionGrid = isCommitInRevisionGrid;
-            string? accountName = config.GetString("AppVeyorAccountName", null);
-            string? accountToken = config.GetString("AppVeyorAccountToken", null);
-            _shouldLoadTestResults = config.GetBool("AppVeyorLoadTestsResults", false);
+            string? accountName = config.GetValue<string?>("AppVeyorAccountName", null);
+            string? accountToken = config.GetValue<string?>("AppVeyorAccountToken", null);
+            _shouldLoadTestResults = config.GetValue("AppVeyorLoadTestsResults", false);
 
             _fetchBuilds = new HashSet<ObjectId>();
 
@@ -85,7 +85,7 @@ namespace AppVeyorIntegration
             // projectId has format accountName/repoName
             // accountName may be any accessible project (for instance upstream)
             // if AppVeyorAccountName is set, projectNamesSetting may exclude the accountName part
-            string projectNamesSetting = config.GetString("AppVeyorProjectName", "");
+            string projectNamesSetting = config.GetValue("AppVeyorProjectName", "");
             var projectNames = _buildServerWatcher.ReplaceVariables(projectNamesSetting)
                 .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
                 .Where(p => p.Contains("/") || !Strings.IsNullOrEmpty(accountName))

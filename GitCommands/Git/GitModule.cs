@@ -1909,7 +1909,7 @@ namespace GitCommands
 
             if (todoCommits is not null)
             {
-                string commentChar = EffectiveConfigFile.GetString("core.commentChar", "#");
+                string commentChar = EffectiveConfigFile.GetValue("core.commentChar", "#");
 
                 string? currentCommitShortHash = File.Exists(CurrentFilePath) ? File.ReadAllText(CurrentFilePath).Trim() : null;
                 var isCurrentFound = false;

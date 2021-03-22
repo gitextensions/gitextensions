@@ -35,7 +35,7 @@ namespace GitUI.Editor
             // characters for each line[0] and take the character with most.
             // That would work well in practice.
 
-            string commentCharSetting = module.EffectiveConfigFile.GetString("core.commentChar", "#");
+            string commentCharSetting = module.EffectiveConfigFile.GetValue("core.commentChar", "#");
 
             _commentChar = commentCharSetting?.Length == 1 ? commentCharSetting[0] : '#';
         }

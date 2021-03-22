@@ -21,6 +21,7 @@ namespace GitUIPluginInterfaces
 
         public abstract void SetValue<T>(string name, T value, Func<T, string?> encode);
 
+        [Obsolete("Use new GetValue<T> method.")]
         public bool? GetBool(string name)
         {
             return GetValue<bool?>(name, null, x =>
@@ -39,21 +40,25 @@ namespace GitUIPluginInterfaces
             });
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public bool GetBool(string name, bool defaultValue)
         {
             return GetBool(name) ?? defaultValue;
         }
 
+        [Obsolete("Use new SetValue<T> method.")]
         public void SetBool(string name, bool? value)
         {
             SetValue(name, value, b => b.HasValue ? (b.Value ? "true" : "false") : null);
         }
 
+        [Obsolete("Use new SetValue<T> method.")]
         public void SetInt(string name, int? value)
         {
             SetValue(name, value, b => b.HasValue ? b.ToString() : null);
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public int? GetInt(string name)
         {
             return GetValue<int?>(name, null, x =>
@@ -67,11 +72,13 @@ namespace GitUIPluginInterfaces
             });
         }
 
+        [Obsolete("Use new SetValue<T> method.")]
         public void SetFloat(string name, float? value)
         {
             SetValue(name, value, b => b.HasValue ? b.ToString() : null);
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public float? GetFloat(string name)
         {
             return GetValue<float?>(name, null, x =>
@@ -85,16 +92,19 @@ namespace GitUIPluginInterfaces
             });
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public DateTime GetDate(string name, DateTime defaultValue)
         {
             return GetDate(name) ?? defaultValue;
         }
 
+        [Obsolete("Use new SetValue<T> method.")]
         public void SetDate(string name, DateTime? value)
         {
             SetValue(name, value, b => b?.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public DateTime? GetDate(string name)
         {
             return GetValue<DateTime?>(name, null, x =>
@@ -108,31 +118,37 @@ namespace GitUIPluginInterfaces
             });
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public int GetInt(string name, int defaultValue)
         {
             return GetInt(name) ?? defaultValue;
         }
 
+        [Obsolete("Use new SetValue<T> method.")]
         public void SetFont(string name, Font value)
         {
             SetValue(name, value, x => x.AsString());
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public Font GetFont(string name, Font defaultValue)
         {
             return GetValue(name, defaultValue, x => x.Parse(defaultValue));
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public Color GetColor(string name, Color defaultValue)
         {
             return GetValue<Color?>(name, null, x => ColorTranslator.FromHtml(x)) ?? defaultValue;
         }
 
+        [Obsolete("Use new SetValue<T> method.")]
         public void SetEnum<T>(string name, T value) where T : Enum
         {
             SetValue(name, value, x => x.ToString());
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public T GetEnum<T>(string name, T defaultValue) where T : struct, Enum
         {
             return GetValue(name, defaultValue, x =>
@@ -148,11 +164,13 @@ namespace GitUIPluginInterfaces
             });
         }
 
+        [Obsolete("Use new SetValue<T> method.")]
         public void SetNullableEnum<T>(string name, T? value) where T : struct, Enum
         {
             SetValue(name, value, x => x.HasValue ? x.ToString() : string.Empty);
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         public T? GetNullableEnum<T>(string name) where T : struct
         {
             return GetValue<T?>(name, null, x =>
@@ -173,17 +191,20 @@ namespace GitUIPluginInterfaces
             });
         }
 
+        [Obsolete("Use new SetValue<T> method.")]
         public void SetString(string name, string? value)
         {
             SetValue(name, value, s => string.IsNullOrEmpty(s) ? null : s);
         }
 
+        [Obsolete("Use new GetValue<T> method.")]
         [return: NotNullIfNotNull("defaultValue")]
         public string? GetString(string name, string? defaultValue)
         {
             return GetValue(name, defaultValue, x => x);
         }
 
+#pragma warning disable CS0618 // Type or member is obsolete
         public string GetValue(string key)
         {
             return GetValue(key, string.Empty);
@@ -292,5 +313,6 @@ namespace GitUIPluginInterfaces
                     throw new InvalidOperationException($"Unknown type: {typeof(T)}.");
             }
         }
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 }

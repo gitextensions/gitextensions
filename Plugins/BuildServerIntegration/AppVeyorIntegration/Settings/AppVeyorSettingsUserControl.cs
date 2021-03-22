@@ -29,18 +29,18 @@ namespace AppVeyorIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            AppVeyorProjectName.Text = buildServerConfig.GetString("AppVeyorProjectName", _defaultProjectName);
-            AppVeyorAccountName.Text = buildServerConfig.GetString("AppVeyorAccountName", string.Empty);
-            AppVeyorAccountToken.Text = buildServerConfig.GetString("AppVeyorAccountToken", string.Empty);
-            cbLoadTestResults.Checked = buildServerConfig.GetBool("AppVeyorLoadTestsResults", false);
+            AppVeyorProjectName.Text = buildServerConfig.GetValue("AppVeyorProjectName", _defaultProjectName ?? string.Empty);
+            AppVeyorAccountName.Text = buildServerConfig.GetValue("AppVeyorAccountName", string.Empty);
+            AppVeyorAccountToken.Text = buildServerConfig.GetValue("AppVeyorAccountToken", string.Empty);
+            cbLoadTestResults.Checked = buildServerConfig.GetValue("AppVeyorLoadTestsResults", false);
         }
 
         public void SaveSettings(ISettingsSource buildServerConfig)
         {
-            buildServerConfig.SetString("AppVeyorProjectName", AppVeyorProjectName.Text);
-            buildServerConfig.SetString("AppVeyorAccountName", AppVeyorAccountName.Text);
-            buildServerConfig.SetString("AppVeyorAccountToken", AppVeyorAccountToken.Text);
-            buildServerConfig.SetBool("AppVeyorLoadTestsResults", cbLoadTestResults.Checked);
+            buildServerConfig.SetValue("AppVeyorProjectName", AppVeyorProjectName.Text);
+            buildServerConfig.SetValue("AppVeyorAccountName", AppVeyorAccountName.Text);
+            buildServerConfig.SetValue("AppVeyorAccountToken", AppVeyorAccountToken.Text);
+            buildServerConfig.SetValue("AppVeyorLoadTestsResults", cbLoadTestResults.Checked);
         }
     }
 }

@@ -70,9 +70,9 @@ namespace GitUI
                 _splitter.BeginInit();
                 _splitter.SuspendLayout();
 
-                int prevDpi = settings.GetInt(DpiSettingsKey) ?? DpiUtil.DpiX;
-                int prevSize = settings.GetInt(SizeSettingsKey) ?? 0;
-                int prevDistance = settings.GetInt(DistanceSettingsKey) ?? 0;
+                int prevDpi = settings.GetValue(DpiSettingsKey, DpiUtil.DpiX);
+                int prevSize = settings.GetValue(SizeSettingsKey, 0);
+                int prevDistance = settings.GetValue(DistanceSettingsKey, 0);
 
                 if (prevSize > 0 && prevDistance > 0)
                 {
@@ -104,7 +104,7 @@ namespace GitUI
                     }
                 }
 
-                _splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: false);
+                _splitter.Panel1Collapsed = settings.GetValue(Panel1CollapsedSettingsKey, defaultValue: false);
 
                 _splitter.ResumeLayout();
                 _splitter.EndInit();
@@ -112,11 +112,11 @@ namespace GitUI
 
             public void SaveToSettings(ISettingsSource settings)
             {
-                settings.SetInt(DpiSettingsKey, _dpi);
-                settings.SetInt(SizeSettingsKey, SplitterSize);
-                settings.SetInt(DistanceSettingsKey, _splitter.SplitterDistance);
-                settings.SetFloat(FontSizeSettingsKey, _splitter.Font.Size);
-                settings.SetBool(Panel1CollapsedSettingsKey, _splitter.Panel1Collapsed);
+                settings.SetValue(DpiSettingsKey, _dpi);
+                settings.SetValue(SizeSettingsKey, SplitterSize);
+                settings.SetValue(DistanceSettingsKey, _splitter.SplitterDistance);
+                settings.SetValue(FontSizeSettingsKey, _splitter.Font.Size);
+                settings.SetValue(Panel1CollapsedSettingsKey, _splitter.Panel1Collapsed);
             }
 
             private void SetSplitterDistance(float distance)

@@ -71,8 +71,8 @@ namespace JenkinsIntegration
 
             _buildServerWatcher = buildServerWatcher;
 
-            var projectName = config.GetString("ProjectName", null);
-            var hostName = config.GetString("BuildServerUrl", null);
+            var projectName = config.GetValue<string?>("ProjectName", null);
+            var hostName = config.GetValue<string?>("BuildServerUrl", null);
 
             if (!Strings.IsNullOrEmpty(hostName) && !Strings.IsNullOrEmpty(projectName))
             {
@@ -98,7 +98,7 @@ namespace JenkinsIntegration
                 }
             }
 
-            var ignoreBuilds = config.GetString("IgnoreBuildBranch", string.Empty);
+            var ignoreBuilds = config.GetValue("IgnoreBuildBranch", string.Empty);
             _ignoreBuilds = !string.IsNullOrWhiteSpace(ignoreBuilds) ? new Regex(ignoreBuilds) : null;
         }
 

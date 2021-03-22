@@ -84,8 +84,8 @@ namespace GitUIPluginInterfaces
 
         public string? this[ISettingsSource settings]
         {
-            get => settings.GetString(Name, null);
-            set => settings.SetString(Name, value);
+            get => settings.GetValue<string?>(Name, null);
+            set => settings.SetValue(Name, value);
         }
     }
 }
