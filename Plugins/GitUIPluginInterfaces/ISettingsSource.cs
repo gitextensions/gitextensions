@@ -5,8 +5,16 @@ using System.Globalization;
 
 namespace GitUIPluginInterfaces
 {
-    public abstract class ISettingsSource
+    public abstract class ISettingsSource : Extensibility.ISettingsSource
     {
+        private static readonly Type BoolType = typeof(bool);
+        private static readonly Type IntType = typeof(int);
+        private static readonly Type FloatType = typeof(float);
+        private static readonly Type DateTimeType = typeof(DateTime);
+        private static readonly Type ColorType = typeof(Color);
+        private static readonly Type StringType = typeof(string);
+        private static readonly Type FontType = typeof(Font);
+
         public virtual SettingLevel SettingLevel { get; set; } = SettingLevel.Unknown;
 
         public abstract T GetValue<T>(string name, T defaultValue, Func<string, T> decode);
@@ -174,6 +182,115 @@ namespace GitUIPluginInterfaces
         public string? GetString(string name, string? defaultValue)
         {
             return GetValue(name, defaultValue, x => x);
+        }
+
+        public string GetValue(string key)
+        {
+            return GetValue(key, string.Empty);
+        }
+
+        public string GetValue(string key, string defaultValue)
+        {
+            return GetValue(key, defaultValue, x => x);
+        }
+
+        public T GetValue<T>(string key)
+            where T : new()
+        {
+            return GetValue(key, new T());
+        }
+
+        public T GetValue<T>(string key, T defaultValue)
+        {
+            var type = typeof(T);
+            var baseType = Nullable.GetUnderlyingType(type) ?? type;
+
+            if (baseType == BoolType)
+            {
+                return (T)((object?)GetBool(key) ?? defaultValue!);
+            }
+
+            if (baseType == IntType)
+            {
+                return (T)((object?)GetInt(key) ?? defaultValue!);
+            }
+
+            if (baseType == FloatType)
+            {
+                return (T)((object?)GetFloat(key) ?? defaultValue!);
+            }
+
+            if (baseType == DateTimeType)
+            {
+                return (T)((object?)GetDate(key) ?? defaultValue!);
+            }
+
+            if (baseType == ColorType)
+            {
+                return (T)(object)GetColor(key, (Color)(object)defaultValue!);
+            }
+
+            if (baseType.IsEnum)
+            {
+                return GetValue(key, defaultValue, x =>
+                {
+                    var val = x.ToString();
+
+                    try
+                    {
+                        return (T)Enum.Parse(baseType, val, true);
+                    }
+                    catch
+                    {
+                        return defaultValue;
+                    }
+                });
+            }
+
+            if (baseType == StringType)
+            {
+                return (T)(object)GetString(key, (string)(object)defaultValue!);
+            }
+
+            if (baseType == FontType)
+            {
+                return (T)(object)GetFont(key, (Font)(object)defaultValue!);
+            }
+
+            throw new InvalidOperationException($"Unknown type: {type}.");
+        }
+
+        public void SetValue<T>(string key, T value)
+        {
+            switch (value)
+            {
+                case null:
+                    SetValue(key, value, x => null);
+                    return;
+                case bool boolValue:
+                    SetBool(key, boolValue);
+                    return;
+                case int intValue:
+                    SetInt(key, intValue);
+                    return;
+                case float floatValue:
+                    SetFloat(key, floatValue);
+                    return;
+                case DateTime dateTimeValue:
+                    SetDate(key, dateTimeValue);
+                    return;
+                case Enum enumValue:
+                    SetEnum(key, enumValue);
+                    return;
+                case string stringValue:
+                    SetString(key, stringValue);
+                    return;
+                case Font fontValue:
+                    SetFont(key, fontValue);
+                    return;
+                default:
+                    throw new InvalidOperationException($"Unknown type: {typeof(T)}.");
+            }
         }
     }
 }

@@ -74,11 +74,6 @@ namespace GitCommands.Settings
 
         public readonly CorePath core;
 
-        public string GetValue(string setting)
-        {
-            return GetString(setting, string.Empty);
-        }
-
         public IReadOnlyList<string> GetValues(string setting)
         {
             return SettingsCache.GetValues(setting);
