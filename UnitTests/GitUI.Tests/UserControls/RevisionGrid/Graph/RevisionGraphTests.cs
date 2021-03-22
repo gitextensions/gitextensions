@@ -34,13 +34,13 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.CacheTo(4, 4);
             Assert.AreEqual(5, _revisionGraph.GetCachedCount());
             _revisionGraph.CacheTo(400, 400);
-            Assert.AreEqual(6, _revisionGraph.GetCachedCount());
+            Assert.AreEqual(6 + LookAhead, _revisionGraph.GetCachedCount());
         }
 
         [Test]
         public void ShouldBeAbleToClear()
         {
-            Assert.AreEqual(6, _revisionGraph.Count);
+            Assert.AreEqual(6 + LookAhead, _revisionGraph.Count);
             _revisionGraph.Clear();
             Assert.AreEqual(0, _revisionGraph.Count);
         }
@@ -138,6 +138,8 @@ namespace GitUITests.UserControls.RevisionGrid
             Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetCurrentRevisionLane());
         }
 
+        private static int LookAhead => 20;
+
         private static IEnumerable<GitRevision> Revisions
         {
             get
@@ -154,6 +156,10 @@ namespace GitUITests.UserControls.RevisionGrid
                  *     Commit5
                  *        |
                  *     Commit6
+                 *        |
+                 *       ...
+                 *        |
+                 *     Commit(6 + LookAhead)
                  */
                 GitRevision commit1 = new(ObjectId.Random());
 
@@ -168,16 +174,22 @@ namespace GitUITests.UserControls.RevisionGrid
                 commit3.ParentIds = new ObjectId[] { commit5.ObjectId };
                 commit4.ParentIds = new ObjectId[] { commit5.ObjectId };
 
-                GitRevision commit6 = new(ObjectId.Random());
-                commit5.ParentIds = new ObjectId[] { commit6.ObjectId };
-                commit6.ParentIds = new ObjectId[] { };
-
                 yield return commit1;
                 yield return commit2;
                 yield return commit3;
                 yield return commit4;
-                yield return commit5;
-                yield return commit6;
+
+                GitRevision prevCommit = commit5;
+                for (int i = 0; i < 1 + LookAhead; ++i)
+                {
+                    GitRevision currCommit = new(ObjectId.Random());
+                    prevCommit.ParentIds = new ObjectId[] { currCommit.ObjectId };
+                    yield return prevCommit;
+                    prevCommit = currCommit;
+                }
+
+                prevCommit.ParentIds = new ObjectId[] { };
+                yield return prevCommit;
             }
         }
     }

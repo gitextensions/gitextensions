@@ -62,5 +62,40 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             revisionGraphRow.GetLaneIndexForSegment(_segment1).Should().Be(expectedLane1);
             revisionGraphRow.GetLaneIndexForSegment(_segment2).Should().Be(expectedLane2);
         }
+
+        [TestCase(-1, 4, 1, 2, 3)]
+        [TestCase(0, 1, 2, 3, 4)]
+        [TestCase(0, 2, 1, 3, 4)]
+        [TestCase(0, 3, 1, 2, 4)]
+        [TestCase(0, 4, 1, 2, 3)]
+        [TestCase(1, 0, 1, 2, 3)]
+        [TestCase(1, 1, 0, 3, 4)]
+        [TestCase(1, 2, 0, 3, 4)]
+        [TestCase(1, 3, 0, 2, 4)]
+        [TestCase(1, 4, 0, 2, 3)]
+        [TestCase(2, 0, 1, 2, 3)]
+        [TestCase(2, 1, 0, 2, 3)]
+        [TestCase(2, 2, 0, 1, 4)]
+        [TestCase(2, 3, 0, 1, 4)]
+        [TestCase(2, 4, 0, 1, 3)]
+        [TestCase(3, 0, 1, 2, 3)]
+        [TestCase(3, 1, 0, 2, 3)]
+        [TestCase(3, 2, 0, 1, 3)]
+        [TestCase(3, 3, 0, 1, 2)]
+        [TestCase(4, 3, 0, 1, 2)]
+        public void MoveLanesRight_should_move_segments_twice(int fromLane1, int fromLane2, int expectedLane, int expectedLane1, int expectedLane2)
+        {
+            List<RevisionGraphSegment> segments = new() { _segment, _segment1, _segment2 };
+            IRevisionGraphRow revisionGraphRow = new RevisionGraphRow(_segment.Child, segments);
+            revisionGraphRow.GetLaneCount().Should().Be(3);
+
+            revisionGraphRow.MoveLanesRight(fromLane1);
+            revisionGraphRow.MoveLanesRight(fromLane2);
+
+            revisionGraphRow.GetLaneCount().Should().Be(expectedLane2 + 1);
+            revisionGraphRow.GetLaneIndexForSegment(_segment).Should().Be(expectedLane);
+            revisionGraphRow.GetLaneIndexForSegment(_segment1).Should().Be(expectedLane1);
+            revisionGraphRow.GetLaneIndexForSegment(_segment2).Should().Be(expectedLane2);
+        }
     }
 }
