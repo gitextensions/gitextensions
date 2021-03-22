@@ -1519,6 +1519,8 @@ namespace GitCommands
 
         public static readonly BoolViewSetting MergeGraphLanesHavingCommonParent = new(nameof(MergeGraphLanesHavingCommonParent), true);
 
+        public static readonly BoolViewSetting ReduceGraphCrossings = new(nameof(ReduceGraphCrossings), true);
+
         public static string LastFormatPatchDir
         {
             get => GetString("lastformatpatchdir", "");
