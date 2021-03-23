@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using GitUIPluginInterfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace GitCommands.Settings
 {
@@ -8,14 +9,20 @@ namespace GitCommands.Settings
     /// Settings that can be distributed with repository.
     /// They can be overridden for a particular repository.
     /// </summary>
-    public class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
+    public sealed class RepoDistSettings : SettingsContainer<RepoDistSettings, GitExtSettingsCache>
     {
+        private readonly IConfiguration _configuration;
+
         public RepoDistSettings(RepoDistSettings? lowerPriority, GitExtSettingsCache settingsCache, SettingLevel settingLevel)
             : base(lowerPriority, settingsCache)
         {
             BuildServer = new BuildServer(this);
             Detailed = new DetailedGroup(this);
             SettingLevel = settingLevel;
+
+            _configuration = new ConfigurationBuilder()
+                .AddGitExtensionConfiguration(settingsCache.SettingsFilePath)
+                .Build();
         }
 
         #region CreateXXX
@@ -58,6 +65,28 @@ namespace GitCommands.Settings
         }
 
         #endregion
+
+        public override bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
+        {
+            string? stringValue = _configuration.GetSection(name).Value;
+
+            if (stringValue is null)
+            {
+                value = defaultValue;
+
+                if (LowerPriority is not null && LowerPriority.TryGetValue(name, defaultValue, decode, out value))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            T decodedValue = decode(stringValue);
+            value = decodedValue;
+
+            return true;
+        }
 
         public override void SetValue<T>(string name, T value, Func<T, string?> encode)
         {
