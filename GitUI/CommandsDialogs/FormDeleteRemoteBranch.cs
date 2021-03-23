@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
+using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
@@ -13,14 +15,14 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormDeleteRemoteBranch : GitModuleForm
+    public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
     {
         private readonly TranslationString _deleteRemoteBranchesCaption = new("Delete remote branches");
         private readonly TranslationString _confirmDeleteUnmergedRemoteBranchMessage =
             new TranslationString("At least one remote branch is unmerged. Are you sure you want to delete it?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
 
-        private readonly HashSet<string> _mergedBranches = new HashSet<string>();
         private readonly string _defaultRemoteBranch;
+        private readonly HashSet<string> _mergedBranches = new HashSet<string>();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -31,15 +33,22 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormDeleteRemoteBranch(GitUICommands commands, string defaultRemoteBranch)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             _defaultRemoteBranch = defaultRemoteBranch;
             InitializeComponent();
+
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Delete);
+            AcceptButton = Delete;
+
             InitializeComplete();
         }
 
-        private void FormDeleteRemoteBranchLoad(object sender, EventArgs e)
+        protected override void OnRuntimeLoad(EventArgs e)
         {
+            base.OnRuntimeLoad(e);
+
             Branches.BranchesToSelect = Module.GetRefs(tags: true, branches: true).Where(h => h.IsRemote).ToList();
             foreach (var branch in Module.GetMergedRemoteBranches())
             {
@@ -52,7 +61,28 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void OkClick(object sender, EventArgs e)
+        protected override void OnShown(EventArgs e)
+        {
+            RecalculateSizeConstraints();
+            base.OnShown(e);
+            Branches.Focus();
+        }
+
+        private void RecalculateSizeConstraints()
+        {
+            SuspendLayout();
+            MinimumSize = MaximumSize = Size.Empty;
+
+            int height = ControlsPanel.Height + MainPanel.Padding.Top + MainPanel.Padding.Bottom
+                       + tlpnlMain.Height + tlpnlMain.Margin.Top + tlpnlMain.Margin.Bottom + DpiUtil.Scale(42);
+
+            MinimumSize = new Size(tlpnlMain.PreferredSize.Width + DpiUtil.Scale(70), height);
+            MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, height);
+            Size = new Size(Width, height);
+            ResumeLayout();
+        }
+
+        private void Delete_Click(object sender, EventArgs e)
         {
             try
             {
@@ -77,17 +107,16 @@ namespace GitUI.CommandsDialogs
                 {
                     EnsurePageant(remote);
 
-                    var cmd = new GitDeleteRemoteBranchesCmd(remote, branches.Select(x => x.LocalName));
-
                     ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
-                    using var form = new FormRemoteProcess(UICommands, process: null, cmd.Arguments)
+                    GitDeleteRemoteBranchesCmd cmd = new(remote, branches.Select(x => x.LocalName));
+                    using FormRemoteProcess form = new(UICommands, process: null, cmd.Arguments)
                     {
                         Remote = remote
                     };
-                    form.ShowDialog();
+                    form.ShowDialog(Owner);
 
-                    if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
+                    if (!form.ErrorOccurred() && !Module.InTheMiddleOfAction())
                     {
                         ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                     }

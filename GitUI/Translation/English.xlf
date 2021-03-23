@@ -4018,11 +4018,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>Delete</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="ForceDelete.Text">
-        <source>Force delete</source>
+        <source>&amp;Delete</source>
         <target />
       </trans-unit>
       <trans-unit id="_cannotDeleteCurrentBranchMessage.Text">
@@ -4033,24 +4029,8 @@ You can unset the template:
         <source>Delete branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="_deleteBranchQuestion.Text">
-        <source>Are you sure you want to delete selected branches?
-Deleting a branch can cause commits to be deleted too!</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteUnmergedBranchForcingSuggestion.Text">
-        <source>You cannot delete unmerged branch until you set “force delete” mode.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="labelDeleteBranchWarning.Text">
-        <source>You can only delete branches when they are fully merged in HEAD. 
-When you delete a branch the commits can get lost because nothing points to them.
-When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
-</source>
-        <target />
-      </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
-        <source>Select branches</source>
+        <source>Select &amp;branches</source>
         <target />
       </trans-unit>
     </body>
@@ -4062,11 +4042,11 @@ When you want to delete a not-fully merged branch, you can override this using t
         <target />
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>Delete</source>
+        <source>&amp;Delete</source>
         <target />
       </trans-unit>
       <trans-unit id="DeleteRemote.Text">
-        <source>Delete branche(s) from remote repository</source>
+        <source>Delete branche(s) from remote &amp;repository</source>
         <target />
       </trans-unit>
       <trans-unit id="_confirmDeleteUnmergedRemoteBranchMessage.Text">
@@ -4076,14 +4056,6 @@ Deleting a branch can cause commits to be deleted too!</source>
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesCaption.Text">
         <source>Delete remote branches</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="labelDeleteBranchWarning.Text">
-        <source>The commits referenced by the deleted branch will be lost
-if no other branch or tag references them. Make sure there
-is a branch or tag referencing the commits you wish to keep.
-If you have accidentally deleted a wrong branch, go to Commands | Show reflog form
-in order to recover the lost commits.</source>
         <target />
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">

@@ -117,10 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="labelDeleteBranchWarning.Text" xml:space="preserve">
-    <value>You can only delete branches when they are fully merged in HEAD. 
-When you delete a branch the commits can get lost because nothing points to them.
-When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
-</value>
-  </data>
 </root>
