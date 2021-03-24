@@ -1358,14 +1358,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="_openInVisualStudioMenuItem.Text">
-        <source>Open in Visual Studio</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
         <source>&amp;Sort by...</source>
         <target />

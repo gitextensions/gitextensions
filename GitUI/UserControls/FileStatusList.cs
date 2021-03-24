@@ -35,9 +35,9 @@ namespace GitUI
         private int _nextIndexToSelect = -1;
         private bool _enableSelectedIndexChangeEvent = true;
         private bool _mouseEntered;
-        private readonly ToolStripItem _openSubmoduleMenuItem;
+        private readonly ToolStripItem _NO_TRANSLATE_openSubmoduleMenuItem;
         private readonly ToolStripItem _openInVisualStudioSeparator = new ToolStripSeparator();
-        private readonly ToolStripItem _openInVisualStudioMenuItem;
+        private readonly ToolStripItem _NO_TRANSLATE_openInVisualStudioMenuItem;
         private Rectangle _dragBoxFromMouseDown;
         private IReadOnlyList<FileStatusWithDescription> _itemsWithDescription = new List<FileStatusWithDescription>();
         private IDisposable? _selectedIndexChangeSubscription;
@@ -71,8 +71,8 @@ namespace GitUI
         {
             InitializeComponent();
             InitialiseFiltering();
-            _openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
-            _openInVisualStudioMenuItem = CreateOpenInVisualStudioMenuItem();
+            _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
+            _NO_TRANSLATE_openInVisualStudioMenuItem = CreateOpenInVisualStudioMenuItem();
             _sortByContextMenu = new SortDiffListContextMenuItem(DiffListSortService.Instance)
             {
                 Name = "sortListByContextMenuItem"
@@ -1225,34 +1225,34 @@ namespace GitUI
 
             var cm = (ContextMenuStrip)sender;
 
-            // TODO The handling of _openSubmoduleMenuItem need to be revised
+            // TODO The handling of _NO_TRANSLATE_openSubmoduleMenuItem need to be revised
             // This code handles the 'bold' in the menu for submodules. Other default actions are not set to bold.
             // The actual implementation of the default handling with doubleclick is in each form,
             // separate from this menu item
 
-            if (!cm.Items.Find(_openSubmoduleMenuItem.Name, true).Any())
+            if (!cm.Items.Find(_NO_TRANSLATE_openSubmoduleMenuItem.Name, true).Any())
             {
-                cm.Items.Insert(0, _openSubmoduleMenuItem);
+                cm.Items.Insert(0, _NO_TRANSLATE_openSubmoduleMenuItem);
             }
 
             bool isSubmoduleSelected = SelectedItem?.Item.IsSubmodule ?? false;
 
-            _openSubmoduleMenuItem.Visible = isSubmoduleSelected;
+            _NO_TRANSLATE_openSubmoduleMenuItem.Visible = isSubmoduleSelected;
             if (isSubmoduleSelected && !DisableSubmoduleMenuItemBold)
             {
-                _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow
-                    ? new Font(_openSubmoduleMenuItem.Font, FontStyle.Bold)
-                    : new Font(_openSubmoduleMenuItem.Font, FontStyle.Regular);
+                _NO_TRANSLATE_openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow
+                    ? new Font(_NO_TRANSLATE_openSubmoduleMenuItem.Font, FontStyle.Bold)
+                    : new Font(_NO_TRANSLATE_openSubmoduleMenuItem.Font, FontStyle.Regular);
             }
 
-            if (!cm.Items.Find(_openInVisualStudioMenuItem.Name, true).Any())
+            if (!cm.Items.Find(_NO_TRANSLATE_openInVisualStudioMenuItem.Name, true).Any())
             {
                 cm.Items.Add(_openInVisualStudioSeparator);
-                cm.Items.Add(_openInVisualStudioMenuItem);
+                cm.Items.Add(_NO_TRANSLATE_openInVisualStudioMenuItem);
             }
 
-            _openInVisualStudioMenuItem.Visible = _openInVisualStudioSeparator.Visible = VisualStudioIntegration.IsVisualStudioRunning;
-            _openInVisualStudioMenuItem.Enabled = File.Exists(SelectedItemAbsolutePath);
+            _NO_TRANSLATE_openInVisualStudioMenuItem.Visible = _openInVisualStudioSeparator.Visible = VisualStudioIntegration.IsVisualStudioRunning;
+            _NO_TRANSLATE_openInVisualStudioMenuItem.Enabled = File.Exists(SelectedItemAbsolutePath);
 
             if (!cm.Items.Find(_sortByContextMenu.Name, true).Any())
             {
