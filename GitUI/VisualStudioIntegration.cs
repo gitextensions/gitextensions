@@ -16,7 +16,7 @@ namespace GitUI
 
             if (!File.Exists(filePath))
             {
-                // When opening the context menu, we disable this item if the file does not exists.
+                // When opening the context menu, we disable this item if the file does not exist.
                 // So, we should not experience this situation in practice (barring some exotic race conditions).
                 return false;
             }
