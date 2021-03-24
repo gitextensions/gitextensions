@@ -201,20 +201,7 @@ namespace GitUI
             }
         }
 
-        private string? SelectedItemAbsolutePath
-        {
-            get
-            {
-                var itemName = SelectedItem?.Item.Name;
-
-                if (itemName == null)
-                {
-                    return null;
-                }
-
-                return Path.Combine(Module.WorkingDir, itemName).NormalizePath();
-            }
-        }
+        private string? SelectedItemAbsolutePath => _fullPathResolver.Resolve(SelectedItem?.Item.Name)?.NormalizePath();
 
         private void SetupUnifiedDiffListSorting()
         {
