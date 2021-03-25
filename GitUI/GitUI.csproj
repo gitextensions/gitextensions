@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="AppInsights.WindowsDesktop" Version="$(AppInsightsWindowsDesktopVersion)" />
+    <PackageReference Include="EnvDTE" Version="16.9.31023.347" />
     <PackageReference Include="ExCSS" Version="2.0.6" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="$(MicrosoftWindowsAPICodePackVersion)" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="$(MicrosoftWindowsAPICodePackVersion)" />

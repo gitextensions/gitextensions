@@ -1358,10 +1358,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="_openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
         <source>&amp;Sort by...</source>
         <target />
@@ -9791,6 +9787,18 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_open.Text">
         <source>Open</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_openInVisualStudio.Text">
+        <source>Open in Visual Studio</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_openInVisualStudioFailureCaption.Text">
+        <source>Unable to open file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_openInVisualStudioFailureText.Text">
+        <source>Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.</source>
         <target />
       </trans-unit>
       <trans-unit id="_openReport.Text">
