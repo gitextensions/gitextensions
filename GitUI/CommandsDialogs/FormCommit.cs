@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -1024,9 +1024,9 @@ namespace GitUI.CommandsDialogs
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
-            CommitAndPush.Text = doChangesExist ? _commitAndPush.Text : Strings.ButtonPush;
             Amend.Enabled = true;
             Reset.Enabled = doChangesExist;
+            SetCommitAndPushText();
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -3190,6 +3190,8 @@ namespace GitUI.CommandsDialogs
 
                 CommitAndPush.SetForeColorForBackColor();
             }
+
+            SetCommitAndPushText();
         }
 
         private void StageInSuperproject_CheckedChanged(object sender, EventArgs e)
@@ -3254,6 +3256,11 @@ namespace GitUI.CommandsDialogs
             {
                 MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), Strings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void SetCommitAndPushText()
+        {
+            CommitAndPush.Text = Reset.Enabled || Amend.Checked ? _commitAndPush.Text : Strings.ButtonPush;
         }
 
         internal TestAccessor GetTestAccessor()
