@@ -15,6 +15,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // The RevisionGraph contains all the basic structures needed to render the graph.
     public class RevisionGraph : IRevisionGraphRowProvider
     {
+        public const int MaxLanes = 40;
         private const int _straightenLanesLookAhead = 1;
 
         // Some unordered collections with raw data
@@ -342,9 +343,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 startIndex = Math.Max(1, startIndex);
                 for (int currentIndex = startIndex; currentIndex < lastIndex;)
                 {
+                    IRevisionGraphRow currentRow = localOrderedRowCache[currentIndex];
+                    if (currentRow.Segments.Count >= MaxLanes)
+                    {
+                        ++currentIndex;
+                        continue;
+                    }
+
                     bool moved = false;
                     IRevisionGraphRow previousRow = localOrderedRowCache[currentIndex - 1];
-                    IRevisionGraphRow currentRow = localOrderedRowCache[currentIndex];
                     IRevisionGraphRow nextRow = localOrderedRowCache[currentIndex + 1];
                     foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments)
                     {

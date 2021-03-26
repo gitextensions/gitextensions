@@ -15,7 +15,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 {
     internal sealed class RevisionGraphColumnProvider : ColumnProvider
     {
-        private const int MaxLanes = 40;
+        private const int MaxLanes = RevisionGraph.MaxLanes;
 
         private static readonly int LaneLineWidth = DpiUtil.Scale(2);
         private static readonly int LaneWidth = DpiUtil.Scale(16);
