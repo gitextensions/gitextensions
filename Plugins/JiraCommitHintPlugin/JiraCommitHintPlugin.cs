@@ -47,7 +47,8 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
         public JiraCommitHintPlugin() : base(true)
         {
-            SetNameAndDescription("Jira Commit Hint");
+            Id = new Guid("B0128E39-D312-47DA-B18A-43F5CA726D7D");
+            Name = "Jira Commit Hint";
             Translate();
             Icon = Resources.IconJira;
 
@@ -282,7 +283,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             }
             catch (Exception ex)
             {
-                return new[] { new JiraTaskDTO($"{Description} error", ex.ToString()) };
+                return new[] { new JiraTaskDTO($"{Name} error", ex.ToString()) };
             }
         }
 

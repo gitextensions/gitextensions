@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Text;
@@ -19,7 +20,8 @@ namespace GitExtensions.Plugins.AutoCompileSubmodules
 
         public AutoCompileSubModulesPlugin() : base(true)
         {
-            SetNameAndDescription("Auto compile SubModules");
+            Id = new Guid("D4D1ACB7-0B6B-4A3C-B0DB-A25056A277D9");
+            Name = "Auto compile SubModules";
             Translate();
             Icon = Resources.IconAutoCompileSubmodules;
         }

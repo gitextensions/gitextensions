@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using GitExtensions.Plugins.FindLargeFiles.Properties;
 using GitUIPluginInterfaces;
@@ -11,7 +12,8 @@ namespace GitExtensions.Plugins.FindLargeFiles
     {
         public FindLargeFilesPlugin() : base(true)
         {
-            SetNameAndDescription("Find large files");
+            Id = new Guid("5AE20AB1-D677-46C5-ABDB-7874FF5A9296");
+            Name = "Find large files";
             Translate();
             Icon = Resources.IconFindLargeFiles;
         }

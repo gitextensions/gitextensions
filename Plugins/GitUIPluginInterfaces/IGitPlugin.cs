@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace GitUIPluginInterfaces
 {
     public interface IGitPlugin
     {
+        Guid Id { get; }
+
         string? Name { get; }
 
         string? Description { get; }

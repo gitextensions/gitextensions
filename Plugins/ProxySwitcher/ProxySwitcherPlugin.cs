@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using GitExtensions.Plugins.ProxySwitcher.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -15,7 +16,8 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         public ProxySwitcherPlugin() : base(true)
         {
-            SetNameAndDescription("Proxy Switcher");
+            Id = new Guid("C2A1C7A4-D519-4BD1-859B-6CE7DB9325FB");
+            Name = "Proxy Switcher";
             Translate();
             Icon = Resources.IconProxySwitcher;
         }

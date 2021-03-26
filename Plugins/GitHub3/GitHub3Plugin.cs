@@ -90,7 +90,8 @@ namespace GitExtensions.Plugins.GitHub3
 
         public GitHub3Plugin() : base(true)
         {
-            SetNameAndDescription("GitHub");
+            Id = new Guid("2EC3E1F0-EF37-413F-BEA5-B8FE1F9C505C");
+            Name = "GitHub";
             Translate();
 
             Instance ??= this;

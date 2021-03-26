@@ -12,6 +12,8 @@ namespace ResourceManager
     [UsedImplicitly]
     public abstract class GitPluginBase : IGitPlugin, ITranslate
     {
+        public Guid Id { get; protected set; }
+
         public string? Description { get; protected set; }
         public string? Name { get; protected set; }
         public Image? Icon { get; protected set; }
@@ -30,7 +32,6 @@ namespace ResourceManager
         protected void SetNameAndDescription(string name)
         {
             Name = name;
-            Description = name;
         }
 
         void IDisposable.Dispose()
@@ -78,6 +79,8 @@ namespace ResourceManager
 
         protected void Translate()
         {
+            // Description for old plugin setting processing as key
+            Description = Name;
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
@@ -91,7 +94,7 @@ namespace ResourceManager
         public virtual void TranslateItems(ITranslation translation)
         {
             string name = GetType().Name;
-            TranslationUtils.TranslateProperty(name, this, "Description", translation);
+            TranslationUtils.TranslateProperty(name, this, nameof(Name), translation);
             TranslationUtils.TranslateItemsFromFields(name, this, translation);
         }
     }

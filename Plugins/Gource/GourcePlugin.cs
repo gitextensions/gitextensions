@@ -35,7 +35,8 @@ namespace GitExtensions.Plugins.Gource
 
         public GourcePlugin() : base(true)
         {
-            SetNameAndDescription("Gource");
+            Id = new Guid("F0A6A769-6DCC-4452-9A43-343347015EEC");
+            Name = "Gource";
             Translate();
             Icon = Resources.IconGource;
         }

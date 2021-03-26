@@ -18,7 +18,8 @@ namespace GitExtensions.Plugins.BackgroundFetch
     {
         public BackgroundFetchPlugin() : base(true)
         {
-            SetNameAndDescription("Periodic background fetch");
+            Id = new Guid("D19A7905-8AAD-4271-ACA9-817669B94A1D");
+            Name = "Periodic background fetch";
             Translate();
             Icon = Resources.IconBackgroundFetch;
         }

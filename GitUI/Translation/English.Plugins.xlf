@@ -10,7 +10,7 @@
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Auto compile SubModules</source>
         <target />
       </trans-unit>
@@ -40,7 +40,7 @@
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Periodic background fetch</source>
         <target />
       </trans-unit>
@@ -80,7 +80,7 @@
         <source>Bitbucket Username</source>
         <target />
       </trans-unit>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Bitbucket Server</source>
         <target />
       </trans-unit>
@@ -241,7 +241,7 @@
   </file>
   <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Create local tracking branches</source>
         <target />
       </trans-unit>
@@ -371,7 +371,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Delete obsolete branches</source>
         <target />
       </trans-unit>
@@ -471,7 +471,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Find large files</source>
         <target />
       </trans-unit>
@@ -829,7 +829,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GerritPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Gerrit Code Review</source>
         <target />
       </trans-unit>
@@ -985,7 +985,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <source>ref/...</source>
         <target />
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target />
       </trans-unit>
@@ -1001,7 +1001,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GitFlowPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitFlow</source>
         <target />
       </trans-unit>
@@ -1009,7 +1009,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitHub</source>
         <target />
       </trans-unit>
@@ -1033,7 +1033,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Impact Graph</source>
         <target />
       </trans-unit>
@@ -1041,7 +1041,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Statistics</source>
         <target />
       </trans-unit>
@@ -1061,7 +1061,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GourcePlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Gource</source>
         <target />
       </trans-unit>
@@ -1177,7 +1177,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Jira Commit Hint</source>
         <target />
       </trans-unit>
@@ -1265,7 +1265,7 @@ Do you want to reset the configured path?</source>
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target />
       </trans-unit>
@@ -1273,7 +1273,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Proxy Switcher</source>
         <target />
       </trans-unit>
@@ -1399,7 +1399,7 @@ branch names, tag names)</source>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Release Notes Generator</source>
         <target />
       </trans-unit>

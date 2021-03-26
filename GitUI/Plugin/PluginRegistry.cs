@@ -33,8 +33,10 @@ namespace GitUI
 
                     foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
                     {
-                        Validates.NotNull(plugin.Name);
-                        plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Name);
+                        Validates.NotNull(plugin.Description);
+
+                        // Description for old plugin setting processing as key
+                        plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Id, plugin.Description);
 
                         if (plugin is IRepositoryHostPlugin repositoryHostPlugin)
                         {
