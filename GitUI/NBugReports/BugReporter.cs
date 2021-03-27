@@ -124,8 +124,11 @@ namespace GitExtensions
         {
             var envInfo = UserEnvironmentInformation.GetInformation();
 
-            using var form = new GitUI.NBugReports.BugReportForm();
-            var result = form.ShowDialog(owner, exception, envInfo);
+            using BugReportForm form = new();
+            DialogResult result = form.ShowDialog(owner, exception, envInfo,
+                canIgnore: !isTerminating,
+                showIgnore: exception is ExternalOperationException,
+                focusDetails: exception is UserExternalOperationException);
             if (isTerminating || result == DialogResult.Abort)
             {
                 Environment.Exit(-1);

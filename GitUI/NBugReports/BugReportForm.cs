@@ -71,7 +71,7 @@ Send report anyway?");
             mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
         }
 
-        public DialogResult ShowDialog(IWin32Window? owner, Exception exception, string environmentInfo)
+        public DialogResult ShowDialog(IWin32Window? owner, Exception exception, string environmentInfo, bool canIgnore, bool showIgnore, bool focusDetails)
         {
             _lastException = new SerializableException(exception);
             _lastReport = new Report(_lastException);
@@ -93,6 +93,16 @@ Send report anyway?");
 
             // Fill in the 'Exception' tab
             exceptionDetails.Initialize(_lastException);
+
+            if (focusDetails)
+            {
+                mainTabs.SelectedTab = exceptionTabPage;
+            }
+
+            ControlBox = canIgnore;
+            showIgnore &= canIgnore;
+            IgnoreButton.Visible = showIgnore;
+            IgnoreButton.Visible = showIgnore;
 
             DialogResult = DialogResult.None;
 
@@ -161,6 +171,12 @@ Send report anyway?");
             Clipboard.SetDataObject(report, true, 5, 100);
 
             DialogResult = DialogResult.None;
+        }
+
+        private void IgnoreButton_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Ignore;
+            Close();
         }
 
         internal TestAccessor GetTestAccessor()

@@ -69,6 +69,7 @@
             this.btnCopy = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.IgnoreButton = new System.Windows.Forms.Button();
             this.mainTabs.SuspendLayout();
             this.generalTabPage.SuspendLayout();
             this.tpnlEnvInfo.SuspendLayout();
@@ -151,7 +152,7 @@
             this.clrTextBox.Size = new System.Drawing.Size(160, 20);
             this.clrTextBox.TabIndex = 9;
             // 
-            // clrLabel
+            // _NO_TRANSLATE_ClrLabel
             // 
             this._NO_TRANSLATE_ClrLabel.AutoSize = true;
             this._NO_TRANSLATE_ClrLabel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -162,7 +163,7 @@
             this._NO_TRANSLATE_ClrLabel.Text = "CLR:";
             this._NO_TRANSLATE_ClrLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // gitLabel
+            // _NO_TRANSLATE_GitLabel
             // 
             this._NO_TRANSLATE_GitLabel.AutoSize = true;
             this._NO_TRANSLATE_GitLabel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -482,7 +483,7 @@
             this.sendAndQuitButton.MinimumSize = new System.Drawing.Size(120, 25);
             this.sendAndQuitButton.Name = "sendAndQuitButton";
             this.sendAndQuitButton.Size = new System.Drawing.Size(120, 25);
-            this.sendAndQuitButton.TabIndex = 1;
+            this.sendAndQuitButton.TabIndex = 2;
             this.sendAndQuitButton.Text = "&Send and Quit";
             this.sendAndQuitButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.sendAndQuitButton.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -498,7 +499,7 @@
             this.quitButton.Name = "quitButton";
             this.quitButton.Padding = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.quitButton.Size = new System.Drawing.Size(34, 31);
-            this.quitButton.TabIndex = 2;
+            this.quitButton.TabIndex = 3;
             this.quitButton.TabStop = true;
             this.quitButton.Text = "&Quit";
             this.quitButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -530,12 +531,14 @@
             // 
             this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 3;
+            this.tableLayoutPanel1.ColumnCount = 4;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.quitButton, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.sendAndQuitButton, 1, 0);
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.quitButton, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.sendAndQuitButton, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.IgnoreButton, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.btnCopy, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 434);
@@ -546,6 +549,17 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(550, 31);
             this.tableLayoutPanel1.TabIndex = 1;
             // 
+            // IgnoreButton
+            // 
+            this.IgnoreButton.AutoSize = true;
+            this.IgnoreButton.Location = new System.Drawing.Point(302, 3);
+            this.IgnoreButton.Name = "IgnoreButton";
+            this.IgnoreButton.Size = new System.Drawing.Size(75, 25);
+            this.IgnoreButton.TabIndex = 1;
+            this.IgnoreButton.Text = "&Ignore";
+            this.IgnoreButton.UseVisualStyleBackColor = true;
+            this.IgnoreButton.Click += new System.EventHandler(this.IgnoreButton_Click);
+            // 
             // BugReportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -554,12 +568,10 @@
             this.ClientSize = new System.Drawing.Size(558, 469);
             this.Controls.Add(this.mainTabs);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "BugReportForm";
             this.Padding = new System.Windows.Forms.Padding(4);
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.TopMost = true;
             this.mainTabs.ResumeLayout(false);
@@ -626,5 +638,6 @@
         private System.Windows.Forms.TableLayoutPanel tlpnlGeneral;
         private System.Windows.Forms.Panel pnlHeading;
         private System.Windows.Forms.Panel pnlExceptionType;
+        private System.Windows.Forms.Button IgnoreButton;
     }
 }
