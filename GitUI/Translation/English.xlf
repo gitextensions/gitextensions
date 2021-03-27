@@ -372,6 +372,10 @@ Click this info icon for more details.</source>
   </file>
   <file datatype="plaintext" original="BugReportForm" source-language="en">
     <body>
+      <trans-unit id="IgnoreButton.Text">
+        <source>&amp;Ignore</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noReproStepsSuppliedErrorMessage.Text">
         <source>Please provide as much as information as possible to help the developers solve this issue.</source>
         <target />
