@@ -48,10 +48,14 @@ namespace GitUI.CommandsDialogs
 
                 Debug.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
 
-                ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+                bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+                if (!success)
+                {
+                    return;
+                }
 
                 string command = GitCommandHelpers.CheckoutCmd(selectedObjectId.ToString(), Force.Checked ? LocalChangesAction.Reset : 0);
-                bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+                success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (success)
                 {
                     if (selectedObjectId != checkedOutObjectId)

@@ -63,7 +63,11 @@ namespace GitUI.CommandsDialogs
         {
             var pushCmd = string.Format("push \"{0}\" :refs/tags/{1}", remotesComboboxControl1.SelectedRemote, tagName);
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            if (!success)
+            {
+                return;
+            }
 
             using var form = new FormRemoteProcess(UICommands, process: null, pushCmd);
             ////Remote = currentRemote,

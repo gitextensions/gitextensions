@@ -372,7 +372,11 @@ namespace GitUI.CommandsDialogs
 
             Debug.Assert(originalId is not null, "originalId is not null");
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+            bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+            if (!success)
+            {
+                return DialogResult.Cancel;
+            }
 
             if (UICommands.StartCommandLineProcessDialog(owner, new GitCheckoutBranchCmd(branchName, isRemote, localChanges, newBranchMode, newBranchName)))
             {

@@ -2300,8 +2300,13 @@ namespace GitUI.CommandsDialogs
 
         private void QuickFetch()
         {
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
-            bool success = FormProcess.ShowDialog(this, process: null, arguments: Module.FetchCmd(string.Empty, string.Empty, string.Empty), Module.WorkingDir, input: null, useDialogSettings: true);
+            bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeFetch);
+            if (!success)
+            {
+                return;
+            }
+
+            success = FormProcess.ShowDialog(this, process: null, arguments: Module.FetchCmd(string.Empty, string.Empty, string.Empty), Module.WorkingDir, input: null, useDialogSettings: true);
             if (!success)
             {
                 return;

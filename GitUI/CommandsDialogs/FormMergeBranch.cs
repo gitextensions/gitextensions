@@ -88,7 +88,12 @@ namespace GitUI.CommandsDialogs
         {
             Module.EffectiveSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
+
+            bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
+            if (!success)
+            {
+                return;
+            }
 
             string? mergeMessagePath = null;
             if (addMergeMessage.Checked)
@@ -109,7 +114,7 @@ namespace GitUI.CommandsDialogs
                                                             allowUnrelatedHistories.Checked,
                                                             mergeMessagePath,
                                                             addLogMessages.Checked ? (int)nbMessages.Value : (int?)null);
-            bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+            success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);
 
