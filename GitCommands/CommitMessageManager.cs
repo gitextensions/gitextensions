@@ -53,6 +53,8 @@ namespace GitCommands
     {
         private string CannotReadCommitMessage => "Cannot read commit message";
         private string CannotSaveCommitMessage => "Cannot save commit message";
+        private string CannotReadAmendState => "Cannot read amend state";
+        private string CannotSaveAmendState => "Cannot save amend state";
         private string CannotAccessFile => "Exception: \"{0}\" when accessing {1}";
 
         private readonly string _amendSaveStatePath;
@@ -91,9 +93,9 @@ namespace GitCommands
             {
                 bool amendState = false;
 
-                if (AppSettings.RememberAmendCommitState && _fileSystem.File.Exists(_amendSaveStatePath))
+                if (AppSettings.RememberAmendCommitState)
                 {
-                    bool.TryParse(_fileSystem.File.ReadAllText(_amendSaveStatePath), out amendState);
+                    bool.TryParse(ReadFile(_amendSaveStatePath, CannotReadAmendState), out amendState);
                 }
 
                 return amendState;
@@ -102,9 +104,11 @@ namespace GitCommands
             {
                 if (AppSettings.RememberAmendCommitState && value)
                 {
-                    _fileSystem.File.WriteAllText(_amendSaveStatePath, true.ToString());
+                    WriteFile(_amendSaveStatePath, CannotSaveAmendState, true.ToString());
+                    return;
                 }
-                else
+
+                if (_fileSystem.File.Exists(_amendSaveStatePath))
                 {
                     _fileSystem.File.Delete(_amendSaveStatePath);
                 }
@@ -130,21 +134,7 @@ namespace GitCommands
                     return _overriddenCommitMessage;
                 }
 
-                var (file, exists) = GetMergeOrCommitMessagePath();
-                string result;
-                try
-                {
-                    result = exists ? _fileSystem.File.ReadAllText(file, _commitEncoding) : string.Empty;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(null, string.Format(CannotAccessFile, ex.Message, file),
-                        CannotReadCommitMessage, MessageBoxButtons.OK,
-                        MessageBoxIcon.Exclamation);
-                    result = string.Empty;
-                }
-
-                return result;
+                return ReadFile(GetMergeOrCommitMessagePath(), CannotReadCommitMessage, _commitEncoding);
             }
             set
             {
@@ -153,23 +143,7 @@ namespace GitCommands
                 // do not remember commit message when they have been specified by the command line
                 if (content != _overriddenCommitMessage)
                 {
-                    var path = GetMergeOrCommitMessagePath().filePath;
-                    if (!_fileSystem.Directory.Exists(Path.GetDirectoryName(path)))
-                    {
-                        // The repo no longer exists
-                        return;
-                    }
-
-                    try
-                    {
-                        _fileSystem.File.WriteAllText(path, content, _commitEncoding);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(null, string.Format(CannotAccessFile, ex.Message, path),
-                            CannotSaveCommitMessage, MessageBoxButtons.OK,
-                            MessageBoxIcon.Exclamation);
-                    }
+                    WriteFile(GetMergeOrCommitMessagePath(), CannotSaveCommitMessage, content, _commitEncoding);
                 }
             }
         }
@@ -188,7 +162,7 @@ namespace GitCommands
             var formattedCommitMessage = FormatCommitMessage(commitMessage, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
 
             string path = messageType == CommitMessageType.Normal ? CommitMessagePath : MergeMessagePath;
-            File.WriteAllText(path, formattedCommitMessage, _commitEncoding);
+            WriteFile(path, CannotSaveCommitMessage, formattedCommitMessage, _commitEncoding);
         }
 
         internal static string FormatCommitMessage(string commitMessage, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
@@ -227,14 +201,45 @@ namespace GitCommands
 
         private string GetFilePath(string workingDirGitDir, string fileName) => _fileSystem.Path.Combine(workingDirGitDir, fileName);
 
-        private (string filePath, bool fileExists) GetMergeOrCommitMessagePath()
+        private string GetMergeOrCommitMessagePath() => IsMergeCommit ? MergeMessagePath : CommitMessagePath;
+
+        private string ReadFile(string filePath, string errorTitle, Encoding? encoding = null)
         {
-            if (IsMergeCommit)
+            try
             {
-                return (MergeMessagePath, fileExists: true);
+                if (!_fileSystem.File.Exists(filePath))
+                {
+                    return string.Empty;
+                }
+
+                return _fileSystem.File.ReadAllText(filePath, encoding ?? Encoding.Default);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(null, string.Format(CannotAccessFile, ex.Message, filePath), errorTitle,
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return string.Empty;
+            }
+        }
+
+        private void WriteFile(string filePath, string errorTitle, string content, Encoding? encoding = null)
+        {
+            if (!_fileSystem.Directory.Exists(Path.GetDirectoryName(filePath)))
+            {
+                // The repo no longer exists - ignore silently
+                return;
             }
 
-            return (CommitMessagePath, _fileSystem.File.Exists(CommitMessagePath));
+            try
+            {
+                _fileSystem.File.WriteAllText(filePath, content, encoding ?? Encoding.Default);
+            }
+            catch (Exception ex)
+            {
+                // No need to cancel the other operations in FormCommit - just let the user know that something went wrong
+                MessageBox.Show(null, string.Format(CannotAccessFile, ex.Message, filePath), errorTitle,
+                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
     }
 }

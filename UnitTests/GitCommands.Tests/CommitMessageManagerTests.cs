@@ -134,7 +134,7 @@ namespace GitCommandsTests
         public void AmendState_should_be_false_if_file_contains(string amendText)
         {
             _file.Exists(_amendSaveStatePath).Returns(true);
-            _file.ReadAllText(_amendSaveStatePath).Returns(amendText);
+            _file.ReadAllText(_amendSaveStatePath, Encoding.Default).Returns(amendText);
 
             AppSettings.RememberAmendCommitState = true;
             _manager.AmendState.Should().BeFalse();
@@ -148,7 +148,7 @@ namespace GitCommandsTests
         public void AmendState_should_be_true_if_file_contains(string amendText)
         {
             _file.Exists(_amendSaveStatePath).Returns(true);
-            _file.ReadAllText(_amendSaveStatePath).Returns(amendText);
+            _file.ReadAllText(_amendSaveStatePath, Encoding.Default).Returns(amendText);
 
             AppSettings.RememberAmendCommitState = true;
             _manager.AmendState.Should().BeTrue();
@@ -158,7 +158,8 @@ namespace GitCommandsTests
         public void AmendState_true_should_write_true_to_file()
         {
             bool correctlyWritten = false;
-            _file.When(x => x.WriteAllText(_amendSaveStatePath, true.ToString())).Do(_ => correctlyWritten = true);
+            _file.When(x => x.WriteAllText(_amendSaveStatePath, true.ToString(), Encoding.Default)).Do(_ => correctlyWritten = true);
+            _directory.Exists(Path.GetDirectoryName(_amendSaveStatePath)).Returns(true);
 
             AppSettings.RememberAmendCommitState = true;
             _manager.AmendState = true;
@@ -170,6 +171,7 @@ namespace GitCommandsTests
         public void AmendState_true_should_delete_file_if_not_RememberAmendCommitState()
         {
             bool correctlyDeleted = false;
+            _file.Exists(_amendSaveStatePath).Returns(true);
             _file.When(x => x.Delete(_amendSaveStatePath)).Do(_ => correctlyDeleted = true);
 
             AppSettings.RememberAmendCommitState = false;
@@ -184,6 +186,7 @@ namespace GitCommandsTests
         {
             bool correctlyDeleted = false;
             _file.When(x => x.Delete(_amendSaveStatePath)).Do(_ => correctlyDeleted = true);
+            _file.Exists(_amendSaveStatePath).Returns(true);
 
             AppSettings.RememberAmendCommitState = rememberAmendCommitState;
             _manager.AmendState = false;
