@@ -834,8 +834,7 @@ namespace GitUI.CommandsDialogs
                 }
                 catch (Exception ex)
                 {
-                    await this.SwitchToMainThreadAsync();
-                    ThrowUserExternalOperationException(ex.Message, command: null, arguments: item.Item.Name, ex);
+                    throw new ExternalOperationException(command: null, arguments: item.Item.Name, Module.WorkingDir,  ex);
                 }
 
                 onSaved(fileName);
@@ -982,24 +981,28 @@ namespace GitUI.CommandsDialogs
             }
 
             var fullName = _fullPathResolver.Resolve(item.Item.Name);
-            using (var fileDialog =
-                new SaveFileDialog
-                {
-                    InitialDirectory = Path.GetDirectoryName(fullName),
-                    FileName = Path.GetFileName(fullName),
-                    DefaultExt = Path.GetExtension(fullName),
-                    AddExtension = true
-                })
+            using SaveFileDialog fileDialog = new SaveFileDialog
             {
-                fileDialog.Filter =
-                    _saveFileFilterCurrentFormat.Text + " (*." +
-                    fileDialog.DefaultExt + ")|*." +
-                    fileDialog.DefaultExt +
-                    "|" + _saveFileFilterAllFiles.Text + " (*.*)|*.*";
+                InitialDirectory = Path.GetDirectoryName(fullName),
+                FileName = Path.GetFileName(fullName),
+                DefaultExt = Path.GetExtension(fullName),
+                AddExtension = true
+            };
+            fileDialog.Filter =
+                _saveFileFilterCurrentFormat.Text + " (*." +
+                fileDialog.DefaultExt + ")|*." +
+                fileDialog.DefaultExt +
+                "|" + _saveFileFilterAllFiles.Text + " (*.*)|*.*";
 
-                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+            if (fileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                try
                 {
                     Module.SaveBlobAs(fileDialog.FileName, $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"");
+                }
+                catch (Exception ex)
+                {
+                    throw new ExternalOperationException(command: null, arguments: item.Item.Name, Module.WorkingDir, ex);
                 }
             }
         }

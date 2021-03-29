@@ -341,7 +341,7 @@ See the changes in the commit form.");
                 }
                 catch (Exception ex)
                 {
-                    ThrowUserExternalOperationException(ex.Message, command: null, arguments: gitItem.FileName, ex);
+                    throw new ExternalOperationException(command: null, arguments: gitItem.FileName, Module.WorkingDir, ex);
                 }
             }
 
@@ -744,7 +744,7 @@ See the changes in the commit form.");
                         }
                         catch (Exception ex)
                         {
-                            ThrowUserExternalOperationException(ex.Message, command: null, arguments: gitItem.FileName, ex);
+                            throw new ExternalOperationException(command: null, arguments: gitItem.FileName, Module.WorkingDir, ex);
                         }
                     }
                 }

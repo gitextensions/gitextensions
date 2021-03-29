@@ -510,7 +510,7 @@ namespace GitUI.CommandsDialogs
                         }
                         catch (Exception ex)
                         {
-                            ThrowUserExternalOperationException(ex.Message, command: null, arguments: orgFileName, ex);
+                            throw new ExternalOperationException(command: null, arguments: orgFileName, Module.WorkingDir, ex);
                         }
                     }
                 }

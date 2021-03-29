@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.Git.Tag;
 using GitExtUtils;
@@ -495,7 +496,7 @@ namespace GitUI.CommandsDialogs
                         }
                         catch (Exception ex)
                         {
-                            ThrowUserExternalOperationException(ex.Message, command: null, arguments: null, ex);
+                            throw new ExternalOperationException(command: null, arguments: null, Module.WorkingDir, ex);
                         }
                     }
                 }
