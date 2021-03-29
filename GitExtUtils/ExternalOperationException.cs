@@ -12,31 +12,40 @@ namespace GitExtUtils
         /// Initializes a new instance of the <see cref="ExternalOperationException"/> class with a specified parameters
         /// and a reference to the inner exception that is the cause of this exception.
         /// </summary>
-        /// <param name="command">The command that led to the exception.</param>
-        /// <param name="arguments">The command arguments.</param>
-        /// <param name="workingDirectory">The working directory.</param>
+        /// <param name="operation">The external operation that led to the exception.</param>
+        /// <param name="obj">The object the external operation was applied to.</param>
+        /// <param name="arguments">Further arguments of the external operation.</param>
+        /// <param name="directory">The directory where the external operation was attempted to execute.
+        /// Either the working directory or the path, e.g. if a full path was given to a filesystem operation.</param>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
-        public ExternalOperationException(string? command, string? arguments, string workingDirectory, Exception? innerException)
+        public ExternalOperationException(string? operation = null, string? obj = null, string? arguments = null, string? directory = null, Exception? innerException = null)
             : base(innerException?.Message, innerException)
         {
-            Command = command;
+            Operation = operation;
+            Object = obj;
             Arguments = arguments;
-            WorkingDirectory = workingDirectory;
+            Directory = directory;
         }
 
         /// <summary>
-        /// The command that led to the exception.
+        /// The external operation that led to the exception.
         /// </summary>
-        public string? Command { get; }
+        public string? Operation { get; }
 
         /// <summary>
-        /// The command arguments.
+        /// The object the external operation was applied to.
+        /// </summary>
+        public string? Object { get; }
+
+        /// <summary>
+        /// Further arguments of the external operation.
         /// </summary>
         public string? Arguments { get; }
 
         /// <summary>
-        /// The working directory.
+        /// The directory where the external operation was attempted to execute.
+        /// Either the working directory or the path, e.g. if a full path was given to a filesystem operation.
         /// </summary>
-        public string WorkingDirectory { get; }
+        public string? Directory { get; }
     }
 }

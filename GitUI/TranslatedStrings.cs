@@ -20,9 +20,7 @@ namespace GitUI
         private readonly TranslationString _buttonIgnore = new("Ignore");
         private readonly TranslationString _buttonPush = new("&Push");
         private readonly TranslationString _buttonReportBug = new("Report bug!");
-
-        private readonly TranslationString _captionFailedExecute = new("Failed to execute");
-        private readonly TranslationString _instructionOperationFailed = new("Operation failed");
+        private readonly TranslationString _buttonViewDetails = new("View details");
 
         private readonly TranslationString _containedInCurrentCommitText = new("'{0}' is contained in the currently selected commit");
         private readonly TranslationString _containedInBranchesText = new("Contained in branches:");
@@ -100,10 +98,11 @@ namespace GitUI
 
         private readonly TranslationString _rotInactive = new("[ Inactive ]");
 
-        private readonly TranslationString _argumentsText = new("Arguments");
-        private readonly TranslationString _commandText = new("Command");
-        private readonly TranslationString _workingDirectoryText = new("Working directory");
-        private readonly TranslationString _reportBugText = new("If you think this was caused by Git Extensions, you can report a bug for the team to investigate.");
+        private readonly TranslationString _context = new("Context");
+        private readonly TranslationString _operation = new("Operation");
+        private readonly TranslationString _arguments = new("Arguments");
+        private readonly TranslationString _directory = new("Directory");
+        private readonly TranslationString _reportBug = new("If you think this was caused by Git Extensions, you can report a bug for the team to investigate.");
 
         private readonly TranslationString _openInVisualStudioFailureText = new("Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.");
         private readonly TranslationString _openInVisualStudioFailureCaption = new("Unable to open file");
@@ -138,9 +137,7 @@ namespace GitUI
         public static string ButtonIgnore => _instance.Value._buttonIgnore.Text;
         public static string ButtonPush => _instance.Value._buttonPush.Text;
         public static string ButtonReportBug => _instance.Value._buttonReportBug.Text;
-
-        public static string CaptionFailedExecute => _instance.Value._captionFailedExecute.Text;
-        public static string InstructionOperationFailed => _instance.Value._instructionOperationFailed.Text;
+        public static string ButtonViewDetails => _instance.Value._buttonViewDetails.Text;
 
         public static string ContainedInCurrentCommit => _instance.Value._containedInCurrentCommitText.Text;
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;
@@ -214,10 +211,11 @@ namespace GitUI
 
         public static string Inactive => _instance.Value._rotInactive.Text;
 
-        public static string Arguments => _instance.Value._argumentsText.Text;
-        public static string Command => _instance.Value._commandText.Text;
-        public static string WorkingDirectory => _instance.Value._workingDirectoryText.Text;
-        public static string ReportBug => _instance.Value._reportBugText.Text;
+        public static string Context => _instance.Value._context.Text;
+        public static string Operation => _instance.Value._operation.Text;
+        public static string Arguments => _instance.Value._arguments.Text;
+        public static string Directory => _instance.Value._directory.Text;
+        public static string ReportBug => _instance.Value._reportBug.Text;
 
         public static string OpenInVisualStudioFailureText => _instance.Value._openInVisualStudioFailureText.Text;
         public static string OpenInVisualStudioFailureCaption => _instance.Value._openInVisualStudioFailureCaption.Text;
