@@ -20,9 +20,7 @@ namespace GitUI
         private readonly TranslationString _buttonIgnore = new("Ignore");
         private readonly TranslationString _buttonPush = new("&Push");
         private readonly TranslationString _buttonReportBug = new("Report bug!");
-
-        private readonly TranslationString _captionFailedExecute = new("Failed to execute");
-        private readonly TranslationString _instructionOperationFailed = new("Operation failed");
+        private readonly TranslationString _buttonViewDetails = new("View details");
 
         private readonly TranslationString _containedInCurrentCommitText = new("'{0}' is contained in the currently selected commit");
         private readonly TranslationString _containedInBranchesText = new("Contained in branches:");
@@ -138,9 +136,7 @@ namespace GitUI
         public static string ButtonIgnore => _instance.Value._buttonIgnore.Text;
         public static string ButtonPush => _instance.Value._buttonPush.Text;
         public static string ButtonReportBug => _instance.Value._buttonReportBug.Text;
-
-        public static string CaptionFailedExecute => _instance.Value._captionFailedExecute.Text;
-        public static string InstructionOperationFailed => _instance.Value._instructionOperationFailed.Text;
+        public static string ButtonViewDetails => _instance.Value._buttonViewDetails.Text;
 
         public static string ContainedInCurrentCommit => _instance.Value._containedInCurrentCommitText.Text;
         public static string ContainedInBranches => _instance.Value._containedInBranchesText.Text;

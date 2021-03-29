@@ -372,6 +372,10 @@ Click this info icon for more details.</source>
   </file>
   <file datatype="plaintext" original="BugReportForm" source-language="en">
     <body>
+      <trans-unit id="IgnoreButton.Text">
+        <source>&amp;Ignore</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noReproStepsSuppliedErrorMessage.Text">
         <source>Please provide as much as information as possible to help the developers solve this issue.</source>
         <target />
@@ -9573,12 +9577,12 @@ Select this commit to populate the full message.</source>
         <source>Report bug!</source>
         <target />
       </trans-unit>
-      <trans-unit id="_cancelText.Text">
-        <source>Cancel</source>
+      <trans-unit id="_buttonViewDetails.Text">
+        <source>View details</source>
         <target />
       </trans-unit>
-      <trans-unit id="_captionFailedExecute.Text">
-        <source>Failed to execute</source>
+      <trans-unit id="_cancelText.Text">
+        <source>Cancel</source>
         <target />
       </trans-unit>
       <trans-unit id="_childrenText.Text">
@@ -9723,10 +9727,6 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_installGitInstructions.Text">
         <source>Install git...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_instructionOperationFailed.Text">
-        <source>Operation failed</source>
         <target />
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
