@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -11,6 +13,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         int GetLaneCount();
         IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
         int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision);
+        void MoveLanesRight(int fromLane);
     }
 
     // The RevisionGraphRow contains an ordered list of Segments that crosses the row or connects to the revision in the row.
@@ -29,7 +32,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public IReadOnlyList<RevisionGraphSegment> Segments { get; }
 
         // This dictonary contains a cached list of all segments and the lane index the segment is in for this row.
-        private IReadOnlyDictionary<RevisionGraphSegment, int>? _segmentLanes;
+        private IDictionary<RevisionGraphSegment, int>? _segmentLanes;
 
         // The cached lanecount
         private int _laneCount;
@@ -52,13 +55,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // We do not want SegementLanes to be build multiple times. Lock it.
             lock (Revision)
             {
-                // Another thread could be waiting for the lock, while the segmentlanes where being build. Check again if segmentslanes is null.
+                // Another thread could be waiting for the lock, while the segmentlanes were being built. Check again if segmentslanes is null.
                 if (_segmentLanes is not null)
                 {
                     return;
                 }
 
-                Dictionary<RevisionGraphSegment, int> newSegmentLanes = new Dictionary<RevisionGraphSegment, int>();
+                Dictionary<RevisionGraphSegment, int> newSegmentLanes = new();
 
                 int currentRevisionLane = -1;
                 int laneIndex = 0;
@@ -166,6 +169,24 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             return -1;
+        }
+
+        public void MoveLanesRight(int fromLane)
+        {
+            Validates.NotNull(_segmentLanes);
+            RevisionGraphSegment[] segmentsToBeMoved = _segmentLanes.Where(keyValue => keyValue.Value >= fromLane)
+                                                                    .Select(keyValue => keyValue.Key)
+                                                                    .ToArray();
+            if (!segmentsToBeMoved.Any())
+            {
+                return;
+            }
+
+            ++_laneCount;
+            foreach (RevisionGraphSegment segment in segmentsToBeMoved)
+            {
+                ++_segmentLanes[segment];
+            }
         }
     }
 }

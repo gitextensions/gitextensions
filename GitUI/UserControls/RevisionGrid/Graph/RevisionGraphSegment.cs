@@ -1,4 +1,6 @@
-﻿namespace GitUI.UserControls.RevisionGrid.Graph
+﻿using System.Diagnostics;
+
+namespace GitUI.UserControls.RevisionGrid.Graph
 {
     // This class represents the connection between 2 revisions.
     //     *    <- Child
@@ -15,6 +17,7 @@
     //     *  |
     //     | /
     //     *    <- Parent
+    [DebuggerDisplay("Child: {Child} - Parent: {Parent}")]
     public class RevisionGraphSegment
     {
         public RevisionGraphSegment(RevisionGraphRevision parent, RevisionGraphRevision child)
