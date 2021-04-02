@@ -23,8 +23,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             StartSegments = new SynchronizedCollection<RevisionGraphSegment>();
 
             Score = guessScore;
-
-            LaneColor = -1;
         }
 
         public void ApplyFlags(RevisionNodeFlags types)
@@ -44,8 +42,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// to a revision with a higher score.
         /// </summary>
         public int Score { get; private set; }
-
-        public int LaneColor { get; set; }
 
         // This method is called to ensure that the score is higher than a given score.
         // E.g. the score needs to be higher that the score of its children.
@@ -136,19 +132,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void AddParent(RevisionGraphRevision parent, out int maxScore)
         {
-            // Generate a LaneColor used for rendering
-            if (!Parents.IsEmpty)
-            {
-                parent.LaneColor = parent.Score;
-            }
-            else
-            {
-                if (parent.LaneColor == -1)
-                {
-                    parent.LaneColor = LaneColor;
-                }
-            }
-
             if (IsRelative)
             {
                 parent.MakeRelative();

@@ -176,7 +176,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // This revision is added from the log, but not seen before. This is probably a root node (new branch) OR the revisions
                 // are not in topo order. If this the case, we deal with it later.
                 revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, ++_maxScore);
-                revisionGraphRevision.LaneColor = revisionGraphRevision.IsCheckedOut ? 0 : _maxScore;
 
                 _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
             }
@@ -280,6 +279,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     // This is the first row. Start with only the startsegments of this row
                     segments = new List<RevisionGraphSegment>(revision.StartSegments);
+
+                    foreach (var startSegment in revision.StartSegments)
+                    {
+                        startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: null);
+                    }
                 }
                 else
                 {
@@ -296,10 +300,31 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                         // This segment that is copied from the previous row, connects to the node in this row.
                         // Copy all new segments that start from this node (revision) to this lane.
-                        if (revision == segment.Parent && !startSegmentsAdded)
+                        if (revision == segment.Parent)
                         {
-                            startSegmentsAdded = true;
-                            segments.AddRange(revision.StartSegments);
+                            if (!startSegmentsAdded)
+                            {
+                                startSegmentsAdded = true;
+                                segments.AddRange(revision.StartSegments);
+                            }
+
+                            foreach (var startSegment in revision.StartSegments)
+                            {
+                                if (startSegment == revision.StartSegments.First())
+                                {
+                                    if (startSegment.LaneInfo is null || startSegment.LaneInfo.StartScore > segment.LaneInfo?.StartScore)
+                                    {
+                                        startSegment.LaneInfo = segment.LaneInfo;
+                                    }
+                                }
+                                else
+                                {
+                                    if (startSegment.LaneInfo is null)
+                                    {
+                                        startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: segment.LaneInfo);
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -308,6 +333,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     {
                         // Add new segments started by this revision to the end
                         segments.AddRange(revision.StartSegments);
+
+                        foreach (var startSegment in revision.StartSegments)
+                        {
+                            startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: null);
+                        }
                     }
                 }
 
