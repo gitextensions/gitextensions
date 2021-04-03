@@ -46,6 +46,7 @@ Send report anyway?");
         }
 
         public BugReportForm()
+            : base(enablePositionRestore: false, allowNonUiThread: true)
         {
             InitializeComponent();
 
