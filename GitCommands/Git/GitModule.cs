@@ -2267,7 +2267,6 @@ namespace GitCommands
 
             GitArgumentBuilder args = new("diff")
             {
-                "--no-color",
                 extraDiffArguments,
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 "-M -C",
@@ -2310,7 +2309,6 @@ namespace GitCommands
             // Supported since Git 2.19 (checks when adding the command)
             GitArgumentBuilder args = new("range-diff")
             {
-                "--no-color",
                 extraDiffArguments,
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 "-M -C",
@@ -2356,7 +2354,6 @@ namespace GitCommands
             return _gitExecutable.Execute(
                 new GitArgumentBuilder("diff")
                 {
-                    "--no-color",
                     "-M -C",
                     "--name-status",
                     { nullSeparated, "-z" },
@@ -2609,7 +2606,6 @@ namespace GitCommands
         {
             GitArgumentBuilder args = new("diff")
             {
-                "--no-color",
                 "-M",
                 "-C",
                 "-z",

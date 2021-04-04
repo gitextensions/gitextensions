@@ -56,7 +56,6 @@ namespace GitCommands.Git
 
             GitArgumentBuilder aheadBehindGitCommand = new("for-each-ref")
             {
-                $"--color=never",
                 $"--format=\"{_refFormat}\"",
                 "refs/heads/" + branchName
             };

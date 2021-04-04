@@ -69,7 +69,6 @@ namespace GitCommands.Git.Commands
                         ? (ArgumentString)"--no-optional-locks"
                         : default)
                 {
-                    "--no-color",
                     { staged, "-M -C --cached" },
                     extraDiffArguments,
                     { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
