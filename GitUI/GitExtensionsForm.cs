@@ -29,8 +29,7 @@ namespace GitUI
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> indicating position restore.</summary>
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>
-        protected GitExtensionsForm(bool enablePositionRestore, bool allowNonUiThread = false)
-            : base(allowNonUiThread)
+        protected GitExtensionsForm(bool enablePositionRestore)
         {
             var needsPositionSave = enablePositionRestore;
             _needsPositionRestore = enablePositionRestore;

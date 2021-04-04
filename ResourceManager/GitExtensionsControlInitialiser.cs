@@ -13,9 +13,9 @@ namespace ResourceManager
         /// <summary>indicates whether the initialisation has been signalled as complete.</summary>
         private bool _initialiseCompleteCalled;
 
-        public GitExtensionsControlInitialiser(GitExtensionsFormBase form, bool allowNonUiThread)
+        public GitExtensionsControlInitialiser(GitExtensionsFormBase form)
         {
-            if (!allowNonUiThread)
+            if (form.GetType().Name != "BugReportForm")
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
             }

@@ -23,13 +23,8 @@ namespace ResourceManager
 
         /// <summary>Creates a new <see cref="GitExtensionsFormBase"/> indicating position restore.</summary>
         public GitExtensionsFormBase()
-            : this(allowNonUiThread: false)
         {
-        }
-
-        public GitExtensionsFormBase(bool allowNonUiThread)
-        {
-            _initialiser = new GitExtensionsControlInitialiser(this, allowNonUiThread);
+            _initialiser = new GitExtensionsControlInitialiser(this);
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;
             Icon = Resources.GitExtensionsLogoIcon;
