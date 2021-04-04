@@ -25,8 +25,8 @@ namespace GitExtUtils.GitUI.Theming
         private readonly bool _failed;
 
         private static int ImagePadding { get; } = DpiUtil.Scale(6);
-        private static int SelectedTabPadding { get; } = DpiUtil.Scale(2);
-        private static int BorderWidth { get; } = DpiUtil.Scale(1);
+        private const int SelectedTabPadding = 2;
+        private const int BorderWidth = 1;
 
         public TabControlPaintContext(TabControl tabs, PaintEventArgs e)
         {
@@ -34,7 +34,7 @@ namespace GitExtUtils.GitUI.Theming
             _graphics = e.Graphics;
             _clipRectangle = e.ClipRectangle;
             _size = tabs.Size;
-            _parentBackColor = tabs.Parent.BackColor;
+            _parentBackColor = GetParentBackColor(tabs);
             _selectedIndex = tabs.SelectedIndex;
             _tabCount = tabs.TabCount;
             _font = tabs.Font;
@@ -106,7 +106,7 @@ namespace GitExtUtils.GitUI.Theming
 
         private void RenderTabBackground(int index)
         {
-            using var borderPen = GetBorderPen();
+            using var borderPen = CreateBorderPen();
             var outerRect = GetOuterTabRect(index);
             _graphics.FillRectangle(GetBackgroundBrush(index), outerRect);
 
@@ -265,10 +265,26 @@ namespace GitExtUtils.GitUI.Theming
             }
 
             _graphics.FillRectangle(GetBackgroundBrush(_selectedIndex), pageRect);
-            using var borderPen = GetBorderPen();
+            using var borderPen = CreateBorderPen();
             {
                 _graphics.DrawRectangle(borderPen, pageRect);
             }
+        }
+
+        private Color GetParentBackColor(TabControl tabs)
+        {
+            var parent = tabs.Parent;
+            while (parent is not null)
+            {
+                if (parent.BackColor != Color.Transparent)
+                {
+                    return parent.BackColor;
+                }
+
+                parent = parent.Parent;
+            }
+
+            return SystemColors.Window;
         }
 
         private Brush GetBackgroundBrush(int index)
@@ -287,7 +303,7 @@ namespace GitExtUtils.GitUI.Theming
                 : SystemBrushes.Control;
         }
 
-        private Pen GetBorderPen() =>
-            new Pen(SystemBrushes.ControlDark, BorderWidth);
+        private Pen CreateBorderPen() =>
+            new Pen(Color.LightGray.AdaptBackColor(), BorderWidth);
     }
 }
