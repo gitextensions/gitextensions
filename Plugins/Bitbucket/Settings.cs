@@ -9,9 +9,9 @@ namespace GitExtensions.Plugins.Bitbucket
     public class Settings
     {
         private const string BitbucketHttpRegex =
-            @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([\w\-]+?))\/(?<repo>([\w\-]+)).git";
+            @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([^\/]+?))\/(?<repo>(.*?)).git";
         private const string BitbucketSshRegex =
-            @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([\w\-]+))\/(?<repo>([\w\-]+)).git";
+            @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([^\/]+))\/(?<repo>(.*?)).git";
 
         public static Settings? Parse(IGitModule gitModule, ISettingsSource settings, BitbucketPlugin plugin)
         {
