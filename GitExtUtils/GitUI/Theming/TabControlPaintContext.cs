@@ -110,7 +110,7 @@ namespace GitExtUtils.GitUI.Theming
             var outerRect = GetOuterTabRect(index);
             _graphics.FillRectangle(GetBackgroundBrush(index), outerRect);
 
-            var points = new List<Point>(4);
+            List<Point> points = new(4);
             if (index <= _selectedIndex)
             {
                 points.Add(new Point(outerRect.Left, outerRect.Bottom - 1));
@@ -299,11 +299,11 @@ namespace GitExtUtils.GitUI.Theming
             bool isHighlighted = _tabRects[index].Contains(_mouseCursor);
 
             return isHighlighted
-                ? SystemBrushes.ControlLightLight
+                ? new SolidBrush(ColorHelper.Lerp(SystemColors.Control, SystemColors.HotTrack, 64f / 255f))
                 : SystemBrushes.Control;
         }
 
         private Pen CreateBorderPen() =>
-            new Pen(Color.LightGray.AdaptBackColor(), BorderWidth);
+            new(Color.LightGray.AdaptBackColor(), BorderWidth);
     }
 }
