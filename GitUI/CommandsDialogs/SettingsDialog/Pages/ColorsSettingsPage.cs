@@ -75,6 +75,33 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             set => chkUseSystemVisualStyle.Checked = value;
         }
 
+        private bool SettingsAreModified
+        {
+            get
+            {
+                if (SelectedThemeId != ThemeModule.Settings.Theme.Id)
+                {
+                    return true;
+                }
+
+                if (SelectedThemeId == ThemeId.Default)
+                {
+                    // UseSystemVisualStyle and ThemeVariations settings are only applicable with non-default theme.
+                    // However, in order to preserve user preference, we do not reset these when
+                    // user chooses the default theme from the menu, we only disable the checkboxes.
+
+                    // This is why, when the default theme is selected, we should ignore any difference in
+                    // UseSystemVisualStyle or ThemeVariations checkboxes from the actual theme settings.
+                    // Their value is not applied and only kept to be applied when user chooses non-default theme
+                    // again.
+                    return false;
+                }
+
+                return UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle ||
+                    !SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
+            }
+        }
+
         protected override void OnRuntimeLoad()
         {
             base.OnRuntimeLoad();
@@ -170,12 +197,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (counter == 0)
             {
-                bool settingsChanged =
-                    UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle ||
-                    SelectedThemeId != ThemeModule.Settings.Theme.Id ||
-                    !SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
-
-                lblRestartNeeded.Visible = settingsChanged;
+                lblRestartNeeded.Visible = SettingsAreModified;
                 chkColorblind.Enabled =
                     chkUseSystemVisualStyle.Enabled = SelectedThemeId != ThemeId.Default;
             }
