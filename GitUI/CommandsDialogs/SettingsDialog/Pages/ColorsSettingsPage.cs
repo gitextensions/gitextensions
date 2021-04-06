@@ -27,6 +27,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Colors";
             sbOpenThemeFolder.AutoSize = false;
+
+            _NO_TRANSLATE_cbSelectTheme.SelectedIndexChanged += ComboBoxTheme_SelectedIndexChanged;
+            chkUseSystemVisualStyle.CheckedChanged += ChkUseSystemVisualStyle_CheckedChanged;
+            chkColorblind.CheckedChanged += ChkColorblind_CheckedChanged;
+
             InitializeComplete();
         }
 
