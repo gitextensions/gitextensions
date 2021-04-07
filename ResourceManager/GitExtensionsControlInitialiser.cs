@@ -15,11 +15,7 @@ namespace ResourceManager
 
         public GitExtensionsControlInitialiser(GitExtensionsFormBase form)
         {
-            if (form.GetType().Name != "BugReportForm")
-            {
-                ThreadHelper.ThrowIfNotOnUIThread();
-            }
-
+            ThreadHelper.ThrowIfNotOnUIThread();
             form.Load += LoadHandler;
             _translate = form;
         }

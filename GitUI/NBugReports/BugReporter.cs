@@ -124,6 +124,15 @@ namespace GitExtensions
         {
             var envInfo = UserEnvironmentInformation.GetInformation();
 
+            if (isTerminating)
+            {
+                // Do not attempt to open the BugReportForm from a non-UI thread
+                GitHubUrlBuilder urlBuilder = new(new ErrorReportMarkDownBodyBuilder());
+                string? url = urlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", exception, envInfo, additionalInfo: null);
+                OsShellUtil.OpenUrlInDefaultBrowser(url);
+                Environment.Exit(-1);
+            }
+
             using BugReportForm form = new();
             DialogResult result = form.ShowDialog(owner, exception, envInfo,
                 canIgnore: !isTerminating,
