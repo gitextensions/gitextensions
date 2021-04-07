@@ -73,7 +73,7 @@ namespace CommonTestUtils
             }
         }
 
-        public IProcess Start(ArgumentString arguments, bool createWindow, bool redirectInput, bool redirectOutput, Encoding outputEncoding, bool useShellExecute = false)
+        public IProcess Start(ArgumentString arguments, bool createWindow, bool redirectInput, bool redirectOutput, Encoding outputEncoding, bool useShellExecute = false, bool throwOnErrorOutput = true)
         {
             System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
 

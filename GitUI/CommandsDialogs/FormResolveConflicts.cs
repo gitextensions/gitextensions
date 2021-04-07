@@ -558,7 +558,7 @@ namespace GitUI.CommandsDialogs
                     GitUIPluginInterfaces.ExecutionResult res;
                     try
                     {
-                        res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments);
+                        res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments, throwOnErrorOutput: false);
                     }
                     catch (Exception)
                     {

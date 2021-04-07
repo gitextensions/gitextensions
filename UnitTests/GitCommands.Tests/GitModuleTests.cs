@@ -747,13 +747,13 @@ namespace GitCommandsTests
                     var child = moduleTestHelpers[i];
 
                     // Add child as submodule of parent
-                    parent.Module.GitExecutable.GetOutput(GitCommandHelpers.AddSubmoduleCmd(child.Module.WorkingDir.ToPosixPath(), $"repo{i}", null, true));
+                    parent.Module.GitExecutable.GetOutput(GitCommandHelpers.AddSubmoduleCmd(child.Module.WorkingDir.ToPosixPath(), $"repo{i}", null, true), throwOnErrorOutput: false);
                     parent.Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
                 }
 
                 // Init all modules of root
                 var root = moduleTestHelpers[0];
-                root.Module.GitExecutable.GetOutput(@"submodule update --init --recursive");
+                root.Module.GitExecutable.GetOutput(@"submodule update --init --recursive", throwOnErrorOutput: false);
 
                 var paths = root.Module.GetSubmodulesLocalPaths(recursive: true);
                 Assert.AreEqual(new string[] { "repo1", "repo1/repo2", "repo1/repo2/repo3" }, paths, $"Modules: {string.Join(" ", paths)}");

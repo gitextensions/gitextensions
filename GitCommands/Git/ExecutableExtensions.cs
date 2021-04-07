@@ -34,6 +34,7 @@ namespace GitCommands
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
+        /// <param name="throwOnErrorOutput">A flag configuring whether to throw an exception if the exit code is not 0 or if the output to StandardError is not empty.</param>
         /// <returns>The concatenation of standard output and standard error. To receive these outputs separately, use <see cref="Execute"/> instead.</returns>
         [MustUseReturnValue("If output text is not required, use " + nameof(RunCommand) + " instead")]
         public static string GetOutput(
@@ -42,10 +43,11 @@ namespace GitCommands
             byte[]? input = null,
             Encoding? outputEncoding = null,
             CommandCache? cache = null,
-            bool stripAnsiEscapeCodes = true)
+            bool stripAnsiEscapeCodes = true,
+            bool throwOnErrorOutput = true)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
-                () => executable.GetOutputAsync(arguments, input, outputEncoding, cache, stripAnsiEscapeCodes));
+                () => executable.GetOutputAsync(arguments, input, outputEncoding, cache, stripAnsiEscapeCodes, throwOnErrorOutput));
         }
 
         /// <summary>
@@ -88,6 +90,7 @@ namespace GitCommands
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="cache">A <see cref="CommandCache"/> to use if command results may be cached, otherwise <c>null</c>.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
+        /// <param name="throwOnErrorOutput">A flag configuring whether to throw an exception if the exit code is not 0 or if the output to StandardError is not empty.</param>
         /// <returns>A task that yields the concatenation of standard output and standard error. To receive these outputs separately, use <see cref="ExecuteAsync"/> instead.</returns>
         public static async Task<string> GetOutputAsync(
             this IExecutable executable,
@@ -95,7 +98,8 @@ namespace GitCommands
             byte[]? input = null,
             Encoding? outputEncoding = null,
             CommandCache? cache = null,
-            bool stripAnsiEscapeCodes = true)
+            bool stripAnsiEscapeCodes = true,
+            bool throwOnErrorOutput = true)
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
@@ -109,7 +113,8 @@ namespace GitCommands
                 createWindow: false,
                 redirectInput: input is not null,
                 redirectOutput: true,
-                outputEncoding);
+                outputEncoding,
+                throwOnErrorOutput: throwOnErrorOutput);
             if (input is not null)
             {
                 await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
@@ -292,6 +297,7 @@ namespace GitCommands
         /// <param name="writeInput">A callback that writes bytes to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
+        /// <param name="throwOnErrorOutput">A flag configuring whether to throw an exception if the exit code is not 0 or if the output to StandardError is not empty.</param>
         /// <returns>An <see cref="ExecutionResult"/> object that gives access to exit code, standard output and standard error values.</returns>
         [MustUseReturnValue("If execution result is not required, use " + nameof(RunCommand) + " instead")]
         public static ExecutionResult Execute(
@@ -300,10 +306,11 @@ namespace GitCommands
             Action<StreamWriter>? writeInput = null,
             Encoding? outputEncoding = null,
             CommandCache? cache = null,
-            bool stripAnsiEscapeCodes = true)
+            bool stripAnsiEscapeCodes = true,
+            bool throwOnErrorOutput = true)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
-                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, stripAnsiEscapeCodes));
+                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, stripAnsiEscapeCodes, throwOnErrorOutput));
         }
 
         /// <summary>
@@ -314,6 +321,7 @@ namespace GitCommands
         /// <param name="writeInput">A callback that writes bytes to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
+        /// <param name="throwOnErrorOutput">A flag configuring whether to throw an exception if the exit code is not 0 or if the output to StandardError is not empty.</param>
         /// <returns>A task that yields an <see cref="ExecutionResult"/> object that gives access to exit code, standard output and standard error values.</returns>
         public static async Task<ExecutionResult> ExecuteAsync(
             this IExecutable executable,
@@ -321,11 +329,12 @@ namespace GitCommands
             Action<StreamWriter>? writeInput = null,
             Encoding? outputEncoding = null,
             CommandCache? cache = null,
-            bool stripAnsiEscapeCodes = true)
+            bool stripAnsiEscapeCodes = true,
+            bool throwOnErrorOutput = true)
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            if (cache is not null && cache.TryGet(arguments, out var cachedOutput, out var cachedError))
+            if (cache is not null && cache.TryGet(arguments, out byte[]? cachedOutput, out byte[]? cachedError))
             {
                 return new ExecutionResult(
                     CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(cachedOutput, error: null, ref outputEncoding)),
@@ -333,7 +342,7 @@ namespace GitCommands
                     exitCode: 0);
             }
 
-            using var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding);
+            using IProcess process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding, throwOnErrorOutput: throwOnErrorOutput);
             MemoryStream outputBuffer = new();
             MemoryStream errorBuffer = new();
             var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
