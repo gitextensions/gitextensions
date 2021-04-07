@@ -60,7 +60,7 @@ namespace GitCommands.Git
                 "refs/heads/" + branchName
             };
 
-            ExecutionResult result = GetGitExecutable().Execute(aheadBehindGitCommand, outputEncoding: encoding);
+            ExecutionResult result = GetGitExecutable().Execute(aheadBehindGitCommand, outputEncoding: encoding, throwOnErrorOutput: false);
             if (!result.ExitedSuccessfully || string.IsNullOrEmpty(result.StandardOutput))
             {
                 return null;
