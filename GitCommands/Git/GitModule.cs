@@ -2763,10 +2763,20 @@ namespace GitCommands
                 : null;
         }
 
+        /// <summary>
+        /// Get the file contents for the HEAD commit
+        /// </summary>
+        /// <param name="file">The Git status item</param>
+        /// <returns>An awaitable task with the requested file contents.</returns>
         public async Task<string?> GetFileContentsAsync(GitItemStatus file)
         {
-            var contents = new StringBuilder();
+            if (!file.IsTracked || (file.Staged == StagedStatus.Index && file.IsNew))
+            {
+                // File is not in Git
+                return null;
+            }
 
+            StringBuilder contents = new();
             string? currentContents = await GetFileContentsAsync(file.Name).ConfigureAwaitRunInline();
             if (currentContents is not null)
             {
