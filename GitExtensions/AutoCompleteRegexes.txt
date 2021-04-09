@@ -8,7 +8,7 @@
 .asp, .aspx, .cs = (?:(?:(?:public|protected|private|internal)\s+(?:[\w.]+(?:\s*<[<>\w\s.,]+>)?\s+)*([\w.]+)(?:\s*<[<>\w\s.,]+>)?)|(?:namespace\s+([\w.]+))|(?:new\s+([\w]+))|(?:using\s+([\w.]+)))
 .h, .hpp, .hxx = ^\s*(?:class|struct)\s+([\w]+)|^\s+(?:\w+\s+)*([\w]+)\s*\(|^#define\s+(\w+)
 .html = \"#(\w+)\"
-.java = (?:public|protected|private|internal)\s+(?:[\w.]+\s+)*([\w.]+)|class\s+([\w]+)(?:(?:\s+)?(?:extends|implements)(?:\s+)?([\w]+)?)
+.java, .groovy = (?:public|protected|private|internal)\s+(?:[\w.]+\s+)*([\w.]+)|class\s+([\w]+)(?:(?:\s+)?(?:extends|implements)(?:\s+)?([\w]+)?)
 .js = (?:(?:prototype\.|this\.)(\w+)\s*=\s*)?function\s*(?:(\w*)\s*)\(
 .pas = (\w+)\s+=\s+(?:class|record|interface)|(?:procedure|function|property|constructor)\s+(\w+)
 .php = ^\s*class\s+(\w+)|^\s*(?:(?:public|private)?\s+function)\s+(\w+)|::(\w+)|->(\w+)
