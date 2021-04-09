@@ -149,19 +149,21 @@ namespace GitUI.AutoCompletion
 
         private static async Task<string?> GetChangedFileTextAsync(GitModule module, GitItemStatus file)
         {
-            var changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000")
+            if (file.IsTracked)
+            {
+                var changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000")
                 .ConfigureAwait(false);
 
-            if (changes is not null)
-            {
-                return changes.Text;
-            }
+                if (changes is not null)
+                {
+                    return changes.Text;
+                }
 
-            var content = await module.GetFileContentsAsync(file).ConfigureAwaitRunInline();
-
-            if (content is not null)
-            {
-                return content;
+                var content = await module.GetFileContentsAsync(file).ConfigureAwaitRunInline();
+                if (content is not null)
+                {
+                    return content;
+                }
             }
 
             // Try to read the contents of the file: if it cannot be read, skip the operation silently.
