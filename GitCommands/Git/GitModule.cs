@@ -2822,10 +2822,14 @@ namespace GitCommands
                 return head;
             }
 
-            var args = new GitArgumentBuilder("symbolic-ref") { "HEAD" };
+            var args = new GitArgumentBuilder("symbolic-ref")
+            {
+                "--quiet",
+                "HEAD"
+            };
             var result = _gitExecutable.Execute(args);
 
-            return result.ExitCode == 0
+            return result.ExitedSuccessfully
                 ? result.StandardOutput
                 : setDefaultIfEmpty ? DetachedHeadParser.DetachedBranch : string.Empty;
         }
@@ -3622,10 +3626,15 @@ namespace GitCommands
                 return objectId;
             }
 
-            var args = new GitArgumentBuilder("rev-parse") { $"\"{revisionExpression}~0\"" };
+            var args = new GitArgumentBuilder("rev-parse")
+            {
+                "--quiet",
+                "--verify",
+                $"\"{revisionExpression}~0\""
+            };
             var result = _gitExecutable.Execute(args);
 
-            return result.ExitCode == 0 && ObjectId.TryParse(result.StandardOutput, offset: 0, out objectId)
+            return result.ExitedSuccessfully && ObjectId.TryParse(result.StandardOutput, offset: 0, out objectId)
                 ? objectId
                 : null;
         }

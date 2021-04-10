@@ -142,42 +142,42 @@ namespace GitCommandsTests
             // TODO test case where this is false
             Assert.IsTrue(GitVersion.Current.FetchCanAskForProgress);
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/remotebranch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
                     "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch").Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/remotebranch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
                     "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --tags",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", true).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/remotebranch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
                     "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", null).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/remotebranch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
                     "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --unshallow",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", isUnshallow: true).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/remotebranch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
                     "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/remotebranch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
                     "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --prune-tags",
@@ -214,49 +214,49 @@ namespace GitCommandsTests
         [Test]
         public void PushCmd()
         {
-            using (_executable.StageOutput("rev-parse \"refs/heads/from-branch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/from-branch~0\"", null))
             {
                 Assert.AreEqual(
                     "push --progress \"remote\" from-branch",
                     _gitModule.PushCmd("remote", "from-branch", null, ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/from-branch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/from-branch~0\"", null))
             {
                 Assert.AreEqual(
                     "push --progress \"remote\" from-branch:refs/heads/to-branch",
                     _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/from-branch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/from-branch~0\"", null))
             {
                 Assert.AreEqual(
                     "push -f --progress \"remote\" from-branch:refs/heads/to-branch",
                     _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.Force, track: false, recursiveSubmodules: 0).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/from-branch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/from-branch~0\"", null))
             {
                 Assert.AreEqual(
                     "push --force-with-lease --progress \"remote\" from-branch:refs/heads/to-branch",
                     _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.ForceWithLease, track: false, recursiveSubmodules: 0).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/from-branch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/from-branch~0\"", null))
             {
                 Assert.AreEqual(
                     "push -u --progress \"remote\" from-branch:refs/heads/to-branch",
                     _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: true, recursiveSubmodules: 0).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/from-branch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/from-branch~0\"", null))
             {
                 Assert.AreEqual(
                     "push --recurse-submodules=check --progress \"remote\" from-branch:refs/heads/to-branch",
                     _gitModule.PushCmd("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 1).Arguments);
             }
 
-            using (_executable.StageOutput("rev-parse \"refs/heads/from-branch~0\"", null))
+            using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/from-branch~0\"", null))
             {
                 Assert.AreEqual(
                     "push --recurse-submodules=on-demand --progress \"remote\" from-branch:refs/heads/to-branch",
@@ -414,7 +414,7 @@ namespace GitCommandsTests
         public void RevParse_should_query_git_and_return_ObjectId_if_get_valid_hash()
         {
             var revisionExpression = "11111";
-            using (_executable.StageOutput($"rev-parse \"{revisionExpression}~0\"", new string('1', ObjectId.Sha1CharCount), 0))
+            using (_executable.StageOutput($"rev-parse --quiet --verify \"{revisionExpression}~0\"", new string('1', ObjectId.Sha1CharCount), 0))
             {
                 _gitModule.RevParse(revisionExpression).Should().Be(ObjectId.WorkTreeId);
             }
@@ -424,7 +424,7 @@ namespace GitCommandsTests
         public void RevParse_should_query_git_and_return_null_if_invalid_response()
         {
             var revisionExpression = "11111";
-            using (_executable.StageOutput($"rev-parse \"{revisionExpression}~0\"", "foo bar", 0))
+            using (_executable.StageOutput($"rev-parse --quiet --verify \"{revisionExpression}~0\"", "foo bar", 0))
             {
                 _gitModule.RevParse(revisionExpression).Should().BeNull();
             }
