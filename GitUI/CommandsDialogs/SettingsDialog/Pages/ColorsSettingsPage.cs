@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
             set
             {
-                var formattedThemeId = new FormattedThemeId(value);
+                FormattedThemeId formattedThemeId = new(value);
                 int index = _NO_TRANSLATE_cbSelectTheme.Items.IndexOf(formattedThemeId);
                 if (index < 0)
                 {
@@ -47,7 +47,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     // - user creates custom theme and selects it in this settings page
                     // - user saves app settings
                     // - user deletes the file with custom theme
-                    MessageBoxes.ShowError(this, "Theme not found: " + formattedThemeId);
+                    // - on first install; suppress MessageBox
+                    string theme = formattedThemeId.ToString();
+                    if (!string.IsNullOrWhiteSpace(theme))
+                    {
+                        MessageBoxes.ShowError(FindForm(), $"Theme not found: {theme}");
+                    }
+
                     index = 0;
                 }
 
