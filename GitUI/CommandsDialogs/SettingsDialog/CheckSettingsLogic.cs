@@ -79,6 +79,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                 if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
                 {
+                    if (ContainsSh(AppSettings.GitBinDir))
+                    {
+                        return true;
+                    }
+
                     AppSettings.GitBinDir = string.Empty;
                     return true;
                 }
