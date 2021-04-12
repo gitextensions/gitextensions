@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (!EnvUtils.RunningOnWindows())
             {
-                AppSettings.GitBinDir = "";
+                AppSettings.GitBinDir = string.Empty;
                 return true;
             }
 
@@ -64,41 +64,43 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 gitpath = possibleNewPath.Trim();
             }
 
-            foreach (var toolsPath in new[] { @"bin\", @"usr\bin\" })
+            foreach (string toolsPath in new[] { @"usr\bin\", @"bin\" })
             {
-                gitpath = gitpath.Replace(@"\cmd\git.exe", @"\" + toolsPath)
+                string linuxToolsPath = gitpath.Replace(@"\cmd\git.exe", @"\" + toolsPath)
                     .Replace(@"\cmd\git.cmd", @"\" + toolsPath)
                     .Replace(@"\bin\git.exe", @"\" + toolsPath);
 
-                if (Directory.Exists(gitpath))
+                if (ContainsSh(linuxToolsPath))
                 {
-                    if (File.Exists(gitpath + "sh.exe") || File.Exists(gitpath + "sh"))
+                    AppSettings.GitBinDir = linuxToolsPath;
+                    return true;
+                }
+
+                if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
+                {
+                    if (ContainsSh(AppSettings.GitBinDir))
+                    {
+                        return true;
+                    }
+
+                    AppSettings.GitBinDir = string.Empty;
+                    return true;
+                }
+
+                foreach (string path in GetGitLocations())
+                {
+                    linuxToolsPath = path + toolsPath;
+                    if (ContainsSh(gitpath))
                     {
                         AppSettings.GitBinDir = gitpath;
                         return true;
                     }
                 }
-
-                if (CheckIfFileIsInPath("sh.exe") || CheckIfFileIsInPath("sh"))
-                {
-                    AppSettings.GitBinDir = "";
-                    return true;
-                }
-
-                foreach (var path in GetGitLocations())
-                {
-                    if (Directory.Exists(path + toolsPath))
-                    {
-                        if (File.Exists(path + toolsPath + "sh.exe") || File.Exists(path + toolsPath + "sh"))
-                        {
-                            AppSettings.GitBinDir = path + toolsPath;
-                            return true;
-                        }
-                    }
-                }
             }
 
             return false;
+
+            static bool ContainsSh(string path) => Directory.Exists(path) && (File.Exists(path + "sh.exe") || File.Exists(path + "sh"));
         }
 
         private static IEnumerable<string> GetGitLocations()
