@@ -65,15 +65,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 gitpath = possibleNewPath.Trim();
             }
 
-            foreach (string toolsPath in new[] { @"bin\", @"usr\bin\" })
+            foreach (string toolsPath in new[] { @"usr\bin\", @"bin\" })
             {
-                gitpath = gitpath.Replace(@"\cmd\git.exe", @"\" + toolsPath)
+                string linuxToolsPath = gitpath.Replace(@"\cmd\git.exe", @"\" + toolsPath)
                     .Replace(@"\cmd\git.cmd", @"\" + toolsPath)
                     .Replace(@"\bin\git.exe", @"\" + toolsPath);
 
-                if (ContainsSh(gitpath))
+                if (ContainsSh(linuxToolsPath))
                 {
-                    AppSettings.GitBinDir = gitpath;
+                    AppSettings.GitBinDir = linuxToolsPath;
                     return true;
                 }
 
@@ -90,7 +90,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                 foreach (string path in GetGitLocations())
                 {
-                    gitpath = path + toolsPath;
+                    linuxToolsPath = path + toolsPath;
                     if (ContainsSh(gitpath))
                     {
                         AppSettings.GitBinDir = gitpath;
