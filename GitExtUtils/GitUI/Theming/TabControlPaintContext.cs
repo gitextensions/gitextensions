@@ -20,7 +20,6 @@ namespace GitExtUtils.GitUI.Theming
         private readonly Image?[] _tabImages;
         private readonly Rectangle[] _tabRects;
         private readonly string[] _tabTexts;
-        private readonly Color[] _tabBackColors;
         private readonly Size _size;
         private readonly bool _failed;
 
@@ -52,9 +51,6 @@ namespace GitExtUtils.GitUI.Theming
                 _tabRects = Enumerable.Range(0, _tabCount)
                     .Select(tabs.GetTabRect)
                     .ToArray();
-                _tabBackColors = Enumerable.Range(0, _tabCount)
-                    .Select(i => tabs.TabPages[i].BackColor)
-                    .ToArray();
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -68,7 +64,6 @@ namespace GitExtUtils.GitUI.Theming
                 _tabTexts = null!;
                 _tabImages = null!;
                 _tabRects = null!;
-                _tabBackColors = null!;
             }
         }
 
@@ -291,13 +286,10 @@ namespace GitExtUtils.GitUI.Theming
         {
             if (index == _selectedIndex)
             {
-                return _tabBackColors[index] == Color.Transparent
-                    ? SystemBrushes.Window
-                    : new SolidBrush(_tabBackColors[index]);
+                return SystemBrushes.Window;
             }
 
             bool isHighlighted = _tabRects[index].Contains(_mouseCursor);
-
             return isHighlighted
                 ? new SolidBrush(ColorHelper.Lerp(SystemColors.Control, SystemColors.HotTrack, 64f / 255f))
                 : SystemBrushes.Control;
