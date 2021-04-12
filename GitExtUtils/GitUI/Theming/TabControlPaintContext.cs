@@ -23,8 +23,11 @@ namespace GitExtUtils.GitUI.Theming
         private readonly Size _size;
         private readonly bool _failed;
 
-        private static int ImagePadding { get; } = DpiUtil.Scale(6);
-        private const int SelectedTabPadding = 2;
+        private static readonly int ImagePadding = DpiUtil.Scale(6);
+
+        // DPI 100% - 175%: 2; DPI 200%: 4
+        // so that when leftmost tab is selected, its border matches the border of tab control
+        private static readonly int SelectedTabPadding = 2 * (int)Math.Floor(DpiUtil.ScaleX);
         private const int BorderWidth = 1;
 
         public TabControlPaintContext(TabControl tabs, PaintEventArgs e)
