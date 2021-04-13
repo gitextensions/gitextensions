@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using EasyHook;
 using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls;
@@ -45,7 +45,6 @@ namespace GitUI.Theming
         private static ListViewRenderer? _listViewRenderer;
         private static HeaderRenderer? _headerRenderer;
         private static TreeViewRenderer? _treeViewRenderer;
-        private static TabRenderer? _tabRenderer;
 
         private static bool BypassThemeRenderers =>
             ThemeSettings.UseSystemVisualStyle || BypassAnyHook;
@@ -118,7 +117,6 @@ namespace GitUI.Theming
                 _listViewRenderer = new ListViewRenderer(),
                 _headerRenderer = new HeaderRenderer(),
                 _treeViewRenderer = new TreeViewRenderer(),
-                _tabRenderer = new TabRenderer(),
                 new EditRenderer(),
                 new SpinRenderer(),
                 new ComboBoxRenderer(),
@@ -136,7 +134,6 @@ namespace GitUI.Theming
             Validates.NotNull(_headerRenderer);
             Validates.NotNull(_listViewRenderer);
             Validates.NotNull(_treeViewRenderer);
-            Validates.NotNull(_tabRenderer);
 
             foreach (ThemeRenderer renderer in _renderers)
             {
@@ -151,7 +148,6 @@ namespace GitUI.Theming
             _headerRenderer.AddThemeData(listViewHandle);
             _listViewRenderer.AddThemeData(listViewHandle);
             _treeViewRenderer.AddThemeData(treeViewHandle);
-            _tabRenderer.AddThemeData(new TabControl().Handle);
         }
 
         public static void Uninstall()

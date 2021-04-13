@@ -320,6 +320,30 @@ namespace GitExtUtils.GitUI.Theming
             return new HslColor(correctedH / 360d, hsl.S, hsl.L).ToColor();
         }
 
+        public static Color Lerp(Color colour, Color to, float amount)
+        {
+            // start colours as lerp-able floats
+            float sr = colour.R, sg = colour.G, sb = colour.B;
+
+            // end colours as lerp-able floats
+            float er = to.R, eg = to.G, eb = to.B;
+
+            // lerp the colours to get the difference
+            byte r = (byte)Lerp(sr, er),
+                g = (byte)Lerp(sg, eg),
+                b = (byte)Lerp(sb, eb);
+
+            // return the new colour
+            return Color.FromArgb(r, g, b);
+
+            float Lerp(float start, float end)
+            {
+                var difference = end - start;
+                var adjusted = difference * amount;
+                return start + adjusted;
+            }
+        }
+
         internal static class TestAccessor
         {
             public static double Transform(double orig, double exampleOrig, double oppositeOrig, double example, double opposite) =>
