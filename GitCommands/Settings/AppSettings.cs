@@ -1361,8 +1361,8 @@ namespace GitCommands
             get
             {
                 return new ThemeId(
-                    GetString("uitheme", string.Empty),
-                    GetBool("uithemeisbuiltin", true));
+                    GetString("uitheme", ThemeId.Default.Name),
+                    GetBool("uithemeisbuiltin", ThemeId.Default.IsBuiltin));
             }
             set
             {

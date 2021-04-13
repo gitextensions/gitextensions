@@ -19,7 +19,8 @@ namespace GitUI.Theming
         public static void Load()
         {
             new ThemeMigration(Repository).Migrate();
-            Settings = LoadThemeSettings();
+            Settings = LoadThemeSettings(Repository);
+            IsDarkTheme = Settings.Theme.GetNonEmptyColor(KnownColor.Window).GetBrightness() < 0.5;
             ColorHelper.ThemeSettings = Settings;
             ThemeFix.ThemeSettings = Settings;
             Win32ThemeHooks.ThemeSettings = Settings;
@@ -42,12 +43,12 @@ namespace GitUI.Theming
             ResetGdiCaches();
         }
 
-        private static ThemeSettings LoadThemeSettings()
+        private static ThemeSettings LoadThemeSettings(IThemeRepository repository)
         {
             Theme invariantTheme;
             try
             {
-                invariantTheme = Repository.GetInvariantTheme();
+                invariantTheme = repository.GetInvariantTheme();
             }
             catch (ThemeException ex)
             {
@@ -65,7 +66,7 @@ namespace GitUI.Theming
             Theme theme;
             try
             {
-                theme = Repository.GetTheme(themeId, AppSettings.ThemeVariations);
+                theme = repository.GetTheme(themeId, AppSettings.ThemeVariations);
             }
             catch (ThemeException ex)
             {
@@ -73,17 +74,18 @@ namespace GitUI.Theming
                 return CreateFallbackSettings(invariantTheme);
             }
 
-            try
+            if (!AppSettings.UseSystemVisualStyle)
             {
-                InstallHooks(theme);
+                try
+                {
+                    InstallHooks(theme);
+                }
+                catch (Exception ex)
+                {
+                    MessageBoxes.ShowError(null, $"Failed to install Win32 theming hooks: {ex}");
+                    return CreateFallbackSettings(invariantTheme);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBoxes.ShowError(null, $"Failed to install Win32 theming hooks: {ex}");
-                return CreateFallbackSettings(invariantTheme);
-            }
-
-            IsDarkTheme = theme.GetNonEmptyColor(KnownColor.Window).GetBrightness() < 0.5;
 
             return new ThemeSettings(theme, invariantTheme, AppSettings.ThemeVariations, AppSettings.UseSystemVisualStyle);
         }
@@ -129,7 +131,7 @@ namespace GitUI.Theming
             Win32ThemeHooks.WindowCreated -= Handle_WindowCreated;
         }
 
-        public static void ReloadThemeData()
+        public static void ReloadWin32ThemeData()
         {
             Win32ThemeHooks.LoadThemeData();
         }

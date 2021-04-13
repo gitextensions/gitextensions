@@ -6,7 +6,22 @@ using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Theming
 {
-    public class ThemeRepository
+    public interface IThemeRepository
+    {
+        string InvariantThemeName { get; }
+
+        Theme GetTheme(ThemeId themeId, IReadOnlyList<string> variations);
+
+        void Save(Theme theme);
+
+        Theme GetInvariantTheme();
+
+        IEnumerable<ThemeId> GetThemeIds();
+
+        void Delete(ThemeId themeId);
+    }
+
+    public class ThemeRepository : IThemeRepository
     {
         private readonly IThemePersistence _persistence;
         private readonly IThemePathProvider _themePathProvider;

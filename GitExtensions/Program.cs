@@ -52,7 +52,7 @@ namespace GitExtensions
                 // reload the theme, and repaint all forms
                 if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.VisualStyle)
                 {
-                    ThemeModule.ReloadThemeData();
+                    ThemeModule.ReloadWin32ThemeData();
                     foreach (Form form in Application.OpenForms)
                     {
                         form.BeginInvoke((MethodInvoker)(() => form.Invalidate()));
