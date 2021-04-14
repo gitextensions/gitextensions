@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using FluentAssertions;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
@@ -14,157 +15,152 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
     [TestFixture]
     public class ColorsPageSettingsPageControllerTests
     {
+        private ColorSettingsPageTestContext _context = null!;
+
         [SetUp]
         public void Setup()
         {
-            AppSettings.UseSystemVisualStyle = true; // to prevent installing win32 theming hooks
+            ThemeModule.TestAccessor.SuppressWin32Hooks = true;
+
+            var page = new MockColorsSettingsPage();
+            var themeRepository = Substitute.For<IThemeRepository>();
+            var themePathProvider = Substitute.For<IThemePathProvider>();
+            themeRepository
+                .GetTheme(Arg.Any<ThemeId>(), Arg.Any<IReadOnlyList<string>>())
+                .Returns(callInfo => new Theme(new Dictionary<AppColor, Color>(), new Dictionary<KnownColor, Color>(), callInfo.Arg<ThemeId>()));
+            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
+
+            _context = new ColorSettingsPageTestContext(page, controller, themeRepository);
         }
 
         [Test]
         public void When_current_theme_is_default_choosing_visual_style_or_theme_variation_should_be_disabled()
         {
-            var page = new MockColorsSettingsPage();
-            var themeRepository = Substitute.For<IThemeRepository>();
-            var themePathProvider = Substitute.For<IThemePathProvider>();
             AppSettings.ThemeId = ThemeId.Default;
-            ThemeModule.TestAccessor.ReloadThemeSettings(themeRepository);
+            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
-            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
-            controller.ShowThemeSettings();
+            _context.Controller.ShowThemeSettings();
 
-            page.IsChoosingThemeVariationsEnabled.Should().BeFalse();
-            page.IsChoosingVisualStyleEnabled.Should().BeFalse();
+            _context.Page.IsChoosingThemeVariationsEnabled.Should().BeFalse();
+            _context.Page.IsChoosingVisualStyleEnabled.Should().BeFalse();
         }
 
         [Test]
         public void When_current_theme_is_non_default_choosing_visual_style_or_theme_variation_should_be_enabled()
         {
-            var page = new MockColorsSettingsPage();
-            var themeRepository = Substitute.For<IThemeRepository>();
-            var themePathProvider = Substitute.For<IThemePathProvider>();
+            AppSettings.ThemeId = new ThemeId("non_default", isBuiltin: true);
+            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
+            _context.Controller.ShowThemeSettings();
 
-            var changedThemeId = new ThemeId("non_default", isBuiltin: true);
-            var theme = new Theme(new Dictionary<AppColor, Color>(), new Dictionary<KnownColor, Color>(), changedThemeId);
-            themeRepository
-                .GetTheme(Arg.Is(changedThemeId), Arg.Any<IReadOnlyList<string>>())
-                .Returns(theme);
-            AppSettings.ThemeId = changedThemeId;
-            ThemeModule.TestAccessor.ReloadThemeSettings(themeRepository);
-
-            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
-            controller.ShowThemeSettings();
-
-            page.IsChoosingThemeVariationsEnabled.Should().BeTrue();
-            page.IsChoosingVisualStyleEnabled.Should().BeTrue();
+            _context.Page.IsChoosingThemeVariationsEnabled.Should().BeTrue();
+            _context.Page.IsChoosingVisualStyleEnabled.Should().BeTrue();
         }
 
         [Test]
-        public void SettingsAreModified_should_return_false_initially()
+        public void When_user_switches_to_default_theme_UseSystemVisualStyle_should_be_checked()
         {
-            var page = new MockColorsSettingsPage();
-            var themeRepository = Substitute.For<IThemeRepository>();
-            var themePathProvider = Substitute.For<IThemePathProvider>();
+            AppSettings.ThemeId = new ThemeId("non_default", isBuiltin: true);
+            AppSettings.UseSystemVisualStyle = false;
+            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
+            _context.Controller.ShowThemeSettings();
+            _context.Page.UseSystemVisualStyle.Should().BeFalse();
+
+            _context.Page.SelectedThemeId = ThemeId.Default;
+            _context.Controller.HandleSelectedThemeChanged();
+            _context.Page.UseSystemVisualStyle.Should().BeTrue();
+        }
+
+        [Test]
+        public void When_user_switches_to_non_default_theme_UseSystemVisualStyle_should_be_unchecked()
+        {
             AppSettings.ThemeId = ThemeId.Default;
-            ThemeModule.TestAccessor.ReloadThemeSettings(themeRepository);
+            AppSettings.UseSystemVisualStyle = true;
+            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
+            _context.Controller.ShowThemeSettings();
+            _context.Page.UseSystemVisualStyle.Should().BeTrue();
 
-            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
-            controller.ShowThemeSettings();
-            controller.SettingsAreModified.Should().BeFalse();
+            _context.Page.SelectedThemeId = new ThemeId("non_default", isBuiltin: true);
+            _context.Controller.HandleSelectedThemeChanged();
+            _context.Page.UseSystemVisualStyle.Should().BeFalse();
         }
 
         [Test]
-        public void SettingsAreModified_should_reflect_ThemeId_change()
+        public void When_user_switches_to_default_theme_UseColorblindVariation_should_be_unchecked()
         {
-            var page = new MockColorsSettingsPage();
-            var themeRepository = Substitute.For<IThemeRepository>();
-            var themePathProvider = Substitute.For<IThemePathProvider>();
-            AppSettings.ThemeId = ThemeId.Default;
-            ThemeModule.TestAccessor.ReloadThemeSettings(themeRepository);
+            AppSettings.ThemeId = new ThemeId("non_default", isBuiltin: true);
+            AppSettings.ThemeVariations = new[] { ThemeVariations.Colorblind };
+            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
+            _context.Controller.ShowThemeSettings();
+            _context.Page.SelectedThemeVariations.Should().BeEquivalentTo(ThemeVariations.Colorblind);
 
-            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
-            controller.ShowThemeSettings();
-            page.SelectedThemeId = new ThemeId("non_default", isBuiltin: false);
-            controller.SettingsAreModified.Should().BeTrue();
+            _context.Page.SelectedThemeId = ThemeId.Default;
+            _context.Controller.HandleSelectedThemeChanged();
+            _context.Page.SelectedThemeVariations.Should().BeEmpty();
         }
 
-        [Test]
-        public void When_current_theme_is_default_SettingsAreModified_should_ignore_UseSystemVisualStyle_change()
+        [TestCaseSource(nameof(CasesThemeSettings))]
+        public void SettingsAreModified_should_reflect_ThemeId_change(
+            ThemeId themeId, string[] themeVariations, bool useSystemVisualStyle)
         {
-            var page = new MockColorsSettingsPage();
-            var themeRepository = Substitute.For<IThemeRepository>();
-            var themePathProvider = Substitute.For<IThemePathProvider>();
-            AppSettings.ThemeId = ThemeId.Default;
-            ThemeModule.TestAccessor.ReloadThemeSettings(themeRepository);
+            AppSettings.ThemeId = themeId;
+            AppSettings.ThemeVariations = themeVariations;
+            AppSettings.UseSystemVisualStyle = useSystemVisualStyle;
+            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
+            _context.Controller.ShowThemeSettings();
 
-            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
-            controller.ShowThemeSettings();
-            page.UseSystemVisualStyle = !page.UseSystemVisualStyle;
-            controller.SettingsAreModified.Should().BeFalse();
+            _context.Page.SelectedThemeId = new ThemeId("another_theme", isBuiltin: false);
+            _context.Controller.SettingsAreModified.Should().BeTrue();
         }
 
-        [Test]
-        public void When_current_theme_is_default_SettingsAreModified_should_ignore_ThemeVariations_change()
+        [TestCaseSource(nameof(CasesThemeSettings))]
+        public void SettingsAreModified_should_reflect_UseSystemVisualStyle_change(
+            ThemeId themeId, string[] themeVariations, bool useSystemVisualStyle)
         {
-            var page = new MockColorsSettingsPage();
-            var themeRepository = Substitute.For<IThemeRepository>();
-            var themePathProvider = Substitute.For<IThemePathProvider>();
-            AppSettings.ThemeId = ThemeId.Default;
-            AppSettings.ThemeVariations = ThemeVariations.None;
-            ThemeModule.TestAccessor.ReloadThemeSettings(themeRepository);
+            AppSettings.ThemeId = themeId;
+            AppSettings.ThemeVariations = themeVariations;
+            AppSettings.UseSystemVisualStyle = useSystemVisualStyle;
+            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
-            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
-            controller.ShowThemeSettings();
-            page.SelectedThemeVariations = new[] { ThemeVariations.Colorblind };
-            controller.SettingsAreModified.Should().BeFalse();
+            _context.Controller.ShowThemeSettings();
+            _context.Controller.SettingsAreModified.Should().BeFalse();
+
+            _context.Page.UseSystemVisualStyle = !_context.Page.UseSystemVisualStyle;
+            _context.Controller.SettingsAreModified.Should().BeTrue();
         }
 
-        [Test]
-        public void When_current_theme_is_non_default_SettingsAreModified_should_reflect_UseSystemVisualStyle_change()
+        [TestCaseSource(nameof(CasesThemeSettings))]
+        public void SettingsAreModified_should_reflect_ThemeVariations_change(
+            ThemeId themeId, string[] themeVariations, bool useSystemVisualStyle)
         {
-            var page = new MockColorsSettingsPage();
-            var themeRepository = Substitute.For<IThemeRepository>();
-            var themePathProvider = Substitute.For<IThemePathProvider>();
+            AppSettings.ThemeId = themeId;
+            AppSettings.ThemeVariations = themeVariations;
+            AppSettings.UseSystemVisualStyle = useSystemVisualStyle;
+            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
-            var changedThemeId = new ThemeId("non_default", isBuiltin: true);
-            var theme = new Theme(new Dictionary<AppColor, Color>(), new Dictionary<KnownColor, Color>(), changedThemeId);
-            themeRepository
-                .GetTheme(Arg.Is(changedThemeId), Arg.Any<IReadOnlyList<string>>())
-                .Returns(theme);
-            AppSettings.ThemeId = changedThemeId;
-            ThemeModule.TestAccessor.ReloadThemeSettings(themeRepository);
+            _context.Controller.ShowThemeSettings();
+            _context.Controller.SettingsAreModified.Should().BeFalse();
 
-            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
-
-            controller.ShowThemeSettings();
-            controller.SettingsAreModified.Should().BeFalse();
-
-            page.UseSystemVisualStyle = !page.UseSystemVisualStyle;
-            controller.SettingsAreModified.Should().BeTrue();
+            _context.Page.SelectedThemeVariations = themeVariations.SequenceEqual(ThemeVariations.None)
+                ? new[] { ThemeVariations.Colorblind }
+                : ThemeVariations.None;
+            _context.Controller.SettingsAreModified.Should().BeTrue();
         }
 
-        [Test]
-        public void When_current_theme_is_non_default_SettingsAreModified_should_reflect_ThemeVariations_change()
+        private static IEnumerable<object[]> CasesThemeSettings()
         {
-            var page = new MockColorsSettingsPage();
-            var themeRepository = Substitute.For<IThemeRepository>();
-            var themePathProvider = Substitute.For<IThemePathProvider>();
+            yield return new object[]
+            {
+                ThemeId.Default,
+                ThemeVariations.None,
+                true // useSystemVisualStyle
+            };
 
-            var changedThemeId = new ThemeId("non_default", isBuiltin: true);
-            var theme = new Theme(new Dictionary<AppColor, Color>(), new Dictionary<KnownColor, Color>(), changedThemeId);
-            themeRepository
-                .GetTheme(Arg.Is(changedThemeId), Arg.Any<IReadOnlyList<string>>())
-                .Returns(theme);
-            AppSettings.ThemeId = changedThemeId;
-            AppSettings.ThemeVariations = ThemeVariations.None;
-            ThemeModule.TestAccessor.ReloadThemeSettings(themeRepository);
-
-            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
-
-            controller.ShowThemeSettings();
-            controller.SettingsAreModified.Should().BeFalse();
-
-            page.SelectedThemeVariations = new[] { ThemeVariations.Colorblind };
-            controller.SettingsAreModified.Should().BeTrue();
+            yield return new object[]
+            {
+                new ThemeId("non_default", isBuiltin: true),
+                new[] { ThemeVariations.Colorblind },
+                false // useSystemVisualStyle
+            };
         }
 
         private class MockColorsSettingsPage : IColorsSettingsPage
@@ -182,6 +178,25 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
             public void PopulateThemeMenu(IEnumerable<ThemeId> themeIds)
             {
             }
+        }
+
+        private class ColorSettingsPageTestContext
+        {
+            public ColorSettingsPageTestContext(
+                IColorsSettingsPage page,
+                ColorsSettingsPageController controller,
+                IThemeRepository themeRepository)
+            {
+                Page = page;
+                Controller = controller;
+                ThemeRepository = themeRepository;
+            }
+
+            public IColorsSettingsPage Page { get; }
+
+            public ColorsSettingsPageController Controller { get; }
+
+            public IThemeRepository ThemeRepository { get; }
         }
     }
 }
