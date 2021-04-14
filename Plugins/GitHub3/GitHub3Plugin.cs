@@ -58,11 +58,11 @@ namespace GitExtensions.Plugins.GitHub3
 
         public static string OAuthToken
         {
-            get => GitHub3Plugin.Instance.OAuthToken.ValueOrDefault(GitHub3Plugin.Instance.Settings);
+            get => GitHub3Plugin.Instance.PersonalAccessToken.ValueOrDefault(GitHub3Plugin.Instance.Settings);
             set
             {
                 _username = null;
-                GitHub3Plugin.Instance.OAuthToken[GitHub3Plugin.Instance.Settings] = value;
+                GitHub3Plugin.Instance.PersonalAccessToken[GitHub3Plugin.Instance.Settings] = value;
                 GitHub3Plugin.GitHub.setOAuth2Token(value);
             }
         }
@@ -72,12 +72,14 @@ namespace GitExtensions.Plugins.GitHub3
     public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
         private readonly TranslationString _viewInWebSite = new("View in {0}");
-        private readonly TranslationString _tokenAlreadyExist = new("You already have an OAuth token. To get a new one, delete your old one in Plugins > Settings first.");
+        private readonly TranslationString _tokenAlreadyExist = new("You already have an personal access token. To get a new one, delete your old one in Plugins > Plugin Settings first.");
+        private readonly TranslationString _generateToken = new("Generate a GitHub personal access token");
+        private readonly TranslationString _openLinkFailed = new TranslationString("Fail to open the link");
 
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
         public readonly StringSetting GitHubHost = new("GitHub (Enterprise) hostname", "github.com");
-        public readonly StringSetting OAuthToken = new("OAuth Token", "");
+        public readonly StringSetting PersonalAccessToken = new("OAuth Token", "Personal Access Token", "");
         public string GitHubApiEndpoint => $"https://api.{GitHubHost.ValueOrDefault(Settings)}";
         public string GitHubEndpoint => $"https://{GitHubHost.ValueOrDefault(Settings)}";
 
@@ -101,7 +103,23 @@ namespace GitExtensions.Plugins.GitHub3
 
         public override IEnumerable<ISetting> GetSettings()
         {
-            yield return OAuthToken;
+            yield return PersonalAccessToken;
+
+            var generateTokenLink = new LinkLabel { Text = _generateToken.Text };
+            generateTokenLink.Click += GenerateTokenLink_Click;
+            yield return new PseudoSetting(generateTokenLink);
+        }
+
+        private void GenerateTokenLink_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Process.Start($"https://{GitHubHost.ValueOrDefault(Instance.Settings)}/settings/tokens/new?description=Token%20for%20GitExtensions&scopes=repo,public_repo");
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(_openLinkFailed.Text);
+            }
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -117,10 +135,7 @@ namespace GitExtensions.Plugins.GitHub3
         {
             if (string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
             {
-                var authorizationApiUrl = new Uri(new Uri(GitHubApiEndpoint), GitHubAuthorizationRelativeUrl).ToString();
-                using var gitHubCredentialsPrompt = new GitHubCredentialsPrompt(authorizationApiUrl);
-
-                gitHubCredentialsPrompt.ShowDialog(args.OwnerForm);
+                args.GitUICommands.StartSettingsDialog(this);
             }
             else
             {
