@@ -4,7 +4,7 @@ namespace GitExtUtils.GitUI.Theming
 {
     public readonly struct ThemeId
     {
-        public static ThemeId Default { get; } = new(string.Empty, false);
+        public static ThemeId Default { get; } = new(string.Empty, isBuiltin: true);
 
         public string Name { get; }
         public bool IsBuiltin { get; }
