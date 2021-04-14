@@ -73,22 +73,27 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _loader.LoadAsync(
                 () =>
                 {
-                    var t = _gitHoster.GetHostedRemotesForModule().ToList();
-                    foreach (var el in t)
+                    var hostedRemotes = _gitHoster.GetHostedRemotesForModule().ToArray();
+
+                    // load all hosted repositories.
+                    foreach (var hostedRemote in hostedRemotes)
                     {
-                        el.GetHostedRepository(); // We do this now because we want to do it in the async part.
+                        try
+                        {
+                            hostedRemote.GetHostedRepository(); // We do this now because we want to do it in the async part.
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
 
-                    return t;
+                    return hostedRemotes;
                 },
                 hostedRemotes =>
                 {
                     _hostedRemotes = hostedRemotes;
                     _selectHostedRepoCB.Items.Clear();
-                    foreach (var hostedRepo in _hostedRemotes)
-                    {
-                        _selectHostedRepoCB.Items.Add(hostedRepo);
-                    }
+                    _selectHostedRepoCB.Items.AddRange(hostedRemotes);
 
                     SelectHostedRepositoryForCurrentRemote();
                     this.UnMask();
@@ -99,7 +104,17 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             var hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
 
-            var hostedRepo = hostedRemote?.GetHostedRepository();
+            _pullRequestsList.Items.Clear();
+            IHostedRepository? hostedRepo;
+            try
+            {
+                hostedRepo = hostedRemote?.GetHostedRepository();
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
             if (hostedRepo is null)
             {
                 return;
