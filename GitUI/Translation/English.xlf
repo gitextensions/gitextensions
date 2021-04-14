@@ -1680,10 +1680,6 @@ You will have push access. {2}</source>
         <source>Clone</source>
         <target />
       </trans-unit>
-      <trans-unit id="closeBtn.Text">
-        <source>Close</source>
-        <target />
-      </trans-unit>
       <trans-unit id="columnHeaderMyReposForks.Text">
         <source># Forks</source>
         <target />
@@ -3012,10 +3008,6 @@ revision:</source>
       </trans-unit>
       <trans-unit id="AddPath.Text">
         <source>Add a path...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Cancel.Text">
-        <source>Cancel</source>
         <target />
       </trans-unit>
       <trans-unit id="Cleanup.Text">
@@ -4965,10 +4957,6 @@ command "git help shortlog"</source>
       </trans-unit>
       <trans-unit id="_switchWorktreeTitle.Text">
         <source>Open a worktree</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="buttonClose.Text">
-        <source>Close</source>
         <target />
       </trans-unit>
       <trans-unit id="buttonPruneWorktrees.Text">
@@ -9587,6 +9575,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_childrenText.Text">
         <source>{0:Child|Children}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_closeText.Text">
+        <source>Close</source>
         <target />
       </trans-unit>
       <trans-unit id="_combinedDiff.Text">

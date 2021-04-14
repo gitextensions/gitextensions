@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.columnHeaderSearchOwner = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSearchForks = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cloneBtn = new System.Windows.Forms.Button();
-            this.closeBtn = new System.Windows.Forms.Button();
+            this._NO_TRANSLATE_closeBtn = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.myReposPage = new System.Windows.Forms.TabPage();
@@ -130,16 +130,16 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.cloneBtn.UseVisualStyleBackColor = true;
             this.cloneBtn.Click += new System.EventHandler(this._cloneBtn_Click);
             // 
-            // closeBtn
+            // _NO_TRANSLATE_closeBtn
             // 
-            this.closeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.closeBtn.Location = new System.Drawing.Point(615, 3);
-            this.closeBtn.Name = "closeBtn";
-            this.closeBtn.Size = new System.Drawing.Size(120, 30);
-            this.closeBtn.TabIndex = 1;
-            this.closeBtn.Text = "Close";
-            this.closeBtn.UseVisualStyleBackColor = true;
-            this.closeBtn.Click += new System.EventHandler(this._closeBtn_Click);
+            this._NO_TRANSLATE_closeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this._NO_TRANSLATE_closeBtn.Location = new System.Drawing.Point(615, 3);
+            this._NO_TRANSLATE_closeBtn.Name = "closeBtn";
+            this._NO_TRANSLATE_closeBtn.Size = new System.Drawing.Size(120, 30);
+            this._NO_TRANSLATE_closeBtn.TabIndex = 1;
+            this._NO_TRANSLATE_closeBtn.Text = TranslatedStrings.Close;
+            this._NO_TRANSLATE_closeBtn.UseVisualStyleBackColor = true;
+            this._NO_TRANSLATE_closeBtn.Click += new System.EventHandler(this._closeBtn_Click);
             // 
             // tableLayoutPanel2
             // 
@@ -549,7 +549,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.closeBtn);
+            this.flowLayoutPanel1.Controls.Add(this._NO_TRANSLATE_closeBtn);
             this.flowLayoutPanel1.Controls.Add(this.cloneBtn);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
@@ -590,7 +590,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         #endregion
 
         private System.Windows.Forms.Button cloneBtn;
-        private System.Windows.Forms.Button closeBtn;
+        private System.Windows.Forms.Button _NO_TRANSLATE_closeBtn;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage myReposPage;

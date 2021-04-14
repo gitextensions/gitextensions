@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.IsDeleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Open = new System.Windows.Forms.DataGridViewImageColumn();
             this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
-            this.buttonClose = new System.Windows.Forms.Button();
+            this._NO_TRANSLATE_Close = new System.Windows.Forms.Button();
             this.buttonPruneWorktrees = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Worktrees)).BeginInit();
@@ -142,16 +142,16 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Delete.ReadOnly = true;
             this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             // 
-            // buttonClose
+            // _NO_TRANSLATE_Close
             // 
-            this.buttonClose.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.buttonClose.Location = new System.Drawing.Point(450, 262);
-            this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(178, 23);
-            this.buttonClose.TabIndex = 1;
-            this.buttonClose.Text = "Close";
-            this.buttonClose.UseVisualStyleBackColor = true;
-            this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
+            this._NO_TRANSLATE_Close.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this._NO_TRANSLATE_Close.Location = new System.Drawing.Point(450, 262);
+            this._NO_TRANSLATE_Close.Name = "Close";
+            this._NO_TRANSLATE_Close.Size = new System.Drawing.Size(178, 23);
+            this._NO_TRANSLATE_Close.TabIndex = 1;
+            this._NO_TRANSLATE_Close.Text = TranslatedStrings.Close;
+            this._NO_TRANSLATE_Close.UseVisualStyleBackColor = true;
+            this._NO_TRANSLATE_Close.Click += new System.EventHandler(this.buttonClose_Click);
             // 
             // buttonPruneWorktrees
             // 
@@ -170,7 +170,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(832, 297);
             this.Controls.Add(this.buttonPruneWorktrees);
-            this.Controls.Add(this.buttonClose);
+            this.Controls.Add(this._NO_TRANSLATE_Close);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -187,7 +187,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         #endregion
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button buttonClose;
+        private System.Windows.Forms.Button _NO_TRANSLATE_Close;
         private System.Windows.Forms.DataGridView Worktrees;
         private System.Windows.Forms.Button buttonPruneWorktrees;
         private System.Windows.Forms.DataGridViewTextBoxColumn Path;
