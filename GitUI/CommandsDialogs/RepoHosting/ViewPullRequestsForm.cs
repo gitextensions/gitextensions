@@ -112,11 +112,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             catch (Exception)
             {
+                SelectNextHostedRepositoryIfFirstLoad();
                 return;
             }
 
             if (hostedRepo is null)
             {
+                SelectNextHostedRepositoryIfFirstLoad();
                 return;
             }
 
@@ -143,6 +145,14 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     }
                 })
                 .FileAndForget();
+
+            void SelectNextHostedRepositoryIfFirstLoad()
+            {
+                if (_isFirstLoad)
+                {
+                    SelectNextHostedRepository();
+                }
+            }
         }
 
         private void FileViewer_TopScrollReached(object sender, EventArgs e)
@@ -161,11 +171,14 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (_isFirstLoad)
             {
-                _isFirstLoad = false;
                 if (infos is not null && infos.Count == 0 && _hostedRemotes is not null && _hostedRemotes.Count > 0)
                 {
                     SelectNextHostedRepository();
                     return;
+                }
+                else
+                {
+                    _isFirstLoad = false;
                 }
             }
 
@@ -217,7 +230,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             int i = _selectHostedRepoCB.SelectedIndex + 1;
             if (i >= _selectHostedRepoCB.Items.Count)
             {
-                i = 0;
+                return;
             }
 
             _selectHostedRepoCB.SelectedIndex = i;
