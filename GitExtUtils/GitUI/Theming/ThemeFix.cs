@@ -106,6 +106,7 @@ namespace GitExtUtils.GitUI.Theming
 
         private static void SetupTabControl(TabControl tabControl)
         {
+            new TabControlRenderer(tabControl).Setup();
             tabControl.TabPages.OfType<TabPage>()
                 .ForEach(SetupTabPage);
         }
