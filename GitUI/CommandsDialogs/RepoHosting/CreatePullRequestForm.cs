@@ -132,31 +132,37 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         await TaskScheduler.Default;
 
-                        IHostedRepository hostedRepository = remote.GetHostedRepository();
-                        var branches = hostedRepository.GetBranches();
-
-                        await this.SwitchToMainThreadAsync();
-
-                        comboBox.Items.Clear();
-
-                        var selectItem = 0;
-                        var defaultBranch = hostedRepository.GetDefaultBranch();
-                        for (var i = 0; i < branches.Count; i++)
+                        try
                         {
-                            if (branches[i].Name == defaultBranch)
+                            IHostedRepository hostedRepository = remote.GetHostedRepository();
+                            var branches = hostedRepository.GetBranches();
+
+                            await this.SwitchToMainThreadAsync();
+
+                            comboBox.Items.Clear();
+
+                            var selectItem = 0;
+                            var defaultBranch = hostedRepository.GetDefaultBranch();
+                            for (var i = 0; i < branches.Count; i++)
                             {
-                                selectItem = i;
+                                if (branches[i].Name == defaultBranch)
+                                {
+                                    selectItem = i;
+                                }
+
+                                comboBox.Items.Add(branches[i].Name);
                             }
 
-                            comboBox.Items.Add(branches[i].Name);
-                        }
+                            if (branches.Count > 0)
+                            {
+                                comboBox.SelectedIndex = selectItem;
+                            }
 
-                        if (branches.Count > 0)
+                            _createBtn.Enabled = true;
+                        }
+                        catch (Exception)
                         {
-                            comboBox.SelectedIndex = selectItem;
                         }
-
-                        _createBtn.Enabled = true;
                     })
                 .FileAndForget();
         }
