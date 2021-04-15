@@ -23,9 +23,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         }
 
         public bool SettingsAreModified =>
-            _page.SelectedThemeId != ThemeModule.Settings.Theme.Id ||
-            _page.UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle ||
-            !_page.SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
+            _page.SelectedThemeId != ThemeModule.Settings.Theme.Id
+            || _page.UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle
+            || !_page.SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
 
         public void ShowThemeSettings()
         {

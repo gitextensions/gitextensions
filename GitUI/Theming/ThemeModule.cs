@@ -11,7 +11,7 @@ namespace GitUI.Theming
 {
     public static class ThemeModule
     {
-        private static bool _suppressWin32Hooks;
+        private static bool _suppressWin32HooksForTests;
 
         public static ThemeSettings Settings { get; private set; } = ThemeSettings.Default;
 
@@ -76,7 +76,7 @@ namespace GitUI.Theming
                 return CreateFallbackSettings(invariantTheme);
             }
 
-            if (!AppSettings.UseSystemVisualStyle && !_suppressWin32Hooks)
+            if (!AppSettings.UseSystemVisualStyle && !_suppressWin32HooksForTests)
             {
                 try
                 {
@@ -158,8 +158,8 @@ namespace GitUI.Theming
 
             public static bool SuppressWin32Hooks
             {
-                get => _suppressWin32Hooks;
-                set => _suppressWin32Hooks = value;
+                get => _suppressWin32HooksForTests;
+                set => _suppressWin32HooksForTests = value;
             }
         }
     }
