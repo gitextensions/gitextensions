@@ -22,32 +22,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _themePathProvider = themePathProvider;
         }
 
-        public bool SettingsAreModified
-        {
-            get
-            {
-                if (_page.SelectedThemeId != ThemeModule.Settings.Theme.Id)
-                {
-                    return true;
-                }
-
-                if (_page.SelectedThemeId == ThemeId.Default)
-                {
-                    // UseSystemVisualStyle and ThemeVariations settings are only applicable with non-default theme.
-                    // However, in order to preserve user preference, we do not reset these when
-                    // user chooses the default theme from the menu, we only disable the checkboxes.
-
-                    // This is why, when the default theme is selected, we should ignore any difference in
-                    // UseSystemVisualStyle or ThemeVariations checkboxes from the actual theme settings.
-                    // Their value is not applied and only kept to be applied when user chooses non-default theme
-                    // again.
-                    return false;
-                }
-
-                return _page.UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle ||
-                    !_page.SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
-            }
-        }
+        public bool SettingsAreModified =>
+            _page.SelectedThemeId != ThemeModule.Settings.Theme.Id
+            || _page.UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle
+            || !_page.SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
 
         public void ShowThemeSettings()
         {
