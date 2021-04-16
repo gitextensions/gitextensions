@@ -74,7 +74,8 @@ namespace GitExtensions.Plugins.GitHub3
         private readonly TranslationString _viewInWebSite = new("View in {0}");
         private readonly TranslationString _tokenAlreadyExist = new("You already have an personal access token. To get a new one, delete your old one in Plugins > Plugin Settings first.");
         private readonly TranslationString _generateToken = new("Generate a GitHub personal access token");
-        private readonly TranslationString _openLinkFailed = new TranslationString("Fail to open the link");
+        private readonly TranslationString _manageToken = new("Manage GitHub personal access token");
+        private readonly TranslationString _openLinkFailed = new TranslationString("Fail to open the link. Reason: ");
 
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
@@ -108,17 +109,31 @@ namespace GitExtensions.Plugins.GitHub3
             var generateTokenLink = new LinkLabel { Text = _generateToken.Text };
             generateTokenLink.Click += GenerateTokenLink_Click;
             yield return new PseudoSetting(generateTokenLink);
+
+            var manageTokenLink = new LinkLabel { Text = _manageToken.Text };
+            manageTokenLink.Click += ManageTokenLink_Click;
+            yield return new PseudoSetting(manageTokenLink);
         }
 
         private void GenerateTokenLink_Click(object sender, EventArgs e)
         {
+            OpenLink($"https://{GitHubHost.ValueOrDefault(Instance.Settings)}/settings/tokens/new?description=Token%20for%20GitExtensions&scopes=repo,public_repo");
+        }
+
+        private void ManageTokenLink_Click(object sender, EventArgs e)
+        {
+            OpenLink($"https://{GitHubHost.ValueOrDefault(Instance.Settings)}/settings/tokens");
+        }
+
+        private void OpenLink(string url)
+        {
             try
             {
-                Process.Start($"https://{GitHubHost.ValueOrDefault(Instance.Settings)}/settings/tokens/new?description=Token%20for%20GitExtensions&scopes=repo,public_repo");
+                Process.Start(url);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(_openLinkFailed.Text);
+                MessageBox.Show(_openLinkFailed.Text + ex.Message);
             }
         }
 
