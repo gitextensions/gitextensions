@@ -14,7 +14,7 @@ namespace GitUI.NBugReports
         /// <param name="context">The command that led to the exception.</param>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
         public UserExternalOperationException(string context, ExternalOperationException innerException)
-            : base(innerException.Command, innerException.Arguments, innerException.WorkingDirectory, innerException.InnerException)
+            : base(innerException.Command, innerException.Arguments, innerException.WorkingDirectory, innerException.ExitCode, innerException.InnerException)
         {
             Context = context;
         }

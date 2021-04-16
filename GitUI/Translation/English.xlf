@@ -9698,6 +9698,10 @@ Select this commit to populate the full message.</source>
         <source>Not on a branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="_exitCodeText.Text">
+        <source>Exit code</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
         <source>Find git...</source>
         <target />

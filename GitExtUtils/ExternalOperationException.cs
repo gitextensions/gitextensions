@@ -15,13 +15,20 @@ namespace GitExtUtils
         /// <param name="command">The command that led to the exception.</param>
         /// <param name="arguments">The command arguments.</param>
         /// <param name="workingDirectory">The working directory.</param>
+        /// <param name="exitCode">The exit code of an executed process.</param>
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
-        public ExternalOperationException(string? command, string? arguments, string workingDirectory, Exception? innerException)
+        public ExternalOperationException(
+            string? command = null,
+            string? arguments = null,
+            string? workingDirectory = null,
+            int? exitCode = null,
+            Exception? innerException = null)
             : base(innerException?.Message, innerException)
         {
             Command = command;
             Arguments = arguments;
             WorkingDirectory = workingDirectory;
+            ExitCode = exitCode;
         }
 
         /// <summary>
@@ -38,5 +45,10 @@ namespace GitExtUtils
         /// The working directory.
         /// </summary>
         public string WorkingDirectory { get; }
+
+        /// <summary>
+        /// The exit code of an executed process.
+        /// </summary>
+        public int? ExitCode { get; }
     }
 }
