@@ -310,6 +310,8 @@ namespace GitUI.BranchTreePanel
 
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
         {
+            _selectionCancellationTokenSequence.CancelCurrent();
+
             base.OnUICommandsSourceSet(source);
 
             CreateBranches();

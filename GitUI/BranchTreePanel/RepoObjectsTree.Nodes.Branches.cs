@@ -163,11 +163,6 @@ namespace GitUI.BranchTreePanel
                     _isMerged = value;
 
                     ApplyStyle();
-
-                    if (_isMerged && Visible)
-                    {
-                        TreeViewNode.ToolTipText = string.Format(Strings.ContainedInCurrentCommit, Name);
-                    }
                 }
             }
 
@@ -185,6 +180,10 @@ namespace GitUI.BranchTreePanel
                 if (!Visible)
                 {
                     TreeViewNode.ToolTipText = string.Format(Strings.InvisibleCommit, FullPath);
+                }
+                else if (_isMerged)
+                {
+                    TreeViewNode.ToolTipText = string.Format(Strings.ContainedInCurrentCommit, Name);
                 }
             }
         }
