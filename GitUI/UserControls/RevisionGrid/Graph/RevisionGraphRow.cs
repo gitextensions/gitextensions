@@ -29,15 +29,27 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
         public RevisionGraphRevision Revision { get; }
+
         public IReadOnlyList<RevisionGraphSegment> Segments { get; }
 
-        // This dictonary contains a cached list of all segments and the lane index the segment is in for this row.
+        /// <summary>
+        /// This dictonary contains a cached list of all segments and the lane index the segment is in for this row.
+        /// </summary>
         private IDictionary<RevisionGraphSegment, int>? _segmentLanes;
 
-        // The cached lanecount
+        /// <summary>
+        /// Contains the gaps created by <cref>MoveLanesRight</cref>
+        /// </summary>
+        private HashSet<int> _gaps = new();
+
+        /// <summary>
+        /// The cached lanecount
+        /// </summary>
         private int _laneCount;
 
-        // The cached revisionlane
+        /// <summary>
+        /// The cached revisionlane
+        /// </summary>
         private int _revisionLane;
 
         // The row contains ordered segments. This method sorts the segments per lane.
@@ -173,8 +185,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void MoveLanesRight(int fromLane)
         {
+            int nextGap = _gaps.Min(lane => lane > fromLane ? lane : null) ?? int.MaxValue;
+
+            if (_revisionLane >= fromLane && _revisionLane < nextGap)
+            {
+                ++_revisionLane;
+            }
+
             Validates.NotNull(_segmentLanes);
-            RevisionGraphSegment[] segmentsToBeMoved = _segmentLanes.Where(keyValue => keyValue.Value >= fromLane)
+            RevisionGraphSegment[] segmentsToBeMoved = _segmentLanes.Where(keyValue => keyValue.Value >= fromLane && keyValue.Value < nextGap)
                                                                     .Select(keyValue => keyValue.Key)
                                                                     .ToArray();
             if (!segmentsToBeMoved.Any())
@@ -182,7 +201,16 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            ++_laneCount;
+            _gaps.Add(fromLane);
+            if (nextGap < int.MaxValue)
+            {
+                _gaps.Remove(nextGap);
+            }
+            else
+            {
+                ++_laneCount;
+            }
+
             foreach (RevisionGraphSegment segment in segmentsToBeMoved)
             {
                 ++_segmentLanes[segment];

@@ -15,8 +15,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // The RevisionGraph contains all the basic structures needed to render the graph.
     public class RevisionGraph : IRevisionGraphRowProvider
     {
-        public const int MaxLanes = 40;
-        private const int _straightenLanesLookAhead = 1;
+        internal const int MaxLanes = 40;
+        private const int _straightenLanesLookAhead = 20;
 
         // Some unordered collections with raw data
         private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
@@ -72,7 +72,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return 0;
             }
 
-            return _orderedRowCache.Count;
+            int cachedCount = _orderedRowCache.Count;
+            return cachedCount == Count ? cachedCount : cachedCount - _straightenLanesLookAhead;
         }
 
         /// <summary>
@@ -89,6 +90,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public void CacheTo(int currentRowIndex, int lastToCacheRowIndex)
         {
             currentRowIndex += _straightenLanesLookAhead;
+            lastToCacheRowIndex += _straightenLanesLookAhead;
+
             RevisionGraphRevision[] orderedNodesCache = BuildOrderedNodesCache(currentRowIndex);
 
             BuildOrderedRowCache(orderedNodesCache, currentRowIndex, lastToCacheRowIndex);
@@ -344,7 +347,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 localOrderedRowCache.Add(new RevisionGraphRow(revision, segments));
             }
 
-            StraightenLanes(startIndex - 1, lastToCacheRowIndex, localOrderedRowCache);
+            StraightenLanes(startIndex - _straightenLanesLookAhead, lastToCacheRowIndex, localOrderedRowCache);
 
             // Overwrite the global instance at the end, to prevent flickering
             _orderedRowCache = localOrderedRowCache;
@@ -359,13 +362,19 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // | | |<-- previous lane
                 // |/ /
                 // * |<---- current lane
+                // | |
+                // | |
+                // | |
                 // |\ \
-                // | | |<-- next lane
+                // | | |<-- lookahead lane
                 //
                 // And change it into this:
                 // | | |
                 // |/  |
                 // *   |
+                // |   |
+                // |   |
+                // |   |
                 // |\  |
                 // | | |
                 //
@@ -390,17 +399,28 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         if (previousLane > currentLane)
                         {
                             int straightenedCurrentLane = currentLane + 1;
-                            int nextLane = nextRow.GetLaneIndexForSegment(revisionGraphSegment);
-                            if ((nextLane == straightenedCurrentLane) || (nextLane > straightenedCurrentLane && previousLane == straightenedCurrentLane))
+                            int lookaheadLane = currentLane;
+                            int nextIndex = currentIndex + 1;
+                            for (int lookaheadIndex = nextIndex; lookaheadLane == currentLane && lookaheadIndex <= Math.Min(currentIndex + _straightenLanesLookAhead, lastIndex); ++lookaheadIndex)
                             {
-                                currentRow.MoveLanesRight(currentLane);
-                                moved = true;
+                                lookaheadLane = localOrderedRowCache[lookaheadIndex].GetLaneIndexForSegment(revisionGraphSegment);
+                                if ((lookaheadLane == straightenedCurrentLane) || (lookaheadLane > straightenedCurrentLane && previousLane == straightenedCurrentLane))
+                                {
+                                    currentRow.MoveLanesRight(currentLane);
+                                    for (; nextIndex < lookaheadIndex; ++nextIndex)
+                                    {
+                                        localOrderedRowCache[nextIndex].MoveLanesRight(currentLane);
+                                    }
+
+                                    moved = true;
+                                    break;
+                                }
                             }
                         }
                     }
 
                     // if moved, check again whether the lanes of the previous row can be moved, too
-                    currentIndex = moved ? Math.Max(currentIndex - 1, startIndex) : currentIndex + 1;
+                    currentIndex = moved ? Math.Max(currentIndex - _straightenLanesLookAhead, startIndex) : currentIndex + 1;
                 }
             }
         }
