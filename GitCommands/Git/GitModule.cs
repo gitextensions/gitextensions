@@ -2363,11 +2363,11 @@ namespace GitCommands
             });
         }
 
-        public string GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache = false, bool nullSeparated = false)
+        public ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache = false, bool nullSeparated = false)
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
 
-            return _gitExecutable.GetOutput(
+            return _gitExecutable.Execute(
                 new GitArgumentBuilder("diff")
                 {
                     "--no-color",
@@ -2427,8 +2427,12 @@ namespace GitCommands
                 return status.Where(x => x.Staged == stagedStatus).ToList();
             }
 
-            var output = GetDiffFiles(firstRevision, secondRevision, noCache: noCache, nullSeparated: true);
-            var result = GetDiffChangedFilesFromString(output, stagedStatus);
+            ExecutionResult exec = GetDiffFiles(firstRevision, secondRevision, noCache: noCache, nullSeparated: true);
+            var result = GetDiffChangedFilesFromString(exec.StandardOutput, stagedStatus);
+            if (!exec.ExitedSuccessfully)
+            {
+                result.Add(createErrorGitItemStatus(exec.StandardError));
+            }
 
             if (firstRevision == GitRevision.WorkTreeGuid || secondRevision == GitRevision.WorkTreeGuid)
             {
@@ -2510,14 +2514,12 @@ namespace GitCommands
             bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
             UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
-            var output = _gitExecutable.GetOutput(
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
-
-            List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(output).ToList();
-            if (IsGitErrorMessage(output))
+            ExecutionResult exec = _gitExecutable.Execute(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
+            List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
+            if (!exec.ExitedSuccessfully)
             {
                 // No simple way to pass the error message, create fake file
-                result.Add(createErrorGitItemStatus(output));
+                result.Add(createErrorGitItemStatus(exec.StandardError));
             }
 
             if (!excludeAssumeUnchangedFiles || !excludeSkipWorktreeFiles)
@@ -2620,37 +2622,34 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetIndexFiles()
         {
-            var output = _gitExecutable.GetOutput(
-                new GitArgumentBuilder("diff")
-                {
-                    "--no-color",
-                    "-M",
-                    "-C",
-                    "-z",
-                    "--cached",
-                    "--name-status"
-                });
-
-            if (output.Length < 50 && output.Contains("fatal: No HEAD commit to compare"))
+            var args = new GitArgumentBuilder("diff")
             {
-                // This command is a little more expensive because it will return both staged and unstaged files
-                var command = GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No);
-
-                output = _gitExecutable.GetOutput(command);
-
-                List<GitItemStatus> res = _getAllChangedFilesOutputParser.Parse(output)
-                                                .Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))
-                                                .ToList();
-                if (IsGitErrorMessage(output))
-                {
-                    // No simple way to pass the error message, create fake file
-                    res.Add(createErrorGitItemStatus(output));
-                }
-
-                return res;
+                "--no-color",
+                "-M",
+                "-C",
+                "-z",
+                "--cached",
+                "--name-status"
+            };
+            ExecutionResult exec = _gitExecutable.Execute(args);
+            if (exec.ExitedSuccessfully)
+            {
+                return GetDiffChangedFilesFromString(exec.StandardOutput, StagedStatus.Index);
             }
 
-            return GetDiffChangedFilesFromString(output, StagedStatus.Index);
+            // This command is a little more expensive because it will return both staged and unstaged files
+            var command = GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No);
+            exec = _gitExecutable.Execute(command);
+            List<GitItemStatus> res = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)
+                                            .Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))
+                                            .ToList();
+            if (!exec.ExitedSuccessfully)
+            {
+                // No simple way to pass the error message, create fake file
+                res.Add(createErrorGitItemStatus(exec.StandardError));
+            }
+
+            return res;
         }
 
         /// <summary>
@@ -2661,16 +2660,7 @@ namespace GitCommands
         /// <returns>list with the parsed GitItemStatus.</returns>
         /// <seealso href="https://git-scm.com/docs/git-diff"/>
         private List<GitItemStatus> GetDiffChangedFilesFromString(string statusString, StagedStatus staged)
-        {
-            List<GitItemStatus> result = _getAllChangedFilesOutputParser.GetAllChangedFilesFromString_v1(statusString, true, staged);
-            if (IsGitErrorMessage(statusString))
-            {
-                // No simple way to pass the error message, create fake file
-                result.Add(createErrorGitItemStatus(statusString));
-            }
-
-            return result;
-        }
+            => _getAllChangedFilesOutputParser.GetAllChangedFilesFromString_v1(statusString, true, staged);
 
         public IReadOnlyList<GitItemStatus> GetIndexFilesWithSubmodulesStatus()
         {
@@ -2687,12 +2677,12 @@ namespace GitCommands
         public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = IgnoreSubmodulesMode.None)
         {
             var args = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
-            var output = _gitExecutable.GetOutput(args);
-            List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(output).ToList();
-            if (IsGitErrorMessage(output))
+            ExecutionResult exec = _gitExecutable.Execute(args);
+            List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
+            if (!exec.ExitedSuccessfully)
             {
                 // No simple way to pass the error message, create fake file
-                result.Add(createErrorGitItemStatus(output));
+                result.Add(createErrorGitItemStatus(exec.StandardError));
             }
 
             return result;
@@ -3042,21 +3032,21 @@ namespace GitCommands
                 return Array.Empty<string>();
             }
 
-            var output = _gitExecutable.GetOutput(
-                new GitArgumentBuilder("branch")
-                {
-                    { getRemote && getLocal, "-a" },
-                    { getRemote && !getLocal, "-r" },
-                    "--contains",
-                    objectId
-                });
-
-            if (IsGitErrorMessage(output))
+            var args = new GitArgumentBuilder("branch")
             {
+                { getRemote && getLocal, "-a" },
+                { getRemote && !getLocal, "-r" },
+                "--contains",
+                objectId
+            };
+            ExecutionResult exec = _gitExecutable.Execute(args);
+            if (!exec.ExitedSuccessfully)
+            {
+                // Error occurred, no matches (no error presented to the user)
                 return Array.Empty<string>();
             }
 
-            var result = output.Split(new[] { '\r', '\n', '*', '+' }, StringSplitOptions.RemoveEmptyEntries);
+            var result = exec.StandardOutput.Split(new[] { '\r', '\n', '*', '+' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Remove symlink targets as in "origin/HEAD -> origin/master"
             for (var i = 0; i < result.Length; i++)
@@ -3084,14 +3074,14 @@ namespace GitCommands
         /// <param name="objectId">The sha1.</param>
         public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId)
         {
-            var output = _gitExecutable.GetOutput($"tag --contains {objectId}");
-
-            if (IsGitErrorMessage(output))
+            ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}");
+            if (!exec.ExitedSuccessfully)
             {
+                // Error occurred, no matches (no error presented to the user)
                 return Array.Empty<string>();
             }
 
-            return output.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return exec.StandardOutput.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         /// <summary>
@@ -3107,7 +3097,7 @@ namespace GitCommands
 
             tag = tag.Trim();
 
-            var output = _gitExecutable.GetOutput($"tag -l -n10 {tag}");
+            ExecutionResult exec = _gitExecutable.Execute($"tag -l -n10 {tag}");
 
             /*
              * $ git tag -l -n10 1.50
@@ -3125,11 +3115,13 @@ namespace GitCommands
              *     Format path dialog improved
              */
 
-            if (IsGitErrorMessage(output))
+            if (!exec.ExitedSuccessfully)
             {
+                // Error occurred, no message (no error presented to the user)
                 return null;
             }
 
+            var output = exec.StandardOutput;
             if (!output.StartsWith(tag))
             {
                 return null;
@@ -4147,6 +4139,11 @@ namespace GitCommands
             return _gitExecutable.Execute(args).ExitedSuccessfully;
         }
 
+        /// <summary>
+        /// Finds the most recent tag that is reachable from a commit
+        /// </summary>
+        /// <param name="commitId">The commit where to start searching</param>
+        /// <returns>Tag name if it exists, otherwise null</returns>
         public string? GetDescribe(ObjectId commitId)
         {
             var args = new GitArgumentBuilder("describe")
@@ -4156,24 +4153,11 @@ namespace GitCommands
                 "--abbrev=40",
                 commitId
             };
-            var output = _gitExecutable.GetOutput(args).TrimEnd();
 
-            if (IsGitErrorMessage(output))
-            {
-                return null;
-            }
-
-            return output;
-        }
-
-        /// <summary>
-        /// Determines whether a git command's output indicates an error occurred.
-        /// </summary>
-        /// <param name="gitOutput">The output from the git command, to inspect.</param>
-        /// <returns><c>true</c> if the command detailed an error, otherwise <c>false</c>.</returns>
-        public static bool IsGitErrorMessage(string gitOutput)
-        {
-            return Regex.IsMatch(gitOutput, @"^\s*(error:|fatal)");
+            ExecutionResult exec = _gitExecutable.Execute(args);
+            return !exec.ExitedSuccessfully
+                ? exec.StandardOutput.TrimEnd()
+                : null;
         }
 
         private static GitItemStatus createErrorGitItemStatus(string gitOutput)

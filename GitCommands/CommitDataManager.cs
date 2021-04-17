@@ -215,16 +215,18 @@ namespace GitCommands
             // This command can be cached if commitId is a git sha and Notes are ignored
             Debug.Assert(!cache || ObjectId.TryParse(commitId, out _), $"git-log cache should be used only for sha ({commitId})");
 
-            data = GetModule().GitExecutable.GetOutput(arguments,
+            ExecutionResult exec = GetModule().GitExecutable.Execute(arguments,
                 outputEncoding: GitModule.LosslessEncoding,
                 cache: cache ? GitModule.GitCommandCache : null);
 
-            if (GitModule.IsGitErrorMessage(data))
+            if (!exec.ExitedSuccessfully)
             {
+                data = null;
                 error = "Cannot find commit " + commitId;
                 return false;
             }
 
+            data = exec.StandardOutput;
             error = null;
             return true;
         }

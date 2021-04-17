@@ -283,7 +283,16 @@ namespace ResourceManager
                     }
                 }
 
-                string diffs = gitModule.GetDiffFiles(status.OldCommit.ToString(), status.Commit.ToString(), nullSeparated: false);
+                // It is possible that a commit does not exist, should not raise an error to the user:
+                // * Create a commit in a submodule, do not push
+                // * Commit submodule changes
+                // * Open the repo in a worktree clone
+                // * Checkout the commit
+                // * Select the submodule in the diff tab
+                // This should not raise a popup to the user, but describe the error message
+                string diffs = gitModule.GetDiffFiles(status.OldCommit.ToString(), status.Commit.ToString(), nullSeparated: false)
+                    .AllOutput;
+
                 if (!string.IsNullOrEmpty(diffs))
                 {
                     sb.AppendLine("\nDifferences:");

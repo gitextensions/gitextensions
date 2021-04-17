@@ -294,9 +294,10 @@ namespace GitCommands
             ArgumentString arguments = default,
             Action<StreamWriter>? writeInput = null,
             Encoding? outputEncoding = null,
+            CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true)
         {
-            var result = await executable.ExecuteAsync(arguments, writeInput, outputEncoding, stripAnsiEscapeCodes);
+            var result = await executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, stripAnsiEscapeCodes);
             return result.StandardOutput.SplitLines().Concat(result.StandardError.SplitLines());
         }
 
@@ -320,10 +321,11 @@ namespace GitCommands
             ArgumentString arguments,
             Action<StreamWriter>? writeInput = null,
             Encoding? outputEncoding = null,
+            CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
-                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, stripAnsiEscapeCodes));
+                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, stripAnsiEscapeCodes));
         }
 
         /// <summary>
@@ -340,9 +342,18 @@ namespace GitCommands
             ArgumentString arguments,
             Action<StreamWriter>? writeInput = null,
             Encoding? outputEncoding = null,
+            CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true)
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
+
+            if (cache is not null && cache.TryGet(arguments, out var cachedOutput, out var cachedError))
+            {
+                return new ExecutionResult(
+                    CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(cachedOutput, error: null, ref outputEncoding)),
+                    CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(output: null, cachedError, ref outputEncoding)),
+                    exitCode: 0);
+            }
 
             using var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding);
             var outputBuffer = new MemoryStream();
@@ -363,8 +374,12 @@ namespace GitCommands
 
             var output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
             var error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
-
             var exitCode = await process.WaitForExitAsync();
+
+            if (cache is not null && exitCode == 0)
+            {
+                cache.Add(arguments, outputBuffer.ToArray(), errorBuffer.ToArray());
+            }
 
             return new ExecutionResult(
                 CleanString(stripAnsiEscapeCodes, output),
