@@ -1,7 +1,6 @@
 ﻿using System;
-using GitCommands;
 using GitCommands.Settings;
-using Microsoft;
+using GitUIPluginInterfaces.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -14,37 +13,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComplete();
         }
 
-        private DetailedGroup DetailedSettings
-        {
-            get
-            {
-                Validates.NotNull(CurrentSettings);
-                return CurrentSettings.Detailed;
-            }
-        }
-
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(DetailedSettingsPage));
-        }
-
-        protected override void Init(ISettingsPageHost pageHost)
-        {
-            base.Init(pageHost);
-            BindSettingsWithControls();
-        }
-
-        protected override void PageToSettings()
-        {
-            AppSettings.SmtpServer = SmtpServer.Text;
-            if (int.TryParse(SmtpServerPort.Text, out var port))
-            {
-                AppSettings.SmtpPort = port;
-            }
-
-            AppSettings.SmtpUseSsl = chkUseSSL.Checked;
-
-            base.PageToSettings();
         }
 
         protected override void OnRuntimeLoad()
@@ -57,18 +28,43 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-            SmtpServer.Text = AppSettings.SmtpServer;
-            SmtpServerPort.Text = AppSettings.SmtpPort.ToString();
-            chkUseSSL.Checked = AppSettings.SmtpUseSsl;
+            IDetailedSettings detailedSettings = GetCurrentSettings()
+                .Detailed();
+
+            SmtpServer.Text = detailedSettings.SmtpServer;
+            SmtpServerPort.Text = detailedSettings.SmtpPort.ToString();
+            chkUseSSL.Checked = detailedSettings.SmtpUseSsl;
+
+            chkRemotesFromServer.Checked = detailedSettings.GetRemoteBranchesDirectlyFromRemote;
+            addLogMessages.Checked = detailedSettings.AddMergeLogMessages;
+            nbMessages.Text = detailedSettings.MergeLogMessagesCount.ToString();
 
             base.SettingsToPage();
         }
 
-        private void BindSettingsWithControls()
+        protected override void PageToSettings()
         {
-            AddSettingBinding(DetailedSettings.GetRemoteBranchesDirectlyFromRemote, chkRemotesFromServer);
-            AddSettingBinding(DetailedSettings.AddMergeLogMessages, addLogMessages);
-            AddSettingBinding(DetailedSettings.MergeLogMessagesCount, nbMessages);
+            IDetailedSettings detailedSettings = GetCurrentSettings()
+                .Detailed();
+
+            detailedSettings.SmtpServer = SmtpServer.Text;
+
+            if (int.TryParse(SmtpServerPort.Text, out var port))
+            {
+                detailedSettings.SmtpPort = port;
+            }
+
+            detailedSettings.SmtpUseSsl = chkUseSSL.Checked;
+
+            detailedSettings.GetRemoteBranchesDirectlyFromRemote = chkRemotesFromServer.Checked;
+            detailedSettings.AddMergeLogMessages = addLogMessages.Checked;
+
+            if (int.TryParse(nbMessages.Text, out var messagesCount))
+            {
+                detailedSettings.MergeLogMessagesCount = messagesCount;
+            }
+
+            base.PageToSettings();
         }
 
         private void chkUseSSL_CheckedChanged(object sender, EventArgs e)

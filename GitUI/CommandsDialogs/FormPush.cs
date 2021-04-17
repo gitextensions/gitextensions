@@ -12,12 +12,14 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Remotes;
+using GitCommands.Settings;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
@@ -1008,7 +1010,10 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter(Cursors.AppStarting))
             {
                 IReadOnlyList<IGitRef> remoteHeads;
-                if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.Value)
+                IDetailedSettings detailedSettings = Module.GetEffectiveSettings()
+                    .Detailed();
+
+                if (detailedSettings.GetRemoteBranchesDirectlyFromRemote)
                 {
                     EnsurePageant(remote);
 

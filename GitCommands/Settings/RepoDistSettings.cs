@@ -14,7 +14,6 @@ namespace GitCommands.Settings
             : base(lowerPriority, settingsCache)
         {
             BuildServer = new BuildServer(this);
-            Detailed = new DetailedGroup(this);
             SettingLevel = settingLevel;
         }
 
@@ -100,7 +99,6 @@ namespace GitCommands.Settings
         }
 
         public readonly BuildServer BuildServer;
-        public readonly DetailedGroup Detailed;
 
         public bool NoFastForwardMerge
         {
@@ -130,20 +128,5 @@ namespace GitCommands.Settings
         }
 
         public SettingsPath TypeSettings => new SettingsPath(this, Type.Value!);
-    }
-
-    public class DetailedGroup : SettingsPath
-    {
-        public readonly ISetting<bool> GetRemoteBranchesDirectlyFromRemote;
-        public readonly ISetting<bool> AddMergeLogMessages;
-        public readonly ISetting<int> MergeLogMessagesCount;
-
-        public DetailedGroup(RepoDistSettings container)
-            : base(container, "Detailed")
-        {
-            GetRemoteBranchesDirectlyFromRemote = Setting.Create(this, nameof(GetRemoteBranchesDirectlyFromRemote), false);
-            AddMergeLogMessages = Setting.Create(this, nameof(AddMergeLogMessages), false);
-            MergeLogMessagesCount = Setting.Create(this, nameof(MergeLogMessagesCount), 20);
-        }
     }
 }
