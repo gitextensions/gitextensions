@@ -77,14 +77,18 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _mergeConflictsCaption = new("Merge conflicts");
 
-        private readonly TranslationString _noFilesStagedAndNothingToCommit =
-            new TranslationString("There are no files staged for this commit.");
-        private readonly TranslationString _noFilesStagedButSuggestToCommitAllUnstaged =
-            new TranslationString("There are no files staged for this commit. Stage and commit all unstaged files?");
-        private readonly TranslationString _noFilesStagedButSuggestToCommitAllFilteredUnstaged =
-            new TranslationString("There are no files staged for this commit. Stage and commit the unstaged files that match your filter?");
         private readonly TranslationString _noFilesStagedAndConfirmAnEmptyMergeCommit =
             new TranslationString("There are no files staged for this commit.\nAre you sure you want to commit?");
+        private readonly TranslationString _noFilesStagedCommitAllFilteredUnstagedOption =
+            new TranslationString("Stage and commit the unstaged files that match your filter");
+        private readonly TranslationString _noFilesStagedCommitAllUnstagedOption =
+            new TranslationString("Stage and commit all unstaged files");
+        private readonly TranslationString _noFilesStagedMakeEmptyCommitOption =
+            new TranslationString("Make an empty commit");
+        private readonly TranslationString _noFilesStagedCommitCaption =
+            new TranslationString("Confirm commit");
+        private readonly TranslationString _noFilesStagedCommitInstructions =
+            new TranslationString("There aren't any changes in the staging area.\nHow do you want to proceed?");
 
         private readonly TranslationString _noStagedChanges = new("There are no staged changes");
         private readonly TranslationString _noUnstagedChanges = new("There are no unstaged changes");
@@ -1208,25 +1212,60 @@ namespace GitUI.CommandsDialogs
 
                 bool ConfirmAndStageAllUnstaged()
                 {
-                    if (Unstaged.IsEmpty)
+                    bool mustStageAll = false;
+                    using var dialog = new TaskDialog()
                     {
-                        MessageBox.Show(this, _noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        OwnerWindowHandle = Handle,
+                        Cancelable = true,
+                        Caption = _noFilesStagedCommitCaption.Text,
+                        Icon = TaskDialogStandardIcon.Error,
+                        InstructionText = _noFilesStagedCommitInstructions.Text,
+                        StandardButtons = TaskDialogStandardButtons.Cancel
+                    };
+
+                    // Option 1: there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
+                    var lnkStageAndCommit = new TaskDialogCommandLink("StageAndCommit", Unstaged.IsFilterActive ?
+                        _noFilesStagedCommitAllFilteredUnstagedOption.Text : _noFilesStagedCommitAllUnstagedOption.Text);
+                    lnkStageAndCommit.Click += (s, e) =>
+                    {
+                        mustStageAll = true;
+                        dialog.Close(TaskDialogResult.Ok);
+                    };
+                    dialog.Controls.Add(lnkStageAndCommit);
+
+                    // Option 2: the user just wants to make an empty commmit
+                    var lnkEmptyCommit = new TaskDialogCommandLink("MakeEmptyCommit", _noFilesStagedMakeEmptyCommitOption.Text);
+                    lnkEmptyCommit.Click += (s, e) =>
+                    {
+                        dialog.Close(TaskDialogResult.Ok);
+                    };
+                    dialog.Controls.Add(lnkEmptyCommit);
+
+                    dialog.Opened += (s, e) =>
+                    {
+                        /* If there are no unstaged changes, this option must be disabled.
+                         Microsoft.WindowsAPICodePack only allows disabling a CommandLink after the dialog is shown */
+                        if (Unstaged.IsEmpty)
+                        {
+                            lnkStageAndCommit.Enabled = false;
+                        }
+                    };
+
+                    var dialogResult = dialog.Show();
+                    if (dialogResult == TaskDialogResult.Cancel)
+                    {
                         return false;
                     }
 
-                    // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
-                    string message = Unstaged.IsFilterActive ? _noFilesStagedButSuggestToCommitAllFilteredUnstaged.Text : _noFilesStagedButSuggestToCommitAllUnstaged.Text;
-                    if (MessageBox.Show(this, message, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    if (mustStageAll)
                     {
-                        return false;
-                    }
+                        StageAllAccordingToFilter();
 
-                    StageAllAccordingToFilter();
-
-                    // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
-                    if (Staged.IsEmpty)
-                    {
-                        return false;
+                        if (Staged.IsEmpty)
+                        {
+                            // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
+                            return false;
+                        }
                     }
 
                     return true;
@@ -1338,7 +1377,8 @@ namespace GitUI.CommandsDialogs
                         _useFormCommitMessage,
                         noVerifyToolStripMenuItem.Checked,
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
-                        toolStripGpgKeyTextBox.Text);
+                        toolStripGpgKeyTextBox.Text,
+                        Staged.IsEmpty);
 
                     success = FormProcess.ShowDialog(this, process: null, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
 
