@@ -1,0 +1,35 @@
+﻿<SerializableException xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ExtendedInformation>
+    <Command>&lt;command&gt;</Command>
+    <Arguments>&lt;arguments&gt;</Arguments>
+    <WorkingDirectory>&lt;wdir&gt;</WorkingDirectory>
+    <HResult>-2146233088</HResult>
+  </ExtendedInformation>
+  <InnerException>
+    <ExtendedInformation>
+      <HResult>-2146233088</HResult>
+    </ExtendedInformation>
+    <InnerException>
+      <ExtendedInformation>
+        <HResult>-2147352558</HResult>
+      </ExtendedInformation>
+      <Message>Bang!</Message>
+      <Type>System.DivideByZeroException</Type>
+    </InnerException>
+    <Message>Process exited with failure code -1</Message>
+    <Type>System.Exception</Type>
+  </InnerException>
+  <Message>Process exited with failure code -1</Message>
+  <Source>GitCommands</Source>
+  <StackTrace>   at GitCommands.Executable.ProcessWrapper.OnProcessExit(Object sender, EventArgs eventArgs)
+   at System.Diagnostics.Process.OnExited()
+   at System.Diagnostics.Process.RaiseOnExited()
+   at System.Diagnostics.Process.CompletionCallback(Object context, Boolean wasSignaled)
+   at System.Threading._ThreadPoolWaitOrTimerCallback.WaitOrTimerCallback_Context(Object state, Boolean timedOut)
+   at System.Threading._ThreadPoolWaitOrTimerCallback.WaitOrTimerCallback_Context_f(Object state)
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading.ExecutionContext.Run(ExecutionContext executionContext, ContextCallback callback, Object state, Boolean preserveSyncCtx)
+   at System.Threading._ThreadPoolWaitOrTimerCallback.PerformWaitOrTimerCallback(Object state, Boolean timedOut)</StackTrace>
+  <TargetSite>Void OnProcessExit(System.Object, System.EventArgs) @ GitCommands.Executable+ProcessWrapper</TargetSite>
+  <Type>GitExtUtils.ExternalOperationException</Type>
+</SerializableException>

@@ -10,6 +10,7 @@ using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
+using GitUI.NBugReports;
 using GitUI.Theming;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -69,8 +70,8 @@ namespace GitExtensions
 
                 if (!Debugger.IsAttached)
                 {
-                    AppDomain.CurrentDomain.UnhandledException += (s, e) => BugReporter.Report((Exception)e.ExceptionObject, e.IsTerminating);
-                    Application.ThreadException += (s, e) => BugReporter.Report(e.Exception, isTerminating: false);
+                    AppDomain.CurrentDomain.UnhandledException += (s, e) => BugReportInvoker.Report((Exception)e.ExceptionObject, e.IsTerminating);
+                    Application.ThreadException += (s, e) => BugReportInvoker.Report(e.Exception, isTerminating: false);
                 }
             }
             catch (TypeInitializationException tie)
@@ -84,8 +85,6 @@ namespace GitExtensions
                 }
             }
 
-            // This is done here so these values can be used in the GitGui project but this project is the authority of the values.
-            UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
             AppTitleGenerator.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.Branch);
 
             // NOTE we perform the rest of the application's startup in another method to defer

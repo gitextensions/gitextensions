@@ -1,9 +1,8 @@
 ﻿using BugReporter;
 using GitCommands;
-using GitUI;
 using NUnit.Framework;
 
-namespace GitUITests
+namespace BugReporterTests
 {
     [TestFixture]
     public sealed class UserEnvironmentInformationTests
