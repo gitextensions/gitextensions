@@ -30,6 +30,7 @@ namespace GitUI.CommandsDialogs
         private readonly CommonLogic _commonLogic;
         private readonly string _translatedTitle;
         private SettingsPageReference? _initialPage;
+        private bool _saved = false;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -252,7 +253,7 @@ namespace GitUI.CommandsDialogs
                 // TODO: this method has a generic sounding name but only saves some specific settings
                 AppSettings.SaveSettings();
 
-                DialogResult = DialogResult.OK;
+                _saved = true;
 
                 return true;
             }
@@ -286,6 +287,14 @@ namespace GitUI.CommandsDialogs
                 }
 
                 settingsTreeView.GotoPage(_initialPage);
+            }
+        }
+
+        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_saved)
+            {
+                DialogResult = DialogResult.OK;
             }
         }
 
