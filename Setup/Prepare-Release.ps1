@@ -53,7 +53,7 @@ function Generate-Changelog {
     "`r`n#### Changes:" | Out-File $changelogFile -Append -Encoding utf8
     $issues | ForEach-Object {
         $issue = $_;
-        "* [#$($issue.number)] $($issue.title)" | Out-File $changelogFile -Append -Encoding utf8
+        "* [$($issue.number)] $($issue.title)" | Out-File $changelogFile -Append -Encoding utf8
     }
     "`r`n" | Out-File $changelogFile -Append -Encoding utf8
     $issueLinks | Out-File $changelogFile -Append -Encoding utf8

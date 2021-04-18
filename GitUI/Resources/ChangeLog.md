@@ -2,6 +2,16 @@ Changelog
 =========
 
 
+### Version 3.5 (18 April 2021)
+
+#### Changes:
+* [9036] [NBug] Не удалось найти часть пути "E:\test_screenshots\.git\GitEx...
+* [8971] Support Bitbucket repos with dots in the name
+
+[9036]:https://github.com/gitextensions/gitextensions/pull/9036
+[8971]:https://github.com/gitextensions/gitextensions/pull/8971
+
+
 ### Version 3.5-RC1 (21 March 2021)
 
 #### Changes:
