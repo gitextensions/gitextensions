@@ -1505,7 +1505,7 @@ namespace GitUI
         public void ViewSelectedRevisions()
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Any(rev => rev is not null && !rev.IsArtificial))
+            if (selectedRevisions.Count > 0 && !selectedRevisions[0].IsArtificial)
             {
                 Form ProvideForm()
                 {

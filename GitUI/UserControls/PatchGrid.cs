@@ -135,7 +135,7 @@ namespace GitUI
 
             var patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
 
-            if (patchFile.ObjectId is not null)
+            if (patchFile.ObjectId is not null && !patchFile.ObjectId.IsArtificial)
             {
                 UICommands.StartFormCommitDiff(patchFile.ObjectId);
                 return;
