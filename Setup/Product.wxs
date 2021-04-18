@@ -817,6 +817,15 @@
       <Component Id="Korean.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.Plugins.xlf" />
       </Component>
+      <Component Id="Turkish.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.gif" />
+      </Component>
+      <Component Id="Turkish.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.xlf" />
+      </Component>
+      <Component Id="Turkish.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.Plugins.xlf" />
+      </Component>
     </DirectoryRef>
     <DirectoryRef Id="PuttyDir">
       <Component Id="plink.exe" Guid="*">
@@ -1690,6 +1699,11 @@
           <ComponentRef Id="Korean.xlf" />
           <ComponentRef Id="Korean.Plugins.xlf" />
           <ComponentRef Id="Korean.gif" />
+        </Feature>
+        <Feature Id="Turkish" Title="Turkish" Level="1">
+          <ComponentRef Id="Turkish.xlf" />
+          <ComponentRef Id="Turkish.Plugins.xlf" />
+          <ComponentRef Id="Turkish.gif" />
         </Feature>
       </Feature>
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">

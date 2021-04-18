@@ -10,8 +10,8 @@ try {
         Remove-Item -Force;
 
     # 2. download updated plugin translations
-    ./tx.exe pull -a --parallel --minimum-perc 95 -f -r git-extensions.plugins-3_5
-    ./tx.exe pull -a --parallel --minimum-perc 95 -f -r git-extensions.plugins-3_5 --pseudo
+    ./tx.exe pull -a --parallel -f -r git-extensions.plugins-3_5
+    ./tx.exe pull -a --parallel -f -r git-extensions.plugins-3_5 --pseudo
 
     # 3. download updated translations
     ./tx.exe pull -a --parallel --minimum-perc 95 -f -r git-extensions.ui-3_5
