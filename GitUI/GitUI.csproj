@@ -40,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BugReporter\BugReporter.csproj" />
     <ProjectReference Include="..\Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj" />
     <ProjectReference Include="..\Externals\EasyHook\EasyHook\EasyHook.csproj" />
     <ProjectReference Include="..\Externals\Git.hub\Git.hub\Git.hub.csproj" />

@@ -1,0 +1,4 @@
+﻿System.DivideByZeroException: BOOM!
+   at BugReporterTests.SerializableExceptionTests.Code.SimpleException()
+   at BugReporterTests.SerializableExceptionTests.<>c.<get_TestCases>b__3_0()
+   at BugReporterTests.SerializableExceptionTests.ToString_should_be_same_from_round_trip(String testName, Action action)
