@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using BugReporter;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -21,6 +22,11 @@ namespace TranslationApp
             {
                 // Store the shared JoinableTaskContext
                 ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+            }
+
+            // force load into the appdomain
+            using (BugReportForm dummy = new())
+            {
             }
 
             // required for translation

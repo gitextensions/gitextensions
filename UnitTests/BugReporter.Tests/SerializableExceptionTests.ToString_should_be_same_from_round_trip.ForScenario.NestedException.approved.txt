@@ -1,0 +1,10 @@
+﻿System.Exception: OPPS! ---> System.ApplicationException: BAM! ---> System.DivideByZeroException: BOOM!
+   at BugReporterTests.SerializableExceptionTests.Code.SimpleException()
+   at BugReporterTests.SerializableExceptionTests.Code.NestedException()
+   --- End of inner exception stack trace ---
+   at BugReporterTests.SerializableExceptionTests.Code.NestedException()
+   at BugReporterTests.SerializableExceptionTests.Code.DoubleNestedException()
+   --- End of inner exception stack trace ---
+   at BugReporterTests.SerializableExceptionTests.Code.DoubleNestedException()
+   at BugReporterTests.SerializableExceptionTests.<>c.<get_TestCases>b__3_1()
+   at BugReporterTests.SerializableExceptionTests.ToString_should_be_same_from_round_trip(String testName, Action action)

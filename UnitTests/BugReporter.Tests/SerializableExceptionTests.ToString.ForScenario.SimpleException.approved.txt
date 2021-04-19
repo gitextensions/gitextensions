@@ -1,0 +1,4 @@
+﻿System.DivideByZeroException: BOOM!
+   at BugReporterTests.SerializableExceptionTests.Code.SimpleException()
+   at BugReporterTests.SerializableExceptionTests.<>c.<get_TestCases>b__3_0()
+   at BugReporterTests.SerializableExceptionTests.ToString(String testName, Action action)
