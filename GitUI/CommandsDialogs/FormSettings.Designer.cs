@@ -222,6 +222,7 @@ namespace GitUI.CommandsDialogs
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
             this.Shown += new System.EventHandler(this.FormSettings_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.scriptInfoBindingSource)).EndInit();
