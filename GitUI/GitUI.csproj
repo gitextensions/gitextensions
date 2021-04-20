@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="..\GitExtUtils\Annotations.cs" Link="Utils\Annotations.cs" />
+    <Compile Include="..\GitExtUtils\Delimiters.cs" Link="Utils\Delimiters.cs" />
+    <Compile Include="..\GitExtUtils\LazyStringSplit.cs" Link="Utils\LazyStringSplit.cs" />
     <Compile Include="..\GitExtUtils\Strings.cs" Link="Utils\Strings.cs" />
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Utils\Validates.cs" />
   </ItemGroup>

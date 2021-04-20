@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using GitExtUtils;
 using Microsoft.Win32;
 
 namespace GitUI
@@ -58,7 +59,7 @@ namespace GitUI
                         }
                     }
 
-                    int.TryParse(version.ToString().Split('.')[0], out browserVersion);
+                    int.TryParse(version.ToString().LazySplit('.').First(), out browserVersion);
                 }
 
                 emulationMode = browserVersion switch

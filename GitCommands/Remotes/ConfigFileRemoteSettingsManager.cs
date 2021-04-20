@@ -150,7 +150,7 @@ namespace GitCommands.Remotes
             }
 
             var remoteHead = remote.Push
-                                   .Select(s => s.Split(':'))
+                                   .Select(s => s.Split(Delimiters.Colon))
                                    .Where(t => t.Length == 2)
                                    .Where(t => IsSettingForBranch(t[0], branch))
                                    .Select(t => new GitRef(module, null, t[1]))

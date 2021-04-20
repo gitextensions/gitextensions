@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Patches;
 
@@ -18,7 +19,7 @@ namespace GitUI.Editor.Diff
             var leftLineNum = DiffLineInfo.NotApplicableLineNum;
             var rightLineNum = DiffLineInfo.NotApplicableLineNum;
             var isHeaderLineLocated = false;
-            string[] lines = diffContent.Split('\n');
+            string[] lines = diffContent.Split(Delimiters.LineFeed);
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];

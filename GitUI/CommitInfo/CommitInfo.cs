@@ -222,12 +222,12 @@ namespace GitUI.CommitInfo
             int warningPos = tree.IndexOf("warning:");
             if (warningPos >= 0)
             {
-                throw new RefsWarningException(tree.Substring(warningPos).SplitLines()[0]);
+                throw new RefsWarningException(tree.Substring(warningPos).LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).First());
             }
 
             int i = 0;
             var dict = new Dictionary<string, int>();
-            foreach (var entry in tree.Split('\n'))
+            foreach (var entry in tree.LazySplit('\n'))
             {
                 if (dict.ContainsKey(entry))
                 {

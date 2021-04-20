@@ -61,7 +61,7 @@ namespace GitCommands.Git
             var submodules = GetModule().GetSubmodulesLocalPaths();
 
             // Split all files on '\0' (WE NEED ALL COMMANDS TO BE RUN WITH -z! THIS IS ALSO IMPORTANT FOR ENCODING ISSUES!)
-            var files = trimmedStatus.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            var files = trimmedStatus.Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
                 if (string.IsNullOrEmpty(files[n]))
@@ -77,8 +77,7 @@ namespace GitCommands.Git
                 else
                 {
                     // Note that this fails for files with spaces (git-status --porcelain=1 is deprecated)
-                    var splitChars = new[] { '\t', ' ' };
-                    splitIndex = files[n].IndexOfAny(splitChars, 1);
+                    splitIndex = files[n].IndexOfAny(Delimiters.TabAndSpace, 1);
                 }
 
                 string status;
@@ -182,7 +181,7 @@ namespace GitCommands.Git
             string trimmedStatus = RemoveWarnings(getAllChangedFilesCommandOutput);
 
             // Split all files on '\0'
-            var files = trimmedStatus.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            var files = trimmedStatus.Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
             for (int n = 0; n < files.Length; n++)
             {
                 string line = files[n];
@@ -221,7 +220,7 @@ namespace GitCommands.Git
                         Debug.Assert(line.Length > 2 && n + 1 < files.Length, "Cannot parse renamed:" + line);
 
                         // Find renamed files...
-                        string[] renames = line.Substring(114).Split(new[] { ' ' }, 2);
+                        string[] renames = line.Substring(114).Split(Delimiters.Space, 2);
                         renamePercent = renames[0];
                         fileName = renames[1];
                         oldFileName = files[++n];

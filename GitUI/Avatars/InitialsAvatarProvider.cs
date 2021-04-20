@@ -52,7 +52,7 @@ namespace GitUI.Avatars
 
             if (!Strings.IsNullOrWhiteSpace(email))
             {
-                var withoutDomain = email.Split('@')[0].TrimStart();
+                var withoutDomain = email.LazySplit('@').First().TrimStart();
                 return (withoutDomain, _emailInitialSeparator);
             }
 

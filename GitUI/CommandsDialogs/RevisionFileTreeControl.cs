@@ -80,7 +80,7 @@ See the changes in the commit form.");
                 return;
             }
 
-            var pathParts = filePath.Split('/');
+            var pathParts = filePath.Split(Delimiters.ForwardSlash);
 
             var currentNodes = tvGitTree.Nodes;
             TreeNode? foundNode = null;
@@ -467,7 +467,7 @@ See the changes in the commit form.");
                 return;
             }
 
-            var items = selectedItem.Split('/');
+            var items = selectedItem.Split(Delimiters.ForwardSlash);
             var nodes = tvGitTree.Nodes;
 
             for (var i = 0; i < items.Length - 1; i++)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -46,7 +47,7 @@ namespace GitUI
 
         public IEnumerable<IGitRef> GetSelectedBranches()
         {
-            foreach (string branch in branches.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string branch in branches.Text.LazySplit(' ', StringSplitOptions.RemoveEmptyEntries))
             {
                 var gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
                 if (gitHead is null)

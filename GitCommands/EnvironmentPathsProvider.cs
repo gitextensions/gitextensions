@@ -44,7 +44,7 @@ namespace GitCommands
                 yield break;
             }
 
-            foreach (string rawDir in pathVariable.Split(EnvUtils.EnvVariableSeparator))
+            foreach (string rawDir in pathVariable.LazySplit(EnvUtils.EnvVariableSeparator))
             {
                 string dir = rawDir;
 

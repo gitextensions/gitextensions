@@ -298,7 +298,7 @@ namespace GitCommands
             bool stripAnsiEscapeCodes = true)
         {
             var result = await executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, stripAnsiEscapeCodes);
-            return result.StandardOutput.SplitLines().Concat(result.StandardError.SplitLines());
+            return result.StandardOutput.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Concat(result.StandardError.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries));
         }
 
         /// <summary>

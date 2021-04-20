@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GitExtUtils;
 
 namespace GitCommands
 {
@@ -81,7 +82,7 @@ namespace GitCommands
 
                 IEnumerable<int> ParseNumbers()
                 {
-                    foreach (var number in Full.Split('.'))
+                    foreach (var number in Full.LazySplit('.'))
                     {
                         if (int.TryParse(number, out var value))
                         {

@@ -84,7 +84,7 @@ namespace GitUI.CommandsDialogs
                 gridReflog.DataSource = refLines;
 
                 IEnumerable<RefLine> ConvertReflogOutput()
-                    => from line in output.Split('\n')
+                    => from line in output.LazySplit('\n')
                         where line.Length != 0
                         select _regexReflog.Match(line)
                         into match

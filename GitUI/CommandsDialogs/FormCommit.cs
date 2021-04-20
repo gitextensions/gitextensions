@@ -2428,7 +2428,7 @@ namespace GitUI.CommandsDialogs
                     name.QuoteNE()
                 };
                 string diff = Module.GitExecutable.GetOutput(args);
-                var lines = diff.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = diff.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
                 const string subprojectCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojectCommit)).Substring(subprojectCommit.Length + 1);
                 var to = lines.Single(s => s.StartsWith("+" + subprojectCommit)).Substring(subprojectCommit.Length + 1);

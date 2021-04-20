@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
 
             var gitArguments = new GitArgumentBuilder("ls-remote") { "--heads", url.ToPosixPath().Quote() };
             var heads = gitExecutable.GetOutput(gitArguments);
-            return heads.SplitLines()
+            return heads.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
                         .Select(head =>
                         {
                             int branchIndex = head.IndexOf(GitRefName.RefsHeadsPrefix);

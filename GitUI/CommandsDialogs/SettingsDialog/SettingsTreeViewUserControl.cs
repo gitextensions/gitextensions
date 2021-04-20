@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using Microsoft;
@@ -141,7 +142,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 }
 
                 // search for keywords (space combines as 'and')
-                var andKeywords = searchFor.Split(' ');
+                var andKeywords = searchFor.LazySplit(' ');
                 if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Any(k => k.Contains(keyword))))
                 {
                     // only part of a keyword must match to have a match

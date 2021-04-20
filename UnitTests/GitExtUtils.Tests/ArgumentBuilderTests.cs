@@ -61,7 +61,7 @@ namespace GitExtUtilsTests
 
             var args = "Lorem ipsum dolor sit amet, solet soleat option mel no.";
             var expectedLength = args.Length;
-            builder.AddRange(args.Split(' '));
+            builder.AddRange(args.LazySplit(' '));
             builder.GetTestAccessor().Arguments.Length.Should().Be(expectedLength + /* 'test ' */5);
         }
 

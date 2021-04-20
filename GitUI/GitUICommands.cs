@@ -1557,7 +1557,7 @@ namespace GitUI
             {
                 selectedId = null;
                 firstId = null;
-                foreach (string part in arg.Split(','))
+                foreach (string part in arg.LazySplit(','))
                 {
                     if (!module.TryResolvePartialCommitId(part, out var objectId))
                     {
@@ -1604,7 +1604,7 @@ namespace GitUI
             {
                 if (File.Exists(args[2]))
                 {
-                    string path = File.ReadAllText(args[2]).Trim().Split(new[] { '\n' }, 1).FirstOrDefault();
+                    string? path = File.ReadAllText(args[2]).Trim().LazySplit('\n').FirstOrDefault();
                     if (Directory.Exists(path))
                     {
                         c = new GitUICommands(path);

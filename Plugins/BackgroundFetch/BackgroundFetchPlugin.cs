@@ -117,7 +117,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
                                           }
                                       }
 
-                                      var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim().SplitBySpace();
+                                      var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim().Split(Delimiters.Space, StringSplitOptions.RemoveEmptyEntries);
                                       args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
                                       string msg;
                                       try

@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Text;
 using System.Windows.Forms;
+using GitExtUtils;
 
 namespace GitCommands
 {
@@ -175,23 +176,21 @@ namespace GitCommands
             var formattedCommitMessage = new StringBuilder();
 
             var lineNumber = 1;
-            foreach (var line in commitMessage.Split('\n'))
+            foreach (var line in commitMessage.LazySplit('\n'))
             {
-                string nonNullLine = line ?? string.Empty;
-
                 // When a committemplate is used, skip comments and do not count them as line.
                 // otherwise: "#" is probably not used for comment but for issue number
-                if (usingCommitTemplate && nonNullLine.StartsWith("#"))
+                if (usingCommitTemplate && line.StartsWith("#"))
                 {
                     continue;
                 }
 
-                if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(nonNullLine))
+                if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(line))
                 {
                     formattedCommitMessage.AppendLine();
                 }
 
-                formattedCommitMessage.AppendLine(nonNullLine);
+                formattedCommitMessage.AppendLine(line);
 
                 lineNumber++;
             }

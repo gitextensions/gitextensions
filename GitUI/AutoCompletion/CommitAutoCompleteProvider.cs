@@ -120,7 +120,7 @@ namespace GitUI.AutoCompletion
             }
 
             using var sr = new StreamReader(s);
-            return sr.ReadToEnd().Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            return sr.ReadToEnd().Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static Dictionary<string, Regex> ParseRegexes()
@@ -135,7 +135,7 @@ namespace GitUI.AutoCompletion
                 var extensionStr = line.Substring(0, i);
                 var regexStr = line.Substring(i + 1).Trim();
 
-                var extensions = extensionStr.Split(',').Select(s => s.Trim()).Distinct();
+                var extensions = extensionStr.LazySplit(',').Select(s => s.Trim()).Distinct();
                 var regex = new Regex(regexStr, RegexOptions.Compiled);
 
                 foreach (var extension in extensions)
