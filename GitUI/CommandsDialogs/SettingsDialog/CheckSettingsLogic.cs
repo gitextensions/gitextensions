@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 try
                 {
-                    string output = new Executable(command).GetOutput();
+                    string output = new Executable(command).GetOutput(arguments: "--version");
                     if (!string.IsNullOrEmpty(output))
                     {
                         if (command is not null)
@@ -236,7 +236,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool CanFindGitCmd()
         {
-            return !string.IsNullOrEmpty(Module?.GitExecutable.GetOutput(""));
+            return !string.IsNullOrEmpty(Module?.GitExecutable.GetOutput(arguments: "--version"));
         }
     }
 }
