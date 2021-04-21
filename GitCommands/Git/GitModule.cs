@@ -2929,10 +2929,13 @@ namespace GitCommands
         }
 
         public async Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string? commit = null)
-            => (await _gitExecutable
-                .GetOutputAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit))
-                .ConfigureAwait(false))
-                .Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+        {
+            ExecutionResult result = await _gitExecutable
+                .ExecuteAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit))
+                .ConfigureAwait(false);
+            ////TODO: Handle non-empty result.StandardError
+            return result.StandardOutput.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+        }
 
         public IEnumerable<string> GetMergedBranches(bool includeRemote = false)
         {
