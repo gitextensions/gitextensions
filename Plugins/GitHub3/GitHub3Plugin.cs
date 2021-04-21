@@ -129,7 +129,13 @@ namespace GitExtensions.Plugins.GitHub3
         {
             try
             {
-                Process.Start(url);
+                ProcessStartInfo psi = new(url)
+                {
+                    UseShellExecute = true,
+                    Verb = "open"
+                };
+
+                Process.Start(psi);
             }
             catch (Exception ex)
             {
