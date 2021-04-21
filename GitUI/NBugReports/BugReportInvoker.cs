@@ -1,7 +1,10 @@
 ﻿#nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Security;
 using System.Text;
 using System.Windows.Forms;
 using BugReporter;
@@ -79,7 +82,13 @@ namespace GitUI.NBugReports
             }
 
             bool isUserExternalOperation = exception is UserExternalOperationException;
-            bool isExternalOperation = exception is ExternalOperationException;
+            bool isExternalOperation = exception is ExternalOperationException
+                                                 or IOException
+                                                 or SecurityException
+                                                 or FileNotFoundException
+                                                 or DirectoryNotFoundException
+                                                 or PathTooLongException
+                                                 or Win32Exception;
 
             StringBuilder text = new();
             string rootError = Append(text, exception);
@@ -111,7 +120,7 @@ namespace GitUI.NBugReports
             taskDialogCommandLink.Click += (s, e) =>
             {
                 taskDialog.Close();
-                ShowNBug(OwnerForm, exception, isTerminating);
+                ShowNBug(OwnerForm, exception, isExternalOperation, isTerminating);
             };
             taskDialog.Controls.Add(taskDialogCommandLink);
 
@@ -134,13 +143,13 @@ namespace GitUI.NBugReports
             }
         }
 
-        private static void ShowNBug(IWin32Window? owner, Exception exception, bool isTerminating)
+        private static void ShowNBug(IWin32Window? owner, Exception exception, bool isExternalOperation, bool isTerminating)
         {
             using BugReportForm form = new();
             DialogResult result = form.ShowDialog(owner, new SerializableException(exception),
                 UserEnvironmentInformation.GetInformation(),
                 canIgnore: !isTerminating,
-                showIgnore: exception is ExternalOperationException,
+                showIgnore: isExternalOperation,
                 focusDetails: exception is UserExternalOperationException);
             if (isTerminating || result == DialogResult.Abort)
             {
@@ -150,7 +159,7 @@ namespace GitUI.NBugReports
 
         private static string Base64Encode(string plainText)
         {
-            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             return Convert.ToBase64String(plainTextBytes);
         }
     }
