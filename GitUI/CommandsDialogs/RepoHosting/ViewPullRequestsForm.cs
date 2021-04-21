@@ -10,6 +10,7 @@ using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -26,6 +27,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly TranslationString _strUnableUnderstandPatch = new("Error: Unable to understand patch");
         private readonly TranslationString _strRemoteAlreadyExist = new("ERROR: Remote with name {0} already exists but it points to a different repository!\r\nDetails: Is {1} expected {2}");
         private readonly TranslationString _strCouldNotAddRemote = new("Could not add remote with name {0} and URL {1}");
+        private readonly TranslationString _strRemoteIgnore = new("Remote ignored");
         #endregion
 
         private GitProtocol _cloneGitProtocol;
@@ -82,8 +84,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         {
                             hostedRemote.GetHostedRepository(); // We do this now because we want to do it in the async part.
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            System.Windows.Forms.TaskDialog.ShowDialog(new TaskDialogPage
+                            {
+                                Icon = TaskDialogIcon.Error,
+                                Caption = _strRemoteIgnore.Text,
+                                Text = string.Format(TranslatedStrings.RemoteInError, ex.Message, hostedRemote.DisplayData),
+                                Buttons = { System.Windows.Forms.TaskDialogButton.OK },
+                            });
                         }
                     }
 
@@ -112,6 +121,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
             catch (Exception)
             {
+                // if fails to load this remote, select the next one
                 SelectNextHostedRepositoryIfFirstLoad();
                 return;
             }

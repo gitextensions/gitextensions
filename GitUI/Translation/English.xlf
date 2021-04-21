@@ -1104,6 +1104,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Pull request</source>
         <target />
       </trans-unit>
+      <trans-unit id="_strRemoteFailToLoadBranches.Text">
+        <source>Fail to load target branches</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_strYouMustSpecifyATitle.Text">
         <source>You must specify a title.</source>
         <target />
@@ -9818,6 +9822,12 @@ Select this commit to populate the full message.</source>
         <source>Remote</source>
         <target />
       </trans-unit>
+      <trans-unit id="_remoteInError.Text">
+        <source>{0}
+
+Remote: {1}</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_remotesText.Text">
         <source>Remotes</source>
         <target />
@@ -10039,6 +10049,10 @@ Yes, I allow telemetry!</source>
       <trans-unit id="_strRemoteAlreadyExist.Text">
         <source>ERROR: Remote with name {0} already exists but it points to a different repository!
 Details: Is {1} expected {2}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_strRemoteIgnore.Text">
+        <source>Remote ignored</source>
         <target />
       </trans-unit>
       <trans-unit id="_strUnableUnderstandPatch.Text">

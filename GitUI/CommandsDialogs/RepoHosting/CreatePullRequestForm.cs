@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft.VisualStudio.Threading;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -19,6 +20,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly TranslationString _strFailedToCreatePullRequest = new("Failed to create pull request.");
         private readonly TranslationString _strPleaseCloneGitHubRep = new("Please clone GitHub repository before pull request.");
         private readonly TranslationString _strDone = new("Done");
+        private readonly TranslationString _strRemoteFailToLoadBranches = new("Fail to load target branches");
         #endregion
 
         private readonly IRepositoryHostPlugin _repoHost;
@@ -28,6 +30,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private string? _currentBranch;
         private string? _prevTitle;
         private readonly AsyncLoader _remoteLoader = new();
+        private bool _ignoreFirstRemoteLoading = true;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -96,11 +99,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 _pullReqTargetsCB.SelectedIndex = 0;
             }
 
+            _ignoreFirstRemoteLoading = false;
+
             _pullReqTargetsCB_SelectedIndexChanged(this, EventArgs.Empty);
         }
 
         private void _pullReqTargetsCB_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_ignoreFirstRemoteLoading)
+            {
+                return;
+            }
+
             _currentHostedRemote = (IHostedRemote)_pullReqTargetsCB.SelectedItem;
 
             _remoteBranchesCB.Items.Clear();
@@ -160,8 +170,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                             _createBtn.Enabled = true;
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
+                            System.Windows.Forms.TaskDialog.ShowDialog(new TaskDialogPage
+                                {
+                                    Icon = TaskDialogIcon.Error,
+                                    Caption = _strRemoteFailToLoadBranches.Text,
+                                    Text = string.Format(TranslatedStrings.RemoteInError, ex.Message, remote.DisplayData),
+                                    Buttons = { System.Windows.Forms.TaskDialogButton.OK },
+                                });
                         }
                     })
                 .FileAndForget();
