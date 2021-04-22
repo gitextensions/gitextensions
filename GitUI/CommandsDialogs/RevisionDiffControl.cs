@@ -824,7 +824,7 @@ namespace GitUI.CommandsDialogs
             {
                 await TaskScheduler.Default;
 
-                var blob = Module.GetFileBlobHash(item.Item.Name, item.SecondRevision.ObjectId);
+                var blob = Module.GetFileBlobHash(item.Item.Name, item.Item.IsDeleted ? item.FirstRevision!.ObjectId : item.SecondRevision.ObjectId);
 
                 if (blob is null)
                 {
