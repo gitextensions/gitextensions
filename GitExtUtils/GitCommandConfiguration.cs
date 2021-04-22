@@ -27,6 +27,7 @@ namespace GitExtUtils
             Default.Add(new GitConfigItem("diff.noprefix", "false"), "diff");
             Default.Add(new GitConfigItem("diff.mnemonicprefix", "false"), "diff");
             Default.Add(new GitConfigItem("diff.ignoreSubmodules", "none"), "diff", "status");
+            Default.Add(new GitConfigItem("core.safecrlf", "false"), "diff");
         }
 
         /// <summary>
