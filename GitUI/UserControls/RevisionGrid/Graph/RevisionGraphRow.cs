@@ -40,7 +40,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <summary>
         /// Contains the gaps created by <cref>MoveLanesRight</cref>
         /// </summary>
-        private HashSet<int> _gaps = new();
+        private HashSet<int>? _gaps;
 
         /// <summary>
         /// The cached lanecount
@@ -185,7 +185,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void MoveLanesRight(int fromLane)
         {
-            int nextGap = _gaps.Min(lane => lane > fromLane ? lane : null) ?? int.MaxValue;
+            int nextGap = _gaps?.Min(lane => lane > fromLane ? lane : null) ?? int.MaxValue;
 
             if (_revisionLane >= fromLane && _revisionLane < nextGap)
             {
@@ -201,6 +201,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
+            _gaps ??= new();
             _gaps.Add(fromLane);
             if (nextGap < int.MaxValue)
             {
