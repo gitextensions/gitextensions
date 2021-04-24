@@ -299,11 +299,6 @@ namespace GitUI.CommandsDialogs
             selectionFilter.Size = DpiUtil.Scale(selectionFilter.Size);
             toolStripStatusBranchIcon.Width = DpiUtil.Scale(toolStripStatusBranchIcon.Width);
 
-            _splitterManager.AddSplitter(splitMain, "splitMain");
-            _splitterManager.AddSplitter(splitRight, "splitRight");
-            _splitterManager.AddSplitter(splitLeft, "splitLeft");
-            _splitterManager.RestoreSplitters();
-
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
             Reset.Visible = AppSettings.ShowResetAllChanges;
             ResetUnStaged.Visible = AppSettings.ShowResetWorkTreeChanges;
@@ -472,7 +467,20 @@ namespace GitUI.CommandsDialogs
             showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles") != "no";
             MinimizeBox = Owner is null;
             LoadCustomDifftools();
+
             base.OnLoad(e);
+
+            _splitterManager.AddSplitter(splitMain, nameof(splitMain));
+            _splitterManager.AddSplitter(splitRight, nameof(splitRight));
+            _splitterManager.AddSplitter(splitLeft, nameof(splitLeft));
+            _splitterManager.RestoreSplitters();
+
+            // Since #8849 and #8557 we have a geometry bug, which pushes the splitter up by 6px.
+            // Account for this shift. This is a workaround at best.
+            //
+            // The problem is likely caused by 'splitRight.FixedPanel = FixedPanel.Panel2' fact, but other forms
+            // have the same setting, and don't appear to suffer from the same bug.
+            splitRight.SplitterDistance -= 6;
         }
 
         protected override void OnShown(EventArgs e)
