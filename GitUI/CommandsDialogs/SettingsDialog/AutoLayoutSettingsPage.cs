@@ -3,19 +3,12 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
-using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public abstract partial class AutoLayoutSettingsPage : RepoDistSettingsPage, ISettingsLayout
     {
         private ISettingsLayout? _settingsLayout;
-
-        protected override ISettingsSource GetCurrentSettings()
-        {
-            Validates.NotNull(CurrentSettings);
-            return CurrentSettings;
-        }
 
         protected virtual ISettingsLayout GetSettingsLayout()
         {
