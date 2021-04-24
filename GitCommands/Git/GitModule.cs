@@ -1721,20 +1721,13 @@ namespace GitCommands
 
             if (nonNewFiles.Count != 0)
             {
-                var execution = _gitExecutable.Execute(
-                    new GitArgumentBuilder("update-index")
-                    {
-                        "--info-only",
-                        "--index-info"
-                    },
-                    inputWriter =>
-                    {
-                        foreach (var file in nonNewFiles)
-                        {
-                            inputWriter.WriteLine($"0 0000000000000000000000000000000000000000\t\"{EscapeOctalCodePoints(file.Name.ToPosixPath())}\"");
-                        }
-                    },
-                    SystemEncoding);
+                StringBuilder sb = new("reset --");
+                foreach (var file in nonNewFiles)
+                {
+                    sb.Append($" \"{file.Name.ToPosixPath()}\"");
+                }
+
+                var execution = _gitExecutable.Execute(sb.ToString());
 
                 output.AppendLine(execution.AllOutput);
             }
@@ -1748,12 +1741,12 @@ namespace GitCommands
                     "--stdin"
                 },
                 inputWriter =>
+                {
+                    foreach (var file in newFiles)
                     {
-                        foreach (var file in newFiles)
-                        {
-                            UpdateIndex(inputWriter, file.Name);
-                        }
-                    },
+                        UpdateIndex(inputWriter, file.Name);
+                    }
+                },
                 SystemEncoding);
 
                 output.Append(execution.AllOutput);
@@ -1839,7 +1832,7 @@ namespace GitCommands
         {
             var bytes = EncodingHelper.ConvertTo(
                 SystemEncoding,
-                $"\"{filename.ToPosixPath()}\"{inputWriter.NewLine}");
+                $"{inputWriter.NewLine}\"{filename.ToPosixPath()}\"");
 
             inputWriter.BaseStream.Write(bytes, 0, bytes.Length);
         }
@@ -3866,47 +3859,6 @@ namespace GitCommands
                         return match.Value;
                     }
                 });
-        }
-
-        /// <summary>
-        /// Escapes a UTF8 string <paramref name="s"/> into octal code points.
-        /// </summary>
-        /// <remarks>
-        /// If <paramref name="s"/> is <c>null</c> then an empty string is returned.
-        /// </remarks>
-        /// <example>
-        /// <code>EscapeOctalCodePoints("두다") == @"\353\221\220\353\213\244"</code>
-        /// </example>
-        /// <param name="s">The string to escape.</param>
-        /// <returns>The escaped string, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
-        [return: NotNullIfNotNull("s")]
-        public static string? EscapeOctalCodePoints(string? s)
-        {
-            if (s is null)
-            {
-                return null;
-            }
-
-            var resultBuilder = new StringBuilder(s.Length);
-
-            for (int i = 0; i < s.Length; i++)
-            {
-                var charSubstring = s.Substring(i, 1);
-                var charBytes = Encoding.UTF8.GetBytes(charSubstring);
-                if (charBytes.Length == 1)
-                {
-                    resultBuilder.Append(charSubstring);
-                }
-                else
-                {
-                    foreach (var charByte in charBytes)
-                    {
-                        resultBuilder.AppendFormat(@"\{0}", Convert.ToString(charByte, toBase: 8));
-                    }
-                }
-            }
-
-            return resultBuilder.ToString();
         }
 
         [return: NotNullIfNotNull("fileName")]

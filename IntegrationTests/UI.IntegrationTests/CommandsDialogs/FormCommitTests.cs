@@ -273,8 +273,8 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void Should_unstage_only_filtered_on_UnstageAll()
         {
             _referenceRepository.Reset();
-            _referenceRepository.CreateRepoFile("file1A.txt", "Test");
-            _referenceRepository.CreateRepoFile("file1B.txt", "Test");
+            _referenceRepository.CreateRepoFile("file1A-Привет.txt", "Test");   // escaped and not escaped in the same string
+            _referenceRepository.CreateRepoFile("file1B-두다.txt", "Test");      // escaped octal code points (Korean Hangul in this case)
             _referenceRepository.CreateRepoFile("file2.txt", "Test");
 
             RunFormTest(async form =>
@@ -296,7 +296,15 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 var testform = form.GetTestAccessor();
 
+                Assert.AreEqual(0, testform.StagedList.AllItemsCount);
+                Assert.AreEqual(3, testform.UnstagedList.AllItemsCount);
+
+                testform.StagedList.SetFilter("");
                 testform.StageAllToolItem.PerformClick();
+
+                Assert.AreEqual(3, testform.StagedList.AllItemsCount);
+                Assert.AreEqual(0, testform.UnstagedList.AllItemsCount);
+
                 testform.StagedList.ClearSelected();
                 testform.StagedList.SetFilter("file1");
 

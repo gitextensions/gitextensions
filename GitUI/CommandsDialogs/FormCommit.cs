@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -780,7 +780,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            StageAllToolStripMenuItemClick(this, EventArgs.Empty);
+            StageAllAccordingToFilter();
             return true;
         }
 
@@ -1549,22 +1549,18 @@ namespace GitUI.CommandsDialogs
             Unstage();
         }
 
-        private void UnstageAllToolStripMenuItemClick(object sender, EventArgs e)
+        private void toolUnstageAllItem_Click(object sender, EventArgs e)
+        {
+            UnstageAllFiles();
+        }
+
+        private void UnstageAllFiles()
         {
             var lastSelection = _currentFilesList is not null
                 ? _currentSelection
                 : Array.Empty<GitItemStatus>();
 
             Validates.NotNull(lastSelection);
-
-            void StageAreaLoaded()
-            {
-                _currentFilesList = Unstaged;
-                RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
-                Unstaged.Focus();
-
-                OnStageAreaLoaded -= StageAreaLoaded;
-            }
 
             OnStageAreaLoaded += StageAreaLoaded;
 
@@ -1585,6 +1581,16 @@ namespace GitUI.CommandsDialogs
             }
 
             Initialize();
+            return;
+
+            void StageAreaLoaded()
+            {
+                _currentFilesList = Unstaged;
+                RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
+                Unstaged.Focus();
+
+                OnStageAreaLoaded -= StageAreaLoaded;
+            }
         }
 
         private void UnstagedSelectionChanged(object sender, EventArgs e)
@@ -1716,7 +1722,7 @@ namespace GitUI.CommandsDialogs
             var initialStagedCount = Staged.GitItemStatuses.Count;
             if (canUseUnstageAll && initialStagedCount > 10 && allFiles.Count == initialStagedCount)
             {
-                UnstageAllToolStripMenuItemClick(this, EventArgs.Empty);
+                UnstageAllFiles();
                 return;
             }
 
@@ -1891,7 +1897,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void StageAllToolStripMenuItemClick(object sender, EventArgs e)
+        private void toolStageAllItem_Click(object sender, EventArgs e)
         {
             StageAllAccordingToFilter();
         }
