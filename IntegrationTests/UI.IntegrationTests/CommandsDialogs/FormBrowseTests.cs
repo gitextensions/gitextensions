@@ -5,11 +5,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
+using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests.CommandsDialogs
@@ -18,6 +21,7 @@ namespace GitExtensions.UITests.CommandsDialogs
     public class FormBrowseTests
     {
         // Created once for the fixture
+        private TestComposition _composition;
         private ReferenceRepository _referenceRepository;
 
         // Created once for each test
@@ -39,6 +43,11 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
             AppSettings.ShowAuthorAvatarColumn = false;
+
+            _composition = TestComposition.Empty
+                .AddParts(typeof(MockWindowsJumpListManager))
+                .AddParts(typeof(MockRepositoryDescriptionProvider))
+                .AddParts(typeof(MockAppTitleGenerator));
         }
 
         [OneTimeTearDown]
@@ -63,6 +72,9 @@ namespace GitExtensions.UITests.CommandsDialogs
             }
 
             _commands = new GitUICommands(_referenceRepository.Module);
+
+            ExportProvider mefExportProvider = _composition.ExportProviderFactory.CreateExportProvider();
+            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
         [Test]

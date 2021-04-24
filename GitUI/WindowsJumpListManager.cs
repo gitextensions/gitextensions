@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -13,36 +14,48 @@ using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {
+    public interface IWindowsJumpListManager : IDisposable
+    {
+        bool NeedsJumpListCreation { get; }
+
+        void AddToRecent(string workingDir);
+        void CreateJumpList(IntPtr windowHandle, WindowsThumbnailToolbarButtons buttons);
+        void DisableThumbnailToolbar();
+        void UpdateCommitIcon(Image image);
+    }
+
     /// <summary>
     /// Provides access to Windows taskbar jumplists features.
     /// </summary>
     /// <seealso href="https://www.sevenforums.com/news/44368-developing-windows-7-taskbar-thumbnail-toolbars.html" />
     /// <seealso href="https://github.com/jlnewton87/Programming/blob/master/C%23/Windows%20API%20Code%20Pack%201.1/source/WindowsAPICodePack/Shell/Taskbar/JumpList.cs" />
     /// <inheritdoc />
-    public sealed class WindowsJumpListManager : IDisposable
+    [Export(typeof(IWindowsJumpListManager))]
+    public sealed class WindowsJumpListManager : IWindowsJumpListManager
     {
+        private static readonly Dictionary<Image, Icon> _iconByImage = new();
+        private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
         private ThumbnailToolBarButton? _commitButton;
         private ThumbnailToolBarButton? _pushButton;
         private ThumbnailToolBarButton? _pullButton;
         private string? _deferredAddToRecent;
-        private static readonly Dictionary<Image, Icon> _iconByImage = new();
         private bool ToolbarButtonsCreated => _commitButton is not null;
-        private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
 
-        public WindowsJumpListManager(IRepositoryDescriptionProvider repositoryDescriptionProvider)
+        static WindowsJumpListManager()
         {
-            _repositoryDescriptionProvider = repositoryDescriptionProvider;
             if (TaskbarManager.IsPlatformSupported)
             {
                 TaskbarManager.Instance.ApplicationId = AppSettings.ApplicationId;
             }
         }
 
-        ~WindowsJumpListManager()
+        [ImportingConstructor]
+        public WindowsJumpListManager(IRepositoryDescriptionProvider repositoryDescriptionProvider)
         {
-            Dispose(false);
+            _repositoryDescriptionProvider = repositoryDescriptionProvider;
         }
 
+        // MEF will dispose instantiated parts when the container is disposed. There is no need to include a finalizer here.
         public void Dispose()
         {
             Dispose(true);

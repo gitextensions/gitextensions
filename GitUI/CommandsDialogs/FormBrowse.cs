@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
         private readonly ICommitDataManager _commitDataManager;
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
-        private readonly WindowsJumpListManager _windowsJumpListManager;
+        private readonly IWindowsJumpListManager _windowsJumpListManager;
         private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
         private List<ToolStripItem>? _currentSubmoduleMenuItems;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
@@ -207,9 +207,8 @@ namespace GitUI.CommandsDialogs
             revisionDiff.Bind(RevisionGrid, fileTree, () => RequestRefresh());
             fileTree.Bind(() => RequestRefresh());
 
-            RepositoryDescriptionProvider repositoryDescriptionProvider = new(new GitDirectoryResolver());
-            _appTitleGenerator = new AppTitleGenerator(repositoryDescriptionProvider);
-            _windowsJumpListManager = new WindowsJumpListManager(repositoryDescriptionProvider);
+            _appTitleGenerator = ManagedExtensibility.GetExport<IAppTitleGenerator>().Value;
+            _windowsJumpListManager = ManagedExtensibility.GetExport<IWindowsJumpListManager>().Value;
 
             InitCountArtificial(out _gitStatusMonitor);
 

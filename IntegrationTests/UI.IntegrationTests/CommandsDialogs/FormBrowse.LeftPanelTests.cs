@@ -4,10 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
+using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests.CommandsDialogs
@@ -19,6 +22,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         private const string RemoteName = "remote1";
 
         // Created once for the fixture
+        private TestComposition _composition;
         private ReferenceRepository _remoteReferenceRepository;
 
         // Track the original setting value
@@ -43,6 +47,11 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.ShowAuthorAvatarColumn = false;
 
             AppSettings.RepoObjectsTreeShowTags = true;
+
+            _composition = TestComposition.Empty
+                .AddParts(typeof(MockWindowsJumpListManager))
+                .AddParts(typeof(MockRepositoryDescriptionProvider))
+                .AddParts(typeof(MockAppTitleGenerator));
         }
 
         [OneTimeTearDown]
@@ -74,6 +83,9 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.CreateBranch("Branch2", _referenceRepository.CommitHash);
 
             _referenceRepository.CreateCommit("head commit");
+
+            ExportProvider mefExportProvider = _composition.ExportProviderFactory.CreateExportProvider();
+            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
         [TearDown]

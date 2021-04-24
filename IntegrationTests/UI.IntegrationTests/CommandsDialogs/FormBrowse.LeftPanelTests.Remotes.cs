@@ -4,11 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
+using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Remotes;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests.CommandsDialogs
@@ -18,6 +21,7 @@ namespace GitExtensions.UITests.CommandsDialogs
     public class FormBrowse_LeftPanel_RemotesTests
     {
         // Created once for the fixture
+        private TestComposition _composition;
         private ReferenceRepository _referenceRepository;
 
         // Track the original setting value
@@ -63,6 +67,14 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             _commands = new GitUICommands(_referenceRepository.Module);
             _remotesManager = new ConfigFileRemoteSettingsManager(() => _referenceRepository.Module);
+
+            _composition = TestComposition.Empty
+                .AddParts(typeof(MockWindowsJumpListManager))
+                .AddParts(typeof(MockRepositoryDescriptionProvider))
+                .AddParts(typeof(MockAppTitleGenerator));
+
+            ExportProvider mefExportProvider = _composition.ExportProviderFactory.CreateExportProvider();
+            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
         [TearDown]
