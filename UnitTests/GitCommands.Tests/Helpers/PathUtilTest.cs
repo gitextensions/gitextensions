@@ -104,12 +104,14 @@ namespace GitCommandsTests.Helpers
         [TestCase(null, false)]
         [TestCase("", false)]
         [TestCase("    ", false)]
-        [TestCase("http://", true)]
+        [TestCase("http://", false)]
         [TestCase("HTTPS://www", true)]
-        [TestCase("git://", true)]
-        [TestCase("file:", true)]
-        [TestCase("SSH:", true)]
+        [TestCase("git://", false)]
+        [TestCase("file:", false)]
+        [TestCase("SSH:", false)]
         [TestCase("SSH", false)]
+        [TestCase("rtsp://probably.not.a.git.url/default.mp4", false)]
+        [TestCase("https://myhost:12368/", true)]
         public void IsUrl(string path, bool expected)
         {
             PathUtil.IsUrl(path).Should().Be(expected);
@@ -347,6 +349,12 @@ namespace GitCommandsTests.Helpers
         [TestCase("https://github.com/gitextensions/gitextensions", true)]
         [TestCase("https://github.com/gitextensions/gitextensions.git", true)]
         [TestCase("github.com/gitextensions/gitextensions.git", true)]
+        [TestCase("git clone https://github.com/gitextensions/gitextensions", true)]
+        [TestCase("HTTPS://MYPRIVATEGITHUB.COM:8080/LOUDREPO.GIT", true)]
+        [TestCase("git://myurl/myrepo.git", true)]
+        [TestCase("git clone https://github.com/gitextensions/gitextensions && cd gitextensions", true)]
+        [TestCase("github.com/gitextensions", false)]
+        [TestCase("github.com/gitextensions/gitextensions/pull/9018", false)]
         public void CanBeGitURL(string url, bool expected)
         {
             Assert.AreEqual(expected, PathUtil.CanBeGitURL(url));
