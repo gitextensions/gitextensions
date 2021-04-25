@@ -6,9 +6,9 @@ namespace GitUI
     public interface IFindFilePredicateProvider
     {
         /// <summary>
-        /// Returns the names of files that match the specified search pattern
+        /// Returns the names of files that match the specified search pattern.
         /// </summary>
-        /// <param name="searchPattern">The search string to match against the paths of files</param>
+        /// <param name="searchPattern">The search string to match against the paths of files.</param>
         Func<string?, bool> Get(string searchPattern, string workingDir);
     }
 

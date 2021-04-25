@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         #region Key
         private Keys _keyData;
 
-        /// <summary>Gets or sets the KeyData</summary>
+        /// <summary>Gets or sets the KeyData.</summary>
         public Keys KeyData
         {
             get { return _keyData; }

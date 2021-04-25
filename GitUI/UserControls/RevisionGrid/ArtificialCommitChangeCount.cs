@@ -10,34 +10,34 @@ namespace GitUI
     public sealed class ArtificialCommitChangeCount
     {
         /// <summary>
-        /// Number of changed files
+        /// Number of changed files.
         /// </summary>
         public IReadOnlyList<GitItemStatus> Changed { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
-        ///  Number of new files
+        ///  Number of new files.
         /// </summary>
         public IReadOnlyList<GitItemStatus> New { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
-        /// Number of deleted files
+        /// Number of deleted files.
         /// </summary>
         public IReadOnlyList<GitItemStatus> Deleted { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
         /// Number of submodules where the commit has changed
-        /// (regardless if they are dirty or not)
+        /// (regardless if they are dirty or not).
         /// </summary>
         public IReadOnlyList<GitItemStatus> SubmodulesChanged { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
         /// Number of dirty submodules (with changes that are not committed)
-        /// (regardless if the commit is changed or not)
+        /// (regardless if the commit is changed or not).
         /// </summary>
         public IReadOnlyList<GitItemStatus> SubmodulesDirty { get; private set; } = Array.Empty<GitItemStatus>();
 
         /// <summary>
-        /// Any change in any category
+        /// Any change in any category.
         /// </summary>
         public bool HasChanges
             => (Changed?.Count ?? 0) > 0
@@ -47,9 +47,9 @@ namespace GitUI
                || (SubmodulesDirty?.Count ?? 0) > 0;
 
         /// <summary>
-        /// Update the change count
+        /// Update the change count.
         /// </summary>
-        /// <param name="items">Git items</param>
+        /// <param name="items">Git items.</param>
         public void Update(IReadOnlyList<GitItemStatus> items)
         {
             Changed = items.Where(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule).ToList();
@@ -60,9 +60,9 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Summary for the changes, limited if too big
+        /// Summary for the changes, limited if too big.
         /// </summary>
-        /// <returns>string with changes</returns>
+        /// <returns>string with changes.</returns>
         public string GetSummary()
         {
             StringBuilder builder = new();

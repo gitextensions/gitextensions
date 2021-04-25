@@ -16,13 +16,13 @@ namespace GitUI.UserControls
 
         /// <summary>
         /// The Text property of this control will be filled with the selected path
-        /// and the Text property is used as path to initialize the folder browser's default selection
+        /// and the Text property is used as path to initialize the folder browser's default selection.
         /// </summary>
         public Control? PathShowingControl { get; set; }
 
         /// <summary>
         /// Opens a a folder picker dialog with the path in "getter" preselected and
-        /// if OK is returned uses "setter" to set the path
+        /// if OK is returned uses "setter" to set the path.
         /// </summary>
         public void ShowFolderBrowserDialogWithPreselectedPath(Func<string> getter, Action<string> setter)
         {

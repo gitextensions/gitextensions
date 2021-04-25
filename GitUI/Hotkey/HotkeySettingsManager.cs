@@ -20,7 +20,7 @@ namespace GitUI.Hotkey
         #region Serializer
         private static XmlSerializer? _serializer;
 
-        /// <summary>Lazy-loaded Serializer for HotkeySettings[]</summary>
+        /// <summary>Lazy-loaded Serializer for HotkeySettings[].</summary>
         private static XmlSerializer Serializer => _serializer ??= new XmlSerializer(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
 
         #endregion
@@ -93,7 +93,7 @@ namespace GitUI.Hotkey
             }
         }
 
-        /// <summary>Serializes and saves the supplied settings</summary>
+        /// <summary>Serializes and saves the supplied settings.</summary>
         public static void SaveSettings(HotkeySettings[] settings)
         {
             try

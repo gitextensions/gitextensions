@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -39,9 +39,9 @@ namespace GitUI.Editor.Diff
         }
 
         /// <summary>
-        /// returns the according line numbers or null if the caretLine is not mapped
+        /// returns the according line numbers or null if the caretLine is not mapped.
         /// </summary>
-        /// <param name="caretLine">0-based (in contrast to the displayed line numbers which are 1-based)</param>
+        /// <param name="caretLine">0-based (in contrast to the displayed line numbers which are 1-based).</param>
         public DiffLineInfo GetLineInfo(int caretLine)
         {
             DiffLineInfo diffLine;

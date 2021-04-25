@@ -38,17 +38,17 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private IDictionary<RevisionGraphSegment, int>? _segmentLanes;
 
         /// <summary>
-        /// Contains the gaps created by <cref>MoveLanesRight</cref>
+        /// Contains the gaps created by. <cref>MoveLanesRight</cref>
         /// </summary>
         private HashSet<int>? _gaps;
 
         /// <summary>
-        /// The cached lanecount
+        /// The cached lanecount.
         /// </summary>
         private int _laneCount;
 
         /// <summary>
-        /// The cached revisionlane
+        /// The cached revisionlane.
         /// </summary>
         private int _revisionLane;
 

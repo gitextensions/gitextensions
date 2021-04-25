@@ -6,7 +6,7 @@ using ResourceManager;
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     /// <summary>
-    /// Page to group other pages
+    /// Page to group other pages.
     /// </summary>
     public abstract class GroupSettingsPage : Translate, ISettingsPage
     {

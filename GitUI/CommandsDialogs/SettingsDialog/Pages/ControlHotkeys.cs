@@ -7,7 +7,7 @@ using ResourceManager;
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     /// <summary>
-    /// ControlHotkeys enables editing of HotkeySettings
+    /// ControlHotkeys enables editing of HotkeySettings.
     /// </summary>
     public partial class ControlHotkeys : GitExtensionsControl
     {

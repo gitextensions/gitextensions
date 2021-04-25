@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         /// <summary>
         /// silently does not save some settings if Git is not configured correctly
-        /// (user notification is done elsewhere)
+        /// (user notification is done elsewhere).
         /// </summary>
         protected override void PageToSettings()
         {

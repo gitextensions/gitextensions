@@ -21,13 +21,13 @@ namespace GitUI
     public static class GitUIExtensions
     {
         /// <summary>
-        /// View the changes between the revisions, if possible as a diff
+        /// View the changes between the revisions, if possible as a diff.
         /// </summary>
-        /// <param name="fileViewer">Current FileViewer</param>
-        /// <param name="item">The FileStatusItem to present changes for</param>
-        /// <param name="defaultText">default text if no diff is possible</param>
-        /// <param name="openWithDiffTool">The difftool command to open with</param>
-        /// <returns>Task to view</returns>
+        /// <param name="fileViewer">Current FileViewer.</param>
+        /// <param name="item">The FileStatusItem to present changes for.</param>
+        /// <param name="defaultText">default text if no diff is possible.</param>
+        /// <param name="openWithDiffTool">The difftool command to open with.</param>
+        /// <returns>Task to view.</returns>
         public static Task ViewChangesAsync(this FileViewer fileViewer,
             FileStatusItem? item,
             string defaultText = "",

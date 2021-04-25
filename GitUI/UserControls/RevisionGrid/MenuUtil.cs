@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid
         private static Font? _disabledFont;
 
         /// <summary>
-        /// set the menu item disabled and remove mouse hover effect
+        /// set the menu item disabled and remove mouse hover effect.
         /// </summary>
         public static void SetAsCaptionMenuItem(ToolStripMenuItem menuItem, ToolStrip menu)
         {
@@ -26,7 +26,7 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
-        /// no mouse over effect for disabled menu items, if the Tag is "caption"
+        /// no mouse over effect for disabled menu items, if the Tag is "caption".
         /// </summary>
         private sealed class MenuItemBackgroundFilter : IMenuItemBackgroundFilter
         {

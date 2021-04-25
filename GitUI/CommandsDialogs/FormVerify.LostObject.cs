@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs
             public DateTime? Date { get; private set; }
 
             /// <summary>
-            /// Tag name (for a tag object)
+            /// Tag name (for a tag object).
             /// </summary>
             public string? TagName { get; set; }
 

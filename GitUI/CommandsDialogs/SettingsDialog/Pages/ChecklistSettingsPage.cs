@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
         /// <summary>
-        /// TODO: remove this direct dependency to another SettingsPage later when possible
+        /// TODO: remove this direct dependency to another SettingsPage later when possible.
         /// </summary>
         public SshSettingsPage? SshSettingsPage { get; set; }
 

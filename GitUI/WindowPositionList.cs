@@ -12,7 +12,7 @@ using GitCommands;
 namespace GitUI
 {
     /// <summary>
-    ///   Stores the state and position of a single window
+    ///   Stores the state and position of a single window.
     /// </summary>
     [DebuggerDisplay("Name={Name} Rect={Rect} DeviceDpi={DeviceDpi} State={State}")]
     [Serializable]

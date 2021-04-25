@@ -265,9 +265,9 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// Provide a description for the first selected or parent to the "primary" selected last
+        /// Provide a description for the first selected or parent to the "primary" selected last.
         /// </summary>
-        /// <returns>A description of the selected parent</returns>
+        /// <returns>A description of the selected parent.</returns>
         private string? DescribeRevision(List<GitRevision> parents)
         {
             return parents.Count switch
@@ -925,10 +925,10 @@ namespace GitUI.CommandsDialogs
 
         /// <summary>
         /// Checks if it is possible to reset to the revision.
-        /// For artificial is Index is possible but not WorkTree or Combined
+        /// For artificial is Index is possible but not WorkTree or Combined.
         /// </summary>
-        /// <param name="guid">The Git objectId</param>
-        /// <returns>If it is possible to reset to the revisions</returns>
+        /// <param name="guid">The Git objectId.</param>
+        /// <returns>If it is possible to reset to the revisions.</returns>
         private bool CanResetToRevision(ObjectId guid)
         {
             return guid != ObjectId.WorkTreeId
@@ -1121,9 +1121,9 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// Hotkey handler
+        /// Hotkey handler.
         /// </summary>
-        /// <returns>true if hotkey handled</returns>
+        /// <returns>true if hotkey handled.</returns>
         private bool StageSelectedFiles()
         {
             if (!DiffFiles.Focused)
@@ -1142,9 +1142,9 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// Hotkey handler
+        /// Hotkey handler.
         /// </summary>
-        /// <returns>true if hotkey handled</returns>
+        /// <returns>true if hotkey handled.</returns>
         private bool UnstageSelectedFiles()
         {
             if (!DiffFiles.Focused)
@@ -1163,9 +1163,9 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// Hotkey handler
+        /// Hotkey handler.
         /// </summary>
-        /// <returns>true if hotkey handled</returns>
+        /// <returns>true if hotkey handled.</returns>
         private bool ResetSelectedFilesWithConfirmation()
         {
             if (!DiffFiles.Focused)

@@ -33,7 +33,7 @@ namespace GitUI.UserControls.RevisionGrid
         protected override string TranslationCategoryName => "RevisionGrid";
 
         /// <summary>
-        /// ... "Update" because the hotkey settings might change
+        /// ... "Update" because the hotkey settings might change.
         /// </summary>
         public void CreateOrUpdateMenuCommands()
         {

@@ -9,7 +9,7 @@ namespace GitUI.Hotkey
     public static class KeysExtensions
     {
         /// <summary>
-        /// Strips the modifier from KeyData
+        /// Strips the modifier from KeyData.
         /// </summary>
         public static Keys GetKeyCode(this Keys keyData)
         {

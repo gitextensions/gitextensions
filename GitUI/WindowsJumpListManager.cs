@@ -134,7 +134,7 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Indicates if the JumpList creation is still needed
+        /// Indicates if the JumpList creation is still needed.
         /// </summary>
         public bool NeedsJumpListCreation => IsSupported && !ToolbarButtonsCreated;
 
@@ -210,14 +210,14 @@ namespace GitUI
 
         /// <summary>
         /// Converts an image into an icon.  This was taken off of the interwebs.
-        /// It's on a billion different sites and forum posts, so I would say its creative commons by now. -tekmaven
+        /// It's on a billion different sites and forum posts, so I would say its creative commons by now. -tekmaven.
         /// </summary>
-        /// <param name="img">The image that shall become an icon</param>
+        /// <param name="img">The image that shall become an icon.</param>
         /// <param name="size">The width and height of the icon. Standard
         /// sizes are 16x16, 32x32, 48x48, 64x64.</param>
         /// <param name="keepAspectRatio">Whether the image should be squashed into a
         /// square or whether whitespace should be put around it.</param>
-        /// <returns>An icon!!</returns>
+        /// <returns>An icon!!.</returns>
         private static Icon MakeIcon(Image img, int size, bool keepAspectRatio)
         {
             var square = new Bitmap(size, size); // create new bitmap

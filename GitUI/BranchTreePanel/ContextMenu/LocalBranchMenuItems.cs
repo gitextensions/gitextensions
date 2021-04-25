@@ -26,7 +26,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
         }
 
         /// <summary>
-        /// Filter menu entries that depend on the branch being active or not
+        /// Filter menu entries that depend on the branch being active or not.
         /// </summary>
         public IEnumerable<ToolStripItemWithKey> GetInactiveBranchItems()
         {

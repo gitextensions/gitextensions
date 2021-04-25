@@ -13,7 +13,7 @@ namespace GitUI
         ///
         /// Two rows selected:
         /// A - first selected row
-        /// B - second selected row
+        /// B - second selected row.
         /// </summary>
         public static bool TryGet(
             IReadOnlyList<GitRevision?>? revisions,

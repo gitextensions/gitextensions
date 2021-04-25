@@ -6,14 +6,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// <summary>
     /// to jump to a specific page
     ///
-    /// TODO: extend with attributes to jump to specific control on settingspage
+    /// TODO: extend with attributes to jump to specific control on settingspage.
     /// </summary>
     public abstract class SettingsPageReference
     {
     }
 
     /// <summary>
-    /// Type may be a SettingsPage type or a IGitPlugin subclass type
+    /// Type may be a SettingsPage type or a IGitPlugin subclass type.
     /// </summary>
     public class SettingsPageReferenceByType : SettingsPageReference
     {

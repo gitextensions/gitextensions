@@ -12,7 +12,7 @@ namespace GitUI.Theming
         /// <remarks>
         /// Performance measurement result:
         /// Always faster than 200 microseconds
-        /// 90% cases faster than 5 microseconds, probably `GetActiveWindow` caches result
+        /// 90% cases faster than 5 microseconds, probably `GetActiveWindow` caches result.
         /// </remarks>
         public bool IsSystemDialogOpen
         {

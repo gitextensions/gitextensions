@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace GitUI.Interops.DwmApi
 {
     /// <summary>
-    /// Allow to set dark title bar on Win10. From: https://stackoverflow.com/questions/57124243/winforms-dark-title-bar-on-windows-10/62811758#62811758
+    /// Allow to set dark title bar on Win10. From: https://stackoverflow.com/questions/57124243/winforms-dark-title-bar-on-windows-10/62811758#62811758.
     /// </summary>
     internal static class DwmApi
     {

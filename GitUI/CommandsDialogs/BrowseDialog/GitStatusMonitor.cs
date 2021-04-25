@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private const int FileChangedUpdateDelay = 1000;
 
         /// <summary>
-        /// Minimum interval between subsequent updates
+        /// Minimum interval between subsequent updates.
         /// </summary>
         private const int MinUpdateInterval = 30000;
 
@@ -503,9 +503,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <summary>
         /// Schedule a status update after the specified delay
         /// Do not change if a value is already set at a earlier time,
-        /// but respect the minimal (dynamic) update times between updates
+        /// but respect the minimal (dynamic) update times between updates.
         /// </summary>
-        /// <param name="delay">delay in milli seconds</param>
+        /// <param name="delay">delay in milli seconds.</param>
         private void ScheduleNextUpdateTime(int delay)
         {
             lock (_statusSequence)
@@ -527,7 +527,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         /// <summary>
         /// Schedule a status update from interactive changes (repo changed or refreshed)
-        /// A short delay is added
+        /// A short delay is added.
         /// </summary>
         private void ScheduleNextInteractiveTime()
         {

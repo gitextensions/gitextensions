@@ -486,7 +486,7 @@ namespace GitUI
 
         public bool HasScanRegion => _region is not null;
 
-        /// <summary>Begins the start offset for searching</summary>
+        /// <summary>Begins the start offset for searching.</summary>
         public int BeginOffset
         {
             get
@@ -500,7 +500,7 @@ namespace GitUI
             }
         }
 
-        /// <summary>Begins the end offset for searching</summary>
+        /// <summary>Begins the end offset for searching.</summary>
         public int EndOffset
         {
             get
@@ -566,9 +566,9 @@ namespace GitUI
 
         /// <summary>Finds next instance of LookFor, according to the search rules
         /// (MatchCase, MatchWholeWordOnly).</summary>
-        /// <param name="beginAtOffset">Offset in Document at which to begin the search</param>
+        /// <param name="beginAtOffset">Offset in Document at which to begin the search.</param>
         /// <remarks>If there is a match at beginAtOffset precisely, it will be returned.</remarks>
-        /// <returns>Region of document that matches the search string</returns>
+        /// <returns>Region of document that matches the search string.</returns>
         public TextRange? FindNext(int beginAtOffset, bool searchBackward, out bool loopedAround)
         {
             Validates.NotNull(LookFor);

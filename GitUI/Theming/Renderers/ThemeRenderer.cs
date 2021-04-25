@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -8,18 +8,18 @@ namespace GitUI.Theming
     /// <summary>
     /// Defines customization of win32 api theming methods, see
     /// https://docs.microsoft.com/en-us/windows/win32/api/uxtheme/ and
-    /// https://docs.microsoft.com/en-us/windows/win32/controls/parts-and-states
+    /// https://docs.microsoft.com/en-us/windows/win32/controls/parts-and-states.
     /// </summary>
     internal abstract class ThemeRenderer : IDisposable
     {
         /// <summary>
         /// Result code indicating theming method's task was not achieved.
+        /// In this case original win32 theming api method is applied by <see cref="Win32ThemeHooks"/>.
         /// </summary>
-        //// In this case original win32 theming api method is applied by <see cref="Win32ThemeHooks"/>
         public const int Unhandled = 1;
 
         /// <summary>
-        /// Result code indicating successful completion of theming method's task
+        /// Result code indicating successful completion of theming method's task.
         /// </summary>
         public const int Handled = 0;
 
@@ -64,7 +64,7 @@ namespace GitUI.Theming
         /// "SCROLLBAR". The result depends on window class, e.g. ListView or NativeListView will
         /// have different theme data.
         /// </summary>
-        /// <param name="hwnd">win32 window handle</param>
+        /// <param name="hwnd">win32 window handle.</param>
         public void AddThemeData(IntPtr hwnd)
         {
             var htheme = NativeMethods.OpenThemeData(hwnd, Clsid);
