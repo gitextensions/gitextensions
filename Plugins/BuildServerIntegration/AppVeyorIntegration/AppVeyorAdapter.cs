@@ -450,7 +450,9 @@ namespace AppVeyorIntegration
 
             return httpClient.GetAsync(restServicePath, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                              .ContinueWith(
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
                                  task => GetStreamFromHttpResponseAsync(httpClient, task, restServicePath, cancellationToken),
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
                                  cancellationToken,
                                  restServicePath.Contains("github") ? TaskContinuationOptions.None : TaskContinuationOptions.AttachedToParent,
                                  TaskScheduler.Current)

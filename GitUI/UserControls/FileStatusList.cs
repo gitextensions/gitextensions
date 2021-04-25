@@ -950,10 +950,11 @@ namespace GitUI
                     {
                         var capturedItem = item;
 
-                        ThreadHelper.JoinableTaskFactory.RunAsync(
-                        async () =>
+                        ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                         {
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
                             await task;
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
 
                             await this.SwitchToMainThreadAsync();
 

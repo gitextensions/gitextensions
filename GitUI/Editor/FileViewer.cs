@@ -636,7 +636,9 @@ namespace GitUI.Editor
 
                 using var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 using var reader = new StreamReader(stream, Module.FilesEncoding);
+#pragma warning disable VSTHRD103 // Call async methods when in an async method
                 var content = reader.ReadToEnd();
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
                 FilePreamble = reader.CurrentEncoding.GetPreamble();
                 return content;
             }
