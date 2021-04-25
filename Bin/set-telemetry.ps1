@@ -27,8 +27,10 @@ if (!$doc) {
 
 $node = $doc.SelectSingleNode("/dictionary/item/key/string[text()='TelemetryEnabled']")
 if ($node -ne $null) {
-    $node.ParentNode.ParentNode.value.string = "$telemetryEnabled";
-    $doc.Save($userAppDataPath)
+    if (-not $telemetryEnabled) {
+        $node.ParentNode.ParentNode.value.string = "$telemetryEnabled";
+        $doc.Save($userAppDataPath)
+    }
     exit 0
 }
 
