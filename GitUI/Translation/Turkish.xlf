@@ -229,7 +229,7 @@ Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
       </trans-unit>
       <trans-unit id="chkShowCurrentBranchInVisualStudio.Text">
         <source>Show current branch in Visual Studio</source>
-        <target>Visual Studio'daki geçerli dalı göster</target>
+        <target>Visual Studio'da geçerli dalı göster</target>
         
       </trans-unit>
       <trans-unit id="chkShowRelativeDate.Text">
@@ -377,7 +377,7 @@ Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
       </trans-unit>
       <trans-unit id="blameRevisionToolStripMenuItem.Text">
         <source>Blame this revision</source>
-        <target>Bu düzeltimi(revizyonu) izle(suçla)</target>
+        <target>Bu düzeltmeyi(revizyonu) izle(suçla)</target>
         
       </trans-unit>
       <trans-unit id="commitHashToolStripMenuItem.Text">
@@ -1519,6 +1519,7 @@ Lütfen, git'in (Windows için Git veya cygwin) yüklü olduğuna emin olun veya
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
         <source>Omit uninteresting changes from combined diff</source>
+        <target>Birleştirilmiş farktan ilginç olmayan değişiklikleri atla</target>
         
       </trans-unit>
       <trans-unit id="chkOpenSubmoduleDiffInSeparateWindow.Text">
@@ -2257,7 +2258,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Filter</source>
-        <target>Filtreleme</target>
+        <target>Filtrele</target>
         
       </trans-unit>
     </body>
@@ -2553,6 +2554,7 @@ düzeltmeyi seçin:</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Configure available encodings</source>
+        <target>Kullanılabilir kodlamaları yapılandır</target>
         
       </trans-unit>
       <trans-unit id="ButtonCancel.Text">
@@ -2634,7 +2636,7 @@ düzeltmeyi seçin:</target>
       </trans-unit>
       <trans-unit id="CommitInfoTabPage.Text">
         <source>Commit</source>
-        <target>Teslim Et</target>
+        <target>Teslim</target>
         
       </trans-unit>
       <trans-unit id="DiffTabPage.Text">
@@ -3967,6 +3969,8 @@ Yeni &quot;{0}&quot; deposunu şimdi açmak istiyor musunuz?</target>
       <trans-unit id="label1.Text">
         <source>Supported commandline arguments for
 gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
+        <target>Gitex.cmd / gitex için desteklenen
+komut satırı bağımsız değişkenleri (GitExtensions.exe ile aynı klasörde bulunur):</target>
         
       </trans-unit>
     </body>
@@ -4834,7 +4838,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Create b&amp;ranch at this revision</source>
-        <target>Bu düzeltimde(revizyonda) d&amp;al oluştur</target>
+        <target>Bu düzeltmede(revizyonda) d&amp;al oluştur</target>
         
       </trans-unit>
     </body>
@@ -5156,6 +5160,7 @@ Göstere gidiniz</target>
       </trans-unit>
       <trans-unit id="_btnSwapTooltip.Text">
         <source>Swap BASE and Compare commits</source>
+        <target>TEMEL (BASE) ve Karşılaştırma teslimleri yer değiştir</target>
         
       </trans-unit>
       <trans-unit id="_ckCompareToMergeBase.Text">
@@ -5175,6 +5180,7 @@ Göstere gidiniz</target>
       </trans-unit>
       <trans-unit id="btnCompareDirectoriesWithDiffTool.Text">
         <source>Open diff using &amp;directory diff tool</source>
+        <target>&amp;Dizini, fark aracını kullanarak farkını aç</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
@@ -5322,7 +5328,7 @@ Eğer emin değilseniz sadece bu pencereyi kapatın.</target>
       </trans-unit>
       <trans-unit id="CommitInfoTabPage.Text">
         <source>Commit</source>
-        <target>Teslim Et</target>
+        <target>Teslim</target>
         
       </trans-unit>
       <trans-unit id="DiffTab.Text">
@@ -5548,6 +5554,10 @@ Eğer emin değilseniz sadece bu pencereyi kapatın.</target>
 &quot; {0} &quot;
 
 Do you want Git Extensions to help locate the correct folder?</source>
+        <target>EV (HOME) ortam değişkeni, genel git yapılandırma (config) dosyasını içeren bir dizine işaret etmiyor:
+&quot; {0} &quot;
+
+Git Extensions'ın doğru klasörü bulmanıza yardımcı olmasını istiyor musunuz?</target>
         
       </trans-unit>
       <trans-unit id="_gitGlobalConfigNotFoundCaption.Text">
@@ -5578,6 +5588,8 @@ Do you want Git Extensions to help locate the correct folder?</source>
       <trans-unit id="_homeNotAccessible.Text">
         <source>The environment variable HOME points to a directory that is not accessible:
 &quot;{0}&quot;</source>
+        <target>EV (HOME) ortam değişkeni, erişilemeyen bir dizine işaret ediyor:
+&quot;{0}&quot;</target>
         
       </trans-unit>
       <trans-unit id="_noHomeDirectorySpecified.Text">
@@ -5984,7 +5996,7 @@ _ReSharper*/</target>
 - tag name
 - branch name</source>
         <target>Teslim ifade örnekleri:
-- tam teslim karması: örn:  8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
+- tam teslim karması: örn: 8eab51fcb9c4538eb74c4dcd4c31ffd693ad25c9
 - kısmi teslim karması (benzersizse): örn: 8eab51fcb9c453
 - etiket adı
 - dal adı</target>
@@ -6419,7 +6431,7 @@ Bu ayarlama ortak ata ağacına da yapılır.</target>
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>Remote:</source>
-        <target>Uzak:</target>
+        <target>Uzak Depo:</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -6991,6 +7003,7 @@ Bunu şimdi yapmak ister misiniz?</target>
       </trans-unit>
       <trans-unit id="_useForceWithLeaseInstead.Text">
         <source>Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?</source>
+        <target>Zorla itme, son getirmenizden bu yana yapılan değişikliklerin üzerine yazabilir. Bunun yerine, daha güvenli olarak kiralamayla zorla itmeyi kullanmak ister misin?</target>
         
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
@@ -7801,6 +7814,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="_localRefInvalid.Text">
         <source>The entered value '{0}' is not the name of an existing local branch.</source>
+        <target>Girilen '{0}' değeri, mevcut bir yerel dal adı değil.</target>
         
       </trans-unit>
       <trans-unit id="labelResetBranchWarning.Text">
@@ -8045,6 +8059,10 @@ Bu eylem geri alınamaz. </target>
 {0}
 
 Is the merge conflict solved?</source>
+        <target>Birleştirme çakışması çözülmeli ve sonuç şu şekilde kaydedilmelidir:
+{0}
+
+Birleştirme çakışması çözüldü mü?</target>
         
       </trans-unit>
       <trans-unit id="_askMergeConflictSolvedCaption.Text">
@@ -8157,6 +8175,10 @@ Choose to keep the local ({1}), remote ({2}) or base file.</source>
 A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict.
 
 Choose the file you want to keep, merge the files or delete the file?</source>
+        <target>{0} dosyasının temel (base) düzeltmesi (revizyonu) yok.
+Aynı ada sahip bir dosya, yerel depoda ({1}) ve uzak depoda ({2}) oluşturulmuş ve bu da çakışmaya neden oldu.
+
+Korumak istediğiniz dosyayı seçilsin mi veya dosyalar birleştirilsin mi veya dosya silinsin mi?</target>
         
       </trans-unit>
       <trans-unit id="_fileDeletedLocallyAndModifiedRemotely.Text">
@@ -8212,6 +8234,10 @@ Birleştirme çakışması çözüldü olarak işaretlenmeyecektir. Lütfen, tek
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
+        <target>{0} ve seçilen {2} dosyadan {1} tanesinin, yerel bir düzeltmesi (revizyonu) yok.
+Dosyalar, yerel depoda silinmiş, ancak uzak depoda değiştirilmiş.
+
+Dosyaları silin veya değiştirilmiş sürümleri korumayı seçin.</target>
         
       </trans-unit>
       <trans-unit id="_filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected.Text">
@@ -8219,6 +8245,10 @@ Choose to delete the files or keep the modified versions.</source>
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
+        <target>{0} dosyası ve seçilen diğer {1} dosyanın, yerel bir düzeltmesi (revizyonu) yok.
+Dosyalar, yerel depoda silinmiş, ancak uzak depoda değiştirilmiş.
+
+Dosyaları silin veya değiştirilmiş sürümleri korumayı seçin.</target>
         
       </trans-unit>
       <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLong.Text">
@@ -8226,6 +8256,10 @@ Choose to delete the files or keep the modified versions.</source>
 The files have been modified locally, but deleted remotely.
 
 Choose to delete the files or keep the modified versions.</source>
+        <target>{0} ve seçilen {2} dosyadan {1} tanesinin, uzak bir düzeltmesi (revizyonu) yok.
+Dosyalar, yerel depoda değiştirilmiş, ancak uzak depoda silinmiş.
+
+Dosyaları silin veya değiştirilmiş sürümleri korumayı seçin.</target>
         
       </trans-unit>
       <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected.Text">
@@ -8233,6 +8267,10 @@ Choose to delete the files or keep the modified versions.</source>
 The files have been modified locally, but deleted remotely.
 
 Choose to delete the files or keep the modified versions.</source>
+        <target>{0} dosyası ve seçilen diğer {1} dosyanın, uzak bir düzeltmesi (revizyonu) yok.
+Dosyalar, yerel depoda değiştirilmiş, ancak uzak depoda silinmiş.
+
+Dosyaları silin veya değiştirilmiş sürümleri korumayı seçin.</target>
         
       </trans-unit>
       <trans-unit id="_keepBaseButtonText.Text">
@@ -8298,6 +8336,7 @@ Lütfen, ayarlara gidin ve birleştirme aracını ayarlayın!</target>
       </trans-unit>
       <trans-unit id="_solveMergeConflictApplyToAllCheckBoxText.Text">
         <source>Apply to {0} and {1} other file(s)</source>
+        <target>{0} ve diğer {1} dosyaya uygula</target>
         
       </trans-unit>
       <trans-unit id="_solveMergeConflictDialogCaption.Text">
@@ -8446,7 +8485,7 @@ Do you want to use this custom merge script?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Filter</source>
-        <target>Filtreleme</target>
+        <target>Filtrele</target>
         
       </trans-unit>
       <trans-unit id="CurrentBranchOnlyCheck.Text">
@@ -9354,6 +9393,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="label60.Text">
         <source>Files content encoding</source>
+        <target>Dosyaların içerik kodlaması</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
@@ -9939,9 +9979,9 @@ Do you want to trust this host key and then try again?</source>
         <source>Since this repository has submodules, it's necessary to update them on every checkout.
 
 This will just checkout on the submodule the commit determined by the superproject.</source>
-        <target>Bu depo alt modüller içerir, bu nedenle her çıkış yapıldığında alt modülleri güncellemeniz gerekiryor.
+        <target>Bu depo, alt modüller içeriyor. Bu nedenle her çıkış yapıldığında, bu alt modülleri güncellemeniz gerekiyor.
 
-Bu, yalnızca süper proje tarafından belirlenen teslimlerde alt modülden çıkış yapar.</target>
+Bu, yalnızca alt modül içerisinde bulunan ve süper proje tarafından belirlenen teslimlerden çıkış yapar.</target>
         
       </trans-unit>
     </body>
@@ -10685,6 +10725,7 @@ Tüm dalları göstermek için düzeltme tablosuna sağ tıklayın, 'Görünüm'
       </trans-unit>
       <trans-unit id="_assumeUnchangedFail.Text">
         <source>Fail to assume unchanged the file '{0}'.</source>
+        <target>'{0}' dosyasının değiştirilmediği varsayılamadı.</target>
         
       </trans-unit>
       <trans-unit id="_assumeUnchangedMessage.Text">
@@ -10845,11 +10886,12 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="rememberFileStripMenuItem.Text">
         <source>Remember file for diff</source>
+        <target>Fark için dosyayı hatırla</target>
         
       </trans-unit>
       <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
         <source>Reset to selected revision</source>
-        <target>Seçili düzeltimi(revizyonu) sıfırla</target>
+        <target>Seçili düzeltmeyi(revizyonu) sıfırla</target>
         
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem.Text">
@@ -11114,6 +11156,7 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">
         <source>For you own protection dropping more than 10 patch files at once is blocked!</source>
+        <target>Kendi güvenliğiniz için aynı anda 10'dan fazla yama dosyasını atmanız engellendi!</target>
         
       </trans-unit>
       <trans-unit id="_loadingControlAsync.Text">
@@ -11153,7 +11196,7 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="_revisionFilter.Text">
         <source>Filter</source>
-        <target>Filtreleme</target>
+        <target>Filtrele</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -11416,6 +11459,7 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="URICol.HeaderText">
         <source>URI</source>
+        <target>URI</target>
         
       </trans-unit>
       <trans-unit id="_addTemplate.Text">
@@ -11496,7 +11540,7 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayArgumentsHelp.Text">
         <source>Arguments help</source>
-        <target>Parametre yardımı</target>
+        <target>Bağımsız değişkenler yardımı</target>
         
       </trans-unit>
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
@@ -11849,7 +11893,7 @@ OpenSSH kullanıldığında, komut satırı iletişim kutuları gösterilir!
     <body>
       <trans-unit id="_argumentsText.Text">
         <source>Arguments</source>
-        <target>Parametreler</target>
+        <target>Bağımsız değişkenler</target>
         
       </trans-unit>
       <trans-unit id="_authorDateText.Text">
@@ -11945,6 +11989,7 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_combinedDiff.Text">
         <source>Combined diff</source>
+        <target>Birleştirilmiş fark</target>
         
       </trans-unit>
       <trans-unit id="_commandText.Text">
@@ -12023,6 +12068,7 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_diffBaseToB.Text">
         <source>Unique diff BASE with b/</source>
+        <target>TEMEL(BASE) ile b'nin benzersiz farkı/</target>
         
       </trans-unit>
       <trans-unit id="_diffCommonBase.Text">
@@ -12267,6 +12313,7 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_scriptErrorOptionWithoutRevisionText.Text">
         <source>A valid revision is required to substitute the argument options</source>
+        <target>Bağımsız değişken seçeneklerini değiştirmek için geçerli bir düzeltme (revizyon) gerekiyor</target>
         
       </trans-unit>
       <trans-unit id="_scriptText.Text">

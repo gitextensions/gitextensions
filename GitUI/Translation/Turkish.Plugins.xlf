@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe parametreleri</target>
+        <target>msbuild.exe bağımsız değişkenleri</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
@@ -70,7 +70,7 @@
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
-        <target>Çalıştırılacak git komutunun parametreleri</target>
+        <target>Çalıştırılacak git komutunun bağımsız değişkenleri</target>
         
       </trans-unit>
     </body>
@@ -279,12 +279,12 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>Yerel izleme dalları oluşturma</target>
+        <target>Yerel izleme dalları oluştur</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>Yerel izleme dalları oluşturma</target>
+        <target>Yerel izleme dalları oluştur</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -298,7 +298,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
-        <target>Yerel izleme dalları oluşturma</target>
+        <target>Yerel izleme dalları oluştur</target>
         
       </trans-unit>
     </body>
@@ -460,7 +460,7 @@ Devam etmek istediğine emin misin?</target>
     <body>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
-        <target>Eski dalları silme</target>
+        <target>Eski dalları sil</target>
         
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
@@ -666,7 +666,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="labelRemote.Text">
         <source>Remote:</source>
-        <target>Uzak:</target>
+        <target>Uzak Depo:</target>
         
       </trans-unit>
       <trans-unit id="labelTopicBranch.Text">
@@ -735,7 +735,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="labelRemote.Text">
         <source>Remote:</source>
-        <target>Uzak:</target>
+        <target>Uzak Depo:</target>
         
       </trans-unit>
       <trans-unit id="labelReviewers.Text">
@@ -1367,7 +1367,7 @@ Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlay
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
-        <target>Parametreler</target>
+        <target>Bağımsız değişkenler</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
@@ -1400,7 +1400,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
-        <target>Parametreler</target>
+        <target>Bağımsız değişkenler</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
@@ -1692,7 +1692,7 @@ MS Word veya LibreOffice Writer gibi programlara yapıştırılabilir.</target>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>git günlük parametreleri:</target>
+        <target>git günlük değişkenleri:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
