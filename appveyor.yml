@@ -29,7 +29,6 @@ build:
 
 install:
 - cmd: git submodule update --init --recursive
-- cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
     cd scripts
     C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
@@ -51,7 +50,7 @@ build_script:
     }
 
     # build
-    dotnet build -c Release --nologo /bl:build.binlog
+    dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog
 
     # if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
     # 
@@ -72,7 +71,7 @@ build_script:
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
-    dotnet test --no-restore --nologo /bl:tests.binlog
+    dotnet test -c Release --no-restore --nologo --verbosity q --test-adapter-path:. --logger:Appveyor --logger:trx /bl:.\artifacts\log\tests.binlog
 
 
 # scripts to run after tests
@@ -104,24 +103,14 @@ on_failure:
         Push-AppveyorArtifact "$_"
     }
 - ps: |
-    Get-ChildItem -recurse artifacts\tests\TestResult.xml -ErrorAction SilentlyContinue `
-    | ForEach-Object {
-        $resultFilePath = "$_"
-        Get-Content $resultFilePath `
-        | Select-String -Pattern '<test-run id="[^"]*"\s+testcasecount="(\d+)"\s+result="([^"]*)"\s+total="(\d+)"\s+passed="(\d+)"\s+failed="(\d+)".*' `
-        | foreach {
-            $result = $_.Matches.Groups
+    Get-ChildItem -recurse artifacts\TestsResults\Release\*.trx | `
+        ForEach-Object {
+            $file = $_.FullName.Replace('[', '``[').Replace(']', '``]')
+            #Write-Output "Processing $file"
 
-            $total  = $result[1].Value
-            $passed = $result[4].Value
-            $failed = $result[5].Value
-            $notPassed = $total - $passed
-            $testErrors = $failed
-            $testProjectName = $resultFilePath.Split('\\')[-3]
-
-            if ($testErrors -ne 0) {
-              $logFile = Get-ChildItem -recurse artifacts\$testProjectName*.log
-              Push-AppveyorArtifact $logFile
+            [xml]$xml = Get-Content -Path $file
+            $xml.TestRun.Results.UnitTestResult | Where-Object outcome -eq 'Failed' | ForEach-Object {
+                $errorMessage = "$($_.Output.ErrorInfo.Message)`r`n$($_.Output.ErrorInfo.StackTrace)`r`n"
+                Write-Host $errorMessage -ForegroundColor Red
             }
         }
-    }

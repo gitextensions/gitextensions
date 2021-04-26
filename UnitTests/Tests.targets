@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+<Project>
+
+  <PropertyGroup>
+    <IsTestProject>true</IsTestProject>
+
+    <_TestResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'TestsResults', '$(Configuration)'))</_TestResultsDir>
+    <VSTestLogger>trx</VSTestLogger>
+    <VSTestResultsDirectory>$(_TestResultsDir)</VSTestResultsDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true' and '$(TestArchitectures)' == ''">
+    <TestArchitectures>$(PlatformTarget)</TestArchitectures>
+    <TestArchitectures Condition="'$(PlatformTarget)' == '' or '$(PlatformTarget)' == 'AnyCpu'">x64</TestArchitectures>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <PackageReference Include="ApprovalTests" Version="$(ApprovalTestsVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NSubstitute" Version="$(NSubstituteVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit" Version="$(NUnitVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit3TestAdapter" Version="$(NUnitTestAdapterVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+
+    <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+
+    <PackageReference Include="Codecov" Version="1.10.0" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit.ConsoleRunner" Version="$(NUnitConsoleRunnerVersion)" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="OpenCover" Version="4.7.922" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+  </ItemGroup>
+
+</Project>

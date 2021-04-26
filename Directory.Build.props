@@ -1,5 +1,6 @@
 <Project>
   <Import Project="Solution.Versions.props" />
+  <Import Project="RepoLayout.props" />
 
   <PropertyGroup>
     <LangVersion>9</LangVersion>
