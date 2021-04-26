@@ -27,9 +27,9 @@
     <MicrosoftNETTestSdkVersion Condition="'$(MicrosoftNETTestSdkVersion)' == ''">16.6.1</MicrosoftNETTestSdkVersion>
     <NSubstituteVersion Condition="'$(NSubstituteVersion)' == ''">4.2.1 </NSubstituteVersion>
     <OpenCoverVersion Condition="'$(OpenCoverVersion)' == ''">4.7.922</OpenCoverVersion>
-    <NUnitConsoleRunnerVersion Condition="'$(NUnitConsoleRunnerVersion)' == ''">3.11.1</NUnitConsoleRunnerVersion>
-    <NUnitTestAdapterVersion Condition="'$(NUnitTestAdapterVersion)' == ''">3.16.1</NUnitTestAdapterVersion>
-    <NUnitVersion Condition="'$(NUnitVersion)' == ''">3.12.0</NUnitVersion>
+    <NUnitConsoleRunnerVersion Condition="'$(NUnitConsoleRunnerVersion)' == ''">3.12.0</NUnitConsoleRunnerVersion>
+    <NUnitTestAdapterVersion Condition="'$(NUnitTestAdapterVersion)' == ''">3.17.0</NUnitTestAdapterVersion>
+    <NUnitVersion Condition="'$(NUnitVersion)' == ''">3.13.1</NUnitVersion>
     <UsingToolNUnit Condition="'$(UsingToolNUnit)' == ''">true</UsingToolNUnit>
 
     <!-- Setup -->

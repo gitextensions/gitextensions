@@ -70,7 +70,6 @@ namespace GitCommandsTests
                 yield return @"c::\word";
                 yield return "\"c:\\word\t\\\"";
                 yield return @".c:\Programs\";
-                yield return "c:\\Programs\\Get\"\\";
             }
             else
             {

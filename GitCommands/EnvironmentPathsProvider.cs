@@ -75,7 +75,12 @@ namespace GitCommands
         {
             try
             {
+                // NOTE:
+                // Path APIs don't throw an exception for invalid characters
+                // https://docs.microsoft.com/dotnet/core/compatibility/2.1#path-apis-dont-throw-an-exception-for-invalid-characters
+
                 _ = new FileInfo(path).Attributes;
+
                 return true;
             }
             catch (ArgumentException)
@@ -83,6 +88,11 @@ namespace GitCommands
             }
             catch (IOException)
             {
+                // Querying attribures for UNC paths results in IOException
+                if (Uri.TryCreate(path, UriKind.Absolute, out Uri? uri) && uri.IsUnc)
+                {
+                    return true;
+                }
             }
             catch (NotSupportedException)
             {
