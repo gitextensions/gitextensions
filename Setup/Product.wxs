@@ -518,6 +518,9 @@
       <Component Id="ExCSS.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\ExCSS.dll" />
       </Component>
+      <Component Id="Newtonsoft.Json.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Newtonsoft.Json.dll" />
+      </Component>
       <!-- Remove unused dll, installed in versions <= 2.31 -->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
         <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both" />
@@ -635,9 +638,6 @@
       </Component>
       <Component Id="ReleaseNotesGenerator.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ReleaseNotesGenerator.dll" />
-      </Component>
-      <Component Id="Newtonsoft.Json.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\Newtonsoft.Json.dll" />
       </Component>
       <Component Id="JiraCommitHintPlugin.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.JiraCommitHintPlugin.dll" />
@@ -1553,6 +1553,7 @@
       <ComponentRef Id="SmartFormat.dll" />
       <ComponentRef Id="Ben.Demystifier.dll" />
       <ComponentRef Id="NetSpell.SpellChecker.dll" />
+      <ComponentRef Id="Newtonsoft.Json.dll" />
       <ComponentRef Id="ResourceManager.dll" />
       <ComponentRef Id="GitUIPluginInterfaces.dll" />
       <ComponentRef Id="ExCSS.dll" />
@@ -1641,18 +1642,15 @@
         </Feature>
         <Feature Id="Bitbucket" Title="Atlassian Bitbucket Server integration" Level="1">
           <ComponentRef Id="Bitbucket.dll" />
-          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="AppVeyorIntegration" Title="AppVeyor integration" Level="1">
           <ComponentRef Id="AppVeyorIntegration.dll" />
-          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="TeamCityIntegration" Title="TeamCity integration" Level="1">
           <ComponentRef Id="TeamCityIntegration.dll" />
         </Feature>
         <Feature Id="JenkinsIntegration" Title="Jenkins integration" Level="1">
           <ComponentRef Id="JenkinsIntegration.dll" />
-          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="TfsIntegration" Title="Tfs integration" Level="1">
           <ComponentRef Id="TfsIntegration.dll" />
@@ -1665,17 +1663,14 @@
           <ComponentRef Id="Microsoft.VisualStudio.Services.Common.dll" />
           <ComponentRef Id="Microsoft.VisualStudio.Services.WebApi.dll" />
           <ComponentRef Id="System.Net.Http.Formatting.dll" />
-          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="AzureDevOpsIntegration" Title="Azure DevOps and TFS &gt;= 2015 integration" Level="1">
           <ComponentRef Id="AzureDevOpsIntegration.dll" />
-          <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="JiraCommitHintPlugin" Title="Jira Commit Hint Plugin" Level="1">
           <ComponentRef Id="JiraCommitHintPlugin.dll" />
           <ComponentRef Id="Atlassian.Jira.dll" />
           <ComponentRef Id="RestSharp.dll" />
-          <ComponentRef Id="Newtonsoft.Json.dll" />
           <ComponentRef Id="NString.dll" />
           <ComponentRef Id="System.Collections.Immutable.dll" />
         </Feature>
