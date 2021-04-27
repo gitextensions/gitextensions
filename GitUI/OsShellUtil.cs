@@ -29,17 +29,18 @@ namespace GitUI
         /// <param name="filePath">Pathname of the file to open.</param>
         public static void OpenAs(string filePath)
         {
+            // filePath must not be quoted
             new Executable("rundll32.exe").Start("shell32.dll,OpenAs_RunDLL " + filePath, redirectOutput: true, outputEncoding: System.Text.Encoding.UTF8);
         }
 
         public static void SelectPathInFileExplorer(string filePath)
         {
-            OpenWithFileExplorer("/select, " + filePath);
+            OpenWithFileExplorer($"/select, {filePath.Quote()}", quote: false);
         }
 
-        public static void OpenWithFileExplorer(string arguments)
+        public static void OpenWithFileExplorer(string arguments, bool quote = true)
         {
-            new Executable("explorer.exe").Start(arguments);
+            new Executable("explorer.exe").Start(quote ? arguments.Quote() : arguments);
         }
 
         /// <summary>
