@@ -10,6 +10,9 @@
     <DebugType>full</DebugType>
 
     <CodeAnalysisRuleSet>..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
+
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <!--

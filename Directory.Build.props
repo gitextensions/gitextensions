@@ -19,6 +19,8 @@
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 
     <IsPublishable>false</IsPublishable>
+
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>

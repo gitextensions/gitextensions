@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Nullable>enable</Nullable>
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="AdysTech.CredentialManager" Version="$(AdysTechCredentialManagerVersion)" />

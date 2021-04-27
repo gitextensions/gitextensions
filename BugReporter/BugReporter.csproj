@@ -3,9 +3,10 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>enable</Nullable>
     <ApplicationIcon>Resources\git-extensions-logo.ico</ApplicationIcon>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
