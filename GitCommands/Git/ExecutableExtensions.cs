@@ -239,6 +239,8 @@ namespace GitCommands
         /// <param name="input">Bytes to be written to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
+        /// <param name="throwOnErrorOutput">A flag configuring whether to throw an exception if the exit code is not 0 or if the output to StandardError is not empty.</param>
+        /// <param name="includeErrorOutput">If not throwing on error, include the StandardError output in the response.</param>
         /// <returns>An enumerable sequence of lines that yields lines as they become available. Lines from standard output are returned first, followed by lines from standard error.</returns>
         [MustUseReturnValue("If output lines are not required, use " + nameof(RunCommand) + " instead")]
         public static IEnumerable<string> GetOutputLines(
@@ -246,11 +248,13 @@ namespace GitCommands
             ArgumentString arguments = default,
             byte[]? input = null,
             Encoding? outputEncoding = null,
-            bool stripAnsiEscapeCodes = true)
+            bool stripAnsiEscapeCodes = true,
+            bool throwOnErrorOutput = true,
+            bool includeErrorOutput = false)
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            using var process = executable.Start(arguments, createWindow: false, redirectInput: input is not null, redirectOutput: true, outputEncoding);
+            using var process = executable.Start(arguments, createWindow: false, redirectInput: input is not null, redirectOutput: true, outputEncoding, throwOnErrorOutput: throwOnErrorOutput);
             if (input is not null)
             {
                 process.StandardInput.BaseStream.Write(input, 0, input.Length);
@@ -269,7 +273,7 @@ namespace GitCommands
                 yield return CleanString(stripAnsiEscapeCodes, line);
             }
 
-            while (true)
+            while (includeErrorOutput)
             {
                 var line = process.StandardError.ReadLine();
 
