@@ -75,6 +75,8 @@ namespace CommonTestUtils
 
         public IProcess Start(ArgumentString arguments, bool createWindow, bool redirectInput, bool redirectOutput, Encoding outputEncoding, bool useShellExecute = false)
         {
+            System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
+
             if (_outputStackByArguments.TryRemove(arguments, out var queue) && queue.TryPop(out var item))
             {
                 if (queue.Count == 0)

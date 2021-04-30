@@ -954,7 +954,7 @@ namespace GitUI.CommandsDialogs
             this.toolStageAllItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStageAllItem.Name = "toolStageAllItem";
             this.toolStageAllItem.Size = new System.Drawing.Size(23, 23);
-            this.toolStageAllItem.Click += new System.EventHandler(this.StageAllToolStripMenuItemClick);
+            this.toolStageAllItem.Click += new System.EventHandler(this.toolStageAllItem_Click);
             //
             // toolStripSeparator10
             //
@@ -981,7 +981,7 @@ namespace GitUI.CommandsDialogs
             this.toolUnstageAllItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolUnstageAllItem.Name = "toolUnstageAllItem";
             this.toolUnstageAllItem.Size = new System.Drawing.Size(23, 23);
-            this.toolUnstageAllItem.Click += new System.EventHandler(this.UnstageAllToolStripMenuItemClick);
+            this.toolUnstageAllItem.Click += new System.EventHandler(this.toolUnstageAllItem_Click);
             //
             // toolStripSeparator11
             //

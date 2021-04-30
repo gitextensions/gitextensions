@@ -118,24 +118,6 @@ namespace GitCommandsTests
             Assert.AreSame(s, GitModule.UnescapeOctalCodePoints(s));
         }
 
-        [TestCase(null, null)]
-        [TestCase("", "")]
-        [TestCase(" ", " ")]
-        [TestCase("Hello, World!", "Hello, World!")]
-        [TestCase("두다.txt", @"\353\221\220\353\213\244.txt")] // escaped octal code points (Korean Hangul in this case)
-        [TestCase(@"Привет, World!", @"\320\237\321\200\320\270\320\262\320\265\321\202, World!")] // escaped and not escaped in the same string
-        public void EscapeOctalCodePoints_handles_text(string input, string expected)
-        {
-            Assert.AreEqual(expected, GitModule.EscapeOctalCodePoints(input));
-        }
-
-        [TestCase("Hello, World!")]
-        [TestCase("두다.txt")]
-        public void UnescapeOctalCodePoints_reverses_EscapeOctalCodePoints(string input)
-        {
-            Assert.AreEqual(input, GitModule.UnescapeOctalCodePoints(GitModule.EscapeOctalCodePoints(input)));
-        }
-
         [Test]
         public void FetchCmd()
         {
@@ -927,33 +909,39 @@ namespace GitCommandsTests
             Assert.AreEqual(expectedResult, result);
         }
 
-        private static TestCaseData[] BatchUnstageFilesTestCases { get; set; } =
+        private static IEnumerable<TestCaseData> BatchUnstageFilesTestCases
         {
-            new TestCaseData(new GitItemStatus[]
+            get
             {
-                new GitItemStatus("abc2") { IsNew = true },
-                new GitItemStatus("abc2") { IsNew = true, IsDeleted = true },
-                new GitItemStatus("abc2") { IsNew = false },
-                new GitItemStatus("abc3") { IsNew = false, IsRenamed = true, OldName = "def" }
-            },
-            new string[]
-            {
-                "reset \"HEAD\" -- \"abc2\" \"abc3\" \"def\"",
-                "update-index --info-only --index-info",
-                "update-index --force-remove --stdin"
-            },
-            false),
-            new TestCaseData(new GitItemStatus[]
-            {
-                new GitItemStatus("abc2") { IsNew = false },
-                new GitItemStatus("abc3") { IsNew = false, IsDeleted = true }
-            },
-            new string[]
-            {
-                "reset \"HEAD\" -- \"abc2\" \"abc3\"",
-            },
-            true)
-        };
+                yield return new TestCaseData(
+                    new GitItemStatus[]
+                    {
+                        new GitItemStatus("abc2") { IsNew = true },
+                        new GitItemStatus("abc2") { IsNew = true, IsDeleted = true },
+                        new GitItemStatus("abc2") { IsNew = false },
+                        new GitItemStatus("abc3") { IsNew = false, IsRenamed = true, OldName = "def" }
+                    },
+                    new string[]
+                    {
+                        "reset \"HEAD\" -- \"abc2\" \"abc3\" \"def\"",
+                        "reset -- \"abc2\"",
+                        "update-index --force-remove --stdin"
+                    },
+                    false);
+
+                yield return new TestCaseData(
+                    new GitItemStatus[]
+                    {
+                        new GitItemStatus("abc2") { IsNew = false },
+                        new GitItemStatus("abc3") { IsNew = false, IsDeleted = true }
+                    },
+                    new string[]
+                    {
+                        "reset \"HEAD\" -- \"abc2\" \"abc3\"",
+                    },
+                    true);
+            }
+        }
 
         /// <summary>
         /// Create a GitModule with mockable GitExecutable

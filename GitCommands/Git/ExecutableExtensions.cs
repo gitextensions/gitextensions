@@ -363,10 +363,24 @@ namespace GitCommands
 
             if (writeInput is not null)
             {
+#if DEBUG
+                using MemoryStream mem = new MemoryStream();
+                using StreamWriter sw = new StreamWriter(mem);
+                writeInput(sw);
+
+                System.Diagnostics.Debug.WriteLine($"git {arguments} {Encoding.UTF8.GetString(mem.ToArray(), 0, (int)mem.Length)}");
+#endif
+
                 // TODO do we want to make this async?
                 writeInput(process.StandardInput);
                 process.StandardInput.Close();
             }
+#if DEBUG
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"git {arguments}");
+            }
+#endif
 
             var exitTask = process.WaitForExitAsync();
 
