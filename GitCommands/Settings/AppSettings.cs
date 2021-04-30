@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
@@ -1082,8 +1081,8 @@ namespace GitCommands
 
         public static string Dictionary
         {
-            get => SettingsContainer.Dictionary;
-            set => SettingsContainer.Dictionary = value;
+            get => SettingsContainer.Detached().Dictionary;
+            set => SettingsContainer.Detached().Dictionary = value;
         }
 
         public static bool ShowGitCommandLine

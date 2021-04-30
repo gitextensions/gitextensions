@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitUI.AutoCompletion;
+using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using NetSpell.SpellChecker;
@@ -270,7 +271,10 @@ namespace GitUI.SpellChecker
 
                 var noDicToolStripMenuItem = new ToolStripMenuItem("None");
                 noDicToolStripMenuItem.Click += DicToolStripMenuItemClick;
-                if (Settings.Dictionary == "None")
+
+                IDetachedSettings detachedSettings = Settings.Detached();
+
+                if (detachedSettings.Dictionary is "None")
                 {
                     noDicToolStripMenuItem.Checked = true;
                 }
@@ -286,7 +290,7 @@ namespace GitUI.SpellChecker
                     var dicToolStripMenuItem = new ToolStripMenuItem(dic);
                     dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
 
-                    if (Settings.Dictionary == dic)
+                    if (detachedSettings.Dictionary == dic)
                     {
                         dicToolStripMenuItem.Checked = true;
                     }
@@ -356,7 +360,8 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), Settings.Dictionary), ".dic");
+            IDetachedSettings detachedSettings = Settings.Detached();
+            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), detachedSettings.Dictionary), ".dic");
 
             if (_wordDictionary is null || _wordDictionary.DictionaryFile != dictionaryFile)
             {
@@ -591,8 +596,10 @@ namespace GitUI.SpellChecker
             // it will set a dictionary only for this Module (repository) locally
 
             var settings = Module.LocalSettings ?? Settings;
+            IDetachedSettings detachedSettings = settings.Detached();
 
-            settings.Dictionary = ((ToolStripItem)sender).Text;
+            detachedSettings.Dictionary = ((ToolStripItem)sender).Text;
+
             LoadDictionary();
             CheckSpelling();
         }
@@ -637,7 +644,9 @@ namespace GitUI.SpellChecker
             {
                 OnTextChanged(e);
 
-                if (Settings.Dictionary == "None" || TextBox.Text.Length < 4)
+                IDetachedSettings detachedSettings = Settings.Detached();
+
+                if (detachedSettings.Dictionary is "None" || TextBox.Text.Length < 4)
                 {
                     return;
                 }

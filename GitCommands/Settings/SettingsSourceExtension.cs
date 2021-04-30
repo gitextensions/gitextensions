@@ -13,5 +13,8 @@ namespace GitCommands.Settings
 
         public static IBuildServerSettings BuildServer(this ISettingsSource settingsSource)
             => new BuildServerSettings(settingsSource);
+
+        public static IDetachedSettings Detached(this ISettingsSource settingsSource)
+            => new DetachedSettings(settingsSource);
     }
 }

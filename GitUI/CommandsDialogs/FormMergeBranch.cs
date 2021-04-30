@@ -47,7 +47,10 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
-            noFastForward.Checked = Module.EffectiveSettings.NoFastForwardMerge;
+            IDetachedSettings detachedSettings = Module.GetEffectiveSettings()
+                .Detached();
+
+            noFastForward.Checked = detachedSettings.NoFastForwardMerge;
 
             IDetailedSettings detailedSettings = Module.GetEffectiveSettings()
                 .Detailed();
@@ -92,7 +95,10 @@ namespace GitUI.CommandsDialogs
 
         private void OkClick(object sender, EventArgs e)
         {
-            Module.EffectiveSettings.NoFastForwardMerge = noFastForward.Checked;
+            IDetachedSettings detachedSettings = Module.GetEffectiveSettings()
+                .Detached();
+
+            detachedSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
 
             bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);

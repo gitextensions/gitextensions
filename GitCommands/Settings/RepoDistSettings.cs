@@ -96,17 +96,5 @@ namespace GitCommands.Settings
                 LowerPriority!.SetValue(name, value, encode);
             }
         }
-
-        public bool NoFastForwardMerge
-        {
-            get => GetBool("NoFastForwardMerge", false);
-            set => SetBool("NoFastForwardMerge", value);
-        }
-
-        public string Dictionary
-        {
-            get => GetString("dictionary", "en-US");
-            set => SetString("dictionary", value);
-        }
     }
 }
