@@ -1499,6 +1499,14 @@ namespace GitUI
                         return StartCloneDialog(null, args[1].Replace("github-mac://openRepo/", ""), true);
                     }
 
+                    // User supplied a path. Open the repository if its a valid path
+                    string dir = !string.IsNullOrWhiteSpace(command) && File.Exists(command) ? Path.GetDirectoryName(command) : command;
+                    if (args.Count == 2 && Directory.Exists(dir))
+                    {
+                        LaunchBrowse(dir);
+                        return true;
+                    }
+
                     break;
             }
 #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
