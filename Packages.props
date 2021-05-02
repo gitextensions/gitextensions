@@ -28,6 +28,7 @@
     <PackageReference Update="System.Reactive.Linq" Version="4.4.1" />
     <PackageReference Update="System.Reactive.Interfaces" Version="4.4.1" />
     <PackageReference Update="System.ValueTuple" Version="4.5.0" /> <!-- Required? -->
+    <PackageReference Update="MailKit" Version="2.12.0"/>
 
     <!-- Setup infra -->
     <PackageReference Update="WiX" Version="3.11.2" />
