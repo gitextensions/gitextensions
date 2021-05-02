@@ -7,13 +7,9 @@ It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017/
 
 Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) or send us a tweet [![@git_extensions](https://img.shields.io/badge/twitter-%40git__extensions-blue)](https://twitter.com/git_extensions)
 
-
 ## Current Status
 
 <a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
-
-
-
 
 ### Version 3.x
 
@@ -64,7 +60,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 
 <details>
 <summary>This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono). [More...]</summary>
-This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono).
+This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono).<br />
 The code is in maintenance mode with no significant active development planned. Only certain bug fixes are currently ported across, however there may be consideration given for certain features to be ported across from the v3.x stream.
 
 For more details please refer to [versions comparison](https://github.com/gitextensions/gitextensions/wiki/Compare-versions).
@@ -119,17 +115,16 @@ For more details please refer to [versions comparison](https://github.com/gitext
 
 #### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To:-build-instructions#v3x-and-older)
 
-
 </details>
 
-
-
 ## Downloads
+
 <a href="https://github.com/gitextensions/gitextensions/releases" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?label=GitHub%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://sourceforge.net/projects/gitextensions/files" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions.svg?label=SourceForge%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://chocolatey.org/packages/gitextensions" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/chocolatey/dt/gitextensions.svg?label=Chocolatey%20downloads%20(total)&cacheSeconds=86400"></a>
 
 **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or install it with [Chocolatey](https://chocolatey.org/packages/gitextensions) or [AppGet](https://appget.net/packages/i/gitextensions).
 
 If you want to **update a portable version**, you should delete all the files and the subfolders from the existing folder except:
+
 * _GitExtensions.settings_
 * _WindowPositions.xml_
 * User defined themes in folder _Themes_
@@ -137,7 +132,7 @@ If you want to **update a portable version**, you should delete all the files an
 <table>
   <tr>
     <td>
-      <strong>v3.4.3</strong>
+      <strong>v3.5</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
@@ -208,13 +203,11 @@ If you want to **update a portable version**, you should delete all the files an
   </tr>
 </table>
 
-
 # Conduct
 
 Project maintainers pledge to foster an open and welcoming environment, and ask contributors to do the same.
 
 For more information see our [code of conduct](CODE_OF_CONDUCT.md).
-
 
 # Shoutouts
 
@@ -229,13 +222,11 @@ For more information see our [code of conduct](CODE_OF_CONDUCT.md).
 * We thank [SignPath Foundation](https://signpath.org/) for the signing certificate
 * We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/))
 
-
 ## Backers
 
 Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/gitextensions#backer)]
 
 <a href="https://opencollective.com/gitextensions#backers" target="_blank"><img src="https://opencollective.com/gitextensions/backers.svg?width=890"></a>
-
 
 ## Sponsors
 
