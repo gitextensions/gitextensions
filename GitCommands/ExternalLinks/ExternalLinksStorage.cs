@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using GitCommands.Settings;
 using GitExtUtils;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.ExternalLinks
 {
@@ -15,12 +15,12 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads external link definitions from the settings.
         /// </summary>
-        IReadOnlyList<ExternalLinkDefinition>? Load(RepoDistSettings settings);
+        IReadOnlyList<ExternalLinkDefinition>? Load(ISettingsSource settingsSource);
 
         /// <summary>
         /// Saves the provided external link definitions to the settings.
         /// </summary>
-        void Save(RepoDistSettings settings, IReadOnlyList<ExternalLinkDefinition> definitions);
+        void Save(ISettingsSource settingsSource, IReadOnlyList<ExternalLinkDefinition> definitions);
     }
 
     public sealed class ExternalLinksStorage : IExternalLinksStorage
@@ -30,16 +30,16 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads external link definitions from the settings.
         /// </summary>
-        public IReadOnlyList<ExternalLinkDefinition>? Load(RepoDistSettings settings)
+        public IReadOnlyList<ExternalLinkDefinition>? Load(ISettingsSource settingsSource)
         {
-            var xml = settings.GetString(SettingName, null);
+            var xml = settingsSource.GetString(SettingName, null);
             return LoadFromXmlString(xml);
         }
 
         /// <summary>
         /// Saves the provided external link definitions to the settings.
         /// </summary>
-        public void Save(RepoDistSettings settings, IReadOnlyList<ExternalLinkDefinition> definitions)
+        public void Save(ISettingsSource settingsSource, IReadOnlyList<ExternalLinkDefinition> definitions)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace GitCommands.ExternalLinks
                     xml = sw.ToString();
                 }
 
-                settings.SetString(SettingName, xml);
+                settingsSource.SetString(SettingName, xml);
             }
             catch (Exception e)
             {

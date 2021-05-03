@@ -1,8 +1,6 @@
-﻿using GitCommands.Settings;
-
-namespace GitUI.CommandsDialogs.SettingsDialog
+﻿namespace GitCommands.Settings
 {
-    public class RepoDistSettingsSet
+    public sealed class RepoDistSettingsSet
     {
         public readonly RepoDistSettings EffectiveSettings;
         public readonly RepoDistSettings LocalSettings;

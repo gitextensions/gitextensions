@@ -2,26 +2,56 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.ExternalLinks
 {
     // NB: this implementation is stateful
     public sealed class ExternalLinksManager
     {
-        private readonly RepoDistSettings _cachedSettings;
+        private readonly ISettingsSource _cachedSettings;
         private readonly ExternalLinksManager? _lowerPriority;
         private readonly IExternalLinksStorage _externalLinksStorage = new ExternalLinksStorage();
         private readonly List<ExternalLinkDefinition> _definitions;
 
-        public ExternalLinksManager(RepoDistSettings settings)
+        public ExternalLinksManager(RepoDistSettingsSet settingsSet, SettingLevel settingLevel, bool cascade = false)
         {
-            _cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
-            _definitions = _externalLinksStorage.Load(_cachedSettings).ToList();
-
-            if (settings.LowerPriority is not null)
+            if (settingLevel is SettingLevel.Effective && !cascade)
             {
-                _lowerPriority = new ExternalLinksManager(settings.LowerPriority);
+                throw new InvalidOperationException("Effective settings level should be cascading.");
             }
+
+            switch (settingLevel)
+            {
+                case SettingLevel.Effective:
+                case SettingLevel.Local:
+                    _cachedSettings = settingsSet.LocalSettings;
+
+                    if (cascade)
+                    {
+                        _lowerPriority = new ExternalLinksManager(settingsSet, SettingLevel.Distributed, cascade);
+                    }
+
+                    break;
+                case SettingLevel.Distributed:
+                    _cachedSettings = settingsSet.RepoDistSettings;
+
+                    if (cascade)
+                    {
+                        _lowerPriority = new ExternalLinksManager(settingsSet, SettingLevel.Global, cascade);
+                    }
+
+                    break;
+                case SettingLevel.Global:
+                    _cachedSettings = settingsSet.GlobalSettings;
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown settings level.");
+            }
+
+            _definitions = _externalLinksStorage
+                .Load(_cachedSettings)
+                .ToList();
         }
 
         /// <summary>

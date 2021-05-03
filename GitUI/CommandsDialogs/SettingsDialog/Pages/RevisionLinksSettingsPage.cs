@@ -31,8 +31,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
+            Validates.NotNull(RepoDistSettingsSet);
             Validates.NotNull(CurrentSettings);
-            _externalLinksManager = new ExternalLinksManager(CurrentSettings);
+
+            _externalLinksManager = new ExternalLinksManager(RepoDistSettingsSet, CurrentSettings.SettingLevel, CurrentSettings.SettingLevel is SettingLevel.Effective);
 
             ReloadCategories();
             if (_NO_TRANSLATE_Categories.Items.Count > 0)
