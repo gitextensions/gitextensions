@@ -20,6 +20,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private readonly TranslationString _selectFile =
             new TranslationString("Select file");
 
+        private RepoDistSettings _effectiveSettings;
+
         public readonly RepoDistSettingsSet RepoDistSettingsSet;
         public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
         public readonly GitModule Module;
@@ -30,6 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             Module = null!;
             RepoDistSettingsSet = null!;
             ConfigFileSettingsSet = null!;
+            _effectiveSettings = null!;
         }
 
         public CommonLogic(GitModule module)
@@ -56,6 +59,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 repoDistLocalSettings,
                 repoDistPulledSettings,
                 repoDistGlobalSettings);
+
+            _effectiveSettings = repoDistEffectiveSettings;
 
             ConfigFileSettingsSet = new ConfigFileSettingsSet(
                 configFileEffectiveSettings,
@@ -117,6 +122,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             combo.Items.AddRange(AppSettings.AvailableEncodings.Values.ToArray<object>());
             combo.DisplayMember = nameof(Encoding.EncodingName);
+        }
+
+        public void RepoDistSettingsSave()
+        {
+            _effectiveSettings.Save();
         }
     }
 }

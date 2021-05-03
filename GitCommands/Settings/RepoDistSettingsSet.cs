@@ -1,17 +1,19 @@
-﻿namespace GitCommands.Settings
+﻿using GitUIPluginInterfaces;
+
+namespace GitCommands.Settings
 {
     public sealed class RepoDistSettingsSet
     {
-        public readonly RepoDistSettings EffectiveSettings;
-        public readonly RepoDistSettings LocalSettings;
-        public readonly RepoDistSettings RepoDistSettings;
-        public readonly RepoDistSettings GlobalSettings;
+        public readonly ISettingsSource EffectiveSettings;
+        public readonly ISettingsSource LocalSettings;
+        public readonly ISettingsSource RepoDistSettings;
+        public readonly ISettingsSource GlobalSettings;
 
         public RepoDistSettingsSet(
-            RepoDistSettings effectiveSettings,
-            RepoDistSettings localSettings,
-            RepoDistSettings pulledSettings,
-            RepoDistSettings globalSettings)
+            ISettingsSource effectiveSettings,
+            ISettingsSource localSettings,
+            ISettingsSource pulledSettings,
+            ISettingsSource globalSettings)
         {
             EffectiveSettings = effectiveSettings;
             LocalSettings = localSettings;

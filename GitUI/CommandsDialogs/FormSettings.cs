@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 _commonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
-                _commonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
+                _commonLogic.RepoDistSettingsSave();
 
                 if (EnvUtils.RunningOnWindows())
                 {

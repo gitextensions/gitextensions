@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public class RepoDistSettingsPage : SettingsPageWithHeader, IRepoDistSettingsPage
     {
         protected RepoDistSettingsSet? RepoDistSettingsSet => CommonLogic.RepoDistSettingsSet;
-        protected RepoDistSettings? CurrentSettings { get; private set; }
+        protected ISettingsSource? CurrentSettings { get; private set; }
 
         protected override void Init(ISettingsPageHost pageHost)
         {
@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
         }
 
-        private void SetCurrentSettings(RepoDistSettings settings)
+        private void SetCurrentSettings(ISettingsSource settings)
         {
             if (CurrentSettings is not null)
             {

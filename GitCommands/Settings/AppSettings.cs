@@ -191,14 +191,14 @@ namespace GitCommands
             set => SetBool("RememberAmendCommitState", value);
         }
 
-        public static void UsingContainer(RepoDistSettings settingsContainer, Action action)
+        public static void UsingContainer(ISettingsSource settingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
                 {
                     var oldSC = SettingsContainer;
                     try
                     {
-                        SettingsContainer = settingsContainer;
+                        SettingsContainer = (RepoDistSettings)settingsContainer;
                         action();
                     }
                     finally
