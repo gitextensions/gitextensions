@@ -200,7 +200,10 @@ namespace GitUI
             bool Action()
             {
                 var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message, selectedFiles);
-                return FormProcess.ShowDialog(owner, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+
+                // git-stash may have changed commits also if aborted, the grid must be refreshed
+                return true;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -210,8 +213,11 @@ namespace GitUI
         {
             bool Action()
             {
-                bool success = FormProcess.ShowDialog(owner, process: null, arguments: "stash pop", Module.WorkingDir, input: null, useDialogSettings: true);
-                return success && MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
+                FormProcess.ShowDialog(owner, process: null, arguments: "stash pop", Module.WorkingDir, input: null, useDialogSettings: true);
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
+
+                // git-stash may have changed commits also if aborted, the grid must be refreshed
+                return true;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -221,7 +227,10 @@ namespace GitUI
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, process: null, arguments: $"stash drop {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, process: null, arguments: $"stash drop {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+
+                // git-stash may have changed commits also if aborted, the grid must be refreshed
+                return true;
             }
 
             return DoActionOnRepo(owner, Action);
@@ -231,8 +240,11 @@ namespace GitUI
         {
             bool Action()
             {
-                bool success = FormProcess.ShowDialog(owner, process: null, arguments: $"stash apply {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
-                return success && MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
+                FormProcess.ShowDialog(owner, process: null, arguments: $"stash apply {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
+
+                // git-stash may have changed commits also if aborted, the grid must be refreshed
+                return true;
             }
 
             return DoActionOnRepo(owner, Action);
