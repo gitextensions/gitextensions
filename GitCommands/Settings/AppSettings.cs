@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
@@ -890,20 +889,20 @@ namespace GitCommands
 
         public static string SmtpServer
         {
-            get => GetString("SmtpServer", "smtp.gmail.com");
-            set => SetString("SmtpServer", value);
+            get => SettingsContainer.Detailed().SmtpServer;
+            set => SettingsContainer.Detailed().SmtpServer = value;
         }
 
         public static int SmtpPort
         {
-            get => GetInt("SmtpPort", 465);
-            set => SetInt("SmtpPort", value);
+            get => SettingsContainer.Detailed().SmtpPort;
+            set => SettingsContainer.Detailed().SmtpPort = value;
         }
 
         public static bool SmtpUseSsl
         {
-            get => GetBool("SmtpUseSsl", true);
-            set => SetBool("SmtpUseSsl", value);
+            get => SettingsContainer.Detailed().SmtpUseSsl;
+            set => SettingsContainer.Detailed().SmtpUseSsl = value;
         }
 
         public static bool AutoStash
@@ -1082,8 +1081,8 @@ namespace GitCommands
 
         public static string Dictionary
         {
-            get => SettingsContainer.Dictionary;
-            set => SettingsContainer.Dictionary = value;
+            get => SettingsContainer.Detached().Dictionary;
+            set => SettingsContainer.Detached().Dictionary = value;
         }
 
         public static bool ShowGitCommandLine

@@ -1,11 +1,12 @@
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Remotes;
+using GitCommands.Settings;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -62,40 +63,41 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 async () =>
                 {
                     Validates.NotNull(_populateBuildServerTypeTask);
-                    Validates.NotNull(CurrentSettings);
 
                     await _populateBuildServerTypeTask.JoinAsync();
 
                     await this.SwitchToMainThreadAsync();
 
-                    checkBoxEnableBuildServerIntegration.SetNullableChecked(CurrentSettings.BuildServer.EnableIntegration.Value);
-                    checkBoxShowBuildResultPage.SetNullableChecked(CurrentSettings.BuildServer.ShowBuildResultPage.Value);
+                    IBuildServerSettings buildServerSettings = GetCurrentSettings()
+                        .BuildServer();
 
-                    BuildServerType.SelectedItem = CurrentSettings.BuildServer.Type.Value ?? _noneItem.Text;
+                    checkBoxEnableBuildServerIntegration.SetNullableChecked(buildServerSettings.EnableIntegration);
+                    checkBoxShowBuildResultPage.SetNullableChecked(buildServerSettings.ShowBuildResultPage);
+
+                    BuildServerType.SelectedItem = buildServerSettings.Type ?? _noneItem.Text;
                 });
         }
 
         protected override void PageToSettings()
         {
-            Validates.NotNull(CurrentSettings);
+            IBuildServerSettings buildServerSettings = GetCurrentSettings()
+                .BuildServer();
 
-            CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.Checked;
-            CurrentSettings.BuildServer.ShowBuildResultPage.Value = checkBoxShowBuildResultPage.Checked;
+            buildServerSettings.EnableIntegration = checkBoxEnableBuildServerIntegration.Checked;
+            buildServerSettings.ShowBuildResultPage = checkBoxShowBuildResultPage.Checked;
 
             var selectedBuildServerType = GetSelectedBuildServerType();
 
-            CurrentSettings.BuildServer.Type.Value = selectedBuildServerType;
+            buildServerSettings.Type = selectedBuildServerType;
 
             var control =
                 buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>()
                                         .SingleOrDefault();
-            control?.SaveSettings(CurrentSettings.BuildServer.TypeSettings);
+            control?.SaveSettings(GetCurrentSettings().ByPath(buildServerSettings.Type!));
         }
 
         private void ActivateBuildServerSettingsControl()
         {
-            Validates.NotNull(CurrentSettings);
-
             var controls = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().Cast<Control>();
             var previousControl = controls.SingleOrDefault();
             previousControl?.Dispose();
@@ -106,7 +108,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (control is not null)
             {
-                control.LoadSettings(CurrentSettings.BuildServer.TypeSettings);
+                IBuildServerSettings buildServerSettings = GetCurrentSettings()
+                    .BuildServer();
+
+                control.LoadSettings(GetCurrentSettings().ByPath(buildServerSettings.Type!));
 
                 buildServerSettingsPanel.Controls.Add((Control)control);
                 ((Control)control).Dock = DockStyle.Fill;

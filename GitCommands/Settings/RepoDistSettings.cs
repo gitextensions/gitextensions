@@ -13,8 +13,6 @@ namespace GitCommands.Settings
         public RepoDistSettings(RepoDistSettings? lowerPriority, GitExtSettingsCache settingsCache, SettingLevel settingLevel)
             : base(lowerPriority, settingsCache)
         {
-            BuildServer = new BuildServer(this);
-            Detailed = new DetailedGroup(this);
             SettingLevel = settingLevel;
         }
 
@@ -97,53 +95,6 @@ namespace GitCommands.Settings
                 // the settings is not assigned on this level, recurse to the lower level
                 LowerPriority!.SetValue(name, value, encode);
             }
-        }
-
-        public readonly BuildServer BuildServer;
-        public readonly DetailedGroup Detailed;
-
-        public bool NoFastForwardMerge
-        {
-            get => GetBool("NoFastForwardMerge", false);
-            set => SetBool("NoFastForwardMerge", value);
-        }
-
-        public string Dictionary
-        {
-            get => GetString("dictionary", "en-US");
-            set => SetString("dictionary", value);
-        }
-    }
-
-    public class BuildServer : SettingsPath
-    {
-        public readonly ISetting<string> Type;
-        public readonly ISetting<bool> EnableIntegration;
-        public readonly ISetting<bool> ShowBuildResultPage;
-
-        public BuildServer(RepoDistSettings container)
-            : base(container, "BuildServer")
-        {
-            Type = Setting.Create(this, nameof(Type), null);
-            EnableIntegration = Setting.Create(this, nameof(EnableIntegration), false);
-            ShowBuildResultPage = Setting.Create(this, nameof(ShowBuildResultPage), true);
-        }
-
-        public SettingsPath TypeSettings => new SettingsPath(this, Type.Value!);
-    }
-
-    public class DetailedGroup : SettingsPath
-    {
-        public readonly ISetting<bool> GetRemoteBranchesDirectlyFromRemote;
-        public readonly ISetting<bool> AddMergeLogMessages;
-        public readonly ISetting<int> MergeLogMessagesCount;
-
-        public DetailedGroup(RepoDistSettings container)
-            : base(container, "Detailed")
-        {
-            GetRemoteBranchesDirectlyFromRemote = Setting.Create(this, nameof(GetRemoteBranchesDirectlyFromRemote), false);
-            AddMergeLogMessages = Setting.Create(this, nameof(AddMergeLogMessages), false);
-            MergeLogMessagesCount = Setting.Create(this, nameof(MergeLogMessagesCount), 20);
         }
     }
 }

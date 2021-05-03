@@ -3,9 +3,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
+using GitCommands.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Script;
+using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -45,9 +47,16 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
-            noFastForward.Checked = Module.EffectiveSettings.NoFastForwardMerge;
-            addLogMessages.Checked = Module.EffectiveSettings.Detailed.AddMergeLogMessages.Value;
-            nbMessages.Value = Module.EffectiveSettings.Detailed.MergeLogMessagesCount.Value;
+            IDetachedSettings detachedSettings = Module.GetEffectiveSettings()
+                .Detached();
+
+            noFastForward.Checked = detachedSettings.NoFastForwardMerge;
+
+            IDetailedSettings detailedSettings = Module.GetEffectiveSettings()
+                .Detailed();
+
+            addLogMessages.Checked = detailedSettings.AddMergeLogMessages;
+            nbMessages.Value = detailedSettings.MergeLogMessagesCount;
 
             advanced.Checked = AppSettings.AlwaysShowAdvOpt;
             advanced_CheckedChanged(this, EventArgs.Empty);
@@ -86,7 +95,10 @@ namespace GitUI.CommandsDialogs
 
         private void OkClick(object sender, EventArgs e)
         {
-            Module.EffectiveSettings.NoFastForwardMerge = noFastForward.Checked;
+            IDetachedSettings detachedSettings = Module.GetEffectiveSettings()
+                .Detached();
+
+            detachedSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
 
             bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
@@ -169,7 +181,11 @@ namespace GitUI.CommandsDialogs
         private void addMessages_CheckedChanged(object sender, EventArgs e)
         {
             nbMessages.Enabled = addLogMessages.Checked;
-            Module.EffectiveSettings.Detailed.AddMergeLogMessages.Value = addLogMessages.Checked;
+
+            IDetailedSettings detailedSettings = Module.GetEffectiveSettings()
+                .Detailed();
+
+            detailedSettings.AddMergeLogMessages = addLogMessages.Checked;
         }
 
         private void addMergeMessage_CheckedChanged(object sender, EventArgs e)
@@ -179,7 +195,10 @@ namespace GitUI.CommandsDialogs
 
         private void nbMessages_ValueChanged(object sender, EventArgs e)
         {
-            Module.EffectiveSettings.Detailed.MergeLogMessagesCount.Value = Convert.ToInt32(nbMessages.Value);
+            IDetailedSettings detailedSettings = Module.GetEffectiveSettings()
+                .Detailed();
+
+            detailedSettings.MergeLogMessagesCount = Convert.ToInt32(nbMessages.Value);
         }
     }
 }
