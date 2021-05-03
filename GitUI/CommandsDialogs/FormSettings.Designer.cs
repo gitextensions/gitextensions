@@ -219,7 +219,7 @@ namespace GitUI.CommandsDialogs
             this.MinimumSize = new System.Drawing.Size(966, 785);
             this.Name = "FormSettings";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Settings";
             this.Shown += new System.EventHandler(this.FormSettings_Shown);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
