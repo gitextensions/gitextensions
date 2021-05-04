@@ -709,26 +709,9 @@ namespace GitUI.Editor
             ReloadHotkeys();
             Font = AppSettings.FixedWidthFont;
 
-            DetectDefaultEncoding();
-            return;
-
-            void DetectDefaultEncoding()
-            {
-                var encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
-                encodingToolStripComboBox.Items.AddRange(encodings);
-                encodingToolStripComboBox.ResizeDropDownWidth(50, 250);
-
-                var defaultEncodingName = Encoding.Default.EncodingName;
-
-                for (int i = 0; i < encodings.Length; i++)
-                {
-                    if (string.Equals(encodings[i], defaultEncodingName, StringComparison.OrdinalIgnoreCase))
-                    {
-                        encodingToolStripComboBox.Items[i] = "Default (" + Encoding.Default.HeaderName + ")";
-                        break;
-                    }
-                }
-            }
+            var encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
+            encodingToolStripComboBox.Items.AddRange(encodings);
+            encodingToolStripComboBox.ResizeDropDownWidth(50, 250);
         }
 
         // Private methods
@@ -1824,10 +1807,6 @@ namespace GitUI.Editor
             if (string.IsNullOrEmpty(encodingToolStripComboBox.Text))
             {
                 encod = Module.FilesEncoding;
-            }
-            else if (encodingToolStripComboBox.Text.StartsWith("Default", StringComparison.CurrentCultureIgnoreCase))
-            {
-                encod = Encoding.Default;
             }
             else
             {
