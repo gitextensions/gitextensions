@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
-    <PackageReference Include="SmartFormat.NET" Version="$(SmartFormatNETVersion)" />
+    <PackageReference Include="JetBrains.Annotations" />
+    <PackageReference Include="SmartFormat.NET" />
   </ItemGroup>
 
   <ItemGroup>

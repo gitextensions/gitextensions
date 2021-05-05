@@ -14,13 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppInsights.WindowsDesktop" Version="$(AppInsightsWindowsDesktopVersion)" />
-    <PackageReference Include="EnvDTE" Version="16.9.31023.347" />
-    <PackageReference Include="ExCSS" Version="$(ExCSSVersion)" />
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="$(MicrosoftWindowsAPICodePackVersion)" />
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="$(MicrosoftWindowsAPICodePackVersion)" />
-    <PackageReference Include="System.IO.Abstractions" Version="$(SystemIOAbstractionsVersion)" />
-    <PackageReference Include="JetBrains.Annotations" Version="$(JetBrainsAnnotationsVersion)" />
+    <PackageReference Include="AppInsights.WindowsDesktop" />
+    <PackageReference Include="EnvDTE" />
+    <PackageReference Include="ExCSS" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" />
+    <PackageReference Include="System.IO.Abstractions" />
+    <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,8 +5,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atlassian.SDK" Version="12.1.1" />
-    <PackageReference Include="NString" Version="1.2.0" />
+    <PackageReference Include="Atlassian.SDK" />
+    <PackageReference Include="NString" />
   </ItemGroup>
 
   <ItemGroup>

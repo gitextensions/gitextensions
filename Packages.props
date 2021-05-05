@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <!-- Solution dependencies -->
+    <PackageReference Update="AdysTech.CredentialManager" Version="2.1.1" />
+    <PackageReference Update="Atlassian.SDK" Version="12.1.1" />
+    <PackageReference Update="AppInsights.WindowsDesktop" Version="2.13.1" />
+    <PackageReference Update="Ben.Demystifier" Version="0.1.6" />
+    <PackageReference Update="ConEmu.Core" Version="21.03.14" />
+    <PackageReference Update="EnvDTE" Version="16.9.31023.347" />
+    <PackageReference Update="ExCSS" Version="4.1.0" />
+    <PackageReference Update="GitInfo" Version="2.0.21" />
+    <PackageReference Update="JetBrains.Annotations" Version="2020.1.0" />
+    <PackageReference Update="LibGit2Sharp" Version="0.26.2" />
+    <PackageReference Update="Microsoft.VisualStudio.Composition" Version="16.4.11" />
+    <PackageReference Update="Microsoft.VisualStudio.Threading" Version="16.7.56" />
+    <PackageReference Update="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
+    <PackageReference Update="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+    <PackageReference Update="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Update="NString" Version="1.2.0" />
+    <PackageReference Update="RestSharp" Version="106.11.4" />
+    <PackageReference Update="SmartFormat.NET" Version="2.5.0" />
+    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.321" />
+    <PackageReference Update="System.Collections.Immutable" Version="1.7.1" /> <!-- Required? -->
+    <PackageReference Update="System.IO.Abstractions" Version="11.0.6" />
+    <PackageReference Update="System.IO.Abstractions.TestingHelpers" Version="11.0.6" />
+    <PackageReference Update="System.Reactive" Version="4.4.1" />
+    <PackageReference Update="System.Reactive.Linq" Version="4.4.1" />
+    <PackageReference Update="System.Reactive.Interfaces" Version="4.4.1" />
+    <PackageReference Update="System.ValueTuple" Version="4.5.0" /> <!-- Required? -->
+
+    <!-- Setup infra -->
+    <PackageReference Update="WiX" Version="3.11.2" />
+
+    <!-- Test infra -->
+    <PackageReference Update="ApprovalTests" Version="4.4.0" />
+    <PackageReference Update="Appveyor.TestLogger" Version="2.0.0" />
+    <PackageReference Update="FluentAssertions" Version="5.10.3" />
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.6.1" /> <!-- Required? -->
+    <PackageReference Update="NSubstitute" Version="4.2.1" />
+    <PackageReference Update="NUnit.ConsoleRunner" Version="3.12.0" />
+    <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Update="NUnit" Version="3.13.1" />
+    <PackageReference Update="YamlDotNet" Version="5.0.*" />
+
+  </ItemGroup>
+</Project>

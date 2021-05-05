@@ -21,11 +21,10 @@
 
   <ItemGroup>
     <PackageReference Include="GitInfo">
-      <Version>2.0.21</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="WiX" Version="$(WiXVersion)" />
+    <PackageReference Include="WiX" />
   </ItemGroup>
 
   <ItemGroup>

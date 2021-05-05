@@ -6,4 +6,5 @@
   <Target Name="IntegrationTest" />
   <Target Name="LegacyClean" />
 
+  <Sdk Name="Microsoft.Build.CentralPackageVersions" Version="2.0.79" />
 </Project>
