@@ -3217,17 +3217,22 @@ namespace GitUI.CommandsDialogs
 
         private void manageWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var formManageWorktree = new FormManageWorktree(UICommands);
+            using FormManageWorktree formManageWorktree = new(UICommands);
             formManageWorktree.ShowDialog(this);
         }
 
         private void createWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var formCreateWorktree = new FormCreateWorktree(UICommands);
-            var dialogResult = formCreateWorktree.ShowDialog(this);
-            if (dialogResult == DialogResult.OK && formCreateWorktree.OpenWorktree)
+            using FormCreateWorktree formCreateWorktree = new(UICommands);
+            DialogResult dialogResult = formCreateWorktree.ShowDialog(this);
+            if (dialogResult != DialogResult.OK || !formCreateWorktree.OpenWorktree)
             {
-                var newModule = new GitModule(formCreateWorktree.WorktreeDirectory);
+                return;
+            }
+
+            GitModule newModule = new(formCreateWorktree.WorktreeDirectory);
+            if (newModule.IsValidGitWorkingDir())
+            {
                 SetGitModule(this, new GitModuleEventArgs(newModule));
             }
         }
