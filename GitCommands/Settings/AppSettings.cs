@@ -62,7 +62,6 @@ namespace GitCommands
         public static readonly string SettingsFileName = ApplicationId + ".settings";
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
         private static string _applicationExecutablePath = Application.ExecutablePath;
-        private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
         private static string? _documentationBaseUrl;
 
         public static Lazy<string?> ApplicationDataPath { get; private set; }
@@ -301,10 +300,9 @@ namespace GitCommands
             set => WriteStringRegValue("CascadeShellMenuItems", value);
         }
 
-        [MaybeNull]
         public static string SshPath
         {
-            get => ReadStringRegValue("gitssh", null);
+            get => ReadStringRegValue("gitssh", "");
             set => WriteStringRegValue("gitssh", value);
         }
 
@@ -1529,7 +1527,6 @@ namespace GitCommands
             {
                 SettingsContainer.LockedAction(() =>
                 {
-                    SshPath = SshPathLocatorInstance.Find(GitBinDir);
                     SettingsContainer.Save();
                 });
 
@@ -1546,6 +1543,7 @@ namespace GitCommands
 
             try
             {
+                // Set environment variable
                 GitSshHelpers.SetSsh(SshPath);
             }
             catch
