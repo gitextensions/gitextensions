@@ -59,20 +59,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.Pageant = PageantPath.Text;
             AppSettings.AutoStartPageant = AutostartPageant.Checked;
 
+            string path;
             if (OpenSSH.Checked)
             {
-                GitSshHelpers.SetSsh("");
+                path = "";
+            }
+            else if (Putty.Checked)
+            {
+                path = PlinkPath.Text;
+            }
+            else
+            {
+                // Other.Checked
+                path = OtherSsh.Text;
             }
 
-            if (Putty.Checked)
-            {
-                GitSshHelpers.SetSsh(PlinkPath.Text);
-            }
-
-            if (Other.Checked)
-            {
-                GitSshHelpers.SetSsh(OtherSsh.Text);
-            }
+            GitSshHelpers.SetSsh(path);
         }
 
         private void OpenSSH_CheckedChanged(object sender, EventArgs e)

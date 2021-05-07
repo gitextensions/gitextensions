@@ -1546,6 +1546,7 @@ namespace GitCommands
 
             try
             {
+                // Set environment variable
                 GitSshHelpers.SetSsh(SshPath);
             }
             catch
