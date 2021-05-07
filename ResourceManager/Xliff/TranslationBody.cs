@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml.Serialization;
-using GitExtUtils;
 
 namespace ResourceManager.Xliff
 {

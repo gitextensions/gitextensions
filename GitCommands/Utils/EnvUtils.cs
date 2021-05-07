@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using GitExtUtils;
 using Microsoft.Win32;
 
 namespace GitCommands.Utils

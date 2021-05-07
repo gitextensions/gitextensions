@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FluentAssertions;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;

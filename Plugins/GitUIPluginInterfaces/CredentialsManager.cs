@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
 using AdysTech.CredentialManager;
-using GitExtUtils;
 using Microsoft;
 
 namespace GitUIPluginInterfaces

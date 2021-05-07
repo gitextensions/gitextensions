@@ -1,5 +1,3 @@
-using JetBrains.Annotations;
-
 namespace GitUIPluginInterfaces
 {
     public interface IConfigValueStore

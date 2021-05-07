@@ -9,7 +9,6 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Utils;
-using GitExtUtils;
 using Microsoft;
 using Microsoft.Win32;
 using ResourceManager;

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using static System.Interop;
 
 namespace System
 {

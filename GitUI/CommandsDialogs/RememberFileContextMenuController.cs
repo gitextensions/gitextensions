@@ -3,7 +3,6 @@
 using System;
 using System.Diagnostics.Contracts;
 using GitCommands;
-using GitExtUtils;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 

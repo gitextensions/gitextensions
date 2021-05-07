@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

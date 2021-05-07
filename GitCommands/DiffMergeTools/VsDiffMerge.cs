@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using GitCommands.Utils;
-using GitExtUtils;
 using Microsoft.Win32;
 
 namespace GitCommands.DiffMergeTools

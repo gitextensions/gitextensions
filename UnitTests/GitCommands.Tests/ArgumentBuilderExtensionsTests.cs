@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils;

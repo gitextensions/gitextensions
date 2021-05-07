@@ -3,7 +3,6 @@ using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
-using Microsoft;
 
 namespace GitUI
 {
