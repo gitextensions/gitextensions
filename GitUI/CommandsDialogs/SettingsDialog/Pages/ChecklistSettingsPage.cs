@@ -26,8 +26,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _gitVersionFound =
             new TranslationString("Git {0} is found on your computer.");
 
-        private readonly TranslationString _unknownSshClient =
-            new TranslationString("Unknown SSH client configured: {0}.");
+        private readonly TranslationString _unknownSshClient = new("Unknown SSH client configured: {0}.");
 
         private readonly TranslationString _linuxToolsSshNotFound =
             new TranslationString("Linux tools (sh) not found. To solve this problem you can set the correct path in settings.");
@@ -134,7 +133,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         #endregion
 
         private const string _putty = "PuTTY";
-        private readonly ISshPathLocator _sshPathLocator = new SshPathLocator();
         private DiffMergeToolConfigurationManager _diffMergeToolConfigurationManager;
 
         /// <summary>
@@ -194,6 +192,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 {
                     PageHost.GotoPage(SshSettingsPage.GetPageReference());
                 }
+            }
+            else
+            {
+                PageHost.GotoPage(SshSettingsPage.GetPageReference());
             }
         }
 
@@ -441,7 +443,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                         _puttyConfigured.Text);
             }
 
-            var ssh = _sshPathLocator.Find(AppSettings.GitBinDir);
+            string ssh = AppSettings.SshPath;
+            if (!string.IsNullOrEmpty(ssh) && !File.Exists(ssh))
+            {
+                RenderSettingUnset(SshConfig, SshConfig_Fix, string.Format(_unknownSshClient.Text, ssh));
+                return false;
+            }
+
             RenderSettingSet(SshConfig, SshConfig_Fix, string.IsNullOrEmpty(ssh) ? _opensshUsed.Text : string.Format(_unknownSshClient.Text, ssh));
             return true;
         }

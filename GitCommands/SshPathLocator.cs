@@ -31,6 +31,7 @@ namespace GitCommands
         /// Gets the git SSH command.
         /// If the environment variable is not set, will try to find ssh.exe in git installation directory.
         /// If not found, will return "".
+        /// Note: This method is unused in GE and removed in master, kept for plugins.
         /// </summary>
         public string Find(string gitBinDirectory)
         {

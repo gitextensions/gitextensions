@@ -1,5 +1,5 @@
 using System;
-using GitExtensions;
+using System.IO;
 
 namespace GitCommands
 {
@@ -30,14 +30,25 @@ namespace GitCommands
         public static void SetSsh(string? path)
         {
             // Git will use the embedded OpenSSH ssh.exe if empty/unset
-            Environment.SetEnvironmentVariable("GIT_SSH", path ?? "", EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrEmpty(path) && !File.Exists(path))
+            {
+                path = "";
+            }
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                // OpenSSH uses empty path, compatibility with path set in 3.4
+                var openSsh = _sshPathLocatorInstance.GetSshFromGitDir(AppSettings.GitBinDir);
+                if (path == openSsh)
+                {
+                    path = "";
+                }
+            }
+
+            Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
         }
 
         public static bool Plink()
-        {
-            var sshString = _sshPathLocatorInstance.Find(AppSettings.GitBinDir);
-
-            return sshString.EndsWith("plink.exe", StringComparison.CurrentCultureIgnoreCase);
-        }
+            => AppSettings.SshPath.EndsWith("plink.exe", StringComparison.CurrentCultureIgnoreCase);
     }
 }
