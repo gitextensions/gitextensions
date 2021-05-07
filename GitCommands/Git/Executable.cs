@@ -111,7 +111,15 @@ namespace GitCommands
                 try
                 {
                     _process.Start();
-                    _logOperation.SetProcessId(_process.Id);
+                    try
+                    {
+                        _logOperation.SetProcessId(_process.Id);
+                    }
+                    catch (InvalidOperationException ex) when (useShellExecute)
+                    {
+                        // _process.Start() has succeeded, ignore the failure getting the _process.Id
+                        _logOperation.LogProcessEnd(ex);
+                    }
                 }
                 catch (Exception ex)
                 {
