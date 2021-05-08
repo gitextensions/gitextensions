@@ -72,11 +72,11 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void Find_on_gitBinDir_having_ssh_exe_in_parent_directory_children_should_return_first_ssh_exe_found()
+        public void Find_on_gitBinDir_having_ssh_exe_in_parent_directory_children_should_return_empty()
         {
             var path = SetUpFileSystemWithSshExePathsAs("first", "second");
             var sshPathLocator = new SshPathLocator(_fileSystem, _environment);
-            sshPathLocator.Find(path).Should().Be("first");
+            sshPathLocator.Find(path).Should().Be("");
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace GitCommandsTests
             const string sshExe = @"C:\someotherdir\ssh.exe";
             var path = SetUpFileSystemWithSshExePathsAs(sshExe);
             var sshPathLocator = new SshPathLocator(_fileSystem, _environment);
-            sshPathLocator.Find(path + (withTrailingSeparator ? @"\" : "")).Should().Be(sshExe);
+            sshPathLocator.Find(path + (withTrailingSeparator ? @"\" : "")).Should().Be("");
         }
 
         private string SetUpFileSystemWithSshExePathsAs(params string[] sshExePaths)
