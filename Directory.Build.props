@@ -1,11 +1,11 @@
 <Project>
-  <Import Project="Solution.Versions.props" />
   <Import Project="RepoLayout.props" />
 
   <PropertyGroup>
     <LangVersion>9</LangVersion>
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Nullable>enable</Nullable>
 
     <UseWindowsForms>true</UseWindowsForms>
     <TargetFramework>net5.0-windows</TargetFramework>
@@ -20,7 +20,9 @@
 
     <IsPublishable>false</IsPublishable>
 
-    <Nullable>enable</Nullable>
+    <!-- Test infra -->
+    <UsingToolNUnit Condition="'$(UsingToolNUnit)' == ''">true</UsingToolNUnit>
+
   </PropertyGroup>
 
   <PropertyGroup>

@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reactive.Linq" Version="$(SystemReactiveVersion)" />
+    <PackageReference Include="System.Reactive.Linq" />
   </ItemGroup>
 
   <ItemGroup>

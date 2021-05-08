@@ -5,9 +5,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="$(MicrosoftWindowsAPICodePackVersion)" />
-    <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
-    <PackageReference Include="System.Reactive.Linq" Version="$(SystemReactiveVersion)" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="System.Reactive.Linq" />
   </ItemGroup>
 
   <ItemGroup>
