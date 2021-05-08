@@ -8,6 +8,7 @@ namespace GitCommands
     public interface ISshPathLocator
     {
         string Find(string gitBinDirectory);
+        public string? GetSshFromGitDir(string gitBinDirectory);
     }
 
     public sealed class SshPathLocator : ISshPathLocator
@@ -27,23 +28,34 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Gets the git SSH command;
-        /// If the environment variable is not set, will try to find ssh.exe in git installation directory;
+        /// Gets the git SSH command.
+        /// If the environment variable is not set, will try to find ssh.exe in git installation directory.
         /// If not found, will return "".
         /// </summary>
         public string Find(string gitBinDirectory)
         {
-            var ssh = _environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process);
+            var ssh = _environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process) ?? "";
 
-            if (string.IsNullOrEmpty(ssh))
+            if (!string.IsNullOrEmpty(ssh))
             {
-                ssh = GetSshFromGitDir(gitBinDirectory);
+                // OpenSSH uses empty path, compatibility with path set in 3.4
+                var path = GetSshFromGitDir(gitBinDirectory);
+                if (path == ssh)
+                {
+                    ssh = "";
+                }
             }
 
-            return ssh ?? "";
+            return ssh;
         }
 
-        private string? GetSshFromGitDir(string gitBinDirectory)
+        /// <summary>
+        /// Get ssh path from Git installation.
+        /// (Also used by plugins to get the OpenSSH path).
+        /// </summary>
+        /// <param name="gitBinDirectory">Git installation directory.</param>
+        /// <returns>Path to ssh.exe or null.</returns>
+        public string? GetSshFromGitDir(string gitBinDirectory)
         {
             if (string.IsNullOrEmpty(gitBinDirectory))
             {
