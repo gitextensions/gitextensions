@@ -26,23 +26,6 @@ namespace GitUI.Theming
             Win32ThemeHooks.ThemeSettings = Settings;
         }
 
-        private static void InstallHooks(Theme theme)
-        {
-            Win32ThemeHooks.WindowCreated += Handle_WindowCreated;
-
-            try
-            {
-                Win32ThemeHooks.InstallHooks(theme, new SystemDialogDetector());
-            }
-            catch (Exception)
-            {
-                Win32ThemeHooks.Uninstall();
-                throw;
-            }
-
-            ResetGdiCaches();
-        }
-
         private static ThemeSettings LoadThemeSettings(IThemeRepository repository)
         {
             Theme invariantTheme;

@@ -237,13 +237,6 @@ namespace GitUITests.Theming
             return provider;
         }
 
-        private static IThemeFileReader CreateMockFileReader(string content)
-        {
-            var reader = Substitute.For<IThemeFileReader>();
-            reader.ReadThemeFile(Arg.Any<string>()).Returns(content);
-            return reader;
-        }
-
         private static IThemeFileReader CreateMockFileReader(IReadOnlyDictionary<string, string> contentByFile)
         {
             var reader = Substitute.For<IThemeFileReader>();
@@ -251,27 +244,10 @@ namespace GitUITests.Theming
             return reader;
         }
 
-        private static string GetThemeContent(object colorName, Color regularColor, Color colorblindColor) =>
-            GetThemeContent(
-                new Dictionary<object, Color>
-                {
-                    [colorName] = regularColor,
-                    [colorName + ".colorblind"] = colorblindColor
-                });
-
-        private static string GetThemeContent(object colorName, Color color) =>
-            GetThemeContent(new Dictionary<object, Color> { [colorName] = color });
-
         private static string GetThemeContent(IEnumerable<KeyValuePair<object, Color>> colorByName) =>
             string.Join(
                 Environment.NewLine,
                 colorByName.Select(
                     pair => $".{pair.Key}: {{ color: {ThemePersistence.TestAccessor.FormatColor(pair.Value)}; }}"));
-
-        private static Theme LoadTheme(ThemeLoader loader, params string[] variations) =>
-            loader.LoadTheme(
-                "arbitrary\\theme-path.css",
-                new ThemeId("arbitrary_theme_name", isBuiltin: true),
-                allowedClasses: variations);
     }
 }
