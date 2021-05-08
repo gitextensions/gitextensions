@@ -22,33 +22,34 @@
   <PropertyGroup>
     <RepositoryToolsDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', '.tools'))</RepositoryToolsDir>
 
-    <ArtifactsDir Condition="'$(ArtifactsDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts'))</ArtifactsDir>
+    <ArtifactsDir Condition="'$(ArtifactsDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts', '$(Configuration)'))</ArtifactsDir>
     <ArtifactsToolsetDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'toolset'))</ArtifactsToolsetDir>
     <ArtifactsObjDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'obj'))</ArtifactsObjDir>
     <ArtifactsBinDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'bin'))</ArtifactsBinDir>
-    <ArtifactsTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'tests'))</ArtifactsTestsDir>
-    <ArtifactsLogDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'log', '$(Configuration)'))</ArtifactsLogDir>
-    <ArtifactsTmpDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'tmp', '$(Configuration)'))</ArtifactsTmpDir>
-    <ArtifactsTestResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'TestResults', '$(Configuration)'))</ArtifactsTestResultsDir>
-    <ArtifactsPackagesDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'packages', '$(Configuration)'))</ArtifactsPackagesDir>
-    <ArtifactsUnitTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestsDir)', '$(Configuration)', 'UnitTests'))</ArtifactsUnitTestsDir>
-    <ArtifactsIntegrationTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestsDir)', '$(Configuration)', 'IntegrationTests'))</ArtifactsIntegrationTestsDir>
+    <ArtifactsPluginsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', 'Plugins'))</ArtifactsPluginsDir>
+    <ArtifactsTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', 'tests'))</ArtifactsTestsDir>
+    <ArtifactsLogDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'log'))</ArtifactsLogDir>
+    <ArtifactsTmpDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'tmp'))</ArtifactsTmpDir>
+    <ArtifactsTestResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'TestResults'))</ArtifactsTestResultsDir>
+    <ArtifactsPackagesDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'packages'))</ArtifactsPackagesDir>
+    <ArtifactsUnitTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestsDir)', 'UnitTests'))</ArtifactsUnitTestsDir>
+    <ArtifactsIntegrationTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestsDir)', 'IntegrationTests'))</ArtifactsIntegrationTestsDir>
 
     <ArtifactsPublishDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'publish'))</ArtifactsPublishDir>
-    <AppPublishDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsPublishDir)', '$(Configuration)', 'GitExtensions'))</AppPublishDir>
+    <AppPublishDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsPublishDir)', 'GitExtensions'))</AppPublishDir>
   </PropertyGroup>
 
   <PropertyGroup>
     <OutDirName Condition="'$(OutDirName)' == ''">$(MSBuildProjectName)</OutDirName>
 
     <BaseOutputPath Condition="'$(BaseOutputPath)' == ''">$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)$(OutDirName)\'))</BaseOutputPath>
-    <OutputPath Condition="'$(PlatformName)' == 'AnyCPU'">$(BaseOutputPath)$(Configuration)\</OutputPath>
-    <OutputPath Condition="'$(PlatformName)' != 'AnyCPU'">$(BaseOutputPath)$(PlatformName)\$(Configuration)\</OutputPath>
+    <OutputPath Condition="'$(PlatformName)' == 'AnyCPU'">$(BaseOutputPath)</OutputPath>
+    <OutputPath Condition="'$(PlatformName)' != 'AnyCPU'">$(BaseOutputPath)$(PlatformName)\</OutputPath>
 
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)' == ''">$([System.IO.Path]::GetFullPath('$(ArtifactsObjDir)$(OutDirName)\'))</BaseIntermediateOutputPath>
-    <IntermediateOutputPath Condition="'$(PlatformName)' == 'AnyCPU'">$(BaseIntermediateOutputPath)$(Configuration)\</IntermediateOutputPath>
-    <IntermediateOutputPath Condition="'$(PlatformName)' != 'AnyCPU'">$(BaseIntermediateOutputPath)$(PlatformName)\$(Configuration)\</IntermediateOutputPath>
+    <IntermediateOutputPath Condition="'$(PlatformName)' == 'AnyCPU'">$(BaseIntermediateOutputPath)</IntermediateOutputPath>
+    <IntermediateOutputPath Condition="'$(PlatformName)' != 'AnyCPU'">$(BaseIntermediateOutputPath)$(PlatformName)\</IntermediateOutputPath>
 
-    <GitExtensionsOutputPath>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)GitExtensions\$(Configuration)\'))</GitExtensionsOutputPath>
+    <GitExtensionsOutputPath>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)GitExtensions\'))</GitExtensionsOutputPath>
   </PropertyGroup>
 </Project>

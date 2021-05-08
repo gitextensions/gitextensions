@@ -2,13 +2,12 @@
 <!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
 <Project>
 
-  <UsingTask TaskName="_GetAvailableTranslationsCodeTask" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
+  <UsingTask TaskName="_GetAvailableTranslationsCodeTask" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll" >
     <ParameterGroup>
       <TranslationFolder ParameterType="System.String" Required="true"/>
       <Output ParameterType="Microsoft.Build.Framework.ITaskItem[]" Output="true"/>
     </ParameterGroup>
     <Task>
-      <Reference Include="System.Xml"/>
       <Reference Include="Microsoft.Build"/>
       <Using Namespace="Microsoft.Build.Construction"/>
       <Using Namespace="Microsoft.Build.Evaluation"/>

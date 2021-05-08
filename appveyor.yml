@@ -50,41 +50,34 @@ build_script:
     }
 
     # build
-    dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog
+    dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true
 
-    # if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    # 
-    # # if we have reset above, we need to restore the merge commit, otherwise the loc verification step will fail
-    # # refer to https://github.com/gitextensions/gitextensions/issues/7979
-    # if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
-    #   git config user.email "gitextensions@github.com"
-    #   git config user.name "Git Extensions"
-    #   git commit -m "restore merge commit"
-    # }
-    # 
-    # # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
-    # Push-Location .\GitExtensions
-    # msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
-    # if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    # Pop-Location
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+    # if we have reset above, we need to restore the merge commit, otherwise the loc verification step will fail
+    # refer to https://github.com/gitextensions/gitextensions/issues/7979
+    if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
+      git config user.email "gitextensions@github.com"
+      git config user.name "Git Extensions"
+      git commit -m "restore merge commit"
+    }
 
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
     dotnet test -c Release --no-restore --nologo --verbosity q --test-adapter-path:. --logger:Appveyor --logger:trx /bl:.\artifacts\log\tests.binlog
-
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 # scripts to run after tests
 after_test:
 - ps: |
     Write-Host "Preparing build artifacts..."
-    # & .\cibuild.cmd -publish -logFileName publish.binlog
-    # if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    dotnet publish -c Release --no-build /bl:.\artifacts\log\publish.binlog
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 
 artifacts:
-  - path: artifacts\log\**\*.binlog
-  - path: artifacts\publish\*.zip
+  - path: artifacts\Release\publish\*.zip
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -103,7 +96,7 @@ on_failure:
         Push-AppveyorArtifact "$_"
     }
 - ps: |
-    Get-ChildItem -recurse artifacts\TestsResults\Release\*.trx | `
+    Get-ChildItem -recurse artifacts\Release\TestsResults\*.trx | `
         ForEach-Object {
             $file = $_.FullName.Replace('[', '``[').Replace(']', '``]')
             #Write-Output "Processing $file"

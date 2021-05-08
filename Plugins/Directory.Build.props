@@ -7,10 +7,19 @@
     <Nullable>annotations</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-  </ItemGroup>
+  <!--
+      Direct plugins artifacts to be placed under Plugins folder
+    -->
+  <PropertyGroup Condition=" '$(MSBuildProjectName)' != 'GitUIPluginInterfaces'">
+    <!-- we don't want to have folder with too long names - drop 'GitExtensions.Plugins.' from folder names -->
+    <_ProjectRename>false</_ProjectRename>
+    <_ProjectRename Condition="$(MSBuildProjectName.StartsWith('GitExtensions.Plugins.'))">true</_ProjectRename>
+    <_ProjectName>$(MSBuildProjectName)</_ProjectName>
+    <_ProjectName Condition="$(_ProjectRename) == true">$([System.String]::Copy('$(MSBuildProjectName)').Replace('GitExtensions.Plugins.', ''))</_ProjectName>
+
+    <BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsPluginsDir)', '$(_ProjectName)'))</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)</OutputPath>
+    <OutDir>$(BaseOutputPath)</OutDir>
+  </PropertyGroup>
 
 </Project>

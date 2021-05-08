@@ -1,5 +1,6 @@
 <Project>
-  <Import Project="RepoLayout.props" />
+  <Import Project="scripts\RepoLayout.props" />
+  <Import Project="scripts\Tests.props" />
 
   <PropertyGroup>
     <LangVersion>9</LangVersion>
@@ -19,10 +20,6 @@
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 
     <IsPublishable>false</IsPublishable>
-
-    <!-- Test infra -->
-    <UsingToolNUnit Condition="'$(UsingToolNUnit)' == ''">true</UsingToolNUnit>
-
   </PropertyGroup>
 
   <PropertyGroup>
@@ -35,8 +32,11 @@
   <PropertyGroup Condition="'$(Coverage)' == 'true'">
     <!-- Coverlet assumes PDB files exist on disk https://github.com/tonerdo/coverlet/issues/362 -->
     <DebugType Condition="'$(DebugType)' == 'embedded'">portable</DebugType>
-
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' != 'true'">
+    <Compile Include="$(RepoRoot)\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\stylecop.json">
@@ -52,7 +52,5 @@
       <Visible>False</Visible>
     </AdditionalFiles>
   </ItemGroup>
-
-  <Import Project="scripts\tools\Tests.props" />
 
 </Project>

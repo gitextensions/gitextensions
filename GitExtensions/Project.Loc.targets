@@ -23,14 +23,14 @@
     <PropertyGroup>
       <_GitExtensionsOutputDir Condition="'$(TranslationsPath)' == ''">$([MSBuild]::NormalizeDirectory('$(GitExtensionsOutputPath)', '$(TargetFramework)'))</_GitExtensionsOutputDir>
 
-      <_TranslationAppDir>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)TranslationApp\$(Configuration)\$(TargetFramework)'))</_TranslationAppDir>
-      <_TranslationAppOutputPath>$([MSBuild]::NormalizePath('$(_TranslationAppDir)', 'TranslationApp.exe'))</_TranslationAppOutputPath>
-      <_TranslationAppTempPath>$([MSBuild]::NormalizePath('$(_GitExtensionsOutputDir)', 'TranslationApp.exe'))</_TranslationAppTempPath>
+      <_TranslationAppDir>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)TranslationApp\$(TargetFramework)'))</_TranslationAppDir>
+      <_TranslationAppTempPath>$([MSBuild]::NormalizePath('$(_GitExtensionsOutputDir)'))</_TranslationAppTempPath>
     </PropertyGroup>
 
     <!-- 1. Copy TranslationApp.exe from its output folder to GitExtensions folder -->
     <ItemGroup>
-      <TranslationAppPaths Include="$(_TranslationAppOutputPath)"/>
+      <TranslationAppPaths Include="$(_TranslationAppDir)\TranslationApp.*"/>
+      <TranslationAppTempPaths Include="$(_TranslationAppTempPath)\TranslationApp.*"/>
     </ItemGroup>
 
     <Copy SourceFiles="@(TranslationAppPaths)"
@@ -39,15 +39,18 @@
           ContinueOnError="false" />
 
     <!-- 2. Run TranslationApp.exe to update English*.xlf -->
-    <Exec Command="$(_TranslationAppTempPath)"
-          LogStandardErrorAsError="false"
+    <Exec Command="TranslationApp.exe"
           WorkingDirectory="$(_GitExtensionsOutputDir)"
-          IgnoreExitCode="true">
-      <Output TaskParameter="ExitCode" PropertyName="_TestErrorCode" />
+          EchoOff="true"
+          ConsoleToMsBuild="true"
+          StandardOutputImportance="high">
+      <Output TaskParameter="ExitCode" PropertyName="_TranslationErrorCode" />
     </Exec>
+    <Error Text="Failed to execute $(_TranslationAppTempPath)TranslationApp.exe"
+           Condition="$(_TranslationErrorCode) != 0" />
 
     <!-- 3. Delete TranslationApp.exe so it doesn't get bundled up -->
-    <Delete Files="$(_TranslationAppTempPath)" />
+    <Delete Files="@(TranslationAppTempPaths)" />
 
     <!-- 4. Copy updated English*.xlf to the source folder -->
     <PropertyGroup>
