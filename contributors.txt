@@ -156,5 +156,5 @@ YYYY/MM/DD, github id, Full name, email
 2021/03/16, JuPrgn, Julien Peyregne, julienprgn(at)gmail.com
 2021/03/20, nyankoframe, Damit Senanayake, damit(at)outlook.com
 2021/03/31, darkcamper, Rubén Ruiz, darkcamper(at)gmail.com
-2021/05/05, mrjithil, Jithil P Ponnan, jithil(at)gmail.com
+2021/05/05, mrjithil, Jithil P Ponnan, jithil(at)outlook.com
 2021/05/07, dasiths, Dasith Wijesiriwardena, gitextensions.github(at)dasith.me
