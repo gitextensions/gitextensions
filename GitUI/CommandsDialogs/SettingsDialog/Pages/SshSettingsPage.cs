@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (OpenSSH.Checked)
             {
-                GitSshHelpers.UnsetSsh();
+                GitSshHelpers.SetSsh("");
             }
 
             if (Putty.Checked)

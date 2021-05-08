@@ -26,19 +26,11 @@ namespace GitCommands
             }
         }
 
-        /// <summary>Un-sets the git SSH command path.</summary>
-        public static void UnsetSsh()
-        {
-            Environment.SetEnvironmentVariable("GIT_SSH", "", EnvironmentVariableTarget.Process);
-        }
-
         /// <summary>Sets the git SSH command path.</summary>
         public static void SetSsh(string? path)
         {
-            if (!Strings.IsNullOrEmpty(path))
-            {
-                Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
-            }
+            // Git will use the embedded OpenSSH ssh.exe if empty/unset
+            Environment.SetEnvironmentVariable("GIT_SSH", path ?? "", EnvironmentVariableTarget.Process);
         }
 
         public static bool Plink()
