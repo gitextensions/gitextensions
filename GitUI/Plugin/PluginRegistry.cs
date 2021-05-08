@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
@@ -27,29 +27,31 @@ namespace GitUI
                     return;
                 }
 
-                try
-                {
-                    ManagedExtensibility.SetUserPluginsPath(AppSettings.UserPluginsPath);
+                return;
 
-                    foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
-                    {
-                        Validates.NotNull(plugin.Description);
+                ////try
+                ////{
+                ////    ManagedExtensibility.SetUserPluginsPath(AppSettings.UserPluginsPath);
 
-                        // Description for old plugin setting processing as key
-                        plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Id, plugin.Description);
+                ////    foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
+                ////    {
+                ////        Validates.NotNull(plugin.Description);
 
-                        if (plugin is IRepositoryHostPlugin repositoryHostPlugin)
-                        {
-                            GitHosters.Add(repositoryHostPlugin);
-                        }
+                ////        // Description for old plugin setting processing as key
+                ////        plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Id, plugin.Description);
 
-                        Plugins.Add(plugin);
-                    }
-                }
-                catch
-                {
-                    // no-op
-                }
+                ////        if (plugin is IRepositoryHostPlugin repositoryHostPlugin)
+                ////        {
+                ////            GitHosters.Add(repositoryHostPlugin);
+                ////        }
+
+                ////        Plugins.Add(plugin);
+                ////    }
+                ////}
+                ////catch
+                ////{
+                ////    // no-op
+                ////}
             }
         }
 

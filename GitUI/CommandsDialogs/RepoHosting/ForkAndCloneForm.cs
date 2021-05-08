@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                     await this.SwitchToMainThreadAsync();
                     var lastRepo = repositoryHistory.FirstOrDefault();
-                    if (!Strings.IsNullOrEmpty(lastRepo?.Path))
+                    if (!string.IsNullOrEmpty(lastRepo?.Path))
                     {
                         string p = lastRepo.Path.Trim('/', '\\');
                         destinationTB.Text = Path.GetDirectoryName(p);
@@ -410,7 +410,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var module = new GitModule(targetDir);
 
-            if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !Strings.IsNullOrEmpty(repo.ParentReadOnlyUrl))
+            if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
             {
                 var error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))

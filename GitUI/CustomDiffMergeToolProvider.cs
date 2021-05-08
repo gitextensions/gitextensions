@@ -11,12 +11,12 @@ namespace GitUI
     {
         /// <summary>
         /// Time to wait before loading custom diff tools in FormBrowse
-        /// Avoid loading while git-log and git-diff run
+        /// Avoid loading while git-log and git-diff run.
         /// </summary>
         private const int FormBrowseToolDelay = 15000;
 
         /// <summary>
-        /// Clear the existing caches
+        /// Clear the existing caches.
         /// </summary>
         public void Clear()
         {
@@ -25,13 +25,13 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Load the available  DiffMerge tools and apply to the menus
+        /// Load the available  DiffMerge tools and apply to the menus.
         /// </summary>
-        /// <param name="module">The Git module</param>
-        /// <param name="menus">The menus to update</param>
-        /// <param name="components">The calling Form components, to dispose correctly</param>
-        /// <param name="isDiff">True if diff, false if merge</param>
-        /// <param name="delay">The delay before starting the operation</param>
+        /// <param name="module">The Git module.</param>
+        /// <param name="menus">The menus to update.</param>
+        /// <param name="components">The calling Form components, to dispose correctly.</param>
+        /// <param name="isDiff">True if diff, false if merge.</param>
+        /// <param name="delay">The delay before starting the operation.</param>
         public void LoadCustomDiffMergeTools(GitModule module, IList<CustomDiffMergeTool> menus, IContainer components, bool isDiff, int delay = FormBrowseToolDelay)
         {
             InitMenus(menus);

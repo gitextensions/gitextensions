@@ -32,9 +32,9 @@ namespace GitExtUtilsTests
                 ColumnCount = 3
             };
             ((Action)(() => table.AdjustWidthToSize(-1, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("Column index must be within [0, 2] range\nParameter name: columnIndex\nActual value was -1.");
+                .WithMessage("Column index must be within [0, 2] range (Parameter 'columnIndex')\nActual value was -1.");
             ((Action)(() => table.AdjustWidthToSize(3, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("Column index must be within [0, 2] range\nParameter name: columnIndex\nActual value was 3.");
+                .WithMessage("Column index must be within [0, 2] range (Parameter 'columnIndex')\nActual value was 3.");
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace GitExtUtilsTests
                 ColumnCount = 3
             };
             ((Action)(() => table.AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentException>()
-                .WithMessage("At least one control is required\nParameter name: controls");
+                .WithMessage("At least one control is required (Parameter 'controls')");
         }
 
         [Test]

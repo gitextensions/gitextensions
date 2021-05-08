@@ -66,7 +66,7 @@ namespace GitCommands
         public bool TryGet(string? cmd, [NotNullWhen(returnValue: true)] out byte[]? output, [NotNullWhen(returnValue: true)] out byte[]? error)
         {
             // Never cache empty commands
-            if (!Strings.IsNullOrEmpty(cmd))
+            if (!string.IsNullOrEmpty(cmd))
             {
                 lock (_cache)
                 {
@@ -92,7 +92,7 @@ namespace GitCommands
         public void Add(string? cmd, byte[] output, byte[] error)
         {
             // Never cache empty commands
-            if (Strings.IsNullOrEmpty(cmd))
+            if (string.IsNullOrEmpty(cmd))
             {
                 return;
             }

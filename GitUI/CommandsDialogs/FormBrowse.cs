@@ -2487,7 +2487,7 @@ namespace GitUI.CommandsDialogs
             {
                 string? filePath = PathUtil.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
 
-                if (!Strings.IsNullOrWhiteSpace(filePath))
+                if (!string.IsNullOrWhiteSpace(filePath))
                 {
                     FormBrowseUtil.ShowFileOrParentFolderInFileExplorer(filePath);
                 }
@@ -2905,7 +2905,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in _currentSubmoduleMenuItems)
             {
                 var path = item.Tag as string;
-                if (GitExtUtils.Strings.IsNullOrWhiteSpace(path))
+                if (string.IsNullOrWhiteSpace(path))
                 {
                     // not a submodule
                     continue;

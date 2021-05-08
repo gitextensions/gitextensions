@@ -6,7 +6,6 @@ using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitUI.HelperDialogs;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -110,31 +109,19 @@ namespace GitUI.CommandsDialogs
 
         private void AddPath_Click(object sender, EventArgs e)
         {
-            var dialog = new CommonOpenFileDialog
+            var dialog = new FolderBrowserDialog()
             {
-                InitialDirectory = Module.WorkingDir,
-                EnsurePathExists = true,
-                EnsureFileExists = false,
-                IsFolderPicker = true,
-                ShowHiddenItems = false,
-                Multiselect = true,
-                AddToMostRecentlyUsedList = false,
+                SelectedPath = Module.WorkingDir,
             };
 
-            var result = dialog.ShowDialog();
-            if (result == CommonFileDialogResult.Ok)
+            var result = dialog.ShowDialog(this);
+
+            string subFoldersToClean;
+            if (result == DialogResult.OK
+                && (subFoldersToClean = dialog.SelectedPath).StartsWith(Module.WorkingDir)
+                && Directory.Exists(subFoldersToClean)
+                && !subFoldersToClean.Equals(Module.WorkingDirGitDir.TrimEnd(Path.DirectorySeparatorChar)))
             {
-                var subFoldersToClean = dialog.FileNames
-                    .Where(d => d.StartsWith(Module.WorkingDir)
-                                && Directory.Exists(d)
-                                && !d.Equals(Module.WorkingDirGitDir.TrimEnd(Path.DirectorySeparatorChar)))
-                    .ToList();
-
-                if (!subFoldersToClean.Any())
-                {
-                    return;
-                }
-
                 checkBoxPathFilter.Checked = true;
                 textBoxPaths.Enabled = true;
                 if (textBoxPaths.Text.Length != 0)

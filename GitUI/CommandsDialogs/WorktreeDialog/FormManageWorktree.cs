@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         /// <summary>
         /// If this is not null before showing the dialog the given
-        /// remote name will be preselected in the listbox
+        /// remote name will be preselected in the listbox.
         /// </summary>
         public string? PreselectRemoteOnLoad { get; set; }
 
@@ -169,7 +169,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         /// 3:
         /// worktree /path/to/other-linked-worktree
         /// HEAD 1234abc1234abc1234abc1234abc1234abc1234a
-        /// detached
+        /// detached.
         /// </summary>
         private class WorkTree
         {

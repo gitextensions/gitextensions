@@ -128,7 +128,7 @@ namespace TeamCityIntegration
             HostName = config.GetString("BuildServerUrl", null);
             LogAsGuestUrlParameter = config.GetBool("LogAsGuest", false) ? "&guest=1" : string.Empty;
 
-            if (!Strings.IsNullOrEmpty(HostName))
+            if (!string.IsNullOrEmpty(HostName))
             {
                 InitializeHttpClient(HostName);
                 if (ProjectNames.Length > 0)
@@ -285,7 +285,9 @@ namespace TeamCityIntegration
 
                     try
                     {
+#pragma warning disable VSTHRD002
                         Task.WaitAll(batchTasks, cancellationToken);
+#pragma warning restore VSTHRD002
                     }
                     catch (Exception e)
                     {
@@ -367,7 +369,9 @@ namespace TeamCityIntegration
 
             return _httpClient.GetAsync(FormatRelativePath(restServicePath), HttpCompletionOption.ResponseHeadersRead, cancellationToken)
                              .ContinueWith(
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
                                  task => GetStreamFromHttpResponseAsync(task, restServicePath, cancellationToken),
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
                                  cancellationToken,
                                  TaskContinuationOptions.AttachedToParent,
                                  TaskScheduler.Current)

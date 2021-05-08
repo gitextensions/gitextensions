@@ -138,6 +138,10 @@ namespace GitUI.CommitInfo
                     .Subscribe(_ => handler(_.EventArgs));
 
             commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
+
+            // at this point rtbxCommitMessage.Bounds = {X = 8 Y = 8 Width = 440 Height = 0}
+            // and with Height=0 we won't be receiving any ContentsResizedEvents
+            rtbxCommitMessage.Height = 1;
         }
 
         private void RefreshSortedTags()
@@ -780,7 +784,7 @@ namespace GitUI.CommitInfo
             {
                 int priorityA = GetBranchPriority(a);
                 int priorityB = GetBranchPriority(b);
-                return priorityA == priorityB ? Comparer<string>.Default.Compare(a, b)
+                return priorityA == priorityB ? StringComparer.Ordinal.Compare(a, b)
                     : priorityA - priorityB;
             }
 

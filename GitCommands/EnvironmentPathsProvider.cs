@@ -39,7 +39,7 @@ namespace GitCommands
         {
             string? pathVariable = _environment.GetEnvironmentVariable("PATH");
 
-            if (Strings.IsNullOrWhiteSpace(pathVariable))
+            if (string.IsNullOrWhiteSpace(pathVariable))
             {
                 yield break;
             }
@@ -73,22 +73,32 @@ namespace GitCommands
         // TODO: optimise?
         internal static bool IsValidPath(string path)
         {
-            FileInfo? fi = null;
             try
             {
-                fi = new FileInfo(path);
+                // NOTE:
+                // Path APIs don't throw an exception for invalid characters
+                // https://docs.microsoft.com/dotnet/core/compatibility/2.1#path-apis-dont-throw-an-exception-for-invalid-characters
+
+                _ = new FileInfo(path).Attributes;
+
+                return true;
             }
             catch (ArgumentException)
             {
             }
-            catch (PathTooLongException)
+            catch (IOException)
             {
+                // Querying attribures for UNC paths results in IOException
+                if (Uri.TryCreate(path, UriKind.Absolute, out Uri? uri) && uri.IsUnc)
+                {
+                    return true;
+                }
             }
             catch (NotSupportedException)
             {
             }
 
-            return fi is not null;
+            return false;
         }
     }
 }

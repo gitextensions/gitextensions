@@ -54,7 +54,7 @@ namespace GitUI.CommitInfo
 
             IEnumerable<string> FormatTags(IEnumerable<string> selectedTags)
             {
-                return selectedTags.Select(s => showAsLinks ? _linkFactory.CreateTagLink(s) : WebUtility.HtmlEncode(s));
+                return selectedTags.Select(s => showAsLinks ? _linkFactory.CreateTagLink(s ?? string.Empty) : WebUtility.HtmlEncode(s));
             }
         }
 
@@ -77,7 +77,7 @@ namespace GitUI.CommitInfo
 
             foreach (var branch in branches)
             {
-                string noPrefixBranch = branch;
+                string noPrefixBranch = branch ?? string.Empty;
                 bool branchIsLocal;
                 if (getLocal && getRemote)
                 {

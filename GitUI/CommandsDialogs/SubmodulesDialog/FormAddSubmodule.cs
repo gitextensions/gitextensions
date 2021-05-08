@@ -93,8 +93,8 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         /// </summary>
         /// 'git ls-remotes --heads "URL"' is completely independent from a local repo clone.
         /// Hence there is no need for a GitModule.
-        /// <param name="gitExecutable">the git executable</param>
-        /// <param name="url">the repo URL; can also be a local path</param>
+        /// <param name="gitExecutable">the git executable.</param>
+        /// <param name="url">the repo URL; can also be a local path.</param>
         private static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
         {
             if (string.IsNullOrWhiteSpace(url))

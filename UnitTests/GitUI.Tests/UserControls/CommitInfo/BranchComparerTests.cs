@@ -6,6 +6,8 @@ namespace GitUITests.UserControls.CommitInfo
 {
     public class BranchComparerTests
     {
+        [SetCulture("en-US")]
+        [SetUICulture("en-US")]
         [Test]
         public void BranchComparer([Values(null, "current")] string currentBranch)
         {

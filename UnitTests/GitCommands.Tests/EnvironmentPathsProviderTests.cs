@@ -30,7 +30,7 @@ namespace GitCommandsTests
         public void GetEnvironmentValidPaths()
         {
             string pathVariable = string.Join(_separator, GetValidPaths().Concat(GetInvalidPaths()));
-            _environment.GetEnvironmentVariable("PATH").Returns(pathVariable);
+            _environment.GetEnvironmentVariable("PATH").Returns(_ => pathVariable);
 
             var validPaths = _provider.GetEnvironmentValidPaths();
 
@@ -70,7 +70,6 @@ namespace GitCommandsTests
                 yield return @"c::\word";
                 yield return "\"c:\\word\t\\\"";
                 yield return @".c:\Programs\";
-                yield return "c:\\Programs\\Get\"\\";
             }
             else
             {

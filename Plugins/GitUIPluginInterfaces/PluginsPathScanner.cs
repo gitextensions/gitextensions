@@ -36,7 +36,7 @@ namespace GitUIPluginInterfaces
 
             foreach (string? pluginsPath in pluginsPaths)
             {
-                if (!Strings.IsNullOrEmpty(pluginsPath) && Directory.Exists(pluginsPath))
+                if (!string.IsNullOrEmpty(pluginsPath) && Directory.Exists(pluginsPath))
                 {
                     DirectoryInfo directory = new(pluginsPath);
 

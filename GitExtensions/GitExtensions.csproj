@@ -4,22 +4,20 @@
   <Import Project="Project.Loc.targets" />
 
   <PropertyGroup>
-    <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <StartupObject />
 
     <Prefer32bit>true</Prefer32bit>
 
-    <Nullable>enable</Nullable>
-
     <IsPublishable>true</IsPublishable>
     <PublishDir Condition="'$(IsPublishable)' == 'true'">$(AppPublishDir)</PublishDir>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-  </ItemGroup>
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="GitInfo">
@@ -28,20 +26,18 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="WiX" Version="$(WiXVersion)" />
- </ItemGroup>
+  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GitUI\GitUI.csproj" />
     <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj" />
+    <ProjectReference Include="..\GitUI\GitUI.csproj" />
     <ProjectReference Include="..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
-    <ProjectReference Include="..\GitCommands\GitCommands.csproj" />
     <ProjectReference Include="..\ResourceManager\ResourceManager.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="app.manifest" />
+    <None Remove="AutoCompleteRegexes.txt" />
     <EmbeddedResource Include="AutoCompleteRegexes.txt" />
   </ItemGroup>
 

@@ -82,7 +82,7 @@ namespace GitUI.NBugReports
             StringBuilder text = new();
             string rootError = Append(text, exception);
 
-            using var taskDialog = new TaskDialog
+            using var taskDialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
             {
                 OwnerWindowHandle = OwnerFormHandle,
                 Icon = TaskDialogStandardIcon.Error,

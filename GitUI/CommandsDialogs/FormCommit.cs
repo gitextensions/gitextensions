@@ -28,6 +28,7 @@ using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.SpellChecker;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -1213,7 +1214,7 @@ namespace GitUI.CommandsDialogs
                 bool ConfirmAndStageAllUnstaged()
                 {
                     bool mustStageAll = false;
-                    using var dialog = new TaskDialog()
+                    using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog()
                     {
                         OwnerWindowHandle = Handle,
                         Cancelable = true,
@@ -1295,14 +1296,14 @@ namespace GitUI.CommandsDialogs
                 {
                     int dialogResult = -1;
 
-                    using var dialog = new TaskDialog
+                    using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
                     {
                         OwnerWindowHandle = Handle,
                         Text = _notOnBranch.Text,
                         InstructionText = TranslatedStrings.ErrorInstructionNotOnBranch,
                         Caption = TranslatedStrings.ErrorCaptionNotOnBranch,
                         StandardButtons = TaskDialogStandardButtons.Cancel,
-                        Icon = TaskDialogStandardIcon.Error,
+                        Icon = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStandardIcon.Error,
                         Cancelable = true,
                     };
                     var btnCheckout = new TaskDialogCommandLink("Checkout", null, TranslatedStrings.ButtonCheckoutBranch);
@@ -1413,7 +1414,7 @@ namespace GitUI.CommandsDialogs
 
                     if (pushCompleted && Module.SuperprojectModule is not null &&
                         AppSettings.StageInSuperprojectAfterCommit &&
-                        !Strings.IsNullOrWhiteSpace(Module.SubmodulePath))
+                        !string.IsNullOrWhiteSpace(Module.SubmodulePath))
                     {
                         Module.SuperprojectModule.StageFile(Module.SubmodulePath);
                     }

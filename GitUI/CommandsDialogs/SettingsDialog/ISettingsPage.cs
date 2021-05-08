@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         void SaveSettings();
 
         /// <summary>
-        /// true if the page cannot properly react to cancel or discard
+        /// true if the page cannot properly react to cancel or discard.
         /// </summary>
         bool IsInstantSavePage { get; }
 

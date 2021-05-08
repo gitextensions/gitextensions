@@ -346,6 +346,7 @@ namespace GitUI.BranchTreePanel
                 }
 
                 loadedNodes.DepthEnumerator<SubmoduleNode>()
+#pragma warning disable VSTHRD101 // Avoid unsupported async delegates
                     .ForEach(async node =>
                     {
                         try
@@ -356,6 +357,7 @@ namespace GitUI.BranchTreePanel
                         {
                         }
                     });
+#pragma warning restore VSTHRD101 // Avoid unsupported async delegates
             }
 
             protected override void PostFillTreeViewNode(bool firstTime)

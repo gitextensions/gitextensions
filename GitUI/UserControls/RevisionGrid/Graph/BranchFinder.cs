@@ -47,10 +47,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// MergedWith is set to string.Empty if it is no merge.
         /// First/second branch does not matter because it is the message of the current node.
         /// </summary>
-        /// <param name="node">the node of the revision to evaluate</param>
+        /// <param name="node">the node of the revision to evaluate.</param>
         /// <param name="parent">
         /// the node's parent in the branch which is currently descended
-        /// (used for the decision whether the node belongs to the first or second branch of the merge)
+        /// (used for the decision whether the node belongs to the first or second branch of the merge).
         /// </param>
         private bool CheckForMerge(RevisionGraphRevision node, RevisionGraphRevision? parent)
         {

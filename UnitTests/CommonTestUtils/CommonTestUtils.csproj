@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
     <CodeAnalysisRuleSet>..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
     
     <!-- TODO once all project migrated to SDK-style, remove this and move properties to Directory.Build.props -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="$(LibGit2SharpVersion)" />
-    <PackageReference Include="NUnit" Version="$(NUnitVersion)" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1153,7 +1153,10 @@ namespace GitUI.Editor.RichTextBoxExtension
                     }
                 }
 
-                return text.Substring(from, to - from);
+                // prior to net47 links were created via hidden text, and had the following format: "text#link"
+                // extract the link portion only
+                string linkOldFormat = text.Substring(from, to - from);
+                return linkOldFormat.Substring(linkOldFormat.IndexOf("#") + 1);
             }
             catch
             {
@@ -1227,6 +1230,8 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
         {
+            rtb.DetectUrls = false;
+
             rtb.Clear();
             var cs = new RTFCurrentState();
 

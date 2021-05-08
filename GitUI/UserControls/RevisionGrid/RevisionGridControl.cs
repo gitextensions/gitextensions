@@ -1887,7 +1887,7 @@ namespace GitUI
                 return;
             }
 
-            using var dialog = new TaskDialog
+            using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
             {
                 OwnerWindowHandle = Handle,
                 Text = _areYouSureRebase.Text,
@@ -1897,7 +1897,7 @@ namespace GitUI
                 Icon = TaskDialogStandardIcon.Information,
                 FooterCheckBoxText = _dontShowAgain.Text,
                 FooterIcon = TaskDialogStandardIcon.Information,
-                StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
             };
 
             TaskDialogResult result = dialog.Show();
@@ -1926,7 +1926,7 @@ namespace GitUI
                 return;
             }
 
-            using var dialog = new TaskDialog
+            using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
             {
                 OwnerWindowHandle = Handle,
                 Text = _areYouSureRebase.Text,
@@ -1936,7 +1936,7 @@ namespace GitUI
                 Icon = TaskDialogStandardIcon.Information,
                 FooterCheckBoxText = _dontShowAgain.Text,
                 FooterIcon = TaskDialogStandardIcon.Information,
-                StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
             };
 
             TaskDialogResult result = dialog.Show();
@@ -2421,7 +2421,7 @@ namespace GitUI
 
         public void GoToRef(string? refName, bool showNoRevisionMsg, bool toggleSelection = false)
         {
-            if (Strings.IsNullOrEmpty(refName))
+            if (string.IsNullOrEmpty(refName))
             {
                 return;
             }
@@ -2598,7 +2598,7 @@ namespace GitUI
         {
             var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (revision is not null && !Strings.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
+            if (revision is not null && !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
             {
                 OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.Url);
             }
@@ -2608,7 +2608,7 @@ namespace GitUI
         {
             var revision = GetSelectedRevisions().FirstOrDefault();
 
-            if (revision is not null && !Strings.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
+            if (revision is not null && !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
             {
                 OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.PullRequestUrl);
             }
@@ -2661,7 +2661,7 @@ namespace GitUI
                 {
                     var fileName = fileNameObject as string;
 
-                    if (!Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
                         // Start apply patch dialog for each dropped patch file...
                         UICommands.StartApplyPatchDialog(ParentForm, fileName);
@@ -2678,7 +2678,7 @@ namespace GitUI
                 {
                     var fileName = fileNameObject as string;
 
-                    if (!Strings.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                     {
                         // Allow drop (copy, not move) patch files
                         e.Effect = DragDropEffects.Copy;

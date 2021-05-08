@@ -1,21 +1,6 @@
 {
-  "tools": {
-    "--dotnet": "3.0.101",
-    "vs": {
-      "version": "16.0"
-    },
-    "xcopy-msbuild": "16.0.0-rc1-alpha",
-    "runtimes": {
-      "dotnet": [
-        "$(MicrosoftNETCoreAppPackageVersion)"
-      ]
+    "sdk": {
+      "version": "5.0.202"
     }
-  },
-  "--sdk": {
-    "version": "3.0.101"
-  },
-  "msbuild-sdks": {
-  },
-  "native-tools": {
   }
-}
+  

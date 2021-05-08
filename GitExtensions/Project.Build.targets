@@ -8,12 +8,12 @@
     ============================================================
     -->
   <Target Name="_CopyTranslations" AfterTargets="AfterBuild">
-    <_GetAvailableTranslationsCodeTask
+    <!-- <_GetAvailableTranslationsCodeTask
           TranslationFolder="$(ProjectDir)\..\GitUI\Translation\">
       <Output ItemName="Translations" TaskParameter="Output"/>
     </_GetAvailableTranslationsCodeTask>
 
-    <Copy SourceFiles="@(Translations)" DestinationFolder="$(TargetDir)Translation" ContinueOnError="false" />
+    <Copy SourceFiles="@(Translations)" DestinationFolder="$(TargetDir)Translation" ContinueOnError="false" /> -->
   </Target>
 
   <!--
@@ -29,7 +29,7 @@
     ============================================================
     -->
   <Target Name="_EnumeratePlugins" AfterTargets="AfterBuild">
-    <PropertyGroup>
+    <!-- <PropertyGroup>
       <PluginsFolder>$(TargetDir)Plugins</PluginsFolder>
     </PropertyGroup>
 
@@ -50,7 +50,7 @@
     <XmlPoke XmlInputPath="$(TargetAppConfig.ToString())"
             Namespaces="$(Namespace)"
             Query="configuration/runtime/ns:assemblyBinding/ns:probing/@privatePath" 
-            Value="$(ProbingPrivatePath.ToString())" />
+            Value="$(ProbingPrivatePath.ToString())" /> -->
   </Target>
 
   <!--

@@ -6,6 +6,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
 using GitUI.Theming;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -133,7 +134,7 @@ namespace GitUI.CommandsDialogs
 
         private void SaveChanges()
         {
-            if (!Strings.IsNullOrEmpty(_fileName))
+            if (!string.IsNullOrEmpty(_fileName))
             {
                 if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
                 {

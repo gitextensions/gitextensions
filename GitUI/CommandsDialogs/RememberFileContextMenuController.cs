@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
                     : item.Item.Name)
                 ?.ToPosixPath();
             var id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId;
-            if (Strings.IsNullOrWhiteSpace(name) || id is null)
+            if (string.IsNullOrWhiteSpace(name) || id is null)
             {
                 return null;
             }

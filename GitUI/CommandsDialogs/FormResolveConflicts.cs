@@ -15,6 +15,8 @@ using GitUI.Hotkey;
 using Microsoft;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
+using TaskDialog = Microsoft.WindowsAPICodePack.Dialogs.TaskDialog;
+using TaskDialogStartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation;
 
 namespace GitUI.CommandsDialogs
 {
@@ -516,7 +518,7 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    if (Strings.IsNullOrWhiteSpace(_mergetoolCmd) || Strings.IsNullOrWhiteSpace(_mergetoolPath))
+                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
                     {
                         // mergetool is set, but arguments cannot be manipulated
                         Module.RunMergeTool(item.Filename);

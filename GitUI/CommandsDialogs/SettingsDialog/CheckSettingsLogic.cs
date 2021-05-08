@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             string gitpath = AppSettings.GitCommandValue;
-            if (!Strings.IsNullOrWhiteSpace(possibleNewPath))
+            if (!string.IsNullOrWhiteSpace(possibleNewPath))
             {
                 gitpath = possibleNewPath.Trim();
             }

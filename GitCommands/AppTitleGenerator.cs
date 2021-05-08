@@ -42,7 +42,7 @@ namespace GitCommands
         /// <param name="branchName">Current branch name.</param>
         public string Generate(string? workingDir = null, bool isValidWorkingDir = false, string? branchName = null)
         {
-            if (Strings.IsNullOrWhiteSpace(workingDir) || !isValidWorkingDir)
+            if (string.IsNullOrWhiteSpace(workingDir) || !isValidWorkingDir)
             {
                 return AppSettings.ApplicationName;
             }

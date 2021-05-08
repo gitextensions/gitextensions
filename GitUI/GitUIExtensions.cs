@@ -21,13 +21,13 @@ namespace GitUI
     public static class GitUIExtensions
     {
         /// <summary>
-        /// View the changes between the revisions, if possible as a diff
+        /// View the changes between the revisions, if possible as a diff.
         /// </summary>
-        /// <param name="fileViewer">Current FileViewer</param>
-        /// <param name="item">The FileStatusItem to present changes for</param>
-        /// <param name="defaultText">default text if no diff is possible</param>
-        /// <param name="openWithDiffTool">The difftool command to open with</param>
-        /// <returns>Task to view</returns>
+        /// <param name="fileViewer">Current FileViewer.</param>
+        /// <param name="item">The FileStatusItem to present changes for.</param>
+        /// <param name="defaultText">default text if no diff is possible.</param>
+        /// <param name="openWithDiffTool">The difftool command to open with.</param>
+        /// <returns>Task to view.</returns>
         public static Task ViewChangesAsync(this FileViewer fileViewer,
             FileStatusItem? item,
             string defaultText = "",
@@ -108,14 +108,16 @@ namespace GitUI
                     var diffOfConflict = fileViewer.Module.GetCombinedDiffContent(selectedId, file.Name,
                         fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
 
-                    return Strings.IsNullOrWhiteSpace(diffOfConflict)
+                    return string.IsNullOrWhiteSpace(diffOfConflict)
                         ? TranslatedStrings.UninterestingDiffOmitted
                         : diffOfConflict;
                 }
 
                 if (file.IsSubmodule)
                 {
+#pragma warning disable VSTHRD103 // Call async methods when in an async method
                     var status = ThreadHelper.JoinableTaskFactory.Run(file.GetSubmoduleStatusAsync!);
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
                     return status is not null
                         ? LocalizationHelpers.ProcessSubmoduleStatus(fileViewer.Module, status)
                         : $"Failed to get status for submodule \"{file.Name}\"";

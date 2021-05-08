@@ -16,7 +16,7 @@ namespace GitUI.Avatars
         /// <param name="valueMapperProvider">Supplies requested values by providing conversion functions from <typeparamref name="TInput"/> to string.</param>
         /// <remarks>
         /// The returned formatter can be reused to format different inputs. It basically generates
-        /// a custom StringBuilder from the template
+        /// a custom StringBuilder from the template.
         /// </remarks>
         public static Func<TInput, string> Create<TInput>(string template, Func<string, Func<TInput, string?>> valueMapperProvider)
         {

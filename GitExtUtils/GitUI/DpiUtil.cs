@@ -211,7 +211,6 @@ namespace GitExtUtils.GitUI
             {
             }
 
-            [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
             protected override bool ReleaseHandle()
             {
                 ReleaseDC(IntPtr.Zero, handle);

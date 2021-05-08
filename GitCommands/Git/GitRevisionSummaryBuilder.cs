@@ -22,7 +22,7 @@ namespace GitCommands
 
         public string? BuildSummary(string? body)
         {
-            if (Strings.IsNullOrWhiteSpace(body))
+            if (string.IsNullOrWhiteSpace(body))
             {
                 return null;
             }

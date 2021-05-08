@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
-using GitExtUtils;
-using Microsoft.WindowsAPICodePack.Dialogs;
 namespace GitUI
 {
     public static class OsShellUtil
@@ -48,7 +46,7 @@ namespace GitUI
         /// </summary>
         public static void OpenUrlInDefaultBrowser(string? url)
         {
-            if (!Strings.IsNullOrWhiteSpace(url))
+            if (!string.IsNullOrWhiteSpace(url))
             {
                 new Executable(url).Start(useShellExecute: true);
             }
@@ -62,35 +60,14 @@ namespace GitUI
         /// <returns>The path selected by the user, or null if the user cancels the dialog.</returns>
         public static string? PickFolder(IWin32Window ownerWindow, string? selectedPath = null)
         {
-            if (GitCommands.Utils.EnvUtils.IsWindowsVistaOrGreater())
+            using (var dialog = new FolderBrowserDialog())
             {
-                // use Vista+ dialog
-                using var dialog = new CommonOpenFileDialog();
-                dialog.IsFolderPicker = true;
-
-                if (selectedPath is not null)
-                {
-                    dialog.InitialDirectory = selectedPath;
-                }
-
-                var result = dialog.ShowDialog(ownerWindow.Handle);
-
-                if (result == CommonFileDialogResult.Ok)
-                {
-                    return dialog.FileName;
-                }
-            }
-            else
-            {
-                // use XP-era dialog
-                using var dialog = new FolderBrowserDialog();
                 if (selectedPath is not null)
                 {
                     dialog.SelectedPath = selectedPath;
                 }
 
                 var result = dialog.ShowDialog(ownerWindow);
-
                 if (result == DialogResult.OK)
                 {
                     return dialog.SelectedPath;

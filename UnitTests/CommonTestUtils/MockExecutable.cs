@@ -32,9 +32,9 @@ namespace CommonTestUtils
             return new DelegateDisposable(
                 () =>
                 {
-                    if (_outputStackByArguments.TryGetValue(arguments, out var s) &&
-                        s.TryPeek(out var r) &&
-                        ReferenceEquals(output, r))
+                    if (_outputStackByArguments.TryGetValue(arguments, out ConcurrentStack<(string output, int? exitCode)> queue) &&
+                        queue.TryPeek(out (string output, int? exitCode) item) &&
+                        output == item.output)
                     {
                         throw new AssertionException($"Staged output should have been consumed.\nArguments: {arguments}\nOutput: {output}");
                     }
@@ -77,7 +77,8 @@ namespace CommonTestUtils
         {
             System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
 
-            if (_outputStackByArguments.TryRemove(arguments, out var queue) && queue.TryPop(out var item))
+            if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode)> queue) &&
+                queue.TryPop(out (string output, int? exitCode) item))
             {
                 if (queue.Count == 0)
                 {
@@ -161,7 +162,7 @@ namespace CommonTestUtils
 
                 // Only verify if std input is not closed.
                 // ExecutableExtensions.ExecuteAsync will close std input when writeInput action is specified
-                if (StandardInput.BaseStream is not null)
+                if (StandardInput.BaseStream is not null && StandardInput.BaseStream.CanRead)
                 {
                     // no input should have been written (yet)
                     Assert.AreEqual(0, StandardInput.BaseStream.Length);

@@ -1,12 +1,14 @@
 <Project>
-  <Import Project=".\scripts\sdk\Sdk.props" />
+  <Import Project="Solution.Versions.props" />
+  <Import Project="RepoLayout.props" />
 
   <PropertyGroup>
     <LangVersion>9</LangVersion>
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-    <TargetFramework>net461</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <Prefer32Bit>false</Prefer32Bit>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)GitExtensions.ruleset</CodeAnalysisRuleSet>
@@ -14,7 +16,11 @@
     <!-- TODO once all project migrated to SDK-style, remove this and move properties to Directory.Build.props -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+
     <IsPublishable>false</IsPublishable>
+
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -31,12 +37,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="netstandard" />
-
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)scripts\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
@@ -50,5 +50,7 @@
       <Visible>False</Visible>
     </AdditionalFiles>
   </ItemGroup>
+
+  <Import Project="scripts\tools\Tests.props" />
 
 </Project>

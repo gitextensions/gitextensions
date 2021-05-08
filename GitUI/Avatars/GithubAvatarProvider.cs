@@ -34,7 +34,7 @@ namespace GitUI.Avatars
 
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            var uri = await BuildAvatarUri(email, imageSize);
+            var uri = await BuildAvatarUriAsync(email, imageSize);
 
             if (uri is null)
             {
@@ -61,7 +61,7 @@ namespace GitUI.Avatars
             return image;
         }
 
-        private async Task<Uri?> BuildAvatarUri(string email, int imageSize)
+        private async Task<Uri?> BuildAvatarUriAsync(string email, int imageSize)
         {
             var match = _gitHubEmailRegex.Match(email);
 
@@ -89,7 +89,7 @@ namespace GitUI.Avatars
                     var client = new Git.hub.Client();
                     var userProfile = await client.GetUserAsync(username);
 
-                    if (Strings.IsNullOrEmpty(userProfile?.AvatarUrl))
+                    if (string.IsNullOrEmpty(userProfile?.AvatarUrl))
                     {
                         return null;
                     }

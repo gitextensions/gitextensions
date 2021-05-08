@@ -12,7 +12,7 @@ using ResourceManager;
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     /// <summary>
-    /// set Text property in derived classes to set the title
+    /// set Text property in derived classes to set the title.
     /// </summary>
     public abstract partial class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         /// <summary>
         /// Called when SettingsPage is shown (again);
-        /// e. g. after user clicked a tree item
+        /// e. g. after user clicked a tree item.
         /// </summary>
         public virtual void OnPageShown()
         {
@@ -159,7 +159,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private IReadOnlyList<string>? _childrenText;
 
         /// <summary>
-        /// override to provide search keywords
+        /// override to provide search keywords.
         /// </summary>
         public virtual IEnumerable<string> GetSearchKeywords()
         {

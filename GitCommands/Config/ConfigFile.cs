@@ -306,7 +306,7 @@ namespace GitCommands.Config
 
                 string value = _token.ToString();
 
-                if (Strings.IsNullOrEmpty(_key))
+                if (string.IsNullOrEmpty(_key))
                 {
                     throw new Exception($"Value {value} for empty key in config file {FileName}.");
                 }

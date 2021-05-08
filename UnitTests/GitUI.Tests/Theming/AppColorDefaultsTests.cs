@@ -39,6 +39,7 @@ namespace GitUITests.Theming
             }
         }
 
+#if SUPPORT_THEMES
         [Test]
         public void Default_values_are_specified_in_invariant_theme()
         {
@@ -65,6 +66,7 @@ namespace GitUITests.Theming
                 value.ToArgb().Should().Be(defaultValue.ToArgb());
             }
         }
+#endif
 
         private static Theme GetInvariantTheme()
         {

@@ -56,7 +56,7 @@ namespace GitCommands
 
         public static bool IsBinaryFileName(GitModule module, string? fileName)
         {
-            return !Strings.IsNullOrWhiteSpace(fileName)
+            return !string.IsNullOrWhiteSpace(fileName)
                    && (IsBinaryAccordingToGitAttributes(module, fileName)
                        ?? HasMatchingExtension(BinaryExtensions, fileName));
         }
@@ -166,7 +166,7 @@ namespace GitCommands
         public static bool IsBinaryFileAccordingToContent(string? content)
         {
             // Check for binary file.
-            if (!Strings.IsNullOrEmpty(content))
+            if (!string.IsNullOrEmpty(content))
             {
                 int nullCount = 0;
                 foreach (char c in content)

@@ -244,7 +244,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.SelectedIndexChanged += RemotesUpdated;
             _NO_TRANSLATE_Remotes.TextUpdate += RemotesUpdated;
 
-            if (Strings.IsNullOrEmpty(selectedRemoteName))
+            if (string.IsNullOrEmpty(selectedRemoteName))
             {
                 selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _currentBranchName));
             }
@@ -645,7 +645,7 @@ namespace GitUI.CommandsDialogs
 
                 int dialogResult = -1;
 
-                using var dialog = new TaskDialog
+                using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
                 {
                     OwnerWindowHandle = owner.Handle,
                     Text = allOptions ? _pullRepositoryMergeInstruction.Text : _pullRepositoryForceInstruction.Text,
@@ -655,7 +655,7 @@ namespace GitUI.CommandsDialogs
                     Icon = TaskDialogStandardIcon.Error,
                     FooterCheckBoxText = _dontShowAgain.Text,
                     FooterIcon = TaskDialogStandardIcon.Information,
-                    StartupLocation = TaskDialogStartupLocation.CenterOwner,
+                    StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
                     Cancelable = true
                 };
                 var btnPullDefault = new TaskDialogCommandLink("PullDefault", null, pullDefaultButtonText);

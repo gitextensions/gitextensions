@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Drawing;
 using System.Reflection;
@@ -80,7 +80,9 @@ namespace GitUI.Theming
             {
                 try
                 {
+#if SUPPORT_THEMES
                     InstallHooks(theme);
+#endif
                 }
                 catch (Exception ex)
                 {
@@ -94,6 +96,7 @@ namespace GitUI.Theming
 
         private static void ResetGdiCaches()
         {
+#if SUPPORT_THEMES
             var systemDrawingAssembly = typeof(Color).Assembly;
 
             var colorTableField =
@@ -125,6 +128,7 @@ namespace GitUI.Theming
 
             threadData[systemBrushesKey] = null;
             threadData[systemPensKey] = null;
+#endif
         }
 
         public static void Unload()
@@ -143,7 +147,7 @@ namespace GitUI.Theming
             switch (Control.FromHandle(hwnd))
             {
                 case Form form:
-                    form.Load += (s, e) => ((Form)s).FixVisualStyle();
+                    form.Load += (s, e) => ((Form)s!).FixVisualStyle();
                     break;
             }
         }

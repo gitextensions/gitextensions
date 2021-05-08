@@ -179,7 +179,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
         {
-            e.Value = !Strings.IsNullOrEmpty(revision.BuildStatus?.Description)
+            e.Value = !string.IsNullOrEmpty(revision.BuildStatus?.Description)
                 ? revision.BuildStatus.Description
                 : "";
             e.FormattingApplied = true;

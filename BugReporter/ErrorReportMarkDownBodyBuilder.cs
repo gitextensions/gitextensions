@@ -47,7 +47,7 @@ namespace BugReporter
             sb.AppendLine();
             sb.AppendLine();
 
-            if (!Strings.IsNullOrWhiteSpace(additionalInfo))
+            if (!string.IsNullOrWhiteSpace(additionalInfo))
             {
                 sb.AppendLine("## Additional information");
                 sb.AppendLine(additionalInfo.Trim());
@@ -59,7 +59,7 @@ namespace BugReporter
             {
                 sb.AppendLine("## Environment");
 
-                if (!Strings.IsNullOrWhiteSpace(environmentInfo))
+                if (!string.IsNullOrWhiteSpace(environmentInfo))
                 {
                     sb.AppendLine(environmentInfo);
                 }

@@ -244,12 +244,6 @@ namespace GitUI
 
         public int AllItemsCount => FileStatusListView.Items.Count;
 
-        public override ContextMenu ContextMenu
-        {
-            get => FileStatusListView.ContextMenu;
-            set => FileStatusListView.ContextMenu = value;
-        }
-
         public override ContextMenuStrip ContextMenuStrip
         {
             get { return FileStatusListView.ContextMenuStrip; }
@@ -956,10 +950,11 @@ namespace GitUI
                     {
                         var capturedItem = item;
 
-                        ThreadHelper.JoinableTaskFactory.RunAsync(
-                        async () =>
+                        ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                         {
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
                             await task;
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
 
                             await this.SwitchToMainThreadAsync();
 
@@ -1358,7 +1353,7 @@ namespace GitUI
                     ? SystemColors.HighlightText
                     : SystemColors.WindowText;
 
-                if (!Strings.IsNullOrEmpty(prefix))
+                if (!string.IsNullOrEmpty(prefix))
                 {
                     DrawString(textRect, prefix, grayTextColor);
                     var prefixSize = formatter.MeasureString(prefix);
@@ -1367,7 +1362,7 @@ namespace GitUI
 
                 DrawString(textRect, text, textColor);
 
-                if (!Strings.IsNullOrEmpty(suffix))
+                if (!string.IsNullOrEmpty(suffix))
                 {
                     var textSize = formatter.MeasureString(text);
                     textRect.Offset(textSize.Width, 0);

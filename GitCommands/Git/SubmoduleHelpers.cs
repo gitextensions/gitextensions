@@ -43,7 +43,7 @@ namespace GitCommands.Git
         [return: NotNullIfNotNull("text")]
         public static GitSubmoduleStatus? ParseSubmoduleStatus(string? text, GitModule module, string? fileName)
         {
-            if (Strings.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text))
             {
                 return null;
             }

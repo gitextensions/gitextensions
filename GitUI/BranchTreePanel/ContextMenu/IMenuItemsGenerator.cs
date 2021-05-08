@@ -5,7 +5,7 @@ using GitUI.BranchTreePanel.Interfaces;
 namespace GitUI.BranchTreePanel.ContextMenu
 {
     /// <summary>
-    /// Builds context menu actions for a <see cref="INode"/> depending on declared interfaces
+    /// Builds context menu actions for a <see cref="INode"/> depending on declared interfaces.
     /// </summary>
     public interface IMenuItemsGenerator<TNode> : IEnumerable<ToolStripItemWithKey>
         where TNode : class, INode

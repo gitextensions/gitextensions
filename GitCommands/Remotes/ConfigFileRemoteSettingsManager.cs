@@ -466,7 +466,7 @@ namespace GitCommands.Remotes
             var prefix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
             var fullSettingName = prefix + string.Format(settingName, remoteName);
 
-            if (!Strings.IsNullOrWhiteSpace(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
                 module.SetSetting(fullSettingName, value);
             }

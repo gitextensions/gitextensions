@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
-  <Import Project="..\Directory.Build.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
  
   <PropertyGroup>
-    <Nullable>enable</Nullable>
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,18 +12,5 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
   </ItemGroup>
-
-  <!--
-      Direct plugins artifacts to be placed under GitExtensions/Plugins folder
-    -->
-  <PropertyGroup Condition=" '$(MSBuildProjectName)' != 'GitUIPluginInterfaces'">
-    <_AssemblyRename>false</_AssemblyRename>
-    <_AssemblyRename Condition="$(ContinuousIntegrationBuild) != true and !$(MSBuildProjectName.StartsWith('GitExtensions.'))">true</_AssemblyRename>
-
-    <AssemblyName Condition="$(_AssemblyRename) == true">GitExtensions.$(MSBuildProjectName)</AssemblyName>
-    <BaseOutputPath>$([MSBuild]::NormalizeDirectory('$(GitExtensionsOutputPath)', '$(TargetFramework)', 'Plugins', '$(OutDirName)'))</BaseOutputPath>
-    <OutputPath>$(BaseOutputPath)</OutputPath>
-    <OutDir>$(BaseOutputPath)</OutDir>
-  </PropertyGroup>
 
 </Project>

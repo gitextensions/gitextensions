@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
@@ -61,7 +61,7 @@ namespace GitCommands
         [return: NotNullIfNotNull("dirPath")]
         public static string? EnsureTrailingPathSeparator(this string? dirPath)
         {
-            if (!Strings.IsNullOrEmpty(dirPath) &&
+            if (!string.IsNullOrEmpty(dirPath) &&
                 dirPath[dirPath.Length - 1] != NativeDirectorySeparatorChar &&
                 dirPath[dirPath.Length - 1] != PosixDirectorySeparatorChar)
             {
@@ -89,13 +89,13 @@ namespace GitCommands
         [Pure]
         public static bool IsUrl(string? path)
         {
-            return !Strings.IsNullOrEmpty(path)
+            return !string.IsNullOrEmpty(path)
                 && UrlRegex.IsMatch(path);
         }
 
         public static bool CanBeGitURL(string? url)
         {
-            if (Strings.IsNullOrWhiteSpace(url))
+            if (string.IsNullOrWhiteSpace(url))
             {
                 return false;
             }
@@ -347,7 +347,7 @@ namespace GitCommands
         {
             path = path.RemoveTrailingPathSeparator();
 
-            if (Strings.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 yield break;
             }
@@ -369,7 +369,7 @@ namespace GitCommands
         {
             foreach (string? location in folders)
             {
-                if (Strings.IsNullOrWhiteSpace(location))
+                if (string.IsNullOrWhiteSpace(location))
                 {
                     continue;
                 }

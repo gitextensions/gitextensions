@@ -295,7 +295,7 @@ namespace ResourceManager.Xliff
                 {
                     if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                     {
-                        var isPlugin = assembly.CodeBase.IndexOf("Plugins/", StringComparison.OrdinalIgnoreCase) != -1;
+                        var isPlugin = assembly.Location.IndexOf("Plugins/", StringComparison.OrdinalIgnoreCase) != -1;
                         var val = isPlugin ? ".Plugins" : "";
 
                         if (!dictionary.TryGetValue(val, out var list))

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -11,7 +11,6 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.NBugReports;
-using GitUI.Theming;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -44,6 +43,7 @@ namespace GitExtensions
 
             AppSettings.SetDocumentationBaseUrl(ThisAssembly.Git.Branch);
 
+#if SUPPORT_THEMES
             ThemeModule.Load();
             Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 
@@ -60,6 +60,7 @@ namespace GitExtensions
                     }
                 }
             };
+#endif
 
             HighDpiMouseCursors.Enable();
 
@@ -312,7 +313,7 @@ namespace GitExtensions
         {
             int dialogResult = -1;
 
-            using var dialog1 = new TaskDialog
+            using var dialog1 = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
             {
                 InstructionText = ResourceManager.TranslatedStrings.GitExecutableNotFound,
                 Icon = TaskDialogStandardIcon.Error,
@@ -339,7 +340,7 @@ namespace GitExtensions
             {
                 case 0:
                     {
-                        using var dialog = new OpenFileDialog
+                        using var dialog = new System.Windows.Forms.OpenFileDialog
                         {
                             Filter = @"git.exe|git.exe|git.cmd|git.cmd",
                         };

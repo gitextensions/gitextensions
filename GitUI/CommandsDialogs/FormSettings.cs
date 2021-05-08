@@ -13,6 +13,7 @@ using GitUI.CommandsDialogs.SettingsDialog.Plugins;
 using GitUI.Properties;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
+using TaskDialog = Microsoft.WindowsAPICodePack.Dialogs.TaskDialog;
 
 namespace GitUI.CommandsDialogs
 {

@@ -84,7 +84,7 @@ namespace GitCommands
                 }
                 finally
                 {
-                    if (!Strings.IsNullOrEmpty(tempFile))
+                    if (!string.IsNullOrEmpty(tempFile))
                     {
                         DeleteFile(tempFile);
                     }

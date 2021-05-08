@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 directories.Add(AppSettings.DefaultCloneDestinationPath.EnsureTrailingPathSeparator());
             }
 
-            if (!Strings.IsNullOrWhiteSpace(currentModule?.WorkingDir))
+            if (!string.IsNullOrWhiteSpace(currentModule?.WorkingDir))
             {
                 var di = new DirectoryInfo(currentModule.WorkingDir);
                 if (di.Parent is not null)
@@ -66,7 +66,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (directories.Count == 0)
             {
-                if (!Strings.IsNullOrWhiteSpace(AppSettings.RecentWorkingDir))
+                if (!string.IsNullOrWhiteSpace(AppSettings.RecentWorkingDir))
                 {
                     directories.Add(AppSettings.RecentWorkingDir.EnsureTrailingPathSeparator());
                 }

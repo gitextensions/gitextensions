@@ -17,7 +17,7 @@ namespace GitUI.UserControls
         private static readonly PropertyInfo ListViewGroupListProperty;
         private static readonly PropertyInfo ListViewDefaultGroupProperty;
 
-        /// <summary> Position in <see cref="ListView.Groups"/> collection after the technical "Default" group </summary>
+        /// <summary> Position in <see cref="ListView.Groups"/> collection after the technical "Default" group. </summary>
         private int _minGroupInsertionIndex;
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace GitUI.UserControls
         /// before making any calls to <see cref="ListViewGroupCollection.Insert"/>
         ///
         /// <see cref="ListViewGroupCollection.Add(ListViewGroup)"/> calls must
-        /// not be used after calling this method
+        /// not be used after calling this method.
         /// </summary>
         private void BeginGroupInsertion()
         {

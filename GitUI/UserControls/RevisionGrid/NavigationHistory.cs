@@ -15,7 +15,7 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly Stack<ObjectId> _nextItems = new Stack<ObjectId>();
 
         /// <summary>
-        /// Sets <paramref name="curr"/> as current visible item and resets forward history
+        /// Sets <paramref name="curr"/> as current visible item and resets forward history.
         /// </summary>
         public void Push(ObjectId curr)
         {
@@ -27,12 +27,12 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
-        /// Returns whether CanNavigateBackward is possible
+        /// Returns whether CanNavigateBackward is possible.
         /// </summary>
         public bool CanNavigateBackward => _prevItems.Count > 1;
 
         /// <summary>
-        /// Navigates backward in history, returns item which should be selected, null if no previous item is available
+        /// Navigates backward in history, returns item which should be selected, null if no previous item is available.
         /// </summary>
         /// <exception cref="InvalidOperationException">When no previous history is available.</exception>
         public ObjectId NavigateBackward()
@@ -49,12 +49,12 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
-        /// Returns whether CanNavigateForward is possible
+        /// Returns whether CanNavigateForward is possible.
         /// </summary>
         public bool CanNavigateForward => _nextItems.Count != 0;
 
         /// <summary>
-        /// Navigates forward in history, returns item which should be selected, null if no next item is available
+        /// Navigates forward in history, returns item which should be selected, null if no next item is available.
         /// </summary>
         /// <exception cref="InvalidOperationException">When no forward history is available.</exception>
         public ObjectId NavigateForward()
@@ -70,7 +70,7 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
-        /// Clears both backward and forward history
+        /// Clears both backward and forward history.
         /// </summary>
         public void Clear()
         {

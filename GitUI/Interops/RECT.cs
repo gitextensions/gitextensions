@@ -39,7 +39,7 @@ namespace System
         }
 
         /// <summary>
-        /// Theming interop requires RECT to be class
+        /// Theming interop requires RECT to be class.
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public class RECTCLS

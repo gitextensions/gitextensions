@@ -3,10 +3,10 @@
     <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <OutputType>WinExe</OutputType>
     <StartupObject />
+
+    <!-- To be removed when NRT annotations are complete -->
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BugReporter\BugReporter.csproj" />

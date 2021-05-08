@@ -43,7 +43,7 @@ namespace GitCommandsTests.Remote
         [Test]
         public void LoadRemotes_should_not_populate_remotes_if_none()
         {
-            _module.GetRemoteNames().Returns(x => Enumerable.Empty<string>());
+            _module.GetRemoteNames().Returns(x => Array.Empty<string>());
 
             var remotes = _remotesManager.LoadRemotes(true);
 
@@ -98,7 +98,7 @@ namespace GitCommandsTests.Remote
         public void RemoveRemote_should_throw_if_remote_is_null()
         {
             ((Action)(() => _remotesManager.RemoveRemote(null))).Should().Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null.\r\nParameter name: remote");
+                .WithMessage("Value cannot be null. (Parameter 'remote')");
         }
 
         [Test]
@@ -115,11 +115,11 @@ namespace GitCommandsTests.Remote
         public void SaveRemote_should_throw_if_remoteName_is_null_or_empty()
         {
             ((Action)(() => _remotesManager.SaveRemote(null, null, "b", "c", "d"))).Should().Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
+                .WithMessage("Value cannot be null. (Parameter 'remoteName')");
             ((Action)(() => _remotesManager.SaveRemote(null, "", "b", "c", "d"))).Should().Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
+                .WithMessage("Value cannot be null. (Parameter 'remoteName')");
             ((Action)(() => _remotesManager.SaveRemote(null, "  ", "b", "c", "d"))).Should().Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
+                .WithMessage("Value cannot be null. (Parameter 'remoteName')");
         }
 
         [Test]
@@ -220,7 +220,7 @@ namespace GitCommandsTests.Remote
         public void SetRemoteState_should_throw_if_remote_is_null()
         {
             ((Action)(() => _remotesManager.ToggleRemoteState(null, false))).Should().Throw<ArgumentNullException>()
-                .WithMessage("Value cannot be null.\r\nParameter name: remoteName");
+                .WithMessage("Value cannot be null. (Parameter 'remoteName')");
         }
 
         [Test]

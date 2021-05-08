@@ -44,7 +44,7 @@ namespace GitCommands
         /// <exception cref="PathTooLongException">The resolved path is too long (greater than 248 characters).</exception>
         public string? Resolve(string? path)
         {
-            if (Strings.IsNullOrWhiteSpace(path))
+            if (string.IsNullOrWhiteSpace(path))
             {
                 return null;
             }
