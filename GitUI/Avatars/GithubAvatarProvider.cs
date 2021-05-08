@@ -4,7 +4,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
-using GitExtUtils;
 using JetBrains.Annotations;
 
 namespace GitUI.Avatars

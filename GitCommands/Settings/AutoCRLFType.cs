@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace GitCommands.Settings
+﻿namespace GitCommands.Settings
 {
     public enum AutoCRLFType
     {

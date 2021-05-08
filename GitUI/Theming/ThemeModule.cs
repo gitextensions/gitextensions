@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Drawing;
-using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;

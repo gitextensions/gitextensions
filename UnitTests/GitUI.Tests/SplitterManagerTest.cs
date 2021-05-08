@@ -1,10 +1,4 @@
-﻿using System.Windows.Forms;
-using FluentAssertions;
-using GitCommands.Settings;
-using GitUI;
-using NUnit.Framework;
-
-namespace GitUITests
+﻿namespace GitUITests
 {
     // TODO: Disabled as splitters have become unstable. Refer to #123456 for more details.
     ////[TestFixture]

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands.UserRepositoryHistory;
-using GitExtUtils;
 
 namespace GitUI.CommandsDialogs
 {

@@ -14,7 +14,6 @@ using System.Windows.Forms;
 using BugReporter.Properties;
 using BugReporter.Serialization;
 using GitCommands;
-using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
 using Microsoft;

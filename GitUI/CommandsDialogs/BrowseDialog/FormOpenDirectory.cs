@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
-using GitExtUtils;
 using GitExtUtils.GitUI;
 using ResourceManager;
 

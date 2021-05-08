@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitUI

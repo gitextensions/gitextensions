@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
 using NUnit.Framework;

@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using GitUIPluginInterfaces;
-
-namespace GitCommands.Git.Commands
+﻿namespace GitCommands.Git.Commands
 {
     /// <summary>
     /// Enums requestable in GitRefs() (multiple names can be appended)

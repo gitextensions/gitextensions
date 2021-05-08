@@ -6,7 +6,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands.Settings;
-using GitExtUtils;
 
 namespace GitCommands.ExternalLinks
 {

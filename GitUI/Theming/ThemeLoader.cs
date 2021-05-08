@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using ExCSS;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;

@@ -5,7 +5,6 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
-using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;

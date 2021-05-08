@@ -1,13 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using FluentAssertions;
-using GitCommands;
-using GitCommands.Git;
-using GitUI.CommandsDialogs;
-using GitUI.Properties;
 using GitUI.UserControls;
-using JetBrains.Annotations;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace GitUITests.UserControls
