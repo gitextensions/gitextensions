@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using GitUI;
-using Microsoft;
 using Microsoft.VisualStudio.Composition;
 
 namespace GitUIPluginInterfaces

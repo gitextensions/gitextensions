@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using GitExtUtils;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace

@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace GitUI.UserControls.RevisionGrid.Graph
+﻿namespace GitUI.UserControls.RevisionGrid.Graph
 {
     public class LaneInfo
     {

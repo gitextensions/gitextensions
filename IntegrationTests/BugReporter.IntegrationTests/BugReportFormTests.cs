@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BugReporter;
 using BugReporter.Serialization;
-using CommonTestUtils;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests.NBugReports

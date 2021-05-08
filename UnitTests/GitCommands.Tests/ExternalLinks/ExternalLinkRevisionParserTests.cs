@@ -5,7 +5,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using FluentAssertions;
-using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Remotes;
 using GitUIPluginInterfaces;

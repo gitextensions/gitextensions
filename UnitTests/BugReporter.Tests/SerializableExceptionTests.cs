@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using ApprovalTests;
 using ApprovalTests.Namers;
 using BugReporter.Serialization;

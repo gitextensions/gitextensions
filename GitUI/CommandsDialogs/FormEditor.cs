@@ -5,8 +5,6 @@ using System.Windows.Forms;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
-using GitUI.Theming;
-using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

@@ -1,5 +1,3 @@
-using System;
-
 namespace GitCommands
 {
     public enum AvatarProvider

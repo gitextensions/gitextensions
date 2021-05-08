@@ -1,5 +1,4 @@
-﻿using GitCommands.Git;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {

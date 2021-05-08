@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using BugReporter.Serialization;
-using GitExtUtils;
 
 namespace BugReporter
 {

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Patches;
-using GitExtUtils;
 using GitUI.Editor;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;

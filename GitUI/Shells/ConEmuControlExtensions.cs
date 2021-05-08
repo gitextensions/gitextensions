@@ -1,6 +1,5 @@
 ﻿using System;
 using ConEmu.WinForms;
-using GitExtUtils;
 
 namespace GitUI.Shells
 {

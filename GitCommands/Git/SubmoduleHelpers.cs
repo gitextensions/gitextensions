@@ -3,7 +3,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands.Patches;
-using GitExtUtils;
 using GitUIPluginInterfaces;
 using Microsoft;
 
