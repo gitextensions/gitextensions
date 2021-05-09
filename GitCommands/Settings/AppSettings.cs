@@ -62,7 +62,6 @@ namespace GitCommands
         public static readonly string SettingsFileName = ApplicationId + ".settings";
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
         private static string _applicationExecutablePath = Application.ExecutablePath;
-        private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
         private static string? _documentationBaseUrl;
 
         public static Lazy<string?> ApplicationDataPath { get; private set; }
@@ -117,6 +116,7 @@ namespace GitCommands
             }
 
             MigrateAvatarSettings();
+            MigrateSshSettings();
         }
 
         /// <summary>
@@ -301,10 +301,9 @@ namespace GitCommands
             set => WriteStringRegValue("CascadeShellMenuItems", value);
         }
 
-        [MaybeNull]
         public static string SshPath
         {
-            get => ReadStringRegValue("gitssh", null);
+            get => ReadStringRegValue("gitssh", "");
             set => WriteStringRegValue("gitssh", value);
         }
 
@@ -660,6 +659,20 @@ namespace GitCommands
             if (providerChanged || fallbackImageChanged)
             {
                 SaveSettings();
+            }
+        }
+
+        private static void MigrateSshSettings()
+        {
+            string ssh = AppSettings.SshPath;
+            if (!string.IsNullOrEmpty(ssh))
+            {
+                // OpenSSH uses empty path, compatibility with path set in 3.4
+                string path = new SshPathLocator().GetSshFromGitDir(GitBinDir);
+                if (path == ssh)
+                {
+                    AppSettings.SshPath = "";
+                }
             }
         }
 
@@ -1529,7 +1542,6 @@ namespace GitCommands
             {
                 SettingsContainer.LockedAction(() =>
                 {
-                    SshPath = SshPathLocatorInstance.Find(GitBinDir);
                     SettingsContainer.Save();
                 });
 

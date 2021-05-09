@@ -7,46 +7,21 @@ namespace GitCommands
 {
     public interface ISshPathLocator
     {
-        string Find(string gitBinDirectory);
         public string? GetSshFromGitDir(string gitBinDirectory);
     }
 
     public sealed class SshPathLocator : ISshPathLocator
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IEnvironmentAbstraction _environment;
 
-        public SshPathLocator(IFileSystem fileSystem, IEnvironmentAbstraction environment)
+        public SshPathLocator(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
-            _environment = environment;
         }
 
         public SshPathLocator()
-            : this(new FileSystem(), new EnvironmentAbstraction())
+            : this(new FileSystem())
         {
-        }
-
-        /// <summary>
-        /// Gets the git SSH command.
-        /// If the environment variable is not set, will try to find ssh.exe in git installation directory.
-        /// If not found, will return "".
-        /// </summary>
-        public string Find(string gitBinDirectory)
-        {
-            var ssh = _environment.GetEnvironmentVariable("GIT_SSH", EnvironmentVariableTarget.Process) ?? "";
-
-            if (!string.IsNullOrEmpty(ssh))
-            {
-                // OpenSSH uses empty path, compatibility with path set in 3.4
-                var path = GetSshFromGitDir(gitBinDirectory);
-                if (path == ssh)
-                {
-                    ssh = "";
-                }
-            }
-
-            return ssh;
         }
 
         /// <summary>
@@ -67,7 +42,7 @@ namespace GitCommands
                 // gitBinDirectory will normally end with a directory separator
                 // (at least this is what AppSettings.GitBinDir ensures),
                 // but then GetParent() returns the same directory, only without the trailing separator
-                var gitDirInfo = _fileSystem.Directory.GetParent(gitBinDirectory.RemoveTrailingPathSeparator());
+                IDirectoryInfo gitDirInfo = _fileSystem.Directory.GetParent(gitBinDirectory.RemoveTrailingPathSeparator());
                 if (gitDirInfo is null)
                 {
                     return null;
