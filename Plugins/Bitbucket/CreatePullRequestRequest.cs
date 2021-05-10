@@ -58,7 +58,7 @@ namespace GitExtensions.Plugins.Bitbucket
             Validates.NotNull(_info.TargetBranch);
             Validates.NotNull(_info.Reviewers);
 
-            var resource = new JObject();
+            JObject resource = new();
             resource["title"] = _info.Title;
             resource["description"] = _info.Description;
 
@@ -70,10 +70,10 @@ namespace GitExtensions.Plugins.Bitbucket
                 _info.TargetRepo.ProjectKey,
                 _info.TargetRepo.RepoName, _info.TargetBranch);
 
-            var reviewers = new JArray();
+            JArray reviewers = new();
             foreach (var reviewer in _info.Reviewers)
             {
-                var r = new JObject();
+                JObject r = new();
                 r["user"] = new JObject();
                 r["user"]["name"] = reviewer.Slug;
 
@@ -87,7 +87,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
         private static JObject CreatePullRequestRef(string projectKey, string repoName, string branchName)
         {
-            var reference = new JObject();
+            JObject reference = new();
             reference["id"] = branchName;
             reference["repository"] = new JObject();
             reference["repository"]["slug"] = repoName;

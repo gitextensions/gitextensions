@@ -44,7 +44,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
         public void LoadLegacy_should_return_collection()
         {
             AppSettings.SetString("repositories", "repos");
-            var history = new List<RepositoryCategory>
+            List<RepositoryCategory> history = new()
             {
                 new RepositoryCategory
                 {

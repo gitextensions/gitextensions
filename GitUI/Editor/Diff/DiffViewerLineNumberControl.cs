@@ -65,7 +65,7 @@ namespace GitUI.Editor.Diff
             for (var y = 0; y < ((DrawingPosition.Height + textArea.TextView.VisibleLineDrawingRemainder) / fontHeight) + 1; ++y)
             {
                 var ypos = drawingPosition.Y + (fontHeight * y) - textArea.TextView.VisibleLineDrawingRemainder;
-                var backgroundRectangle = new Rectangle(drawingPosition.X, ypos, drawingPosition.Width, fontHeight);
+                Rectangle backgroundRectangle = new(drawingPosition.X, ypos, drawingPosition.Width, fontHeight);
                 if (!rect.IntersectsWith(backgroundRectangle))
                 {
                     continue;
@@ -129,7 +129,7 @@ namespace GitUI.Editor.Diff
 
         public void DisplayLineNumFor(string diff)
         {
-            var result = new DiffLineNumAnalyzer().Analyze(diff);
+            DiffLinesInfo result = new DiffLineNumAnalyzer().Analyze(diff);
             _diffLines = result.DiffLines;
             MaxLineNumber = result.MaxLineNumber;
         }

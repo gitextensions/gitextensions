@@ -27,7 +27,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
 
         private static class GitObjectsComparer
         {
-            private static readonly Dictionary<string, Comparison<GitObject>> PropertyComparers = new Dictionary<string, Comparison<GitObject>>();
+            private static readonly Dictionary<string, Comparison<GitObject>> PropertyComparers = new();
 
             static GitObjectsComparer()
             {

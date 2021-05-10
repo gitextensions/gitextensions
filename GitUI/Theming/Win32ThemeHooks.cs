@@ -39,7 +39,7 @@ namespace GitUI.Theming
 
         internal static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
-        private static readonly HashSet<NativeListView> InitializingListViews = new HashSet<NativeListView>();
+        private static readonly HashSet<NativeListView> InitializingListViews = new();
         private static ScrollBarRenderer? _scrollBarRenderer;
         private static ListViewRenderer? _listViewRenderer;
         private static HeaderRenderer? _headerRenderer;
@@ -292,7 +292,7 @@ namespace GitUI.Theming
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer is not null && renderer.ForceUseRenderTextEx)
                 {
-                    NativeMethods.DTTOPTS poptions = new NativeMethods.DTTOPTS
+                    NativeMethods.DTTOPTS poptions = new()
                     {
                         dwSize = Marshal.SizeOf<NativeMethods.DTTOPTS>()
                     };

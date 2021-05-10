@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// </summary>
     public abstract partial class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
-        private readonly List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
+        private readonly List<ISettingControlBinding> _controlBindings = new();
         private ISettingsPageHost? _pageHost;
 
         protected SettingsPageBase()
@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost) where T : SettingsPageBase, new()
         {
-            var result = new T();
+            T result = new();
 
             result.AdjustForDpiScaling();
             result.EnableRemoveWordHotkey();
@@ -128,31 +128,31 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         protected void AddSettingBinding(ISetting<bool> setting, CheckBox checkBox)
         {
-            var adapter = new BoolCheckBoxAdapter(setting, checkBox);
+            BoolCheckBoxAdapter adapter = new(setting, checkBox);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
         protected void AddSettingBinding(ISetting<bool?> setting, CheckBox checkBox)
         {
-            var adapter = new BoolCheckBoxAdapter(setting, checkBox);
+            BoolCheckBoxAdapter adapter = new(setting, checkBox);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
         protected void AddSettingBinding(ISetting<int> setting, TextBox control)
         {
-            var adapter = new IntTextBoxAdapter(setting, control);
+            IntTextBoxAdapter adapter = new(setting, control);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
         protected void AddSettingBinding(ISetting<int?> setting, TextBox control)
         {
-            var adapter = new IntTextBoxAdapter(setting, control);
+            IntTextBoxAdapter adapter = new(setting, control);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
         protected void AddSettingBinding(ISetting<string> setting, ComboBox comboBox)
         {
-            var adapter = new StringComboBoxAdapter(setting, comboBox);
+            StringComboBoxAdapter adapter = new(setting, comboBox);
             AddControlBinding(adapter.CreateControlBinding());
         }
 
@@ -172,9 +172,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         /// </summary>
         private static IReadOnlyList<string> GetChildrenText(Control control)
         {
-            var texts = new List<string>();
+            List<string> texts = new();
 
-            var queue = new Queue<Control>();
+            Queue<Control> queue = new();
             queue.Enqueue(control);
 
             while (queue.Count != 0)

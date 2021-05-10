@@ -14,9 +14,9 @@ namespace GitExtensions.Plugins.AutoCompileSubmodules
     public class AutoCompileSubModulesPlugin : GitPluginBase, IGitPluginForRepository
     {
         private readonly TranslationString _doYouWantBuild =
-            new TranslationString("Do you want to build {0}?\n\n{1}");
+            new("Do you want to build {0}?\n\n{1}");
         private readonly TranslationString _enterCorrectMsBuildPath =
-            new TranslationString("Please enter correct MSBuild path in the plugin settings dialog and try again.");
+            new("Please enter correct MSBuild path in the plugin settings dialog and try again.");
 
         public AutoCompileSubModulesPlugin() : base(true)
         {
@@ -68,7 +68,7 @@ namespace GitExtensions.Plugins.AutoCompileSubmodules
 
             var msbuildPath = _msBuildPath.ValueOrDefault(Settings);
 
-            var workingDir = new DirectoryInfo(args.GitModule.WorkingDir);
+            DirectoryInfo workingDir = new(args.GitModule.WorkingDir);
             var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
 
             for (var n = solutionFiles.Length - 1; n > 0; n--)
@@ -122,7 +122,7 @@ namespace GitExtensions.Plugins.AutoCompileSubmodules
 
         private static string SolutionFilesToString(IReadOnlyList<FileInfo> solutionFiles)
         {
-            var solutionString = new StringBuilder();
+            StringBuilder solutionString = new();
 
             for (var n = solutionFiles.Count - 1; n > 0; n--)
             {

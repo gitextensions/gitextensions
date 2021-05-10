@@ -98,7 +98,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
-                var args = new GitArgumentBuilder("log")
+                GitArgumentBuilder args = new("log")
                 {
                     "--pretty=%ci\n%an\n%s",
                     $"{branchName}^1..{branchName}"
@@ -128,7 +128,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             var regex = string.IsNullOrEmpty(context.RegexFilter) ? null : new Regex(context.RegexFilter, options);
             bool regexMustMatch = !context.RegexDoesNotMatch;
 
-            var args = new GitArgumentBuilder("branch")
+            GitArgumentBuilder args = new("branch")
             {
                  "--list",
                  { context.IncludeRemotes, "-r" },
@@ -192,7 +192,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 {
                     // Delete branches one by one, because it is possible one fails
                     var remoteBranchNameOffset = remoteBranchPrefix.Length;
-                    var args = new GitArgumentBuilder("push")
+                    GitArgumentBuilder args = new("push")
                     {
                         remoteName,
                         $":{remoteBranch.Name.Substring(remoteBranchNameOffset)}"
@@ -202,7 +202,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
                 foreach (var localBranch in localBranches)
                 {
-                    var args = new GitArgumentBuilder("branch")
+                    GitArgumentBuilder args = new("branch")
                     {
                         "-d",
                         localBranch.Name
@@ -297,7 +297,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
             IsRefreshing = true;
             var curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
-            var context = new RefreshContext(
+            RefreshContext context = new(
                 _gitCommands,
                 IncludeRemoteBranches.Checked,
                 includeUnmergedBranches.Checked,

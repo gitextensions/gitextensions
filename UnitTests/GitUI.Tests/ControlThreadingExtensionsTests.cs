@@ -18,7 +18,7 @@ namespace GitUITests
         [Test]
         public void ControlSwitchToMainThreadOnMainThread()
         {
-            var form = new Form();
+            Form form = new();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
@@ -27,7 +27,7 @@ namespace GitUITests
                 Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
             });
 
-            var cancellationTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancellationTokenSource = new();
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
@@ -39,7 +39,7 @@ namespace GitUITests
         [Test]
         public void ControlSwitchToMainThreadOnMainThreadCompletesSynchronously()
         {
-            var form = new Form();
+            Form form = new();
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
@@ -49,7 +49,7 @@ namespace GitUITests
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
-            var cancellationTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancellationTokenSource = new();
             awaiter = form.SwitchToMainThreadAsync(cancellationTokenSource.Token).GetAwaiter();
             Assert.True(awaiter.IsCompleted);
             awaiter.GetResult();
@@ -60,7 +60,7 @@ namespace GitUITests
         [Test]
         public void ControlSwitchToMainThreadOnBackgroundThread()
         {
-            var form = new Form();
+            Form form = new();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
@@ -70,7 +70,7 @@ namespace GitUITests
                 Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
             });
 
-            var cancellationTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancellationTokenSource = new();
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 await TaskScheduler.Default;
@@ -83,7 +83,7 @@ namespace GitUITests
         [Test]
         public async Task ControlDisposedBeforeSwitchOnMainThread()
         {
-            var form = new Form();
+            Form form = new();
             form.Dispose();
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
@@ -93,8 +93,8 @@ namespace GitUITests
         [Test]
         public async Task TokenCancelledBeforeSwitchOnMainThread()
         {
-            var form = new Form();
-            var cancellationTokenSource = new CancellationTokenSource();
+            Form form = new();
+            CancellationTokenSource cancellationTokenSource = new();
             cancellationTokenSource.Cancel();
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
@@ -104,9 +104,9 @@ namespace GitUITests
         [Test]
         public async Task ControlDisposedAndTokenCancelledBeforeSwitchOnMainThread()
         {
-            var form = new Form();
+            Form form = new();
             form.Dispose();
-            var cancellationTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancellationTokenSource = new();
             cancellationTokenSource.Cancel();
 
             Assert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
@@ -119,7 +119,7 @@ namespace GitUITests
         [Test]
         public async Task ControlDisposedAfterSwitchOnMainThread()
         {
-            var form = new Form();
+            Form form = new();
 
             var awaitable = form.SwitchToMainThreadAsync();
 
@@ -132,8 +132,8 @@ namespace GitUITests
         [Test]
         public async Task TokenCancelledAfterSwitchOnMainThread()
         {
-            var form = new Form();
-            var cancellationTokenSource = new CancellationTokenSource();
+            Form form = new();
+            CancellationTokenSource cancellationTokenSource = new();
 
             var awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
 
@@ -146,7 +146,7 @@ namespace GitUITests
         [Test]
         public async Task ControlDisposedBeforeSwitchOnBackgroundThread()
         {
-            var form = new Form();
+            Form form = new();
             form.Dispose();
 
             await TaskScheduler.Default;
@@ -158,11 +158,11 @@ namespace GitUITests
         [Test]
         public async Task TokenCancelledBeforeSwitchOnBackgroundThread()
         {
-            var form = new Form();
+            Form form = new();
 
             await TaskScheduler.Default;
 
-            var cancellationTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancellationTokenSource = new();
             cancellationTokenSource.Cancel();
 
             Assert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
@@ -173,7 +173,7 @@ namespace GitUITests
         [Ignore("Hangs")]
         public async Task ControlDisposedAfterSwitchOnBackgroundThread()
         {
-            var form = new Form();
+            Form form = new();
 
             await TaskScheduler.Default;
 
@@ -194,11 +194,11 @@ namespace GitUITests
         [Test]
         public async Task TokenCancelledAfterSwitchOnBackgroundThread()
         {
-            var form = new Form();
+            Form form = new();
 
             await TaskScheduler.Default;
 
-            var cancellationTokenSource = new CancellationTokenSource();
+            CancellationTokenSource cancellationTokenSource = new();
 
             var awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
 

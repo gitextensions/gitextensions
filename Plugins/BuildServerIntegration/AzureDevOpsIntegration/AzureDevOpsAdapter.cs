@@ -172,9 +172,9 @@ Detail of the error:");
                         {
                             ProjectOnErrorKey = CacheKey;
 
-                            var btnOpenSettings = new TaskDialogButton("btnOpenSettings", "Open settings");
-                            var btnIgnore = new TaskDialogButton("btnIgnoreError", "Ignore");
-                            using var errorDialog = new TaskDialog
+                            TaskDialogButton btnOpenSettings = new("btnOpenSettings", "Open settings");
+                            TaskDialogButton btnIgnore = new("btnIgnoreError", "Ignore");
+                            using TaskDialog errorDialog = new()
                             {
                                 InstructionText = errorMessage,
                                 Icon = TaskDialogStandardIcon.Error,
@@ -288,7 +288,7 @@ Detail of the error:");
 
             Validates.NotNull(buildDetail.SourceVersion);
 
-            var buildInfo = new BuildInfo
+            BuildInfo buildInfo = new()
             {
                 Id = buildDetail.BuildNumber,
                 StartDate = buildDetail.StartTime ?? DateTime.MinValue,
@@ -322,7 +322,7 @@ Detail of the error:");
         }
 
         #region TestAccessor
-        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+        internal TestAccessor GetTestAccessor() => new(this);
 
         internal readonly struct TestAccessor
         {

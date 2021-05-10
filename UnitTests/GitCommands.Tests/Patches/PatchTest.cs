@@ -9,7 +9,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestPatchConstructor()
         {
-            var patch = new Patch("header", "index", PatchFileType.Text, "A", "B", true, PatchChangeType.NewFile, "text");
+            Patch patch = new("header", "index", PatchFileType.Text, "A", "B", true, PatchChangeType.NewFile, "text");
 
             Assert.AreEqual("header", patch.Header);
             Assert.AreEqual("index", patch.Index);

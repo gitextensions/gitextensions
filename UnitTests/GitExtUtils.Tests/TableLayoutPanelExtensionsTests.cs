@@ -27,7 +27,7 @@ namespace GitExtUtilsTests
         [Test]
         public void AdjustWidthToSize_should_throw_if_index_outside_table_columns_count()
         {
-            var table = new TableLayoutPanel
+            TableLayoutPanel table = new()
             {
                 ColumnCount = 3
             };
@@ -40,7 +40,7 @@ namespace GitExtUtilsTests
         [Test]
         public void AdjustWidthToSize_should_throw_if_no_widths_given()
         {
-            var table = new TableLayoutPanel
+            TableLayoutPanel table = new()
             {
                 ColumnCount = 3
             };
@@ -50,7 +50,7 @@ namespace GitExtUtilsTests
         [Test]
         public void AdjustWidthToSize_should_throw_if_no_widths_given1()
         {
-            var table = new TableLayoutPanel
+            TableLayoutPanel table = new()
             {
                 ColumnCount = 3
             };
@@ -61,7 +61,7 @@ namespace GitExtUtilsTests
         [Test]
         public void AdjustWidthToSize_should_set_width_to_largest_value()
         {
-            var table = new TableLayoutPanel
+            TableLayoutPanel table = new()
             {
                 ColumnCount = 3
             };

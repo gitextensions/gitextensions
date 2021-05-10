@@ -16,7 +16,7 @@ namespace GitCommandsTests.Git
             var authorTime = DateTime.Now;
             var commitHash = ObjectId.Random();
 
-            var str = new StringBuilder();
+            StringBuilder str = new();
 
             str.AppendLine("Author: Author");
             str.AppendLine("Author date: " + authorTime);
@@ -27,7 +27,7 @@ namespace GitCommandsTests.Git
             str.AppendLine();
             str.Append("FileName: fileName.txt");
 
-            var commit = new GitBlameCommit(
+            GitBlameCommit commit = new(
                 commitHash,
                 "Author",
                 "author@authormail.com",

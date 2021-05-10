@@ -27,7 +27,7 @@ namespace GitUI
 
             GitModule module = GetModule();
 
-            var fileStatusDescs = new List<FileStatusWithDescription>();
+            List<FileStatusWithDescription> fileStatusDescs = new();
             if (revisions!.Count == 1)
             {
                 if (selectedRev.ParentIds is null || selectedRev.ParentIds.Count == 0)
@@ -159,10 +159,10 @@ namespace GitUI
             var allBaseToB = module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, selectedRev.ObjectId, selectedRev.FirstParentId);
             var allBaseToA = module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, firstRev.ObjectId, firstRev.FirstParentId);
 
-            var comparer = new GitItemStatusNameEqualityComparer();
+            GitItemStatusNameEqualityComparer comparer = new();
             var commonBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();
 
-            var revBase = new GitRevision(baseRevGuid);
+            GitRevision revBase = new(baseRevGuid);
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: selectedRev,
@@ -180,14 +180,14 @@ namespace GitUI
                 statuses: commonBaseToAandB));
 
             // Add rangeDiff as a separate group (range is not the same as diff with artificial commits)
-            var statuses = new List<GitItemStatus> { new GitItemStatus(name: TranslatedStrings.DiffRange) { IsRangeDiff = true } };
+            List<GitItemStatus> statuses = new() { new GitItemStatus(name: TranslatedStrings.DiffRange) { IsRangeDiff = true } };
             var first = firstRev.ObjectId == firstRevHead ? firstRev : new GitRevision(firstRevHead);
             var selected = selectedRev.ObjectId == selectedRevHead ? selectedRev : new GitRevision(selectedRevHead);
             var (baseToFirstCount, baseToSecondCount) = module.GetCommitRangeDiffCount(first.ObjectId, selected.ObjectId);
             const int rangeDiffCommitLimit = 100;
             var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? rangeDiffCommitLimit}↓ {baseToSecondCount ?? rangeDiffCommitLimit}↑";
 
-            var rangeDiff = new FileStatusWithDescription(
+            FileStatusWithDescription rangeDiff = new(
                 firstRev: first,
                 secondRev: selected,
                 summary: desc,

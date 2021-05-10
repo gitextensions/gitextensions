@@ -4,7 +4,7 @@ namespace GitCommands
 {
     public class DiffListSortService : IDiffListSortService
     {
-        private static readonly Lazy<DiffListSortService> _lazyDiffListSorting = new Lazy<DiffListSortService>(() => new DiffListSortService());
+        private static readonly Lazy<DiffListSortService> _lazyDiffListSorting = new(() => new DiffListSortService());
         public static DiffListSortService Instance => _lazyDiffListSorting.Value;
         private DiffListSortType _diffListSorting;
         public event EventHandler? DiffListSortingChanged;

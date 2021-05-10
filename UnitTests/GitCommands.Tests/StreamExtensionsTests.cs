@@ -43,7 +43,7 @@ namespace GitCommandsTests
             new byte[0], new byte[] { 1 }, new byte[] { 2, 3 }, new byte[] { 4, 5, 6 }, new byte[] { 7, 8, 9, 10 })]
         public void ReadNullTerminatedLines(byte[] input, params byte[][] expectedChunks)
         {
-            var stream = new MemoryStream(input);
+            MemoryStream stream = new(input);
 
             // Run the test at multiple buffer sizes to test boundary conditions thoroughly
             for (var bufferSize = 1; bufferSize < input.Length + 2; bufferSize++)

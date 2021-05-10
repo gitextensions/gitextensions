@@ -28,8 +28,8 @@ namespace GitUI.CommitInfo
             InitializeComponent();
             InitializeComplete();
 
-            var labelFormatter = new TabbedHeaderLabelFormatter();
-            var headerRenderer = new TabbedHeaderRenderStyleProvider();
+            TabbedHeaderLabelFormatter labelFormatter = new();
+            TabbedHeaderRenderStyleProvider headerRenderer = new();
 
             _commitDataManager = new CommitDataManager(() => Module);
             _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);

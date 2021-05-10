@@ -15,7 +15,7 @@ namespace GitUI.HelperDialogs
     {
         #region Translation
         private readonly TranslationString _fingerprintNotRegistredText =
-            new TranslationString(@"The fingerprint of this host is not registered by PuTTY.
+            new(@"The fingerprint of this host is not registered by PuTTY.
 This causes this process to hang, and that why it is automatically stopped.
 
 When the connection is opened detached from Git and Git Extensions, the host's fingerprint can be registered.
@@ -23,7 +23,7 @@ You could also manually add the host's fingerprint or run Test Connection from t
 
 Do you want to register the host's fingerprint and restart the process?");
         private readonly TranslationString _fingerprintNotRegistredTextCaption =
-            new TranslationString("Host Fingerprint not registered");
+            new("Host Fingerprint not registered");
         #endregion
 
         private bool _restart;
@@ -46,7 +46,7 @@ Do you want to register the host's fingerprint and restart the process?");
 
         public static bool ShowDialog(IWin32Window? owner, GitUICommands commands, ArgumentString arguments)
         {
-            using var formRemoteProcess = new FormRemoteProcess(commands, process: null, arguments);
+            using FormRemoteProcess formRemoteProcess = new(commands, process: null, arguments);
             formRemoteProcess.ShowDialog(owner);
             return !formRemoteProcess.ErrorOccurred();
         }

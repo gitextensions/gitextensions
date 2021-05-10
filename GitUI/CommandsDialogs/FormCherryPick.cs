@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
         private readonly TranslationString _noneParentSelectedText =
-            new TranslationString("None parent is selected!");
+            new("None parent is selected!");
         #endregion
 
         private bool _isMerge;
@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs
 
         private void Revert_Click(object sender, EventArgs e)
         {
-            var args = new ArgumentBuilder();
+            ArgumentBuilder args = new();
             var canExecute = true;
 
             if (_isMerge)

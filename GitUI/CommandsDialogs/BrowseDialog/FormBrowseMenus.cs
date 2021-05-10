@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
 
         // we have to remember which items we registered with the menucommands because other
         // location (RevisionGrid) can register items too!
-        private readonly List<ToolStripMenuItem> _itemsRegisteredWithMenuCommand = new List<ToolStripMenuItem>();
+        private readonly List<ToolStripMenuItem> _itemsRegisteredWithMenuCommand = new();
 
         public FormBrowseMenus(ToolStrip menuStrip)
         {
@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
 
             static ToolStripItem CreateItem(ToolStrip senderToolStrip)
             {
-                var toolStripItem = new ToolStripMenuItem(senderToolStrip.Text)
+                ToolStripMenuItem toolStripItem = new(senderToolStrip.Text)
                 {
                     Checked = senderToolStrip.Visible,
                     CheckOnClick = true,
@@ -384,7 +384,7 @@ namespace GitUI.CommandsDialogs
         {
             toolStripMenuItemTarget.DropDownItems.Clear();
 
-            var toolStripItems = new List<ToolStripItem>();
+            List<ToolStripItem> toolStripItems = new();
             foreach (var menuCommand in menuCommands)
             {
                 var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);

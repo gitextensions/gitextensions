@@ -20,7 +20,7 @@ namespace TranslationApp
                 var translatableTypes = TranslationUtil.GetTranslatableTypes();
                 foreach (var (key, types) in translatableTypes)
                 {
-                    var translation = new TranslationFile();
+                    TranslationFile translation = new();
                     try
                     {
                         foreach (Type type in types)
@@ -60,7 +60,7 @@ namespace TranslationApp
 
         public static IDictionary<string, List<TranslationItemWithCategory>> GetItemsDictionary(IDictionary<string, TranslationFile> translations)
         {
-            var items = new Dictionary<string, List<TranslationItemWithCategory>>();
+            Dictionary<string, List<TranslationItemWithCategory>> items = new();
             foreach (var (key, file) in translations)
             {
                 var list = from item in file.TranslationCategories
@@ -86,7 +86,7 @@ namespace TranslationApp
         public static IDictionary<string, List<TranslationItemWithCategory>> LoadTranslation(
             IDictionary<string, TranslationFile> translation, IDictionary<string, List<TranslationItemWithCategory>> neutralItems)
         {
-            var translateItems = new Dictionary<string, List<TranslationItemWithCategory>>();
+            Dictionary<string, List<TranslationItemWithCategory>> translateItems = new();
 
             var oldTranslationItems = GetItemsDictionary(translation);
 
@@ -94,7 +94,7 @@ namespace TranslationApp
             {
                 var oldItems = oldTranslationItems.Find(key);
                 var transItems = translateItems.Find(key);
-                var dict = new Dictionary<string, string>();
+                Dictionary<string, string> dict = new();
                 foreach (var item in items)
                 {
                     var curItems = oldItems.Where(
@@ -162,12 +162,12 @@ namespace TranslationApp
 
             foreach (var (key, translateItems) in items)
             {
-                var foreignTranslation = new TranslationFile(GitCommands.AppSettings.ProductVersion, "en", targetLanguageCode);
+                TranslationFile foreignTranslation = new(GitCommands.AppSettings.ProductVersion, "en", targetLanguageCode);
                 foreach (var translateItem in translateItems)
                 {
                     var item = translateItem.GetTranslationItem();
 
-                    var ti = new TranslationItem(item.Name, item.Property, item.Source, item.Value);
+                    TranslationItem ti = new(item.Name, item.Property, item.Source, item.Value);
                     ti.Value ??= string.Empty;
                     foreignTranslation.FindOrAddTranslationCategory(translateItem.Category)
                         .Body.AddTranslationItem(ti);

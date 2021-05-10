@@ -78,11 +78,11 @@ Current Branch:
             nameof(ScriptInfoProxy.Command),
             nameof(ScriptInfoProxy.Arguments),
         };
-        private static readonly ImageList EmbeddedIcons = new ImageList
+        private static readonly ImageList EmbeddedIcons = new()
         {
             ColorDepth = ColorDepth.Depth32Bit
         };
-        private readonly BindingList<ScriptInfoProxy> _scripts = new BindingList<ScriptInfoProxy>();
+        private readonly BindingList<ScriptInfoProxy> _scripts = new();
         private SimpleHelpDisplayDialog? _argumentsCheatSheet;
         private bool _handlingCheck;
 
@@ -138,7 +138,7 @@ Current Branch:
                 return;
             }
 
-            var rm = new System.Resources.ResourceManager("GitUI.Properties.Images", Assembly.GetExecutingAssembly());
+            System.Resources.ResourceManager rm = new("GitUI.Properties.Images", Assembly.GetExecutingAssembly());
 
             // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
             rm.GetObject("dummy");

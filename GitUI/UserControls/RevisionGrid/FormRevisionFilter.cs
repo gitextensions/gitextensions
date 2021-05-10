@@ -84,7 +84,7 @@ namespace GitUI.UserControls.RevisionGrid
                 _NO_TRANSLATE_Limit.Value = AppSettings.MaxRevisionGraphCommits;
             }
 
-            var filter = new ArgumentBuilder();
+            ArgumentBuilder filter = new();
 
             if (AuthorCheck.Checked && GitVersion.Current.IsRegExStringCmdPassable(Author.Text))
             {

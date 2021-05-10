@@ -205,7 +205,7 @@ namespace GitCommands
                 return false;
             }
 
-            var arguments = new GitArgumentBuilder("log")
+            GitArgumentBuilder arguments = new("log")
             {
                 "-1",
                 $"--pretty=\"format:{format}\"",
@@ -239,7 +239,7 @@ namespace GitCommands
                 endIndex--;
             }
 
-            var message = new StringBuilder();
+            StringBuilder message = new();
             bool notesStart = false;
 
             for (int i = startIndex; i <= endIndex; i++)

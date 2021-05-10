@@ -15,27 +15,27 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _currentBranchText = new("Current branch:");
         private readonly TranslationString _noOutputPathEnteredText =
-            new TranslationString("You need to enter an output path.");
+            new("You need to enter an output path.");
         private readonly TranslationString _noEmailEnteredText =
-            new TranslationString("You need to enter an email address.");
+            new("You need to enter an email address.");
         private readonly TranslationString _noSubjectEnteredText =
-            new TranslationString("You need to enter a mail subject.");
+            new("You need to enter a mail subject.");
         private readonly TranslationString _wrongSmtpSettingsText =
-            new TranslationString("You need to enter a valid smtp in the settings dialog.");
+            new("You need to enter a valid smtp in the settings dialog.");
         private readonly TranslationString _revisionsNeededText =
-            new TranslationString("You need to select at least one revision");
+            new("You need to select at least one revision");
         private readonly TranslationString _revisionsNeededCaption =
-            new TranslationString("Patch error");
+            new("Patch error");
         private readonly TranslationString _sendMailResult =
-            new TranslationString("Send to:");
+            new("Send to:");
         private readonly TranslationString _sendMailResultFailed =
-            new TranslationString("Failed to send mail.");
+            new("Failed to send mail.");
         private readonly TranslationString _patchResultCaption =
-            new TranslationString("Patch result");
+            new("Patch result");
         private readonly TranslationString _noGitMailConfigured =
-            new TranslationString("There is no email address configured in the settings dialog.");
+            new("There is no email address configured in the settings dialog.");
         private readonly TranslationString _failCreatePatch =
-            new TranslationString("Unable to create patch file(s)");
+            new("Unable to create patch file(s)");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormFormatPatch()
@@ -212,14 +212,14 @@ namespace GitUI.CommandsDialogs
 
                 string to = MailTo.Text;
 
-                using var mail = new MailMessage(from, to, MailSubject.Text, MailBody.Text);
+                using MailMessage mail = new(from, to, MailSubject.Text, MailBody.Text);
                 foreach (string file in Directory.GetFiles(dir, "*.patch"))
                 {
-                    var attachment = new Attachment(file);
+                    Attachment attachment = new(file);
                     mail.Attachments.Add(attachment);
                 }
 
-                var smtpClient = new SmtpClient(AppSettings.SmtpServer)
+                SmtpClient smtpClient = new(AppSettings.SmtpServer)
                 {
                     Port = AppSettings.SmtpPort,
                     EnableSsl = AppSettings.SmtpUseSsl

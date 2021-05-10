@@ -34,7 +34,7 @@ namespace GitUI.Shells
         {
             try
             {
-                var directoryInfo = new DirectoryInfo(path);
+                DirectoryInfo directoryInfo = new(path);
                 if (directoryInfo.Exists)
                 {
                     string posixPath = "/" + directoryInfo.FullName.ToPosixPath().Remove(1, 1);

@@ -76,7 +76,7 @@ namespace GitCommandsTests.Git
             localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns(string.Empty);
             localConfigFileSettings.GetValue($"branch.local_branch.remote").Returns(string.Empty);
             localGitModule.LocalConfigFile.Returns(localConfigFileSettings);
-            var localBranchRef = new GitRef(localGitModule, ObjectId.Random(), "refs/heads/local_branch");
+            GitRef localBranchRef = new(localGitModule, ObjectId.Random(), "refs/heads/local_branch");
 
             GitRef remoteBranchRef = SetupLocalBranchWithATrackingReference("a_remote_branch", "origin");
 
@@ -88,7 +88,7 @@ namespace GitCommandsTests.Git
             var remoteGitModule = Substitute.For<IGitModule>();
             var remoteConfigFileSettings = Substitute.For<IConfigFileSettings>();
             remoteGitModule.LocalConfigFile.Returns(remoteConfigFileSettings);
-            var remoteBranchRef = new GitRef(remoteGitModule, ObjectId.Random(), $"refs/remotes/{remoteName}/{remoteBranchShortName}", remoteName);
+            GitRef remoteBranchRef = new(remoteGitModule, ObjectId.Random(), $"refs/remotes/{remoteName}/{remoteBranchShortName}", remoteName);
             return remoteBranchRef;
         }
 
@@ -99,7 +99,7 @@ namespace GitCommandsTests.Git
             localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns($"refs/heads/{remoteShortName}");
             localConfigFileSettings.GetValue($"branch.local_branch.remote").Returns(remoteName);
             localGitModule.LocalConfigFile.Returns(localConfigFileSettings);
-            var localBranchRef = new GitRef(localGitModule, ObjectId.Random(), "refs/heads/local_branch");
+            GitRef localBranchRef = new(localGitModule, ObjectId.Random(), "refs/heads/local_branch");
             return localBranchRef;
         }
     }

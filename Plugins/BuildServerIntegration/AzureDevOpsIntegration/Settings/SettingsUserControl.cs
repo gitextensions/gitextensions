@@ -144,7 +144,7 @@ namespace AzureDevOpsIntegration.Settings
                     {
                         try
                         {
-                            using var apiClient = new ApiClient(projectUrl, _currentSettings.ApiToken);
+                            using ApiClient apiClient = new(projectUrl, _currentSettings.ApiToken);
                             buildDefinitionName = await apiClient.GetBuildDefinitionNameFromIdAsync(buildId) ?? "";
                         }
                         catch (Exception)

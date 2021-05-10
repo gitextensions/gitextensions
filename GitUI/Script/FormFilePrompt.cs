@@ -33,7 +33,7 @@ namespace GitUI.Script
         private void btnBrowse_Click(object sender, EventArgs e)
         {
             const string separator = " ";
-            using var browseDialog = new OpenFileDialog
+            using OpenFileDialog browseDialog = new()
             {
                 Multiselect = true,
                 InitialDirectory = ".",

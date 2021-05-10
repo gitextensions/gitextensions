@@ -18,7 +18,7 @@ namespace GitUITests.Avatars
 
             var cacheClearedEventHandler = Substitute.For<EventHandler>();
 
-            var cacheCleaner = new MultiCacheCleaner(cacheCleaner1, cacheCleaner2, cacheCleaner3);
+            MultiCacheCleaner cacheCleaner = new(cacheCleaner1, cacheCleaner2, cacheCleaner3);
             cacheCleaner.CacheCleared += cacheClearedEventHandler;
 
             await cacheCleaner.ClearCacheAsync();

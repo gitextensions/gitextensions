@@ -31,7 +31,7 @@ namespace GitExtUtils.GitUI.Theming
         }
 
         private HslColor Transform(HslColor hsl) =>
-            new HslColor(hsl.H, TransformS(hsl), TransformL(hsl.L));
+            new(hsl.H, TransformS(hsl), TransformL(hsl.L));
 
         private void Transform(byte[] bgraValues, int location)
         {

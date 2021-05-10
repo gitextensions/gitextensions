@@ -7,7 +7,7 @@ namespace GitUI.Avatars
     public sealed class StaticImageAvatarProvider : IAvatarProvider
     {
         private readonly Image _image;
-        private readonly Dictionary<int, Image> _sizeCache = new Dictionary<int, Image>();
+        private readonly Dictionary<int, Image> _sizeCache = new();
 
         public StaticImageAvatarProvider(Image image)
         {
@@ -30,7 +30,7 @@ namespace GitUI.Avatars
                     return image;
                 }
 
-                var resizedImage = new Bitmap(_image, new Size(imageSize, imageSize));
+                Bitmap resizedImage = new(_image, new Size(imageSize, imageSize));
                 _sizeCache.Add(imageSize, resizedImage);
 
                 return resizedImage;

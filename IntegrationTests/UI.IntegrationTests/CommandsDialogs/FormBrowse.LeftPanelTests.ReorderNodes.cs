@@ -26,7 +26,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         private bool _originalShowAuthorAvatarColumn;
         private bool _showAvailableDiffTools;
 
-        private List<bool> _originalRepoObjectsTreeShow = new List<bool>();
+        private List<bool> _originalRepoObjectsTreeShow = new();
 
         private GitModuleTestHelper _repo1;
 

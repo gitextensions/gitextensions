@@ -14,7 +14,7 @@ namespace GitUI.Theming
 
         public string ReadThemeFile(string themeFileName)
         {
-            var fileInfo = new FileInfo(themeFileName);
+            FileInfo fileInfo = new(themeFileName);
             if (fileInfo.Exists && fileInfo.Length > MaxFileSize)
             {
                 throw new ThemeException($"Theme file size exceeds {MaxFileSize:#,##0} bytes", themeFileName);

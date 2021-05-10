@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
                                           Action<object, GitModuleEventArgs> setGitModule)
         {
             string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
-            var item = new ToolStripMenuItem(caption)
+            ToolStripMenuItem item = new(caption)
             {
                 DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
                 ShortcutKeyDisplayString = branchName
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs
 
         private void ChangeWorkingDir(string path, Action<object, GitModuleEventArgs> setGitModule)
         {
-            var module = new GitModule(path);
+            GitModule module = new(path);
             if (module.IsValidGitWorkingDir())
             {
                 setGitModule(this, new GitModuleEventArgs(module));

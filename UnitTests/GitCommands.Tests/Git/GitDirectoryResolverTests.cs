@@ -97,14 +97,14 @@ namespace GitCommandsTests.Git
         public void Resolve_non_bare_repository_real_filesystem()
         {
             _resolver = new GitDirectoryResolver();
-            using var helper = new GitModuleTestHelper();
+            using GitModuleTestHelper helper = new();
             _resolver.Resolve(helper.Module.WorkingDir).Should().Be(helper.Module.WorkingDirGitDir);
         }
 
         [Test]
         public void Resolve_submodule_real_filesystem()
         {
-            using var helper = new GitModuleTestHelper();
+            using GitModuleTestHelper helper = new();
             var submodulePath = Path.Combine(helper.Module.WorkingDir, "External", "Git.hub");
             helper.CreateFile(submodulePath, ".git", "\r \r\ngitdir: ../../.git/modules/Externals/Git.hub\r\ntext");
             _resolver = new GitDirectoryResolver();

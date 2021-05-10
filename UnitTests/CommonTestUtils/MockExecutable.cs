@@ -15,9 +15,9 @@ namespace CommonTestUtils
 {
     public sealed class MockExecutable : IExecutable
     {
-        private readonly ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode)>> _outputStackByArguments = new ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode)>>();
-        private readonly ConcurrentDictionary<string, int> _commandArgumentsSet = new ConcurrentDictionary<string, int>();
-        private readonly List<MockProcess> _processes = new List<MockProcess>();
+        private readonly ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode)>> _outputStackByArguments = new();
+        private readonly ConcurrentDictionary<string, int> _commandArgumentsSet = new();
+        private readonly List<MockProcess> _processes = new();
         private int _nextCommandId;
 
         [MustUseReturnValue]
@@ -85,7 +85,7 @@ namespace CommonTestUtils
                     _outputStackByArguments.TryRemove(arguments, out _);
                 }
 
-                var process = new MockProcess(item.output, item.exitCode);
+                MockProcess process = new(item.output, item.exitCode);
 
                 _processes.Add(process);
                 return process;
@@ -93,7 +93,7 @@ namespace CommonTestUtils
 
             if (_commandArgumentsSet.TryRemove(arguments, out _))
             {
-                var process = new MockProcess();
+                MockProcess process = new();
                 _processes.Add(process);
                 return process;
             }
@@ -137,7 +137,7 @@ namespace CommonTestUtils
                 }
                 else
                 {
-                    var cts = new CancellationTokenSource();
+                    CancellationTokenSource cts = new();
                     var ct = cts.Token;
                     cts.Cancel();
                     return Task.FromCanceled<int>(ct);

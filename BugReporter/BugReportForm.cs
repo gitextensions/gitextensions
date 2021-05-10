@@ -218,7 +218,7 @@ Send report anyway?");
         #endregion
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {

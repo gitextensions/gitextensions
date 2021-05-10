@@ -12,7 +12,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 {
     internal sealed class CommitIdColumnProvider : ColumnProvider
     {
-        private readonly Dictionary<Font, int[]> _widthByLengthByFont = new Dictionary<Font, int[]>(capacity: 4);
+        private readonly Dictionary<Font, int[]> _widthByLengthByFont = new(capacity: 4);
         private readonly RevisionGridControl _grid;
 
         public CommitIdColumnProvider(RevisionGridControl grid)

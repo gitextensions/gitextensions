@@ -226,7 +226,7 @@ namespace System
                 value = value.Substring(0, value.Length - 1);
             }
 
-            var sb = new StringBuilder(capacity: value.Length);
+            StringBuilder sb = new(capacity: value.Length);
 
             foreach (var line in value.LazySplit('\n'))
             {

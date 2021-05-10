@@ -5,7 +5,7 @@ namespace GitUI.Editor.Diff
 {
     public sealed class DiffLinesInfo
     {
-        private readonly Dictionary<int, DiffLineInfo> _diffLines = new Dictionary<int, DiffLineInfo>();
+        private readonly Dictionary<int, DiffLineInfo> _diffLines = new();
 
         public IReadOnlyDictionary<int, DiffLineInfo> DiffLines => _diffLines;
 

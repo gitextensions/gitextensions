@@ -18,7 +18,7 @@ namespace BugReporter
                 throw new ArgumentNullException(nameof(exception));
             }
 
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.AppendLine(@"<!--
     :warning: Review existing issues to see whether someone else has already reported your issue.

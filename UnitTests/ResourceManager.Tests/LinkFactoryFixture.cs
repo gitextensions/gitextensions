@@ -13,7 +13,7 @@ namespace ResourceManagerTests
         [TestCase("no link")]
         public void ParseInvalidLink(string link)
         {
-            var linkFactory = new LinkFactory();
+            LinkFactory linkFactory = new();
             Assert.False(linkFactory.ParseLink(link, out var actualUri));
             Assert.That(actualUri, Is.Null);
         }
@@ -21,7 +21,7 @@ namespace ResourceManagerTests
         [Test]
         public void ParseGoToBranchLink()
         {
-            var linkFactory = new LinkFactory();
+            LinkFactory linkFactory = new();
             linkFactory.CreateBranchLink("master");
             string expected = "gitext://gotobranch/master";
             Assert.True(linkFactory.ParseLink("master#gitext://gotobranch/master", out var actualUri));
@@ -31,7 +31,7 @@ namespace ResourceManagerTests
         [Test]
         public void ParseGoToBranchLinkWithHash()
         {
-            var linkFactory = new LinkFactory();
+            LinkFactory linkFactory = new();
             linkFactory.CreateBranchLink("PR#23");
             string expected = "gitext://gotobranch/PR#23";
             Assert.True(linkFactory.ParseLink("PR#23#gitext://gotobranch/PR#23", out var actualUri));
@@ -40,7 +40,7 @@ namespace ResourceManagerTests
 
         private static void TestCreateLink(string caption, string uri)
         {
-            var linkFactory = new LinkFactory();
+            LinkFactory linkFactory = new();
             linkFactory.CreateLink(caption, uri);
             string expected = uri;
             Assert.True(linkFactory.ParseLink(caption + "#" + uri, out var actualUri));
@@ -62,7 +62,7 @@ namespace ResourceManagerTests
         [Test]
         public void ParseRawHttpLinkWithHash()
         {
-            var linkFactory = new LinkFactory();
+            LinkFactory linkFactory = new();
 
             string expected = "https://github.com/gitextensions/gitextensions/pull/3471#end";
             Assert.True(linkFactory.ParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end", out var actualUri));
@@ -78,7 +78,7 @@ namespace ResourceManagerTests
         [Test]
         public void ParseInternalScheme_Null()
         {
-            var linkFactory = new LinkFactory();
+            LinkFactory linkFactory = new();
             Assert.False(linkFactory.ParseInternalScheme(null, out var actualCommandEventArgs));
             Assert.That(actualCommandEventArgs, Is.Null);
         }
@@ -89,8 +89,8 @@ namespace ResourceManagerTests
         [TestCase("http://x")]
         public void ParseInternalScheme_None(string link)
         {
-            var linkFactory = new LinkFactory();
-            var uri = new Uri(link);
+            LinkFactory linkFactory = new();
+            Uri uri = new(link);
             Assert.False(linkFactory.ParseInternalScheme(uri, out var actualCommandEventArgs));
             Assert.That(actualCommandEventArgs, Is.Null);
         }
@@ -105,8 +105,8 @@ namespace ResourceManagerTests
         [TestCase("gitext:not/an/internal/link", "", "not/an/internal/link")]
         public void ParseInternalScheme(string link, string expectedCommand, string expectedData)
         {
-            var linkFactory = new LinkFactory();
-            var uri = new Uri(link);
+            LinkFactory linkFactory = new();
+            Uri uri = new(link);
             Assert.True(linkFactory.ParseInternalScheme(uri, out var actualCommandEventArgs));
             Assert.That(actualCommandEventArgs.Command, Is.EqualTo(expectedCommand));
             Assert.That(actualCommandEventArgs.Data, Is.EqualTo(expectedData));
@@ -126,7 +126,7 @@ namespace ResourceManagerTests
             bool omitHandler,
             bool omitShowAll)
         {
-            var linkFactory = new LinkFactory();
+            LinkFactory linkFactory = new();
             CommandEventArgs actualCommandEventArgs = null;
             string actualShowAll = null;
             string actualException = "";

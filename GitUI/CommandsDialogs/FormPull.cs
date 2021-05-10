@@ -27,43 +27,43 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
         private readonly TranslationString _areYouSureYouWantToRebaseMerge =
-            new TranslationString("The current commit is a merge." + Environment.NewLine +
+            new("The current commit is a merge." + Environment.NewLine +
                                   "Are you sure you want to rebase this merge?");
 
         private readonly TranslationString _areYouSureYouWantToRebaseMergeCaption =
-            new TranslationString("Rebase merge commit?");
+            new("Rebase merge commit?");
 
         private readonly TranslationString _allMergeConflictSolvedQuestion =
-            new TranslationString("Are all merge conflicts solved? Do you want to commit?");
+            new("Are all merge conflicts solved? Do you want to commit?");
 
         private readonly TranslationString _allMergeConflictSolvedQuestionCaption =
-            new TranslationString("Conflicts solved");
+            new("Conflicts solved");
 
         private readonly TranslationString _applyStashedItemsAgain =
-            new TranslationString("Apply stashed items to working directory again?");
+            new("Apply stashed items to working directory again?");
 
         private readonly TranslationString _applyStashedItemsAgainCaption =
-            new TranslationString("Auto stash");
+            new("Auto stash");
 
         private readonly TranslationString _fetchAllBranchesCanOnlyWithFetch =
-            new TranslationString("You can only fetch all remote branches (*) without merge or rebase." +
+            new("You can only fetch all remote branches (*) without merge or rebase." +
                                   Environment.NewLine + "If you want to fetch all remote branches, choose fetch." +
                                   Environment.NewLine +
                                   "If you want to fetch and merge a branch, choose a specific branch.");
 
         private readonly TranslationString _selectRemoteRepository =
-            new TranslationString("Please select a remote repository");
+            new("Please select a remote repository");
 
         private readonly TranslationString _selectSourceDirectory =
-            new TranslationString("Please select a source directory");
+            new("Please select a source directory");
 
         private readonly TranslationString _questionInitSubmodules =
-            new TranslationString("The pulled has submodules configured." + Environment.NewLine +
+            new("The pulled has submodules configured." + Environment.NewLine +
                                    "Do you want to initialize the submodules?" + Environment.NewLine +
                                    "This will initialize and update all submodules recursive.");
 
         private readonly TranslationString _questionInitSubmodulesCaption =
-            new TranslationString("Submodules");
+            new("Submodules");
 
         private readonly TranslationString _notOnBranch = new("You cannot \"pull\" when git head detached." +
                                   Environment.NewLine + Environment.NewLine + "Do you want to continue?");
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pruneBranchesCaption = new("Pull was rejected");
         private readonly TranslationString _pruneBranchesMainInstruction = new("Remote branch no longer exist");
         private readonly TranslationString _pruneBranchesBranch =
-            new TranslationString("Do you want to delete all stale remote-tracking branches?");
+            new("Do you want to delete all stale remote-tracking branches?");
 
         private readonly TranslationString _pruneFromCaption = new("Prune remote branches from {0}");
 
@@ -374,7 +374,7 @@ namespace GitUI.CommandsDialogs
             {
                 int dialogResult = -1;
 
-                using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
+                using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
                 {
                     OwnerWindowHandle = owner?.Handle ?? default,
                     Text = _notOnBranch.Text,
@@ -384,13 +384,13 @@ namespace GitUI.CommandsDialogs
                     Icon = TaskDialogStandardIcon.Error,
                     Cancelable = true,
                 };
-                var btnCheckout = new TaskDialogCommandLink("Checkout", null, TranslatedStrings.ButtonCheckoutBranch);
+                TaskDialogCommandLink btnCheckout = new("Checkout", null, TranslatedStrings.ButtonCheckoutBranch);
                 btnCheckout.Click += (s, e) =>
                 {
                     dialogResult = 0;
                     dialog.Close();
                 };
-                var btnContinue = new TaskDialogCommandLink("Continue", null, TranslatedStrings.ButtonContinue);
+                TaskDialogCommandLink btnContinue = new("Continue", null, TranslatedStrings.ButtonContinue);
                 btnContinue.Click += (s, e) =>
                 {
                     dialogResult = 1;
@@ -573,7 +573,7 @@ namespace GitUI.CommandsDialogs
                 bool? messageBoxResult = AppSettings.AutoPopStashAfterPull;
                 if (messageBoxResult is null)
                 {
-                    using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
+                    using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
                     {
                         OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero,
                         Text = _applyStashedItemsAgain.Text,
@@ -701,11 +701,11 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // auto pull only if current branch was rejected
-                var isRefRemoved = new Regex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.");
+                Regex isRefRemoved = new(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.");
 
                 if (isRefRemoved.IsMatch(form.GetOutputString()))
                 {
-                    using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
+                    using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
                     {
                         OwnerWindowHandle = form.Handle,
                         Text = _pruneBranchesBranch.Text,
@@ -722,7 +722,7 @@ namespace GitUI.CommandsDialogs
                     {
                         string remote = _NO_TRANSLATE_Remotes.Text;
                         string pruneCmd = "remote prune " + remote;
-                        using var formPrune = new FormRemoteProcess(UICommands, process: null, pruneCmd)
+                        using FormRemoteProcess formPrune = new(UICommands, process: null, pruneCmd)
                         {
                             Remote = remote,
                             Text = string.Format(_pruneFromCaption.Text, remote)
@@ -752,7 +752,7 @@ namespace GitUI.CommandsDialogs
                 return true;
             }
 
-            var currentBranchRemote = new Lazy<string>(() => Module.GetSetting(string.Format(SettingKeyString.BranchRemote, localBranch.Text)));
+            Lazy<string> currentBranchRemote = new(() => Module.GetSetting(string.Format(SettingKeyString.BranchRemote, localBranch.Text)));
 
             if (_branch == localBranch.Text)
             {
@@ -775,7 +775,7 @@ namespace GitUI.CommandsDialogs
             {
                 int dialogResult = -1;
 
-                using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
+                using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
                 {
                     OwnerWindowHandle = Handle,
                     Text = string.Format(_noRemoteBranchMainInstruction.Text, remote),
@@ -789,7 +789,7 @@ namespace GitUI.CommandsDialogs
                     Cancelable = false
                 };
 
-                var btnPullFrom = new TaskDialogCommandLink("PullFrom", null, string.Format(_noRemoteBranchButton.Text, remote + "/" + curLocalBranch));
+                TaskDialogCommandLink btnPullFrom = new("PullFrom", null, string.Format(_noRemoteBranchButton.Text, remote + "/" + curLocalBranch));
                 btnPullFrom.Click += (s, e) =>
                 {
                     dialogResult = 0;
@@ -822,7 +822,7 @@ namespace GitUI.CommandsDialogs
 
                 int dialogResult = -1;
 
-                using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
+                using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
                 {
                     OwnerWindowHandle = Handle,
                     Text = string.Format(_noRemoteBranchForFetchMainInstruction.Text, remote),
@@ -834,7 +834,7 @@ namespace GitUI.CommandsDialogs
                     Cancelable = false
                 };
 
-                var btnPullFrom = new TaskDialogCommandLink("PullFrom", null, string.Format(_noRemoteBranchForFetchButton.Text, remote + "/" + curLocalBranch));
+                TaskDialogCommandLink btnPullFrom = new("PullFrom", null, string.Format(_noRemoteBranchForFetchButton.Text, remote + "/" + curLocalBranch));
                 btnPullFrom.Click += (s, e) =>
                 {
                     dialogResult = 0;
@@ -885,7 +885,7 @@ namespace GitUI.CommandsDialogs
             string remoteBranchName = Module.GetSetting(string.Format("branch.{0}.merge", _branch));
             if (!string.IsNullOrEmpty(remoteBranchName))
             {
-                var args = new GitArgumentBuilder("name-rev")
+                GitArgumentBuilder args = new("name-rev")
                 {
                     "--name-only",
                     remoteBranchName.QuoteNE()
@@ -905,7 +905,7 @@ namespace GitUI.CommandsDialogs
 
             if (File.Exists(AppSettings.Pageant))
             {
-                var files = new HashSet<string>(new PathEqualityComparer());
+                HashSet<string> files = new(new PathEqualityComparer());
                 foreach (var remote in GetSelectedRemotes())
                 {
                     var sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);
@@ -1166,7 +1166,7 @@ namespace GitUI.CommandsDialogs
             AllTags.Checked = AllTags.Checked || PruneTags.Checked;
         }
 
-        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+        internal TestAccessor GetTestAccessor() => new(this);
 
         internal readonly struct TestAccessor
         {

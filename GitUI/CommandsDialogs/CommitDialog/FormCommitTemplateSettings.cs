@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
     public partial class FormCommitTemplateSettings : GitExtensionsForm
     {
         private readonly TranslationString _emptyTemplate =
-            new TranslationString("empty");
+            new("empty");
 
         private CommitTemplateItem[]? _commitTemplates;
 

@@ -22,7 +22,7 @@ namespace GitExtUtils.GitUI.Theming
             value.CompareTo(max) > 0 ? max : value;
 
         public static Size MultiplyBy(this Size original, Size multiplier) =>
-            new Size(
+            new(
                 original.Width * multiplier.Width,
                 original.Height * multiplier.Height);
 

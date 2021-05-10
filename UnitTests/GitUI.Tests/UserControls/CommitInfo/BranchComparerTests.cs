@@ -11,7 +11,7 @@ namespace GitUITests.UserControls.CommitInfo
         [Test]
         public void BranchComparer([Values(null, "current")] string currentBranch)
         {
-            var expectedBranches = new List<string>
+            List<string> expectedBranches = new()
             {
                 currentBranch,
 
@@ -58,7 +58,7 @@ namespace GitUITests.UserControls.CommitInfo
                 expectedBranches.RemoveAt(0);
             }
 
-            var branches = new List<string>(expectedBranches);
+            List<string> branches = new(expectedBranches);
 
             SortAndCheckListsForEquality();
 

@@ -18,7 +18,7 @@ namespace GitUITests.UserControls
         [Test]
         public void AuthorEmailToHighlight_should_be_null_when_no_revision_change_processed_yet()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
 
             sut.AuthorEmailToHighlight.Should().BeNull();
         }
@@ -26,7 +26,7 @@ namespace GitUITests.UserControls
         [Test]
         public void When_multiple_revisions_selected_Then_ProcessSelectionChange_should_return_NoAction()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
 
             var action = sut.ProcessRevisionSelectionChange(currentModule,
@@ -42,7 +42,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Given_previously_selected_revision_When_multiple_revisions_selected_Then_AuthorEmailToHighlight_should_not_change()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
             Assert.True(sut.ProcessRevisionSelectionChange(currentModule,
                                                new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) }));
@@ -60,7 +60,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Given_no_previously_selected_revision_When_single_revision_selected_Then_ProcessSelectionChange_should_return_RefreshUserInterface()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
 
             var action = sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
@@ -71,7 +71,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Given_no_previously_selected_revision_When_single_revision_selected_Then_AuthorEmailToHighlight_should_change()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
 
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
@@ -82,7 +82,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Given_previously_selected_revision_When_single_revision_with_same_author_email_selected_Then_ProcessSelectionChange_should_return_NoAction()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
@@ -94,7 +94,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Given_previously_selected_revision_When_single_revision_with_same_author_email_selected_Then_AuthorEmailToHighlight_should_not_change()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
@@ -106,7 +106,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Given_previously_selected_revision_When_single_revision_with_different_author_email_selected_Then_ProcessSelectionChange_should_return_RefreshUserInterface()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
@@ -118,7 +118,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Given_previously_selected_revision_When_single_revision_with_different_author_email_selected_Then_AuthorEmailToHighlight_should_change()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
@@ -130,7 +130,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Given_previously_selected_revision_When_no_revision_selected_Then_ProcessSelectionChange_should_return_RefreshUserInterface()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
             currentModule.SetSetting(SettingKeyString.UserEmail, ExpectedAuthorEmail2);
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
@@ -143,7 +143,7 @@ namespace GitUITests.UserControls
         [Test]
         public void Given_previously_selected_revision_When_no_revision_selected_Then_AuthorEmailToHighlight_should_be_value_of_current_user_email_setting()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             var currentModule = NewModule();
             currentModule.SetSetting(SettingKeyString.UserEmail, ExpectedAuthorEmail2);
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
@@ -156,7 +156,7 @@ namespace GitUITests.UserControls
         [Test]
         public void IsHighlighted_should_return_false_if_revision_is_null()
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
 
             sut.IsHighlighted(null).Should().BeFalse();
         }
@@ -166,7 +166,7 @@ namespace GitUITests.UserControls
         [TestCase("\t")]
         public void IsHighlighted_should_return_false_if_revision_AuthorEmail_is_null_or_whitespace(string authorEmail)
         {
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
 
             sut.IsHighlighted(new GitRevision(ObjectId.Random()) { AuthorEmail = authorEmail }).Should().BeFalse();
         }
@@ -180,7 +180,7 @@ namespace GitUITests.UserControls
         public void IsHighlighted_should_return_true_if_revision_AuthorEmail_matches_AuthorEmailToHighlight(string authorEmail, string highlightEmail, bool expected)
         {
             var currentModule = NewModule();
-            var sut = new AuthorRevisionHighlighting();
+            AuthorRevisionHighlighting sut = new();
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(highlightEmail) });
             sut.AuthorEmailToHighlight.Should().Be(highlightEmail);
 

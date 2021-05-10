@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 ? $"{toolName}|{diffMergeToolConfig.ExeFileName}"
                 : "*.exe;*.cmd;*.bat|*.exe;*.cmd;*.bat";
 
-            using var dialog = new OpenFileDialog
+            using OpenFileDialog dialog = new()
             {
                 Filter = filter,
                 InitialDirectory = initialDirectory,
@@ -319,7 +319,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ConfigureEncoding_Click(object sender, EventArgs e)
         {
-            using var encodingDlg = new FormAvailableEncodings();
+            using FormAvailableEncodings encodingDlg = new();
             if (encodingDlg.ShowDialog() == DialogResult.OK)
             {
                 Global_FilesEncoding.Items.Clear();

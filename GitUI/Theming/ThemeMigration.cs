@@ -49,7 +49,7 @@ namespace GitUI.Theming
                 return;
             }
 
-            var migratedTheme = new Theme(
+            Theme migratedTheme = new(
                 Theme.AppColorNames.ToDictionary(name => name, AppSettings.GetColor),
                 new Dictionary<KnownColor, Color>(),
                 _migratedThemeId);

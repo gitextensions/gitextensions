@@ -203,7 +203,7 @@ namespace GitUI.Theming
 
             using (ctx.HighQuality())
             {
-                using var pen = new Pen(arrowColor, DpiUtil.Scale(2));
+                using Pen pen = new(arrowColor, DpiUtil.Scale(2));
                 ctx.Graphics.DrawLines(pen, arrowPoints);
             }
         }

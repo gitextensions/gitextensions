@@ -693,7 +693,7 @@ namespace GitCommands
         }
 
         private static readonly Dictionary<string, string> _languageCodes =
-            new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+            new(StringComparer.InvariantCultureIgnoreCase)
             {
                 { "Czech", "cs" },
                 { "Dutch", "nl" },
@@ -869,7 +869,7 @@ namespace GitCommands
             set => SetBool("revisiongraphdrawnonrelativestextgray", value);
         }
 
-        public static readonly Dictionary<string, Encoding> AvailableEncodings = new Dictionary<string, Encoding>();
+        public static readonly Dictionary<string, Encoding> AvailableEncodings = new();
 
         public enum PullAction
         {
@@ -2045,7 +2045,7 @@ namespace GitCommands
             }
             else
             {
-                var utf8 = new UTF8Encoding(false);
+                UTF8Encoding utf8 = new(false);
                 foreach (var encodingName in availableEncodings.LazySplit(';'))
                 {
 #pragma warning disable SYSLIB0001 // Type or member is obsolete
@@ -2084,7 +2084,7 @@ namespace GitCommands
             SetString("AvailableEncodings", availableEncodings);
         }
 
-        internal static TestAccessor GetTestAccessor() => new TestAccessor();
+        internal static TestAccessor GetTestAccessor() => new();
 
         internal struct TestAccessor
         {

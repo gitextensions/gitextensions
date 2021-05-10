@@ -19,7 +19,7 @@ namespace GitExtensions.Plugins.CreateLocalBranches
 
         public override bool Execute(GitUIEventArgs args)
         {
-            using var frm = new CreateLocalBranchesForm(args);
+            using CreateLocalBranchesForm frm = new(args);
             frm.ShowDialog(args.OwnerForm);
 
             return true;

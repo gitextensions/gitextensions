@@ -11,7 +11,7 @@ namespace GitUITests
         [Test]
         public void FindDescendants()
         {
-            var root = new Control { Controls = { new Control(), new Control(), new Control() } };
+            Control root = new() { Controls = { new Control(), new Control(), new Control() } };
 
             Assert.AreEqual(3, root.FindDescendants().Count());
             Assert.AreEqual(3, root.FindDescendants().Distinct().Count());
@@ -20,7 +20,7 @@ namespace GitUITests
         [Test]
         public void FindDescendantsOfType()
         {
-            var root = new Control { Controls = { new Control(), new TextBox(), new Control() } };
+            Control root = new() { Controls = { new Control(), new TextBox(), new Control() } };
 
             Assert.AreEqual(1, root.FindDescendantsOfType<TextBox>().Count());
             Assert.AreEqual(1, root.FindDescendantsOfType<TextBox>().Distinct().Count());
@@ -29,7 +29,7 @@ namespace GitUITests
         [Test]
         public void FindDescendantsOfTypeWithPredicate()
         {
-            var root = new Control { Controls = { new Control(), new TextBox { Tag = "A" }, new TextBox { Tag = "B" } } };
+            Control root = new() { Controls = { new Control(), new TextBox { Tag = "A" }, new TextBox { Tag = "B" } } };
 
             Assert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "A"));
             Assert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "B"));

@@ -42,7 +42,7 @@ namespace GitCommands.Git
                 // git config --get with a malformed key (no section) returns:
                 // "error: key does not contain a section: <key>"
                 const string controlStr = "ą"; // "a caudata"
-                var arguments = new GitArgumentBuilder("config")
+                GitArgumentBuilder arguments = new("config")
                 {
                     "--get",
                     controlStr

@@ -32,7 +32,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         public override bool Execute(GitUIEventArgs args)
         {
-            using var form = new ProxySwitcherForm(this, Settings, args);
+            using ProxySwitcherForm form = new(this, Settings, args);
             form.ShowDialog(args.OwnerForm);
 
             return false;

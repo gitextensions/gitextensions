@@ -32,8 +32,8 @@ namespace GitCommandsTests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var loadSignal = new SemaphoreSlim(0);
-                var completeSignal = new SemaphoreSlim(0);
+                SemaphoreSlim loadSignal = new(0);
+                SemaphoreSlim completeSignal = new(0);
 
                 var started = 0;
                 var completed = 0;
@@ -73,7 +73,7 @@ namespace GitCommandsTests
 
                 Assert.False(callerThread.IsThreadPoolThread);
 
-                using var loader = new AsyncLoader();
+                using AsyncLoader loader = new();
                 await loader.LoadAsync(
                     () => loadThread = Thread.CurrentThread,
                     () => continuationThread = Thread.CurrentThread);
@@ -89,8 +89,8 @@ namespace GitCommandsTests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var loadSignal = new SemaphoreSlim(0);
-                var completeSignal = new SemaphoreSlim(0);
+                SemaphoreSlim loadSignal = new(0);
+                SemaphoreSlim completeSignal = new(0);
 
                 var started = 0;
                 var completed = 0;
@@ -155,8 +155,8 @@ namespace GitCommandsTests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var loadSignal = new SemaphoreSlim(0);
-                var completeSignal = new SemaphoreSlim(0);
+                SemaphoreSlim loadSignal = new(0);
+                SemaphoreSlim completeSignal = new(0);
 
                 var started = 0;
                 var completed = 0;
@@ -208,7 +208,7 @@ namespace GitCommandsTests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var observed = new List<Exception>();
+                List<Exception> observed = new();
 
                 _loader.LoadingError += (_, e) =>
                 {
@@ -216,7 +216,7 @@ namespace GitCommandsTests
                     e.Handled = true;
                 };
 
-                var ex = new Exception();
+                Exception ex = new();
 
                 await _loader.LoadAsync(
                     () => throw ex,
@@ -232,7 +232,7 @@ namespace GitCommandsTests
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var ex = new Exception();
+                Exception ex = new();
 
                 await _loader.LoadAsync(
                     () => throw ex,
@@ -243,7 +243,7 @@ namespace GitCommandsTests
         [Test]
         public void Error_raised_via_event_and_not_marked_as_handled_faults_task()
         {
-            var observed = new List<Exception>();
+            List<Exception> observed = new();
 
             _loader.LoadingError += (_, e) =>
             {
@@ -251,7 +251,7 @@ namespace GitCommandsTests
                 e.Handled = false;
             };
 
-            var ex = new Exception();
+            Exception ex = new();
 
             var loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _loader.LoadAsync(
                 () => throw ex,
@@ -267,7 +267,7 @@ namespace GitCommandsTests
         [Test]
         public async Task Using_load_or_cancel_after_dispose_throws()
         {
-            var loader = new AsyncLoader();
+            AsyncLoader loader = new();
 
             // Safe to dispose multiple times
             loader.Dispose();

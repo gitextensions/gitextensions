@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     return string.Empty;
                 }
 
-                var dir = new DirectoryInfo(x.Path);
+                DirectoryInfo dir = new(x.Path);
                 if (dir.Parent is null)
                 {
                     return x.Path;

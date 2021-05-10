@@ -33,7 +33,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
             tb.Height = 500;
         });
         private readonly StringSetting _gitCommand = new("Arguments of git command to run", "fetch --all");
-        private readonly NumberSetting<int> _fetchInterval = new NumberSetting<int>("Fetch every (seconds) - set to 0 to disable", 0);
+        private readonly NumberSetting<int> _fetchInterval = new("Fetch every (seconds) - set to 0 to disable", 0);
         private readonly BoolSetting _autoRefresh = new("Refresh view after fetch", false);
         private readonly BoolSetting _fetchAllSubmodules = new("Fetch all submodules", false);
 

@@ -215,7 +215,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            var str = new StringBuilder();
+            StringBuilder str = new();
 
             if (!string.IsNullOrWhiteSpace(ErrorMessage))
             {

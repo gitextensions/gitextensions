@@ -8,7 +8,7 @@ namespace GitExtUtils.GitUI.Theming
         public static readonly Color FallbackColor = Color.Magenta;
 
         private static readonly Dictionary<AppColor, Color> Values =
-            new Dictionary<AppColor, Color>
+            new()
             {
                 { AppColor.OtherTag, Color.Gray },
                 { AppColor.AuthoredHighlight, Color.LightYellow },

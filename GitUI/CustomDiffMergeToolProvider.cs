@@ -61,7 +61,7 @@ namespace GitUI
                     menu.MenuItem.DropDown = new ContextMenuStrip(components);
                     foreach (var tool in tools)
                     {
-                        var item = new ToolStripMenuItem(tool) { Tag = tool };
+                        ToolStripMenuItem item = new(tool) { Tag = tool };
 
                         item.Click += menu.Click;
                         menu.MenuItem.DropDown.Items.Add(item);
@@ -83,7 +83,7 @@ namespace GitUI
                     {
                         // Allow disabling for difftools
                         menu.MenuItem.DropDown.Items.Add(new ToolStripSeparator());
-                        var disableItem = new ToolStripMenuItem
+                        ToolStripMenuItem disableItem = new()
                         {
                             Text = ResourceManager.TranslatedStrings.DisableMenuItem
                         };

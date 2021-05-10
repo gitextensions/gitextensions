@@ -49,7 +49,7 @@ namespace ResourceManagerTests.CommitDataRenders
                 return true;
             });
 
-            var data = new CommitData(ObjectId.Random(), ObjectId.Random(),
+            CommitData data = new(ObjectId.Random(), ObjectId.Random(),
                 Array.Empty<ObjectId>(),
                 "John Doe (Acme Inc) <John.Doe@test.com>", DateTime.UtcNow,
                 "John Doe <John.Doe@test.com>", DateTime.UtcNow,
@@ -63,7 +63,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_render_body_without_links()
         {
-            var data = new CommitData(ObjectId.Random(), ObjectId.Random(),
+            CommitData data = new(ObjectId.Random(), ObjectId.Random(),
                 Array.Empty<ObjectId>(),
                 "John Doe (Acme Inc) <John.Doe@test.com>", DateTime.UtcNow,
                 "John Doe <John.Doe@test.com>", DateTime.UtcNow,

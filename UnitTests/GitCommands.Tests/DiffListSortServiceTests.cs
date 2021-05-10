@@ -30,7 +30,7 @@ namespace GitCommandsTests
         public void Constructor_loads_persisted_setting(DiffListSortType persistedSetting)
         {
             AppSettings.DiffListSorting = persistedSetting;
-            var service = new DiffListSortService();
+            DiffListSortService service = new();
 
             Assert.AreEqual(persistedSetting, service.DiffListSorting);
         }
@@ -41,7 +41,7 @@ namespace GitCommandsTests
         [TestCase(DiffListSortType.FileStatus)]
         public void Changing_the_sort_modifies_persistence(DiffListSortType sortType)
         {
-            var service = new DiffListSortService();
+            DiffListSortService service = new();
 
             service.DiffListSorting = sortType;
 
@@ -51,7 +51,7 @@ namespace GitCommandsTests
         [Test]
         public void Change_notifications_occur_when_sort_is_changed()
         {
-            var service = new DiffListSortService();
+            DiffListSortService service = new();
             service.DiffListSorting = DiffListSortType.FilePath;
 
             var raisedCount = 0;

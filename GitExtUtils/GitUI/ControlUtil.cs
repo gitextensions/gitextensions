@@ -17,7 +17,7 @@ namespace GitUI
         public static IEnumerable<Control> FindDescendants(this Control control,
             Func<Control, bool>? skip = null)
         {
-            var queue = new Queue<Control>();
+            Queue<Control> queue = new();
 
             foreach (Control child in control.Controls)
             {

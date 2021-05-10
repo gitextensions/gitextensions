@@ -251,13 +251,13 @@ namespace GitExtensions.Plugins.GitImpact
                     return;
                 }
 
-                using var font = new Font("Arial", LinesFontSize);
+                using Font font = new("Arial", LinesFontSize);
                 Brush brush = Brushes.White;
 
                 foreach (var (point, size) in _lineLabels[author])
                 {
                     SizeF sz = g.MeasureString(size.ToString(), font);
-                    var pt = new PointF(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
+                    PointF pt = new(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
                     g.DrawString(size.ToString(), font, brush, pt);
                 }
             }
@@ -267,13 +267,13 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                using var font = new Font("Arial", WeekFontSize);
+                using Font font = new("Arial", WeekFontSize);
                 Brush brush = Brushes.Gray;
 
                 foreach (var (point, date) in _weekLabels)
                 {
                     SizeF sz = g.MeasureString(date.ToString("dd. MMM yy"), font);
-                    var pt = new PointF(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
+                    PointF pt = new(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
                     g.DrawString(date.ToString("dd. MMM yy"), font, brush, pt);
                 }
             }
@@ -290,7 +290,7 @@ namespace GitExtensions.Plugins.GitImpact
         {
             int h_max = 0;
             int x = 0;
-            var author_points_dict = new Dictionary<string, List<(Rectangle, int changeCount)>>();
+            Dictionary<string, List<(Rectangle, int changeCount)>> author_points_dict = new();
 
             lock (_dataLock)
             {
@@ -307,7 +307,7 @@ namespace GitExtensions.Plugins.GitImpact
                     {
                         // Calculate week-author-rectangle
                         int height = Math.Max(1, (int)Math.Round(Math.Pow(Math.Log(data.ChangedLines), 1.5) * 4));
-                        var rc = new Rectangle(x, y, BlockWidth, height);
+                        Rectangle rc = new(x, y, BlockWidth, height);
 
                         // Add rectangle to temporary list
                         if (!author_points_dict.ContainsKey(author))
@@ -346,7 +346,7 @@ namespace GitExtensions.Plugins.GitImpact
                 {
                     var (point, date) = _weekLabels[i];
 
-                    var adjustedPoint = new PointF(point.X, point.Y * (float)height_factor);
+                    PointF adjustedPoint = new(point.X, point.Y * (float)height_factor);
 
                     _weekLabels[i] = (adjustedPoint, date);
                 }
@@ -365,7 +365,7 @@ namespace GitExtensions.Plugins.GitImpact
                     {
                         var (unscaledRect, num) = points[i];
 
-                        var rect = new Rectangle(unscaledRect.Left, (int)(unscaledRect.Top * height_factor),
+                        Rectangle rect = new(unscaledRect.Left, (int)(unscaledRect.Top * height_factor),
                             unscaledRect.Width, Math.Max(1, (int)(unscaledRect.Height * height_factor)));
 
                         points[i] = (rect, num);
@@ -378,7 +378,7 @@ namespace GitExtensions.Plugins.GitImpact
 
                         if (rect.Height > LinesFontSize * 1.5)
                         {
-                            var adjustedPoint = new PointF(rect.Left + (BlockWidth / 2), rect.Top + (rect.Height / 2));
+                            PointF adjustedPoint = new(rect.Left + (BlockWidth / 2), rect.Top + (rect.Height / 2));
 
                             _lineLabels[author].Add((adjustedPoint, num));
                         }

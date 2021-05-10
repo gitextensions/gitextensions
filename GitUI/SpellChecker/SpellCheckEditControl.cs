@@ -156,12 +156,12 @@ namespace GitUI.SpellChecker
 
         private void DrawWave(Point start, Point end)
         {
-            using var pen = new Pen(Color.Red, DpiUtil.ScaleX);
+            using Pen pen = new(Color.Red, DpiUtil.ScaleX);
             var waveWidth = DpiUtil.Scale(4);
             var waveHalfWidth = waveWidth >> 1;
             if ((end.X - start.X) > waveWidth)
             {
-                var pl = new List<Point>();
+                List<Point> pl = new();
                 for (var i = start.X; i <= (end.X - waveHalfWidth); i += waveWidth)
                 {
                     pl.Add(new Point(i, start.Y));
@@ -181,7 +181,7 @@ namespace GitUI.SpellChecker
         {
             var col = Color.FromArgb(120, 255, 255, 0);
             var lineHeight = LineHeight();
-            using var pen = new Pen(col, lineHeight);
+            using Pen pen = new(col, lineHeight);
             start.Offset(0, -lineHeight / 2);
             end.Offset(0, -lineHeight / 2);
             _bufferGraphics!.DrawLine(pen, start, end);

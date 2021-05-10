@@ -76,7 +76,7 @@ namespace GitCommandsTests
         public void LoadChildren_should_return_shallow_tree_for_GitItem_with_updated_FileName()
         {
             var commitId = ObjectId.Random();
-            var item = new GitItem(0, GitObjectType.Tree, commitId, "folder");
+            GitItem item = new(0, GitObjectType.Tree, commitId, "folder");
 
             var items = new[] { Substitute.For<INamedGitItem>(), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file3") };
             _module.GetTree(commitId, false).Returns(items);

@@ -75,7 +75,7 @@ namespace GitUI.UserControls
 
         private void buttonPickCommit_Click(object sender, EventArgs e)
         {
-            using var chooseForm = new FormChooseCommit(UICommands, SelectedObjectId?.ToString());
+            using FormChooseCommit chooseForm = new(UICommands, SelectedObjectId?.ToString());
             if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
             {
                 SetSelectedCommitHash(chooseForm.SelectedRevision.Guid);

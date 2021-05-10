@@ -329,14 +329,14 @@ namespace GitUI.Editor
 
         public ToolStripSeparator AddContextMenuSeparator()
         {
-            var separator = new ToolStripSeparator();
+            ToolStripSeparator separator = new();
             contextMenu.Items.Add(separator);
             return separator;
         }
 
         public ToolStripMenuItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
         {
-            var toolStripItem = new ToolStripMenuItem(text);
+            ToolStripMenuItem toolStripItem = new(text);
             contextMenu.Items.Add(toolStripItem);
             toolStripItem.Click += toolStripItem_Click;
             return toolStripItem;
@@ -635,7 +635,7 @@ namespace GitUI.Editor
                 }
 
                 using var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                using var reader = new StreamReader(stream, Module.FilesEncoding);
+                using StreamReader reader = new(stream, Module.FilesEncoding);
 #pragma warning disable VSTHRD103 // Call async methods when in an async method
                 var content = reader.ReadToEnd();
 #pragma warning restore VSTHRD103 // Call async methods when in an async method
@@ -855,7 +855,7 @@ namespace GitUI.Editor
 
                     if (File.Exists(resolvedPath))
                     {
-                        var file = new FileInfo(resolvedPath);
+                        FileInfo file = new(resolvedPath);
                         return file.Length;
                     }
                 }
@@ -895,7 +895,7 @@ namespace GitUI.Editor
         {
             if (IsIcon())
             {
-                using var icon = new Icon(stream);
+                using Icon icon = new(stream);
                 return icon.ToBitmap();
             }
 
@@ -908,7 +908,7 @@ namespace GitUI.Editor
 
             MemoryStream CopyStream()
             {
-                var copy = new MemoryStream();
+                MemoryStream copy = new();
                 stream.CopyTo(copy);
                 return copy;
             }
@@ -1027,7 +1027,7 @@ namespace GitUI.Editor
                                     ResetView(ViewMode.Text, null);
 
                                     var text = getFileText();
-                                    var summary = new StringBuilder()
+                                    StringBuilder summary = new StringBuilder()
                                         .AppendLine(string.Format(_cannotViewImage.Text, fileName))
                                         .AppendLine()
                                         .AppendLine($"{text.Length:N0} bytes:")
@@ -1432,7 +1432,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            var args = new GitArgumentBuilder("apply")
+            GitArgumentBuilder args = new("apply")
             {
                 "--cached",
                 "--index",
@@ -1504,7 +1504,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            var args = new GitArgumentBuilder("apply")
+            GitArgumentBuilder args = new("apply")
             {
                 "--whitespace=nowarn",
                 { currentItemStaged, "--reverse --index" }
@@ -1514,7 +1514,7 @@ namespace GitUI.Editor
             if (EnvUtils.RunningOnWindows())
             {
                 // remove file mode warnings
-                var regEx = new Regex("warning: .*has type .* expected .*", RegexOptions.Compiled);
+                Regex regEx = new("warning: .*has type .* expected .*", RegexOptions.Compiled);
                 output = output.RemoveLines(regEx.IsMatch);
             }
 
@@ -1560,7 +1560,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            var args = new GitArgumentBuilder("apply")
+            GitArgumentBuilder args = new("apply")
             {
                 "--3way",
                 "--index",
@@ -1837,7 +1837,7 @@ namespace GitUI.Editor
 
         private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using var formGoToLine = new FormGoToLine();
+            using FormGoToLine formGoToLine = new();
             formGoToLine.SetMaxLineNumber(internalFileViewer.MaxLineNumber);
             if (formGoToLine.ShowDialog(this) == DialogResult.OK)
             {
@@ -1902,7 +1902,7 @@ namespace GitUI.Editor
 
         #endregion
 
-        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+        internal TestAccessor GetTestAccessor() => new(this);
 
         internal readonly struct TestAccessor
         {

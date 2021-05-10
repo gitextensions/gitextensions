@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
     {
         public static string CreateFor(IPullRequestInformation currentPullRequestInfo, List<IDiscussionEntry>? entries = null)
         {
-            var html = new StringBuilder();
+            StringBuilder html = new();
             AddLine(html, "<html><body><style type='text/css'>");
             html.Append(CssData);
             AddLine(html, "</style>");

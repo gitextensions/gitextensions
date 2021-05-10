@@ -132,7 +132,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void Resolve_submodule_real_filesystem()
         {
-            using var helper = new GitModuleTestHelper();
+            using GitModuleTestHelper helper = new();
             helper.CreateFile(helper.Module.WorkingDir, ".gitmodules", @"[submodule ""Externals/NBug""]
     path = Externals/NBug
     url = https://github.com/gitextensions/NBug.git

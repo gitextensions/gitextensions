@@ -7,7 +7,7 @@ namespace GitUI.UserControls
     public partial class GotoUserManualControl : GitExtensionsControl
     {
         private readonly TranslationString _gotoUserManualControlTooltip =
-            new TranslationString("Read more about this feature at {0}");
+            new("Read more about this feature at {0}");
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public GotoUserManualControl()

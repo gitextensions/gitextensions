@@ -14,7 +14,7 @@ namespace GitCommands
         private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
 
         // URL regex obtained from https://www.regextester.com/53716 with some modifications
-        private static readonly Regex UrlRegex = new Regex(
+        private static readonly Regex UrlRegex = new(
             @"(?:(?:https?|ftp|file|ssh|git):\/\/|www\.)(?:[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:[A-Z0-9+&@#\/%=~_|$])",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 

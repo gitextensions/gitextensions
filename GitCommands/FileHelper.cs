@@ -65,7 +65,7 @@ namespace GitCommands
         private static bool? IsBinaryAccordingToGitAttributes(GitModule module, string fileName)
         {
             string[] diffValues = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "fortran", "html", "java", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "tex" };
-            var cmd = new GitArgumentBuilder("check-attr")
+            GitArgumentBuilder cmd = new("check-attr")
             {
                 "-z",
                 "diff",
@@ -77,7 +77,7 @@ namespace GitCommands
             };
             string result = module.GitExecutable.GetOutput(cmd);
             var lines = result.Split(Delimiters.NullAndLineFeed);
-            var attributes = new Dictionary<string, string>();
+            Dictionary<string, string> attributes = new();
             for (int i = 0; i < lines.Length - 2; i += 3)
             {
                 attributes[lines[i + 1].Trim()] = lines[i + 2].Trim();

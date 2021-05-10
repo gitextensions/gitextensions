@@ -23,7 +23,7 @@ namespace GitUITests.Avatars
         [Test]
         public async Task Returns_null_if_no_provider_is_set()
         {
-            var provider = new HotSwapAvatarProvider();
+            HotSwapAvatarProvider provider = new();
             var image = await provider.GetAvatarAsync(_email, _name, 16);
             Assert.Null(image);
         }
@@ -31,7 +31,7 @@ namespace GitUITests.Avatars
         [Test]
         public async Task Returns_the_same_image_as_the_wrapped_provider()
         {
-            var provider = new HotSwapAvatarProvider();
+            HotSwapAvatarProvider provider = new();
             var inner = Substitute.For<IAvatarProvider>();
             provider.Provider = inner;
 

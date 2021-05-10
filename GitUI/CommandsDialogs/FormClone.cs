@@ -277,7 +277,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!string.IsNullOrEmpty(_puttySshKey))
                 {
-                    var clonedGitModule = new GitModule(dirTo);
+                    GitModule clonedGitModule = new(dirTo);
                     clonedGitModule.SetSetting(string.Format(SettingKeyString.RemotePuttySshKey, "origin"), _puttySshKey);
                     clonedGitModule.LocalConfigFile.Save();
                 }
@@ -285,7 +285,7 @@ namespace GitUI.CommandsDialogs
                 if (_openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     Hide();
-                    var uiCommands = new GitUICommands(dirTo);
+                    GitUICommands uiCommands = new(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
                 else if (ShowInTaskbar == false && _gitModuleChanged is not null &&

@@ -76,7 +76,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 
                 TabPage GetNewTabPage(TextBox textBox, string caption)
                 {
-                    var tabPage = new TabPage
+                    TabPage tabPage = new()
                     {
                         BorderStyle = BorderStyle.None,
                         Margin = new Padding(0),

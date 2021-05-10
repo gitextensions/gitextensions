@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void Add_Click(object sender, EventArgs e)
         {
-            var definition = new ExternalLinkDefinition
+            ExternalLinkDefinition definition = new()
             {
                 Name = "<new>",
                 Enabled = true,

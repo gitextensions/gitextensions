@@ -69,7 +69,7 @@ namespace GitCommands.Patches
                 }
             }
 
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
 
             foreach (string line in headerLines)
             {
@@ -98,7 +98,7 @@ namespace GitCommands.Patches
             }
 
             const string fileMode = "100644"; // given fake mode to satisfy patch format, git will override this
-            var header = new StringBuilder();
+            StringBuilder header = new();
 
             header.Append("diff --git a/").Append(newFileName).Append(" b/").Append(newFileName).Append('\n');
 
@@ -155,7 +155,7 @@ namespace GitCommands.Patches
             string diff = text.Substring(patchPos - 1);
 
             string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
-            var selectedChunks = new List<Chunk>();
+            List<Chunk> selectedChunks = new();
             int i = 0;
             int currentPos = patchPos - 1;
 
@@ -208,7 +208,7 @@ namespace GitCommands.Patches
 
         private static string? ToPatch(IEnumerable<Chunk> chunks, [InstantHandle] SubChunkToPatchFnc subChunkToPatch)
         {
-            var result = new StringBuilder();
+            StringBuilder result = new();
 
             foreach (Chunk chunk in chunks)
             {
@@ -443,7 +443,7 @@ namespace GitCommands.Patches
     internal sealed class Chunk
     {
         private int _startLine;
-        private readonly List<SubChunk> _subChunks = new List<SubChunk>();
+        private readonly List<SubChunk> _subChunks = new();
         private SubChunk? _currentSubChunk;
 
         private SubChunk CurrentSubChunk
@@ -522,7 +522,7 @@ namespace GitCommands.Patches
             bool inPreContext = true;
             int i = 1;
 
-            var result = new Chunk();
+            Chunk result = new();
             result.ParseHeader(lines[0]);
             currentPos += lines[0].Length + 1;
 
@@ -531,7 +531,7 @@ namespace GitCommands.Patches
                 string line = lines[i];
                 if (inPatch)
                 {
-                    var patchLine = new PatchLine(line);
+                    PatchLine patchLine = new(line);
 
                     // do not refactor, there are no break points condition in VS Express
                     if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
@@ -579,7 +579,7 @@ namespace GitCommands.Patches
 
         public static Chunk FromNewFile(GitModule module, string fileText, int selectionPosition, int selectionLength, bool reset, byte[] filePreamble, Encoding fileContentEncoding)
         {
-            var result = new Chunk { _startLine = 0 };
+            Chunk result = new() { _startLine = 0 };
 
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
@@ -599,7 +599,7 @@ namespace GitCommands.Patches
             {
                 string line = lines[i];
                 string preamble = i == 0 ? new string(fileContentEncoding.GetChars(filePreamble)) : string.Empty;
-                var patchLine = new PatchLine((reset ? "-" : "+") + preamble + line);
+                PatchLine patchLine = new((reset ? "-" : "+") + preamble + line);
 
                 // do not refactor, there are no breakpoints condition in VS Express
                 if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
@@ -648,7 +648,7 @@ namespace GitCommands.Patches
             int addedCount = 0;
             int removedCount = 0;
 
-            var diff = new StringBuilder();
+            StringBuilder diff = new();
             foreach (SubChunk subChunk in _subChunks)
             {
                 if (diff.Length != 0)

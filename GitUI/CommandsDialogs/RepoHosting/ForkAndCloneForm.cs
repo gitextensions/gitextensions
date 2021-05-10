@@ -395,7 +395,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir, depth: GetDepth());
 
-            var formRemoteProcess = new FormRemoteProcess(new GitUICommands(new GitModule(null)), AppSettings.GitCommand, cmd)
+            FormRemoteProcess formRemoteProcess = new(new GitUICommands(new GitModule(null)), AppSettings.GitCommand, cmd)
             {
                 Remote = repoSrc
             };
@@ -407,7 +407,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            var module = new GitModule(targetDir);
+            GitModule module = new(targetDir);
 
             if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
             {

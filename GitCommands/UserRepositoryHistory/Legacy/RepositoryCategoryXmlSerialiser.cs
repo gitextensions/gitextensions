@@ -28,7 +28,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 
             try
             {
-                var serializer = new XmlSerializer(typeof(List<RepositoryCategory>));
+                XmlSerializer serializer = new(typeof(List<RepositoryCategory>));
                 using TextReader reader = new StringReader(serialised);
                 if (serializer.Deserialize(reader) is List<RepositoryCategory> obj)
                 {

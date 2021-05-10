@@ -55,7 +55,7 @@ namespace GitCommands
         private sealed class ProcessWrapper : IProcess
         {
             // TODO should this use TaskCreationOptions.RunContinuationsAsynchronously
-            private readonly TaskCompletionSource<int> _exitTaskCompletionSource = new TaskCompletionSource<int>();
+            private readonly TaskCompletionSource<int> _exitTaskCompletionSource = new();
 
             private readonly object _syncRoot = new();
             private readonly Process _process;

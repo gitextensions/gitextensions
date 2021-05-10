@@ -23,7 +23,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
 
             foreach (var option in EnumHelper.GetValues<GitRefsSortOrder>().Select(e => (Text: e.GetDescription(), Value: e)))
             {
-                var item = new ToolStripMenuItem()
+                ToolStripMenuItem item = new()
                 {
                     Text = option.Text,
                     Image = null,
@@ -58,7 +58,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
             }
         }
 
-        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+        internal TestAccessor GetTestAccessor() => new(this);
 
         internal struct TestAccessor
         {

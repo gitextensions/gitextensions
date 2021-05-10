@@ -325,7 +325,7 @@ namespace GitUI.CommandsDialogs
 
         private void PickAnotherBranch(GitRevision preSelectCommit, ref string? displayStr, ref GitRevision? revision)
         {
-            using var form = new FormCompareToBranch(UICommands, preSelectCommit.ObjectId);
+            using FormCompareToBranch form = new(UICommands, preSelectCommit.ObjectId);
             if (form.ShowDialog(this) == DialogResult.OK)
             {
                 displayStr = form.BranchName;
@@ -337,7 +337,7 @@ namespace GitUI.CommandsDialogs
 
         private void PickAnotherCommit(GitRevision preSelect, ref string? displayStr, ref GitRevision? revision)
         {
-            using var form = new FormChooseCommit(UICommands, preselectCommit: preSelect.Guid, showArtificial: true);
+            using FormChooseCommit form = new(UICommands, preselectCommit: preSelect.Guid, showArtificial: true);
             if (form.ShowDialog(this) == DialogResult.OK)
             {
                 revision = form.SelectedRevision;

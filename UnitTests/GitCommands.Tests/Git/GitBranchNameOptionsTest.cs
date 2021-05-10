@@ -14,7 +14,7 @@ namespace GitCommandsTests.Git
         [TestCase("", "")]
         public void ReplacementToken_can_be_null_or_empty(string token, string expected)
         {
-            var options = new GitBranchNameOptions(token);
+            GitBranchNameOptions options = new(token);
 
             options.ReplacementToken.Should().Be(expected);
         }

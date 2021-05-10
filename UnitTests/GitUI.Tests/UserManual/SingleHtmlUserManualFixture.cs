@@ -12,7 +12,7 @@ namespace GitUITests.UserManual
         [TestCase("merge-conflicts")]
         public void GetUrl(string anchor)
         {
-            var sut = new SingleHtmlUserManual(anchor);
+            SingleHtmlUserManual sut = new(anchor);
 
             var expected = SingleHtmlUserManual.Location + "/index.html".Combine("#", anchor);
 

@@ -30,11 +30,11 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void AddRecentRepositories_should_add_new_item()
         {
-            var containerMenu = new ToolStripMenuItem();
+            ToolStripMenuItem containerMenu = new();
 
             const string path = "";
             const string caption = "CAPTION";
-            var repository = new Repository(path);
+            Repository repository = new(path);
 
             _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
 
@@ -44,11 +44,11 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void AddRecentRepositories_should_set_properties_correctly()
         {
-            var containerMenu = new ToolStripMenuItem();
+            ToolStripMenuItem containerMenu = new();
 
             const string path = "";
             const string caption = "CAPTION";
-            var repository = new Repository(path);
+            Repository repository = new(path);
 
             _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
 
@@ -66,11 +66,11 @@ namespace GitUITests.CommandsDialogs
         {
             _repositoryCurrentBranchNameProvider.GetCurrentBranchName(Arg.Any<string>()).Returns(x => branch);
 
-            var containerMenu = new ToolStripMenuItem();
+            ToolStripMenuItem containerMenu = new();
 
             const string path = "somepath";
             const string caption = "CAPTION";
-            var repository = new Repository(path);
+            Repository repository = new(path);
 
             _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
 
@@ -81,11 +81,11 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void ChangeWorkingDir_should_promt_user_to_delete_invalid_repo()
         {
-            var containerMenu = new ToolStripMenuItem();
+            ToolStripMenuItem containerMenu = new();
 
             const string path = "";
             const string caption = "CAPTION";
-            var repository = new Repository(path);
+            Repository repository = new(path);
 
             _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
 

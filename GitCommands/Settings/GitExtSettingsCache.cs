@@ -6,7 +6,7 @@ namespace GitCommands.Settings
 {
     public class GitExtSettingsCache : FileSettingsCache
     {
-        private readonly XmlSerializableDictionary<string, string> _encodedNameMap = new XmlSerializableDictionary<string, string>();
+        private readonly XmlSerializableDictionary<string, string> _encodedNameMap = new();
 
         public GitExtSettingsCache(string settingsFilePath, bool autoSave = true)
             : base(settingsFilePath, autoSave)
@@ -15,7 +15,7 @@ namespace GitCommands.Settings
 
         public static GitExtSettingsCache FromCache(string settingsFilePath)
         {
-            var createSettingsCache = new Lazy<GitExtSettingsCache>(
+            Lazy<GitExtSettingsCache> createSettingsCache = new(
                 () => new GitExtSettingsCache(settingsFilePath, autoSave: true));
 
             return FromCache(settingsFilePath, createSettingsCache);
@@ -40,7 +40,7 @@ namespace GitCommands.Settings
 
         protected override void WriteSettings(string fileName)
         {
-            using var xtw = new XmlTextWriter(fileName, Encoding.UTF8) { Formatting = Formatting.Indented };
+            using XmlTextWriter xtw = new(fileName, Encoding.UTF8) { Formatting = Formatting.Indented };
             xtw.WriteStartDocument();
             xtw.WriteStartElement("dictionary");
             _encodedNameMap.WriteXml(xtw);
@@ -49,7 +49,7 @@ namespace GitCommands.Settings
 
         protected override void ReadSettings(string fileName)
         {
-            var readerSettings = new XmlReaderSettings
+            XmlReaderSettings readerSettings = new()
             {
                 IgnoreWhitespace = true,
                 CheckCharacters = false

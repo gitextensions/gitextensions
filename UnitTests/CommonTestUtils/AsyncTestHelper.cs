@@ -22,7 +22,7 @@ namespace CommonTestUtils
 
         public static async Task JoinPendingOperationsAsync(TimeSpan timeout)
         {
-            using var cancellationTokenSource = new CancellationTokenSource(timeout);
+            using CancellationTokenSource cancellationTokenSource = new(timeout);
             await ThreadHelper.JoinPendingOperationsAsync(cancellationTokenSource.Token);
         }
     }

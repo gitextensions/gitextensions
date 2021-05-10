@@ -474,7 +474,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private bool PromptCategoryName(List<string> categories, string? originalName, [NotNullWhen(returnValue: true)] out string? name)
         {
-            using var dialog = new FormDashboardCategoryTitle(categories, originalName);
+            using FormDashboardCategoryTitle dialog = new(categories, originalName);
             if (dialog.ShowDialog(this) == DialogResult.OK)
             {
                 name = dialog.Category;
@@ -556,12 +556,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 e.DrawBackground();
             }
 
-            var pointImage = new PointF(e.Bounds.Left + spacing4, e.Bounds.Top + (spacing2 * 4));
+            PointF pointImage = new(e.Bounds.Left + spacing4, e.Bounds.Top + (spacing2 * 4));
 
             // render anchor icon
             if (!string.IsNullOrWhiteSpace((e.Item.Tag as Repository)?.Category))
             {
-                var pointImage1 = new PointF(pointImage.X + imageList1.ImageSize.Width - 12, e.Bounds.Top + spacing2);
+                PointF pointImage1 = new(pointImage.X + imageList1.ImageSize.Width - 12, e.Bounds.Top + spacing2);
                 e.Graphics.DrawImage(Images.Star, pointImage1.X, pointImage1.Y, 16, 16);
             }
 
@@ -569,12 +569,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             e.Graphics.DrawImage(imageList1.Images[e.Item.ImageIndex], pointImage);
 
             // render path
-            var textPadding = new PointF(e.Bounds.Left + spacing4, e.Bounds.Top + spacing6);
-            var pointPath = new PointF(textPadding.X + textOffset, textPadding.Y);
+            PointF textPadding = new(e.Bounds.Left + spacing4, e.Bounds.Top + spacing6);
+            PointF pointPath = new(textPadding.X + textOffset, textPadding.Y);
             var pathBounds = DrawText(e.Graphics, e.Item.Text, AppSettings.Font, _foreColorBrush, textWidth, pointPath, spacing4 * 2);
 
             // render branch
-            var pointBranch = new PointF(pointPath.X, pointPath.Y + pathBounds.Height + spacing1);
+            PointF pointBranch = new(pointPath.X, pointPath.Y + pathBounds.Height + spacing1);
             var branchBounds = DrawText(e.Graphics, e.Item.SubItems[1].Text, _secondaryFont, _branchNameColorBrush, textWidth, pointBranch, spacing4 * 2);
 
             // render category
@@ -590,7 +590,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             {
                 var textBounds = TextRenderer.MeasureText(text, font);
                 var minWidth = Math.Min(textBounds.Width + spacing, maxTextWidth);
-                var bounds = new RectangleF(location, new SizeF(minWidth, textBounds.Height));
+                RectangleF bounds = new(location, new SizeF(minWidth, textBounds.Height));
                 var text1 = Math.Abs(maxTextWidth - minWidth) < float.Epsilon ? ShortenText(text, font, minWidth) : text;
                 g.DrawString(text1, font, brush, bounds, StringFormat.GenericTypographic);
 
@@ -647,7 +647,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void mnuConfigure_Click(object sender, EventArgs e)
         {
-            using var frm = new FormRecentReposSettings();
+            using FormRecentReposSettings frm = new();
             var result = frm.ShowDialog(this);
             if (result == DialogResult.OK)
             {
@@ -684,7 +684,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 tsmiCategories.DropDownItems.Add(tsmiCategoryNone);
                 tsmiCategories.DropDownItems.AddRange(categories.Select(category =>
                 {
-                    var item = new ToolStripMenuItem(category) { Tag = category };
+                    ToolStripMenuItem item = new(category) { Tag = category };
                     item.Click += tsmiCategory_Click;
                     return item;
                 }).ToArray<ToolStripItem>());

@@ -29,7 +29,7 @@ namespace GitCommandsTests.Git
             // We need to correct it to %APPDATA%\GitExtensions\GitExtensions for v3 at least
             var userAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var settingPath = Path.Combine(userAppDataPath, "GitExtensions\\GitExtensions\\GitExtensions.settings");
-            var settingContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(settingPath), SettingLevel.Unknown);
+            RepoDistSettings settingContainer = new(null, GitExtSettingsCache.FromCache(settingPath), SettingLevel.Unknown);
             _appPath = settingContainer.GetString("gitcommand", "git.exe");
 
             // Execute process in GitExtension working directory, so that git will return success exit-code
@@ -50,7 +50,7 @@ namespace GitCommandsTests.Git
         {
             const string arguments = "abc";
 
-            var cache = new CommandCache();
+            CommandCache cache = new();
 
             cache.Add(
                 arguments,
@@ -72,7 +72,7 @@ namespace GitCommandsTests.Git
             const string commandOutput = "Hello World!";
 
             // Empty cache
-            var cache = new CommandCache();
+            CommandCache cache = new();
 
             using (_executable.StageOutput(arguments, commandOutput))
             {
@@ -98,7 +98,7 @@ namespace GitCommandsTests.Git
             // 9: 'reset -- '
             // 1: ' ' added after second Add in ArgumentBuilder
             var appLength = _appPath.Length + 3;
-            var builder = new ArgumentBuilder() { "reset --" };
+            ArgumentBuilder builder = new() { "reset --" };
             var len = builder.ToString().Length;
             var args = builder.BuildBatchArguments(new string[]
             {
@@ -134,7 +134,7 @@ namespace GitCommandsTests.Git
 
         private string GenerateStringByLength(int length)
         {
-            var sb = new StringBuilder(length);
+            StringBuilder sb = new(length);
 
             for (int i = 0; i < length; i++)
             {

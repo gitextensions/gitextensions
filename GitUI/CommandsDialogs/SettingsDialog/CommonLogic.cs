@@ -15,10 +15,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     public sealed class CommonLogic : Translate
     {
         private static readonly TranslationString _cantReadRegistry =
-            new TranslationString("Git Extensions has insufficient permissions to check the registry.");
+            new("Git Extensions has insufficient permissions to check the registry.");
 
         private readonly TranslationString _selectFile =
-            new TranslationString("Select file");
+            new("Select file");
 
         public readonly RepoDistSettingsSet RepoDistSettingsSet;
         public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
@@ -41,14 +41,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
             var repoDistPulledSettings = RepoDistSettings.CreateDistributed(module, false);
             var repoDistLocalSettings = RepoDistSettings.CreateLocal(module, false);
-            var repoDistEffectiveSettings = new RepoDistSettings(
+            RepoDistSettings repoDistEffectiveSettings = new(
                 new RepoDistSettings(repoDistGlobalSettings, repoDistPulledSettings.SettingsCache, SettingLevel.Distributed),
                 repoDistLocalSettings.SettingsCache,
                 SettingLevel.Effective);
 
             var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
             var configFileLocalSettings = ConfigFileSettings.CreateLocal(module, false);
-            var configFileEffectiveSettings = new ConfigFileSettings(
+            ConfigFileSettings configFileEffectiveSettings = new(
                 configFileGlobalSettings, configFileLocalSettings.SettingsCache, SettingLevel.Effective);
 
             RepoDistSettingsSet = new RepoDistSettingsSet(
@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public string SelectFile(string initialDirectory, string filter, string prev)
         {
-            using var dialog = new System.Windows.Forms.OpenFileDialog
+            using System.Windows.Forms.OpenFileDialog dialog = new()
             {
                 Filter = filter,
                 InitialDirectory = initialDirectory,

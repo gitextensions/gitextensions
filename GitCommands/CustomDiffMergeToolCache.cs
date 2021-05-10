@@ -88,7 +88,7 @@ namespace GitCommands
         /// <returns>list with tool names.</returns>
         private IEnumerable<string> ParseCustomDiffMergeTool(string output, string defaultTool)
         {
-            var tools = new List<string>();
+            List<string> tools = new();
 
             // Simple parsing of the textual output opposite to porcelain format
             // https://github.com/git/git/blob/main/git-mergetool--lib.sh#L298

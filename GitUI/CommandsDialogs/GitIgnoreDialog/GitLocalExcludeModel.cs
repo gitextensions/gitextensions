@@ -9,20 +9,20 @@ namespace GitUI.CommandsDialogs.GitIgnoreDialog
     public class GitLocalExcludeModel : Translate, IGitIgnoreDialogModel
     {
         private readonly TranslationString _editLocalExcludeTitle =
-            new TranslationString("Edit .git/info/exclude");
+            new("Edit .git/info/exclude");
 
         private readonly TranslationString _localExcludeOnlyInWorkingDirSupported =
-            new TranslationString(".git/info/exclude is only supported when there is a working directory.");
+            new(".git/info/exclude is only supported when there is a working directory.");
 
         private readonly TranslationString _cannotAccessLocalExclude =
-            new TranslationString("Failed to save .git/info/exclude." + Environment.NewLine +
+            new("Failed to save .git/info/exclude." + Environment.NewLine +
                                   "Check if file is accessible.");
 
         private readonly TranslationString _cannotAccessLocalExcludeCaption =
-            new TranslationString("Failed to save .git/info/exclude");
+            new("Failed to save .git/info/exclude");
 
         private readonly TranslationString _saveFileQuestion =
-            new TranslationString("Save changes to .git/info/exclude?");
+            new("Save changes to .git/info/exclude?");
 
         private readonly IGitModule _module;
 

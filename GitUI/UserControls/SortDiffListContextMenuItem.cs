@@ -81,7 +81,7 @@ namespace GitUI.UserControls
             _sortService.DiffListSorting = sortingType;
         }
 
-        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+        internal TestAccessor GetTestAccessor() => new(this);
 
         internal struct TestAccessor
         {

@@ -74,13 +74,13 @@ namespace GitUI.BranchTreePanel
 
             private async Task<Nodes> FillBranchTreeAsync(IReadOnlyList<IGitRef> branches, CancellationToken token)
             {
-                var nodes = new Nodes(this);
-                var pathToNodes = new Dictionary<string, BaseBranchNode>();
+                Nodes nodes = new(this);
+                Dictionary<string, BaseBranchNode> pathToNodes = new();
 
-                var enabledRemoteRepoNodes = new List<RemoteRepoNode>();
+                List<RemoteRepoNode> enabledRemoteRepoNodes = new();
                 var remoteByName = (await Module.GetRemotesAsync().ConfigureAwaitRunInline()).ToDictionary(r => r.Name);
 
-                var remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
+                ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
 
                 // Create nodes for enabled remotes with branches
                 foreach (IGitRef branch in branches)
@@ -93,7 +93,7 @@ namespace GitUI.BranchTreePanel
                     var remoteName = branch.Name.SubstringUntil('/');
                     if (remoteByName.TryGetValue(remoteName, out Remote remote))
                     {
-                        var remoteBranchNode = new RemoteBranchNode(this, branch.ObjectId, branch.Name, isVisible);
+                        RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, isVisible);
 
                         var parent = remoteBranchNode.CreateRootNode(
                             pathToNodes,
@@ -112,7 +112,7 @@ namespace GitUI.BranchTreePanel
                 {
                     if (remoteByName.TryGetValue(remoteName, out var remote))
                     {
-                        var node = new RemoteRepoNode(this, remoteName, remotesManager, remote, true);
+                        RemoteRepoNode node = new(this, remoteName, remotesManager, remote, true);
                         enabledRemoteRepoNodes.Add(node);
                     }
                 }
@@ -126,14 +126,14 @@ namespace GitUI.BranchTreePanel
                 var disabledRemotes = remotesManager.GetDisabledRemotes();
                 if (disabledRemotes.Count > 0)
                 {
-                    var disabledRemoteRepoNodes = new List<RemoteRepoNode>();
+                    List<RemoteRepoNode> disabledRemoteRepoNodes = new();
                     foreach (var remote in disabledRemotes.OrderBy(remote => remote.Name))
                     {
-                        var node = new RemoteRepoNode(this, remote.Name, remotesManager, remote, false);
+                        RemoteRepoNode node = new(this, remote.Name, remotesManager, remote, false);
                         disabledRemoteRepoNodes.Add(node);
                     }
 
-                    var disabledFolderNode = new RemoteRepoFolderNode(this, TranslatedStrings.Inactive);
+                    RemoteRepoFolderNode disabledFolderNode = new(this, TranslatedStrings.Inactive);
                     disabledRemoteRepoNodes
                         .OrderBy(node => node.FullPath)
                         .ForEach(node => disabledFolderNode.Nodes.AddNode(node));

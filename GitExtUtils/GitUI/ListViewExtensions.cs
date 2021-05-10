@@ -67,7 +67,7 @@ namespace GitUI
             (Rectangle)_getItemRectOrEmptyMethod.Value.Invoke(item.ListView, new object[] { item.Index });
 
         private static readonly Lazy<MethodInfo> _getItemRectOrEmptyMethod =
-            new Lazy<MethodInfo>(() => typeof(ListView).GetMethod(
+            new(() => typeof(ListView).GetMethod(
                 "GetItemRectOrEmpty",
                 BindingFlags.Instance | BindingFlags.NonPublic));
     }

@@ -113,7 +113,7 @@ namespace GitExtensions
 
             if (string.IsNullOrEmpty(AppSettings.Translation))
             {
-                using var formChoose = new FormChooseTranslation();
+                using FormChooseTranslation formChoose = new();
                 formChoose.ShowDialog();
             }
 
@@ -142,10 +142,10 @@ namespace GitExtensions
 
                     if (AppSettings.CheckSettings)
                     {
-                        var uiCommands = new GitUICommands("");
-                        var commonLogic = new CommonLogic(uiCommands.Module);
-                        var checkSettingsLogic = new CheckSettingsLogic(commonLogic);
-                        var fakePageHost = new SettingsPageHostMock(checkSettingsLogic);
+                        GitUICommands uiCommands = new("");
+                        CommonLogic commonLogic = new(uiCommands.Module);
+                        CheckSettingsLogic checkSettingsLogic = new(commonLogic);
+                        SettingsPageHostMock fakePageHost = new(checkSettingsLogic);
                         using var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost);
                         if (!checklistSettingsPage.CheckSettings())
                         {
@@ -167,7 +167,7 @@ namespace GitExtensions
                 MouseWheelRedirector.Active = true;
             }
 
-            var commands = new GitUICommands(GetWorkingDir(args));
+            GitUICommands commands = new(GetWorkingDir(args));
 
             if (args.Length <= 1)
             {
@@ -269,7 +269,7 @@ namespace GitExtensions
                                 if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)))
                                 {
                                     var args = Environment.GetCommandLineArgs();
-                                    var p = new System.Diagnostics.Process { StartInfo = { FileName = args[0] } };
+                                    Process p = new() { StartInfo = { FileName = args[0] } };
                                     if (args.Length > 1)
                                     {
                                         args[0] = "";
@@ -312,20 +312,20 @@ namespace GitExtensions
         {
             int dialogResult = -1;
 
-            using var dialog1 = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
+            using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog1 = new()
             {
                 InstructionText = ResourceManager.TranslatedStrings.GitExecutableNotFound,
                 Icon = TaskDialogStandardIcon.Error,
                 StandardButtons = TaskDialogStandardButtons.Cancel,
                 Cancelable = true,
             };
-            var btnFindGitExecutable = new TaskDialogCommandLink("FindGitExecutable", null, ResourceManager.TranslatedStrings.FindGitExecutable);
+            TaskDialogCommandLink btnFindGitExecutable = new("FindGitExecutable", null, ResourceManager.TranslatedStrings.FindGitExecutable);
             btnFindGitExecutable.Click += (s, e) =>
             {
                 dialogResult = 0;
                 dialog1.Close();
             };
-            var btnInstallGitInstructions = new TaskDialogCommandLink("InstallGitInstructions", null, ResourceManager.TranslatedStrings.InstallGitInstructions);
+            TaskDialogCommandLink btnInstallGitInstructions = new("InstallGitInstructions", null, ResourceManager.TranslatedStrings.InstallGitInstructions);
             btnInstallGitInstructions.Click += (s, e) =>
             {
                 dialogResult = 1;
@@ -339,7 +339,7 @@ namespace GitExtensions
             {
                 case 0:
                     {
-                        using var dialog = new System.Windows.Forms.OpenFileDialog
+                        using OpenFileDialog dialog = new()
                         {
                             Filter = @"git.exe|git.exe|git.cmd|git.cmd",
                         };

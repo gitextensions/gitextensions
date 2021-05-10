@@ -26,7 +26,7 @@ namespace GitCommands
                 return null;
             }
 
-            var s = new StringBuilder(Math.Min(body.Length, CommitSummaryWorstCaseLength));
+            StringBuilder s = new(Math.Min(body.Length, CommitSummaryWorstCaseLength));
 
             int lineCount = 0;
             int lineStartPos = 0;

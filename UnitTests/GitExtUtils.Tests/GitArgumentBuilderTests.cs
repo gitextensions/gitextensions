@@ -26,7 +26,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_default_config_item()
         {
-            var args = new GitArgumentBuilder("log")
+            GitArgumentBuilder args = new("log")
             {
                 "-n 1"
             };
@@ -39,7 +39,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_custom_config_item()
         {
-            var args = new GitArgumentBuilder("foo")
+            GitArgumentBuilder args = new("foo")
             {
                 new GitConfigItem("bar", "baz")
             };
@@ -52,7 +52,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_custom_config_item_quoted()
         {
-            var args = new GitArgumentBuilder("foo")
+            GitArgumentBuilder args = new("foo")
             {
                 new GitConfigItem("bar", "baz bax")
             };
@@ -65,7 +65,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_custom_config_item_already_quoted()
         {
-            var args = new GitArgumentBuilder("foo")
+            GitArgumentBuilder args = new("foo")
             {
                 new GitConfigItem("bar", "\"baz bax\"")
             };
@@ -78,7 +78,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_custom_config_item_and_argument()
         {
-            var args = new GitArgumentBuilder("foo")
+            GitArgumentBuilder args = new("foo")
             {
                 new GitConfigItem("bar", "baz"),
                 "--arg"
@@ -92,7 +92,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_custom_config_item_defined_after_argument()
         {
-            var args = new GitArgumentBuilder("foo")
+            GitArgumentBuilder args = new("foo")
             {
                 "--arg",
                 new GitConfigItem("bar", "baz") // order doesn't matter
@@ -106,7 +106,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_default_and_custom_config_items()
         {
-            var args = new GitArgumentBuilder("log")
+            GitArgumentBuilder args = new("log")
             {
                 new GitConfigItem("bar", "baz"),
                 "-n 1"
@@ -120,7 +120,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_default_and_custom_config_items_and_argument()
         {
-            var args = new GitArgumentBuilder("log")
+            GitArgumentBuilder args = new("log")
             {
                 new GitConfigItem("bar", "baz"),
                 "-n 1"
@@ -134,7 +134,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_config_item_that_overrides_default()
         {
-            var args = new GitArgumentBuilder("log")
+            GitArgumentBuilder args = new("log")
             {
                 new GitConfigItem("log.showSignature", "true"),
                 "-n 1"
@@ -148,7 +148,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Command_with_config_item_that_overrides_default_different_case()
         {
-            var args = new GitArgumentBuilder("log")
+            GitArgumentBuilder args = new("log")
             {
                 new GitConfigItem("LOG.showSIGNATURE", "true"),
                 "-n 1"

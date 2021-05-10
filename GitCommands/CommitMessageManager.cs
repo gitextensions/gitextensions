@@ -173,7 +173,7 @@ namespace GitCommands
                 return string.Empty;
             }
 
-            var formattedCommitMessage = new StringBuilder();
+            StringBuilder formattedCommitMessage = new();
 
             var lineNumber = 1;
             foreach (var line in commitMessage.LazySplit('\n'))

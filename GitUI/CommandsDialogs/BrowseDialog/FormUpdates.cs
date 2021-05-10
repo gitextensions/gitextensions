@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
-                var github = new Client();
+                Client github = new();
                 Repository gitExtRepo = github.getRepository("gitextensions", "gitextensions");
 
                 var configData = gitExtRepo?.GetRef("heads/configdata");
@@ -189,7 +189,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 try
                 {
-                    using WebClient webClient = new WebClient();
+                    using WebClient webClient = new();
                     await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
                 }
                 catch (Exception ex)
@@ -268,7 +268,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public static IEnumerable<ReleaseVersion> Parse(string versionsStr)
         {
-            var cfg = new ConfigFile("", true);
+            ConfigFile cfg = new("", true);
             cfg.LoadFromString(versionsStr);
             var sections = cfg.GetConfigSections("Version");
             sections = sections.Concat(cfg.GetConfigSections("RCVersion"));

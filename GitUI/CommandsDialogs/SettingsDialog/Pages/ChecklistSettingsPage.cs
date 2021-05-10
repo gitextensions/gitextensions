@@ -19,118 +19,118 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         #region Translations
         private readonly TranslationString _wrongGitVersion =
-            new TranslationString("Git found but version {0} is not supported. Upgrade to version {1} or later");
+            new("Git found but version {0} is not supported. Upgrade to version {1} or later");
 
         private readonly TranslationString _notRecommendedGitVersion =
-            new TranslationString("Git found but version {0} is older than recommended. Upgrade to version {1} or later");
+            new("Git found but version {0} is older than recommended. Upgrade to version {1} or later");
 
         private readonly TranslationString _gitVersionFound =
-            new TranslationString("Git {0} is found on your computer.");
+            new("Git {0} is found on your computer.");
 
         private readonly TranslationString _sshClientNotFound = new("SSH client not found: {0}.");
 
         private readonly TranslationString _otherSshClient = new("Other SSH client configured: {0}.");
 
         private readonly TranslationString _linuxToolsSshNotFound =
-            new TranslationString("Linux tools (sh) not found. To solve this problem you can set the correct path in settings.");
+            new("Linux tools (sh) not found. To solve this problem you can set the correct path in settings.");
 
         private readonly TranslationString _solveGitCommandFailedCaption =
-            new TranslationString("Locate git");
+            new("Locate git");
 
         private readonly TranslationString _gitCanBeRun =
-            new TranslationString("Git can be run using: {0}");
+            new("Git can be run using: {0}");
 
         private readonly TranslationString _gitCanBeRunCaption =
-            new TranslationString("Locate git");
+            new("Locate git");
 
         private readonly TranslationString _solveGitCommandFailed =
-            new TranslationString("The command to run git could not be determined automatically." + Environment.NewLine +
+            new("The command to run git could not be determined automatically." + Environment.NewLine +
                 "Please make sure git (Git for Windows or cygwin) is installed or set the correct command manually.");
 
         private readonly TranslationString _shellExtRegistered =
-            new TranslationString("Shell extensions registered properly.");
+            new("Shell extensions registered properly.");
 
         private readonly TranslationString _shellExtNoInstalled =
-            new TranslationString("Shell extensions are not installed. Run the installer to install the shell extensions.");
+            new("Shell extensions are not installed. Run the installer to install the shell extensions.");
 
         private readonly TranslationString _shellExtNeedsToBeRegistered =
-            new TranslationString("{0} needs to be registered in order to use the shell extensions.");
+            new("{0} needs to be registered in order to use the shell extensions.");
 
         private readonly TranslationString _registryKeyGitExtensionsMissing =
-            new TranslationString("Registry entry missing [Software\\GitExtensions\\InstallDir].");
+            new("Registry entry missing [Software\\GitExtensions\\InstallDir].");
 
         private readonly TranslationString _registryKeyGitExtensionsFaulty =
-            new TranslationString("Invalid installation directory stored in [Software\\GitExtensions\\InstallDir].");
+            new("Invalid installation directory stored in [Software\\GitExtensions\\InstallDir].");
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
-            new TranslationString("Git Extensions is properly registered.");
+            new("Git Extensions is properly registered.");
 
         private readonly TranslationString _plinkputtyGenpageantNotFound =
-            new TranslationString("PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.");
+            new("PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.");
 
         private readonly TranslationString _puttyConfigured =
-            new TranslationString("SSH client PuTTY is configured properly.");
+            new("SSH client PuTTY is configured properly.");
 
         private readonly TranslationString _opensshUsed =
-            new TranslationString("Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)");
+            new("Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)");
 
         private readonly TranslationString _languageConfigured =
-            new TranslationString("The configured language is {0}.");
+            new("The configured language is {0}.");
 
         private readonly TranslationString _noLanguageConfigured =
-            new TranslationString("There is no language configured for Git Extensions.");
+            new("There is no language configured for Git Extensions.");
 
         private readonly TranslationString _noEmailSet =
-            new TranslationString("You need to configure a username and an email address.");
+            new("You need to configure a username and an email address.");
 
         private readonly TranslationString _emailSet =
-            new TranslationString("A username and an email address are configured.");
+            new("A username and an email address are configured.");
 
         private readonly TranslationString _mergeToolXConfiguredNeedsCmd =
-            new TranslationString("{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.");
+            new("{0} is configured as mergetool, this is a custom mergetool and needs a custom cmd to be configured.");
 
         private readonly TranslationString _customMergeToolXConfigured =
-            new TranslationString("There is a custom mergetool configured: {0}");
+            new("There is a custom mergetool configured: {0}");
 
         private readonly TranslationString _mergeToolXConfigured =
-            new TranslationString("There is a mergetool configured: {0}");
+            new("There is a mergetool configured: {0}");
 
         private readonly TranslationString _linuxToolsSshFound =
-            new TranslationString("Linux tools (sh) found on your computer.");
+            new("Linux tools (sh) found on your computer.");
 
         private readonly TranslationString _gitNotFound =
-            new TranslationString("Git not found. To solve this problem you can set the correct path in settings.");
+            new("Git not found. To solve this problem you can set the correct path in settings.");
 
         private readonly TranslationString _adviceDiffToolConfiguration =
-            new TranslationString("You should configure a diff tool to show file diff in external program.");
+            new("You should configure a diff tool to show file diff in external program.");
 
         private readonly TranslationString _diffToolXConfigured =
-            new TranslationString("There is a difftool configured: {0}");
+            new("There is a difftool configured: {0}");
 
         private readonly TranslationString _configureMergeTool =
-            new TranslationString("You need to configure merge tool in order to solve merge conflicts.");
+            new("You need to configure merge tool in order to solve merge conflicts.");
 
         private readonly TranslationString _cantRegisterShellExtension =
-            new TranslationString("Could not register the shell extension because '{0}' could not be found.");
+            new("Could not register the shell extension because '{0}' could not be found.");
 
         private readonly TranslationString _noDiffToolConfiguredCaption =
-            new TranslationString("Difftool");
+            new("Difftool");
 
         private readonly TranslationString _puttyFoundAuto =
-            new TranslationString("All paths needed for PuTTY could be automatically found and are set.");
+            new("All paths needed for PuTTY could be automatically found and are set.");
 
         private readonly TranslationString _linuxToolsShNotFound =
-            new TranslationString("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
+            new("The path to linux tools (sh) could not be found automatically." + Environment.NewLine +
                 "Please make sure there are linux tools installed (through Git for Windows or cygwin) or set the correct path manually.");
 
         private readonly TranslationString _linuxToolsShNotFoundCaption =
-            new TranslationString("Locate linux tools");
+            new("Locate linux tools");
 
         private readonly TranslationString _shCanBeRun =
-            new TranslationString("Command sh can be run using: {0}sh");
+            new("Command sh can be run using: {0}sh");
 
         private readonly TranslationString _shCanBeRunCaption =
-            new TranslationString("Locate linux tools");
+            new("Locate linux tools");
 
         private readonly TranslationString _gcmDetectedCaption = new("Obsolete git-credential-winstore.exe detected");
         #endregion
@@ -239,7 +239,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 try
                 {
-                    var pi = new ProcessStartInfo
+                    ProcessStartInfo pi = new()
                     {
                         FileName = "regsvr32",
                         Arguments = path.Quote(),

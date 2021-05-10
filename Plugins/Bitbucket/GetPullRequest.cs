@@ -9,7 +9,7 @@ namespace GitExtensions.Plugins.Bitbucket
     {
         public static PullRequest Parse(JObject json)
         {
-            var request = new PullRequest
+            PullRequest request = new()
             {
                 Id = json["id"].ToString(),
                 Version = json["version"].ToString(),
@@ -109,7 +109,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
         protected override List<PullRequest> ParseResponse(JObject json)
         {
-            var result = new List<PullRequest>();
+            List<PullRequest> result = new();
             foreach (JObject val in json["values"])
             {
                 result.Add(PullRequest.Parse(val));

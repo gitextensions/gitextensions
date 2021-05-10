@@ -542,7 +542,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         internal RectangleF GetFittingRectangle()
         {
-            var boundingRectangle = new RectangleF(PointStart.X, PointStart.Y, 0, 0);
+            RectangleF boundingRectangle = new(PointStart.X, PointStart.Y, 0, 0);
             if ((StartAngle == 0F) || (StartAngle + SweepAngle >= 360))
             {
                 GraphicsUtil.IncludePointX(ref boundingRectangle, BoundingRectangle.Right);
@@ -984,7 +984,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         private IEnumerable<PeripherySurfaceBounds> GetVisiblePeripherySurfaceBounds()
         {
-            var peripherySurfaceBounds = new List<PeripherySurfaceBounds>();
+            List<PeripherySurfaceBounds> peripherySurfaceBounds = new();
 
             // outer periphery side is visible only when startAngle or endAngle
             // is between 0 and 180 degrees
@@ -995,9 +995,9 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 if (StartAngle < 180)
                 {
                     var fi1 = StartAngle;
-                    var x1 = new PointF(PointStart.X, PointStart.Y);
+                    PointF x1 = new(PointStart.X, PointStart.Y);
                     var fi2 = EndAngle;
-                    var x2 = new PointF(PointEnd.X, PointEnd.Y);
+                    PointF x2 = new(PointEnd.X, PointEnd.Y);
                     if (StartAngle + SweepAngle > 180)
                     {
                         fi2 = 180;
@@ -1012,9 +1012,9 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 if (StartAngle + SweepAngle > 360)
                 {
                     const float fi1 = 0;
-                    var x1 = new PointF(BoundingRectangle.Right, Center.Y);
+                    PointF x1 = new(BoundingRectangle.Right, Center.Y);
                     var fi2 = EndAngle;
-                    var x2 = new PointF(PointEnd.X, PointEnd.Y);
+                    PointF x2 = new(PointEnd.X, PointEnd.Y);
                     if (fi2 > 180)
                     {
                         fi2 = 180;
@@ -1052,7 +1052,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             float startAngle, float endAngle,
             PointF pointStart, PointF pointEnd)
         {
-            var path = new GraphicsPath();
+            GraphicsPath path = new();
             path.AddArc(BoundingRectangle, startAngle, endAngle - startAngle);
             path.AddLine(pointEnd.X, pointEnd.Y, pointEnd.X, pointEnd.Y + SliceHeight);
             path.AddArc(

@@ -40,14 +40,14 @@ namespace GitCommands.ExternalLinks
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            var cachedSettings = new RepoDistSettings(null, settings.SettingsCache, SettingLevel.Unknown);
+            RepoDistSettings cachedSettings = new(null, settings.SettingsCache, SettingLevel.Unknown);
             IEnumerable<ExternalLinkDefinition>? effective = _externalLinksStorage.Load(cachedSettings);
 
             Validates.NotNull(effective);
 
             if (settings.LowerPriority is not null)
             {
-                var lowerPriorityLoader = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
+                ConfiguredLinkDefinitionsProvider lowerPriorityLoader = new(_externalLinksStorage);
                 effective = effective.Union(lowerPriorityLoader.Get(settings.LowerPriority));
             }
 

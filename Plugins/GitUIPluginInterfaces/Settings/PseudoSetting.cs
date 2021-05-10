@@ -23,7 +23,7 @@ namespace GitUIPluginInterfaces
 
             _textBoxCreator = () =>
             {
-                var textbox = new TextBox { ReadOnly = true, BorderStyle = BorderStyle.None, Text = text };
+                TextBox textbox = new() { ReadOnly = true, BorderStyle = BorderStyle.None, Text = text };
 
                 if (height.HasValue)
                 {

@@ -15,12 +15,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _deleteBranchQuestion = new(
             "Are you sure you want to delete selected branches?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
         private readonly TranslationString _deleteUnmergedBranchForcingSuggestion =
-            new TranslationString("You cannot delete unmerged branch until you set “force delete” mode.");
+            new("You cannot delete unmerged branch until you set “force delete” mode.");
         private readonly TranslationString _cannotDeleteCurrentBranchMessage =
-            new TranslationString("Cannot delete the branch “{0}” which you are currently on.");
+            new("Cannot delete the branch “{0}” which you are currently on.");
 
         private readonly IEnumerable<string> _defaultBranches;
-        private readonly HashSet<string> _mergedBranches = new HashSet<string>();
+        private readonly HashSet<string> _mergedBranches = new();
         private string? _currentBranch;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                var cmd = new GitDeleteBranchCmd(selectedBranches, ForceDelete.Checked);
+                GitDeleteBranchCmd cmd = new(selectedBranches, ForceDelete.Checked);
                 UICommands.StartCommandLineProcessDialog(this, cmd);
             }
             catch (Exception ex)

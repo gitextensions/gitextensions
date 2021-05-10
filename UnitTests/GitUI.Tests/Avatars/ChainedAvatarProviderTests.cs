@@ -42,7 +42,7 @@ namespace GitUITests.Avatars
         [Test]
         public async Task Construction_without_parameter_is_allowed_and_returns_null()
         {
-            var provider = new ChainedAvatarProvider();
+            ChainedAvatarProvider provider = new();
 
             var image = await provider.GetAvatarAsync(_email1, _name1, _size);
             Assert.Null(image);
@@ -92,7 +92,7 @@ namespace GitUITests.Avatars
             provider2.GetAvatarAsync(_email4, _name4, _size).Returns((Image)null);
             provider3.GetAvatarAsync(_email4, _name4, _size).Returns((Image)null);
 
-            var chainedProvider = new ChainedAvatarProvider(provider1, provider2, provider3);
+            ChainedAvatarProvider chainedProvider = new(provider1, provider2, provider3);
 
             var res1 = await chainedProvider.GetAvatarAsync(_email1, _name1, _size);
             var res2 = await chainedProvider.GetAvatarAsync(_email2, _name2, _size);

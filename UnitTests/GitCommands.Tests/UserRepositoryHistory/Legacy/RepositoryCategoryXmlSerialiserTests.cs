@@ -69,7 +69,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
         [Test]
         public void Verify_backwards_compatibility_of_object_graph()
         {
-            var surrogate = new List<RepositoryCategory>
+            List<RepositoryCategory> surrogate = new()
             {
                 new RepositoryCategory
                 {
@@ -95,9 +95,9 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
             };
 
             string xml;
-            using var sw = new StringWriter();
-            var serializer = new XmlSerializer(typeof(List<RepositoryCategory>));
-            var ns = new XmlSerializerNamespaces();
+            using StringWriter sw = new();
+            XmlSerializer serializer = new(typeof(List<RepositoryCategory>));
+            XmlSerializerNamespaces ns = new();
             ns.Add(string.Empty, string.Empty);
             serializer.Serialize(sw, surrogate, ns);
             xml = sw.ToString();

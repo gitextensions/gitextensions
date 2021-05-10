@@ -119,7 +119,7 @@ namespace GitUI
 
         private List<string> GetBranchHeads(bool local, bool remote)
         {
-            var list = new List<string>();
+            List<string> list = new();
             if (local && remote)
             {
                 var branches = Module.GetRefs(true, true);

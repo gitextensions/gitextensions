@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
 
             private static class LostObjectsComparer
             {
-                private static readonly Dictionary<string, Comparison<LostObject>> PropertyComparers = new Dictionary<string, Comparison<LostObject>>();
+                private static readonly Dictionary<string, Comparison<LostObject>> PropertyComparers = new();
 
                 static LostObjectsComparer()
                 {

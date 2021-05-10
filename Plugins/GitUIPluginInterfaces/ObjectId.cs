@@ -16,7 +16,7 @@ namespace GitUIPluginInterfaces
     /// </remarks>
     public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     {
-        private static readonly ThreadLocal<byte[]> _buffer = new ThreadLocal<byte[]>(() => new byte[Sha1ByteCount], trackAllValues: false);
+        private static readonly ThreadLocal<byte[]> _buffer = new(() => new byte[Sha1ByteCount], trackAllValues: false);
         private static readonly Random _random = new();
 
         /// <summary>

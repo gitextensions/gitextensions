@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
         public FormSparseWorkingCopy(GitUICommands commands)
             : base(commands)
         {
-            var sparse = new FormSparseWorkingCopyViewModel(commands);
+            FormSparseWorkingCopyViewModel sparse = new(commands);
             BindToViewModelGlobal(sparse);
             CreateView(sparse);
             InitializeComplete();
@@ -95,9 +95,9 @@ namespace GitUI.CommandsDialogs
             MinimumSize = new Size(800, 600);
 
             // Tooltips support for the form
-            var componentContainer = new Container();
+            Container componentContainer = new();
             _disposable1 = componentContainer;
-            var tooltip = new ToolTip(componentContainer) { AutomaticDelay = 100 };
+            ToolTip tooltip = new(componentContainer) { AutomaticDelay = 100 };
 
             Panel panelHeader = CreateViewHeader();
 
@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs
 
         private static Panel CreateViewFooter(FormSparseWorkingCopyViewModel sparse, ToolTip tooltip, out Button btnSave, out Button btnCancel)
         {
-            var tableFooterButtons = new TableLayoutPanel { BackColor = SystemColors.ControlLightLight, Dock = DockStyle.Fill, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = 4, RowCount = 1, Margin = Padding.Empty, ColumnStyles = { new ColumnStyle(SizeType.Percent, 100) }, Padding = new Padding(10, 15, 10, 15), CellBorderStyle = TableLayoutPanelCellBorderStyle.None };
+            TableLayoutPanel tableFooterButtons = new() { BackColor = SystemColors.ControlLightLight, Dock = DockStyle.Fill, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, ColumnCount = 4, RowCount = 1, Margin = Padding.Empty, ColumnStyles = { new ColumnStyle(SizeType.Percent, 100) }, Padding = new Padding(10, 15, 10, 15), CellBorderStyle = TableLayoutPanelCellBorderStyle.None };
 
             CheckBox check;
             tableFooterButtons.Controls.Add(check = new CheckBox { Text = Globalized.Strings.RefreshWorkingCopyUsingTheCurrentSettingsAndRules.Text, Checked = sparse.IsRefreshWorkingCopyOnSave, AutoSize = true, Dock = DockStyle.Fill, Margin = Padding.Empty });
@@ -148,7 +148,7 @@ namespace GitUI.CommandsDialogs
 
         private static Panel CreateViewHeader()
         {
-            var panelHeaderMain = new TableLayoutPanel { BackColor = SystemColors.ControlLightLight, Dock = DockStyle.Fill, AutoSize = true, Margin = Padding.Empty, Padding = Padding.Empty, RowCount = 2, ColumnCount = 1 };
+            TableLayoutPanel panelHeaderMain = new() { BackColor = SystemColors.ControlLightLight, Dock = DockStyle.Fill, AutoSize = true, Margin = Padding.Empty, Padding = Padding.Empty, RowCount = 2, ColumnCount = 1 };
 
             Label labelTitle;
             panelHeaderMain.Controls.Add(labelTitle = new Label { Text = Globalized.Strings.SparseWorkingCopy.Text, Dock = DockStyle.Bottom, AutoSize = true, Margin = new Padding(10, 10, 10, 0) });
@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs
         private static Control CreateViewOnOff(FormSparseWorkingCopyViewModel sparse, ToolTip tooltip)
         {
             // When disabled: hint-like panel to enable
-            var panelWhenDisabled = new TableLayoutPanel { BackColor = SystemColors.Info, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Dock = DockStyle.Bottom, ColumnCount = 2, RowCount = 1, ColumnStyles = { new ColumnStyle(SizeType.Percent, 100) }, Margin = Padding.Empty, Padding = new Padding(10, 5, 10, 5) };
+            TableLayoutPanel panelWhenDisabled = new() { BackColor = SystemColors.Info, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Dock = DockStyle.Bottom, ColumnCount = 2, RowCount = 1, ColumnStyles = { new ColumnStyle(SizeType.Percent, 100) }, Margin = Padding.Empty, Padding = new Padding(10, 5, 10, 5) };
             panelWhenDisabled.Controls.Add(new Label { ForeColor = SystemColors.InfoText, Text = Globalized.Strings.SparseWorkingCopySupportHasNotBeenEnabledForThisRepository.Text, Dock = DockStyle.Fill, AutoSize = true, TextAlign = ContentAlignment.MiddleLeft, Margin = Padding.Empty });
             Button btnEnable;
             panelWhenDisabled.Controls.Add(btnEnable = new Button { Width = 75, Height = 23, Text = Globalized.Strings.Enable.Text, Anchor = AnchorStyles.Bottom | AnchorStyles.Right, Dock = DockStyle.Right, UseVisualStyleBackColor = true, Margin = Padding.Empty });
@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs
             // When enabled: a less bold link to disable
             string labelBeforeLink = Globalized.Strings.SparseWorkingCopySupportIsEnabled.Text + ' ';
             string labelWithLink = labelBeforeLink + Globalized.Strings.DisableForThisRepository.Text;
-            var labelWhenEnabled = new LinkLabel { Text = labelWithLink, Dock = DockStyle.Bottom, AutoSize = true, Padding = new Padding(10, 10, 10, 5), FlatStyle = FlatStyle.System, UseCompatibleTextRendering = true };
+            LinkLabel labelWhenEnabled = new() { Text = labelWithLink, Dock = DockStyle.Bottom, AutoSize = true, Padding = new Padding(10, 10, 10, 5), FlatStyle = FlatStyle.System, UseCompatibleTextRendering = true };
             labelWhenEnabled.Links.Add(new LinkLabel.Link(labelBeforeLink.Length, labelWithLink.Length - labelBeforeLink.Length));
             labelWhenEnabled.LinkClicked += delegate { sparse.IsSparseCheckoutEnabled = false; };
             tooltip.SetToolTip(labelWhenEnabled, string.Format(Globalized.Strings.SetsTheGitPropertyToFalseForTheLocalRepository.Text, FormSparseWorkingCopyViewModel.SettingCoreSparseCheckout));
@@ -189,12 +189,12 @@ namespace GitUI.CommandsDialogs
         private static Panel CreateViewRules(FormSparseWorkingCopyViewModel sparse, ToolTip tooltip, IGitUICommandsSource commandsSource)
         {
             // Label
-            var label1 = new Label { AutoSize = true, Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories.Text, Dock = DockStyle.Top, Padding = new Padding(10, 5, 10, 0) };
-            var label2 = new Label { AutoSize = true, Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectoriesLine2.Text, Dock = DockStyle.Top, Padding = new Padding(25, 3, 10, 3), ForeColor = SystemColors.GrayText };
+            Label label1 = new() { AutoSize = true, Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories.Text, Dock = DockStyle.Top, Padding = new Padding(10, 5, 10, 0) };
+            Label label2 = new() { AutoSize = true, Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectoriesLine2.Text, Dock = DockStyle.Top, Padding = new Padding(25, 3, 10, 3), ForeColor = SystemColors.GrayText };
             sparse.PropertyChanged += delegate { label1.Visible = label2.Visible = sparse.IsSparseCheckoutEnabled; };
 
             // Text editor
-            var editor = new FileViewer { Dock = DockStyle.Fill, UICommandsSource = commandsSource, IsReadOnly = false };
+            FileViewer editor = new() { Dock = DockStyle.Fill, UICommandsSource = commandsSource, IsReadOnly = false };
             editor.TextLoaded += (sender, args) => sparse.SetRulesTextAsOnDisk(editor.GetText());
             try
             {
@@ -214,7 +214,7 @@ namespace GitUI.CommandsDialogs
             Control separator = CreateViewSeparator(DockStyle.Top);
             sparse.PropertyChanged += delegate { editor.Visible = separator.Visible = sparse.IsSparseCheckoutEnabled; };
 
-            var panel = new Panel { Margin = Padding.Empty, Padding = Padding.Empty, Controls = { editor, separator, label2, label1 }, AutoSize = true, Dock = DockStyle.Fill };
+            Panel panel = new() { Margin = Padding.Empty, Padding = Padding.Empty, Controls = { editor, separator, label2, label1 }, AutoSize = true, Dock = DockStyle.Fill };
 
             return panel;
         }

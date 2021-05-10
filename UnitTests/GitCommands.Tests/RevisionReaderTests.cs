@@ -92,7 +92,7 @@ namespace GitCommandsTests
         [TestCase("s", "l2\n\nl4 \n", "f.ext ")]
         public void ParseCommitBody_should_work(string subject, string lines, string expectedAdditionalData)
         {
-            var encodedBody = new StringBuilder();
+            StringBuilder encodedBody = new();
             encodedBody.Append(subject);
             if (!string.IsNullOrEmpty(lines))
             {

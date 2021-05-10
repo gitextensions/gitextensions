@@ -15,7 +15,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
         public static Settings? Parse(IGitModule gitModule, ISettingsSource settings, BitbucketPlugin plugin)
         {
-            var result = new Settings
+            Settings result = new()
             {
                 Username = plugin.BitbucketUsername.ValueOrDefault(settings),
                 Password = plugin.BitbucketPassword.ValueOrDefault(settings),

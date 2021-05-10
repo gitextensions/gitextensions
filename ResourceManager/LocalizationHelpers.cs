@@ -30,7 +30,7 @@ namespace ResourceManager
         /// <see href="http://stackoverflow.com/questions/11/how-do-i-calculate-relative-time"/>
         public static string GetRelativeDateString(DateTime originDate, DateTime previousDate, bool displayWeeks = true)
         {
-            var ts = new TimeSpan(RoundDateTime(originDate).Ticks - RoundDateTime(previousDate).Ticks);
+            TimeSpan ts = new(RoundDateTime(originDate).Ticks - RoundDateTime(previousDate).Ticks);
             double delta = Math.Abs(ts.TotalSeconds);
 
             if (delta < 60)
@@ -79,7 +79,7 @@ namespace ResourceManager
 
         public static string GetSubmoduleText(GitModule superproject, string name, string hash, bool cache)
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.AppendLine("Submodule " + name);
             sb.AppendLine();
             GitModule module = superproject.GetSubmodule(name);
@@ -134,7 +134,7 @@ namespace ResourceManager
             }
 
             GitModule gitModule = moduleIsParent ? module.GetSubmodule(status.Name) : module;
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.AppendLine("Submodule " + status.Name + " Change");
 
             // TEMP, will be moved in the follow up refactor

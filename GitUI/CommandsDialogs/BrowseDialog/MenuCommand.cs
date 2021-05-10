@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return new ToolStripSeparator();
             }
 
-            var toolStripMenuItem = new ToolStripMenuItem
+            ToolStripMenuItem toolStripMenuItem = new()
             {
                 Name = menuCommand.Name,
                 Text = menuCommand.Text,
@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             return toolStripMenuItem;
         }
 
-        private readonly List<ToolStripMenuItem> _registeredMenuItems = new List<ToolStripMenuItem>();
+        private readonly List<ToolStripMenuItem> _registeredMenuItems = new();
 
         /// <summary>
         /// if true all other properties have no meaning.

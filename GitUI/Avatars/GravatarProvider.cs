@@ -38,7 +38,7 @@ namespace GitUI.Avatars
             var fallback = SerializeFallbackType(_fallback) ?? "404";
             var hash = ComputeHash(email);
 
-            var uri = new UriBuilder("https", "www.gravatar.com")
+            UriBuilder uri = new("https", "www.gravatar.com")
             {
                 Path = $"/avatar/{hash}",
                 Query = $"s={imageSize}&r={_rating}&d={fallback}"
@@ -63,7 +63,7 @@ namespace GitUI.Avatars
         private static string ComputeHash(string email)
         {
             // Hash specified at http://en.gravatar.com/site/implement/hash/
-            using var md5 = new MD5CryptoServiceProvider();
+            using MD5CryptoServiceProvider md5 = new();
 
             // Gravatar doesn't specify an encoding
             var emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());

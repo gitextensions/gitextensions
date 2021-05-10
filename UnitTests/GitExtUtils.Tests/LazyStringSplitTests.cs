@@ -37,7 +37,7 @@ namespace GitExtUtilsTests
             AssertEx.SequenceEqual(expected, actual);
 
             // Non boxing foreach
-            var list = new List<string>();
+            List<string> list = new();
 
             foreach (var s in new LazyStringSplit(input, delimiter, StringSplitOptions.None))
             {
@@ -78,7 +78,7 @@ namespace GitExtUtilsTests
             AssertEx.SequenceEqual(expected, actual);
 
             // Non boxing foreach
-            var list = new List<string>();
+            List<string> list = new();
 
             foreach (var s in new LazyStringSplit(input, delimiter, StringSplitOptions.RemoveEmptyEntries))
             {

@@ -48,7 +48,7 @@ namespace GitCommands.Git
         /// <returns>list with the git items.</returns>
         internal List<GitItemStatus> GetAllChangedFilesFromString_v1(string getAllChangedFilesCommandOutput, bool fromDiff, StagedStatus staged)
         {
-            var diffFiles = new List<GitItemStatus>();
+            List<GitItemStatus> diffFiles = new();
 
             if (string.IsNullOrEmpty(getAllChangedFilesCommandOutput))
             {
@@ -171,7 +171,7 @@ namespace GitCommands.Git
         /// <returns>list with the parsed GitItemStatus.</returns>
         private static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString_v2(string getAllChangedFilesCommandOutput)
         {
-            var diffFiles = new List<GitItemStatus>();
+            List<GitItemStatus> diffFiles = new();
 
             if (string.IsNullOrEmpty(getAllChangedFilesCommandOutput))
             {

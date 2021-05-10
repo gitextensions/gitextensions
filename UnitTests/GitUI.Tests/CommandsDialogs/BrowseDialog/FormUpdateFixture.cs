@@ -12,7 +12,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
     {
         private static string GetReleasesConfigFileText()
         {
-            var configFile = new ConfigFile("", true);
+            ConfigFile configFile = new("", true);
             configFile.SetValue("Version \"2.47\".ReleaseType", "Major");
             configFile.SetValue("Version \"2.48\".ReleaseType", "Major");
             configFile.SetValue("Version \"2.49\".ReleaseType", "ReleaseCandidate");
@@ -24,7 +24,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
         [Test]
         public void CheckForReleaseCandidatesTest()
         {
-            var currentVersion = new Version(2, 47);
+            Version currentVersion = new(2, 47);
             var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
             var updates = ReleaseVersion.GetNewerVersions(currentVersion, true, availableVersions);
@@ -40,7 +40,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
         [Test]
         public void CheckForMajorReleasesTest()
         {
-            var currentVersion = new Version(2, 47);
+            Version currentVersion = new(2, 47);
             var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
             var updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);
@@ -54,7 +54,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
         [Test]
         public void CheckForNoMajorReleasesTest()
         {
-            var currentVersion = new Version(2, 48);
+            Version currentVersion = new(2, 48);
             var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
             var updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);

@@ -196,7 +196,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     string fileName in
                         Directory.GetFiles(AppSettings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
                 {
-                    var file = new FileInfo(fileName);
+                    FileInfo file = new(fileName);
                     Dictionary.Items.Add(file.Name.Replace(".dic", ""));
                 }
 

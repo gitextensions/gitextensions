@@ -232,7 +232,7 @@ namespace GitUI.CommitInfo
 
         private IDictionary<string, int> GetSortedTags()
         {
-            var args = new GitArgumentBuilder("for-each-ref")
+            GitArgumentBuilder args = new("for-each-ref")
             {
                 "--sort=-taggerdate",
                 "--format=\"%(refname)\"",
@@ -247,7 +247,7 @@ namespace GitUI.CommitInfo
             }
 
             int i = 0;
-            var dict = new Dictionary<string, int>();
+            Dictionary<string, int> dict = new();
             foreach (var entry in tree.LazySplit('\n'))
             {
                 if (dict.ContainsKey(entry))
@@ -344,7 +344,7 @@ namespace GitUI.CommitInfo
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    var tasks = new List<Task>();
+                    List<Task> tasks = new();
 
                     tasks.Add(LoadLinksForRevisionAsync(initialRevision));
 
@@ -435,7 +435,7 @@ namespace GitUI.CommitInfo
                             return null;
                         }
 
-                        var result = new Dictionary<string, string>();
+                        Dictionary<string, string> result = new();
 
                         foreach (var gitRef in refs)
                         {
@@ -521,7 +521,7 @@ namespace GitUI.CommitInfo
                     {
                         var (precedingTag, commitCount) = _gitDescribeProvider.Get(commitId);
 
-                        var gitDescribeInfo = new StringBuilder();
+                        StringBuilder gitDescribeInfo = new();
                         if (!string.IsNullOrEmpty(precedingTag))
                         {
                             string tagString = ShowBranchesAsLinks ? _linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);
@@ -588,7 +588,7 @@ namespace GitUI.CommitInfo
                 IEnumerable<string> tagNames,
                 IDictionary<string, string> annotatedTagsMessages)
             {
-                var result = new StringBuilder();
+                StringBuilder result = new();
 
                 foreach (var tag in tagNames)
                 {
@@ -862,7 +862,7 @@ namespace GitUI.CommitInfo
         }
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {

@@ -10,7 +10,7 @@ namespace GitCommandsTests.Git.Commands
         [Test]
         public void TestConstructor()
         {
-            var cmd = new GitCheckoutBranchCmd("branchName", true);
+            GitCheckoutBranchCmd cmd = new("branchName", true);
 
             Assert.IsNotNull(cmd);
             Assert.AreEqual(cmd.BranchName, "branchName");
@@ -20,7 +20,7 @@ namespace GitCommandsTests.Git.Commands
         [Test]
         public void TestConstructorRemoteIsFalse()
         {
-            var cmd = new GitCheckoutBranchCmd("branchName", false);
+            GitCheckoutBranchCmd cmd = new("branchName", false);
 
             Assert.IsNotNull(cmd);
             Assert.AreEqual(cmd.BranchName, "branchName");
@@ -30,7 +30,7 @@ namespace GitCommandsTests.Git.Commands
         [Test]
         public void TestAccessesRemoteIsFalse()
         {
-            var cmd = new GitCheckoutBranchCmd("branchName", true);
+            GitCheckoutBranchCmd cmd = new("branchName", true);
 
             Assert.IsFalse(cmd.AccessesRemote);
         }

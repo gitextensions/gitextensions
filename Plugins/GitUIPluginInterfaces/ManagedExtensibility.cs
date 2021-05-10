@@ -40,7 +40,7 @@ namespace GitUIPluginInterfaces
             if (lazyExportProvider is null)
             {
                 var capturedApplicationDataFolder = applicationDataFolder;
-                var newLazyExportProvider = new Lazy<ExportProvider>(() => CreateExportProvider(capturedApplicationDataFolder), LazyThreadSafetyMode.ExecutionAndPublication);
+                Lazy<ExportProvider> newLazyExportProvider = new(() => CreateExportProvider(capturedApplicationDataFolder), LazyThreadSafetyMode.ExecutionAndPublication);
                 lazyExportProvider = Interlocked.CompareExchange(ref _exportProvider, newLazyExportProvider, null) ?? newLazyExportProvider;
             }
 

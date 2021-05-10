@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs
                 Validates.NotNull(fileName);
                 FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
                 {
-                    var gitIgnoreFileAddition = new StringBuilder();
+                    StringBuilder gitIgnoreFileAddition = new();
 
                     if (File.Exists(fileName) && !File.ReadAllText(fileName, GitModule.SystemEncoding).EndsWith(Environment.NewLine))
                     {

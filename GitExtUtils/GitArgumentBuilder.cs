@@ -111,7 +111,7 @@ namespace GitExtUtils
             var capacity = _configItems.Sum(i => i.Key.Length + i.Value.Length + 7) + _command.Length + 1 + arguments.Length;
             capacity += gitArgsLength + 1;
 
-            var str = new StringBuilder(capacity);
+            StringBuilder str = new(capacity);
 
             if (gitArgsLength > 0)
             {

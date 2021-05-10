@@ -58,7 +58,7 @@ namespace TeamCityIntegration.Settings
 
         private TreeNode ConvertProjectInTreeNode(Project project)
         {
-            var projectNode = new TreeNode(project.Name)
+            TreeNode projectNode = new(project.Name)
             {
                 Name = project.Name,
                 Tag = project,

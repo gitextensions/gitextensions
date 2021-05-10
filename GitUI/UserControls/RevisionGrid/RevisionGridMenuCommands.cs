@@ -410,7 +410,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void GotoCommitExecute()
         {
-            using var formGoToCommit = new FormGoToCommit(_revisionGrid.UICommands);
+            using FormGoToCommit formGoToCommit = new(_revisionGrid.UICommands);
             if (formGoToCommit.ShowDialog(_revisionGrid) != DialogResult.OK)
             {
                 return;

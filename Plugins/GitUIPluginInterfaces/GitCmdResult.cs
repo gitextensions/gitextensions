@@ -12,7 +12,7 @@ namespace GitUIPluginInterfaces
 
         public string GetString()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
 
             if (!string.IsNullOrEmpty(StdOutput))
             {

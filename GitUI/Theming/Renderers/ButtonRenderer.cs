@@ -163,7 +163,7 @@ namespace GitUI.Theming
                     };
                     using (ctx.HighQuality())
                     {
-                        using var checkPen = new Pen(foreColor, DpiUtil.Scale(1.5f));
+                        using Pen checkPen = new(foreColor, DpiUtil.Scale(1.5f));
                         ctx.Graphics.DrawLines(checkPen, points);
                     }
 

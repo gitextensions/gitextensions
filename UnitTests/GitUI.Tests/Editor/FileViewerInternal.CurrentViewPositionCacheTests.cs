@@ -34,7 +34,7 @@ namespace GitUITests.Editor
         {
             var test = _viewPositionCache.GetTestAccessor();
 
-            var existingViewPosition = new FileViewerInternal.ViewPosition
+            FileViewerInternal.ViewPosition existingViewPosition = new()
             {
                 FirstLine = "first line",
                 FirstVisibleLine = 24,
@@ -142,7 +142,7 @@ namespace GitUITests.Editor
             test.TextEditor.Text = Given.GitDiff;
             test.TextEditor.ActiveTextAreaControl.TextArea.TextView.DrawingPosition = new System.Drawing.Rectangle(0, 0, 100, 100);
 
-            var existingViewPosition = new FileViewerInternal.ViewPosition
+            FileViewerInternal.ViewPosition existingViewPosition = new()
             {
                 ActiveLineNum = new DiffLineInfo
                 {

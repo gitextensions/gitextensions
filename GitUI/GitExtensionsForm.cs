@@ -36,7 +36,7 @@ namespace GitUI
 
             FormClosing += GitExtensionsForm_FormClosing;
 
-            var cancelButton = new Button();
+            Button cancelButton = new();
             cancelButton.Click += CancelButtonClick;
             CancelButton = cancelButton;
 
@@ -140,7 +140,7 @@ namespace GitUI
             else
             {
                 // Calculate location for modal form with parent
-                Point calculatedLocation = new Point(
+                Point calculatedLocation = new(
                     Owner.Left + (Owner.Width / 2) - (Width / 2),
                     Owner.Top + (Owner.Height / 2) - (Height / 2));
                 Location = WindowPositionManager.FitWindowOnScreen(new Rectangle(calculatedLocation, Size), workingArea);
@@ -155,7 +155,7 @@ namespace GitUI
         }
 
         // This is a base class for many forms, which have own GetTestAccessor() methods. This has to be unique
-        internal GitExtensionsFormTestAccessor GetGitExtensionsFormTestAccessor() => new GitExtensionsFormTestAccessor(this);
+        internal GitExtensionsFormTestAccessor GetGitExtensionsFormTestAccessor() => new(this);
 
         internal readonly struct GitExtensionsFormTestAccessor
         {

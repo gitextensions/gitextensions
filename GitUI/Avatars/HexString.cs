@@ -14,7 +14,7 @@ namespace GitUI.Avatars
                 return string.Empty;
             }
 
-            var builder = new StringBuilder(capacity: data.Length * 2);
+            StringBuilder builder = new(capacity: data.Length * 2);
 
             foreach (var b in data)
             {

@@ -41,7 +41,7 @@ namespace GitUI.UserControls
                 return;
             }
 
-            var remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
+            ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
             comboBoxRemotes.DataSource = remotesManager.LoadRemotes(false).Select(x => x.Name).ToList();
         }
     }

@@ -28,7 +28,7 @@ namespace GitUI.Avatars
         /// <inheritdoc/>
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            var templateData = new UriTemplateData(email, name, imageSize);
+            UriTemplateData templateData = new(email, name, imageSize);
 
             foreach (var provider in _subProvider)
             {

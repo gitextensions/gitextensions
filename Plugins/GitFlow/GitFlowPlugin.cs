@@ -19,7 +19,7 @@ namespace GitExtensions.Plugins.GitFlow
 
         public override bool Execute(GitUIEventArgs args)
         {
-            using var frm = new GitFlowForm(args);
+            using GitFlowForm frm = new(args);
             frm.ShowDialog(args.OwnerForm);
             return frm.IsRefreshNeeded;
         }

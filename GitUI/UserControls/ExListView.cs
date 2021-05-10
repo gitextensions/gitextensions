@@ -58,7 +58,7 @@ namespace GitUI.UserControls
 
         public ListViewGroupHitInfo? GetGroupHitInfo(Point location)
         {
-            var info = new LVHITTESTINFO
+            LVHITTESTINFO info = new()
             {
                 pt = location
             };
@@ -95,7 +95,7 @@ namespace GitUI.UserControls
         /// </remarks>
         public void SetGroups(IReadOnlyList<ListViewGroup> groups, StringComparer nameComparer)
         {
-            var groupNames = new HashSet<string>(groups.Select(g => g.Name), nameComparer);
+            HashSet<string> groupNames = new(groups.Select(g => g.Name), nameComparer);
 
             BeginGroupInsertion();
 
@@ -253,7 +253,7 @@ namespace GitUI.UserControls
                     return false;
                 }
 
-                var eventArgs = new ListViewGroupMouseEventArgs(button, hitInfo, 1, 0);
+                ListViewGroupMouseEventArgs eventArgs = new(button, hitInfo, 1, 0);
                 if (isDown)
                 {
                     GroupMouseDown?.Invoke(this, eventArgs);
@@ -275,7 +275,7 @@ namespace GitUI.UserControls
                 groupId = Groups.IndexOf(group) - _minGroupInsertionIndex;
             }
 
-            var lvgroup = new LVGROUPW();
+            LVGROUPW lvgroup = new();
             lvgroup.cbSize = (uint)sizeof(LVGROUPW);
             lvgroup.state = state;
             lvgroup.mask = LVGF.STATE;

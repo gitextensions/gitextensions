@@ -26,13 +26,13 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
                 return null;
             }
 
-            var logLine = new LogLine(m.Groups[1].Value, m.Groups[2].Value);
+            LogLine logLine = new(m.Groups[1].Value, m.Groups[2].Value);
             return logLine;
         }
 
         public IEnumerable<LogLine> Parse(IEnumerable<string>? lines)
         {
-            var resultList = new List<LogLine>();
+            List<LogLine> resultList = new();
             if (lines is null)
             {
                 return resultList;

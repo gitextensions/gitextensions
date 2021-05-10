@@ -109,7 +109,7 @@ namespace GitUITests.Script
         [Test]
         public void GetCurrentRevision_should_return_expected_if_current_revision_has_no_refs()
         {
-            var revision = new GitRevision(ObjectId.IndexId);
+            GitRevision revision = new(ObjectId.IndexId);
             _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
             var result = ScriptOptionsParser.GetTestAccessor()
@@ -153,7 +153,7 @@ namespace GitUITests.Script
         public void Parse_should_parse_c_arguments()
         {
             const string Subject = "line1";
-            var revision = new GitRevision(ObjectId.IndexId)
+            GitRevision revision = new(ObjectId.IndexId)
             {
                 Subject = Subject,
                 Body = $"{Subject}\n\nline3"
@@ -172,7 +172,7 @@ namespace GitUITests.Script
         public void Parse_should_parse_s_arguments()
         {
             const string Subject = "line1";
-            var revision = new GitRevision(ObjectId.IndexId)
+            GitRevision revision = new(ObjectId.IndexId)
             {
                 Subject = Subject,
                 Body = $"{Subject}\n\nline3"
@@ -219,7 +219,7 @@ namespace GitUITests.Script
         [Test]
         public void ParseScriptArguments_resolve_sRemotePathFromUrl_selectedRemotes_empty()
         {
-            var noSelectedRemotes = new List<string>();
+            List<string> noSelectedRemotes = new();
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
@@ -235,7 +235,7 @@ namespace GitUITests.Script
         public void ParseScriptArguments_resolve_sRemotePathFromUrl_currentRemote_set()
         {
             var currentRemote = "myRemote";
-            var selectedRemotes = new List<string>() { currentRemote };
+            List<string> selectedRemotes = new() { currentRemote };
             _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote)).Returns("https://gitlab.com/gitlabhq/gitlabhq.git");
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
@@ -255,7 +255,7 @@ namespace GitUITests.Script
         {
             var option = "sRemoteBranch";
             var branch = remoteName + '/' + branchName;
-            var remoteBranches = new List<IGitRef>() { new GitRef(null, null, branch) };
+            List<IGitRef> remoteBranches = new() { new GitRef(null, null, branch) };
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
@@ -274,7 +274,7 @@ namespace GitUITests.Script
         {
             var option = "sRemoteBranchName";
             var branch = remoteName + '/' + branchName;
-            var remoteBranches = new List<IGitRef>() { new GitRef(null, null, branch) };
+            List<IGitRef> remoteBranches = new() { new GitRef(null, null, branch) };
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
@@ -293,7 +293,7 @@ namespace GitUITests.Script
         {
             var option = "cRemoteBranch";
             var branch = remoteName + '/' + branchName;
-            var remoteBranches = new List<IGitRef>() { new GitRef(null, null, branch) };
+            List<IGitRef> remoteBranches = new() { new GitRef(null, null, branch) };
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,
@@ -312,7 +312,7 @@ namespace GitUITests.Script
         {
             var option = "cRemoteBranchName";
             var branch = remoteName + '/' + branchName;
-            var remoteBranches = new List<IGitRef>() { new GitRef(null, null, branch) };
+            List<IGitRef> remoteBranches = new() { new GitRef(null, null, branch) };
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
                 arguments: "{" + option + "}", option,

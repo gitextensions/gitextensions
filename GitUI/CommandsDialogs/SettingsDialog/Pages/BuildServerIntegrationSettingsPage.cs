@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class BuildServerIntegrationSettingsPage : RepoDistSettingsPage
     {
         private readonly TranslationString _noneItem =
-            new TranslationString("None");
+            new("None");
         private IConfigFileRemoteSettingsManager? _remotesManager;
         private JoinableTask<object>? _populateBuildServerTypeTask;
 

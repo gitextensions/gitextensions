@@ -27,7 +27,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
         private static class BranchesComparer
         {
-            private static readonly Dictionary<string, Comparison<Branch>> PropertyComparers = new Dictionary<string, Comparison<Branch>>();
+            private static readonly Dictionary<string, Comparison<Branch>> PropertyComparers = new();
 
             static BranchesComparer()
             {

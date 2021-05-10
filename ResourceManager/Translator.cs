@@ -50,7 +50,7 @@ namespace ResourceManager
 
         public static string[] GetAllTranslations()
         {
-            var translations = new List<string>();
+            List<string> translations = new();
             try
             {
                 string translationDir = GetTranslationDir();

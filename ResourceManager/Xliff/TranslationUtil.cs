@@ -242,7 +242,7 @@ namespace ResourceManager.Xliff
                    items.Count != 0;
         }
 
-        private static readonly HashSet<string> _translatableItemInComponentNames = new HashSet<string>(StringComparer.Ordinal)
+        private static readonly HashSet<string> _translatableItemInComponentNames = new(StringComparer.Ordinal)
         {
             "AccessibleDescription",
             "AccessibleName",
@@ -283,7 +283,7 @@ namespace ResourceManager.Xliff
 
         public static Dictionary<string, List<Type>> GetTranslatableTypes()
         {
-            var dictionary = new Dictionary<string, List<Type>>();
+            Dictionary<string, List<Type>> dictionary = new();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 if (!assembly.IsTranslatable())

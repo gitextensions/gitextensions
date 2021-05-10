@@ -11,10 +11,10 @@ namespace GitExtUtils.GitUI.Theming
     public static class ThemeFix
     {
         private static readonly ConditionalWeakTable<IWin32Window, IWin32Window> AlreadyFixedControls =
-            new ConditionalWeakTable<IWin32Window, IWin32Window>();
+            new();
 
         private static readonly ConditionalWeakTable<IWin32Window, IWin32Window> AlreadyFixedContextMenuOwners =
-            new ConditionalWeakTable<IWin32Window, IWin32Window>();
+            new();
 
         public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 

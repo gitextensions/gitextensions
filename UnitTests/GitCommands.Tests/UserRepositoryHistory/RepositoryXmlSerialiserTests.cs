@@ -109,7 +109,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         [Test]
         public void Serialize_recent_repositories()
         {
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository(@"C:\Development\gitextensions\"),
                 new Repository(@"C:\Development\gitextensions\Externals\NBug\")

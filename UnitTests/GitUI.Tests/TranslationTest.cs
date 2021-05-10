@@ -32,11 +32,11 @@ namespace GitUITests
 
             var translatableTypes = TranslationUtil.GetTranslatableTypes();
 
-            var problems = new List<(string typeName, Exception exception)>();
+            List<(string typeName, Exception exception)> problems = new();
 
             foreach (var types in translatableTypes.Values)
             {
-                var translation = new TranslationFile();
+                TranslationFile translation = new();
 
                 foreach (var type in types)
                 {

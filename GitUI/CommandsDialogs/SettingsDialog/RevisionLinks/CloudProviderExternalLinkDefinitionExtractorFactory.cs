@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
         public IEnumerable<ICloudProviderExternalLinkDefinitionExtractor> GetAllExtractor()
         {
             var cloudProviderKinds = Enum.GetValues(typeof(CloudProviderKind)).OfType<CloudProviderKind>();
-            var cloudProviderExternalLinkDefinitionExtractorFactory = new CloudProviderExternalLinkDefinitionExtractorFactory();
+            CloudProviderExternalLinkDefinitionExtractorFactory cloudProviderExternalLinkDefinitionExtractorFactory = new();
             return cloudProviderKinds.Select(c => cloudProviderExternalLinkDefinitionExtractorFactory.Get(c))
                 .WhereNotNull();
         }

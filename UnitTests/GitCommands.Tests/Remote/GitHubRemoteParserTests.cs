@@ -22,7 +22,7 @@ namespace GitCommandsTests.Remote
         [Test]
         public void Should_fail_in_parsing_invalid_url()
         {
-            var gitHubRemoteParser = new GitHubRemoteParser();
+            GitHubRemoteParser gitHubRemoteParser = new();
             var url = "https://owner@dev.bad.com/owner/project/_git/repo";
             gitHubRemoteParser.TryExtractGitHubDataFromRemoteUrl(url, out var owner, out var repository).Should().BeFalse();
             owner.Should().BeNull();

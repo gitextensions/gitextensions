@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             if (caption is not null)
             {
-                var label = new Label
+                Label label = new()
                 {
                     Text = controlBinding.Caption(),
                     AutoSize = true,

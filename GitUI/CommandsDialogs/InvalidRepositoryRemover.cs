@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
                                                                    .Count(repo => !GitModule.IsValidGitWorkingDir(repo.Path));
             int dialogResult = -1;
 
-            using var dialog = new TaskDialog
+            using TaskDialog dialog = new()
             {
                 InstructionText = TranslatedStrings.DirectoryInvalidRepository,
                 Caption = TranslatedStrings.Open,
@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
                 StandardButtons = TaskDialogStandardButtons.Cancel,
                 Cancelable = true,
             };
-            var btnRemoveSelectedInvalidRepository = new TaskDialogCommandLink("RemoveSelectedInvalidRepository", null, TranslatedStrings.RemoveSelectedInvalidRepository);
+            TaskDialogCommandLink btnRemoveSelectedInvalidRepository = new("RemoveSelectedInvalidRepository", null, TranslatedStrings.RemoveSelectedInvalidRepository);
             btnRemoveSelectedInvalidRepository.Click += (s, e) =>
             {
                 dialogResult = 0;
@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
             dialog.Controls.Add(btnRemoveSelectedInvalidRepository);
             if (invalidPathCount > 1)
             {
-                var btnRemoveAllInvalidRepositories = new TaskDialogCommandLink("RemoveAllInvalidRepositories", null, string.Format(TranslatedStrings.RemoveAllInvalidRepositories, invalidPathCount));
+                TaskDialogCommandLink btnRemoveAllInvalidRepositories = new("RemoveAllInvalidRepositories", null, string.Format(TranslatedStrings.RemoveAllInvalidRepositories, invalidPathCount));
                 btnRemoveAllInvalidRepositories.Click += (s, e) =>
                 {
                     dialogResult = 1;

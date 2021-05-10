@@ -76,7 +76,7 @@ namespace ResourceManager.CommitDataRenders
 
             Validates.NotNull(_linkFactory);
 
-            var header = new StringBuilder();
+            StringBuilder header = new();
             header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.Author, padding) + _linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
 
             if (!isArtificial)
@@ -131,7 +131,7 @@ namespace ResourceManager.CommitDataRenders
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
 
-            var header = new StringBuilder();
+            StringBuilder header = new();
             header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.Author, padding) + commitData.Author);
             header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? TranslatedStrings.Date : TranslatedStrings.AuthorDate, padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate));
             if (!authorIsCommitter)
