@@ -1620,6 +1620,7 @@ namespace GitUI.CommandsDialogs
             var isAssumeUnchangedExist = Unstaged.SelectedItems.Any(s => s.Item.IsAssumeUnchanged);
             var isAssumeUnchangedAll = Unstaged.SelectedItems.All(s => s.Item.IsAssumeUnchanged);
             var isSkipWorktreeAll = Unstaged.SelectedItems.All(s => s.Item.IsSkipWorktree);
+            bool isAnyDeleted = Unstaged.SelectedItems.Any(i => i.Item.IsDeleted);
 
             openWithDifftoolToolStripMenuItem.Enabled = isTrackedSelected;
             viewFileHistoryToolStripItem.Enabled = isTrackedSelected;
@@ -1632,6 +1633,11 @@ namespace GitUI.CommandsDialogs
             bool isExactlyOneItemSelected = Unstaged.SelectedItems.Count() == 1;
             bool singleFileExists = isExactlyOneItemSelected && File.Exists(_fullPathResolver.Resolve(Unstaged?.SelectedGitItem?.Name));
             editFileToolStripMenuItem.Visible = singleFileExists;
+
+            openToolStripMenuItem.Enabled = !isAnyDeleted;
+            openWithToolStripMenuItem.Enabled = !isAnyDeleted;
+            deleteFileToolStripMenuItem.Enabled = !isAnyDeleted;
+            openContainingFolderToolStripMenuItem.Enabled = !isAnyDeleted;
         }
 
         private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1647,6 +1653,10 @@ namespace GitUI.CommandsDialogs
             bool isExactlyOneItemSelected = Staged.SelectedItems.Count() == 1;
             bool singleFileExists = isExactlyOneItemSelected && File.Exists(_fullPathResolver.Resolve(Staged?.SelectedGitItem?.Name));
             stagedEditFileToolStripMenuItem11.Visible = singleFileExists;
+            bool isAnyDeleted = Staged.SelectedItems.Any(i => i.Item.IsDeleted);
+            stagedOpenToolStripMenuItem7.Enabled = !isAnyDeleted;
+            stagedOpenWithToolStripMenuItem8.Enabled = !isAnyDeleted;
+            stagedOpenFolderToolStripMenuItem10.Enabled = !isAnyDeleted;
         }
 
         private void UnstagedSubmoduleContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
