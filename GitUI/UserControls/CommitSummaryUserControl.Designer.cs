@@ -161,7 +161,7 @@
             tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             tableLayoutPanel1.Controls.Add(this.labelDateCaption, 0, 3);
             tableLayoutPanel1.Controls.Add(this.labelAuthorCaption, 0, 2);
             tableLayoutPanel1.Controls.Add(this.labelAuthor, 1, 2);
