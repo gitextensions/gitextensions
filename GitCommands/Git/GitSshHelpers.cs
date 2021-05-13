@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace GitCommands
 {
@@ -26,10 +27,15 @@ namespace GitCommands
         }
 
         /// <summary>Sets the git SSH command path.</summary>
-        public static void SetSsh(string? path)
+        public static void SetSsh(string path)
         {
             // Git will use the embedded OpenSSH ssh.exe if empty/unset
-            Environment.SetEnvironmentVariable("GIT_SSH", path ?? "", EnvironmentVariableTarget.Process);
+            if (!string.IsNullOrEmpty(path) && !File.Exists(path))
+            {
+                path = "";
+            }
+
+            Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
         }
 
         public static bool Plink()
