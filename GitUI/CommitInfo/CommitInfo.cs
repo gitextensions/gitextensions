@@ -377,8 +377,11 @@ namespace GitUI.CommitInfo
                         tasks.Add(LoadDescribeInfoAsync(initialRevision.ObjectId));
                     }
 
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     await Task.WhenAll(tasks);
 
+                    await this.SwitchToMainThreadAsync(cancellationToken);
                     UpdateRevisionInfo();
                 }).FileAndForget();
 
