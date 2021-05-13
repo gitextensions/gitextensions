@@ -544,11 +544,6 @@ namespace GitUI.Editor
 
             Image? GetImage()
             {
-                if (sha is null)
-                {
-                    return null;
-                }
-
                 try
                 {
                     using var stream = Module.GetFileStream(sha);
