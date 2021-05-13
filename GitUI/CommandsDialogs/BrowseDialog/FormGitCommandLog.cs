@@ -28,8 +28,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             LogOutput.Font = font;
             commandCacheOutput.Font = font;
 
-            chkCaptureCallStacks.Checked = CommandLog.CaptureCallStacks;
-            chkCaptureCallStacks.CheckedChanged += delegate { CommandLog.CaptureCallStacks = chkCaptureCallStacks.Checked; };
+            chkCaptureCallStacks.Checked = AppSettings.LogCaptureCallStacks;
+            chkCaptureCallStacks.CheckedChanged += delegate { AppSettings.LogCaptureCallStacks = chkCaptureCallStacks.Checked; };
 
             chkWordWrap.CheckedChanged += delegate
             {
