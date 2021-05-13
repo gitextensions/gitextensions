@@ -135,7 +135,7 @@ namespace GitUI.CommandsDialogs
 
             void Init()
             {
-                _gitRefs = Module.GetRefs();
+                _gitRefs = Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes);
                 if (GitVersion.Current.SupportPushWithRecursiveSubmodulesCheck)
                 {
                     RecursiveSubmodules.Enabled = true;
@@ -957,7 +957,7 @@ namespace GitUI.CommandsDialogs
         private void FillTagDropDown()
         {
             // var tags = Module.GetTagHeads(GitModule.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
-            List<string> tags = Module.GetRefs(tags: true, branches: false)
+            List<string> tags = Module.GetRefs(RefsFilter.Tags)
                                       .Select(tag => tag.Name)
                                       .ToList();
             tags.Insert(0, AllRefs);

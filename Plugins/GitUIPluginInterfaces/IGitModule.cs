@@ -11,7 +11,7 @@ namespace GitUIPluginInterfaces
         IConfigFileSettings LocalConfigFile { get; }
 
         string AddRemote(string remoteName, string? path);
-        IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true);
+        IReadOnlyList<IGitRef> GetRefs(RefsFilter getRef);
         IEnumerable<string> GetSettings(string setting);
         IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full);
 

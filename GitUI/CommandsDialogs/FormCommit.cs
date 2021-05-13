@@ -916,7 +916,7 @@ namespace GitUI.CommandsDialogs
                 remoteNameLabel.Click -= _branchNameLabelOnClick;
             }
 
-            var currentBranch = Module.GetRefs(tags: false, branches: true).FirstOrDefault(r => r.LocalName == currentBranchName);
+            var currentBranch = Module.GetRefs(RefsFilter.Heads).FirstOrDefault(r => r.LocalName == currentBranchName);
             if (currentBranch is null)
             {
                 branchNameLabel.Text = currentBranchName;

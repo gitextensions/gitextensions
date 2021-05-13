@@ -119,7 +119,7 @@ namespace GitUI.BranchTreePanel
 
                 if (!IsFiltering.Value || _loadedTags is null)
                 {
-                    _loadedTags = Module.GetRefs(tags: true, branches: false);
+                    _loadedTags = Module.GetRefs(RefsFilter.Tags);
                     token.ThrowIfCancellationRequested();
                 }
 

@@ -278,7 +278,7 @@ Inactive remote is completely invisible to git.");
 
         private void InitialiseTabDefaultPullBehaviors(string? preselectLocal = null)
         {
-            var heads = Module.GetRefs(false, true).OrderBy(r => r.LocalName).ToList();
+            var heads = Module.GetRefs(RefsFilter.Heads).OrderBy(r => r.LocalName).ToList();
 
             RemoteRepositoryCombo.Sorted = false;
             RemoteRepositoryCombo.DataSource = new[] { new ConfigFileRemote() }.Union(UserGitRemotes).ToList();
@@ -579,9 +579,9 @@ Inactive remote is completely invisible to git.");
                 return;
             }
 
-            foreach (var remoteHead in Module.GetRefs(true, true))
+            foreach (var remoteHead in Module.GetRefs(RefsFilter.Remotes))
             {
-                if (remoteHead.IsRemote && remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()))
+                if (remoteHead.Name.ToLower().Contains(currentSelectedRemote.ToLower()))
                 {
                     DefaultMergeWithCombo.Items.Add(remoteHead.LocalName);
                 }

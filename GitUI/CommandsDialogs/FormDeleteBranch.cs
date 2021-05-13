@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -42,7 +43,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormDeleteBranchLoad(object sender, EventArgs e)
         {
-            Branches.BranchesToSelect = Module.GetRefs(tags: true, branches: true).Where(h => h.IsHead && !h.IsRemote).ToList();
+            Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads).ToList();
             foreach (var branch in Module.GetMergedBranches())
             {
                 if (!branch.StartsWith("* "))

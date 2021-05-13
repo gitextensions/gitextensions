@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             comboBoxTags.Text = TranslatedStrings.LoadingData;
             return _tagsLoader.LoadAsync(
-                () => Module.GetRefs(tags: true, branches: false).ToList(),
+                () => Module.GetRefs(RefsFilter.Tags).ToList(),
                 list =>
                 {
                     comboBoxTags.Text = string.Empty;
@@ -89,7 +89,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             comboBoxBranches.Text = TranslatedStrings.LoadingData;
             return _branchesLoader.LoadAsync(
-                () => Module.GetRefs(tags: false, branches: true).ToList(),
+                () => Module.GetRefs(RefsFilter.Heads).ToList(),
                 list =>
                 {
                     comboBoxBranches.Text = string.Empty;
