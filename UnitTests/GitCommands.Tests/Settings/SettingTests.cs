@@ -13,17 +13,25 @@ namespace GitCommandsTests.Settings
     {
         private const string SettingsFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?><dictionary />";
 
-        private string _settingFilePath;
-        private RepoDistSettings _settingContainer;
+        private static string _settingFilePath;
+        private static GitExtSettingsCache _gitExtSettingsCache;
+        private static RepoDistSettings _settingContainer;
 
-        [SetUp]
-        public void SetUp()
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
         {
             _settingFilePath = Path.GetTempFileName();
 
             File.WriteAllText(_settingFilePath, SettingsFileContent);
 
-            _settingContainer = new RepoDistSettings(null, GitExtSettingsCache.Create(_settingFilePath), SettingLevel.Unknown);
+            _gitExtSettingsCache = GitExtSettingsCache.Create(_settingFilePath);
+            _settingContainer = new RepoDistSettings(null, _gitExtSettingsCache, SettingLevel.Unknown);
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _gitExtSettingsCache.Dispose();
         }
 
         #region Setting
