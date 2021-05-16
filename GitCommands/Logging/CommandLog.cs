@@ -154,8 +154,6 @@ namespace GitCommands.Logging
 
         private static ConcurrentQueue<CommandLogEntry> _queue = new ConcurrentQueue<CommandLogEntry>();
 
-        public static bool CaptureCallStacks { get; set; }
-
         public static IEnumerable<CommandLogEntry> Commands => _queue;
 
         public static ProcessOperation LogProcessStart(string fileName, string arguments = "", string workDir = "")
@@ -164,7 +162,7 @@ namespace GitCommands.Logging
 
             var entry = new CommandLogEntry(fileName, arguments, workDir, DateTime.Now, ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
-            if (CaptureCallStacks)
+            if (AppSettings.LogCaptureCallStacks)
             {
                 entry.CallStack = new StackTrace();
             }
