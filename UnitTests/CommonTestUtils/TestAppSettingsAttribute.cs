@@ -13,6 +13,7 @@ namespace CommonTestUtils
         public void BeforeTest(ITest test)
         {
             AppSettings.CheckForUpdates = false;
+            AppSettings.ShowAvailableDiffTools = false;
         }
 
         public void AfterTest(ITest test)

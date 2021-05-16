@@ -144,6 +144,23 @@ namespace GitUI.CommitInfo
             rtbxCommitMessage.Height = 1;
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _asyncLoadCancellation.CancelCurrent();
+                ThreadHelper.JoinPendingOperations(); // those run with FileAndForget
+
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         private void RefreshSortedTags()
         {
             if (!Module.IsValidGitWorkingDir())
@@ -360,8 +377,11 @@ namespace GitUI.CommitInfo
                         tasks.Add(LoadDescribeInfoAsync(initialRevision.ObjectId));
                     }
 
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     await Task.WhenAll(tasks);
 
+                    await this.SwitchToMainThreadAsync(cancellationToken);
                     UpdateRevisionInfo();
                 }).FileAndForget();
 
