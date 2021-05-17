@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,11 +53,14 @@ namespace GitCommandsTests.Settings
                     .GetProperty(nameof(ISetting<string>.Value));
             }
 
-            var filePath = Path.GetTempFileName();
+            using TempFileCollection tempFiles = new();
+            string filePath = tempFiles.AddExtension(".settings");
+            tempFiles.AddFile(filePath + ".backup", keepFile: false);
 
             File.WriteAllText(filePath, SettingsFileContent);
 
-            var container = new RepoDistSettings(null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+            using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
+            RepoDistSettings container = new(null, cache, SettingLevel.Unknown);
             object storedValue = null;
 
             // Act
@@ -84,11 +88,14 @@ namespace GitCommandsTests.Settings
                     .GetProperty(nameof(ISetting<string>.Value));
             }
 
-            var filePath = Path.GetTempFileName();
+            using TempFileCollection tempFiles = new();
+            string filePath = tempFiles.AddExtension(".settings");
+            tempFiles.AddFile(filePath + ".backup", keepFile: false);
 
             File.WriteAllText(filePath, SettingsFileContent);
 
-            var container = new RepoDistSettings(null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+            using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
+            RepoDistSettings container = new(null, cache, SettingLevel.Unknown);
             object storedValue = null;
 
             // Act
