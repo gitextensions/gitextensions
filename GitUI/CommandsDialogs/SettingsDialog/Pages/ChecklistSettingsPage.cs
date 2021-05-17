@@ -136,7 +136,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         #endregion
 
         private const string _putty = "PuTTY";
-        private readonly ISshPathLocator _sshPathLocator = new SshPathLocator();
         private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
         /// <summary>
@@ -450,7 +449,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                         _puttyConfigured.Text);
             }
 
-            string ssh = _sshPathLocator.Find(AppSettings.GitBinDir);
+            string ssh = AppSettings.SshPath;
             if (!string.IsNullOrEmpty(ssh) && !File.Exists(ssh))
             {
                 RenderSettingUnset(SshConfig, SshConfig_Fix, string.Format(_sshClientNotFound.Text, ssh));

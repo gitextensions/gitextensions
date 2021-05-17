@@ -11,8 +11,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class SshSettingsPage : SettingsPageWithHeader
     {
-        private readonly ISshPathLocator _sshPathLocator = new SshPathLocator();
-
         public SshSettingsPage()
         {
             InitializeComponent();
@@ -34,7 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             PageantPath.Text = AppSettings.Pageant;
             AutostartPageant.Checked = AppSettings.AutoStartPageant;
 
-            var sshPath = _sshPathLocator.Find(AppSettings.GitBinDir);
+            var sshPath = AppSettings.SshPath;
             if (string.IsNullOrEmpty(sshPath))
             {
                 OpenSSH.Checked = true;
@@ -74,7 +72,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 path = OtherSsh.Text;
             }
 
+            // Set persistent settings as well as the env var used by Git
             GitSshHelpers.SetSsh(path);
+            AppSettings.SshPath = path;
         }
 
         private void OpenSSH_CheckedChanged(object sender, EventArgs e)

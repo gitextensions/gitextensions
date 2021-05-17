@@ -5,8 +5,6 @@ namespace GitCommands
 {
     public static class GitSshHelpers
     {
-        private static readonly ISshPathLocator _sshPathLocatorInstance = new SshPathLocator();
-
         public static bool UseSsh(string arguments)
         {
             var x = !Plink() && DoArgumentsRequireSsh();
@@ -39,10 +37,6 @@ namespace GitCommands
         }
 
         public static bool Plink()
-        {
-            var sshString = _sshPathLocatorInstance.Find(AppSettings.GitBinDir);
-
-            return sshString.EndsWith("plink.exe", StringComparison.CurrentCultureIgnoreCase);
-        }
+            => AppSettings.SshPath.EndsWith("plink.exe", StringComparison.CurrentCultureIgnoreCase);
     }
 }
