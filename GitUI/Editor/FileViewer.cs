@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
@@ -570,26 +571,32 @@ namespace GitUI.Editor
         public Task ViewFileAsync(string fileName, bool isSubmodule = false, Action? openWithDifftool = null)
         {
             string? fullPath = _fullPathResolver.Resolve(fileName);
-
-            if (isSubmodule && !GitModule.IsValidGitWorkingDir(fullPath))
-            {
-                return ViewTextAsync(fileName, "Invalid submodule: " + fileName);
-            }
-
             Validates.NotNull(fullPath);
+            Debug.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
 
-            if (!isSubmodule && (fileName.EndsWith("/") || Directory.Exists(fullPath)))
+            if (!isSubmodule)
             {
-                if (!GitModule.IsValidGitWorkingDir(fullPath))
+                if (fileName.EndsWith("/") || Directory.Exists(fullPath))
                 {
-                    return ViewTextAsync(fileName, "Directory: " + fileName);
-                }
+                    if (!GitModule.IsValidGitWorkingDir(fullPath))
+                    {
+                        return ViewTextAsync(fileName, "Directory: " + fileName);
+                    }
 
-                isSubmodule = true;
+                    isSubmodule = true;
+                }
+                else if (!File.Exists(fullPath))
+                {
+                    return ViewTextAsync(fileName, $"File {fullPath} does not exist");
+                }
+            }
+            else if (!GitModule.IsValidGitWorkingDir(fullPath))
+            {
+                return ViewTextAsync(fileName, $"Invalid submodule: {fileName}");
             }
 
             return ShowOrDeferAsync(
-                fileName,
+                fullPath,
                 () => ViewItemAsync(
                     fileName,
                     isSubmodule,
@@ -602,14 +609,7 @@ namespace GitUI.Editor
             {
                 try
                 {
-                    var path = _fullPathResolver.Resolve(fileName);
-
-                    if (!File.Exists(path))
-                    {
-                        return null;
-                    }
-
-                    using var stream = File.OpenRead(path);
+                    using var stream = File.OpenRead(fullPath);
                     return CreateImage(fileName, stream);
                 }
                 catch
@@ -620,16 +620,7 @@ namespace GitUI.Editor
 
             string GetFileText()
             {
-                var path = File.Exists(fileName)
-                    ? fileName
-                    : _fullPathResolver.Resolve(fileName);
-
-                if (!File.Exists(path))
-                {
-                    return $"File {path} does not exist";
-                }
-
-                using var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using var stream = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 using StreamReader reader = new(stream, Module.FilesEncoding);
 #pragma warning disable VSTHRD103 // Call async methods when in an async method
                 var content = reader.ReadToEnd();
@@ -838,7 +829,7 @@ namespace GitUI.Editor
             ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private Task ShowOrDeferAsync(string fileName, Func<Task> showFunc)
+        private Task ShowOrDeferAsync(string fullPath, Func<Task> showFunc)
         {
             return ShowOrDeferAsync(GetFileLength(), showFunc);
 
@@ -846,17 +837,15 @@ namespace GitUI.Editor
             {
                 try
                 {
-                    var resolvedPath = _fullPathResolver.Resolve(fileName);
-
-                    if (File.Exists(resolvedPath))
+                    Debug.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
+                    if (File.Exists(fullPath))
                     {
-                        FileInfo file = new(resolvedPath);
-                        return file.Length;
+                        return new FileInfo(fullPath).Length;
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, $"{ex.Message}{Environment.NewLine}{fileName}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, $"{ex.Message}{Environment.NewLine}{fullPath}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 // If the file does not exist, it doesn't matter what size we
