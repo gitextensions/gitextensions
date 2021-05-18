@@ -328,17 +328,17 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                string extension = PathUtil.GetExtension(fileName).ToLower();
-                if (extension.Length <= 1)
+                string? extension = Path.GetExtension(fileName)?.ToLower();
+                if (extension?.Length <= 1)
                 {
                     return false;
                 }
 
-                string? dir = PathUtil.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts").EnsureTrailingPathSeparator();
+                string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts").EnsureTrailingPathSeparator();
                 if (Directory.Exists(dir))
                 {
                     if (_mergeScripts.TryGetValue(extension, out var mergeScript) &&
-                        File.Exists(PathUtil.Combine(dir!, mergeScript)))
+                        File.Exists(Path.Combine(dir!, mergeScript)))
                     {
                         if (MessageBox.Show(this, string.Format(_uskUseCustomMergeScript.Text, mergeScript),
                                             _uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==

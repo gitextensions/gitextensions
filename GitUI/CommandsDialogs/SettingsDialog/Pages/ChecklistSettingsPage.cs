@@ -575,8 +575,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 // Check if shell extensions are installed
                 string? installDir = AppSettings.GetInstallDir();
                 Validates.NotNull(installDir);
-                string? path32 = PathUtil.Combine(installDir, CommonLogic.GitExtensionsShellEx32Name);
-                string? path64 = PathUtil.Combine(installDir, CommonLogic.GitExtensionsShellEx64Name);
+                string path32 = Path.Combine(installDir, CommonLogic.GitExtensionsShellEx32Name);
+                string path64 = Path.Combine(installDir, CommonLogic.GitExtensionsShellEx64Name);
                 if (!File.Exists(path32) || (IntPtr.Size == 8 && !File.Exists(path64)))
                 {
                     RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtNoInstalled.Text);

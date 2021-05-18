@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs
 
                     case GitObjectType.Blob:
                         {
-                            var extension = PathUtil.GetExtension(gitItem.FileName);
+                            var extension = Path.GetExtension(gitItem.FileName);
 
                             if (string.IsNullOrWhiteSpace(extension))
                             {

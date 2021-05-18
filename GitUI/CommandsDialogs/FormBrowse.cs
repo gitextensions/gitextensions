@@ -2063,7 +2063,7 @@ namespace GitUI.CommandsDialogs
             StringBuilder fileNames = new();
             foreach (var item in diffFiles.SelectedItems)
             {
-                var path = PathUtil.Combine(module.WorkingDir, item.Item.Name);
+                var path = Path.Combine(module.WorkingDir, item.Item.Name);
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     continue;
@@ -2484,7 +2484,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in diffFiles.SelectedItems)
             {
-                string? filePath = PathUtil.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
+                string filePath = Path.Combine(module.WorkingDir, item.Item.Name.ToNativePath());
 
                 if (!string.IsNullOrWhiteSpace(filePath))
                 {

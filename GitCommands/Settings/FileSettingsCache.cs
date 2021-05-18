@@ -35,17 +35,8 @@ namespace GitCommands.Settings
             _fileWatcher.Changed += _fileWatcher_Changed;
             _fileWatcher.Renamed += _fileWatcher_Renamed;
             _fileWatcher.Created += _fileWatcher_Created;
-            string? dir;
-            try
-            {
-                dir = Path.GetDirectoryName(SettingsFilePath);
-            }
-            catch (ArgumentException)
-            {
-                // Illegal characters in the filename
-                dir = null;
-            }
 
+            string? dir = Path.GetDirectoryName(SettingsFilePath);
             if (Directory.Exists(dir) && File.Exists(SettingsFilePath))
             {
                 _fileWatcher.Path = dir;
