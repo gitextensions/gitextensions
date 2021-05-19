@@ -450,7 +450,7 @@ namespace GitCommandsTests
             GitModule module = new(Path.GetTempPath());
             using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
             {
-                // git diff -M -C -z --name-status
+                // git diff --find-renames --find-copies -z --name-status
                 var statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
                 Approvals.VerifyJson(JsonConvert.SerializeObject(statuses));
             }
@@ -822,7 +822,7 @@ namespace GitCommandsTests
         public void Test_FormatPatch(string from, string to, string outputFile, int? start)
         {
             StringBuilder arguments = new();
-            arguments.Append("format-patch -M -C -B");
+            arguments.Append("format-patch --find-renames --find-copies --break-rewrites");
             if (start is not null)
             {
                 arguments.AppendFormat(" --start-number {0}", start);
@@ -842,7 +842,7 @@ namespace GitCommandsTests
         public void Test_FormatPatchInRoot(string from, string to, string outputFile, int? start)
         {
             StringBuilder arguments = new();
-            arguments.Append("format-patch -M -C -B");
+            arguments.Append("format-patch --find-renames --find-copies --break-rewrites");
             if (start is not null)
             {
                 arguments.AppendFormat(" --start-number {0}", start);

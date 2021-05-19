@@ -624,9 +624,9 @@ namespace GitCommandsTests.Git.Commands
                 GitCommandHelpers.ApplyMailboxPatchCmd(signOff, ignoreWhitespace, patchFile).Arguments);
         }
 
-        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", false)]
-        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff extra -- ""new""", "new", "old", false, "extra", false)]
-        [TestCase(@"--no-optional-locks -c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", true)]
+        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", false)]
+        [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --find-renames --find-copies extra -- ""new""", "new", "old", false, "extra", false)]
+        [TestCase(@"--no-optional-locks -c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoreSubmodules=none -c core.safecrlf=false diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", true)]
         public void GetCurrentChangesCmd(string expected, string fileName, string oldFileName, bool staged,
             string extraDiffArguments, bool noLocks)
         {
