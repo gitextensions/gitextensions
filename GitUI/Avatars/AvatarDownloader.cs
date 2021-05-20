@@ -70,7 +70,7 @@ namespace GitUI.Avatars
 
             try
             {
-                using var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy };
+                using WebClient webClient = new() { Proxy = WebRequest.DefaultWebProxy };
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
                 using var imageStream = await webClient.OpenReadTaskAsync(imageUrl);

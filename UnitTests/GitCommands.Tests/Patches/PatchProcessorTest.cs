@@ -149,8 +149,8 @@ index cdf8bebba,55ff37bb9..000000000
             const string fileNameA = "thisisatesta.txt";
             const string fileNameB = "thisisatestb.txt";
 
-            var patchText = new StringBuilder();
-            var patchOutput = new StringBuilder();
+            StringBuilder patchText = new();
+            StringBuilder patchOutput = new();
 
             AppendHeaderLine(header);
             AppendHeaderLine(index);
@@ -171,7 +171,7 @@ index cdf8bebba,55ff37bb9..000000000
             AppendDiffLine("-ąśdkjaldskjlaksd");
             AppendDiffLine("+changed again€");
 
-            var patch = new Patch(header, index, PatchFileType.Text, fileNameA, fileNameB, false, PatchChangeType.ChangeFile, patchText.ToString());
+            Patch patch = new(header, index, PatchFileType.Text, fileNameA, fileNameB, false, PatchChangeType.ChangeFile, patchText.ToString());
 
             return new TestPatch(patch, patchOutput.ToString());
 

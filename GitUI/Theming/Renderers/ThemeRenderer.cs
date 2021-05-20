@@ -23,7 +23,7 @@ namespace GitUI.Theming
         /// </summary>
         public const int Handled = 0;
 
-        private readonly HashSet<IntPtr> _themeDataHandles = new HashSet<IntPtr>();
+        private readonly HashSet<IntPtr> _themeDataHandles = new();
 
         protected abstract string Clsid { get; }
 
@@ -83,7 +83,7 @@ namespace GitUI.Theming
         }
 
         protected Context CreateRenderContext(IntPtr hdc, NativeMethods.RECTCLS? clip) =>
-            new Context(hdc, clip);
+            new(hdc, clip);
 
         protected class Context : IDisposable
         {
@@ -117,7 +117,7 @@ namespace GitUI.Theming
             }
 
             public HighQualityScope HighQuality() =>
-                new HighQualityScope(Graphics);
+                new(Graphics);
 
             public void Dispose()
             {

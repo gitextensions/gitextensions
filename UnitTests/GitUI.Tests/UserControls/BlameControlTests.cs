@@ -24,7 +24,7 @@ namespace GitUITests.UserControls
         [SetUp]
         public void SetUp()
         {
-            var blameCommit1 = new GitBlameCommit(
+            GitBlameCommit blameCommit1 = new(
                 ObjectId.Random(),
                 "author1",
                 "author1@mail.fake",
@@ -37,7 +37,7 @@ namespace GitUITests.UserControls
                 "test summary commit1",
                 "fileName.txt");
 
-            var blameCommit2 = new GitBlameCommit(
+            GitBlameCommit blameCommit2 = new(
                 ObjectId.Random(),
                 "author2",
                 "author2@mail.fake",
@@ -77,7 +77,7 @@ namespace GitUITests.UserControls
         [TestCase(true, true, false, false, "3/22/2010 - author1")]
         public void BuildAuthorLine_When_FilePath_IsDifferent(bool showAuthorDate, bool showAuthor, bool showFilePath, bool displayAuthorFirst, string expectedResult)
         {
-            var line = new StringBuilder();
+            StringBuilder line = new();
 
             _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
                 "fileName_different.txt", showAuthor, showAuthorDate, showFilePath, displayAuthorFirst);
@@ -88,7 +88,7 @@ namespace GitUITests.UserControls
         [Test]
         public void BuildAuthorLine_When_FilePath_Is_Identic()
         {
-            var line = new StringBuilder();
+            StringBuilder line = new();
 
             _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
                 "fileName.txt", true, true, true, false);

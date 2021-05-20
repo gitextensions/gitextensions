@@ -185,12 +185,12 @@ namespace GitUI.CommandsDialogs
                 // Must be handled when displaying
                 var headId = Module.RevParse("HEAD");
                 Validates.NotNull(headId);
-                var headRev = new GitRevision(headId);
-                var indexRev = new GitRevision(ObjectId.IndexId)
+                GitRevision headRev = new(headId);
+                GitRevision indexRev = new(ObjectId.IndexId)
                 {
                     ParentIds = new[] { headId }
                 };
-                var workTreeRev = new GitRevision(ObjectId.WorkTreeId)
+                GitRevision workTreeRev = new(ObjectId.WorkTreeId)
                 {
                     ParentIds = new[] { ObjectId.IndexId }
                 };
@@ -205,7 +205,7 @@ namespace GitUI.CommandsDialogs
 
                 var selectedId = Module.RevParse(gitStash.Name);
                 Validates.NotNull(selectedId);
-                var secondRev = new GitRevision(selectedId);
+                GitRevision secondRev = new(selectedId);
                 if (firstId is not null)
                 {
                     secondRev.ParentIds = new[] { firstId };
@@ -270,7 +270,7 @@ namespace GitUI.CommandsDialogs
                 var stashName = GetStashName();
                 if (AppSettings.StashConfirmDropShow)
                 {
-                    using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
+                    using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
                     {
                         OwnerWindowHandle = Handle,
                         Text = _areYouSure.Text,

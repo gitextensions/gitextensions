@@ -8,7 +8,7 @@ namespace GitUI
 {
     public sealed class SplitterManager
     {
-        private readonly List<SplitterData> _splitters = new List<SplitterData>();
+        private readonly List<SplitterData> _splitters = new();
         private readonly ISettingsSource _settings;
 
         public SplitterManager(ISettingsSource settings)

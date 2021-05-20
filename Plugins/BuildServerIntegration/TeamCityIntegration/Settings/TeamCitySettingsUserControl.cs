@@ -68,7 +68,7 @@ namespace TeamCityIntegration.Settings
         {
             try
             {
-                var teamCityBuildChooser = new TeamCityBuildChooser(TeamCityServerUrl.Text, TeamCityProjectName.Text, TeamCityBuildIdFilter.Text);
+                TeamCityBuildChooser teamCityBuildChooser = new(TeamCityServerUrl.Text, TeamCityProjectName.Text, TeamCityBuildIdFilter.Text);
                 var result = teamCityBuildChooser.ShowDialog(this);
 
                 if (result == DialogResult.OK)
@@ -98,7 +98,7 @@ namespace TeamCityIntegration.Settings
         {
             if (Clipboard.ContainsText() && Clipboard.GetText().Contains("buildTypeId="))
             {
-                var buildUri = new Uri(Clipboard.GetText());
+                Uri buildUri = new(Clipboard.GetText());
                 var teamCityServerUrl = buildUri.Scheme + "://" + buildUri.Authority;
                 TeamCityServerUrl.Text = teamCityServerUrl;
                 _teamCityAdapter.InitializeHttpClient(teamCityServerUrl);

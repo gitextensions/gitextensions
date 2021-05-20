@@ -13,8 +13,8 @@
                 Y = y;
             }
 
-            public static implicit operator System.Drawing.Point(POINT p) => new System.Drawing.Point(p.X, p.Y);
-            public static implicit operator POINT(System.Drawing.Point p) => new POINT(p.X, p.Y);
+            public static implicit operator System.Drawing.Point(POINT p) => new(p.X, p.Y);
+            public static implicit operator POINT(System.Drawing.Point p) => new(p.X, p.Y);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace GitUITests.Editor
 
         private void SetupLink(string prefix, string linkText, string uri, string suffix)
         {
-            var text = new StringBuilder();
+            StringBuilder text = new();
 
             if (prefix is not null)
             {

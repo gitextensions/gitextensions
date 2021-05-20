@@ -86,7 +86,7 @@ namespace GitCommands
             _capacity *= 2;
 
             var newBuckets = new object[_buckets.Length * 2];
-            var lists = new Stack<List<string>>();
+            Stack<List<string>> lists = new();
 
             for (var i = 0; i < _buckets.Length; i++)
             {

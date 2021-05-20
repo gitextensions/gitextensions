@@ -18,24 +18,24 @@ namespace GitUI.CommandsDialogs
         #region Translation
 
         private readonly TranslationString _conflictResolvedText =
-            new TranslationString("Conflicts resolved");
+            new("Conflicts resolved");
         private readonly TranslationString _conflictMergetoolText =
-            new TranslationString("Solve conflicts");
+            new("Solve conflicts");
 
         private readonly TranslationString _selectPatchFileFilter =
-            new TranslationString("Patch file (*.Patch)");
+            new("Patch file (*.Patch)");
         private readonly TranslationString _selectPatchFileCaption =
-            new TranslationString("Select patch file");
+            new("Select patch file");
 
         private readonly TranslationString _noFileSelectedText =
-            new TranslationString("Please select a patch to apply");
+            new("Please select a patch to apply");
 
         private readonly TranslationString _applyPatchMsgBox =
-            new TranslationString("Apply patch");
+            new("Apply patch");
 
         #endregion
 
-        private static readonly List<PatchFile> Skipped = new List<PatchFile>();
+        private static readonly List<PatchFile> Skipped = new();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormApplyPatch()
@@ -149,7 +149,7 @@ namespace GitUI.CommandsDialogs
 
         private string SelectPatchFile(string initialDirectory)
         {
-            using var dialog = new OpenFileDialog
+            using OpenFileDialog dialog = new()
             {
                 Filter = _selectPatchFileFilter.Text + "|*.patch",
                 InitialDirectory = initialDirectory,
@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                using var sr = new StreamReader(path);
+                using StreamReader sr = new(path);
                 string line = sr.ReadLine();
 
                 return line is not null && (line.StartsWith("diff ") || line.StartsWith("Index: "));

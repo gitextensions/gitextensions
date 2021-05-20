@@ -118,7 +118,7 @@ namespace GitUI.HelperDialogs
 
         public static void ShowErrorDialog(IWin32Window owner, string text, params string[] output)
         {
-            using var form = new FormStatus(commands: null, new EditboxBasedConsoleOutputControl(), useDialogSettings: true);
+            using FormStatus form = new(commands: null, new EditboxBasedConsoleOutputControl(), useDialogSettings: true);
             form.Text = text;
             if (output?.Length > 0)
             {

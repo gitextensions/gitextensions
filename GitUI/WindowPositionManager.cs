@@ -170,7 +170,7 @@ namespace GitUI
                     }
                 }
 
-                var position = new WindowPosition(rectangle, DpiUtil.DpiX, formWindowState, name);
+                WindowPosition position = new(rectangle, DpiUtil.DpiX, formWindowState, name);
                 _windowPositionList.AddOrUpdate(position);
                 _windowPositionList.Save();
             }

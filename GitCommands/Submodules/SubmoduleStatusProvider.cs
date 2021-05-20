@@ -44,7 +44,7 @@ namespace GitCommands.Submodules
         private readonly CancellationTokenSequence _submodulesStatusSequence = new();
         private DateTime _previousSubmoduleUpdateTime;
         private SubmoduleInfoResult? _submoduleInfoResult;
-        private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = new Dictionary<string, SubmoduleInfo>();
+        private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = new();
 
         // Singleton accessor
         public static SubmoduleStatusProvider Default { get; } = new();
@@ -86,7 +86,7 @@ namespace GitCommands.Submodules
             await TaskScheduler.Default;
 
             // Start gathering new submodule structure asynchronously.
-            var currentModule = new GitModule(workingDirectory);
+            GitModule currentModule = new(workingDirectory);
             var result = GetSuperProjectRepositorySubmodulesStructure(currentModule, noBranchText);
 
             // Prepare info for status updates
@@ -160,7 +160,7 @@ namespace GitCommands.Submodules
                 cancelToken.ThrowIfCancellationRequested();
             }
 
-            var currentModule = new GitModule(workingDirectory);
+            GitModule currentModule = new(workingDirectory);
             await UpdateSubmodulesStatusAsync(currentModule, gitStatus, cancelToken);
 
             OnStatusUpdated(_submoduleInfoResult, structureUpdated: false, cancelToken);
@@ -184,7 +184,7 @@ namespace GitCommands.Submodules
         /// <param name="noBranchText">text with no branches.</param>
         private SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(GitModule currentModule, string noBranchText)
         {
-            var result = new SubmoduleInfoResult { Module = currentModule, CurrentSubmoduleStatus = null };
+            SubmoduleInfoResult result = new() { Module = currentModule, CurrentSubmoduleStatus = null };
 
             IGitModule topProject = currentModule.GetTopModule();
             bool isCurrentTopProject = currentModule.SuperprojectModule is null;
@@ -242,7 +242,7 @@ namespace GitCommands.Submodules
                     bold = true;
                 }
 
-                var smi = new SubmoduleInfo(text: name, path, bold);
+                SubmoduleInfo smi = new(text: name, path, bold);
                 result.AllSubmodules.Add(smi);
                 if (path == superWorkDir)
                 {
@@ -428,7 +428,7 @@ namespace GitCommands.Submodules
                 };
 
             // Recursively update submodules
-            var module = new GitModule(path);
+            GitModule module = new(path);
             if (submoduleStatus is not null && submoduleStatus.IsDirty)
             {
                 await GetSubmoduleDetailedStatusAsync(module, cancelToken);
@@ -467,7 +467,7 @@ namespace GitCommands.Submodules
             }
 
             _submoduleInfos[path].Detailed = null;
-            var module = new GitModule(path);
+            GitModule module = new(path);
             foreach (var name in module.GetSubmodulesLocalPaths(false))
             {
                 SetSubmoduleEmptyDetailedStatus(module, name);

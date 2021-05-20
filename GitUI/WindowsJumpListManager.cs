@@ -96,7 +96,7 @@ namespace GitUI
                 }
 
                 // sanitise
-                var sb = new StringBuilder(repositoryDescription);
+                StringBuilder sb = new(repositoryDescription);
                 foreach (char c in Path.GetInvalidFileNameChars())
                 {
                     sb.Replace(c, '_');
@@ -220,7 +220,7 @@ namespace GitUI
         /// <returns>An icon!!.</returns>
         private static Icon MakeIcon(Image img, int size, bool keepAspectRatio)
         {
-            var square = new Bitmap(size, size); // create new bitmap
+            Bitmap square = new(size, size); // create new bitmap
             Graphics g = Graphics.FromImage(square); // allow drawing to it
 
             int x, y, w, h; // dimensions for new image

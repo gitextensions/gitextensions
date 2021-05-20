@@ -112,7 +112,7 @@ namespace GitCommands.Patches
             string? index = null;
             var changeType = PatchChangeType.ChangeFile;
             var fileType = PatchFileType.Text;
-            var patchText = new StringBuilder();
+            StringBuilder patchText = new();
 
             patchText.Append(header);
             if (lineIndex < lines.Length - 1)

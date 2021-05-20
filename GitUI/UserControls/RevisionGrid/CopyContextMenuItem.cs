@@ -60,7 +60,7 @@ namespace GitUI.UserControls.RevisionGrid
                 displayText = PrependItemNumber(displayText);
             }
 
-            var item = new ToolStripMenuItem
+            ToolStripMenuItem item = new()
             {
                 Text = displayText.TrimEnd('\r', '\n'),
                 ShowShortcutKeys = true,
@@ -102,11 +102,11 @@ namespace GitUI.UserControls.RevisionGrid
 
             DropDownItems.Clear();
 
-            List<string> branchNames = new List<string>();
-            List<string> tagNames = new List<string>();
+            List<string> branchNames = new();
+            List<string> tagNames = new();
             foreach (var revision in revisions)
             {
-                var refLists = new GitRefListsForRevision(revision);
+                GitRefListsForRevision refLists = new(revision);
                 branchNames.AddRange(refLists.GetAllBranchNames());
                 tagNames.AddRange(refLists.GetAllTagNames());
             }
@@ -116,7 +116,7 @@ namespace GitUI.UserControls.RevisionGrid
             // Add items for branches
             if (branchNames.Any())
             {
-                var caption = new ToolStripMenuItem { Text = TranslatedStrings.Branches };
+                ToolStripMenuItem caption = new() { Text = TranslatedStrings.Branches };
                 MenuUtil.SetAsCaptionMenuItem(caption, Owner);
                 DropDownItems.Add(caption);
 
@@ -131,7 +131,7 @@ namespace GitUI.UserControls.RevisionGrid
             // Add items for tags
             if (tagNames.Any())
             {
-                var caption = new ToolStripMenuItem { Text = TranslatedStrings.Tags };
+                ToolStripMenuItem caption = new() { Text = TranslatedStrings.Tags };
                 MenuUtil.SetAsCaptionMenuItem(caption, Owner);
                 DropDownItems.Add(caption);
 

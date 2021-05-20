@@ -12,7 +12,7 @@ namespace GitExtensions.UITests
     {
         public static async Task WaitForIdleAsync()
         {
-            var idleCompletionSource = new TaskCompletionSource<VoidResult>();
+            TaskCompletionSource<VoidResult> idleCompletionSource = new();
             Application.Idle += HandleApplicationIdle;
 
             // Queue an event to make sure we don't stall if the application was already idle
@@ -86,7 +86,7 @@ namespace GitExtensions.UITests
             RunForm<Form>(
                 showForm: () =>
                 {
-                    var form = new Form { Text = $"Test {typeof(T).Name}" };
+                    Form form = new() { Text = $"Test {typeof(T).Name}" };
                     control = createControl(form);
                     Assert.True(form.Controls.Contains(control));
                     Application.Run(form);

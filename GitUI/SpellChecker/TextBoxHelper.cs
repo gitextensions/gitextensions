@@ -25,13 +25,13 @@ namespace GitUI.SpellChecker
             var lineIndex = NativeMethods.SendMessageW(rtb.Handle, NativeMethods.EM_LINEINDEX, (IntPtr)lineNumber, IntPtr.Zero).ToInt32();
             var lineLength = NativeMethods.SendMessageW(rtb.Handle, NativeMethods.EM_LINELENGTH, (IntPtr)index, IntPtr.Zero).ToInt32();
 
-            var charRange = new NativeMethods.CHARRANGE
+            NativeMethods.CHARRANGE charRange = new()
             {
                 cpMin = lineIndex,
                 cpMax = lineIndex + lineLength
             };
 
-            var rect = new NativeMethods.RECT
+            NativeMethods.RECT rect = new()
             {
                 top = 0,
                 bottom = (int)AnInch,
@@ -39,7 +39,7 @@ namespace GitUI.SpellChecker
                 right = 10000000 ////(int)(rtb.Width * anInch + 20);
             };
 
-            var rectPage = new NativeMethods.RECT
+            NativeMethods.RECT rectPage = new()
             {
                 top = 0,
                 bottom = (int)AnInch,
@@ -50,7 +50,7 @@ namespace GitUI.SpellChecker
             var canvas = Graphics.FromHwnd(rtb.Handle);
             var canvasHdc = canvas.GetHdc();
 
-            var formatRange = new NativeMethods.FORMATRANGE
+            NativeMethods.FORMATRANGE formatRange = new()
             {
                 chrg = charRange,
                 hdc = canvasHdc,

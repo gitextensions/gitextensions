@@ -16,7 +16,7 @@ namespace GitUITests.Theming
         [Test]
         public void Should_resolve_to_preinstalled_themes_directory_by_default()
         {
-            var resolver = new ThemeCssUrlResolver(CreateMockThemePathProvider());
+            ThemeCssUrlResolver resolver = new(CreateMockThemePathProvider());
             var resolvedPath = resolver.ResolveCssUrl("dark.css");
             resolvedPath.Should().Be(Path.Combine(PreinstalledThemesMockPath, "dark.css"));
         }
@@ -24,7 +24,7 @@ namespace GitUITests.Theming
         [Test]
         public void Should_resolve_to_user_defined_themes_directory_When_url_starts_with_macro()
         {
-            var resolver = new ThemeCssUrlResolver(CreateMockThemePathProvider());
+            ThemeCssUrlResolver resolver = new(CreateMockThemePathProvider());
             var resolvedPath = resolver.ResolveCssUrl("{UserAppData}/dark.css");
             resolvedPath.Should().Be(Path.Combine(UserDefinedThemesMockPath, "dark.css"));
         }

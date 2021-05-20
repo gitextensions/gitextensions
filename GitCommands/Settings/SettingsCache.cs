@@ -6,7 +6,7 @@ namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
-        private readonly ConcurrentDictionary<string, object?> _byNameMap = new ConcurrentDictionary<string, object?>();
+        private readonly ConcurrentDictionary<string, object?> _byNameMap = new();
 
         public void Dispose()
         {

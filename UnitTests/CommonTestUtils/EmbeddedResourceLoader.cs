@@ -8,7 +8,7 @@ namespace CommonTestUtils
         public static string Load(Assembly asm, string fullResourceName)
         {
             using var stream = asm.GetManifestResourceStream(fullResourceName);
-            using var reader = new StreamReader(stream);
+            using StreamReader reader = new(stream);
             string result = reader.ReadToEnd();
             return result;
         }

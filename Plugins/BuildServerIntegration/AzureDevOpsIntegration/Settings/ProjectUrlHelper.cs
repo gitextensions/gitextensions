@@ -11,7 +11,7 @@ namespace AzureDevOpsIntegration.Settings
     /// </summary>
     public class ProjectUrlHelper
     {
-        private static readonly Dictionary<Regex, Func<Match, string>> RemoteToProjectUrlLookup = new Dictionary<Regex, Func<Match, string>>()
+        private static readonly Dictionary<Regex, Func<Match, string>> RemoteToProjectUrlLookup = new()
         {
             { // VS Team Services via HTTPS
                 new Regex(@"^(?<prot>(?:http|https))://(?<user>[^.@]+)(?:@[^.]*)?\.visualstudio\.com(?<port>:\d*)?(?:/DefaultCollection)?(?<project>(/[^/]+)?/[^/]+)/_(git|ssh)/(.+)$"),
@@ -39,7 +39,7 @@ namespace AzureDevOpsIntegration.Settings
             },
         };
 
-        private static readonly Dictionary<Regex, Func<Match, string>> ProjectToTokenManagementUrlLookup = new Dictionary<Regex, Func<Match, string>>()
+        private static readonly Dictionary<Regex, Func<Match, string>> ProjectToTokenManagementUrlLookup = new()
         {
             { // VS Team Services
                 new Regex(@"^(?<instanceurl>(?:http|https)://[^.@]+(?:@[^.]*)?\.visualstudio\.com(?::\d*)?)"),

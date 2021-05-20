@@ -102,7 +102,7 @@ namespace GitUI.CommandsDialogs
                 var rawType = matchedGroups[1].Value;
                 var objectType = GetObjectType(matchedGroups[3]);
                 var objectId = ObjectId.Parse(raw, matchedGroups[4]);
-                var result = new LostObject(objectType, rawType, objectId);
+                LostObject result = new(objectType, rawType, objectId);
 
                 if (objectType == LostObjectType.Commit)
                 {

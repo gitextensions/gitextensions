@@ -32,7 +32,7 @@ namespace GitUI.Theming
 
         public Theme LoadTheme(string themeFileName, ThemeId themeId, in IReadOnlyList<string> allowedClasses)
         {
-            var themeColors = new ThemeColors();
+            ThemeColors themeColors = new();
             LoadThemeColors(themeFileName, cssImportChain: new[] { themeFileName }, allowedClasses, themeColors);
             return new Theme(themeColors.AppColors, themeColors.SysColors, themeId);
         }
@@ -182,13 +182,13 @@ namespace GitUI.Theming
         }
 
         private static ThemeException StyleRuleThemeException(StyleRule styleRule, string themePath)
-            => new ThemeException($"Invalid CSS rule '{styleRule.SelectorText}'", themePath);
+            => new($"Invalid CSS rule '{styleRule.SelectorText}'", themePath);
 
         private class ThemeColors
         {
-            public readonly Dictionary<AppColor, Color> AppColors = new Dictionary<AppColor, Color>();
-            public readonly Dictionary<KnownColor, Color> SysColors = new Dictionary<KnownColor, Color>();
-            public readonly Dictionary<string, int> SpecificityByColor = new Dictionary<string, int>();
+            public readonly Dictionary<AppColor, Color> AppColors = new();
+            public readonly Dictionary<KnownColor, Color> SysColors = new();
+            public readonly Dictionary<string, int> SpecificityByColor = new();
         }
     }
 }

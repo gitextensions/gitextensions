@@ -381,14 +381,14 @@ namespace GitCommandsTests
         [Test]
         public void RevParse_should_return_null_if_revisionExpression_exceeds_260_symbols()
         {
-            var revisionExpression = new string('a', 261);
+            string revisionExpression = new('a', 261);
             _gitModule.RevParse(revisionExpression).Should().BeNull();
         }
 
         [Test]
         public void RevParse_should_return_ObjectId_if_revisionExpression_is_valid_hash()
         {
-            var revisionExpression = new string('1', ObjectId.Sha1CharCount);
+            string revisionExpression = new('1', ObjectId.Sha1CharCount);
             _gitModule.RevParse(revisionExpression).Should().Be(ObjectId.WorkTreeId);
         }
 
@@ -447,7 +447,7 @@ namespace GitCommandsTests
         public void GetDiffChangedFilesFromString(string testName, StagedStatus stagedStatus, string statusString)
         {
             // TODO produce a valid working directory
-            var module = new GitModule(Path.GetTempPath());
+            GitModule module = new(Path.GetTempPath());
             using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
             {
                 // git diff -M -C -z --name-status
@@ -602,7 +602,7 @@ namespace GitCommandsTests
         [Test]
         public void GetParents_calls_correct_command_and_parses_response()
         {
-            var args = new GitArgumentBuilder("log")
+            GitArgumentBuilder args = new("log")
             {
                 "-n 1",
                 "--format=format:%P",
@@ -725,7 +725,7 @@ namespace GitCommandsTests
         [Test]
         public void GetSubmodulesLocalPaths()
         {
-            var moduleTestHelpers = new List<CommonTestUtils.GitModuleTestHelper>();
+            List<CommonTestUtils.GitModuleTestHelper> moduleTestHelpers = new();
             try
             {
                 const int numModules = 4;
@@ -775,8 +775,8 @@ namespace GitCommandsTests
         public void GetSuperprojectCurrentCheckout()
         {
             // Create super and sub repo
-            using CommonTestUtils.GitModuleTestHelper moduleTestHelperSuper = new CommonTestUtils.GitModuleTestHelper("super repo"),
-                                                       moduleTestHelperSub = new CommonTestUtils.GitModuleTestHelper("sub repo");
+            using CommonTestUtils.GitModuleTestHelper moduleTestHelperSuper = new("super repo"),
+                                                       moduleTestHelperSub = new("sub repo");
 
             // Add and init the submodule
             moduleTestHelperSuper.AddSubmodule(moduleTestHelperSub, "sub repo");
@@ -821,7 +821,7 @@ namespace GitCommandsTests
         [TestCase(new object[] { "123", "567", "output.file", 2 })]
         public void Test_FormatPatch(string from, string to, string outputFile, int? start)
         {
-            var arguments = new StringBuilder();
+            StringBuilder arguments = new();
             arguments.Append("format-patch -M -C -B");
             if (start is not null)
             {
@@ -841,7 +841,7 @@ namespace GitCommandsTests
         [TestCase(new object[] { null, "567", "output.file", 2 })]
         public void Test_FormatPatchInRoot(string from, string to, string outputFile, int? start)
         {
-            var arguments = new StringBuilder();
+            StringBuilder arguments = new();
             arguments.Append("format-patch -M -C -B");
             if (start is not null)
             {
@@ -867,7 +867,7 @@ namespace GitCommandsTests
         public void ResetFiles_should_work_as_expected(string[] files, string args)
         {
             // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
-            using var moduleTestHelper = new GitModuleTestHelper();
+            using GitModuleTestHelper moduleTestHelper = new();
             var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
             string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
             _executable.StageOutput(args, dummyCommandOutput);
@@ -879,7 +879,7 @@ namespace GitCommandsTests
         public void RemoveFiles_shouldWorkAsExpected(string[] files, string args)
         {
             // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
-            using var moduleTestHelper = new GitModuleTestHelper();
+            using GitModuleTestHelper moduleTestHelper = new();
             var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
             string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
             _executable.StageOutput(args, dummyCommandOutput);
@@ -897,7 +897,7 @@ namespace GitCommandsTests
         public void BatchUnstageFiles_should_work_as_expected(GitItemStatus[] files, string[] args, bool expectedResult)
         {
             // Real GitModule is need to access AppSettings.GitCommand static property, avoid exception with dummy GitModule
-            using var moduleTestHelper = new GitModuleTestHelper();
+            using GitModuleTestHelper moduleTestHelper = new();
             var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
 
             foreach (var arg in args)
@@ -955,7 +955,7 @@ namespace GitCommandsTests
 
             typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(module, executable);
-            var cmdRunner = new GitCommandRunner(executable, () => GitModule.SystemEncoding);
+            GitCommandRunner cmdRunner = new(executable, () => GitModule.SystemEncoding);
             typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(module, cmdRunner);
 

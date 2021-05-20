@@ -39,7 +39,7 @@ namespace GitCommandsTests.Git
         {
             var firstSelected = new[] { ObjectId.IndexId, ObjectId.Random() };
 
-            var selectedRevision = new GitRevision(ObjectId.WorkTreeId)
+            GitRevision selectedRevision = new(ObjectId.WorkTreeId)
             {
                 ParentIds = new[] { ObjectId.IndexId }
             };
@@ -59,7 +59,7 @@ namespace GitCommandsTests.Git
                 parent2
             };
 
-            var selectedRevision2 = new GitRevision(ObjectId.Random())
+            GitRevision selectedRevision2 = new(ObjectId.Random())
             {
                 ParentIds = new[] { parent1, parent2 }
             };
@@ -134,7 +134,7 @@ namespace GitCommandsTests.Git
         {
             var gitRef = Substitute.For<IGitRef>();
             gitRef.Name.Returns(x => "Name is MyName");
-            var revision = new GitRevision(ObjectId.Random()) { Refs = new[] { gitRef } };
+            GitRevision revision = new(ObjectId.Random()) { Refs = new[] { gitRef } };
 
             _tester.Matches(revision, criteria).Should().BeTrue();
         }
@@ -148,7 +148,7 @@ namespace GitCommandsTests.Git
             var gitRef = Substitute.For<IGitRef>();
             gitRef.Name.Returns(x => "Name is MyName");
 
-            var revision = new GitRevision(ObjectId.Parse("0011223344556677889900112233445566778899")) { Refs = new[] { gitRef } };
+            GitRevision revision = new(ObjectId.Parse("0011223344556677889900112233445566778899")) { Refs = new[] { gitRef } };
 
             _tester.Matches(revision, criteria).Should().Be(expected);
         }

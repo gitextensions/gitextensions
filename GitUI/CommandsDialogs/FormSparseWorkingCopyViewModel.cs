@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
         {
             // Re-apply tree to the index
             // TODO: check how it affects the uncommitted working copy changes
-            using var fromProcess = new FormRemoteProcess(_gitCommands, AppSettings.GitCommand, RefreshWorkingCopyCommandName);
+            using FormRemoteProcess fromProcess = new(_gitCommands, AppSettings.GitCommand, RefreshWorkingCopyCommandName);
             fromProcess.ShowDialog(Form.ActiveForm);
         }
 
@@ -225,7 +225,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // Confirm
-            var args = new ComfirmAdjustingRulesOnDeactEventArgs(!rulelines.Any());
+            ComfirmAdjustingRulesOnDeactEventArgs args = new(!rulelines.Any());
             ComfirmAdjustingRulesOnDeactRequested(this, args);
             if (args.Cancel)
             {

@@ -14,7 +14,7 @@ namespace BugReporter
 {
     internal partial class ExceptionDetails : UserControl
     {
-        private readonly Dictionary<TreeNode, SerializableException> _exceptionDetailsList = new Dictionary<TreeNode, SerializableException>();
+        private readonly Dictionary<TreeNode, SerializableException> _exceptionDetailsList = new();
 
         public ExceptionDetails()
         {
@@ -133,7 +133,7 @@ namespace BugReporter
 
         private void ExceptionDetailsListView_DoubleClick(object sender, EventArgs e)
         {
-            using var detailView = new ExceptionDetailView();
+            using ExceptionDetailView detailView = new();
             detailView.ShowDialog(exceptionDetailsListView.SelectedItems[0].Text, exceptionDetailsListView.SelectedItems[0].SubItems[1].Text);
         }
 
@@ -159,7 +159,7 @@ namespace BugReporter
         }
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {

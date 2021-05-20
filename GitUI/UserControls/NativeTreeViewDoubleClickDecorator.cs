@@ -42,7 +42,7 @@ namespace GitUI.UserControls
 
             if (doubleClicked)
             {
-                var cancelEventArgs = new CancelEventArgs();
+                CancelEventArgs cancelEventArgs = new();
                 BeforeDoubleClickExpandCollapse?.Invoke(sender, cancelEventArgs);
                 e.Cancel = cancelEventArgs.Cancel;
             }

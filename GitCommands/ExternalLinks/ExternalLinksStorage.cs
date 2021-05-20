@@ -54,9 +54,9 @@ namespace GitCommands.ExternalLinks
                         definition.RemoveEmptyFormats();
                     }
 
-                    var sw = new StringWriter();
-                    var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
-                    var ns = new XmlSerializerNamespaces();
+                    StringWriter sw = new();
+                    XmlSerializer serializer = new(typeof(List<ExternalLinkDefinition>));
+                    XmlSerializerNamespaces ns = new();
                     ns.Add(string.Empty, string.Empty);
                     serializer.Serialize(sw, definitions.OrderBy(x => x.Name).ToList(), ns);
                     xml = sw.ToString();
@@ -80,9 +80,9 @@ namespace GitCommands.ExternalLinks
 
             try
             {
-                var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
-                using var stringReader = new StringReader(xmlString);
-                using var xmlReader = new XmlTextReader(stringReader);
+                XmlSerializer serializer = new(typeof(List<ExternalLinkDefinition>));
+                using StringReader stringReader = new(xmlString);
+                using XmlTextReader xmlReader = new(stringReader);
                 return serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>;
             }
             catch (Exception ex)

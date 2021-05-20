@@ -66,7 +66,7 @@ namespace GitUITests.CommandsDialogs
 
         private IDisposable MockupGitOutput(string output, string encodedUrl = DummyUrlEncoded)
         {
-            var gitArguments = new GitArgumentBuilder("ls-remote") { "--heads", encodedUrl };
+            GitArgumentBuilder gitArguments = new("ls-remote") { "--heads", encodedUrl };
             return _gitExecutable.StageOutput(gitArguments.ToString(), output);
         }
     }

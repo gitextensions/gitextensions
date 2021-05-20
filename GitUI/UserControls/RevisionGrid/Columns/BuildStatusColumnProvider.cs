@@ -89,7 +89,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 size = DpiUtil.Scale(new Size(8, 8));
 
-                var location = new Point(
+                Point location = new(
                     e.CellBounds.Left + (size.Width / 2),
                     e.CellBounds.Top + ((e.CellBounds.Height - size.Height) / 2));
 

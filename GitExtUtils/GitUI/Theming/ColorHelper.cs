@@ -73,11 +73,11 @@ namespace GitExtUtils.GitUI.Theming
             KnownColor highlightColorName,
             float degreeOfGrayness = 1f)
         {
-            var grayTextHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
-            var textHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
-            var highlightTextHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.HighlightText));
-            var backgroundHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(backgroundColorName));
-            var highlightBackgroundHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(highlightColorName));
+            HslColor grayTextHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
+            HslColor textHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
+            HslColor highlightTextHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.HighlightText));
+            HslColor backgroundHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(backgroundColorName));
+            HslColor highlightBackgroundHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(highlightColorName));
 
             double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
 
@@ -96,8 +96,8 @@ namespace GitExtUtils.GitUI.Theming
         /// </summary>
         public static Color GetGrayTextColor(KnownColor textColorName, float degreeOfGrayness = 1f)
         {
-            var grayTextHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
-            var textHsl = new HslColor(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
+            HslColor grayTextHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
+            HslColor textHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
 
             double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
             var highlightGrayTextHsl = grayTextHsl.WithLuminosity(grayTextL);
@@ -247,8 +247,8 @@ namespace GitExtUtils.GitUI.Theming
             Func<double, double>? s = null,
             Func<double, double>? l = null)
         {
-            var hsl = new HslColor(c);
-            var transformed = new HslColor(
+            HslColor hsl = new(c);
+            HslColor transformed = new(
                 h?.Invoke(hsl.H) ?? hsl.H,
                 s?.Invoke(hsl.S) ?? hsl.S,
                 l?.Invoke(hsl.L) ?? hsl.L);
@@ -288,7 +288,7 @@ namespace GitExtUtils.GitUI.Theming
 
         public static HslColor ToPerceptedHsl(this Color rgb)
         {
-            var hsl = new HslColor(rgb);
+            HslColor hsl = new(rgb);
             return hsl.WithLuminosity(PerceptedL(rgb, hsl.L));
         }
 
@@ -304,7 +304,7 @@ namespace GitExtUtils.GitUI.Theming
         {
             double excludeHTo = 15d; // orange
 
-            var hsl = new HslColor(color);
+            HslColor hsl = new(color);
             var deltaH = ((hsl.H * 360d) - excludeHTo + 180).Modulo(360) - 180;
 
             const double deltaFrom = -140d;

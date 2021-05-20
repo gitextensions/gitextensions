@@ -261,7 +261,7 @@ namespace GitUI
 
             _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
 
-            var gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
+            GitRevisionSummaryBuilder gitRevisionSummaryBuilder = new();
             _revisionGraphColumnProvider = new RevisionGraphColumnProvider(this, _gridView._revisionGraph, gitRevisionSummaryBuilder);
             _gridView.AddColumn(_revisionGraphColumnProvider);
             _gridView.AddColumn(new MessageColumnProvider(this, gitRevisionSummaryBuilder));
@@ -404,7 +404,7 @@ namespace GitUI
                 return;
             }
 
-            using var dlg = new FormQuickGitRefSelector();
+            using FormQuickGitRefSelector dlg = new();
             dlg.Init(actionLabel, refs);
             dlg.Location = GetQuickItemSelectorLocation();
             if (dlg.ShowDialog(ParentForm) != DialogResult.OK || dlg.SelectedRef is null)
@@ -715,7 +715,7 @@ namespace GitUI
                 ? string.Empty
                 : revision.ObjectId.ToShortString() + ": ";
 
-            var gitRefListsForRevision = new GitRefListsForRevision(revision);
+            GitRefListsForRevision gitRefListsForRevision = new(revision);
 
             var descriptiveRef = gitRefListsForRevision.AllBranches
                 .Concat(gitRefListsForRevision.AllTags)
@@ -949,7 +949,7 @@ namespace GitUI
                     predicate = null;
                 }
 
-                var revisions = new Subject<GitRevision>();
+                Subject<GitRevision> revisions = new();
                 _revisionSubscription?.Dispose();
                 _revisionSubscription = revisions
                     .ObserveOn(ThreadPoolScheduler.Instance)
@@ -1061,7 +1061,7 @@ namespace GitUI
                     var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
                     // Add working directory as virtual commit
-                    var workTreeRev = new GitRevision(ObjectId.WorkTreeId)
+                    GitRevision workTreeRev = new(ObjectId.WorkTreeId)
                     {
                         Author = userName,
                         AuthorDate = DateTime.MaxValue,
@@ -1076,7 +1076,7 @@ namespace GitUI
                     _gridView.Add(workTreeRev);
 
                     // Add index as virtual commit
-                    var indexRev = new GitRevision(ObjectId.IndexId)
+                    GitRevision indexRev = new(ObjectId.IndexId)
                     {
                         Author = userName,
                         AuthorDate = DateTime.MaxValue,
@@ -1161,7 +1161,7 @@ namespace GitUI
                 return null;
             }
 
-            var spi = new SuperProjectInfo();
+            SuperProjectInfo spi = new();
             var (code, commit) = await gitModule.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
             if (code == 'U')
             {
@@ -1288,7 +1288,7 @@ namespace GitUI
 
         private IEnumerable<ObjectId> TryGetParents(ObjectId objectId)
         {
-            var args = new GitArgumentBuilder("rev-list")
+            GitArgumentBuilder args = new("rev-list")
             {
                 { AppSettings.MaxRevisionGraphCommits > 0, $"--max-count={AppSettings.MaxRevisionGraphCommits}" },
                 objectId
@@ -1526,7 +1526,7 @@ namespace GitUI
 
             UICommands.DoActionOnRepo(() =>
             {
-                using var form = new FormCreateTag(UICommands, revision?.ObjectId);
+                using FormCreateTag form = new(UICommands, revision?.ObjectId);
                 return form.ShowDialog(ParentForm) == DialogResult.OK;
             });
         }
@@ -1565,7 +1565,7 @@ namespace GitUI
 
             UICommands.DoActionOnRepo(() =>
             {
-                using var form = new FormCreateBranch(UICommands, revision?.ObjectId);
+                using FormCreateBranch form = new(UICommands, revision?.ObjectId);
                 return form.ShowDialog(ParentForm) == DialogResult.OK;
             });
         }
@@ -1661,14 +1661,14 @@ namespace GitUI
             SetEnabled(stopBisectToolStripMenuItem, inTheMiddleOfBisect);
             SetEnabled(bisectSeparator, inTheMiddleOfBisect);
 
-            var deleteTagDropDown = new ContextMenuStrip();
-            var deleteBranchDropDown = new ContextMenuStrip();
-            var checkoutBranchDropDown = new ContextMenuStrip();
-            var mergeBranchDropDown = new ContextMenuStrip();
-            var renameDropDown = new ContextMenuStrip();
+            ContextMenuStrip deleteTagDropDown = new();
+            ContextMenuStrip deleteBranchDropDown = new();
+            ContextMenuStrip checkoutBranchDropDown = new();
+            ContextMenuStrip mergeBranchDropDown = new();
+            ContextMenuStrip renameDropDown = new();
 
             var revision = LatestSelectedRevision;
-            var gitRefListsForRevision = new GitRefListsForRevision(revision);
+            GitRefListsForRevision gitRefListsForRevision = new(revision);
             _rebaseOnTopOf = null;
 
             foreach (var head in gitRefListsForRevision.AllTags)
@@ -1710,7 +1710,7 @@ namespace GitUI
             // if there is no branch to merge, then let user to merge selected commit into current branch
             if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
-                var toolStripItem = new ToolStripMenuItem(revision.Guid);
+                ToolStripMenuItem toolStripItem = new(revision.Guid);
                 toolStripItem.Click += delegate { UICommands.StartMergeBranchDialog(ParentForm, revision.Guid); };
                 mergeBranchDropDown.Items.Add(toolStripItem);
                 _rebaseOnTopOf ??= toolStripItem.Tag as string;
@@ -1857,7 +1857,7 @@ namespace GitUI
 
             ToolStripMenuItem AddBranchMenuItem(ContextMenuStrip menu, IGitRef gitRef, EventHandler action)
             {
-                var menuItem = new ToolStripMenuItem(gitRef.Name)
+                ToolStripMenuItem menuItem = new(gitRef.Name)
                 {
                     Image = gitRef.IsRemote ? Images.BranchRemote : Images.BranchLocal
                 };
@@ -1887,7 +1887,7 @@ namespace GitUI
                 return;
             }
 
-            using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
+            using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
             {
                 OwnerWindowHandle = Handle,
                 Text = _areYouSureRebase.Text,
@@ -1926,7 +1926,7 @@ namespace GitUI
                 return;
             }
 
-            using var dialog = new Microsoft.WindowsAPICodePack.Dialogs.TaskDialog
+            using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
             {
                 OwnerWindowHandle = Handle,
                 Text = _areYouSureRebase.Text,
@@ -2383,7 +2383,7 @@ namespace GitUI
                 return;
             }
 
-            var args = new GitArgumentBuilder("merge-base")
+            GitArgumentBuilder args = new("merge-base")
             {
                 { revisions.Count > 2 || (revisions.Count == 2 && hasArtificial), "--octopus" },
                 { revisions.Count < 1, "HEAD" },
@@ -2475,7 +2475,7 @@ namespace GitUI
                 return;
             }
 
-            using var form = new FormCompareToBranch(UICommands, headCommit.ObjectId);
+            using FormCompareToBranch form = new(UICommands, headCommit.ObjectId);
             if (form.ShowDialog(ParentForm) == DialogResult.OK)
             {
                 Validates.NotNull(form.BranchName);
@@ -2777,7 +2777,7 @@ namespace GitUI
         }
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {

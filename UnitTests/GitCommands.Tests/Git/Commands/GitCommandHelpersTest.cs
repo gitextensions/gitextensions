@@ -71,7 +71,7 @@ namespace GitCommandsTests.Git.Commands
         public void TestFetchArguments()
         {
             // TODO produce a valid working directory
-            var module = new GitModule(Path.GetTempPath());
+            GitModule module = new(Path.GetTempPath());
             {
                 // Specifying a remote and a local branch creates a local branch
                 var fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
@@ -135,7 +135,7 @@ namespace GitCommandsTests.Git.Commands
         [Test]
         public void TestUnsetStagedStatus()
         {
-            var item = new GitItemStatus("name");
+            GitItemStatus item = new("name");
             Assert.AreEqual(item.Staged, StagedStatus.Unset);
         }
 

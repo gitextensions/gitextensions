@@ -23,7 +23,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
         private readonly GitUIEventArgs _gitUiCommands;
         private readonly IGitModule _gitCommands;
         private string[] _revList = Array.Empty<string>();
-        private readonly Dictionary<string, GitObject> _list = new Dictionary<string, GitObject>();
+        private readonly Dictionary<string, GitObject> _list = new();
         private readonly SortableObjectsList _gitObjects = new();
 
         public FindLargeFilesForm(float threshold, GitUIEventArgs gitUiEventArgs)
@@ -55,14 +55,14 @@ namespace GitExtensions.Plugins.FindLargeFiles
             try
             {
                 var data = GetLargeFiles(_threshold);
-                Dictionary<string, DateTime> revData = new Dictionary<string, DateTime>();
+                Dictionary<string, DateTime> revData = new();
                 foreach (var d in data)
                 {
                     string commit = d.Commit.First();
                     DateTime date;
                     if (!revData.ContainsKey(commit))
                     {
-                        var args = new GitArgumentBuilder("show")
+                        GitArgumentBuilder args = new("show")
                         {
                             "-s",
                             commit,
@@ -109,7 +109,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
                     var packFiles = Directory.GetFiles(objectsPackDirectory, "pack-*.idx");
                     foreach (var pack in packFiles)
                     {
-                        var args = new GitArgumentBuilder("verify-pack")
+                        GitArgumentBuilder args = new("verify-pack")
                         {
                             "-v",
                             pack
@@ -160,11 +160,11 @@ namespace GitExtensions.Plugins.FindLargeFiles
         {
             base.OnLoad(e);
 
-            var args = new GitArgumentBuilder("rev-list") { "HEAD" };
+            GitArgumentBuilder args = new("rev-list") { "HEAD" };
             _revList = _gitCommands.GitExecutable.GetOutput(args).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(_revList.Length * 1.1f);
             BranchesGrid.DataSource = _gitObjects;
-            var thread = new Thread(FindLargeFilesFunction);
+            Thread thread = new(FindLargeFilesFunction);
             thread.Start();
         }
 
@@ -179,7 +179,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
                     pbRevisions.Value = i;
                 });
                 string rev = _revList[i];
-                var args = new GitArgumentBuilder("ls-tree")
+                GitArgumentBuilder args = new("ls-tree")
                 {
                     "-zrl",
                     rev
@@ -206,7 +206,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
         {
             if (MessageBox.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                var sb = new StringBuilder();
+                StringBuilder sb = new();
                 foreach (GitObject gitObject in _gitObjects.Where(gitObject => gitObject.Delete))
                 {
                     sb.AppendLine(string.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch {1}\" --prune-empty -- --all",

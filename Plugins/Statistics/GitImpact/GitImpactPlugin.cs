@@ -26,7 +26,7 @@ namespace GitExtensions.Plugins.GitImpact
                 return false;
             }
 
-            using var form = new FormImpact(args.GitModule);
+            using FormImpact form = new(args.GitModule);
             form.ShowDialog(args.OwnerForm);
 
             return false;

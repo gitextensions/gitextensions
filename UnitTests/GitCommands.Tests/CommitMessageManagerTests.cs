@@ -212,7 +212,7 @@ namespace GitCommandsTests
         [Test]
         public void WriteCommitMessageToFile_should_write_COMMITMESSAGE()
         {
-            var manager = new CommitMessageManager(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
+            CommitMessageManager manager = new(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
 
             File.Exists(manager.CommitMessagePath).Should().BeFalse();
 
@@ -226,7 +226,7 @@ namespace GitCommandsTests
         [Test]
         public void WriteCommitMessageToFile_should_write_MERGE_MSG()
         {
-            var manager = new CommitMessageManager(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
+            CommitMessageManager manager = new(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
 
             File.Exists(manager.MergeMessagePath).Should().BeFalse();
 

@@ -34,8 +34,8 @@ namespace BugReporter.Info
 
         public override string ToString()
         {
-            var serializer = new XmlSerializer(typeof(Report));
-            using var stream = new MemoryStream();
+            XmlSerializer serializer = new(typeof(Report));
+            using MemoryStream stream = new();
             stream.SetLength(0);
             serializer.Serialize(stream, this);
             stream.Position = 0;

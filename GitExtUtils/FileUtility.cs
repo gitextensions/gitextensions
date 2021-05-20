@@ -12,7 +12,7 @@ namespace GitExtUtils
         /// <param name="contents">Text to write as file contents.</param>
         public static void SafeWriteAllText(string fileName, string contents, Encoding encoding)
         {
-            using var fs = new FileStream(fileName, FileMode.Open);
+            using FileStream fs = new(fileName, FileMode.Open);
             using (TextWriter tw = new StreamWriter(fs, encoding, bufferSize: 4096, leaveOpen: true))
             {
                 tw.Write(contents);

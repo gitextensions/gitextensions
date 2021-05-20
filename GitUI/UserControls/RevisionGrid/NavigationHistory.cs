@@ -8,11 +8,11 @@ namespace GitUI.UserControls.RevisionGrid
     {
         // history of selected items (browse history)
         // head == currently selected item
-        private readonly Stack<ObjectId> _prevItems = new Stack<ObjectId>();
+        private readonly Stack<ObjectId> _prevItems = new();
 
         // backtracked items
         // head == item to show when navigating forward
-        private readonly Stack<ObjectId> _nextItems = new Stack<ObjectId>();
+        private readonly Stack<ObjectId> _nextItems = new();
 
         /// <summary>
         /// Sets <paramref name="curr"/> as current visible item and resets forward history.

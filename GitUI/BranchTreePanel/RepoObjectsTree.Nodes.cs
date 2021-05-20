@@ -16,7 +16,7 @@ namespace GitUI.BranchTreePanel
     {
         private sealed class Nodes : IEnumerable<Node>
         {
-            private readonly List<Node> _nodesList = new List<Node>();
+            private readonly List<Node> _nodesList = new();
 
             public Tree? Tree { get; }
 
@@ -76,7 +76,7 @@ namespace GitUI.BranchTreePanel
             /// </summary>
             internal void FillTreeViewNode(TreeNode treeViewNode)
             {
-                var prevNodes = new HashSet<Node>();
+                HashSet<Node> prevNodes = new();
                 for (var i = 0; i < treeViewNode.Nodes.Count; i++)
                 {
                     prevNodes.Add(Node.GetNode(treeViewNode.Nodes[i]));
@@ -129,7 +129,7 @@ namespace GitUI.BranchTreePanel
             private bool _isCurrentlyFiltering;
 
             // A flag to indicate whether the data is being filtered (e.g. Show Current Branch Only).
-            private protected static AsyncLocal<bool> IsFiltering = new AsyncLocal<bool>();
+            private protected static AsyncLocal<bool> IsFiltering = new();
 
             protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
             {
@@ -407,7 +407,7 @@ namespace GitUI.BranchTreePanel
             }
 
             private static readonly Dictionary<Type, ContextMenuStrip> DefaultContextMenus
-                = new Dictionary<Type, ContextMenuStrip>();
+                = new();
 
             public static void RegisterContextMenu(Type type, ContextMenuStrip menu)
             {

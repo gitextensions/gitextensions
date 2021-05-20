@@ -40,18 +40,18 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             var accessor = _fileStatusList.GetTestAccessor();
 
-            var itemNotInList = new GitItemStatus(name: "not in list");
-            var item0 = new GitItemStatus(name: "z.0");
-            var item1 = new GitItemStatus(name: "x.1");
-            var item2 = new GitItemStatus(name: "y.2");
-            var items = new List<GitItemStatus> { item0, item1, item2 };
+            GitItemStatus itemNotInList = new(name: "not in list");
+            GitItemStatus item0 = new(name: "z.0");
+            GitItemStatus item1 = new(name: "x.1");
+            GitItemStatus item2 = new(name: "y.2");
+            List<GitItemStatus> items = new() { item0, item1, item2 };
 
             // alphabetical order
             var itemAt0 = item1;
             var itemAt1 = item2;
             var itemAt2 = item0;
-            var firstRev = new GitRevision(ObjectId.Random());
-            var secondRev = new GitRevision(ObjectId.Random());
+            GitRevision firstRev = new(ObjectId.Random());
+            GitRevision secondRev = new(ObjectId.Random());
             _fileStatusList.SetDiffs(firstRev: firstRev, secondRev: secondRev, items: items);
 
             accessor.FileStatusListView.FocusedItem.Index.Should().Be(0);

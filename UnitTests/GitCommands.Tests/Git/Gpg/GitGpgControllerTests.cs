@@ -42,8 +42,8 @@ namespace GitCommandsTests.Git.Gpg
         {
             var objectId = ObjectId.Random();
 
-            var revision = new GitRevision(objectId);
-            var args = new GitArgumentBuilder("log")
+            GitRevision revision = new(objectId);
+            GitArgumentBuilder args = new("log")
             {
                 "--pretty=\"format:%G?\"",
                 "-1",
@@ -77,7 +77,7 @@ namespace GitCommandsTests.Git.Gpg
 
             string gitRefCompleteName = "refs/tags/FirstTag^{}";
 
-            var revision = new GitRevision(objectId)
+            GitRevision revision = new(objectId)
             {
                 Refs = Enumerable.Range(0, numberOfTags)
                     .Select(_ => new GitRef(_module, objectId, gitRefCompleteName))
@@ -96,10 +96,10 @@ namespace GitCommandsTests.Git.Gpg
         {
             var objectId = ObjectId.Random();
 
-            var gitRef = new GitRef(_module, objectId, "refs/tags/FirstTag^{}");
+            GitRef gitRef = new(_module, objectId, "refs/tags/FirstTag^{}");
 
-            var revision = new GitRevision(objectId) { Refs = new[] { gitRef } };
-            var args = new GitArgumentBuilder("verify-tag")
+            GitRevision revision = new(objectId) { Refs = new[] { gitRef } };
+            GitArgumentBuilder args = new("verify-tag")
             {
                 "--raw",
                 gitRef.LocalName
@@ -116,8 +116,8 @@ namespace GitCommandsTests.Git.Gpg
         public void Validate_GetCommitVerificationMessage(string returnString)
         {
             var objectId = ObjectId.Random();
-            var revision = new GitRevision(objectId);
-            var args = new GitArgumentBuilder("log")
+            GitRevision revision = new(objectId);
+            GitArgumentBuilder args = new("log")
             {
                 "--pretty=\"format:%GG\"",
                 "-1",
@@ -149,7 +149,7 @@ namespace GitCommandsTests.Git.Gpg
         public void Validate_GetTagVerifyMessage(int usefulTagRefNumber, string expected)
         {
             var objectId = ObjectId.Random();
-            var revision = new GitRevision(objectId);
+            GitRevision revision = new(objectId);
 
             IDisposable validate = null;
 
@@ -158,7 +158,7 @@ namespace GitCommandsTests.Git.Gpg
                 case 0:
                     {
                         // Tag but not dereference
-                        var gitRef = new GitRef(_module, objectId, "refs/tags/TagName");
+                        GitRef gitRef = new(_module, objectId, "refs/tags/TagName");
                         revision.Refs = new[] { gitRef };
 
                         break;
@@ -167,10 +167,10 @@ namespace GitCommandsTests.Git.Gpg
                 case 1:
                     {
                         // One tag that's also IsDereference == true
-                        var gitRef = new GitRef(_module, objectId, "refs/tags/TagName^{}");
+                        GitRef gitRef = new(_module, objectId, "refs/tags/TagName^{}");
                         revision.Refs = new[] { gitRef };
 
-                        var args = new GitArgumentBuilder("verify-tag") { gitRef.LocalName };
+                        GitArgumentBuilder args = new("verify-tag") { gitRef.LocalName };
                         validate = _executable.StageOutput(args.ToString(), gitRef.LocalName);
 
                         break;
@@ -179,12 +179,12 @@ namespace GitCommandsTests.Git.Gpg
                 case 2:
                     {
                         // Two tag that's also IsDereference == true
-                        var gitRef1 = new GitRef(_module, objectId, "refs/tags/FirstTag^{}");
+                        GitRef gitRef1 = new(_module, objectId, "refs/tags/FirstTag^{}");
 
-                        var args = new GitArgumentBuilder("verify-tag") { gitRef1.LocalName };
+                        GitArgumentBuilder args = new("verify-tag") { gitRef1.LocalName };
                         _executable.StageOutput(args.ToString(), gitRef1.LocalName);
 
-                        var gitRef2 = new GitRef(_module, objectId, "refs/tags/SecondTag^{}");
+                        GitRef gitRef2 = new(_module, objectId, "refs/tags/SecondTag^{}");
                         revision.Refs = new[] { gitRef1, gitRef2 };
 
                         args = new GitArgumentBuilder("verify-tag") { gitRef2.LocalName };

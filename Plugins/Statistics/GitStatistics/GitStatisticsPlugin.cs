@@ -42,7 +42,7 @@ namespace GitExtensions.Plugins.GitStatistics
 
             var countSubmodule = !_ignoreSubmodules.ValueOrDefault(Settings);
 
-            var formStatistics = new FormGitStatistics(args.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
+            FormGitStatistics formStatistics = new(args.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
             {
                 DirectoriesToIgnore = _ignoreDirectories.ValueOrDefault(Settings).Replace("/", "\\")
             };

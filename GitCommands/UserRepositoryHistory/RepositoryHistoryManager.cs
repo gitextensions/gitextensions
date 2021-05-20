@@ -7,7 +7,7 @@
     {
         static RepositoryHistoryManager()
         {
-            var repositoryStorage = new RepositoryStorage();
+            RepositoryStorage repositoryStorage = new();
             Locals = new LocalRepositoryManager(repositoryStorage, new Legacy.RepositoryHistoryMigrator());
             Remotes = new RemoteRepositoryManager(repositoryStorage);
         }

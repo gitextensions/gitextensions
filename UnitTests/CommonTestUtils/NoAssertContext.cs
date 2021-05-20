@@ -25,7 +25,7 @@ namespace System
         private static readonly object s_lock = new();
         private static bool s_hooked;
 
-        private static readonly ConcurrentDictionary<int, int> s_suppressedThreads = new ConcurrentDictionary<int, int>();
+        private static readonly ConcurrentDictionary<int, int> s_suppressedThreads = new();
 
         // "Default" is the listener that terminates the process when debug assertions fail.
         private static readonly TraceListener s_defaultListener = Trace.Listeners["Default"];

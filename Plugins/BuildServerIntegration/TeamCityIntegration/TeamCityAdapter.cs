@@ -63,7 +63,7 @@ namespace TeamCityIntegration
 
         private string? _httpClientHostSuffix;
 
-        private readonly List<JoinableTask<IEnumerable<string>>> _getBuildTypesTask = new List<JoinableTask<IEnumerable<string>>>();
+        private readonly List<JoinableTask<IEnumerable<string>>> _getBuildTypesTask = new();
 
         private CookieContainer? _teamCityNtlmAuthCookie;
 
@@ -81,7 +81,7 @@ namespace TeamCityIntegration
             }
 
             string url = serverUrl + "ntlmLogin.html";
-            var cookieContainer = new CookieContainer();
+            CookieContainer cookieContainer = new();
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.CookieContainer = cookieContainer;
 
@@ -250,7 +250,7 @@ namespace TeamCityIntegration
 
         private void NotifyObserverOfBuilds(string[] buildIds, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
-            var tasks = new List<Task>(8);
+            List<Task> tasks = new(8);
             var buildsLeft = buildIds.Length;
 
             foreach (var buildId in buildIds.OrderByDescending(int.Parse))
@@ -338,7 +338,7 @@ namespace TeamCityIntegration
                 statusText = currentStageText;
             }
 
-            var buildInfo = new BuildInfo
+            BuildInfo buildInfo = new()
             {
                 Id = idValue,
                 StartDate = DecodeJsonDateTime(startDateText),
@@ -522,7 +522,7 @@ namespace TeamCityIntegration
 
         private Task<XDocument> GetFilteredBuildsXmlResponseAsync(string buildTypeId, CancellationToken cancellationToken, DateTime? sinceDate = null, bool? running = null)
         {
-            var values = new List<string> { "branch:(default:any)" };
+            List<string> values = new() { "branch:(default:any)" };
 
             if (sinceDate.HasValue)
             {

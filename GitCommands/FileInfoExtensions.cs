@@ -18,7 +18,7 @@ namespace GitCommands
                 return;
             }
 
-            var fileInfo = new FileInfo(fileName);
+            FileInfo fileInfo = new(fileName);
             var oldAttributes = fileInfo.Attributes;
             fileInfo.Attributes = FileAttributes.Normal;
             writableAction(fileName);

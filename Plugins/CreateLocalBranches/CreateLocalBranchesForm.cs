@@ -20,7 +20,7 @@ namespace GitExtensions.Plugins.CreateLocalBranches
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var args = new GitArgumentBuilder("branch") { "-a" };
+            GitArgumentBuilder args = new("branch") { "-a" };
             string[] references = _gitUiCommands.GitModule.GitExecutable.GetOutput(args)
                 .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 

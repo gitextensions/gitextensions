@@ -29,7 +29,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
         public static HtmlFragment FromClipboard()
         {
             string rawClipboardText = Clipboard.GetText(TextDataFormat.Html);
-            var h = new HtmlFragment(rawClipboardText);
+            HtmlFragment h = new(rawClipboardText);
             return h;
         }
 
@@ -175,7 +175,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
 
         internal static DataObject CreateHtmlFormatClipboardDataObject(string htmlFragment, string? title = "From Clipboard", Uri? sourceUri = null)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            System.Text.StringBuilder sb = new();
 
             // Builds the CF_HTML header. See format specification here:
             // http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
@@ -223,7 +223,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
             // Finally copy to clipboard.
             // http://stackoverflow.com/questions/13332377/how-to-set-html-text-in-clipboard
             string data = sb.ToString();
-            var dataObject = new DataObject();
+            DataObject dataObject = new();
             dataObject.SetText(data, TextDataFormat.Html);
             dataObject.SetText(htmlFragment, TextDataFormat.Text);
 

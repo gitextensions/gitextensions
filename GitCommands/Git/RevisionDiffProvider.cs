@@ -67,7 +67,7 @@ namespace GitCommands.Git
                     firstRevision + ", " + secondRevision);
             }
 
-            var extra = new ArgumentBuilder();
+            ArgumentBuilder extra = new();
             firstRevision = ArtificialToDiffOptions(firstRevision);
             secondRevision = ArtificialToDiffOptions(secondRevision);
 

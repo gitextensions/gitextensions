@@ -43,7 +43,7 @@ namespace GitExtUtilsTests
         [Test]
         public void IsEmpty()
         {
-            var builder = new ArgumentBuilder();
+            ArgumentBuilder builder = new();
             builder.IsEmpty.Should().BeTrue();
 
             builder.Add("test");
@@ -53,7 +53,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Length()
         {
-            var builder = new ArgumentBuilder();
+            ArgumentBuilder builder = new();
             builder.GetTestAccessor().Arguments.Length.Should().Be(0);
 
             builder.Add("test");
@@ -74,7 +74,7 @@ namespace GitExtUtilsTests
         [TestCase(new[] { "test", null, "test" }, 9, "test test")]
         public void Add(string[] args, int expectedLength, string expected)
         {
-            var builder = new ArgumentBuilder();
+            ArgumentBuilder builder = new();
 
             foreach (string arg in args)
             {

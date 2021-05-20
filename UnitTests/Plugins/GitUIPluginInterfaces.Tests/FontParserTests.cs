@@ -28,7 +28,7 @@ namespace GitUIPluginInterfacesTests
         [TestCase(FontStyle.Bold | FontStyle.Italic, "Arial;9;_IC_;1;1")]
         public void AsString_should_persist_font_with_styles(FontStyle fontStyle, string serialised)
         {
-            using var font = new Font("Arial", 9, fontStyle);
+            using Font font = new("Arial", 9, fontStyle);
             font.AsString().Should().Be(serialised);
         }
 

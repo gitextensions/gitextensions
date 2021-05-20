@@ -34,7 +34,7 @@ namespace GitCommandsTests.Config
 
         private static string GetDefaultConfigFileContent()
         {
-            var content = new StringBuilder();
+            StringBuilder content = new();
             content.AppendLine("[section1]");
             content.AppendLine("key1=value1");
             content.AppendLine("[section2.subsection]");
@@ -46,7 +46,7 @@ namespace GitCommandsTests.Config
 
         private string GetConfigValue(string cfgFile, string key)
         {
-            var args = new GitArgumentBuilder("config")
+            GitArgumentBuilder args = new("config")
             {
                 "-f",
                 cfgFile.Quote(),
@@ -79,7 +79,7 @@ namespace GitCommandsTests.Config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
 
-            var configFile = new ConfigFile(GetConfigFileName() + "\\", false);
+            ConfigFile configFile = new(GetConfigFileName() + "\\", false);
 
             Assert.IsNotNull(configFile);
         }
@@ -89,7 +89,7 @@ namespace GitCommandsTests.Config
         {
             try
             {
-                var file = new ConfigFile(null, true);
+                ConfigFile file = new(null, true);
                 file.GetValue("nonexistentSetting", string.Empty);
             }
             catch (Exception e)
@@ -101,7 +101,7 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestSave()
         {
-            var configFile = new ConfigFile(GetConfigFileName(), true);
+            ConfigFile configFile = new(GetConfigFileName(), true);
             configFile.SetValue("branch.BranchName1.remote", "origin1");
             configFile.Save();
 
@@ -122,7 +122,7 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestSetValueNonExisting()
         {
-            var configFile = new ConfigFile(GetConfigFileName(), true);
+            ConfigFile configFile = new(GetConfigFileName(), true);
             configFile.Save();
 
             configFile.SetValue("section1.key1", "section1key1");
@@ -139,7 +139,7 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestSetValueExisting()
         {
-            var configFile = new ConfigFile(GetConfigFileName(), true);
+            ConfigFile configFile = new(GetConfigFileName(), true);
             configFile.SetValue("section.key", "section.key");
             configFile.Save();
 
@@ -153,7 +153,7 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestSetValueSectionWithDotNonExisting()
         {
-            var configFile = new ConfigFile(GetConfigFileName(), true);
+            ConfigFile configFile = new(GetConfigFileName(), true);
             configFile.SetValue("submodule.test.test2.path1", "submodule.test.test2.path1");
             configFile.SetValue("submodule.test.test2.path2", "submodule.test.test2.path2");
             configFile.Save();
@@ -170,7 +170,7 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestSetValueSectionWithDotExisting()
         {
-            var configFile = new ConfigFile(GetConfigFileName(), true);
+            ConfigFile configFile = new(GetConfigFileName(), true);
             configFile.SetValue("submodule.test.test1.path1", "invalid");
             configFile.SetValue("submodule.test.test2.path1", "submodule.test.test2.path1");
             configFile.SetValue("submodule.test.test2.path2", "submodule.test.test2.path2");
@@ -194,7 +194,7 @@ namespace GitCommandsTests.Config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
             }
 
-            var configFile = new ConfigFile(GetConfigFileName(), true);
+            ConfigFile configFile = new(GetConfigFileName(), true);
             CheckValueIsEqual(configFile, "section1.key1", "value1");
             CheckValueIsEqual(configFile, "section2.subsection.key2", "value2");
             CheckValueIsEqual(configFile, "section3.subsection.key3", "value3");
@@ -203,7 +203,7 @@ namespace GitCommandsTests.Config
         [Test]
         public void TestWithNullSettings()
         {
-            var file = new ConfigFile(GetConfigFileName(), true);
+            ConfigFile file = new(GetConfigFileName(), true);
             Assert.Throws<ArgumentNullException>(() => file.GetValue(null, null));
         }
 
@@ -216,13 +216,13 @@ namespace GitCommandsTests.Config
                 File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
 
                 // Make sure it is hidden
-                var configFile = new FileInfo(GetConfigFileName());
+                FileInfo configFile = new(GetConfigFileName());
                 configFile.Attributes = FileAttributes.Hidden;
             }
 
             // PERFORM TEST
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "section1.key1", "value1");
                 CheckValueIsEqual(configFile, "section2.subsection.key2", "value2");
                 CheckValueIsEqual(configFile, "section3.subsection.key3", "value3");
@@ -233,7 +233,7 @@ namespace GitCommandsTests.Config
 
             // CHECK WRITTEN VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "section1.key1", "new-value1");
             }
         }
@@ -243,7 +243,7 @@ namespace GitCommandsTests.Config
         {
             // TEST DATA
             {
-                var content = new StringBuilder();
+                StringBuilder content = new();
 
                 content.AppendLine("[merge]");
                 content.AppendLine("	tool = kdiff3");
@@ -266,20 +266,20 @@ namespace GitCommandsTests.Config
 
             // CHECK GET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "user.name", "Sergey Pustovit");
             }
 
             // CHECK SET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 configFile.SetValue("user.name", "new-value");
                 configFile.Save();
             }
 
             // CHECK WRITTEN VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "user.name", "new-value");
             }
         }
@@ -289,7 +289,7 @@ namespace GitCommandsTests.Config
         {
             // TEST DATA
             {
-                var content = new StringBuilder();
+                StringBuilder content = new();
 
                 content.AppendLine("[core]");
                 content.AppendLine("	repositoryformatversion = 0");
@@ -321,20 +321,20 @@ namespace GitCommandsTests.Config
 
             // CHECK GET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "core.repositoryformatversion", "0");
             }
 
             // CHECK SET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 configFile.SetValue("core.repositoryformatversion", "1");
                 configFile.Save();
             }
 
             // CHECK WRITTEN VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "core.repositoryformatversion", "1");
             }
         }
@@ -344,7 +344,7 @@ namespace GitCommandsTests.Config
         {
             // TEST DATA
             {
-                var content = new StringBuilder();
+                StringBuilder content = new();
 
                 content.AppendLine("[bugtraq]");
                 content.AppendLine("	url = http://192.168.0.1:8080/browse/%BUGID%");
@@ -360,33 +360,33 @@ namespace GitCommandsTests.Config
 
             // CHECK GET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "bugtraq.logregex", "\n([A-Z][A-Z0-9]+-/d+)");
             }
 
             // CHECK SET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 configFile.SetValue("bugtraq.logregex", "data\nnewline");
                 configFile.Save();
             }
 
             // CHECK WRITTEN VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "bugtraq.logregex", "data\nnewline");
             }
 
             // CHECK SET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 configFile.SetValue("bugtraq.logregex", "data\\newline");
                 configFile.Save();
             }
 
             // CHECK WRITTEN VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "bugtraq.logregex", "data\\newline");
             }
         }
@@ -396,7 +396,7 @@ namespace GitCommandsTests.Config
         {
             // TEST DATA
             {
-                var content = new StringBuilder();
+                StringBuilder content = new();
 
                 content.AppendLine("# issue tracker configuration");
                 content.AppendLine("[bugtraq]");
@@ -417,7 +417,7 @@ namespace GitCommandsTests.Config
 
             // CHECK GET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "bugtraq.url", "http://192.168.0.1:8080/browse/%BUGID%");
                 CheckValueIsEqual(configFile, "bugtraq.message", "This commit fixes %BUGID%");
                 CheckValueIsEqual(configFile, "bugtraq.number", "");
@@ -431,7 +431,7 @@ namespace GitCommandsTests.Config
         {
             // TEST DATA
             {
-                var content = new StringBuilder();
+                StringBuilder content = new();
 
                 content.AppendLine("# issue tracker configuration");
                 content.AppendLine("[bugtraq \"default\\\\5\"]");
@@ -443,7 +443,7 @@ namespace GitCommandsTests.Config
 
             // CHECK GET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "bugtraq.default\\5.url", "http://192.168.0.1:8080/browse/%BUGID%");
             }
         }
@@ -453,7 +453,7 @@ namespace GitCommandsTests.Config
         {
             // TEST DATA
             {
-                var content = new StringBuilder();
+                StringBuilder content = new();
 
                 content.AppendLine("[section \"sub section\"]");
                 content.AppendLine("	test = test");
@@ -464,20 +464,20 @@ namespace GitCommandsTests.Config
 
             // CHECK GET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "section.sub section.test", "test");
             }
 
             // CHECK SET CONFIG VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 configFile.SetValue("section.sub section.test", @"test2");
                 configFile.Save();
             }
 
             // CHECK WRITTEN VALUE
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
                 CheckValueIsEqual(configFile, "section.sub section.test", "test2");
             }
         }
@@ -499,7 +499,7 @@ namespace GitCommandsTests.Config
 
             // verify
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
+                ConfigFile configFile = new(GetConfigFileName(), true);
 
                 string remote = "branch.BranchName1.remote";
                 CheckValueIsEqual(configFile, remote, "origin1");
@@ -538,7 +538,7 @@ namespace GitCommandsTests.Config
 [status]
       showUntrackedFiles = no
 ";
-            var cfg = new ConfigFile("", true);
+            ConfigFile cfg = new("", true);
             cfg.LoadFromString(configFileContent);
             string actual = cfg.GetValue("status.showUntrackedFiles", string.Empty);
             string expected = "no";
@@ -554,7 +554,7 @@ namespace GitCommandsTests.Config
       showUntrackedFiles = no
 [status]
 ";
-            var cfg = new ConfigFile("", true);
+            ConfigFile cfg = new("", true);
             cfg.LoadFromString(configFileContent);
             string actual = cfg.GetValue("status.showUntrackedFiles", string.Empty);
             string expected = "no";
@@ -571,7 +571,7 @@ namespace GitCommandsTests.Config
 [status]
       showUntrackedFiles = no
 ";
-            var cfg = new ConfigFile("", true);
+            ConfigFile cfg = new("", true);
             cfg.LoadFromString(configFileContent);
             string actual = cfg.GetValue("status.showUntrackedFiles", string.Empty);
             string expected = "no";
@@ -588,7 +588,7 @@ namespace GitCommandsTests.Config
 [status]
       showUntrackedFiles = no
 ";
-            var cfg = new ConfigFile("", true);
+            ConfigFile cfg = new("", true);
             cfg.LoadFromString(configFileContent);
             IEnumerable<string> actual = cfg.GetValues("status.showUntrackedFiles");
             IEnumerable<string> expected = new[] { "yes", "no" };
@@ -598,13 +598,13 @@ namespace GitCommandsTests.Config
         [Test]
         public void SquareBracketInValue()
         {
-            var content = new StringBuilder();
+            StringBuilder content = new();
 
             content.AppendLine("[branch \"reporting_bad_behaviour\"]");
             content.AppendLine("    remote = origin");
             content.AppendLine("	merge = refs/heads/[en]reporting_bad_behaviour");
 
-            var cfg = new ConfigFile("", true);
+            ConfigFile cfg = new("", true);
             cfg.LoadFromString(content.ToString());
             string actual = cfg.GetValue("branch.reporting_bad_behaviour.merge", string.Empty);
             string expected = "refs/heads/[en]reporting_bad_behaviour";
@@ -614,13 +614,13 @@ namespace GitCommandsTests.Config
         [Test]
         public void SquareBracketInSectionName()
         {
-            var content = new StringBuilder();
+            StringBuilder content = new();
 
             content.AppendLine("[branch \"[en]reporting_bad_behaviour\"]");
             content.AppendLine("    remote = origin");
             content.AppendLine("	merge = refs/heads/reporting_bad_behaviour");
 
-            var cfg = new ConfigFile("", true);
+            ConfigFile cfg = new("", true);
             cfg.LoadFromString(content.ToString());
             string actual = cfg.GetValue("branch.[en]reporting_bad_behaviour.merge", string.Empty);
             string expected = "refs/heads/reporting_bad_behaviour";
@@ -636,7 +636,7 @@ namespace GitCommandsTests.Config
             if (File.Exists(GetConfigFileName()))
             {
                 // Make sure it is hidden
-                var configFile = new FileInfo(GetConfigFileName());
+                FileInfo configFile = new(GetConfigFileName());
                 configFile.Attributes = FileAttributes.Normal;
 
                 File.Delete(GetConfigFileName());

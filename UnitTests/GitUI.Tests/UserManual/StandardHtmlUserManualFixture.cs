@@ -16,7 +16,7 @@ namespace GitUITests.UserManual
             AppSettings.GetTestAccessor().ResetDocumentationBaseUrl();
             AppSettings.SetDocumentationBaseUrl("master");
 
-            var sut = new StandardHtmlUserManual(subFolder, anchor);
+            StandardHtmlUserManual sut = new(subFolder, anchor);
 
             sut.GetUrl().Should().Be(expected);
         }

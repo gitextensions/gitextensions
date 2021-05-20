@@ -45,7 +45,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task AddAsMostRecentAsync_should_add_new_path_as_top_entry()
         {
             const string repoToAdd = "path to add\\";
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1\\"),
                 new Repository("path3\\"),
@@ -64,7 +64,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task AddAsMostRecentAsync_should_move_existing_path_as_top_entry()
         {
             const string repoToAdd = "path to add\\";
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1\\"),
                 new Repository("path3\\"),
@@ -84,7 +84,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task AddAsMostRecentAsync_should_move_only_first_existing_path_as_top_entry()
         {
             const string repoToAdd = "path to add\\";
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1\\"),
                 new Repository("path3\\"),
@@ -106,7 +106,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task AddAsMostRecentAsync_should_not_move_if_path_already_as_top_entry()
         {
             const string repoToAdd = "path to add\\";
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository(repoToAdd),
                 new Repository("path1\\"),
@@ -167,7 +167,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         {
             const int size = 3;
             AppSettings.RecentRepositoriesHistorySize = size;
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1") { Category = "my" },
                 new Repository("path2"),
@@ -189,7 +189,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task RemoveRecentAsync_should_remove_if_exists()
         {
             const string repoToDelete = "path to delete";
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1"),
                 new Repository(repoToDelete),
@@ -212,7 +212,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task RemoveFavouriteAsync_should_not_crash_if_not_exists()
         {
             const string repoToDelete = "path to delete";
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1"),
                 new Repository("path2"),
@@ -239,7 +239,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task RemoveFavouriteAsync_should_remove_if_exists()
         {
             const string repoToDelete = "path to delete";
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1"),
                 new Repository(repoToDelete),
@@ -266,7 +266,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public async Task RemoveRecentAsync_should_not_crash_if_not_exists()
         {
             const string repoToDelete = "path to delete";
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1"),
                 new Repository("path2"),
@@ -295,7 +295,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         [Test]
         public async Task SaveFavouriteHistoryAsync_should_save()
         {
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1"),
                 new Repository("path2"),
@@ -321,7 +321,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         {
             const int size = 3;
             AppSettings.RecentRepositoriesHistorySize = size;
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1"),
                 new Repository("path2"),
@@ -338,7 +338,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         [Test]
         public async Task RemoveInvalidRepositoriesAsync_should_apply_predicate()
         {
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("Even"),
                 new Repository("Odd"),
@@ -358,7 +358,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         [Test]
         public async Task RemoveInvalidRepositoriesAsync_should_not_apply_predicate()
         {
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("Even"),
                 new Repository("Odd"),
@@ -379,7 +379,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         {
             const string repoToDelete = "different path";
 
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1"),
                 new Repository("path2"),
@@ -400,7 +400,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         {
             const string repoToDelete = "different path";
 
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository("path1"),
                 new Repository("path2"),

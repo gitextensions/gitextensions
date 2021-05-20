@@ -151,7 +151,7 @@ namespace GitUI.Theming
         }
 
         private static ThemeSettings CreateFallbackSettings(Theme invariantTheme) =>
-            new ThemeSettings(Theme.Default, invariantTheme, ThemeVariations.None, useSystemVisualStyle: true);
+            new(Theme.Default, invariantTheme, ThemeVariations.None, useSystemVisualStyle: true);
 
         internal static class TestAccessor
         {

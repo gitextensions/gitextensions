@@ -18,12 +18,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (File.Exists(path))
             {
-                var fileInfo = new FileInfo(path);
+                FileInfo fileInfo = new(path);
                 OsShellUtil.SelectPathInFileExplorer(fileInfo.FullName);
             }
             else if (Directory.Exists(path))
             {
-                var fileInfo = new FileInfo(path);
+                FileInfo fileInfo = new(path);
                 OsShellUtil.OpenWithFileExplorer(fileInfo.Directory.FullName);
             }
         }

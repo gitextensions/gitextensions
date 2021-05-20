@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
 
         private void BrowsePatch_Click(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog
+            OpenFileDialog dialog = new()
             {
                 Filter = _patchFileFilterString.Text + "|*.patch",
                 InitialDirectory = @".",

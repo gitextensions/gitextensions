@@ -22,13 +22,13 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
         {
             ThemeModule.TestAccessor.SuppressWin32Hooks = true;
 
-            var page = new MockColorsSettingsPage();
+            MockColorsSettingsPage page = new();
             var themeRepository = Substitute.For<IThemeRepository>();
             var themePathProvider = Substitute.For<IThemePathProvider>();
             themeRepository
                 .GetTheme(Arg.Any<ThemeId>(), Arg.Any<IReadOnlyList<string>>())
                 .Returns(callInfo => new Theme(new Dictionary<AppColor, Color>(), new Dictionary<KnownColor, Color>(), callInfo.Arg<ThemeId>()));
-            var controller = new ColorsSettingsPageController(page, themeRepository, themePathProvider);
+            ColorsSettingsPageController controller = new(page, themeRepository, themePathProvider);
 
             _context = new ColorSettingsPageTestContext(page, controller, themeRepository);
         }

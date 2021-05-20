@@ -60,7 +60,7 @@ namespace GitCommandsTests
         [TestCase(@"C:\dev\c#\repo\")]
         public void Resolve_combines_paths(string workingDir)
         {
-            var resolver = new FullPathResolver(() => workingDir);
+            FullPathResolver resolver = new(() => workingDir);
             resolver.Resolve("file.txt").Should().Be(Path.Combine(workingDir, "file.txt").Replace("/", "\\"));
         }
 
@@ -69,7 +69,7 @@ namespace GitCommandsTests
         [TestCase(" ")]
         public void Resolve_does_not_throw_on_invalid_workingDir(string workingDir)
         {
-            var resolver = new FullPathResolver(() => workingDir);
+            FullPathResolver resolver = new(() => workingDir);
             resolver.Resolve("file.txt").Should().Be(Path.Combine(Environment.CurrentDirectory, "file.txt").Replace("/", "\\"));
         }
     }

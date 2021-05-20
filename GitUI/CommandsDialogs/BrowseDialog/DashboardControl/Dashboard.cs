@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 {
                     var padding24 = DpiUtil.Scale(24);
                     var padding3 = DpiUtil.Scale(3);
-                    var linkLabel = new LinkLabel
+                    LinkLabel linkLabel = new()
                     {
                         AutoSize = true,
                         AutoEllipsis = true,

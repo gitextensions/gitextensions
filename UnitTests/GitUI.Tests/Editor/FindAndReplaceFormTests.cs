@@ -152,7 +152,7 @@ namespace GitUITests.Editor
             AssertTextRange(new TextRange(0, 4), actualRange);
 
             // Move the caret outside of the originally selected region.
-            var newCaretPosition = new TextLocation(1, 1);
+            TextLocation newCaretPosition = new(1, 1);
             _textEditorControl.ActiveTextAreaControl.Caret.Position = newCaretPosition;
 
             actualRange = await _findAndReplaceForm.FindNextAsync(true, false, null);
@@ -236,7 +236,7 @@ namespace GitUITests.Editor
 
             if (scanRegion.Start != default || scanRegion.End != default)
             {
-                var selection = new DefaultSelection(_textEditorControl.Document, scanRegion.Start, scanRegion.End);
+                DefaultSelection selection = new(_textEditorControl.Document, scanRegion.Start, scanRegion.End);
                 _textEditorControl.ActiveTextAreaControl.SelectionManager.SetSelection(selection);
                 _textEditorControl.ActiveTextAreaControl.Caret.Position = scanRegion.End;
                 _testAccessor.Search.SetScanRegion(selection);

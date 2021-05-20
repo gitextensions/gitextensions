@@ -96,7 +96,7 @@ namespace GitUITests.Avatars
 
         protected Stream GetPngStream()
         {
-            var stream = new MemoryStream();
+            MemoryStream stream = new();
             _img1.Save(stream, ImageFormat.Png);
             stream.Position = 0;
             return stream;

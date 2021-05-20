@@ -13,10 +13,10 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _push = new("Push");
 
         private readonly TranslationString _aheadCommitsToPush =
-            new TranslationString("{0} new commit(s) will be pushed");
+            new("{0} new commit(s) will be pushed");
 
         private readonly TranslationString _behindCommitsTointegrateOrForcePush =
-            new TranslationString("{0} commit(s) should be integrated (or will be lost if force pushed)");
+            new("{0} commit(s) should be integrated (or will be lost if force pushed)");
 
         private IAheadBehindDataProvider? _aheadBehindDataProvider;
 
@@ -81,7 +81,7 @@ namespace GitUI.CommandsDialogs
         }
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {

@@ -268,7 +268,7 @@ namespace GitCommandsTests.Git
         public void TryParseAsciiHexBytes_returns_false_when_bounds_check_fails()
         {
             var bytes = new byte[ObjectId.Sha1CharCount];
-            var segment = new ArraySegment<byte>(bytes);
+            ArraySegment<byte> segment = new(bytes);
 
             Assert.False(ObjectId.TryParseAsciiHexBytes(segment, -1, out ObjectId objectId));
             Assert.Null(objectId);

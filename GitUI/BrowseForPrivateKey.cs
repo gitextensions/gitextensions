@@ -31,7 +31,7 @@ namespace GitUI
         /// </summary>
         public static string? Browse(IWin32Window parent)
         {
-            using var dialog = new OpenFileDialog
+            using OpenFileDialog dialog = new()
             {
                 Filter = " (*.ppk)|*.ppk",
                 InitialDirectory = ".",

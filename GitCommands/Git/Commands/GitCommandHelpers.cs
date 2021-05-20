@@ -417,7 +417,7 @@ namespace GitCommands.Git.Commands
                 throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
             }
 
-            var builder = new GitArgumentBuilder("rebase");
+            GitArgumentBuilder builder = new("rebase");
             if (ignoreDate)
             {
                 builder.Add("--ignore-date");
@@ -520,7 +520,7 @@ namespace GitCommands.Git.Commands
 
         public static ArgumentString GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
-            var args = new GitArgumentBuilder("status", gitOptions:
+            GitArgumentBuilder args = new("status", gitOptions:
                 noLocks && GitVersion.Current.SupportNoOptionalLocks
                     ? (ArgumentString)"--no-optional-locks"
                     : default)

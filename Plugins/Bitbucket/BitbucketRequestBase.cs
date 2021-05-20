@@ -37,13 +37,13 @@ namespace GitExtensions.Plugins.Bitbucket
             Validates.NotNull(Settings.Username);
             Validates.NotNull(Settings.Password);
 
-            var client = new RestClient
+            RestClient client = new()
             {
                 BaseUrl = new System.Uri(Settings.BitbucketUrl),
                 Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password)
             };
 
-            var request = new RestRequest(ApiUrl, RequestMethod);
+            RestRequest request = new(ApiUrl, RequestMethod);
             if (RequestBody is not null)
             {
                 request.AddJsonBody(RequestBody);
@@ -90,17 +90,17 @@ namespace GitExtensions.Plugins.Bitbucket
             catch (JsonReaderException)
             {
                 MessageBox.Show(jsonString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                var errorResponse = new BitbucketResponse<T> { Success = false };
+                BitbucketResponse<T> errorResponse = new() { Success = false };
                 return errorResponse;
             }
 
             if (json["errors"] is not null)
             {
-                var messages = new List<string>();
-                var errorResponse = new BitbucketResponse<T> { Success = false };
+                List<string> messages = new();
+                BitbucketResponse<T> errorResponse = new() { Success = false };
                 foreach (var error in json["errors"])
                 {
-                    var sb = new StringBuilder();
+                    StringBuilder sb = new();
                     sb.AppendLine(error["message"].ToString());
                     if (error["reviewerErrors"] is not null)
                     {

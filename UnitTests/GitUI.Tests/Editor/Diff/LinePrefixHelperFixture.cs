@@ -73,7 +73,7 @@ namespace GitUITests.Editor.Diff
 
             var doc = PreDocumentForDiffText(diffText);
 
-            var helper = new LinePrefixHelper(lineSegmentGetter);
+            LinePrefixHelper helper = new(lineSegmentGetter);
             helper.DoesLineStartWith(doc, 0, prefix).Should().BeTrue();
         }
 
@@ -85,7 +85,7 @@ namespace GitUITests.Editor.Diff
 
             var doc = PreDocumentForDiffText(diffText);
 
-            var helper = new LinePrefixHelper(lineSegmentGetter);
+            LinePrefixHelper helper = new(lineSegmentGetter);
             helper.DoesLineStartWith(doc, 0, "++").Should().BeFalse();
         }
 
@@ -109,7 +109,7 @@ namespace GitUITests.Editor.Diff
 
         private static List<ISegment> GetSegmentsForDiffText(string diffText)
         {
-            var lineSegments = new List<ISegment>();
+            List<ISegment> lineSegments = new();
             foreach (var diffLine in diffText.Split('\n'))
             {
                 var seg = Substitute.For<ISegment>();

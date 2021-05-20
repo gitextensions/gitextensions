@@ -381,11 +381,11 @@ namespace GitUI.BranchTreePanel
 
                 #endregion
 
-                var nodes = new Nodes(this);
+                Nodes nodes = new(this);
                 var aheadBehindData = _aheadBehindDataProvider?.GetData();
 
                 var currentBranch = Module.GetSelectedBranch();
-                var pathToNode = new Dictionary<string, BaseBranchNode>();
+                Dictionary<string, BaseBranchNode> pathToNode = new();
                 foreach (IGitRef branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
@@ -393,7 +393,7 @@ namespace GitUI.BranchTreePanel
                     Validates.NotNull(branch.ObjectId);
 
                     bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
-                    var localBranchNode = new LocalBranchNode(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, isVisible);
+                    LocalBranchNode localBranchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, isVisible);
 
                     if (aheadBehindData is not null && aheadBehindData.ContainsKey(localBranchNode.FullPath))
                     {

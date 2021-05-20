@@ -76,7 +76,7 @@ namespace GitUI.UserControls
 
             string[] GetContainsRevisionBranches()
             {
-                var result = new HashSet<string>();
+                HashSet<string> result = new();
 
                 if (_containRevisions.Count > 0)
                 {

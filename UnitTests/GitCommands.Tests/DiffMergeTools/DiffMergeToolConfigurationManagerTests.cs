@@ -178,7 +178,7 @@ namespace GitCommandsTests.DiffMergeTools
         [Test]
         public void LoadDiffMergeToolConfig_should_load_tool_config_if_tool_registered()
         {
-            var tool = new SemanticMerge();
+            SemanticMerge tool = new();
 
             var toolPath = @"c:\some\path\to the tool\MyTool.exe";
             _fileSettings.GetValue($"mergetool.{tool.Name}.path").Returns(toolPath);

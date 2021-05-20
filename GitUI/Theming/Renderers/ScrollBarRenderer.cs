@@ -32,7 +32,7 @@ namespace GitUI.Theming
         {
             var foreColor = GetArrowButtonForeColor(stateId);
             var arrowPts = GetArrowPolygon(prect, stateId);
-            using var pen = new Pen(foreColor, DpiUtil.Scale(2));
+            using Pen pen = new(foreColor, DpiUtil.Scale(2));
             using (ctx.HighQuality())
             {
                 ctx.Graphics.DrawLines(pen, arrowPts);

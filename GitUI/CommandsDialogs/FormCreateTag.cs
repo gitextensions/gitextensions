@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs
                 return "";
             }
 
-            var createTagArgs = new GitCreateTagArgs(textBoxTagName.Text,
+            GitCreateTagArgs createTagArgs = new(textBoxTagName.Text,
                                                      objectId,
                                                      GetSelectedOperation(annotate.SelectedIndex),
                                                      tagMessage.Text,
@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using var form = new FormRemoteProcess(UICommands, process: null, pushCmd)
+            using FormRemoteProcess form = new(UICommands, process: null, pushCmd)
             {
                 Remote = _currentRemote,
                 Text = string.Format(_pushToCaption.Text, _currentRemote),

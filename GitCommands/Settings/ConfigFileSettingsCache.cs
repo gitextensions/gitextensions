@@ -17,7 +17,7 @@ namespace GitCommands.Settings
 
         public static ConfigFileSettingsCache FromCache(string settingsFilePath, bool isLocal)
         {
-            var createSettingsCache = new Lazy<ConfigFileSettingsCache>(
+            Lazy<ConfigFileSettingsCache> createSettingsCache = new(
                 () => new ConfigFileSettingsCache(settingsFilePath, true, isLocal));
 
             return FromCache(settingsFilePath, createSettingsCache);

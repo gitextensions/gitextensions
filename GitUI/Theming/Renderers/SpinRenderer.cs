@@ -110,7 +110,7 @@ namespace GitUI.Theming
             ctx.Graphics.FillRectangle(backBrush, prect);
             using (ctx.HighQuality())
             {
-                using var pen = new Pen(foreColor, DpiUtil.Scale(2));
+                using Pen pen = new(foreColor, DpiUtil.Scale(2));
                 ctx.Graphics.DrawLines(pen, arrowPolygon);
             }
         }

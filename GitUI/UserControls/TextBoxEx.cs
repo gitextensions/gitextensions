@@ -74,7 +74,7 @@ namespace GitUI.UserControls
                     var windowDC = NativeMethods.GetWindowDC(Handle);
                     {
                         using var graphics = Graphics.FromHdc(windowDC);
-                        using var pen = new Pen(penColor);
+                        using Pen pen = new(penColor);
 
                         ControlPaint.DrawBorder(graphics, ClientRectangle, penColor, ButtonBorderStyle.Solid);
                     }

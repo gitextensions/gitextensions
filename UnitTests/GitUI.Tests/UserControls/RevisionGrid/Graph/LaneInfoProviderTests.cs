@@ -18,7 +18,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         /// for testing the LaneInfoProvider.References.MergeRegex
         /// "(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$"
         /// </summary>
-        private static readonly List<string> MergeSubjectsWithDecoding = new List<string>()
+        private static readonly List<string> MergeSubjectsWithDecoding = new()
         {
             "Merge Branch xxx", // case-insignificance
             "xxx", "master",
@@ -189,7 +189,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         [Test]
         public void GetLaneInfo_should_return_no_info_if_node_revision_null()
         {
-            var nodeWithoutRevision = new RevisionGraphRevision(ObjectId.WorkTreeId, 0);
+            RevisionGraphRevision nodeWithoutRevision = new(ObjectId.WorkTreeId, 0);
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (nodeWithoutRevision, isAtNode: false));
 
             _infoProvider.GetLaneInfo(0, 0).Should().Be(LaneInfoProvider.TestAccessor.NoInfoText.Text);
@@ -377,7 +377,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             string into = MergeSubjectsWithDecoding[2];
             _mergeCommitNode.GitRevision.Subject = subject;
 
-            var gitRef = new GitRef(null, null, GitRefName.RefsHeadsPrefix + "local_branch");
+            GitRef gitRef = new(null, null, GitRefName.RefsHeadsPrefix + "local_branch");
             _mergeCommitNode.GitRevision.Refs = new GitRef[] { gitRef };
 
             GetLaneInfo_should_display(_realCommitNode, into);

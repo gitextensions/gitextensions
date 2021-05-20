@@ -105,10 +105,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             MostRecentLB.Items.Clear();
             LessRecentLB.Items.Clear();
 
-            var mostRecentRepos = new List<RecentRepoInfo>();
-            var lessRecentRepos = new List<RecentRepoInfo>();
+            List<RecentRepoInfo> mostRecentRepos = new();
+            List<RecentRepoInfo> lessRecentRepos = new();
 
-            var splitter = new RecentRepoSplitter
+            RecentRepoSplitter splitter = new()
             {
                 MaxRecentRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value,
                 ShorteningStrategy = GetShorteningStrategy(),
@@ -289,7 +289,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             var rowBounds = e.Bounds;
             int leftMargin = e.Item.GetBounds(ItemBoundsPortion.Label).Left;
-            var bounds = new Rectangle(leftMargin, rowBounds.Top, rowBounds.Width - leftMargin, rowBounds.Height);
+            Rectangle bounds = new(leftMargin, rowBounds.Top, rowBounds.Width - leftMargin, rowBounds.Height);
 
             e.Graphics.FillRectangle(SystemBrushes.Window, bounds);
             TextRenderer.DrawText(e.Graphics, e.Item.Text, listView.Font, bounds, SystemColors.ControlText,

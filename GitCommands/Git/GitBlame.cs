@@ -63,7 +63,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            var s = new StringBuilder();
+            StringBuilder s = new();
 
             s.Append("Author: ").AppendLine(Author);
             s.Append("Author date: ").AppendLine(AuthorTime.ToString(CultureInfo.CurrentCulture));

@@ -51,7 +51,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         public void Load_should_return_collection()
         {
             AppSettings.SetString("a", "repos");
-            var history = new List<Repository>
+            List<Repository> history = new()
             {
                 new Repository(@"C:\Development\gitextensions\"),
                 new Repository(@"C:\Development\gitextensions\Externals\NBug\")

@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public class TextboxHotkey : TextBox
     {
         private readonly TranslationString _hotkeyNotSet =
-            new TranslationString("None");
+            new("None");
 
         #region Key
         private Keys _keyData;

@@ -103,7 +103,7 @@ namespace GitCommands.Gpg
             return await Task.Run(() =>
             {
                 CommitStatus cmtStatus;
-                var args = new GitArgumentBuilder("log")
+                GitArgumentBuilder args = new("log")
                 {
                     "--pretty=\"format:%G?\"",
                     "-1",
@@ -204,7 +204,7 @@ namespace GitCommands.Gpg
             }
 
             var module = GetModule();
-            var args = new GitArgumentBuilder("log")
+            GitArgumentBuilder args = new("log")
             {
                 "--pretty=\"format:%GG\"",
                 "-1",
@@ -237,7 +237,7 @@ namespace GitCommands.Gpg
             }
 
             var module = GetModule();
-            var args = new GitArgumentBuilder("verify-tag")
+            GitArgumentBuilder args = new("verify-tag")
             {
                 { raw, "--raw" },
                 tagName

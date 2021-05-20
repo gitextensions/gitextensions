@@ -47,7 +47,7 @@ See the changes in the commit form.");
         private readonly TranslationString _success = new("Success");
 
         // store strings to not keep references to nodes
-        private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
+        private readonly Stack<string> _lastSelectedNodes = new();
         private readonly IRevisionFileTreeController _revisionFileTreeController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
@@ -361,7 +361,7 @@ See the changes in the commit form.");
                     case GitObjectType.Blob:
                     case GitObjectType.Commit:
                     {
-                        var file = new GitItemStatus(name: gitItem.FileName)
+                        GitItemStatus file = new(name: gitItem.FileName)
                         {
                             IsTracked = true,
                             TreeGuid = gitItem.ObjectId,
@@ -402,12 +402,12 @@ See the changes in the commit form.");
         {
             if (e.Item is TreeNode { Tag: GitItem gitItem })
             {
-                var fileList = new StringCollection();
+                StringCollection fileList = new();
                 var fileName = _fullPathResolver.Resolve(gitItem.FileName);
 
                 fileList.Add(fileName.ToNativePath());
 
-                var obj = new DataObject();
+                DataObject obj = new();
                 obj.SetFileDropList(fileList);
 
                 DoDragDrop(obj, DragDropEffects.Copy);
@@ -723,8 +723,8 @@ See the changes in the commit form.");
             if (tvGitTree.SelectedNode?.Tag is GitItem { ObjectType: GitObjectType.Blob } gitItem)
             {
                 var fullName = _fullPathResolver.Resolve(gitItem.FileName);
-                using var fileDialog =
-                    new SaveFileDialog
+                using SaveFileDialog fileDialog =
+                    new()
                     {
                         InitialDirectory = Path.GetDirectoryName(fullName),
                         FileName = Path.GetFileName(fullName),
@@ -764,7 +764,7 @@ See the changes in the commit form.");
                 return;
             }
 
-            var itemStatus = new GitItemStatus(name: selectedFile);
+            GitItemStatus itemStatus = new(name: selectedFile);
 
             var answer = MessageBox.Show(_assumeUnchangedMessage.Text, _assumeUnchangedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 

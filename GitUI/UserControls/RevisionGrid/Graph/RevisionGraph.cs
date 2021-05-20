@@ -19,7 +19,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private const int _straightenLanesLookAhead = 20;
 
         // Some unordered collections with raw data
-        private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
+        private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new();
         private ImmutableList<RevisionGraphRevision> _nodes = ImmutableList<RevisionGraphRevision>.Empty;
 
         /// <summary>
@@ -457,7 +457,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+        internal TestAccessor GetTestAccessor() => new(this);
 
         internal readonly struct TestAccessor
         {

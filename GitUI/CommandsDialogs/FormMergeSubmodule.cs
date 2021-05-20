@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs
 
         private void StageSubmodule()
         {
-            var args = new GitArgumentBuilder("add")
+            GitArgumentBuilder args = new("add")
             {
                 "--",
                 _filename.QuoteNE()
@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs
         private void btCheckoutBranch_Click(object sender, EventArgs e)
         {
             var revisions = new[] { ObjectId.Parse(tbLocal.Text), ObjectId.Parse(tbRemote.Text) };
-            var submoduleCommands = new GitUICommands(Module.GetSubmoduleFullPath(_filename));
+            GitUICommands submoduleCommands = new(Module.GetSubmoduleFullPath(_filename));
             if (!submoduleCommands.StartCheckoutBranch(this, revisions))
             {
                 return;

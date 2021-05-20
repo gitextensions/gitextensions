@@ -19,7 +19,7 @@ namespace GitUI.Editor
         d, drop = remove commit
         */
 
-        private static readonly Dictionary<char, (string longForm, HighlightColor color)> _commandByFirstChar = new Dictionary<char, (string longForm, HighlightColor color)>
+        private static readonly Dictionary<char, (string longForm, HighlightColor color)> _commandByFirstChar = new()
         {
             { 'p', ("pick", new HighlightColor(Color.Black, bold: true, italic: false)) },
             { 'r', ("reword", new HighlightColor(Color.Purple, bold: true, italic: false)) },

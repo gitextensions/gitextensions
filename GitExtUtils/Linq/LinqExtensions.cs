@@ -8,7 +8,7 @@ namespace System.Linq
     public static class LinqExtensions
     {
         [MustUseReturnValue]
-        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer = null) => new HashSet<T>(source, comparer ?? EqualityComparer<T>.Default);
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer = null) => new(source, comparer ?? EqualityComparer<T>.Default);
 
         [MustUseReturnValue]
         public static HashSet<TKey> ToHashSet<TSource, TKey>(
@@ -20,7 +20,7 @@ namespace System.Linq
                 throw new ArgumentNullException(nameof(keySelector));
             }
 
-            var result = new HashSet<TKey>();
+            HashSet<TKey> result = new();
 
             foreach (var element in source)
             {
@@ -161,7 +161,7 @@ namespace System.Linq
                 return Array.Empty<T>();
             }
 
-            var list = new List<T>();
+            List<T> list = new();
 
             do
             {

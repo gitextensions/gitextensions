@@ -34,10 +34,10 @@ namespace GitUI.UserControls.RevisionGrid
 
         internal RevisionGraph _revisionGraph = new();
 
-        private readonly List<ColumnProvider> _columnProviders = new List<ColumnProvider>();
+        private readonly List<ColumnProvider> _columnProviders = new();
         private readonly CancellationTokenSequence _backgroundCancellationSequence;
         private readonly AsyncQueue<(Func<CancellationToken, Task> backgroundOperation, CancellationToken cancellationToken)> _backgroundQueue =
-            new AsyncQueue<(Func<CancellationToken, Task> backgroundOperation, CancellationToken cancellationToken)>();
+            new();
         private CancellationToken _backgroundCancellationToken;
         private JoinableTask? _backgroundProcessingTask;
         private int _backgroundScrollTo;
@@ -293,7 +293,7 @@ namespace GitUI.UserControls.RevisionGrid
                 var commitBodyForeColor = GetCommitBodyForeground(e.State, e.RowIndex);
 
                 e.Graphics.FillRectangle(backBrush, e.CellBounds);
-                var cellStyle = new CellStyle(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont);
+                CellStyle cellStyle = new(backBrush, foreColor, commitBodyForeColor, _normalFont, _boldFont, _monospaceFont);
                 provider.OnCellPainting(e, revision, _rowHeight, cellStyle);
 
                 e.Handled = true;
@@ -466,7 +466,7 @@ namespace GitUI.UserControls.RevisionGrid
                     CancellationToken backgroundOperationCancellation;
                     try
                     {
-                        using var timeoutTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(200));
+                        using CancellationTokenSource timeoutTokenSource = new(TimeSpan.FromMilliseconds(200));
                         using var linkedCancellation = timeoutTokenSource.Token.CombineWith(cancellationToken);
                         timeoutToken = timeoutTokenSource.Token;
                         (backgroundOperation, backgroundOperationCancellation) = await _backgroundQueue.DequeueAsync(linkedCancellation.Token);

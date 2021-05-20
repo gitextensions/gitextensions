@@ -22,14 +22,14 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _selectLostObjectsToRestoreMessage = new("Select objects to restore.");
         private readonly TranslationString _selectLostObjectsToRestoreCaption = new("Restore lost objects");
 
-        private readonly List<LostObject> _lostObjects = new List<LostObject>();
+        private readonly List<LostObject> _lostObjects = new();
         private readonly SortableLostObjectsList _filteredLostObjects = new();
         private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new();
         private readonly IGitTagController _gitTagController;
 
         private LostObject? _previewedItem;
 
-        private static readonly Dictionary<string, string> LanguagesStartOfFile = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> LanguagesStartOfFile = new()
         {
             { "{", "recovery.json" },
             { "#include", "recovery.cpp" },
@@ -119,7 +119,7 @@ namespace GitUI.CommandsDialogs
 
         private void mnuLostObjectsCreateTag_Click(object sender, EventArgs e)
         {
-            using var frm = new FormCreateTag(UICommands, GetCurrentGitRevision());
+            using FormCreateTag frm = new(UICommands, GetCurrentGitRevision());
             var dialogResult = frm.ShowDialog(this);
             if (dialogResult == DialogResult.OK)
             {
@@ -129,7 +129,7 @@ namespace GitUI.CommandsDialogs
 
         private void mnuLostObjectsCreateBranch_Click(object sender, EventArgs e)
         {
-            using var frm = new FormCreateBranch(UICommands, GetCurrentGitRevision());
+            using FormCreateBranch frm = new(UICommands, GetCurrentGitRevision());
             var dialogResult = frm.ShowDialog(this);
             if (dialogResult == DialogResult.OK)
             {
@@ -356,7 +356,7 @@ namespace GitUI.CommandsDialogs
 
             if (obj is not null)
             {
-                using var frm = new FormEdit(UICommands, obj);
+                using FormEdit frm = new(UICommands, obj);
                 frm.IsReadOnly = true;
                 frm.ShowDialog(this);
             }
@@ -382,7 +382,7 @@ namespace GitUI.CommandsDialogs
             {
                 currentTag++;
                 var tagName = lostObject.ObjectType == LostObjectType.Tag ? lostObject.TagName : currentTag.ToString();
-                var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{tagName}", lostObject.ObjectId);
+                GitCreateTagArgs createTagArgs = new($"{RestoredObjectsTagPrefix}{tagName}", lostObject.ObjectId);
                 _gitTagController.CreateTag(createTagArgs, this);
             }
 
@@ -481,8 +481,8 @@ namespace GitUI.CommandsDialogs
 
             if (lostObject.ObjectType == LostObjectType.Blob)
             {
-                using var fileDialog =
-                    new SaveFileDialog
+                using SaveFileDialog fileDialog =
+                    new()
                     {
                         InitialDirectory = Module.WorkingDir,
                         FileName = "LOST_FOUND.txt",

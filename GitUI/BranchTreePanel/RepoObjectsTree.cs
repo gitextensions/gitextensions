@@ -24,13 +24,13 @@ namespace GitUI.BranchTreePanel
     {
         private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
         private readonly TranslationString _showBranchOnly =
-            new TranslationString("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
+            new("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
         private readonly TranslationString _searchTooltip = new("Search");
         private readonly TranslationString _showHideRefsTooltip = new("Show/hide branches/remotes/tags");
 
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
-        private readonly List<Tree> _rootNodes = new List<Tree>();
+        private readonly List<Tree> _rootNodes = new();
         private readonly SearchControl<string> _txtBranchCriterion;
         private BranchTree _branchesTree;
         private RemoteBranchTree _remotesTree;
@@ -143,7 +143,7 @@ namespace GitUI.BranchTreePanel
 
                 Image Pad(Image image)
                 {
-                    var padded = new Bitmap(image.Width, image.Height + rowPadding + rowPadding, PixelFormat.Format32bppArgb);
+                    Bitmap padded = new(image.Width, image.Height + rowPadding + rowPadding, PixelFormat.Format32bppArgb);
                     using var g = Graphics.FromImage(padded);
                     g.DrawImageUnscaled(image, 0, rowPadding);
                     return padded;
@@ -152,7 +152,7 @@ namespace GitUI.BranchTreePanel
 
             SearchControl<string> CreateSearchBox()
             {
-                var search = new SearchControl<string>(SearchForBranch, i => { })
+                SearchControl<string> search = new(SearchForBranch, i => { })
                 {
                     Anchor = AnchorStyles.Left | AnchorStyles.Right,
                     Name = "txtBranchCritierion",
@@ -182,7 +182,7 @@ namespace GitUI.BranchTreePanel
 
                 IEnumerable<string> CollectFilterCandidates()
                 {
-                    var list = new List<string>();
+                    List<string> list = new();
 
                     foreach (TreeNode rootNode in treeMain.Nodes)
                     {
@@ -329,7 +329,7 @@ namespace GitUI.BranchTreePanel
 
         private void CreateBranches()
         {
-            var rootNode = new TreeNode(TranslatedStrings.Branches)
+            TreeNode rootNode = new(TranslatedStrings.Branches)
             {
                 Name = TranslatedStrings.Branches,
                 ImageKey = nameof(Images.BranchLocalRoot),
@@ -340,7 +340,7 @@ namespace GitUI.BranchTreePanel
 
         private void CreateRemotes()
         {
-            var rootNode = new TreeNode(TranslatedStrings.Remotes)
+            TreeNode rootNode = new(TranslatedStrings.Remotes)
             {
                 Name = TranslatedStrings.Remotes,
                 ImageKey = nameof(Images.BranchRemoteRoot),
@@ -357,7 +357,7 @@ namespace GitUI.BranchTreePanel
 
         private void CreateTags()
         {
-            var rootNode = new TreeNode(TranslatedStrings.Tags)
+            TreeNode rootNode = new(TranslatedStrings.Tags)
             {
                 Name = TranslatedStrings.Tags,
                 ImageKey = nameof(Images.TagHorizontal),
@@ -368,7 +368,7 @@ namespace GitUI.BranchTreePanel
 
         private void CreateSubmodules()
         {
-            var rootNode = new TreeNode(TranslatedStrings.Submodules)
+            TreeNode rootNode = new(TranslatedStrings.Submodules)
             {
                 Name = TranslatedStrings.Submodules,
                 ImageKey = nameof(Images.FolderSubmodule),
@@ -464,8 +464,8 @@ namespace GitUI.BranchTreePanel
 
             List<TreeNode> SearchTree(string text, IEnumerable<TreeNode> nodes)
             {
-                var queue = new Queue<TreeNode>(nodes);
-                var ret = new List<TreeNode>();
+                Queue<TreeNode> queue = new(nodes);
+                List<TreeNode> ret = new();
 
                 while (queue.Count != 0)
                 {
@@ -557,7 +557,7 @@ namespace GitUI.BranchTreePanel
         }
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {

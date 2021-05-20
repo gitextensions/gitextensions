@@ -172,7 +172,7 @@ namespace GitExtUtils.GitUI
             }
 
             var size = Scale(new Size(image.Width, image.Height));
-            var bitmap = new Bitmap(size.Width, size.Height);
+            Bitmap bitmap = new(size.Width, size.Height);
 
             using var g = Graphics.FromImage(bitmap);
 

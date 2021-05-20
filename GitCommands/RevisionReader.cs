@@ -123,7 +123,7 @@ namespace GitCommands
                 token.ThrowIfCancellationRequested();
 
                 // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
-                var stringPool = new StringPool();
+                StringPool stringPool = new();
 
                 var buffer = new byte[4096];
 
@@ -396,7 +396,7 @@ namespace GitCommands
             // Finally, decode the names, email, subject and body strings using the required text encoding
             var s = encoding.GetString(array, offset, lastOffset - offset);
 
-            var reader = new StringLineReader(s);
+            StringLineReader reader = new(s);
 
             var author = reader.ReadLine(stringPool);
             var authorEmail = reader.ReadLine(stringPool);
@@ -545,7 +545,7 @@ namespace GitCommands
         #endregion
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {
@@ -563,7 +563,7 @@ namespace GitCommands
             internal static (string? body, string? additionalData) ParseCommitBody(StringLineReader reader, string subject) =>
                 RevisionReader.ParseCommitBody(reader, subject);
 
-            internal static StringLineReader MakeReader(string s) => new StringLineReader(s);
+            internal static StringLineReader MakeReader(string s) => new(s);
 
             internal static string EndOfBody => RevisionReader.EndOfBody;
         }

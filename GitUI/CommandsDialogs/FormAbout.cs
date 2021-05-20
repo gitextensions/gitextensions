@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
             var contributorsList = GetContributorList();
             var thanksToContributorsText = string.Format(_thanksToContributors.Text, contributorsList.Count);
 
-            var random = new Random();
+            Random random = new();
 
             thanksTimer.Tick += delegate { ThankNextContributor(); };
             thanksTimer.Enabled = true;
@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs
 
             void ShowContributorsForm()
             {
-                using var formContributors = new FormContributors();
+                using FormContributors formContributors = new();
                 formContributors.ShowDialog(owner: this);
             }
 

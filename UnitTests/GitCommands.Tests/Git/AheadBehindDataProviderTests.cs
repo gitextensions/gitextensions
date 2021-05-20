@@ -255,7 +255,7 @@ namespace GitCommandsTests.Git
 
         private void SetResultOfGitCommand(string result)
         {
-            var writer = new StreamWriter(_standardOutputStream);
+            StreamWriter writer = new(_standardOutputStream);
             writer.Write(result);
             writer.Flush();
             _standardOutputStream.Position = 0;

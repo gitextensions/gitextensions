@@ -46,8 +46,8 @@ namespace GitUITests.Editor
                         "2:\n" +
                         "3:Selected\n" +
                         "4:";
-            using var testHelper = new GitModuleTestHelper();
-            var uiCommands = new GitUICommands(testHelper.Module);
+            using GitModuleTestHelper testHelper = new();
+            GitUICommands uiCommands = new(testHelper.Module);
             _uiCommandsSource.UICommands.Returns(x => uiCommands);
             _fileViewer.UICommandsSource = _uiCommandsSource;
             _fileViewer.GetTestAccessor().FileViewerInternal.SetText(sampleText, null);
@@ -88,8 +88,8 @@ index 62a5c2f08..2bc482714 100644
 -            int scrollPos = ScrollPos;
 +            int scrollPos = VScrollPosition;";
 
-            using var testHelper = new GitModuleTestHelper();
-            var uiCommands = new GitUICommands(testHelper.Module);
+            using GitModuleTestHelper testHelper = new();
+            GitUICommands uiCommands = new(testHelper.Module);
             _uiCommandsSource.UICommands.Returns(x => uiCommands);
             _fileViewer.UICommandsSource = _uiCommandsSource;
 
@@ -121,8 +121,8 @@ index 62a5c2f08..2bc482714 100644
 -            int scrollPos = ScrollPos;
 +            int scrollPos = VScrollPosition;";
 
-            using var testHelper = new GitModuleTestHelper();
-            var uiCommands = new GitUICommands(testHelper.Module);
+            using GitModuleTestHelper testHelper = new();
+            GitUICommands uiCommands = new(testHelper.Module);
             _uiCommandsSource.UICommands.Returns(x => uiCommands);
             _fileViewer.UICommandsSource = _uiCommandsSource;
 
@@ -145,8 +145,8 @@ index 62a5c2f08..2bc482714 100644
 index b25b745..5194740 100644
 Binary files a/binaryfile.bin and b/binaryfile.bin differ";
 
-            using var testHelper = new GitModuleTestHelper();
-            var uiCommands = new GitUICommands(testHelper.Module);
+            using GitModuleTestHelper testHelper = new();
+            GitUICommands uiCommands = new(testHelper.Module);
             _uiCommandsSource.UICommands.Returns(x => uiCommands);
             _fileViewer.UICommandsSource = _uiCommandsSource;
 

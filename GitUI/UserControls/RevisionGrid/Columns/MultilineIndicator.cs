@@ -59,7 +59,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return;
             }
 
-            var indicatorRect = new Rectangle(
+            Rectangle indicatorRect = new(
                 _e.CellBounds.Right - marginX - _indicatorRectWidth,
                 _e.CellBounds.Y + ((_e.CellBounds.Height - _indicatorRectHeight) / 2),
                 _indicatorRectWidth,

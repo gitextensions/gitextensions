@@ -462,7 +462,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             }
 
             // split the backmost (at 270 degrees) pie slice
-            var pieSlices = new List<PieSlice>(PieSlices);
+            List<PieSlice> pieSlices = new(PieSlices);
             var splitSlices = PieSlices[0].Split(270F);
             pieSlices[0] = splitSlices[0];
             if (splitSlices[1].SweepAngle > 0F)
@@ -649,7 +649,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             var largestDisplacementEllipseSize = LargestDisplacementEllipseSize;
             var maxDisplacementIndex = SliceRelativeDisplacements.Length - 1;
             var largestDisplacement = LargestDisplacement;
-            var listPieSlices = new List<PieSlice>();
+            List<PieSlice> listPieSlices = new();
             PieSlicesMapping.Clear();
             var colorIndex = 0;
             var backPieIndex = -1;
@@ -873,7 +873,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </param>
         protected void DrawSliceSides(Graphics graphics)
         {
-            var pieSlices = new List<PieSlice>(PieSlices);
+            List<PieSlice> pieSlices = new(PieSlices);
 
             // if the first slice spreads across 180 and 360 degrees boundaries it
             // will appear on both left and right edge so its periphery has to be

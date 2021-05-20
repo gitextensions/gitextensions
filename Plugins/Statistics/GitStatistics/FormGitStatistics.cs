@@ -110,7 +110,7 @@ namespace GitExtensions.Plugins.GitStatistics
 
                     TotalCommits.Text = string.Format(_commits.Text, totalCommits);
 
-                    var builder = new StringBuilder();
+                    StringBuilder builder = new();
 
                     var commitCountValues = new decimal[commitsPerUser.Count];
                     var commitCountLabels = new string[commitsPerUser.Count];
@@ -208,11 +208,11 @@ namespace GitExtensions.Plugins.GitStatistics
             var extensionValues = new decimal[_lineCounter.LinesOfCodePerExtension.Count];
             var extensionLabels = new string[_lineCounter.LinesOfCodePerExtension.Count];
 
-            var linesOfCodePerExtension = new List<KeyValuePair<string, int>>(_lineCounter.LinesOfCodePerExtension);
+            List<KeyValuePair<string, int>> linesOfCodePerExtension = new(_lineCounter.LinesOfCodePerExtension);
             linesOfCodePerExtension.Sort((first, next) => -first.Value.CompareTo(next.Value));
 
             var n = 0;
-            var linesOfCodePerLanguageText = new StringBuilder();
+            StringBuilder linesOfCodePerLanguageText = new();
             foreach (var (extension, loc) in linesOfCodePerExtension)
             {
                 var percent = (double)loc / _lineCounter.CodeLineCount;

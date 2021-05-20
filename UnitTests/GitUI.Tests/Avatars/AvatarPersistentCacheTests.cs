@@ -46,7 +46,7 @@ namespace GitUITests.Avatars
         [Test]
         public async Task GetAvatarAsync_should_create_if_folder_absent()
         {
-            var fileSystem = new MockFileSystem();
+            MockFileSystem fileSystem = new();
             _cache = new FileSystemAvatarCache(_inner, fileSystem);
             fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
@@ -58,7 +58,7 @@ namespace GitUITests.Avatars
         [Test]
         public async Task GetAvatarAsync_should_create_image_from_stream()
         {
-            var fileSystem = new MockFileSystem();
+            MockFileSystem fileSystem = new();
             _cache = new FileSystemAvatarCache(_inner, fileSystem);
             fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
@@ -106,7 +106,7 @@ namespace GitUITests.Avatars
         [Test]
         public async Task ClearCacheAsync_should_remove_all()
         {
-            var fileSystem = new MockFileSystem();
+            MockFileSystem fileSystem = new();
             _cache = new FileSystemAvatarCache(_inner, fileSystem);
 
             fileSystem.AddFile(Path.Combine(_folderPath, "a@a.com.16px.png"), new MockFileData(""));

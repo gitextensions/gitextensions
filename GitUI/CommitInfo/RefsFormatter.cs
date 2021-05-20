@@ -60,7 +60,7 @@ namespace GitUI.CommitInfo
 
         private (IEnumerable<string> formattedBranches, bool truncated) FilterAndFormatBranches(IEnumerable<string> branches, bool showAsLinks, bool limit)
         {
-            var formattedBranches = new List<string>();
+            List<string> formattedBranches = new();
             bool truncated = false;
 
             const string remotesPrefix = "remotes/";

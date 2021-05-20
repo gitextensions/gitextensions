@@ -27,7 +27,7 @@ namespace GitCommands.UserRepositoryHistory
 
             try
             {
-                var serializer = new XmlSerializer(typeof(RepositoryHistorySurrogate));
+                XmlSerializer serializer = new(typeof(RepositoryHistorySurrogate));
                 using TextReader reader = new StringReader(serialised);
                 if (serializer.Deserialize(reader) is RepositoryHistorySurrogate obj)
                 {
@@ -57,10 +57,10 @@ namespace GitCommands.UserRepositoryHistory
 
             try
             {
-                var surrogate = new RepositoryHistorySurrogate(repositories);
-                using var sw = new StringWriter();
-                var serializer = new XmlSerializer(typeof(RepositoryHistorySurrogate));
-                var ns = new XmlSerializerNamespaces();
+                RepositoryHistorySurrogate surrogate = new(repositories);
+                using StringWriter sw = new();
+                XmlSerializer serializer = new(typeof(RepositoryHistorySurrogate));
+                XmlSerializerNamespaces ns = new();
                 ns.Add(string.Empty, string.Empty);
                 serializer.Serialize(sw, surrogate, ns);
                 return sw.ToString();

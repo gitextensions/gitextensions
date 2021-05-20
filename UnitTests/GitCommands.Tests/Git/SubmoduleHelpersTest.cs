@@ -22,7 +22,7 @@ namespace GitCommandsTests.Git
             Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside-b"));
             Directory.CreateDirectory(Path.Combine(root, "Assets", "Core", "Vehicle Physics core assets"));
 
-            var testModule = new GitModule(root);
+            GitModule testModule = new(root);
 
             // Submodule name without spaces in the name
 

@@ -141,7 +141,7 @@ namespace GitUI
 
                 if (truncatePathMethod == TruncatePathMethod.Compact && EnvUtils.RunningOnWindows())
                 {
-                    var result = new StringBuilder(length);
+                    StringBuilder result = new(length);
                     NativeMethods.PathCompactPathEx(result, path, length, 0);
                     return result.ToString();
                 }

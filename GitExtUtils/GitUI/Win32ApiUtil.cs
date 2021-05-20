@@ -10,6 +10,6 @@ namespace GitUI
         /// Convert <see cref="Message.LParam"/> to <see cref="Point"/>.
         /// </summary>
         public static Point ToPoint(this IntPtr lparam) =>
-            new Point(unchecked((int)lparam.ToInt64()));
+            new(unchecked((int)lparam.ToInt64()));
     }
 }

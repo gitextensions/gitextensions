@@ -71,8 +71,8 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    var tsmiFavouriteRepositories = new ToolStripMenuItem();
-                    var repositoryHistory = new List<Repository>
+                    ToolStripMenuItem tsmiFavouriteRepositories = new();
+                    List<Repository> repositoryHistory = new()
                     {
                         new Repository(@"c:\") { Category = "D" },
                         new Repository(@"c:\") { Category = "A" },

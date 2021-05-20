@@ -94,9 +94,9 @@ namespace GitExtUtils.GitUI.Theming
         /// </summary>
         public double L { get; }
 
-        public HslColor WithHue(double hue) => new HslColor(hue, S, L);
-        public HslColor WithSaturation(double saturation) => new HslColor(H, saturation, L);
-        public HslColor WithLuminosity(double luminosity) => new HslColor(H, S, luminosity);
+        public HslColor WithHue(double hue) => new(hue, S, L);
+        public HslColor WithSaturation(double saturation) => new(H, saturation, L);
+        public HslColor WithLuminosity(double luminosity) => new(H, S, luminosity);
 
         /// <summary>
         /// Converts this HSL color object to a <see cref="Color"/> object based on RGB values.

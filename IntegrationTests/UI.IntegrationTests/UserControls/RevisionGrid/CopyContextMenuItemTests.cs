@@ -71,8 +71,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void Should_show_info_if_commit_has_defined_branches()
         {
-            var revision = new GitRevision(ObjectId.Random());
-            var refs = new List<IGitRef>
+            GitRevision revision = new(ObjectId.Random());
+            List<IGitRef> refs = new()
             {
                 new GitRef(null, revision.ObjectId, "refs/heads/branch1"),
                 new GitRef(null, revision.ObjectId, "refs/heads/branch2")
@@ -97,8 +97,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void Should_show_info_if_commit_has_defined_tags()
         {
-            var revision = new GitRevision(ObjectId.Random());
-            var refs = new List<IGitRef>
+            GitRevision revision = new(ObjectId.Random());
+            List<IGitRef> refs = new()
             {
                 new GitRef(null, revision.ObjectId, "refs/tags/tag1"),
                 new GitRef(null, revision.ObjectId, "refs/tags/tag2")
@@ -123,8 +123,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void Should_show_info_if_commit_has_defined_branches_and_tags()
         {
-            var revision = new GitRevision(ObjectId.Random());
-            var refs = new List<IGitRef>
+            GitRevision revision = new(ObjectId.Random());
+            List<IGitRef> refs = new()
             {
                 new GitRef(null, revision.ObjectId, "refs/tags/tag1"),
                 new GitRef(null, revision.ObjectId, "refs/heads/branch1"),
@@ -155,13 +155,13 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void Should_should_show_info_for_multiple_commits()
         {
-            var rev1 = new GitRevision(ObjectId.Random())
+            GitRevision rev1 = new(ObjectId.Random())
             {
                 Author = "Author1",
                 AuthorEmail = "author1@foo.bla",
                 AuthorDate = new DateTime(2018, 10, 23, 11, 34, 21),
             };
-            var rev2 = new GitRevision(ObjectId.Random())
+            GitRevision rev2 = new(ObjectId.Random())
             {
                 Author = "Author2",
                 AuthorEmail = "author2@foo.bla",
@@ -169,7 +169,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 CommitterEmail = "committer2@foo.bar",
                 CommitDate = new DateTime(2018, 10, 23, 11, 34, 21),
             };
-            var rev3 = new GitRevision(ObjectId.Random())
+            GitRevision rev3 = new(ObjectId.Random())
             {
                 Author = "Author3",
                 AuthorEmail = "author3@foo.bla",

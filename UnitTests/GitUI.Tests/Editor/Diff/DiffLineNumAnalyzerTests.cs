@@ -32,7 +32,7 @@ namespace GitUITests.Editor.Diff
         public void CanGetHeaders()
         {
             var result = _lineNumAnalyzer.Analyze(_sampleDiff);
-            var headerLines = new List<int> { 5, 17 };
+            List<int> headerLines = new() { 5, 17 };
             foreach (var header in headerLines)
             {
                 result.DiffLines[header].LeftLineNumber.Should().Be(DiffLineInfo.NotApplicableLineNum);

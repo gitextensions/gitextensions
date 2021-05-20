@@ -48,7 +48,7 @@ namespace GitUITests.Theming
         {
             var mockFileReader = CreateMockFileReader(GetThemeContent(colorName, testColorValue));
             var mockCssUrlResolver = Substitute.For<IThemeCssUrlResolver>();
-            var loader = new ThemeLoader(mockCssUrlResolver, mockFileReader);
+            ThemeLoader loader = new(mockCssUrlResolver, mockFileReader);
 
             var theme = LoadTheme(loader);
 
@@ -62,7 +62,7 @@ namespace GitUITests.Theming
         {
             var mockFileReader = CreateMockFileReader(GetThemeContent(colorName, color));
             var mockCssUrlResolver = Substitute.For<IThemeCssUrlResolver>();
-            var loader = new ThemeLoader(mockCssUrlResolver, mockFileReader);
+            ThemeLoader loader = new(mockCssUrlResolver, mockFileReader);
 
             var theme = LoadTheme(loader);
 
@@ -77,7 +77,7 @@ namespace GitUITests.Theming
             var colorblindColor = Color.Blue;
             var mockFileReader = CreateMockFileReader(GetThemeContent(colorName, regularColor, colorblindColor));
             var mockCssUrlResolver = Substitute.For<IThemeCssUrlResolver>();
-            var loader = new ThemeLoader(mockCssUrlResolver, mockFileReader);
+            ThemeLoader loader = new(mockCssUrlResolver, mockFileReader);
 
             var regularTheme = LoadTheme(loader);
             regularTheme.GetColor(colorName).ToArgb().Should().Be(regularColor.ToArgb());
@@ -95,7 +95,7 @@ namespace GitUITests.Theming
             var colorblindColor = Color.Blue;
             var mockFileReader = CreateMockFileReader(GetThemeContent(colorName, regularColor, colorblindColor));
             var mockCssUrlResolver = Substitute.For<IThemeCssUrlResolver>();
-            var loader = new ThemeLoader(mockCssUrlResolver, mockFileReader);
+            ThemeLoader loader = new(mockCssUrlResolver, mockFileReader);
 
             var regularTheme = LoadTheme(loader);
             regularTheme.GetColor(colorName).ToArgb().Should().Be(regularColor.ToArgb());
@@ -115,7 +115,7 @@ namespace GitUITests.Theming
 
             var mockFileReader = CreateMockFileReader(commentedContent);
             var mockCssUrlResolver = Substitute.For<IThemeCssUrlResolver>();
-            var loader = new ThemeLoader(mockCssUrlResolver, mockFileReader);
+            ThemeLoader loader = new(mockCssUrlResolver, mockFileReader);
 
             var theme = LoadTheme(loader);
 
@@ -127,7 +127,7 @@ namespace GitUITests.Theming
         {
             var mockFileReader = CreateMockFileReader(GetThemeContent("InvalidColorName", Color.Red));
             var mockCssUrlResolver = Substitute.For<IThemeCssUrlResolver>();
-            var loader = new ThemeLoader(mockCssUrlResolver, mockFileReader);
+            ThemeLoader loader = new(mockCssUrlResolver, mockFileReader);
 
             loader.Invoking(l => LoadTheme(l))
                 .Should().Throw<ThemeException>()
@@ -139,7 +139,7 @@ namespace GitUITests.Theming
         {
             var mockFileReader = CreateMockFileReader(GetThemeContent(KnownColor.Control, Color.Red) + "}");
             var mockCssUrlResolver = Substitute.For<IThemeCssUrlResolver>();
-            var loader = new ThemeLoader(mockCssUrlResolver, mockFileReader);
+            ThemeLoader loader = new(mockCssUrlResolver, mockFileReader);
 
             loader.Invoking(l => LoadTheme(l))
                 .Should().Throw<ThemeException>()
@@ -152,7 +152,7 @@ namespace GitUITests.Theming
             [ValueSource(nameof(TestColorValues))] Color baseColor)
         {
             var pathProvider = CreateMockPathProvider();
-            var resolver = new ThemeCssUrlResolver(pathProvider);
+            ThemeCssUrlResolver resolver = new(pathProvider);
 
             string themePath = Path.Combine(pathProvider.AppThemesDirectory, "theme.css");
             string baseThemePath = Path.Combine(pathProvider.AppThemesDirectory, "base.css");
@@ -163,7 +163,7 @@ namespace GitUITests.Theming
                 [themePath] = "@import url(\"base.css\");",
             });
 
-            var loader = new ThemeLoader(resolver, mockFileReader);
+            ThemeLoader loader = new(resolver, mockFileReader);
 
             var theme = loader.LoadTheme(themePath, new ThemeId("theme", isBuiltin: true), allowedClasses: ThemeVariations.None);
             theme.GetColor(colorName).ToArgb().Should().Be(baseColor.ToArgb());
@@ -176,7 +176,7 @@ namespace GitUITests.Theming
             [ValueSource(nameof(AlternativeTestColorValues))] Color colorOverride)
         {
             var pathProvider = CreateMockPathProvider();
-            var resolver = new ThemeCssUrlResolver(pathProvider);
+            ThemeCssUrlResolver resolver = new(pathProvider);
 
             string themePath = Path.Combine(pathProvider.AppThemesDirectory, "theme.css");
             string baseThemePath = Path.Combine(pathProvider.AppThemesDirectory, "base.css");
@@ -189,7 +189,7 @@ namespace GitUITests.Theming
                     GetThemeContent(colorName, colorOverride)
             });
 
-            var loader = new ThemeLoader(resolver, mockFileReader);
+            ThemeLoader loader = new(resolver, mockFileReader);
 
             var theme = loader.LoadTheme(themePath, new ThemeId("theme", isBuiltin: true), allowedClasses: ThemeVariations.None);
             theme.GetColor(colorName).ToArgb().Should().Be(colorOverride.ToArgb());
@@ -200,7 +200,7 @@ namespace GitUITests.Theming
         public void Should_throw_When_cyclic_css_imports()
         {
             var pathProvider = CreateMockPathProvider();
-            var resolver = new ThemeCssUrlResolver(pathProvider);
+            ThemeCssUrlResolver resolver = new(pathProvider);
 
             string themePath = Path.Combine(pathProvider.AppThemesDirectory, "theme.css");
             string baseThemePath = Path.Combine(pathProvider.AppThemesDirectory, "base.css");
@@ -211,7 +211,7 @@ namespace GitUITests.Theming
                 [themePath] = "@import url(\"base.css\");"
             });
 
-            var loader = new ThemeLoader(resolver, mockFileReader);
+            ThemeLoader loader = new(resolver, mockFileReader);
 
             loader.Invoking(_ => _.LoadTheme(
                     themePath,

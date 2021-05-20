@@ -48,7 +48,7 @@ namespace AppVeyorIntegrationTests
         {
             var resultString = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(),
                 $"{GetType().Namespace}.MockData.{filename}");
-            var appVeyorAdapter = new AppVeyorAdapter();
+            AppVeyorAdapter appVeyorAdapter = new();
             appVeyorAdapter.Initialize(Substitute.For<IBuildServerWatcher>(), Substitute.For<ISettingsSource>(), () => { },
                 id => true);
 

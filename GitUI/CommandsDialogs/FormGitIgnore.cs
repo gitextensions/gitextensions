@@ -12,10 +12,10 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormGitIgnore : GitModuleForm
     {
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupportedCaption =
-            new TranslationString("No working directory");
+            new("No working directory");
 
         private readonly TranslationString _saveFileQuestionCaption =
-            new TranslationString("Save changes?");
+            new("Save changes?");
 
         private readonly bool _localExclude;
         private string _originalGitIgnoreFileContent = string.Empty;

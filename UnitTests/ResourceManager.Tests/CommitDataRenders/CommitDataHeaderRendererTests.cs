@@ -61,7 +61,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void GetFont_should_get_font_from_style_provider()
         {
-            using var c = new Control();
+            using Control c = new();
             using var g = c.CreateGraphics();
             _renderer.GetFont(g);
 
@@ -89,7 +89,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(
+            CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
                 Array.Empty<ObjectId>(),
@@ -117,7 +117,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = "John Doe <John.Doe@test.com>";
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(
+            CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
                 Array.Empty<ObjectId>(),
@@ -146,7 +146,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
-            var data = new CommitData(
+            CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
                 Array.Empty<ObjectId>(),
@@ -175,7 +175,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(
+            CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
                 Array.Empty<ObjectId>(),
@@ -207,7 +207,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(
+            CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
                 _parentHashes,
@@ -237,7 +237,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(
+            CommitData data = new(
                 ObjectId.Parse(artificialGuid),
                 ObjectId.Random(),
                 _parentHashes,
@@ -271,7 +271,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(
+            CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
                 Array.Empty<ObjectId>(),
@@ -299,7 +299,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = "John Doe <John.Doe@test.com>";
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(
+            CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
                 Array.Empty<ObjectId>(),
@@ -328,7 +328,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
-            var data = new CommitData(
+            CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
                 Array.Empty<ObjectId>(),

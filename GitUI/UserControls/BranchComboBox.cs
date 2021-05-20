@@ -80,7 +80,7 @@ namespace GitUI
         {
             Validates.NotNull(_branchesToSelect);
 
-            using var formSelectMultipleBranches = new FormSelectMultipleBranches(_branchesToSelect);
+            using FormSelectMultipleBranches formSelectMultipleBranches = new(_branchesToSelect);
             foreach (var branch in GetSelectedBranches())
             {
                 formSelectMultipleBranches.SelectBranch(branch.Name);

@@ -47,7 +47,7 @@ namespace GitUI.Avatars
         {
             // initialize download only if needed (some options, like local providers, don't need a downloader)
             // and use the downloader provided as parameter if possible.
-            var lazyDownloader = new Lazy<IAvatarDownloader>(() => downloader ?? new AvatarDownloader());
+            Lazy<IAvatarDownloader> lazyDownloader = new(() => downloader ?? new AvatarDownloader());
 
             // build collection of (non-null) providers
             var providers = new[]
@@ -116,8 +116,8 @@ namespace GitUI.Avatars
 
             MultiCacheCleaner cacheCleaner = new(persistentCacheProvider, memoryCachedProvider);
 
-            var mainProvider
-                = new SafetynetAvatarProvider(
+            SafetynetAvatarProvider mainProvider
+                = new(
                     new ChainedAvatarProvider(
                         memoryCachedProvider,
                         UserImageAvatarProvider));

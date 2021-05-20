@@ -23,7 +23,7 @@ namespace GitCommands
     public sealed class FileAssociatedIconProvider : IFileAssociatedIconProvider
     {
         private readonly IFileSystem _fileSystem;
-        private static readonly ConcurrentDictionary<string, Icon?> LoadedFileIcons = new ConcurrentDictionary<string, Icon?>(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<string, Icon?> LoadedFileIcons = new(StringComparer.OrdinalIgnoreCase);
 
         public FileAssociatedIconProvider(IFileSystem fileSystem)
         {

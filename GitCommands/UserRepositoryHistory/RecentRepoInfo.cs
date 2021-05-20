@@ -66,9 +66,9 @@ namespace GitCommands.UserRepositoryHistory
 
         public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
         {
-            var orderedRepos = new SortedList<string, List<RecentRepoInfo>>();
-            var mostRecentRepos = new List<RecentRepoInfo>();
-            var lessRecentRepos = new List<RecentRepoInfo>();
+            SortedList<string, List<RecentRepoInfo>> orderedRepos = new();
+            List<RecentRepoInfo> mostRecentRepos = new();
+            List<RecentRepoInfo> lessRecentRepos = new();
 
             var middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
             var signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
@@ -81,7 +81,7 @@ namespace GitCommands.UserRepositoryHistory
             {
                 bool mostRecent = (mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
                     repository.Anchor == Repository.RepositoryAnchor.MostRecent;
-                var ri = new RecentRepoInfo(repository, mostRecent);
+                RecentRepoInfo ri = new(repository, mostRecent);
                 if (ri.MostRecent)
                 {
                     mostRecentRepos.Add(ri);
@@ -188,7 +188,7 @@ namespace GitCommands.UserRepositoryHistory
                 orderedRepos.Add(repoInfo.Caption!, list);
             }
 
-            var tmpList = new List<RecentRepoInfo>();
+            List<RecentRepoInfo> tmpList = new();
             if (existsShortName)
             {
                 for (int i = list.Count - 1; i >= 0; i--)

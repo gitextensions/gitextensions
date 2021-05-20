@@ -17,26 +17,26 @@ namespace GitUI
     public partial class FindAndReplaceForm : GitExtensionsForm
     {
         private readonly TranslationString _findAndReplaceString =
-            new TranslationString("Find & replace");
+            new("Find & replace");
         private readonly TranslationString _findString =
-            new TranslationString("Find");
+            new("Find");
         private readonly TranslationString _selectionOnlyString =
-            new TranslationString("selection only");
+            new("selection only");
         private readonly TranslationString _textNotFoundString =
-            new TranslationString("Text not found");
+            new("Text not found");
         private readonly TranslationString _noSearchString =
-            new TranslationString("No string specified to look for!");
+            new("No string specified to look for!");
         private readonly TranslationString _textNotFoundString2 =
-            new TranslationString("Search text not found.");
+            new("Search text not found.");
         private readonly TranslationString _notFoundString =
-            new TranslationString("Not found");
+            new("Not found");
         private readonly TranslationString _noOccurrencesFoundString =
-            new TranslationString("No occurrences found.");
+            new("No occurrences found.");
         private readonly TranslationString _replacedOccurrencesString =
-            new TranslationString("Replaced {0} occurrences.");
+            new("Replaced {0} occurrences.");
 
         private readonly Dictionary<TextEditorControl, HighlightGroup> _highlightGroups =
-            new Dictionary<TextEditorControl, HighlightGroup>();
+            new();
 
         private readonly TextEditorSearcher _search;
         private TextEditorControl? _editor;
@@ -271,7 +271,7 @@ namespace GitUI
                     offset = range.Offset + range.Length;
                     count++;
 
-                    var m = new TextMarker(range.Offset, range.Length,
+                    TextMarker m = new(range.Offset, range.Length,
                                            TextMarkerType.SolidBlock, Color.Yellow, Color.Black);
                     group.AddMarker(m);
                 }
@@ -418,7 +418,7 @@ namespace GitUI
             base.Dispose(disposing);
         }
 
-        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+        internal TestAccessor GetTestAccessor() => new(this);
 
         internal readonly struct TestAccessor
         {
@@ -710,7 +710,7 @@ namespace GitUI
     {
         private readonly IDocument _document;
         private readonly TextEditorControl _editor;
-        private readonly List<TextMarker> _markers = new List<TextMarker>();
+        private readonly List<TextMarker> _markers = new();
 
         public HighlightGroup(TextEditorControl editor)
         {

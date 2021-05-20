@@ -13,13 +13,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly ColorsSettingsPageController _controller;
 
         private static readonly TranslationString FormatBuiltinThemeName =
-            new TranslationString("{0}");
+            new("{0}");
 
         private static readonly TranslationString FormatUserDefinedThemeName =
-            new TranslationString("{0}, user-defined");
+            new("{0}, user-defined");
 
         private static readonly TranslationString DefaultThemeName =
-            new TranslationString("default");
+            new("default");
 
         public ColorsSettingsPage()
         {

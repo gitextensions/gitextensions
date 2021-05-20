@@ -60,7 +60,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
                 return;
             }
 
-            var args = new GitArgumentBuilder("log")
+            GitArgumentBuilder args = new("log")
             {
                 string.Format(_NO_TRANSLATE_textBoxGitLogArguments.Text, textBoxRevFrom.Text, _NO_TRANSLATE_textBoxRevTo.Text)
             };
@@ -123,7 +123,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
             string colSeparatorFirstLine = separateColumnWithTabInsteadOfSpaces ? "\t" : " ";
             string colSeparatorRestLines = separateColumnWithTabInsteadOfSpaces ? "\t" : "        ";
 
-            var stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
 
             foreach (var logLine in logLines)
             {
@@ -139,7 +139,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
 
         private static string CreateHtmlTable(IEnumerable<LogLine> logLines)
         {
-            var stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
             stringBuilder.Append("<table>\r\n");
             foreach (var logLine in logLines)
             {

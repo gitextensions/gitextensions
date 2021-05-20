@@ -40,7 +40,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
             _gitExecutable = new MockExecutable();
             typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(_commands.Module, _gitExecutable);
-            var cmdRunner = new GitCommandRunner(_gitExecutable, () => GitModule.SystemEncoding);
+            GitCommandRunner cmdRunner = new(_gitExecutable, () => GitModule.SystemEncoding);
             typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
                 .SetValue(_commands.Module, cmdRunner);
         }
@@ -71,7 +71,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/",
                     "refs/remotes/origin/master\nrefs/heads/master\nrefs/heads/warning"); // does not contain "warning:"
 
-                var expected = new Dictionary<string, int>
+                Dictionary<string, int> expected = new()
                 {
                     ["refs/remotes/origin/master"] = 0,
                     ["refs/heads/master"] = 1,
@@ -93,7 +93,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/",
                     "refs/remotes/origin/master\nrefs/heads/master\nrefs/remotes/origin/bugfix/YS-38651-test-twist-changes-r100-on-s375\nrefs/remotes/origin/bugfix/ys-38651-test-twist-changes-r100-on-s375"); // case sensitive duplicates
 
-                var expected = new Dictionary<string, int>
+                Dictionary<string, int> expected = new()
                 {
                     ["refs/remotes/origin/master"] = 0,
                     ["refs/heads/master"] = 1,
@@ -116,7 +116,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/",
                     "refs/remotes/origin/master\nrefs/heads/master\nrefs/tags/v3.1\nrefs/tags/v3.1 \n refs/tags/v3.1"); // have leading and trailing spaces
 
-                var expected = new Dictionary<string, int>
+                Dictionary<string, int> expected = new()
                 {
                     ["refs/remotes/origin/master"] = 0,
                     ["refs/heads/master"] = 1,
@@ -140,7 +140,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/",
                     "refs/remotes/origin/master\nrefs/remotes/foo/duplicate\nrefs/remotes/foo/bar\nrefs/remotes/foo/duplicate\nrefs/remotes/foo/last"); // exact duplicates
 
-                var expected = new Dictionary<string, int>
+                Dictionary<string, int> expected = new()
                 {
                     ["refs/remotes/origin/master"] = 0,
                     ["refs/remotes/foo/duplicate"] = 1,

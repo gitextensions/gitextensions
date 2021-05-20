@@ -10,7 +10,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Multiple_values_can_be_set()
         {
-            var control = new Control();
+            Control control = new();
 
             control.SetTag(1);
             control.SetTag(2f);
@@ -24,7 +24,7 @@ namespace GitExtUtilsTests
         [Test]
         public void When_tag_field_is_occupied_GetTag_returns_default()
         {
-            var control = new Control();
+            Control control = new();
             control.Tag = new object();
 
             Assert.That(control.HasTag<int>(), Is.False);
@@ -34,7 +34,7 @@ namespace GitExtUtilsTests
         [Test]
         public void When_tag_field_is_occupied_SetTag_replaces_existing_tag()
         {
-            var control = new Control();
+            Control control = new();
             control.Tag = new object();
 
             control.SetTag(1);
@@ -46,7 +46,7 @@ namespace GitExtUtilsTests
         [Test]
         public void When_another_type_is_stored_at_key_GetTag_return_default()
         {
-            var control = new Control();
+            Control control = new();
             control.SetTag("key", 1);
             control.SetTag("key", 2f);
 

@@ -7,7 +7,7 @@ namespace GitExtUtils
     public sealed class GitCommandConfiguration
     {
         private readonly ConcurrentDictionary<string, GitConfigItem[]> _configByCommand
-            = new ConcurrentDictionary<string, GitConfigItem[]>(StringComparer.Ordinal);
+            = new(StringComparer.Ordinal);
 
         /// <summary>
         /// Gets the default configuration for git commands used by Git Extensions.

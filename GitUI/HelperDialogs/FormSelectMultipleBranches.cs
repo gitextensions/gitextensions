@@ -46,7 +46,7 @@ namespace GitUI.HelperDialogs
 
         public IReadOnlyList<IGitRef> GetSelectedBranches()
         {
-            var branches = new List<IGitRef>();
+            List<IGitRef> branches = new();
 
             foreach (IGitRef head in Branches.CheckedItems)
             {

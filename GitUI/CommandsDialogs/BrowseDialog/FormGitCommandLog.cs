@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             LogItems.DisplayMember = nameof(CommandLogEntry.ColumnLine);
 
-            var font = new Font(FontFamily.GenericMonospace, 9);
+            Font font = new(FontFamily.GenericMonospace, 9);
             LogItems.Font = font;
             CommandCacheItems.Font = font;
             LogOutput.Font = font;
@@ -165,7 +165,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void mnuSaveToFile_Click(object sender, EventArgs e)
         {
-            using var fileDialog = new SaveFileDialog
+            using SaveFileDialog fileDialog = new()
             {
                 Title = Name,
                 DefaultExt = ".txt",

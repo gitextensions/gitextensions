@@ -14,7 +14,7 @@ namespace GitUI
 
         static ControlThreadingExtensions()
         {
-            using var cts = new CancellationTokenSource();
+            using CancellationTokenSource cts = new();
             cts.Cancel();
             _preCancelledToken = cts.Token;
 
@@ -144,7 +144,7 @@ namespace GitUI
                         return new StrongBox<CancellationToken>(_preCancelledToken);
                     }
 
-                    var cts = new CancellationTokenSource();
+                    CancellationTokenSource cts = new();
 
                     // Get a copy of the CancellationToken before the source can be disposed. After the source is cancelled
                     // and disposed, the CancellationToken will continue to behave properly, but

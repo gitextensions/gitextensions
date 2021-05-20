@@ -14,7 +14,7 @@ namespace GitExtUtils
     public sealed class MruCache<TKey, TValue> where TValue : notnull
     {
         private readonly Dictionary<TKey, LinkedListNode<Entry>> _nodeByKey;
-        private readonly LinkedList<Entry> _entries = new LinkedList<Entry>();
+        private readonly LinkedList<Entry> _entries = new();
 
         /// <summary>
         /// Gets the maximum number of entries that this cache will hold.
@@ -49,7 +49,7 @@ namespace GitExtUtils
         /// <param name="value">The value to store against the provided key.</param>
         public void Add(TKey key, TValue value)
         {
-            var entry = new Entry(key, value);
+            Entry entry = new(key, value);
 
             if (_nodeByKey.TryGetValue(key, out var node))
             {

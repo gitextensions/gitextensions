@@ -54,7 +54,7 @@ namespace BugReporter
                 return $"- (minimum: {lastSupportedVersion}, recommended: {recommendedVersion})";
             }
 
-            var actualVersion = new GitVersion(gitVersion);
+            GitVersion actualVersion = new(gitVersion);
             if (actualVersion < lastSupportedVersion)
             {
                 return $"{gitVersion} (minimum: {lastSupportedVersion}, please update!)";

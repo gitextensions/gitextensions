@@ -18,7 +18,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
             Icon = Resources.IconFindLargeFiles;
         }
 
-        private readonly NumberSetting<float> _sizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
+        private readonly NumberSetting<float> _sizeLargeFile = new("Find large files bigger than (Mb)", 1);
 
         public override IEnumerable<ISetting> GetSettings()
         {
@@ -28,7 +28,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
 
         public override bool Execute(GitUIEventArgs args)
         {
-            using var frm = new FindLargeFilesForm(_sizeLargeFile.ValueOrDefault(Settings), args);
+            using FindLargeFilesForm frm = new(_sizeLargeFile.ValueOrDefault(Settings), args);
             frm.ShowDialog(args.OwnerForm);
 
             return true;

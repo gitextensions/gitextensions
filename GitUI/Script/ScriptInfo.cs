@@ -47,7 +47,7 @@
 
             // Get all resources
             System.Resources.ResourceManager rm
-                = new System.Resources.ResourceManager("GitUI.Properties.Images",
+                = new("GitUI.Properties.Images",
                     System.Reflection.Assembly.GetExecutingAssembly());
 
             // return icon

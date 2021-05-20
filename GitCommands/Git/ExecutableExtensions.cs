@@ -18,7 +18,7 @@ namespace GitCommands
     public static class ExecutableExtensions
     {
         private static readonly Regex _ansiCodePattern = new(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
-        private static readonly Lazy<Encoding> _defaultOutputEncoding = new Lazy<Encoding>(() => GitModule.SystemEncoding, false);
+        private static readonly Lazy<Encoding> _defaultOutputEncoding = new(() => GitModule.SystemEncoding, false);
 
         /// <summary>
         /// Launches a process for the executable and returns its output.
@@ -70,7 +70,7 @@ namespace GitCommands
             CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true)
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (var batch in batchArguments)
             {
                 sb.Append(executable.GetOutput(batch.Argument, input, outputEncoding, cache, stripAnsiEscapeCodes));
@@ -116,8 +116,8 @@ namespace GitCommands
                 process.StandardInput.Close();
             }
 
-            var outputBuffer = new MemoryStream();
-            var errorBuffer = new MemoryStream();
+            MemoryStream outputBuffer = new();
+            MemoryStream errorBuffer = new();
             var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
             var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
             var exitTask = process.WaitForExitAsync();
@@ -356,16 +356,16 @@ namespace GitCommands
             }
 
             using var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding);
-            var outputBuffer = new MemoryStream();
-            var errorBuffer = new MemoryStream();
+            MemoryStream outputBuffer = new();
+            MemoryStream errorBuffer = new();
             var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
             var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
 
             if (writeInput is not null)
             {
 #if DEBUG
-                using MemoryStream mem = new MemoryStream();
-                using StreamWriter sw = new StreamWriter(mem);
+                using MemoryStream mem = new();
+                using StreamWriter sw = new(mem);
                 writeInput(sw);
 
                 System.Diagnostics.Debug.WriteLine($"git {arguments} {Encoding.UTF8.GetString(mem.ToArray(), 0, (int)mem.Length)}");

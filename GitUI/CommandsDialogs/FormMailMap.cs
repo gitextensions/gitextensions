@@ -10,19 +10,19 @@ namespace GitUI.CommandsDialogs
     public partial class FormMailMap : GitModuleForm
     {
         private readonly TranslationString _mailmapOnlyInWorkingDirSupported =
-            new TranslationString(".mailmap is only supported when there is a working directory.");
+            new(".mailmap is only supported when there is a working directory.");
         private readonly TranslationString _mailmapOnlyInWorkingDirSupportedCaption =
-            new TranslationString("No working directory");
+            new("No working directory");
 
         private readonly TranslationString _cannotAccessMailmap =
-            new TranslationString("Failed to save .mailmap." + Environment.NewLine + "Check if file is accessible.");
+            new("Failed to save .mailmap." + Environment.NewLine + "Check if file is accessible.");
         private readonly TranslationString _cannotAccessMailmapCaption =
-            new TranslationString("Failed to save .mailmap");
+            new("Failed to save .mailmap");
 
         private readonly TranslationString _saveFileQuestion =
-            new TranslationString("Save changes to .mailmap?");
+            new("Save changes to .mailmap?");
         private readonly TranslationString _saveFileQuestionCaption =
-            new TranslationString("Save changes?");
+            new("Save changes?");
 
         public string MailMapFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;

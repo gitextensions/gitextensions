@@ -14,8 +14,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         private readonly Action<ObjectId?> _setSelectedRevision;
         private NavigationDirection? _direction;
-        private readonly Stack<ObjectId> _childHistory = new Stack<ObjectId>();
-        private readonly Stack<ObjectId> _parentHistory = new Stack<ObjectId>();
+        private readonly Stack<ObjectId> _childHistory = new();
+        private readonly Stack<ObjectId> _parentHistory = new();
 
         public ParentChildNavigationHistory(Action<ObjectId?> setSelectedRevision)
         {

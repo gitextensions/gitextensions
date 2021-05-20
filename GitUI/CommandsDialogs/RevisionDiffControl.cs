@@ -27,14 +27,14 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _saveFileFilterAllFiles = new("All files");
         private readonly TranslationString _deleteSelectedFilesCaption = new("Delete");
         private readonly TranslationString _deleteSelectedFiles =
-            new TranslationString("Are you sure you want to delete the selected file(s)?");
+            new("Are you sure you want to delete the selected file(s)?");
         private readonly TranslationString _deleteFailed = new("Delete file failed");
         private readonly TranslationString _multipleDescription = new("<multiple>");
         private readonly TranslationString _selectedRevision = new("Second: b/");
         private readonly TranslationString _firstRevision = new("First: a/");
 
         private readonly TranslationString _resetSelectedChangesText =
-            new TranslationString("Are you sure you want to reset all selected files to {0}?");
+            new("Are you sure you want to reset all selected files to {0}?");
 
         private RevisionGridControl? _revisionGrid;
         private RevisionFileTreeControl? _revisionFileTree;
@@ -335,7 +335,7 @@ namespace GitUI.CommandsDialogs
             bool isAnySubmodule = selectedItems.Any(item => item.Item.IsSubmodule);
             (bool allFilesExist, bool allDirectoriesExist, bool allFilesOrUntrackedDirectoriesExist) = FileOrUntrackedDirExists(selectedItems, _fullPathResolver);
 
-            var selectionInfo = new ContextMenuSelectionInfo(
+            ContextMenuSelectionInfo selectionInfo = new(
                 selectedRevision: selectedRev,
                 isDisplayOnlyDiff: isDisplayOnlyDiff,
                 isStatusOnly: isStatusOnly,
@@ -763,7 +763,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var item = new FileStatusItem(
+            FileStatusItem item = new(
                 firstRev: DiffFiles.SelectedItem.SecondRevision,
                 secondRev: DiffFiles.SelectedItem.FirstRevision,
                 item: DiffFiles.SelectedItem.Item);
@@ -981,8 +981,8 @@ namespace GitUI.CommandsDialogs
             }
 
             var fullName = _fullPathResolver.Resolve(item.Item.Name);
-            using var fileDialog =
-                new SaveFileDialog
+            using SaveFileDialog fileDialog =
+                new()
                 {
                     InitialDirectory = Path.GetDirectoryName(fullName),
                     FileName = Path.GetFileName(fullName),
@@ -1054,7 +1054,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var name in submodules)
             {
-                var submodulCommands = new GitUICommands(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
+                GitUICommands submodulCommands = new(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                 submodulCommands.StartCommitDialog(this);
             }
 
@@ -1103,7 +1103,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var name in submodules)
             {
-                var uiCmds = new GitUICommands(Module.GetSubmodule(name));
+                GitUICommands uiCmds = new(Module.GetSubmodule(name));
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
 

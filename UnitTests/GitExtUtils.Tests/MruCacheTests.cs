@@ -9,7 +9,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Add_expires_last_used_entry_when_at_capacity()
         {
-            var cache = new MruCache<int, string>(capacity: 3);
+            MruCache<int, string> cache = new(capacity: 3);
 
             cache.Add(1, "one");
             cache.Add(2, "two");
@@ -30,7 +30,7 @@ namespace GitExtUtilsTests
         [Test]
         public void TryGetValue_renews_lifespan_of_entry()
         {
-            var cache = new MruCache<int, string>(capacity: 3);
+            MruCache<int, string> cache = new(capacity: 3);
 
             cache.Add(1, "one");
             cache.Add(2, "two");
@@ -51,7 +51,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Clear_removes_all_entries()
         {
-            var cache = new MruCache<int, string>(capacity: 3);
+            MruCache<int, string> cache = new(capacity: 3);
 
             cache.Add(1, "one");
             cache.Add(2, "two");
@@ -67,7 +67,7 @@ namespace GitExtUtilsTests
         [Test]
         public void TryRemove_removes_existing_entries()
         {
-            var cache = new MruCache<int, string>(capacity: 3);
+            MruCache<int, string> cache = new(capacity: 3);
 
             cache.Add(1, "one");
             cache.Add(2, "two");
@@ -84,7 +84,7 @@ namespace GitExtUtilsTests
         [Test]
         public void TryRemove_returns_false_for_unknown_entry()
         {
-            var cache = new MruCache<int, string>(capacity: 3);
+            MruCache<int, string> cache = new(capacity: 3);
 
             cache.Add(1, "one");
 

@@ -21,8 +21,8 @@ namespace GitUITests.GitUICommandsTests
         [TestCase(@"C:/working/dir/path/file.ext", "C:/working/dir/path/file.ext")]
         public void NormalizeFileNameTest(string fileName, string expected)
         {
-            var module = new GitModule(@"c:\working\dir");
-            var commands = new GitUICommands(module);
+            GitModule module = new(@"c:\working\dir");
+            GitUICommands commands = new(module);
 
             commands.GetTestAccessor().NormalizeFileName(fileName).Should().Be(expected);
         }

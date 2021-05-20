@@ -27,7 +27,7 @@ namespace GitExtensions.Plugins.Bitbucket
         private readonly string _NO_TRANSLATE_LinkViewPull = "pull-requests";
 
         private readonly Settings? _settings;
-        private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
+        private readonly BindingList<BitbucketUser> _reviewers = new();
 
         public BitbucketPullRequestForm(Settings? settings, IGitModule? module)
         {
@@ -88,8 +88,8 @@ namespace GitExtensions.Plugins.Bitbucket
                 Validates.NotNull(_settings.ProjectKey);
                 Validates.NotNull(_settings.RepoSlug);
 
-                var list = new List<Repository>();
-                var getDefaultRepo = new GetRepoRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+                List<Repository> list = new();
+                GetRepoRequest getDefaultRepo = new(_settings.ProjectKey, _settings.RepoSlug, _settings);
                 var defaultRepo = await getDefaultRepo.SendAsync().ConfigureAwait(false);
                 if (defaultRepo.Success)
                 {
@@ -123,8 +123,8 @@ namespace GitExtensions.Plugins.Bitbucket
                 Validates.NotNull(_settings.ProjectKey);
                 Validates.NotNull(_settings.RepoSlug);
 
-                var list = new List<PullRequest>();
-                var getPullRequests = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+                List<PullRequest> list = new();
+                GetPullRequest getPullRequests = new(_settings.ProjectKey, _settings.RepoSlug, _settings);
                 var result = await getPullRequests.SendAsync().ConfigureAwait(false);
                 if (result.Success)
                 {
@@ -149,7 +149,7 @@ namespace GitExtensions.Plugins.Bitbucket
                     return;
                 }
 
-                var info = new PullRequestInfo
+                PullRequestInfo info = new()
                 {
                     Title = txtTitle.Text,
                     Description = txtDescription.Text,
@@ -160,7 +160,7 @@ namespace GitExtensions.Plugins.Bitbucket
                     Reviewers = _reviewers
                 };
                 Validates.NotNull(_settings);
-                var pullRequest = new CreatePullRequestRequest(_settings, info);
+                CreatePullRequestRequest pullRequest = new(_settings, info);
                 var response = await pullRequest.SendAsync();
                 await this.SwitchToMainThreadAsync();
                 if (response.Success)
@@ -176,7 +176,7 @@ namespace GitExtensions.Plugins.Bitbucket
             });
         }
 
-        private readonly Dictionary<Repository, IEnumerable<string>> _branches = new Dictionary<Repository, IEnumerable<string>>();
+        private readonly Dictionary<Repository, IEnumerable<string>> _branches = new();
         private async Task<IEnumerable<string>> GetBitbucketBranchesAsync(Repository selectedRepo)
         {
             lock (_branches)
@@ -189,8 +189,8 @@ namespace GitExtensions.Plugins.Bitbucket
 
             Validates.NotNull(_settings);
 
-            var list = new List<string>();
-            var getBranches = new GetBranchesRequest(selectedRepo, _settings);
+            List<string> list = new();
+            GetBranchesRequest getBranches = new(selectedRepo, _settings);
             var result = await getBranches.SendAsync().ConfigureAwait(false);
             if (result.Success)
             {
@@ -275,7 +275,7 @@ namespace GitExtensions.Plugins.Bitbucket
             }
 
             Validates.NotNull(_settings);
-            var getCommit = new GetHeadCommitRequest(repo, branch, _settings);
+            GetHeadCommitRequest getCommit = new(repo, branch, _settings);
             var result = await getCommit.SendAsync().ConfigureAwait(false);
             return result.Success ? result.Result : null;
         }
@@ -306,7 +306,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
             Validates.NotNull(_settings);
 
-            var getCommitsInBetween = new GetInBetweenCommitsRequest(
+            GetInBetweenCommitsRequest getCommitsInBetween = new(
                 (Repository)ddlRepositorySource.SelectedValue,
                 (Repository)ddlRepositoryTarget.SelectedValue,
                 (Commit)ddlBranchSource.Tag,
@@ -320,7 +320,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
                 await this.SwitchToMainThreadAsync();
 
-                var sb = new StringBuilder();
+                StringBuilder sb = new();
                 sb.AppendLine();
                 foreach (var commit in result.Result)
                 {
@@ -358,7 +358,7 @@ namespace GitExtensions.Plugins.Bitbucket
         {
             if (lbxPullRequests.SelectedItem is PullRequest curItem)
             {
-                var mergeInfo = new MergeRequestInfo
+                MergeRequestInfo mergeInfo = new()
                 {
                     Id = curItem.Id,
                     Version = curItem.Version,
@@ -369,7 +369,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 Validates.NotNull(_settings);
 
                 // Merge
-                var mergeRequest = new MergePullRequest(_settings, mergeInfo);
+                MergePullRequest mergeRequest = new(_settings, mergeInfo);
                 var response = ThreadHelper.JoinableTaskFactory.Run(() => mergeRequest.SendAsync());
                 if (response.Success)
                 {
@@ -389,7 +389,7 @@ namespace GitExtensions.Plugins.Bitbucket
         {
             if (lbxPullRequests.SelectedItem is PullRequest curItem)
             {
-                var mergeInfo = new MergeRequestInfo
+                MergeRequestInfo mergeInfo = new()
                 {
                     Id = curItem.Id,
                     Version = curItem.Version,
@@ -400,7 +400,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 Validates.NotNull(_settings);
 
                 // Approve
-                var approveRequest = new ApprovePullRequest(_settings, mergeInfo);
+                ApprovePullRequest approveRequest = new(_settings, mergeInfo);
                 var response = ThreadHelper.JoinableTaskFactory.Run(() => approveRequest.SendAsync());
                 if (response.Success)
                 {

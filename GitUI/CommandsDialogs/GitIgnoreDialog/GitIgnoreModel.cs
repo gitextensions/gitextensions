@@ -8,19 +8,19 @@ namespace GitUI.CommandsDialogs.GitIgnoreDialog
     public class GitIgnoreModel : Translate, IGitIgnoreDialogModel
     {
         private readonly TranslationString _editGitignoreTitle =
-            new TranslationString("Edit .gitignore");
+            new("Edit .gitignore");
 
         private readonly TranslationString _gitignoreOnlyInWorkingDirSupported =
-            new TranslationString(".gitignore is only supported when there is a working directory.");
+            new(".gitignore is only supported when there is a working directory.");
 
         private readonly TranslationString _cannotAccessGitignore =
-            new TranslationString("Failed to save .gitignore." + Environment.NewLine + "Check if file is accessible.");
+            new("Failed to save .gitignore." + Environment.NewLine + "Check if file is accessible.");
 
         private readonly TranslationString _cannotAccessGitignoreCaption =
-            new TranslationString("Failed to save .gitignore");
+            new("Failed to save .gitignore");
 
         private readonly TranslationString _saveFileQuestion =
-            new TranslationString("Save changes to .gitignore?");
+            new("Save changes to .gitignore?");
 
         private readonly IFullPathResolver _fullPathResolver;
 

@@ -33,7 +33,7 @@ namespace GitExtensions.Plugins.GitHub3
             {
                 var request = (HttpWebRequest)WebRequest.Create(_pullRequest.DiffUrl);
                 using var response = await request.GetResponseAsync();
-                using var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                using StreamReader reader = new(response.GetResponseStream(), Encoding.UTF8);
                 _diffData = await reader.ReadToEndAsync();
             }
 

@@ -58,7 +58,7 @@ namespace GitCommands
             }
         }
 
-        private static readonly List<RegisteredCommitTemplateItem> RegisteredTemplatesStorage = new List<RegisteredCommitTemplateItem>();
+        private static readonly List<RegisteredCommitTemplateItem> RegisteredTemplatesStorage = new();
         private readonly IFileSystem _fileSystem;
         private readonly Func<IGitModule> _getModule;
         private readonly IFullPathResolver _fullPathResolver;

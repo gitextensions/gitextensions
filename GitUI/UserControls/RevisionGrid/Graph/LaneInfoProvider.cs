@@ -31,7 +31,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return NoInfoText.Text;
             }
 
-            var laneInfoText = new StringBuilder();
+            StringBuilder laneInfoText = new();
             if (!node.GitRevision.IsArtificial)
             {
                 if (isAtNode)
@@ -41,7 +41,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 laneInfoText.AppendLine(node.GitRevision.Guid);
 
-                var branch = new BranchFinder(node);
+                BranchFinder branch = new(node);
                 if (!string.IsNullOrWhiteSpace(branch.CommittedTo))
                 {
                     laneInfoText.AppendFormat("\n{0}: {1}", TranslatedStrings.Branch, branch.CommittedTo);

@@ -20,7 +20,7 @@ namespace GitUI.Avatars
          * RaMMicHaeL
          * SamuelLongchamps
          */
-        private static readonly Regex _gitHubEmailRegex = new Regex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex _gitHubEmailRegex = new(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private readonly IAvatarDownloader _downloader;
         private readonly bool _onlySupplyNoReply;
@@ -85,7 +85,7 @@ namespace GitUI.Avatars
 
                 if (isBot)
                 {
-                    var client = new Git.hub.Client();
+                    Git.hub.Client client = new();
                     var userProfile = await client.GetUserAsync(username);
 
                     if (string.IsNullOrEmpty(userProfile?.AvatarUrl))
@@ -93,8 +93,8 @@ namespace GitUI.Avatars
                         return null;
                     }
 
-                    var builder = new UriBuilder(userProfile.AvatarUrl);
-                    var query = new StringBuilder(builder.Query.TrimStart('?'));
+                    UriBuilder builder = new(userProfile.AvatarUrl);
+                    StringBuilder query = new(builder.Query.TrimStart('?'));
                     query.Append(query.Length == 0 ? "?" : "&");
                     query.Append("s=").Append(imageSize);
                     builder.Query = query.ToString();

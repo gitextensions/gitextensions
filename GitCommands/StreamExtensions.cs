@@ -107,7 +107,7 @@ namespace GitCommands
         public static byte[] ReadAllBytes(this Stream stream)
         {
             // NOTE no need to dispose MemoryStream
-            var memoryStream = new MemoryStream();
+            MemoryStream memoryStream = new();
             stream.CopyTo(memoryStream);
             return memoryStream.ToArray();
         }

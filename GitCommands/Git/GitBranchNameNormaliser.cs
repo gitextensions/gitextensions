@@ -159,7 +159,7 @@ namespace GitCommands.Git
         /// <returns>Normalised branch name.</returns>
         internal string Rule04(string branchName, GitBranchNameOptions options)
         {
-            var result = new StringBuilder(branchName.Length);
+            StringBuilder result = new(branchName.Length);
             foreach (char t in branchName)
             {
                 if (IsValidChar(t) || char.IsLetterOrDigit(t))

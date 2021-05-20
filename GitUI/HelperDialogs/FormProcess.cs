@@ -21,7 +21,7 @@ namespace GitUI.HelperDialogs
         public string? ProcessInput { get; }
         public readonly string WorkingDirectory;
         public HandleOnExit? HandleOnExitCallback { get; set; }
-        public readonly Dictionary<string, string> ProcessEnvVariables = new Dictionary<string, string>();
+        public readonly Dictionary<string, string> ProcessEnvVariables = new();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -61,7 +61,7 @@ namespace GitUI.HelperDialogs
         {
             Debug.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
 
-            using var formProcess = new FormProcess(commands: null, process, arguments, workingDirectory, input, useDialogSettings);
+            using FormProcess formProcess = new(commands: null, process, arguments, workingDirectory, input, useDialogSettings);
             formProcess.ShowDialog(owner);
             return !formProcess.ErrorOccurred();
         }
@@ -70,7 +70,7 @@ namespace GitUI.HelperDialogs
         {
             Debug.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
 
-            using var formProcess = new FormProcess(commands: null, process, arguments, workingDirectory, input, useDialogSettings);
+            using FormProcess formProcess = new(commands: null, process, arguments, workingDirectory, input, useDialogSettings);
             formProcess.ShowDialog(owner);
             return formProcess.GetOutputString();
         }
@@ -139,7 +139,7 @@ namespace GitUI.HelperDialogs
             {
                 ConsoleOutput.KillProcess();
 
-                var module = new GitModule(WorkingDirectory);
+                GitModule module = new(WorkingDirectory);
                 module.UnlockIndex(includeSubmodules: true);
             }
             catch

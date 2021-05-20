@@ -143,7 +143,7 @@ namespace GitCommands.Remotes
             var module = GetModule();
             bool IsSettingForBranch(string setting, string branchName)
             {
-                var head = new GitRef(module, null, setting);
+                GitRef head = new(module, null, setting);
                 return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
             }
 
@@ -219,7 +219,7 @@ namespace GitCommands.Remotes
         // TODO: candidate for Async implementations
         public IEnumerable<ConfigFileRemote> LoadRemotes(bool loadDisabled)
         {
-            var remotes = new List<ConfigFileRemote>();
+            List<ConfigFileRemote> remotes = new();
             var module = _getModule();
             if (module is null)
             {

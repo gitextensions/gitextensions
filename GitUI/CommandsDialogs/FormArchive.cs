@@ -12,16 +12,16 @@ namespace GitUI.CommandsDialogs
     public partial class FormArchive : GitModuleForm
     {
         private readonly TranslationString _saveFileDialogFilterZip =
-            new TranslationString("Zip file (*.zip)");
+            new("Zip file (*.zip)");
 
         private readonly TranslationString _saveFileDialogFilterTar =
-            new TranslationString("Tar file (*.tar)");
+            new("Tar file (*.tar)");
 
         private readonly TranslationString _saveFileDialogCaption =
-            new TranslationString("Save archive as");
+            new("Save archive as");
 
         private readonly TranslationString _noRevisionSelected =
-            new TranslationString("You need to choose a target revision.");
+            new("You need to choose a target revision.");
 
         private GitRevision? _selectedRevision;
         public GitRevision? SelectedRevision
@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs
                 filenameSuggestion += "_" + textBoxPaths.Lines[0].Trim().Replace(".", "_");
             }
 
-            using var saveFileDialog = new SaveFileDialog
+            using SaveFileDialog saveFileDialog = new()
             {
                 Filter = string.Format("{0}|*.{1}", fileFilterCaption, fileFilterEnding),
                 Title = _saveFileDialogCaption.Text,
@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnChooseRevision_Click(object sender, EventArgs e)
         {
-            using var chooseForm = new FormChooseCommit(UICommands, SelectedRevision?.Guid);
+            using FormChooseCommit chooseForm = new(UICommands, SelectedRevision?.Guid);
             if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
             {
                 SelectedRevision = chooseForm.SelectedRevision;
@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs
 
         private void btnDiffChooseRevision_Click(object sender, EventArgs e)
         {
-            using var chooseForm = new FormChooseCommit(UICommands, DiffSelectedRevision is not null ? DiffSelectedRevision.Guid : string.Empty);
+            using FormChooseCommit chooseForm = new(UICommands, DiffSelectedRevision is not null ? DiffSelectedRevision.Guid : string.Empty);
             if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
             {
                 DiffSelectedRevision = chooseForm.SelectedRevision;

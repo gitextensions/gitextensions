@@ -65,7 +65,7 @@ namespace CommonTestUtils
                 try
                 {
                     // Wait for eventual pending operations triggered by the test.
-                    using var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout);
+                    using CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout);
                     try
                     {
                         // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of

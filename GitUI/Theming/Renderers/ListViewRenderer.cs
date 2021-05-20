@@ -57,7 +57,7 @@ namespace GitUI.Theming
         private int RenderColumnDetail(Context ctx, Rectangle prect)
         {
             int width = Math.Max(1, prect.Width / 2);
-            using var brush = new SolidBrush(Color.FromArgb(32, SystemColors.HotTrack));
+            using SolidBrush brush = new(Color.FromArgb(32, SystemColors.HotTrack));
             ctx.Graphics.FillRectangle(
                 brush,
                 Rectangle.FromLTRB(
@@ -218,7 +218,7 @@ namespace GitUI.Theming
                     ctx.Graphics.FillEllipse(backBrush, prect.Inclusive());
                 }
 
-                using var forePen = new Pen(foreColor, DpiUtil.Scale(2));
+                using Pen forePen = new(foreColor, DpiUtil.Scale(2));
                 ctx.Graphics.DrawLines(forePen, arrowPoints);
             }
         }

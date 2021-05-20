@@ -9,7 +9,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public LoadingControl()
         {
-            var size = new Size(32, 32);
+            Size size = new(32, 32);
 
             _waitSpinner = new WaitSpinner
             {

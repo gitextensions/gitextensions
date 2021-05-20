@@ -316,7 +316,7 @@ namespace GitUI.Script
 
             int internalBorder = BorderSize;
             Rectangle focusRect =
-                new Rectangle(internalBorder - 1,
+                new(internalBorder - 1,
                               internalBorder - 1,
                               bounds.Width - _dropDownRectangle.Width - internalBorder,
                               bounds.Height - (internalBorder * 2) + 2);
@@ -403,7 +403,7 @@ namespace GitUI.Script
 
         private void PaintArrow(Graphics g, Rectangle dropDownRect)
         {
-            var middle = new Point(Convert.ToInt32(dropDownRect.Left + (dropDownRect.Width / 2)), Convert.ToInt32(dropDownRect.Top + (dropDownRect.Height / 2)));
+            Point middle = new(Convert.ToInt32(dropDownRect.Left + (dropDownRect.Width / 2)), Convert.ToInt32(dropDownRect.Top + (dropDownRect.Height / 2)));
 
             // if the width is odd - favor pushing it over one pixel right.
             middle.X += dropDownRect.Width % 2;

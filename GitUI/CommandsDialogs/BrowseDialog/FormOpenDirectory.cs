@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private static IReadOnlyList<string> GetDirectories(GitModule? currentModule, IEnumerable<Repository> repositoryHistory)
         {
-            var directories = new List<string>();
+            List<string> directories = new();
 
             if (!string.IsNullOrWhiteSpace(AppSettings.DefaultCloneDestinationPath))
             {
@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (!string.IsNullOrWhiteSpace(currentModule?.WorkingDir))
             {
-                var di = new DirectoryInfo(currentModule.WorkingDir);
+                DirectoryInfo di = new(currentModule.WorkingDir);
                 if (di.Parent is not null)
                 {
                     directories.Add(di.Parent.FullName.EnsureTrailingPathSeparator());
@@ -82,7 +82,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public static GitModule? OpenModule(IWin32Window owner, GitModule? currentModule)
         {
-            using var open = new FormOpenDirectory(currentModule);
+            using FormOpenDirectory open = new(currentModule);
             open.ShowDialog(owner);
             return open._chosenModule;
         }
@@ -123,7 +123,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
-                var currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
+                DirectoryInfo currentDirectory = new(_NO_TRANSLATE_Directory.Text);
                 if (currentDirectory.Parent is null)
                 {
                     return;
@@ -145,7 +145,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
-                var currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
+                DirectoryInfo currentDirectory = new(_NO_TRANSLATE_Directory.Text);
                 folderGoUpButton.Enabled = currentDirectory.Exists && currentDirectory.Parent is not null;
             }
             catch
@@ -161,7 +161,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return null;
             }
 
-            var chosenModule = new GitModule(path.EnsureTrailingPathSeparator());
+            GitModule chosenModule = new(path.EnsureTrailingPathSeparator());
             if (!chosenModule.IsValidGitWorkingDir())
             {
                 return null;
@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {

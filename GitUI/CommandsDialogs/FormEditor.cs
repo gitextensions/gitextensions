@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    using var bytes = new MemoryStream();
+                    using MemoryStream bytes = new();
                     bytes.Write(fileViewer.FilePreamble, 0, fileViewer.FilePreamble.Length);
                     using (var writer = new StreamWriter(bytes, Module.FilesEncoding))
                     {
@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
         }
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {

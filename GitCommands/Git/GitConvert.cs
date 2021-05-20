@@ -16,7 +16,7 @@ namespace GitCommands
                 return buf;
             }
 
-            var bufStatistic = new BufStatistic(buf);
+            BufStatistic bufStatistic = new(buf);
 
             if (bufStatistic.cntLf == 0)
             {
@@ -38,7 +38,7 @@ namespace GitCommands
                 return buf;
             }
 
-            var bytes = new List<byte>((int)(buf.Length * 1.01));
+            List<byte> bytes = new((int)(buf.Length * 1.01));
 
             if (buf.Length >= 1)
             {

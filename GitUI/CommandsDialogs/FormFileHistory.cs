@@ -252,7 +252,7 @@ namespace GitUI.CommandsDialogs
                     // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                     //
 
-                    var args = new GitArgumentBuilder("log")
+                    GitArgumentBuilder args = new("log")
                     {
                         "--format=\"%n\"",
                         "--name-only",
@@ -262,10 +262,10 @@ namespace GitUI.CommandsDialogs
                         fileName.Quote()
                     };
 
-                    var listOfFileNames = new StringBuilder(fileName.Quote());
+                    StringBuilder listOfFileNames = new(fileName.Quote());
 
                     // keep a set of the file names already seen
-                    var setOfFileNames = new HashSet<string?> { fileName };
+                    HashSet<string?> setOfFileNames = new() { fileName };
 
                     var lines = Module.GitExecutable.GetOutputLines(args, outputEncoding: GitModule.LosslessEncoding);
 
@@ -401,7 +401,7 @@ namespace GitUI.CommandsDialogs
             {
                 Validates.NotNull(fileName);
                 View.Encoding = Diff.Encoding;
-                var file = new GitItemStatus(name: fileName)
+                GitItemStatus file = new(name: fileName)
                 {
                     IsTracked = true,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
@@ -411,13 +411,13 @@ namespace GitUI.CommandsDialogs
             else if (tabControl1.SelectedTab == DiffTab)
             {
                 Validates.NotNull(fileName);
-                var file = new GitItemStatus(name: fileName)
+                GitItemStatus file = new(name: fileName)
                 {
                     IsTracked = true,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
                 var revisions = FileChanges.GetSelectedRevisions();
-                var item = new FileStatusItem(firstRev: revisions.Skip(1).LastOrDefault(), secondRev: revisions.FirstOrDefault(), file);
+                FileStatusItem item = new(firstRev: revisions.Skip(1).LastOrDefault(), secondRev: revisions.FirstOrDefault(), file);
                 Diff.ViewChangesAsync(item, defaultText: "You need to select at least one revision to view diff.");
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
@@ -484,7 +484,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 fullName = fullName.ToNativePath();
-                using var fileDialog = new SaveFileDialog
+                using SaveFileDialog fileDialog = new()
                 {
                     InitialDirectory = Path.GetDirectoryName(fullName),
                     FileName = Path.GetFileName(fullName),

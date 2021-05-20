@@ -60,7 +60,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         private void RefreshProxy()
         {
-            var args = new GitArgumentBuilder("config")
+            GitArgumentBuilder args = new("config")
             {
                 "--get",
                 "http.proxy"
@@ -83,7 +83,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
 
         private string BuildHttpProxy()
         {
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append("\"");
             var username = _plugin.Username.ValueOrDefault(_settings);
             if (!string.IsNullOrEmpty(username))
@@ -115,7 +115,7 @@ namespace GitExtensions.Plugins.ProxySwitcher
         {
             var httpProxy = BuildHttpProxy();
 
-            var args = new GitArgumentBuilder("config")
+            GitArgumentBuilder args = new("config")
             {
                 { ApplyGlobally_CheckBox.Checked, "--global" },
                 "http.proxy",

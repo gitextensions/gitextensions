@@ -39,7 +39,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 return false;
             }
 
-            using var frm = new BitbucketPullRequestForm(settings, args.GitModule);
+            using BitbucketPullRequestForm frm = new(settings, args.GitModule);
             frm.ShowDialog(args.OwnerForm);
 
             return true;

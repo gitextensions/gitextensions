@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs
     {
         private const string ScriptNameSuffix = "_ownScript";
 
-        private static readonly Lazy<IEnumerable<HotkeyCommand>> Hotkeys = new Lazy<IEnumerable<HotkeyCommand>>(()
+        private static readonly Lazy<IEnumerable<HotkeyCommand>> Hotkeys = new(()
             => HotkeySettingsManager.LoadHotkeys(FormSettings.HotkeySettingsName));
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var script in scripts)
             {
-                var item = new ToolStripMenuItem
+                ToolStripMenuItem item = new()
                 {
                     Text = script.Name,
                     Name = $"{script.Name}{ScriptNameSuffix}",

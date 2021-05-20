@@ -77,7 +77,7 @@ namespace GitExtUtils.GitUI.Theming
                 return;
             }
 
-            using var canvasBrush = new SolidBrush(_parentBackColor);
+            using SolidBrush canvasBrush = new(_parentBackColor);
             _graphics.FillRectangle(canvasBrush, _clipRectangle);
 
             RenderSelectedPageBackground();
@@ -141,7 +141,7 @@ namespace GitExtUtils.GitUI.Theming
         {
             var innerRect = _tabRects[index];
             int imgHeight = _imageSize.Height;
-            var imgRect = new Rectangle(
+            Rectangle imgRect = new(
                 new Point(innerRect.X + ImagePadding,
                     innerRect.Y + ((innerRect.Height - imgHeight) / 2)),
                 _imageSize);

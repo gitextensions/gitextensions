@@ -94,7 +94,7 @@ namespace GitUITests.UserControls
         public void DisplayAheadBehindInformation_should_display_normal_state_when_in_ahead_state()
         {
             var branchName = "my-branch";
-            var data = new Dictionary<string, AheadBehindData>
+            Dictionary<string, AheadBehindData> data = new()
             {
                 { branchName, new AheadBehindData { AheadCount = "9", BehindCount = string.Empty, Branch = branchName } }
             };
@@ -112,7 +112,7 @@ namespace GitUITests.UserControls
         public void DisplayAheadBehindInformation_should_display_warning_state_when_in_behind_state()
         {
             var branchName = "my-branch";
-            var data = new Dictionary<string, AheadBehindData>
+            Dictionary<string, AheadBehindData> data = new()
             {
                 { branchName, new AheadBehindData { AheadCount = string.Empty, BehindCount = "2", Branch = branchName } }
             };
@@ -130,7 +130,7 @@ namespace GitUITests.UserControls
         public void DisplayAheadBehindInformation_should_display_warning_state_when_in_ahead_and_behind_state()
         {
             var branchName = "my-branch";
-            var data = new Dictionary<string, AheadBehindData>
+            Dictionary<string, AheadBehindData> data = new()
             {
                 { branchName, new AheadBehindData { AheadCount = "99", BehindCount = "3", Branch = branchName } }
             };

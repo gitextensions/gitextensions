@@ -13,7 +13,7 @@ namespace GitUITests
         [Test]
         public void Next_cancels_previous_token()
         {
-            var sequence = new CancellationTokenSequence();
+            CancellationTokenSequence sequence = new();
 
             var token1 = sequence.Next();
 
@@ -28,7 +28,7 @@ namespace GitUITests
         [Test]
         public void Next_throws_if_disposed()
         {
-            var sequence = new CancellationTokenSequence();
+            CancellationTokenSequence sequence = new();
 
             sequence.Dispose();
 
@@ -38,7 +38,7 @@ namespace GitUITests
         [Test]
         public void Cancel_cancels_previous_token()
         {
-            var sequence = new CancellationTokenSequence();
+            CancellationTokenSequence sequence = new();
 
             var token = sequence.Next();
 
@@ -52,7 +52,7 @@ namespace GitUITests
         [Test]
         public void Cancel_is_idempotent()
         {
-            var sequence = new CancellationTokenSequence();
+            CancellationTokenSequence sequence = new();
 
             var token = sequence.Next();
 
@@ -67,7 +67,7 @@ namespace GitUITests
         [Test]
         public void Cancel_does_not_throw_if_no_token_yet_issued()
         {
-            var sequence = new CancellationTokenSequence();
+            CancellationTokenSequence sequence = new();
 
             sequence.CancelCurrent();
         }
@@ -75,7 +75,7 @@ namespace GitUITests
         [Test]
         public void Dispose_cancels_previous_token()
         {
-            var sequence = new CancellationTokenSequence();
+            CancellationTokenSequence sequence = new();
 
             var token = sequence.Next();
 
@@ -89,7 +89,7 @@ namespace GitUITests
         [Test]
         public void Dispose_is_idempotent()
         {
-            var sequence = new CancellationTokenSequence();
+            CancellationTokenSequence sequence = new();
 
             sequence.Next();
 
@@ -102,7 +102,7 @@ namespace GitUITests
         [Test]
         public void Dispose_does_not_throw_if_no_token_yet_issued()
         {
-            var sequence = new CancellationTokenSequence();
+            CancellationTokenSequence sequence = new();
 
             sequence.Dispose();
         }
@@ -115,12 +115,12 @@ namespace GitUITests
             var logicalProcessorCount = Environment.ProcessorCount;
             var threadCount = Math.Max(2, logicalProcessorCount);
 
-            using var sequence = new CancellationTokenSequence();
-            using var barrier = new Barrier(threadCount);
-            using var countdown = new CountdownEvent(loopCount * threadCount);
+            using CancellationTokenSequence sequence = new();
+            using Barrier barrier = new(threadCount);
+            using CountdownEvent countdown = new(loopCount * threadCount);
             var completedCount = 0;
 
-            var completionTokenSource = new CancellationTokenSource();
+            CancellationTokenSource completionTokenSource = new();
             var completionToken = completionTokenSource.Token;
             var winnerByIndex = new int[threadCount];
 

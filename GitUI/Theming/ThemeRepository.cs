@@ -79,7 +79,7 @@ namespace GitUI.Theming
                 return Enumerable.Empty<ThemeId>();
             }
 
-            var directory = new DirectoryInfo(_themePathProvider.UserThemesDirectory);
+            DirectoryInfo directory = new(_themePathProvider.UserThemesDirectory);
             return directory.Exists
                 ? directory
                     .EnumerateFiles("*" + _themePathProvider.ThemeExtension, SearchOption.TopDirectoryOnly)

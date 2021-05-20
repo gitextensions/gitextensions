@@ -15,7 +15,7 @@ namespace GitUI.Infrastructure.Telemetry
 
         public void Report()
         {
-            var properties = new Dictionary<string, string>
+            Dictionary<string, string> properties = new()
                 {
                     // layout
                     { "ShowLeftPanel".FormatKey(), _owner.MainSplitContainer.Panel1Collapsed.ToString() },

@@ -119,7 +119,7 @@ namespace GitUI.Script
                     {
                         if (string.Equals(plugin.Name, command, StringComparison.CurrentCultureIgnoreCase))
                         {
-                            var eventArgs = new GitUIEventArgs(owner, uiCommands);
+                            GitUIEventArgs eventArgs = new(owner, uiCommands);
                             return new CommandStatus(executed: true, needsGridRefresh: plugin.Execute(eventArgs));
                         }
                     }
@@ -138,7 +138,7 @@ namespace GitUI.Script
                 command = command.Replace(NavigateToPrefix, string.Empty);
                 if (!string.IsNullOrEmpty(command))
                 {
-                    var revisionRef = new Executable(command, module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
+                    string revisionRef = new Executable(command, module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
 
                     if (revisionRef is not null)
                     {

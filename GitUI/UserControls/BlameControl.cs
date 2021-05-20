@@ -263,7 +263,7 @@ namespace GitUI.Blame
             if (rect.Contains(MousePosition))
             {
                 Point p = BlameAuthor.PointToClient(MousePosition);
-                var me = new MouseEventArgs(0, 0, p.X, p.Y, 0);
+                MouseEventArgs me = new(0, 0, p.X, p.Y, 0);
                 BlameAuthor_MouseMove(this, me);
             }
         }
@@ -320,7 +320,7 @@ namespace GitUI.Blame
                 return ("", "", new List<GitBlameEntry>(0));
             }
 
-            var body = new StringBuilder(capacity: 4096);
+            StringBuilder body = new(capacity: 4096);
 
             GitBlameCommit? lastCommit = null;
 
@@ -343,10 +343,10 @@ namespace GitUI.Blame
                                                      .Max();
             var lineLengthEstimate = 25 + _blame.Lines.Max(l => l.Commit.Author?.Length ?? 0) + filePathLengthEstimate;
             var lineLength = Math.Max(80, lineLengthEstimate);
-            var lineBuilder = new StringBuilder(lineLength + 2);
-            var gutter = new StringBuilder(capacity: lineBuilder.Capacity * _blame.Lines.Count);
-            var emptyLine = new string(' ', lineLength);
-            var cacheAvatars = new Dictionary<string, Image?>();
+            StringBuilder lineBuilder = new(lineLength + 2);
+            StringBuilder gutter = new(capacity: lineBuilder.Capacity * _blame.Lines.Count);
+            string emptyLine = new(' ', lineLength);
+            Dictionary<string, Image?> cacheAvatars = new();
             var noAuthorImage = (Image)new Bitmap(Images.User80, avatarSize, avatarSize);
             for (var index = 0; index < _blame.Lines.Count; index++)
             {
@@ -451,7 +451,7 @@ namespace GitUI.Blame
         {
             var mostRecentDate = DateTime.Now.Ticks;
             var artificialOldBoundary = ArtificialOldBoundary;
-            var gitBlameDisplays = new List<GitBlameEntry>(blameLines.Count);
+            List<GitBlameEntry> gitBlameDisplays = new(blameLines.Count);
 
             var lessRecentDate = Math.Min(artificialOldBoundary.Ticks,
                                           blameLines.Select(l => l.Commit.AuthorTime)
@@ -464,7 +464,7 @@ namespace GitUI.Blame
             {
                 var relativeTicks = Math.Max(0, blame.Commit.AuthorTime.Ticks - lessRecentDate);
                 var ageBucketIndex = Math.Min((int)(relativeTicks / intervalSize), AgeBucketGradientColors.Count - 1);
-                var gitBlameDisplay = new GitBlameEntry
+                GitBlameEntry gitBlameDisplay = new()
                 {
                     AgeBucketIndex = ageBucketIndex,
                     AgeBucketColor = AgeBucketGradientColors[ageBucketIndex]
@@ -489,7 +489,7 @@ namespace GitUI.Blame
             }
             else
             {
-                using var frm = new FormCommitDiff(UICommands, _lastBlameLine.Commit.ObjectId);
+                using FormCommitDiff frm = new(UICommands, _lastBlameLine.Commit.ObjectId);
                 frm.ShowDialog(this);
             }
         }
@@ -611,7 +611,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            using var frm = new FormCommitDiff(UICommands, revisionId);
+            using FormCommitDiff frm = new(UICommands, revisionId);
             frm.ShowDialog(this);
         }
 
@@ -624,7 +624,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            using var frm = new FormCommitDiff(UICommands, commit.ObjectId);
+            using FormCommitDiff frm = new(UICommands, commit.ObjectId);
             frm.ShowDialog(this);
         }
 
@@ -640,7 +640,7 @@ namespace GitUI.Blame
         }
 
         internal TestAccessor GetTestAccessor()
-            => new TestAccessor(this);
+            => new(this);
 
         internal readonly struct TestAccessor
         {
