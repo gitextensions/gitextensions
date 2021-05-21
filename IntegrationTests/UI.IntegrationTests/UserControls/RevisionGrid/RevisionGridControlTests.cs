@@ -92,7 +92,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
 
                     var ta = revisionGridControl.GetTestAccessor();
-                    ta.RefFilterOptions.Should().Be(RefFilterOptions.None);
+                    ta.RefFilterOptions.Should().Be(RefFilterOptions.Branches);
                 });
         }
 
@@ -325,6 +325,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     {
                         Console.WriteLine($"{runTest.Method.Name} failed: {ex.Demystify()}");
                         Console.WriteLine(_referenceRepository.Module.GitExecutable.GetOutput("status"));
+                        throw;
                     }
                 });
         }
@@ -358,6 +359,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     {
                         Console.WriteLine($"{runTest.Method.Name} failed: {ex.Demystify()}");
                         Console.WriteLine(_referenceRepository.Module.GitExecutable.GetOutput("status"));
+                        throw;
                     }
 
                     // let the focus events be handled
