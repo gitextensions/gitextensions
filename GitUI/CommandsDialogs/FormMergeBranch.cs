@@ -7,6 +7,7 @@ using GitCommands.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.Script;
+using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Settings;
 using ResourceManager;
 
@@ -69,7 +70,8 @@ namespace GitUI.CommandsDialogs
             var selectedHead = Module.GetSelectedBranch();
             currentBranchLabel.Text = selectedHead;
 
-            Branches.BranchesToSelect = Module.GetRefs(true, true);
+            // Offer rebase on refs also for tags (but not stash, notes etc)
+            Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags);
 
             if (_defaultBranch is not null)
             {

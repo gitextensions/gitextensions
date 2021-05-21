@@ -527,12 +527,12 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<IGitRef> GetLocalBranches()
         {
-            return _localBranches ??= Module.GetRefs(tags: false, branches: true);
+            return _localBranches ??= Module.GetRefs(RefsFilter.Heads);
         }
 
         private IEnumerable<IGitRef> GetRemoteBranches()
         {
-            return _remoteBranches ??= Module.GetRefs(tags: true, branches: true).Where(h => h.IsRemote && !h.IsTag).ToList();
+            return _remoteBranches ??= Module.GetRefs(RefsFilter.Remotes);
         }
 
         private void FormCheckoutBranch_Activated(object sender, EventArgs e)

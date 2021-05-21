@@ -8,6 +8,7 @@ using GitCommands.Git.Commands;
 using GitCommands.Patches;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -79,7 +80,8 @@ namespace GitUI.CommandsDialogs
             var selectedHead = Module.GetSelectedBranch();
             Currentbranch.Text = selectedHead;
 
-            var refs = Module.GetRefs(true, true).OfType<GitRef>().ToList();
+            // Offer rebase on refs also for tags (but not stash, notes etc)
+            var refs = Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags).OfType<GitRef>().ToList();
             Branches.DataSource = refs;
             Branches.DisplayMember = nameof(GitRef.Name);
 
@@ -90,7 +92,7 @@ namespace GitUI.CommandsDialogs
 
             Branches.Select();
 
-            refs = Module.GetRefs(false, true).OfType<GitRef>().ToList();
+            refs = Module.GetRefs(RefsFilter.Heads).OfType<GitRef>().ToList();
             cboTo.DataSource = refs;
             cboTo.DisplayMember = nameof(GitRef.Name);
 

@@ -958,7 +958,8 @@ namespace GitUI
 
                 _revisionReader ??= new RevisionReader();
 
-                var refs = Module.GetRefs(GetRefsEnum.All);
+                // Find all ambiguous refs (including stash, notes etc)
+                var refs = Module.GetRefs(RefsFilter.NoFilter);
                 _ambiguousRefs = GitRef.GetAmbiguousRefNames(refs);
 
                 _gridView.SuspendLayout();

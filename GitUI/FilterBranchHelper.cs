@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
@@ -117,42 +119,15 @@ namespace GitUI
             _NO_TRANSLATE_toolStripBranches.Enabled = Module.IsValidGitWorkingDir();
         }
 
-        private List<string> GetBranchHeads(bool local, bool remote)
-        {
-            List<string> list = new();
-            if (local && remote)
-            {
-                var branches = Module.GetRefs(true, true);
-                list.AddRange(branches.Where(branch => !branch.IsTag).Select(branch => branch.Name));
-            }
-            else if (local)
-            {
-                var branches = Module.GetRefs(false);
-                list.AddRange(branches.Select(branch => branch.Name));
-            }
-            else if (remote)
-            {
-                var branches = Module.GetRefs(true, true);
-                list.AddRange(branches.Where(branch => branch.IsRemote && !branch.IsTag).Select(branch => branch.Name));
-            }
-
-            return list;
-        }
-
-        private IEnumerable<string> GetTagsRefs()
-        {
-            return Module.GetRefs(true, false).Select(tag => tag.Name);
-        }
-
         private List<string> GetBranchAndTagRefs(bool local, bool tag, bool remote)
         {
-            var list = GetBranchHeads(local, remote);
-            if (tag)
-            {
-                list.AddRange(GetTagsRefs());
-            }
+            // Options are interpreted as the refs the search should be limited too
+            // If neither option is selected all refs will be queried also including stash and notes
+            RefsFilter refs = (local ? RefsFilter.Heads : RefsFilter.NoFilter)
+                | (tag ? RefsFilter.Tags : RefsFilter.NoFilter)
+                | (remote ? RefsFilter.Remotes : RefsFilter.NoFilter);
 
-            return list;
+            return Module.GetRefs(refs).Select(branch => branch.Name).ToList();
         }
 
         private void toolStripBranches_TextUpdate(object sender, EventArgs e)

@@ -56,7 +56,7 @@ namespace GitUI.BranchTreePanel
 
                 if (!IsFiltering.Value || _loadedBranches is null)
                 {
-                    _loadedBranches = Module.GetRefs(tags: true, branches: true).Where(branch => branch.IsRemote && !branch.IsTag).ToList();
+                    _loadedBranches = Module.GetRefs(RefsFilter.Remotes).ToList();
                     token.ThrowIfCancellationRequested();
                 }
 

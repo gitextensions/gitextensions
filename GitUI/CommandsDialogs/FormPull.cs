@@ -308,7 +308,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (PullFromUrl.Checked)
                     {
-                        _heads = Module.GetRefs(false, true).ToList();
+                        _heads = Module.GetRefs(RefsFilter.Heads).ToList();
                     }
                     else
                     {
@@ -321,10 +321,9 @@ namespace GitUI.CommandsDialogs
                         // doesn't return heads that are new on the server. This can be updated using
                         // update branch info in the manage remotes dialog.
                         _heads = new List<IGitRef>();
-                        foreach (var head in Module.GetRefs(true, true))
+                        foreach (var head in Module.GetRefs(RefsFilter.Remotes))
                         {
-                            if (!head.IsRemote ||
-                                !head.Name.StartsWith(_NO_TRANSLATE_Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
+                            if (!head.Name.StartsWith(_NO_TRANSLATE_Remotes.Text, StringComparison.CurrentCultureIgnoreCase))
                             {
                                 continue;
                             }

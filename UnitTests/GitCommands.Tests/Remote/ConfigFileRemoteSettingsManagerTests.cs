@@ -260,7 +260,7 @@ namespace GitCommandsTests.Remote
                 CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/local", ""),
             };
 
-            _module.GetRefs().ReturnsForAnyArgs(refs);
+            _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
             _remotesManager.ConfigureRemotes("origin");
 
@@ -276,7 +276,7 @@ namespace GitCommandsTests.Remote
             {
                 CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/remotes/origin/develop", "origin"),
             };
-            _module.GetRefs().ReturnsForAnyArgs(refs);
+            _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
             _remotesManager.ConfigureRemotes("origin");
 
@@ -293,7 +293,7 @@ namespace GitCommandsTests.Remote
                 CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/develop", ""),
                 CreateSubstituteRef("ddca5a9cdc3ab10e042ae6cf5f8da2dd25c4b75f", "refs/remotes/origin/master", "origin"),
             };
-            _module.GetRefs().ReturnsForAnyArgs(refs);
+            _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
             _remotesManager.ConfigureRemotes("origin");
 
@@ -310,7 +310,7 @@ namespace GitCommandsTests.Remote
             {
                 CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/tags/local-tag", ""),
             };
-            _module.GetRefs().ReturnsForAnyArgs(refs);
+            _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
             _remotesManager.ConfigureRemotes("origin");
 
@@ -328,7 +328,7 @@ namespace GitCommandsTests.Remote
                 CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/develop", ""),
                 CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/remotes/origin/develop", "origin"),
             };
-            _module.GetRefs().ReturnsForAnyArgs(refs);
+            _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
             _remotesManager.ConfigureRemotes("origin");
             var mergeWith = "develop";
@@ -402,7 +402,7 @@ namespace GitCommandsTests.Remote
                 CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", $"refs/remotes/{enabledRemoteNameWithBranches}/develop", $"{enabledRemoteNameWithBranches}"),
             };
 
-            _module.GetRefs().ReturnsForAnyArgs(refs);
+            _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
             List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true) };
             _configFile.GetConfigSections().Returns(x => sections);

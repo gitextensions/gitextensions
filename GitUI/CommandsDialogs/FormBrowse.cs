@@ -2147,7 +2147,7 @@ namespace GitUI.CommandsDialogs
                     // Make sure there are never more than a 100 branches added to the menu
                     // Git Extensions will hang when the drop down is too large...
                     return Module
-                        .GetRefs(tags: false, branches: true)
+                        .GetRefs(RefsFilter.Heads)
                         .Take(100);
                 }
             }

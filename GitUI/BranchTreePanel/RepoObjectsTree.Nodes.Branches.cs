@@ -333,7 +333,7 @@ namespace GitUI.BranchTreePanel
 
                 if (!IsFiltering.Value || _loadedBranches is null)
                 {
-                    _loadedBranches = Module.GetRefs(tags: false, branches: true);
+                    _loadedBranches = Module.GetRefs(RefsFilter.Heads);
                     token.ThrowIfCancellationRequested();
                 }
 
