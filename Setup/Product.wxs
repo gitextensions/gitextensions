@@ -128,6 +128,9 @@
       <Component Id="BugReporter.exe" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\BugReporter.exe" />
       </Component>
+      <Component Id="BugReporter.exe.config" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\BugReporter.exe.config" />
+      </Component>
       <Component Id="System.IO.Abstractions.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\System.IO.Abstractions.dll" />
       </Component>
@@ -1493,6 +1496,7 @@
       <ComponentRef Id="gitex.cmd" />
       <ComponentRef Id="set_telemetry" />
       <ComponentRef Id="BugReporter.exe" />
+      <ComponentRef Id="BugReporter.exe.config" />
       <ComponentRef Id="GitExtensions.exe" />
       <ComponentRef Id="GitExtensions.exe.config" />
       <ComponentRef Id="GitCommands.dll" />
