@@ -101,6 +101,7 @@ namespace GitUI
 
         private readonly TranslationString _argumentsText = new("Arguments");
         private readonly TranslationString _commandText = new("Command");
+        private readonly TranslationString _exitCodeText = new("Exit code");
         private readonly TranslationString _workingDirectoryText = new("Working directory");
         private readonly TranslationString _reportBugText = new("If you think this was caused by Git Extensions, you can report a bug for the team to investigate.");
 
@@ -214,6 +215,7 @@ namespace GitUI
 
         public static string Arguments => _instance.Value._argumentsText.Text;
         public static string Command => _instance.Value._commandText.Text;
+        public static string ExitCode => _instance.Value._exitCodeText.Text;
         public static string WorkingDirectory => _instance.Value._workingDirectoryText.Text;
         public static string ReportBug => _instance.Value._reportBugText.Text;
 

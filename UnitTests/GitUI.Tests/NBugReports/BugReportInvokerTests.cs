@@ -30,6 +30,7 @@ namespace GitUITests.NBugReports
         private const string _command = "command";
         private const string _arguments = "arguments";
         private const string _directory = "directory";
+        private const int _exitCode = 128;
 
         public static IEnumerable TestCases
         {
@@ -45,14 +46,15 @@ namespace GitUITests.NBugReports
                     _messageInner,
                     "");
                 yield return new TestCaseData(new UserExternalOperationException(_context,
-                    new ExternalOperationException(_command, _arguments, _directory, new Exception(_messageOuter, new Exception(_messageInner)))),
+                    new ExternalOperationException(_command, _arguments, _directory, _exitCode, new Exception(_messageOuter, new Exception(_messageInner)))),
                     _messageInner,
                     $"{_context}{Environment.NewLine}"
+                    + $"Exit code: {_exitCode}{Environment.NewLine}{Environment.NewLine}"
                     + $"Command: {_command}{Environment.NewLine}"
                     + $"Arguments: {_arguments}{Environment.NewLine}"
                     + $"Working directory: {_directory}{Environment.NewLine}");
-                yield return new TestCaseData(new UserExternalOperationException(null,
-                    new ExternalOperationException(null, null, null, new Exception(_messageInner))),
+                yield return new TestCaseData(new UserExternalOperationException(context: null,
+                    new ExternalOperationException(null, null, null, null, new Exception(_messageInner))),
                     _messageInner,
                     "");
             }

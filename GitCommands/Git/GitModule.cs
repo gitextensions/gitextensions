@@ -2457,16 +2457,15 @@ namespace GitCommands
         {
             var resultCollection = GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, true).ToList();
 
-            // shows untracked files
+            // add - optionally stashed - untracked files
             GitArgumentBuilder args = new("log")
             {
                 $"{stashName}^3",
                 "--pretty=format:\"%T\"",
                 "--max-count=1"
             };
-            var untrackedTreeHash = _gitExecutable.GetOutput(args);
-
-            if (ObjectId.TryParse(untrackedTreeHash, out var treeId))
+            ExecutionResult executionResult = _gitExecutable.Execute(args);
+            if (executionResult.ExitedSuccessfully && ObjectId.TryParse(executionResult.StandardOutput, out ObjectId? treeId))
             {
                 var files = GetTreeFiles(treeId, full: true);
 

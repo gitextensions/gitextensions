@@ -40,7 +40,6 @@ namespace GitUI.Script
             }
             catch (ExternalOperationException ex) when (ex is not UserExternalOperationException)
             {
-                ThreadHelper.AssertOnUIThread();
                 throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorFailedToExecute}: '{scriptKey}'", ex);
             }
         }
@@ -55,9 +54,8 @@ namespace GitUI.Script
             ScriptInfo? scriptInfo = ScriptManager.GetScript(scriptKey);
             if (scriptInfo is null)
             {
-                ThreadHelper.AssertOnUIThread();
                 throw new UserExternalOperationException($"{TranslatedStrings.ScriptErrorCantFind}: '{scriptKey}'",
-                    new ExternalOperationException(command: null, arguments: null, module.WorkingDir, innerException: null));
+                    new ExternalOperationException(workingDirectory: module.WorkingDir));
             }
 
             if (string.IsNullOrEmpty(scriptInfo.Command))
@@ -73,9 +71,8 @@ namespace GitUI.Script
                                                                         && ScriptOptionsParser.Contains(arguments, option));
                 if (optionDependingOnSelectedRevision is not null)
                 {
-                    ThreadHelper.AssertOnUIThread();
                     throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{scriptKey}'{Environment.NewLine}'{optionDependingOnSelectedRevision}' {TranslatedStrings.ScriptErrorOptionWithoutRevisionGridText}",
-                        new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir, innerException: null));
+                        new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir));
                 }
             }
 
@@ -90,9 +87,8 @@ namespace GitUI.Script
             (string? argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, owner, revisionGrid);
             if (abort)
             {
-                ThreadHelper.AssertOnUIThread();
                 throw new UserExternalOperationException($"{TranslatedStrings.ScriptText}: '{scriptKey}'{Environment.NewLine}{TranslatedStrings.ScriptErrorOptionWithoutRevisionText}",
-                    new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir, innerException: null));
+                    new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir));
             }
 
             Validates.NotNull(argument);
