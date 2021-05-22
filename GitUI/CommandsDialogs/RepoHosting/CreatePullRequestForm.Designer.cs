@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             | System.Windows.Forms.AnchorStyles.Right)));
             this._titleTB.Location = new System.Drawing.Point(58, 19);
             this._titleTB.Name = "_titleTB";
-            this._titleTB.Size = new System.Drawing.Size(462, 23);
+            this._titleTB.Size = new System.Drawing.Size(462, 20);
             this._titleTB.TabIndex = 0;
             // 
             // label1
@@ -44,7 +44,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(33, 15);
+            this.label1.Size = new System.Drawing.Size(30, 13);
             this.label1.TabIndex = 1;
             this.label1.Text = "Title:";
             // 
@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 48);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(37, 15);
+            this.label2.Size = new System.Drawing.Size(34, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Body:";
             // 
@@ -87,11 +87,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _pullReqTargetsCB
             // 
+            this._pullReqTargetsCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._pullReqTargetsCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._pullReqTargetsCB.FormattingEnabled = true;
             this._pullReqTargetsCB.Location = new System.Drawing.Point(141, 12);
             this._pullReqTargetsCB.Name = "_pullReqTargetsCB";
-            this._pullReqTargetsCB.Size = new System.Drawing.Size(246, 23);
+            this._pullReqTargetsCB.Size = new System.Drawing.Size(391, 21);
             this._pullReqTargetsCB.TabIndex = 3;
             this._pullReqTargetsCB.SelectedIndexChanged += new System.EventHandler(this._pullReqTargetsCB_SelectedIndexChanged);
             // 
@@ -100,7 +102,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(9, 15);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(100, 15);
+            this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 5;
             this.label3.Text = "Target repository:";
             // 
@@ -120,7 +122,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(9, 42);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(75, 15);
+            this.label4.Size = new System.Drawing.Size(68, 13);
             this.label4.TabIndex = 7;
             this.label4.Text = "Your branch:";
             // 
@@ -129,27 +131,31 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(9, 69);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(84, 15);
+            this.label5.Size = new System.Drawing.Size(77, 13);
             this.label5.TabIndex = 8;
             this.label5.Text = "Target branch:";
             // 
             // _yourBranchesCB
             // 
+            this._yourBranchesCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._yourBranchesCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._yourBranchesCB.FormattingEnabled = true;
             this._yourBranchesCB.Location = new System.Drawing.Point(141, 39);
             this._yourBranchesCB.Name = "_yourBranchesCB";
-            this._yourBranchesCB.Size = new System.Drawing.Size(246, 23);
+            this._yourBranchesCB.Size = new System.Drawing.Size(391, 21);
             this._yourBranchesCB.TabIndex = 0;
             this._yourBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
             // _remoteBranchesCB
             // 
+            this._remoteBranchesCB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this._remoteBranchesCB.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._remoteBranchesCB.FormattingEnabled = true;
             this._remoteBranchesCB.Location = new System.Drawing.Point(141, 66);
             this._remoteBranchesCB.Name = "_remoteBranchesCB";
-            this._remoteBranchesCB.Size = new System.Drawing.Size(246, 23);
+            this._remoteBranchesCB.Size = new System.Drawing.Size(391, 21);
             this._remoteBranchesCB.TabIndex = 1;
             this._remoteBranchesCB.SelectedIndexChanged += new System.EventHandler(this._yourBranchCB_SelectedIndexChanged);
             // 
