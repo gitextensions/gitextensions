@@ -87,13 +87,16 @@ after_test:
     # get files
     $msi = (Resolve-Path .\artifacts\publish\GitExtensions-*.msi)[0].Path;
     $zip = (Resolve-Path .\artifacts\publish\GitExtensions-Portable-*.zip)[0].Path;
-    #$vsix = (Resolve-Path artifacts\publish\GitExtensionsVSIX.vsix)[0].Path;
 
     # do not sign artifacts for non-release branches
     if ($env:APPVEYOR_PULL_REQUEST_TITLE) {
         Write-Host "[INFO]: Do not sign non-release branches"
         Get-ChildItem $zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-        #Get-ChildItem $vsix | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
+        if ($env:ARTIFACT_PUBLISH_PULL_REQUEST_MSI) {
+            Get-ChildItem $msi | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+        }
+
         Exit-AppVeyorBuild
         return
     }
