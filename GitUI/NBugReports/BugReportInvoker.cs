@@ -68,8 +68,30 @@ namespace GitUI.NBugReports
             }
         }
 
+        private static void LogError(Exception exception, bool isTerminating)
+        {
+            string tempFolder = Path.GetTempPath();
+            string tempFileName = $"{AppSettings.ApplicationId}.{AppSettings.AppVersion}.{DateTime.Now.ToString("yyyyMMdd.HHmmssfff")}.log";
+            string tempFile = Path.Combine(tempFolder, tempFileName);
+
+            try
+            {
+                string content = $"Is fatal: {isTerminating}\r\n{exception}";
+                File.WriteAllText(tempFile, content);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to error to {tempFile}\r\n{ex.Message}", "Error writing log", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         public static void Report(Exception exception, bool isTerminating)
         {
+            if (AppSettings.WriteErrorLog)
+            {
+                LogError(exception, isTerminating);
+            }
+
             if (isTerminating)
             {
                 // TODO: this is not very efficient
