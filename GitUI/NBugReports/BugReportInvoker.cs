@@ -81,7 +81,7 @@ namespace GitUI.NBugReports
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Failed to error to {tempFile}\r\n{ex.Message}", "Error writing log", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Failed to log error to {tempFile}\r\n{ex.Message}", "Error writing log", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
