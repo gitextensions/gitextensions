@@ -666,9 +666,7 @@ See the changes in the commit form.");
                 var fileName = _fullPathResolver.Resolve(gitItem.FileName);
                 if (File.Exists(fileName))
                 {
-                    // NOTE File.Exists is not annotated to imply that fileName is non-null when the returned value is true
-                    // in .NET Framework. This suppression will not be required when moving to .NET 5+.
-                    OsShellUtil.OpenAs(fileName!.ToNativePath());
+                    OsShellUtil.OpenAs(fileName.ToNativePath());
                 }
             }
         }
@@ -683,7 +681,7 @@ See the changes in the commit form.");
 
         private void diffWithRememberedFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!(tvGitTree.SelectedNode?.Tag is GitItem gitItem) || _revision is null)
+            if (tvGitTree.SelectedNode?.Tag is not GitItem gitItem || _revision is null)
             {
                 return;
             }

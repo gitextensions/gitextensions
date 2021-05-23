@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
 
@@ -58,7 +59,7 @@ namespace GitCommands
                 {
                     if (subItem is GitItem gitItem)
                     {
-                        gitItem.FileName = PathUtil.Combine(basePath, gitItem.FileName) ?? string.Empty;
+                        gitItem.FileName = Path.Combine(basePath, gitItem.FileName);
                     }
 
                     yield return subItem;

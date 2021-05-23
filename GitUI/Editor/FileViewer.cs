@@ -521,7 +521,7 @@ namespace GitUI.Editor
             {
                 // File system access for other than Worktree,
                 // to handle that git-status does not detect details for untracked (git-diff --no-index will not give info)
-                var fullPath = PathUtil.Combine(Module.WorkingDir, file.Name);
+                var fullPath = Path.Combine(Module.WorkingDir, file.Name);
                 if (Directory.Exists(fullPath) && GitModule.IsValidGitWorkingDir(fullPath))
                 {
                     isSubmodule = true;

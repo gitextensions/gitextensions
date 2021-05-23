@@ -54,18 +54,21 @@ namespace GitExtensions.Plugins.GitStatistics
             {
                 foreach (var file in filesToCheck)
                 {
-                    if (extensions.Contains(PathUtil.GetExtension(file)))
+                    FileInfo fileInfo = null;
+                    try
                     {
-                        FileInfo fileInfo;
-                        try
+                        if (extensions.Contains(Path.GetExtension(file)))
                         {
                             fileInfo = new FileInfo(file);
                         }
-                        catch
-                        {
-                            continue;
-                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
 
+                    if (fileInfo is not null)
+                    {
                         yield return fileInfo;
                     }
                 }

@@ -42,7 +42,7 @@ namespace GitUI.AutoCompletion
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var regex = GetRegexForExtension(PathUtil.GetExtension(file.Name));
+                var regex = GetRegexForExtension(Path.GetExtension(file.Name) ?? "");
 
                 if (regex is not null)
                 {
@@ -97,7 +97,7 @@ namespace GitUI.AutoCompletion
 
             Validates.NotNull(appDataPath);
 
-            var path = PathUtil.Combine(appDataPath, "AutoCompleteRegexes.txt");
+            var path = Path.Combine(appDataPath, "AutoCompleteRegexes.txt");
 
             if (File.Exists(path))
             {

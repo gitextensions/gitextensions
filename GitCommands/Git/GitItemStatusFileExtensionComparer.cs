@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace GitCommands.Git
 {
@@ -27,8 +28,8 @@ namespace GitCommands.Git
 
             var lhsPath = GetPrimarySortingPath(x);
             var rhsPath = GetPrimarySortingPath(y);
-            var lhsExt = PathUtil.GetExtension(lhsPath);
-            var rhsExt = PathUtil.GetExtension(rhsPath);
+            var lhsExt = Path.GetExtension(lhsPath);
+            var rhsExt = Path.GetExtension(rhsPath);
 
             var comparisonResult = StringComparer.InvariantCulture.Compare(lhsExt, rhsExt);
             if (comparisonResult == 0)
