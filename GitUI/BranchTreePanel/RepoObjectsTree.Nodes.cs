@@ -283,7 +283,8 @@ namespace GitUI.BranchTreePanel
                     return;
                 }
 
-                Nodes newNodes = await loadNodesTask(token);
+                // Module is invalid in Dashboard
+                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(token) : new(tree: null);
 
                 await treeView.SwitchToMainThreadAsync(token);
 

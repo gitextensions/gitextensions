@@ -1116,19 +1116,11 @@ namespace GitCommands
             {
                 "--parents",
                 "--no-walk",
+                "--min-parents=2",
                 $"{startRev}..{endRev}"
             };
 
-            return _gitExecutable
-                .GetOutputLines(args)
-                .Any(IsTwoSha1Hashes);
-
-            static bool IsTwoSha1Hashes(string parents)
-            {
-                // TODO use Regex here to avoid allocations
-                string[] tab = parents.Split(Delimiters.Space);
-                return tab.Length > 2 && tab.All(parent => GitRevision.Sha1HashRegex.IsMatch(parent));
-            }
+            return _gitExecutable.GetOutputLines(args).Any();
         }
 
         public ConfigFile GetSubmoduleConfigFile()
