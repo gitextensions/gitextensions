@@ -40,6 +40,7 @@ namespace GitUI.CommandsDialogs
             tbLocal.Text = item.Local.ObjectId?.ToString() ?? _deleted.Text;
             tbRemote.Text = item.Remote.ObjectId?.ToString() ?? _deleted.Text;
             tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout()?.ToString() ?? "";
+            btCheckoutBranch.Enabled = item.Base.ObjectId is not null && item.Remote.ObjectId is not null;
         }
 
         private void btRefresh_Click(object sender, EventArgs e)
