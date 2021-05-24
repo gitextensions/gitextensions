@@ -291,6 +291,13 @@ namespace GitUI.BranchTreePanel
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);
 
+                // Check again after switch to main thread
+                treeView = TreeViewNode.TreeView;
+                if (treeView is null || !IsAttached)
+                {
+                    return;
+                }
+
                 try
                 {
                     string? originalSelectedNodeFullNamePath = treeView.SelectedNode?.GetFullNamePath();
@@ -430,7 +437,7 @@ namespace GitUI.BranchTreePanel
 
             protected IWin32Window? ParentWindow()
             {
-                return TreeViewNode.TreeView.FindForm();
+                return TreeViewNode.TreeView?.FindForm();
             }
 
             protected virtual string DisplayText()
