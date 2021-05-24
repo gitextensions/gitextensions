@@ -64,7 +64,7 @@ namespace GitUI.BranchTreePanel
             {
                 base.ApplyStyle();
 
-                TreeViewNode.ForeColor = Visible ? TreeViewNode.TreeView.ForeColor : Color.Silver.AdaptTextColor();
+                TreeViewNode.ForeColor = Visible && TreeViewNode.TreeView is not null ? TreeViewNode.TreeView.ForeColor : Color.Silver.AdaptTextColor();
                 TreeViewNode.ImageKey =
                     TreeViewNode.SelectedImageKey = Visible ? null : nameof(Images.EyeClosed);
             }
@@ -127,7 +127,7 @@ namespace GitUI.BranchTreePanel
 
             protected void SelectRevision()
             {
-                TreeViewNode.TreeView.BeginInvoke(new Action(() =>
+                TreeViewNode.TreeView?.BeginInvoke(new Action(() =>
                 {
                     UICommands.BrowseGoToRef(FullPath, showNoRevisionMsg: true, toggleSelection: ModifierKeys.HasFlag(Keys.Control));
                     TreeViewNode.TreeView?.Focus();
@@ -415,6 +415,12 @@ namespace GitUI.BranchTreePanel
                 if (firstTime)
                 {
                     TreeViewNode.Expand();
+                }
+
+                // Skip hidden node
+                if (TreeViewNode.TreeView is null)
+                {
+                    return;
                 }
 
                 if (TreeViewNode.TreeView.SelectedNode is not null)
