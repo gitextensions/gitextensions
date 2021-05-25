@@ -20,7 +20,6 @@ using GitUI.Script;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Settings;
 using Microsoft;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -644,53 +643,49 @@ namespace GitUI.CommandsDialogs
 
                 int dialogResult = -1;
 
-                using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                TaskDialogPage page = new()
                 {
-                    OwnerWindowHandle = owner.Handle,
                     Text = allOptions ? _pullRepositoryMergeInstruction.Text : _pullRepositoryForceInstruction.Text,
-                    InstructionText = allOptions ? _pullRepositoryMainMergeInstruction.Text : _pullRepositoryMainForceInstruction.Text,
+                    Heading = allOptions ? _pullRepositoryMainMergeInstruction.Text : _pullRepositoryMainForceInstruction.Text,
                     Caption = string.Format(_pullRepositoryCaption.Text, destination),
-                    StandardButtons = TaskDialogStandardButtons.Cancel,
-                    Icon = TaskDialogStandardIcon.Error,
-                    FooterCheckBoxText = _dontShowAgain.Text,
-                    FooterIcon = TaskDialogStandardIcon.Information,
-                    StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
-                    Cancelable = true
+                    Buttons = { TaskDialogButton.Cancel },
+                    Icon = TaskDialogIcon.Error,
+                    Verification = new TaskDialogVerificationCheckBox
+                    {
+                        Text = _dontShowAgain.Text
+                    },
+                    AllowCancel = true
                 };
-                TaskDialogCommandLink btnPullDefault = new("PullDefault", null, pullDefaultButtonText);
+                TaskDialogCommandLinkButton btnPullDefault = new(pullDefaultButtonText);
                 btnPullDefault.Click += (s, e) =>
                 {
                     dialogResult = 0;
-                    dialog.Close();
                 };
-                TaskDialogCommandLink btnPullRebase = new("PullRebase", null, _pullRebaseButton.Text);
+                TaskDialogCommandLinkButton btnPullRebase = new(_pullRebaseButton.Text);
                 btnPullRebase.Click += (s, e) =>
                 {
                     dialogResult = 1;
-                    dialog.Close();
                 };
-                TaskDialogCommandLink btnPullMerge = new("PullMerge", null, _pullMergeButton.Text);
+                TaskDialogCommandLinkButton btnPullMerge = new(_pullMergeButton.Text);
                 btnPullMerge.Click += (s, e) =>
                 {
                     dialogResult = 2;
-                    dialog.Close();
                 };
-                TaskDialogCommandLink btnPushForce = new("PushForce", null, _pushForceButton.Text);
+                TaskDialogCommandLinkButton btnPushForce = new(_pushForceButton.Text);
                 btnPushForce.Click += (s, e) =>
                 {
                     dialogResult = 3;
-                    dialog.Close();
                 };
                 if (allOptions)
                 {
-                    dialog.Controls.Add(btnPullDefault);
-                    dialog.Controls.Add(btnPullRebase);
-                    dialog.Controls.Add(btnPullMerge);
+                    page.Buttons.Add(btnPullDefault);
+                    page.Buttons.Add(btnPullRebase);
+                    page.Buttons.Add(btnPullMerge);
                 }
 
-                dialog.Controls.Add(btnPushForce);
+                page.Buttons.Add(btnPushForce);
 
-                dialog.Show();
+                TaskDialog.ShowDialog(Handle, page);
 
                 switch (dialogResult)
                 {
@@ -711,7 +706,7 @@ namespace GitUI.CommandsDialogs
                         break;
                 }
 
-                if (dialog.FooterCheckBoxChecked == true)
+                if (page.Verification.Checked)
                 {
                     AppSettings.AutoPullOnPushRejectedAction = onRejectedPullAction;
                 }

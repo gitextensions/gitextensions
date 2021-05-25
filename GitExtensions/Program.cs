@@ -12,7 +12,6 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.NBugReports;
 using Microsoft.VisualStudio.Threading;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GitExtensions
 {
@@ -313,29 +312,27 @@ namespace GitExtensions
         {
             int dialogResult = -1;
 
-            using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog1 = new()
+            TaskDialogPage page = new()
             {
-                InstructionText = ResourceManager.TranslatedStrings.GitExecutableNotFound,
-                Icon = TaskDialogStandardIcon.Error,
-                StandardButtons = TaskDialogStandardButtons.Cancel,
-                Cancelable = true,
+                Heading = ResourceManager.TranslatedStrings.GitExecutableNotFound,
+                Icon = TaskDialogIcon.Error,
+                Buttons = { TaskDialogButton.Cancel },
+                AllowCancel = true,
             };
-            TaskDialogCommandLink btnFindGitExecutable = new("FindGitExecutable", null, ResourceManager.TranslatedStrings.FindGitExecutable);
+            TaskDialogCommandLinkButton btnFindGitExecutable = new(ResourceManager.TranslatedStrings.FindGitExecutable);
             btnFindGitExecutable.Click += (s, e) =>
             {
                 dialogResult = 0;
-                dialog1.Close();
             };
-            TaskDialogCommandLink btnInstallGitInstructions = new("InstallGitInstructions", null, ResourceManager.TranslatedStrings.InstallGitInstructions);
+            TaskDialogCommandLinkButton btnInstallGitInstructions = new(ResourceManager.TranslatedStrings.InstallGitInstructions);
             btnInstallGitInstructions.Click += (s, e) =>
             {
                 dialogResult = 1;
-                dialog1.Close();
             };
-            dialog1.Controls.Add(btnFindGitExecutable);
-            dialog1.Controls.Add(btnInstallGitInstructions);
+            page.Buttons.Add(btnFindGitExecutable);
+            page.Buttons.Add(btnInstallGitInstructions);
 
-            dialog1.Show();
+            TaskDialog.ShowDialog(page);
             switch (dialogResult)
             {
                 case 0:

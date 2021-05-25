@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI
@@ -93,21 +92,21 @@ namespace GitUI
 
         public static bool ConfirmUpdateSubmodules(IWin32Window? owner)
         {
-            using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+            TaskDialogPage page = new()
             {
-                OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero,
                 Text = Instance._updateSubmodulesToo.Text,
-                InstructionText = Instance._theRepositorySubmodules.Text,
+                Heading = Instance._theRepositorySubmodules.Text,
                 Caption = Instance._updateSubmodules.Text,
-                Icon = TaskDialogStandardIcon.Information,
-                StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
-                FooterCheckBoxText = Instance._rememberChoice.Text,
-                FooterIcon = TaskDialogStandardIcon.Information,
-                StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner
+                Icon = TaskDialogIcon.Information,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Verification = new TaskDialogVerificationCheckBox
+                {
+                    Text = Instance._rememberChoice.Text
+                }
             };
 
-            bool result = dialog.Show() == TaskDialogResult.Yes;
-            if (dialog.FooterCheckBoxChecked == true)
+            bool result = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
+            if (page.Verification.Checked)
             {
                 AppSettings.DontConfirmUpdateSubmodulesOnCheckout = result;
                 AppSettings.UpdateSubmodulesOnCheckout = result;

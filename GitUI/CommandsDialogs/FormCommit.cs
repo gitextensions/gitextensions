@@ -32,7 +32,6 @@ using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -1213,46 +1212,36 @@ namespace GitUI.CommandsDialogs
                 bool ConfirmAndStageAllUnstaged()
                 {
                     bool mustStageAll = false;
-                    using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                    TaskDialogPage page = new()
                     {
-                        OwnerWindowHandle = Handle,
-                        Cancelable = true,
+                        AllowCancel = true,
                         Caption = _noFilesStagedCommitCaption.Text,
-                        Icon = TaskDialogStandardIcon.Error,
-                        InstructionText = _noFilesStagedCommitInstructions.Text,
-                        StandardButtons = TaskDialogStandardButtons.Cancel
+                        Icon = TaskDialogIcon.Error,
+                        Heading = _noFilesStagedCommitInstructions.Text,
+                        Buttons = { TaskDialogButton.Cancel }
                     };
 
                     // Option 1: there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
-                    TaskDialogCommandLink lnkStageAndCommit = new("StageAndCommit", Unstaged.IsFilterActive ?
-                        _noFilesStagedCommitAllFilteredUnstagedOption.Text : _noFilesStagedCommitAllUnstagedOption.Text);
+                    string text = Unstaged.IsFilterActive ? _noFilesStagedCommitAllFilteredUnstagedOption.Text : _noFilesStagedCommitAllUnstagedOption.Text;
+                    TaskDialogCommandLinkButton lnkStageAndCommit = new(text, enabled: !Unstaged.IsEmpty)
+                    {
+                        Tag = 1
+                    };
                     lnkStageAndCommit.Click += (s, e) =>
                     {
                         mustStageAll = true;
-                        dialog.Close(TaskDialogResult.Ok);
                     };
-                    dialog.Controls.Add(lnkStageAndCommit);
+                    page.Buttons.Add(lnkStageAndCommit);
 
                     // Option 2: the user just wants to make an empty commmit
-                    TaskDialogCommandLink lnkEmptyCommit = new("MakeEmptyCommit", _noFilesStagedMakeEmptyCommitOption.Text);
-                    lnkEmptyCommit.Click += (s, e) =>
+                    TaskDialogCommandLinkButton lnkEmptyCommit = new(_noFilesStagedMakeEmptyCommitOption.Text)
                     {
-                        dialog.Close(TaskDialogResult.Ok);
+                        Tag = 2
                     };
-                    dialog.Controls.Add(lnkEmptyCommit);
+                    page.Buttons.Add(lnkEmptyCommit);
 
-                    dialog.Opened += (s, e) =>
-                    {
-                        /* If there are no unstaged changes, this option must be disabled.
-                         Microsoft.WindowsAPICodePack only allows disabling a CommandLink after the dialog is shown */
-                        if (Unstaged.IsEmpty)
-                        {
-                            lnkStageAndCommit.Enabled = false;
-                        }
-                    };
-
-                    var dialogResult = dialog.Show();
-                    if (dialogResult == TaskDialogResult.Cancel)
+                    TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+                    if (result.Tag is not int)
                     {
                         return false;
                     }
@@ -1295,39 +1284,35 @@ namespace GitUI.CommandsDialogs
                 {
                     int dialogResult = -1;
 
-                    using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                    TaskDialogPage page = new()
                     {
-                        OwnerWindowHandle = Handle,
                         Text = _notOnBranch.Text,
-                        InstructionText = TranslatedStrings.ErrorInstructionNotOnBranch,
+                        Heading = TranslatedStrings.ErrorInstructionNotOnBranch,
                         Caption = TranslatedStrings.ErrorCaptionNotOnBranch,
-                        StandardButtons = TaskDialogStandardButtons.Cancel,
-                        Icon = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStandardIcon.Error,
-                        Cancelable = true,
+                        Buttons = { TaskDialogButton.Cancel },
+                        Icon = TaskDialogIcon.Error,
+                        AllowCancel = true,
                     };
-                    TaskDialogCommandLink btnCheckout = new("Checkout", null, TranslatedStrings.ButtonCheckoutBranch);
+                    TaskDialogCommandLinkButton btnCheckout = new(TranslatedStrings.ButtonCheckoutBranch);
                     btnCheckout.Click += (s, e) =>
                     {
                         dialogResult = 0;
-                        dialog.Close();
                     };
-                    TaskDialogCommandLink btnCreate = new("Create", null, TranslatedStrings.ButtonCreateBranch);
+                    TaskDialogCommandLinkButton btnCreate = new(TranslatedStrings.ButtonCreateBranch);
                     btnCreate.Click += (s, e) =>
                     {
                         dialogResult = 1;
-                        dialog.Close();
                     };
-                    TaskDialogCommandLink btnContinue = new("Continue", null, TranslatedStrings.ButtonContinue);
+                    TaskDialogCommandLinkButton btnContinue = new(TranslatedStrings.ButtonContinue);
                     btnContinue.Click += (s, e) =>
                     {
                         dialogResult = 2;
-                        dialog.Close();
                     };
-                    dialog.Controls.Add(btnCheckout);
-                    dialog.Controls.Add(btnCreate);
-                    dialog.Controls.Add(btnContinue);
+                    page.Buttons.Add(btnCheckout);
+                    page.Buttons.Add(btnCreate);
+                    page.Buttons.Add(btnContinue);
 
-                    dialog.Show();
+                    TaskDialog.ShowDialog(Handle, page);
 
                     switch (dialogResult)
                     {

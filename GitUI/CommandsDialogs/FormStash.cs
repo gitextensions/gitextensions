@@ -8,7 +8,6 @@ using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 using Microsoft;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -270,28 +269,28 @@ namespace GitUI.CommandsDialogs
                 var stashName = GetStashName();
                 if (AppSettings.StashConfirmDropShow)
                 {
-                    using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                    TaskDialogPage page = new()
                     {
-                        OwnerWindowHandle = Handle,
                         Text = _areYouSure.Text,
                         Caption = _stashDropConfirmTitle.Text,
-                        InstructionText = _cannotBeUndone.Text,
-                        StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
-                        Icon = TaskDialogStandardIcon.Information,
-                        FooterCheckBoxText = _dontShowAgain.Text,
-                        FooterIcon = TaskDialogStandardIcon.Information,
-                        StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
+                        Heading = _cannotBeUndone.Text,
+                        Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                        Icon = TaskDialogIcon.Information,
+                        Verification = new TaskDialogVerificationCheckBox
+                        {
+                            Text = _dontShowAgain.Text
+                        }
                     };
 
-                    TaskDialogResult result = dialog.Show();
+                    TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
 
-                    if (result == TaskDialogResult.Yes)
+                    if (result == TaskDialogButton.Yes)
                     {
                         UICommands.StashDrop(this, stashName);
                         Initialize();
                     }
 
-                    if (dialog.FooterCheckBoxChecked == true)
+                    if (page.Verification.Checked)
                     {
                         AppSettings.StashConfirmDropShow = false;
                     }

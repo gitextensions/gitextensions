@@ -1,7 +1,7 @@
 using System.Linq;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GitUI.CommandsDialogs
 {
@@ -25,33 +25,31 @@ namespace GitUI.CommandsDialogs
                                                                    .Count(repo => !GitModule.IsValidGitWorkingDir(repo.Path));
             int dialogResult = -1;
 
-            using TaskDialog dialog = new()
+            TaskDialogPage page = new()
             {
-                InstructionText = TranslatedStrings.DirectoryInvalidRepository,
+                Heading = TranslatedStrings.DirectoryInvalidRepository,
                 Caption = TranslatedStrings.Open,
-                Icon = TaskDialogStandardIcon.Error,
-                StandardButtons = TaskDialogStandardButtons.Cancel,
-                Cancelable = true,
+                Icon = TaskDialogIcon.Error,
+                Buttons = { TaskDialogButton.Cancel },
+                AllowCancel = true
             };
-            TaskDialogCommandLink btnRemoveSelectedInvalidRepository = new("RemoveSelectedInvalidRepository", null, TranslatedStrings.RemoveSelectedInvalidRepository);
+            TaskDialogCommandLinkButton btnRemoveSelectedInvalidRepository = new(TranslatedStrings.RemoveSelectedInvalidRepository);
             btnRemoveSelectedInvalidRepository.Click += (s, e) =>
             {
                 dialogResult = 0;
-                dialog.Close();
             };
-            dialog.Controls.Add(btnRemoveSelectedInvalidRepository);
+            page.Buttons.Add(btnRemoveSelectedInvalidRepository);
             if (invalidPathCount > 1)
             {
-                TaskDialogCommandLink btnRemoveAllInvalidRepositories = new("RemoveAllInvalidRepositories", null, string.Format(TranslatedStrings.RemoveAllInvalidRepositories, invalidPathCount));
+                TaskDialogCommandLinkButton btnRemoveAllInvalidRepositories = new(string.Format(TranslatedStrings.RemoveAllInvalidRepositories, invalidPathCount));
                 btnRemoveAllInvalidRepositories.Click += (s, e) =>
                 {
                     dialogResult = 1;
-                    dialog.Close();
                 };
-                dialog.Controls.Add(btnRemoveAllInvalidRepositories);
+                page.Buttons.Add(btnRemoveAllInvalidRepositories);
             }
 
-            dialog.Show();
+            TaskDialog.ShowDialog(page);
 
             switch (dialogResult)
             {

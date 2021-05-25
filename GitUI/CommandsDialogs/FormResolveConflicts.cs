@@ -12,10 +12,7 @@ using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using Microsoft;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
-using TaskDialog = Microsoft.WindowsAPICodePack.Dialogs.TaskDialog;
-using TaskDialogStartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation;
 
 namespace GitUI.CommandsDialogs
 {
@@ -899,52 +896,49 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private TaskDialog CreateSolveMergeConflictTaskDialog(IntPtr handle, string text, string instructionText, string caption, string applyToAllCheckBoxText,
+        private TaskDialogPage CreateSolveMergeConflictTaskDialogPage(string text, string instructionText, string caption, string applyToAllCheckBoxText,
             string keepLocalButtonText, string keepRemoteButtonText, string keepBaseButtonText)
         {
-            TaskDialog dialog = new()
+            TaskDialogPage page = new()
             {
-                OwnerWindowHandle = handle,
                 Text = text,
-                InstructionText = instructionText,
+                Heading = instructionText,
                 Caption = caption,
-                StandardButtons = TaskDialogStandardButtons.Cancel,
-                Icon = TaskDialogStandardIcon.Error,
-                FooterCheckBoxText = applyToAllCheckBoxText,
-                FooterIcon = TaskDialogStandardIcon.Information,
-                StartupLocation = TaskDialogStartupLocation.CenterOwner,
-                Cancelable = true
+                Buttons = { TaskDialogButton.Cancel },
+                Icon = TaskDialogIcon.Error,
+                Verification = new TaskDialogVerificationCheckBox
+                {
+                    Text = applyToAllCheckBoxText
+                },
+                AllowCancel = true
             };
 
             // Local
-            TaskDialogCommandLink btnKeepLocal = new("KeepLocal", null, keepLocalButtonText);
+            TaskDialogCommandLinkButton btnKeepLocal = new(keepLocalButtonText);
             btnKeepLocal.Click += (s, e) =>
             {
                 _solveMergeConflictDialogResult = ConflictResolutionPreference.KeepLocal;
-                dialog.Close();
             };
 
             // Remote
-            TaskDialogCommandLink btnKeepRemote = new("KeepRemote", null, keepRemoteButtonText);
+            TaskDialogCommandLinkButton btnKeepRemote = new(keepRemoteButtonText);
             btnKeepRemote.Click += (s, e) =>
             {
                 _solveMergeConflictDialogResult = ConflictResolutionPreference.KeepRemote;
-                dialog.Close();
             };
 
             // Base
-            TaskDialogCommandLink btnKeepBase = new("KeepBase", null, keepBaseButtonText);
+            TaskDialogCommandLinkButton btnKeepBase = new(keepBaseButtonText);
             btnKeepBase.Click += (s, e) =>
             {
                 _solveMergeConflictDialogResult = ConflictResolutionPreference.KeepBase;
-                dialog.Close();
             };
 
-            dialog.Controls.Add(btnKeepLocal);
-            dialog.Controls.Add(btnKeepRemote);
-            dialog.Controls.Add(btnKeepBase);
+            page.Buttons.Add(btnKeepLocal);
+            page.Buttons.Add(btnKeepRemote);
+            page.Buttons.Add(btnKeepBase);
 
-            return dialog;
+            return page;
         }
 
         private void OpenSolveMergeConflictDialogAndExecuteSelectedMergeAction(Action<ConflictResolutionPreference> selectedMergeAction,
@@ -953,11 +947,11 @@ namespace GitUI.CommandsDialogs
         {
             if (!_solveMergeConflictApplyToAll)
             {
-                using var dialog = CreateSolveMergeConflictTaskDialog(Handle, dialogText, dialogInstructionText, dialogCaption, dialogFooterCheckboxText,
+                TaskDialogPage page = CreateSolveMergeConflictTaskDialogPage(dialogText, dialogInstructionText, dialogCaption, dialogFooterCheckboxText,
                     keepLocalButtonText, keepRemoteButtonText, keepBaseButtonText);
 
-                dialog.Show();
-                _solveMergeConflictApplyToAll = dialog.FooterCheckBoxChecked ?? false;
+                TaskDialog.ShowDialog(Handle, page);
+                _solveMergeConflictApplyToAll = page.Verification?.Checked ?? false;
             }
 
             selectedMergeAction(_solveMergeConflictDialogResult);

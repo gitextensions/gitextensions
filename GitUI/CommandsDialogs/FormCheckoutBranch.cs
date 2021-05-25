@@ -13,7 +13,6 @@ using GitUI.Script;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -385,21 +384,21 @@ namespace GitUI.CommandsDialogs
                     bool? messageBoxResult = AppSettings.AutoPopStashAfterCheckoutBranch;
                     if (messageBoxResult is null)
                     {
-                        using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                        TaskDialogPage page = new()
                         {
-                            OwnerWindowHandle = Handle,
                             Text = _applyStashedItemsAgain.Text,
                             Caption = _applyStashedItemsAgainCaption.Text,
-                            Icon = TaskDialogStandardIcon.Information,
-                            StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
-                            FooterCheckBoxText = _dontShowAgain.Text,
-                            FooterIcon = TaskDialogStandardIcon.Information,
-                            StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner
+                            Icon = TaskDialogIcon.Information,
+                            Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                            Verification = new TaskDialogVerificationCheckBox
+                            {
+                                Text = _dontShowAgain.Text
+                            }
                         };
 
-                        messageBoxResult = dialog.Show() == TaskDialogResult.Yes;
+                        messageBoxResult = TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes;
 
-                        if (dialog.FooterCheckBoxChecked == true)
+                        if (page.Verification.Checked)
                         {
                             AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
                         }

@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using BugReporter;
 using BugReporter.Serialization;
 using GitExtUtils;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GitUI.NBugReports
 {
@@ -94,13 +93,12 @@ namespace GitUI.NBugReports
             StringBuilder text = new();
             string rootError = Append(text, exception);
 
-            using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog taskDialog = new()
+            TaskDialogPage page = new()
             {
-                OwnerWindowHandle = OwnerFormHandle,
-                Icon = TaskDialogStandardIcon.Error,
+                Icon = TaskDialogIcon.Error,
                 Caption = TranslatedStrings.Error,
-                InstructionText = rootError,
-                Cancelable = true,
+                Heading = rootError,
+                AllowCancel = true
             };
 
             // prefer to ignore failed external operations
@@ -117,13 +115,12 @@ namespace GitUI.NBugReports
             }
 
             string buttonText = isUserExternalOperation ? TranslatedStrings.ButtonViewDetails : TranslatedStrings.ButtonReportBug;
-            TaskDialogCommandLink taskDialogCommandLink = new(buttonText, buttonText);
+            TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText);
             taskDialogCommandLink.Click += (s, e) =>
             {
-                taskDialog.Close();
                 ShowNBug(OwnerForm, exception, isExternalOperation, isTerminating);
             };
-            taskDialog.Controls.Add(taskDialogCommandLink);
+            page.Buttons.Add(taskDialogCommandLink);
 
             // let the user decide whether to report the bug
             if (!isExternalOperation)
@@ -131,16 +128,15 @@ namespace GitUI.NBugReports
                 AddIgnoreOrCloseButton();
             }
 
-            taskDialog.Text = text.ToString().Trim();
-            taskDialog.Show();
+            page.Text = text.ToString().Trim();
+            TaskDialog.ShowDialog(OwnerFormHandle, page);
             return;
 
             void AddIgnoreOrCloseButton()
             {
                 string buttonText = isTerminating ? TranslatedStrings.ButtonCloseApp : TranslatedStrings.ButtonIgnore;
-                TaskDialogCommandLink taskDialogCommandLink = new(buttonText, buttonText);
-                taskDialogCommandLink.Click += (s, e) => taskDialog.Close();
-                taskDialog.Controls.Add(taskDialogCommandLink);
+                TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText);
+                page.Buttons.Add(taskDialogCommandLink);
             }
         }
 
