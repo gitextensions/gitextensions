@@ -641,8 +641,6 @@ namespace GitUI.CommandsDialogs
                         break;
                 }
 
-                int dialogResult = -1;
-
                 TaskDialogPage page = new()
                 {
                     Text = allOptions ? _pullRepositoryMergeInstruction.Text : _pullRepositoryForceInstruction.Text,
@@ -657,25 +655,9 @@ namespace GitUI.CommandsDialogs
                     AllowCancel = true
                 };
                 TaskDialogCommandLinkButton btnPullDefault = new(pullDefaultButtonText);
-                btnPullDefault.Click += (s, e) =>
-                {
-                    dialogResult = 0;
-                };
                 TaskDialogCommandLinkButton btnPullRebase = new(_pullRebaseButton.Text);
-                btnPullRebase.Click += (s, e) =>
-                {
-                    dialogResult = 1;
-                };
                 TaskDialogCommandLinkButton btnPullMerge = new(_pullMergeButton.Text);
-                btnPullMerge.Click += (s, e) =>
-                {
-                    dialogResult = 2;
-                };
                 TaskDialogCommandLinkButton btnPushForce = new(_pushForceButton.Text);
-                btnPushForce.Click += (s, e) =>
-                {
-                    dialogResult = 3;
-                };
                 if (allOptions)
                 {
                     page.Buttons.Add(btnPullDefault);
@@ -685,25 +667,26 @@ namespace GitUI.CommandsDialogs
 
                 page.Buttons.Add(btnPushForce);
 
-                TaskDialog.ShowDialog(Handle, page);
-
-                switch (dialogResult)
+                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+                if (result == TaskDialogButton.Cancel)
                 {
-                    case 0:
-                        onRejectedPullAction = AppSettings.PullAction.Default;
-                        break;
-                    case 1:
-                        onRejectedPullAction = AppSettings.PullAction.Rebase;
-                        break;
-                    case 2:
-                        onRejectedPullAction = AppSettings.PullAction.Merge;
-                        break;
-                    case 3:
-                        forcePush = true;
-                        break;
-                    default:
-                        onRejectedPullAction = AppSettings.PullAction.None;
-                        break;
+                    onRejectedPullAction = AppSettings.PullAction.None;
+                }
+                else if (result == btnPullDefault)
+                {
+                    onRejectedPullAction = AppSettings.PullAction.Default;
+                }
+                else if (result == btnPullRebase)
+                {
+                    onRejectedPullAction = AppSettings.PullAction.Rebase;
+                }
+                else if (result == btnPullMerge)
+                {
+                    onRejectedPullAction = AppSettings.PullAction.Merge;
+                }
+                else if (result == btnPushForce)
+                {
+                    forcePush = true;
                 }
 
                 if (page.Verification.Checked)

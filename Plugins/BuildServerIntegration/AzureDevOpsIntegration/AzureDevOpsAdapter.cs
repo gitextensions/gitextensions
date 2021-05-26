@@ -169,8 +169,7 @@ Detail of the error:");
                         {
                             ProjectOnErrorKey = CacheKey;
 
-                            const int yes = 1;
-                            TaskDialogButton btnOpenSettings = new("Open settings") { Tag = yes };
+                            TaskDialogButton btnOpenSettings = new("Open settings");
                             TaskDialogButton btnIgnore = new("Ignore");
                             TaskDialogPage page = new()
                             {
@@ -182,7 +181,7 @@ Detail of the error:");
                             };
 
                             TaskDialogButton result = TaskDialog.ShowDialog(page);
-                            if (result.Tag is yes)
+                            if (result == btnOpenSettings)
                             {
                                 ProjectOnErrorKey = null;
                                 Validates.NotNull(_openSettings);

@@ -370,8 +370,6 @@ namespace GitUI.CommandsDialogs
 
             if (!Fetch.Checked && string.IsNullOrWhiteSpace(Branches.Text) && Module.IsDetachedHead())
             {
-                int dialogResult = -1;
-
                 TaskDialogPage page = new()
                 {
                     Text = _notOnBranch.Text,
@@ -382,31 +380,22 @@ namespace GitUI.CommandsDialogs
                     AllowCancel = true,
                 };
                 TaskDialogCommandLinkButton btnCheckout = new(TranslatedStrings.ButtonCheckoutBranch);
-                btnCheckout.Click += (s, e) =>
-                {
-                    dialogResult = 0;
-                };
                 TaskDialogCommandLinkButton btnContinue = new(TranslatedStrings.ButtonContinue);
-                btnContinue.Click += (s, e) =>
-                {
-                    dialogResult = 1;
-                };
                 page.Buttons.Add(btnCheckout);
                 page.Buttons.Add(btnContinue);
 
-                TaskDialog.ShowDialog(owner?.Handle ?? default, page);
-
-                switch (dialogResult)
+                TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? default, page);
+                if (result == TaskDialogButton.Cancel)
                 {
-                    case 0:
-                        if (!UICommands.StartCheckoutBranch(owner))
-                        {
-                            return DialogResult.Cancel;
-                        }
+                    return DialogResult.Cancel;
+                }
 
-                        break;
-                    case -1:
+                if (result == btnCheckout)
+                {
+                    if (!UICommands.StartCheckoutBranch(owner))
+                    {
                         return DialogResult.Cancel;
+                    }
                 }
             }
 
@@ -766,8 +755,6 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(Branches.Text) && !string.IsNullOrEmpty(curLocalBranch)
                 && remote != currentBranchRemote.Value && !Fetch.Checked)
             {
-                int dialogResult = -1;
-
                 TaskDialogPage page = new()
                 {
                     Text = string.Format(_noRemoteBranchMainInstruction.Text, remote),
@@ -783,23 +770,17 @@ namespace GitUI.CommandsDialogs
                 };
 
                 TaskDialogCommandLinkButton btnPullFrom = new(string.Format(_noRemoteBranchButton.Text, remote + "/" + curLocalBranch));
-                btnPullFrom.Click += (s, e) =>
-                {
-                    dialogResult = 0;
-                };
                 page.Buttons.Add(btnPullFrom);
 
-                TaskDialog.ShowDialog(Handle, page);
+                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
 
-                switch (dialogResult)
+                if (result == btnPullFrom)
                 {
-                    case 0:
-                        curRemoteBranch = curLocalBranch;
-                        return true;
-
-                    default:
-                        return false;
+                    curRemoteBranch = curLocalBranch;
+                    return true;
                 }
+
+                return false;
             }
 
             if (string.IsNullOrEmpty(Branches.Text) && !string.IsNullOrEmpty(curLocalBranch) && Fetch.Checked)
@@ -812,8 +793,6 @@ namespace GitUI.CommandsDialogs
                     return true;
                 }
 
-                int dialogResult = -1;
-
                 TaskDialogPage page = new()
                 {
                     Text = string.Format(_noRemoteBranchForFetchMainInstruction.Text, remote),
@@ -825,21 +804,18 @@ namespace GitUI.CommandsDialogs
                 };
 
                 TaskDialogCommandLinkButton btnPullFrom = new(string.Format(_noRemoteBranchForFetchButton.Text, remote + "/" + curLocalBranch));
-                btnPullFrom.Click += (s, e) =>
-                {
-                    dialogResult = 0;
-                };
                 page.Buttons.Add(btnPullFrom);
 
-                TaskDialog.ShowDialog(Handle, page);
-
-                switch (dialogResult)
+                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+                if (result == TaskDialogButton.Cancel)
                 {
-                    case 0:
-                        curRemoteBranch = curLocalBranch;
-                        return true;
-                    default:
-                        return false;
+                    return false;
+                }
+
+                if (result == btnPullFrom)
+                {
+                    curRemoteBranch = curLocalBranch;
+                    return true;
                 }
             }
 

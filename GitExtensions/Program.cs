@@ -310,8 +310,6 @@ namespace GitExtensions
 
         private static bool LocateMissingGit()
         {
-            int dialogResult = -1;
-
             TaskDialogPage page = new()
             {
                 Heading = ResourceManager.TranslatedStrings.GitExecutableNotFound,
@@ -320,51 +318,29 @@ namespace GitExtensions
                 AllowCancel = true,
             };
             TaskDialogCommandLinkButton btnFindGitExecutable = new(ResourceManager.TranslatedStrings.FindGitExecutable);
-            btnFindGitExecutable.Click += (s, e) =>
-            {
-                dialogResult = 0;
-            };
             TaskDialogCommandLinkButton btnInstallGitInstructions = new(ResourceManager.TranslatedStrings.InstallGitInstructions);
-            btnInstallGitInstructions.Click += (s, e) =>
-            {
-                dialogResult = 1;
-            };
             page.Buttons.Add(btnFindGitExecutable);
             page.Buttons.Add(btnInstallGitInstructions);
 
-            TaskDialog.ShowDialog(page);
-            switch (dialogResult)
+            TaskDialogButton result = TaskDialog.ShowDialog(page);
+            if (result == btnFindGitExecutable)
             {
-                case 0:
-                    {
-                        using OpenFileDialog dialog = new()
-                        {
-                            Filter = @"git.exe|git.exe|git.cmd|git.cmd",
-                        };
-                        if (dialog.ShowDialog(null) == DialogResult.OK)
-                        {
-                            AppSettings.GitCommandValue = dialog.FileName;
-                        }
+                using OpenFileDialog dialog = new() { Filter = @"git.exe|git.exe|git.cmd|git.cmd" };
+                if (dialog.ShowDialog(null) == DialogResult.OK)
+                {
+                    AppSettings.GitCommandValue = dialog.FileName;
+                }
 
-                        if (CheckSettingsLogic.SolveGitCommand())
-                        {
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                case 1:
-                    {
-                        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
-                        return false;
-                    }
-
-                default:
-                    {
-                        return false;
-                    }
+                return CheckSettingsLogic.SolveGitCommand();
             }
+
+            if (result == btnInstallGitInstructions)
+            {
+                OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
+                return false;
+            }
+
+            return false;
         }
     }
 }

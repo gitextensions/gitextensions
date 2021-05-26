@@ -1223,10 +1223,7 @@ namespace GitUI.CommandsDialogs
 
                     // Option 1: there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
                     string text = Unstaged.IsFilterActive ? _noFilesStagedCommitAllFilteredUnstagedOption.Text : _noFilesStagedCommitAllUnstagedOption.Text;
-                    TaskDialogCommandLinkButton lnkStageAndCommit = new(text, enabled: !Unstaged.IsEmpty)
-                    {
-                        Tag = 1
-                    };
+                    TaskDialogCommandLinkButton lnkStageAndCommit = new(text, enabled: !Unstaged.IsEmpty);
                     lnkStageAndCommit.Click += (s, e) =>
                     {
                         mustStageAll = true;
@@ -1234,14 +1231,11 @@ namespace GitUI.CommandsDialogs
                     page.Buttons.Add(lnkStageAndCommit);
 
                     // Option 2: the user just wants to make an empty commmit
-                    TaskDialogCommandLinkButton lnkEmptyCommit = new(_noFilesStagedMakeEmptyCommitOption.Text)
-                    {
-                        Tag = 2
-                    };
+                    TaskDialogCommandLinkButton lnkEmptyCommit = new(_noFilesStagedMakeEmptyCommitOption.Text);
                     page.Buttons.Add(lnkEmptyCommit);
 
                     TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
-                    if (result.Tag is not int)
+                    if (result == TaskDialogButton.Cancel)
                     {
                         return false;
                     }
@@ -1282,8 +1276,6 @@ namespace GitUI.CommandsDialogs
 
                 if (!AppSettings.DontConfirmCommitIfNoBranch && Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
                 {
-                    int dialogResult = -1;
-
                     TaskDialogPage page = new()
                     {
                         Text = _notOnBranch.Text,
@@ -1294,45 +1286,32 @@ namespace GitUI.CommandsDialogs
                         AllowCancel = true,
                     };
                     TaskDialogCommandLinkButton btnCheckout = new(TranslatedStrings.ButtonCheckoutBranch);
-                    btnCheckout.Click += (s, e) =>
-                    {
-                        dialogResult = 0;
-                    };
                     TaskDialogCommandLinkButton btnCreate = new(TranslatedStrings.ButtonCreateBranch);
-                    btnCreate.Click += (s, e) =>
-                    {
-                        dialogResult = 1;
-                    };
                     TaskDialogCommandLinkButton btnContinue = new(TranslatedStrings.ButtonContinue);
-                    btnContinue.Click += (s, e) =>
-                    {
-                        dialogResult = 2;
-                    };
                     page.Buttons.Add(btnCheckout);
                     page.Buttons.Add(btnCreate);
                     page.Buttons.Add(btnContinue);
 
-                    TaskDialog.ShowDialog(Handle, page);
-
-                    switch (dialogResult)
+                    TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+                    if (result == TaskDialogButton.Cancel)
                     {
-                        case 0:
-                            var revisions = _editedCommit is not null ? new[] { _editedCommit.ObjectId } : null;
-                            if (!UICommands.StartCheckoutBranch(this, revisions))
-                            {
-                                return;
-                            }
+                        return;
+                    }
 
-                            break;
-                        case 1:
-                            if (!UICommands.StartCreateBranchDialog(this, _editedCommit?.ObjectId))
-                            {
-                                return;
-                            }
-
-                            break;
-                        case -1:
+                    if (result == btnCheckout)
+                    {
+                        ObjectId[] revisions = _editedCommit is not null ? new[] { _editedCommit.ObjectId } : null;
+                        if (!UICommands.StartCheckoutBranch(this, revisions))
+                        {
                             return;
+                        }
+                    }
+                    else if (result == btnCreate)
+                    {
+                        if (!UICommands.StartCreateBranchDialog(this, _editedCommit?.ObjectId))
+                        {
+                            return;
+                        }
                     }
                 }
 
