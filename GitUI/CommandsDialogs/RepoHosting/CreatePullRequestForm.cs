@@ -177,6 +177,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                     Caption = _strRemoteFailToLoadBranches.Text,
                                     Text = string.Format(TranslatedStrings.RemoteInError, ex.Message, remote.DisplayData),
                                     Buttons = { TaskDialogButton.OK },
+                                    SizeToContent = true
                                 });
                         }
                     })

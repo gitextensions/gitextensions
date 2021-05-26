@@ -1218,7 +1218,8 @@ namespace GitUI.CommandsDialogs
                         Caption = _noFilesStagedCommitCaption.Text,
                         Icon = TaskDialogIcon.Error,
                         Heading = _noFilesStagedCommitInstructions.Text,
-                        Buttons = { TaskDialogButton.Cancel }
+                        Buttons = { TaskDialogButton.Cancel },
+                        SizeToContent = true
                     };
 
                     // Option 1: there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
@@ -1284,6 +1285,7 @@ namespace GitUI.CommandsDialogs
                         Buttons = { TaskDialogButton.Cancel },
                         Icon = TaskDialogIcon.Error,
                         AllowCancel = true,
+                        SizeToContent = true
                     };
                     TaskDialogCommandLinkButton btnCheckout = new(TranslatedStrings.ButtonCheckoutBranch);
                     TaskDialogCommandLinkButton btnCreate = new(TranslatedStrings.ButtonCreateBranch);

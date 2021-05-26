@@ -652,7 +652,8 @@ namespace GitUI.CommandsDialogs
                     {
                         Text = _dontShowAgain.Text
                     },
-                    AllowCancel = true
+                    AllowCancel = true,
+                    SizeToContent = true
                 };
                 TaskDialogCommandLinkButton btnPullDefault = new(pullDefaultButtonText);
                 TaskDialogCommandLinkButton btnPullRebase = new(_pullRebaseButton.Text);

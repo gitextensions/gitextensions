@@ -265,7 +265,8 @@ namespace GitUI.CommandsDialogs
                     Caption = TranslatedStrings.Error,
                     Buttons = { TaskDialogButton.OK },
                     Icon = TaskDialogIcon.Error,
-                    AllowCancel = true
+                    AllowCancel = true,
+                    SizeToContent = true
                 };
                 TaskDialog.ShowDialog(Handle, page);
 

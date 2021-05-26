@@ -102,7 +102,8 @@ namespace GitUI
                 Verification = new TaskDialogVerificationCheckBox
                 {
                     Text = Instance._rememberChoice.Text
-                }
+                },
+                SizeToContent = true
             };
 
             bool result = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;

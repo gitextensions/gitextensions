@@ -30,7 +30,8 @@ namespace GitUI.CommandsDialogs
                 Caption = TranslatedStrings.Open,
                 Icon = TaskDialogIcon.Error,
                 Buttons = { TaskDialogButton.Cancel },
-                AllowCancel = true
+                AllowCancel = true,
+                SizeToContent = true
             };
             TaskDialogCommandLinkButton btnRemoveSelectedInvalidRepository = new(TranslatedStrings.RemoveSelectedInvalidRepository);
             page.Buttons.Add(btnRemoveSelectedInvalidRepository);

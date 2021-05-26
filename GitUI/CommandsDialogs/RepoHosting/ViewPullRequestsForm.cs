@@ -91,6 +91,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                 Caption = _strRemoteIgnore.Text,
                                 Text = string.Format(TranslatedStrings.RemoteInError, ex.Message, hostedRemote.DisplayData),
                                 Buttons = { TaskDialogButton.OK },
+                                SizeToContent = true
                             });
                         }
                     }

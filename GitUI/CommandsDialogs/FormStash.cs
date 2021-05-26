@@ -279,7 +279,8 @@ namespace GitUI.CommandsDialogs
                         Verification = new TaskDialogVerificationCheckBox
                         {
                             Text = _dontShowAgain.Text
-                        }
+                        },
+                        SizeToContent = true
                     };
 
                     TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);

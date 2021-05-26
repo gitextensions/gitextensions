@@ -378,6 +378,7 @@ namespace GitUI.CommandsDialogs
                     Buttons = { TaskDialogButton.Cancel },
                     Icon = TaskDialogIcon.Error,
                     AllowCancel = true,
+                    SizeToContent = true
                 };
                 TaskDialogCommandLinkButton btnCheckout = new(TranslatedStrings.ButtonCheckoutBranch);
                 TaskDialogCommandLinkButton btnContinue = new(TranslatedStrings.ButtonContinue);
@@ -566,7 +567,8 @@ namespace GitUI.CommandsDialogs
                         Verification = new TaskDialogVerificationCheckBox
                         {
                             Text = _dontShowAgain.Text
-                        }
+                        },
+                        SizeToContent = true
                     };
 
                     messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
@@ -697,6 +699,7 @@ namespace GitUI.CommandsDialogs
                         Buttons = { TaskDialogButton.Yes, TaskDialogButton.No, TaskDialogButton.Cancel },
                         Icon = TaskDialogIcon.Information,
                         DefaultButton = TaskDialogButton.No,
+                        SizeToContent = true
                     };
                     TaskDialogButton result = TaskDialog.ShowDialog(form.Handle, page);
 
@@ -766,7 +769,8 @@ namespace GitUI.CommandsDialogs
                     {
                         Text = _dontShowAgain.Text
                     },
-                    AllowCancel = false
+                    AllowCancel = false,
+                    SizeToContent = true
                 };
 
                 TaskDialogCommandLinkButton btnPullFrom = new(string.Format(_noRemoteBranchButton.Text, remote + "/" + curLocalBranch));
@@ -800,7 +804,8 @@ namespace GitUI.CommandsDialogs
                     Heading = _noRemoteBranch.Text,
                     Buttons = { TaskDialogButton.Cancel },
                     Icon = TaskDialogIcon.Information,
-                    AllowCancel = false
+                    AllowCancel = false,
+                    SizeToContent = true
                 };
 
                 TaskDialogCommandLinkButton btnPullFrom = new(string.Format(_noRemoteBranchForFetchButton.Text, remote + "/" + curLocalBranch));

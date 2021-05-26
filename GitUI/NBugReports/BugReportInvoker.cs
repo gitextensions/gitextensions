@@ -98,7 +98,8 @@ namespace GitUI.NBugReports
                 Icon = TaskDialogIcon.Error,
                 Caption = TranslatedStrings.Error,
                 Heading = rootError,
-                AllowCancel = true
+                AllowCancel = true,
+                SizeToContent = true
             };
 
             // prefer to ignore failed external operations

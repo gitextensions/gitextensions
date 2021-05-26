@@ -910,7 +910,8 @@ namespace GitUI.CommandsDialogs
                 {
                     Text = applyToAllCheckBoxText
                 },
-                AllowCancel = true
+                AllowCancel = true,
+                SizeToContent = true
             };
 
             // Local

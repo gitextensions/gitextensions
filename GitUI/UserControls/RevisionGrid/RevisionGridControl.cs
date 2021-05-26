@@ -1899,10 +1899,11 @@ namespace GitUI
                 Verification = new TaskDialogVerificationCheckBox
                 {
                     Text = _dontShowAgain.Text
-                }
+                },
+                SizeToContent = true
             };
 
-            TaskDialogButton result = System.Windows.Forms.TaskDialog.ShowDialog(Handle, page);
+            TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
 
             if (page.Verification.Checked)
             {
@@ -1938,7 +1939,8 @@ namespace GitUI
                 Verification = new TaskDialogVerificationCheckBox
                 {
                     Text = _dontShowAgain.Text
-                }
+                },
+                SizeToContent = true
             };
 
             TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);

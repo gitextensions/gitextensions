@@ -316,6 +316,7 @@ namespace GitExtensions
                 Icon = TaskDialogIcon.Error,
                 Buttons = { TaskDialogButton.Cancel },
                 AllowCancel = true,
+                SizeToContent = true
             };
             TaskDialogCommandLinkButton btnFindGitExecutable = new(ResourceManager.TranslatedStrings.FindGitExecutable);
             TaskDialogCommandLinkButton btnInstallGitInstructions = new(ResourceManager.TranslatedStrings.InstallGitInstructions);
