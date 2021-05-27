@@ -70,7 +70,7 @@ namespace GitCommands.ExternalLinks
             }
         }
 
-        // TODO: refactor and outsource to the centralised SettingsSerialiser implementations.
+        // TODO: refactor and outsource to the centralised SettingsSerializer implementations.
         private static IReadOnlyList<ExternalLinkDefinition>? LoadFromXmlString(string? xmlString)
         {
             if (string.IsNullOrWhiteSpace(xmlString))

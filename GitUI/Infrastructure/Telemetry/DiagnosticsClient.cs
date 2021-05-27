@@ -1,5 +1,5 @@
 // The original idea and the implementation are borrowed from  https://github.com/NuGetPackageExplorer/NuGetPackageExplorer
-// Credits to Oren Novotny
+// Credits to https://github.com/clairernovotny
 
 using System;
 using System.Collections.Generic;

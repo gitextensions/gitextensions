@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
         private readonly ToolStrip _mainMenuStrip;
 
         /// <summary>
-        /// The context menu that be shown to allow toggle visibilty of toolbars in <see cref="FormBrowse"/>.
+        /// The context menu that be shown to allow toggle visibility of toolbars in <see cref="FormBrowse"/>.
         /// </summary>
         private readonly ContextMenuStrip _toolStripContextMenu = new();
 
