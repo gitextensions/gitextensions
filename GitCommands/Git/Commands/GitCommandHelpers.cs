@@ -69,10 +69,11 @@ namespace GitCommands.Git.Commands
                         ? (ArgumentString)"--no-optional-locks"
                         : default)
                 {
-                    "--no-color",
-                    { staged, "-M -C --cached" },
-                    extraDiffArguments,
+                    "--find-renames",
+                    "--find-copies",
                     { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
+                    extraDiffArguments,
+                    { staged, "--cached" },
                     "--",
                     fileName.ToPosixPath().Quote(),
                     { staged, oldFileName?.ToPosixPath().Quote() }

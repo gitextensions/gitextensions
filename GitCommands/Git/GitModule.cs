@@ -1317,7 +1317,9 @@ namespace GitCommands
             return _gitExecutable.GetOutput(
                 new GitArgumentBuilder("format-patch")
                 {
-                    "-M -C -B",
+                    "--find-renames",
+                    "--find-copies",
+                    "--break-rewrites",
                     { start is not null, $"--start-number {start}" },
                     { !string.IsNullOrEmpty(from), $"{from.Quote()}..{to.Quote()}", $"--root {to.Quote()}" },
                     $"-o {output.ToPosixPath().Quote()}"
@@ -2267,10 +2269,10 @@ namespace GitCommands
 
             GitArgumentBuilder args = new("diff")
             {
-                "--no-color",
-                extraDiffArguments,
+                "--find-renames",
+                "--find-copies",
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
-                "-M -C",
+                extraDiffArguments,
                 diffOptions
             };
 
@@ -2310,10 +2312,10 @@ namespace GitCommands
             // Supported since Git 2.19 (checks when adding the command)
             GitArgumentBuilder args = new("range-diff")
             {
-                "--no-color",
-                extraDiffArguments,
+                "--find-renames",
+                "--find-copies",
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
-                "-M -C",
+                extraDiffArguments,
                 { firstBase is null || secondBase is null,  $"{firstId}...{secondId}", $"{firstBase}..{firstId} {secondBase}..{secondId}" }
             };
 
@@ -2356,8 +2358,8 @@ namespace GitCommands
             return _gitExecutable.Execute(
                 new GitArgumentBuilder("diff")
                 {
-                    "--no-color",
-                    "-M -C",
+                    "--find-renames",
+                    "--find-copies",
                     "--name-status",
                     { nullSeparated, "-z" },
                     _revisionDiffProvider.Get(firstRevision, secondRevision)
@@ -2609,12 +2611,11 @@ namespace GitCommands
         {
             GitArgumentBuilder args = new("diff")
             {
-                "--no-color",
-                "-M",
-                "-C",
+                "--find-renames",
+                "--find-copies",
                 "-z",
-                "--cached",
-                "--name-status"
+                "--name-status",
+                "--cached"
             };
             ExecutionResult exec = _gitExecutable.Execute(args);
             if (exec.ExitedSuccessfully)
@@ -3551,8 +3552,9 @@ namespace GitCommands
             _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
             {
                 { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
+                "--find-renames",
+                "--find-copies",
                 "--no-prompt",
-                "-M -C",
                 extraDiffArguments,
                 _revisionDiffProvider.Get(firstRevision, secondRevision, filename, oldFileName, isTracked)
             });
@@ -3578,8 +3580,9 @@ namespace GitCommands
             _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
             {
                 { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
+                "--find-renames",
+                "--find-copies",
                 "--no-prompt",
-                "-M -C",
                 firstGitCommit.QuoteNE(),
                 secondGitCommit.QuoteNE()
             });
