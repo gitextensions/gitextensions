@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="">
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -646,6 +646,10 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
         <source>Default SSH client, OpenSSH, will be used. (commandline window will appear on pull, push and clone operations)</source>
         <target />
       </trans-unit>
+      <trans-unit id="_otherSshClient.Text">
+        <source>Other SSH client configured: {0}.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_plinkputtyGenpageantNotFound.Text">
         <source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</source>
         <target />
@@ -699,8 +703,8 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Locate git</source>
         <target />
       </trans-unit>
-      <trans-unit id="_unknownSshClient.Text">
-        <source>Unknown SSH client configured: {0}.</source>
+      <trans-unit id="_sshClientNotFound.Text">
+        <source>SSH client not found: {0}.</source>
         <target />
       </trans-unit>
       <trans-unit id="_wrongGitVersion.Text">
