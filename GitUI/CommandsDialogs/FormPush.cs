@@ -20,7 +20,6 @@ using GitUI.Script;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Settings;
 using Microsoft;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -642,76 +641,56 @@ namespace GitUI.CommandsDialogs
                         break;
                 }
 
-                int dialogResult = -1;
-
-                using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                TaskDialogPage page = new()
                 {
-                    OwnerWindowHandle = owner.Handle,
                     Text = allOptions ? _pullRepositoryMergeInstruction.Text : _pullRepositoryForceInstruction.Text,
-                    InstructionText = allOptions ? _pullRepositoryMainMergeInstruction.Text : _pullRepositoryMainForceInstruction.Text,
+                    Heading = allOptions ? _pullRepositoryMainMergeInstruction.Text : _pullRepositoryMainForceInstruction.Text,
                     Caption = string.Format(_pullRepositoryCaption.Text, destination),
-                    StandardButtons = TaskDialogStandardButtons.Cancel,
-                    Icon = TaskDialogStandardIcon.Error,
-                    FooterCheckBoxText = _dontShowAgain.Text,
-                    FooterIcon = TaskDialogStandardIcon.Information,
-                    StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
-                    Cancelable = true
+                    Buttons = { TaskDialogButton.Cancel },
+                    Icon = TaskDialogIcon.Error,
+                    Verification = new TaskDialogVerificationCheckBox
+                    {
+                        Text = _dontShowAgain.Text
+                    },
+                    AllowCancel = true,
+                    SizeToContent = true
                 };
-                TaskDialogCommandLink btnPullDefault = new("PullDefault", null, pullDefaultButtonText);
-                btnPullDefault.Click += (s, e) =>
-                {
-                    dialogResult = 0;
-                    dialog.Close();
-                };
-                TaskDialogCommandLink btnPullRebase = new("PullRebase", null, _pullRebaseButton.Text);
-                btnPullRebase.Click += (s, e) =>
-                {
-                    dialogResult = 1;
-                    dialog.Close();
-                };
-                TaskDialogCommandLink btnPullMerge = new("PullMerge", null, _pullMergeButton.Text);
-                btnPullMerge.Click += (s, e) =>
-                {
-                    dialogResult = 2;
-                    dialog.Close();
-                };
-                TaskDialogCommandLink btnPushForce = new("PushForce", null, _pushForceButton.Text);
-                btnPushForce.Click += (s, e) =>
-                {
-                    dialogResult = 3;
-                    dialog.Close();
-                };
+                TaskDialogCommandLinkButton btnPullDefault = new(pullDefaultButtonText);
+                TaskDialogCommandLinkButton btnPullRebase = new(_pullRebaseButton.Text);
+                TaskDialogCommandLinkButton btnPullMerge = new(_pullMergeButton.Text);
+                TaskDialogCommandLinkButton btnPushForce = new(_pushForceButton.Text);
                 if (allOptions)
                 {
-                    dialog.Controls.Add(btnPullDefault);
-                    dialog.Controls.Add(btnPullRebase);
-                    dialog.Controls.Add(btnPullMerge);
+                    page.Buttons.Add(btnPullDefault);
+                    page.Buttons.Add(btnPullRebase);
+                    page.Buttons.Add(btnPullMerge);
                 }
 
-                dialog.Controls.Add(btnPushForce);
+                page.Buttons.Add(btnPushForce);
 
-                dialog.Show();
-
-                switch (dialogResult)
+                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+                if (result == TaskDialogButton.Cancel)
                 {
-                    case 0:
-                        onRejectedPullAction = AppSettings.PullAction.Default;
-                        break;
-                    case 1:
-                        onRejectedPullAction = AppSettings.PullAction.Rebase;
-                        break;
-                    case 2:
-                        onRejectedPullAction = AppSettings.PullAction.Merge;
-                        break;
-                    case 3:
-                        forcePush = true;
-                        break;
-                    default:
-                        onRejectedPullAction = AppSettings.PullAction.None;
-                        break;
+                    onRejectedPullAction = AppSettings.PullAction.None;
+                }
+                else if (result == btnPullDefault)
+                {
+                    onRejectedPullAction = AppSettings.PullAction.Default;
+                }
+                else if (result == btnPullRebase)
+                {
+                    onRejectedPullAction = AppSettings.PullAction.Rebase;
+                }
+                else if (result == btnPullMerge)
+                {
+                    onRejectedPullAction = AppSettings.PullAction.Merge;
+                }
+                else if (result == btnPushForce)
+                {
+                    forcePush = true;
                 }
 
-                if (dialog.FooterCheckBoxChecked == true)
+                if (page.Verification.Checked)
                 {
                     AppSettings.AutoPullOnPushRejectedAction = onRejectedPullAction;
                 }

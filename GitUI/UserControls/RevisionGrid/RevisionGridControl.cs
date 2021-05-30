@@ -31,8 +31,9 @@ using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
+using TaskDialog = System.Windows.Forms.TaskDialog;
+using TaskDialogButton = System.Windows.Forms.TaskDialogButton;
 
 namespace GitUI
 {
@@ -1888,27 +1889,28 @@ namespace GitUI
                 return;
             }
 
-            using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+            TaskDialogPage page = new()
             {
-                OwnerWindowHandle = Handle,
                 Text = _areYouSureRebase.Text,
                 Caption = _rebaseConfirmTitle.Text,
-                InstructionText = _rebaseBranch.Text,
-                StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
-                Icon = TaskDialogStandardIcon.Information,
-                FooterCheckBoxText = _dontShowAgain.Text,
-                FooterIcon = TaskDialogStandardIcon.Information,
-                StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
+                Heading = _rebaseBranch.Text,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Icon = TaskDialogIcon.Information,
+                Verification = new TaskDialogVerificationCheckBox
+                {
+                    Text = _dontShowAgain.Text
+                },
+                SizeToContent = true
             };
 
-            TaskDialogResult result = dialog.Show();
+            TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
 
-            if (dialog.FooterCheckBoxChecked == true)
+            if (page.Verification.Checked)
             {
                 AppSettings.DontConfirmRebase = true;
             }
 
-            if (result == TaskDialogResult.Yes)
+            if (result == TaskDialogButton.Yes)
             {
                 UICommands.StartRebase(ParentForm, _rebaseOnTopOf);
             }
@@ -1927,27 +1929,28 @@ namespace GitUI
                 return;
             }
 
-            using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+            TaskDialogPage page = new()
             {
-                OwnerWindowHandle = Handle,
                 Text = _areYouSureRebase.Text,
                 Caption = _rebaseConfirmTitle.Text,
-                InstructionText = _rebaseBranchInteractive.Text,
-                StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
-                Icon = TaskDialogStandardIcon.Information,
-                FooterCheckBoxText = _dontShowAgain.Text,
-                FooterIcon = TaskDialogStandardIcon.Information,
-                StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
+                Heading = _rebaseBranchInteractive.Text,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Icon = TaskDialogIcon.Information,
+                Verification = new TaskDialogVerificationCheckBox
+                {
+                    Text = _dontShowAgain.Text
+                },
+                SizeToContent = true
             };
 
-            TaskDialogResult result = dialog.Show();
+            TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
 
-            if (dialog.FooterCheckBoxChecked == true)
+            if (page.Verification.Checked)
             {
                 AppSettings.DontConfirmRebase = true;
             }
 
-            if (result == TaskDialogResult.Yes)
+            if (result == TaskDialogButton.Yes)
             {
                 UICommands.StartInteractiveRebase(ParentForm, _rebaseOnTopOf);
             }

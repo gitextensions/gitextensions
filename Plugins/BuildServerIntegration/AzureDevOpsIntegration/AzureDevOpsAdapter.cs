@@ -14,10 +14,7 @@ using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
-using TaskDialog = Microsoft.WindowsAPICodePack.Dialogs.TaskDialog;
-using TaskDialogButton = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogButton;
 
 namespace AzureDevOpsIntegration
 {
@@ -172,22 +169,19 @@ Detail of the error:");
                         {
                             ProjectOnErrorKey = CacheKey;
 
-                            TaskDialogButton btnOpenSettings = new("btnOpenSettings", "Open settings");
-                            TaskDialogButton btnIgnore = new("btnIgnoreError", "Ignore");
-                            using TaskDialog errorDialog = new()
+                            TaskDialogButton btnOpenSettings = new("Open settings");
+                            TaskDialogButton btnIgnore = new("Ignore");
+                            TaskDialogPage page = new()
                             {
-                                InstructionText = errorMessage,
-                                Icon = TaskDialogStandardIcon.Error,
-                                Cancelable = true,
+                                Heading = errorMessage,
+                                Icon = TaskDialogIcon.Error,
+                                AllowCancel = true,
                                 Caption = _buildIntegrationErrorCaption.Text,
-                                Controls = { btnOpenSettings, btnIgnore }
+                                Buttons = { btnOpenSettings, btnIgnore }
                             };
 
-                            btnOpenSettings.Click += (sender, e) => errorDialog.Close(TaskDialogResult.Yes);
-                            btnIgnore.Click += (sender, e) => errorDialog.Close(TaskDialogResult.No);
-
-                            var result = errorDialog.Show();
-                            if (result == TaskDialogResult.Yes)
+                            TaskDialogButton result = TaskDialog.ShowDialog(page);
+                            if (result == btnOpenSettings)
                             {
                                 ProjectOnErrorKey = null;
                                 Validates.NotNull(_openSettings);

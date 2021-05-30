@@ -11,9 +11,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
 using GitUI.Properties;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
-using TaskDialog = Microsoft.WindowsAPICodePack.Dialogs.TaskDialog;
 
 namespace GitUI.CommandsDialogs
 {
@@ -260,17 +258,17 @@ namespace GitUI.CommandsDialogs
             }
             catch (SaveSettingsException ex) when (ex.InnerException is not null)
             {
-                using TaskDialog dialog = new()
+                TaskDialogPage page = new()
                 {
-                    OwnerWindowHandle = Handle,
                     Text = ex.InnerException.Message,
-                    InstructionText = _cantSaveSettings.Text,
+                    Heading = _cantSaveSettings.Text,
                     Caption = TranslatedStrings.Error,
-                    StandardButtons = TaskDialogStandardButtons.Ok,
-                    Icon = TaskDialogStandardIcon.Error,
-                    Cancelable = true,
+                    Buttons = { TaskDialogButton.OK },
+                    Icon = TaskDialogIcon.Error,
+                    AllowCancel = true,
+                    SizeToContent = true
                 };
-                dialog.Show();
+                TaskDialog.ShowDialog(Handle, page);
 
                 return false;
             }

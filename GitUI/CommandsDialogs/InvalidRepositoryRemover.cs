@@ -1,7 +1,7 @@
 using System.Linq;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GitUI.CommandsDialogs
 {
@@ -23,58 +23,40 @@ namespace GitUI.CommandsDialogs
         {
             int invalidPathCount = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync())
                                                                    .Count(repo => !GitModule.IsValidGitWorkingDir(repo.Path));
-            int dialogResult = -1;
 
-            using TaskDialog dialog = new()
+            TaskDialogPage page = new()
             {
-                InstructionText = TranslatedStrings.DirectoryInvalidRepository,
+                Heading = TranslatedStrings.DirectoryInvalidRepository,
                 Caption = TranslatedStrings.Open,
-                Icon = TaskDialogStandardIcon.Error,
-                StandardButtons = TaskDialogStandardButtons.Cancel,
-                Cancelable = true,
+                Icon = TaskDialogIcon.Error,
+                Buttons = { TaskDialogButton.Cancel },
+                AllowCancel = true,
+                SizeToContent = true
             };
-            TaskDialogCommandLink btnRemoveSelectedInvalidRepository = new("RemoveSelectedInvalidRepository", null, TranslatedStrings.RemoveSelectedInvalidRepository);
-            btnRemoveSelectedInvalidRepository.Click += (s, e) =>
-            {
-                dialogResult = 0;
-                dialog.Close();
-            };
-            dialog.Controls.Add(btnRemoveSelectedInvalidRepository);
+            TaskDialogCommandLinkButton btnRemoveSelectedInvalidRepository = new(TranslatedStrings.RemoveSelectedInvalidRepository);
+            page.Buttons.Add(btnRemoveSelectedInvalidRepository);
+
+            TaskDialogCommandLinkButton btnRemoveAllInvalidRepositories = new(string.Format(TranslatedStrings.RemoveAllInvalidRepositories, invalidPathCount));
             if (invalidPathCount > 1)
             {
-                TaskDialogCommandLink btnRemoveAllInvalidRepositories = new("RemoveAllInvalidRepositories", null, string.Format(TranslatedStrings.RemoveAllInvalidRepositories, invalidPathCount));
-                btnRemoveAllInvalidRepositories.Click += (s, e) =>
-                {
-                    dialogResult = 1;
-                    dialog.Close();
-                };
-                dialog.Controls.Add(btnRemoveAllInvalidRepositories);
+                page.Buttons.Add(btnRemoveAllInvalidRepositories);
             }
 
-            dialog.Show();
+            TaskDialogButton result = TaskDialog.ShowDialog(page);
 
-            switch (dialogResult)
+            if (result == btnRemoveSelectedInvalidRepository)
             {
-                case 0:
-                    {
-                        /* Remove selected invalid repo */
-                        ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(repositoryPath));
-                        return true;
-                    }
-
-                case 1:
-                    {
-                        /* Remove all invalid repos */
-                        ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(repoPath => GitModule.IsValidGitWorkingDir(repoPath)));
-                        return true;
-                    }
-
-                default:
-                    {
-                        /* Cancel */
-                        return false;
-                    }
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(repositoryPath));
+                return true;
             }
+
+            if (result == btnRemoveAllInvalidRepositories)
+            {
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(repoPath => GitModule.IsValidGitWorkingDir(repoPath)));
+                return true;
+            }
+
+            return false;
         }
     }
 }

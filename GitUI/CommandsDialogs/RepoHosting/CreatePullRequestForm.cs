@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft.VisualStudio.Threading;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -172,12 +171,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         }
                         catch (Exception ex)
                         {
-                            System.Windows.Forms.TaskDialog.ShowDialog(new TaskDialogPage
+                            TaskDialog.ShowDialog(new TaskDialogPage
                                 {
                                     Icon = TaskDialogIcon.Error,
                                     Caption = _strRemoteFailToLoadBranches.Text,
                                     Text = string.Format(TranslatedStrings.RemoteInError, ex.Message, remote.DisplayData),
-                                    Buttons = { System.Windows.Forms.TaskDialogButton.OK },
+                                    Buttons = { TaskDialogButton.OK },
+                                    SizeToContent = true
                                 });
                         }
                     })

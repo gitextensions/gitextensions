@@ -18,7 +18,6 @@ using GitUI.HelperDialogs;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -371,46 +370,33 @@ namespace GitUI.CommandsDialogs
 
             if (!Fetch.Checked && string.IsNullOrWhiteSpace(Branches.Text) && Module.IsDetachedHead())
             {
-                int dialogResult = -1;
-
-                using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                TaskDialogPage page = new()
                 {
-                    OwnerWindowHandle = owner?.Handle ?? default,
                     Text = _notOnBranch.Text,
-                    InstructionText = TranslatedStrings.ErrorInstructionNotOnBranch,
+                    Heading = TranslatedStrings.ErrorInstructionNotOnBranch,
                     Caption = TranslatedStrings.ErrorCaptionNotOnBranch,
-                    StandardButtons = TaskDialogStandardButtons.Cancel,
-                    Icon = TaskDialogStandardIcon.Error,
-                    Cancelable = true,
+                    Buttons = { TaskDialogButton.Cancel },
+                    Icon = TaskDialogIcon.Error,
+                    AllowCancel = true,
+                    SizeToContent = true
                 };
-                TaskDialogCommandLink btnCheckout = new("Checkout", null, TranslatedStrings.ButtonCheckoutBranch);
-                btnCheckout.Click += (s, e) =>
-                {
-                    dialogResult = 0;
-                    dialog.Close();
-                };
-                TaskDialogCommandLink btnContinue = new("Continue", null, TranslatedStrings.ButtonContinue);
-                btnContinue.Click += (s, e) =>
-                {
-                    dialogResult = 1;
-                    dialog.Close();
-                };
-                dialog.Controls.Add(btnCheckout);
-                dialog.Controls.Add(btnContinue);
+                TaskDialogCommandLinkButton btnCheckout = new(TranslatedStrings.ButtonCheckoutBranch);
+                TaskDialogCommandLinkButton btnContinue = new(TranslatedStrings.ButtonContinue);
+                page.Buttons.Add(btnCheckout);
+                page.Buttons.Add(btnContinue);
 
-                dialog.Show();
-
-                switch (dialogResult)
+                TaskDialogButton result = TaskDialog.ShowDialog(owner?.Handle ?? default, page);
+                if (result == TaskDialogButton.Cancel)
                 {
-                    case 0:
-                        if (!UICommands.StartCheckoutBranch(owner))
-                        {
-                            return DialogResult.Cancel;
-                        }
+                    return DialogResult.Cancel;
+                }
 
-                        break;
-                    case -1:
+                if (result == btnCheckout)
+                {
+                    if (!UICommands.StartCheckoutBranch(owner))
+                    {
                         return DialogResult.Cancel;
+                    }
                 }
             }
 
@@ -572,21 +558,22 @@ namespace GitUI.CommandsDialogs
                 bool? messageBoxResult = AppSettings.AutoPopStashAfterPull;
                 if (messageBoxResult is null)
                 {
-                    using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                    TaskDialogPage page = new()
                     {
-                        OwnerWindowHandle = owner?.Handle ?? IntPtr.Zero,
                         Text = _applyStashedItemsAgain.Text,
                         Caption = _applyStashedItemsAgainCaption.Text,
-                        StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No,
-                        Icon = TaskDialogStandardIcon.Information,
-                        FooterCheckBoxText = _dontShowAgain.Text,
-                        FooterIcon = TaskDialogStandardIcon.Information,
-                        StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
+                        Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                        Icon = TaskDialogIcon.Information,
+                        Verification = new TaskDialogVerificationCheckBox
+                        {
+                            Text = _dontShowAgain.Text
+                        },
+                        SizeToContent = true
                     };
 
-                    messageBoxResult = dialog.Show() == TaskDialogResult.Yes;
+                    messageBoxResult = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
 
-                    if (dialog.FooterCheckBoxChecked == true)
+                    if (page.Verification.Checked)
                     {
                         AppSettings.AutoPopStashAfterPull = messageBoxResult;
                     }
@@ -704,20 +691,19 @@ namespace GitUI.CommandsDialogs
 
                 if (isRefRemoved.IsMatch(form.GetOutputString()))
                 {
-                    using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                    TaskDialogPage page = new()
                     {
-                        OwnerWindowHandle = form.Handle,
                         Text = _pruneBranchesBranch.Text,
                         Caption = _pruneBranchesCaption.Text,
-                        InstructionText = _pruneBranchesMainInstruction.Text,
-                        StandardButtons = TaskDialogStandardButtons.Yes | TaskDialogStandardButtons.No | TaskDialogStandardButtons.Cancel,
-                        Icon = TaskDialogStandardIcon.Information,
-                        DefaultButton = TaskDialogDefaultButton.No,
-                        StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
+                        Heading = _pruneBranchesMainInstruction.Text,
+                        Buttons = { TaskDialogButton.Yes, TaskDialogButton.No, TaskDialogButton.Cancel },
+                        Icon = TaskDialogIcon.Information,
+                        DefaultButton = TaskDialogButton.No,
+                        SizeToContent = true
                     };
-                    TaskDialogResult result = dialog.Show();
+                    TaskDialogButton result = TaskDialog.ShowDialog(form.Handle, page);
 
-                    if (result == TaskDialogResult.Yes)
+                    if (result == TaskDialogButton.Yes)
                     {
                         string remote = _NO_TRANSLATE_Remotes.Text;
                         string pruneCmd = "remote prune " + remote;
@@ -772,41 +758,33 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrEmpty(Branches.Text) && !string.IsNullOrEmpty(curLocalBranch)
                 && remote != currentBranchRemote.Value && !Fetch.Checked)
             {
-                int dialogResult = -1;
-
-                using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                TaskDialogPage page = new()
                 {
-                    OwnerWindowHandle = Handle,
                     Text = string.Format(_noRemoteBranchMainInstruction.Text, remote),
                     Caption = _noRemoteBranchCaption.Text,
-                    InstructionText = _noRemoteBranch.Text,
-                    StandardButtons = TaskDialogStandardButtons.Cancel,
-                    Icon = TaskDialogStandardIcon.Information,
-                    FooterCheckBoxText = _dontShowAgain.Text,
-                    FooterIcon = TaskDialogStandardIcon.Information,
-                    StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
-                    Cancelable = false
+                    Heading = _noRemoteBranch.Text,
+                    Buttons = { TaskDialogButton.Cancel },
+                    Icon = TaskDialogIcon.Information,
+                    Verification = new TaskDialogVerificationCheckBox
+                    {
+                        Text = _dontShowAgain.Text
+                    },
+                    AllowCancel = false,
+                    SizeToContent = true
                 };
 
-                TaskDialogCommandLink btnPullFrom = new("PullFrom", null, string.Format(_noRemoteBranchButton.Text, remote + "/" + curLocalBranch));
-                btnPullFrom.Click += (s, e) =>
+                TaskDialogCommandLinkButton btnPullFrom = new(string.Format(_noRemoteBranchButton.Text, remote + "/" + curLocalBranch));
+                page.Buttons.Add(btnPullFrom);
+
+                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+
+                if (result == btnPullFrom)
                 {
-                    dialogResult = 0;
-                    dialog.Close();
-                };
-                dialog.Controls.Add(btnPullFrom);
-
-                dialog.Show();
-
-                switch (dialogResult)
-                {
-                    case 0:
-                        curRemoteBranch = curLocalBranch;
-                        return true;
-
-                    default:
-                        return false;
+                    curRemoteBranch = curLocalBranch;
+                    return true;
                 }
+
+                return false;
             }
 
             if (string.IsNullOrEmpty(Branches.Text) && !string.IsNullOrEmpty(curLocalBranch) && Fetch.Checked)
@@ -819,37 +797,30 @@ namespace GitUI.CommandsDialogs
                     return true;
                 }
 
-                int dialogResult = -1;
-
-                using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog = new()
+                TaskDialogPage page = new()
                 {
-                    OwnerWindowHandle = Handle,
                     Text = string.Format(_noRemoteBranchForFetchMainInstruction.Text, remote),
                     Caption = _noRemoteBranchCaption.Text,
-                    InstructionText = _noRemoteBranch.Text,
-                    StandardButtons = TaskDialogStandardButtons.Cancel,
-                    Icon = TaskDialogStandardIcon.Information,
-                    StartupLocation = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogStartupLocation.CenterOwner,
-                    Cancelable = false
+                    Heading = _noRemoteBranch.Text,
+                    Buttons = { TaskDialogButton.Cancel },
+                    Icon = TaskDialogIcon.Information,
+                    AllowCancel = false,
+                    SizeToContent = true
                 };
 
-                TaskDialogCommandLink btnPullFrom = new("PullFrom", null, string.Format(_noRemoteBranchForFetchButton.Text, remote + "/" + curLocalBranch));
-                btnPullFrom.Click += (s, e) =>
-                {
-                    dialogResult = 0;
-                    dialog.Close();
-                };
-                dialog.Controls.Add(btnPullFrom);
+                TaskDialogCommandLinkButton btnPullFrom = new(string.Format(_noRemoteBranchForFetchButton.Text, remote + "/" + curLocalBranch));
+                page.Buttons.Add(btnPullFrom);
 
-                dialog.Show();
-
-                switch (dialogResult)
+                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+                if (result == TaskDialogButton.Cancel)
                 {
-                    case 0:
-                        curRemoteBranch = curLocalBranch;
-                        return true;
-                    default:
-                        return false;
+                    return false;
+                }
+
+                if (result == btnPullFrom)
+                {
+                    curRemoteBranch = curLocalBranch;
+                    return true;
                 }
             }
 

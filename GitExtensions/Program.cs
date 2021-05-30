@@ -12,7 +12,6 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.NBugReports;
 using Microsoft.VisualStudio.Threading;
-using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace GitExtensions
 {
@@ -311,63 +310,38 @@ namespace GitExtensions
 
         private static bool LocateMissingGit()
         {
-            int dialogResult = -1;
-
-            using Microsoft.WindowsAPICodePack.Dialogs.TaskDialog dialog1 = new()
+            TaskDialogPage page = new()
             {
-                InstructionText = ResourceManager.TranslatedStrings.GitExecutableNotFound,
-                Icon = TaskDialogStandardIcon.Error,
-                StandardButtons = TaskDialogStandardButtons.Cancel,
-                Cancelable = true,
+                Heading = ResourceManager.TranslatedStrings.GitExecutableNotFound,
+                Icon = TaskDialogIcon.Error,
+                Buttons = { TaskDialogButton.Cancel },
+                AllowCancel = true,
+                SizeToContent = true
             };
-            TaskDialogCommandLink btnFindGitExecutable = new("FindGitExecutable", null, ResourceManager.TranslatedStrings.FindGitExecutable);
-            btnFindGitExecutable.Click += (s, e) =>
+            TaskDialogCommandLinkButton btnFindGitExecutable = new(ResourceManager.TranslatedStrings.FindGitExecutable);
+            TaskDialogCommandLinkButton btnInstallGitInstructions = new(ResourceManager.TranslatedStrings.InstallGitInstructions);
+            page.Buttons.Add(btnFindGitExecutable);
+            page.Buttons.Add(btnInstallGitInstructions);
+
+            TaskDialogButton result = TaskDialog.ShowDialog(page);
+            if (result == btnFindGitExecutable)
             {
-                dialogResult = 0;
-                dialog1.Close();
-            };
-            TaskDialogCommandLink btnInstallGitInstructions = new("InstallGitInstructions", null, ResourceManager.TranslatedStrings.InstallGitInstructions);
-            btnInstallGitInstructions.Click += (s, e) =>
-            {
-                dialogResult = 1;
-                dialog1.Close();
-            };
-            dialog1.Controls.Add(btnFindGitExecutable);
-            dialog1.Controls.Add(btnInstallGitInstructions);
+                using OpenFileDialog dialog = new() { Filter = @"git.exe|git.exe|git.cmd|git.cmd" };
+                if (dialog.ShowDialog(null) == DialogResult.OK)
+                {
+                    AppSettings.GitCommandValue = dialog.FileName;
+                }
 
-            dialog1.Show();
-            switch (dialogResult)
-            {
-                case 0:
-                    {
-                        using OpenFileDialog dialog = new()
-                        {
-                            Filter = @"git.exe|git.exe|git.cmd|git.cmd",
-                        };
-                        if (dialog.ShowDialog(null) == DialogResult.OK)
-                        {
-                            AppSettings.GitCommandValue = dialog.FileName;
-                        }
-
-                        if (CheckSettingsLogic.SolveGitCommand())
-                        {
-                            return true;
-                        }
-
-                        return false;
-                    }
-
-                case 1:
-                    {
-                        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
-                        return false;
-                    }
-
-                default:
-                    {
-                        return false;
-                    }
+                return CheckSettingsLogic.SolveGitCommand();
             }
+
+            if (result == btnInstallGitInstructions)
+            {
+                OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
+                return false;
+            }
+
+            return false;
         }
     }
 }
