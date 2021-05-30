@@ -336,6 +336,7 @@ namespace GitCommands
             }
             set
             {
+                GitVersion.ResetVersion();
                 if (IsPortable())
                 {
                     SetString("gitcommand", value);
