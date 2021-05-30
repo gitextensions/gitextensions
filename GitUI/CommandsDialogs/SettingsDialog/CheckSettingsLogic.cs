@@ -177,6 +177,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 try
                 {
+                    // Use cached version if possible
+                    if (AppSettings.GitCommand == command && !(GitVersion.Current?.IsUnknown ?? true))
+                    {
+                        return true;
+                    }
+
                     string output = new Executable(command).GetOutput(arguments: "--version");
                     if (!string.IsNullOrEmpty(output))
                     {
