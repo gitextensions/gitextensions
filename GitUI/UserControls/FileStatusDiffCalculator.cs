@@ -179,13 +179,20 @@ namespace GitUI
                 summary: TranslatedStrings.DiffCommonBase + GetDescriptionForRevision(describeRevision, baseRevGuid),
                 statuses: commonBaseToAandB));
 
+            if (!GitVersion.Current.SupportRangeDiffTool)
+            {
+                return fileStatusDescs;
+            }
+
             // Add rangeDiff as a separate group (range is not the same as diff with artificial commits)
             List<GitItemStatus> statuses = new() { new GitItemStatus(name: TranslatedStrings.DiffRange) { IsRangeDiff = true } };
             var first = firstRev.ObjectId == firstRevHead ? firstRev : new GitRevision(firstRevHead);
             var selected = selectedRev.ObjectId == selectedRevHead ? selectedRev : new GitRevision(selectedRevHead);
             var (baseToFirstCount, baseToSecondCount) = module.GetCommitRangeDiffCount(first.ObjectId, selected.ObjectId);
-            const int rangeDiffCommitLimit = 100;
-            var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? rangeDiffCommitLimit}↓ {baseToSecondCount ?? rangeDiffCommitLimit}↑";
+
+            // first and selected has a common merge base and count must be available
+            // Only a printout, so no Validates
+            var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑";
 
             FileStatusWithDescription rangeDiff = new(
                 firstRev: first,
@@ -195,29 +202,6 @@ namespace GitUI
                 baseA: baseA,
                 baseB: baseB);
             fileStatusDescs.Add(rangeDiff);
-
-            // Git range-diff has cubic runtime complexity and can be slow and memory consuming, so just skip if diff is large
-            // to avoid that GE seem to hang when selecting the range diff
-            int count = (baseA is null || baseB is null
-                ? baseToFirstCount + baseToSecondCount
-                : module.GetCommitCount(firstRevHead.ToString(), baseA.ToString(), cache: true)
-                + module.GetCommitCount(selectedRevHead.ToString(), baseB.ToString(), cache: true))
-                ?? rangeDiffCommitLimit;
-            if (!GitVersion.Current.SupportRangeDiffTool || count >= rangeDiffCommitLimit)
-            {
-                var range = baseA is null || baseB is null
-                    ? $"{first.ObjectId}...{selected.ObjectId}"
-                    : $"{baseA}..{first.ObjectId} {baseB}..{selected.ObjectId}";
-                statuses[0].IsStatusOnly = true;
-
-                // Message is not translated, considered as an error message
-                statuses[0].ErrorMessage =
-                    $"# The symmetric difference from {first.ObjectId.ToShortString()} to {selected.ObjectId.ToShortString()} is {count} >= {rangeDiffCommitLimit}\n"
-                    + "# Git range-diff may take a long time and Git Extensions seem to hang during execution, why the command is not executed.\n"
-                    + "# You can still run the command in a Git terminal.\n"
-                    + "# Remove '--no-patch' to see changes to files too.\n"
-                    + $"git range-diff {range} --no-patch";
-            }
 
             return fileStatusDescs;
 

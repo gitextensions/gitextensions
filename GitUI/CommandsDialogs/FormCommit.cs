@@ -163,6 +163,7 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _unstagedLoader = new();
         private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
         private readonly CancellationTokenSequence _interactiveAddSequence = new();
+        private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("CommitDialog"));
         private readonly Subject<string> _selectionFilterSubject = new();
         private readonly IFullPathResolver _fullPathResolver;
@@ -416,6 +417,7 @@ namespace GitUI.CommandsDialogs
             {
                 _unstagedLoader.Dispose();
                 _interactiveAddSequence.Dispose();
+                _viewChangesSequence.Dispose();
                 components?.Dispose();
             }
 
@@ -1139,7 +1141,8 @@ namespace GitUI.CommandsDialogs
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                await SelectedDiff.ViewChangesAsync(item, openWithDiffTool: () => OpenWithDiffTool());
+                await SelectedDiff.ViewChangesAsync(item, openWithDiffTool: () => OpenWithDiffTool(),
+                    cancellationToken: _viewChangesSequence.Next());
             }).FileAndForget();
 
             return;

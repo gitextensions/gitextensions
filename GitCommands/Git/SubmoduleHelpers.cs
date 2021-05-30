@@ -10,9 +10,9 @@ namespace GitCommands.Git
 {
     public static class SubmoduleHelpers
     {
-        public static GitSubmoduleStatus? GetCurrentSubmoduleChanges(GitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId)
+        public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(GitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId)
         {
-            Patch? patch = module.GetSingleDiff(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, true);
+            Patch? patch = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true).ConfigureAwait(false);
             return ParseSubmodulePatchStatus(patch, module, fileName);
         }
 

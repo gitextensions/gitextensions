@@ -27,26 +27,29 @@ namespace GitUI
         /// <param name="defaultText">default text if no diff is possible.</param>
         /// <param name="openWithDiffTool">The difftool command to open with.</param>
         /// <returns>Task to view.</returns>
-        public static Task ViewChangesAsync(this FileViewer fileViewer,
+        public static async Task ViewChangesAsync(this FileViewer fileViewer,
             FileStatusItem? item,
+            CancellationToken cancellationToken,
             string defaultText = "",
             Action? openWithDiffTool = null)
         {
             if (item?.Item.IsStatusOnly ?? false)
             {
                 // Present error (e.g. parsing Git)
-                return fileViewer.ViewTextAsync(item.Item.Name, item.Item.ErrorMessage ?? "");
+                await fileViewer.ViewTextAsync(item.Item.Name, item.Item.ErrorMessage ?? "");
+                return;
             }
 
             if (item?.Item is null || item.SecondRevision?.ObjectId is null)
             {
                 if (!string.IsNullOrWhiteSpace(defaultText))
                 {
-                    return fileViewer.ViewTextAsync(item?.Item?.Name, defaultText);
+                    await fileViewer.ViewTextAsync(item?.Item?.Name, defaultText);
+                    return;
                 }
 
                 fileViewer.Clear();
-                return Task.CompletedTask;
+                return;
             }
 
             var firstId = item.FirstRevision?.ObjectId ?? item.SecondRevision.FirstParentId;
@@ -56,14 +59,19 @@ namespace GitUI
             if (item.Item.IsNew || firstId is null || (!item.Item.IsDeleted && FileHelper.IsImage(item.Item.Name)))
             {
                 // View blob guid from revision, or file for worktree
-                return fileViewer.ViewGitItemRevisionAsync(item.Item, item.SecondRevision.ObjectId, openWithDiffTool);
+                await fileViewer.ViewGitItemRevisionAsync(item.Item, item.SecondRevision.ObjectId, openWithDiffTool);
+                return;
             }
 
             if (item.Item.IsRangeDiff)
             {
-                // This command may take time, give an indication of what is going on
-                // The sha are incorrect if baseA/baseB is set, to simplify the presentation
-                fileViewer.ViewText("range-diff.sh", $"git range-diff {firstId}...{item.SecondRevision.ObjectId}");
+                // Git range-diff has cubic runtime complexity and can be slow and memory consuming,
+                // give an indication of what is going on
+                string range = item.BaseA is null || item.BaseB is null
+                    ? $"{firstId}...{item.SecondRevision.ObjectId}"
+                    : $"{item.BaseA}..{firstId} {item.BaseB}..{item.SecondRevision.ObjectId}";
+
+                await fileViewer.ViewTextAsync("range-diff.sh", $"git range-diff {range}");
 
                 string output = fileViewer.Module.GetRangeDiff(
                         firstId,
@@ -74,17 +82,29 @@ namespace GitUI
 
                 // Try set highlighting from first found filename
                 Match match = new Regex(@"\n\s*(@@|##)\s+(?<file>[^#:\n]+)").Match(output ?? "");
-                var filename = match.Groups["file"].Success ? match.Groups["file"].Value : item.Item.Name;
+                string filename = match.Groups["file"].Success ? match.Groups["file"].Value : item.Item.Name;
 
-                return fileViewer.ViewRangeDiffAsync(filename, output ?? defaultText);
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await fileViewer.ViewRangeDiffAsync(filename, output ?? defaultText);
+                return;
             }
 
-            string selectedPatch = GetSelectedPatch(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item)
+            string selectedPatch = (await GetSelectedPatchAsync(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item))
                 ?? defaultText;
 
-            return item.Item.IsSubmodule
-                ? fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool)
-                : fileViewer.ViewPatchAsync(item, text: selectedPatch, openWithDifftool: openWithDiffTool);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (item.Item.IsSubmodule)
+            {
+                await fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool);
+            }
+            else
+            {
+                await fileViewer.ViewPatchAsync(item, text: selectedPatch, openWithDifftool: openWithDiffTool);
+            }
+
+            return;
 
             void OpenWithDiffTool()
             {
@@ -96,7 +116,7 @@ namespace GitUI
                     isTracked: item.Item.IsTracked);
             }
 
-            static string? GetSelectedPatch(
+            static async Task<string?> GetSelectedPatchAsync(
                 FileViewer fileViewer,
                 ObjectId firstId,
                 ObjectId selectedId,
@@ -112,24 +132,26 @@ namespace GitUI
                         : diffOfConflict;
                 }
 
-                if (file.IsSubmodule)
+                var task = file.GetSubmoduleStatusAsync();
+
+                if (file.IsSubmodule && task is not null)
                 {
-#pragma warning disable VSTHRD103 // Call async methods when in an async method
-                    var status = ThreadHelper.JoinableTaskFactory.Run(file.GetSubmoduleStatusAsync!);
-#pragma warning restore VSTHRD103 // Call async methods when in an async method
+                    // Patch already evaluated
+                    var status = await task;
+
                     return status is not null
                         ? LocalizationHelpers.ProcessSubmoduleStatus(fileViewer.Module, status)
                         : $"Failed to get status for submodule \"{file.Name}\"";
                 }
 
-                var patch = GetItemPatch(fileViewer.Module, file, firstId, selectedId,
+                var patch = await GetItemPatchAsync(fileViewer.Module, file, firstId, selectedId,
                     fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
 
                 return file.IsSubmodule
                     ? LocalizationHelpers.ProcessSubmodulePatch(fileViewer.Module, file.Name, patch)
                     : patch?.Text;
 
-                static Patch? GetItemPatch(
+                static async Task<Patch?> GetItemPatchAsync(
                     GitModule module,
                     GitItemStatus file,
                     ObjectId? firstId,
@@ -140,7 +162,7 @@ namespace GitUI
                     // Files with tree guid should be presented with normal diff
                     var isTracked = file.IsTracked || (file.TreeGuid is not null && secondId is not null);
 
-                    return module.GetSingleDiff(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
+                    return await module.GetSingleDiffAsync(firstId, secondId, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
                 }
             }
         }
