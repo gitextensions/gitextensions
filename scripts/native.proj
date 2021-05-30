@@ -1,0 +1,68 @@
+<Project DefaultTargets="Build">
+  <PropertyGroup>
+    <!-- Keep Sdk.targets happy -->
+    <TargetFrameworkIdentifier>net</TargetFrameworkIdentifier>
+    <TargetFrameworkVersion>5.0</TargetFrameworkVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="vswhere" Version="2.8.4" IsImplicitlyDefined="true" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <Target Name="Build">
+    <PropertyGroup>
+      <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+      <VSWherePath>$([MSBuild]::NormalizePath('$(Pkgvswhere)', 'tools'))</VSWherePath>
+    </PropertyGroup>
+
+    <!-- Work out VS installation path, so we can find MSBuild.exe -->
+    <Exec
+        Command="vswhere.exe -latest -prerelease -property installationPath -requires Microsoft.Component.MSBuild"
+        WorkingDirectory="$(VSWherePath)"
+        EchoOff="true"
+        ConsoleToMsBuild="true"
+        StandardOutputImportance="Low">
+        <Output TaskParameter="ConsoleOutput" PropertyName="_VSInstallPath" />
+    </Exec>
+
+    <PropertyGroup>
+      <_MSBuildCurrentPath>$([MSBuild]::NormalizePath('$(_VSInstallPath)', 'MSBuild', 'Current', 'Bin'))</_MSBuildCurrentPath>
+
+      <_GitExtSshAskPassPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', 'GitExtSshAskPass', 'GitExtSshAskPass.sln'))</_GitExtSshAskPassPath>
+      <_GitExtensionsShellExPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', 'GitExtensionsShellEx', 'GitExtensionsShellEx.sln'))</_GitExtensionsShellExPath>
+
+      <_ProjectArgs32> /p:Configuration=$(Configuration) /p:Platform=Win32</_ProjectArgs32>
+      <_ProjectArgs64> /p:Configuration=$(Configuration) /p:Platform=x64</_ProjectArgs64>
+    </PropertyGroup>
+
+    <!-- Build GitExtSshAskPass project, x86 -->
+    <Exec
+        Command="msbuild.exe $(_GitExtSshAskPassPath) $(_ProjectArgs32)"
+        WorkingDirectory="$(_MSBuildCurrentPath)"
+        EchoOff="true"
+        ConsoleToMsBuild="true"
+        StandardOutputImportance="High">
+    </Exec>
+    <!-- Build GitExtensionsShellEx project, x86 -->
+    <Exec
+        Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgs32)"
+        WorkingDirectory="$(_MSBuildCurrentPath)"
+        EchoOff="true"
+        ConsoleToMsBuild="true"
+        StandardOutputImportance="High">
+    </Exec>
+    <!-- Build GitExtensionsShellEx project, x64 -->
+    <Exec
+        Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgs64)"
+        WorkingDirectory="$(_MSBuildCurrentPath)"
+        EchoOff="true"
+        ConsoleToMsBuild="true"
+        StandardOutputImportance="High">
+    </Exec>
+  </Target>
+
+  <!-- Stub out targets required by the Microsoft.NET.Sdk -->
+  <Target Name="CreateManifestResourceNames"></Target>
+</Project>

@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)\scripts\Localisation.targets" />
   <Import Project="Project.Build.targets" />
   <Import Project="Project.Publish.targets" />
   <Import Project="Project.Loc.targets" />

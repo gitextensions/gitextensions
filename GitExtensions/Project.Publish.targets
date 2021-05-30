@@ -1,4 +1,5 @@
 <Project>
+  <Import Project="$(SolutionDir)\scripts\Publish.targets"/>
 
   <!--
     ============================================================
@@ -8,25 +9,28 @@
     ============================================================
     -->
   <Target Name="_PublishTranslations">
-    <!-- <_GetAvailableTranslationsCodeTask
+    <_GetAvailableTranslationsCodeTask
           TranslationFolder="$(TargetDir)Translation\">
       <Output ItemName="Translations" TaskParameter="Output"/>
     </_GetAvailableTranslationsCodeTask>
 
-    <Copy SourceFiles="@(Translations)" DestinationFolder="$(PublishDir)Translation" ContinueOnError="false" /> -->
+    <Copy SourceFiles="@(Translations)" DestinationFolder="$(PublishDir)Translation" ContinueOnError="false" />
   </Target>
 
   <!--
+
+    Disabled until we find a way to utilise it under .NET
+
     ============================================================
                        _PublishExtraDependecies
 
     Copies additional files (e.g. EasyHook dlls) to the publish directory.
     ============================================================
-    -->
   <Target Name="_PublishExtraDependecies">
     <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x64\EasyHook64.dll" DestinationFolder="$(PublishDir)" />
     <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x86\EasyHook32.dll" DestinationFolder="$(PublishDir)" />
   </Target>
+    -->
 
   <!--
     ============================================================
@@ -37,7 +41,8 @@
     -->
   <Target Name="_RetrieveCurrentBuildVersion">
     <PropertyGroup>
-      <ExeAssembly>$([MSBuild]::NormalizePath('$(PublishDir)', $(_DeploymentApplicationManifestIdentity)))</ExeAssembly>
+      <_ApplicationManifestIdentity2>$([System.String]::Copy('$(_DeploymentApplicationManifestIdentity)').Replace('.exe', '.dll'))</_ApplicationManifestIdentity2>
+      <ExeAssembly>$([MSBuild]::NormalizePath('$(PublishDir)', $(_ApplicationManifestIdentity2)))</ExeAssembly>
     </PropertyGroup>
 
     <GetAssemblyIdentity AssemblyFiles="$(ExeAssembly)">
@@ -63,7 +68,7 @@
   <Target Name="_DownloadPluginManager">
     <Exec 
       Condition="!Exists('$(_PluginManagerPath)')"
-      Command="powershell.exe $(SolutionDir)\scripts\Download-PluginManager.ps1 -ExtractRootPath '$(_PluginManagerPath)'" />
+      Command="powershell.exe $(RepoRoot)\scripts\Download-PluginManager.ps1 -ExtractRootPath '$(_PluginManagerPath)'" />
   </Target>
 
   <!--
@@ -76,8 +81,10 @@
   <!-- Any errors in targets that executed as 'AfterTargets' don't break the build: https://github.com/microsoft/msbuild/issues/3345
        A fix is going out in VS16.6p3, but it is way too long for us to wait.
     -->
-  <Target Name="CreatePortable" BeforeTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_PublishExtraDependecies;_DownloadPluginManager">
+  <Target Name="CreatePortable" BeforeTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_DownloadPluginManager">
     <PropertyGroup>
+      <_TargetAppConfig>@(AppConfigFileDestination)</_TargetAppConfig>
+
       <_UserDictionariesSourceDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'Bin', 'Dictionaries'))</_UserDictionariesSourceDir>
       <_UserDictionariesPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Dictionaries'))</_UserDictionariesPublishDir>
 
@@ -85,7 +92,7 @@
       <_AppUserPluginsPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'UserPlugins'))</_AppUserPluginsPublishDir>
 
       <!-- Resolve app.config, so we can set/unset "portable" flag -->
-      <_PublishAppConfig>$([System.IO.Path]::GetFileName('$(TargetAppConfig)'))</_PublishAppConfig>
+      <_PublishAppConfig>$([System.IO.Path]::GetFileName('$(_TargetAppConfig)'))</_PublishAppConfig>
       <_PublishAppConfigPath>$([System.IO.Path]::Combine('$(PublishDir)', '$(_PublishAppConfig)'))</_PublishAppConfigPath>
 
       <!-- Resolve the output file -->
@@ -100,16 +107,16 @@
       <_PluginManagerPublishDir>$([MSBuild]::NormalizeDirectory('$(_AppUserPluginsPublishDir)', 'GitExtensions.PluginManager'))</_PluginManagerPublishDir>
 
       <!-- We want to archive the whole publish folder, so get one level up -->
-      <_PublishedPath>$([MSBuild]::NormalizeDirectory('$(PublishDir)', '..'))</_PublishedPath>
+      <_PublishedPath>$([MSBuild]::NormalizeDirectory('$(PublishDir)'))</_PublishedPath>
     </PropertyGroup>
 
-    <!-- Determine plugins assemblies and their required references -->
+    <!-- Determine plugins assemblies and their required references
     <_GetPluginAssembliesCodeTask
           SolutionPath="$(SolutionPath)"
           BuildConfiguration="$(Configuration)"
           IsContinuousIntegrationBuild="$(ContinuousIntegrationBuild)">
       <Output ItemName="CollectedPluginAssemblies" TaskParameter="Output"/>
-    </_GetPluginAssembliesCodeTask>
+    </_GetPluginAssembliesCodeTask> -->
 
     <ItemGroup>
       <UserDictionaries Include="$(_UserDictionariesSourceDir)\*.dic" />
@@ -196,12 +203,22 @@
       <_PublishMsiPath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)'))</_PublishMsiPath>
     </PropertyGroup>
 
-    <MSBuild 
+    <!-- Determine WiX version from the referenced package -->
+    <ItemGroup>
+      <_WiX Include="@(PackageReference)"  Condition="$([System.String]::Copy('%(Identity)')) == 'WiX'" />
+    </ItemGroup>
+    <Error Text="WiX package reference can't be found" Condition="'@(_WiX->Count())' != 1" />
+    <PropertyGroup>
+      <_WiXVersion>%(_WiX.Version)</_WiXVersion>
+    </PropertyGroup>
+
+    <!-- WiX isn't yet compatible with .NET. See: https://github.com/wixtoolset/issues/issues/5627 -->
+    <!-- <MSBuild 
         Projects="$(ProjectDir)\..\Setup\Setup.wixproj"
         Targets="Build"
-        Properties="Configuration=$(Configuration);Platform=x86;Version=$(CurrentBuildVersion);ArtifactsBinPath=$(ArtifactsBinDir);ArtifactsPublishPath=$(AppPublishDir);OutputPath=$(_PublishMsiPath.TrimEnd('\'));TargetName=$(_PublishMsiFileName)"
+        Properties="Configuration=$(Configuration);Platform=x86;WiXVersion=$(_WiXVersion);Version=$(CurrentBuildVersion);ArtifactsBinPath=$(ArtifactsBinDir);ArtifactsPublishPath=$(AppPublishDir);OutputPath=$(_PublishMsiPath.TrimEnd('\'));TargetName=$(_PublishMsiFileName)"
         StopOnFirstFailure="true"
-        />
+        /> -->
   </Target>
 
 </Project>

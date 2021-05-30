@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" />
+    <PackageReference Include="NUnit" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
 <Project>
 
-  <PropertyGroup>
-    <IsTestProject>true</IsTestProject>
-
-    <_TestResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'TestsResults', '$(Configuration)'))</_TestResultsDir>
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <_TestResultsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'TestsResults'))</_TestResultsDir>
     <VSTestLogger>trx</VSTestLogger>
     <VSTestResultsDirectory>$(_TestResultsDir)</VSTestResultsDirectory>
   </PropertyGroup>
@@ -16,6 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <!-- VS TestExplorer uses this to identify a test project -->
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+
+    <PackageReference Include="Microsoft.NET.Test.Sdk" IsImplicitlyDefined="true" />
+
     <PackageReference Include="ApprovalTests" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
     <PackageReference Include="FluentAssertions" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NSubstitute" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
