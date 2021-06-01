@@ -406,6 +406,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (lines.Length == 1)
             {
+                indicator.Render();
                 return;
             }
 
