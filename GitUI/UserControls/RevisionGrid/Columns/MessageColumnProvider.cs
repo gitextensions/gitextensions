@@ -100,11 +100,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
             {
-                var bodySummary = _gitRevisionSummaryBuilder.BuildSummary(revision.Body);
-                var initialLength = (bodySummary?.Length ?? 50) + 10;
+                // The body is not stored for older commits (to save memory)
+                string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(revision.Body)
+                    ?? revision.Subject + (revision.HasMultiLineMessage ? Strings.BodyNotLoaded : "");
+                int initialLength = bodySummary.Length + 10;
                 _toolTipBuilder.EnsureCapacity(initialLength);
 
-                _toolTipBuilder.Append(bodySummary ?? revision.Subject + Strings.BodyNotLoaded);
+                _toolTipBuilder.Append(bodySummary);
 
                 if (revision.Refs.Count != 0)
                 {
