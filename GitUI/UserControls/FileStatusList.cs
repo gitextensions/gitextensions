@@ -1079,17 +1079,26 @@ namespace GitUI
             int GetWidth()
             {
                 var pathFormatter = new PathFormatter(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
-                var controlWidth = FileStatusListView.ClientSize.Width;
+                int controlWidth = FileStatusListView.ClientSize.Width;
 
-                var contentWidth = FileStatusListView.Items()
-                    .Where(item => item.BoundsOrEmpty().IntersectsWith(FileStatusListView.ClientRectangle))
-                    .Select(item =>
-                    {
-                        (_, _, _, _, int textStart, int textWidth, _) = FormatListViewItem(item, pathFormatter, FileStatusListView.ClientSize.Width);
-                        return textStart + textWidth;
-                    })
-                    .DefaultIfEmpty(controlWidth)
-                    .Max();
+                int contentWidth = 0;
+                try
+                {
+                    contentWidth = FileStatusListView.Items()
+                        .Where(item => item.BoundsOrEmpty().IntersectsWith(FileStatusListView.ClientRectangle))
+                        .Select(item =>
+                        {
+                            (_, _, _, _, int textStart, int textWidth, _) = FormatListViewItem(item, pathFormatter, FileStatusListView.ClientSize.Width);
+                            return textStart + textWidth;
+                        })
+                        .DefaultIfEmpty(controlWidth)
+                        .Max();
+                }
+                catch (Exception)
+                {
+                    // See https://github.com/gitextensions/gitextensions/issues/9166#issuecomment-849567022
+                    // A rather obscure bug report, which may be causing random app crashes
+                }
 
                 return Math.Max(contentWidth, controlWidth);
             }
