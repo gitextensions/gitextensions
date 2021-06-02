@@ -43,6 +43,11 @@ namespace GitCommands
             }
         }
 
+        public static void ResetVersion()
+        {
+            _current = null;
+        }
+
         public readonly string Full;
         private readonly int _a;
         private readonly int _b;
