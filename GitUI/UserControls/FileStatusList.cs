@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.NBugReports;
 using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -1100,17 +1102,27 @@ namespace GitUI
             int GetWidth()
             {
                 PathFormatter pathFormatter = new(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
-                var controlWidth = FileStatusListView.ClientSize.Width;
+                int controlWidth = FileStatusListView.ClientSize.Width;
 
-                var contentWidth = FileStatusListView.Items()
-                    .Where(item => item.BoundsOrEmpty().IntersectsWith(FileStatusListView.ClientRectangle))
-                    .Select(item =>
-                    {
-                        (_, _, _, _, int textStart, int textWidth, _) = FormatListViewItem(item, pathFormatter, FileStatusListView.ClientSize.Width);
-                        return textStart + textWidth;
-                    })
-                    .DefaultIfEmpty(controlWidth)
-                    .Max();
+                int contentWidth = 0;
+                try
+                {
+                    contentWidth = FileStatusListView.Items()
+                        .Where(item => item.BoundsOrEmpty().IntersectsWith(FileStatusListView.ClientRectangle))
+                        .Select(item =>
+                        {
+                            (_, _, _, _, int textStart, int textWidth, _) = FormatListViewItem(item, pathFormatter, FileStatusListView.ClientSize.Width);
+                            return textStart + textWidth;
+                        })
+                        .DefaultIfEmpty(controlWidth)
+                        .Max();
+                }
+                catch (ExternalException exception)
+                {
+                    // See https://github.com/gitextensions/gitextensions/issues/9166#issuecomment-849567022
+                    // A rather obscure bug report, which may be causing random app crashes
+                    BugReportInvoker.LogError(exception);
+                }
 
                 return Math.Max(contentWidth, controlWidth);
             }
