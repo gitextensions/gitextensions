@@ -80,7 +80,7 @@ namespace GitCommands.Git.Commands
                 };
         }
 
-        public static ArgumentString GetRefsCmd(RefsFilter getRef, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder)
+        public static ArgumentString GetRefsCmd(RefsFilter getRef, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, int count = 0)
         {
             bool hasTags = (getRef == RefsFilter.NoFilter) || (getRef & RefsFilter.Tags) != 0;
 
@@ -91,6 +91,7 @@ namespace GitCommands.Git.Commands
             {
                 SortCriteria(hasTags, sortBy, sortOrder),
                 GitRefsFormat(hasTags),
+                { count > 0, $"--count={count}" },
                 GitRefsPattern(getRef)
             };
 
@@ -334,38 +335,6 @@ namespace GitCommands.Git.Commands
                 { all, "--tags" },
                 { !all, $"tag {tag.Replace(" ", "")}" }
             };
-        }
-
-        public static ArgumentString GetSortedRefsCommand(bool noLocks = false)
-        {
-            if (AppSettings.ShowSuperprojectRemoteBranches)
-            {
-                return new GitArgumentBuilder("for-each-ref", gitOptions:
-                    noLocks && GitVersion.Current.SupportNoOptionalLocks
-                        ? (ArgumentString)"--no-optional-locks"
-                        : default)
-                {
-                    "--sort=-committerdate",
-                    "--format=\"%(objectname) %(refname)\"",
-                    "refs/"
-                };
-            }
-
-            if (AppSettings.ShowSuperprojectBranches || AppSettings.ShowSuperprojectTags)
-            {
-                return new GitArgumentBuilder("for-each-ref", gitOptions:
-                    noLocks && GitVersion.Current.SupportNoOptionalLocks
-                        ? (ArgumentString)"--no-optional-locks"
-                        : default)
-                {
-                    "--sort=-committerdate",
-                    "--format=\"%(objectname) %(refname)\"",
-                    { AppSettings.ShowSuperprojectBranches, "refs/heads/" },
-                    { AppSettings.ShowSuperprojectTags, " refs/tags/" }
-                };
-            }
-
-            return "";
         }
 
         public static ArgumentString StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string>? selectedFiles)

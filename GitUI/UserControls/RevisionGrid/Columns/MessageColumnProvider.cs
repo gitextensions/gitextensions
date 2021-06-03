@@ -58,7 +58,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 if (spi.Refs is not null && revision.ObjectId is not null &&
                     spi.Refs.TryGetValue(revision.ObjectId, out var refs))
                 {
-                    superprojectRefs.AddRange(refs.Where(RevisionGridControl.ShowRemoteRef));
+                    superprojectRefs.AddRange(refs);
                 }
             }
 
