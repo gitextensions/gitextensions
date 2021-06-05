@@ -101,20 +101,6 @@ namespace GitCommandsTests.Helpers
             Assert.AreEqual(PathUtil.IsLocalFile("ssh://domain\\user@serverip/cache/git/something/something.git"), false);
         }
 
-        [TestCase(null, false)]
-        [TestCase("", false)]
-        [TestCase("    ", false)]
-        [TestCase("http://", true)]
-        [TestCase("HTTPS://www", true)]
-        [TestCase("git://", true)]
-        [TestCase("file:", true)]
-        [TestCase("SSH:", true)]
-        [TestCase("SSH", false)]
-        public void IsUrl(string path, bool expected)
-        {
-            PathUtil.IsUrl(path).Should().Be(expected);
-        }
-
         [Test]
         public void GetFileNameTest()
         {
@@ -347,6 +333,17 @@ namespace GitCommandsTests.Helpers
         [TestCase("https://github.com/gitextensions/gitextensions", true)]
         [TestCase("https://github.com/gitextensions/gitextensions.git", true)]
         [TestCase("github.com/gitextensions/gitextensions.git", true)]
+        [TestCase("HTTPS://MYPRIVATEGITHUB.COM:8080/LOUDREPO.GIT", true)]
+        [TestCase("git://myurl/myrepo.git", true)]
+        [TestCase("github.com/gitextensions", false)]
+        [TestCase("github.com/gitextensions/gitextensions/pull/9018", false)]
+        [TestCase("http://", false)]
+        [TestCase("HTTPS://www", true)]
+        [TestCase("git://", true)]
+        [TestCase("file:", false)]
+        [TestCase("SSH:", true)]
+        [TestCase("SSH", false)]
+        [TestCase("https://myhost:12368/", true)]
         public void CanBeGitURL(string url, bool expected)
         {
             Assert.AreEqual(expected, PathUtil.CanBeGitURL(url));
