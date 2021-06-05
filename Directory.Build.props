@@ -34,7 +34,7 @@
     <DebugType Condition="'$(DebugType)' == 'embedded'">portable</DebugType>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(IsTestProject)' != 'true'">
+  <ItemGroup>
     <Compile Include="$(RepoRoot)\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
   </ItemGroup>
 
