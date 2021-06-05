@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 1;
-            this.Ok.Text = "Checkout";
+            this.Ok.Text = "&Checkout";
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
@@ -157,7 +157,7 @@ namespace GitUI.CommandsDialogs
             this.rbDontChange.Name = "rbDontChange";
             this.rbDontChange.Size = new System.Drawing.Size(89, 19);
             this.rbDontChange.TabIndex = 0;
-            this.rbDontChange.Text = "Don\'t change";
+            this.rbDontChange.Text = "Do&n\'t change";
             this.rbDontChange.UseVisualStyleBackColor = false;
             // 
             // rbMerge
@@ -171,7 +171,7 @@ namespace GitUI.CommandsDialogs
             this.rbMerge.Name = "rbMerge";
             this.rbMerge.Size = new System.Drawing.Size(55, 19);
             this.rbMerge.TabIndex = 1;
-            this.rbMerge.Text = "Merge";
+            this.rbMerge.Text = "&Merge";
             this.rbMerge.UseVisualStyleBackColor = false;
             // 
             // rbStash
@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs
             this.rbStash.Name = "rbStash";
             this.rbStash.Size = new System.Drawing.Size(52, 19);
             this.rbStash.TabIndex = 2;
-            this.rbStash.Text = "Stash";
+            this.rbStash.Text = "S&tash";
             this.rbStash.UseVisualStyleBackColor = false;
             // 
             // rbReset
@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs
             this.rbReset.Name = "rbReset";
             this.rbReset.Size = new System.Drawing.Size(53, 19);
             this.rbReset.TabIndex = 3;
-            this.rbReset.Text = "Reset";
+            this.rbReset.Text = "&Reset";
             this.rbReset.UseVisualStyleBackColor = false;
             this.rbReset.CheckedChanged += new System.EventHandler(this.rbReset_CheckedChanged);
             // 
@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs
             this.chkSetLocalChangesActionAsDefault.Name = "chkSetLocalChangesActionAsDefault";
             this.chkSetLocalChangesActionAsDefault.Size = new System.Drawing.Size(91, 17);
             this.chkSetLocalChangesActionAsDefault.TabIndex = 4;
-            this.chkSetLocalChangesActionAsDefault.Text = "Set as default";
+            this.chkSetLocalChangesActionAsDefault.Text = "Set as &default";
             this.chkSetLocalChangesActionAsDefault.UseVisualStyleBackColor = false;
             // 
             // tlpnlBranches
@@ -248,7 +248,7 @@ namespace GitUI.CommandsDialogs
             this.LocalBranch.Size = new System.Drawing.Size(87, 17);
             this.LocalBranch.TabIndex = 0;
             this.LocalBranch.TabStop = true;
-            this.LocalBranch.Text = "Local branch";
+            this.LocalBranch.Text = "Local &branch";
             this.LocalBranch.UseVisualStyleBackColor = true;
             this.LocalBranch.CheckedChanged += new System.EventHandler(this.LocalBranchCheckedChanged);
             // 
@@ -263,7 +263,7 @@ namespace GitUI.CommandsDialogs
             this.Remotebranch.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.Remotebranch.Size = new System.Drawing.Size(330, 17);
             this.Remotebranch.TabIndex = 1;
-            this.Remotebranch.Text = "Remote branch";
+            this.Remotebranch.Text = "Remote &branch";
             this.Remotebranch.UseVisualStyleBackColor = true;
             this.Remotebranch.CheckedChanged += new System.EventHandler(this.RemoteBranchCheckedChanged);
             // 
@@ -275,7 +275,7 @@ namespace GitUI.CommandsDialogs
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(85, 33);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Select branch";
+            this.label1.Text = "&Select branch";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Branches
@@ -351,7 +351,7 @@ namespace GitUI.CommandsDialogs
             this.rbDontCreate.Name = "rbDontCreate";
             this.rbDontCreate.Size = new System.Drawing.Size(208, 17);
             this.rbDontCreate.TabIndex = 4;
-            this.rbDontCreate.Text = "Checkout remote branch";
+            this.rbDontCreate.Text = "Ch&eckout remote branch";
             this.rbDontCreate.UseVisualStyleBackColor = true;
             // 
             // txtCustomBranchName
@@ -375,7 +375,7 @@ namespace GitUI.CommandsDialogs
             this.rbResetBranch.Size = new System.Drawing.Size(208, 17);
             this.rbResetBranch.TabIndex = 0;
             this.rbResetBranch.TabStop = true;
-            this.rbResetBranch.Text = "Reset local branch with the name:";
+            this.rbResetBranch.Text = "R&eset local branch with the name:";
             this.rbResetBranch.UseVisualStyleBackColor = true;
             // 
             // rbCreateBranchWithCustomName
@@ -387,7 +387,7 @@ namespace GitUI.CommandsDialogs
             this.rbCreateBranchWithCustomName.Name = "rbCreateBranchWithCustomName";
             this.rbCreateBranchWithCustomName.Size = new System.Drawing.Size(208, 17);
             this.rbCreateBranchWithCustomName.TabIndex = 2;
-            this.rbCreateBranchWithCustomName.Text = "Create local branch with custom name:";
+            this.rbCreateBranchWithCustomName.Text = "Cr&eate local branch with custom name:";
             this.rbCreateBranchWithCustomName.UseVisualStyleBackColor = true;
             this.rbCreateBranchWithCustomName.CheckedChanged += new System.EventHandler(this.rbCreateBranchWithCustomName_CheckedChanged);
             // 
