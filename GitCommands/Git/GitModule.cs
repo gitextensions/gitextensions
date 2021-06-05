@@ -734,22 +734,22 @@ namespace GitCommands
             return list;
         }
 
-        public async Task<Dictionary<IGitRef, IGitItem?>> GetSubmoduleItemsForEachRefAsync(string? filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
+        public async Task<Dictionary<IGitRef, IGitItem?>> GetSubmoduleItemsForEachRefAsync(string? filename, bool noLocks = false)
         {
-            string? command = GitCommandHelpers.GetSortedRefsCommand(noLocks: noLocks);
-
-            if (command is null)
+            const int maxSuperRefCount = 100;
+            var refsFilter = (AppSettings.ShowSuperprojectBranches ? RefsFilter.Heads : RefsFilter.NoFilter)
+                | (AppSettings.ShowSuperprojectRemoteBranches ? RefsFilter.Remotes : RefsFilter.NoFilter)
+                | (AppSettings.ShowSuperprojectTags ? RefsFilter.Tags : RefsFilter.NoFilter);
+            if (refsFilter == RefsFilter.NoFilter)
             {
                 return new Dictionary<IGitRef, IGitItem?>();
             }
 
-            filename = filename.ToPosixPath();
-
+            string? command = GitCommandHelpers.GetRefsCmd(refsFilter, noLocks: noLocks, GitRefsSortBy.committerdate, GitRefsSortOrder.Descending, maxSuperRefCount);
             var refList = await _gitExecutable.GetOutputAsync(command).ConfigureAwait(false);
-
             var refs = ParseRefs(refList);
 
-            return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleCommitHash(filename, r.Name));
+            return refs.ToDictionary(r => r, r => GetSubmoduleCommitHash(filename.ToPosixPath(), r.Name));
         }
 
         private IGitItem? GetSubmoduleCommitHash(string? filename, string refName)

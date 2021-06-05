@@ -801,26 +801,6 @@ namespace GitUI
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        internal static bool ShowRemoteRef(IGitRef r)
-        {
-            if (r.IsTag)
-            {
-                return AppSettings.ShowSuperprojectTags;
-            }
-
-            if (r.IsHead)
-            {
-                return AppSettings.ShowSuperprojectBranches;
-            }
-
-            if (r.IsRemote)
-            {
-                return AppSettings.ShowSuperprojectRemoteBranches;
-            }
-
-            return false;
-        }
-
         private void ShowLoading(bool sync = true)
         {
             _loadingControlSync.Visible = sync;
@@ -995,7 +975,7 @@ namespace GitUI
                 _superprojectCurrentCheckout = null;
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    var scc = await GetSuperprojectCheckoutAsync(ShowRemoteRef, capturedModule, noLocks: true);
+                    var scc = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
                     await this.SwitchToMainThreadAsync();
 
                     if (_superprojectCurrentCheckout != scc)
@@ -1156,7 +1136,7 @@ namespace GitUI
             }
         }
 
-        private static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(Func<IGitRef, bool> showRemoteRef, GitModule gitModule, bool noLocks = false)
+        private static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(GitModule gitModule, bool noLocks = false)
         {
             if (gitModule.SuperprojectModule is null)
             {
@@ -1179,7 +1159,7 @@ namespace GitUI
                 spi.CurrentBranch = commit;
             }
 
-            var refs = await gitModule.SuperprojectModule.GetSubmoduleItemsForEachRefAsync(gitModule.SubmodulePath, showRemoteRef, noLocks: noLocks);
+            var refs = await gitModule.SuperprojectModule.GetSubmoduleItemsForEachRefAsync(gitModule.SubmodulePath, noLocks: noLocks);
 
             if (refs is not null)
             {

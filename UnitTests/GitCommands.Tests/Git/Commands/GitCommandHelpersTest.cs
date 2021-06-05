@@ -634,13 +634,6 @@ namespace GitCommandsTests.Git.Commands
                 extraDiffArguments, noLocks).ToString());
         }
 
-        [TestCase(@"for-each-ref --sort=-committerdate --format=""%(objectname) %(refname)"" refs/heads/", false)]
-        [TestCase(@"--no-optional-locks for-each-ref --sort=-committerdate --format=""%(objectname) %(refname)"" refs/heads/", true)]
-        public void GetSortedRefsCommand(string expected, bool noLocks)
-        {
-            Assert.AreEqual(expected, GitCommandHelpers.GetSortedRefsCommand(noLocks).ToString());
-        }
-
         private static IEnumerable<TestCaseData> GetRefsCommandTestData
         {
             get
@@ -664,20 +657,22 @@ namespace GitCommandsTests.Git.Commands
                             sortConditionRef = $" --sort={prefix}*{sortBy}";
                         }
 
-                        yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder,
+                        yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
                             /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
-                        yield return new TestCaseData(RefsFilter.Tags, /* noLocks */ false, sortBy, sortOrder,
+                        yield return new TestCaseData(RefsFilter.Tags, /* noLocks */ false, sortBy, sortOrder, 0,
                             /* expected */ $@"for-each-ref{sortConditionRef}{sortCondition}{format} refs/tags/");
-                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder,
+                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 0,
                             /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/heads/");
-                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ true, sortBy, sortOrder,
+                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ false, sortBy, sortOrder, 100,
+                            /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} --count=100 refs/heads/");
+                        yield return new TestCaseData(RefsFilter.Heads, /* noLocks */ true, sortBy, sortOrder, 0,
                             /* expected */ $@"--no-optional-locks for-each-ref{sortCondition}{formatNoTag} refs/heads/");
-                        yield return new TestCaseData(RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder,
+                        yield return new TestCaseData(RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
                             /* expected */ $@"for-each-ref{sortCondition}{formatNoTag} refs/remotes/");
 
-                        yield return new TestCaseData(RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder,
+                        yield return new TestCaseData(RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
                             /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format}");
-                        yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder,
+                        yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.NoFilter, /* noLocks */ true, sortBy, sortOrder, 0,
                             /* expected */ $@"--no-optional-locks for-each-ref{sortConditionRef}{sortCondition}{format} refs/heads/ refs/remotes/ refs/tags/");
                     }
                 }
@@ -685,9 +680,9 @@ namespace GitCommandsTests.Git.Commands
         }
 
         [TestCaseSource(nameof(GetRefsCommandTestData))]
-        public void GetRefsCmd(RefsFilter getRefs, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, string expected)
+        public void GetRefsCmd(RefsFilter getRefs, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, int count, string expected)
         {
-            Assert.AreEqual(expected, GitCommandHelpers.GetRefsCmd(getRefs, noLocks, sortBy, sortOrder).ToString());
+            Assert.AreEqual(expected, GitCommandHelpers.GetRefsCmd(getRefs, noLocks, sortBy, sortOrder, count).ToString());
         }
     }
 }
