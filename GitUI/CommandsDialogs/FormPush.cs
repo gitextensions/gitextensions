@@ -289,7 +289,7 @@ namespace GitUI.CommandsDialogs
         private bool PushChanges(IWin32Window? owner)
         {
             ErrorOccurred = false;
-            if (PushToUrl.Checked && !PathUtil.IsUrl(PushDestination.Text))
+            if (PushToUrl.Checked && !Uri.IsWellFormedUriString(PushDestination.Text, UriKind.Absolute))
             {
                 MessageBox.Show(owner, _selectDestinationDirectory.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
