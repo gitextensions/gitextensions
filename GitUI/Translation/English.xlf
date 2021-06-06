@@ -2786,15 +2786,15 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="LocalBranch.Text">
-        <source>Local branch</source>
+        <source>Local &amp;branch</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
-        <source>Checkout</source>
+        <source>&amp;Checkout</source>
         <target />
       </trans-unit>
       <trans-unit id="Remotebranch.Text">
-        <source>Remote branch</source>
+        <source>Remote &amp;branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_applyStashedItemsAgain.Text">
@@ -2806,7 +2806,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="_createBranch.Text">
-        <source>Create local branch with the name:</source>
+        <source>Cr&amp;eate local branch with the name:</source>
         <target />
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
@@ -2838,11 +2838,11 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
-        <source>Set as default</source>
+        <source>Set as &amp;default</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Select branch</source>
+        <source>&amp;Select branch</source>
         <target />
       </trans-unit>
       <trans-unit id="localChangesGB.Text">
@@ -2850,31 +2850,31 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="rbCreateBranchWithCustomName.Text">
-        <source>Create local branch with custom name:</source>
+        <source>Cr&amp;eate local branch with custom name:</source>
         <target />
       </trans-unit>
       <trans-unit id="rbDontChange.Text">
-        <source>Don't change</source>
+        <source>Do&amp;n't change</source>
         <target />
       </trans-unit>
       <trans-unit id="rbDontCreate.Text">
-        <source>Checkout remote branch</source>
+        <source>Ch&amp;eckout remote branch</source>
         <target />
       </trans-unit>
       <trans-unit id="rbMerge.Text">
-        <source>Merge</source>
+        <source>&amp;Merge</source>
         <target />
       </trans-unit>
       <trans-unit id="rbReset.Text">
-        <source>Reset</source>
+        <source>&amp;Reset</source>
         <target />
       </trans-unit>
       <trans-unit id="rbResetBranch.Text">
-        <source>Reset local branch with the name:</source>
+        <source>R&amp;eset local branch with the name:</source>
         <target />
       </trans-unit>
       <trans-unit id="rbStash.Text">
-        <source>Stash</source>
+        <source>S&amp;tash</source>
         <target />
       </trans-unit>
     </body>

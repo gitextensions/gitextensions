@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _customBranchNameIsNotValid =
             new("“{0}” is not valid branch name.\nEnter valid branch name or select predefined value.");
         private readonly TranslationString _createBranch =
-            new("Create local branch with the name:");
+            new("Cr&eate local branch with the name:");
         private readonly TranslationString _applyStashedItemsAgainCaption =
             new("Auto stash");
         private readonly TranslationString _applyStashedItemsAgain =
@@ -75,6 +75,7 @@ namespace GitUI.CommandsDialogs
 
             // work-around the designer bug that can't add controls to FlowLayoutPanel
             ControlsPanel.Controls.Add(Ok);
+            AcceptButton = Ok;
 
             ApplyLayout();
             Shown += FormCheckoutBranch_Shown;
