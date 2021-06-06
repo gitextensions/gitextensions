@@ -113,9 +113,9 @@ namespace GitUI.CommandsDialogs
                         string text = Clipboard.GetText(TextDataFormat.Text) ?? string.Empty;
 
                         // See if it's a valid URL.
-                        if (PathUtil.CanBeGitURL(text))
+                        if (TryExtractUrl(text, out var possibleURL))
                         {
-                            _NO_TRANSLATE_From.Text = text;
+                            _NO_TRANSLATE_From.Text = possibleURL;
                         }
                     }
                 }
@@ -465,6 +465,56 @@ namespace GitUI.CommandsDialogs
             }
 
             base.Dispose(disposing);
+        }
+
+        /// <summary>
+        /// Check whether the given string contains one or more valid URLs and extracts
+        /// the first URL that exists, if any.
+        /// </summary>
+        /// <remarks>
+        /// Uri.IsWellFormedUriString is used instead of Uri.TryCreate as file URIs
+        /// of the form X:\\directory\\filename should not be treated as URLs.
+        /// The first URL extracted from <paramref name="contents"/> is assigned to
+        /// <paramref name="url"/>. If <paramref name="contents"/> contains more than one URL,
+        /// subsequent URLs are not extracted.
+        /// </remarks>
+        /// <param name="contents">A string to attempt to extract URLs from.</param>
+        /// <param name="url">A <see cref="string"/> that contains the URL, if any, extracted from <paramref name="contents"/>.</param>
+        /// <returns><see langword="true"/> if a URL was extracted; otherwise <see langword="false"/>.</returns>
+        private bool TryExtractUrl(string contents, out string url)
+        {
+            url = "";
+
+            if (string.IsNullOrEmpty(contents))
+            {
+                return false;
+            }
+
+            var parts = contents.Split(' ');
+            foreach (string s in parts)
+            {
+                if (Uri.IsWellFormedUriString(s, UriKind.Absolute))
+                {
+                    url = s;
+                    break;
+                }
+            }
+
+            return !string.IsNullOrEmpty(url);
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FormClone _form;
+
+            public TestAccessor(FormClone form)
+            {
+                _form = form;
+            }
+
+            public bool TryExtractUrl(string text, out string url) => _form.TryExtractUrl(text, out url);
         }
     }
 }

@@ -13,11 +13,6 @@ namespace GitCommands
         private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
         private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
 
-        // URL regex obtained from https://www.regextester.com/53716 with some modifications
-        private static readonly Regex UrlRegex = new(
-            @"(?:(?:https?|ftp|file|ssh|git):\/\/|www\.)(?:[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:[A-Z0-9+&@#\/%=~_|$])",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
         public static readonly char PosixDirectorySeparatorChar = '/';
         public static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
 
@@ -75,23 +70,6 @@ namespace GitCommands
             return !Regex.IsMatch(fileName, @"^(\w+):\/\/([\S]+)");
         }
 
-        /// <summary>
-        /// A slightly less naive way to check whether the given path is a URL by checking
-        /// whether it matches a regular expression defined in <see cref="UrlRegex"/>.
-        /// </summary>
-        /// <remarks>
-        /// Certain strings such as "http://" or "ssh:" are not considered valid URLs
-        /// as they don't have a host, port or path.
-        /// </remarks>
-        /// <param name="path">A path to check.</param>
-        /// <returns><see langword="true"/> if the given path starts with 'http', 'ssh' or 'git'; otherwise <see langword="false"/>.</returns>
-        [Pure]
-        public static bool IsUrl(string? path)
-        {
-            return !string.IsNullOrEmpty(path)
-                && UrlRegex.IsMatch(path);
-        }
-
         public static bool CanBeGitURL(string? url)
         {
             if (string.IsNullOrWhiteSpace(url))
@@ -99,7 +77,7 @@ namespace GitCommands
                 return false;
             }
 
-            return IsUrl(url)
+            return Uri.IsWellFormedUriString(url, UriKind.Absolute)
                    || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
                    || GitModule.IsValidGitWorkingDir(url);
         }
