@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitUI.NBugReports;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -73,10 +75,23 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 e.State.HasFlag(DataGridViewElementStates.Visible) &&
                 e.RowIndex >= 0 &&
                 _revisionGraph.Count != 0 &&
-                _revisionGraph.Count > e.RowIndex &&
-                PaintGraphCell(e.RowIndex, e.CellBounds, e.Graphics))
+                _revisionGraph.Count > e.RowIndex)
             {
-                e.Handled = true;
+                try
+                {
+                    if (PaintGraphCell(e.RowIndex, e.CellBounds, e.Graphics))
+                    {
+                        e.Handled = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Consume the exception since it does not bubble up to our handlers
+                    Debug.Write(ex);
+#if DEBUG
+                    BugReportInvoker.LogError(ex);
+#endif
+                }
             }
 
             return;
@@ -342,12 +357,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private Brush GetBrushForLaneInfo(LaneInfo? laneInfo, bool isRelative)
         {
-            if (!isRelative && (_revisionGraphDrawStyleCache is RevisionGraphDrawStyleEnum.DrawNonRelativesGray or RevisionGraphDrawStyleEnum.HighlightSelected))
+            // laneInfo can be null for revisions without parents and children, especially when filtering, draw them gray, too
+            if (laneInfo is null
+                || (!isRelative && (_revisionGraphDrawStyleCache is RevisionGraphDrawStyleEnum.DrawNonRelativesGray or RevisionGraphDrawStyleEnum.HighlightSelected)))
             {
                 return RevisionGraphLaneColor.NonRelativeBrush;
             }
 
-            Validates.NotNull(laneInfo);
             return RevisionGraphLaneColor.GetBrushForLane(laneInfo.Color);
         }
 
