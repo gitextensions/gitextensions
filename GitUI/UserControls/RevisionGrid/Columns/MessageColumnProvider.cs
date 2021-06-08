@@ -359,11 +359,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             var text = items.Count.ToString();
             var bounds = messageBounds.ReduceLeft(offset);
-            var color = e.State.HasFlag(DataGridViewElementStates.Selected)
-                ? SystemColors.HighlightText
-                : SystemColors.ControlText;
             var textWidth = Math.Max(
-                _grid.DrawColumnText(e, text, style.NormalFont, color, bounds),
+                _grid.DrawColumnText(e, text, style.NormalFont, style.ForeColor, bounds),
                 TextRenderer.MeasureText("88", style.NormalFont).Width);
             offset += textWidth + textHorizontalPadding;
         }
