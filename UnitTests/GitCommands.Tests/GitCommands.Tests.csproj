@@ -21,6 +21,7 @@
     <EmbeddedResource Include="Helpers\MockData\WindowsLines.bin" />
     <EmbeddedResource Include="MockData\Too_long_lines.txt" />
     <EmbeddedResource Include="MockData\Too_many_lines.txt" />
+    <EmbeddedResource Include="Git\WorkTree\MockData\List_worktree_output.txt" />
     <None Include="Patches\testdata\big.patch">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

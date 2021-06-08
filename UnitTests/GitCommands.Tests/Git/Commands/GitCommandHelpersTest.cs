@@ -684,5 +684,11 @@ namespace GitCommandsTests.Git.Commands
         {
             Assert.AreEqual(expected, GitCommandHelpers.GetRefsCmd(getRefs, noLocks, sortBy, sortOrder, count).ToString());
         }
+
+        [Test]
+        public void ListWorkTreeCmd()
+        {
+            Assert.AreEqual("worktree list --porcelain", GitCommandHelpers.ListWorkTreeCmd().Arguments);
+        }
     }
 }

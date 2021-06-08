@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitCommands.Git.WorkTrees;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -16,12 +18,15 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _deleteBranchQuestion = new(
             "Are you sure you want to delete selected branches?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
         private readonly TranslationString _deleteUnmergedBranchForcingSuggestion =
-            new("You cannot delete unmerged branch until you set “force delete” mode.");
+            new("You cannot delete unmerged branch until you set \"force delete\" mode.");
         private readonly TranslationString _cannotDeleteCurrentBranchMessage =
-            new("Cannot delete the branch “{0}” which you are currently on.");
+            new("Cannot delete the branch \"{0}\" which you are currently on.");
+        private readonly TranslationString _cannotDeleteWorktreeBranchMessage = new("Cannot delete branch(es):");
+        private readonly TranslationString _branchPathMessage = new(" - \"{0}\" checked out at \"{1}\"");
 
         private readonly IEnumerable<string> _defaultBranches;
         private readonly HashSet<string> _mergedBranches = new();
+        private readonly HashSet<string> _worktreeBranches = new();
         private string? _currentBranch;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
@@ -46,7 +51,11 @@ namespace GitUI.CommandsDialogs
             Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads).ToList();
             foreach (var branch in Module.GetMergedBranches())
             {
-                if (!branch.StartsWith("* "))
+                if (branch.StartsWith("+ "))
+                {
+                    _worktreeBranches.Add(branch.Trim('+', ' '));
+                }
+                else if (!branch.StartsWith("* "))
                 {
                     _mergedBranches.Add(branch.Trim());
                 }
@@ -76,6 +85,21 @@ namespace GitUI.CommandsDialogs
                 if (_currentBranch is not null && selectedBranches.Any(branch => branch.Name == _currentBranch))
                 {
                     MessageBox.Show(this, string.Format(_cannotDeleteCurrentBranchMessage.Text, _currentBranch), _deleteBranchCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                HashSet<string> selectedWorktreeBranches = selectedBranches
+                    .Where(branch => _worktreeBranches.Contains(branch.Name))
+                    .Select(branch => branch.LocalName).ToHashSet();
+                if (selectedWorktreeBranches.Count > 0)
+                {
+                    string output = Module.GitExecutable.GetOutput(GitCommandHelpers.ListWorkTreeCmd());
+                    IEnumerable<GitWorkTree> worktrees = ListWorkTreeOutputParser.Parse(output)
+                        .Where(w => selectedWorktreeBranches.Contains(w.BranchName));
+                    string paths = string.Join(Environment.NewLine, worktrees
+                        .Select(worktree => string.Format(_branchPathMessage.Text, worktree.BranchName, worktree.Path)));
+                    string message = _cannotDeleteWorktreeBranchMessage.Text + Environment.NewLine + paths;
+                    MessageBox.Show(this, message, _deleteBranchCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 

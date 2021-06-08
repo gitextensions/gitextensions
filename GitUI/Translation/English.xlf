@@ -4034,8 +4034,16 @@ You can unset the template:
         <source>Force delete</source>
         <target />
       </trans-unit>
+      <trans-unit id="_branchPathMessage.Text">
+        <source> - "{0}" checked out at "{1}"</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_cannotDeleteCurrentBranchMessage.Text">
-        <source>Cannot delete the branch “{0}” which you are currently on.</source>
+        <source>Cannot delete the branch "{0}" which you are currently on.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotDeleteWorktreeBranchMessage.Text">
+        <source>Cannot delete branch(es):</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteBranchCaption.Text">
@@ -4048,7 +4056,7 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteUnmergedBranchForcingSuggestion.Text">
-        <source>You cannot delete unmerged branch until you set “force delete” mode.</source>
+        <source>You cannot delete unmerged branch until you set "force delete" mode.</source>
         <target />
       </trans-unit>
       <trans-unit id="labelDeleteBranchWarning.Text">

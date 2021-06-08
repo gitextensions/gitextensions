@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitExtUtils;
+using GitCommands.Git.Commands;
+using GitCommands.Git.WorkTrees;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
@@ -21,7 +23,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         private readonly TranslationString _deleteWorktreeTitle = new("Delete a worktree");
         private readonly TranslationString _deleteWorktreeFailedText = new("Failed to delete a worktree");
 
-        private List<WorkTree>? _worktrees;
+        private List<GitWorkTree>? _worktrees;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormManageWorktree()
@@ -44,11 +46,11 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Delete.Image = Images.Delete.AdaptLightness();
             InitializeComplete();
 
-            Path.DataPropertyName = nameof(WorkTree.Path);
-            Type.DataPropertyName = nameof(WorkTree.Type);
-            Branch.DataPropertyName = nameof(WorkTree.Branch);
-            Sha1.DataPropertyName = nameof(WorkTree.Sha1);
-            IsDeleted.DataPropertyName = nameof(WorkTree.IsDeleted);
+            Path.DataPropertyName = nameof(GitWorkTree.Path);
+            Type.DataPropertyName = nameof(GitWorkTree.Type);
+            Branch.DataPropertyName = nameof(GitWorkTree.CompleteBranchName);
+            Sha1.DataPropertyName = nameof(GitWorkTree.Sha1);
+            IsDeleted.DataPropertyName = nameof(GitWorkTree.IsDeleted);
         }
 
         private void FormManageWorktree_Load(object sender, EventArgs e)
@@ -64,47 +66,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void Initialize()
         {
-            var lines = Module.GitExecutable.GetOutput("worktree list --porcelain");
-
-            _worktrees = new List<WorkTree>();
-            WorkTree? currentWorktree = null;
-            foreach (var line in lines.LazySplit('\n'))
-            {
-                if (string.IsNullOrWhiteSpace(line))
-                {
-                    continue;
-                }
-
-                var strings = line.Split(' ');
-                if (strings[0] == "worktree")
-                {
-                    currentWorktree = new WorkTree { Path = line.Substring(9) };
-                    currentWorktree.IsDeleted = !Directory.Exists(currentWorktree.Path);
-                    _worktrees.Add(currentWorktree);
-                }
-                else if (strings[0] == "HEAD")
-                {
-                    Validates.NotNull(currentWorktree);
-                    currentWorktree.Sha1 = strings[1];
-                }
-                else
-                {
-                    Validates.NotNull(currentWorktree);
-                    switch (strings[0])
-                    {
-                        case "bare":
-                            currentWorktree.Type = HeadType.Bare;
-                            break;
-                        case "branch":
-                            currentWorktree.Type = HeadType.Branch;
-                            currentWorktree.Branch = strings[1];
-                            break;
-                        case "detached":
-                            currentWorktree.Type = HeadType.Detached;
-                            break;
-                    }
-                }
-            }
+            string output = Module.GitExecutable.GetOutput(GitCommandHelpers.ListWorkTreeCmd());
+            _worktrees = ListWorkTreeOutputParser.Parse(output);
 
             Worktrees.DataSource = _worktrees;
             for (var i = 0; i < Worktrees.Rows.Count; i++)
@@ -127,7 +90,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             buttonPruneWorktrees.Enabled = _worktrees.Skip(1).Any(w => w.IsDeleted);
         }
 
-        private bool CanDeleteWorkspace(WorkTree workTree)
+        private bool CanDeleteWorkspace(GitWorkTree workTree)
         {
             if (workTree.IsDeleted)
             {
@@ -149,42 +112,9 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             return true;
         }
 
-        private bool IsCurrentlyOpenedWorktree(WorkTree workTree)
+        private bool IsCurrentlyOpenedWorktree(GitWorkTree workTree)
         {
             return new DirectoryInfo(UICommands.GitModule.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path).FullName.TrimEnd('\\');
-        }
-
-        /// <summary>
-        /// Here are the 3 types of lines return by the `worktree list --porcelain` that should be handled:
-        ///
-        /// 1:
-        /// worktree /path/to/bare-source
-        /// bare
-        ///
-        /// 2:
-        /// /worktree /path/to/linked-worktree
-        /// /HEAD abcd1234abcd1234abcd1234abcd1234abcd1234
-        /// /branch refs/heads/master
-        ///
-        /// 3:
-        /// worktree /path/to/other-linked-worktree
-        /// HEAD 1234abc1234abc1234abc1234abc1234abc1234a
-        /// detached.
-        /// </summary>
-        private class WorkTree
-        {
-            public string? Path { get; set; }
-            public HeadType Type { get; set; }
-            public string? Sha1 { get; set; }
-            public string? Branch { get; set; }
-            public bool IsDeleted { get; set; }
-        }
-
-        private enum HeadType
-        {
-            Bare,
-            Branch,
-            Detached
         }
 
         private void buttonClose_Click(object sender, EventArgs e)
