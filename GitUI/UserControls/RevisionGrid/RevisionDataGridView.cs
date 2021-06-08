@@ -31,6 +31,7 @@ namespace GitUI.UserControls.RevisionGrid
     public sealed class RevisionDataGridView : DataGridView
     {
         private readonly SolidBrush _alternatingRowBackgroundBrush;
+        private readonly SolidBrush _authoredHighlightBrush;
 
         internal RevisionGraph _revisionGraph = new();
 
@@ -64,8 +65,8 @@ namespace GitUI.UserControls.RevisionGrid
             InitializeComponent();
             DoubleBuffered = true;
 
-            _alternatingRowBackgroundBrush =
-                new SolidBrush(KnownColor.Window.MakeBackgroundDarkerBy(0.025)); // 0.018
+            _alternatingRowBackgroundBrush = new SolidBrush(KnownColor.Window.MakeBackgroundDarkerBy(0.025)); // 0.018
+            _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
 
             UpdateRowHeight();
 
@@ -261,7 +262,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (AppSettings.HighlightAuthoredRevisions && revision is not null && !revision.IsArtificial && AuthorHighlighting?.IsHighlighted(revision) != false)
             {
-                return new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
+                return _authoredHighlightBrush;
             }
 
             if (rowIndex % 2 == 0 && AppSettings.RevisionGraphDrawAlternateBackColor)
