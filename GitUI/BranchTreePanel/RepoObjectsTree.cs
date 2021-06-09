@@ -73,7 +73,6 @@ namespace GitUI.BranchTreePanel
             RegisterContextActions();
 
             treeMain.ShowNodeToolTips = true;
-            treeMain.HideSelection = false;
 
             toolTip.SetToolTip(btnSearch, _searchTooltip.Text);
             tsbCollapseAll.ToolTipText = mnubtnCollapse.ToolTipText;
