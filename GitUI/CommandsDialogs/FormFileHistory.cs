@@ -408,7 +408,7 @@ namespace GitUI.CommandsDialogs
                     IsTracked = true,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
-                _ = View.ViewGitItemRevisionAsync(file, revision.ObjectId);
+                _ = View.ViewGitItemAsync(file, revision.ObjectId);
             }
             else if (tabControl1.SelectedTab == DiffTab)
             {
