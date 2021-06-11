@@ -59,7 +59,7 @@ namespace GitUI
             if (item.Item.IsNew || firstId is null || (!item.Item.IsDeleted && FileHelper.IsImage(item.Item.Name)))
             {
                 // View blob guid from revision, or file for worktree
-                await fileViewer.ViewGitItemRevisionAsync(item.Item, item.SecondRevision.ObjectId, openWithDiffTool);
+                await fileViewer.ViewGitItemAsync(item, openWithDiffTool);
                 return;
             }
 
