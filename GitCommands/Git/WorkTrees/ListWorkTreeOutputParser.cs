@@ -63,7 +63,7 @@ namespace GitCommands.Git.WorkTrees
                         Validates.NotNull(currentWorktree);
                         currentWorktree.Type = HeadType.Branch;
                         currentWorktree.CompleteBranchName = strings[1];
-                        currentWorktree.BranchName = strings[1].Replace("refs/heads/", string.Empty);
+                        currentWorktree.BranchName = strings[1].Replace(GitRefName.RefsHeadsPrefix, string.Empty);
                         break;
                     case "detached":
                         Validates.NotNull(currentWorktree);
