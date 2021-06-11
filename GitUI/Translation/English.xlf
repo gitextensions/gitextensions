@@ -2886,11 +2886,11 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="Force.Text">
-        <source>Force (reset local changes)</source>
+        <source>&amp;Force (reset local changes)</source>
         <target />
       </trans-unit>
       <trans-unit id="OkCheckout.Text">
-        <source>Checkout</source>
+        <source>&amp;Checkout</source>
         <target />
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBox.Text">
@@ -2902,7 +2902,7 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Checkout this revision</source>
+        <source>Checkout this &amp;revision</source>
         <target />
       </trans-unit>
     </body>
@@ -2914,7 +2914,7 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
-        <source>Automatically create a commit</source>
+        <source>&amp;Automatically create a commit</source>
         <target />
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
@@ -2922,11 +2922,11 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="ParentsLabel.Text">
-        <source>This commit is a merge, select parent:</source>
+        <source>This commit is a merge, select &amp;parent:</source>
         <target />
       </trans-unit>
       <trans-unit id="Pick.Text">
-        <source>Cherry pick</source>
+        <source>&amp;Cherry pick</source>
         <target />
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
@@ -2934,7 +2934,7 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="checkAddReference.Text">
-        <source>Add commit reference to commit message</source>
+        <source>A&amp;dd commit reference to commit message</source>
         <target />
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -2954,7 +2954,7 @@ Are you sure?</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Choose another
+        <source>C&amp;hoose another
 revision:</source>
         <target />
       </trans-unit>
@@ -5383,7 +5383,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
+        <source>&amp;Manage remotes</source>
         <target />
       </trans-unit>
       <trans-unit id="BranchTab.Text">
@@ -5403,11 +5403,11 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="ForcePushBranches.Text">
-        <source>&amp;Force Push</source>
+        <source>F&amp;orce push</source>
         <target />
       </trans-unit>
       <trans-unit id="ForcePushTags.Text">
-        <source>&amp;Force Push</source>
+        <source>&amp;Force push</source>
         <target />
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
@@ -5427,7 +5427,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="Pull.Text">
-        <source>Pull</source>
+        <source>P&amp;ull</source>
         <target />
       </trans-unit>
       <trans-unit id="PushColumn.HeaderText">
@@ -5435,11 +5435,11 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="PushToRemote.Text">
-        <source>Remote</source>
+        <source>&amp;Remote</source>
         <target />
       </trans-unit>
       <trans-unit id="PushToUrl.Text">
-        <source>Url</source>
+        <source>U&amp;rl</source>
         <target />
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
@@ -5459,7 +5459,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="ReplaceTrackingReference.Text">
-        <source>Replace tracking reference</source>
+        <source>R&amp;eplace tracking reference</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowOptions.Text">
@@ -5485,7 +5485,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="_createPullRequestCB.Text">
-        <source>Create pull request after push</source>
+        <source>&amp;Create pull request after push</source>
         <target />
       </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
@@ -5577,7 +5577,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
-        <source>Force With &amp;Lease</source>
+        <source>&amp;Force with lease</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox2.Text">
@@ -5585,19 +5585,19 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Tag to push</source>
+        <source>&amp;Tag to push</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Recursive submodules</source>
+        <source>Recursive &amp;submodules</source>
         <target />
       </trans-unit>
       <trans-unit id="labelFrom.Text">
-        <source>Branch to push</source>
+        <source>&amp;Branch to push</source>
         <target />
       </trans-unit>
       <trans-unit id="labelTo.Text">
-        <source>to</source>
+        <source>&amp;to</source>
         <target />
       </trans-unit>
       <trans-unit id="selectAllToolStripMenuItem.Text">
@@ -6702,7 +6702,7 @@ Do you want to use this custom merge script?</source>
         <target />
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
-        <source>Automatically create a commit</source>
+        <source>&amp;Automatically create a commit</source>
         <target />
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
@@ -6710,11 +6710,11 @@ Do you want to use this custom merge script?</source>
         <target />
       </trans-unit>
       <trans-unit id="ParentsLabel.Text">
-        <source>This commit is a merge, select parent:</source>
+        <source>This commit is a merge, select &amp;parent:</source>
         <target />
       </trans-unit>
       <trans-unit id="Revert.Text">
-        <source>Revert this commit</source>
+        <source>&amp;Revert this commit</source>
         <target />
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
