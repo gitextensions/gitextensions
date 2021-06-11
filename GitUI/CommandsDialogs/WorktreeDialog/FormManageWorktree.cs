@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             Path.DataPropertyName = nameof(GitWorkTree.Path);
             Type.DataPropertyName = nameof(GitWorkTree.Type);
-            Branch.DataPropertyName = nameof(GitWorkTree.CompleteBranchName);
+            Branch.DataPropertyName = nameof(GitWorkTree.BranchName);
             Sha1.DataPropertyName = nameof(GitWorkTree.Sha1);
             IsDeleted.DataPropertyName = nameof(GitWorkTree.IsDeleted);
         }
