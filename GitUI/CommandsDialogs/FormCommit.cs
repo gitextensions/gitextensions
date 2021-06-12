@@ -1744,20 +1744,7 @@ namespace GitUI.CommandsDialogs
                             continue;
                         }
 
-                        var item2 = item;
-                        if (unstagedFiles.Exists(i => i.Name == item2.Name))
-                        {
-                            continue;
-                        }
-
-                        if (item.IsNew && !item.IsChanged && !item.IsDeleted)
-                        {
-                            item.IsTracked = false;
-                        }
-                        else
-                        {
-                            item.IsTracked = true;
-                        }
+                        item.IsTracked = item.IsNew && !item.IsChanged && !item.IsDeleted ? false : true;
 
                         if (item.IsRenamed)
                         {
@@ -1778,7 +1765,16 @@ namespace GitUI.CommandsDialogs
                         }
 
                         item.Staged = StagedStatus.WorkTree;
-                        unstagedFiles.Add(item);
+                        int index = unstagedFiles.FindIndex(i => i.Name == item.Name);
+
+                        if (index >= 0)
+                        {
+                            unstagedFiles[index] = item;
+                        }
+                        else
+                        {
+                            unstagedFiles.Add(item);
+                        }
                     }
 
                     var (headRev, indexRev, workTreeRev) = GetHeadRevisions();
