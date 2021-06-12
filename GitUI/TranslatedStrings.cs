@@ -46,8 +46,8 @@ namespace GitUI
         private readonly TranslationString _local = new("Local");
         private readonly TranslationString _tag = new("Tag");
         private readonly TranslationString _remote = new("Remote");
-        private readonly TranslationString _openWithGitExtensions = new("Open with Git Extensions");
-        private readonly TranslationString _openInVisualStudio = new("Open in Visual Studio");
+        private readonly TranslationString _openWithGitExtensions = new("&Open with Git Extensions");
+        private readonly TranslationString _openInVisualStudio = new("Open in &Visual Studio");
         private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new("Enable automatic continuous scroll (without ALT button)");
         private readonly TranslationString _noRevision = new("No revision");
 
@@ -72,7 +72,7 @@ namespace GitUI
         private readonly TranslationString _sortBy = new("&Sort by...");
         private readonly TranslationString _sortOrder = new("&Sort order...");
 
-        private readonly TranslationString _diffSelectedWithRememberedFile = new("Diff with \"{0}\"");
+        private readonly TranslationString _diffSelectedWithRememberedFile = new("&Diff with \"{0}\"");
         private readonly TranslationString _diffWithParent = new("Diff with a/");
         private readonly TranslationString _diffBaseToB = new("Unique diff BASE with b/");
         private readonly TranslationString _diffCommonBase = new("Common diff with BASE a/");
