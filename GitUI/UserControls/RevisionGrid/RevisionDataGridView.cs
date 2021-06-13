@@ -337,6 +337,14 @@ namespace GitUI.UserControls.RevisionGrid
             StartBackgroundProcessingTask(cancellationToken);
         }
 
+        public void LoadingCompleted()
+        {
+            foreach (ColumnProvider columnProvider in _columnProviders)
+            {
+                columnProvider.LoadingCompleted();
+            }
+        }
+
         /// <summary>
         /// Checks whether the given hash is present in the graph.
         /// </summary>

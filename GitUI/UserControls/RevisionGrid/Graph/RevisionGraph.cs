@@ -22,6 +22,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new();
         private ImmutableList<RevisionGraphRevision> _nodes = ImmutableList<RevisionGraphRevision>.Empty;
 
+        private bool _loadingCompleted;
+
         /// <summary>
         /// The max score is used to keep a chronological order during the graph building.
         /// It is cheaper than doing <c>_nodes.Max(n => n.Score)</c>.
@@ -48,11 +50,17 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void Clear()
         {
+            _loadingCompleted = false;
             _maxScore = 0;
             _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
             _nodes = ImmutableList<RevisionGraphRevision>.Empty;
             _orderedNodesCache = null;
             _orderedRowCache = null;
+        }
+
+        public void LoadingCompleted()
+        {
+            _loadingCompleted = true;
         }
 
         public int Count => _nodes.Count;
@@ -73,7 +81,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             int cachedCount = _orderedRowCache.Count;
-            return cachedCount == Count ? cachedCount : cachedCount - _straightenLanesLookAhead;
+            return _loadingCompleted ? cachedCount : cachedCount - _straightenLanesLookAhead;
         }
 
         /// <summary>

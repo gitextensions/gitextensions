@@ -410,6 +410,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             _graphCache.Reset();
         }
 
+        public override void LoadingCompleted()
+        {
+            _revisionGraph.LoadingCompleted();
+        }
+
         public override void Refresh(int rowHeight, in VisibleRowRange range)
         {
             // Hide graph column when there it is disabled OR when a filter is active
