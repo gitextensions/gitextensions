@@ -930,12 +930,12 @@ namespace GitUI
                     predicate = null;
                 }
 
+                _isReadingRevisions = true;
                 Subject<GitRevision> revisions = new();
                 _revisionSubscription?.Dispose();
                 _revisionSubscription = revisions
                     .ObserveOn(ThreadPoolScheduler.Instance)
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
-                _isReadingRevisions = true;
 
                 _revisionReader ??= new RevisionReader();
 
