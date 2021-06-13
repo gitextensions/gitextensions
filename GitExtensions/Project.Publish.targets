@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$(SolutionDir)\scripts\Publish.targets"/>
+  <Import Project="$(MSBuildProjectDirectory)\..\scripts\Publish.targets"/>
 
   <!--
     ============================================================

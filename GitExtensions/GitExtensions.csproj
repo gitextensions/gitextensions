@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="$(SolutionDir)\scripts\Localisation.targets" />
-  <Import Project="Project.Build.targets" />
-  <Import Project="Project.Publish.targets" />
-  <Import Project="Project.Loc.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\..\scripts\Localisation.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\Project.Build.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\Project.Publish.targets" />
+  <Import Project="$(MSBuildProjectDirectory)\Project.Loc.targets" />
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
