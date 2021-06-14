@@ -256,7 +256,7 @@ namespace GitUI.CommandsDialogs
             this.stageFileToolStripMenuItem.Image = global::GitUI.Properties.Images.Stage;
             this.stageFileToolStripMenuItem.Name = "stageFileToolStripMenuItem";
             this.stageFileToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
-            this.stageFileToolStripMenuItem.Text = "Sta&ge file(s)";
+            this.stageFileToolStripMenuItem.Text = "&Stage file(s)";
             this.stageFileToolStripMenuItem.Click += new System.EventHandler(this.StageFileToolStripMenuItemClick);
             // 
             // unstageFileToolStripMenuItem
