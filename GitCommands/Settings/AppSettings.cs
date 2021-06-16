@@ -108,14 +108,38 @@ namespace GitCommands
                 return path;
             });
 
+            bool newFile = CreateEmptySettingsFileIfMissing();
+
             SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath), SettingLevel.Unknown);
 
-            if (!File.Exists(SettingsFilePath))
+            if (newFile || !File.Exists(SettingsFilePath))
             {
                 ImportFromRegistry();
             }
 
             MigrateAvatarSettings();
+
+            return;
+
+            static bool CreateEmptySettingsFileIfMissing()
+            {
+                try
+                {
+                    string dir = Path.GetDirectoryName(SettingsFilePath);
+                    if (!Directory.Exists(dir) || File.Exists(SettingsFilePath))
+                    {
+                        return false;
+                    }
+                }
+                catch (ArgumentException)
+                {
+                    // Illegal characters in the filename
+                    return false;
+                }
+
+                File.WriteAllText(SettingsFilePath, "<?xml version=\"1.0\" encoding=\"utf-8\"?><dictionary />", Encoding.UTF8);
+                return true;
+            }
         }
 
         /// <summary>
