@@ -117,6 +117,7 @@ namespace GitCommands
             // This property is relatively expensive to call for every revision, so
             // cache it for the duration of the loop.
             var logOutputEncoding = module.LogOutputEncoding;
+            long sixMonths = new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(30 * 6)).ToUnixTimeSeconds();
 
             using (var process = module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
@@ -141,7 +142,7 @@ namespace GitCommands
                             // We keep full multiline message bodies within the last six months.
                             // Commits earlier than that have their properties set to null and the
                             // memory will be GCd.
-                            if (DateTime.Now - revision.AuthorDate > TimeSpan.FromDays(30 * 6))
+                            if (sixMonths > revision.AuthorUnixTime)
                             {
                                 revision.Body = null;
                             }
@@ -340,10 +341,10 @@ namespace GitCommands
             #region Timestamps
 
             // Lines 2 and 3 are timestamps, as decimal ASCII seconds since the unix epoch, each terminated by `\n`
-            var authorDate = ParseUnixDateTime();
-            var commitDate = ParseUnixDateTime();
+            var authorUnixTime = ParseUnixDateTime();
+            var commitUnixTime = ParseUnixDateTime();
 
-            DateTime ParseUnixDateTime()
+            long ParseUnixDateTime()
             {
                 long unixTime = 0;
 
@@ -353,7 +354,7 @@ namespace GitCommands
 
                     if (c == '\n')
                     {
-                        return DateTimeUtils.UnixEpoch.AddTicks(unixTime * TimeSpan.TicksPerSecond).ToLocalTime();
+                        return unixTime;
                     }
 
                     unixTime = (unixTime * 10) + (c - '0');
@@ -435,10 +436,10 @@ namespace GitCommands
                 TreeGuid = treeId,
                 Author = author,
                 AuthorEmail = authorEmail,
-                AuthorDate = authorDate,
+                AuthorUnixTime = authorUnixTime,
                 Committer = committer,
                 CommitterEmail = committerEmail,
-                CommitDate = commitDate,
+                CommitUnixTime = commitUnixTime,
                 MessageEncoding = encodingName,
                 Subject = subject,
                 Body = body,

@@ -938,8 +938,8 @@ namespace GitCommands
                 AuthorEmail = ReEncodeStringFromLossless(lines[4]),
                 Committer = ReEncodeStringFromLossless(lines[6]),
                 CommitterEmail = ReEncodeStringFromLossless(lines[7]),
-                AuthorDate = DateTimeUtils.ParseUnixTime(lines[5]),
-                CommitDate = DateTimeUtils.ParseUnixTime(lines[8]),
+                AuthorUnixTime = long.Parse(lines[5]),
+                CommitUnixTime = long.Parse(lines[8]),
                 MessageEncoding = lines[9]
             };
 

@@ -101,7 +101,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                 GitRevision = new GitRevision(ObjectId.WorkTreeId)
                 {
                     Author = "John Doe",
-                    AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
+                    AuthorUnixTime = DateTimeUtils.ToUnixTime(DateTime.Parse("2010-03-24 13:37:12")),
                     AuthorEmail = "j.doe@some.email.dotcom",
                     Body = "WIP: fixing bugs"
                 }
@@ -112,7 +112,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                 GitRevision = new GitRevision(realCommitObjectId)
                 {
                     Author = "John Doe",
-                    AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
+                    AuthorUnixTime = DateTimeUtils.ToUnixTime(DateTime.Parse("2010-03-24 13:37:12")),
                     AuthorEmail = "j.doe@some.email.dotcom",
                     Subject = "fix: bugs",
                     Body = "fix: bugs\r\n\r\nall bugs fixed"
@@ -124,7 +124,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                 GitRevision = new GitRevision(mergeCommitObjectId)
                 {
                     Author = "John Doe",
-                    AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
+                    AuthorUnixTime = DateTimeUtils.ToUnixTime(DateTime.Parse("2010-03-24 13:37:12")),
                     AuthorEmail = "j.doe@some.email.dotcom",
                     Subject = "merge remote tracking branch upstream/branch",
                     Body = "merge commit's subject here will not be parsed\r\n\r\nmerge commit's body might list details and/or conflicts...",
@@ -137,7 +137,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                 GitRevision = new GitRevision(undetectedMergeCommitObjectId)
                 {
                     Author = "John Doe",
-                    AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
+                    AuthorUnixTime = DateTimeUtils.ToUnixTime(DateTime.Parse("2010-03-24 13:37:12")),
                     AuthorEmail = "j.doe@some.email.dotcom",
                     Subject = "special merge",
                     Body = "merge commit's subject here will not be parsed\r\n\r\nmerge commit's body might list details and/or conflicts...",
@@ -150,7 +150,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
                 GitRevision = new GitRevision(innerCommitObjectId)
                 {
                     Author = "John Doe",
-                    AuthorDate = DateTime.Parse("2010-03-24 13:37:12"),
+                    AuthorUnixTime = DateTimeUtils.ToUnixTime(DateTime.Parse("2010-03-24 13:37:12")),
                     AuthorEmail = "j.doe@some.email.dotcom",
                     Subject = "fix: further bugs",
                     Body = "fix: further bugs"
