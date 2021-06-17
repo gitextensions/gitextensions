@@ -13,6 +13,7 @@ using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -371,7 +372,7 @@ See the changes in the commit form.");
                             IsSubmodule = gitItem.ObjectType == GitObjectType.Commit
                         };
 
-                        return FileText.ViewGitItemAsync(file);
+                        return FileText.ViewGitItemAsync(file, gitItem.ObjectId);
                     }
 
                     default:

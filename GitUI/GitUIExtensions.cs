@@ -73,7 +73,7 @@ namespace GitUI
             if (item.Item.IsNew || firstId is null || FileHelper.IsImage(item.Item.Name))
             {
                 // View blob guid from revision, or file for worktree
-                return fileViewer.ViewGitItemRevisionAsync(item.Item, item.SecondRevision.ObjectId, openWithDiffTool);
+                return fileViewer.ViewGitItemAsync(item, openWithDiffTool);
             }
 
             if (item.Item.IsRangeDiff)
