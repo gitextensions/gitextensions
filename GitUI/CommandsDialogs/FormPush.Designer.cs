@@ -93,7 +93,7 @@
             this.ckForceWithLease.Name = "ckForceWithLease";
             this.ckForceWithLease.Size = new System.Drawing.Size(109, 17);
             this.ckForceWithLease.TabIndex = 0;
-            this.ckForceWithLease.Text = "Force With &Lease";
+            this.ckForceWithLease.Text = "&Force with lease";
             this.ckForceWithLease.UseVisualStyleBackColor = true;
             this.ckForceWithLease.CheckedChanged += new System.EventHandler(this.ForceWithLeaseCheckedChanged);
             // 
@@ -104,7 +104,7 @@
             this.ForcePushBranches.Name = "ForcePushBranches";
             this.ForcePushBranches.Size = new System.Drawing.Size(79, 17);
             this.ForcePushBranches.TabIndex = 1;
-            this.ForcePushBranches.Text = "&Force Push";
+            this.ForcePushBranches.Text = "F&orce push";
             this.ForcePushBranches.UseVisualStyleBackColor = true;
             this.ForcePushBranches.CheckedChanged += new System.EventHandler(this.ForcePushBranchesCheckedChanged);
             // 
@@ -115,7 +115,7 @@
             this.PushToUrl.Name = "PushToUrl";
             this.PushToUrl.Size = new System.Drawing.Size(38, 17);
             this.PushToUrl.TabIndex = 3;
-            this.PushToUrl.Text = "Url";
+            this.PushToUrl.Text = "U&rl";
             this.toolTip1.SetToolTip(this.PushToUrl, "Url to push to");
             this.PushToUrl.UseVisualStyleBackColor = true;
             this.PushToUrl.CheckedChanged += new System.EventHandler(this.PushToUrlCheckedChanged);
@@ -129,7 +129,7 @@
             this.PushToRemote.Size = new System.Drawing.Size(62, 17);
             this.PushToRemote.TabIndex = 0;
             this.PushToRemote.TabStop = true;
-            this.PushToRemote.Text = "Remote";
+            this.PushToRemote.Text = "&Remote";
             this.toolTip1.SetToolTip(this.PushToRemote, "Remote repository to push to");
             this.PushToRemote.UseVisualStyleBackColor = true;
             // 
@@ -219,7 +219,7 @@
             this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.labelTo.Size = new System.Drawing.Size(17, 22);
             this.labelTo.TabIndex = 1;
-            this.labelTo.Text = "to";
+            this.labelTo.Text = "&to";
             this.labelTo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // RemoteBranch
@@ -268,7 +268,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(113, 13);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Recursive submodules";
+            this.label2.Text = "Recursive &submodules";
             // 
             // RecursiveSubmodules
             // 
@@ -291,7 +291,7 @@
             this.ReplaceTrackingReference.Name = "ReplaceTrackingReference";
             this.ReplaceTrackingReference.Size = new System.Drawing.Size(155, 17);
             this.ReplaceTrackingReference.TabIndex = 1;
-            this.ReplaceTrackingReference.Text = "Replace tracking reference";
+            this.ReplaceTrackingReference.Text = "R&eplace tracking reference";
             this.ReplaceTrackingReference.UseVisualStyleBackColor = true;
             // 
             // _createPullRequestCB
@@ -301,7 +301,7 @@
             this._createPullRequestCB.Name = "_createPullRequestCB";
             this._createPullRequestCB.Size = new System.Drawing.Size(171, 17);
             this._createPullRequestCB.TabIndex = 3;
-            this._createPullRequestCB.Text = "Create pull request after push";
+            this._createPullRequestCB.Text = "&Create pull request after push";
             this._createPullRequestCB.UseVisualStyleBackColor = true;
             // 
             // labelFrom
@@ -311,7 +311,7 @@
             this.labelFrom.Name = "labelFrom";
             this.labelFrom.Size = new System.Drawing.Size(79, 13);
             this.labelFrom.TabIndex = 0;
-            this.labelFrom.Text = "Branch to push";
+            this.labelFrom.Text = "&Branch to push";
             // 
             // TagTab
             // 
@@ -334,7 +334,7 @@
             this.ForcePushTags.Name = "ForcePushTags";
             this.ForcePushTags.Size = new System.Drawing.Size(79, 17);
             this.ForcePushTags.TabIndex = 2;
-            this.ForcePushTags.Text = "&Force Push";
+            this.ForcePushTags.Text = "&Force push";
             this.ForcePushTags.UseVisualStyleBackColor = true;
             // 
             // label1
@@ -344,7 +344,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(64, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Tag to push";
+            this.label1.Text = "&Tag to push";
             // 
             // TagComboBox
             // 
@@ -491,7 +491,7 @@
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(150, 25);
             this.AddRemote.TabIndex = 2;
-            this.AddRemote.Text = "Manage remotes";
+            this.AddRemote.Text = "&Manage remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
             // 
@@ -527,7 +527,7 @@
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(101, 25);
             this.Pull.TabIndex = 2;
-            this.Pull.Text = "Pull";
+            this.Pull.Text = "P&ull";
             this.Pull.UseVisualStyleBackColor = true;
             this.Pull.Click += new System.EventHandler(this.PullClick);
             // 

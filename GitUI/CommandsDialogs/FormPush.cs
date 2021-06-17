@@ -723,9 +723,9 @@ namespace GitUI.CommandsDialogs
                 _NO_TRANSLATE_Branch.Items.Add(head);
             }
 
-            _NO_TRANSLATE_Branch.Text = curBranch;
-
             _NO_TRANSLATE_Branch.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+
+            _NO_TRANSLATE_Branch.Text = curBranch;
         }
 
         private IEnumerable<IGitRef> GetLocalBranches()
@@ -775,6 +775,9 @@ namespace GitUI.CommandsDialogs
             }
 
             RemoteBranch.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+
+            // Set text again as workaround for appearing focused after setting DropDownWidth
+            RemoteBranch.Text = RemoteBranch.Text;
         }
 
         private void BranchSelectedValueChanged(object sender, EventArgs e)

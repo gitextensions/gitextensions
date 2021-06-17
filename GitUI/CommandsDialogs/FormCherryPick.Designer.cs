@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.SetRowSpan(this.Pick, 2);
             this.Pick.Size = new System.Drawing.Size(136, 31);
             this.Pick.TabIndex = 10;
-            this.Pick.Text = "Cherry pick";
+            this.Pick.Text = "&Cherry pick";
             this.Pick.UseVisualStyleBackColor = true;
             this.Pick.Click += new System.EventHandler(this.Revert_Click);
             // 
@@ -76,7 +76,7 @@ namespace GitUI.CommandsDialogs
             this.btnChooseRevision.Margin = new System.Windows.Forms.Padding(4);
             this.btnChooseRevision.Name = "btnChooseRevision";
             this.btnChooseRevision.Size = new System.Drawing.Size(31, 30);
-            this.btnChooseRevision.TabIndex = 33;
+            this.btnChooseRevision.TabIndex = 34;
             this.btnChooseRevision.UseVisualStyleBackColor = true;
             this.btnChooseRevision.Click += new System.EventHandler(this.btnChooseRevision_Click);
             // 
@@ -88,8 +88,8 @@ namespace GitUI.CommandsDialogs
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(132, 46);
-            this.label2.TabIndex = 34;
-            this.label2.Text = "Choose another\r\nrevision:";
+            this.label2.TabIndex = 33;
+            this.label2.Text = "C&hoose another\r\nrevision:";
             // 
             // ParentsLabel
             // 
@@ -98,8 +98,8 @@ namespace GitUI.CommandsDialogs
             this.ParentsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ParentsLabel.Name = "ParentsLabel";
             this.ParentsLabel.Size = new System.Drawing.Size(298, 23);
-            this.ParentsLabel.TabIndex = 13;
-            this.ParentsLabel.Text = "This commit is a merge, select parent:";
+            this.ParentsLabel.TabIndex = 12;
+            this.ParentsLabel.Text = "This commit is a merge, select &parent:";
             // 
             // ParentsList
             // 
@@ -119,7 +119,7 @@ namespace GitUI.CommandsDialogs
             this.ParentsList.MultiSelect = false;
             this.ParentsList.Name = "ParentsList";
             this.ParentsList.Size = new System.Drawing.Size(726, 109);
-            this.ParentsList.TabIndex = 12;
+            this.ParentsList.TabIndex = 13;
             this.ParentsList.UseCompatibleStateImageBehavior = false;
             this.ParentsList.View = System.Windows.Forms.View.Details;
             // 
@@ -152,7 +152,7 @@ namespace GitUI.CommandsDialogs
             this.checkAddReference.Name = "checkAddReference";
             this.checkAddReference.Size = new System.Drawing.Size(357, 27);
             this.checkAddReference.TabIndex = 14;
-            this.checkAddReference.Text = "Add commit reference to commit message";
+            this.checkAddReference.Text = "A&dd commit reference to commit message";
             this.checkAddReference.UseVisualStyleBackColor = true;
             // 
             // AutoCommit
@@ -164,7 +164,7 @@ namespace GitUI.CommandsDialogs
             this.AutoCommit.Name = "AutoCommit";
             this.AutoCommit.Size = new System.Drawing.Size(265, 27);
             this.AutoCommit.TabIndex = 11;
-            this.AutoCommit.Text = "Automatically create a commit";
+            this.AutoCommit.Text = "&Automatically create a commit";
             this.AutoCommit.UseVisualStyleBackColor = true;
             // 
             // BranchInfo

@@ -66,8 +66,8 @@
             this.ParentsLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.ParentsLabel.Name = "ParentsLabel";
             this.ParentsLabel.Size = new System.Drawing.Size(298, 23);
-            this.ParentsLabel.TabIndex = 15;
-            this.ParentsLabel.Text = "This commit is a merge, select parent:";
+            this.ParentsLabel.TabIndex = 14;
+            this.ParentsLabel.Text = "This commit is a merge, select &parent:";
             // 
             // ParentsList
             // 
@@ -85,7 +85,7 @@
             this.ParentsList.MultiSelect = false;
             this.ParentsList.Name = "ParentsList";
             this.ParentsList.Size = new System.Drawing.Size(668, 75);
-            this.ParentsList.TabIndex = 14;
+            this.ParentsList.TabIndex = 15;
             this.ParentsList.UseCompatibleStateImageBehavior = false;
             this.ParentsList.View = System.Windows.Forms.View.Details;
             // 
@@ -118,7 +118,7 @@
             this.AutoCommit.Name = "AutoCommit";
             this.AutoCommit.Size = new System.Drawing.Size(265, 27);
             this.AutoCommit.TabIndex = 11;
-            this.AutoCommit.Text = "Automatically create a commit";
+            this.AutoCommit.Text = "&Automatically create a commit";
             this.AutoCommit.UseVisualStyleBackColor = true;
             // 
             // Revert
@@ -130,7 +130,7 @@
             this.Revert.Name = "Revert";
             this.Revert.Size = new System.Drawing.Size(171, 33);
             this.Revert.TabIndex = 10;
-            this.Revert.Text = "Revert this commit";
+            this.Revert.Text = "&Revert this commit";
             this.Revert.UseVisualStyleBackColor = true;
             this.Revert.Click += new System.EventHandler(this.Revert_Click);
             // 

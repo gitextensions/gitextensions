@@ -79,7 +79,7 @@
             this.OkCheckout.Name = "OkCheckout";
             this.OkCheckout.Size = new System.Drawing.Size(122, 25);
             this.OkCheckout.TabIndex = 1;
-            this.OkCheckout.Text = "Checkout";
+            this.OkCheckout.Text = "&Checkout";
             this.OkCheckout.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.OkCheckout.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.OkCheckout.UseVisualStyleBackColor = true;
@@ -93,7 +93,7 @@
             this.Force.Name = "Force";
             this.Force.Size = new System.Drawing.Size(166, 19);
             this.Force.TabIndex = 5;
-            this.Force.Text = "Force (reset local changes)";
+            this.Force.Text = "&Force (reset local changes)";
             this.Force.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel1
@@ -114,7 +114,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(124, 15);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Checkout this revision";
+            this.label2.Text = "Checkout this &revision";
             // 
             // commitPickerSmallControl1
             // 
