@@ -1744,19 +1744,16 @@ namespace GitUI.CommandsDialogs
                             continue;
                         }
 
-                        var item2 = item;
-                        if (unstagedFiles.Exists(i => i.Name == item2.Name))
-                        {
-                            continue;
-                        }
+                        item.IsTracked = !item.IsNew || item.IsChanged || item.IsDeleted;
+                        int index = unstagedFiles.FindIndex(i => i.Name == item.Name);
 
-                        if (item.IsNew && !item.IsChanged && !item.IsDeleted)
+                        if (index >= 0)
                         {
-                            item.IsTracked = false;
-                        }
-                        else
-                        {
-                            item.IsTracked = true;
+                            unstagedFiles[index].IsNew = item.IsNew;
+                            unstagedFiles[index].IsDeleted = item.IsDeleted;
+                            unstagedFiles[index].IsTracked = item.IsTracked;
+                            unstagedFiles[index].IsChanged = item.IsChanged;
+                            continue;
                         }
 
                         if (item.IsRenamed)
