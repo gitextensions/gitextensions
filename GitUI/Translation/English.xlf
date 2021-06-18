@@ -8899,6 +8899,10 @@ See the changes in the commit form.</source>
         <source>Show tags</source>
         <target />
       </trans-unit>
+      <trans-unit id="showMultiLineCommitMessagesToolStripMenuItem.Text">
+        <source>Show multi-line commit messages</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="RevisionGridControl" source-language="en">
