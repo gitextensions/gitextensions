@@ -158,7 +158,7 @@ namespace GitUI.Theming
             //      Color color = ColorTranslator.FromHtml(colorProperty.DeclaredValue.Original.Text);
             //
             // colorProperty.DeclaredValue.Original.Text contains the required information, e.g. #f9f9f9
-            // but none of the properties nor types are public, thus leaving us with either atempting to
+            // but none of the properties nor types are public, thus leaving us with either attempting to
             // access the data via the reflection, or parsing the raw text.
             // Prefer the latter option - less magic.
 

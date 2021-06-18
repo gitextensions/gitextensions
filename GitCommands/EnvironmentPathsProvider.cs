@@ -88,7 +88,7 @@ namespace GitCommands
             }
             catch (IOException)
             {
-                // Querying attribures for UNC paths results in IOException
+                // Querying attributes for UNC paths results in IOException
                 if (Uri.TryCreate(path, UriKind.Absolute, out Uri? uri) && uri.IsUnc)
                 {
                     return true;

@@ -132,7 +132,7 @@ Inactive remote is completely invisible to git.");
         public string? PreselectRemoteOnLoad { get; set; }
 
         /// <summary>
-        /// If this is not null before showing the dialog tab "Default push behvaior" is opened
+        /// If this is not null before showing the dialog tab "Default push behavior" is opened
         /// and the given local name will be preselected in the listbox.
         /// </summary>
         /// <remarks>exclusive of <see cref="PreselectRemoteOnLoad"/>.</remarks>

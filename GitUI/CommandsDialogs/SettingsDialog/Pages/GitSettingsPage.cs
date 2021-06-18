@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             // TODO?: rescan
 
-            // orginal:
+            // original:
             ////            throw new NotImplementedException(@"
             ////            Save();
             ////            using (var frm = new FormFixHome()) frm.ShowDialog(this);

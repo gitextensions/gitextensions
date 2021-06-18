@@ -655,7 +655,7 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslatioApp
+                // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslationApp
 
                 _formBrowseMenus?.Dispose();
                 _filterRevisionsHelper?.Dispose();

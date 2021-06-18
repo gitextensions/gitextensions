@@ -343,7 +343,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             if (keyData == Keys.Enter)
             {
-                // .NET 5.0 introduced collapsible `ListViewGoup`s, which we do not yet have API access to but still get rendered in the UI.
+                // .NET 5.0 introduced collapsible `ListViewGroup`s, which we do not yet have API access to but still get rendered in the UI.
                 // Whenever the list of repos is collapsed but we still have a repo selected (and hidden), if we hit enter, the selected repo will
                 // be opened. This should be a no-op instead, however, since we cannot visually tell what repo is selected. When we upgrade
                 // to .NET 5.0, we can check ListViewGroup.CollapsedState to fix this issue.

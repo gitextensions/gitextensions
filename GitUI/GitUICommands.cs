@@ -936,7 +936,7 @@ namespace GitUI
         /// Open the archive dialog.
         /// </summary>
         /// <param name="revision">Revision to create an archive from.</param>
-        /// <param name="revision2">Revision for differencial archive.</param>
+        /// <param name="revision2">Revision for differential archive.</param>
         /// <param name="path">Files path for archive.</param>
         public bool StartArchiveDialog(IWin32Window? owner = null, GitRevision? revision = null, GitRevision? revision2 = null, string? path = null)
         {
