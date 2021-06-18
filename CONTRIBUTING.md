@@ -49,7 +49,7 @@ Pull requests will be reviewed by one or more team members. To improve the chanc
 pull request being merged, your contribution should be as easy to review as possible.
 Specifically:
 
-- Be focussed in scope
+- Be focused in scope
 - Be comprised of clear commits (use interactive rebase to tidy things up if needed)
 - Include a clear description of the changes and why they should be made
 - Be accompanied by unit tests

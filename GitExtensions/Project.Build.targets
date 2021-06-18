@@ -20,7 +20,7 @@
     ============================================================
                        _EnumeratePlugins
 
-    Enumerates all avaialble plugins $(TargetDir)\Plugins\$(PluginName) and updates
+    Enumerates all available plugins $(TargetDir)\Plugins\$(PluginName) and updates
     app.config with the list of available plugins.
 
     For the development build all plugins are copied to $(TargetDir)\Plugins\$(PluginName).

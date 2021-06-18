@@ -88,7 +88,7 @@ Changelog
 * [7999] Fix up double plural in ResourceManager.Strings
 * [7993] Fix up show all branches / tags in history
 * [7986] fix: Error while executing user script from RevisionGrid
-* [7984] Deleted files presented as Unkown
+* [7984] Deleted files presented as Unknown
 * [7981] Redesign script config
 * [7976] GitStatusMonitor: Avoid background updates if GUI is not visible
 * [7974] Centralise removal of invalid repositories
@@ -160,7 +160,7 @@ Changelog
 * [7753] Avoid deleting test directories while operations may be in progress
 * [7752] Avoid a 200ms delay when RunBackgroundAsync is cancelled
 * [7750] Avoid attempting to update non-existent UI
-* [7739] FormCommit: Unaccessible COMMITMESSAGE
+* [7739] FormCommit: Inaccessible COMMITMESSAGE
 * [7732] AzureDevOps CI: Fix and improvements
 * [7720] improve file status list presentation
 * [7719] Refactor: Compare with ObjectId rather than Guid
@@ -501,7 +501,7 @@ Changelog
 * Fix #7331: Update GitInfo dependency to get bug fix - PR [7332]
 * Consistent display of binary files - PR [7330]
 * Update syntax highlighting control - PR [7325]
-* Fix #7263: Progress bar value/max value not initialized when reseting files. - PR [7324]
+* Fix #7263: Progress bar value/max value not initialized when resetting files. - PR [7324]
 * Fix installer when PS is in ConstrainedLanguage mode - PR [7309]
 * Fix #7250:  Error when fetching pull requests from local branch - PR [7307]
 * Allow branch creation in folder context menu (#7013) - PR [7305]
@@ -513,7 +513,7 @@ Changelog
 * Settings: Regenerate the Controls when previous instance was disposed - PR [7241]
 * GitIndexWatcher: check that directory exists before enabling - PR [7238]
 * Fix #3280: Optimize unstage/reset performance by git reset/unstage batch files - PR [7237]
-* Dont confirm switch worktree option - PR [7230]
+* Don't confirm switch worktree option - PR [7230]
 * Exclude "fixup!" and "squash!" prefixes from commit message RegEx validation - PR [7223]
 * Blame: Fix missing commit metadata on some commits - PR [7222]
 * Support older Gerrit API - PR [7216]
@@ -646,7 +646,7 @@ Changelog
 * Move ArtificialCommits from Settings to grid View menu - PR [6638]
 * Request more information via NBug submission form - Issue [6607]
 * fix: Throws on `git remote` call outside git repo - PR [6586]
-* Improve stacktrace readability by using Ben.Demysifier - Issue [6569]
+* Improve stacktrace readability by using Ben.Demystifier - Issue [6569]
 * fix: Invalid URI when open invalid path - PR [6560]
 * RevisionGrid: Add branch icons in contextual menu - PR [6534]
 * Fix rebase and apply patches displayed patches status - PR [6531]
@@ -884,7 +884,7 @@ Changelog
 * Reset selected lines is broken for staged files - Issue [6076]
 * Debounce navigating the list of branches - Issue [6072]
 * Delete All no longer works - "not selectable" - Issue [6068]
-* Fetching orgin from the remote branches on first load asks for the ssh key - Issue [6047]
+* Fetching origin from the remote branches on first load asks for the ssh key - Issue [6047]
 * Copy Commit Info distorts the Commit Info display - Issue [6045]
 * Fix ROT selected node ensuring visible without collapsing other nodes… - PR [6013]
 * No good way to pass arguments which contain whitespace or special characters to scripts - Issue [5999]
@@ -1076,7 +1076,7 @@ Changelog
 * Exception if no current checkout when selecting current revision - PR [6023]
 * [Bug]  Custom stash names not working - Issue [6016]
 * Update nuget.exe 4.7.1 -> 4.9.2 - PR [6006]
-* Empty/exception when reseting to a remote branch, complaining about the Commit Date < min UTC DateTime - Issue [5984]
+* Empty/exception when resetting to a remote branch, complaining about the Commit Date < min UTC DateTime - Issue [5984]
 * Refresh revision grid when superproject branch/tag is completed - PR [5981]
 * BitBucket Server plugin has garbage links - Issue [5976]
 * New gitignore editor doesn't allow multiple lines - Issue [5975]
@@ -1237,7 +1237,7 @@ Changelog
 * Check for recommended Git version - PR [4929]
 * Fix filter commit label - PR [4926]
 * Migrate categorised local repositories - PR [4899]
-* Some other improvements/fixs in formverify (Recover lost objects form) - PR [4898]
+* Some other improvements/fixes in formverify (Recover lost objects form) - PR [4898]
 * Branch graph lines can have invisible colors - Issue [4892]
 * Improve FormVerify (Recover lost objects form) - PR [4882]
 * [Discussion] Display categorised repository history - Issue [4878]
@@ -1409,7 +1409,7 @@ Changelog
 * Git config log.showSignature breaks revision grid - Issue [5179]
 * Graph column width sometimes appears too narrow - Issue [5167]
 * Browsing submodule repo can introduce UI pauses - Issue [5166]
-* AppVeyor build is broken: ValueTuple DLL is mssing - Issue [5165]
+* AppVeyor build is broken: ValueTuple DLL is missing - Issue [5165]
 * JTF+Rx Stack overflow - Issue [5134]
 * Error on push deleting a remote branch when a tag with the same name exists - Issue [5119]
 * Repository init dialog shows incorrect location - Issue [5107]
@@ -1421,7 +1421,7 @@ Changelog
 * RTF round-trip bug causes System.ArgumentException: File format is not valid - Issue [5005]
 * NBug scaling issues - Issue [4989]
 * Diff view options are positioned wrong, cannot be selected - Issue [4978]
-* crash on copy to clippboard operation if repo history is still loading - Issue [4966]
+* crash on copy to clipboard operation if repo history is still loading - Issue [4966]
 * Crash when you click on the Commit tab - Issue [4956]
 * "Reset all changes" not working when "Refresh dialog on form focus" true - Issue [4907]
 * Column widths not adjustable - Issue [4902]
@@ -1445,13 +1445,13 @@ Changelog
 * Crash during copy to clipboard - Issue [4542]
 * "Restore to selected version" function is removed from 2.51 - Issue [4535]
 * AsyncLoader doesn't cancel on dispose - Issue [4517]
-* Is there a bug in RevisionGraph.ProccessGitLog? - Issue [4516]
+* Is there a bug in RevisionGraph.ProcessGitLog? - Issue [4516]
 * GitK is not launched with newer Git - Issue [4510]
 * PuTTY Installer Is Outdated - Issue [4509]
 * GitEx selects the top revision after creating a new tag - Issue [4495]
 * 2.51: App crashes upon pressing "Script"  - Issue [4488]
 * Find in the Diff tab fails to find text - Issue [4485]
-* Commit index count dissapears on refresh - Issue [4483]
+* Commit index count disappears on refresh - Issue [4483]
 * Branch input isn't focused on Merge window - Issue [4464]
 * Unable to solution build in VS2017 - Issue [4458]
 * Option to set language in - Dictionary For Spelling Check - not working - Issue [4443]
@@ -1467,7 +1467,7 @@ Changelog
 * Command Log: logs may be lost - Issue [4231]
 * Stash List is called to often - Issue [4230]
 * "Do you want to add a tracking reference?" dialog appears on different screen - Issue [4205]
-* Cyling through Layouts should re-layout everything - Issue [4195]
+* Cycling through Layouts should re-layout everything - Issue [4195]
 * Cannot revert or cherry-pick selected lines - Issue [4190]
 * Feature: Remove or change old credential.helper setting - Issue [4179]
 * "Open local repository" layout broken at high DPI - Issue [4174]
@@ -1481,7 +1481,7 @@ Changelog
 * "Clean working directory" form layout broken at high DPI - Issue [3828]
 * Font selection lets you select font style but then ignores it - Issue [3795]
 * git-credential-winstore.exe missing - Issue [3732]
-* Commit Screen disapears after clicking on the drop down buttons on it - Issue [3593]
+* Commit Screen disappears after clicking on the drop down buttons on it - Issue [3593]
 * Console window cannot be closed with the Escape key - Issue [3531]
 * GitCredentialWinStore missing - Issue [3511]
 * GetSubmoduleStatusAsync CancellationTokenSource Disposed - Issue [3278]
@@ -1523,7 +1523,7 @@ Changelog
 * Git-status in the background should use --no-optional-locks - Issue [5066]
 * Typing 'b' or 'h' into the Diff Filter Files text box doesn't insert the character - Issue [5065]
 * Customized window size is not kept - Issue [5021]
-* Commit index count dissapears on refresh - Issue [4483]
+* Commit index count disappears on refresh - Issue [4483]
 
 
 ### [Version 2.51.02] (24 May 2018)
@@ -1644,7 +1644,7 @@ Changelog
 * Hide CommitInfo panel for virtual commits - PR [4096]
 * (A lot of) filetree improvements - PR [4093]
 * Browse Diff Submodule menu options for unstaged commit - PR [4092]
-* Remove "(slow!)" for showing stageged/unstaged as commits in Settings - PR [4088]
+* Remove "(slow!)" for showing staged/unstaged as commits in Settings - PR [4088]
 * Stage/unstage in browse - PR [4087]
 * Show count for artificial commits - PR [4086]
 * CA2202 CA2213 suppression - PR [4085]
@@ -1818,7 +1818,7 @@ Changelog
 * Hide CommitInfo panel for virtual commits - PR [4096]
 * (A lot of) filetree improvements - PR [4093]
 * Browse Diff Submodule menu options for unstaged commit - PR [4092]
-* Remove "(slow!)" for showing stageged/unstaged as commits in Settings - PR [4088]
+* Remove "(slow!)" for showing staged/unstaged as commits in Settings - PR [4088]
 * Stage/unstage in browse - PR [4087]
 * Show count for artificial commits - PR [4086]
 * CA2202 CA2213 suppression - PR [4085]
@@ -2121,7 +2121,7 @@ Changelog
 
 ### Version 2.49.03 (26 March 2017)
 * Fixed issue #3605. NullReferenceException from CanBeGitUrl when trying to clone git repository from dashboard.
-* Fixed issue #3578. File history and blame not show when path to file contain Cyrilic chars bug reproducible.
+* Fixed issue #3578. File history and blame not show when path to file contain Cyrillic chars bug reproducible.
 
 ### Version 2.49.02 (22 March 2017)
 * Fixed issue #3464. Background fetch plugin - Not working.
@@ -2310,7 +2310,7 @@ Changelog
 * Fixed issue #2597: [VS Plugin] Don't try highlight node when it is not found
 * Fixed issue #2590: [VS Plugin] Allow some commands on all targets
 * Fixed issue #2601, #2587, #2559, #2560: Fix issues with VS Plugin
-* Fixed issue #2591: NullRefernceException in GitPlugin
+* Fixed issue #2591: NullReferenceException in GitPlugin
 * Fixed issue #2620: Fix a couple of exceptions thrown when processing is incorrectly done on error messages
 * Fixed issue #2565: Fix for "init" command line command
 * Fixed issue #2501: Fix for "fatal: Not a valid object name" when displaying a nonexistent blob
@@ -2382,7 +2382,7 @@ Changelog
 * Support integration with TeamCity and Jenkins build server
 * Support pull request for Atlassian Stash
 * GitExt suggest update submodules after changing revision. PR #2176
-* Show commit changes (i.e: -1+5) on Checkout Branch, CheckoutR evision, Create Branch and Create Tag dialogs
+* Show commit changes (i.e: -1+5) on Checkout Branch, CheckoutR revision, Create Branch and Create Tag dialogs
 * Separate windows to merge submodules
 * Increased performance and lowered memory footprint of DvcsGraph
 * Allow Create branch in Commit dialog
@@ -2396,12 +2396,12 @@ Changelog
 * Open .git/config fixed
 * "Back" button and history
 * Disabled by default: include untracked files in stash
-* Commiter name added to commit dialog status bar. PR #1812
+* Committer name added to commit dialog status bar. PR #1812
 * Check ValidSvnWorkindDir before do svn commands. Method GitSvnCommandHelpers.ValidSvnWorkindDir work not correct on submodule repo
 * Fixed undetected working directory in root directory (the additional "dir.rfind" in the while condition stopped the loop **before** e.g. "C:" has been reached)
 * "Initialize repository" renamed to "Create repository"
 * "working dir" and "working tree" renamed to "working directory" to simplify translation
-* Preffer Putty from GitExtensions
+* Prefer Putty from GitExtensions
 * New settings management
 * Translation format changed to XLIFF (you can help on [Transifex](https://www.transifex.com/organization/git-extensions/dashboard/git-extensions) website)
 * Fixed issue #2349: Bug fixed with file history for file outside of the solution
@@ -2434,9 +2434,9 @@ Changelog
 
 ### Version 2.47 (8 November 2013)
 * Main menu restructured. Issues: #1576, #1629
-* Added BackgroundFetch plugin in order to allow perioding fetching of all remotes automatically
+* Added BackgroundFetch plugin in order to allow periodic fetching of all remotes automatically
 * Putty updated to version beta 0.63 (released 2013-08-06)
-* Display diff files list for each parent in separete collapsible group
+* Display diff files list for each parent in separate collapsible group
 * Autopull from remote to which push was rejected. Closes #1887
 * Added support for installing GitPlugin in VS2013
 * ShellExtensionSettingsPage: add simple preview for context menu items. PR #1661
@@ -2453,7 +2453,7 @@ Changelog
 * Improvements for FormResetCurrentBranch. PR #1750
 * FormFormatPatch support sending from gmail server
 * LoadPuttyKey for all remotes
-* Close commit dialog when all changes are commited - now considers new file as a change
+* Close commit dialog when all changes are committed - now considers new file as a change
 * Disabled offer commit for resolve conflicts dialog when it called from commit window. Closes #1623
 * Support pull latest submodule changes from FormSubmodules dialog window
 * Asynchronous RepositoryHistory loading implemented
@@ -2516,7 +2516,7 @@ Changelog
 * FormCheckoutBranch behavior fixed again when called from commit dialog
 * Fixed navigation in the blame committer list when double clicking
 * Fixed FormFileHistory selection current revision
-* Fixed issue #1585: IsBinaryAccordingToGitAttribute() rewrited using "git check-attr"
+* Fixed issue #1585: IsBinaryAccordingToGitAttribute() rewritten using "git check-attr"
 * Fixed issue #1590: "Show current branch only" fixed
 * Fixed issue #1622: "Show Changes" from Blame window crash fixed
 * Fixed issue #1631: Font size reading from settings fixed
@@ -2536,7 +2536,7 @@ Changelog
 * Fixed issue #1397: Shell exceptions broken
 * Fixed issue #1407: Reorder context menu items in commit dialog to better match other context menus
 * Fixed issue #1419: Command line argument "commit --quiet" doesn't work anymore
-* Fixed issue #1428: Uncheck "Amend Commit" checkbox after commiting
+* Fixed issue #1428: Uncheck "Amend Commit" checkbox after committing
 * Fixed issue #1372: Stage submodule after commit
 * Fixed Issue #1430: Replaced settings dialog with more user friendlue dialog
 * Fixed issue #1432: Add icon for "Revert commit" in revision grid context menu
@@ -2591,7 +2591,7 @@ Changelog
 * Fixed issue #1021: Added option to always show checkout dialog
 * Fixed issue #1135: Auto suggestion disabled in the Clone Repository dialog
 * Fixed issue #1161: Jump list fixed
-* Fixed issue #1173: Integraded NBug
+* Fixed issue #1173: Integrated NBug
 * Fixed issue #1195: Email address HTML encoding fixed
 * Fixed issue #1199: Warn user when reset file changes failed because it is in use
 * Fixed issue #1201: Fixed url to MSysGit project page
@@ -2656,7 +2656,7 @@ Changelog
 * Fixed issue #1113: Show friendly error when deleting unmerged branch without selecting force option
 * Fixed issue #1114: Hide remode HEAD
 * Fixed issue #1116: In some cases file differences are shown incorrect
-* Fixed issue #1128: Removed buttons from Visual Studion Xml Editor toolbar
+* Fixed issue #1128: Removed buttons from Visual Studio Xml Editor toolbar
 * Fixed syntax highlighting when + or - is in text
 * Added line and column position to commit window
 * Implement Mergetool/Difftool command suggestions for p4merge (Merge only) and BeyondCompare3 (Merge and Diff)
@@ -2675,14 +2675,14 @@ Changelog
 ### Version 2.33 (6 June 2012)
 * Fixed issue 843: toolbar is disabled when in a wxs file
 * Fixed issue 922: error during merge conflict resolve
-* Fixed issue 951: install Git Extensions into 'All Progams' instead of 'All Programs\Git Extensions'
+* Fixed issue 951: install Git Extensions into 'All Programs' instead of 'All Programs\Git Extensions'
 * Fixed issue 954: improve RSS feed deletion
 * Fixed issue 955: GitHub plugin fixed for GitHub api 3
 * Fixed issue 965: integrated text editor usability improvements
 * Fixed issue 995: support github-windows and git URL link protocol
 * Fixed issue 1000: added option to sign-off commits
 * Added French translation
-* Seprate commit button status icon if dirty only submodules
+* Separate commit button status icon if dirty only submodules
 * Many bugfixes and minor changes
 
 ### Version 2.32 (20 May 2012)
@@ -2703,7 +2703,7 @@ Changelog
 * Fixed issue 915: checkout branch dialog added if no branch selected at starting commit dialog
 * Fixed issue 925: apply patch should recognise unified format
 * Fixed issue: select all files in commit dialog performance fix
-* Fixed issue: merge conflict dialog crashwhen "Diff-Scripts" folder not exist
+* Fixed issue: merge conflict dialog crash when "Diff-Scripts" folder not exist
 * Updated msysgit to version 1.7.10
 * Added option "Open last working dir on startup"
 * Added search dialog for diff files
@@ -2786,7 +2786,7 @@ Changelog
 * Fixed autostash with submodules
 * Fixed 2 way merge for TortoiseMerge
 * Updated msysgit to version 1.7.8
-* Added support for staging/unstaging files with non-ASCI characters
+* Added support for staging/unstaging files with non-ASCII characters
 * Added "Open containing folder" entry to the context menu of difference files
 * Added "Rename branch" to context menu in revision grid
 * Added Notepad++ to supported editors list
@@ -2818,7 +2818,7 @@ Changelog
 * When trying to pull-rebase a merge commit a warning is given
 * Updated msysgit to version 1.7.7.1
 * Traditional Chinese translation updated
-* German transation updated
+* German transaction updated
 * Many bugfixes and minor changes
 
 ### Version 2.25 (16 October 2011)
@@ -2833,7 +2833,7 @@ Changelog
 * Fixed issue 656: Error viewing Blame Tab on binary file
 * Fixed issue 661: "Refresh on form focus" option in the Commit dialog does not display its setting.
 * Fixed issue: 'clone/fork GitHub repo' throws an exception if no GitHub credentials are known
-* Fixed issue: remove '.git' from targer directory if the original repository ends with '.git'
+* Fixed issue: remove '.git' from target directory if the original repository ends with '.git'
 * Fixed issue: in some cases warnings are shown in the commit dialog instead of the staged files
 * Fixed issue: the merge dialog does not close after all merge conflicts are solved
 * Updated msysgit to version 1.7.7
@@ -2987,7 +2987,7 @@ Changelog
 * Fixed issue 289: added support for MonsterId, Identicon and Wavatar when user has no Gravatar
 * Fixed issue 304: cannot load commit log
 * Fixed issue 305: binary files are not saved properly when using "save as..."
-* Fixed issue 318: when pushing new branch, track it automaticall
+* Fixed issue 318: when pushing new branch, track it automatically
 * Fixed bug: commands Clone and Initialize in Visual Studio plugin are not always enabled
 * Fixed "automatically configure the default push..." feature when adding remote
 * Fixed a pretty significant slowdown caused by the toolbar status when browsing large repositories
@@ -3073,7 +3073,7 @@ Changelog
 * GitExtensions now can be used in Linux using Mono
 
 ### Version 2.03 (18 September 2010)
-* Fixed bug: exception when deleting repository form dashboad using dashboardeditor
+* Fixed bug: exception when deleting repository form dashboard using dashboardeditor
 * Fixed bug: Settings for autocrlf are now the same as in the msysgit installer
 * Fixed bug: revision header in commitinfo was not cleard between changing selection
 * Fixed bug: branches with '/' are not handled correct
@@ -3119,7 +3119,7 @@ Changelog
 * Fixed issue 123: Translation String is missing in Delete branch conformation dialog
 * Fixed issue 126: Added editor for .gitattributes
 * Fixed issue 129: loading submodules submenu is very slow
-* Fixed issue 131: Add a blame funtion (commandline: GitExtensions blame [filename])
+* Fixed issue 131: Add a blame function (commandline: GitExtensions blame [filename])
 * Fixed issue 135: settings not saved when closing application
 * Gravatars are not longer stored in the IsolatedStorage, but use the ApplicationData path
 * Default windows font is used instead of Segoe UI
@@ -3128,7 +3128,7 @@ Changelog
 ### Version 1.98
 * Fixed issue 105: Allow to open "gitex browse" with a given filter.
 * Fixed issue 106: Show all branches which "contain" a given commit in their history.
-* Fixed issue 107: Alt+f4 and other function keys not working when rvision graph has focus.
+* Fixed issue 107: Alt+f4 and other function keys not working when revision graph has focus.
 * Fixed issue 108: Apply patch files from directory not working.
 * Fixed bug: Git Extensions crashes when opening certain repositories (e.g. linux kernel)
 * After opening the FileHistory window the selected revision will be displayed.
@@ -3166,7 +3166,7 @@ Changelog
 * Added functionality for creating and editing translations
 * Added link to report issues to dashboard
 * Added option to mark ill formed commit messages
-* Added the ability to move to the prev/next quickseach string by hitting alt+arrowup/alt+arrowdown
+* Added the ability to move to the prev/next quicksearch string by hitting alt+arrowup/alt+arrowdown
 * Added plugin to start gource repository visualizer
 * Added toolbar to diff viewer to jump to next change
 * Added option to show nonprinting characters in file viewer
@@ -3180,7 +3180,7 @@ Changelog
 * Quicksearch now also searches in branches
 * All windows positions are now saved
 * Settings dialog performance improved
-* The scoll position in file viewer is saved when switching revision.
+* The scroll position in file viewer is saved when switching revision.
 * Author image size can be set in context menu of gravatar control
 * The diff viewer now shows the old sha1 and new sha1 when viewing a submodule diff
 * The default web proxy is used to connect to internet
@@ -3294,7 +3294,7 @@ Changelog
 * Added context menu to merge conflict dialog
 * Added "Abort" button to merge conflict dialog
 * Most dialogs changed to support larger DPI settings.
-* Delete commit message after succesful commit.
+* Delete commit message after successful commit.
 * Added waitcursor to FormResolveConflicts.
 * Set width to submodules submenu and recent repositories submenu.
 * Added F3 and Shift+F3 to code dialog.
@@ -3335,7 +3335,7 @@ Changelog
 
 ### Version 1.72
 * Fixed bug in "Auto compile submodules" plugin
-* Added progress dialgo to "Check for updates" plugin
+* Added progress dialog to "Check for updates" plugin
 
 ### Version 1.71
 * Added support for plugin
@@ -3358,7 +3358,7 @@ Changelog
 ### Version 1.68
 * Improved 'Recover lost objects' dialog. Now all lost objects can be found and finding a specific commit should be much easier now.
 * Use Environment.NewLine instead of "\n".
-* Fixed a bug in default .gitignore file, it would show the [Db]ebug directory. It should be [Dd]ebug directory ofcourse.
+* Fixed a bug in default .gitignore file, it would show the [Db]ebug directory. It should be [Dd]ebug directory of course.
 * Added Resharper directories to .gitignore file.
 * Added recursive submode commands. When cloning a submodule containing nested submodules, all nested submodules can be initialized. There are also recursive initialize, update and synchronize commands added to the submodule menu.
 * Added checkout branch to the revision graph context menu.
@@ -3488,7 +3488,7 @@ Changelog
 * Added picture viewer to commit dialog
 
 ### Version 1.49
-* Fixed crash when loading some repositores (git://git.kernel.org/pub/scm/git/git.git)
+* Fixed crash when loading some repositories (git://git.kernel.org/pub/scm/git/git.git)
 
 ### Version 1.48
 * Added ChangeLog
@@ -3519,7 +3519,7 @@ Changelog
 * Fixed a bug in Visual Studio plugin
 
 ### Version 1.40
-* Better Visual Studio intergration.
+* Better Visual Studio integration.
 
 ### Version 1.38
 * Most dialogs are closed after a task is finished with success
@@ -3539,13 +3539,13 @@ Changelog
 ### Version 1.35
 * Fixed bug causing multiple config entries
 * Improved solve mergeconflict features
-* Small changes to improve usuability
+* Small changes to improve usability
 
 ### Version 1.30
 * Added support for custom mergetools
 * Fixed settings for git 1.6.1.xxx
 * Improved patch and rebase features
-* Removed a lot of annoying mergeconlict popups
+* Removed a lot of annoying mergeconflict popups
 * 32 bit and 64bit support is now in same setup
 * Fixed (and probably created) some bugs
 * Some small 64bit Windows improvements (auto-settings, some paths)
@@ -3577,22 +3577,22 @@ Changelog
 * Added PuTTY support.
 * PuTTY can now be used instead of OpenSSH.
 * When using PuTTY the commandline windows that are needed for entering
-* OpenSSH passprase are not needed anymore.
-* PuTTY private keys can be configured per remote, so key is automatilly loaded.
+* OpenSSH passphrase are not needed anymore.
+* PuTTY private keys can be configured per remote, so key is automatically loaded.
 
 ### Version 1.14
 * Improved rebase features a bit.
 * Minor bug fixes.
 
 ### Version 1.13
-* I'm still focussing on the push and pull features, because I use this a lot myself.
+* I'm still focusing on the push and pull features, because I use this a lot myself.
 * Improved auto-settings-correct features
 * Added rebase features
 * Improved merge conflict handling a bit.
 
 ### Version 1.12
 * Fixed lots of remote feature mistakes and added some missing features.
-* Push/pull/fetch should work as suppost to.
+* Push/pull/fetch should work as supposed to.
 * Added multiple stash support.
 * Did some testing, fixed minor bugs.
 * Know bug: delay loading commit graph is broken, I will fix this in the next release!
@@ -3636,7 +3636,7 @@ Changelog
 * Added "reset branch" function
 
 ### Version 1.01
-* Blame fucntion added to file history
+* Blame function added to file history
 * Fixed working dir detection
 * Small performance improvements
 
@@ -3665,13 +3665,13 @@ Changelog
 ### Version 0.92
 * Fixed a bug in clone/push/pull.
 
-* For this version I also added a non-installer version. This is just a zip file that cointains the binairy files.
+* For this version I also added a non-installer version. This is just a zip file that contains the binairy files.
 * Please note that this is just the standalone application without shell extensions!
 
 ### Version 0.91
 * Rewritten most of commit logic. This works better now.
-* Colors added on tag/branch/stach labels
-* I also added a directory history on open/push/pull/clone, just to increase useabillity
+* Colors added on tag/branch/stash labels
+* I also added a directory history on open/push/pull/clone, just to increase usabillity
 
 ### Version 0.9
 * Removed Visual Studio plugin
@@ -3713,7 +3713,7 @@ Changelog
 * Better feedback when an error occurs
 * Shell extension also works on directories
 * Dialogs are modal now
-* VS2008 doesn't crash on errors anymore (which was very anoying!)
+* VS2008 doesn't crash on errors anymore (which was very annoying!)
 
 ### Version 0.4
 * Apply patch is now working
