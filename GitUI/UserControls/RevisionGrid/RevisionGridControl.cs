@@ -2185,7 +2185,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        internal void ShowCommitBodyInRevisionGrid()
+        internal void ToggleShowCommitBodyInRevisionGrid()
         {
             AppSettings.ShowCommitBodyInRevisionGrid = !AppSettings.ShowCommitBodyInRevisionGrid;
             MenuCommands.TriggerMenuChanged();
