@@ -1261,8 +1261,8 @@ namespace GitCommands
 
         public static bool ShowCommitBodyInRevisionGrid
         {
-            get => GetBool("showcommitbodyinrevisiongrid", true);
-            set => SetBool("showcommitbodyinrevisiongrid", value);
+            get => GetBool("ShowCommitBodyInRevisionGrid", true);
+            set => SetBool("ShowCommitBodyInRevisionGrid", value);
         }
 
         /// <summary>Gets or sets the path to the git application executable.</summary>
