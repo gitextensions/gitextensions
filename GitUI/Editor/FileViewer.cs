@@ -443,7 +443,7 @@ namespace GitUI.Editor
         /// <param name="fileName">The fileName to present.</param>
         /// <param name="text">The patch text.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
-        /// <param name="checkGitAttributes">Check Git attributes to check for bimary files.</param>
+        /// <param name="checkGitAttributes">Check Git attributes to check for binary files.</param>
         public Task ViewTextAsync(string? fileName, string text,
             Action? openWithDifftool = null, bool checkGitAttributes = false)
         {

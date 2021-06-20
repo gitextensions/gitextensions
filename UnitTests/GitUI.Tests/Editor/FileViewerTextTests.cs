@@ -33,7 +33,7 @@ namespace GitUITests.Editor
 
         /// <summary>
         /// When: some text is selected in a <see cref="FileViewer"/>.
-        /// Assert: All occurences of the selected text are highlighted.
+        /// Assert: All occurrences of the selected text are highlighted.
         /// </summary>
         [Test]
         public void FileViewer_highlight_selected_text_when_enabled()

@@ -25,7 +25,7 @@ environment:
   TEST_RUN_COUNT: 1
   # Execute unit tests
   RUN_UNIT_TESTS: 1
-  # Execute integation tests
+  # Execute integration tests
   RUN_INTEGRATION_TESTS: 1
   # Fail the build if any of the tests fail
   FAIL_BUILD_IF_TESTS_FAIL: 1

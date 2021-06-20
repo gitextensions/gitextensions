@@ -267,7 +267,7 @@ namespace NetSpell.SpellChecker
 
         #endregion
 
-        #region ISpell Near Miss Suggetion methods
+        #region ISpell Near Miss Suggestion methods
 
         private void SuggestWord(string word, List<Word> tempSuggestion)
         {

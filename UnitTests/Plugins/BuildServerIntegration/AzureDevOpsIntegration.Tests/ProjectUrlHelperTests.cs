@@ -55,7 +55,7 @@ namespace AzureDevOpsIntegrationTests
         }
 
         /// <remarks>
-        /// TryGetTokenManagementUrlFromProject will happlily convert anything that somewhat looks like a project url
+        /// TryGetTokenManagementUrlFromProject will happily convert anything that somewhat looks like a project url
         /// in favor of better availability for on premise installations of TFS
         /// </remarks>
         [TestCase(null)]

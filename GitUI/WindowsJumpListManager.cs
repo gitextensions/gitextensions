@@ -182,7 +182,7 @@ namespace GitUI
                 _pullButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Pull.Image, 48, true), thumbButtons.Pull.Text);
                 _pullButton.Click += thumbButtons.Pull.Click;
 
-                // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
+                // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, because of how the WindowsAPICodePack was implemented.
                 TaskbarManager.Instance.ThumbnailToolBars.AddButtons(handle, _commitButton, _pullButton, _pushButton);
             }
         }
