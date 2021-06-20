@@ -1259,10 +1259,10 @@ namespace GitCommands
             set => SetInt("revisiongridquicksearchtimeout", value);
         }
 
-        public static bool ShowMultiLineCommitMessages
+        public static bool ShowCommitBodyInRevisionGrid
         {
-            get => GetBool("showmultilinecommitmessages", true);
-            set => SetBool("showmultilinecommitmessages", value);
+            get => GetBool("showcommitbodyinrevisiongrid", true);
+            set => SetBool("showcommitbodyinrevisiongrid", value);
         }
 
         /// <summary>Gets or sets the path to the git application executable.</summary>

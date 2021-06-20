@@ -2185,9 +2185,9 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        internal void ToggleShowMultiLineCommit()
+        internal void ShowCommitBodyInRevisionGrid()
         {
-            AppSettings.ShowMultiLineCommitMessages = !AppSettings.ShowMultiLineCommitMessages;
+            AppSettings.ShowCommitBodyInRevisionGrid = !AppSettings.ShowCommitBodyInRevisionGrid;
             MenuCommands.TriggerMenuChanged();
             Refresh();
         }

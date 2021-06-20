@@ -356,10 +356,10 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
-                    Name = "showMultiLineCommitMessagesToolStripMenuItem",
-                    Text = "Show multi-line commit messages",
-                    ExecuteAction = () => _revisionGrid.ToggleShowMultiLineCommit(),
-                    IsCheckedFunc = () => AppSettings.ShowMultiLineCommitMessages
+                    Name = "showCommitMessageBodyToolStripMenuItem",
+                    Text = "Show commit message body",
+                    ExecuteAction = () => _revisionGrid.ShowCommitBodyInRevisionGrid(),
+                    IsCheckedFunc = () => AppSettings.ShowCommitBodyInRevisionGrid
                 },
 
                 MenuCommand.CreateSeparator(),

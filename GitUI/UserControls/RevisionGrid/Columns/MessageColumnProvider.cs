@@ -404,7 +404,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return;
             }
 
-            if (lines.Length > 1)
+            if (lines.Length > 1 && AppSettings.ShowCommitBodyInRevisionGrid)
             {
                 var commitBody = string.Concat(lines.Skip(1).Select(_ => " " + _));
                 var bodyBounds = messageBounds.ReduceLeft(offset);

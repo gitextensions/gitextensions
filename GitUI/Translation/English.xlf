@@ -8867,6 +8867,10 @@ See the changes in the commit form.</source>
         <source>Show build status text</source>
         <target />
       </trans-unit>
+      <trans-unit id="showCommitMessageBodyToolStripMenuItem.Text">
+        <source>Show commit message body</source>
+        <target />
+      </trans-unit>
       <trans-unit id="showDateColumnToolStripMenuItem.Text">
         <source>Show date column</source>
         <target />
@@ -8897,10 +8901,6 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="showTagsToolStripMenuItem.Text">
         <source>Show tags</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showMultiLineCommitMessagesToolStripMenuItem.Text">
-        <source>Show multi-line commit messages</source>
         <target />
       </trans-unit>
     </body>
