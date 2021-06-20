@@ -358,7 +358,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "showCommitMessageBodyToolStripMenuItem",
                     Text = "Show commit message body",
-                    ExecuteAction = () => _revisionGrid.ShowCommitBodyInRevisionGrid(),
+                    ExecuteAction = () => _revisionGrid.ToggleShowCommitBodyInRevisionGrid(),
                     IsCheckedFunc = () => AppSettings.ShowCommitBodyInRevisionGrid
                 },
 
