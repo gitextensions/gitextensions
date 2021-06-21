@@ -2783,6 +2783,8 @@ namespace GitUI
             public RefFilterOptions RefFilterOptions => _revisionGridControl.RefFilterOptions;
 
             public int VisibleRevisionCount => _revisionGridControl._gridView.RowCount;
+
+            public bool IsRefreshingRevisions => _revisionGridControl._isRefreshingRevisions;
         }
     }
 }
