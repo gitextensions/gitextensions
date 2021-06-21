@@ -466,7 +466,8 @@ namespace GitUI.BranchTreePanel
             {
                 Queue<TreeNode> queue = new(nodes);
                 List<TreeNode> ret = new();
-
+                bool isFullMatch = false;
+                int matchIndex = -1;
                 while (queue.Count != 0)
                 {
                     var n = queue.Dequeue();
@@ -475,6 +476,20 @@ namespace GitUI.BranchTreePanel
                     {
                         if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
                         {
+                            if (!isFullMatch)
+                            {
+                                if (string.Compare(text, branch.FullPath, StringComparison.InvariantCultureIgnoreCase) == 0)
+                                {
+                                    isFullMatch = true;
+                                    matchIndex = ret.Count;
+                                }
+                                else if (matchIndex == -1 && branch.FullPath.Contains('/') &&
+                                    string.Compare(text, branch.FullPath.Split('/').Last(), StringComparison.InvariantCultureIgnoreCase) == 0)
+                                {
+                                    matchIndex = ret.Count;
+                                }
+                            }
+
                             AddTreeNodeToSearchResult(ret, n);
                         }
                     }
@@ -482,6 +497,20 @@ namespace GitUI.BranchTreePanel
                     {
                         if (n.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
                         {
+                            if (!isFullMatch)
+                            {
+                                if (string.Compare(text, n.Text, StringComparison.InvariantCultureIgnoreCase) == 0)
+                                {
+                                    isFullMatch = true;
+                                    matchIndex = ret.Count;
+                                }
+                                else if (matchIndex == -1 && n.Text.Contains('/') &&
+                                    string.Compare(text, n.Text.Split('/').Last(), StringComparison.InvariantCultureIgnoreCase) == 0)
+                                {
+                                    matchIndex = ret.Count;
+                                }
+                            }
+
                             AddTreeNodeToSearchResult(ret, n);
                         }
                     }
@@ -492,7 +521,25 @@ namespace GitUI.BranchTreePanel
                     }
                 }
 
+                if (matchIndex > 0)
+                {
+                    rotateListToSetFirstAsMatchIndex(ret, matchIndex);
+                }
+
                 return ret;
+            }
+        }
+
+        private void rotateListToSetFirstAsMatchIndex(List<TreeNode> ret, int matchIndex)
+        {
+            int rotationIndex = 0;
+
+            while (rotationIndex < matchIndex)
+            {
+                TreeNode firstElement = ret.FirstOrDefault();
+                ret.RemoveAt(0);
+                ret.Add(firstElement);
+                rotationIndex++;
             }
         }
 
