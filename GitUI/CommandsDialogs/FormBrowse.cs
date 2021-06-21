@@ -849,7 +849,7 @@ namespace GitUI.CommandsDialogs
             FillCommitInfo(selectedRevision);
 
             // If the revision's body has been updated then the grid needs to be refreshed to display it
-            if (selectedRevision is not null && selectedRevision.HasMultiLineMessage && oldBody != selectedRevision.Body)
+            if (AppSettings.ShowCommitBodyInRevisionGrid && selectedRevision is not null && selectedRevision.HasMultiLineMessage && oldBody != selectedRevision.Body)
             {
                 RevisionGrid.Refresh();
             }

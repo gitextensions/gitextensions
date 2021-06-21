@@ -354,6 +354,13 @@ namespace GitUI.UserControls.RevisionGrid
                     ExecuteAction = () => _revisionGrid.ToggleShowGitNotes(),
                     IsCheckedFunc = () => AppSettings.ShowGitNotes
                 },
+                new MenuCommand
+                {
+                    Name = "showCommitMessageBodyToolStripMenuItem",
+                    Text = "Show commit message body",
+                    ExecuteAction = () => _revisionGrid.ToggleShowCommitBodyInRevisionGrid(),
+                    IsCheckedFunc = () => AppSettings.ShowCommitBodyInRevisionGrid
+                },
 
                 MenuCommand.CreateSeparator(),
 
