@@ -50,7 +50,7 @@ namespace GitUI.BranchTreePanel
 
             public bool Delete()
             {
-                return UICommands.StartDeleteTagDialog(TreeViewNode.TreeView, Name);
+                return UICommands.StartDeleteTagDialog(TreeViewNode.TreeView, FullPath);
             }
 
             public bool Merge()
