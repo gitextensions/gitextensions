@@ -39,8 +39,8 @@
 .HighlightAllOccurences  { color: #ffffe0; }
 .Tag                     { color: #00008b; }
 .Graph                   { color: #8b0000; }
-.Branch                  { color: #22a639; }
-.RemoteBranch            { color: #e66363; }
+.Branch                  { color: #008000; }
+.RemoteBranch            { color: #8b0009; }
 .DiffSection             { color: #e6e6e6; }
 .DiffRemoved             { color: #ffc8c8; }
 .DiffRemovedExtra        { color: #ffa5a5; }

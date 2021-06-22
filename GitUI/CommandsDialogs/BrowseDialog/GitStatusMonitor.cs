@@ -505,7 +505,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// Do not change if a value is already set at a earlier time,
         /// but respect the minimal (dynamic) update times between updates.
         /// </summary>
-        /// <param name="delay">delay in milli seconds.</param>
+        /// <param name="delay">delay in milliseconds.</param>
         private void ScheduleNextUpdateTime(int delay)
         {
             lock (_statusSequence)

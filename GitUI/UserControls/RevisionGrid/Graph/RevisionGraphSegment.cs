@@ -7,7 +7,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     //     |    <- segment connects two commits
     //     *    <- Parent
     // A segment can span multiple rows when rendered as a graph.
-    // Example: This graph has 6 segements.
+    // Example: This graph has 6 segments.
     //     *    <- Child
     //   / | \  <- Child.StartSegments ("start" although they are merged here)
     //  |  *  |

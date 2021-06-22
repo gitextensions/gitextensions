@@ -86,7 +86,7 @@ Current Branch:
         private SimpleHelpDisplayDialog? _argumentsCheatSheet;
         private bool _handlingCheck;
 
-        // settings maybe loaded before page is shwon or after
+        // settings maybe loaded before page is shown or after
         // we need to track that so we load images before we bind the list
         private bool _imagsLoaded;
 
@@ -140,7 +140,7 @@ Current Branch:
 
             System.Resources.ResourceManager rm = new("GitUI.Properties.Images", Assembly.GetExecutingAssembly());
 
-            // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
+            // dummy request; for some strange reason the ResourceSets are not loaded until after the first object request... bug?
             rm.GetObject("dummy");
 
             using System.Resources.ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);

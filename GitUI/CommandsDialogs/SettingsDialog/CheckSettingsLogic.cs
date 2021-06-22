@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 }
                 catch (Exception)
                 {
-                    // Ignore expection, we are trying to find a way to execute git.exe
+                    // Ignore exception, we are trying to find a way to execute git.exe
                 }
 
                 return false;

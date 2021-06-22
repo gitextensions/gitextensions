@@ -101,11 +101,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
             {
-                var bodySummary = _gitRevisionSummaryBuilder.BuildSummary(revision.Body);
-                var initialLength = (bodySummary?.Length ?? 50) + 10;
+                // The body is not stored for older commits (to save memory)
+                string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(revision.Body)
+                    ?? revision.Subject + (revision.HasMultiLineMessage ? TranslatedStrings.BodyNotLoaded : "");
+                int initialLength = bodySummary.Length + 10;
                 _toolTipBuilder.EnsureCapacity(initialLength);
 
-                _toolTipBuilder.Append(bodySummary ?? revision.Subject + TranslatedStrings.BodyNotLoaded);
+                _toolTipBuilder.Append(bodySummary);
 
                 if (revision.Refs.Count != 0)
                 {
@@ -359,11 +361,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             var text = items.Count.ToString();
             var bounds = messageBounds.ReduceLeft(offset);
-            var color = e.State.HasFlag(DataGridViewElementStates.Selected)
-                ? SystemColors.HighlightText
-                : SystemColors.ControlText;
             var textWidth = Math.Max(
-                _grid.DrawColumnText(e, text, style.NormalFont, color, bounds),
+                _grid.DrawColumnText(e, text, style.NormalFont, style.ForeColor, bounds),
                 TextRenderer.MeasureText("88", style.NormalFont).Width);
             offset += textWidth + textHorizontalPadding;
         }
@@ -405,15 +404,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return;
             }
 
-            if (lines.Length == 1)
+            if (lines.Length > 1 && AppSettings.ShowCommitBodyInRevisionGrid)
             {
-                return;
+                var commitBody = string.Concat(lines.Skip(1).Select(_ => " " + _));
+                var bodyBounds = messageBounds.ReduceLeft(offset);
+                var bodyWidth = _grid.DrawColumnText(e, commitBody, font, style.CommitBodyForeColor, bodyBounds);
+                offset += bodyWidth;
             }
-
-            var commitBody = string.Concat(lines.Skip(1).Select(_ => " " + _));
-            var bodyBounds = messageBounds.ReduceLeft(offset);
-            var bodyWidth = _grid.DrawColumnText(e, commitBody, font, style.CommitBodyForeColor, bodyBounds);
-            offset += bodyWidth;
 
             // Draw the multi-line indicator
             indicator.Render();

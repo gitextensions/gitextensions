@@ -1234,7 +1234,7 @@ namespace GitUI.CommandsDialogs
                     };
                     page.Buttons.Add(lnkStageAndCommit);
 
-                    // Option 2: the user just wants to make an empty commmit
+                    // Option 2: the user just wants to make an empty commit
                     TaskDialogCommandLinkButton lnkEmptyCommit = new(_noFilesStagedMakeEmptyCommitOption.Text);
                     page.Buttons.Add(lnkEmptyCommit);
 

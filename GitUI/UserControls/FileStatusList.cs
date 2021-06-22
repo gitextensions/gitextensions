@@ -1341,7 +1341,7 @@ namespace GitUI
 
             if (item.Selected)
             {
-                e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
+                e.Graphics.FillRectangle(Focused ? SystemBrushes.Highlight : OtherColors.InactiveSelectionHighlightBrush, e.Bounds);
             }
 
             if (image is not null)
@@ -1353,14 +1353,14 @@ namespace GitUI
             {
                 Rectangle textRect = new(prefixTextStartX, item.Bounds.Top, textMaxWidth, item.Bounds.Height);
 
-                Color grayTextColor = item.Selected
+                Color grayTextColor = item.Selected && Focused
                     ? ColorHelper.GetHighlightGrayTextColor(
                         backgroundColorName: KnownColor.Window,
                         textColorName: KnownColor.WindowText,
                         highlightColorName: KnownColor.Highlight)
                     : SystemColors.GrayText;
 
-                Color textColor = item.Selected
+                Color textColor = item.Selected && Focused
                     ? SystemColors.HighlightText
                     : SystemColors.WindowText;
 
