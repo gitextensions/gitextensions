@@ -500,63 +500,51 @@ namespace GitUI.BranchTreePanel
                     rotateListToSetFirstAsMatchIndex(ret, matchIndex);
                 }
 
-                return ret;
-            }
-        }
-
-        /// <summary>
-        /// A function to see if the node text or full path of a node (for branch node) is matching with search text
-        /// </summary>
-        /// <param name="nodeText">nodeText/full path</param>
-        /// <param name="searchText">text entered in search box</param>
-        /// <param name="isFullMatch">is full match found</param>
-        /// <param name="matchIndex">index of the closest match found</param>
-        /// <param name="ret">List of matching nodes</param>
-        /// <returns>true if match found</returns>
-        private bool searchForMatchingText(string nodeText, string searchText, ref bool isFullMatch, ref int matchIndex, List<TreeNode> ret)
-        {
-            if (nodeText.IndexOf(searchText, StringComparison.InvariantCultureIgnoreCase) != -1)
-            {
-                // If full match is already found no need to search for furthur matches as full match has highest priority
-                if (!isFullMatch)
+                // A function to see if the node text or full path of a node (for branch node) is matching with search text
+                bool searchForMatchingText(string nodeText, string searchText, ref bool isFullMatch, ref int matchIndex, List<TreeNode> ret)
                 {
-                    // checking for full match
-                    if (string.Compare(nodeText, searchText, StringComparison.InvariantCultureIgnoreCase) == 0)
+                    if (nodeText.IndexOf(searchText, StringComparison.InvariantCultureIgnoreCase) != -1)
                     {
-                        isFullMatch = true;
-                        matchIndex = ret.Count;
+                        // If full match is already found no need to search for furthur matches as full match has highest priority
+                        if (!isFullMatch)
+                        {
+                            // checking for full match
+                            if (string.Compare(nodeText, searchText, StringComparison.InvariantCultureIgnoreCase) == 0)
+                            {
+                                isFullMatch = true;
+                                matchIndex = ret.Count;
+                            }
+
+                            // if full match not found, check for matches appearing after the last '/' for child node match.
+                            // If a match after '/' was already found then skip this by checking match index
+                            else if (matchIndex == -1 && nodeText.Contains('/') &&
+                                string.Compare(searchText, nodeText.Split('/').Last(), StringComparison.InvariantCultureIgnoreCase) == 0)
+                            {
+                                matchIndex = ret.Count;
+                            }
+                        }
+
+                        return true;
                     }
 
-                    // if full match not found, check for matches appearing after the last '/' for child node match.
-                    // If a match after '/' was already found then skip this by checking match index
-                    else if (matchIndex == -1 && nodeText.Contains('/') &&
-                        string.Compare(searchText, nodeText.Split('/').Last(), StringComparison.InvariantCultureIgnoreCase) == 0)
+                    return false;
+                }
+
+                // Rotate the list to set the match with high priority as first item
+                void rotateListToSetFirstAsMatchIndex(List<TreeNode> ret, int matchIndex)
+                {
+                    int rotationIndex = 0;
+
+                    while (rotationIndex < matchIndex)
                     {
-                        matchIndex = ret.Count;
+                        TreeNode firstElement = ret.FirstOrDefault();
+                        ret.RemoveAt(0);
+                        ret.Add(firstElement);
+                        rotationIndex++;
                     }
                 }
 
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Rotate the list to set the match with high priority as first item
-        /// </summary>
-        /// <param name="ret">list of nodes</param>
-        /// <param name="matchIndex">index of high priority match</param>
-        private void rotateListToSetFirstAsMatchIndex(List<TreeNode> ret, int matchIndex)
-        {
-            int rotationIndex = 0;
-
-            while (rotationIndex < matchIndex)
-            {
-                TreeNode firstElement = ret.FirstOrDefault();
-                ret.RemoveAt(0);
-                ret.Add(firstElement);
-                rotationIndex++;
+                return ret;
             }
         }
 
