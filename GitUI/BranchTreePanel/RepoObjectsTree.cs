@@ -473,43 +473,15 @@ namespace GitUI.BranchTreePanel
 
                     if (n.Tag is BaseBranchNode branch)
                     {
-                        if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                        if (searchForMatchingText(branch.FullPath, text, ref isFullMatch, ref matchIndex, ret))
                         {
-                            if (!isFullMatch)
-                            {
-                                if (string.Compare(text, branch.FullPath, StringComparison.InvariantCultureIgnoreCase) == 0)
-                                {
-                                    isFullMatch = true;
-                                    matchIndex = ret.Count;
-                                }
-                                else if (matchIndex == -1 && branch.FullPath.Contains('/') &&
-                                    string.Compare(text, branch.FullPath.Split('/').Last(), StringComparison.InvariantCultureIgnoreCase) == 0)
-                                {
-                                    matchIndex = ret.Count;
-                                }
-                            }
-
                             AddTreeNodeToSearchResult(ret, n);
                         }
                     }
                     else
                     {
-                        if (n.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                        if (searchForMatchingText(n.Text, text, ref isFullMatch, ref matchIndex, ret))
                         {
-                            if (!isFullMatch)
-                            {
-                                if (string.Compare(text, n.Text, StringComparison.InvariantCultureIgnoreCase) == 0)
-                                {
-                                    isFullMatch = true;
-                                    matchIndex = ret.Count;
-                                }
-                                else if (matchIndex == -1 && n.Text.Contains('/') &&
-                                    string.Compare(text, n.Text.Split('/').Last(), StringComparison.InvariantCultureIgnoreCase) == 0)
-                                {
-                                    matchIndex = ret.Count;
-                                }
-                            }
-
                             AddTreeNodeToSearchResult(ret, n);
                         }
                     }
@@ -520,6 +492,9 @@ namespace GitUI.BranchTreePanel
                     }
                 }
 
+                // if matches with high priority are found bring those to the first of the list by rotating the list
+                // Rotation is done to maintain the tree order, so that on click of search button multiple times,
+                // the selected node passes down the tree to other matches.
                 if (matchIndex > 0)
                 {
                     rotateListToSetFirstAsMatchIndex(ret, matchIndex);
@@ -529,6 +504,49 @@ namespace GitUI.BranchTreePanel
             }
         }
 
+        /// <summary>
+        /// A function to see if the node text or full path of a node (for branch node) is matching with search text
+        /// </summary>
+        /// <param name="nodeText">nodeText/full path</param>
+        /// <param name="searchText">text entered in search box</param>
+        /// <param name="isFullMatch">is full match found</param>
+        /// <param name="matchIndex">index of the closest match found</param>
+        /// <param name="ret">List of matching nodes</param>
+        /// <returns>true if match found</returns>
+        private bool searchForMatchingText(string nodeText, string searchText, ref bool isFullMatch, ref int matchIndex, List<TreeNode> ret)
+        {
+            if (nodeText.IndexOf(searchText, StringComparison.InvariantCultureIgnoreCase) != -1)
+            {
+                // If full match is already found no need to search for furthur matches as full match has highest priority
+                if (!isFullMatch)
+                {
+                    // checking for full match
+                    if (string.Compare(nodeText, searchText, StringComparison.InvariantCultureIgnoreCase) == 0)
+                    {
+                        isFullMatch = true;
+                        matchIndex = ret.Count;
+                    }
+
+                    // if full match not found, check for matches appearing after the last '/' for child node match.
+                    // If a match after '/' was already found then skip this by checking match index
+                    else if (matchIndex == -1 && nodeText.Contains('/') &&
+                        string.Compare(searchText, nodeText.Split('/').Last(), StringComparison.InvariantCultureIgnoreCase) == 0)
+                    {
+                        matchIndex = ret.Count;
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Rotate the list to set the match with high priority as first item
+        /// </summary>
+        /// <param name="ret">list of nodes</param>
+        /// <param name="matchIndex">index of high priority match</param>
         private void rotateListToSetFirstAsMatchIndex(List<TreeNode> ret, int matchIndex)
         {
             int rotationIndex = 0;
