@@ -1,5 +1,15 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
+using ApprovalTests;
+using ApprovalTests.Namers;
+using ApprovalTests.Reporters;
+using ApprovalTests.Reporters.ContinuousIntegration;
+using FluentAssertions;
 using GitCommands;
+using GitUIPluginInterfaces;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace GitCommandsTests
@@ -9,10 +19,17 @@ namespace GitCommandsTests
     {
         private RevisionReader _revisionReader;
 
+        private Func<string?, Encoding?> _getEncodingByGitName;
+        private Encoding _logOutputEncoding = Encoding.UTF8;
+        private long _sixMonths = new DateTimeOffset(new DateTime(2021, 01, 01)).ToUnixTimeSeconds();
+
         [SetUp]
         public void Setup()
         {
             _revisionReader = new RevisionReader();
+
+            // The normal encoding is _logOutputEncoding ("i18n.logoutputencoding") since Git 1.8.4
+            _getEncodingByGitName = (encoding) => _logOutputEncoding;
         }
 
         [Test]
@@ -73,6 +90,62 @@ namespace GitCommandsTests
             if (notExpectedToContain is not null)
             {
                 args.ToString().Should().NotContain(notExpectedToContain);
+            }
+        }
+
+        [Test]
+        public void TryParseRevisionshould_return_false_if_argument_is_invalid()
+        {
+            ArraySegment<byte> chunk = null;
+
+            bool res = RevisionReader.TestAccessor.TryParseRevision(chunk, _getEncodingByGitName, _logOutputEncoding, _sixMonths, out _);
+            res.Should().BeFalse();
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+
+        // Avoid launching the difftool at differences
+        // APPVEYOR should be detected automatically, this forces the setting (also in local tests)
+        // The popup will hang the tests without failure information
+        [UseReporter(typeof(AppVeyorReporter))]
+        [Test]
+        [TestCase("bad_parentid", false)]
+        [TestCase("bad_parentid_length", false)]
+        [TestCase("bad_sha", false)]
+        [TestCase("empty", false)]
+        [TestCase("illegal_timestamp", true, true)]
+        [TestCase("multi_pathfilter", true)]
+        [TestCase("no_encoding", false)]
+        [TestCase("no_subject", true)]
+        [TestCase("normal", true)]
+        [TestCase("short_sha", false)]
+        [TestCase("simple_pathfilter", true)]
+        [TestCase("subject_no_body", true)]
+        public void TryParseRevision_test(string testName, bool expectedReturn, bool serialThrows = false)
+        {
+            using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
+            {
+                string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
+                ArraySegment<byte> chunk = File.ReadAllBytes(path);
+
+                RevisionReader.TestAccessor.TryParseRevision(chunk, _getEncodingByGitName, _logOutputEncoding, _sixMonths, out GitRevision rev)
+                    .Should().Be(expectedReturn);
+
+                // No LocalTime for the time stamps
+                JsonSerializerSettings timeZoneSettings = new()
+                {
+                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
+                };
+
+                if (serialThrows)
+                {
+                    Action act = () => JsonConvert.SerializeObject(rev);
+                    act.Should().Throw<JsonSerializationException>();
+                }
+                else if (expectedReturn)
+                {
+                    Approvals.VerifyJson(JsonConvert.SerializeObject(rev, timeZoneSettings));
+                }
             }
         }
     }

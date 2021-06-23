@@ -1,0 +1,34 @@
+﻿{
+    "ObjectId": {
+        "IsArtificial": false
+    },
+    "Guid": "5899baad9014356f7a334da660a7b304b4b00da2",
+    "Refs": [],
+    "ParentIds": [
+        {
+            "IsArtificial": false
+        }
+    ],
+    "TreeGuid": {
+        "IsArtificial": false
+    },
+    "Author": "Gerhard Olsson",
+    "AuthorEmail": "gerhardol@users.noreply.github.com",
+    "AuthorUnixTime": 1622238476,
+    "AuthorDate": "2021-05-28T21:47:56Z",
+    "Committer": "Gerhard Olsson",
+    "CommitterEmail": "gerhardol@users.noreply.github.com",
+    "CommitUnixTime": 1624314822,
+    "CommitDate": "2021-06-21T22:33:42Z",
+    "BuildStatus": null,
+    "Subject": "RevisionReader: Parse raw commit body",
+    "Body": "RevisionReader: Parse raw commit body\n\n* Separate path filter handling\nOnly use EndOfBody when there are pathfilters.\n\n* Use sequence of end-of-text instead of GUID for EndOfBody\nto reduce I/O.\n\n* Parse raw body %B instead of combining %s%n%n%b to avoid extra processing\nin both Git and GE.\nSimplify the handling.\n\n* Do not allocate body for older commits\nPreviously a temporary variable was allocated also if body was\nnot stored in the commit message (to save memory, for older commits).\n\n* Only store commit body if multiline message\nIf the body is the same as the subject, do not store the message\nThis also avoids loading the commit body for older commits\nif the commit is selected\n\n* Align usage of commit body retrieval for other than RevisionReader\n  * \"Previous commit messages\" used %s%b instead of %B\n  * Align parsing of raw body and subject\n\n* ObjectId Inline local parsing functions\n\n* Use ReadOnlySpan<char> in RevisionReader\nReduce string allocations\n\n* Use HighPerformance StringBuffer",
+    "HasMultiLineMessage": true,
+    "HasNotes": false,
+    "MessageEncoding": null,
+    "IsArtificial": false,
+    "HasParent": true,
+    "FirstParentId": {
+        "IsArtificial": false
+    }
+}

@@ -116,6 +116,7 @@ namespace GitCommands
 
             var logOutputEncoding = module.LogOutputEncoding;
             long sixMonths = new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(30 * 6)).ToUnixTimeSeconds();
+            Func<string?, Encoding> getEncodingByGitName = (name) => module.GetEncodingByGitName(name);
 
             using (var process = module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
@@ -127,7 +128,7 @@ namespace GitCommands
                 {
                     token.ThrowIfCancellationRequested();
 
-                    if (TryParseRevision(module, chunk, logOutputEncoding, sixMonths, out var revision)
+                    if (TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out var revision)
                         && (revisionPredicate is null || revisionPredicate(revision)))
                     {
                         // Look up any refs associated with this revision
@@ -225,7 +226,7 @@ namespace GitCommands
             }
         }
 
-        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
+        private static bool TryParseRevision(ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -356,7 +357,7 @@ namespace GitCommands
             else
             {
                 encodingName = logOutputEncoding.GetString(array.Slice(offset, encodingNameEndLength));
-                encoding = module.GetEncodingByGitName(encodingName) ?? Encoding.UTF8;
+                encoding = getEncodingByGitName(encodingName) ?? Encoding.UTF8;
             }
 
             offset += encodingNameEndLength + 1;
@@ -499,6 +500,9 @@ namespace GitCommands
             internal ArgumentBuilder BuildArgumentsBuildArguments(RefFilterOptions refFilterOptions,
                 string branchFilter, string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
+
+            internal static bool TryParseRevision(ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
+                RevisionReader.TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out revision);
         }
     }
 }

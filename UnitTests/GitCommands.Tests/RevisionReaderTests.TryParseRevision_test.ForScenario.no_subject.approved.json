@@ -1,0 +1,40 @@
+﻿{
+    "ObjectId": {
+        "IsArtificial": false
+    },
+    "Guid": "0c350e248500e4e893e6d17dcc61591cc1cd64e7",
+    "Refs": [],
+    "ParentIds": [
+        {
+            "IsArtificial": false
+        },
+        {
+            "IsArtificial": false
+        },
+        {
+            "IsArtificial": false
+        }
+    ],
+    "TreeGuid": {
+        "IsArtificial": false
+    },
+    "Author": "",
+    "AuthorEmail": "Gerhard Olsson",
+    "AuthorUnixTime": 0,
+    "AuthorDate": "9999-12-31T23:59:59.9999999Z",
+    "Committer": "gerhardol@users.noreply.github.com",
+    "CommitterEmail": "Gerhard Olsson",
+    "CommitUnixTime": 1624479586,
+    "CommitDate": "2021-06-23T20:19:46Z",
+    "BuildStatus": null,
+    "Subject": "gerhardol@users.noreply.github.com",
+    "Body": "gerhardol@users.noreply.github.com",
+    "HasMultiLineMessage": false,
+    "HasNotes": false,
+    "MessageEncoding": "1624479586",
+    "IsArtificial": false,
+    "HasParent": true,
+    "FirstParentId": {
+        "IsArtificial": false
+    }
+}
