@@ -46,6 +46,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.CascadeShellMenuItems = l_CascadeShellMenuItems;
             AppSettings.AlwaysShowAllCommands = cbAlwaysShowAllCommands.Checked;
+            AppSettings.EnableExplorerIntegration = cbShellIntegration.Checked;
         }
 
         private void chlMenuEntries_SelectedValueChanged(object sender, EventArgs e)
