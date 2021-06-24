@@ -1367,6 +1367,11 @@ namespace GitUI
                 return;
             }
 
+            if (e.Modifiers != Keys.None)
+            {
+                return;
+            }
+
             switch (e.KeyCode)
             {
                 case Keys.F2:
@@ -1398,6 +1403,7 @@ namespace GitUI
                                 }
                             },
                             FormQuickGitRefSelector.Action.Delete);
+
                         break;
                     }
             }
