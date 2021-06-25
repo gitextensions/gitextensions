@@ -6858,23 +6858,23 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target />
       </trans-unit>
       <trans-unit id="Apply.Text">
-        <source>Apply Selected Stash</source>
+        <source>&amp;Apply Selected Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="Clear.Text">
-        <source>Drop Selected Stash</source>
+        <source>&amp;Drop Selected Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="Stash.Text">
-        <source>Stash all changes</source>
+        <source>S&amp;tash all changes</source>
         <target />
       </trans-unit>
       <trans-unit id="StashKeepIndex.Text">
-        <source>Keep index</source>
+        <source>&amp;Keep index</source>
         <target />
       </trans-unit>
       <trans-unit id="StashSelectedFiles.Text">
-        <source>Stash selected changes</source>
+        <source>Stash &amp;selected changes</source>
         <target />
       </trans-unit>
       <trans-unit id="Stashes.ToolTipText">
@@ -6914,11 +6914,11 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target />
       </trans-unit>
       <trans-unit id="cherryPickFileChangesToolStripMenuItem.Text">
-        <source>Cherry pick file changes</source>
+        <source>&amp;Cherry pick file changes</source>
         <target />
       </trans-unit>
       <trans-unit id="chkIncludeUntrackedFiles.Text">
-        <source>Include untracked files</source>
+        <source>&amp;Include untracked files</source>
         <target />
       </trans-unit>
       <trans-unit id="refreshToolStripButton.Text">
@@ -6926,7 +6926,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target />
       </trans-unit>
       <trans-unit id="showToolStripLabel.Text">
-        <source>Show:</source>
+        <source>S&amp;how:</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripButton_customMessage.Text">
