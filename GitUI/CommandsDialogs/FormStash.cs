@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
+using GitUI.Hotkey;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
@@ -25,6 +26,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly AsyncLoader _asyncLoader = new();
+        private int _lastSelectedStashIndex = -1;
 
         public bool ManageStashes { get; set; }
         private GitStash? _currentWorkingDirStashItem;
@@ -131,6 +133,9 @@ namespace GitUI.CommandsDialogs
 
             stashedItems.Insert(0, _currentWorkingDirStashItem);
 
+            HotkeysEnabled = true;
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+
             Stashes.Text = "";
             StashMessage.Text = "";
             Stashes.SelectedItem = null;
@@ -141,10 +146,24 @@ namespace GitUI.CommandsDialogs
                 Stashes.Items.Add(stashedItem);
             }
 
-            if (ManageStashes && Stashes.Items.Count > 1)
+            if (_lastSelectedStashIndex > 0)
+            {
+                // Last operation was a drop, select next index
+                if (_lastSelectedStashIndex >= Stashes.Items.Count)
+                {
+                    _lastSelectedStashIndex--;
+                }
+
+                Stashes.SelectedIndex = _lastSelectedStashIndex;
+                _lastSelectedStashIndex = -1;
+            }
+            else if (ManageStashes && Stashes.Items.Count > 1)
             {
                 // more than just the default ("Current working directory changes")
                 Stashes.SelectedIndex = 1; // -> auto-select first non-default
+
+                // First load done, show worktree on next refresh
+                ManageStashes = false;
             }
             else if (Stashes.Items.Count > 0)
             {
@@ -192,6 +211,44 @@ namespace GitUI.CommandsDialogs
             View.ScrollToTop();
         }
 
+        #region Hotkey commands
+
+        public static readonly string HotkeySettingsName = "Stash";
+
+        internal enum Command
+        {
+            NextStash = 0,
+            PreviousStash = 1,
+            Refresh = 2
+        }
+
+        private bool ChangeSelectedStash(bool next = true)
+        {
+            // Move in list similar to RevGrid, so newest is first in list
+            int index = Stashes.SelectedIndex + (next ? -1 : 1);
+
+            if (index >= Stashes.Items.Count || index < 0)
+            {
+                return false;
+            }
+
+            Stashes.SelectedIndex = index;
+            return true;
+        }
+
+        protected override CommandStatus ExecuteCommand(int cmd)
+        {
+            switch ((Command)cmd)
+            {
+                case Command.NextStash: return ChangeSelectedStash(next: true);
+                case Command.PreviousStash: return ChangeSelectedStash(next: false);
+                case Command.Refresh: RefreshAll(); return true;
+                default: return base.ExecuteCommand(cmd);
+            }
+        }
+
+        #endregion
+
         private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
             GitStash gitStash = (GitStash)Stashes.SelectedItem;
@@ -233,7 +290,7 @@ namespace GitUI.CommandsDialogs
             Loading.Visible = false;
             Loading.IsAnimating = false;
             Stashes.Enabled = true;
-            refreshToolStripButton.Enabled = true;
+            refreshToolStripButton.Enabled = gitStash == _currentWorkingDirStashItem;
         }
 
         private void ResizeStashesWidth()
@@ -305,6 +362,7 @@ namespace GitUI.CommandsDialogs
 
                     if (result == TaskDialogButton.Yes)
                     {
+                        _lastSelectedStashIndex = Stashes.SelectedIndex;
                         UICommands.StashDrop(this, stashName);
                         Initialize();
                     }
@@ -316,6 +374,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
+                    _lastSelectedStashIndex = Stashes.SelectedIndex;
                     UICommands.StashDrop(this, stashName);
                     Initialize();
                 }
@@ -368,8 +427,14 @@ namespace GitUI.CommandsDialogs
             RefreshAll();
         }
 
-        private void RefreshAll()
+        private void RefreshAll(bool force = false)
         {
+            if (!force && Stashes.SelectedIndex != 0)
+            {
+                // Worktree not select, not relevant
+                return;
+            }
+
             using (WaitCursorScope.Enter())
             {
                 Initialize();
@@ -379,7 +444,7 @@ namespace GitUI.CommandsDialogs
         private void FormStashShown(object sender, EventArgs e)
         {
             // shown when form is first displayed
-            RefreshAll();
+            RefreshAll(force: true);
         }
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)

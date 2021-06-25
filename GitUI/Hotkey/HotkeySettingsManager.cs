@@ -362,6 +362,11 @@ namespace GitUI.Hotkey
                     Hk(RevisionFileTreeControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
                     Hk(RevisionFileTreeControl.Command.ShowHistory, ShowHistoryHotkey)),
                 new HotkeySettings(
+                    FormStash.HotkeySettingsName,
+                    Hk(FormStash.Command.NextStash, Keys.Control | Keys.N),
+                    Hk(FormStash.Command.PreviousStash, Keys.Control | Keys.P),
+                    Hk(FormStash.Command.Refresh, Keys.F5)),
+                new HotkeySettings(
                     FormSettings.HotkeySettingsName,
                     LoadScriptHotkeys())
             };
