@@ -32,6 +32,8 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.CacheTo(4, 4);
             Assert.AreEqual(5, _revisionGraph.GetCachedCount());
             _revisionGraph.CacheTo(400, 400);
+            Assert.AreEqual(6, _revisionGraph.GetCachedCount());
+            _revisionGraph.LoadingCompleted();
             Assert.AreEqual(6 + LookAhead, _revisionGraph.GetCachedCount());
         }
 

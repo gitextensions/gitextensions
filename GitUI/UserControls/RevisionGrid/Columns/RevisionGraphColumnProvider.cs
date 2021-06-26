@@ -240,7 +240,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     void DrawItem()
                     {
-                        if (index > _revisionGraph.GetCachedCount())
+                        if (index >= _revisionGraph.GetCachedCount())
                         {
                             return;
                         }
@@ -408,6 +408,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             _revisionGraph.Clear();
             _graphCache.Clear();
             _graphCache.Reset();
+        }
+
+        public override void LoadingCompleted()
+        {
+            _revisionGraph.LoadingCompleted();
         }
 
         public override void Refresh(int rowHeight, in VisibleRowRange range)

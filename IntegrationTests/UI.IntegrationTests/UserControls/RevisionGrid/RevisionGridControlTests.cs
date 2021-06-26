@@ -97,7 +97,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public void View_refect_applied_branch_filter()
+        public void View_reflects_applied_branch_filter()
         {
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
@@ -121,17 +121,16 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
 
                     // Refresh the grid, to reflect the filter
-                    revisionGridControl.ForceRefreshRevisions();
-                    DoEvents();
+                    RefreshRevisions(revisionGridControl);
 
                     // Confirm the filter has been applied
-                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
                     ta.VisibleRevisionCount.Should().Be(2);
+                    ProcessUntil(() => revisionGridControl.LatestSelectedRevision.ObjectId.ToString(), _branch1Commit);
                 });
         }
 
         [Test]
-        public void View_refect_reset_branch_filter()
+        public void View_reflects_reset_branch_filter()
         {
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
@@ -155,12 +154,11 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
 
                     // Refresh the grid, to reflect the filter
-                    revisionGridControl.ForceRefreshRevisions();
-                    DoEvents();
+                    RefreshRevisions(revisionGridControl);
 
                     // Confirm the filter has been reset, all commits are shown
-                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
                     ta.VisibleRevisionCount.Should().Be(6);
+                    ProcessUntil(() => revisionGridControl.LatestSelectedRevision.ObjectId.ToString(), _branch1Commit);
                 });
         }
 
@@ -318,8 +316,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     formBrowse.RevisionGridControl.SetAndApplyBranchFilter(initialFilter);
 
                     // Refresh the grid, to reflect the filter
-                    formBrowse.RevisionGridControl.ForceRefreshRevisions();
-                    DoEvents();
+                    RefreshRevisions(formBrowse.RevisionGridControl);
 
                     try
                     {
@@ -380,6 +377,32 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 Thread.Sleep(50);
                 Application.DoEvents();
             }
+        }
+
+        private static void RefreshRevisions(RevisionGridControl revisionGridControl)
+        {
+            revisionGridControl.ForceRefreshRevisions();
+
+            ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+        }
+
+        private static void ProcessUntil(Func<string> getCurrent, string expected, int maxIterations = 100)
+        {
+            string current = "";
+            for (int iteration = 0; iteration < maxIterations; ++iteration)
+            {
+                current = getCurrent();
+                if (current == expected)
+                {
+                    Debug.WriteLine($"{nameof(ProcessUntil)} '{expected}' in iteration {iteration}");
+                    return;
+                }
+
+                Application.DoEvents();
+                Thread.Sleep(5);
+            }
+
+            Assert.Fail($"{current} != {expected} in {maxIterations} iterations");
         }
     }
 }

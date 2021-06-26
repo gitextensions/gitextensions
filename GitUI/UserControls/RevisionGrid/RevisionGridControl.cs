@@ -930,12 +930,12 @@ namespace GitUI
                     predicate = null;
                 }
 
+                _isReadingRevisions = true;
                 Subject<GitRevision> revisions = new();
                 _revisionSubscription?.Dispose();
                 _revisionSubscription = revisions
                     .ObserveOn(ThreadPoolScheduler.Instance)
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
-                _isReadingRevisions = true;
 
                 _revisionReader ??= new RevisionReader();
 
@@ -1111,6 +1111,7 @@ namespace GitUI
                     {
                         await this.SwitchToMainThreadAsync();
 
+                        _gridView.LoadingCompleted();
                         SetPage(_gridView);
                         _isRefreshingRevisions = false;
                         CheckAndRepairInitialRevision();
@@ -2782,6 +2783,8 @@ namespace GitUI
             public RefFilterOptions RefFilterOptions => _revisionGridControl.RefFilterOptions;
 
             public int VisibleRevisionCount => _revisionGridControl._gridView.RowCount;
+
+            public bool IsRefreshingRevisions => _revisionGridControl._isRefreshingRevisions;
         }
     }
 }
