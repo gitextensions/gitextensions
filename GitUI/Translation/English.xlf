@@ -6921,20 +6921,16 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <source>&amp;Include untracked files</source>
         <target />
       </trans-unit>
+      <trans-unit id="messageLabel.Text">
+        <source>&amp;Message:</source>
+        <target />
+      </trans-unit>
       <trans-unit id="refreshToolStripButton.Text">
         <source>Refresh</source>
         <target />
       </trans-unit>
       <trans-unit id="showToolStripLabel.Text">
         <source>S&amp;how:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripButton_customMessage.Text">
-        <source>Custom stash message</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripButton_customMessage.ToolTipText">
-        <source>Write custom stash message</source>
         <target />
       </trans-unit>
     </body>

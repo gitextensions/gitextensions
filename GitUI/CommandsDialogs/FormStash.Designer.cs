@@ -30,6 +30,7 @@ namespace GitUI.CommandsDialogs
             this.StashKeepIndex = new System.Windows.Forms.CheckBox();
             this.Apply = new System.Windows.Forms.Button();
             this.Clear = new System.Windows.Forms.Button();
+            this.messageLabel = new System.Windows.Forms.Label();
             this.StashMessage = new System.Windows.Forms.RichTextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.Loading = new LoadingControl();
@@ -40,7 +41,6 @@ namespace GitUI.CommandsDialogs
             this.showToolStripLabel = new System.Windows.Forms.ToolStripLabel();
             this.Stashes = new System.Windows.Forms.ToolStripComboBox();
             this.refreshToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton_customMessage = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.View = new GitUI.Editor.FileViewer();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -86,17 +86,19 @@ namespace GitUI.CommandsDialogs
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.StashMessage, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.StashMessage, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.messageLabel, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.toolStrip1, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
+            this.tableLayoutPanel2.RowCount = 5;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(280, 1040);
@@ -209,6 +211,12 @@ namespace GitUI.CommandsDialogs
             this.Clear.UseVisualStyleBackColor = true;
             this.Clear.Click += new System.EventHandler(this.ClearClick);
             // 
+            // messageLabel
+            // 
+            this.messageLabel.Name = "messageLabel";
+            this.messageLabel.Size = new System.Drawing.Size(280, 37);
+            this.messageLabel.Text = "&Message:";
+            // 
             // StashMessage
             // 
             this.StashMessage.BackColor = System.Drawing.SystemColors.Info;
@@ -221,7 +229,6 @@ namespace GitUI.CommandsDialogs
             this.StashMessage.Size = new System.Drawing.Size(280, 150);
             this.StashMessage.TabIndex = 3;
             this.StashMessage.Text = "";
-            this.StashMessage.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.StashMessage_MouseDoubleClick);
             // 
             // panel1
             // 
@@ -287,7 +294,6 @@ namespace GitUI.CommandsDialogs
             this.showToolStripLabel,
             this.Stashes,
             this.refreshToolStripButton,
-            this.toolStripButton_customMessage,
             this.toolStripSeparator1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -326,22 +332,6 @@ namespace GitUI.CommandsDialogs
             this.refreshToolStripButton.Size = new System.Drawing.Size(36, 37);
             this.refreshToolStripButton.Text = "Refresh";
             this.refreshToolStripButton.Click += new System.EventHandler(this.RefreshClick);
-            // 
-            // toolStripButton_customMessage
-            // 
-            this.toolStripButton_customMessage.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton_customMessage.CheckOnClick = true;
-            this.toolStripButton_customMessage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_customMessage.Enabled = false;
-            this.toolStripButton_customMessage.Image = global::GitUI.Properties.Images.FileStatusModified;
-            this.toolStripButton_customMessage.ImageTransparentColor = System.Drawing.Color.White;
-            this.toolStripButton_customMessage.Name = "toolStripButton_customMessage";
-            this.toolStripButton_customMessage.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
-            this.toolStripButton_customMessage.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButton_customMessage.Text = "Custom stash message";
-            this.toolStripButton_customMessage.ToolTipText = "Write custom stash message";
-            this.toolStripButton_customMessage.Click += new System.EventHandler(this.toolStripButton_customMessage_Click);
-            this.toolStripButton_customMessage.EnabledChanged += new System.EventHandler(this.toolStripButton_customMessage_EnabledChanged);
             // 
             // toolStripSeparator1
             // 
@@ -400,6 +390,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.SplitContainer splitContainer1;
         private FileStatusList Stashed;
         private System.Windows.Forms.BindingSource gitStashBindingSource;
+        private System.Windows.Forms.Label messageLabel;
         private System.Windows.Forms.RichTextBox StashMessage;
         private FileViewer View;
         private ToolStripEx toolStrip1;
@@ -408,7 +399,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripComboBox Stashes;
         private GitUI.UserControls.RevisionGrid.LoadingControl Loading;
         private CheckBox StashKeepIndex;
-        private ToolStripButton toolStripButton_customMessage;
         private ToolStripSeparator toolStripSeparator1;
         private CheckBox chkIncludeUntrackedFiles;
         private TableLayoutPanel tableLayoutPanel2;

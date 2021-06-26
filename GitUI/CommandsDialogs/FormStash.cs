@@ -183,10 +183,10 @@ namespace GitUI.CommandsDialogs
             Loading.IsAnimating = true;
             Stashes.Enabled = false;
             refreshToolStripButton.Enabled = false;
-            toolStripButton_customMessage.Enabled = false;
+            StashMessage.ReadOnly = true;
             if (gitStash == _currentWorkingDirStashItem)
             {
-                toolStripButton_customMessage.Enabled = true;
+                StashMessage.ReadOnly = false;
                 _asyncLoader.LoadAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
                 Clear.Enabled = false; // disallow Drop  (of current working directory)
                 Apply.Enabled = false; // disallow Apply (of current working directory)
@@ -295,7 +295,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResizeStashesWidth()
         {
-            Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width - toolStripButton_customMessage.Width, Stashes.Size.Height);
+            Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width, Stashes.Size.Height);
         }
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
@@ -315,7 +315,7 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
-                var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
+                var msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;
                 UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg);
                 Initialize();
             }
@@ -331,7 +331,7 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
-                var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
+                var msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;
                 UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg, Stashed.SelectedItems.Select(i => i.Item.Name).ToList());
                 Initialize();
             }
@@ -400,9 +400,9 @@ namespace GitUI.CommandsDialogs
             {
                 InitializeSoft();
 
-                if (Stashes.SelectedItem is not null)
+                if (Stashes.SelectedItem is GitStash gitStash)
                 {
-                    StashMessage.Text = ((GitStash)Stashes.SelectedItem).Message;
+                    StashMessage.Text = gitStash != _currentWorkingDirStashItem ? gitStash.Message : "";
                 }
 
                 if (Stashes.Items.Count == 1)
@@ -455,52 +455,6 @@ namespace GitUI.CommandsDialogs
         private void FormStash_Resize(object sender, EventArgs e)
         {
             ResizeStashesWidth();
-        }
-
-        private void toolStripButton_customMessage_Click(object sender, EventArgs e)
-        {
-            if (toolStripButton_customMessage.Enabled)
-            {
-                if (((ToolStripButton)sender).Checked)
-                {
-                    StashMessage.ReadOnly = false;
-                    StashMessage.Focus();
-                    StashMessage.SelectAll();
-                }
-                else
-                {
-                    StashMessage.ReadOnly = true;
-                }
-            }
-        }
-
-        private void StashMessage_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left)
-            {
-                return;
-            }
-
-            if (toolStripButton_customMessage.Enabled)
-            {
-                if (!toolStripButton_customMessage.Checked)
-                {
-                    toolStripButton_customMessage.PerformClick();
-                }
-            }
-        }
-
-        private void toolStripButton_customMessage_EnabledChanged(object sender, EventArgs e)
-        {
-            var button = (ToolStripButton)sender;
-            if (!button.Enabled)
-            {
-                StashMessage.ReadOnly = true;
-            }
-            else if (button.Checked)
-            {
-                StashMessage.ReadOnly = false;
-            }
         }
 
         private void View_KeyUp(object sender, KeyEventArgs e)
