@@ -7,5 +7,8 @@ namespace System
     {
         [DllImport(Libraries.User32)]
         public static extern IntPtr GetWindowDC(IntPtr hwnd);
+
+        [DllImport(Libraries.User32)]
+        public static extern void ReleaseDC(IntPtr hwnd, IntPtr dc);
     }
 }

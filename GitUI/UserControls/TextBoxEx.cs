@@ -60,23 +60,21 @@ namespace GitUI.UserControls
             {
                 case NativeMethods.WM_NCPAINT:
                 case NativeMethods.WM_PAINT:
-                    var penColor = _borderDefaultColor;
+                    Color penColor = Focused ? _borderFocusedColor
+                        : _hovered ? _borderHoveredColor
+                        : _borderDefaultColor;
 
-                    if (Focused)
+                    IntPtr windowDC = NativeMethods.GetWindowDC(Handle);
+                    try
                     {
-                        penColor = _borderFocusedColor;
-                    }
-                    else if (_hovered)
-                    {
-                        penColor = _borderHoveredColor;
-                    }
-
-                    var windowDC = NativeMethods.GetWindowDC(Handle);
-                    {
-                        using var graphics = Graphics.FromHdc(windowDC);
-                        using var pen = new Pen(penColor);
+                        using Graphics graphics = Graphics.FromHdc(windowDC);
+                        using Pen pen = new(penColor);
 
                         ControlPaint.DrawBorder(graphics, ClientRectangle, penColor, ButtonBorderStyle.Solid);
+                    }
+                    finally
+                    {
+                        NativeMethods.ReleaseDC(Handle, windowDC);
                     }
 
                     break;
