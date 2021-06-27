@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -184,7 +185,7 @@ namespace GitUITests.CommandsDialogs
             var item = new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
             using var bitmap = new Bitmap(1, 1);
-            using var icon = Icon.FromHandle(bitmap.GetHicon());
+            using var icon = bitmap.BitmapToIcon();
             _iconProvider.Get(Arg.Any<string>(), Arg.Is<string>(x => x.EndsWith(".txt"))).Returns(icon);
 
             _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
