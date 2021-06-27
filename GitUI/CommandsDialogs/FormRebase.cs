@@ -77,8 +77,10 @@ namespace GitUI.CommandsDialogs
             _startRebaseImmediately = startRebaseImmediately;
         }
 
-        private void FormRebaseLoad(object sender, EventArgs e)
+        protected override void OnShown(EventArgs e)
         {
+            base.OnShown(e);
+
             var selectedHead = Module.GetSelectedBranch();
             Currentbranch.Text = selectedHead;
 
