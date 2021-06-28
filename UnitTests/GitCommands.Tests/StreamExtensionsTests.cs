@@ -10,38 +10,57 @@ namespace GitCommandsTests
         private const byte nil = 0;
 
         [TestCase(
-            new byte[] { })]
+            new byte[] { },
+            false)]
         [TestCase(
             new byte[] { 1 },
+            false,
             new byte[] { 1 })]
         [TestCase(
             new byte[] { nil },
+            false,
             new byte[0])]
         [TestCase(
             new byte[] { nil, nil },
+            false,
             new byte[0], new byte[0])]
         [TestCase(
             new byte[] { 1, 2, 3, 4, 5, 6 },
+            false,
             new byte[] { 1, 2, 3, 4, 5, 6 })]
         [TestCase(
             new byte[] { 2, 3, 4, 5, 6, nil },
+            false,
             new byte[] { 2, 3, 4, 5, 6 })]
         [TestCase(
             new byte[] { nil, 1, 2, 3, 4, 5, 6 },
+            false,
             new byte[0], new byte[] { 1, 2, 3, 4, 5, 6 })]
         [TestCase(
             new byte[] { 1, 2, 3, nil, 4, 5, 6 },
+            false,
             new byte[] { 1, 2, 3 }, new byte[] { 4, 5, 6 })]
         [TestCase(
             new byte[] { 1, 2, 3, nil, nil, 4, 5, 6 },
+            false,
             new byte[] { 1, 2, 3 }, new byte[0], new byte[] { 4, 5, 6 })]
         [TestCase(
             new byte[] { 1, 2, 3, nil, 4, 5, 6, nil, 7, 8, 9 },
+            false,
             new byte[] { 1, 2, 3 }, new byte[] { 4, 5, 6 }, new byte[] { 7, 8, 9 })]
         [TestCase(
             new byte[] { nil, 1, nil, 2, 3, nil, 4, 5, 6, nil, 7, 8, 9, 10 },
+            false,
             new byte[0], new byte[] { 1 }, new byte[] { 2, 3 }, new byte[] { 4, 5, 6 }, new byte[] { 7, 8, 9, 10 })]
-        public void ReadNullTerminatedLines(byte[] input, params byte[][] expectedChunks)
+        [TestCase(
+            new byte[] { nil, 1, nil, 2, 3, nil, nil, 4, 5, 6, nil, 7, 8, 9, 10 },
+            true,
+            new byte[] { nil, 1, nil, 2, 3, nil }, new byte[] { 4, 5, 6, nil, 7, 8, 9, 10 })]
+        [TestCase(
+            new byte[] { nil, nil, 1, nil, 2, 3, nil, nil, 4, 5, 6, nil, 7, 8, 9, 10 },
+            true,
+            new byte[] { nil }, new byte[] { 1, nil, 2, 3, nil }, new byte[] { 4, 5, 6, nil, 7, 8, 9, 10 })]
+        public void ReadNullTerminatedLines(byte[] input, bool useDoubleNull, params byte[][] expectedChunks)
         {
             MemoryStream stream = new(input);
 
@@ -53,7 +72,7 @@ namespace GitCommandsTests
 
                 stream.Position = 0;
 
-                using var e = stream.ReadNullTerminatedChunks(ref buffer).GetEnumerator();
+                using var e = stream.ReadNullTerminatedChunks(ref buffer, useDoubleNull).GetEnumerator();
                 for (var chunkIndex = 0; chunkIndex < expectedChunks.Length; chunkIndex++)
                 {
                     var expected = expectedChunks[chunkIndex];

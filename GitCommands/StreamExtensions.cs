@@ -8,7 +8,7 @@ namespace GitCommands
     public static class StreamExtensions
     {
         [MustUseReturnValue]
-        public static IEnumerable<ArraySegment<byte>> ReadNullTerminatedChunks(this Stream stream, ref byte[] buffer)
+        public static IEnumerable<ArraySegment<byte>> ReadNullTerminatedChunks(this Stream stream, ref byte[] buffer, bool useDoubleNull)
         {
             // Work around generator functions and ref parameters
             var buf = buffer;
@@ -20,6 +20,7 @@ namespace GitCommands
             {
                 var yieldFromIndex = 0;
                 var writeToIndex = 0;
+                bool prevDoubleNullMatch = false;
 
                 while (true)
                 {
@@ -44,7 +45,55 @@ namespace GitCommands
 
                     while (searchFromIndex < searchBeforeIndex)
                     {
-                        var nullIndex = Array.IndexOf<byte>(buf, 0, searchFromIndex, searchBeforeIndex - searchFromIndex);
+                        int nullIndex;
+
+                        while (true)
+                        {
+                            nullIndex = Array.IndexOf<byte>(buf, 0, searchFromIndex, searchBeforeIndex - searchFromIndex);
+
+                            if (!useDoubleNull)
+                            {
+                                break;
+                            }
+
+                            // "--name-only" for "git log -z" adds one or more null terminated file names before the final null
+                            // Therefore, a record is terminated with two consequtive null
+                            if (nullIndex < 0)
+                            {
+                                // No match, read more
+                                prevDoubleNullMatch = false;
+                                break;
+                            }
+                            else if (prevDoubleNullMatch && nullIndex == searchFromIndex)
+                            {
+                                // Last match was completed
+                                prevDoubleNullMatch = false;
+                                break;
+                            }
+                            else
+                            {
+                                prevDoubleNullMatch = nullIndex == searchBeforeIndex - 1;
+                                if (prevDoubleNullMatch)
+                                {
+                                    // Need to get a larger buffer to find if this was a match
+                                    nullIndex = -1;
+                                    break;
+                                }
+                                else
+                                {
+                                    nullIndex++;
+                                    if (buf[nullIndex] == 0)
+                                    {
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        // This was not a match, loop again
+                                        searchFromIndex = nullIndex;
+                                     }
+                                }
+                            }
+                        }
 
                         if (nullIndex == -1)
                         {

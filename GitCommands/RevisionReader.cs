@@ -65,10 +65,11 @@ namespace GitCommands
             string branchFilter,
             string revisionFilter,
             string pathFilter,
+            bool hasNameInfo,
             Func<GitRevision, bool>? revisionPredicate)
         {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(() => ExecuteAsync(module, refs, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
+                .RunAsync(() => ExecuteAsync(module, refs, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, hasNameInfo, revisionPredicate))
                 .FileAndForget(
                     ex =>
                     {
@@ -85,6 +86,7 @@ namespace GitCommands
             string branchFilter,
             string revisionFilter,
             string pathFilter,
+            bool hasNameInfo,
             Func<GitRevision, bool>? revisionPredicate)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -112,6 +114,7 @@ namespace GitCommands
 
 #if TRACE
             var sw = Stopwatch.StartNew();
+            int parseErrors = 0;
 #endif
 
             // This property is relatively expensive to call for every revision, so
@@ -127,7 +130,7 @@ namespace GitCommands
 
                 var buffer = new byte[4096];
 
-                foreach (var chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
+                foreach (var chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer, hasNameInfo))
                 {
                     token.ThrowIfCancellationRequested();
 
@@ -154,10 +157,16 @@ namespace GitCommands
                             subject.OnNext(revision);
                         }
                     }
+#if TRACE
+                    else
+                    {
+                        parseErrors++;
+                    }
+#endif
                 }
 
 #if TRACE
-                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count}");
+                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count} parseErrors={parseErrors}");
 #endif
             }
 
@@ -208,8 +217,7 @@ namespace GitCommands
                     }.ToString()
                 },
                 revisionFilter,
-                "--",
-                pathFilter
+                { !string.IsNullOrWhiteSpace(pathFilter), $"-- {pathFilter}" }
             };
         }
 
@@ -248,9 +256,6 @@ namespace GitCommands
 
             if (chunk.Count == 0)
             {
-                // "git log -z --name-only" returns multiple consecutive null bytes when logging
-                // the history of a single file. Haven't worked out why, but it's safe to skip
-                // such chunks.
                 revision = default;
                 return false;
             }
@@ -531,7 +536,9 @@ namespace GitCommands
                     return null;
                 }
 
-                var s = _s.Substring(_index);
+                // Extract the first null terminated name (ignore other names)
+                int end = _s.IndexOf((char)0, _index);
+                var s = end < 0 ? _s.Substring(_index) : _s.Substring(_index, end - _index);
 
                 if (advance)
                 {

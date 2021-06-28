@@ -960,6 +960,7 @@ namespace GitUI
                     _branchFilter,
                     _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + _fixedRevisionFilter,
                     _revisionFilter.GetPathFilter() + _fixedPathFilter,
+                    !string.IsNullOrEmpty(_fixedPathFilter),
                     predicate);
 
                 if (_initialLoad)
