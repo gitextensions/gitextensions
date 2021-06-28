@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
+using GitUI.Hotkey;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
@@ -25,6 +26,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly AsyncLoader _asyncLoader = new();
+        private int _lastSelectedStashIndex = -1;
 
         public bool ManageStashes { get; set; }
         private GitStash? _currentWorkingDirStashItem;
@@ -131,6 +133,9 @@ namespace GitUI.CommandsDialogs
 
             stashedItems.Insert(0, _currentWorkingDirStashItem);
 
+            HotkeysEnabled = true;
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+
             Stashes.Text = "";
             StashMessage.Text = "";
             Stashes.SelectedItem = null;
@@ -141,10 +146,24 @@ namespace GitUI.CommandsDialogs
                 Stashes.Items.Add(stashedItem);
             }
 
-            if (ManageStashes && Stashes.Items.Count > 1)
+            if (_lastSelectedStashIndex > 0)
+            {
+                // Last operation was a drop, select next index
+                if (_lastSelectedStashIndex >= Stashes.Items.Count)
+                {
+                    _lastSelectedStashIndex--;
+                }
+
+                Stashes.SelectedIndex = _lastSelectedStashIndex;
+                _lastSelectedStashIndex = -1;
+            }
+            else if (ManageStashes && Stashes.Items.Count > 1)
             {
                 // more than just the default ("Current working directory changes")
                 Stashes.SelectedIndex = 1; // -> auto-select first non-default
+
+                // First load done, show worktree on next refresh
+                ManageStashes = false;
             }
             else if (Stashes.Items.Count > 0)
             {
@@ -164,10 +183,10 @@ namespace GitUI.CommandsDialogs
             Loading.IsAnimating = true;
             Stashes.Enabled = false;
             refreshToolStripButton.Enabled = false;
-            toolStripButton_customMessage.Enabled = false;
+            StashMessage.ReadOnly = true;
             if (gitStash == _currentWorkingDirStashItem)
             {
-                toolStripButton_customMessage.Enabled = true;
+                StashMessage.ReadOnly = false;
                 _asyncLoader.LoadAsync(() => Module.GetAllChangedFiles(), LoadGitItemStatuses);
                 Clear.Enabled = false; // disallow Drop  (of current working directory)
                 Apply.Enabled = false; // disallow Apply (of current working directory)
@@ -191,6 +210,44 @@ namespace GitUI.CommandsDialogs
             Stashed.SelectNextVisibleItem();
             View.ScrollToTop();
         }
+
+        #region Hotkey commands
+
+        public static readonly string HotkeySettingsName = "Stash";
+
+        internal enum Command
+        {
+            NextStash = 0,
+            PreviousStash = 1,
+            Refresh = 2
+        }
+
+        private bool ChangeSelectedStash(bool next = true)
+        {
+            // Move in list similar to RevGrid, so newest is first in list
+            int index = Stashes.SelectedIndex + (next ? -1 : 1);
+
+            if (index >= Stashes.Items.Count || index < 0)
+            {
+                return false;
+            }
+
+            Stashes.SelectedIndex = index;
+            return true;
+        }
+
+        protected override CommandStatus ExecuteCommand(int cmd)
+        {
+            switch ((Command)cmd)
+            {
+                case Command.NextStash: return ChangeSelectedStash(next: true);
+                case Command.PreviousStash: return ChangeSelectedStash(next: false);
+                case Command.Refresh: RefreshAll(); return true;
+                default: return base.ExecuteCommand(cmd);
+            }
+        }
+
+        #endregion
 
         private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
         {
@@ -233,12 +290,12 @@ namespace GitUI.CommandsDialogs
             Loading.Visible = false;
             Loading.IsAnimating = false;
             Stashes.Enabled = true;
-            refreshToolStripButton.Enabled = true;
+            refreshToolStripButton.Enabled = gitStash == _currentWorkingDirStashItem;
         }
 
         private void ResizeStashesWidth()
         {
-            Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width - toolStripButton_customMessage.Width, Stashes.Size.Height);
+            Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width, Stashes.Size.Height);
         }
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
@@ -258,7 +315,7 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
-                var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
+                var msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;
                 UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg);
                 Initialize();
             }
@@ -274,7 +331,7 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
-                var msg = toolStripButton_customMessage.Checked ? " " + StashMessage.Text.Trim() : string.Empty;
+                var msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;
                 UICommands.StashSave(this, chkIncludeUntrackedFiles.Checked, StashKeepIndex.Checked, msg, Stashed.SelectedItems.Select(i => i.Item.Name).ToList());
                 Initialize();
             }
@@ -305,6 +362,7 @@ namespace GitUI.CommandsDialogs
 
                     if (result == TaskDialogButton.Yes)
                     {
+                        _lastSelectedStashIndex = Stashes.SelectedIndex;
                         UICommands.StashDrop(this, stashName);
                         Initialize();
                     }
@@ -316,6 +374,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
+                    _lastSelectedStashIndex = Stashes.SelectedIndex;
                     UICommands.StashDrop(this, stashName);
                     Initialize();
                 }
@@ -341,9 +400,9 @@ namespace GitUI.CommandsDialogs
             {
                 InitializeSoft();
 
-                if (Stashes.SelectedItem is not null)
+                if (Stashes.SelectedItem is GitStash gitStash)
                 {
-                    StashMessage.Text = ((GitStash)Stashes.SelectedItem).Message;
+                    StashMessage.Text = gitStash != _currentWorkingDirStashItem ? gitStash.Message : "";
                 }
 
                 if (Stashes.Items.Count == 1)
@@ -368,8 +427,14 @@ namespace GitUI.CommandsDialogs
             RefreshAll();
         }
 
-        private void RefreshAll()
+        private void RefreshAll(bool force = false)
         {
+            if (!force && Stashes.SelectedIndex != 0)
+            {
+                // Worktree not select, not relevant
+                return;
+            }
+
             using (WaitCursorScope.Enter())
             {
                 Initialize();
@@ -379,7 +444,7 @@ namespace GitUI.CommandsDialogs
         private void FormStashShown(object sender, EventArgs e)
         {
             // shown when form is first displayed
-            RefreshAll();
+            RefreshAll(force: true);
         }
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
@@ -390,52 +455,6 @@ namespace GitUI.CommandsDialogs
         private void FormStash_Resize(object sender, EventArgs e)
         {
             ResizeStashesWidth();
-        }
-
-        private void toolStripButton_customMessage_Click(object sender, EventArgs e)
-        {
-            if (toolStripButton_customMessage.Enabled)
-            {
-                if (((ToolStripButton)sender).Checked)
-                {
-                    StashMessage.ReadOnly = false;
-                    StashMessage.Focus();
-                    StashMessage.SelectAll();
-                }
-                else
-                {
-                    StashMessage.ReadOnly = true;
-                }
-            }
-        }
-
-        private void StashMessage_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left)
-            {
-                return;
-            }
-
-            if (toolStripButton_customMessage.Enabled)
-            {
-                if (!toolStripButton_customMessage.Checked)
-                {
-                    toolStripButton_customMessage.PerformClick();
-                }
-            }
-        }
-
-        private void toolStripButton_customMessage_EnabledChanged(object sender, EventArgs e)
-        {
-            var button = (ToolStripButton)sender;
-            if (!button.Enabled)
-            {
-                StashMessage.ReadOnly = true;
-            }
-            else if (button.Checked)
-            {
-                StashMessage.ReadOnly = false;
-            }
         }
 
         private void View_KeyUp(object sender, KeyEventArgs e)
