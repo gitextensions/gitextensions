@@ -119,7 +119,7 @@ namespace GitCommands
                 }
 
                 // Ignore (known) tools that must run in a terminal
-                string[] ignoredTools = { "vimdiff", "vimdiff2", "vimdiff3" };
+                string[] ignoredTools = { "vimdiff", "vimdiff1", "vimdiff2", "vimdiff3" };
                 var toolName = tool[0];
                 if (!string.IsNullOrWhiteSpace(toolName) && !tools.Contains(toolName) && !ignoredTools.Contains(toolName))
                 {
