@@ -203,6 +203,7 @@ namespace GitCommandsTests.Helpers
         }
 
         [TestCase(@"C:\WORK\", @"GitExtensions\", @"C:\WORK\GitExtensions\")]
+        [TestCase(@"C:\WORK\", @" file .txt ", @"C:\WORK\ file .txt ")]
         [TestCase(@"\\wsl$\", @"Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
         public void Resolve(string path, string relativePath, string expected)
         {
