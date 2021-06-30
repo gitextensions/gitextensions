@@ -234,7 +234,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             _realCommitNode.GitRevision.HasMultiLineMessage = false;
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false));
 
-            GetLaneInfo_should_display(_realCommitNode, suffix: _realCommitNode.GitRevision.Subject);
+            GetLaneInfo_should_display(_realCommitNode);
         }
 
         [Test]

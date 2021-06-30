@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs
                     {
                         result.Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
                         string encodingName = logPatternMatch.Groups[2].Value;
-                        result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
+                        result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName) ?? "";
                         result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
                         if (logPatternMatch.Groups.Count >= 5)
                         {

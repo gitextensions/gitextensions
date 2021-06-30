@@ -25,6 +25,7 @@ namespace GitUIPluginInterfaces
         public static readonly Regex Sha1HashShortRegex = new(@"\b[a-f\d]{7,40}\b", RegexOptions.Compiled);
 
         private BuildInfo? _buildStatus;
+        private string? _body;
 
         public GitRevision(ObjectId objectId)
         {
@@ -80,7 +81,13 @@ namespace GitUIPluginInterfaces
 
         public string Subject { get; set; } = "";
 
-        public string? Body { get; set; }
+        public string? Body
+        {
+            // Body is not stored by default for older commits to reduce memory usage
+            // Body do not have to be stored explicitly if same as subject and not multiline
+            get => _body ?? (!HasMultiLineMessage ? Subject : null);
+            set => _body = value;
+        }
 
         public bool HasMultiLineMessage { get; set; }
         public bool HasNotes { get; set; }

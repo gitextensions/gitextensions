@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using JetBrains.Annotations;
@@ -290,9 +291,13 @@ namespace GitUIPluginInterfaces
         [MustUseReturnValue]
         public static bool TryParseAsciiHexBytes(ArraySegment<byte> bytes, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
-            var index = bytes.Offset;
+            ReadOnlySpan<byte> array = bytes.AsSpan();
+            return TryParseAsciiHexReadOnlySpan(array, out objectId);
+        }
 
-            if (bytes.Count != Sha1CharCount)
+        public static bool TryParseAsciiHexReadOnlySpan(ReadOnlySpan<byte> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
+        {
+            if (array.Length != Sha1CharCount)
             {
                 objectId = default;
                 return false;
@@ -300,11 +305,11 @@ namespace GitUIPluginInterfaces
 
             var success = true;
 
-            var i1 = HexAsciiBytesToUInt32(index);
-            var i2 = HexAsciiBytesToUInt32(index + 8);
-            var i3 = HexAsciiBytesToUInt32(index + 16);
-            var i4 = HexAsciiBytesToUInt32(index + 24);
-            var i5 = HexAsciiBytesToUInt32(index + 32);
+            var i1 = HexAsciiBytesToUInt32(ref array, 0);
+            var i2 = HexAsciiBytesToUInt32(ref array, 8);
+            var i3 = HexAsciiBytesToUInt32(ref array, 16);
+            var i4 = HexAsciiBytesToUInt32(ref array, 24);
+            var i5 = HexAsciiBytesToUInt32(ref array, 32);
 
             if (success)
             {
@@ -315,10 +320,8 @@ namespace GitUIPluginInterfaces
             objectId = default;
             return false;
 
-            uint HexAsciiBytesToUInt32(int j)
+            uint HexAsciiBytesToUInt32(ref ReadOnlySpan<byte> array, int j)
             {
-                var array = bytes.Array;
-
                 return (uint)(HexAsciiByteToInt(array[j]) << 28 |
                               HexAsciiByteToInt(array[j + 1]) << 24 |
                               HexAsciiByteToInt(array[j + 2]) << 20 |
@@ -329,14 +332,15 @@ namespace GitUIPluginInterfaces
                               HexAsciiByteToInt(array[j + 7]));
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             int HexAsciiByteToInt(byte b)
             {
-                if (b >= '0' && b <= '9')
+                if (b is >= (byte)'0' and <= (byte)'9')
                 {
                     return b - 48;
                 }
 
-                if (b >= 'a' && b <= 'f')
+                if (b is >= (byte)'a' and <= (byte)'f')
                 {
                     return b - 87;
                 }
