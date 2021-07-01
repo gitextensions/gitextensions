@@ -104,6 +104,8 @@ namespace GitUI.CommandsDialogs
 
         [CanBeNull] private TabPage _consoleTabPage;
 
+        private Dictionary<Brush, Icon> _overlayIconByBrush = new();
+
         [Flags]
         private enum UpdateTargets
         {
@@ -407,16 +409,21 @@ namespace GitUI.CommandsDialogs
                         {
                             lastBrush = brush;
 
-                            const int imgDim = 32;
-                            const int dotDim = 15;
-                            const int pad = 2;
-                            using Bitmap bmp = new(imgDim, imgDim);
-                            using Graphics g = Graphics.FromImage(bmp);
-                            g.SmoothingMode = SmoothingMode.AntiAlias;
-                            g.Clear(Color.Transparent);
-                            g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
+                            if (!_overlayIconByBrush.TryGetValue(brush, out Icon overlay))
+                            {
+                                const int imgDim = 32;
+                                const int dotDim = 15;
+                                const int pad = 2;
+                                using Bitmap bmp = new(imgDim, imgDim);
+                                using Graphics g = Graphics.FromImage(bmp);
+                                g.SmoothingMode = SmoothingMode.AntiAlias;
+                                g.Clear(Color.Transparent);
+                                g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
 
-                            using Icon overlay = bmp.ToIcon();
+                                overlay = bmp.ToIcon();
+                                _overlayIconByBrush.Add(brush, overlay);
+                            }
+
                             TaskbarManager.Instance.SetOverlayIcon(overlay, "");
 
                             var repoStateVisualiser = new RepoStateVisualiser();
