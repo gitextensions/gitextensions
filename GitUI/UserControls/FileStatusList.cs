@@ -891,7 +891,8 @@ namespace GitUI
             if (updateCausedByFilter)
             {
                 previouslySelectedItems = FileStatusListView.SelectedItems()
-                    .ToHashSet(i => i.Tag<FileStatusItem>().Item);
+                    .Select(i => i.Tag<FileStatusItem>().Item)
+                    .ToHashSet();
 
                 DataSourceChanged?.Invoke(this, EventArgs.Empty);
             }
