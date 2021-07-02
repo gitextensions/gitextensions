@@ -18,6 +18,44 @@ namespace ResourceManager.Xliff
             = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
               BindingFlags.NonPublic | BindingFlags.SetField;
 
+        private static readonly HashSet<string> _processedAssemblies = new();
+
+        private static readonly HashSet<string> _translatableItemInComponentNames = new(StringComparer.Ordinal)
+        {
+            "AccessibleDescription",
+            "AccessibleName",
+            "Caption",
+            "Text",
+            "ToolTipText",
+            "Title"
+        };
+
+        private static bool IsTranslatableItemInComponent(PropertyInfo property)
+        {
+            return property.PropertyType == typeof(string) &&
+                   _translatableItemInComponentNames.Contains(property.Name);
+        }
+
+        private static readonly string[] UnTranslatableDLLs =
+        {
+            "mscorlib",
+            "Microsoft",
+            "Presentation",
+            "WindowsBase",
+            "ICSharpCode",
+            "access",
+            "SMDiag",
+            "System",
+            "vshost",
+            "Atlassian",
+            "RestSharp",
+            "EnvDTE",
+            "Newtonsoft",
+            "ConEmuWinForms",
+            "TranslationApp",
+            "netstandard",
+        };
+
         private static bool AllowTranslateProperty([NotNullWhen(returnValue: true)] string? text)
         {
             if (text is null)
@@ -242,36 +280,6 @@ namespace ResourceManager.Xliff
                    items.Count != 0;
         }
 
-        private static readonly HashSet<string> _translatableItemInComponentNames = new(StringComparer.Ordinal)
-        {
-            "AccessibleDescription",
-            "AccessibleName",
-            "Caption",
-            "Text",
-            "ToolTipText",
-            "Title"
-        };
-
-        private static bool IsTranslatableItemInComponent(PropertyInfo property)
-        {
-            return property.PropertyType == typeof(string) &&
-                   _translatableItemInComponentNames.Contains(property.Name);
-        }
-
-        private static readonly string[] UnTranslatableDLLs =
-        {
-            "mscorlib",
-            "Microsoft",
-            "Presentation",
-            "WindowsBase",
-            "ICSharpCode",
-            "access",
-            "SMDiag",
-            "System",
-            "vshost",
-            "Atlassian",
-        };
-
         /// <summary>true if the specified <see cref="Assembly"/> may be translatable.</summary>
         private static bool IsTranslatable(this Assembly assembly)
         {
@@ -286,12 +294,19 @@ namespace ResourceManager.Xliff
             Dictionary<string, List<Type>> dictionary = new();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
+                if (_processedAssemblies.Contains(assembly.FullName))
+                {
+                    continue;
+                }
+
+                _processedAssemblies.Add(assembly.FullName);
+
                 if (!assembly.IsTranslatable())
                 {
                     continue;
                 }
 
-                foreach (var type in assembly.GetTypes())
+                foreach (var type in GetLoadableTypes(assembly))
                 {
                     if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                     {
@@ -337,6 +352,18 @@ namespace ResourceManager.Xliff
             }
 
             return obj;
+        }
+
+        private static IEnumerable<Type> GetLoadableTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException e)
+            {
+                return e.Types.Where(t => t != null);
+            }
         }
     }
 }

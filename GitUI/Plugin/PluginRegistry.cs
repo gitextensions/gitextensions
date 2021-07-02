@@ -3,6 +3,7 @@ using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
+using Microsoft;
 
 namespace GitUI
 {
@@ -26,31 +27,29 @@ namespace GitUI
                     return;
                 }
 
-                return;
+                try
+                {
+                    ManagedExtensibility.SetUserPluginsPath(AppSettings.UserPluginsPath);
 
-                ////try
-                ////{
-                ////    ManagedExtensibility.SetUserPluginsPath(AppSettings.UserPluginsPath);
+                    foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
+                    {
+                        Validates.NotNull(plugin.Description);
 
-                ////    foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
-                ////    {
-                ////        Validates.NotNull(plugin.Description);
+                        // Description for old plugin setting processing as key
+                        plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Id, plugin.Description);
 
-                ////        // Description for old plugin setting processing as key
-                ////        plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Id, plugin.Description);
+                        if (plugin is IRepositoryHostPlugin repositoryHostPlugin)
+                        {
+                            GitHosters.Add(repositoryHostPlugin);
+                        }
 
-                ////        if (plugin is IRepositoryHostPlugin repositoryHostPlugin)
-                ////        {
-                ////            GitHosters.Add(repositoryHostPlugin);
-                ////        }
-
-                ////        Plugins.Add(plugin);
-                ////    }
-                ////}
-                ////catch
-                ////{
-                ////    // no-op
-                ////}
+                        Plugins.Add(plugin);
+                    }
+                }
+                catch
+                {
+                    // no-op
+                }
             }
         }
 
