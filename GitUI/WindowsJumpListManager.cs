@@ -255,7 +255,7 @@ namespace GitUI
 
             // following line would work directly on any image, but then
             // it wouldn't look as nice.
-            return square.BitmapToIcon();
+            return square.ToIcon();
         }
 
         private static void SafeInvoke(Action action, string callerName)

@@ -211,7 +211,7 @@ namespace GitUI.HelperDialogs
         private void SetIcon(Bitmap image)
         {
             Icon oldIcon = Icon;
-            Icon = image.BitmapToIcon();
+            Icon = image.ToIcon();
             oldIcon?.Dispose();
         }
 

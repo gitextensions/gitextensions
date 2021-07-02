@@ -7,7 +7,7 @@ namespace GitUI
 {
     public static class BitmapExtensions
     {
-        public static Icon BitmapToIcon(this Bitmap bitmap)
+        public static Icon ToIcon(this Bitmap bitmap)
         {
             if (bitmap is null)
             {
@@ -18,7 +18,7 @@ namespace GitUI
             try
             {
                 handle = bitmap.GetHicon();
-                var icon = Icon.FromHandle(handle);
+                Icon icon = Icon.FromHandle(handle);
 
                 return (Icon)icon.Clone();
             }

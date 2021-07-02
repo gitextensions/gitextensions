@@ -184,8 +184,8 @@ namespace GitUITests.CommandsDialogs
             var items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1.txt"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2.txt") };
             var item = new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
-            using var bitmap = new Bitmap(1, 1);
-            using var icon = bitmap.BitmapToIcon();
+            using Bitmap bitmap = new(1, 1);
+            using Icon icon = bitmap.ToIcon();
             _iconProvider.Get(Arg.Any<string>(), Arg.Is<string>(x => x.EndsWith(".txt"))).Returns(icon);
 
             _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
