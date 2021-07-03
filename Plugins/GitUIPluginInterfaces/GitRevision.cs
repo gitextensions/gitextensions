@@ -81,8 +81,6 @@ namespace GitUIPluginInterfaces
         // UTF-8 when is null or empty
         public string? MessageEncoding { get; set; }
 
-        public string? Name { get; set; }
-
         public override string ToString() => $"{ObjectId.ToShortString()}:{Subject}";
 
         /// <summary>
