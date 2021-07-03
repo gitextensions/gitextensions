@@ -25,7 +25,7 @@ namespace GitUI
         private ThumbnailToolBarButton _pushButton;
         private ThumbnailToolBarButton _pullButton;
         private string _deferredAddToRecent;
-        private static Dictionary<Image, Icon> _iconByImage = new();
+        private static readonly Dictionary<Image, Icon> _iconByImage = new();
         private bool ToolbarButtonsCreated => _commitButton is not null;
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
 

@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs
 
         [CanBeNull] private TabPage _consoleTabPage;
 
-        private Dictionary<Brush, Icon> _overlayIconByBrush = new();
+        private readonly Dictionary<Brush, Icon> _overlayIconByBrush = new();
 
         [Flags]
         private enum UpdateTargets
