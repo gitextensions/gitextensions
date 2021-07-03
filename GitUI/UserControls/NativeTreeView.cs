@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace GitUI.UserControls
 {
@@ -7,7 +8,7 @@ namespace GitUI.UserControls
         protected override void CreateHandle()
         {
             base.CreateHandle();
-            NativeMethods.SetWindowTheme(Handle, "explorer", null);
+            PInvoke.SetWindowTheme((HWND)Handle, "explorer", null);
         }
     }
 }

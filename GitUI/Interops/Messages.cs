@@ -29,10 +29,6 @@
         // from vsstyle.h
         public const int TEXT_MAININSTRUCTION = 1;
 
-        // from vssym32.h
-        public const int TMT_TEXTCOLOR = 3803;
-        public const int TMT_FONT = 210;
-
         public const int EM_FORMATRANGE = WM_USER + 57;
         public const int EM_LINEINDEX = 0x00BB;
         public const int EM_LINELENGTH = 0x00C1;

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using Windows.Win32;
 
 namespace GitUI.Theming
 {
@@ -22,9 +23,10 @@ namespace GitUI.Theming
             {
                 case Parts.LVP_GROUPHEADER:
                 {
-                    NativeMethods.GetThemeColor(htheme, partid, stateid, poptions.iColorPropId,
+                    PInvoke.GetThemeColor(htheme, partid, stateid, poptions.iColorPropId,
                         out var crefText);
-                    var color = Color.FromArgb(crefText.R, crefText.G, crefText.B);
+                    var colorref = new NativeMethods.COLORREF(crefText);
+                    var color = Color.FromArgb(colorref.R, colorref.G, colorref.B);
                     var adaptedColor = color.AdaptTextColor();
 
                     // do not render, just modify text color

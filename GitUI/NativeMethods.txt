@@ -1,5 +1,11 @@
+CloseThemeData
 CreateSolidBrush
 DwmSetWindowAttribute
+GetThemeColor
+GetThemeFont
 InternetGetConnectedState
+OpenThemeData
+SetWindowTheme
 
 DWMWINDOWATTRIBUTE
+THEME_PROPERTY_SYMBOL_ID

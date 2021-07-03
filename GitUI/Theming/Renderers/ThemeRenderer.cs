@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace GitUI.Theming
 {
@@ -67,7 +69,7 @@ namespace GitUI.Theming
         /// <param name="hwnd">win32 window handle.</param>
         public void AddThemeData(IntPtr hwnd)
         {
-            var htheme = NativeMethods.OpenThemeData(hwnd, Clsid);
+            var htheme = PInvoke.OpenThemeData((HWND)hwnd, Clsid);
             _themeDataHandles.Add(htheme);
         }
 
@@ -78,7 +80,7 @@ namespace GitUI.Theming
         {
             foreach (var htheme in _themeDataHandles)
             {
-                NativeMethods.CloseThemeData(htheme);
+                PInvoke.CloseThemeData(htheme);
             }
         }
 
