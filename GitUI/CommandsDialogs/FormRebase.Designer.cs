@@ -601,7 +601,6 @@ namespace GitUI.CommandsDialogs
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rebase";
-            this.Load += new System.EventHandler(this.FormRebaseLoad);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.OptionsPanel.ResumeLayout(false);
