@@ -1,4 +1,6 @@
-﻿namespace System
+﻿using Windows.Win32;
+
+namespace System
 {
     internal static partial class NativeMethods
     {
@@ -6,17 +8,17 @@
         ///  Scroll bar values (SB_) that indicates the user's scrolling request in a horizontal scrollbar.
         ///  Used by WM_HSCROLL message.
         /// </summary>
-        public enum SBH : int
+        public enum SBH : uint
         {
-            LINELEFT = 0,
-            LINERIGHT = 1,
-            PAGELEFT = 2,
-            PAGERIGHT = 3,
-            THUMBPOSITION = 4,
-            THUMBTRACK = 5,
-            LEFT = 6,
-            RIGHT = 7,
-            ENDSCROLL = 8,
+            LINELEFT = Constants.SB_LINELEFT,
+            LINERIGHT = Constants.SB_LINERIGHT,
+            PAGELEFT = Constants.SB_PAGELEFT,
+            PAGERIGHT = Constants.SB_PAGERIGHT,
+            THUMBPOSITION = Constants.SB_THUMBPOSITION,
+            THUMBTRACK = Constants.SB_THUMBTRACK,
+            LEFT = Constants.SB_LEFT,
+            RIGHT = Constants.SB_RIGHT,
+            ENDSCROLL = Constants.SB_ENDSCROLL,
         }
     }
 }
