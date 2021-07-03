@@ -5,6 +5,7 @@ GetScrollPos
 GetThemeColor
 GetThemeFont
 InternetGetConnectedState
+IsIconic
 OpenThemeData
 SetWindowTheme
 
