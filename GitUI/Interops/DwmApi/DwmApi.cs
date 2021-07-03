@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Dwm;
 
 namespace GitUI.Interops.DwmApi
 {
@@ -8,19 +10,16 @@ namespace GitUI.Interops.DwmApi
     /// </summary>
     internal static class DwmApi
     {
-        [DllImport("dwmapi.dll", ExactSpelling = true)]
-        private static extern int DwmSetWindowAttribute(IntPtr hwnd, uint attr, ref int attrValue, int attrSize);
-
         // Non-documented Windows constants
-        private const uint DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
-        private const uint DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+        private const DWMWINDOWATTRIBUTE DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = (DWMWINDOWATTRIBUTE)19;
+        private const DWMWINDOWATTRIBUTE DWMWA_USE_IMMERSIVE_DARK_MODE = (DWMWINDOWATTRIBUTE)20;
 
         private static readonly bool _isSupported = IsWindows10BuildOrGreater(17763);
-        private static readonly uint _dwmAttribute = IsWindows10BuildOrGreater(18985)
+        private static readonly DWMWINDOWATTRIBUTE _dwmAttribute = IsWindows10BuildOrGreater(18985)
             ? DWMWA_USE_IMMERSIVE_DARK_MODE
             : DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1;
 
-        internal static bool UseImmersiveDarkMode(IntPtr hwnd, bool enabled)
+        internal static unsafe bool UseImmersiveDarkMode(IntPtr hwnd, bool enabled)
         {
             if (!_isSupported || hwnd == IntPtr.Zero)
             {
@@ -31,7 +30,7 @@ namespace GitUI.Interops.DwmApi
 
             try
             {
-                return DwmSetWindowAttribute(hwnd, _dwmAttribute, ref useImmersiveDarkMode, sizeof(int)) == 0;
+                return PInvoke.DwmSetWindowAttribute((HWND)hwnd, (uint)_dwmAttribute, &useImmersiveDarkMode, sizeof(int)) == 0;
             }
             catch (Exception)
             {
