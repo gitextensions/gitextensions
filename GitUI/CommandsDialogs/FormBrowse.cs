@@ -104,6 +104,8 @@ namespace GitUI.CommandsDialogs
 
         [CanBeNull] private TabPage _consoleTabPage;
 
+        private readonly Dictionary<Brush, Icon> _overlayIconByBrush = new();
+
         [Flags]
         private enum UpdateTargets
         {
@@ -407,23 +409,22 @@ namespace GitUI.CommandsDialogs
                         {
                             lastBrush = brush;
 
-                            const int imgDim = 32;
-                            const int dotDim = 15;
-                            const int pad = 2;
-                            using (var bmp = new Bitmap(imgDim, imgDim))
+                            if (!_overlayIconByBrush.TryGetValue(brush, out Icon overlay))
                             {
-                                using (var g = Graphics.FromImage(bmp))
-                                {
-                                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                                    g.Clear(Color.Transparent);
-                                    g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
-                                }
+                                const int imgDim = 32;
+                                const int dotDim = 15;
+                                const int pad = 2;
+                                using Bitmap bmp = new(imgDim, imgDim);
+                                using Graphics g = Graphics.FromImage(bmp);
+                                g.SmoothingMode = SmoothingMode.AntiAlias;
+                                g.Clear(Color.Transparent);
+                                g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
 
-                                using (var overlay = Icon.FromHandle(bmp.GetHicon()))
-                                {
-                                    TaskbarManager.Instance.SetOverlayIcon(overlay, "");
-                                }
+                                overlay = bmp.ToIcon();
+                                _overlayIconByBrush.Add(brush, overlay);
                             }
+
+                            TaskbarManager.Instance.SetOverlayIcon(overlay, "");
 
                             var repoStateVisualiser = new RepoStateVisualiser();
                             var (image, _) = repoStateVisualiser.Invoke(status);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -24,6 +25,7 @@ namespace GitUI
         private ThumbnailToolBarButton _pushButton;
         private ThumbnailToolBarButton _pullButton;
         private string _deferredAddToRecent;
+        private static readonly Dictionary<Image, Icon> _iconByImage = new();
         private bool ToolbarButtonsCreated => _commitButton is not null;
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
 
@@ -213,8 +215,13 @@ namespace GitUI
         /// <returns>An icon!!</returns>
         private static Icon MakeIcon(Image img, int size, bool keepAspectRatio)
         {
-            var square = new Bitmap(size, size); // create new bitmap
-            Graphics g = Graphics.FromImage(square); // allow drawing to it
+            if (_iconByImage.TryGetValue(img, out Icon icon))
+            {
+                return icon;
+            }
+
+            using Bitmap square = new(size, size); // create new bitmap
+            using Graphics g = Graphics.FromImage(square); // allow drawing to it
 
             int x, y, w, h; // dimensions for new image
 
@@ -255,7 +262,9 @@ namespace GitUI
 
             // following line would work directly on any image, but then
             // it wouldn't look as nice.
-            return Icon.FromHandle(square.GetHicon());
+            icon = square.ToIcon();
+            _iconByImage.Add(img, icon);
+            return icon;
         }
 
         private static void SafeInvoke(Action action, string callerName)
