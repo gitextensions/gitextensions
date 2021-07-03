@@ -360,7 +360,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return false;
             }
 
-            return NativeMethods.IsIconic(currentProcess.MainWindowHandle).IsTrue();
+            return NativeMethods.IsIconic(currentProcess.MainWindowHandle);
         }
 
         private void Update()

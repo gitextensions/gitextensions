@@ -1,5 +1,5 @@
 using System.Runtime.InteropServices;
-using static System.Interop;
+using Windows.Win32.Foundation;
 
 namespace System
 {
