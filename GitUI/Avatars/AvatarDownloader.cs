@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
+using Windows.Win32;
 
 namespace GitUI.Avatars
 {
@@ -27,7 +28,7 @@ namespace GitUI.Avatars
             }
 
             // check network connectivity
-            if (!NativeMethods.InternetGetConnectedState(out _, 0))
+            if (!PInvoke.InternetGetConnectedState(out _, 0))
             {
                 return null;
             }

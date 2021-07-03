@@ -1,4 +1,5 @@
 CreateSolidBrush
 DwmSetWindowAttribute
+InternetGetConnectedState
 
 DWMWINDOWATTRIBUTE
