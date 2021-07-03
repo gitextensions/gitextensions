@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using GitExtUtils.GitUI;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.Theming
 {
@@ -38,7 +39,7 @@ namespace GitUI.Theming
         public override bool ForceUseRenderTextEx { get; } = true;
 
         public override int RenderTextEx(IntPtr htheme, IntPtr hdc, int partid, int stateid,
-            string psztext, int cchtext, NativeMethods.DT dwtextflags,
+            string psztext, int cchtext, DRAW_TEXT_FORMAT dwtextflags,
             IntPtr prect, ref NativeMethods.DTTOPTS poptions)
         {
             Color textColor;

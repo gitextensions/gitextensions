@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms.VisualStyles;
 using GitExtUtils.GitUI;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.Theming
 {
@@ -24,7 +25,7 @@ namespace GitUI.Theming
 
         public override int RenderTextEx(IntPtr htheme, IntPtr hdc, int partid, int stateid,
             string psztext, int cchtext,
-            NativeMethods.DT dwtextflags, IntPtr prect,
+            DRAW_TEXT_FORMAT dwtextflags, IntPtr prect,
             ref NativeMethods.DTTOPTS poptions)
         {
             switch ((Parts)partid)

@@ -5,6 +5,7 @@ using System.Windows.Forms.VisualStyles;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using Windows.Win32;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.Theming
 {
@@ -16,7 +17,7 @@ namespace GitUI.Theming
             IntPtr hdc,
             int partid, int stateid,
             string psztext, int cchtext,
-            NativeMethods.DT dwtextflags,
+            DRAW_TEXT_FORMAT dwtextflags,
             IntPtr prect, ref NativeMethods.DTTOPTS poptions)
         {
             switch ((Parts)partid)

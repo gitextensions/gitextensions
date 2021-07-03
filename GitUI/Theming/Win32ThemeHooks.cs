@@ -8,6 +8,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls;
 using Microsoft;
 using Windows.Win32;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.Theming
 {
@@ -286,7 +287,7 @@ namespace GitUI.Theming
             IntPtr htheme, IntPtr hdc,
             int partid, int stateid,
             string psztext, int cchtext,
-            NativeMethods.DT dwtextflags, int dwtextflags2, IntPtr prect)
+            DRAW_TEXT_FORMAT dwtextflags, int dwtextflags2, IntPtr prect)
         {
             if (!BypassThemeRenderers)
             {
@@ -317,7 +318,7 @@ namespace GitUI.Theming
             IntPtr htheme, IntPtr hdc,
             int partid, int stateid,
             string psztext, int cchtext,
-            NativeMethods.DT dwtextflags,
+            DRAW_TEXT_FORMAT dwtextflags,
             IntPtr prect, ref NativeMethods.DTTOPTS poptions)
         {
             if (!BypassThemeRenderers)

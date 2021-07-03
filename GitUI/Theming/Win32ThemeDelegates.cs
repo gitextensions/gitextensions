@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.Theming
 {
@@ -30,7 +31,7 @@ namespace GitUI.Theming
         int partid, int stateId,
         string psztext,
         int cchtext,
-        NativeMethods.DT dwtextflags,
+        DRAW_TEXT_FORMAT dwtextflags,
         int dwtextflags2,
         IntPtr prect);
 
@@ -40,7 +41,7 @@ namespace GitUI.Theming
         int partid, int stateid,
         string pszText,
         int cchText,
-        NativeMethods.DT dwtextflags,
+        DRAW_TEXT_FORMAT dwtextflags,
         IntPtr prect,
         ref NativeMethods.DTTOPTS poptions);
 
