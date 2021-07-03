@@ -7,6 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using GitCommands.Utils;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.UI.Controls;
 using static System.NativeMethods;
 
 namespace GitUI.UserControls
@@ -203,7 +206,7 @@ namespace GitUI.UserControls
                         return;
                 }
 
-                newValue ??= GetScrollPos(Handle, SB.VERT);
+                newValue ??= PInvoke.GetScrollPos((HWND)Handle, SCROLLBAR_CONSTANTS.SB_VERT);
                 Scroll?.Invoke(this, new ScrollEventArgs(type, newValue.Value));
 
                 short LowWord(long number) =>

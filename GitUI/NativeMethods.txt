@@ -1,6 +1,7 @@
 CloseThemeData
 CreateSolidBrush
 DwmSetWindowAttribute
+GetScrollPos
 GetThemeColor
 GetThemeFont
 InternetGetConnectedState
