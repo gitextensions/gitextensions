@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace GitUI.UserControls
 {
@@ -71,7 +73,7 @@ namespace GitUI.UserControls
                         penColor = _borderHoveredColor;
                     }
 
-                    var windowDC = NativeMethods.GetWindowDC(Handle);
+                    var windowDC = PInvoke.GetWindowDC((HWND)Handle);
                     {
                         using var graphics = Graphics.FromHdc(windowDC);
                         using Pen pen = new(penColor);

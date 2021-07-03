@@ -4,6 +4,7 @@ DwmSetWindowAttribute
 GetScrollPos
 GetThemeColor
 GetThemeFont
+GetWindowDC
 InternetGetConnectedState
 IsIconic
 OpenThemeData
