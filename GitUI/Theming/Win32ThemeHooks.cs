@@ -7,6 +7,7 @@ using EasyHook;
 using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls;
 using Microsoft;
+using Windows.Win32;
 
 namespace GitUI.Theming
 {
@@ -219,7 +220,7 @@ namespace GitUI.Theming
                 if (color != Color.Empty)
                 {
                     int colorref = ColorTranslator.ToWin32(color);
-                    var hbrush = NativeMethods.CreateSolidBrush(colorref);
+                    var hbrush = PInvoke.CreateSolidBrush(unchecked((uint)colorref));
                     return hbrush;
                 }
             }
