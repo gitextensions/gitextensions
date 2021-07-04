@@ -32,10 +32,26 @@ namespace GitCommandsTests
             _getEncodingByGitName = (encoding) => _logOutputEncoding;
         }
 
+        [TestCase(0, false)]
+        [TestCase(1, true)]
+        public void BuildArguments_should_add_maxcount_if_requested(int maxCount, bool expected)
+        {
+            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(maxCount, RefFilterOptions.All, "", "", "");
+
+            if (expected)
+            {
+                args.ToString().Should().Contain($" --max-count={maxCount} ");
+            }
+            else
+            {
+                args.ToString().Should().NotContain(" --max-count=");
+            }
+        }
+
         [Test]
         public void BuildArguments_should_be_NUL_terminated()
         {
-            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(RefFilterOptions.All, "", "", "");
+            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(-1, RefFilterOptions.All, "", "", "");
 
             args.ToString().Should().Contain(" log -z ");
         }
@@ -46,7 +62,7 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.All | RefFilterOptions.Reflogs, true)]
         public void BuildArguments_should_add_reflog_if_requested(RefFilterOptions refFilterOptions, bool expected)
         {
-            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(refFilterOptions, "", "", "");
+            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(-1, refFilterOptions, "", "", "");
 
             if (expected)
             {
@@ -80,7 +96,7 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.Tags, " --tags ", null)]
         public void BuildArguments_check_parameters(RefFilterOptions refFilterOptions, string expectedToContain, string notExpectedToContain)
         {
-            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(refFilterOptions, "my_*", "my_revision", "my_path");
+            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(-1, refFilterOptions, "my_*", "my_revision", "my_path");
 
             if (expectedToContain is not null)
             {

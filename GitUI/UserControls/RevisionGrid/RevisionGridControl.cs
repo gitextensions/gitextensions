@@ -956,6 +956,7 @@ namespace GitUI
                     Module,
                     refs,
                     revisions,
+                    _revisionFilter.GetMaxCount(),
                     refFilterOptions,
                     _branchFilter,
                     _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + _fixedRevisionFilter,
@@ -1186,8 +1187,7 @@ namespace GitUI
         internal bool ShouldHideGraph(bool inclBranchFilter)
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(_branchFilter)) ||
-                   !(!_revisionFilter.ShouldHideGraph() &&
-                     string.IsNullOrEmpty(InMemAuthorFilter) &&
+                   !(string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
                      string.IsNullOrEmpty(InMemMessageFilter));
         }
