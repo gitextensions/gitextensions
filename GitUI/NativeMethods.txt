@@ -10,6 +10,7 @@ GetWindowDC
 InternetGetConnectedState
 IsIconic
 OpenThemeData
+SendMessage
 SetForegroundWindow
 SetWindowTheme
 
@@ -28,3 +29,5 @@ SB_PAGERIGHT
 SB_RIGHT
 SB_THUMBPOSITION
 SB_THUMBTRACK
+TVM_SETEXTENDEDSTYLE
+TVS_EX_DOUBLEBUFFER

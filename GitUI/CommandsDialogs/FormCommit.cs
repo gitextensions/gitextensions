@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -33,6 +32,8 @@ using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace GitUI.CommandsDialogs
 {
@@ -426,15 +427,9 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnHandleCreated(EventArgs e)
         {
-            const int TVM_SETEXTENDEDSTYLE = 0x1100 + 44;
-            const int TVS_EX_DOUBLEBUFFER = 0x0004;
-
-            SendMessage(Handle, TVM_SETEXTENDEDSTYLE, (IntPtr)TVS_EX_DOUBLEBUFFER, (IntPtr)TVS_EX_DOUBLEBUFFER);
+            PInvoke.SendMessage((HWND)Handle, Constants.TVM_SETEXTENDEDSTYLE, (nuint)Constants.TVS_EX_DOUBLEBUFFER, (nint)Constants.TVS_EX_DOUBLEBUFFER);
             base.OnHandleCreated(e);
         }
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr SendMessage(IntPtr hwnd, int msg, IntPtr wp, IntPtr lp);
 
         protected override void OnApplicationActivated()
         {
