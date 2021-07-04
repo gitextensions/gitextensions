@@ -578,7 +578,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             POINT scrollPoint = default;
             PInvoke.SendMessage((HWND)handleRef.Handle, Constants.EM_GETSCROLLPOS, UIntPtr.Zero, (nint)(&scrollPoint));
             GC.KeepAlive(handleRef.Wrapper);
-            return new Point(scrollPoint.x, scrollPoint.y);
+            return scrollPoint;
         }
 
         public static Point GetScrollPoint(this RichTextBox rtb)

@@ -13,6 +13,7 @@ OpenThemeData
 SendMessage
 SetForegroundWindow
 SetWindowTheme
+WindowFromPoint
 
 DRAW_TEXT_FORMAT
 DWMWINDOWATTRIBUTE

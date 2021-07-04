@@ -1,4 +1,5 @@
-﻿using Windows.Win32.UI.Controls;
+﻿using Windows.Win32.Foundation;
+using Windows.Win32.UI.Controls;
 
 namespace System
 {
