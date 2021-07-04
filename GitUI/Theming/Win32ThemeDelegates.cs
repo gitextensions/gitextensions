@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.Theming
 {
@@ -19,7 +20,7 @@ namespace GitUI.Theming
     [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true, CharSet = CharSet.Unicode)]
     internal delegate int DrawThemeBackgroundExDelegate(
         IntPtr htheme, IntPtr hdc, int partId, int stateId,
-        NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions);
+        NativeMethods.RECTCLS prect, ref DTBGOPTS poptions);
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
     internal delegate int GetThemeColorDelegate(

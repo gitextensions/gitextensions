@@ -6,6 +6,7 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using Windows.Win32;
 using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.Theming
 {
@@ -75,7 +76,7 @@ namespace GitUI.Theming
         public override int RenderBackgroundEx(
             IntPtr htheme, IntPtr hdc,
             int partid, int stateid,
-            NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
+            NativeMethods.RECTCLS prect, ref DTBGOPTS poptions)
         {
             switch ((Parts)partid)
             {

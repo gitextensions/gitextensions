@@ -9,6 +9,7 @@ using GitUI.UserControls;
 using Microsoft;
 using Windows.Win32;
 using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.Theming
 {
@@ -249,7 +250,7 @@ namespace GitUI.Theming
         private static int DrawThemeBackgroundExHook(
             IntPtr htheme, IntPtr hdc,
             int partid, int stateid,
-            NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
+            NativeMethods.RECTCLS prect, ref DTBGOPTS poptions)
         {
             if (!BypassThemeRenderers)
             {
