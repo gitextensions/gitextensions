@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
+using Windows.Win32;
 using Windows.Win32.Foundation;
 
 namespace GitUI.SpellChecker
@@ -23,8 +24,8 @@ namespace GitUI.SpellChecker
             }
 
             var lineNumber = rtb.GetLineFromCharIndex(index);
-            var lineIndex = NativeMethods.SendMessageW(rtb.Handle, NativeMethods.EM_LINEINDEX, (IntPtr)lineNumber, IntPtr.Zero).ToInt32();
-            var lineLength = NativeMethods.SendMessageW(rtb.Handle, NativeMethods.EM_LINELENGTH, (IntPtr)index, IntPtr.Zero).ToInt32();
+            var lineIndex = PInvoke.SendMessage((HWND)rtb.Handle, Constants.EM_LINEINDEX, (nuint)lineNumber, IntPtr.Zero);
+            var lineLength = PInvoke.SendMessage((HWND)rtb.Handle, Constants.EM_LINELENGTH, (nuint)index, IntPtr.Zero);
 
             NativeMethods.CHARRANGE charRange = new()
             {
@@ -60,7 +61,7 @@ namespace GitUI.SpellChecker
                 rcPage = rectPage
             };
 
-            NativeMethods.SendMessageW(rtb.Handle, NativeMethods.EM_FORMATRANGE, IntPtr.Zero, ref formatRange);
+            PInvoke.SendMessage((HWND)rtb.Handle, Constants.EM_FORMATRANGE, UIntPtr.Zero, ref formatRange);
 
             canvas.ReleaseHdc(canvasHdc);
             canvas.Dispose();

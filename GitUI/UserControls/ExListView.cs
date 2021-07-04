@@ -66,7 +66,7 @@ namespace GitUI.UserControls
                 pt = location
             };
 
-            if (SendMessageW(Handle, LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) == new IntPtr(-1))
+            if (PInvoke.SendMessage((HWND)Handle, Constants.LVM_SUBITEMHITTEST, unchecked((nuint)(nint)(-1)), ref info) == -1)
             {
                 return null;
             }
@@ -134,21 +134,21 @@ namespace GitUI.UserControls
         protected override void WndProc(ref Message m)
         {
             var message = m;
-            switch (m.Msg)
+            switch ((uint)m.Msg)
             {
-                case WM_LBUTTONUP when GetGroupHitInfo(message.LParam.ToPoint())?.IsCollapseButton == true:
+                case Constants.WM_LBUTTONUP when GetGroupHitInfo(message.LParam.ToPoint())?.IsCollapseButton == true:
                     DefWndProc(ref m); // collapse / expand by clicking button in group header
                     break;
 
-                case LVM_INSERTGROUP:
+                case Constants.LVM_INSERTGROUP:
                     base.WndProc(ref m);
                     HandleAddedGroup(m);
                     break;
 
-                case WM_RBUTTONUP when IsGroupMouseEventHandled(MouseButtons.Right, isDown: false):
-                case WM_RBUTTONDOWN when IsGroupMouseEventHandled(MouseButtons.Right, isDown: true):
-                case WM_LBUTTONUP when IsGroupMouseEventHandled(MouseButtons.Left, isDown: false):
-                case WM_LBUTTONDOWN when IsGroupMouseEventHandled(MouseButtons.Left, isDown: true):
+                case Constants.WM_RBUTTONUP when IsGroupMouseEventHandled(MouseButtons.Right, isDown: false):
+                case Constants.WM_RBUTTONDOWN when IsGroupMouseEventHandled(MouseButtons.Right, isDown: true):
+                case Constants.WM_LBUTTONUP when IsGroupMouseEventHandled(MouseButtons.Left, isDown: false):
+                case Constants.WM_LBUTTONDOWN when IsGroupMouseEventHandled(MouseButtons.Left, isDown: true):
                     break;
 
                 default:
@@ -162,20 +162,20 @@ namespace GitUI.UserControls
                 ScrollEventType type;
                 int? newValue = null;
 
-                switch (msg.Msg)
+                switch ((uint)msg.Msg)
                 {
-                    case WM_VSCROLL:
+                    case Constants.WM_VSCROLL:
                         type = (ScrollEventType)LowWord(msg.WParam.ToInt64());
                         newValue = HighWord(msg.WParam.ToInt64());
                         break;
 
-                    case WM_MOUSEWHEEL:
+                    case Constants.WM_MOUSEWHEEL:
                         type = HighWord(msg.WParam.ToInt64()) > 0
                             ? ScrollEventType.SmallDecrement
                             : ScrollEventType.SmallIncrement;
                         break;
 
-                    case WM_KEYDOWN:
+                    case Constants.WM_KEYDOWN:
                         switch ((Keys)msg.WParam.ToInt32())
                         {
                             case Keys.Up:
@@ -284,7 +284,7 @@ namespace GitUI.UserControls
             lvgroup.mask = LVGF.STATE;
             lvgroup.iGroupId = groupId;
 
-            NativeMethods.SendMessageW(Handle, LVM_SETGROUPINFO, (IntPtr)groupId, ref lvgroup);
+            PInvoke.SendMessage((HWND)Handle, Constants.LVM_SETGROUPINFO, (nuint)groupId, ref lvgroup);
         }
 
         /// <summary>

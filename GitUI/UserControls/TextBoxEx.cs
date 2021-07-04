@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -58,10 +57,10 @@ namespace GitUI.UserControls
                 return;
             }
 
-            switch (m.Msg)
+            switch ((uint)m.Msg)
             {
-                case NativeMethods.WM_NCPAINT:
-                case NativeMethods.WM_PAINT:
+                case Constants.WM_NCPAINT:
+                case Constants.WM_PAINT:
                     var penColor = _borderDefaultColor;
 
                     if (Focused)
@@ -83,15 +82,15 @@ namespace GitUI.UserControls
 
                     break;
 
-                case NativeMethods.WM_NCMOUSEHOVER when !_hovered:
-                case NativeMethods.WM_MOUSEHOVER when !_hovered:
+                case Constants.WM_NCMOUSEHOVER when !_hovered:
+                case Constants.WM_MOUSEHOVER when !_hovered:
                     _hovered = true;
 
                     Invalidate();
 
                     break;
-                case NativeMethods.WM_NCMOUSELEAVE:
-                case NativeMethods.WM_MOUSELEAVE:
+                case Constants.WM_NCMOUSELEAVE:
+                case Constants.WM_MOUSELEAVE:
                     _hovered = false;
 
                     Invalidate();
