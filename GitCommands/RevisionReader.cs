@@ -198,7 +198,19 @@ namespace GitCommands
                     }.ToString()
                 },
                 revisionFilter,
-                { !string.IsNullOrWhiteSpace(pathFilter), $"-- {pathFilter}" }
+                {
+                    !string.IsNullOrWhiteSpace(pathFilter),
+                    new ArgumentBuilder
+                    {
+                        { AppSettings.FullHistoryInFileHistory, $"--full-history" },
+                        {
+                            AppSettings.FullHistoryInFileHistory && AppSettings.SimplifyMergesInFileHistory,
+                            $"--simplify-merges"
+                        },
+                        $"--parents",
+                        { $"-- {pathFilter}" }
+                    }.ToString()
+                }
             };
         }
 

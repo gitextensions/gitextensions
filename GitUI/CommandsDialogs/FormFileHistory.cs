@@ -241,79 +241,72 @@ namespace GitUI.CommandsDialogs
                 // browse dialog.
                 FileName = fileName.ToPosixPath();
 
-                var res = (revision: (string?)null, path: $" \"{fileName}\"");
                 var fullFilePath = _fullPathResolver.Resolve(fileName);
                 _filePathByObjectId.Clear();
 
-                if (AppSettings.FollowRenamesInFileHistory)
+                if (!AppSettings.FollowRenamesInFileHistory)
                 {
-                    // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
-                    //
-                    // But we can take a more complicated path to get reasonable results:
-                    //  1. use git log --follow to get all previous filenames of the file we are interested in
-                    //  2. use git log "list of files names" to get the history graph
-                    //
-                    // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
-                    //
+                    return (revision: (string?)null, path: $" \"{fileName}\"");
+                }
 
-                    const string startOfObjectId = "????";
-                    GitArgumentBuilder args = new("log")
+                // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
+                //
+                // But we can take a more complicated path to get reasonable results:
+                //  1. use git log --follow to get all previous filenames of the file we are interested in
+                //  2. use git log "list of files names" to get the history graph
+                //
+                // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
+                //
+
+                const string startOfObjectId = "????";
+                GitArgumentBuilder args = new("log")
+                {
+                    // --name-only will list each filename on a separate line, ending with a an empty line
+                    // Find start of a new commit with a sequence impossible in a filename
+                    $"--format=\"{startOfObjectId}%H\"",
+                    "--name-only",
+                    "--follow",
+                    FindRenamesAndCopiesOpts(),
+                    "--",
+                    fileName.Quote()
+                };
+
+                HashSet<string?> setOfFileNames = new();
+                var lines = Module.GitExecutable.GetOutputLines(args, outputEncoding: GitModule.LosslessEncoding);
+
+                ObjectId currentObjectId = null;
+                foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
+                {
+                    if (string.IsNullOrEmpty(line))
                     {
-                        // --name-only will list each filename on a separate line, ending with a an empty line
-                        // Find start of a new commit with a sequence impossible in a filename
-                        $"--format=\"{startOfObjectId}%H\"",
-                        "--name-only",
-                        "--follow",
-                        FindRenamesAndCopiesOpts(),
-                        "--",
-                        fileName.Quote()
-                    };
-
-                    HashSet<string?> setOfFileNames = new();
-                    var lines = Module.GitExecutable.GetOutputLines(args, outputEncoding: GitModule.LosslessEncoding);
-
-                    ObjectId currentObjectId = null;
-                    foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
-                    {
-                        if (string.IsNullOrEmpty(line))
-                        {
-                            // empty filename after sha
-                            continue;
-                        }
-
-                        if (line.StartsWith(startOfObjectId))
-                        {
-                            if (line.Length < ObjectId.Sha1CharCount + startOfObjectId.Length
-                                || !ObjectId.TryParse(line, offset: startOfObjectId.Length, out currentObjectId))
-                            {
-                                // Parse error, ignore
-                                currentObjectId = null;
-                            }
-
-                            continue;
-                        }
-
-                        if (currentObjectId == null)
-                        {
-                            // Parsing has failed, ignore
-                            continue;
-                        }
-
-                        // Add only the first file to the dictionary
-                        _filePathByObjectId.TryAdd(currentObjectId, line);
-                        setOfFileNames.Add(line);
+                        // empty filename after sha
+                        continue;
                     }
 
-                    res.path = string.Join("", setOfFileNames.Select(s => @$" ""{s}"""));
-                    res.revision += $" --parents{FindRenamesAndCopiesOpts()}";
+                    if (line.StartsWith(startOfObjectId))
+                    {
+                        if (line.Length < ObjectId.Sha1CharCount + startOfObjectId.Length
+                            || !ObjectId.TryParse(line, offset: startOfObjectId.Length, out currentObjectId))
+                        {
+                            // Parse error, ignore
+                            currentObjectId = null;
+                        }
+
+                        continue;
+                    }
+
+                    if (currentObjectId == null)
+                    {
+                        // Parsing has failed, ignore
+                        continue;
+                    }
+
+                    // Add only the first file to the dictionary
+                    _filePathByObjectId.TryAdd(currentObjectId, line);
+                    setOfFileNames.Add(line);
                 }
 
-                if (AppSettings.FullHistoryInFileHistory)
-                {
-                    res.revision = string.Concat(" --full-history ", AppSettings.SimplifyMergesInFileHistory ? "--simplify-merges " : string.Empty, res.revision);
-                }
-
-                return res;
+                return (revision: $" --parents{FindRenamesAndCopiesOpts()}", path: string.Join("", setOfFileNames.Select(s => @$" ""{s}""")));
             }
         }
 
