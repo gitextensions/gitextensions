@@ -175,7 +175,6 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.ShowConEmuTab)], true, false, true);
                 yield return (properties[nameof(AppSettings.ConEmuStyle)], "<Solarized Light>", true, true);
                 yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", true, true);
-                yield return (properties[nameof(AppSettings.ConEmuFontSize)], "12", true, true);
                 yield return (properties[nameof(AppSettings.ShowGpgInformation)], true, false, true);
 
                 yield return (properties[nameof(AppSettings.ShowSplitViewLayout)], true, false, false);

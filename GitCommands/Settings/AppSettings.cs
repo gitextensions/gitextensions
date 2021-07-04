@@ -467,7 +467,6 @@ namespace GitCommands
         public static ISetting<bool> ShowConEmuTab => Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
         public static ISetting<string> ConEmuStyle => Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
         public static ISetting<string> ConEmuTerminal => Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
-        public static ISetting<string> ConEmuFontSize => Setting.Create(DetailedSettingsPath, nameof(ConEmuFontSize), "12");
         public static ISetting<bool> ShowGpgInformation => Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
 
         public static CommitInfoPosition CommitInfoPosition
@@ -1451,6 +1450,12 @@ namespace GitCommands
         {
             get => GetFont("font", SystemFonts.MessageBoxFont);
             set => SetFont("font", value);
+        }
+
+        public static Font ConEmuConsoleFont
+        {
+            get => GetFont("conemuconsolefont", new Font("Consolas", 12));
+            set => SetFont("conemuconsolefont", value);
         }
 
         #endregion
