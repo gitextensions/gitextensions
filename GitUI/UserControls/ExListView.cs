@@ -278,10 +278,10 @@ namespace GitUI.UserControls
                 groupId = Groups.IndexOf(group) - _minGroupInsertionIndex;
             }
 
-            LVGROUPW lvgroup = new();
-            lvgroup.cbSize = (uint)sizeof(LVGROUPW);
-            lvgroup.state = state;
-            lvgroup.mask = LVGF.STATE;
+            LVGROUP lvgroup = new();
+            lvgroup.cbSize = (uint)sizeof(LVGROUP);
+            lvgroup.state = (uint)state;
+            lvgroup.mask = LVGROUP_MASK.LVGF_STATE;
             lvgroup.iGroupId = groupId;
 
             PInvoke.SendMessage((HWND)Handle, Constants.LVM_SETGROUPINFO, (nuint)groupId, ref lvgroup);

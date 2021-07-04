@@ -1,4 +1,6 @@
-﻿namespace System
+﻿using Windows.Win32;
+
+namespace System
 {
     internal static partial class NativeMethods
     {
@@ -9,47 +11,47 @@
             /// Groups are expanded, the group name is displayed,
             /// and all items in the group are displayed.
             /// </summary>
-            Normal = 0,
+            Normal = Constants.LVGS_NORMAL,
 
             /// <summary>
             /// The group is collapsed.
             /// </summary>
-            Collapsed = 1,
+            Collapsed = Constants.LVGS_COLLAPSED,
 
             /// <summary>
             /// The group is hidden.
             /// </summary>
-            Hidden = 2,
+            Hidden = Constants.LVGS_HIDDEN,
 
             /// <summary>
             /// Version 6.00 and Windows Vista. The group does not display a header.
             /// </summary>
-            NoHeader = 4,
+            NoHeader = Constants.LVGS_NOHEADER,
 
             /// <summary>
             /// Version 6.00 and Windows Vista. The group can be collapsed.
             /// </summary>
-            Collapsible = 8,
+            Collapsible = Constants.LVGS_COLLAPSIBLE,
 
             /// <summary>
             /// Version 6.00 and Windows Vista. The group has keyboard focus.
             /// </summary>
-            Focused = 16,
+            Focused = Constants.LVGS_FOCUSED,
 
             /// <summary>
             /// Version 6.00 and Windows Vista. The group is selected.
             /// </summary>
-            Selected = 32,
+            Selected = Constants.LVGS_SELECTED,
 
             /// <summary>
             /// Version 6.00 and Windows Vista. The group displays only a portion of its items.
             /// </summary>
-            SubSeted = 64,
+            SubSeted = Constants.LVGS_SUBSETED,
 
             /// <summary>
             /// Version 6.00 and Windows Vista. The subset link of the group has keyboard focus.
             /// </summary>
-            SubSetLinkFocused = 128
+            SubSetLinkFocused = Constants.LVGS_SUBSETLINKFOCUSED,
         }
     }
 }
