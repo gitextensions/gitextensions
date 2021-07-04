@@ -17,6 +17,7 @@ SetForegroundWindow
 SetWindowTheme
 WindowFromPoint
 
+CHARRANGE
 DRAW_TEXT_FORMAT
 DTBGOPTS
 DTTOPTS

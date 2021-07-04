@@ -5,6 +5,7 @@ using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.SpellChecker
 {
@@ -27,7 +28,7 @@ namespace GitUI.SpellChecker
             var lineIndex = PInvoke.SendMessage((HWND)rtb.Handle, Constants.EM_LINEINDEX, (nuint)lineNumber, IntPtr.Zero);
             var lineLength = PInvoke.SendMessage((HWND)rtb.Handle, Constants.EM_LINELENGTH, (nuint)index, IntPtr.Zero);
 
-            NativeMethods.CHARRANGE charRange = new()
+            CHARRANGE charRange = new()
             {
                 cpMin = lineIndex,
                 cpMax = lineIndex + lineLength
