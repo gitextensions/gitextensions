@@ -1,4 +1,6 @@
-﻿namespace System
+﻿using Windows.Win32.UI.Controls;
+
+namespace System
 {
     internal static partial class NativeMethods
     {
@@ -8,7 +10,7 @@
         public struct LVHITTESTINFO
         {
             public POINT pt;
-            public LVHITTESTFLAGS flags;
+            public LVHITTESTINFO_FLAGS flags;
             public int iItem;
             public int iSubItem;
 

@@ -71,7 +71,7 @@ namespace GitUI.UserControls
                 return null;
             }
 
-            if ((info.flags & LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) == 0)
+            if ((info.flags & LVHITTESTINFO_FLAGS.LVHT_EX_GROUP_HEADER) == 0)
             {
                 return null;
             }
@@ -81,7 +81,7 @@ namespace GitUI.UserControls
                 var groupId = GetGroupId(group);
                 if (info.iItem == groupId)
                 {
-                    bool isCollapseButton = (info.flags & LVHITTESTFLAGS.LVHT_EX_GROUP_COLLAPSE) > 0;
+                    bool isCollapseButton = (info.flags & LVHITTESTINFO_FLAGS.LVHT_EX_GROUP_COLLAPSE) > 0;
                     return new ListViewGroupHitInfo(group, isCollapseButton, location);
                 }
             }
