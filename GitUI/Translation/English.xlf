@@ -3062,6 +3062,10 @@ Do you want to continue?</source>
         <source>Toggle split view layout</source>
         <target />
       </trans-unit>
+      <trans-unit id="toolStripAdvancedFilterButton.ToolTipText">
+        <source>Advanced filter</source>
+        <target />
+      </trans-unit>
       <trans-unit id="toolStripBranchFilterDropDownButton.Text">
         <source>Branch type</source>
         <target />

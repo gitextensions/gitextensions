@@ -57,6 +57,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripFileExplorer = new System.Windows.Forms.ToolStripButton();
             this.userShell = new System.Windows.Forms.ToolStripSplitButton();
             this.EditSettings = new System.Windows.Forms.ToolStripButton();
+            this.toolStripAdvancedFilterButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripBranchFilterComboBox = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripBranchFilterDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
@@ -285,6 +286,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStripFilters.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripFilters.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripFilters.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripAdvancedFilterButton,
             this.toolStripLabel1,
             this.toolStripBranchFilterComboBox,
             this.toolStripBranchFilterDropDownButton,
@@ -606,6 +608,15 @@ namespace GitUI.CommandsDialogs
             this.EditSettings.Size = new System.Drawing.Size(23, 22);
             this.EditSettings.ToolTipText = "Settings";
             this.EditSettings.Click += new System.EventHandler(this.OnShowSettingsClick);
+            // 
+            // toolStripAdvancedFilterButton
+            // 
+            this.toolStripAdvancedFilterButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripAdvancedFilterButton.Image = global::GitUI.Properties.Images.FunnelPencil;
+            this.toolStripAdvancedFilterButton.Name = "toolStripAdvancedFilterButton";
+            this.toolStripAdvancedFilterButton.Size = new System.Drawing.Size(23, 22);
+            this.toolStripAdvancedFilterButton.ToolTipText = "Advanced filter";
+            this.toolStripAdvancedFilterButton.Click += new System.EventHandler(this.AdvancedFilterButton_Click);
             // 
             // toolStripLabel1
             // 
@@ -1902,6 +1913,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem manageStashesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator17;
         private ToolStripSeparator toolStripSeparator19;
+        private ToolStripButton toolStripAdvancedFilterButton;
         private ToolStripLabel toolStripLabel1;
         private ToolStripComboBox toolStripBranchFilterComboBox;
         private ToolStripDropDownButton toolStripBranchFilterDropDownButton;

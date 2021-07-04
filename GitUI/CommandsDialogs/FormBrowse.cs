@@ -3244,6 +3244,11 @@ namespace GitUI.CommandsDialogs
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
+        private void AdvancedFilterButton_Click(object sender, EventArgs e)
+        {
+            RevisionGrid.ShowRevisionFilterDialog();
+        }
+
         private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
         {
             if (toolStripBranchFilterComboBox.Items.Count == 0)
