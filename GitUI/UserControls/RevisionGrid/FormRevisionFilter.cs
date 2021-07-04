@@ -6,15 +6,12 @@ namespace GitUI.UserControls.RevisionGrid
 {
     public partial class FormRevisionFilter : GitExtensionsForm
     {
-        private int _maxRevisionGraphCommitsDefaultValue;
         public FormRevisionFilter()
         {
             InitializeComponent();
             InitializeComplete();
 
-            LimitCheck.Checked = AppSettings.MaxRevisionGraphCommits > 0;
             _NO_TRANSLATE_Limit.Value = AppSettings.MaxRevisionGraphCommits;
-            _maxRevisionGraphCommitsDefaultValue = AppSettings.MaxRevisionGraphCommits;
         }
 
         private void FormRevisionFilterLoad(object sender, EventArgs e)
@@ -114,14 +111,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public int GetMaxCount()
         {
-            // If the value is not user defined, update it to the new default value.
-            if (_maxRevisionGraphCommitsDefaultValue == (int)_NO_TRANSLATE_Limit.Value)
-            {
-                _maxRevisionGraphCommitsDefaultValue = AppSettings.MaxRevisionGraphCommits;
-                _NO_TRANSLATE_Limit.Value = AppSettings.MaxRevisionGraphCommits;
-            }
-
-            return LimitCheck.Checked ? (int)_NO_TRANSLATE_Limit.Value : -1;
+            return LimitCheck.Checked ? (int)_NO_TRANSLATE_Limit.Value : AppSettings.MaxRevisionGraphCommits;
         }
 
         public string GetPathFilter()
