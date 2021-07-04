@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Windows.Win32;
 
 namespace GitUI.Theming
 {
@@ -18,7 +19,7 @@ namespace GitUI.Theming
         {
             get
             {
-                var hwnd = NativeMethods.GetActiveWindow();
+                var hwnd = PInvoke.GetActiveWindow();
                 return hwnd != IntPtr.Zero && Control.FromHandle(hwnd) is null;
             }
         }

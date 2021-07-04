@@ -2,6 +2,7 @@ CloseThemeData
 CreateSolidBrush
 DestroyIcon
 DwmSetWindowAttribute
+GetActiveWindow
 GetScrollPos
 GetThemeColor
 GetThemeFont
