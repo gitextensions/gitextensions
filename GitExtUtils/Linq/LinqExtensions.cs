@@ -7,41 +7,6 @@ namespace System.Linq
 {
     public static class LinqExtensions
     {
-        [MustUseReturnValue]
-        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer = null) => new(source, comparer ?? EqualityComparer<T>.Default);
-
-        [MustUseReturnValue]
-        public static HashSet<TKey> ToHashSet<TSource, TKey>(
-            this IEnumerable<TSource> source,
-            Func<TSource, TKey> keySelector)
-        {
-            if (keySelector is null)
-            {
-                throw new ArgumentNullException(nameof(keySelector));
-            }
-
-            HashSet<TKey> result = new();
-
-            foreach (var element in source)
-            {
-                var key = keySelector(element);
-
-                if (key is null)
-                {
-                    throw new ArgumentException(
-                        "Key selector produced a key that is null. See exception data for source.",
-                        nameof(keySelector))
-                    {
-                        Data = { { "source", element } }
-                    };
-                }
-
-                result.Add(key);
-            }
-
-            return result;
-        }
-
         [Pure]
         public static string Join(this IEnumerable<string> source, string separator)
         {

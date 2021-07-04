@@ -762,7 +762,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                var remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).ToHashSet(b => b.LocalName);
+                var remoteBranchesSet = GetRemoteBranches(_selectedRemote.Name).Select(b => b.LocalName).ToHashSet();
                 var onlyLocalBranches = GetLocalBranches().Where(b => !remoteBranchesSet.Contains(b.LocalName));
 
                 foreach (var head in onlyLocalBranches)

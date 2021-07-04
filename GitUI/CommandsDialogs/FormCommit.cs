@@ -1101,7 +1101,7 @@ namespace GitUI.CommandsDialogs
 
             Validates.NotNull(lastSelection);
             var newItems = _currentFilesList == Staged ? stagedFiles : unstagedFiles;
-            var names = lastSelection.ToHashSet(x => x.Name);
+            var names = lastSelection.Select(x => x.Name).ToHashSet();
             var newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
 
             if (newSelection.Any())
