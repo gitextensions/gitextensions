@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Windows.Win32;
 using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.UserControls
 {
@@ -61,23 +62,21 @@ namespace GitUI.UserControls
             {
                 case Constants.WM_NCPAINT:
                 case Constants.WM_PAINT:
-                    var penColor = _borderDefaultColor;
+                    Color penColor = Focused ? _borderFocusedColor
+                        : _hovered ? _borderHoveredColor
+                        : _borderDefaultColor;
 
-                    if (Focused)
+                    HDC windowDC = PInvoke.GetWindowDC((HWND)Handle);
+                    try
                     {
-                        penColor = _borderFocusedColor;
-                    }
-                    else if (_hovered)
-                    {
-                        penColor = _borderHoveredColor;
-                    }
-
-                    var windowDC = PInvoke.GetWindowDC((HWND)Handle);
-                    {
-                        using var graphics = Graphics.FromHdc(windowDC);
+                        using Graphics graphics = Graphics.FromHdc(windowDC);
                         using Pen pen = new(penColor);
 
                         ControlPaint.DrawBorder(graphics, ClientRectangle, penColor, ButtonBorderStyle.Solid);
+                    }
+                    finally
+                    {
+                        PInvoke.ReleaseDC((HWND)Handle, windowDC);
                     }
 
                     break;

@@ -33,7 +33,6 @@ namespace GitCommands
 
     public sealed class RevisionReader : IDisposable
     {
-        private const string EndOfBody = "1DEA7CC4-FB39-450A-8DDF-762FCEA28B05";
         private const string FullFormat =
 
               // These header entries can all be decoded from the bytes directly.
@@ -53,7 +52,7 @@ namespace GitCommands
               /* Committer name  */ "%cN%n" +
               /* Committer email */ "%cE%n" +
               /* Commit subject  */ "%s%n%n" +
-              /* Commit body     */ "%b" + EndOfBody;
+              /* Commit body     */ "%b";
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new();
 
@@ -112,6 +111,7 @@ namespace GitCommands
 
 #if TRACE
             var sw = Stopwatch.StartNew();
+            int parseErrors = 0;
 #endif
 
             // This property is relatively expensive to call for every revision, so
@@ -154,10 +154,16 @@ namespace GitCommands
                             subject.OnNext(revision);
                         }
                     }
+#if TRACE
+                    else
+                    {
+                        parseErrors++;
+                    }
+#endif
                 }
 
 #if TRACE
-                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count}");
+                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count} parseErrors={parseErrors}");
 #endif
             }
 
@@ -208,8 +214,7 @@ namespace GitCommands
                     }.ToString()
                 },
                 revisionFilter,
-                "--",
-                pathFilter
+                { !string.IsNullOrWhiteSpace(pathFilter), $"-- {pathFilter}" }
             };
         }
 
@@ -248,9 +253,6 @@ namespace GitCommands
 
             if (chunk.Count == 0)
             {
-                // "git log -z --name-only" returns multiple consecutive null bytes when logging
-                // the history of a single file. Haven't worked out why, but it's safe to skip
-                // such chunks.
                 revision = default;
                 return false;
             }
@@ -403,7 +405,7 @@ namespace GitCommands
             var committer = reader.ReadLine(stringPool);
             var committerEmail = reader.ReadLine(stringPool);
 
-            var subject = reader.ReadLine(advance: false);
+            var subject = reader.ReadLine(advance: false).Trim();
 
             if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null)
             {
@@ -416,7 +418,7 @@ namespace GitCommands
             // NOTE the convention is that the Subject string is duplicated at the start of the Body string
             // Therefore we read the subject twice.
             // If there are not enough characters remaining for a body, then just assign the subject string directly.
-            var (body, additionalData) = ParseCommitBody(reader, subject);
+            var body = reader.ReadToEnd();
             if (body is null)
             {
                 // TODO log this parse error
@@ -440,40 +442,11 @@ namespace GitCommands
                 MessageEncoding = encodingName,
                 Subject = subject,
                 Body = body,
-                Name = additionalData,
-                HasMultiLineMessage = !ReferenceEquals(subject, body),
+                HasMultiLineMessage = subject != body,
                 HasNotes = false
             };
 
             return true;
-        }
-
-        private static (string? body, string? additionalData) ParseCommitBody(StringLineReader reader, string subject)
-        {
-            int lengthOfSubjectRepeatedInBody = subject.Length + 2/*newlines*/;
-            if (reader.Remaining == lengthOfSubjectRepeatedInBody + EndOfBody.Length)
-            {
-                return (body: subject, additionalData: null);
-            }
-
-            string tail = reader.ReadToEnd() ?? "";
-            int indexOfEndOfBody = tail.LastIndexOf(EndOfBody, StringComparison.InvariantCulture);
-            if (indexOfEndOfBody < 0)
-            {
-                // TODO log this parse error
-                Debug.Fail("Missing end-of-body marker in the log -- this should not happen");
-                return (body: null, additionalData: null);
-            }
-
-            string? additionalData = null;
-            if (tail.Length > indexOfEndOfBody + EndOfBody.Length)
-            {
-                additionalData = tail.Substring(indexOfEndOfBody + EndOfBody.Length).TrimStart();
-            }
-
-            string body = indexOfEndOfBody == lengthOfSubjectRepeatedInBody
-                          ? subject : tail.Substring(0, indexOfEndOfBody).TrimEnd();
-            return (body, additionalData);
         }
 
         public void Dispose()
@@ -531,7 +504,7 @@ namespace GitCommands
                     return null;
                 }
 
-                var s = _s.Substring(_index);
+                var s = _s.Substring(_index).Trim();
 
                 if (advance)
                 {
@@ -560,12 +533,7 @@ namespace GitCommands
                 string branchFilter, string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
-            internal static (string? body, string? additionalData) ParseCommitBody(StringLineReader reader, string subject) =>
-                RevisionReader.ParseCommitBody(reader, subject);
-
             internal static StringLineReader MakeReader(string s) => new(s);
-
-            internal static string EndOfBody => RevisionReader.EndOfBody;
         }
     }
 }

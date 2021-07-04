@@ -168,25 +168,6 @@ namespace GitUI.HelperDialogs
             ConsoleOutput.AppendMessageFreeThreaded(text);
         }
 
-        private static Icon BitmapToIcon(Bitmap bitmap)
-        {
-            IntPtr handle = IntPtr.Zero;
-            try
-            {
-                handle = bitmap.GetHicon();
-                var icon = Icon.FromHandle(handle);
-
-                return (Icon)icon.Clone();
-            }
-            finally
-            {
-                if (handle != IntPtr.Zero)
-                {
-                    PInvoke.DestroyIcon((HICON)handle);
-                }
-            }
-        }
-
         private protected void Done(bool isSuccess)
         {
             try
@@ -228,7 +209,7 @@ namespace GitUI.HelperDialogs
         private void SetIcon(Bitmap image)
         {
             Icon oldIcon = Icon;
-            Icon = BitmapToIcon(image);
+            Icon = image.ToIcon();
             oldIcon?.Dispose();
         }
 

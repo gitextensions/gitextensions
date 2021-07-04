@@ -12,6 +12,7 @@ GetWindowDC
 InternetGetConnectedState
 IsIconic
 OpenThemeData
+ReleaseDC
 SendMessage
 SetForegroundWindow
 SetWindowTheme

@@ -75,13 +75,17 @@ namespace GitUI.CommandsDialogs
             _startRebaseImmediately = startRebaseImmediately;
         }
 
-        private void FormRebaseLoad(object sender, EventArgs e)
+        protected override void OnShown(EventArgs e)
         {
+            base.OnShown(e);
+
             var selectedHead = Module.GetSelectedBranch();
             Currentbranch.Text = selectedHead;
 
             // Offer rebase on refs also for tags (but not stash, notes etc)
-            var refs = Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags).OfType<GitRef>().ToList();
+            List<GitRef> refs = _startRebaseImmediately
+                ? new()
+                : Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags).OfType<GitRef>().ToList();
             Branches.DataSource = refs;
             Branches.DisplayMember = nameof(GitRef.Name);
 
@@ -92,7 +96,7 @@ namespace GitUI.CommandsDialogs
 
             Branches.Select();
 
-            refs = Module.GetRefs(RefsFilter.Heads).OfType<GitRef>().ToList();
+            refs = refs.Where(h => h.IsHead).ToList();
             cboTo.DataSource = refs;
             cboTo.DisplayMember = nameof(GitRef.Name);
 
