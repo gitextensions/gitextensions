@@ -3,7 +3,9 @@ CreateSolidBrush
 DestroyIcon
 DwmSetWindowAttribute
 GetActiveWindow
+GetLongPathName
 GetScrollPos
+GetShortPathName
 GetThemeColor
 GetThemeFont
 GetWindowDC
