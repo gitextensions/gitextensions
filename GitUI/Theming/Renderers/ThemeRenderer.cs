@@ -33,16 +33,12 @@ namespace GitUI.Theming
 
         public virtual bool ForceUseRenderTextEx => false;
 
-        public virtual int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
-            NativeMethods.RECTCLS pcliprect)
+        public virtual int RenderBackground(HDC hdc, int partid, int stateid, RECT prect, RECT? pcliprect)
         {
             return Unhandled;
         }
 
-        public virtual int RenderBackgroundEx(
-            IntPtr htheme, IntPtr hdc,
-            int partid, int stateid,
-            NativeMethods.RECTCLS prect, ref DTBGOPTS poptions)
+        public virtual int RenderBackgroundEx(IntPtr htheme, HDC hdc, int partid, int stateid, RECT prect, DTBGOPTS? poptions)
         {
             return Unhandled;
         }
@@ -52,7 +48,7 @@ namespace GitUI.Theming
             int partid, int stateid,
             string psztext, int cchtext,
             DRAW_TEXT_FORMAT dwtextflags,
-            IntPtr prect, ref NativeMethods.DTTOPTS poptions)
+            IntPtr prect, ref DTTOPTS poptions)
         {
             return Unhandled;
         }
@@ -86,13 +82,13 @@ namespace GitUI.Theming
             }
         }
 
-        protected Context CreateRenderContext(IntPtr hdc, NativeMethods.RECTCLS? clip) =>
+        protected Context CreateRenderContext(HDC hdc, RECT? clip) =>
             new(hdc, clip);
 
         protected class Context : IDisposable
         {
-            private readonly IntPtr _hdc;
-            private readonly NativeMethods.RECTCLS? _clip;
+            private readonly HDC _hdc;
+            private readonly RECT? _clip;
             private readonly Lazy<Graphics> _graphicsLazy;
 
             private bool _clipChanged;
@@ -100,7 +96,7 @@ namespace GitUI.Theming
 
             public Graphics Graphics => _graphicsLazy.Value;
 
-            public Context(IntPtr hdc, NativeMethods.RECTCLS? clip)
+            public Context(HDC hdc, RECT? clip)
             {
                 _hdc = hdc;
                 _clip = clip;

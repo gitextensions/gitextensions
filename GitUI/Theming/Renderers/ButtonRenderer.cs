@@ -1,6 +1,7 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using GitExtUtils.GitUI;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.Theming
 {
@@ -8,8 +9,7 @@ namespace GitUI.Theming
     {
         protected override string Clsid { get; } = "Button";
 
-        public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
-            NativeMethods.RECTCLS pcliprect)
+        public override int RenderBackground(HDC hdc, int partid, int stateid, RECT prect, RECT? pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
             switch ((Parts)partid)
