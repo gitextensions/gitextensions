@@ -1,4 +1,6 @@
-﻿namespace System
+﻿using Windows.Win32.Foundation;
+
+namespace System
 {
     internal static partial class NativeMethods
     {

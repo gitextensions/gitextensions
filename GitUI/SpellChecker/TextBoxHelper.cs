@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
+using Windows.Win32.Foundation;
 
 namespace GitUI.SpellChecker
 {
@@ -31,7 +32,7 @@ namespace GitUI.SpellChecker
                 cpMax = lineIndex + lineLength
             };
 
-            NativeMethods.RECT rect = new()
+            RECT rect = new()
             {
                 top = 0,
                 bottom = (int)AnInch,
@@ -39,7 +40,7 @@ namespace GitUI.SpellChecker
                 right = 10000000 ////(int)(rtb.Width * anInch + 20);
             };
 
-            NativeMethods.RECT rectPage = new()
+            RECT rectPage = new()
             {
                 top = 0,
                 bottom = (int)AnInch,
