@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using ResourceManager;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace GitUI
 {
@@ -78,7 +80,7 @@ namespace GitUI
                 return false;
             }
 
-            NativeMethods.SendMessage(hwnd, m.Msg, m.WParam, m.LParam);
+            PInvoke.SendMessage((HWND)hwnd, (uint)m.Msg, (nuint)(nint)m.WParam, m.LParam);
             return true;
 
             static bool IsNonScrollableRichTextBox(Control c) => c is RichTextBox { ScrollBars: RichTextBoxScrollBars.None };
@@ -89,9 +91,6 @@ namespace GitUI
             // P/Invoke declarations
             [DllImport("user32.dll")]
             public static extern IntPtr WindowFromPoint(POINT pt);
-
-            [DllImport("user32.dll")]
-            public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
             [StructLayout(LayoutKind.Sequential)]
             public readonly struct POINT
