@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace GitUI
 {
@@ -31,7 +33,7 @@ namespace GitUI
                     dte.ExecuteCommand("File.OpenFile", filePath);
 
                     // Bring the Visual Studio window to the front of the desktop
-                    NativeMethods.SetForegroundWindow(new IntPtr(dte.MainWindow.HWnd));
+                    PInvoke.SetForegroundWindow((HWND)(nint)dte.MainWindow.HWnd);
 
                     return true;
                 }
@@ -87,9 +89,6 @@ namespace GitUI
 
         private static class NativeMethods
         {
-            [DllImport("user32.dll")]
-            public static extern bool SetForegroundWindow(IntPtr hwnd);
-
             [DllImport("ole32.dll")]
             public static extern void CreateBindCtx(int reserved, out IBindCtx ppbc);
 

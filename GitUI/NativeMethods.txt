@@ -10,6 +10,7 @@ GetWindowDC
 InternetGetConnectedState
 IsIconic
 OpenThemeData
+SetForegroundWindow
 SetWindowTheme
 
 DRAW_TEXT_FORMAT
