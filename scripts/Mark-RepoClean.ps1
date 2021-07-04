@@ -12,6 +12,7 @@ $submodules | ForEach-Object {
     popd
 }
 
+& git update-index --skip-worktree Externals/NetSpell.SpellChecker/Properties/AssemblyInfo.cs
 & git update-index --skip-worktree GitUI/CommandsDialogs/FormBrowse.cs
 & git update-index --skip-worktree CommonAssemblyInfo.cs
 & git update-index --skip-worktree CommonAssemblyInfoExternals.cs

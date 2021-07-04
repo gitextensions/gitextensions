@@ -1089,7 +1089,7 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       </trans-unit>
       <trans-unit id="copyCommitInfoToolStripMenuItem.Text">
         <source>&amp;Copy commit info</source>
-        <target>コミット情報のコピー (&amp;C)</target>
+        <target>コミット情報をコピー(&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="copyLinkToolStripMenuItem.Text">
@@ -1731,17 +1731,17 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="copyNewVersionToolStripMenuItem.Text">
         <source>Copy new version</source>
-        <target>新しいバージョンのコピー</target>
+        <target>新しいバージョンをコピー</target>
         
       </trans-unit>
       <trans-unit id="copyOldVersionToolStripMenuItem.Text">
         <source>Copy old version</source>
-        <target>古いバージョンのコピー</target>
+        <target>古いバージョンをコピー</target>
         
       </trans-unit>
       <trans-unit id="copyPatchToolStripMenuItem.Text">
         <source>Copy patch</source>
-        <target>パッチのコピー</target>
+        <target>パッチをコピー</target>
         
       </trans-unit>
       <trans-unit id="copyToolStripMenuItem.Text">
@@ -2812,7 +2812,7 @@ compare with first:</source>
         <source>You will still be able to find all the commit's changes in the staging area
 
 Do you want to continue?</source>
-        <target>ステージングエリア内では全コミットの変更を見ることができます。
+        <target>ステージング領域内のコミットのすべての変更を見ることもできます。
 
 続行しますか？</target>
         
@@ -10655,7 +10655,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="diffOpenRevisionFileWithToolStripMenuItem.Text">
         <source>Open this revision with... (temp file)</source>
-        <target>このリビジョンをプログラムを指定して開く (一時ファイル)</target>
+        <target>このリビジョンをプログラムを指定して開く...(一時ファイル)</target>
         
       </trans-unit>
       <trans-unit id="diffOpenWorkingDirectoryFileWithToolStripMenuItem.Text">
@@ -10750,12 +10750,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
         <source>Stage file(s)</source>
-        <target>ステージされたファイル</target>
+        <target>ファイルをステージに追加</target>
         
       </trans-unit>
       <trans-unit id="unstageFileToolStripMenuItem.Text">
         <source>Unstage file(s)</source>
-        <target>未ステージのファイル</target>
+        <target>ファイルをステージ取り消し</target>
         
       </trans-unit>
     </body>
@@ -10910,7 +10910,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="openFileWithToolStripMenuItem.Text">
         <source>Open this revision with... (temp file)</source>
-        <target>このリビジョンをプログラムを指定して開く (一時ファイル)</target>
+        <target>このリビジョンをプログラムを指定して開く...(一時ファイル)</target>
         
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">

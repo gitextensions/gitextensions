@@ -34,6 +34,8 @@
       <trans-unit id="chkAutoNormaliseBranchName.ToolTipText">
         <source>Controls whether branch name should be automatically normalised as per git branch naming rules.
 If enabled, any illegal symbols will be replaced with the replacement symbol of your choice.</source>
+        <target>git 분기 이름 규칙에 따라 분기 이름을 자동으로 정규화하는지에 대한 여부를 제어합니다.
+이 옵션을 활성화하면, 잘못된 기호는 사용자가 선택한 사용 기호로 대체됩니다.</target>
         
       </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
@@ -63,6 +65,10 @@ If yes, embeds the fully functional console emulator. This is experimental and m
 If no, redirects select strings from stdout/stderr into an edit box. This is the classic mode.
 
 Turn off if you experience problems with the console emulator.</source>
+        <target>콘솔 프로그램 출력이 Clone이나 Pull과 같은 명령 대화상자에서 표시되는 방식을 제어합니다.
+이 설정을 활성화화면, 모든 기능을 갖춘 콘솔 에뮬레이터를 포함합니다. 이 기능은 실험적으로 제공되며 불안정할 수 있습니다.
+이 설정을 비활성화하면, stdout/stderr에서 가져온 내용을  편집상자로 리디렉션합니다. 이는 전형적인 모드입니다.
+콘솔 에뮬레이터에 문제가 있으면 이 설정을 비활성화합니다.</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -187,6 +193,12 @@ the &quot;Custom&quot; provider allows you to set custom provider URLs and
 &quot;None&quot; disables user-defined avatars.
 
 Click this info icon for more details.</source>
+        <target>아바타 공급자는 사용자가 정의한 아바타 이미지의 출처를 정의합니다.
+&quot;Default&quot; 공급자는 GitHub와 Gravatar를 사용합니다.
+&quot;Custom&quot; 공급자는 사용자 지정 공급자 URL을 설정할 수 있습니다.
+&quot;None&quot;은 사용자 정의 아바타를 비활성화합니다.
+
+이 아이콘을 클릭하여 더 자세한 내용 보기.</target>
         
       </trans-unit>
       <trans-unit id="_noDictFile.Text">
@@ -203,6 +215,9 @@ Click this info icon for more details.</source>
         <source>A default image, if the provider has no image for the email address.
 
 Click this info icon for more details.</source>
+        <target>아바타 공급자에 이메일 주소에 대한 이미지가 없는 경우 기본 이미지를 표시합니다.
+
+이 아이콘을 클릭하여 더 자세한 내용 보기.</target>
         
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -277,6 +292,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="lblCustomAvatarTemplate.Text">
         <source>Custom avatar template</source>
+        <target>사용자 지정 아바타 템플릿</target>
         
       </trans-unit>
       <trans-unit id="lblLanguage.Text">
@@ -1536,11 +1552,14 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkShowAllCustomDiffTools.Text">
         <source>Show all available difftools</source>
+        <target>사용 가능한 모든 difftools 표시</target>
         
       </trans-unit>
       <trans-unit id="chkShowAllCustomDiffTools.ToolTipText">
         <source>Show all configured difftools in a dropdown.
 The primary difftool can still be selected by clicking the main menu entry.</source>
+        <target>드롭다운에 구성된 모든 difftool를 표시합니다.
+주 difftool은 여전히  메인 메뉴 항목을 클릭하여 선택할 수 있습니다.</target>
         
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
@@ -2707,6 +2726,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
         <source>Failed to delete index.lock</source>
+        <target>index.lock 파일 제거 실패</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -3250,6 +3270,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="toolStripBranchFilterDropDownButton.Text">
         <source>Branch type</source>
+        <target>분기 유형</target>
         
       </trans-unit>
       <trans-unit id="toolStripButtonCommit.Text">
@@ -3284,6 +3305,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="toolStripLabel1.ToolTipText">
         <source>Branch filter</source>
+        <target>분기 필터</target>
         
       </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
@@ -3298,6 +3320,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="toolStripRevisionFilterDropDownButton.Text">
         <source>Filter type</source>
+        <target>필터 유형</target>
         
       </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
@@ -4171,6 +4194,7 @@ Are you sure you want to commit?</source>
       </trans-unit>
       <trans-unit id="_noFilesStagedButSuggestToCommitAllFilteredUnstaged.Text">
         <source>There are no files staged for this commit. Stage and commit the unstaged files that match your filter?</source>
+        <target>이 커밋을 위해 스테이징된 파일이 없습니다. 필터와 일치하는 스테이징되지 않은 파일들을 스테이징하고 커밋 하시겠습니까?</target>
         
       </trans-unit>
       <trans-unit id="_noFilesStagedButSuggestToCommitAllUnstaged.Text">
@@ -4236,6 +4260,7 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="_stageAll.Text">
         <source>Stage all</source>
+        <target>모두 스테이징</target>
         
       </trans-unit>
       <trans-unit id="_stageDetails.Text">
@@ -4289,6 +4314,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_unstageAll.Text">
         <source>Unstage all</source>
+        <target>모두 스테이징 취소</target>
         
       </trans-unit>
       <trans-unit id="_unstageFiltered.Text">
@@ -6833,6 +6859,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="TagTab.ToolTipText">
         <source>Push tags to remote repository</source>
+        <target>원격 리포지토리에 tag Push</target>
         
       </trans-unit>
       <trans-unit id="_branchNewForRemote.Text">
@@ -10237,10 +10264,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnCollapse.Text">
         <source>Collapse</source>
+        <target>축소</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCollapse.ToolTipText">
         <source>Collapse all subnodes</source>
+        <target>모든 서브노드 축소</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.Text">
@@ -10250,6 +10279,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.ToolTipText">
         <source>Commit changes in selected submodule</source>
+        <target>선택한 서브모듈의 변경사항 Commit</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCreateBranch.Text">
@@ -10259,6 +10289,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnCreateBranch.ToolTipText">
         <source>Create a local branch</source>
+        <target>로컬 분기 생성</target>
         
       </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.Text">
@@ -10268,6 +10299,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.ToolTipText">
         <source>Delete all child branchs, which must all be fully merged in its upstream branch or in HEAD</source>
+        <target>upstream 분기 또는 HEAD에서 완전히 병합되어야 하는 모든 자식분기 삭제</target>
         
       </trans-unit>
       <trans-unit id="mnubtnDisableRemote.Text">
@@ -10287,10 +10319,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnExpand.Text">
         <source>Expand</source>
+        <target>확장</target>
         
       </trans-unit>
       <trans-unit id="mnubtnExpand.ToolTipText">
         <source>Expand all subnodes</source>
+        <target>모든 서브노드 확장</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
@@ -10465,6 +10499,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">
         <source>Collapse all subnodes</source>
+        <target>모든 서브노드 축소</target>
         
       </trans-unit>
       <trans-unit id="tsbShowBranches.Text">
@@ -10813,6 +10848,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="expandToolStripMenuItem.Text">
         <source>Expand</source>
+        <target>확장</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -11949,6 +11985,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_buttonViewDetails.Text">
         <source>View details</source>
+        <target>세부사항 보기</target>
         
       </trans-unit>
       <trans-unit id="_cancelText.Text">

@@ -1,6 +1,72 @@
 Changelog
 =========
 
+### Version 3.5.1 (04 Jul 2021)
+
+#### Changes:
+* [9321] Fixup GDI object leaks
+* [9314] Exclude vimdiff1 from custom difftools
+* [9313] Fix PathUtil handling of spaces in file names (for 3.5)
+* [9311] Reduce window flicker and loss of focus
+* [9303] Open Delete Tag dialog from Left Panel with full tag name
+* [9289] Create empty settings file if missing
+* [9288] Settings not stored (on first run)
+* [9281] Allow line patching for new worktree/index files
+* [9280] Broken hunks stage/unstage for new files
+* [9272] Fixup `AcceptButton` of `FormCheckoutBranch`
+* [9253] RevGrid multiline indicators 3.5
+* [9242] Use fullPathResolver for viewing local files
+* [9233] Left Panel: Check `TreeViewNode.TreeView` for `null`
+* [9230] Avoid `FormatException` from `FormMergeSubmodule`
+* [9227] Log errors
+* [9207] Accessibility: revision grid branch colors
+* [9205] `CommitInfo`: Fix up threading issues
+* [9201] FormCreateBranch: Fix branches list display on 2 lines
+* [9173] Ignore failure getting `Process.Id` when opening URL
+* [9167] Add `BugReporter.exe` to installer
+* [9166] 3.5.0: Application randomly closes
+* [9130] Quote path for opening with `Explorer.exe`
+* [9125] Workaround for splitter persistence in `FormBrowse`
+* [9121] Stash pop is not refreshing the window
+* [9116] Update Clone dialog's handling of clipboard text
+* [9114] Let installer not activate disabled telemetry
+* [9112] SSH broken after upgrade to 3.5.0 (due to breaking setting change)
+* [9111] Accessibility: contrast too low
+* [9110] Missing Newtonsoft.Json.dll if installed with no plugins selected / Git Extensions (3.5.0.11713)
+* [9026] 3.5 RC1 installer issues
+
+
+[9321]:https://github.com/gitextensions/gitextensions/pull/9321
+[9314]:https://github.com/gitextensions/gitextensions/pull/9314
+[9313]:https://github.com/gitextensions/gitextensions/pull/9313
+[9311]:https://github.com/gitextensions/gitextensions/pull/9311
+[9303]:https://github.com/gitextensions/gitextensions/pull/9303
+[9289]:https://github.com/gitextensions/gitextensions/pull/9289
+[9288]:https://github.com/gitextensions/gitextensions/issues/9288
+[9281]:https://github.com/gitextensions/gitextensions/pull/9281
+[9280]:https://github.com/gitextensions/gitextensions/issues/9280
+[9272]:https://github.com/gitextensions/gitextensions/pull/9272
+[9253]:https://github.com/gitextensions/gitextensions/pull/9253
+[9242]:https://github.com/gitextensions/gitextensions/pull/9242
+[9233]:https://github.com/gitextensions/gitextensions/pull/9233
+[9230]:https://github.com/gitextensions/gitextensions/pull/9230
+[9227]:https://github.com/gitextensions/gitextensions/pull/9227
+[9207]:https://github.com/gitextensions/gitextensions/pull/9207
+[9205]:https://github.com/gitextensions/gitextensions/pull/9205
+[9201]:https://github.com/gitextensions/gitextensions/pull/9201
+[9173]:https://github.com/gitextensions/gitextensions/pull/9173
+[9167]:https://github.com/gitextensions/gitextensions/pull/9167
+[9166]:https://github.com/gitextensions/gitextensions/issues/9166
+[9130]:https://github.com/gitextensions/gitextensions/pull/9130
+[9125]:https://github.com/gitextensions/gitextensions/pull/9125
+[9121]:https://github.com/gitextensions/gitextensions/issues/9121
+[9116]:https://github.com/gitextensions/gitextensions/pull/9116
+[9114]:https://github.com/gitextensions/gitextensions/pull/9114
+[9112]:https://github.com/gitextensions/gitextensions/issues/9112
+[9111]:https://github.com/gitextensions/gitextensions/issues/9111
+[9110]:https://github.com/gitextensions/gitextensions/issues/9110
+[9026]:https://github.com/gitextensions/gitextensions/issues/9026
+
 
 ### Version 3.5 (25 April 2021)
 

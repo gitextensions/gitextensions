@@ -823,6 +823,15 @@
       <Component Id="Korean.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.Plugins.xlf" />
       </Component>
+      <Component Id="SimplifiedChinese.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.gif" />
+      </Component>
+      <Component Id="SimplifiedChinese.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.xlf" />
+      </Component>
+      <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.Plugins.xlf" />
+      </Component>
       <Component Id="Turkish.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.gif" />
       </Component>
@@ -1702,6 +1711,11 @@
           <ComponentRef Id="Korean.xlf" />
           <ComponentRef Id="Korean.Plugins.xlf" />
           <ComponentRef Id="Korean.gif" />
+        </Feature>
+        <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+          <ComponentRef Id="SimplifiedChinese.xlf" />
+          <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
+          <ComponentRef Id="SimplifiedChinese.gif" />
         </Feature>
         <Feature Id="Turkish" Title="Turkish" Level="1">
           <ComponentRef Id="Turkish.xlf" />

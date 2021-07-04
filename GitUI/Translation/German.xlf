@@ -28,13 +28,13 @@
       </trans-unit>
       <trans-unit id="chkAutoNormaliseBranchName.Text">
         <source>Auto normalise branch name</source>
-        <target>Branchname automatisch normalisieren</target>
+        <target>Branchnamen automatisch normalisieren</target>
         
       </trans-unit>
       <trans-unit id="chkAutoNormaliseBranchName.ToolTipText">
         <source>Controls whether branch name should be automatically normalised as per git branch naming rules.
 If enabled, any illegal symbols will be replaced with the replacement symbol of your choice.</source>
-        <target>Steuert ob der Branchname automatisiert nach den git Branch Namensregeln normalisiert werden soll. Wenn aktiviert, alle ungültigen Symbole werden mit dem Ersetzungssymbol der Wahl ersetzt.</target>
+        <target>Steuert ob der Branchname automatisiert nach den git branch Namensregeln normalisiert werden soll. Wenn aktiviert, werden alle ungültigen Symbole mit dem Ersetzungssymbol der Wahl ersetzt.</target>
         
       </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
@@ -1555,11 +1555,14 @@ Stellen Sie sicher, dass git (Git für Windows oder cygwin) installiert wurde od
       </trans-unit>
       <trans-unit id="chkShowAllCustomDiffTools.Text">
         <source>Show all available difftools</source>
+        <target>Zeige alle verfügbaren Diff-Werkzeuge</target>
         
       </trans-unit>
       <trans-unit id="chkShowAllCustomDiffTools.ToolTipText">
         <source>Show all configured difftools in a dropdown.
 The primary difftool can still be selected by clicking the main menu entry.</source>
+        <target>Zeige alle verfügbaren Diff-Werkzeuge in einer Auswahlliste.
+Das vorrangige Diff-Werkzeug kann weiterhin durch Klicken auf den Hauptmenüeintrag gewählt werden.</target>
         
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
@@ -2586,10 +2589,12 @@ mit erster zu vergleichen:</target>
       </trans-unit>
       <trans-unit id="Bad.Text">
         <source>Mark current revision &amp;bad</source>
+        <target>Revision als Schlecht markieren</target>
         
       </trans-unit>
       <trans-unit id="Good.Text">
         <source>Mark current revision &amp;good</source>
+        <target>Revision als &amp;Gut markieren</target>
         
       </trans-unit>
       <trans-unit id="Start.Text">
@@ -2609,6 +2614,7 @@ mit erster zu vergleichen:</target>
       </trans-unit>
       <trans-unit id="btnSkip.Text">
         <source>&amp;Skip current revision</source>
+        <target>Aktuelle Revision über&amp;springen</target>
         
       </trans-unit>
     </body>
@@ -3275,6 +3281,7 @@ Wollen Sie weiter machen?</target>
       </trans-unit>
       <trans-unit id="toolStripBranchFilterDropDownButton.Text">
         <source>Branch type</source>
+        <target>Branch-Art</target>
         
       </trans-unit>
       <trans-unit id="toolStripButtonCommit.Text">
@@ -3309,6 +3316,7 @@ Wollen Sie weiter machen?</target>
       </trans-unit>
       <trans-unit id="toolStripLabel1.ToolTipText">
         <source>Branch filter</source>
+        <target>Branch-Filter</target>
         
       </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
@@ -3323,6 +3331,7 @@ Wollen Sie weiter machen?</target>
       </trans-unit>
       <trans-unit id="toolStripRevisionFilterDropDownButton.Text">
         <source>Filter type</source>
+        <target>Filtertyp</target>
         
       </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.Text">
@@ -3332,6 +3341,7 @@ Wollen Sie weiter machen?</target>
       </trans-unit>
       <trans-unit id="toolStripRevisionFilterLabel.ToolTipText">
         <source>Text filter</source>
+        <target>Textfilter</target>
         
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
@@ -10313,10 +10323,12 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
       </trans-unit>
       <trans-unit id="mnubtnCollapse.Text">
         <source>Collapse</source>
+        <target>Einklappen</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCollapse.ToolTipText">
         <source>Collapse all subnodes</source>
+        <target>Alle Unterknoten zuklappen</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.Text">
@@ -10366,10 +10378,12 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
       </trans-unit>
       <trans-unit id="mnubtnExpand.Text">
         <source>Expand</source>
+        <target>Aufklappen</target>
         
       </trans-unit>
       <trans-unit id="mnubtnExpand.ToolTipText">
         <source>Expand all subnodes</source>
+        <target>Alle Unterknoten aufklappen</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
@@ -10553,6 +10567,7 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">
         <source>Collapse all subnodes</source>
+        <target>Alle Unterknoten zuklappen</target>
         
       </trans-unit>
       <trans-unit id="tsbShowBranches.Text">
@@ -10902,6 +10917,7 @@ Die Änderungen sehen Sie im Commit Bereich.</target>
       </trans-unit>
       <trans-unit id="expandToolStripMenuItem.Text">
         <source>Expand</source>
+        <target>Aufklappen</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -12056,6 +12072,7 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       </trans-unit>
       <trans-unit id="_buttonViewDetails.Text">
         <source>View details</source>
+        <target>Details anzeigen</target>
         
       </trans-unit>
       <trans-unit id="_cancelText.Text">
@@ -12180,6 +12197,7 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
       </trans-unit>
       <trans-unit id="_disableMenuItem.Text">
         <source>Disable this dropdown</source>
+        <target>Diese Auswahl sperren</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
