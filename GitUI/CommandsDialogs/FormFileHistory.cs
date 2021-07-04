@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs
                 var fullFilePath = _fullPathResolver.Resolve(fileName);
                 _filePathByObjectId.Clear();
 
-                if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
+                if (AppSettings.FollowRenamesInFileHistory)
                 {
                     // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
                     //
@@ -306,17 +306,6 @@ namespace GitUI.CommandsDialogs
 
                     res.path = string.Join("", setOfFileNames.Select(s => @$" ""{s}"""));
                     res.revision += $" --parents{FindRenamesAndCopiesOpts()}";
-                }
-                else if (AppSettings.FollowRenamesInFileHistory)
-                {
-                    // history of a directory
-                    // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                    res.revision = $" {FindRenamesOpt()} --follow --parents";
-                }
-                else
-                {
-                    // rename following disabled
-                    res.revision = " --parents";
                 }
 
                 if (AppSettings.FullHistoryInFileHistory)
