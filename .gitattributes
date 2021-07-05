@@ -8,6 +8,8 @@
 *.cmd text eol=crlf
 *.sh text eol=lf
 *.py text eol=lf
-*.bin binary
 
+# Used in unit tests - try text diff
+*.bin binary diff=text
+*RevisionReaderTests.*.approved.* binary diff=text
 *DoAutoCRLF*.approved.* binary diff=text

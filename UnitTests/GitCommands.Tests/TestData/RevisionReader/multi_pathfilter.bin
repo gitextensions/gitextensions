@@ -1,0 +1,40 @@
+5899baad9014356f7a334da660a7b304b4b00da2d813fba1809beab1728fa892ae5fa7343fd23e31205f42c4bc5f06b5dff522ff6cb62190474beec4
+1622238476
+1624314822
+
+Gerhard Olsson
+gerhardol@users.noreply.github.com
+Gerhard Olsson
+gerhardol@users.noreply.github.com
+RevisionReader: Parse raw commit body
+
+* Separate path filter handling
+Only use EndOfBody when there are pathfilters.
+
+* Use sequence of end-of-text instead of GUID for EndOfBody
+to reduce I/O.
+
+* Parse raw body %B instead of combining %s%n%n%b to avoid extra processing
+in both Git and GE.
+Simplify the handling.
+
+* Do not allocate body for older commits
+Previously a temporary variable was allocated also if body was
+not stored in the commit message (to save memory, for older commits).
+
+* Only store commit body if multiline message
+If the body is the same as the subject, do not store the message
+This also avoids loading the commit body for older commits
+if the commit is selected
+
+* Align usage of commit body retrieval for other than RevisionReader
+  * "Previous commit messages" used %s%b instead of %B
+  * Align parsing of raw body and subject
+
+* ObjectId Inline local parsing functions
+
+* Use ReadOnlySpan<char> in RevisionReader
+Reduce string allocations
+
+* Use HighPerformance StringBuffer
+

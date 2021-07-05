@@ -938,8 +938,8 @@ namespace GitCommands
                 AuthorEmail = ReEncodeStringFromLossless(lines[4]),
                 Committer = ReEncodeStringFromLossless(lines[6]),
                 CommitterEmail = ReEncodeStringFromLossless(lines[7]),
-                AuthorDate = DateTimeUtils.ParseUnixTime(lines[5]),
-                CommitDate = DateTimeUtils.ParseUnixTime(lines[8]),
+                AuthorUnixTime = long.Parse(lines[5]),
+                CommitUnixTime = long.Parse(lines[8]),
                 MessageEncoding = lines[9]
             };
 
@@ -950,11 +950,18 @@ namespace GitCommands
             }
             else
             {
-                string message = ProcessDiffNotes(10);
+                string message = ProcessDiffNotes(startIndex: 10);
 
                 // commit message is not re-encoded by git when format is given
-                revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
-                revision.Subject = revision.Body?.Substring(0, revision.Body.IndexOfAny(new[] { '\r', '\n' })) ?? "";
+                // See also RevisionReader for parsing commit body
+                string body = ReEncodeCommitMessage(message, revision.MessageEncoding);
+                revision.Body = body;
+
+                ReadOnlySpan<char> span = (body ?? "").AsSpan();
+                int endSubjectIndex = span.IndexOf('\n');
+                revision.Subject = endSubjectIndex >= 0
+                    ? span.Slice(0, endSubjectIndex).TrimEnd().ToString()
+                    : body ?? "";
             }
 
             if (loadRefs)
@@ -3507,7 +3514,7 @@ namespace GitCommands
                 "-z",
                 $"-n {count}",
                 revision,
-                "--pretty=format:%e%n%s%n%n%b",
+                "--pretty=format:%e%n%B",
                 { !string.IsNullOrEmpty(authorPattern), string.Concat("--author=\"", authorPattern, "\"") }
             };
 
@@ -3884,7 +3891,7 @@ namespace GitCommands
         // there was a bug: Git before v1.8.4 did not recode commit message when format is given
         // Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
         // characters could be replaced by replacement character while re-encoding to LogOutputEncoding
-        public string ReEncodeCommitMessage(string s, string? toEncodingName)
+        public string? ReEncodeCommitMessage(string s, string? toEncodingName)
         {
             Encoding? encoding;
             try
@@ -3896,7 +3903,7 @@ namespace GitCommands
                 return s + "\n\n! Unsupported commit message encoding: " + toEncodingName + " !";
             }
 
-            return ReEncodeStringFromLossless(s, encoding);
+            return ReEncodeStringFromLossless(s, encoding)?.Trim();
         }
 
         public Encoding? GetEncodingByGitName(string? encodingName)

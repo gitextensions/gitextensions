@@ -12,6 +12,7 @@
     <PackageReference Update="GitInfo" Version="2.0.21" />
     <PackageReference Update="JetBrains.Annotations" Version="2020.1.0" />
     <PackageReference Update="LibGit2Sharp" Version="0.26.2" />
+    <PackageReference Update="Microsoft.Toolkit.HighPerformance" Version="7.0.2" />
     <PackageReference Update="Microsoft.VisualStudio.Composition" Version="16.4.11" />
     <PackageReference Update="Microsoft.VisualStudio.Threading" Version="16.7.56" />
     <PackageReference Update="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
+using Microsoft.Toolkit.HighPerformance.Buffers;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
@@ -35,24 +37,22 @@ namespace GitCommands
     {
         private const string FullFormat =
 
-              // These header entries can all be decoded from the bytes directly.
-              // Each hash is 20 bytes long.
+            // These header entries can all be decoded from the bytes directly.
+            // Each hash is 20 bytes long.
 
-              /* Object ID       */ "%H" +
-              /* Tree ID         */ "%T" +
-              /* Parent IDs      */ "%P%n" +
-              /* Author date     */ "%at%n" +
-              /* Commit date     */ "%ct%n" +
-              /* Encoding        */ "%e%n" +
-              /*
-               Items below here must be decoded as strings to support non-ASCII.
-               */
-              /* Author name     */ "%aN%n" +
-              /* Author email    */ "%aE%n" +
-              /* Committer name  */ "%cN%n" +
-              /* Committer email */ "%cE%n" +
-              /* Commit subject  */ "%s%n%n" +
-              /* Commit body     */ "%b";
+            /* Object ID       */ "%H" +
+            /* Tree ID         */ "%T" +
+            /* Parent IDs      */ "%P%n" +
+            /* Author date     */ "%at%n" +
+            /* Commit date     */ "%ct%n" +
+            /* Encoding        */ "%e%n" +
+
+            // Items below here must be decoded as strings to support non-ASCII.
+            /* Author name     */ "%aN%n" +
+            /* Author email    */ "%aE%n" +
+            /* Committer name  */ "%cN%n" +
+            /* Committer email */ "%cE%n" +
+            /* Commit raw body */ "%B";
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new();
 
@@ -114,16 +114,13 @@ namespace GitCommands
             int parseErrors = 0;
 #endif
 
-            // This property is relatively expensive to call for every revision, so
-            // cache it for the duration of the loop.
             var logOutputEncoding = module.LogOutputEncoding;
+            long sixMonths = new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(30 * 6)).ToUnixTimeSeconds();
+            Func<string?, Encoding> getEncodingByGitName = (name) => module.GetEncodingByGitName(name);
 
             using (var process = module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
                 token.ThrowIfCancellationRequested();
-
-                // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
-                StringPool stringPool = new();
 
                 var buffer = new byte[4096];
 
@@ -131,28 +128,15 @@ namespace GitCommands
                 {
                     token.ThrowIfCancellationRequested();
 
-                    if (TryParseRevision(module, chunk, stringPool, logOutputEncoding, out var revision))
+                    if (TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out var revision)
+                        && (revisionPredicate is null || revisionPredicate(revision)))
                     {
-                        if (revisionPredicate is null || revisionPredicate(revision))
-                        {
-                            // The full commit message body is used initially in InMemFilter, after which it isn't
-                            // strictly needed and can be re-populated asynchronously.
-                            //
-                            // We keep full multiline message bodies within the last six months.
-                            // Commits earlier than that have their properties set to null and the
-                            // memory will be GCd.
-                            if (DateTime.Now - revision.AuthorDate > TimeSpan.FromDays(30 * 6))
-                            {
-                                revision.Body = null;
-                            }
+                        // Look up any refs associated with this revision
+                        revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
 
-                            // Look up any refs associated with this revision
-                            revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
+                        revisionCount++;
 
-                            revisionCount++;
-
-                            subject.OnNext(revision);
-                        }
+                        subject.OnNext(revision);
                     }
 #if TRACE
                     else
@@ -163,7 +147,7 @@ namespace GitCommands
                 }
 
 #if TRACE
-                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count} parseErrors={parseErrors}");
+                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={parseErrors}");
 #endif
             }
 
@@ -242,7 +226,7 @@ namespace GitCommands
             }
         }
 
-        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, [NotNullWhen(returnValue: true)] out GitRevision? revision)
+        private static bool TryParseRevision(ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -251,7 +235,7 @@ namespace GitCommands
             // at the beginning of the chunk. The latter part of the chunk will require
             // decoding as a string.
 
-            if (chunk.Count == 0)
+            if (chunk.Count < ObjectId.Sha1CharCount * 2)
             {
                 revision = default;
                 return false;
@@ -259,80 +243,66 @@ namespace GitCommands
 
             #region Object ID, Tree ID, Parent IDs
 
+            ReadOnlySpan<byte> array = chunk.AsSpan();
+
             // The first 40 bytes are the revision ID and the tree ID back to back
-            if (!ObjectId.TryParseAsciiHexBytes(chunk, 0, out var objectId) ||
-                !ObjectId.TryParseAsciiHexBytes(chunk, ObjectId.Sha1CharCount, out var treeId))
+            if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(0, ObjectId.Sha1CharCount), out var objectId) ||
+                !ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out var treeId))
             {
                 revision = default;
                 return false;
             }
 
-            var array = chunk.Array;
-            var offset = chunk.Offset + (ObjectId.Sha1CharCount * 2);
-            var lastOffset = chunk.Offset + chunk.Count;
+            var offset = ObjectId.Sha1CharCount * 2;
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
-            var parentIds = new ObjectId[CountParents(offset)];
-            var parentIndex = 0;
-
-            int CountParents(int baseOffset)
+            int noParents = CountParents(ref array, offset);
+            if (noParents < 0)
             {
-                if (array[baseOffset] == '\n')
-                {
-                    return 0;
-                }
+                // Parse issue
+                revision = default;
+                return false;
+            }
 
-                var count = 1;
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            int CountParents(ref ReadOnlySpan<byte> array, int baseOffset)
+            {
+                int count = 0;
 
-                while (true)
+                while (baseOffset < array.Length && array[baseOffset] != '\n')
                 {
+                    Debug.Assert(count == 0 || array[baseOffset] == ' ', $"Unexpected contents in the parent array: {array[baseOffset]}/{count}");
                     baseOffset += ObjectId.Sha1CharCount;
-                    var c = array[baseOffset];
-
-                    if (c != ' ')
+                    if (count > 0)
                     {
-                        break;
+                        // Except for the first parent, advance after the space
+                        baseOffset++;
                     }
 
                     count++;
-                    baseOffset++;
+                }
+
+                if (baseOffset >= array.Length || array[baseOffset] != '\n')
+                {
+                    return -1;
                 }
 
                 return count;
             }
 
-            while (true)
+            var parentIds = new ObjectId[noParents];
+
+            for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
             {
-                if (offset >= lastOffset - ObjectId.Sha1CharCount - 1)
-                {
-                    revision = default;
-                    return false;
-                }
-
-                var b = array[offset];
-
-                if (b == '\n')
-                {
-                    // There are no more parent IDs
-                    offset++;
-                    break;
-                }
-
-                if (b == ' ')
-                {
-                    // We are starting a new parent ID
-                    offset++;
-                }
-
-                if (!ObjectId.TryParseAsciiHexBytes(array, offset, out var parentId))
+                if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
                 {
                     // TODO log this parse problem
                     revision = default;
                     return false;
                 }
 
-                parentIds[parentIndex++] = parentId;
-                offset += ObjectId.Sha1CharCount;
+                parentIds[parentIndex] = parentId;
+                offset += ObjectId.Sha1CharCount + 1;
             }
 
             #endregion
@@ -340,10 +310,11 @@ namespace GitCommands
             #region Timestamps
 
             // Lines 2 and 3 are timestamps, as decimal ASCII seconds since the unix epoch, each terminated by `\n`
-            var authorDate = ParseUnixDateTime();
-            var commitDate = ParseUnixDateTime();
+            var authorUnixTime = ParseUnixDateTime(ref array);
+            var commitUnixTime = ParseUnixDateTime(ref array);
 
-            DateTime ParseUnixDateTime()
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            long ParseUnixDateTime(ref ReadOnlySpan<byte> array)
             {
                 long unixTime = 0;
 
@@ -353,7 +324,7 @@ namespace GitCommands
 
                     if (c == '\n')
                     {
-                        return DateTimeUtils.UnixEpoch.AddTicks(unixTime * TimeSpan.TicksPerSecond).ToLocalTime();
+                        return unixTime;
                     }
 
                     unixTime = (unixTime * 10) + (c - '0');
@@ -368,61 +339,54 @@ namespace GitCommands
             string? encodingName;
             Encoding encoding;
 
-            var encodingNameEndOffset = Array.IndexOf(array, (byte)'\n', offset);
+            var encodingNameEndLength = array[offset..].IndexOf((byte)'\n');
 
-            if (encodingNameEndOffset == -1)
+            if (encodingNameEndLength == -1)
             {
                 // TODO log this error case
                 revision = default;
                 return false;
             }
 
-            if (offset == encodingNameEndOffset)
+            if (encodingNameEndLength == 0)
             {
-                // No encoding specified
+                // No encoding specified, this is the normal case since Git 1.8.4
                 encoding = logOutputEncoding;
                 encodingName = null;
             }
             else
             {
-                encodingName = logOutputEncoding.GetString(array, offset, encodingNameEndOffset - offset);
-                encoding = module.GetEncodingByGitName(encodingName) ?? Encoding.UTF8;
+                encodingName = logOutputEncoding.GetString(array.Slice(offset, encodingNameEndLength));
+                encoding = getEncodingByGitName(encodingName) ?? Encoding.UTF8;
             }
 
-            offset = encodingNameEndOffset + 1;
+            offset += encodingNameEndLength + 1;
 
             #endregion
 
             #region Encoded string values (names, emails, subject, body, [file]name)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
-            var s = encoding.GetString(array, offset, lastOffset - offset);
+            var s = encoding.GetString(array[offset..]).AsSpan();
 
             StringLineReader reader = new(s);
 
-            var author = reader.ReadLine(stringPool);
-            var authorEmail = reader.ReadLine(stringPool);
-            var committer = reader.ReadLine(stringPool);
-            var committerEmail = reader.ReadLine(stringPool);
+            var author = reader.ReadLine();
+            var authorEmail = reader.ReadLine();
+            var committer = reader.ReadLine();
+            var committerEmail = reader.ReadLine();
 
-            var subject = reader.ReadLine(advance: false).Trim();
+            bool skipBody = sixMonths > authorUnixTime;
+            (string? subject, string? body, bool hasMultiLineMessage) = reader.PeakToEnd(skipBody);
 
-            if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null)
+            // We keep a full multiline message body within the last six months.
+            // Note also that if body and subject are identical (single line), the body never need to be stored
+            skipBody = skipBody || !hasMultiLineMessage;
+
+            if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null || (skipBody != (body is null)))
             {
                 // TODO log this parse error
                 Debug.Fail("Unable to read an entry from the log -- this should not happen");
-                revision = default;
-                return false;
-            }
-
-            // NOTE the convention is that the Subject string is duplicated at the start of the Body string
-            // Therefore we read the subject twice.
-            // If there are not enough characters remaining for a body, then just assign the subject string directly.
-            var body = reader.ReadToEnd();
-            if (body is null)
-            {
-                // TODO log this parse error
-                Debug.Fail("Unable to read body from the log -- this should not happen");
                 revision = default;
                 return false;
             }
@@ -435,14 +399,14 @@ namespace GitCommands
                 TreeGuid = treeId,
                 Author = author,
                 AuthorEmail = authorEmail,
-                AuthorDate = authorDate,
+                AuthorUnixTime = authorUnixTime,
                 Committer = committer,
                 CommitterEmail = committerEmail,
-                CommitDate = commitDate,
+                CommitUnixTime = commitUnixTime,
                 MessageEncoding = encodingName,
                 Subject = subject,
                 Body = body,
-                HasMultiLineMessage = subject != body,
+                HasMultiLineMessage = hasMultiLineMessage,
                 HasNotes = false
             };
 
@@ -459,12 +423,12 @@ namespace GitCommands
         /// <summary>
         /// Simple type to walk along a string, line by line, without redundant allocations.
         /// </summary>
-        internal struct StringLineReader
+        internal ref struct StringLineReader
         {
-            private readonly string _s;
+            private ReadOnlySpan<char> _s;
             private int _index;
 
-            public StringLineReader(string s)
+            public StringLineReader(ReadOnlySpan<char> s)
             {
                 _s = s;
                 _index = 0;
@@ -472,46 +436,50 @@ namespace GitCommands
 
             public int Remaining => _s.Length - _index;
 
-            public string? ReadLine(StringPool? pool = null, bool advance = true)
+            public string? ReadLine()
             {
-                if (_index == _s.Length)
+                if (_index >= _s.Length)
                 {
                     return null;
                 }
 
                 var startIndex = _index;
-                var endIndex = _s.IndexOf('\n', startIndex);
+                var lineLength = _s[_index..].IndexOf('\n');
 
-                if (endIndex == -1)
+                if (lineLength == -1)
                 {
-                    return ReadToEnd(advance);
-                }
-
-                if (advance)
-                {
-                    _index = endIndex + 1;
-                }
-
-                return pool is not null
-                    ? pool.Intern(_s, startIndex, endIndex - startIndex)
-                    : _s.Substring(startIndex, endIndex - startIndex);
-            }
-
-            public string? ReadToEnd(bool advance = true)
-            {
-                if (_index == _s.Length)
-                {
+                    // Consider this as an error: PeakToEnd() should be explicitly used
                     return null;
                 }
 
-                var s = _s.Substring(_index).Trim();
+                _index += lineLength + 1;
+                return StringPool.Shared.GetOrAdd(_s.Slice(startIndex, lineLength));
+            }
 
-                if (advance)
+            public (string? subject, string? body, bool hasMultiLineMessage) PeakToEnd(bool skipBody)
+            {
+                if (_index >= _s.Length)
                 {
-                    _index = _s.Length;
+                    return (null, null, false);
                 }
 
-                return s;
+                ReadOnlySpan<char> bodySlice = _s[_index..].Trim();
+
+                // Subject can also be defined as the contents before empty line (%s for --pretty),
+                // this uses the alternative definition of first line in body.
+                int lengthSubject = bodySlice.IndexOf('\n');
+                bool hasMultiLineMessage = lengthSubject >= 0;
+                string subject = hasMultiLineMessage
+                    ? bodySlice.Slice(0, lengthSubject).TrimEnd().ToString()
+                    : bodySlice.ToString();
+
+                // See caller for reasoning when message body can be omitted
+                // (String interning makes hasMultiLineMessage check only for clarity)
+                string? body = skipBody || !hasMultiLineMessage
+                    ? null
+                    : bodySlice.ToString();
+
+                return (subject, body, hasMultiLineMessage);
             }
         }
 
@@ -533,7 +501,8 @@ namespace GitCommands
                 string branchFilter, string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
-            internal static StringLineReader MakeReader(string s) => new(s);
+            internal static bool TryParseRevision(ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
+                RevisionReader.TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out revision);
         }
     }
 }

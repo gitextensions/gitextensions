@@ -159,7 +159,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             {
                 Author = "Author1",
                 AuthorEmail = "author1@foo.bla",
-                AuthorDate = new DateTime(2018, 10, 23, 11, 34, 21),
+                AuthorUnixTime = DateTimeUtils.ToUnixTime(new DateTime(2018, 10, 23, 11, 34, 21)),
             };
             GitRevision rev2 = new(ObjectId.Random())
             {
@@ -167,7 +167,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 AuthorEmail = "author2@foo.bla",
                 Committer = "Committer2",
                 CommitterEmail = "committer2@foo.bar",
-                CommitDate = new DateTime(2018, 10, 23, 11, 34, 21),
+                CommitUnixTime = DateTimeUtils.ToUnixTime(new DateTime(2018, 10, 23, 11, 34, 21)),
             };
             GitRevision rev3 = new(ObjectId.Random())
             {

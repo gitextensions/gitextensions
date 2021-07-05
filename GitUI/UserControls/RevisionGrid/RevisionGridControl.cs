@@ -1046,10 +1046,10 @@ namespace GitUI
                     GitRevision workTreeRev = new(ObjectId.WorkTreeId)
                     {
                         Author = userName,
-                        AuthorDate = DateTime.MaxValue,
+                        AuthorUnixTime = 0,
                         AuthorEmail = userEmail,
                         Committer = userName,
-                        CommitDate = DateTime.MaxValue,
+                        CommitUnixTime = 0,
                         CommitterEmail = userEmail,
                         Subject = ResourceManager.TranslatedStrings.Workspace,
                         ParentIds = new[] { ObjectId.IndexId },
@@ -1061,10 +1061,10 @@ namespace GitUI
                     GitRevision indexRev = new(ObjectId.IndexId)
                     {
                         Author = userName,
-                        AuthorDate = DateTime.MaxValue,
+                        AuthorUnixTime = 0,
                         AuthorEmail = userEmail,
                         Committer = userName,
-                        CommitDate = DateTime.MaxValue,
+                        CommitUnixTime = 0,
                         CommitterEmail = userEmail,
                         Subject = ResourceManager.TranslatedStrings.Index,
                         ParentIds = new[] { filteredCurrentCheckout },

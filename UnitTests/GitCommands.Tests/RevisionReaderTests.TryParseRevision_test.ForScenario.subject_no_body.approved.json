@@ -1,0 +1,34 @@
+﻿{
+    "ObjectId": {
+        "IsArtificial": false
+    },
+    "Guid": "6668f89f67eb51e823b3868d90c404c570698204",
+    "Refs": [],
+    "ParentIds": [
+        {
+            "IsArtificial": false
+        }
+    ],
+    "TreeGuid": {
+        "IsArtificial": false
+    },
+    "Author": "Drew Noakes",
+    "AuthorEmail": "git@drewnoakes.com",
+    "AuthorUnixTime": 1520333012,
+    "AuthorDate": "2018-03-06T10:43:32Z",
+    "Committer": "Drew Noakes",
+    "CommitterEmail": "git@drewnoakes.com",
+    "CommitUnixTime": 1520333021,
+    "CommitDate": "2018-03-06T10:43:41Z",
+    "BuildStatus": null,
+    "Subject": "Remove MVC & Razor annotation attributes",
+    "Body": null,
+    "HasMultiLineMessage": true,
+    "HasNotes": false,
+    "MessageEncoding": null,
+    "IsArtificial": false,
+    "HasParent": true,
+    "FirstParentId": {
+        "IsArtificial": false
+    }
+}
