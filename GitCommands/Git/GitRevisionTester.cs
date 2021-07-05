@@ -108,7 +108,7 @@ namespace GitCommands.Git
             }
 
             return revision.Author?.IndexOf(criteria, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
-                   revision.Subject?.IndexOf(criteria, StringComparison.OrdinalIgnoreCase) >= 0;
+                   (revision.Body ?? revision.Subject)?.IndexOf(criteria, StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }
