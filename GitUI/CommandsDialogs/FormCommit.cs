@@ -2784,16 +2784,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Message_KeyUp(object sender, KeyEventArgs e)
-        {
-            // Ctrl + Enter = Commit
-            if (e.Control && e.KeyCode == Keys.Enter)
-            {
-                ExecuteCommitCommand();
-                e.Handled = true;
-            }
-        }
-
         private void ExecuteCommitCommand()
         {
             CheckForStagedAndCommit(Amend.Checked, push: false);
@@ -2801,10 +2791,13 @@ namespace GitUI.CommandsDialogs
 
         private void Message_KeyDown(object sender, KeyEventArgs e)
         {
-            // Prevent adding a line break when all we want is to commit
             if (e.Control && e.KeyCode == Keys.Enter)
             {
+                // Prevent adding a line break when all we want is to commit
                 e.Handled = true;
+
+                // Ctrl + Enter = Commit
+                ExecuteCommitCommand();
             }
         }
 
