@@ -963,6 +963,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap FunnelPencil {
+            get {
+                object obj = ResourceManager.GetObject("FunnelPencil", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap GeneralSettings {
             get {
                 object obj = ResourceManager.GetObject("GeneralSettings", resourceCulture);

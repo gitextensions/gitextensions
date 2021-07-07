@@ -60,6 +60,7 @@ namespace GitCommands
             GitModule module,
             IReadOnlyList<IGitRef> refs,
             IObserver<GitRevision> subject,
+            int maxCount,
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
@@ -67,7 +68,7 @@ namespace GitCommands
             Func<GitRevision, bool>? revisionPredicate)
         {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(() => ExecuteAsync(module, refs, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
+                .RunAsync(() => ExecuteAsync(module, refs, subject, maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
                 .FileAndForget(
                     ex =>
                     {
@@ -80,6 +81,7 @@ namespace GitCommands
             GitModule module,
             IReadOnlyList<IGitRef> refs,
             IObserver<GitRevision> subject,
+            int maxCount,
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
@@ -107,7 +109,7 @@ namespace GitCommands
 
             token.ThrowIfCancellationRequested();
 
-            var arguments = BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
+            var arguments = BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
 #if TRACE
             var sw = Stopwatch.StartNew();
@@ -157,13 +159,16 @@ namespace GitCommands
             }
         }
 
-        private ArgumentBuilder BuildArguments(RefFilterOptions refFilterOptions,
+        private ArgumentBuilder BuildArguments(int maxCount,
+            RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
             string pathFilter)
         {
+            bool needParentRewrite = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
             return new GitArgumentBuilder("log")
             {
+                { maxCount > 0, $"--max-count={maxCount}" },
                 "-z",
                 {
                     !string.IsNullOrWhiteSpace(branchFilter) && IsSimpleBranchFilter(branchFilter),
@@ -198,6 +203,18 @@ namespace GitCommands
                     }.ToString()
                 },
                 revisionFilter,
+                {
+                    needParentRewrite,
+                    new ArgumentBuilder
+                    {
+                        { AppSettings.FullHistoryInFileHistory, $"--full-history" },
+                        {
+                            AppSettings.FullHistoryInFileHistory && AppSettings.SimplifyMergesInFileHistory,
+                            $"--simplify-merges"
+                        },
+                        $"--parents"
+                    }.ToString()
+                },
                 { !string.IsNullOrWhiteSpace(pathFilter), $"-- {pathFilter}" }
             };
         }
@@ -497,9 +514,9 @@ namespace GitCommands
                 _revisionReader = revisionReader;
             }
 
-            internal ArgumentBuilder BuildArgumentsBuildArguments(RefFilterOptions refFilterOptions,
+            internal ArgumentBuilder BuildArgumentsBuildArguments(int maxCount, RefFilterOptions refFilterOptions,
                 string branchFilter, string revisionFilter, string pathFilter) =>
-                _revisionReader.BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
+                _revisionReader.BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
             internal static bool TryParseRevision(ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
                 RevisionReader.TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out revision);
