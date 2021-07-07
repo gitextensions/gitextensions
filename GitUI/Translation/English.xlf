@@ -1251,6 +1251,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Console style</source>
         <target />
       </trans-unit>
+      <trans-unit id="consoleFontChangeButton.Text">
+        <source>font name</source>
+        <target />
+      </trans-unit>
       <trans-unit id="groupBoxConsoleSettings.Text">
         <source>Console settings (restart required)</source>
         <target />
@@ -1259,8 +1263,8 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Console style</source>
         <target />
       </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Font size</source>
+      <trans-unit id="lblFontName.Text">
+        <source>Font</source>
         <target />
       </trans-unit>
     </body>
