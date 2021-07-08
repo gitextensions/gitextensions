@@ -12,7 +12,7 @@ namespace GitUI.Script
             EnvironmentConfiguration.SetEnvironmentVariables();
 
             IExecutable executable = new Executable(filename, workingDir);
-            executable.Start(arguments);
+            executable.Start(arguments, createWindow: !runInBackground);
         }
     }
 }
