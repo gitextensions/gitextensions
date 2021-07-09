@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" />
     <PackageReference Include="NUnit" />
   </ItemGroup>
 

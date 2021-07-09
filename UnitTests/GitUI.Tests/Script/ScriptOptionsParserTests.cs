@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Composition;
+using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.UserRepositoryHistory;
 using GitUI.Script;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -342,8 +346,14 @@ namespace GitUITests.Script
         [Test]
         public void ParseScriptArguments_resolve_RepoName()
         {
+            var composition = TestComposition.Empty
+                .AddParts(typeof(MockRepositoryDescriptionProvider));
+
+            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
+            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
+
             var option = "RepoName";
-            var dirName = "Windows"; // chose one which will never contain a repo
+            var dirName = MockRepositoryDescriptionProvider.ShortName; // chose one which will never contain a repo
             _module.WorkingDir.Returns("C:\\" + dirName);
 
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
@@ -377,6 +387,15 @@ namespace GitUITests.Script
 
             result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{sMessage}", "sMessage", null, null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null);
             result.Should().Be("test string with \"double qoutes\" and escaped \\\"double qoutes\\\"");
+        }
+
+        [Shared, PartNotDiscoverable]
+        [Export(typeof(IRepositoryDescriptionProvider))]
+        internal class MockRepositoryDescriptionProvider : IRepositoryDescriptionProvider
+        {
+            internal const string ShortName = "Windows";
+
+            public string Get(string repositoryDir) => ShortName;
         }
     }
 }
