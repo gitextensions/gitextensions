@@ -643,6 +643,8 @@ namespace GitUI.CommandsDialogs
                 userShell.ToolTipText = shell.Name;
                 userShell.Tag = shell;
             }
+
+            gitBashToolStripMenuItem.Tag = _shellProvider.GetShell(BashShell.ShellName);
         }
 
         protected override void Dispose(bool disposing)
