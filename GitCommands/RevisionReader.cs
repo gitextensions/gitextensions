@@ -54,6 +54,8 @@ namespace GitCommands
             /* Committer email */ "%cE%n" +
             /* Commit raw body */ "%B";
 
+        // Trace info for parse errors
+        private static int _noOfParseError = 0;
         private readonly CancellationTokenSequence _cancellationTokenSequence = new();
 
         public void Execute(
@@ -111,9 +113,8 @@ namespace GitCommands
 
             var arguments = BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
-#if TRACE
+#if DEBUG
             var sw = Stopwatch.StartNew();
-            int parseErrors = 0;
 #endif
 
             var logOutputEncoding = module.LogOutputEncoding;
@@ -140,16 +141,11 @@ namespace GitCommands
 
                         subject.OnNext(revision);
                     }
-#if TRACE
-                    else
-                    {
-                        parseErrors++;
-                    }
-#endif
                 }
 
-#if TRACE
-                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={parseErrors}");
+#if DEBUG
+                // TODO Make it possible to explicitly activate Trace printouts like this
+                Debug.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={_noOfParseError}");
 #endif
             }
 
@@ -254,6 +250,7 @@ namespace GitCommands
 
             if (chunk.Count < ObjectId.Sha1CharCount * 2)
             {
+                ParseAssert($"Log parse error, not enough data: {chunk.Count}");
                 revision = default;
                 return false;
             }
@@ -266,6 +263,7 @@ namespace GitCommands
             if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(0, ObjectId.Sha1CharCount), out var objectId) ||
                 !ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out var treeId))
             {
+                ParseAssert($"Log parse error, object id: {chunk.Count}({array.Slice(0, ObjectId.Sha1CharCount).ToString()}");
                 revision = default;
                 return false;
             }
@@ -276,7 +274,7 @@ namespace GitCommands
             int noParents = CountParents(in array, offset);
             if (noParents < 0)
             {
-                // Parse issue
+                ParseAssert($"Log parse error, {noParents} no of parents for {objectId}");
                 revision = default;
                 return false;
             }
@@ -288,7 +286,8 @@ namespace GitCommands
 
                 while (baseOffset < array.Length && array[baseOffset] != '\n')
                 {
-                    Debug.Assert(count == 0 || array[baseOffset] == ' ', $"Unexpected contents in the parent array: {array[baseOffset]}/{count}");
+                    // Parse error, not using ParseAssert (or increasing _noOfParseError)
+                    Debug.Assert(count == 0 || array[baseOffset] == ' ', $"Log parse error, unexpected contents in the parent array: {array[baseOffset]}/{count} for {objectId}");
                     baseOffset += ObjectId.Sha1CharCount;
                     if (count > 0)
                     {
@@ -313,7 +312,7 @@ namespace GitCommands
             {
                 if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
                 {
-                    // TODO log this parse problem
+                    ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
                     revision = default;
                     return false;
                 }
@@ -360,7 +359,7 @@ namespace GitCommands
 
             if (encodingNameEndLength == -1)
             {
-                // TODO log this error case
+                ParseAssert($"Log parse error, no encoding name for {objectId}");
                 revision = default;
                 return false;
             }
@@ -393,7 +392,7 @@ namespace GitCommands
             var committerEmail = reader.ReadLine();
 
             bool skipBody = sixMonths > authorUnixTime;
-            (string? subject, string? body, bool hasMultiLineMessage) = reader.PeakSubjectBody(skipBody);
+            (string? subject, string? body, bool hasMultiLineMessage) = reader.PeekSubjectBody(skipBody);
 
             // We keep a full multiline message body within the last six months.
             // Note also that if body and subject are identical (single line), the body never need to be stored
@@ -401,8 +400,7 @@ namespace GitCommands
 
             if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null || (skipBody != (body is null)))
             {
-                // TODO log this parse error
-                Debug.Fail("Unable to read an entry from the log -- this should not happen");
+                ParseAssert($"Log parse error, decoded fields ({subject}::{body}) for {objectId}");
                 revision = default;
                 return false;
             }
@@ -427,6 +425,13 @@ namespace GitCommands
             };
 
             return true;
+
+            static void ParseAssert(string? message)
+            {
+                _noOfParseError++;
+                Debug.Assert(_noOfParseError > 1, message);
+                Trace.WriteLineIf(_noOfParseError > 10, message);
+            }
         }
 
         public void Dispose()
@@ -469,7 +474,7 @@ namespace GitCommands
                 return StringPool.Shared.GetOrAdd(_s.Slice(startIndex, lineLength));
             }
 
-            public (string? subject, string? body, bool hasMultiLineMessage) PeakSubjectBody(bool skipBody)
+            public (string? subject, string? body, bool hasMultiLineMessage) PeekSubjectBody(bool skipBody)
             {
                 // Empty subject is allowed
                 if (_index > _s.Length)
