@@ -1833,7 +1833,7 @@ namespace GitCommands
         {
             var bytes = EncodingHelper.ConvertTo(
                 SystemEncoding,
-                $"{inputWriter.NewLine}\"{filename.ToPosixPath()}\"");
+                $"\"{filename.ToPosixPath()}\"{inputWriter.NewLine}");
 
             inputWriter.BaseStream.Write(bytes, 0, bytes.Length);
         }

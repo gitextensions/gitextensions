@@ -60,13 +60,13 @@ namespace GitCommands.Git
                 "refs/heads/" + branchName
             };
 
-            var result = GetGitExecutable().GetOutput(aheadBehindGitCommand, outputEncoding: encoding);
-            if (string.IsNullOrEmpty(result))
+            ExecutionResult result = GetGitExecutable().Execute(aheadBehindGitCommand, outputEncoding: encoding);
+            if (!result.ExitedSuccessfully || string.IsNullOrEmpty(result.StandardOutput))
             {
                 return null;
             }
 
-            var matches = _aheadBehindRegEx.Matches(result);
+            var matches = _aheadBehindRegEx.Matches(result.StandardOutput);
             Dictionary<string, AheadBehindData> aheadBehindForBranchesData = new();
             foreach (Match match in matches)
             {
