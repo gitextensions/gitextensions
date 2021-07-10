@@ -290,12 +290,9 @@ namespace GitUIPluginInterfaces
         /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
         [MustUseReturnValue]
         public static bool TryParseAsciiHexBytes(ArraySegment<byte> bytes, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
-        {
-            ReadOnlySpan<byte> array = bytes.AsSpan();
-            return TryParseAsciiHexReadOnlySpan(array, out objectId);
-        }
+            => TryParseAsciiHexReadOnlySpan(bytes.AsSpan(), out objectId);
 
-        public static bool TryParseAsciiHexReadOnlySpan(ReadOnlySpan<byte> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
+        public static bool TryParseAsciiHexReadOnlySpan(in ReadOnlySpan<byte> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
             if (array.Length != Sha1CharCount)
             {
@@ -305,11 +302,11 @@ namespace GitUIPluginInterfaces
 
             var success = true;
 
-            var i1 = HexAsciiBytesToUInt32(ref array, 0);
-            var i2 = HexAsciiBytesToUInt32(ref array, 8);
-            var i3 = HexAsciiBytesToUInt32(ref array, 16);
-            var i4 = HexAsciiBytesToUInt32(ref array, 24);
-            var i5 = HexAsciiBytesToUInt32(ref array, 32);
+            var i1 = HexAsciiBytesToUInt32(in array, 0);
+            var i2 = HexAsciiBytesToUInt32(in array, 8);
+            var i3 = HexAsciiBytesToUInt32(in array, 16);
+            var i4 = HexAsciiBytesToUInt32(in array, 24);
+            var i5 = HexAsciiBytesToUInt32(in array, 32);
 
             if (success)
             {
@@ -320,7 +317,7 @@ namespace GitUIPluginInterfaces
             objectId = default;
             return false;
 
-            uint HexAsciiBytesToUInt32(ref ReadOnlySpan<byte> array, int j)
+            uint HexAsciiBytesToUInt32(in ReadOnlySpan<byte> array, int j)
             {
                 return (uint)(HexAsciiByteToInt(array[j]) << 28 |
                               HexAsciiByteToInt(array[j + 1]) << 24 |
