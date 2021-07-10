@@ -2136,10 +2136,16 @@ namespace GitCommands
 
         public async Task<IReadOnlyList<Remote>> GetRemotesAsync()
         {
-            return ParseRemotes(await _gitExecutable.GetOutputLinesAsync("remote -v"));
+            ExecutionResult result = await _gitExecutable.ExecuteAsync("remote -v");
+            ////TODO: Handle non-empty result.StandardError if not result.ExitedSuccessfully
+            return result.ExitedSuccessfully
+                ? ParseRemotes(result)
+                : Array.Empty<Remote>();
 
-            IReadOnlyList<Remote> ParseRemotes(IEnumerable<string> lines)
+            static IReadOnlyList<Remote> ParseRemotes(ExecutionResult result)
             {
+                IEnumerable<string> lines = result.StandardOutput.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
+                    .Concat(result.StandardError.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries));
                 List<Remote> remotes = new();
 
                 // See tests for explanation of the format
@@ -2914,16 +2920,22 @@ namespace GitCommands
             // Assume that all GetRefs() are done in the background, which may not be correct in the future.
             const bool noLocks = true;
 
-            var cmd = GitCommandHelpers.GetRefsCmd(getRef, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
-            var refList = _gitExecutable.GetOutput(cmd);
-            return ParseRefs(refList);
+            ArgumentString cmd = GitCommandHelpers.GetRefsCmd(getRef, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
+            ExecutionResult result = _gitExecutable.Execute(cmd);
+            ////TODO: Handle non-empty result.StandardError
+            return result.ExitedSuccessfully
+                ? ParseRefs(result.StandardOutput)
+                : Array.Empty<IGitRef>();
         }
 
         public async Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string? commit = null)
-            => (await _gitExecutable
-                .GetOutputAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit))
-                .ConfigureAwait(false))
-                .Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+        {
+            ExecutionResult result = await _gitExecutable
+                .ExecuteAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit))
+                .ConfigureAwait(false);
+            ////TODO: Handle non-empty result.StandardError
+            return result.StandardOutput.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+        }
 
         public IEnumerable<string> GetMergedBranches(bool includeRemote = false)
         {
