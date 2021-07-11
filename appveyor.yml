@@ -38,21 +38,33 @@ install:
 # to run your custom scripts instead of automatic MSBuild
 build_script:
 - ps: |
-    # for release branches mark the repo as clean
-    if (!$env:APPVEYOR_PULL_REQUEST_TITLE -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
-      & .\scripts\Mark-RepoClean.ps1
-    }
-
+    $isBuildingPR = $false;
     # if building a temporary merge with master, soft reset to the PR commit so the build contains the PR's hash instead of the merge-commit's hash
     if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT -and ($env:APPVEYOR_REPO_COMMIT -ne $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT))
     {
-      git reset --soft "$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT" --
+        git reset --soft "$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT" --
+        $isBuildingPR = $true;
     }
-
-    # build
+- ps: |
+    # build VC++
     dotnet build .\scripts\native.proj -c Release --verbosity q --nologo /bl:.\artifacts\log\native.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true
+- ps: |
+    # build .NET
+    dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog /p:ContinuousIntegrationBuild=true
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+- ps: |
+    # if we have reset above we need to reset English xlfs, otherwise the loc verification step will fail
+    # refer to https://github.com/gitextensions/gitextensions/issues/7979
+    if ($isBuildingPR) {
+        git checkout $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT --force
+    }
+- ps: |
+    # Verify that new strings (if any) have been processed and ready for localisation
+    # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
+    Push-Location .\GitExtensions
+    dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
+    Pop-Location
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 # to run your custom scripts instead of automatic tests
