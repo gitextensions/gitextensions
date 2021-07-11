@@ -137,6 +137,7 @@ namespace GitCommandsTests
         [TestCase("short_sha", false)]
         [TestCase("simple_pathfilter", true)]
         [TestCase("subject_no_body", true)]
+        [TestCase("empty_commit", true)]
         public void TryParseRevision_test(string testName, bool expectedReturn, bool serialThrows = false)
         {
             using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))

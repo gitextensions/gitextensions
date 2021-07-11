@@ -475,7 +475,8 @@ namespace GitCommands
 
             public (string? subject, string? body, bool hasMultiLineMessage) PeakToEnd(bool skipBody)
             {
-                if (_index >= _s.Length)
+                // Empty subject is allowed
+                if (_index > _s.Length)
                 {
                     return (null, null, false);
                 }
