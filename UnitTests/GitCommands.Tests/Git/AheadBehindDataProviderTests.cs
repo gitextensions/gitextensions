@@ -36,7 +36,7 @@ namespace GitCommandsTests.Git
             _process.StandardError.Returns(x => _errorStreamReader);
 
             _executable = Substitute.For<IExecutable>();
-            _executable.Start(Arg.Any<ArgumentString>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<Encoding>(), Arg.Any<bool>()).Returns(x => _process);
+            _executable.Start(Arg.Any<ArgumentString>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<Encoding>(), Arg.Any<bool>(), Arg.Any<bool>()).Returns(x => _process);
 
             _provider = new AheadBehindDataProvider(() => _executable);
         }
