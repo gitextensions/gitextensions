@@ -7,6 +7,10 @@ using EasyHook;
 using GitExtUtils.GitUI.Theming;
 using GitUI.UserControls;
 using Microsoft;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.Theming
 {
@@ -51,7 +55,7 @@ namespace GitUI.Theming
         private static bool BypassAnyHook =>
             _systemDialogDetector?.IsSystemDialogOpen == true;
 
-        public static void InstallHooks(Theme theme, SystemDialogDetector systemDialogDetector)
+        public static unsafe void InstallHooks(Theme theme, SystemDialogDetector systemDialogDetector)
         {
             _theme = theme;
             _systemDialogDetector = systemDialogDetector;
@@ -219,7 +223,7 @@ namespace GitUI.Theming
                 if (color != Color.Empty)
                 {
                     int colorref = ColorTranslator.ToWin32(color);
-                    var hbrush = NativeMethods.CreateSolidBrush(colorref);
+                    var hbrush = PInvoke.CreateSolidBrush(unchecked((uint)colorref));
                     return hbrush;
                 }
             }
@@ -227,15 +231,15 @@ namespace GitUI.Theming
             return _getSysColorBrushBypass!(nindex);
         }
 
-        private static int DrawThemeBackgroundHook(
-            IntPtr htheme, IntPtr hdc,
+        private static unsafe int DrawThemeBackgroundHook(
+            IntPtr htheme, HDC hdc,
             int partid, int stateid,
-            NativeMethods.RECTCLS prect, NativeMethods.RECTCLS pcliprect)
+            in RECT prect, [In] RECT* pcliprect)
         {
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer?.RenderBackground(hdc, partid, stateid, prect, pcliprect) == ThemeRenderer.Handled)
+                if (renderer?.RenderBackground(hdc, partid, stateid, prect, pcliprect is null ? null : *pcliprect) == ThemeRenderer.Handled)
                 {
                     return ThemeRenderer.Handled;
                 }
@@ -244,10 +248,10 @@ namespace GitUI.Theming
             return _drawThemeBackgroundBypass!(htheme, hdc, partid, stateid, prect, pcliprect);
         }
 
-        private static int DrawThemeBackgroundExHook(
-            IntPtr htheme, IntPtr hdc,
+        private static unsafe int DrawThemeBackgroundExHook(
+            IntPtr htheme, HDC hdc,
             int partid, int stateid,
-            NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
+            in RECT prect, [In] DTBGOPTS* poptions)
         {
             if (!BypassThemeRenderers)
             {
@@ -257,13 +261,13 @@ namespace GitUI.Theming
                     renderer = _renderers.OfType<ListViewRenderer>().SingleOrDefault();
                 }
 
-                if (renderer?.RenderBackgroundEx(htheme, hdc, partid, stateid, prect, ref poptions) == ThemeRenderer.Handled)
+                if (renderer?.RenderBackgroundEx(htheme, hdc, partid, stateid, prect, poptions is null ? null : *poptions) == ThemeRenderer.Handled)
                 {
                     return ThemeRenderer.Handled;
                 }
             }
 
-            return _drawThemeBackgroundExBypass!(htheme, hdc, partid, stateid, prect, ref poptions);
+            return _drawThemeBackgroundExBypass!(htheme, hdc, partid, stateid, in prect, poptions);
         }
 
         private static int GetThemeColorHook(IntPtr htheme, int ipartid, int istateid, int ipropid,
@@ -285,16 +289,16 @@ namespace GitUI.Theming
             IntPtr htheme, IntPtr hdc,
             int partid, int stateid,
             string psztext, int cchtext,
-            NativeMethods.DT dwtextflags, int dwtextflags2, IntPtr prect)
+            DRAW_TEXT_FORMAT dwtextflags, int dwtextflags2, IntPtr prect)
         {
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
                 if (renderer is not null && renderer.ForceUseRenderTextEx)
                 {
-                    NativeMethods.DTTOPTS poptions = new()
+                    DTTOPTS poptions = new()
                     {
-                        dwSize = Marshal.SizeOf<NativeMethods.DTTOPTS>()
+                        dwSize = (uint)Marshal.SizeOf<DTTOPTS>()
                     };
 
                     return _drawThemeTextExBypass!(
@@ -316,8 +320,8 @@ namespace GitUI.Theming
             IntPtr htheme, IntPtr hdc,
             int partid, int stateid,
             string psztext, int cchtext,
-            NativeMethods.DT dwtextflags,
-            IntPtr prect, ref NativeMethods.DTTOPTS poptions)
+            DRAW_TEXT_FORMAT dwtextflags,
+            IntPtr prect, ref DTTOPTS poptions)
         {
             if (!BypassThemeRenderers)
             {

@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.Theming
 {
@@ -29,16 +33,12 @@ namespace GitUI.Theming
 
         public virtual bool ForceUseRenderTextEx => false;
 
-        public virtual int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
-            NativeMethods.RECTCLS pcliprect)
+        public virtual int RenderBackground(HDC hdc, int partid, int stateid, RECT prect, RECT? pcliprect)
         {
             return Unhandled;
         }
 
-        public virtual int RenderBackgroundEx(
-            IntPtr htheme, IntPtr hdc,
-            int partid, int stateid,
-            NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
+        public virtual int RenderBackgroundEx(IntPtr htheme, HDC hdc, int partid, int stateid, RECT prect, DTBGOPTS? poptions)
         {
             return Unhandled;
         }
@@ -47,8 +47,8 @@ namespace GitUI.Theming
             IntPtr hdc,
             int partid, int stateid,
             string psztext, int cchtext,
-            NativeMethods.DT dwtextflags,
-            IntPtr prect, ref NativeMethods.DTTOPTS poptions)
+            DRAW_TEXT_FORMAT dwtextflags,
+            IntPtr prect, ref DTTOPTS poptions)
         {
             return Unhandled;
         }
@@ -67,7 +67,7 @@ namespace GitUI.Theming
         /// <param name="hwnd">win32 window handle.</param>
         public void AddThemeData(IntPtr hwnd)
         {
-            var htheme = NativeMethods.OpenThemeData(hwnd, Clsid);
+            var htheme = PInvoke.OpenThemeData((HWND)hwnd, Clsid);
             _themeDataHandles.Add(htheme);
         }
 
@@ -78,17 +78,17 @@ namespace GitUI.Theming
         {
             foreach (var htheme in _themeDataHandles)
             {
-                NativeMethods.CloseThemeData(htheme);
+                PInvoke.CloseThemeData(htheme);
             }
         }
 
-        protected Context CreateRenderContext(IntPtr hdc, NativeMethods.RECTCLS? clip) =>
+        protected Context CreateRenderContext(HDC hdc, RECT? clip) =>
             new(hdc, clip);
 
         protected class Context : IDisposable
         {
-            private readonly IntPtr _hdc;
-            private readonly NativeMethods.RECTCLS? _clip;
+            private readonly HDC _hdc;
+            private readonly RECT? _clip;
             private readonly Lazy<Graphics> _graphicsLazy;
 
             private bool _clipChanged;
@@ -96,7 +96,7 @@ namespace GitUI.Theming
 
             public Graphics Graphics => _graphicsLazy.Value;
 
-            public Context(IntPtr hdc, NativeMethods.RECTCLS? clip)
+            public Context(HDC hdc, RECT? clip)
             {
                 _hdc = hdc;
                 _clip = clip;

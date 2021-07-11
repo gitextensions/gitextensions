@@ -9,6 +9,8 @@ using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using Microsoft;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -360,7 +362,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return false;
             }
 
-            return NativeMethods.IsIconic(currentProcess.MainWindowHandle).IsTrue();
+            return PInvoke.IsIconic((HWND)currentProcess.MainWindowHandle);
         }
 
         private void Update()

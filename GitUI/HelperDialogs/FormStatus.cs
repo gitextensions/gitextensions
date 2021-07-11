@@ -6,6 +6,8 @@ using GitCommands;
 using GitUI.Properties;
 using GitUI.UserControls;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using Windows.Win32;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace GitUI.HelperDialogs
 {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using Windows.Win32;
 
 namespace GitUI
 {
@@ -25,10 +26,10 @@ namespace GitUI
             base.WndProc(ref m);
 
             if (ClickThrough &&
-                m.Msg == NativeMethods.WM_MOUSEACTIVATE &&
-                m.Result == (IntPtr)NativeMethods.MA_ACTIVATEANDEAT)
+                m.Msg == Constants.WM_MOUSEACTIVATE &&
+                m.Result == (IntPtr)Constants.MA_ACTIVATEANDEAT)
             {
-                m.Result = (IntPtr)NativeMethods.MA_ACTIVATE;
+                m.Result = (IntPtr)Constants.MA_ACTIVATE;
             }
         }
     }

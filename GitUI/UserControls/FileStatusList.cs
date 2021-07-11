@@ -22,6 +22,7 @@ using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
+using Windows.Win32;
 
 namespace GitUI
 {
@@ -788,7 +789,7 @@ namespace GitUI
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == NativeMethods.WM_MOUSEACTIVATE)
+            if (m.Msg == Constants.WM_MOUSEACTIVATE)
             {
                 _mouseEntered = !Focused;
             }

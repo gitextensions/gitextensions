@@ -2,25 +2,29 @@
 {
     using System;
     using System.Drawing;
+    using Windows.Win32;
+    using Windows.Win32.Foundation;
+    using Windows.Win32.UI.Controls;
 
     public static class FontUtil
     {
 #pragma warning disable SA1305 // Field names should not use Hungarian notation
         static FontUtil()
         {
-            var hTheme = NativeMethods.OpenThemeData(IntPtr.Zero, "TEXTSTYLE");
+            var hTheme = PInvoke.OpenThemeData((HWND)IntPtr.Zero, "TEXTSTYLE");
             if (hTheme != IntPtr.Zero)
             {
-                NativeMethods.GetThemeFont(hTheme, IntPtr.Zero, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_FONT, out var pFont);
+                PInvoke.GetThemeFont(hTheme, null, NativeMethods.TEXT_MAININSTRUCTION, 0, (int)THEME_PROPERTY_SYMBOL_ID.TMT_FONT, out var pFont);
 
                 MainInstructionFont = Font.FromLogFont(pFont);
 
-                NativeMethods.COLORREF pColor;
-                NativeMethods.GetThemeColor(hTheme, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_TEXTCOLOR, out pColor);
+                PInvoke.GetThemeColor(hTheme, NativeMethods.TEXT_MAININSTRUCTION, 0, (int)THEME_PROPERTY_SYMBOL_ID.TMT_TEXTCOLOR, out var color);
+
+                var pColor = new NativeMethods.COLORREF(color);
 
                 MainInstructionColor = Color.FromArgb(pColor.R, pColor.G, pColor.B);
 
-                NativeMethods.CloseThemeData(hTheme);
+                PInvoke.CloseThemeData(hTheme);
             }
             else
             {

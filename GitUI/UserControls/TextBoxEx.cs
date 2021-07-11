@@ -1,6 +1,8 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.UserControls
 {
@@ -56,15 +58,15 @@ namespace GitUI.UserControls
                 return;
             }
 
-            switch (m.Msg)
+            switch ((uint)m.Msg)
             {
-                case NativeMethods.WM_NCPAINT:
-                case NativeMethods.WM_PAINT:
+                case Constants.WM_NCPAINT:
+                case Constants.WM_PAINT:
                     Color penColor = Focused ? _borderFocusedColor
                         : _hovered ? _borderHoveredColor
                         : _borderDefaultColor;
 
-                    IntPtr windowDC = NativeMethods.GetWindowDC(Handle);
+                    HDC windowDC = PInvoke.GetWindowDC((HWND)Handle);
                     try
                     {
                         using Graphics graphics = Graphics.FromHdc(windowDC);
@@ -74,20 +76,20 @@ namespace GitUI.UserControls
                     }
                     finally
                     {
-                        NativeMethods.ReleaseDC(Handle, windowDC);
+                        PInvoke.ReleaseDC((HWND)Handle, windowDC);
                     }
 
                     break;
 
-                case NativeMethods.WM_NCMOUSEHOVER when !_hovered:
-                case NativeMethods.WM_MOUSEHOVER when !_hovered:
+                case Constants.WM_NCMOUSEHOVER when !_hovered:
+                case Constants.WM_MOUSEHOVER when !_hovered:
                     _hovered = true;
 
                     Invalidate();
 
                     break;
-                case NativeMethods.WM_NCMOUSELEAVE:
-                case NativeMethods.WM_MOUSELEAVE:
+                case Constants.WM_NCMOUSELEAVE:
+                case Constants.WM_MOUSELEAVE:
                     _hovered = false;
 
                     Invalidate();

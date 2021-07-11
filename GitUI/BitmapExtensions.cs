@@ -2,6 +2,8 @@
 
 using System;
 using System.Drawing;
+using Windows.Win32;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace GitUI
 {
@@ -26,7 +28,7 @@ namespace GitUI
             {
                 if (handle != IntPtr.Zero)
                 {
-                    NativeMethods.DestroyIcon(handle);
+                    PInvoke.DestroyIcon((HICON)handle);
                 }
             }
         }

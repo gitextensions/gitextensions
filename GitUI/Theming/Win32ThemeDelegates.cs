@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.Theming
 {
@@ -10,15 +13,15 @@ namespace GitUI.Theming
     internal delegate IntPtr GetSysColorBrushDelegate(int nindex);
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
-    internal delegate int DrawThemeBackgroundDelegate(
-        IntPtr htheme, IntPtr hdc,
+    internal unsafe delegate int DrawThemeBackgroundDelegate(
+        IntPtr htheme, HDC hdc,
         int partId, int stateId,
-        NativeMethods.RECTCLS prect, NativeMethods.RECTCLS pcliprect);
+        in RECT prect, [In] RECT* pcliprect);
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true, CharSet = CharSet.Unicode)]
-    internal delegate int DrawThemeBackgroundExDelegate(
-        IntPtr htheme, IntPtr hdc, int partId, int stateId,
-        NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions);
+    internal unsafe delegate int DrawThemeBackgroundExDelegate(
+        IntPtr htheme, HDC hdc, int partId, int stateId,
+        in RECT prect, [In] DTBGOPTS* poptions);
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true)]
     internal delegate int GetThemeColorDelegate(
@@ -30,7 +33,7 @@ namespace GitUI.Theming
         int partid, int stateId,
         string psztext,
         int cchtext,
-        NativeMethods.DT dwtextflags,
+        DRAW_TEXT_FORMAT dwtextflags,
         int dwtextflags2,
         IntPtr prect);
 
@@ -40,9 +43,9 @@ namespace GitUI.Theming
         int partid, int stateid,
         string pszText,
         int cchText,
-        NativeMethods.DT dwtextflags,
+        DRAW_TEXT_FORMAT dwtextflags,
         IntPtr prect,
-        ref NativeMethods.DTTOPTS poptions);
+        ref DTTOPTS poptions);
 
     [UnmanagedFunctionPointer(CallingConvention.StdCall, SetLastError = true, CharSet = CharSet.Unicode)]
     internal delegate IntPtr CreateWindowExDelegate(

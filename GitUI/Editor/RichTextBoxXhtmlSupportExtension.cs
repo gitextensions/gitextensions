@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 #pragma warning disable SA1305 // Field names should not use Hungarian notation
 
@@ -34,14 +36,16 @@ namespace GitUI.Editor.RichTextBoxExtension
         private static IntPtr BeginUpdate(HandleRef handleRef)
         {
             // Prevent the control from raising any events.
-            IntPtr oldEventMask = NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, IntPtr.Zero);
+            int oldEventMask = PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_SETEVENTMASK, UIntPtr.Zero, IntPtr.Zero);
 
             // Prevent the control from redrawing itself.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.WM_SETREDRAW, UIntPtr.Zero, IntPtr.Zero);
 
-            return oldEventMask;
+            GC.KeepAlive(handleRef.Wrapper);
+
+            return (IntPtr)oldEventMask;
         }
 
         public static IntPtr BeginUpdate(this RichTextBox rtb)
@@ -61,12 +65,14 @@ namespace GitUI.Editor.RichTextBoxExtension
         private static void EndUpdate(HandleRef handleRef, IntPtr oldEventMask)
         {
             // Allow the control to redraw itself.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.WM_SETREDRAW, 1, IntPtr.Zero);
 
             // Allow the control to raise event messages.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, oldEventMask);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_SETEVENTMASK, UIntPtr.Zero, oldEventMask);
+
+            GC.KeepAlive(handleRef.Wrapper);
         }
 
         public static void EndUpdate(this RichTextBox rtb, IntPtr oldEventMask)
@@ -250,8 +256,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             public int dxOffset;
             public PFA wAlignment;
             public short cTabCount;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-            public int[] rgxTabs;
+            private unsafe fixed int _rgxTabs[32];
 
             // PARAFORMAT2 from here onwards.
             public int dySpaceBefore;
@@ -270,7 +275,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             public short wBorders;
         }
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct CHARFORMAT
         {
             public CHARFORMAT(CFM mask, CFE effects)
@@ -279,7 +284,6 @@ namespace GitUI.Editor.RichTextBoxExtension
                 cbSize = Marshal.SizeOf(this);
                 dwMask = mask;
                 dwEffects = effects;
-                szFaceName = "";
             }
 
             public int cbSize;
@@ -290,8 +294,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             public int crTextColor;
             public byte bCharSet;
             public byte bPitchAndFamily;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-            public string szFaceName;
+            private unsafe fixed char _szFaceName[32];
 
             // CHARFORMAT2 from here onwards.
             public FW wWeight;
@@ -305,56 +308,32 @@ namespace GitUI.Editor.RichTextBoxExtension
             public byte bAnimation;
             public byte bRevAuthor;
             public byte bReserved1;
+
+            public unsafe string FaceName
+            {
+                get
+                {
+                    fixed (char* szFaceName = _szFaceName)
+                    {
+                        return Marshal.PtrToStringUni((IntPtr)szFaceName);
+                    }
+                }
+
+                set
+                {
+                    if (value.Length > 31)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(value));
+                    }
+
+                    fixed (char* szFaceName = _szFaceName)
+                    {
+                        value.AsSpan().CopyTo(new Span<char>(szFaceName, 32));
+                        _szFaceName[value.Length] = '\0';
+                    }
+                }
+            }
         }
-
-        #region Win32 Apis
-        internal static class NativeMethods
-        {
-            // Constants from the Platform SDK.
-            internal const int WM_USER = 0x0400;
-            internal const int EM_GETCHARFORMAT = WM_USER + 58;
-            internal const int EM_SETCHARFORMAT = WM_USER + 68;
-            internal const int EM_HIDESELECTION = WM_USER + 63;
-            internal const int EM_GETSCROLLPOS = WM_USER + 221;
-            internal const int EM_SETSCROLLPOS = WM_USER + 222;
-
-            internal const int EM_SETEVENTMASK = 1073;
-            internal const int EM_GETPARAFORMAT = 1085;
-            internal const int EM_SETPARAFORMAT = 1095;
-            internal const int WM_SETREDRAW = 11;
-
-            // Defines for EM_SETCHARFORMAT/EM_GETCHARFORMAT
-            internal const int SCF_SELECTION = 0x0001;
-            internal const int SCF_WORD = 0x0002;
-            internal const int SCF_ALL = 0x0004;
-
-            internal const int LF_FACESIZE = 32;
-
-            [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                int msg,
-                IntPtr wParam,
-                IntPtr lParam);
-
-            [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                int msg,
-                IntPtr wParam,
-                ref Point lParam);
-
-            [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                int msg,
-                IntPtr wParam,
-                ref PARAFORMAT lp);
-
-            [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                int msg,
-                IntPtr wParam,
-                ref CHARFORMAT lp);
-        }
-        #endregion
 
         public static void SetSuperScript(this RichTextBox rtb, bool bSet)
         {
@@ -426,15 +405,17 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
         }
 
-        private static PARAFORMAT GetParaFormat(HandleRef handleRef)
+        private static unsafe PARAFORMAT GetParaFormat(HandleRef handleRef)
         {
             PARAFORMAT pf = new();
             pf.cbSize = Marshal.SizeOf(pf);
 
             // Get the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_GETPARAFORMAT,
-                (IntPtr)NativeMethods.SCF_SELECTION, ref pf);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_GETPARAFORMAT,
+                (nuint)Constants.SCF_SELECTION, (nint)(&pf));
+
+            GC.KeepAlive(handleRef.Wrapper);
 
             return pf;
         }
@@ -445,14 +426,16 @@ namespace GitUI.Editor.RichTextBoxExtension
             return GetParaFormat(handleRef);
         }
 
-        private static void SetParaFormat(HandleRef handleRef, PARAFORMAT value)
+        private static unsafe void SetParaFormat(HandleRef handleRef, PARAFORMAT value)
         {
             Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETPARAFORMAT,
-                (IntPtr)NativeMethods.SCF_SELECTION, ref value);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_SETPARAFORMAT,
+                (nuint)Constants.SCF_SELECTION, (nint)(&value));
+
+            GC.KeepAlive(handleRef.Wrapper);
         }
 
         public static void SetParaFormat(this RichTextBox rtb, PARAFORMAT value)
@@ -461,15 +444,17 @@ namespace GitUI.Editor.RichTextBoxExtension
             SetParaFormat(handleRef, value);
         }
 
-        private static PARAFORMAT GetDefaultParaFormat(HandleRef handleRef)
+        private static unsafe PARAFORMAT GetDefaultParaFormat(HandleRef handleRef)
         {
             PARAFORMAT pf = new();
             pf.cbSize = Marshal.SizeOf(pf);
 
             // Get the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_GETPARAFORMAT,
-                (IntPtr)NativeMethods.SCF_ALL, ref pf);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_GETPARAFORMAT,
+                (nuint)Constants.SCF_ALL, (nint)(&pf));
+
+            GC.KeepAlive(handleRef.Wrapper);
 
             return pf;
         }
@@ -480,14 +465,16 @@ namespace GitUI.Editor.RichTextBoxExtension
             return GetDefaultParaFormat(handleRef);
         }
 
-        private static void SetDefaultParaFormat(HandleRef handleRef, PARAFORMAT value)
+        private static unsafe void SetDefaultParaFormat(HandleRef handleRef, PARAFORMAT value)
         {
             Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETPARAFORMAT,
-                (IntPtr)NativeMethods.SCF_ALL, ref value);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_SETPARAFORMAT,
+                (nuint)Constants.SCF_ALL, (nint)(&value));
+
+            GC.KeepAlive(handleRef.Wrapper);
         }
 
         public static void SetDefaultParaFormat(this RichTextBox rtb, PARAFORMAT value)
@@ -496,15 +483,17 @@ namespace GitUI.Editor.RichTextBoxExtension
             SetDefaultParaFormat(handleRef, value);
         }
 
-        private static CHARFORMAT GetCharFormat(HandleRef handleRef)
+        private static unsafe CHARFORMAT GetCharFormat(HandleRef handleRef)
         {
             CHARFORMAT cf = new();
             cf.cbSize = Marshal.SizeOf(cf);
 
             // Get the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_GETCHARFORMAT,
-                (IntPtr)NativeMethods.SCF_SELECTION, ref cf);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_GETCHARFORMAT,
+                (nuint)Constants.SCF_SELECTION, (nint)(&cf));
+
+            GC.KeepAlive(handleRef.Wrapper);
 
             return cf;
         }
@@ -515,14 +504,16 @@ namespace GitUI.Editor.RichTextBoxExtension
             return GetCharFormat(handleRef);
         }
 
-        private static void SetCharFormat(HandleRef handleRef, CHARFORMAT value)
+        private static unsafe void SetCharFormat(HandleRef handleRef, CHARFORMAT value)
         {
             Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETCHARFORMAT,
-                (IntPtr)NativeMethods.SCF_SELECTION, ref value);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_SETCHARFORMAT,
+                (nuint)Constants.SCF_SELECTION, (nint)(&value));
+
+            GC.KeepAlive(handleRef.Wrapper);
         }
 
         public static void SetCharFormat(this RichTextBox rtb, CHARFORMAT value)
@@ -537,15 +528,17 @@ namespace GitUI.Editor.RichTextBoxExtension
             rtb.SetCharFormat(cf);
         }
 
-        private static CHARFORMAT GetDefaultCharFormat(HandleRef handleRef)
+        private static unsafe CHARFORMAT GetDefaultCharFormat(HandleRef handleRef)
         {
             CHARFORMAT cf = new();
             cf.cbSize = Marshal.SizeOf(cf);
 
             // Get the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_GETCHARFORMAT,
-                (IntPtr)NativeMethods.SCF_ALL, ref cf);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_GETCHARFORMAT,
+                (nuint)Constants.SCF_ALL, (nint)(&cf));
+
+            GC.KeepAlive(handleRef.Wrapper);
 
             return cf;
         }
@@ -556,14 +549,16 @@ namespace GitUI.Editor.RichTextBoxExtension
             return GetDefaultCharFormat(handleRef);
         }
 
-        private static void SetDefaultCharFormat(HandleRef handleRef, CHARFORMAT value)
+        private static unsafe void SetDefaultCharFormat(HandleRef handleRef, CHARFORMAT value)
         {
             Debug.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
             // Set the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETCHARFORMAT,
-                (IntPtr)NativeMethods.SCF_ALL, ref value);
+            PInvoke.SendMessage((HWND)handleRef.Handle,
+                Constants.EM_SETCHARFORMAT,
+                (nuint)Constants.SCF_ALL, (nint)(&value));
+
+            GC.KeepAlive(handleRef.Wrapper);
         }
 
         public static void SetDefaultCharFormat(this RichTextBox rtb, CHARFORMAT value)
@@ -578,10 +573,11 @@ namespace GitUI.Editor.RichTextBoxExtension
             rtb.SetDefaultCharFormat(cf);
         }
 
-        private static Point GetScrollPoint(HandleRef handleRef)
+        private static unsafe Point GetScrollPoint(HandleRef handleRef)
         {
-            Point scrollPoint = new();
-            NativeMethods.SendMessage(handleRef, NativeMethods.EM_GETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
+            POINT scrollPoint = default;
+            PInvoke.SendMessage((HWND)handleRef.Handle, Constants.EM_GETSCROLLPOS, UIntPtr.Zero, (nint)(&scrollPoint));
+            GC.KeepAlive(handleRef.Wrapper);
             return scrollPoint;
         }
 
@@ -591,9 +587,11 @@ namespace GitUI.Editor.RichTextBoxExtension
             return GetScrollPoint(handleRef);
         }
 
-        private static void SetScrollPoint(HandleRef handleRef, Point scrollPoint)
+        private static unsafe void SetScrollPoint(HandleRef handleRef, Point scrollPoint)
         {
-            NativeMethods.SendMessage(handleRef, NativeMethods.EM_SETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
+            PInvoke.SendMessage((HWND)handleRef.Handle, Constants.EM_SETSCROLLPOS, UIntPtr.Zero, (nint)(&scrollPoint));
+
+            GC.KeepAlive(handleRef.Wrapper);
         }
 
         public static void SetScrollPoint(this RichTextBox rtb, Point scrollPoint)
@@ -758,7 +756,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 CHARFORMAT cf = rtb.GetCharFormat();
                 PARAFORMAT pf = rtb.GetParaFormat();
 
-                string strfname = cf.szFaceName;
+                string strfname = cf.FaceName;
                 strfname = strfname.Trim(chtrim);
 
                 // new font format ?
@@ -1427,7 +1425,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                     break;
                 case "font":
                     cs.scf.Push(cs.cf);
-                    string strFont = cs.cf.szFaceName;
+                    string strFont = cs.cf.FaceName;
                     int crFont = cs.cf.crTextColor;
                     int yHeight = cs.cf.yHeight;
 
@@ -1466,7 +1464,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
                     reader.MoveToElement();
 
-                    cs.cf.szFaceName = strFont;
+                    cs.cf.FaceName = strFont;
                     cs.cf.crTextColor = crFont;
                     cs.cf.yHeight = yHeight;
 

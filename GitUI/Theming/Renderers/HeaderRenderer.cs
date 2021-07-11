@@ -1,6 +1,7 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms.VisualStyles;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.Theming
 {
@@ -8,8 +9,7 @@ namespace GitUI.Theming
     {
         protected override string Clsid { get; } = "Header";
 
-        public override int RenderBackground(IntPtr hdc, int partId, int stateId, Rectangle prect,
-            NativeMethods.RECTCLS pcliprect)
+        public override int RenderBackground(HDC hdc, int partId, int stateId, RECT prect, RECT? pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
             switch ((Parts)partId)
@@ -25,8 +25,8 @@ namespace GitUI.Theming
                     var backBrush = GetBackBrush((State.Item)stateId);
                     ctx.Graphics.FillRectangle(backBrush, prect);
                     ctx.Graphics.DrawLine(SystemPens.ControlDark,
-                        new Point(prect.Right - 1, prect.Top),
-                        new Point(prect.Right - 1, prect.Bottom - 1));
+                        new Point(prect.right - 1, prect.top),
+                        new Point(prect.right - 1, prect.bottom - 1));
                     return Handled;
                 }
 

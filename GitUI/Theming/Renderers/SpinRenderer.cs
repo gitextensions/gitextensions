@@ -1,6 +1,7 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using GitExtUtils.GitUI;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
 
 namespace GitUI.Theming
 {
@@ -8,8 +9,7 @@ namespace GitUI.Theming
     {
         protected override string Clsid { get; } = "Spin";
 
-        public override int RenderBackground(IntPtr hdc, int partId, int stateId, Rectangle prect,
-            NativeMethods.RECTCLS pcliprect)
+        public override int RenderBackground(HDC hdc, int partId, int stateId, RECT prect, RECT? pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
             return (Parts)partId switch

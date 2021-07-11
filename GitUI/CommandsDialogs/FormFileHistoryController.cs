@@ -1,9 +1,8 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Text;
 using GitCommands.Utils;
 using Microsoft;
+using Windows.Win32;
 
 namespace GitUI.CommandsDialogs
 {
@@ -19,7 +18,7 @@ namespace GitUI.CommandsDialogs
         /// This supports drive-lettered paths and UNC paths, but a UNC root
         /// will be returned in lowercase (e.g., \\server\share).
         /// </remarks>
-        public bool TryGetExactPath(string? path, [NotNullWhen(returnValue: true)] out string? exactPath)
+        public unsafe bool TryGetExactPath(string? path, [NotNullWhen(returnValue: true)] out string? exactPath)
         {
             if (!File.Exists(path) && !Directory.Exists(path))
             {
@@ -35,14 +34,19 @@ namespace GitUI.CommandsDialogs
             if (EnvUtils.RunningOnWindows())
             {
                 // grab the 8.3 file path
-                StringBuilder shortPath = new(4096);
-                if (NativeMethods.GetShortPathNameW(path, shortPath, shortPath.Capacity) > 0)
+                const int MaxChars = 4096;
+                char* buffer = stackalloc char[MaxChars];
+                uint actualLength = PInvoke.GetShortPathName(path, buffer, MaxChars);
+                if (actualLength > 0)
                 {
+                    string shortPath = new(buffer, 0, (int)actualLength);
+
                     // use 8.3 file path to get properly cased full file path
-                    StringBuilder longPath = new(4096);
-                    if (NativeMethods.GetLongPathNameW(shortPath.ToString(), longPath, longPath.Capacity) > 0)
+                    actualLength = PInvoke.GetLongPathName(shortPath, buffer, MaxChars);
+                    if (actualLength > 0)
                     {
-                        exactPath = longPath.ToString();
+                        string longPath = new(buffer, 0, (int)actualLength);
+                        exactPath = longPath;
                         return true;
                     }
                 }

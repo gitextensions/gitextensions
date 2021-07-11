@@ -4,6 +4,10 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.Theming
 {
@@ -15,21 +19,22 @@ namespace GitUI.Theming
             IntPtr hdc,
             int partid, int stateid,
             string psztext, int cchtext,
-            NativeMethods.DT dwtextflags,
-            IntPtr prect, ref NativeMethods.DTTOPTS poptions)
+            DRAW_TEXT_FORMAT dwtextflags,
+            IntPtr prect, ref DTTOPTS poptions)
         {
             switch ((Parts)partid)
             {
                 case Parts.LVP_GROUPHEADER:
                 {
-                    NativeMethods.GetThemeColor(htheme, partid, stateid, poptions.iColorPropId,
+                    PInvoke.GetThemeColor(htheme, partid, stateid, poptions.iColorPropId,
                         out var crefText);
-                    var color = Color.FromArgb(crefText.R, crefText.G, crefText.B);
+                    var colorref = new NativeMethods.COLORREF(crefText);
+                    var color = Color.FromArgb(colorref.R, colorref.G, colorref.B);
                     var adaptedColor = color.AdaptTextColor();
 
                     // do not render, just modify text color
                     poptions.iColorPropId = 0;
-                    poptions.crText = ColorTranslator.ToWin32(adaptedColor);
+                    poptions.crText = (uint)ColorTranslator.ToWin32(adaptedColor);
 
                     // proceed to default implementation with modified poptions parameter
                     return Unhandled;
@@ -39,8 +44,7 @@ namespace GitUI.Theming
             return Unhandled;
         }
 
-        public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
-            NativeMethods.RECTCLS pcliprect)
+        public override int RenderBackground(HDC hdc, int partid, int stateid, RECT prect, RECT? pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
             return (Parts)partid switch
@@ -69,10 +73,7 @@ namespace GitUI.Theming
             return Handled;
         }
 
-        public override int RenderBackgroundEx(
-            IntPtr htheme, IntPtr hdc,
-            int partid, int stateid,
-            NativeMethods.RECTCLS prect, ref NativeMethods.DTBGOPTS poptions)
+        public override int RenderBackgroundEx(IntPtr htheme, HDC hdc, int partid, int stateid, RECT prect, DTBGOPTS? poptions)
         {
             switch ((Parts)partid)
             {
@@ -96,7 +97,7 @@ namespace GitUI.Theming
                     {
                         CheckBoxRenderer.DrawCheckBox(
                             ctx.Graphics,
-                            new Point(prect.Left, prect.Top),
+                            new Point(prect.left, prect.top),
                             state);
                     }
 

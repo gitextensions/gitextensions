@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using GitExtUtils.GitUI;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.Controls;
 
 namespace GitUI.Theming
 {
@@ -8,8 +11,7 @@ namespace GitUI.Theming
     {
         protected override string Clsid { get; } = "Combobox";
 
-        public override int RenderBackground(IntPtr hdc, int partid, int stateid, Rectangle prect,
-            NativeMethods.RECTCLS pcliprect)
+        public override int RenderBackground(HDC hdc, int partid, int stateid, RECT prect, RECT? pcliprect)
         {
             using var ctx = CreateRenderContext(hdc, pcliprect);
             switch ((Parts)partid)
@@ -38,8 +40,8 @@ namespace GitUI.Theming
         public override bool ForceUseRenderTextEx { get; } = true;
 
         public override int RenderTextEx(IntPtr htheme, IntPtr hdc, int partid, int stateid,
-            string psztext, int cchtext, NativeMethods.DT dwtextflags,
-            IntPtr prect, ref NativeMethods.DTTOPTS poptions)
+            string psztext, int cchtext, DRAW_TEXT_FORMAT dwtextflags,
+            IntPtr prect, ref DTTOPTS poptions)
         {
             Color textColor;
             switch ((Parts)partid)
@@ -62,9 +64,9 @@ namespace GitUI.Theming
                     }
 
                     // do not render, just modify text color
-                    poptions.dwFlags |= NativeMethods.DTT.TextColor;
+                    poptions.dwFlags = (uint)((NativeMethods.DTT)poptions.dwFlags | NativeMethods.DTT.TextColor);
                     poptions.iColorPropId = 0;
-                    poptions.crText = ColorTranslator.ToWin32(textColor);
+                    poptions.crText = (uint)ColorTranslator.ToWin32(textColor);
                     return Unhandled;
 
                 default:

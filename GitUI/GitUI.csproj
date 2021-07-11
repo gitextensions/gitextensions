@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" />
     <PackageReference Include="System.IO.Abstractions" />
     <PackageReference Include="JetBrains.Annotations" />
+    <PackageReference Include="Microsoft.Windows.CsWin32" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
