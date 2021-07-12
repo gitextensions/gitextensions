@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 
 namespace GitCommands
 {
@@ -30,11 +29,6 @@ namespace GitCommands
         public static void SetSsh(string? path)
         {
             // Git will use the embedded OpenSSH ssh.exe if empty/unset
-            if (!string.IsNullOrEmpty(path) && !File.Exists(path))
-            {
-                path = "";
-            }
-
             if (!string.IsNullOrEmpty(path))
             {
                 // OpenSSH uses empty path, compatibility with path set in 3.4
@@ -48,6 +42,7 @@ namespace GitCommands
             Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
         }
 
+        // Note that variants like TortoisePlink.exe are supported too
         public static bool Plink()
             => AppSettings.SshPath.EndsWith("plink.exe", StringComparison.CurrentCultureIgnoreCase);
     }
