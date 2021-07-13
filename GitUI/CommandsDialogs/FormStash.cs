@@ -342,7 +342,7 @@ namespace GitUI.CommandsDialogs
             using (new WaitCursorScope())
             {
                 var stashName = GetStashName();
-                if (AppSettings.StashConfirmDropShow)
+                if (!AppSettings.DontConfirmStashDropShow)
                 {
                     TaskDialogPage page = new()
                     {
@@ -369,7 +369,7 @@ namespace GitUI.CommandsDialogs
 
                     if (page.Verification.Checked)
                     {
-                        AppSettings.StashConfirmDropShow = false;
+                        AppSettings.DontConfirmStashDropShow = true;
                     }
                 }
                 else

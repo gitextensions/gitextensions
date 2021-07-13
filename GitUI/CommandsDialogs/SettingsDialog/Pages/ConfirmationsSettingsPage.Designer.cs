@@ -124,7 +124,7 @@
             this.gbConfirmations.Padding = new System.Windows.Forms.Padding(8);
             this.gbConfirmations.Size = new System.Drawing.Size(1353, 542);
             this.gbConfirmations.TabStop = false;
-            this.gbConfirmations.Text = "Don\'t ask to confirm to (use with caution)";
+            this.gbConfirmations.Text = "Confirm Actions";
             // 
             // tlpnlConfirmations
             // 

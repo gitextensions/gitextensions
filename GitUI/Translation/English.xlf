@@ -1240,7 +1240,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="gbConfirmations.Text">
-        <source>Don't ask to confirm to (use with caution)</source>
+        <source>Confirm Actions</source>
         <target />
       </trans-unit>
     </body>
