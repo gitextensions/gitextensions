@@ -145,6 +145,8 @@ namespace GitCommandsTests
                 string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
                 ArraySegment<byte> chunk = File.ReadAllBytes(path);
 
+                // Set to a high value so Debug.Assert do not raise exceptions
+                RevisionReader.TestAccessor.NoOfParseError = 100;
                 RevisionReader.TestAccessor.TryParseRevision(chunk, _getEncodingByGitName, _logOutputEncoding, _sixMonths, out GitRevision rev)
                     .Should().Be(expectedReturn);
 

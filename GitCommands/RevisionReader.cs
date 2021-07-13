@@ -308,17 +308,24 @@ namespace GitCommands
 
             var parentIds = new ObjectId[noParents];
 
-            for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
+            if (noParents == 0)
             {
-                if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
+                offset++;
+            }
+            else
+            {
+                for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
                 {
-                    ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
-                    revision = default;
-                    return false;
-                }
+                    if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
+                    {
+                        ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
+                        revision = default;
+                        return false;
+                    }
 
-                parentIds[parentIndex] = parentId;
-                offset += ObjectId.Sha1CharCount + 1;
+                    parentIds[parentIndex] = parentId;
+                    offset += ObjectId.Sha1CharCount + 1;
+                }
             }
 
             #endregion
@@ -430,7 +437,7 @@ namespace GitCommands
             {
                 _noOfParseError++;
                 Debug.Assert(_noOfParseError > 1, message);
-                Trace.WriteLineIf(_noOfParseError > 10, message);
+                Trace.WriteLineIf(_noOfParseError < 10, message);
             }
         }
 
@@ -522,6 +529,12 @@ namespace GitCommands
 
             internal static bool TryParseRevision(ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
                 RevisionReader.TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out revision);
+
+            internal static int NoOfParseError
+            {
+                get { return _noOfParseError; }
+                set { _noOfParseError = value; }
+            }
         }
     }
 }
