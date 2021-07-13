@@ -153,3 +153,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/01/25, guybark, Guy Barker, guybark(at)microsoft.com
 2021/02/10, mabako, Marcus Bauer, mabako(at)gmail.com
 2021/03/20, nyankoframe, Damit Senanayake, damit(at)outlook.com
+2021/06/18, jwfx, Jörg Winkler, jwfx at bitmx.net

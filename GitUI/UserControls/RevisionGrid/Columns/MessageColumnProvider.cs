@@ -406,16 +406,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return;
             }
 
-            if (lines.Length == 1)
+            if (lines.Length > 1 && AppSettings.ShowCommitBodyInRevisionGrid)
             {
-                indicator.Render();
-                return;
+                var commitBody = string.Concat(lines.Skip(1).Select(_ => " " + _));
+                var bodyBounds = messageBounds.ReduceLeft(offset);
+                var bodyWidth = _grid.DrawColumnText(e, commitBody, font, style.CommitBodyForeColor, bodyBounds);
+                offset += bodyWidth;
             }
-
-            var commitBody = string.Concat(lines.Skip(1).Select(_ => " " + _));
-            var bodyBounds = messageBounds.ReduceLeft(offset);
-            var bodyWidth = _grid.DrawColumnText(e, commitBody, font, style.CommitBodyForeColor, bodyBounds);
-            offset += bodyWidth;
 
             // Draw the multi-line indicator
             indicator.Render();

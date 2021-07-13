@@ -2225,6 +2225,13 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
+        internal void ToggleShowCommitBodyInRevisionGrid()
+        {
+            AppSettings.ShowCommitBodyInRevisionGrid = !AppSettings.ShowCommitBodyInRevisionGrid;
+            MenuCommands.TriggerMenuChanged();
+            Refresh();
+        }
+
         internal void ShowFirstParent()
         {
             AppSettings.ShowFirstParent = !AppSettings.ShowFirstParent;
