@@ -54,10 +54,15 @@ build_script:
     dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog /p:ContinuousIntegrationBuild=true
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 - ps: |
-    # if we have reset above we need to reset English xlfs, otherwise the loc verification step will fail
+    # if we have reset above, we need to restore the merge commit, otherwise the loc verification step will fail
+    # there is no need to have the same commit hash, but there must be no pending changes before the loc verification
     # refer to https://github.com/gitextensions/gitextensions/issues/7979
     if ($isBuildingPR) {
-        git checkout $env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT --force
+        git config user.email "gitextensions@github.com"
+        git config user.name "Git Extensions"
+        git commit -a -m "restore merge commit"
+        # ignore warning about line-endings conversion
+        $global:LASTEXITCODE = 0
     }
 - ps: |
     # Verify that new strings (if any) have been processed and ready for localisation
