@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.FileStatusListView = new GitUI.UserControls.ExListView();
+            this.FileStatusListView = new GitUI.UserControls.NativeListView();
             this.columnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.NoFiles = new System.Windows.Forms.Label();
             this.FilterComboBox = new System.Windows.Forms.ComboBox();
@@ -61,13 +61,13 @@
             this.FileStatusListView.TabIndex = 4;
             this.FileStatusListView.UseCompatibleStateImageBehavior = false;
             this.FileStatusListView.View = System.Windows.Forms.View.Details;
-            this.FileStatusListView.GroupMouseDown += new System.EventHandler<GitUI.UserControls.ListViewGroupMouseEventArgs>(this.FileStatusListView_GroupMouseDown);
             this.FileStatusListView.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.FileStatusListView_DrawSubItem);
             this.FileStatusListView.ClientSizeChanged += new System.EventHandler(this.FileStatusListView_ClientSizeChanged);
             this.FileStatusListView.DoubleClick += new System.EventHandler(this.FileStatusListView_DoubleClick);
             this.FileStatusListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListView_KeyDown);
             this.FileStatusListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseDown);
             this.FileStatusListView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseMove);
+            this.FileStatusListView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.FileStatusListView_Scroll);
             // 
             // columnHeader
             // 
@@ -163,7 +163,7 @@
 
         #endregion
 
-        private GitUI.UserControls.ExListView FileStatusListView;
+        private GitUI.UserControls.NativeListView FileStatusListView;
         private System.Windows.Forms.Label NoFiles;
         private System.Windows.Forms.ColumnHeader columnHeader;
         private System.Windows.Forms.ComboBox FilterComboBox;

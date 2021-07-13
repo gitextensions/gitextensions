@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
     public partial class UserRepositoriesList : GitExtensionsControl
     {
         private readonly TranslationString _groupRecentRepositories = new("Recent repositories");
+        private readonly TranslationString _groupActions = new("Actions");
         private readonly TranslationString _deleteCategoryCaption = new(
             "Delete Category");
         private readonly TranslationString _deleteCategoryQuestion = new(
@@ -75,7 +76,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             _lvgRecentRepositories = new ListViewGroup(_groupRecentRepositories.Text, HorizontalAlignment.Left)
             {
-                Name = string.Empty
+                Name = string.Empty,
+                CollapsedState = ListViewGroupCollapsedState.Expanded,
+                TaskLink = _groupActions.Text
             };
 
             _foreColorBrush = new SolidBrush(base.ForeColor);
@@ -85,7 +88,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             listView1.Items.Clear();
             listView1.Groups.Clear();
-            listView1.AllowCollapseGroups = true;
 
             imageList1.Images.Clear();
             imageList1.ImageSize = DpiUtil.Scale(imageList1.ImageSize);
@@ -278,6 +280,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             try
             {
                 listView1.BeginUpdate();
+                listView1.Groups.Clear();
                 listView1.Items.Clear();
                 if (recentRepositories.Count > 0 || favouriteRepositories.Count > 0)
                 {
@@ -292,10 +295,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         .Where(c => !string.IsNullOrWhiteSpace(c))
                         .Distinct(GroupHeaderComparer)
                         .OrderBy(c => c)
-                        .Select(c => new ListViewGroup(c, c)))
-                    .AsReadOnlyList();
+                        .Select(c => new ListViewGroup(c, c)
+                        {
+                            CollapsedState = ListViewGroupCollapsedState.Expanded,
+                            TaskLink = _groupActions.Text
+                        }))
+                    .ToArray();
 
-                listView1.SetGroups(groups, GroupHeaderComparer);
+                listView1.Groups.AddRange(groups);
                 BindRepositories(recentRepositories, isFavourite: false);
                 BindRepositories(favouriteRepositories, isFavourite: true);
             }
@@ -598,6 +605,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
         }
 
+        private void ListView1_GroupTaskLinkClick(object sender, ListViewGroupEventArgs e)
+        {
+            ListViewGroup group = listView1.Groups[e.GroupIndex];
+            bool isRecentRepositoriesGroup = group == _lvgRecentRepositories;
+            tsmiCategoryDelete.Visible = !isRecentRepositoriesGroup;
+            tsmiCategoryRename.Visible = !isRecentRepositoriesGroup;
+            tsmiCategoryClear.Visible = isRecentRepositoriesGroup;
+
+            contextMenuStripCategory.Tag = group;
+            contextMenuStripCategory.Show(listView1, listView1.PointToClient(Cursor.Position));
+        }
+
         private void listView1_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -611,27 +630,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 {
                     _rightClickedItem.Selected = true;
                 }
-            }
-        }
-
-        private void listView1_GroupMouseUp(object sender, ListViewGroupMouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                var groupHitInfo = listView1.GetGroupHitInfo(e.Location);
-
-                if (groupHitInfo is null)
-                {
-                    return;
-                }
-
-                bool isRecentRepositoriesGroup = groupHitInfo.Group == _lvgRecentRepositories;
-                tsmiCategoryDelete.Visible = !isRecentRepositoriesGroup;
-                tsmiCategoryRename.Visible = !isRecentRepositoriesGroup;
-                tsmiCategoryClear.Visible = isRecentRepositoriesGroup;
-
-                contextMenuStripCategory.Tag = groupHitInfo.Group;
-                contextMenuStripCategory.Show(listView1, e.Location);
             }
         }
 
