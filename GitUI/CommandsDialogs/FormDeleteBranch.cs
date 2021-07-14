@@ -15,10 +15,9 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormDeleteBranch : GitExtensionsDialog
     {
         private readonly TranslationString _deleteBranchCaption = new("Delete branches");
-        private readonly TranslationString _cannotDeleteCurrentBranchMessage =
-            new("Cannot delete the branch “{0}” which you are currently on.");
+        private readonly TranslationString _cannotDeleteCurrentBranchMessage = new("Cannot delete the branch “{0}” which you are currently on.");
         private readonly TranslationString _deleteBranchConfirmTitle = new("Delete Confirmation");
-        private readonly TranslationString _deleteBranchQuestion = new("Are you sure you want to delete selected branches?");
+        private readonly TranslationString _deleteBranchQuestion = new("The selected branch(es) have not been merged into HEAD.\r\nProceed?");
         private readonly TranslationString _useReflogHint = new("Did you know you can use reflog to restore deleted branches?");
 
         private readonly IEnumerable<string> _defaultBranches;
@@ -113,17 +112,23 @@ namespace GitUI.CommandsDialogs
                 {
                     Text = _deleteBranchQuestion.Text,
                     Caption = _deleteBranchConfirmTitle.Text,
-                    Icon = TaskDialogIcon.Information,
+                    Icon = TaskDialogIcon.Warning,
                     Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
                     Footnote = _useReflogHint.Text,
                     Verification = new(TranslatedStrings.DontShowAgain),
-                    SizeToContent = true
+                    SizeToContent = true,
+                    DefaultButton = TaskDialogButton.No
                 };
 
                 bool isConfirmed = TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes;
                 if (isConfirmed)
                 {
                     AppSettings.DontConfirmDeleteBranch = page.Verification.Checked;
+                }
+
+                if (!isConfirmed)
+                {
+                    return;
                 }
             }
 

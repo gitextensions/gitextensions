@@ -4496,7 +4496,8 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="_deleteBranchQuestion.Text">
-        <source>Are you sure you want to delete selected branches?</source>
+        <source>The selected branch(es) have not been merged into HEAD.
+Proceed?</source>
         <target />
       </trans-unit>
       <trans-unit id="_useReflogHint.Text">
