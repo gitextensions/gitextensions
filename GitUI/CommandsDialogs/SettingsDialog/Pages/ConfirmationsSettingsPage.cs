@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // Stashes:
             chkAutoPopStashAfterPull.CheckState = ToCheckboxStateInverted(AppSettings.AutoPopStashAfterPull);
             chkAutoPopStashAfterCheckout.CheckState = ToCheckboxStateInverted(AppSettings.AutoPopStashAfterCheckoutBranch);
-            chkConfirmStashDrop.Checked = !AppSettings.DontConfirmStashDropShow;
+            chkConfirmStashDrop.Checked = !AppSettings.DontConfirmStashDrop;
 
             // Conflict resolution:
             chkResolveConflicts.Checked = !AppSettings.DontConfirmResolveConflicts;
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // Stashes:
             AppSettings.AutoPopStashAfterPull = ToBooleanInverted(chkAutoPopStashAfterPull.CheckState);
             AppSettings.AutoPopStashAfterCheckoutBranch = ToBooleanInverted(chkAutoPopStashAfterCheckout.CheckState);
-            AppSettings.DontConfirmStashDropShow = !chkConfirmStashDrop.Checked;
+            AppSettings.DontConfirmStashDrop = !chkConfirmStashDrop.Checked;
 
             // Conflict resolution:
             AppSettings.DontConfirmResolveConflicts = !chkResolveConflicts.Checked;

@@ -1188,11 +1188,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="chkAutoPopStashAfterCheckout.Text">
-        <source>Apply stashed changes after successful checkout (stash will be popped automatically)</source>
+        <source>Apply stashed changes after successful checkout (else stash will be popped automatically)</source>
         <target />
       </trans-unit>
       <trans-unit id="chkAutoPopStashAfterPull.Text">
-        <source>Apply stashed changes after successful pull (stash will be popped automatically)</source>
+        <source>Apply stashed changes after successful pull (else stash will be popped automatically)</source>
         <target />
       </trans-unit>
       <trans-unit id="chkCommitAfterConflictsResolved.Text">
@@ -1228,7 +1228,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="chkSwitchWorktree.Text">
-        <source>Switch Worktree</source>
+        <source>Switch worktree</source>
         <target />
       </trans-unit>
       <trans-unit id="chkUndoLastCommitConfirmation.Text">
@@ -1240,7 +1240,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="gbConfirmations.Text">
-        <source>Confirm Actions</source>
+        <source>Confirm actions</source>
         <target />
       </trans-unit>
     </body>

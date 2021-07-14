@@ -97,7 +97,7 @@
             lblGroupConflictResolution.Location = new System.Drawing.Point(3, 331);
             lblGroupConflictResolution.Name = "lblGroupConflictResolution";
             lblGroupConflictResolution.Size = new System.Drawing.Size(1331, 15);
-            lblGroupConflictResolution.Text = "Rebase / Conflict Resolution:";
+            lblGroupConflictResolution.Text = "Rebase / conflict resolution:";
             // 
             // tlpnlMain
             // 
@@ -124,7 +124,7 @@
             this.gbConfirmations.Padding = new System.Windows.Forms.Padding(8);
             this.gbConfirmations.Size = new System.Drawing.Size(1353, 542);
             this.gbConfirmations.TabStop = false;
-            this.gbConfirmations.Text = "Confirm Actions";
+            this.gbConfirmations.Text = "Confirm actions";
             // 
             // tlpnlConfirmations
             // 
@@ -256,7 +256,7 @@
             this.chkAutoPopStashAfterCheckout.Location = new System.Drawing.Point(3, 247);
             this.chkAutoPopStashAfterCheckout.Name = "chkAutoPopStashAfterCheckout";
             this.chkAutoPopStashAfterCheckout.Size = new System.Drawing.Size(477, 19);
-            this.chkAutoPopStashAfterCheckout.Text = "Apply stashed changes after successful checkout (stash will be popped automatically)";
+            this.chkAutoPopStashAfterCheckout.Text = "Apply stashed changes after successful checkout (else stash will be popped automatically)";
             this.chkAutoPopStashAfterCheckout.ThreeState = true;
             this.chkAutoPopStashAfterCheckout.UseVisualStyleBackColor = true;
             // 
@@ -266,7 +266,7 @@
             this.chkAutoPopStashAfterPull.Location = new System.Drawing.Point(3, 272);
             this.chkAutoPopStashAfterPull.Name = "chkAutoPopStashAfterPull";
             this.chkAutoPopStashAfterPull.Size = new System.Drawing.Size(448, 19);
-            this.chkAutoPopStashAfterPull.Text = "Apply stashed changes after successful pull (stash will be popped automatically)";
+            this.chkAutoPopStashAfterPull.Text = "Apply stashed changes after successful pull (else stash will be popped automatically)";
             this.chkAutoPopStashAfterPull.ThreeState = true;
             this.chkAutoPopStashAfterPull.UseVisualStyleBackColor = true;
             // 
@@ -305,7 +305,7 @@
             this.chkSwitchWorktree.Location = new System.Drawing.Point(3, 488);
             this.chkSwitchWorktree.Name = "chkSwitchWorktree";
             this.chkSwitchWorktree.Size = new System.Drawing.Size(112, 19);
-            this.chkSwitchWorktree.Text = "Switch Worktree";
+            this.chkSwitchWorktree.Text = "Switch worktree";
             this.chkSwitchWorktree.UseVisualStyleBackColor = true;
             // 
             // chkUpdateModules

@@ -391,7 +391,7 @@ namespace GitCommands
             set => SetBool("stashkeepindex", value);
         }
 
-        public static bool DontConfirmStashDropShow
+        public static bool DontConfirmStashDrop
         {
             // The settings was originally was called 'StashConfirmDropShow', and then it was inverted.
             // To maintain the compat with the existing user settings negate the retrieved value.
