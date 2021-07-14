@@ -1243,6 +1243,30 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Confirm actions</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblGroupBranches.Text">
+        <source>Branches:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblGroupCommits.Text">
+        <source>Commits:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblGroupConflictResolution.Text">
+        <source>Rebase / conflict resolution:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblGroupStashes.Text">
+        <source>Stash:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblGroupSubmodules.Text">
+        <source>Submodules:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblGroupWorktrees.Text">
+        <source>Worktrees:</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="ConsoleStyleSettingsPage" source-language="en">
