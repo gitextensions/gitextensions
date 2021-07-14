@@ -465,21 +465,22 @@ namespace GitUI.BranchTreePanel
             {
                 Queue<TreeNode> queue = new(nodes);
                 List<TreeNode> ret = new();
-
+                bool isFullMatch = false;
+                int matchIndex = -1;
                 while (queue.Count != 0)
                 {
                     var n = queue.Dequeue();
 
                     if (n.Tag is BaseBranchNode branch)
                     {
-                        if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                        if (searchForMatchingText(branch.FullPath, text, ref isFullMatch, ref matchIndex, ret))
                         {
                             AddTreeNodeToSearchResult(ret, n);
                         }
                     }
                     else
                     {
-                        if (n.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                        if (searchForMatchingText(n.Text, text, ref isFullMatch, ref matchIndex, ret))
                         {
                             AddTreeNodeToSearchResult(ret, n);
                         }
@@ -488,6 +489,58 @@ namespace GitUI.BranchTreePanel
                     foreach (TreeNode subNode in n.Nodes)
                     {
                         queue.Enqueue(subNode);
+                    }
+                }
+
+                // if matches with high priority are found bring those to the first of the list by rotating the list
+                // Rotation is done to maintain the tree order, so that on click of search button multiple times,
+                // the selected node passes down the tree to other matches.
+                if (matchIndex > 0)
+                {
+                    rotateListToSetFirstAsMatchIndex(ret, matchIndex);
+                }
+
+                // A function to see if the node text or full path of a node (for branch node) is matching with search text
+                bool searchForMatchingText(string nodeText, string searchText, ref bool isFullMatch, ref int matchIndex, List<TreeNode> ret)
+                {
+                    if (nodeText.IndexOf(searchText, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    {
+                        // If full match is already found no need to search for furthur matches as full match has highest priority
+                        if (!isFullMatch)
+                        {
+                            // checking for full match
+                            if (string.Compare(nodeText, searchText, StringComparison.InvariantCultureIgnoreCase) == 0)
+                            {
+                                isFullMatch = true;
+                                matchIndex = ret.Count;
+                            }
+
+                            // if full match not found, check for matches appearing after the last '/' for child node match.
+                            // If a match after '/' was already found then skip this by checking match index
+                            else if (matchIndex == -1 && nodeText.Contains('/') &&
+                                string.Compare(searchText, nodeText.Split('/').Last(), StringComparison.InvariantCultureIgnoreCase) == 0)
+                            {
+                                matchIndex = ret.Count;
+                            }
+                        }
+
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                // Rotate the list to set the match with high priority as first item
+                void rotateListToSetFirstAsMatchIndex(List<TreeNode> ret, int matchIndex)
+                {
+                    int rotationIndex = 0;
+
+                    while (rotationIndex < matchIndex)
+                    {
+                        TreeNode firstElement = ret.FirstOrDefault();
+                        ret.RemoveAt(0);
+                        ret.Add(firstElement);
+                        rotationIndex++;
                     }
                 }
 
