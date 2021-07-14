@@ -8823,6 +8823,10 @@ The action cannot be undone.</source>
 The action cannot be undone.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_groupActions.Text">
+        <source>Actions</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_groupRecentRepositories.Text">
         <source>Recent repositories</source>
         <target />

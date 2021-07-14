@@ -1,6 +1,4 @@
-﻿using GitUI.UserControls;
-
-namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
+﻿namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
     partial class UserRepositoriesList
     {
@@ -62,7 +60,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.tsmiCategoryRename = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiCategoryDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiCategoryClear = new System.Windows.Forms.ToolStripMenuItem();
-            this.listView1 = new ExListView();
+            this.listView1 = new GitUI.UserControls.NativeListView();
             this.clmhdrPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmhdrBranch = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmhdrCategory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -276,7 +274,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.listView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseClick);
             this.listView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseMove);
             this.listView1.MouseLeave += new System.EventHandler(this.listView1_MouseLeave);
-            this.listView1.GroupMouseUp += new System.EventHandler<ListViewGroupMouseEventArgs>(this.listView1_GroupMouseUp);
+            this.listView1.GroupTaskLinkClick += new System.EventHandler<System.Windows.Forms.ListViewGroupEventArgs>(this.ListView1_GroupTaskLinkClick);
             // 
             // clmhdrPath
             // 
@@ -367,7 +365,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private System.Windows.Forms.ToolStripMenuItem tsmiCategoryDelete;
         private System.Windows.Forms.ToolStripMenuItem tsmiCategoryClear;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private ExListView listView1;
+        private GitUI.UserControls.NativeListView listView1;
         private System.Windows.Forms.ColumnHeader clmhdrPath;
         private System.Windows.Forms.ColumnHeader clmhdrBranch;
         private System.Windows.Forms.ColumnHeader clmhdrCategory;

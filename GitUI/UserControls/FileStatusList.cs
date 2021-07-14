@@ -89,9 +89,6 @@ namespace GitUI
             FileStatusListView.SmallImageList = CreateImageList();
             FileStatusListView.LargeImageList = FileStatusListView.SmallImageList;
 
-            FileStatusListView.AllowCollapseGroups = true;
-            FileStatusListView.Scroll += FileStatusListView_Scroll;
-
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             Controls.SetChildIndex(NoFiles, 0);
             NoFiles.Font = new Font(NoFiles.Font, FontStyle.Italic);
@@ -912,6 +909,7 @@ namespace GitUI
                 {
                     group = new ListViewGroup(i.Summary)
                     {
+                        CollapsedState = ListViewGroupCollapsedState.Expanded,
                         Tag = i.FirstRev
                     };
 
@@ -924,7 +922,7 @@ namespace GitUI
                     itemStatuses = _noItemStatuses;
                     if (group is not null)
                     {
-                        FileStatusListView.SetGroupState(group, NativeMethods.LVGS.Collapsible | NativeMethods.LVGS.Collapsed);
+                        group.CollapsedState = ListViewGroupCollapsedState.Collapsed;
                     }
                 }
                 else
