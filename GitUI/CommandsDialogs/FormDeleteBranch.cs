@@ -105,7 +105,9 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (!AppSettings.DontConfirmDeleteBranch)
+            // always treat branches as unmerged if there is no current branch (HEAD is detached)
+            bool hasUnmergedBranches = _currentBranch is null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
+            if (hasUnmergedBranches && !AppSettings.DontConfirmDeleteBranch)
             {
                 TaskDialogPage page = new()
                 {
@@ -118,8 +120,8 @@ namespace GitUI.CommandsDialogs
                     SizeToContent = true
                 };
 
-                bool messageBoxResult = TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes;
-                if (messageBoxResult)
+                bool isConfirmed = TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes;
+                if (isConfirmed)
                 {
                     AppSettings.DontConfirmDeleteBranch = page.Verification.Checked;
                 }

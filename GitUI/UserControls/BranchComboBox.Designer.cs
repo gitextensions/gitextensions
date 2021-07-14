@@ -40,7 +40,7 @@
             this.branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.branches.FormattingEnabled = true;
-            this.branches.Location = new System.Drawing.Point(0, 1);
+            this.branches.Location = new System.Drawing.Point(0, 3);
             this.branches.Name = "branches";
             this.branches.Size = new System.Drawing.Size(304, 23);
             // 
