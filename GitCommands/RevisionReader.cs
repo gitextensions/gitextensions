@@ -54,6 +54,8 @@ namespace GitCommands
             /* Committer email */ "%cE%n" +
             /* Commit raw body */ "%B";
 
+        // Trace info for parse errors
+        private static int _noOfParseError = 0;
         private readonly CancellationTokenSequence _cancellationTokenSequence = new();
 
         public void Execute(
@@ -111,9 +113,8 @@ namespace GitCommands
 
             var arguments = BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
-#if TRACE
+#if DEBUG
             var sw = Stopwatch.StartNew();
-            int parseErrors = 0;
 #endif
 
             var logOutputEncoding = module.LogOutputEncoding;
@@ -140,16 +141,11 @@ namespace GitCommands
 
                         subject.OnNext(revision);
                     }
-#if TRACE
-                    else
-                    {
-                        parseErrors++;
-                    }
-#endif
                 }
 
-#if TRACE
-                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={parseErrors}");
+#if DEBUG
+                // TODO Make it possible to explicitly activate Trace printouts like this
+                Debug.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} parseErrors={_noOfParseError}");
 #endif
             }
 
@@ -243,7 +239,7 @@ namespace GitCommands
             }
         }
 
-        private static bool TryParseRevision(ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
+        private static bool TryParseRevision(in ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, in Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -254,6 +250,7 @@ namespace GitCommands
 
             if (chunk.Count < ObjectId.Sha1CharCount * 2)
             {
+                ParseAssert($"Log parse error, not enough data: {chunk.Count}");
                 revision = default;
                 return false;
             }
@@ -266,6 +263,7 @@ namespace GitCommands
             if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(0, ObjectId.Sha1CharCount), out var objectId) ||
                 !ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out var treeId))
             {
+                ParseAssert($"Log parse error, object id: {chunk.Count}({array.Slice(0, ObjectId.Sha1CharCount).ToString()}");
                 revision = default;
                 return false;
             }
@@ -273,22 +271,23 @@ namespace GitCommands
             var offset = ObjectId.Sha1CharCount * 2;
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
-            int noParents = CountParents(ref array, offset);
+            int noParents = CountParents(in array, offset);
             if (noParents < 0)
             {
-                // Parse issue
+                ParseAssert($"Log parse error, {noParents} no of parents for {objectId}");
                 revision = default;
                 return false;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            int CountParents(ref ReadOnlySpan<byte> array, int baseOffset)
+            int CountParents(in ReadOnlySpan<byte> array, int baseOffset)
             {
                 int count = 0;
 
                 while (baseOffset < array.Length && array[baseOffset] != '\n')
                 {
-                    Debug.Assert(count == 0 || array[baseOffset] == ' ', $"Unexpected contents in the parent array: {array[baseOffset]}/{count}");
+                    // Parse error, not using ParseAssert (or increasing _noOfParseError)
+                    Debug.Assert(count == 0 || array[baseOffset] == ' ', $"Log parse error, unexpected contents in the parent array: {array[baseOffset]}/{count} for {objectId}");
                     baseOffset += ObjectId.Sha1CharCount;
                     if (count > 0)
                     {
@@ -309,17 +308,24 @@ namespace GitCommands
 
             var parentIds = new ObjectId[noParents];
 
-            for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
+            if (noParents == 0)
             {
-                if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
+                offset++;
+            }
+            else
+            {
+                for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
                 {
-                    // TODO log this parse problem
-                    revision = default;
-                    return false;
-                }
+                    if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(offset, ObjectId.Sha1CharCount), out ObjectId parentId))
+                    {
+                        ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
+                        revision = default;
+                        return false;
+                    }
 
-                parentIds[parentIndex] = parentId;
-                offset += ObjectId.Sha1CharCount + 1;
+                    parentIds[parentIndex] = parentId;
+                    offset += ObjectId.Sha1CharCount + 1;
+                }
             }
 
             #endregion
@@ -327,17 +333,17 @@ namespace GitCommands
             #region Timestamps
 
             // Lines 2 and 3 are timestamps, as decimal ASCII seconds since the unix epoch, each terminated by `\n`
-            var authorUnixTime = ParseUnixDateTime(ref array);
-            var commitUnixTime = ParseUnixDateTime(ref array);
+            var authorUnixTime = ParseUnixDateTime(in array);
+            var commitUnixTime = ParseUnixDateTime(in array);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            long ParseUnixDateTime(ref ReadOnlySpan<byte> array)
+            long ParseUnixDateTime(in ReadOnlySpan<byte> array)
             {
                 long unixTime = 0;
 
                 while (true)
                 {
-                    var c = array[offset++];
+                    int c = array[offset++];
 
                     if (c == '\n')
                     {
@@ -360,7 +366,7 @@ namespace GitCommands
 
             if (encodingNameEndLength == -1)
             {
-                // TODO log this error case
+                ParseAssert($"Log parse error, no encoding name for {objectId}");
                 revision = default;
                 return false;
             }
@@ -381,12 +387,11 @@ namespace GitCommands
 
             #endregion
 
-            #region Encoded string values (names, emails, subject, body, [file]name)
+            #region Encoded string values (names, emails, subject, body)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
-            var s = encoding.GetString(array[offset..]).AsSpan();
-
-            StringLineReader reader = new(s);
+            ReadOnlySpan<char> s = encoding.GetString(array[offset..]).AsSpan();
+            StringLineReader reader = new(in s);
 
             var author = reader.ReadLine();
             var authorEmail = reader.ReadLine();
@@ -394,7 +399,7 @@ namespace GitCommands
             var committerEmail = reader.ReadLine();
 
             bool skipBody = sixMonths > authorUnixTime;
-            (string? subject, string? body, bool hasMultiLineMessage) = reader.PeakToEnd(skipBody);
+            (string? subject, string? body, bool hasMultiLineMessage) = reader.PeekSubjectBody(skipBody);
 
             // We keep a full multiline message body within the last six months.
             // Note also that if body and subject are identical (single line), the body never need to be stored
@@ -402,8 +407,7 @@ namespace GitCommands
 
             if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null || (skipBody != (body is null)))
             {
-                // TODO log this parse error
-                Debug.Fail("Unable to read an entry from the log -- this should not happen");
+                ParseAssert($"Log parse error, decoded fields ({subject}::{body}) for {objectId}");
                 revision = default;
                 return false;
             }
@@ -428,6 +432,13 @@ namespace GitCommands
             };
 
             return true;
+
+            static void ParseAssert(string? message)
+            {
+                _noOfParseError++;
+                Debug.Assert(_noOfParseError > 1, message);
+                Trace.WriteLineIf(_noOfParseError < 10, message);
+            }
         }
 
         public void Dispose()
@@ -442,16 +453,14 @@ namespace GitCommands
         /// </summary>
         internal ref struct StringLineReader
         {
-            private ReadOnlySpan<char> _s;
+            private readonly ReadOnlySpan<char> _s;
             private int _index;
 
-            public StringLineReader(ReadOnlySpan<char> s)
+            public StringLineReader(in ReadOnlySpan<char> s)
             {
                 _s = s;
                 _index = 0;
             }
-
-            public int Remaining => _s.Length - _index;
 
             public string? ReadLine()
             {
@@ -460,20 +469,19 @@ namespace GitCommands
                     return null;
                 }
 
-                var startIndex = _index;
-                var lineLength = _s[_index..].IndexOf('\n');
-
+                int lineLength = _s[_index..].IndexOf('\n');
                 if (lineLength == -1)
                 {
-                    // Consider this as an error: PeakToEnd() should be explicitly used
+                    // A line must be terminated
                     return null;
                 }
 
+                int startIndex = _index;
                 _index += lineLength + 1;
                 return StringPool.Shared.GetOrAdd(_s.Slice(startIndex, lineLength));
             }
 
-            public (string? subject, string? body, bool hasMultiLineMessage) PeakToEnd(bool skipBody)
+            public (string? subject, string? body, bool hasMultiLineMessage) PeekSubjectBody(bool skipBody)
             {
                 // Empty subject is allowed
                 if (_index > _s.Length)
@@ -521,6 +529,12 @@ namespace GitCommands
 
             internal static bool TryParseRevision(ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
                 RevisionReader.TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out revision);
+
+            internal static int NoOfParseError
+            {
+                get { return _noOfParseError; }
+                set { _noOfParseError = value; }
+            }
         }
     }
 }
