@@ -101,13 +101,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 yield return envVariable;
             }
 
-            yield return Path.Combine(AppSettings.GetInstallDir(), @"PuTTY\");
             string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
-            string? programFilesX86 = null;
-            if (IntPtr.Size == 8
+            string? programFilesX86 = (IntPtr.Size == 8
                 || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
+                ? Environment.GetEnvironmentVariable("ProgramFiles(x86)")
+                : null;
+
+            yield return programFiles + @"\PuTTY\";
+            if (programFilesX86 is not null)
             {
-                programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+                yield return programFilesX86 + @"\PuTTY\";
             }
 
             yield return programFiles + @"\TortoiseGit\bin\";
@@ -122,12 +125,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 yield return programFilesX86 + @"\TortoiseSvn\bin\";
             }
 
-            yield return programFiles + @"\PuTTY\";
-            if (programFilesX86 is not null)
-            {
-                yield return programFilesX86 + @"\PuTTY\";
-            }
-
+            // Old(?) uninstaller
             yield return CommonLogic.GetRegistryValue(Registry.LocalMachine,
                                                         "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\PuTTY_is1",
                                                         "InstallLocation");
@@ -156,13 +154,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 {
                     PlinkPath.Text = installdir + "plink.exe";
                 }
-
-                if (!File.Exists(PlinkPath.Text))
+                else if (File.Exists(installdir + "TortoisePlink.exe"))
                 {
-                    if (File.Exists(installdir + "TortoisePlink.exe"))
-                    {
-                        PlinkPath.Text = installdir + "TortoisePlink.exe";
-                    }
+                    PlinkPath.Text = installdir + "TortoisePlink.exe";
                 }
             }
 

@@ -873,15 +873,6 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PuttyDir">
-      <Component Id="plink.exe" Guid="*">
-        <File Source="..\Bin\plink.exe" />
-      </Component>
-      <Component Id="pageant.exe" Guid="*">
-        <File Source="..\Bin\pageant.exe" />
-      </Component>
-      <Component Id="puttygen.exe" Guid="*">
-        <File Source="..\Bin\puttygen.exe" />
-      </Component>
       <Component Id="gitssh_openssh.reg" Guid="5f730698-ac38-4e63-ad5d-505b21d1fa22">
         <Condition><![CDATA[NOT Upgrading AND SSHCLIENT="OpenSSH"]]></Condition>
         <RegistryValue Name="gitssh" Value="" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
@@ -895,13 +886,13 @@
         <RegistryValue Name="gitssh" Value="[CURRENT_SSHCLIENT]" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
       </Component>
       <Component Id="plink.reg" Guid="*">
-        <RegistryValue Name="plink" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+        <RegistryValue Name="plink" Value="[ProgramFilesFolder]plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
       </Component>
       <Component Id="pageant.reg" Guid="*">
-        <RegistryValue Name="pageant" Value="[INSTALLDIR]PuTTY\pageant.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+        <RegistryValue Name="pageant" Value="[ProgramFilesFolder]pageant.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
       </Component>
       <Component Id="puttygen.reg" Guid="*">
-        <RegistryValue Name="puttygen" Value="[INSTALLDIR]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
+        <RegistryValue Name="puttygen" Value="[ProgramFilesFolder]puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="DirConEmu">
@@ -1562,11 +1553,8 @@
       <ComponentRef Id="gitssh_openssh.reg" />
       <ComponentRef Id="gitssh_putty.reg" />
       <ComponentRef Id="gitssh_current.reg" />
-      <ComponentRef Id="plink.exe" />
       <ComponentRef Id="plink.reg" />
-      <ComponentRef Id="pageant.exe" />
       <ComponentRef Id="pageant.reg" />
-      <ComponentRef Id="puttygen.exe" />
       <ComponentRef Id="puttygen.reg" />
       <ComponentGroupRef Id="Component.ConEmuFiles" />
       <ComponentGroupRef Id="Component.NetStandard" />
