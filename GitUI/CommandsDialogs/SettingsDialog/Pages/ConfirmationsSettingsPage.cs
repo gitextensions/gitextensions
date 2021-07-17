@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -14,68 +15,87 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-            chkAmend.Checked = AppSettings.DontConfirmAmend;
-            chkCommitIfNoBranch.Checked = AppSettings.DontConfirmCommitIfNoBranch;
-            chkAutoPopStashAfterPull.CheckState = AppSettings.AutoPopStashAfterPull.ToCheckboxState();
-            chkAutoPopStashAfterCheckout.CheckState = AppSettings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
-            chkConfirmStashDrop.Checked = !AppSettings.StashConfirmDropShow;
-            chkPushNewBranch.Checked = AppSettings.DontConfirmPushNewBranch;
-            chkAddTrackingRef.Checked = AppSettings.DontConfirmAddTrackingRef;
-            chkUpdateModules.CheckState = AppSettings.DontConfirmUpdateSubmodulesOnCheckout.ToCheckboxState();
-            chkResolveConflicts.Checked = AppSettings.DontConfirmResolveConflicts;
-            chkCommitAfterConflictsResolved.Checked = AppSettings.DontConfirmCommitAfterConflictsResolved;
-            chkSecondAbortConfirmation.Checked = AppSettings.DontConfirmSecondAbortConfirmation;
-            chkRebaseOnTopOfSelectedCommit.Checked = AppSettings.DontConfirmRebase;
-            chkUndoLastCommitConfirmation.Checked = AppSettings.DontConfirmUndoLastCommit;
-            chkFetchAndPruneAllConfirmation.Checked = AppSettings.DontConfirmFetchAndPruneAll;
-            chkSwitchWorktree.Checked = AppSettings.DontConfirmSwitchWorktree;
+            // Commits:
+            chkAmend.Checked = !AppSettings.DontConfirmAmend;
+            chkUndoLastCommitConfirmation.Checked = !AppSettings.DontConfirmUndoLastCommit;
+            chkCommitIfNoBranch.Checked = !AppSettings.DontConfirmCommitIfNoBranch;
+            chkRebaseOnTopOfSelectedCommit.Checked = !AppSettings.DontConfirmRebase;
+
+            // Branches:
+            chkFetchAndPruneAllConfirmation.Checked = !AppSettings.DontConfirmFetchAndPruneAll;
+            chkPushNewBranch.Checked = !AppSettings.DontConfirmPushNewBranch;
+            chkAddTrackingRef.Checked = !AppSettings.DontConfirmAddTrackingRef;
+
+            // Stashes:
+            chkAutoPopStashAfterPull.CheckState = ToCheckboxStateInverted(AppSettings.AutoPopStashAfterPull);
+            chkAutoPopStashAfterCheckout.CheckState = ToCheckboxStateInverted(AppSettings.AutoPopStashAfterCheckoutBranch);
+            chkConfirmStashDrop.Checked = !AppSettings.DontConfirmStashDrop;
+
+            // Conflict resolution:
+            chkResolveConflicts.Checked = !AppSettings.DontConfirmResolveConflicts;
+            chkCommitAfterConflictsResolved.Checked = !AppSettings.DontConfirmCommitAfterConflictsResolved;
+            chkSecondAbortConfirmation.Checked = !AppSettings.DontConfirmSecondAbortConfirmation;
+
+            // Submodules:
+            chkUpdateModules.CheckState = ToCheckboxStateInverted(AppSettings.DontConfirmUpdateSubmodulesOnCheckout);
+
+            // Worktrees:
+            chkSwitchWorktree.Checked = !AppSettings.DontConfirmSwitchWorktree;
         }
 
         protected override void PageToSettings()
         {
-            AppSettings.DontConfirmAmend = chkAmend.Checked;
-            AppSettings.DontConfirmCommitIfNoBranch = chkCommitIfNoBranch.Checked;
-            AppSettings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
-            AppSettings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
-            AppSettings.StashConfirmDropShow = !chkConfirmStashDrop.Checked;
-            AppSettings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
-            AppSettings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
-            AppSettings.DontConfirmUpdateSubmodulesOnCheckout = chkUpdateModules.CheckState.ToBoolean();
-            AppSettings.DontConfirmResolveConflicts = chkResolveConflicts.Checked;
-            AppSettings.DontConfirmCommitAfterConflictsResolved = chkCommitAfterConflictsResolved.Checked;
-            AppSettings.DontConfirmSecondAbortConfirmation = chkSecondAbortConfirmation.Checked;
-            AppSettings.DontConfirmRebase = chkRebaseOnTopOfSelectedCommit.Checked;
-            AppSettings.DontConfirmUndoLastCommit = chkUndoLastCommitConfirmation.Checked;
-            AppSettings.DontConfirmFetchAndPruneAll = chkFetchAndPruneAllConfirmation.Checked;
-            AppSettings.DontConfirmSwitchWorktree = chkSwitchWorktree.Checked;
+            // Commits:
+            AppSettings.DontConfirmAmend = !chkAmend.Checked;
+            AppSettings.DontConfirmUndoLastCommit = !chkUndoLastCommitConfirmation.Checked;
+            AppSettings.DontConfirmCommitIfNoBranch = !chkCommitIfNoBranch.Checked;
+            AppSettings.DontConfirmRebase = !chkRebaseOnTopOfSelectedCommit.Checked;
+
+            // Branches:
+            AppSettings.DontConfirmFetchAndPruneAll = !chkFetchAndPruneAllConfirmation.Checked;
+            AppSettings.DontConfirmPushNewBranch = !chkPushNewBranch.Checked;
+            AppSettings.DontConfirmAddTrackingRef = !chkAddTrackingRef.Checked;
+
+            // Stashes:
+            AppSettings.AutoPopStashAfterPull = ToBooleanInverted(chkAutoPopStashAfterPull.CheckState);
+            AppSettings.AutoPopStashAfterCheckoutBranch = ToBooleanInverted(chkAutoPopStashAfterCheckout.CheckState);
+            AppSettings.DontConfirmStashDrop = !chkConfirmStashDrop.Checked;
+
+            // Conflict resolution:
+            AppSettings.DontConfirmResolveConflicts = !chkResolveConflicts.Checked;
+            AppSettings.DontConfirmCommitAfterConflictsResolved = !chkCommitAfterConflictsResolved.Checked;
+            AppSettings.DontConfirmSecondAbortConfirmation = !chkSecondAbortConfirmation.Checked;
+
+            // Submodules:
+            AppSettings.DontConfirmUpdateSubmodulesOnCheckout = ToBooleanInverted(chkUpdateModules.CheckState);
+
+            // Worktrees:
+            AppSettings.DontConfirmSwitchWorktree = !chkSwitchWorktree.Checked;
         }
 
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(ConfirmationsSettingsPage));
         }
-    }
 
-    public static class CheckboxExtension
-    {
-        public static CheckState ToCheckboxState(this bool? booleanValue)
+        private static CheckState ToCheckboxStateInverted(bool? booleanValue)
         {
             if (!booleanValue.HasValue)
             {
                 return CheckState.Indeterminate;
             }
 
-            return booleanValue == true ? CheckState.Checked : CheckState.Unchecked;
+            return booleanValue == false ? CheckState.Checked : CheckState.Unchecked;
         }
 
-        public static bool? ToBoolean(this CheckState state)
+        private static bool? ToBooleanInverted(CheckState state)
         {
             if (state == CheckState.Indeterminate)
             {
                 return null;
             }
 
-            return state == CheckState.Checked;
+            return state != CheckState.Checked;
         }
     }
 }

@@ -159,7 +159,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.AutoNormaliseBranchName)], true, false, false);
                 yield return (properties[nameof(AppSettings.RememberAmendCommitState)], true, false, false);
                 yield return (properties[nameof(AppSettings.StashKeepIndex)], false, false, false);
-                yield return (properties[nameof(AppSettings.StashConfirmDropShow)], true, false, false);
+                yield return (properties[nameof(AppSettings.DontConfirmStashDrop)], true, false, false);
                 yield return (properties[nameof(AppSettings.ApplyPatchIgnoreWhitespace)], false, false, false);
                 yield return (properties[nameof(AppSettings.ApplyPatchSignOff)], true, false, false);
                 yield return (properties[nameof(AppSettings.UseHistogramDiffAlgorithm)], false, false, false);

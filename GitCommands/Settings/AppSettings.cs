@@ -391,10 +391,12 @@ namespace GitCommands
             set => SetBool("stashkeepindex", value);
         }
 
-        public static bool StashConfirmDropShow
+        public static bool DontConfirmStashDrop
         {
-            get => GetBool("stashconfirmdropshow", true);
-            set => SetBool("stashconfirmdropshow", value);
+            // The settings was originally was called 'StashConfirmDropShow', and then it was inverted.
+            // To maintain the compat with the existing user settings negate the retrieved value.
+            get => !GetBool("stashconfirmdropshow", false);
+            set => SetBool("stashconfirmdropshow", !value);
         }
 
         public static bool ApplyPatchIgnoreWhitespace

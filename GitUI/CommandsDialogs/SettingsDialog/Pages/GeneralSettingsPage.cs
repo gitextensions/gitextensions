@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using ResourceManager;
@@ -83,7 +84,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             RevisionGridQuickSearchTimeout.Value = AppSettings.RevisionGridQuickSearchTimeout;
             chkFollowRenamesInFileHistory.Checked = AppSettings.FollowRenamesInFileHistory;
             chkStashUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInAutoStash;
-            chkUpdateModules.CheckState = AppSettings.UpdateSubmodulesOnCheckout.ToCheckboxState();
+            chkUpdateModules.CheckState = ToCheckboxState(AppSettings.UpdateSubmodulesOnCheckout);
             chkShowStashCountInBrowseWindow.Checked = AppSettings.ShowStashCount;
             chkShowAheadBehindDataInBrowseWindow.Checked = AppSettings.ShowAheadBehindData;
             chkShowAheadBehindDataInBrowseWindow.Enabled = GitVersion.Current.SupportAheadBehindData;
@@ -112,7 +113,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
             AppSettings.UseHistogramDiffAlgorithm = chkUseHistogramDiffAlgorithm.Checked;
             AppSettings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
-            AppSettings.UpdateSubmodulesOnCheckout = chkUpdateModules.CheckState.ToBoolean();
+            AppSettings.UpdateSubmodulesOnCheckout = ToBoolean(chkUpdateModules.CheckState);
             AppSettings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
             AppSettings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
             AppSettings.ShowGitStatusForArtificialCommits = chkShowGitStatusForArtificialCommits.Checked;
@@ -149,6 +150,26 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 return dir.Parent.FullName;
             };
+        }
+
+        private static CheckState ToCheckboxState(bool? booleanValue)
+        {
+            if (!booleanValue.HasValue)
+            {
+                return CheckState.Indeterminate;
+            }
+
+            return booleanValue == true ? CheckState.Checked : CheckState.Unchecked;
+        }
+
+        private static bool? ToBoolean(CheckState state)
+        {
+            if (state == CheckState.Indeterminate)
+            {
+                return null;
+            }
+
+            return state == CheckState.Checked;
         }
 
         private void DefaultCloneDestinationBrowseClick(object sender, EventArgs e)
