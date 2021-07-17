@@ -306,12 +306,22 @@ namespace GitUI.CommandsDialogs
                     setOfFileNames.Add(line);
                 }
 
+                if (FileName.EndsWith("/"))
+                {
+                    // For object type tree (folders), the filename for a commit is "random" and is not used
+                    _filePathByObjectId.Clear();
+                }
+
                 return (revision: FindRenamesAndCopiesOpts(), path: string.Join("", setOfFileNames.Select(s => @$" ""{s}""")));
             }
         }
 
         private string? GetFileNameForRevision(GitRevision rev)
-            => _filePathByObjectId.TryGetValue(rev.ObjectId, out string? path) ? path : null;
+        {
+            ObjectId objectId = rev.IsArtificial ? FileChanges.CurrentCheckout : rev.ObjectId;
+
+            return _filePathByObjectId.TryGetValue(objectId, out string? path) ? path : null;
+        }
 
         // returns " --find-renames=..." according to app settings
         private static ArgumentString FindRenamesOpt()
@@ -366,13 +376,11 @@ namespace GitUI.CommandsDialogs
 
             SetTitle(fileName);
 
+            TabPage preferredTab = null;
             if (revision.IsArtificial)
             {
-                tabControl1.SelectedTab = DiffTab;
-
                 CommitInfoTabPage.Parent = null;
-                BlameTab.Parent = null;
-                ViewTab.Parent = null;
+                preferredTab = DiffTab;
             }
             else
             {
@@ -380,20 +388,50 @@ namespace GitUI.CommandsDialogs
                 {
                     tabControl1.TabPages.Insert(0, CommitInfoTabPage);
                 }
+            }
 
+            if (fileName.EndsWith("/"))
+            {
+                // Note that artificial commits for object type tree (folder) will be handled here too,
+                // i.e. no tab at all is visible
+                DiffTab.Parent = null;
+                preferredTab = CommitInfoTabPage;
+            }
+            else
+            {
+                if (DiffTab.Parent is null)
+                {
+                    int index = tabControl1.TabPages.IndexOf(CommitInfoTabPage);
+                    Debug.Assert(index != -1, "TabControl should contain commit info tab page");
+                    tabControl1.TabPages.Insert(index + 1, DiffTab);
+                }
+            }
+
+            if (revision.IsArtificial || fileName.EndsWith("/"))
+            {
+                BlameTab.Parent = null;
+                ViewTab.Parent = null;
+            }
+            else
+            {
                 if (ViewTab.Parent is null)
                 {
-                    var index = tabControl1.TabPages.IndexOf(DiffTab);
+                    int index = tabControl1.TabPages.IndexOf(DiffTab);
                     Debug.Assert(index != -1, "TabControl should contain diff tab page");
                     tabControl1.TabPages.Insert(index + 1, ViewTab);
                 }
 
                 if (BlameTab.Parent is null)
                 {
-                    var index = tabControl1.TabPages.IndexOf(ViewTab);
+                    int index = tabControl1.TabPages.IndexOf(ViewTab);
                     Debug.Assert(index != -1, "TabControl should contain view tab page");
                     tabControl1.TabPages.Insert(index + 1, BlameTab);
                 }
+            }
+
+            if (tabControl1.SelectedTab?.Parent is null && preferredTab is not null)
+            {
+                tabControl1.SelectedTab = preferredTab;
             }
 
             if (tabControl1.SelectedTab == BlameTab)
