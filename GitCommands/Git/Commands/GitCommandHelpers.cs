@@ -540,5 +540,10 @@ namespace GitCommands.Git.Commands
                 branch
             };
         }
+
+        public static ArgumentString ListWorkTreeCmd()
+        {
+            return new GitArgumentBuilder("worktree") { "list", "--porcelain" };
+        }
     }
 }
