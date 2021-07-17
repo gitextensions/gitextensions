@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -26,11 +27,16 @@ namespace ResourceManager
         {
             _initialiser = new GitExtensionsControlInitialiser(this);
 
+            if (IsDesignMode)
+            {
+                return;
+            }
+
             ShowInTaskbar = Application.OpenForms.Count <= 0;
             Icon = Resources.GitExtensionsLogoIcon;
         }
 
-        protected bool IsDesignModeActive => _initialiser.IsDesignModeActive;
+        protected bool IsDesignMode => _initialiser.IsDesignMode;
 
         #region Hotkeys
 
@@ -43,7 +49,7 @@ namespace ResourceManager
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (HotkeysEnabled && Hotkeys is not null)
+            if (!IsDesignMode && HotkeysEnabled && Hotkeys is not null)
             {
                 foreach (var hotkey in Hotkeys)
                 {
@@ -77,9 +83,12 @@ namespace ResourceManager
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == NativeMethods.WM_ACTIVATEAPP && m.WParam != IntPtr.Zero)
+            if (!IsDesignMode)
             {
-                OnApplicationActivated();
+                if (m.Msg == NativeMethods.WM_ACTIVATEAPP && m.WParam != IntPtr.Zero)
+                {
+                    OnApplicationActivated();
+                }
             }
 
             base.WndProc(ref m);
@@ -95,6 +104,11 @@ namespace ResourceManager
         protected void InitializeComplete()
         {
             _initialiser.InitializeComplete();
+
+            if (IsDesignMode)
+            {
+                return;
+            }
 
             AutoScaleMode = AppSettings.EnableAutoScale
                 ? AutoScaleMode.Dpi

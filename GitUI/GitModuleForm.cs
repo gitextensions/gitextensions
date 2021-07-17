@@ -53,7 +53,7 @@ namespace GitUI
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         protected GitModuleForm()
         {
-            if (LicenseManager.UsageMode != LicenseUsageMode.Designtime && !IsUnitTestActive)
+            if (!IsDesignMode && !IsUnitTestActive)
             {
                 throw new InvalidOperationException(
                     "This constructor is only to be called by the Visual Studio designer, and the translation unit tests.");
