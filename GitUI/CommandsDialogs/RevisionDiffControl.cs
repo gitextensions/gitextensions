@@ -844,7 +844,6 @@ namespace GitUI.CommandsDialogs
                 await TaskScheduler.Default;
 
                 var blob = Module.GetFileBlobHash(item.Item.Name, item.SecondRevision.ObjectId);
-
                 if (blob is null)
                 {
                     return;
@@ -852,7 +851,15 @@ namespace GitUI.CommandsDialogs
 
                 var fileName = PathUtil.GetFileName(item.Item.Name);
                 fileName = (Path.GetTempPath() + fileName).ToNativePath();
-                Module.SaveBlobAs(fileName, blob.ToString());
+                try
+                {
+                    Module.SaveBlobAs(fileName, blob.ToString());
+                }
+                catch (Exception ex)
+                {
+                    await this.SwitchToMainThreadAsync();
+                    ThrowUserExternalOperationException(ex.Message, command: null, arguments: item.Item.Name, ex);
+                }
 
                 onSaved(fileName);
             }).FileAndForget();
