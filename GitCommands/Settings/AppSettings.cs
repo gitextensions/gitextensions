@@ -395,7 +395,7 @@ namespace GitCommands
         {
             // The settings was originally was called 'StashConfirmDropShow', and then it was inverted.
             // To maintain the compat with the existing user settings negate the retrieved value.
-            get => !GetBool("stashconfirmdropshow", false);
+            get => !GetBool("stashconfirmdropshow", true);
             set => SetBool("stashconfirmdropshow", !value);
         }
 
