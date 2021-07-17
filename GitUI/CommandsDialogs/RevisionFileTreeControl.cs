@@ -450,7 +450,13 @@ See the changes in the commit form.");
         {
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
             {
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision);
+                string name = gitItem.FileName;
+                if (gitItem.ObjectType == GitObjectType.Tree)
+                {
+                    name += "/";
+                }
+
+                UICommands.StartFileHistoryDialog(this, name, _revision);
             }
         }
 
