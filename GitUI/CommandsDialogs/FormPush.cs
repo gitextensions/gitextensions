@@ -84,7 +84,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullActionRebase = new("rebase");
         private readonly TranslationString _pullActionMerge = new("merge");
         private readonly TranslationString _pullRepositoryCaption = new("Push was rejected from \"{0}\"");
-        private readonly TranslationString _dontShowAgain = new("Remember my decision.");
         private readonly TranslationString _useForceWithLeaseInstead =
             new("Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?");
         private readonly TranslationString _forceWithLeaseTooltips =
@@ -650,7 +649,7 @@ namespace GitUI.CommandsDialogs
                     Icon = TaskDialogIcon.Error,
                     Verification = new TaskDialogVerificationCheckBox
                     {
-                        Text = _dontShowAgain.Text
+                        Text = TranslatedStrings.DontShowAgain
                     },
                     AllowCancel = true,
                     SizeToContent = true

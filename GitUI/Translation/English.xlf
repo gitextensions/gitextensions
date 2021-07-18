@@ -1195,6 +1195,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Apply stashed changes after successful pull (else stash will be popped automatically)</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkBranchDeleteUnmerged.Text">
+        <source>Delete unmerged branches</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkCommitAfterConflictsResolved.Text">
         <source>Commit changes after conflicts have been resolved</source>
         <target />
@@ -3276,10 +3280,6 @@ Enter valid branch name or select predefined value.</source>
 Enter valid branch name or select predefined value.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_invalidBranchName.Text">
         <source>An existing branch must be selected.</source>
         <target />
@@ -4484,11 +4484,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>Delete</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="ForceDelete.Text">
-        <source>Force delete</source>
+        <source>&amp;Delete</source>
         <target />
       </trans-unit>
       <trans-unit id="_cannotDeleteCurrentBranchMessage.Text">
@@ -4496,27 +4492,24 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="_deleteBranchCaption.Text">
-        <source>Delete branches</source>
+        <source>Delete Branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteBranchConfirmTitle.Text">
+        <source>Delete Confirmation</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteBranchQuestion.Text">
-        <source>Are you sure you want to delete selected branches?
-Deleting a branch can cause commits to be deleted too!</source>
+        <source>The selected branch(es) have not been merged into HEAD.
+Proceed?</source>
         <target />
       </trans-unit>
-      <trans-unit id="_deleteUnmergedBranchForcingSuggestion.Text">
-        <source>You cannot delete unmerged branch until you set “force delete” mode.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="labelDeleteBranchWarning.Text">
-        <source>You can only delete branches when they are fully merged in HEAD. 
-When you delete a branch the commits can get lost because nothing points to them.
-When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
-</source>
+      <trans-unit id="_useReflogHint.Text">
+        <source>Did you know you can use reflog to restore deleted branches?</source>
         <target />
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
-        <source>Select branches</source>
+        <source>Select &amp;branches</source>
         <target />
       </trans-unit>
     </body>
@@ -5836,10 +5829,6 @@ Are you sure you want to rebase this merge?</source>
         <source>&amp;Pull</source>
         <target />
       </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_fetchAllBranchesCanOnlyWithFetch.Text">
         <source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
@@ -6067,10 +6056,6 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_createPullRequestCB.Text">
         <source>&amp;Create pull request after push</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Remember my decision.</source>
         <target />
       </trans-unit>
       <trans-unit id="_errorPushToRemoteCaption.Text">
@@ -7472,10 +7457,6 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="_currentWorkingDirChanges.Text">
         <source>Current working directory changes</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again.</source>
         <target />
       </trans-unit>
       <trans-unit id="_noStashes.Text">
@@ -10677,6 +10658,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_disableMenuItem.Text">
         <source>Disable this dropdown</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_dontShowAgain.Text">
+        <source>Don't show me this message again</source>
         <target />
       </trans-unit>
       <trans-unit id="_error.Text">
