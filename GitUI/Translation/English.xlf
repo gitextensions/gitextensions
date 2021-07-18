@@ -10760,6 +10760,10 @@ Select this commit to populate the full message.</source>
         <source>no branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="_noChanges.Text">
+        <source>No changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
         <target />

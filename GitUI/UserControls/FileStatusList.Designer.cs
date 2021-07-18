@@ -84,7 +84,6 @@
             this.NoFiles.Name = "NoFiles";
             this.NoFiles.Size = new System.Drawing.Size(65, 13);
             this.NoFiles.TabIndex = 5;
-            this.NoFiles.Text = "No changes";
             // 
             // FilterComboBox
             // 

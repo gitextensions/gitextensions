@@ -90,6 +90,7 @@ namespace GitUI
             FileStatusListView.LargeImageList = FileStatusListView.SmallImageList;
 
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
+            NoFiles.Text = TranslatedStrings.NoChanges;
             Controls.SetChildIndex(NoFiles, 0);
             NoFiles.Font = new Font(NoFiles.Font, FontStyle.Italic);
             FilterWatermarkLabel.Font = new Font(FilterWatermarkLabel.Font, FontStyle.Italic);
