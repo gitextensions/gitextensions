@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
     public partial class UserRepositoriesList : GitExtensionsControl
     {
         private readonly TranslationString _groupRecentRepositories = new("Recent repositories");
+        private readonly TranslationString _repositorySearchPlaceholder = new("Search repositories");
         private readonly TranslationString _groupActions = new("Actions");
         private readonly TranslationString _deleteCategoryCaption = new(
             "Delete Category");
@@ -85,6 +86,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints - 1f);
             lblRecentRepositories.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
+
+            textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
 
             listView1.Items.Clear();
             listView1.Groups.Clear();
@@ -274,7 +277,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             IReadOnlyList<RecentRepoInfo> favouriteRepositories;
             using (var graphics = CreateGraphics())
             {
-                (recentRepositories, favouriteRepositories) = _controller.PreRenderRepositories(graphics);
+                (recentRepositories, favouriteRepositories) = _controller.PreRenderRepositories(graphics, textBoxSearch.Text);
             }
 
             try
@@ -340,6 +343,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
         }
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+
+            // Reset the recent repo cache and the search
+            _controller.ClearCache();
+            textBoxSearch.Text = "";
+        }
+
         protected virtual void OnModuleChanged(GitModuleEventArgs args)
         {
             var handler = GitModuleChanged;
@@ -354,7 +366,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 // Whenever the list of repos is collapsed but we still have a repo selected (and hidden), if we hit enter, the selected repo will
                 // be opened. This should be a no-op instead, however, since we cannot visually tell what repo is selected. When we upgrade
                 // to .NET 5.0, we can check ListViewGroup.CollapsedState to fix this issue.
-                return TryOpenSelectedRepository();
+                return TryOpenRepository(GetSelectedRepository());
             }
 
             return base.ProcessDialogKey(keyData);
@@ -621,7 +633,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             if (e.Button == MouseButtons.Left)
             {
-                TryOpenSelectedRepository();
+                TryOpenRepository(GetSelectedRepository());
             }
             else if (e.Button == MouseButtons.Right)
             {
@@ -630,6 +642,26 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 {
                     _rightClickedItem.Selected = true;
                 }
+            }
+        }
+
+        private void TextBoxSearch_TextChanged(object sender, EventArgs e)
+        {
+            ShowRecentRepositories();
+        }
+
+        private void TextBoxSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                // Open the first repo in the list
+                var items = listView1.Items;
+                if (items.Count == 0)
+                {
+                    return;
+                }
+
+                OpenRepository((Repository)items[0].Tag);
             }
         }
 
@@ -857,28 +889,38 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
         }
 
-        // returns false only if no repository is selected
-        private bool TryOpenSelectedRepository()
+        /// <summary>
+        /// Tries to open the currently selected repository
+        /// </summary>
+        /// <returns>False if no repo is selected, true otherwise</returns>
+        private bool TryOpenRepository(Repository? repository)
         {
-            var selected = GetSelectedRepository();
-            if (selected is null)
+            if (repository is null)
             {
                 return false;
             }
 
+            OpenRepository(repository);
+            return true;
+        }
+
+        /// <summary>
+        /// Opens the given repository
+        /// </summary>
+        /// <param name="selected">Repository</param>
+        private void OpenRepository(Repository selected)
+        {
             if (_controller.IsValidGitWorkingDir(selected.Path))
             {
                 OnModuleChanged(new GitModuleEventArgs(new GitModule(selected.Path)));
-                return true;
+                return;
             }
 
             if (_controller.RemoveInvalidRepository(selected.Path))
             {
                 ShowRecentRepositories();
-                return true;
+                return;
             }
-
-            return true;
         }
     }
 }

@@ -48,6 +48,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             userRepositoriesList.HeaderHeight = pnlLogo.Height;
         }
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+
+            // Focus the control in order for the search bar to have focus once the dashboard is shown
+            userRepositoriesList.Focus();
+        }
+
         // need this to stop flickering of the background images, nothing else works
         protected override CreateParams CreateParams
         {
