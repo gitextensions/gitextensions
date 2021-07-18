@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs
         private const string FormBrowseName = "FormBrowse";
 
         private readonly TranslationString _buildReportTabCaption = new("Build Report");
+        private readonly TranslationString _noChanges = new("No changes.");
         private readonly AsyncLoader _asyncLoader = new();
         private readonly ICommitDataManager _commitDataManager;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
@@ -421,7 +422,7 @@ namespace GitUI.CommandsDialogs
                 };
                 var revisions = FileChanges.GetSelectedRevisions();
                 FileStatusItem item = new(firstRev: revisions.Skip(1).LastOrDefault(), secondRev: revisions.FirstOrDefault(), file);
-                _ = Diff.ViewChangesAsync(item, defaultText: "You need to select at least one revision to view diff.",
+                _ = Diff.ViewChangesAsync(item, defaultText: _noChanges.Text,
                     cancellationToken: _viewChangesSequence.Next());
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
