@@ -1,5 +1,7 @@
+#pragma warning disable VSTHRD108 // Assert thread affinity unconditionally
+
 using System;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
@@ -8,13 +10,19 @@ namespace ResourceManager
 {
     internal sealed class GitExtensionsControlInitialiser
     {
+        private static bool? _isDesignMode;
         private readonly ITranslate _translate;
 
-        /// <summary>indicates whether the initialisation has been signalled as complete.</summary>
+        // Indicates whether the initialisation has been signalled as complete.
         private bool _initialiseCompleteCalled;
 
         public GitExtensionsControlInitialiser(GitExtensionsFormBase form)
         {
+            if (IsDesignMode)
+            {
+                return;
+            }
+
             ThreadHelper.ThrowIfNotOnUIThread();
             form.Load += LoadHandler;
             _translate = form;
@@ -22,24 +30,40 @@ namespace ResourceManager
 
         public GitExtensionsControlInitialiser(GitExtensionsControl control)
         {
+            if (IsDesignMode)
+            {
+                return;
+            }
+
             ThreadHelper.ThrowIfNotOnUIThread();
             control.Load += LoadHandler;
             _translate = control;
         }
 
-        private void LoadHandler(object control, EventArgs e)
+        /// <summary>
+        /// Indicates whether code is running as part of an IDE designer, such as the WinForms designer.
+        /// </summary>
+        public bool IsDesignMode
         {
-            if (!_initialiseCompleteCalled && !IsDesignModeActive)
+            get
             {
-                throw new Exception($"{control.GetType().Name} must call {nameof(InitializeComplete)} in its constructor, ideally as the final statement.");
+                if (_isDesignMode is null)
+                {
+                    string processName = Process.GetCurrentProcess().ProcessName.ToLowerInvariant();
+                    _isDesignMode = processName.Contains("devenv") || processName.Contains("designtoolsserver");
+                }
+
+                return _isDesignMode.Value;
             }
         }
 
-        /// <summary>Indicates whether code is running as part of an IDE designer, such as the WinForms designer.</summary>
-        public bool IsDesignModeActive => LicenseManager.UsageMode == LicenseUsageMode.Designtime;
-
         public void InitializeComplete()
         {
+            if (IsDesignMode)
+            {
+                return;
+            }
+
             if (_initialiseCompleteCalled)
             {
                 throw new InvalidOperationException($"{nameof(InitializeComplete)} already called.");
@@ -50,5 +74,15 @@ namespace ResourceManager
             ((Control)_translate).Font = AppSettings.Font;
             Translator.Translate(_translate, AppSettings.CurrentTranslation);
         }
+
+        private void LoadHandler(object control, EventArgs e)
+        {
+            if (!_initialiseCompleteCalled)
+            {
+                throw new Exception($"{control.GetType().Name} must call {nameof(InitializeComplete)} in its constructor, ideally as the final statement.");
+            }
+        }
     }
 }
+
+#pragma warning restore VSTHRD108 // Assert thread affinity unconditionally

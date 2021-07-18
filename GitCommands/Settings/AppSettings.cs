@@ -1919,10 +1919,9 @@ namespace GitCommands
             set => SetBool("Log.CaptureCallStacks", value);
         }
 
-        public static bool IsPortable()
-        {
-            return Properties.Settings.Default.IsPortable;
-        }
+        // There is a bug in .NET/.NET Designer that fails to execute Properties.Settings.Default call.
+        // Return false whilst we're in the designer.
+        public static bool IsPortable() => !IsDesignMode && Properties.Settings.Default.IsPortable;
 
         public static bool WriteErrorLog
         {
@@ -2126,6 +2125,22 @@ namespace GitCommands
             string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
             availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
             SetString("AvailableEncodings", availableEncodings);
+        }
+
+        private static bool? _isDesignMode;
+
+        private static bool IsDesignMode
+        {
+            get
+            {
+                if (_isDesignMode is null)
+                {
+                    string processName = Process.GetCurrentProcess().ProcessName.ToLowerInvariant();
+                    _isDesignMode = processName.Contains("devenv") || processName.Contains("designtoolsserver");
+                }
+
+                return _isDesignMode.Value;
+            }
         }
 
         internal static TestAccessor GetTestAccessor() => new();

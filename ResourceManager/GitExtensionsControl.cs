@@ -28,7 +28,7 @@ namespace ResourceManager
             set => base.Font = value;
         }
 
-        public bool IsDesignModeActive => _initialiser.IsDesignModeActive;
+        protected bool IsDesignMode => _initialiser.IsDesignMode;
 
         protected virtual void OnRuntimeLoad()
         {
@@ -38,7 +38,7 @@ namespace ResourceManager
         {
             base.OnLoad(e);
 
-            if (!_initialiser.IsDesignModeActive)
+            if (!IsDesignMode)
             {
                 OnRuntimeLoad();
             }
@@ -53,6 +53,12 @@ namespace ResourceManager
         protected void InitializeComplete()
         {
             _initialiser.InitializeComplete();
+
+            if (IsDesignMode)
+            {
+                return;
+            }
+
             this.FixVisualStyle();
         }
 
