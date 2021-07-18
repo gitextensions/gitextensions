@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormDeleteBranch : GitExtensionsDialog
     {
-        private readonly TranslationString _deleteBranchCaption = new("Delete branches");
+        private readonly TranslationString _deleteBranchCaption = new("Delete Branches");
         private readonly TranslationString _cannotDeleteCurrentBranchMessage = new("Cannot delete the branch “{0}” which you are currently on.");
         private readonly TranslationString _deleteBranchConfirmTitle = new("Delete Confirmation");
         private readonly TranslationString _deleteBranchQuestion = new("The selected branch(es) have not been merged into HEAD.\r\nProceed?");
@@ -106,7 +106,7 @@ namespace GitUI.CommandsDialogs
 
             // always treat branches as unmerged if there is no current branch (HEAD is detached)
             bool hasUnmergedBranches = _currentBranch is null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
-            if (hasUnmergedBranches && !AppSettings.DontConfirmDeleteBranch)
+            if (hasUnmergedBranches && !AppSettings.DontConfirmDeleteUnmergedBranch)
             {
                 TaskDialogPage page = new()
                 {
@@ -114,25 +114,19 @@ namespace GitUI.CommandsDialogs
                     Caption = _deleteBranchConfirmTitle.Text,
                     Icon = TaskDialogIcon.Warning,
                     Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                    DefaultButton = TaskDialogButton.No,
                     Footnote = _useReflogHint.Text,
-                    Verification = new(TranslatedStrings.DontShowAgain),
                     SizeToContent = true,
-                    DefaultButton = TaskDialogButton.No
                 };
 
                 bool isConfirmed = TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes;
-                if (isConfirmed)
-                {
-                    AppSettings.DontConfirmDeleteBranch = page.Verification.Checked;
-                }
-
                 if (!isConfirmed)
                 {
                     return;
                 }
             }
 
-            GitDeleteBranchCmd cmd = new(selectedBranches, force: true);
+            GitDeleteBranchCmd cmd = new(selectedBranches, force: hasUnmergedBranches);
             bool success = UICommands.StartCommandLineProcessDialog(Owner, cmd);
             if (success)
             {

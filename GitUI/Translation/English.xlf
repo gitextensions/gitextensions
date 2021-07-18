@@ -1195,6 +1195,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Apply stashed changes after successful pull (else stash will be popped automatically)</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkBranchDeleteUnmerged.Text">
+        <source>Delete unmerged branches</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkCommitAfterConflictsResolved.Text">
         <source>Commit changes after conflicts have been resolved</source>
         <target />
@@ -4488,7 +4492,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="_deleteBranchCaption.Text">
-        <source>Delete branches</source>
+        <source>Delete Branches</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteBranchConfirmTitle.Text">
