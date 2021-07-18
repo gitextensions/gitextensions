@@ -111,6 +111,8 @@ namespace GitUI
 
         private readonly TranslationString _remoteInError = new("{0}\n\nRemote: {1}");
 
+        private readonly TranslationString _noChanges = new("No changes");
+
         // public only because of FormTranslate
         public TranslatedStrings()
         {
@@ -226,6 +228,7 @@ namespace GitUI
         public static string OpenInVisualStudioFailureText => _instance.Value._openInVisualStudioFailureText.Text;
         public static string OpenInVisualStudioFailureCaption => _instance.Value._openInVisualStudioFailureCaption.Text;
         public static string RemoteInError => _instance.Value._remoteInError.Text;
+        public static string NoChanges => _instance.Value._noChanges.Text;
 
         #region Scripts
 
