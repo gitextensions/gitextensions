@@ -180,7 +180,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <summary>
         /// Add a single revision from the git log.
         /// </summary>
-        public void Add(GitRevision revision, RevisionNodeFlags types)
+        public void Add(GitRevision revision, RevisionNodeFlags types, bool addParentGraph = true)
         {
             if (!_nodeByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))
             {
@@ -203,7 +203,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // No build the revisions parent/child structure. The parents need to added here. The child structure is kept in synch in
             // the RevisionGraphRevision class.
-            if (revision.ParentIds is not null)
+            if (revision.ParentIds is not null && addParentGraph)
             {
                 foreach (ObjectId parentObjectId in revision.ParentIds)
                 {

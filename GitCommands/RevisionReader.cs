@@ -79,6 +79,11 @@ namespace GitCommands
                     });
         }
 
+        /// <summary>
+        /// Parents require rewrite, all commits may not be included
+        /// </summary>
+        public bool ParentsAreRewriten { get; private set; } = false;
+
         private async Task ExecuteAsync(
             GitModule module,
             IReadOnlyList<IGitRef> refs,
@@ -161,7 +166,7 @@ namespace GitCommands
             string revisionFilter,
             string pathFilter)
         {
-            bool needParentRewrite = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
+            ParentsAreRewriten = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
             return new GitArgumentBuilder("log")
             {
                 { maxCount > 0, $"--max-count={maxCount}" },
@@ -200,7 +205,7 @@ namespace GitCommands
                 },
                 revisionFilter,
                 {
-                    needParentRewrite,
+                    ParentsAreRewriten,
                     new ArgumentBuilder
                     {
                         { AppSettings.FullHistoryInFileHistory, $"--full-history" },

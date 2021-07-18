@@ -1002,16 +1002,21 @@ namespace GitUI
                     firstRevisionReceived = true;
 
                     this.InvokeAsync(() => { ShowLoading(false); }).FileAndForget();
+
+                    // If parents are rewritten HEAD may not be included
+                    // Add the artificial commits as unrelated commits so they always appear
+                    // (finding the most relevant commit is tricky)
+                    if (_revisionReader.ParentsAreRewriten)
+                    {
+                        AddArtificialRevisionsIfPossible(addParentGraph: false);
+                    }
                 }
 
                 var isCurrentCheckout = revision.ObjectId.Equals(CurrentCheckout);
 
-                if (isCurrentCheckout &&
-                    ShowUncommittedChangesIfPossible &&
-                    AppSettings.RevisionGraphShowWorkingDirChanges &&
-                    !Module.IsBareRepository())
+                if (isCurrentCheckout && !_revisionReader.ParentsAreRewriten)
                 {
-                    AddArtificialRevisions(revision.ObjectId);
+                    AddArtificialRevisionsIfPossible(addParentGraph: true);
                 }
 
                 var flags = RevisionNodeFlags.None;
@@ -1035,15 +1040,22 @@ namespace GitUI
 
                 return;
 
-                void AddArtificialRevisions(ObjectId filteredCurrentCheckout)
+                void AddArtificialRevisionsIfPossible(bool addParentGraph)
                 {
+                    if (!ShowUncommittedChangesIfPossible
+                        || !AppSettings.RevisionGraphShowWorkingDirChanges
+                        || Module.IsBareRepository())
+                    {
+                        return;
+                    }
+
                     _indexChangeCount = new ArtificialCommitChangeCount();
                     _workTreeChangeCount = new ArtificialCommitChangeCount();
 
                     var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
                     var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
-                    // Add working directory as virtual commit
+                    // Add working directory as an artificial commit
                     GitRevision workTreeRev = new(ObjectId.WorkTreeId)
                     {
                         Author = userName,
@@ -1058,7 +1070,7 @@ namespace GitUI
                     };
                     _gridView.Add(workTreeRev);
 
-                    // Add index as virtual commit
+                    // Add index as an artificial commit
                     GitRevision indexRev = new(ObjectId.IndexId)
                     {
                         Author = userName,
@@ -1068,10 +1080,11 @@ namespace GitUI
                         CommitUnixTime = 0,
                         CommitterEmail = userEmail,
                         Subject = ResourceManager.TranslatedStrings.Index,
-                        ParentIds = new[] { filteredCurrentCheckout },
+                        ParentIds = new[] { CurrentCheckout },
                         HasNotes = true
                     };
-                    _gridView.Add(indexRev);
+
+                    _gridView.Add(indexRev, addParentGraph: addParentGraph);
 
                     UpdateArtificialCommitCount(_artificialStatus, workTreeRev, indexRev);
                 }

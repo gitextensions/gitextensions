@@ -299,9 +299,9 @@ namespace GitUI.UserControls.RevisionGrid
             e.Handled = true;
         }
 
-        public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None)
+        public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None, bool addParentGraph = true)
         {
-            _revisionGraph.Add(revision, types);
+            _revisionGraph.Add(revision, types, addParentGraph);
 
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
