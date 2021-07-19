@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             var availableEncoding = Encoding.GetEncodings()
                 .Select(ei => ei.GetEncoding())
                 .Where(e => e != Encoding.UTF7) // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
-                .Where(e => !includedEncoding.ContainsKey(e.HeaderName))
+                .Where(e => !includedEncoding.ContainsKey(e.WebName))
                 .ToList();
 
             // If exists utf-8, then replace to utf-8 without BOM
@@ -59,9 +59,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (ListAvailableEncodings.SelectedItem is not null)
             {
-                var index = ListAvailableEncodings.SelectedIndex;
+                Encoding selected = (Encoding)ListAvailableEncodings.SelectedItem;
+                foreach (Encoding included in ListIncludedEncodings.Items)
+                {
+                    if (included.WebName == selected.WebName)
+                    {
+                        MessageBox.Show(this,
+                            string.Format("The encoding '{0}' has the same WebName '{1}' as the already included '{2}' - ignoring.",
+                                selected.EncodingName,
+                                selected.WebName,
+                                included.EncodingName));
+                        return;
+                    }
+                }
+
                 ListIncludedEncodings.Items.Add(ListAvailableEncodings.SelectedItem);
-                ListAvailableEncodings.Items.RemoveAt(index);
+                ListAvailableEncodings.Items.RemoveAt(ListAvailableEncodings.SelectedIndex);
             }
         }
 
@@ -70,7 +83,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AppSettings.AvailableEncodings.Clear();
             foreach (Encoding encoding in ListIncludedEncodings.Items)
             {
-                AppSettings.AvailableEncodings.Add(encoding.HeaderName, encoding);
+                AppSettings.AvailableEncodings.Add(encoding.WebName, encoding);
             }
 
             DialogResult = DialogResult.OK;

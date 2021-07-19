@@ -2021,7 +2021,7 @@ namespace GitCommands
         {
             void AddEncoding(Encoding e)
             {
-                AvailableEncodings[e.HeaderName] = e;
+                AvailableEncodings[e.WebName] = e;
             }
 
             void AddEncodingByName(string s)
@@ -2062,14 +2062,14 @@ namespace GitCommands
                 var utf8 = new UTF8Encoding(false);
                 foreach (var encodingName in availableEncodings.Split(';'))
                 {
-                    if (encodingName == Encoding.UTF7.HeaderName)
+                    if (encodingName == Encoding.UTF7.WebName)
                     {
                         // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
                         continue;
                     }
 
                     // create utf-8 without BOM
-                    if (encodingName == utf8.HeaderName)
+                    if (encodingName == utf8.WebName)
                     {
                         AddEncoding(utf8);
                     }
@@ -2091,8 +2091,8 @@ namespace GitCommands
 
         private static void SaveEncodings()
         {
-            string availableEncodings = AvailableEncodings.Values.Select(e => e.HeaderName).Join(";");
-            availableEncodings = availableEncodings.Replace(Encoding.Default.HeaderName, "Default");
+            string availableEncodings = AvailableEncodings.Values.Select(e => e.WebName).Join(";");
+            availableEncodings = availableEncodings.Replace(Encoding.Default.WebName, "Default");
             SetString("AvailableEncodings", availableEncodings);
         }
 

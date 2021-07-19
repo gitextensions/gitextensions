@@ -170,7 +170,7 @@ namespace GitCommands.Settings
 
         private void SetEncoding(string settingName, Encoding? encoding)
         {
-            SetValue(settingName, encoding?.HeaderName);
+            SetValue(settingName, encoding?.WebName);
         }
     }
 
