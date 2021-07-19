@@ -997,6 +997,8 @@ namespace GitUI
 
             void OnRevisionRead(GitRevision revision)
             {
+                var isCurrentCheckout = revision.ObjectId.Equals(CurrentCheckout);
+
                 if (!firstRevisionReceived)
                 {
                     firstRevisionReceived = true;
@@ -1008,11 +1010,9 @@ namespace GitUI
                     // (finding the most relevant commit is tricky)
                     if (_revisionReader.ParentsAreRewriten)
                     {
-                        AddArtificialRevisionsIfPossible(addParentGraph: false);
+                        AddArtificialRevisionsIfPossible(addParentGraph: isCurrentCheckout);
                     }
                 }
-
-                var isCurrentCheckout = revision.ObjectId.Equals(CurrentCheckout);
 
                 if (isCurrentCheckout && !_revisionReader.ParentsAreRewriten)
                 {
