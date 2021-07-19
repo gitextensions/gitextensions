@@ -70,7 +70,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AppSettings.AvailableEncodings.Clear();
             foreach (Encoding encoding in ListIncludedEncodings.Items)
             {
-                AppSettings.AvailableEncodings.Add(encoding.HeaderName, encoding);
+                if (AppSettings.AvailableEncodings.TryGetValue(encoding.HeaderName, out var conflict))
+                {
+                    MessageBox.Show(this,
+                        $"'{encoding}' ({encoding.EncodingName} / {encoding.WebName}) has the same HeaderName '{encoding.HeaderName}' as '{conflict}' ({conflict.EncodingName} / {conflict.WebName})",
+                        "Encoding conflict");
+                }
+
+                AppSettings.AvailableEncodings[encoding.HeaderName] = encoding;
             }
 
             DialogResult = DialogResult.OK;
