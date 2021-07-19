@@ -311,7 +311,11 @@ namespace GitUI.CommandsDialogs
         }
 
         private string? GetFileNameForRevision(GitRevision rev)
-            => _filePathByObjectId.TryGetValue(rev.ObjectId, out string? path) ? path : null;
+        {
+            ObjectId objectId = rev.IsArtificial ? FileChanges.CurrentCheckout : rev.ObjectId;
+
+            return _filePathByObjectId.TryGetValue(objectId, out string? path) ? path : null;
+        }
 
         // returns " --find-renames=..." according to app settings
         private static ArgumentString FindRenamesOpt()
