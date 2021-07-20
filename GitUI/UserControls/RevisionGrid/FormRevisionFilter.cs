@@ -116,7 +116,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public string GetPathFilter()
         {
-            return FileFilterCheck.Checked ? $" {FileFilter.Text.ToPosixPath()}" : "";
+            return FileFilterCheck.Checked ? FileFilter.Text : "";
         }
 
         public string GetInMemAuthorFilter()
@@ -147,6 +147,12 @@ namespace GitUI.UserControls.RevisionGrid
         public void SetBranchFilter(string filter)
         {
             BranchFilter.Text = filter?.Trim();
+        }
+
+        public void SetPathFilter(string filter)
+        {
+            FileFilter.Text = filter?.Trim();
+            FileFilterCheck.Checked = !string.IsNullOrWhiteSpace(filter);
         }
 
         private void OkClick(object sender, EventArgs e)

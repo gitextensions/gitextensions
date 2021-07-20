@@ -144,8 +144,6 @@ namespace GitUI
         private string? _rebaseOnTopOf;
         private bool _isRefreshingRevisions;
         private IReadOnlyList<ObjectId>? _selectedObjectIds;
-        private string? _fixedRevisionFilter = "";
-        private string _fixedPathFilter = "";
         private string _branchFilter = "";
         private SuperProjectInfo? _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
@@ -176,6 +174,13 @@ namespace GitUI
         internal bool IsShowCurrentBranchOnlyChecked { get; private set; }
         internal bool IsShowAllBranchesChecked { get; private set; }
         internal bool IsShowFilteredBranchesChecked { get; private set; }
+
+        /// <summary>
+        /// The (first) seen name for commits, for FileHistory with path filters.
+        /// See BuildFilter() for limitations of commits included.
+        /// The property is explicitly initialized by FileHistory.
+        /// </summary>
+        internal Dictionary<ObjectId, string>? FilePathByObjectId { get; set; } = null;
 
         public RevisionGridControl()
         {
@@ -386,10 +391,26 @@ namespace GitUI
             }
         }
 
-        public void SetFilters((string? revision, string path) filter)
+        // returns " --find-renames=..." according to app settings
+        private static ArgumentString FindRenamesOpt()
         {
-            _fixedRevisionFilter = filter.revision;
-            _fixedPathFilter = filter.path;
+            return AppSettings.FollowRenamesInFileHistoryExactOnly
+                ? " --find-renames=\"100%\""
+                : " --find-renames";
+        }
+
+        // returns " --find-renames=... --find-copies=..." according to app settings
+        private static ArgumentString FindRenamesAndCopiesOpts()
+        {
+            var findCopies = AppSettings.FollowRenamesInFileHistoryExactOnly
+                ? " --find-copies=\"100%\""
+                : " --find-copies";
+            return FindRenamesOpt() + findCopies;
+        }
+
+        public void SetPathFilters(string path)
+        {
+            _revisionFilter.SetPathFilter(path);
         }
 
         private void InitiateRefAction(IReadOnlyList<IGitRef>? refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
@@ -952,6 +973,7 @@ namespace GitUI
                 _gridView.SelectionChanged += OnGridViewSelectionChanged;
                 _gridView.ResumeLayout();
 
+                string pathFilter = BuildPathFilter(_revisionFilter.GetPathFilter());
                 _revisionReader.Execute(
                     Module,
                     refs,
@@ -959,8 +981,8 @@ namespace GitUI
                     _revisionFilter.GetMaxCount(),
                     refFilterOptions,
                     _branchFilter,
-                    _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + _fixedRevisionFilter,
-                    _revisionFilter.GetPathFilter() + _fixedPathFilter,
+                    _revisionFilter.GetRevisionFilter() + QuickRevisionFilter,
+                    pathFilter,
                     predicate);
 
                 if (_initialLoad)
@@ -994,6 +1016,111 @@ namespace GitUI
             }
 
             return;
+
+            string BuildPathFilter(string? path)
+            {
+                FilePathByObjectId?.Clear();
+
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    return "";
+                }
+
+                // Manual arguments must be quoted if needed (internal paths are quoted)
+                // except for simple arguments without any quotes or spaces
+                path = path.Trim();
+                bool multpleArgs = false;
+                if (!path.Any(c => c == '"') && !path.Any(c => c == '\''))
+                {
+                    if (!path.Any(c => c == ' '))
+                    {
+                        path = path.Quote();
+                    }
+                    else
+                    {
+                        multpleArgs = true;
+                    }
+                }
+                else if (path.Count(c => c == '"') + path.Count(c => c == '\'') > 2)
+                {
+                    // Basic detection of multiple quoted strings (let the Git command fail for more advanced usage)
+                    multpleArgs = true;
+                }
+
+                if (!AppSettings.FollowRenamesInFileHistory
+
+                    // The command line can be very long for folders, just ignore.
+                    || path.EndsWith("/")
+                    || path.EndsWith("/\"")
+
+                    // --follow only accepts exactly one argument, error for all other
+                    || multpleArgs)
+                {
+                    return path;
+                }
+
+                // git log --follow is not working as expected (see  https://stackoverflow.com/questions/46487476/git-log-follow-graph-skips-commits)
+                //
+                // But we can take a more complicated path to get reasonable results:
+                //  1. use git log --follow to get all previous filenames of the file we are interested in
+                //  2. use git log "list of files names" to get the history graph
+
+                const string startOfObjectId = "????";
+                GitArgumentBuilder args = new("log")
+                {
+                    // --name-only will list each filename on a separate line, ending with an empty line
+                    // Find start of a new commit with a sequence impossible in a filename
+                    $"--format=\"{startOfObjectId}%H\"",
+                    "--name-only",
+                    "--follow",
+                    FindRenamesAndCopiesOpts(),
+                    "--",
+                    path
+                };
+
+                HashSet<string?> setOfFileNames = new();
+                var lines = Module.GitExecutable.GetOutputLines(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorOutput: false);
+
+                // TODO Check the exit code and warn the user that rename detection could not be done.
+
+                ObjectId currentObjectId = null;
+                foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
+                {
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        // empty line after sha
+                        continue;
+                    }
+
+                    if (line.StartsWith(startOfObjectId))
+                    {
+                        if (line.Length < ObjectId.Sha1CharCount + startOfObjectId.Length
+                            || !ObjectId.TryParse(line, offset: startOfObjectId.Length, out currentObjectId))
+                        {
+                            // Parse error, ignore
+                            currentObjectId = null;
+                        }
+
+                        continue;
+                    }
+
+                    if (currentObjectId == null)
+                    {
+                        // Parsing has failed, ignore
+                        continue;
+                    }
+
+                    // Add only the first file to the dictionary
+                    FilePathByObjectId?.TryAdd(currentObjectId, line);
+                    setOfFileNames.Add(line);
+                }
+
+                // Add path in case of no matches so result is never empty
+                // This also occurs if Git detects more than one path argument
+                return setOfFileNames.Count == 0
+                    ? path
+                    : string.Join("", setOfFileNames.Select(s => @$" ""{s}"""));
+            }
 
             void OnRevisionRead(GitRevision revision)
             {

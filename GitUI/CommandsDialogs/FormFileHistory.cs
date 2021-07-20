@@ -34,7 +34,6 @@ namespace GitUI.CommandsDialogs
         private readonly CancellationTokenSequence _viewChangesSequence = new();
 
         private BuildReportTabPageExtension? _buildReportTabPageExtension;
-        private readonly Dictionary<ObjectId, string> _filePathByObjectId = new();
 
         private string FileName { get; set; }
 
@@ -85,6 +84,7 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.SelectedId = revision?.ObjectId;
             RevisionGrid.ShowBuildServerInfo = true;
+            RevisionGrid.FilePathByObjectId = new();
 
             FileName = fileName;
             SetTitle();
@@ -222,122 +222,27 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            _asyncLoader.LoadAsync(
-                () => BuildFilter(),
-                filter =>
-                {
-                    RevisionGrid.SetFilters(filter);
-                    RevisionGrid.Load();
-                });
+            // Replace windows path separator to Linux path separator.
+            // This is needed to keep the file history working when started from file tree in
+            // browse dialog.
+            FileName = FileName.ToPosixPath();
+
+            RevisionGrid.SetPathFilters(FileName.QuoteNE());
+            RevisionGrid.Load();
 
             return;
-
-            (string? revision, string path) BuildFilter()
-            {
-                var fileName = FileName;
-
-                // Replace windows path separator to Linux path separator.
-                // This is needed to keep the file history working when started from file tree in
-                // browse dialog.
-                FileName = fileName.ToPosixPath();
-
-                var fullFilePath = _fullPathResolver.Resolve(fileName);
-                _filePathByObjectId.Clear();
-
-                if (!AppSettings.FollowRenamesInFileHistory)
-                {
-                    return (revision: (string?)null, path: $" \"{fileName}\"");
-                }
-
-                // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
-                //
-                // But we can take a more complicated path to get reasonable results:
-                //  1. use git log --follow to get all previous filenames of the file we are interested in
-                //  2. use git log "list of files names" to get the history graph
-                //
-                // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
-                //
-
-                const string startOfObjectId = "????";
-                GitArgumentBuilder args = new("log")
-                {
-                    // --name-only will list each filename on a separate line, ending with a an empty line
-                    // Find start of a new commit with a sequence impossible in a filename
-                    $"--format=\"{startOfObjectId}%H\"",
-                    "--name-only",
-                    "--follow",
-                    FindRenamesAndCopiesOpts(),
-                    "--",
-                    fileName.Quote()
-                };
-
-                HashSet<string?> setOfFileNames = new();
-                var lines = Module.GitExecutable.GetOutputLines(args, outputEncoding: GitModule.LosslessEncoding);
-
-                ObjectId currentObjectId = null;
-                foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
-                {
-                    if (string.IsNullOrEmpty(line))
-                    {
-                        // empty filename after sha
-                        continue;
-                    }
-
-                    if (line.StartsWith(startOfObjectId))
-                    {
-                        if (line.Length < ObjectId.Sha1CharCount + startOfObjectId.Length
-                            || !ObjectId.TryParse(line, offset: startOfObjectId.Length, out currentObjectId))
-                        {
-                            // Parse error, ignore
-                            currentObjectId = null;
-                        }
-
-                        continue;
-                    }
-
-                    if (currentObjectId == null)
-                    {
-                        // Parsing has failed, ignore
-                        continue;
-                    }
-
-                    // Add only the first file to the dictionary
-                    _filePathByObjectId.TryAdd(currentObjectId, line);
-                    setOfFileNames.Add(line);
-                }
-
-                if (FileName.EndsWith("/"))
-                {
-                    // For object type tree (folders), the filename for a commit is "random" and is not used
-                    _filePathByObjectId.Clear();
-                }
-
-                return (revision: FindRenamesAndCopiesOpts(), path: string.Join("", setOfFileNames.Select(s => @$" ""{s}""")));
-            }
         }
 
         private string? GetFileNameForRevision(GitRevision rev)
         {
+            if (RevisionGrid.FilePathByObjectId is null)
+            {
+                return null;
+            }
+
             ObjectId objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
 
-            return _filePathByObjectId.TryGetValue(objectId, out string? path) ? path : null;
-        }
-
-        // returns " --find-renames=..." according to app settings
-        private static ArgumentString FindRenamesOpt()
-        {
-            return AppSettings.FollowRenamesInFileHistoryExactOnly
-                ? " --find-renames=\"100%\""
-                : " --find-renames";
-        }
-
-        // returns " --find-renames=... --find-copies=..." according to app settings
-        private static ArgumentString FindRenamesAndCopiesOpts()
-        {
-            var findCopies = AppSettings.FollowRenamesInFileHistoryExactOnly
-                ? " --find-copies=\"100%\""
-                : " --find-copies";
-            return FindRenamesOpt() + findCopies;
+            return RevisionGrid.FilePathByObjectId.TryGetValue(objectId, out string? path) ? path : null;
         }
 
         private void FileChangesSelectionChanged(object sender, EventArgs e)
