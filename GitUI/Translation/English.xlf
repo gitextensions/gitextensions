@@ -9496,7 +9496,7 @@ Are you sure to assume this file won't change ?</source>
         <target />
       </trans-unit>
       <trans-unit id="_cantExtractTempArchive.Text">
-        <source>Unable to extract tempory archive.</source>
+        <source>Unable to extract temporary archive.</source>
         <target />
       </trans-unit>
       <trans-unit id="_cantSaveToTemp.Text">
