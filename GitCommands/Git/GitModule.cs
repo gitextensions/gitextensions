@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Mail;
 using System.Security;
@@ -593,6 +594,30 @@ namespace GitCommands
 
             using var stream = File.Create(saveAs);
             stream.Write(blobData, 0, blobData.Length);
+        }
+
+        public void SaveTreeAs(string saveAs, string hash)
+        {
+            string archivePath = Path.Join(saveAs.SubstringUntilLast('\\'), $"{hash}.zip");
+
+            if (!File.Exists(archivePath))
+            {
+                GitArgumentBuilder args = new("archive")
+                {
+                    $"--format zip",
+                    $"--output \"{archivePath.ToNativePath()}\"",
+                    $"{hash}",
+                    "-0"
+                };
+
+                using var process = _gitCommandRunner.RunDetached(args);
+                process.WaitForExit();
+            }
+
+            if (!Directory.Exists(saveAs))
+            {
+                ZipFile.ExtractToDirectory(archivePath, saveAs);
+            }
         }
 
         private static string GetSide(string side)

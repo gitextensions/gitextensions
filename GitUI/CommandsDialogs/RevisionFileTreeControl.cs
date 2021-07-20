@@ -45,6 +45,9 @@ Are you sure to assume this file won't change ?");
 
 See the changes in the commit form.");
 
+        private readonly TranslationString _cantSaveToTemp = new("Unable to save to Temp directory.");
+        private readonly TranslationString _cantExtractTempArchive = new("Unable to extract tempory archive.");
+
         private readonly TranslationString _success = new("Success");
 
         // store strings to not keep references to nodes
@@ -339,6 +342,31 @@ See the changes in the commit form.");
             return null;
         }
 
+        private string? SaveItemToTempFile(GitItem gitItem)
+        {
+            if (string.IsNullOrWhiteSpace(gitItem.FileName))
+            {
+                return null;
+            }
+
+            string fileName = gitItem.FileName.SubstringAfterLast('/').SubstringAfterLast('\\');
+            fileName = (Path.GetTempPath() + fileName).ToNativePath();
+
+            switch (gitItem.ObjectType)
+            {
+                case GitObjectType.Blob:
+                    Module.SaveBlobAs(fileName, gitItem.Guid);
+                    return fileName;
+                case GitObjectType.Commit:
+                case GitObjectType.Tree:
+                    string shortObjectId = gitItem.ObjectId.ToShortString();
+                    Module.SaveTreeAs(fileName, shortObjectId);
+                    return fileName;
+                default:
+                    return null;
+            }
+        }
+
         private void SpawnCommitBrowser(GitItem item)
         {
             GitUICommands.LaunchBrowse(workingDir: _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator()) ?? "", selectedId: item.ObjectId);
@@ -403,15 +431,32 @@ See the changes in the commit form.");
         {
             if (e.Item is TreeNode { Tag: GitItem gitItem })
             {
-                StringCollection fileList = new();
-                var fileName = _fullPathResolver.Resolve(gitItem.FileName);
+                string tempFilePath;
+                try
+                {
+                    tempFilePath = SaveItemToTempFile(gitItem);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(_cantSaveToTemp.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                catch (FileNotFoundException)
+                {
+                    MessageBox.Show(_cantExtractTempArchive.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                fileList.Add(fileName.ToNativePath());
+                if (tempFilePath is not null)
+                {
+                    StringCollection fileList = new();
+                    fileList.Add(tempFilePath);
 
-                DataObject obj = new();
-                obj.SetFileDropList(fileList);
+                    DataObject obj = new();
+                    obj.SetFileDropList(fileList);
 
-                DoDragDrop(obj, DragDropEffects.Copy);
+                    DoDragDrop(obj, DragDropEffects.Copy);
+                }
             }
         }
 
