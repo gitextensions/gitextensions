@@ -160,4 +160,3 @@ YYYY/MM/DD, github id, Full name, email
 2021/05/07, dasiths, Dasith Wijesiriwardena, gitextensions.github(at)dasith.me
 2021/06/18, jwfx, Jörg Winkler, jwfx at bitmx.net
 2021/07/15, davidgiga1993, David Schumann, davidgiga1993(at)gmail.com
-2021/07/20, ransontech, Nicholas Ranson, nickjranson(at)gmail.com
