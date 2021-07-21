@@ -598,7 +598,7 @@ namespace GitCommands
 
         public void SaveTreeAs(string saveAs, string hash)
         {
-            string archivePath = Path.Join(saveAs.SubstringUntilLast('\\'), $"{hash}.zip");
+            string archivePath = PathUtil.GetArchivePath(saveAs);
 
             if (!File.Exists(archivePath))
             {

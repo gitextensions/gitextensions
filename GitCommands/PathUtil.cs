@@ -94,6 +94,30 @@ namespace GitCommands
             return fileName;
         }
 
+        public static string GetParentDirectoryPath(string fileName)
+        {
+            var pathSeparators = new[] { NativeDirectorySeparatorChar, PosixDirectorySeparatorChar };
+            var pos = fileName.LastIndexOfAny(pathSeparators);
+            if (pos != -1)
+            {
+                fileName = fileName.Substring(0, pos + 1);
+            }
+
+            return fileName;
+        }
+
+        public static string GetTempPath(string fileName)
+        {
+            return Path.GetTempPath() + fileName;
+        }
+
+        public static string GetArchivePath(string tempPath)
+        {
+            string fileName = GetFileName(tempPath);
+            string dirPath = GetParentDirectoryPath(tempPath);
+            return Path.Join(dirPath, $"{fileName}.zip");
+        }
+
         public static string NormalizePath(this string path)
         {
             if (string.IsNullOrWhiteSpace(path))

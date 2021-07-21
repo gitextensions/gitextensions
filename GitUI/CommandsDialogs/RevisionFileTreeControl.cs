@@ -349,19 +349,19 @@ See the changes in the commit form.");
                 return null;
             }
 
-            string fileName = gitItem.FileName.SubstringAfterLast('/').SubstringAfterLast('\\');
-            fileName = (Path.GetTempPath() + fileName).ToNativePath();
+            string fileName = PathUtil.GetFileName(gitItem.FileName);
+            string tempPath = PathUtil.GetTempPath(fileName);
 
             switch (gitItem.ObjectType)
             {
                 case GitObjectType.Blob:
-                    Module.SaveBlobAs(fileName, gitItem.Guid);
-                    return fileName;
+                    Module.SaveBlobAs(tempPath, gitItem.Guid);
+                    return tempPath;
                 case GitObjectType.Commit:
                 case GitObjectType.Tree:
                     string shortObjectId = gitItem.ObjectId.ToShortString();
-                    Module.SaveTreeAs(fileName, shortObjectId);
-                    return fileName;
+                    Module.SaveTreeAs(tempPath, shortObjectId);
+                    return tempPath;
                 default:
                     return null;
             }
