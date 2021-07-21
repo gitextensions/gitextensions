@@ -540,5 +540,16 @@ namespace GitCommands.Git.Commands
                 branch
             };
         }
+
+        public static ArgumentString ArchiveCmd(string? format, string? outputPath, ObjectId? id, int? compression)
+        {
+            return new GitArgumentBuilder("archive")
+            {
+                { format is not null, $"--format {format}" },
+                { !string.IsNullOrWhiteSpace(outputPath), $"--output \"{outputPath.ToNativePath()}\"" },
+                id,
+                { compression is not null,  $"-{compression}" }
+            };
+        }
     }
 }
