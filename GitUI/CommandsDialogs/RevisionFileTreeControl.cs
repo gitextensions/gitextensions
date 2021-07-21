@@ -433,16 +433,13 @@ See the changes in the commit form.");
             {
                 string? tempFilePath = SaveItemToTempFile(gitItem);
 
-                if (tempFilePath is not null)
-                {
-                    StringCollection fileList = new();
-                    fileList.Add(tempFilePath);
+                StringCollection fileList = new();
+                fileList.Add(tempFilePath);
 
-                    DataObject obj = new();
-                    obj.SetFileDropList(fileList);
+                DataObject obj = new();
+                obj.SetFileDropList(fileList);
 
-                    DoDragDrop(obj, DragDropEffects.Copy);
-                }
+                DoDragDrop(obj, DragDropEffects.Copy);
             }
         }
 
