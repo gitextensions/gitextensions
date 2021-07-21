@@ -47,9 +47,6 @@ Are you sure to assume this file won't change ?");
 
 See the changes in the commit form.");
 
-        private readonly TranslationString _cantSaveToTemp = new("Unable to save to Temp directory.");
-        private readonly TranslationString _cantExtractTempArchive = new("Unable to extract temporary archive.");
-
         private readonly TranslationString _success = new("Success");
 
         // store strings to not keep references to nodes
