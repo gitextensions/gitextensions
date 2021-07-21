@@ -5,6 +5,7 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Text.RegularExpressions;
 using GitCommands.Utils;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
@@ -111,11 +112,11 @@ namespace GitCommands
             return Path.GetTempPath() + fileName;
         }
 
-        public static string GetArchivePath(string tempPath)
+        public static string GetArchivePath(string tempPath, ObjectId id)
         {
             string fileName = GetFileName(tempPath);
             string dirPath = GetParentDirectoryPath(tempPath);
-            return Path.Join(dirPath, $"{fileName}.zip");
+            return Path.Join(dirPath, $"{id.ToShortString()}_{fileName}.zip");
         }
 
         public static string NormalizePath(this string path)
