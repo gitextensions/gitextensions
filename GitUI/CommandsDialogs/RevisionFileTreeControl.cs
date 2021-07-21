@@ -431,21 +431,7 @@ See the changes in the commit form.");
         {
             if (e.Item is TreeNode { Tag: GitItem gitItem })
             {
-                string tempFilePath;
-                try
-                {
-                    tempFilePath = SaveItemToTempFile(gitItem);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    MessageBox.Show(_cantSaveToTemp.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                catch (FileNotFoundException)
-                {
-                    MessageBox.Show(_cantExtractTempArchive.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                string? tempFilePath = SaveItemToTempFile(gitItem);
 
                 if (tempFilePath is not null)
                 {
