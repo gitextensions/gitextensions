@@ -854,11 +854,8 @@ See the changes in the commit form.");
                 process.WaitForExit();
             }
 
-            if (!Directory.Exists(saveAs))
-            {
-                ZipFile.ExtractToDirectory(archivePath, saveAs);
-                File.Delete(archivePath);
-            }
+            ZipFile.ExtractToDirectory(archivePath, saveAs, overwriteFiles: true);
+            File.Delete(archivePath);
         }
 
         public void SwitchFocus(bool alreadyContainedFocus)
