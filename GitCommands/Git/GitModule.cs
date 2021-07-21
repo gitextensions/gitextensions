@@ -610,7 +610,7 @@ namespace GitCommands
                     "-0"
                 };
 
-                using var process = _gitCommandRunner.RunDetached(args);
+                using IProcess process = _gitExecutable.Start(args);
                 process.WaitForExit();
             }
 
