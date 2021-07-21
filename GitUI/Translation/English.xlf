@@ -9487,14 +9487,6 @@ Are you sure to assume this file won't change ?</source>
         <source>File successfully assumed unchanged.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_cantExtractTempArchive.Text">
-        <source>Unable to extract temporary archive.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_cantSaveToTemp.Text">
-        <source>Unable to save to Temp directory.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
         <source>Node not found. The next available parent node will be selected.</source>
         <target />
