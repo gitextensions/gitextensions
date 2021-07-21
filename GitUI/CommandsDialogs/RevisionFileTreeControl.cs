@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -359,8 +361,7 @@ See the changes in the commit form.");
                     return tempPath;
                 case GitObjectType.Commit:
                 case GitObjectType.Tree:
-                    string shortObjectId = gitItem.ObjectId.ToShortString();
-                    Module.SaveTreeAs(tempPath, shortObjectId);
+                    SaveTreeAs(tempPath, gitItem.ObjectId);
                     return tempPath;
                 default:
                     return null;
@@ -842,6 +843,23 @@ See the changes in the commit form.");
             if (e.Button == MouseButtons.Right)
             {
                 tvGitTree.SelectedNode = e.Node;
+            }
+        }
+
+        private void SaveTreeAs(string saveAs, ObjectId id)
+        {
+            string archivePath = PathUtil.GetArchivePath(saveAs, id);
+
+            if (!File.Exists(archivePath))
+            {
+                ArgumentString args = GitCommandHelpers.ArchiveCmd("zip", archivePath, id, 0);
+                using IProcess process = Module.GitExecutable.Start(args);
+                process.WaitForExit();
+            }
+
+            if (!Directory.Exists(saveAs))
+            {
+                ZipFile.ExtractToDirectory(archivePath, saveAs);
             }
         }
 
