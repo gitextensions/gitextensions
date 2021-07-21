@@ -860,6 +860,7 @@ See the changes in the commit form.");
             if (!Directory.Exists(saveAs))
             {
                 ZipFile.ExtractToDirectory(archivePath, saveAs);
+                File.Delete(archivePath);
             }
         }
 
