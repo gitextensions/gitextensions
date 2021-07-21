@@ -438,6 +438,17 @@ See the changes in the commit form.");
                 obj.SetFileDropList(fileList);
 
                 DoDragDrop(obj, DragDropEffects.Copy);
+
+                FileAttributes attr = File.GetAttributes(tempFilePath);
+
+                if (attr.HasFlag(FileAttributes.Directory))
+                {
+                    Directory.Delete(tempFilePath, recursive: true);
+                }
+                else
+                {
+                    File.Delete(tempFilePath);
+                }
             }
         }
 
