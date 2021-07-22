@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -240,6 +241,12 @@ namespace GitCommands.Submodules
                 {
                     result.CurrentSubmoduleName = currentModule.GetCurrentSubmoduleLocalPath();
                     bold = true;
+                }
+
+                if (string.IsNullOrWhiteSpace(path) || result.AllSubmodules.Any(info => info.Path == path))
+                {
+                    Trace.WriteLine($"Ignoring duplicate submodule path: {path} ({name})");
+                    continue;
                 }
 
                 SubmoduleInfo smi = new(text: name, path, bold);
