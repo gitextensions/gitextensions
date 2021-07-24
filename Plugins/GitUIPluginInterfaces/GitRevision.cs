@@ -32,6 +32,15 @@ namespace GitUIPluginInterfaces
             ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
         }
 
+        /// <summary>
+        /// Make a shallow clone of the object.
+        /// </summary>
+        /// <returns>A shallow copy.</returns>
+        public GitRevision Clone()
+        {
+            return (GitRevision)MemberwiseClone();
+        }
+
         public ObjectId ObjectId { get; }
 
         public string Guid => ObjectId.ToString();
