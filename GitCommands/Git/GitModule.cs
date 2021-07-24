@@ -1004,17 +1004,21 @@ namespace GitCommands
             }
         }
 
-        public IReadOnlyList<ObjectId> GetParents(ObjectId commitId)
+        public IReadOnlyList<ObjectId> GetParents(ObjectId objectId)
         {
-            GitArgumentBuilder args = new("log")
+            if (objectId.IsArtificial)
             {
-                "-n 1",
-                "--format=format:%P",
-                commitId
+                // For WorkTree could Index be returned, but for Index HEAD should be available anyway
+                throw new InvalidOperationException(nameof(objectId));
+            }
+
+            GitArgumentBuilder args = new("rev-parse")
+            {
+                $"{objectId}^@"
             };
-            return _gitExecutable
-                .GetOutput(args)
-                .LazySplit(' ', StringSplitOptions.RemoveEmptyEntries)
+            return _gitExecutable.Execute(args, cache: GitCommandCache)
+                .StandardOutput
+                .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries)
                 .Select(line => ObjectId.Parse(line))
                 .ToList();
         }
