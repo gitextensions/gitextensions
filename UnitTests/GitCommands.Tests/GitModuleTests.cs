@@ -602,16 +602,14 @@ namespace GitCommandsTests
         [Test]
         public void GetParents_calls_correct_command_and_parses_response()
         {
-            GitArgumentBuilder args = new("log")
+            GitArgumentBuilder args = new("rev-parse")
             {
-                "-n 1",
-                "--format=format:%P",
-                Sha1
+                $"{Sha1}^@"
             };
 
             using (_executable.StageOutput(
                 args.ToString(),
-                $"{Sha2} {Sha3}"))
+                $"{Sha2}\n{Sha3}\n"))
             {
                 var parents = _gitModule.GetParents(Sha1);
 
