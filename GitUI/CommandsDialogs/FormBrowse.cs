@@ -406,9 +406,6 @@ namespace GitUI.CommandsDialogs
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
                     toolStripButtonLevelUp.Image = Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
-                    // The diff filelist is not updated, as the selected diff is unset
-                    ////_revisionDiff.RefreshArtificial();
-
                     if (countToolbar || countArtificial)
                     {
                         if (!ReferenceEquals(brush, lastBrush)
@@ -1997,7 +1994,6 @@ namespace GitUI.CommandsDialogs
             var module = e.GitModule;
             HideVariableMainMenuItems();
             PluginRegistry.Unregister(UICommands);
-            RevisionGrid.InvalidateCount();
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
             _filterBranchHelper.SetBranchFilter(string.Empty, refresh: false);

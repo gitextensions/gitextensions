@@ -138,8 +138,6 @@ namespace GitUI
         private bool _initialLoad = true;
         private bool _isReadingRevisions = true;
 
-        /// <summary>Tracks status for the artificial commits while the revision graph is reloading.</summary>
-        private IReadOnlyList<GitItemStatus>? _artificialStatus;
         private RevisionReader? _revisionReader;
         private IDisposable? _revisionSubscription;
         private GitRevision? _baseCommitToCompare;
@@ -2199,11 +2197,6 @@ namespace GitUI
             Refresh();
         }
 
-        public void InvalidateCount()
-        {
-            _artificialStatus = null;
-        }
-
         #region Artificial commit change counters
 
         public ArtificialCommitChangeCount? GetChangeCount(ObjectId objectId)
@@ -2221,9 +2214,6 @@ namespace GitUI
 
             UpdateChangeCount(ObjectId.WorkTreeId, status);
             UpdateChangeCount(ObjectId.IndexId, status);
-
-            // cache the status for a refresh
-            _artificialStatus = status;
 
             _gridView.Invalidate();
             return;
