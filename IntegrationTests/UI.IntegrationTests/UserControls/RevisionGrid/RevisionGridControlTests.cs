@@ -33,6 +33,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
             // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar.
             AppSettings.ShowAuthorAvatarColumn = false;
+
+            AppSettings.RevisionGraphShowWorkingDirChanges = true;
         }
 
         [SetUp]
@@ -124,7 +126,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     RefreshRevisions(revisionGridControl);
 
                     // Confirm the filter has been applied
-                    ta.VisibleRevisionCount.Should().Be(2);
+                    ta.VisibleRevisionCount.Should().Be(4);
                     ProcessUntil(() => revisionGridControl.LatestSelectedRevision.ObjectId.ToString(), _branch1Commit);
                 });
         }
@@ -141,7 +143,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 {
                     var ta = revisionGridControl.GetTestAccessor();
                     Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
-                    ta.VisibleRevisionCount.Should().Be(2);
+                    ta.VisibleRevisionCount.Should().Be(4);
 
                     // Verify the view hasn't changed until we refresh
                     revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);

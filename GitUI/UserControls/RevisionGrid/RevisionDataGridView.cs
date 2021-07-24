@@ -299,9 +299,16 @@ namespace GitUI.UserControls.RevisionGrid
             e.Handled = true;
         }
 
-        public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None)
+        /// <summary>
+        /// Add a single revision from the git log to the graph, including segments to parents.
+        /// Update visible rows if needed.
+        /// </summary>
+        /// <param name="revision">The revision to add.</param>
+        /// <param name="types">The graph node flags.</param>
+        /// <param name="insertAsFirst">Insert the (artificial) revision first in the graph.</param>
+        public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None, bool insertAsFirst = false)
         {
-            _revisionGraph.Add(revision, types);
+            _revisionGraph.Add(revision, types, insertAsFirst);
 
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
