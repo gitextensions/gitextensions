@@ -157,7 +157,17 @@ namespace GitUI
         {
             return DoActionOnRepo(owner, action: () =>
             {
-                using FormDeleteRemoteBranch form = new(this, remoteBranch);
+                using FormDeleteRemoteBranch form = new(this, new[] { remoteBranch });
+                form.ShowDialog(owner);
+                return true;
+            }, changesRepo: false);
+        }
+
+        public bool StartDeleteRemoteBranchDialog(IWin32Window? owner, IEnumerable<string> remoteBranches)
+        {
+            return DoActionOnRepo(owner, action: () =>
+            {
+                using FormDeleteRemoteBranch form = new(this, remoteBranches);
                 form.ShowDialog(owner);
                 return true;
             }, changesRepo: false);

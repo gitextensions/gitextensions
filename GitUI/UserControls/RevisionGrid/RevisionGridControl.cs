@@ -392,9 +392,9 @@ namespace GitUI
             _fixedPathFilter = filter.path;
         }
 
-        private void InitiateRefAction(IReadOnlyList<IGitRef>? refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
+        private void InitiateRefAction(IReadOnlyList<IGitRef> refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
-            if (refs is null || refs.Count < 1)
+            if (refs.Count < 1)
             {
                 return;
             }
@@ -1361,17 +1361,16 @@ namespace GitUI
 
         private void OnGridViewKeyUp(object sender, KeyEventArgs e)
         {
-            var selectedRevision = LatestSelectedRevision;
-
-            if (selectedRevision is null)
-            {
-                return;
-            }
-
             switch (e.KeyCode)
             {
                 case Keys.F2:
                     {
+                        GitRevision selectedRevision = LatestSelectedRevision;
+                        if (selectedRevision is null)
+                        {
+                            return;
+                        }
+
                         InitiateRefAction(
                             new GitRefListsForRevision(selectedRevision).GetRenameableLocalBranches(),
                             gitRef => UICommands.StartRenameDialog(ParentForm, gitRef.Name),
@@ -1381,24 +1380,52 @@ namespace GitUI
 
                 case Keys.Delete:
                     {
-                        InitiateRefAction(
-                            new GitRefListsForRevision(selectedRevision).GetDeletableRefs(Module.GetSelectedBranch()),
-                            gitRef =>
-                            {
-                                if (gitRef.IsTag)
-                                {
-                                    UICommands.StartDeleteTagDialog(ParentForm, gitRef.Name);
-                                }
-                                else if (gitRef.IsRemote)
-                                {
-                                    UICommands.StartDeleteRemoteBranchDialog(ParentForm, gitRef.Name);
-                                }
-                                else
-                                {
-                                    UICommands.StartDeleteBranchDialog(ParentForm, gitRef.Name);
-                                }
-                            },
-                            FormQuickGitRefSelector.Action.Delete);
+                        IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
+                        if (selectedRevisions.Count == 0)
+                        {
+                            return;
+                        }
+
+                        IReadOnlyList<IGitRef> deletableRefs = new GitRefListsForRevision(selectedRevisions).GetDeletableRefs(Module.GetSelectedBranch());
+
+                        if (selectedRevisions.Count == 1)
+                        {
+                            InitiateRefAction(
+                              deletableRefs,
+                              gitRef =>
+                              {
+                                  if (gitRef.IsTag)
+                                  {
+                                      UICommands.StartDeleteTagDialog(ParentForm, gitRef.Name);
+                                  }
+                                  else if (gitRef.IsRemote)
+                                  {
+                                      UICommands.StartDeleteRemoteBranchDialog(ParentForm, gitRef.Name);
+                                  }
+                                  else
+                                  {
+                                      UICommands.StartDeleteBranchDialog(ParentForm, gitRef.Name);
+                                  }
+                              },
+                              FormQuickGitRefSelector.Action.Delete);
+                            return;
+                        }
+
+                        // We have multiple revisions selected. Check if:
+                        // * all selected revisions contain remotes -> invoke the dialog to delete remote branches,
+                        // * else assume local branches are selected -> invoke the dialog to delete local branches.
+                        //
+                        // TODO: support deletion of multiple tags. This requires redesign of FormDeleteTag.
+
+                        if (deletableRefs.Where(r => r.IsRemote).Select(r => r.Guid).Distinct().Count() == selectedRevisions.Count)
+                        {
+                            UICommands.StartDeleteRemoteBranchDialog(ParentForm, deletableRefs.Where(r => r.IsRemote).Select(r => r.Name));
+                        }
+                        else
+                        {
+                            UICommands.StartDeleteBranchDialog(ParentForm, deletableRefs.Where(r => !r.IsRemote).Select(r => r.Name));
+                        }
+
                         break;
                     }
             }
