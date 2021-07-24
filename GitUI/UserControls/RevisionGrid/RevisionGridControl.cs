@@ -2331,6 +2331,12 @@ namespace GitUI
                     if (idToSelect is not null
                         && (!idToSelect.IsArtificial || !AppSettings.ShowGitStatusForArtificialCommits || GetChangeCount(idToSelect)?.HasChanges == true))
                     {
+                        if (idToSelect == CurrentCheckout && AppSettings.ShowGitStatusForArtificialCommits && _gridView.GetRevision(idToSelect) is null)
+                        {
+                            // HEAD is not in revision grid (filtered)
+                            return ObjectId.WorkTreeId;
+                        }
+
                         return idToSelect;
                     }
                 }
