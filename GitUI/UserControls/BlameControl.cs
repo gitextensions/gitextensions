@@ -85,6 +85,13 @@ namespace GitUI.Blame
             BlameAuthor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
         }
 
+        public void HideCommitInfo()
+        {
+            splitContainer1.Panel1Collapsed = true;
+            CommitInfo.Visible = false;
+            CommitInfo.CommandClicked -= commitInfo_CommandClicked;
+        }
+
         public void LoadBlame(GitRevision revision, IReadOnlyList<ObjectId>? children, string? fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {
             var objectId = revision.ObjectId;
@@ -306,7 +313,10 @@ namespace GitUI.Blame
             _clickedBlameLine = null;
 
             _blameId = revision.ObjectId;
-            CommitInfo.SetRevisionWithChildren(revision, children);
+            if (CommitInfo.Visible)
+            {
+                CommitInfo.SetRevisionWithChildren(revision, children);
+            }
 
             controlToMask?.UnMask();
         }

@@ -67,6 +67,7 @@ See the changes in the commit form.");
             _revisionFileTreeController = new RevisionFileTreeController(() => Module.WorkingDir,
                                                                          new GitRevisionInfoProvider(() => Module),
                                                                          new FileAssociatedIconProvider());
+            BlameControl.HideCommitInfo();
             blameToolStripMenuItem1.Checked = AppSettings.RevisionFileTreeShowBlame;
         }
 
