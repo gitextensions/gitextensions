@@ -87,7 +87,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormBrowse"));
         private readonly GitStatusMonitor _gitStatusMonitor;
-        private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFormBrowseController _controller;
@@ -199,12 +198,12 @@ namespace GitUI.CommandsDialogs
                 RegisterPlugins();
             }).FileAndForget();
 
-            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
+            ToolStripFilters.SetFilter(filter);
+
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
             repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, RevisionGrid, RevisionGrid, RevisionGrid);
-            toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree, () => RequestRefresh());
             fileTree.Bind(() => RequestRefresh());
 
@@ -219,6 +218,7 @@ namespace GitUI.CommandsDialogs
                 PuTTYToolStripMenuItem.Visible = false;
             }
 
+            RevisionGrid.ShowFirstParentsToggled += (sender, e) => ToolStripFilters.ShowFirstParentChecked = AppSettings.ShowFirstParent;
             RevisionGrid.SelectionChanged += (sender, e) =>
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
@@ -242,8 +242,6 @@ namespace GitUI.CommandsDialogs
                                 && (AppSettings.ShowCurrentBranchOnly || AppSettings.BranchFilterEnabled);
                 repoObjectsTree.ToggleFilterMode(isFiltering);
             };
-
-            _filterRevisionsHelper.SetFilter(filter);
 
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -469,18 +467,7 @@ namespace GitUI.CommandsDialogs
                 ToolStripScripts.BackColor = toolBackColor;
                 ToolStripScripts.ForeColor = toolForeColor;
 
-                toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
-                toolStripRevisionFilterDropDownButton.ForeColor = toolForeColor;
-
-                var toolTextBoxBackColor = SystemColors.Window;
-                toolStripBranchFilterComboBox.BackColor = toolTextBoxBackColor;
-                toolStripBranchFilterComboBox.ForeColor = toolForeColor;
-                toolStripRevisionFilterTextBox.BackColor = toolTextBoxBackColor;
-                toolStripRevisionFilterTextBox.ForeColor = toolForeColor;
-
-                // Scale tool strip items according to DPI
-                toolStripBranchFilterComboBox.Size = DpiUtil.Scale(toolStripBranchFilterComboBox.Size);
-                toolStripRevisionFilterTextBox.Size = DpiUtil.Scale(toolStripRevisionFilterTextBox.Size);
+                ToolStripFilters.InitToolStripStyles(toolForeColor, toolBackColor);
             }
 
             Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
@@ -660,7 +647,6 @@ namespace GitUI.CommandsDialogs
                 // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslationApp
 
                 _formBrowseMenus?.Dispose();
-                _filterRevisionsHelper?.Dispose();
                 _filterBranchHelper?.Dispose();
                 components?.Dispose();
                 _gitStatusMonitor?.Dispose();
@@ -773,14 +759,14 @@ namespace GitUI.CommandsDialogs
         public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);
-            TranslationUtils.AddTranslationItemsFromFields(Name, _filterRevisionsHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(Name, ToolStripFilters, translation);
             TranslationUtils.AddTranslationItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
         public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
-            TranslationUtils.TranslateItemsFromFields(Name, _filterRevisionsHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(Name, ToolStripFilters, translation);
             TranslationUtils.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
@@ -790,7 +776,7 @@ namespace GitUI.CommandsDialogs
             if (RevisionGrid.FilterIsApplied(false))
             {
                 // Clear filter
-                _filterRevisionsHelper.SetFilter(string.Empty);
+                ToolStripFilters.SetFilter(string.Empty);
             }
 
             // If a branch filter is applied by text or using the menus "Show current branch only"
@@ -1327,7 +1313,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_WorkingDir.DropDownItems.Add(mnuRecentReposSettings);
 
-            PreventToolStripSplitButtonClosing((ToolStripSplitButton)sender);
+            ToolStripFilters.PreventToolStripSplitButtonClosing((ToolStripSplitButton)sender);
         }
 
         private void WorkingDirClick(object sender, EventArgs e)
@@ -2114,7 +2100,7 @@ namespace GitUI.CommandsDialogs
             branchSelect.DropDownItems.Add(new ToolStripSeparator());
             AddBranchesMenuItems();
 
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
 
             void AddCheckoutBranchMenuItem()
             {
@@ -2282,12 +2268,6 @@ namespace GitUI.CommandsDialogs
             FillCommitInfo(revision);
         }
 
-        private void FocusFilter()
-        {
-            ToolStripControlHost filterToFocus = toolStripRevisionFilterTextBox.Focused ? (ToolStripControlHost)toolStripBranchFilterComboBox : (ToolStripControlHost)toolStripRevisionFilterTextBox;
-            filterToFocus.Focus();
-        }
-
         private void FindFileInSelectedCommit()
         {
             CommitInfoTabControl.SelectedTab = TreeTabPage;
@@ -2333,7 +2313,7 @@ namespace GitUI.CommandsDialogs
                 case Command.FocusBuildServerStatus: FocusTabOf(_buildReportTabPageExtension?.Control, (c, alreadyContainedFocus) => c.Focus()); break;
                 case Command.FocusNextTab: FocusNextTab(); break;
                 case Command.FocusPrevTab: FocusNextTab(forward: false); break;
-                case Command.FocusFilter: FocusFilter(); break;
+                case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
                 case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
                 case Command.AddNotes: AddNotes(); break;
                 case Command.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
@@ -2708,35 +2688,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void PreventToolStripSplitButtonClosing(ToolStripSplitButton? control)
-        {
-            if (control is null || toolStripBranchFilterComboBox.Focused || toolStripRevisionFilterTextBox.Focused)
-            {
-                return;
-            }
-
-            control.Tag = this.FindFocusedControl();
-            control.DropDownClosed += ToolStripSplitButtonDropDownClosed;
-            toolStripBranchFilterComboBox.Focus();
-        }
-
-        private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
-        {
-            if (sender is ToolStripSplitButton control)
-            {
-                control.DropDownClosed -= ToolStripSplitButtonDropDownClosed;
-
-                if (control.Tag is Control controlToFocus)
-                {
-                    controlToFocus.Focus();
-                    control.Tag = null;
-                }
-            }
-        }
-
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
         {
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         #region Submodules
@@ -2963,7 +2917,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         /// <summary>
@@ -3071,11 +3025,6 @@ namespace GitUI.CommandsDialogs
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
         {
             UICommands.StartSparseWorkingCopyDialog(this);
-        }
-
-        private void toolStripBranches_DropDown_ResizeDropDownWidth(object sender, EventArgs e)
-        {
-            toolStripBranchFilterComboBox.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void toolStripMenuItemReflog_Click(object sender, EventArgs e)
@@ -3238,22 +3187,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripSplitStash_DropDownOpened(object sender, EventArgs e)
         {
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
-        }
-
-        private void AdvancedFilterButton_Click(object sender, EventArgs e)
-        {
-            RevisionGrid.ShowRevisionFilterDialog();
-        }
-
-        private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
-        {
-            if (toolStripBranchFilterComboBox.Items.Count == 0)
-            {
-                return;
-            }
-
-            toolStripBranchFilterComboBox.DroppedDown = true;
+            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3361,6 +3295,59 @@ namespace GitUI.CommandsDialogs
         private void HelpToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             tsmiTelemetryEnabled.Checked = AppSettings.TelemetryEnabled ?? false;
+        }
+
+        private void toolStripFilters_AdvancedFilterRequested(object sender, EventArgs e)
+        {
+            RevisionGrid.ShowRevisionFilterDialog();
+        }
+
+        private void toolStripFilters_RevisionFilterApplied(object sender, RevisionFilterEventArgs e)
+        {
+            // TODO: move the logic to RevisionGrid
+
+            string revListArgs;
+            string inMemMessageFilter;
+            string inMemCommitterFilter;
+            string inMemAuthorFilter;
+
+            try
+            {
+                RevisionGrid.FormatQuickFilter(
+                    e.Filter, e.FilterByCommit, e.FilterByCommitter, e.FilterByAuthor, e.FilterByDiffContent,
+                    out revListArgs,
+                    out inMemMessageFilter,
+                    out inMemCommitterFilter,
+                    out inMemAuthorFilter);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Filter error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ToolStripFilters.SetFilter(string.Empty);
+                return;
+            }
+
+            if ((RevisionGrid.QuickRevisionFilter == revListArgs) &&
+                (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
+                (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
+                (RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
+                RevisionGrid.InMemFilterIgnoreCase)
+            {
+                return;
+            }
+
+            RevisionGrid.QuickRevisionFilter = revListArgs;
+            RevisionGrid.InMemMessageFilter = inMemMessageFilter;
+            RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
+            RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
+            RevisionGrid.InMemFilterIgnoreCase = true;
+            RevisionGrid.Visible = true;
+            RevisionGrid.ForceRefreshRevisions();
+        }
+
+        private void toolStripFilters_ShowFirstParentsCheckedChanged(object sender, EventArgs e)
+        {
+            RevisionGrid.ShowFirstParent();
         }
     }
 }
