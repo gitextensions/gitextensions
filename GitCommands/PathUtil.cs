@@ -109,7 +109,7 @@ namespace GitCommands
 
         public static string GetTempPath(string fileName)
         {
-            return Path.GetTempPath() + fileName;
+            return Path.Combine(Path.GetTempPath(), fileName);
         }
 
         public static string GetArchivePath(string tempPath, ObjectId id)
