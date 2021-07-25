@@ -349,7 +349,7 @@ See the changes in the commit form.");
             }
 
             string fileName = PathUtil.GetFileName(gitItem.FileName);
-            string tempPath = PathUtil.GetTempPath(fileName);
+            string tempPath = Path.Combine(Path.GetTempPath(), fileName);
 
             switch (gitItem.ObjectType)
             {
