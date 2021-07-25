@@ -58,10 +58,7 @@ namespace GitUI.CommandsDialogs
             _iconProvider = iconProvider;
         }
 
-        /// <summary>
-        /// Locates the node by the label.
-        /// </summary>
-        /// <returns>The first node matching the label, if one found; otherwise <see langword="null"/>.</returns>
+        /// <inheritdoc/>
         public TreeNode? Find(TreeNodeCollection nodes, string label)
         {
             for (var i = 0; i < nodes.Count; i++)
@@ -149,6 +146,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        /// <inheritdoc/>
         public bool SelectFileOrFolder(NativeTreeView tree, string fileSubPath)
         {
             Queue<string> pathParts = new(fileSubPath.Split(Path.DirectorySeparatorChar));
@@ -185,9 +183,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        /// <summary>
-        /// Clears the cache of the current revision's loaded children items.
-        /// </summary>
+        /// <inheritdoc/>
         public void ResetCache()
         {
             _cachedItems.Clear();
