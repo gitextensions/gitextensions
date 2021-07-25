@@ -12,6 +12,9 @@ namespace GitUI.UserControls
         /// </summary>
         private void InitializeComponent()
         {
+            this.tsmiBranchLocal = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiBranchRemote = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiBranchTag = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiCommitFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiCommitter = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiAuthor = new System.Windows.Forms.ToolStripMenuItem();
@@ -28,35 +31,35 @@ namespace GitUI.UserControls
             this.tsmiShowFirstParent = new System.Windows.Forms.ToolStripButton();
             this.SuspendLayout();
             // 
-            // commitFilterToolStripMenuItem
+            // tsmiCommitFilter
             // 
             this.tsmiCommitFilter.Checked = true;
             this.tsmiCommitFilter.CheckOnClick = true;
-            this.tsmiCommitFilter.Name = "commitFilterToolStripMenuItem";
+            this.tsmiCommitFilter.Name = "tsmiCommitFilter";
             this.tsmiCommitFilter.Text = "Commit message and hash";
             // 
-            // committerToolStripMenuItem
+            // tsmiCommitter
             // 
             this.tsmiCommitter.CheckOnClick = true;
-            this.tsmiCommitter.Name = "committerToolStripMenuItem";
+            this.tsmiCommitter.Name = "tsmiCommitter";
             this.tsmiCommitter.Text = "Committer";
             // 
-            // authorToolStripMenuItem
+            // tsmiAuthor
             // 
             this.tsmiAuthor.CheckOnClick = true;
-            this.tsmiAuthor.Name = "authorToolStripMenuItem";
+            this.tsmiAuthor.Name = "tsmiAuthor";
             this.tsmiAuthor.Text = "Author";
             // 
-            // hashToolStripMenuItem
+            // tsmiHash
             // 
             this.tsmiHash.CheckOnClick = true;
-            this.tsmiHash.Name = "hashToolStripMenuItem";
+            this.tsmiHash.Name = "tsmiHash";
             this.tsmiHash.Text = "Hash";
             // 
-            // diffContainsToolStripMenuItem
+            // tsmiDiffContains
             // 
             this.tsmiDiffContains.CheckOnClick = true;
-            this.tsmiDiffContains.Name = "diffContainsToolStripMenuItem";
+            this.tsmiDiffContains.Name = "tsmiDiffContains";
             this.tsmiDiffContains.Text = "Diff contains (SLOW)";
             // 
             // toolStripLabel1
@@ -67,32 +70,58 @@ namespace GitUI.UserControls
             this.toolStripLabel1.Text = "Branches:";
             this.toolStripLabel1.ToolTipText = "Branch filter";
             // 
-            // toolStripAdvancedFilterButton
+            // tsbtnAdvancedFilter
             // 
             this.tsbtnAdvancedFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsbtnAdvancedFilter.Image = global::GitUI.Properties.Images.FunnelPencil;
-            this.tsbtnAdvancedFilter.Name = "toolStripAdvancedFilterButton";
+            this.tsbtnAdvancedFilter.Name = "tsbtnAdvancedFilter";
             this.tsbtnAdvancedFilter.Size = new System.Drawing.Size(23, 22);
             this.tsbtnAdvancedFilter.ToolTipText = "Advanced filter";
             this.tsbtnAdvancedFilter.Click += new System.EventHandler(this.tsbtnAdvancedFilter_Click);
             // 
-            // toolStripBranchFilterComboBox
+            // tscboBranchFilter
             // 
             this.tscboBranchFilter.AutoSize = false;
             this.tscboBranchFilter.BackColor = System.Drawing.SystemColors.Control;
             this.tscboBranchFilter.DropDownWidth = 300;
             this.tscboBranchFilter.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.tscboBranchFilter.Name = "toolStripBranchFilterComboBox";
+            this.tscboBranchFilter.Name = "tscboBranchFilter";
             this.tscboBranchFilter.Size = new System.Drawing.Size(100, 23);
             this.tscboBranchFilter.Tag = "ToolBar_group:Branch filter";
             this.tscboBranchFilter.Click += new System.EventHandler(this.tscboBranchFilter_Click);
-            this.tscboBranchFilter.DropDown += new System.EventHandler(this.tscboBranchFilter_ResizeDropDownWidth);
+            this.tscboBranchFilter.DropDown += new System.EventHandler(this.tscboBranchFilter_DropDown);
+            this.tscboBranchFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tscboBranchFilter_KeyUp);
+            this.tscboBranchFilter.TextChanged += new System.EventHandler(this.tscboBranchFilter_TextChanged);
+            this.tscboBranchFilter.TextUpdate += new System.EventHandler(this.tscboBranchFilter_TextUpdate);
             // 
-            // toolStripBranchFilterDropDownButton
+            // tsmiBranchLocal
+            // 
+            this.tsmiBranchLocal.Checked = true;
+            this.tsmiBranchLocal.CheckOnClick = true;
+            this.tsmiBranchLocal.Name = "tsmiBranchLocal";
+            this.tsmiBranchLocal.Text = "Local";
+            // 
+            // tsmiBranchRemote
+            // 
+            this.tsmiBranchRemote.CheckOnClick = true;
+            this.tsmiBranchRemote.Name = "tsmiBranchRemote";
+            this.tsmiBranchRemote.Text = "Remote";
+            // 
+            // tsmiBranchTag
+            // 
+            this.tsmiBranchTag.CheckOnClick = true;
+            this.tsmiBranchTag.Name = "tsmiBranchTag";
+            this.tsmiBranchTag.Text = "Tag";
+            // 
+            // tsddbtnBranchFilter
             // 
             this.tsddbtnBranchFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsddbtnBranchFilter.DropDownItems.AddRange(new ToolStripItem[] {
+            this.tsmiBranchLocal,
+            this.tsmiBranchRemote,
+            this.tsmiBranchTag});
             this.tsddbtnBranchFilter.Image = global::GitUI.Properties.Images.EditFilter;
-            this.tsddbtnBranchFilter.Name = "toolStripBranchFilterDropDownButton";
+            this.tsddbtnBranchFilter.Name = "tsddbtnBranchFilter";
             this.tsddbtnBranchFilter.Size = new System.Drawing.Size(29, 22);
             this.tsddbtnBranchFilter.Tag = "ToolBar_group:Branch filter";
             this.tsddbtnBranchFilter.Text = "Branch type";
@@ -102,24 +131,24 @@ namespace GitUI.UserControls
             this.toolStripSeparator19.Name = "toolStripSeparator19";
             this.toolStripSeparator19.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripRevisionFilterLabel
+            // tslblRevisionFilter
             // 
-            this.tslblRevisionFilter.Name = "toolStripRevisionFilterLabel";
+            this.tslblRevisionFilter.Name = "tslblRevisionFilter";
             this.tslblRevisionFilter.Size = new System.Drawing.Size(36, 22);
             this.tslblRevisionFilter.Tag = "ToolBar_group:Text filter";
             this.tslblRevisionFilter.Text = "Filter:";
             this.tslblRevisionFilter.ToolTipText = "Text filter";
             // 
-            // toolStripRevisionFilterTextBox
+            // tstxtRevisionFilter
             // 
             this.tstxtRevisionFilter.BackColor = System.Drawing.SystemColors.Control;
             this.tstxtRevisionFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tstxtRevisionFilter.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.tstxtRevisionFilter.Name = "toolStripRevisionFilterTextBox";
+            this.tstxtRevisionFilter.Name = "tstxtRevisionFilter";
             this.tstxtRevisionFilter.Size = new System.Drawing.Size(100, 25);
             this.tstxtRevisionFilter.Tag = "ToolBar_group:Text filter";
             // 
-            // toolStripRevisionFilterDropDownButton
+            // tsddbtnRevisionFilter
             // 
             this.tsddbtnRevisionFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsddbtnRevisionFilter.Image = global::GitUI.Properties.Images.EditFilter;
@@ -129,17 +158,17 @@ namespace GitUI.UserControls
             this.tsmiAuthor,
             this.tsmiDiffContains});
             this.tsddbtnRevisionFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsddbtnRevisionFilter.Name = "toolStripRevisionFilterDropDownButton";
+            this.tsddbtnRevisionFilter.Name = "tsddbtnRevisionFilter";
             this.tsddbtnRevisionFilter.Size = new System.Drawing.Size(29, 22);
             this.tsddbtnRevisionFilter.Tag = "ToolBar_group:Text filter";
             this.tsddbtnRevisionFilter.Text = "Filter type";
             // 
-            // ShowFirstParent
+            // tsmiShowFirstParent
             // 
             this.tsmiShowFirstParent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.tsmiShowFirstParent.Image = global::GitUI.Properties.Images.ShowFirstParent;
             this.tsmiShowFirstParent.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiShowFirstParent.Name = "ShowFirstParent";
+            this.tsmiShowFirstParent.Name = "tsmiShowFirstParent";
             this.tsmiShowFirstParent.Size = new System.Drawing.Size(23, 20);
             this.tsmiShowFirstParent.ToolTipText = "Show first parents";
             this.tsmiShowFirstParent.Click += new System.EventHandler(this.tsmiShowFirstParentt_Click);
@@ -170,8 +199,16 @@ namespace GitUI.UserControls
 
         }
 
+        private void TscboBranchFilter_KeyUp(object sender, KeyEventArgs e)
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
 
+        private ToolStripMenuItem tsmiBranchLocal;
+        private ToolStripMenuItem tsmiBranchRemote;
+        private ToolStripMenuItem tsmiBranchTag;
         private ToolStripMenuItem tsmiCommitFilter;
         private ToolStripMenuItem tsmiCommitter;
         private ToolStripMenuItem tsmiAuthor;

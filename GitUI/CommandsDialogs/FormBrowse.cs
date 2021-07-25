@@ -87,7 +87,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormBrowse"));
         private readonly GitStatusMonitor _gitStatusMonitor;
-        private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
@@ -198,12 +197,12 @@ namespace GitUI.CommandsDialogs
                 RegisterPlugins();
             }).FileAndForget();
 
-            ToolStripFilters.SetFilter(filter);
+            ToolStripFilters.SetRevisionFilter(filter);
 
-            _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
-            repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, RevisionGrid, RevisionGrid, RevisionGrid);
+            // TODO: dependency on FilterBranchHelper
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, filterBranchHelper: null, RevisionGrid, RevisionGrid, RevisionGrid);
             revisionDiff.Bind(RevisionGrid, fileTree, () => RequestRefresh());
             fileTree.Bind(() => RequestRefresh());
 
@@ -218,6 +217,14 @@ namespace GitUI.CommandsDialogs
                 PuTTYToolStripMenuItem.Visible = false;
             }
 
+            RevisionGrid.RefFilterOptionsChanged += (sender, e) =>
+            {
+                if (e.RefFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
+                {
+                    // This means show all branches
+                    ToolStripFilters.SetBranchFilter(string.Empty, refresh: false);
+                }
+            };
             RevisionGrid.ShowFirstParentsToggled += (sender, e) => ToolStripFilters.ShowFirstParentChecked = AppSettings.ShowFirstParent;
             RevisionGrid.SelectionChanged += (sender, e) =>
             {
@@ -647,7 +654,6 @@ namespace GitUI.CommandsDialogs
                 // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslationApp
 
                 _formBrowseMenus?.Dispose();
-                _filterBranchHelper?.Dispose();
                 components?.Dispose();
                 _gitStatusMonitor?.Dispose();
                 _windowsJumpListManager?.Dispose();
@@ -684,7 +690,7 @@ namespace GitUI.CommandsDialogs
             }
 
             RevisionGrid.Load();
-            _filterBranchHelper.InitToolStripBranchFilter();
+            InitToolStripBranchFilter();
 
             ActiveControl = RevisionGrid;
             RevisionGrid.IndexWatcher.Reset();
@@ -760,14 +766,12 @@ namespace GitUI.CommandsDialogs
         {
             base.AddTranslationItems(translation);
             TranslationUtils.AddTranslationItemsFromFields(Name, ToolStripFilters, translation);
-            TranslationUtils.AddTranslationItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
         public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
             TranslationUtils.TranslateItemsFromFields(Name, ToolStripFilters, translation);
-            TranslationUtils.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
         public override void CancelButtonClick(object sender, EventArgs e)
@@ -776,14 +780,14 @@ namespace GitUI.CommandsDialogs
             if (RevisionGrid.FilterIsApplied(false))
             {
                 // Clear filter
-                ToolStripFilters.SetFilter(string.Empty);
+                ToolStripFilters.SetRevisionFilter(string.Empty);
             }
 
             // If a branch filter is applied by text or using the menus "Show current branch only"
             else if (RevisionGrid.FilterIsApplied(true) || AppSettings.BranchFilterEnabled)
             {
                 // Clear branch filter
-                _filterBranchHelper.SetBranchFilter(string.Empty, true);
+                ToolStripFilters.SetBranchFilter(string.Empty, refresh: true);
 
                 // Execute the "Show all branches" menu option
                 RevisionGrid.ShowAllBranches();
@@ -1065,7 +1069,7 @@ namespace GitUI.CommandsDialogs
                 _createPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
                 _viewPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
 
-                _filterBranchHelper.InitToolStripBranchFilter();
+                InitToolStripBranchFilter();
 
                 if (repositoryToolStripMenuItem.Visible)
                 {
@@ -1203,6 +1207,28 @@ namespace GitUI.CommandsDialogs
 
                 RevisionGrid.IndexWatcher.Reset();
             }
+        }
+
+        private void InitToolStripBranchFilter()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            if (!Module.IsValidGitWorkingDir())
+            {
+                ToolStripFilters.Enabled = false;
+                return;
+            }
+
+            ToolStripFilters.Enabled = true;
+            RefsFilter branchesFilter = ToolStripFilters.BranchesFilter;
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default;
+                string[] branches = Module.GetRefs(branchesFilter).Select(branch => branch.Name).ToArray();
+
+                await ToolStripFilters.SwitchToMainThreadAsync();
+                ToolStripFilters.BindBranches(branches);
+            }).FileAndForget();
         }
 
         private void OnActivate()
@@ -1982,7 +2008,7 @@ namespace GitUI.CommandsDialogs
             PluginRegistry.Unregister(UICommands);
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
-            _filterBranchHelper.SetBranchFilter(string.Empty, refresh: false);
+            ToolStripFilters.SetBranchFilter(string.Empty, refresh: false);
 
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
@@ -2654,7 +2680,7 @@ namespace GitUI.CommandsDialogs
                     // and to make it possible we add explicit branch filter and refresh.
                     if (AppSettings.ShowFirstParent && !found)
                     {
-                        _filterBranchHelper.SetBranchFilter(revision?.ToString(), refresh: true);
+                        ToolStripFilters.SetBranchFilter(revision?.ToString(), refresh: true);
                         RevisionGrid.SetSelectedRevision(revision);
                     }
 
@@ -3302,6 +3328,22 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ShowRevisionFilterDialog();
         }
 
+        private void toolStripFilters_BranchesUpdateRequested(object sender, EventArgs e)
+        {
+            InitToolStripBranchFilter();
+        }
+
+        private void toolStripFilters_BranchFilterApplied(object sender, BranchFilterEventArgs e)
+        {
+            // TODO: move the logic to RevisionGrid
+
+            bool success = RevisionGrid.SetAndApplyBranchFilter(e.Filter);
+            if (success && e.RequireRefresh)
+            {
+                RevisionGrid.ForceRefreshRevisions();
+            }
+        }
+
         private void toolStripFilters_RevisionFilterApplied(object sender, RevisionFilterEventArgs e)
         {
             // TODO: move the logic to RevisionGrid
@@ -3323,7 +3365,7 @@ namespace GitUI.CommandsDialogs
             catch (InvalidOperationException ex)
             {
                 MessageBox.Show(this, ex.Message, "Filter error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ToolStripFilters.SetFilter(string.Empty);
+                ToolStripFilters.SetRevisionFilter(string.Empty);
                 return;
             }
 

@@ -1,19 +1,33 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls
 {
     internal partial class FilterToolBar : ToolStripEx
     {
+        private static readonly string[] _noResultsFound = { TranslatedStrings.NoResultsFound };
         private bool _isApplyingFilter;
+        private bool _filterBeingChanged;
 
         /// <summary>
         /// Occurs whenever the advanced filter button is clicked.
         /// </summary>
         public event EventHandler AdvancedFilterRequested;
+
+        /// <summary>
+        /// Occurs whenever the branch filter is applied.
+        /// </summary>
+        public event EventHandler<BranchFilterEventArgs> BranchFilterApplied;
+
+        /// <summary>
+        /// Occurs whenever the branches filter dropdown needs to be udpated.
+        /// </summary>
+        public event EventHandler BranchesUpdateRequested;
 
         /// <summary>
         /// Occurs whenever the revision filter is applied.
@@ -31,14 +45,29 @@ namespace GitUI.UserControls
 
             tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
 
-            tstxtRevisionFilter.Leave += (s, e) => ApplyFilter();
+            tstxtRevisionFilter.Leave += (s, e) => ApplyRevisionFilter();
             tstxtRevisionFilter.KeyUp += (s, e) =>
             {
                 if (e.KeyValue == (char)Keys.Enter)
                 {
-                    ApplyFilter();
+                    ApplyRevisionFilter();
                 }
             };
+
+            tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+        }
+
+        public RefsFilter BranchesFilter
+        {
+            get
+            {
+                // Options are interpreted as the refs the search should be limited too
+                // If neither option is selected all refs will be queried also including stash and notes
+                RefsFilter refs = (tsmiBranchLocal.Checked ? RefsFilter.Heads : RefsFilter.NoFilter)
+                    | (tsmiBranchTag.Checked ? RefsFilter.Tags : RefsFilter.NoFilter)
+                    | (tsmiBranchRemote.Checked ? RefsFilter.Remotes : RefsFilter.NoFilter);
+                return refs;
+            }
         }
 
         public bool ShowFirstParentChecked
@@ -47,7 +76,30 @@ namespace GitUI.UserControls
             set => tsmiShowFirstParent.Checked = value;
         }
 
-        private void ApplyFilter()
+        private void ApplyBranchFilter(bool refresh)
+        {
+            if (_isApplyingFilter)
+            {
+                return;
+            }
+
+            _isApplyingFilter = true;
+
+            // The user has accepted the filter
+            _filterBeingChanged = false;
+
+            string filter = tscboBranchFilter.Items.Count > 0 ? tscboBranchFilter.Text : string.Empty;
+            if (filter == TranslatedStrings.NoResultsFound)
+            {
+                filter = string.Empty;
+            }
+
+            BranchFilterApplied?.Invoke(this, new BranchFilterEventArgs(filter, refresh));
+
+            _isApplyingFilter = false;
+        }
+
+        private void ApplyRevisionFilter()
         {
             if (_isApplyingFilter)
             {
@@ -64,10 +116,53 @@ namespace GitUI.UserControls
             _isApplyingFilter = false;
         }
 
-        public void SetFilter(string filter)
+        public void BindBranches(string[] branches)
+        {
+            var autoCompleteList = tscboBranchFilter.AutoCompleteCustomSource.Cast<string>();
+            if (!autoCompleteList.SequenceEqual(branches))
+            {
+                tscboBranchFilter.AutoCompleteCustomSource.Clear();
+                tscboBranchFilter.AutoCompleteCustomSource.AddRange(branches);
+            }
+
+            string filter = tscboBranchFilter.Items.Count > 0 ? tscboBranchFilter.Text : string.Empty;
+            string[] matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
+
+            if (matches.Length == 0)
+            {
+                matches = _noResultsFound;
+            }
+
+            int index = tscboBranchFilter.SelectionStart;
+            tscboBranchFilter.Items.Clear();
+            tscboBranchFilter.Items.AddRange(matches);
+            tscboBranchFilter.SelectionStart = index;
+        }
+
+        /// <summary>
+        ///  Clears the filter textbox without raising any events.
+        /// </summary>
+        public void ResetBranchesFilter() => tscboBranchFilter.Text = string.Empty;
+
+        /// <summary>
+        ///  Sets the branches filter and raises <see cref="BranchFilterApplied"/> event.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        /// <param name="refresh"><see langword="true"/> to request the revision grid to refresh; otherwise <see langword="false"/>.</param>
+        public void SetBranchFilter(string? filter, bool refresh)
+        {
+            tscboBranchFilter.Text = filter;
+            ApplyBranchFilter(refresh);
+        }
+
+        /// <summary>
+        ///  Sets the revision filter and raises <see cref="RevisionFilterApplied"/> event.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        public void SetRevisionFilter(string filter)
         {
             tstxtRevisionFilter.Text = filter;
-            ApplyFilter();
+            ApplyRevisionFilter();
         }
 
         public void SetFocus()
@@ -109,6 +204,12 @@ namespace GitUI.UserControls
             tscboBranchFilter.Focus();
         }
 
+        private void UpdateBranchFilterItems()
+        {
+            tscboBranchFilter.Items.Clear();
+            BranchesUpdateRequested?.Invoke(this, EventArgs.Empty);
+        }
+
         private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
         {
             if (sender is ToolStripSplitButton control)
@@ -138,9 +239,28 @@ namespace GitUI.UserControls
             tscboBranchFilter.DroppedDown = true;
         }
 
-        private void tscboBranchFilter_ResizeDropDownWidth(object sender, EventArgs e)
+        private void tscboBranchFilter_DropDown(object sender, EventArgs e)
         {
-            tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            UpdateBranchFilterItems();
+        }
+
+        private void tscboBranchFilter_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                ApplyBranchFilter(refresh: _filterBeingChanged);
+            }
+        }
+
+        private void tscboBranchFilter_TextChanged(object sender, EventArgs e)
+        {
+            _filterBeingChanged = true;
+        }
+
+        private void tscboBranchFilter_TextUpdate(object sender, EventArgs e)
+        {
+            _filterBeingChanged = true;
+            UpdateBranchFilterItems();
         }
 
         private void tsmiShowFirstParentt_Click(object sender, EventArgs e)

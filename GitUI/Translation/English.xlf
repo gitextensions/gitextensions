@@ -3166,6 +3166,18 @@ Do you want to continue?</source>
         <source>Author</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiBranchLocal.Text">
+        <source>Local</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiBranchRemote.Text">
+        <source>Remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiBranchTag.Text">
+        <source>Tag</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiCommitFilter.Text">
         <source>Commit message and hash</source>
         <target />

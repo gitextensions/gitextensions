@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,6 +25,12 @@ namespace GitUI
 
         public FilterBranchHelper(ToolStripComboBox toolStripBranches, ToolStripDropDownButton toolStripDropDownButton2, RevisionGridControl revisionGrid)
         {
+            int i = 0;
+            if (i == 0)
+            {
+                return;
+            }
+
             //
             // localToolStripMenuItem
             //
