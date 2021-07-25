@@ -112,7 +112,7 @@ namespace GitCommands
             return Path.Combine(Path.GetTempPath(), fileName);
         }
 
-        public static string GetArchivePath(string tempPath, ObjectId id)
+        public static string GetArchivePath(string tempPath, ObjectId objectId)
         {
             string fileName = GetFileName(tempPath);
             string dirPath = GetParentDirectoryPath(tempPath);
