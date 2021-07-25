@@ -121,6 +121,7 @@ namespace GitUI.CommandsDialogs
             ResetSelectedFiles = 9,
             StageSelectedFile = 10,
             UnStageSelectedFile = 11,
+            ShowFileTree = 12
         }
 
         public CommandStatus ExecuteCommand(Command cmd)
@@ -151,6 +152,7 @@ namespace GitUI.CommandsDialogs
                 case Command.ResetSelectedFiles: return ResetSelectedFilesWithConfirmation();
                 case Command.StageSelectedFile: return StageSelectedFiles();
                 case Command.UnStageSelectedFile: return UnstageSelectedFiles();
+                case Command.ShowFileTree: diffShowInFileTreeToolStripMenuItem.PerformClick(); break;
 
                 default: return base.ExecuteCommand(cmd);
             }
@@ -173,6 +175,7 @@ namespace GitUI.CommandsDialogs
             resetFileToParentToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetSelectedFiles);
             stageFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageSelectedFile);
             unstageFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnStageSelectedFile);
+            diffShowInFileTreeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowFileTree);
 
             DiffText.ReloadHotkeys();
         }
