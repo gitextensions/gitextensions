@@ -95,7 +95,7 @@ namespace GitCommands
             return fileName;
         }
 
-        public static string GetParentDirectoryPath(string fileName)
+        private static string GetParentDirectoryPath(string fileName)
         {
             var pathSeparators = new[] { NativeDirectorySeparatorChar, PosixDirectorySeparatorChar };
             var pos = fileName.LastIndexOfAny(pathSeparators);
