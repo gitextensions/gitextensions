@@ -116,16 +116,16 @@ namespace GitUI
 
         public bool StartCommandLineProcessDialog(IWin32Window? owner, IGitCommand command)
         {
-            var executed = command.AccessesRemote
+            bool success = command.AccessesRemote
                 ? FormRemoteProcess.ShowDialog(owner, this, command.Arguments)
                 : FormProcess.ShowDialog(owner, process: null, arguments: command.Arguments, Module.WorkingDir, input: null, useDialogSettings: true);
 
-            if (executed && command.ChangesRepoState)
+            if (success && command.ChangesRepoState)
             {
                 RepoChangedNotifier.Notify();
             }
 
-            return executed;
+            return success;
         }
 
         public void StartCommandLineProcessDialog(IWin32Window? owner, string command, ArgumentString arguments)

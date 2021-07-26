@@ -31,9 +31,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _applyStashedItemsAgain =
             new("Apply stashed items to working directory again?");
 
-        private readonly TranslationString _dontShowAgain =
-            new("Don't show me this message again.");
-
         private readonly TranslationString _resetNonFastForwardBranch =
             new("You are going to reset the “{0}” branch to a new location discarding ALL the commited changes since the {1} revision.\n\nAre you sure?");
         private readonly TranslationString _resetCaption = new("Reset branch");
@@ -393,7 +390,7 @@ namespace GitUI.CommandsDialogs
                             Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
                             Verification = new TaskDialogVerificationCheckBox
                             {
-                                Text = _dontShowAgain.Text
+                                Text = TranslatedStrings.DontShowAgain
                             },
                             SizeToContent = true
                         };

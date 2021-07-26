@@ -13,6 +13,7 @@ namespace GitUI
         private readonly TranslationString _okText = new("OK");
         private readonly TranslationString _cancelText = new("Cancel");
         private readonly TranslationString _closeText = new("Close");
+        private readonly TranslationString _dontShowAgain = new("Don't show me this message again");
 
         private readonly TranslationString _buttonCheckoutBranch = new("Checkout branch");
         private readonly TranslationString _buttonContinue = new("Continue");
@@ -133,6 +134,7 @@ namespace GitUI
         public static string OK => _instance.Value._okText.Text;
         public static string Cancel => _instance.Value._cancelText.Text;
         public static string Close => _instance.Value._closeText.Text;
+        public static string DontShowAgain => _instance.Value._dontShowAgain.Text;
 
         public static string ButtonContinue => _instance.Value._buttonContinue.Text;
         public static string ButtonCheckoutBranch => _instance.Value._buttonCheckoutBranch.Text;

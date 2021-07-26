@@ -40,32 +40,30 @@
             this.branches.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.branches.FormattingEnabled = true;
-            this.branches.Location = new System.Drawing.Point(0, 0);
+            this.branches.Location = new System.Drawing.Point(0, 3);
             this.branches.Name = "branches";
             this.branches.Size = new System.Drawing.Size(304, 23);
-            this.branches.TabIndex = 0;
             // 
             // selectMultipleBranchesButton
             // 
             this.selectMultipleBranchesButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.selectMultipleBranchesButton.Image = global::GitUI.Properties.Images.Select;
-            this.selectMultipleBranchesButton.Location = new System.Drawing.Point(308, 0);
+            this.selectMultipleBranchesButton.Location = new System.Drawing.Point(308, 1);
             this.selectMultipleBranchesButton.Margin = new System.Windows.Forms.Padding(0);
             this.selectMultipleBranchesButton.Name = "selectMultipleBranchesButton";
             this.selectMultipleBranchesButton.Size = new System.Drawing.Size(23, 23);
-            this.selectMultipleBranchesButton.TabIndex = 1;
             this.selectMultipleBranchesButton.UseVisualStyleBackColor = true;
             this.selectMultipleBranchesButton.Click += new System.EventHandler(this.selectMultipleBranchesButton_Click);
             // 
             // BranchComboBox
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.selectMultipleBranchesButton);
             this.Controls.Add(this.branches);
+            this.Controls.Add(this.selectMultipleBranchesButton);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "BranchComboBox";
-            this.Size = new System.Drawing.Size(331, 24);
+            this.Size = new System.Drawing.Size(331, 26);
             this.ResumeLayout(false);
 
         }
