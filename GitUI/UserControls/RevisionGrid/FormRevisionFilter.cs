@@ -49,6 +49,7 @@ namespace GitUI.UserControls.RevisionGrid
             Author.Enabled = AuthorCheck.Checked;
             Committer.Enabled = CommitterCheck.Checked;
             Message.Enabled = MessageCheck.Checked;
+            IgnoreCase.Enabled = Author.Enabled || Committer.Enabled || MessageCheck.Checked;
             _NO_TRANSLATE_Limit.Enabled = LimitCheck.Checked;
             FileFilter.Enabled = FileFilterCheck.Checked;
 
@@ -169,9 +170,14 @@ namespace GitUI.UserControls.RevisionGrid
             return true;
         }
 
-        public void SetPathFilter(string filter)
+        public void SetPathFilter(string? filter)
         {
-            FileFilter.Text = filter?.Trim();
+            // If null the value is set from forms, then just uncheck
+            if (filter is not null)
+            {
+                FileFilter.Text = filter;
+            }
+
             FileFilterCheck.Checked = !string.IsNullOrWhiteSpace(filter);
         }
 
