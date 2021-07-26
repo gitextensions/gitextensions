@@ -217,7 +217,13 @@ namespace GitCommands
         {
             try
             {
-                shellPath = Path.Combine(EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Git", shell);
+                shellPath = Path.Combine(EnvironmentAbstraction.GetEnvironmentVariable("ProgramW6432"), "Git", shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
+
+                shellPath = Path.Combine(EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Git", shell);
                 if (File.Exists(shellPath))
                 {
                     return true;
