@@ -243,7 +243,8 @@ namespace GitCommands.Submodules
                     bold = true;
                 }
 
-                if (string.IsNullOrWhiteSpace(path) || result.AllSubmodules.Any(info => info.Path == path))
+                if (string.IsNullOrWhiteSpace(path)
+                    || result.AllSubmodules.Any(info => path.Equals(info.Path, StringComparison.OrdinalIgnoreCase)))
                 {
                     Trace.WriteLine($"Ignoring duplicate submodule path: {path} ({name})");
                     continue;
