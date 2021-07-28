@@ -1,4 +1,6 @@
-﻿namespace GitFlow
+﻿using System;
+
+namespace GitFlow
 {
     partial class GitFlowForm
     {
@@ -68,6 +70,7 @@
             this.panel3 = new System.Windows.Forms.GroupBox();
             this.txtResult = new System.Windows.Forms.TextBox();
             this.lblRunCommand = new System.Windows.Forms.Label();
+            this.cbApplyToSubmodules = new System.Windows.Forms.CheckBox();
             this.gbManage.SuspendLayout();
             this.pnlManageBranch.SuspendLayout();
             this.pnlPull.SuspendLayout();
@@ -459,11 +462,22 @@
             this.lblRunCommand.TabIndex = 1;
             this.lblRunCommand.Text = "-";
             // 
+            // cbApplyToSubmodules
+            // 
+            this.cbApplyToSubmodules.AutoSize = true;
+            this.cbApplyToSubmodules.Location = new System.Drawing.Point(433, 16);
+            this.cbApplyToSubmodules.Name = "cbApplyToSubmodules";
+            this.cbApplyToSubmodules.Size = new System.Drawing.Size(122, 17);
+            this.cbApplyToSubmodules.TabIndex = 4;
+            this.cbApplyToSubmodules.Text = "Include Submodules";
+            this.cbApplyToSubmodules.UseVisualStyleBackColor = true;
+            // 
             // GitFlowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(653, 556);
+            this.Controls.Add(this.cbApplyToSubmodules);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.pbResultCommand);
             this.Controls.Add(this.lnkGitFlow);
@@ -536,5 +550,6 @@
         private System.Windows.Forms.TextBox txtResult;
         private System.Windows.Forms.CheckBox cbPushAfterFinish;
         private System.Windows.Forms.CheckBox cbSquash;
+        private System.Windows.Forms.CheckBox cbApplyToSubmodules;
     }
 }

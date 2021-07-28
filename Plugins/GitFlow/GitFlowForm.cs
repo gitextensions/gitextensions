@@ -279,6 +279,20 @@ namespace GitFlow
             RunCommand(args);
         }
 
+        private void ApplyCommandToAllSubmodules(ArgumentString args)
+        {
+            if (cbApplyToSubmodules.Checked)
+            {
+                RunOutputCommand(new GitArgumentBuilder("submodule")
+                {
+                    "foreach",
+                    "--recursive",
+                    "git",
+                    args.Arguments
+                });
+            }
+        }
+
         private void btnPull_Click(object sender, EventArgs e)
         {
             var args = new GitArgumentBuilder("flow")
@@ -337,7 +351,35 @@ namespace GitFlow
 
             txtResult.Text = resultText;
 
+            ApplyCommandToAllSubmodules(commandText);
+
             return result.ExitCode == 0;
+        }
+
+        private void RunOutputCommand(ArgumentString commandText)
+        {
+            pbResultCommand.Image = DpiUtil.Scale(Resource.StatusHourglass);
+            ShowToolTip(pbResultCommand, "running command : git " + commandText);
+            ForceRefresh(pbResultCommand);
+            lblRunCommand.Text = "git " + commandText;
+            ForceRefresh(lblRunCommand);
+            txtResult.Text = "running...";
+            ForceRefresh(txtResult);
+
+            var result = _gitUiCommands.GitModule.GitExecutable.GetOutput(commandText);
+
+            IsRefreshNeeded = true;
+
+            ttDebug.RemoveAll();
+
+            ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n");
+            var resultText = Regex.Replace(result, @"\r\n?|\n", Environment.NewLine);
+
+            pbResultCommand.Image = DpiUtil.Scale(Resource.success);
+            ShowToolTip(pbResultCommand, resultText);
+            DisplayHead();
+
+            txtResult.Text = resultText;
         }
 
         #endregion
