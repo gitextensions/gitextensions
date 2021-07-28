@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitFlow
+﻿namespace GitFlow
 {
     partial class GitFlowForm
     {
@@ -118,7 +116,7 @@ namespace GitFlow
             // 
             // btnFinish
             // 
-            this.btnFinish.Location = new System.Drawing.Point(490, 72);
+            this.btnFinish.Location = new System.Drawing.Point(490, 65);
             this.btnFinish.Name = "btnFinish";
             this.btnFinish.Size = new System.Drawing.Size(82, 23);
             this.btnFinish.TabIndex = 0;
@@ -130,7 +128,7 @@ namespace GitFlow
             // 
             this.gbManage.Controls.Add(this.pnlManageBranch);
             this.gbManage.Controls.Add(this.cbManageType);
-            this.gbManage.Location = new System.Drawing.Point(13, 149);
+            this.gbManage.Location = new System.Drawing.Point(13, 169);
             this.gbManage.Name = "gbManage";
             this.gbManage.Size = new System.Drawing.Size(628, 162);
             this.gbManage.TabIndex = 6;
@@ -151,13 +149,13 @@ namespace GitFlow
             this.pnlManageBranch.Controls.Add(this.btnFinish);
             this.pnlManageBranch.Location = new System.Drawing.Point(10, 30);
             this.pnlManageBranch.Name = "pnlManageBranch";
-            this.pnlManageBranch.Size = new System.Drawing.Size(610, 131);
+            this.pnlManageBranch.Size = new System.Drawing.Size(610, 126);
             this.pnlManageBranch.TabIndex = 7;
             // 
             // cbSquash
             // 
             this.cbSquash.AutoSize = true;
-            this.cbSquash.Location = new System.Drawing.Point(492, 113);
+            this.cbSquash.Location = new System.Drawing.Point(492, 106);
             this.cbSquash.Name = "cbSquash";
             this.cbSquash.Size = new System.Drawing.Size(62, 17);
             this.cbSquash.TabIndex = 9;
@@ -167,7 +165,7 @@ namespace GitFlow
             // cbPushAfterFinish
             // 
             this.cbPushAfterFinish.AutoSize = true;
-            this.cbPushAfterFinish.Location = new System.Drawing.Point(492, 97);
+            this.cbPushAfterFinish.Location = new System.Drawing.Point(492, 90);
             this.cbPushAfterFinish.Name = "cbPushAfterFinish";
             this.cbPushAfterFinish.Size = new System.Drawing.Size(101, 17);
             this.cbPushAfterFinish.TabIndex = 8;
@@ -250,7 +248,7 @@ namespace GitFlow
             // 
             // btnPublish
             // 
-            this.btnPublish.Location = new System.Drawing.Point(31, 72);
+            this.btnPublish.Location = new System.Drawing.Point(34, 65);
             this.btnPublish.Name = "btnPublish";
             this.btnPublish.Size = new System.Drawing.Size(81, 23);
             this.btnPublish.TabIndex = 0;
@@ -315,7 +313,7 @@ namespace GitFlow
             this.gbStart.Controls.Add(this.lblPrefixName);
             this.gbStart.Controls.Add(this.label10);
             this.gbStart.Controls.Add(this.btnCreateBranch);
-            this.gbStart.Location = new System.Drawing.Point(12, 41);
+            this.gbStart.Location = new System.Drawing.Point(12, 61);
             this.gbStart.Name = "gbStart";
             this.gbStart.Size = new System.Drawing.Size(629, 100);
             this.gbStart.TabIndex = 8;
@@ -433,9 +431,9 @@ namespace GitFlow
             this.panel3.Controls.Add(this.txtResult);
             this.panel3.Controls.Add(this.lblRunCommand);
             this.panel3.Controls.Add(this.label2);
-            this.panel3.Location = new System.Drawing.Point(12, 319);
+            this.panel3.Location = new System.Drawing.Point(12, 339);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(629, 200);
+            this.panel3.Size = new System.Drawing.Size(629, 180);
             this.panel3.TabIndex = 11;
             this.panel3.TabStop = false;
             this.panel3.Text = "Result of git flow command run";
@@ -449,7 +447,7 @@ namespace GitFlow
             this.txtResult.Name = "txtResult";
             this.txtResult.ReadOnly = true;
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResult.Size = new System.Drawing.Size(617, 162);
+            this.txtResult.Size = new System.Drawing.Size(617, 142);
             this.txtResult.TabIndex = 2;
             this.txtResult.Text = " -";
             // 
@@ -465,11 +463,11 @@ namespace GitFlow
             // cbApplyToSubmodules
             // 
             this.cbApplyToSubmodules.AutoSize = true;
-            this.cbApplyToSubmodules.Location = new System.Drawing.Point(433, 16);
+            this.cbApplyToSubmodules.Location = new System.Drawing.Point(12, 38);
             this.cbApplyToSubmodules.Name = "cbApplyToSubmodules";
-            this.cbApplyToSubmodules.Size = new System.Drawing.Size(122, 17);
+            this.cbApplyToSubmodules.Size = new System.Drawing.Size(203, 17);
             this.cbApplyToSubmodules.TabIndex = 4;
-            this.cbApplyToSubmodules.Text = "Include Submodules";
+            this.cbApplyToSubmodules.Text = "Apply the command to all submodules";
             this.cbApplyToSubmodules.UseVisualStyleBackColor = true;
             // 
             // GitFlowForm
