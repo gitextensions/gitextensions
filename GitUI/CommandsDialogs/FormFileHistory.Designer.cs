@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.FileChanges = new GitUI.RevisionGridControl();
+            this.RevisionGrid = new GitUI.RevisionGridControl();
             this.FileHistoryContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToClipboardToolStripMenuItem = new GitUI.UserControls.RevisionGrid.CopyContextMenuItem();
             this.separatorAfterCopySubmenu = new System.Windows.Forms.ToolStripSeparator();
@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.FileChanges);
+            this.splitContainer1.Panel1.Controls.Add(this.RevisionGrid);
             // 
             // splitContainer1.Panel2
             // 
@@ -102,13 +102,13 @@ namespace GitUI.CommandsDialogs
             // 
             // FileChanges
             // 
-            this.FileChanges.ContextMenuStrip = this.FileHistoryContextMenu;
-            this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileChanges.Location = new System.Drawing.Point(0, 0);
-            this.FileChanges.Name = "FileChanges";
-            this.FileChanges.Size = new System.Drawing.Size(748, 101);
-            this.FileChanges.TabIndex = 2;
-            this.FileChanges.DoubleClick += new System.EventHandler(this.FileChangesDoubleClick);
+            this.RevisionGrid.ContextMenuStrip = this.FileHistoryContextMenu;
+            this.RevisionGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
+            this.RevisionGrid.Name = "FileChanges";
+            this.RevisionGrid.Size = new System.Drawing.Size(748, 101);
+            this.RevisionGrid.TabIndex = 2;
+            this.RevisionGrid.DoubleClick += new System.EventHandler(this.FileChangesDoubleClick);
             // 
             // FileHistoryContextMenu
             // 
@@ -633,7 +633,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TabPage BlameTab;
         private FileViewer View;
         private FileViewer Diff;
-        private RevisionGridControl FileChanges;
+        private RevisionGridControl RevisionGrid;
         private System.Windows.Forms.ContextMenuStrip FileHistoryContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private Blame.BlameControl Blame;

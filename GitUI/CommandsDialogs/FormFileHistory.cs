@@ -60,13 +60,13 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             ConfigureTabControl();
 
-            _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, FileChanges);
-            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, FileChanges, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
+            _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
+            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
 
             _formBrowseMenus = new FormBrowseMenus(FileHistoryContextMenu);
             _formBrowseMenus.ResetMenuCommandSets();
-            _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, FileChanges.MenuCommands.NavigateMenuCommands);
-            _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, FileChanges.MenuCommands.ViewMenuCommands);
+            _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, RevisionGrid.MenuCommands.NavigateMenuCommands);
+            _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.MenuCommands.ViewMenuCommands);
             _formBrowseMenus.InsertRevisionGridMainMenuItems(toolStripSeparator4);
 
             _commitDataManager = new CommitDataManager(() => Module);
@@ -77,14 +77,14 @@ namespace GitUI.CommandsDialogs
             Diff.EscapePressed += Close;
             Blame.EscapePressed += Close;
 
-            copyToClipboardToolStripMenuItem.SetRevisionFunc(() => FileChanges.GetSelectedRevisions());
+            copyToClipboardToolStripMenuItem.SetRevisionFunc(() => RevisionGrid.GetSelectedRevisions());
 
             InitializeComplete();
 
             Blame.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
 
-            FileChanges.SelectedId = revision?.ObjectId;
-            FileChanges.ShowBuildServerInfo = true;
+            RevisionGrid.SelectedId = revision?.ObjectId;
+            RevisionGrid.ShowBuildServerInfo = true;
 
             FileName = fileName;
             SetTitle();
@@ -98,8 +98,8 @@ namespace GitUI.CommandsDialogs
                 tabControl1.RemoveIfExists(BlameTab);
             }
 
-            FileChanges.SelectionChanged += FileChangesSelectionChanged;
-            FileChanges.DisableContextMenu();
+            RevisionGrid.SelectionChanged += FileChangesSelectionChanged;
+            RevisionGrid.DisableContextMenu();
 
             bool blameTabExists = tabControl1.Contains(BlameTab);
 
@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                FileChanges.Visible = false;
+                RevisionGrid.Visible = false;
             }
 
             LoadCustomDifftools();
@@ -215,7 +215,7 @@ namespace GitUI.CommandsDialogs
 
         private void LoadFileHistory()
         {
-            FileChanges.Visible = true;
+            RevisionGrid.Visible = true;
 
             if (string.IsNullOrEmpty(FileName))
             {
@@ -226,8 +226,8 @@ namespace GitUI.CommandsDialogs
                 () => BuildFilter(),
                 filter =>
                 {
-                    FileChanges.SetFilters(filter);
-                    FileChanges.Load();
+                    RevisionGrid.SetFilters(filter);
+                    RevisionGrid.Load();
                 });
 
             return;
@@ -318,7 +318,7 @@ namespace GitUI.CommandsDialogs
 
         private string? GetFileNameForRevision(GitRevision rev)
         {
-            ObjectId objectId = rev.IsArtificial ? FileChanges.CurrentCheckout : rev.ObjectId;
+            ObjectId objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
 
             return _filePathByObjectId.TryGetValue(objectId, out string? path) ? path : null;
         }
@@ -363,7 +363,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateSelectedFileViewers(bool force = false)
         {
-            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
 
             if (selectedRevisions.Count == 0)
             {
@@ -371,7 +371,7 @@ namespace GitUI.CommandsDialogs
             }
 
             GitRevision revision = selectedRevisions[0];
-            var children = FileChanges.GetRevisionChildren(revision.ObjectId);
+            var children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             string fileName = GetFileNameForRevision(revision) ?? FileName;
 
             SetTitle(fileName);
@@ -436,7 +436,7 @@ namespace GitUI.CommandsDialogs
 
             if (tabControl1.SelectedTab == BlameTab)
             {
-                Blame.LoadBlame(revision, children, fileName, FileChanges, BlameTab, Diff.Encoding, force: force);
+                Blame.LoadBlame(revision, children, fileName, RevisionGrid, BlameTab, Diff.Encoding, force: force);
             }
             else if (tabControl1.SelectedTab == ViewTab)
             {
@@ -457,7 +457,7 @@ namespace GitUI.CommandsDialogs
                     IsTracked = true,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
-                var revisions = FileChanges.GetSelectedRevisions();
+                var revisions = RevisionGrid.GetSelectedRevisions();
                 FileStatusItem item = new(firstRev: revisions.Skip(1).LastOrDefault(), secondRev: revisions.FirstOrDefault(), file);
                 _ = Diff.ViewChangesAsync(item, defaultText: "You need to select at least one revision to view diff.",
                     cancellationToken: _viewChangesSequence.Next());
@@ -479,7 +479,7 @@ namespace GitUI.CommandsDialogs
 
         private void FileChangesDoubleClick(object sender, EventArgs e)
         {
-            FileChanges.ViewSelectedRevisions();
+            RevisionGrid.ViewSelectedRevisions();
         }
 
         private void OpenWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
@@ -498,7 +498,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var toolName = item?.Tag as string;
-            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
             var orgFileName = selectedRevisions.Count != 0
                 ? GetFileNameForRevision(selectedRevisions[0])
                 : null;
@@ -508,7 +508,7 @@ namespace GitUI.CommandsDialogs
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRows = FileChanges.GetSelectedRevisions();
+            var selectedRows = RevisionGrid.GetSelectedRevisions();
 
             if (selectedRows.Count > 0)
             {
@@ -601,7 +601,7 @@ namespace GitUI.CommandsDialogs
 
         private void cherryPickThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
                 UICommands.StartCherryPickDialog(this, selectedRevisions[0]);
@@ -610,7 +610,7 @@ namespace GitUI.CommandsDialogs
 
         private void revertCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
             if (selectedRevisions.Count == 1)
             {
                 UICommands.StartRevertCommitDialog(this, selectedRevisions[0]);
@@ -619,7 +619,7 @@ namespace GitUI.CommandsDialogs
 
         private void FileHistoryContextMenuOpening(object sender, CancelEventArgs e)
         {
-            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
 
             diffToolRemoteLocalStripMenuItem.Enabled =
                 selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId != ObjectId.WorkTreeId &&
@@ -662,7 +662,7 @@ namespace GitUI.CommandsDialogs
                 Validates.NotNull(e.Data);
                 if (Module.TryResolvePartialCommitId(e.Data, out var objectId))
                 {
-                    FileChanges.SetSelectedRevision(objectId);
+                    RevisionGrid.SetSelectedRevision(objectId);
                 }
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
@@ -671,16 +671,16 @@ namespace GitUI.CommandsDialogs
                 CommitData? commit = _commitDataManager.GetCommitData(e.Data, out _);
                 if (commit is not null)
                 {
-                    FileChanges.SetSelectedRevision(commit.ObjectId);
+                    RevisionGrid.SetSelectedRevision(commit.ObjectId);
                 }
             }
             else if (e.Command == "navigatebackward")
             {
-                FileChanges.NavigateBackward();
+                RevisionGrid.NavigateBackward();
             }
             else if (e.Command == "navigateforward")
             {
-                FileChanges.NavigateForward();
+                RevisionGrid.NavigateForward();
             }
         }
 
