@@ -29,24 +29,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 ListIncludedEncodings.EndUpdate();
             }
 
-            var availableEncoding = Encoding.GetEncodings()
+            object[] selectableEncodings = Encoding.GetEncodings()
                 .Select(ei => ei.GetEncoding())
+                .Select(e => e.GetType() == typeof(UTF8Encoding) ? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false) : e) // If exists utf-8, then replace to utf-8 without BOM
                 .Where(e => e != Encoding.UTF7) // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
                 .Where(e => !includedEncoding.ContainsKey(e.WebName))
-                .ToList();
-
-            // If exists utf-8, then replace to utf-8 without BOM
-            var utf8 = availableEncoding.FirstOrDefault(e => typeof(UTF8Encoding) == e.GetType());
-            if (utf8 is not null)
-            {
-                availableEncoding.Remove(utf8);
-                availableEncoding.Add(new UTF8Encoding(false));
-            }
+                .GroupBy(e => e.WebName)
+                .Select(group => group.First()) // ignore encodings which cannot be distinguished, keep first only
+                .ToArray<object>();
 
             ListAvailableEncodings.BeginUpdate();
             try
             {
-                ListAvailableEncodings.Items.AddRange(availableEncoding.ToArray<object>());
+                ListAvailableEncodings.Items.AddRange(selectableEncodings);
                 ListAvailableEncodings.DisplayMember = nameof(Encoding.EncodingName);
             }
             finally
@@ -59,20 +54,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (ListAvailableEncodings.SelectedItem is not null)
             {
-                Encoding selected = (Encoding)ListAvailableEncodings.SelectedItem;
-                foreach (Encoding included in ListIncludedEncodings.Items)
-                {
-                    if (included.WebName == selected.WebName)
-                    {
-                        MessageBox.Show(this,
-                            string.Format("The encoding '{0}' has the same WebName '{1}' as the already included '{2}' - ignoring.",
-                                selected.EncodingName,
-                                selected.WebName,
-                                included.EncodingName));
-                        return;
-                    }
-                }
-
                 ListIncludedEncodings.Items.Add(ListAvailableEncodings.SelectedItem);
                 ListAvailableEncodings.Items.RemoveAt(ListAvailableEncodings.SelectedIndex);
             }
