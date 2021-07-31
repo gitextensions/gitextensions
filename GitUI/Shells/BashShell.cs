@@ -27,25 +27,20 @@ namespace GitUI.Shells
                 // Try to find bash or sh below to set ExecutableCommandLine, as git-bash.exe cannot be connected to the built-in console.
             }
 
-            if (PathUtil.TryFindShellPath(BashExe, out exePath))
+            foreach (string shellExecutableName in new string[] { BashExe, ShExe })
             {
-                if (ExecutablePath is null)
+                if (PathUtil.TryFindShellPath(shellExecutableName, out exePath))
                 {
-                    ExecutableName = BashExe;
-                    ExecutablePath = exePath;
-                }
+                    if (ExecutablePath is null)
+                    {
+                        ExecutableName = shellExecutableName;
+                        ExecutablePath = exePath;
+                    }
 
-                ExecutableCommandLine = $"{exePath.Quote()} --login -i";
-            }
-            else if (PathUtil.TryFindShellPath(ShExe, out exePath))
-            {
-                if (ExecutablePath is null)
-                {
-                    ExecutableName = ShExe;
-                    ExecutablePath = exePath;
-                }
+                    ExecutableCommandLine = $"{exePath.Quote()} --login -i";
 
-                ExecutableCommandLine = $"{exePath.Quote()} --login -i";
+                    break;
+                }
             }
         }
 
