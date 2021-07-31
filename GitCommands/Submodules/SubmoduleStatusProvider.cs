@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Git;
+using GitCommands.Utils;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -244,7 +245,8 @@ namespace GitCommands.Submodules
                 }
 
                 if (string.IsNullOrWhiteSpace(path)
-                    || result.AllSubmodules.Any(info => path.Equals(info.Path, StringComparison.OrdinalIgnoreCase)))
+                    || (EnvUtils.RunningOnWindows()
+                        && result.AllSubmodules.Any(info => path.Equals(info.Path, StringComparison.OrdinalIgnoreCase))))
                 {
                     Trace.WriteLine($"Ignoring duplicate submodule path: {path} ({name})");
                     continue;
