@@ -217,7 +217,7 @@ namespace GitCommands
 
             ExecutionResult exec = GetModule().GitExecutable.Execute(arguments,
                 outputEncoding: GitModule.LosslessEncoding,
-                cache: cache ? GitModule.GitCommandCache : null);
+                cache: cache ? GitModule.GitCommandCache : null, throwOnErrorOutput: false);
 
             if (!exec.ExitedSuccessfully)
             {

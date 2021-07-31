@@ -23,6 +23,8 @@ namespace GitUIPluginInterfaces
         /// <param name="outputEncoding">The <see cref="Encoding"/> to use when interpreting standard output and standard
         /// error, or <c>null</c> if <paramref name="redirectOutput"/> is <c>false</c>.</param>
         /// <param name="useShellExecute">The value for the flag <c>ProcessStartInfo.UseShellExecute</c>.</param>
+        /// <param name="throwOnErrorOutput">A flag configuring whether to throw an exception if the exit code is not 0
+        /// or if the output to StandardError is not empty.</param>
         /// <returns>The started process.</returns>
         [MustUseReturnValue]
         IProcess Start(ArgumentString arguments = default,
@@ -30,6 +32,7 @@ namespace GitUIPluginInterfaces
                        bool redirectInput = false,
                        bool redirectOutput = false,
                        Encoding? outputEncoding = null,
-                       bool useShellExecute = false);
+                       bool useShellExecute = false,
+                       bool throwOnErrorOutput = true);
     }
 }

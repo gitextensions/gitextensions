@@ -1277,11 +1277,7 @@ namespace GitUI
                 objectId
             };
 
-            // NOTE if the object ID does not exist we receive a message resembling (excluding quotes):
-            //
-            // "fatal: bad object b897cd39543bd933da30af872a633760e79472c9"
-
-            foreach (var line in Module.GitExecutable.GetOutputLines(args))
+            foreach (var line in Module.GitExecutable.GetOutputLines(args, throwOnErrorOutput: false))
             {
                 if (ObjectId.TryParse(line, out var parentId))
                 {
