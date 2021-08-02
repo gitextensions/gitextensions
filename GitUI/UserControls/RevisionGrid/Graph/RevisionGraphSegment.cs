@@ -28,10 +28,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public LaneInfo? LaneInfo { get; set; }
 
-        public int StartScore => Child.Score;
-
-        public int EndScore => Parent.Score;
-
         public RevisionGraphRevision Parent { get; }
         public RevisionGraphRevision Child { get; }
     }
