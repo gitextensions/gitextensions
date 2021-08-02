@@ -502,7 +502,7 @@ namespace GitUI.CommandsDialogs
             return !string.IsNullOrEmpty(url);
         }
 
-        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+        internal TestAccessor GetTestAccessor() => new(this);
 
         internal readonly struct TestAccessor
         {

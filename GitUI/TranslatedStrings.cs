@@ -106,6 +106,7 @@ namespace GitUI
         private readonly TranslationString _workingDirectoryText = new("Working directory");
         private readonly TranslationString _reportBugText = new("If you think this was caused by Git Extensions, you can report a bug for the team to investigate.");
 
+        private readonly TranslationString _filterFileInGrid = new("Filter file in &grid");
         private readonly TranslationString _openInVisualStudioFailureText = new("Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.");
         private readonly TranslationString _openInVisualStudioFailureCaption = new("Unable to open file");
 
@@ -174,6 +175,7 @@ namespace GitUI
         public static string Tag => _instance.Value._tag.Text;
         public static string Remote => _instance.Value._remote.Text;
         public static string OpenWithGitExtensions => _instance.Value._openWithGitExtensions.Text;
+        public static string FilterFileInGrid => _instance.Value._filterFileInGrid.Text;
         public static string OpenInVisualStudio => _instance.Value._openInVisualStudio.Text;
         public static string ContScrollToNextFileOnlyWithAlt => _instance.Value._contScrollToNextFileOnlyWithAlt.Text;
         public static string NoRevision => _instance.Value._noRevision.Text;

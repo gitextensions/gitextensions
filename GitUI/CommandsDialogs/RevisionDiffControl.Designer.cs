@@ -54,6 +54,7 @@ namespace GitUI.CommandsDialogs
             this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffShowInFileTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.diffFilterFileInGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator33 = new System.Windows.Forms.ToolStripSeparator();
             this.fileHistoryDiffToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -136,8 +137,9 @@ namespace GitUI.CommandsDialogs
             this.diffToolStripSeparator13,
             this.copyFilenameToClipboardToolStripMenuItem1,
             this.openContainingFolderToolStripMenuItem,
-            this.diffShowInFileTreeToolStripMenuItem,
             this.toolStripSeparator33,
+            this.diffShowInFileTreeToolStripMenuItem,
+            this.diffFilterFileInGridToolStripMenuItem,
             this.fileHistoryDiffToolstripMenuItem,
             this.blameToolStripMenuItem,
             this.findInDiffToolStripMenuItem});
@@ -394,6 +396,11 @@ namespace GitUI.CommandsDialogs
             this.openContainingFolderToolStripMenuItem.Text = "Show &in folder";
             this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
             // 
+            // toolStripSeparator33
+            // 
+            this.toolStripSeparator33.Name = "toolStripSeparator33";
+            this.toolStripSeparator33.Size = new System.Drawing.Size(293, 6);
+            // 
             // diffShowInFileTreeToolStripMenuItem
             // 
             this.diffShowInFileTreeToolStripMenuItem.Image = global::GitUI.Properties.Images.FileTree;
@@ -402,10 +409,12 @@ namespace GitUI.CommandsDialogs
             this.diffShowInFileTreeToolStripMenuItem.Text = "Show in File &tree";
             this.diffShowInFileTreeToolStripMenuItem.Click += new System.EventHandler(this.diffShowInFileTreeToolStripMenuItem_Click);
             // 
-            // toolStripSeparator33
+            // diffFilterFileInGridToolStripMenuItem
             // 
-            this.toolStripSeparator33.Name = "toolStripSeparator33";
-            this.toolStripSeparator33.Size = new System.Drawing.Size(293, 6);
+            this.diffFilterFileInGridToolStripMenuItem.Image = global::GitUI.Properties.Images.FunnelPencil;
+            this.diffFilterFileInGridToolStripMenuItem.Name = "diffFilterFileInGridToolStripMenuItem";
+            this.diffFilterFileInGridToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.diffFilterFileInGridToolStripMenuItem.Click += new System.EventHandler(this.diffFilterFileInGridToolStripMenuItem_Click);
             // 
             // fileHistoryDiffToolstripMenuItem
             // 
@@ -477,6 +486,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem firstToLocalToolStripMenuItem;
         private ToolStripMenuItem firstToSelectedToolStripMenuItem;
         private ToolStripMenuItem findInDiffToolStripMenuItem;
+        private ToolStripMenuItem diffFilterFileInGridToolStripMenuItem;
         private ToolStripMenuItem blameToolStripMenuItem;
         private ToolStripMenuItem fileHistoryDiffToolstripMenuItem;
         private ToolStripSeparator toolStripSeparator33;

@@ -44,6 +44,7 @@
             this.fileTreeArchiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileTreeCleanWorkingTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorFileNameActions = new System.Windows.Forms.ToolStripSeparator();
+            this.filterFileInGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blameToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorTopActions = new System.Windows.Forms.ToolStripSeparator();
@@ -124,6 +125,7 @@
             this.copyFilenameToClipboardToolStripMenuItem,
             this.fileTreeOpenContainingFolderToolStripMenuItem,
             this.toolStripSeparatorFileNameActions,
+            this.filterFileInGridToolStripMenuItem,
             this.fileHistoryToolStripMenuItem,
             this.blameToolStripMenuItem1,
             this.fileTreeArchiveToolStripMenuItem,
@@ -226,6 +228,13 @@
             // 
             this.toolStripSeparatorFileNameActions.Name = "toolStripSeparatorFileNameActions";
             this.toolStripSeparatorFileNameActions.Size = new System.Drawing.Size(322, 6);
+            // 
+            // filterFileInGridToolStripMenuItem
+            // 
+            this.filterFileInGridToolStripMenuItem.Image = global::GitUI.Properties.Images.FunnelPencil;
+            this.filterFileInGridToolStripMenuItem.Name = "filterFileInGridToolStripMenuItem";
+            this.filterFileInGridToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
+            this.filterFileInGridToolStripMenuItem.Click += new System.EventHandler(this.filterFileInGridToolStripMenuItem_Click);
             // 
             // fileHistoryToolStripMenuItem
             // 
@@ -385,6 +394,7 @@
         private System.Windows.Forms.ToolStripMenuItem fileTreeArchiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileTreeCleanWorkingTreeToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFileNameActions;
+        private System.Windows.Forms.ToolStripMenuItem filterFileInGridToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blameToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;

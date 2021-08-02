@@ -63,6 +63,7 @@ namespace GitUI.CommandsDialogs
             DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
             DiffText.LinePatchingBlocksUntilReload = true;
             BlameControl.HideCommitInfo();
+            diffFilterFileInGridToolStripMenuItem.Text = TranslatedStrings.FilterFileInGrid;
         }
 
         private void FileViewer_TopScrollReached(object sender, EventArgs e)
@@ -122,7 +123,8 @@ namespace GitUI.CommandsDialogs
             ResetSelectedFiles = 9,
             StageSelectedFile = 10,
             UnStageSelectedFile = 11,
-            ShowFileTree = 12
+            ShowFileTree = 12,
+            FilterFileInGrid = 13
         }
 
         public CommandStatus ExecuteCommand(Command cmd)
@@ -154,6 +156,7 @@ namespace GitUI.CommandsDialogs
                 case Command.StageSelectedFile: return StageSelectedFiles();
                 case Command.UnStageSelectedFile: return UnstageSelectedFiles();
                 case Command.ShowFileTree: diffShowInFileTreeToolStripMenuItem.PerformClick(); break;
+                case Command.FilterFileInGrid: diffFilterFileInGridToolStripMenuItem.PerformClick(); break;
 
                 default: return base.ExecuteCommand(cmd);
             }
@@ -177,6 +180,7 @@ namespace GitUI.CommandsDialogs
             stageFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageSelectedFile);
             unstageFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnStageSelectedFile);
             diffShowInFileTreeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowFileTree);
+            diffFilterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
 
             DiffText.ReloadHotkeys();
         }
@@ -216,6 +220,13 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        /// <summary>
+        /// Gets or sets the file in the list to select initially.
+        /// When switching commits, the last selected file is "followed" if available in the new commit,
+        /// this file is used as a fallback.
+        /// </summary>
+        public string? FallbackFollowedFile { private get; set; } = null;
+
         private void SetDiffs(IReadOnlyList<GitRevision> revisions)
         {
             Validates.NotNull(_revisionGrid);
@@ -228,6 +239,11 @@ namespace GitUI.CommandsDialogs
             if (oldDiffItem is not null && DiffFiles.FirstGroupItems.Any(i => i.Item.Name.Equals(oldDiffItem.Item.Name)))
             {
                 DiffFiles.SelectedGitItem = oldDiffItem.Item;
+            }
+            else if (!string.IsNullOrWhiteSpace(FallbackFollowedFile)
+                && DiffFiles.FirstGroupItems.Where(i => i.Item.Name.Equals(FallbackFollowedFile)).FirstOrDefault()?.Item is GitItemStatus listItem)
+            {
+                DiffFiles.SelectedGitItem = listItem;
             }
         }
 
@@ -539,6 +555,11 @@ namespace GitUI.CommandsDialogs
             // switch to view (and fills the first level of file tree data model if not already done)
             (FindForm() as FormBrowse)?.ExecuteCommand(FormBrowse.Command.FocusFileTree);
             _revisionFileTree.ExpandToFile(DiffFiles.SelectedItems.First().Item.Name);
+        }
+
+        private void diffFilterFileInGridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            (FindForm() as FormBrowse)?.SetPathFilter(DiffFiles.SelectedItems.First().Item.Name.ToPosixPath());
         }
 
         private void UpdateStatusOfMenuItems()
