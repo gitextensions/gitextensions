@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Git;
+using GitCommands.Utils;
 using GitExtensions;
 using GitUI;
 using GitUIPluginInterfaces;
@@ -242,6 +244,14 @@ namespace GitCommands.Submodules
                 {
                     result.CurrentSubmoduleName = currentModule.GetCurrentSubmoduleLocalPath();
                     bold = true;
+                }
+
+                if (string.IsNullOrWhiteSpace(path)
+                    || (EnvUtils.RunningOnWindows()
+                        && result.AllSubmodules.Any(info => path.Equals(info.Path, StringComparison.OrdinalIgnoreCase))))
+                {
+                    Trace.WriteLine($"Ignoring duplicate submodule path: {path} ({name})");
+                    continue;
                 }
 
                 var smi = new SubmoduleInfo { Text = name, Path = path, Bold = bold };
