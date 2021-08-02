@@ -9317,6 +9317,10 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>&amp;Edit working directory file</source>
         <target />
       </trans-unit>
+      <trans-unit id="diffFilterFileInGridToolStripMenuItem.Text">
+        <source>Filter file in &amp;grid</source>
+        <target />
+      </trans-unit>
       <trans-unit id="diffOpenRevisionFileToolStripMenuItem.Text">
         <source>Ope&amp;n this revision (temp file)</source>
         <target />
@@ -9513,6 +9517,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="filterFileInGridToolStripMenuItem.Text">
+        <source>Filter file in &amp;grid</source>
         <target />
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
@@ -10646,6 +10654,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_exitCodeText.Text">
         <source>Exit code</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_filterFileInGrid.Text">
+        <source>Filter file in &amp;grid</source>
         <target />
       </trans-unit>
       <trans-unit id="_findGitExecutable.Text">

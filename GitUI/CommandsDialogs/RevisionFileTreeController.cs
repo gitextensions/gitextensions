@@ -149,7 +149,7 @@ namespace GitUI.CommandsDialogs
         /// <inheritdoc/>
         public bool SelectFileOrFolder(NativeTreeView tree, string fileSubPath)
         {
-            Queue<string> pathParts = new(fileSubPath.Split(Path.DirectorySeparatorChar));
+            Queue<string> pathParts = new(fileSubPath.Split(Delimiters.PathSeparators));
             var foundNode = FindSubNode(tree.Nodes, pathParts);
             if (foundNode is null)
             {

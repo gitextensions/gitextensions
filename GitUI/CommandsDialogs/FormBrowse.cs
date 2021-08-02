@@ -859,6 +859,15 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
+        public void SetPathFilter(string pathFilter)
+        {
+            RevisionGrid.SetPathFilter(pathFilter.QuoteNE());
+            revisionDiff.FallbackFollowedFile = pathFilter;
+            fileTree.FallbackFollowedFile = pathFilter;
+            Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), branchSelect.Text, TranslatedStrings.NoBranch, RevisionGrid.GetPathFilter());
+            RevisionGrid.ForceRefreshRevisions();
+        }
+
         private void ShowDashboard()
         {
             toolPanel.SuspendLayout();

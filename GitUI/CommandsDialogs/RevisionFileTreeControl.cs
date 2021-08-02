@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -48,7 +49,6 @@ See the changes in the commit form.");
         private readonly TranslationString _success = new("Success");
 
         // store strings to not keep references to nodes
-        private readonly Stack<string> _lastSelectedNodes = new();
         private readonly IRevisionFileTreeController _revisionFileTreeController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider = new FindFilePredicateProvider();
@@ -69,6 +69,7 @@ See the changes in the commit form.");
                                                                          new FileAssociatedIconProvider());
             BlameControl.HideCommitInfo();
             blameToolStripMenuItem1.Checked = AppSettings.RevisionFileTreeShowBlame;
+            filterFileInGridToolStripMenuItem.Text = TranslatedStrings.FilterFileInGrid;
         }
 
         public void Bind(RevisionGridControl revisionGrid, Action? refreshGitStatus)
@@ -149,6 +150,13 @@ See the changes in the commit form.");
             findToolStripMenuItem_Click(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Gets or sets the file in the list to select initially.
+        /// When switching commits, the last selected file is "followed" if available in the new commit,
+        /// this file is used as a fallback.
+        /// </summary>
+        public string? FallbackFollowedFile { private get; set; } = null;
+
         public void LoadRevision(GitRevision? revision)
         {
             _revision = revision;
@@ -160,57 +168,45 @@ See the changes in the commit form.");
                 tvGitTree.BeginUpdate();
 
                 // Save state only when there is selected node
+                List<string> tryNodes = new();
                 if (tvGitTree.SelectedNode is not null)
                 {
-                    var node = tvGitTree.SelectedNode;
-                    _lastSelectedNodes.Clear();
+                    TreeNode node = tvGitTree.SelectedNode;
+                    string path = "";
                     while (node is not null)
                     {
-                        _lastSelectedNodes.Push(node.Text);
+                        path = string.IsNullOrWhiteSpace(path) ? node.Text : $"{node.Text}/{path}";
                         node = node.Parent;
                     }
+
+                    if (!string.IsNullOrWhiteSpace(path))
+                    {
+                        tryNodes.Add(path);
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(FallbackFollowedFile))
+                {
+                    tryNodes.Add(FallbackFollowedFile);
                 }
 
                 // Refresh tree
                 tvGitTree.Nodes.Clear();
 
-                // restore selected file and scroll position when new selection is done
+                // restore selected file when new selection is done
                 if (_revision is not null && !_revision.IsArtificial && tvGitTree.ImageList is not null)
                 {
                     _revisionFileTreeController.LoadChildren(_revision, tvGitTree.Nodes, tvGitTree.ImageList.Images);
-                    ////GitTree.Sort();
-                    TreeNode? lastMatchedNode = null;
 
-                    // Load state
-                    var currentNodes = tvGitTree.Nodes;
-                    TreeNode? matchedNode = null;
-                    while (_lastSelectedNodes.Count > 0 && currentNodes is not null)
+                    foreach (string path in tryNodes)
                     {
-                        var next = _lastSelectedNodes.Pop();
-                        foreach (TreeNode node in currentNodes)
+                        if (_revisionFileTreeController.SelectFileOrFolder(tvGitTree, path))
                         {
-                            if (node.Text != next && next.Length != 40)
-                            {
-                                continue;
-                            }
-
-                            node.Expand();
-                            matchedNode = node;
+                            // Try scroll
+                            tvGitTree.SelectedNode.EnsureVisible();
                             break;
                         }
-
-                        if (matchedNode is null)
-                        {
-                            currentNodes = null;
-                        }
-                        else
-                        {
-                            lastMatchedNode = matchedNode;
-                            currentNodes = matchedNode.Nodes;
-                        }
                     }
-
-                    tvGitTree.SelectedNode = lastMatchedNode;
                 }
 
                 if (tvGitTree.SelectedNode is null)
@@ -238,7 +234,8 @@ See the changes in the commit form.");
             OpenWithDifftool = 2,
             OpenAsTempFile = 3,
             OpenAsTempFileWith = 4,
-            EditFile = 5
+            EditFile = 5,
+            FilterFileInGrid = 6
         }
 
         public CommandStatus ExecuteCommand(Command cmd)
@@ -256,6 +253,7 @@ See the changes in the commit form.");
                 case Command.OpenAsTempFile: openFileToolStripMenuItem.PerformClick(); break;
                 case Command.OpenAsTempFileWith: openFileWithToolStripMenuItem.PerformClick(); break;
                 case Command.EditFile: editCheckedOutFileToolStripMenuItem.PerformClick(); break;
+                case Command.FilterFileInGrid: filterFileInGridToolStripMenuItem.PerformClick(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -271,6 +269,7 @@ See the changes in the commit form.");
             openFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFile);
             openFileWithToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFileWith);
             editCheckedOutFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
+            filterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
             FileText.ReloadHotkeys();
         }
 
@@ -481,16 +480,35 @@ See the changes in the commit form.");
             }
         }
 
-        private void fileHistoryItem_Click(object sender, EventArgs e)
+        private bool TryGetSelectedName([NotNullWhen(returnValue: true)] out string? name)
         {
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
             {
-                string name = gitItem.FileName;
+                name = gitItem.FileName;
                 if (gitItem.ObjectType == GitObjectType.Tree)
                 {
                     name += "/";
                 }
 
+                return true;
+            }
+
+            name = null;
+            return false;
+        }
+
+        private void filterFileInGridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TryGetSelectedName(out string name))
+            {
+                (FindForm() as FormBrowse)?.SetPathFilter(name.ToPosixPath());
+            }
+        }
+
+        private void fileHistoryItem_Click(object sender, EventArgs e)
+        {
+            if (TryGetSelectedName(out string name))
+            {
                 UICommands.StartFileHistoryDialog(this, name, _revision);
             }
         }
