@@ -232,7 +232,7 @@ namespace GitUI.CommandsDialogs
             // browse dialog.
             FileName = FileName.ToPosixPath();
 
-            RevisionGrid.SetPathFilters(FileName.QuoteNE());
+            RevisionGrid.SetPathFilter(FileName.QuoteNE());
             RevisionGrid.Load();
         }
 
