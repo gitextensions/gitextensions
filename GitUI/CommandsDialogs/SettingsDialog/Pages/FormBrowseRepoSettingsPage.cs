@@ -25,6 +25,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             AppSettings.ShowConEmuTab.Value = chkChowConsoleTab.Checked;
+            AppSettings.UseBrowseForFileHistory.Value = chkUseBrowseForFileHistory.Checked;
             AppSettings.ShowGpgInformation.Value = chkShowGpgInformation.Checked;
 
             AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem).Name.ToLowerInvariant();
@@ -34,6 +35,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
             chkChowConsoleTab.Checked = AppSettings.ShowConEmuTab.Value;
+            chkUseBrowseForFileHistory.Checked = AppSettings.UseBrowseForFileHistory.Value;
             chkShowGpgInformation.Checked = AppSettings.ShowGpgInformation.Value;
 
             foreach (IShellDescriptor shell in _shellProvider.GetShells())

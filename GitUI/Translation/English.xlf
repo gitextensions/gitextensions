@@ -3290,6 +3290,10 @@ Do you want to continue?</source>
         <source>Show GPG information</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkUseBrowseForFileHistory.Text">
+        <source>Use Browse For FileHistory</source>
+        <target />
+      </trans-unit>
       <trans-unit id="gbGeneral.Text">
         <source>General</source>
         <target />
