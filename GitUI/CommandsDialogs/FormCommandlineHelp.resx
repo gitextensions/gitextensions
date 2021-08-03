@@ -119,7 +119,7 @@
   </resheader>
   <data name="_NO_TRANSLATE_commands.Text" xml:space="preserve">
     <value>[path]
-browse [path] [-filter=] [-commit=&lt;selectedSha&gt;[,&lt;firstSha&gt;]]
+browse [path] [-filter=] [--pathFilter=&lt;filepath&gt;] [-commit=&lt;selectedSha&gt;[,&lt;firstSha&gt;]]
 about
 add [filename]
 addfiles [filename]
