@@ -16,7 +16,9 @@ namespace GitCommands
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isValidWorkingDir">Indicates whether the given path contains a valid repository.</param>
         /// <param name="branchName">Current branch name.</param>
-        string Generate(string? workingDir = null, bool isValidWorkingDir = false, string? branchName = null);
+        /// <param name="defaultBranchName">Default branch name if <paramref name="branchName"/> is null (but not empty).</param>
+        /// <param name="pathName">Current pathfilter.</param>
+        string Generate(string? workingDir = null, bool isValidWorkingDir = false, string? branchName = null, string defaultBranchName = "", string? pathName = null);
     }
 
     /// <summary>
@@ -36,27 +38,29 @@ namespace GitCommands
             _descriptionProvider = descriptionProvider;
         }
 
-        /// <summary>
-        /// Generates main window title according to given repository.
-        /// </summary>
-        /// <param name="workingDir">Path to repository.</param>
-        /// <param name="isValidWorkingDir">Indicates whether the given path contains a valid repository.</param>
-        /// <param name="branchName">Current branch name.</param>
-        public string Generate(string? workingDir = null, bool isValidWorkingDir = false, string? branchName = null)
+        /// <inheritdoc />
+        public string Generate(string? workingDir = null, bool isValidWorkingDir = false, string? branchName = null, string defaultBranchName = "", string? pathName = null)
         {
             if (string.IsNullOrWhiteSpace(workingDir) || !isValidWorkingDir)
             {
                 return AppSettings.ApplicationName;
             }
 
-            branchName = branchName?.Trim('(', ')') ?? "no branch";
+            branchName = branchName?.Trim('(', ')') ?? defaultBranchName;
+
+            // Pathname normally have quotes already
+            pathName = string.IsNullOrWhiteSpace(pathName)
+                ? ""
+                    : pathName.StartsWith(@"""") && pathName.EndsWith(@"""")
+                        ? $"{pathName} "
+                        : $"{pathName.Quote()} ";
 
             var description = _descriptionProvider.Get(workingDir);
 
 #if DEBUG
-            return $"{description} ({branchName}) - {AppSettings.ApplicationName}{_extraInfo}";
+            return $"{description} ({branchName}) {pathName}- {AppSettings.ApplicationName}{_extraInfo}";
 #else
-            return $"{description} ({branchName}) - {AppSettings.ApplicationName}";
+            return $"{description} ({branchName}) {pathName}- {AppSettings.ApplicationName}";
 #endif
         }
 

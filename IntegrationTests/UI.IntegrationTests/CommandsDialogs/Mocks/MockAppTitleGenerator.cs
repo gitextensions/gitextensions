@@ -9,6 +9,6 @@ namespace GitExtensions.UITests.CommandsDialogs
     [Export(typeof(IAppTitleGenerator))]
     internal class MockAppTitleGenerator : IAppTitleGenerator
     {
-        public string Generate(string? workingDir = null, bool isValidWorkingDir = false, string? branchName = null) => "Mock title";
+        public string Generate(string? workingDir = null, bool isValidWorkingDir = false, string? branchName = null, string defaultBranchName = "", string? pathName = null) => "Mock title";
     }
 }

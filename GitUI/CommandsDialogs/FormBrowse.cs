@@ -703,6 +703,7 @@ namespace GitUI.CommandsDialogs
                         })
                     .FileAndForget();
             };
+            RevisionGrid.PathFilterChanged += revisionGrid_PathFilterChanged;
             UpdateSubmodulesStructure();
             UpdateStashCount();
 
@@ -845,6 +846,11 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync(selectedRevision));
             FillBuildReport(selectedRevision);
             repoObjectsTree.SelectionChanged(selectedRevisions);
+        }
+
+        private void revisionGrid_PathFilterChanged(object? sender, EventArgs e)
+        {
+            Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), branchSelect.Text, TranslatedStrings.NoBranch, RevisionGrid.GetPathFilter());
         }
 
         #region IBrowseRepo
@@ -1109,8 +1115,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 RefreshWorkingDirComboText();
-                var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : TranslatedStrings.NoBranch;
-                Text = _appTitleGenerator.Generate(Module.WorkingDir, validBrowseDir, branchName);
+                Text = _appTitleGenerator.Generate(Module.WorkingDir, validBrowseDir, branchSelect.Text, TranslatedStrings.NoBranch, RevisionGrid.GetPathFilter());
 
                 OnActivate();
 
