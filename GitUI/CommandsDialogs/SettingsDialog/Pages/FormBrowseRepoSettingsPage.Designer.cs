@@ -32,6 +32,7 @@
             this.chkChowConsoleTab = new System.Windows.Forms.CheckBox();
             this.cboTerminal = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.chkUseBrowseForFileHistory = new System.Windows.Forms.CheckBox();
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.gbTabs = new System.Windows.Forms.GroupBox();
             this.gbGeneral.SuspendLayout();
@@ -44,7 +45,7 @@
             this.chkShowGpgInformation.Location = new System.Drawing.Point(9, 48);
             this.chkShowGpgInformation.Name = "chkShowGpgInformation";
             this.chkShowGpgInformation.Size = new System.Drawing.Size(212, 17);
-            this.chkShowGpgInformation.TabIndex = 6;
+            this.chkShowGpgInformation.TabIndex = 7;
             this.chkShowGpgInformation.Text = "Show GPG information";
             this.chkShowGpgInformation.UseVisualStyleBackColor = true;
             // 
@@ -54,7 +55,7 @@
             this.chkChowConsoleTab.Location = new System.Drawing.Point(9, 25);
             this.chkChowConsoleTab.Name = "chkChowConsoleTab";
             this.chkChowConsoleTab.Size = new System.Drawing.Size(209, 17);
-            this.chkChowConsoleTab.TabIndex = 5;
+            this.chkChowConsoleTab.TabIndex = 6;
             this.chkChowConsoleTab.Text = "Show the Console tab";
             this.chkChowConsoleTab.UseVisualStyleBackColor = true;
             // 
@@ -77,15 +78,26 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Default shell";
             // 
+            // chkUseBrowseForFileHistory
+            // 
+            this.chkUseBrowseForFileHistory.AutoSize = true;
+            this.chkUseBrowseForFileHistory.Location = new System.Drawing.Point(9, 48);
+            this.chkUseBrowseForFileHistory.Name = "chkUseBrowseForFileHistory";
+            this.chkUseBrowseForFileHistory.Size = new System.Drawing.Size(212, 17);
+            this.chkUseBrowseForFileHistory.TabIndex = 4;
+            this.chkUseBrowseForFileHistory.Text = "Use Browse For FileHistory";
+            this.chkUseBrowseForFileHistory.UseVisualStyleBackColor = true;
+            // 
             // gbGeneral
             // 
             this.gbGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbGeneral.Controls.Add(this.cboTerminal);
             this.gbGeneral.Controls.Add(this.label2);
+            this.gbGeneral.Controls.Add(this.chkUseBrowseForFileHistory);
             this.gbGeneral.Location = new System.Drawing.Point(11, 11);
             this.gbGeneral.Name = "gbGeneral";
-            this.gbGeneral.Size = new System.Drawing.Size(1487, 56);
+            this.gbGeneral.Size = new System.Drawing.Size(1487, 81);
             this.gbGeneral.TabIndex = 1;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
@@ -99,7 +111,7 @@
             this.gbTabs.Location = new System.Drawing.Point(11, 86);
             this.gbTabs.Name = "gbTabs";
             this.gbTabs.Size = new System.Drawing.Size(1487, 82);
-            this.gbTabs.TabIndex = 4;
+            this.gbTabs.TabIndex = 5;
             this.gbTabs.TabStop = false;
             this.gbTabs.Text = "Tabs (restart required)";
             // 
@@ -126,6 +138,7 @@
         private System.Windows.Forms.CheckBox chkChowConsoleTab;
         private System.Windows.Forms.ComboBox cboTerminal;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox chkUseBrowseForFileHistory;
         private System.Windows.Forms.GroupBox gbGeneral;
         private System.Windows.Forms.GroupBox gbTabs;
     }
