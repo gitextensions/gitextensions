@@ -27,6 +27,7 @@ namespace GitUI
         private const string FileHistoryCommand = "filehistory";
 
         private const string FilterByRevisionArg = "--filter-by-revision";
+        private const string PathFilterArg = "--pathFilter";
 
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly IFullPathResolver _fullPathResolver;
@@ -1123,12 +1124,13 @@ namespace GitUI
         /// Open Browse - main GUI including dashboard.
         /// </summary>
         /// <param name="owner">current window owner.</param>
-        /// <param name="filter">filter to apply to browse.</param>
+        /// <param name="revFilter">revision filter to apply to browse.</param>
+        /// <param name="pathFilter">path filter to apply to browse.</param>
         /// <param name="selectedId">Currently (last) selected commit id.</param>
         /// <param name="firstId">First selected commit id (as in a diff).</param>
-        public bool StartBrowseDialog(IWin32Window? owner = null, string filter = "", ObjectId? selectedId = null, ObjectId? firstId = null)
+        public bool StartBrowseDialog(IWin32Window? owner = null, string revFilter = "", string pathFilter = "", ObjectId? selectedId = null, ObjectId? firstId = null)
         {
-            FormBrowse form = new(this, filter, selectedId, firstId);
+            FormBrowse form = new(this, revFilter, pathFilter, selectedId, firstId);
 
             if (Application.MessageLoop)
             {
@@ -1562,12 +1564,18 @@ namespace GitUI
             var arg = GetParameterOrEmptyStringAsDefault(args, "-commit");
             if (arg == "")
             {
-                return StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
+                return StartBrowseDialog(null,
+                    GetParameterOrEmptyStringAsDefault(args, "-filter"),
+                    GetParameterOrEmptyStringAsDefault(args, PathFilterArg));
             }
 
             if (TryGetObjectIds(arg, Module, out var selectedId, out var firstId))
             {
-                return StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), selectedId, firstId);
+                return StartBrowseDialog(null,
+                    GetParameterOrEmptyStringAsDefault(args, "-filter"),
+                    GetParameterOrEmptyStringAsDefault(args, PathFilterArg),
+                    selectedId,
+                    firstId);
             }
 
             Console.Error.WriteLine($"No commit found matching: {arg}");
@@ -1632,7 +1640,7 @@ namespace GitUI
                 }
             }
 
-            return c.StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
+            return c.StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), GetParameterOrEmptyStringAsDefault(args, PathFilterArg));
         }
 
         private bool RunSynchronizeCommand(IReadOnlyDictionary<string, string?> arguments)

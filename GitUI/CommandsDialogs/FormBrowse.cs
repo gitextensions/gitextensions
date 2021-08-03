@@ -131,10 +131,11 @@ namespace GitUI.CommandsDialogs
         /// Open Browse - main GUI including dashboard.
         /// </summary>
         /// <param name="commands">commands in the current form.</param>
-        /// <param name="filter">filter to apply to browse.</param>
+        /// <param name="revFilter">revision filter to apply to browse.</param>
+        /// <param name="pathFilter">path filter to apply to browse.</param>
         /// <param name="selectedId">Currently (last) selected commit id.</param>
         /// <param name="firstId">First selected commit id (as in a diff).</param>
-        public FormBrowse(GitUICommands commands, string filter, ObjectId? selectedId = null, ObjectId? firstId = null)
+        public FormBrowse(GitUICommands commands, string revFilter, string pathFilter, ObjectId? selectedId = null, ObjectId? firstId = null)
             : base(commands)
         {
             InitializeComponent();
@@ -196,6 +197,9 @@ namespace GitUI.CommandsDialogs
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 RegisterPlugins();
             }).FileAndForget();
+
+            _appTitleGenerator = ManagedExtensibility.GetExport<IAppTitleGenerator>().Value;
+            _windowsJumpListManager = ManagedExtensibility.GetExport<IWindowsJumpListManager>().Value;
 
             _appTitleGenerator = ManagedExtensibility.GetExport<IAppTitleGenerator>().Value;
             _windowsJumpListManager = ManagedExtensibility.GetExport<IWindowsJumpListManager>().Value;
@@ -317,7 +321,8 @@ namespace GitUI.CommandsDialogs
 
             ToolStripFilters.Bind(() => Module, RevisionGrid);
             ToolStripFilters.UpdateBranchFilterItems();
-            ToolStripFilters.SetRevisionFilter(filter);
+            ToolStripFilters.SetRevisionFilter(revFilter);
+            SetPathFilter(pathFilter);
 
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
