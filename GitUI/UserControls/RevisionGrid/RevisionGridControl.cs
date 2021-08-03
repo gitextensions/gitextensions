@@ -63,6 +63,7 @@ namespace GitUI
     {
         public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
         public event EventHandler? FilterChanged;
+        public event EventHandler? PathFilterChanged;
         public event EventHandler? RevisionGraphLoaded;
         public event EventHandler? SelectionChanged;
 
@@ -422,6 +423,11 @@ namespace GitUI
             _formRevisionFilter.SetPathFilter(path);
         }
 
+        public string GetPathFilter()
+        {
+            return _formRevisionFilter.GetPathFilter();
+        }
+
         private void InitiateRefAction(IReadOnlyList<IGitRef>? refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
             if (refs is null || refs.Count < 1)
@@ -651,6 +657,11 @@ namespace GitUI
         private void OnFilterChanged()
         {
             FilterChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnPathFilterChanged()
+        {
+            PathFilterChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public new void Load()
@@ -1879,6 +1890,7 @@ namespace GitUI
         public void ShowRevisionFilterDialog()
         {
             _formRevisionFilter.ShowDialog(ParentForm);
+            OnPathFilterChanged();
             ForceRefreshRevisions();
         }
 

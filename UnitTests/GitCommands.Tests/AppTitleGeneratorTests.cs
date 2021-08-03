@@ -15,6 +15,7 @@ namespace GitCommandsTests
     {
         private TestComposition _composition;
         private IAppTitleGenerator _appTitleGenerator;
+        private string _defaultBranchName = "no branch";
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -52,16 +53,33 @@ namespace GitCommandsTests
         [Test]
         public void Generate_should_include_no_branch_if_supplied()
         {
-            string title = _appTitleGenerator.Generate("a", true, null);
-            title.Should().StartWith($"{MockRepositoryDescriptionProvider.ShortName} (no branch) - {AppSettings.ApplicationName}");
+            string title = _appTitleGenerator.Generate("a", true, null, defaultBranchName: _defaultBranchName);
+            title.Should().StartWith($"{MockRepositoryDescriptionProvider.ShortName} ({_defaultBranchName}) - {AppSettings.ApplicationName}");
         }
 
         [Test]
         public void Generate_should_include_supplied_branch_without_braces()
         {
             string branchName = "feature/my_(test)_branch";
-            string title = _appTitleGenerator.Generate("a", true, "(" + branchName + ")");
+            string title = _appTitleGenerator.Generate("a", true, branchName: "(" + branchName + ")", defaultBranchName: _defaultBranchName);
             title.Should().StartWith($"{MockRepositoryDescriptionProvider.ShortName} ({branchName}) - {AppSettings.ApplicationName}");
+        }
+
+        [Test]
+        public void Generate_should_include_supplied_pathname()
+        {
+            string branchName = "feature/my_(test)_branch";
+            string pathName = "folder/folder/file";
+            string title = _appTitleGenerator.Generate("a", true, branchName: "(" + branchName + ")", pathName: pathName);
+            title.Should().StartWith($@"{MockRepositoryDescriptionProvider.ShortName} ({branchName}) ""{pathName}"" - {AppSettings.ApplicationName}");
+        }
+
+        [Test]
+        public void Generate_should_not_quote_already_quoted_pathname()
+        {
+            string pathName = @"""folder/folder/file""";
+            string title = _appTitleGenerator.Generate("a", true, pathName: pathName, defaultBranchName: _defaultBranchName);
+            title.Should().StartWith($@"{MockRepositoryDescriptionProvider.ShortName} ({_defaultBranchName}) {pathName} - {AppSettings.ApplicationName}");
         }
 
 #if DEBUG
@@ -70,9 +88,9 @@ namespace GitCommandsTests
         {
             string buildBranch = "build_branch";
             AppTitleGenerator.Initialise(buildSha, buildBranch);
-            string title = _appTitleGenerator.Generate("a", true, null);
+            string title = _appTitleGenerator.Generate("a", true, null, defaultBranchName: _defaultBranchName);
 
-            title.Should().Be($"{MockRepositoryDescriptionProvider.ShortName} (no branch) - {AppSettings.ApplicationName} [DEBUG]");
+            title.Should().Be($"{MockRepositoryDescriptionProvider.ShortName} ({_defaultBranchName}) - {AppSettings.ApplicationName} [DEBUG]");
         }
 
         [Test]
@@ -81,9 +99,9 @@ namespace GitCommandsTests
             string buildSha = "1234567812345678123456781234567812345678";
             string buildBranch = "build_branch";
             AppTitleGenerator.Initialise(buildSha, buildBranch);
-            string title = _appTitleGenerator.Generate("a", true, null);
+            string title = _appTitleGenerator.Generate("a", true, null, defaultBranchName: _defaultBranchName);
 
-            title.Should().Be($"{MockRepositoryDescriptionProvider.ShortName} (no branch) - {AppSettings.ApplicationName} {buildSha.Substring(0, 8)} ({buildBranch})");
+            title.Should().Be($"{MockRepositoryDescriptionProvider.ShortName} ({_defaultBranchName}) - {AppSettings.ApplicationName} {buildSha.Substring(0, 8)} ({buildBranch})");
         }
 #endif
     }
