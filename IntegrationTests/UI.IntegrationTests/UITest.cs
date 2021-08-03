@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
 using GitUI;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests
@@ -34,6 +35,15 @@ namespace GitExtensions.UITests
             where T : Form
         {
             Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
+
+            // Needed for FormBrowse, ScriptOptionsParser
+            ManagedExtensibility.Initialise(new[]
+            {
+#if GITUI
+                typeof(GitUI.GitExtensionsForm).Assembly,
+#endif
+                typeof(GitCommands.GitModule).Assembly
+            });
 
             T form = null;
             try

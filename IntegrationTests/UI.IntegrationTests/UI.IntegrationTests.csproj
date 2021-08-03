@@ -4,6 +4,8 @@
     
     <!-- TODO once all project migrated to SDK-style, remove this and move properties to Directory.Build.props -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <DefineConstants>$(DefineConstants);GITUI;</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
