@@ -20,9 +20,11 @@ namespace GitUI.Avatars
 
                 NormalizedEmail = Email.Trim().ToLowerInvariant();
 
+#pragma warning disable SYSLIB0021 // 'MD5CryptoServiceProvider' is obsolete
                 EmailMd5 = new Lazy<string>(() => ComputeHash(new MD5CryptoServiceProvider(), NormalizedEmail));
                 EmailSha1 = new Lazy<string>(() => ComputeHash(new SHA1CryptoServiceProvider(), NormalizedEmail));
                 EmailSha256 = new Lazy<string>(() => ComputeHash(new SHA256CryptoServiceProvider(), NormalizedEmail));
+#pragma warning restore SYSLIB0021 // 'MD5CryptoServiceProvider' is obsolete
             }
 
             public string Email { get; }

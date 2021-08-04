@@ -188,7 +188,9 @@ namespace GitExtensions.Plugins.Gource
             // classes throw exceptions upon error
             try
             {
-                WebClient webClient = new() { Proxy = WebRequest.DefaultWebProxy };
+#pragma warning disable SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
+                using WebClient webClient = new() { Proxy = WebRequest.DefaultWebProxy };
+#pragma warning restore SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
                 // Once the WebResponse object has been retrieved,
@@ -237,7 +239,9 @@ namespace GitExtensions.Plugins.Gource
         {
             try
             {
-                WebClient webClient = new() { Proxy = WebRequest.DefaultWebProxy };
+#pragma warning disable SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
+                using WebClient webClient = new() { Proxy = WebRequest.DefaultWebProxy };
+#pragma warning restore SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
                 webClient.Encoding = Encoding.UTF8;
 

@@ -10,7 +10,7 @@ matrix:
   fast_finish: true
 
 # https://www.appveyor.com/docs/build-environment/#build-worker-images
-image: Visual Studio 2019
+image: Visual Studio 2022
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

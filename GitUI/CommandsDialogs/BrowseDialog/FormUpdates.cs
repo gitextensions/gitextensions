@@ -189,7 +189,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 try
                 {
+#pragma warning disable SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
                     using WebClient webClient = new();
+#pragma warning restore SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
                     await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
                 }
                 catch (Exception ex)

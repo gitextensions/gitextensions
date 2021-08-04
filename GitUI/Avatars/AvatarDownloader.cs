@@ -70,7 +70,9 @@ namespace GitUI.Avatars
 
             try
             {
+#pragma warning disable SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
                 using WebClient webClient = new() { Proxy = WebRequest.DefaultWebProxy };
+#pragma warning restore SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
                 using var imageStream = await webClient.OpenReadTaskAsync(imageUrl);

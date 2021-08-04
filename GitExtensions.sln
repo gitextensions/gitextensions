@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28917.182
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32104.313
 MinimumVisualStudioVersion = 15.0.27130.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}"
 	ProjectSection(SolutionItems) = preProject
@@ -143,6 +143,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.targets = Directory.Build.targets
 		GitExtensions.ruleset = GitExtensions.ruleset
 		GitExtensionsTest.ruleset = GitExtensionsTest.ruleset
+		global.json = global.json
 		LICENSE.md = LICENSE.md
 		Packages.props = Packages.props
 		PrivacyPolicy.md = PrivacyPolicy.md
@@ -152,7 +153,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{472B72D9-9336-4C8B-A199-300F0CA7669E}"
 	ProjectSection(SolutionItems) = preProject
-		scripts\build.ps1 = scripts\build.ps1
 		scripts\Download-PluginManager.ps1 = scripts\Download-PluginManager.ps1
 		scripts\Mark-RepoClean.ps1 = scripts\Mark-RepoClean.ps1
 		scripts\stylecop.json = scripts\stylecop.json
@@ -186,13 +186,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEM
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "transifex", "transifex", "{D017F26A-694F-4127-B917-9B1BD3F01E2F}"
 	ProjectSection(SolutionItems) = preProject
-		scripts\transifex\DownloadTransifexTranslations.ps1 = scripts\transifex\DownloadTransifexTranslations.ps1
-		scripts\transifex\UpdateLocalEnglishTranslations.ps1 = scripts\transifex\UpdateLocalEnglishTranslations.ps1
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".tx", ".tx", "{EFBCA0B9-9E08-4464-BEAA-DAF2FF85C6AB}"
-	ProjectSection(SolutionItems) = preProject
-		scripts\transifex\.tx\config = scripts\transifex\.tx\config
+		.tools\transifex\.tx\config = .tools\transifex\.tx\config
+		.tools\transifex\DownloadTransifexTranslations.ps1 = .tools\transifex\DownloadTransifexTranslations.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeleteUnusedBranches.Tests", "UnitTests\Plugins\DeleteUnusedBranches.Tests\DeleteUnusedBranches.Tests.csproj", "{3FD5B353-17C0-4122-A693-27B707D06EFF}"
@@ -447,7 +442,6 @@ Global
 		{2828E531-7EB3-4A52-A71E-DCE73B9907FC} = {BC90FFE0-7770-4979-884E-9F9F294C58C0}
 		{95A371C3-77B9-437A-892E-17CA0097106B} = {17FD2A6B-4005-41DC-BFAC-59F936DF33AA}
 		{D017F26A-694F-4127-B917-9B1BD3F01E2F} = {472B72D9-9336-4C8B-A199-300F0CA7669E}
-		{EFBCA0B9-9E08-4464-BEAA-DAF2FF85C6AB} = {D017F26A-694F-4127-B917-9B1BD3F01E2F}
 		{3FD5B353-17C0-4122-A693-27B707D06EFF} = {C2276A26-13DF-485A-8B2C-414CF507798F}
 		{958D7C09-1FA5-4438-A6A0-B3E8BD96E291} = {449DD87E-63E9-4C61-B797-A94F8CBE8837}
 		{AA58470E-24F7-4CED-8C76-06F05B09F1B1} = {958D7C09-1FA5-4438-A6A0-B3E8BD96E291}

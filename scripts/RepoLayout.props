@@ -6,6 +6,7 @@
   -->
 
   <PropertyGroup>
+    <SolutionTargetFramework>net6.0-windows</SolutionTargetFramework>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
     <PlatformName Condition="'$(PlatformName)' == ''">$(Platform)</PlatformName>
@@ -26,7 +27,7 @@
     <ArtifactsToolsetDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'toolset'))</ArtifactsToolsetDir>
     <ArtifactsObjDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'obj'))</ArtifactsObjDir>
     <ArtifactsBinDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'bin'))</ArtifactsBinDir>
-    <ArtifactsPluginsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', 'GitExtensions', 'net5.0-windows', 'Plugins'))</ArtifactsPluginsDir>
+    <ArtifactsPluginsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', 'GitExtensions', '$(SolutionTargetFramework)', 'Plugins'))</ArtifactsPluginsDir>
     <ArtifactsTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', 'tests'))</ArtifactsTestsDir>
     <ArtifactsLogDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'log'))</ArtifactsLogDir>
     <ArtifactsTmpDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'tmp'))</ArtifactsTmpDir>
