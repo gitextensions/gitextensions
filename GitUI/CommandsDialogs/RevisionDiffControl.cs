@@ -62,6 +62,7 @@ namespace GitUI.CommandsDialogs
             DiffText.TopScrollReached += FileViewer_TopScrollReached;
             DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
             DiffText.LinePatchingBlocksUntilReload = true;
+            BlameControl.HideCommitInfo();
         }
 
         private void FileViewer_TopScrollReached(object sender, EventArgs e)
@@ -230,7 +231,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void Bind(RevisionGridControl revisionGrid, RevisionFileTreeControl revisionFileTree, Action refreshGitStatus)
+        public void Bind(RevisionGridControl revisionGrid, RevisionFileTreeControl revisionFileTree, Action? refreshGitStatus)
         {
             _revisionGrid = revisionGrid;
             _revisionFileTree = revisionFileTree;
@@ -459,8 +460,20 @@ namespace GitUI.CommandsDialogs
             RequestRefresh();
         }
 
+        private void BlameSelectedFileDiff()
+        {
+            BlameControl.Visible = true;
+            DiffText.Visible = false;
+            GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
+                ? _revisionGrid.GetActualRevision(_revisionGrid.CurrentCheckout)
+                : DiffFiles.SelectedItem.SecondRevision;
+            BlameControl.LoadBlame(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGrid, controlToMask: null, DiffText.Encoding);
+        }
+
         private async Task ShowSelectedFileDiffAsync()
         {
+            BlameControl.Visible = false;
+            DiffText.Visible = true;
             await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
                 openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick(),
                 cancellationToken: _viewChangesSequence.Next());
@@ -600,7 +613,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            UICommands.StartFileHistoryDialog(this, item.Item.Name, item.SecondRevision, true, true);
+            blameToolStripMenuItem.Checked = !blameToolStripMenuItem.Checked;
+            BlameSelectedFileDiff();
         }
 
         private void StageFileToolStripMenuItemClick(object sender, EventArgs e)
@@ -1141,7 +1155,14 @@ namespace GitUI.CommandsDialogs
         {
             if (alreadyContainedFocus && DiffFiles.Focused)
             {
-                DiffText.Focus();
+                if (BlameControl.Visible)
+                {
+                    BlameControl.Focus();
+                }
+                else
+                {
+                    DiffText.Focus();
+                }
             }
             else
             {

@@ -59,6 +59,7 @@ namespace GitUI.CommandsDialogs
             this.blameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findInDiffToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DiffText = new GitUI.Editor.FileViewer();
+            this.BlameControl = new Blame.BlameControl();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.DiffSplitContainer)).BeginInit();
             this.DiffSplitContainer.Panel1.SuspendLayout();
@@ -83,6 +84,7 @@ namespace GitUI.CommandsDialogs
             // DiffSplitContainer.Panel2
             // 
             this.DiffSplitContainer.Panel2.Controls.Add(this.DiffText);
+            this.DiffSplitContainer.Panel2.Controls.Add(this.BlameControl);
             this.DiffSplitContainer.Size = new System.Drawing.Size(729, 360);
             this.DiffSplitContainer.SplitterDistance = 300;
             this.DiffSplitContainer.SplitterWidth = 6;
@@ -101,6 +103,15 @@ namespace GitUI.CommandsDialogs
             this.DiffFiles.SelectedIndexChanged += new System.EventHandler(this.DiffFiles_SelectedIndexChanged);
             this.DiffFiles.DataSourceChanged += new System.EventHandler(this.DiffFiles_DataSourceChanged);
             this.DiffFiles.DoubleClick += new System.EventHandler(this.DiffFiles_DoubleClick);
+            // 
+            // BlameControl
+            // 
+            this.BlameControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BlameControl.Location = new System.Drawing.Point(0, 0);
+            this.BlameControl.Margin = new System.Windows.Forms.Padding(0);
+            this.BlameControl.Name = "BlameControl";
+            this.BlameControl.Size = new System.Drawing.Size(300, 360);
+            this.BlameControl.TabIndex = 1;
             // 
             // DiffContextMenu
             // 
@@ -406,6 +417,7 @@ namespace GitUI.CommandsDialogs
             // 
             // blameToolStripMenuItem
             // 
+            this.blameToolStripMenuItem.Checked = false;
             this.blameToolStripMenuItem.Image = global::GitUI.Properties.Images.Blame;
             this.blameToolStripMenuItem.Name = "blameToolStripMenuItem";
             this.blameToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
@@ -495,6 +507,7 @@ namespace GitUI.CommandsDialogs
         private ContextMenuStrip DiffContextMenu;
         private FileStatusList DiffFiles;
         private Editor.FileViewer DiffText;
+        private Blame.BlameControl BlameControl;
         private ToolStripMenuItem diffEditWorkingDirectoryFileToolStripMenuItem;
         private ToolStripMenuItem diffOpenWorkingDirectoryFileWithToolStripMenuItem;
         private ToolStripMenuItem diffOpenRevisionFileToolStripMenuItem;

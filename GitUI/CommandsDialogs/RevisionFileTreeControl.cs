@@ -374,7 +374,7 @@ See the changes in the commit form.");
 
                         BlameControl.Visible = true;
                         FileText.Visible = false;
-                        BlameControl.LoadBlame(_revision, null, gitItem.FileName, _revisionGrid, null, FileText.Encoding);
+                        BlameControl.LoadBlame(_revision, children: null, gitItem.FileName, _revisionGrid, controlToMask: null, FileText.Encoding);
                         return Task.CompletedTask;
                     }
 
