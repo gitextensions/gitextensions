@@ -227,6 +227,14 @@ namespace GitUI.Editor
             set => internalFileViewer.IsReadOnly = value;
         }
 
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        public bool EnableAutomaticContinuousScroll
+        {
+            get => automaticContinuousScrollToolStripMenuItem.Visible;
+            set => automaticContinuousScrollToolStripMenuItem.Visible = value;
+        }
+
         [DefaultValue(null)]
         [Description("If true line numbers are shown in the textarea")]
         [Category("Appearance")]

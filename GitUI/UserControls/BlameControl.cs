@@ -69,6 +69,7 @@ namespace GitUI.Blame
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
             BlameFile.MouseMove += BlameFile_MouseMove;
             BlameFile.EscapePressed += () => EscapePressed?.Invoke();
+            BlameFile.EnableAutomaticContinuousScroll = false;
 
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
         }
@@ -232,7 +233,6 @@ namespace GitUI.Blame
                 return;
             }
 
-            // TODO: Request GitRevision from RevisionGrid that contain all commits
             var newBlameLine = _blame.Lines[selectedLine];
 
             if (ReferenceEquals(_lastBlameLine?.Commit, newBlameLine.Commit))
@@ -241,7 +241,7 @@ namespace GitUI.Blame
             }
 
             _lastBlameLine = newBlameLine;
-            CommitInfo.Revision = Module.GetRevision(_lastBlameLine.Commit.ObjectId);
+            CommitInfo.Revision = _revGrid.GetActualRevision(_lastBlameLine.Commit.ObjectId);
         }
 
         private void BlameAuthor_HScrollPositionChanged(object sender, EventArgs e)
