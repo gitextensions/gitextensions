@@ -18,7 +18,7 @@ namespace ResourceManager.CommitDataRenders
                 if (input.Length < desiredLength)
                 {
                     int l = desiredLength - input.Length;
-                    return input + new string('\t', (l / tabSize) + (l % tabSize == 0 ? 0 : 1));
+                    return input + new string('\t', l / tabSize);
                 }
 
                 return input;
