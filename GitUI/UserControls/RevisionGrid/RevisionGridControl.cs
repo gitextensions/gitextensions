@@ -105,6 +105,8 @@ namespace GitUI
         private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
         private readonly DataGridViewColumn _maximizedColumn;
         private DataGridViewColumn? _lastVisibleResizableColumn;
+        private readonly ArtificialCommitChangeCount _workTreeChangeCount = new();
+        private readonly ArtificialCommitChangeCount _indexChangeCount = new();
 
         private RefFilterOptions _DONT_USE_ME_DIRECTLY_refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
 
@@ -1171,9 +1173,6 @@ namespace GitUI
                     return;
                 }
 
-                _indexChangeCount = new ArtificialCommitChangeCount();
-                _workTreeChangeCount = new ArtificialCommitChangeCount();
-
                 var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
                 var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
@@ -1207,8 +1206,6 @@ namespace GitUI
                 };
 
                 _gridView.Add(indexRev, insertAsFirst: insertAsFirst);
-
-                UpdateArtificialCommitCount(_artificialStatus, workTreeRev, indexRev);
             }
 
             void OnRevisionReaderError(Exception exception)
@@ -2218,27 +2215,12 @@ namespace GitUI
                     : null;
         }
 
-        private ArtificialCommitChangeCount _workTreeChangeCount = new();
-        private ArtificialCommitChangeCount _indexChangeCount = new();
-
-        public void UpdateArtificialCommitCount(
-            IReadOnlyList<GitItemStatus>? status,
-            GitRevision? workTreeRev = null,
-            GitRevision? indexRev = null)
+        public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus>? status)
         {
             status ??= new List<GitItemStatus>();
-            workTreeRev ??= GetRevision(ObjectId.WorkTreeId);
-            indexRev ??= GetRevision(ObjectId.IndexId);
 
-            if (workTreeRev is not null)
-            {
-                UpdateChangeCount(ObjectId.WorkTreeId, status);
-            }
-
-            if (indexRev is not null)
-            {
-                UpdateChangeCount(ObjectId.IndexId, status);
-            }
+            UpdateChangeCount(ObjectId.WorkTreeId, status);
+            UpdateChangeCount(ObjectId.IndexId, status);
 
             // cache the status for a refresh
             _artificialStatus = status;
@@ -2250,10 +2232,12 @@ namespace GitUI
             {
                 Debug.Assert(objectId == ObjectId.WorkTreeId || objectId == ObjectId.IndexId,
                     $"Unexpected Git object id {objectId}");
-                var changeCount = GetChangeCount(objectId);
                 var staged = objectId == ObjectId.WorkTreeId ? StagedStatus.WorkTree : StagedStatus.Index;
                 var items = status.Where(item => item.Staged == staged).ToList();
-                changeCount?.Update(items);
+
+                var changeCount = GetChangeCount(objectId);
+                Validates.NotNull(changeCount);
+                changeCount.Update(items);
             }
         }
 
