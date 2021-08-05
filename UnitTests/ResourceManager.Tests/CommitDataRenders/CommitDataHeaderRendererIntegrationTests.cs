@@ -49,12 +49,12 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_with_tabs_and_links()
         {
-            var expectedHeader = "Author:			<a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
-                                 "Author date:	3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
-                                 "Committer:		<a href='mailto:Jane.Doe@test.com'>Jane Doe &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
+            var expectedHeader = "Author:		<a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
+                                    "Author date:	3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
+                                 "Committer:	<a href='mailto:Jane.Doe@test.com'>Jane Doe &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date:	2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
                                  "Commit hash:	" + _data.ObjectId + Environment.NewLine +
-                                 "Children:		" +
+                                 "Children:	" +
                                    "<a href='gitext://gotocommit/" + _data.ChildIds[0] + "'>" + _data.ChildIds[0].ToShortString() + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ChildIds[1] + "'>" + _data.ChildIds[1].ToShortString() + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ChildIds[2] + "'>" + _data.ChildIds[2].ToShortString() + "</a>" + Environment.NewLine +
@@ -70,12 +70,12 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_with_tabs_no_links()
         {
-            var expectedHeader = "Author:			<a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
+            var expectedHeader = "Author:		<a href='mailto:John.Doe@test.com'>John Doe (Acme Inc) &lt;John.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Author date:	3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
-                                 "Committer:		<a href='mailto:Jane.Doe@test.com'>Jane Doe &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
+                                 "Committer:	<a href='mailto:Jane.Doe@test.com'>Jane Doe &lt;Jane.Doe@test.com&gt;</a>" + Environment.NewLine +
                                  "Commit date:	2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
                                  "Commit hash:	" + _data.ObjectId + Environment.NewLine +
-                                 "Children:		" +
+                                 "Children:	" +
                                    _data.ChildIds[0].ToShortString() + " " +
                                    _data.ChildIds[1].ToShortString() + " " +
                                    _data.ChildIds[2].ToShortString() + Environment.NewLine +
@@ -133,9 +133,9 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void RenderPlain_with_tabs()
         {
-            var expectedHeader = "Author:			John Doe (Acme Inc) <John.Doe@test.com>" + Environment.NewLine +
+            var expectedHeader = "Author:		John Doe (Acme Inc) <John.Doe@test.com>" + Environment.NewLine +
                                  "Author date:	3 days ago (" + LocalizationHelpers.GetFullDateString(_data.AuthorDate) + ")" + Environment.NewLine +
-                                 "Committer:		Jane Doe <Jane.Doe@test.com>" + Environment.NewLine +
+                                 "Committer:	Jane Doe <Jane.Doe@test.com>" + Environment.NewLine +
                                  "Commit date:	2 days ago (" + LocalizationHelpers.GetFullDateString(_data.CommitDate) + ")" + Environment.NewLine +
                                  "Commit hash:	" + _data.ObjectId;
 
