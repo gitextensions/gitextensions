@@ -197,6 +197,7 @@ namespace GitUI.CommandsDialogs
                 RegisterPlugins();
             }).FileAndForget();
 
+            ToolStripFilters.Bind(() => Module);
             ToolStripFilters.SetRevisionFilter(filter);
 
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
@@ -684,7 +685,6 @@ namespace GitUI.CommandsDialogs
             }
 
             RevisionGrid.Load();
-            InitToolStripBranchFilter();
 
             ActiveControl = RevisionGrid;
             RevisionGrid.IndexWatcher.Reset();
@@ -1063,8 +1063,6 @@ namespace GitUI.CommandsDialogs
                 _createPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
                 _viewPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
 
-                InitToolStripBranchFilter();
-
                 if (repositoryToolStripMenuItem.Visible)
                 {
                     manageSubmodulesToolStripMenuItem.Enabled = !bareRepository;
@@ -1201,28 +1199,6 @@ namespace GitUI.CommandsDialogs
 
                 RevisionGrid.IndexWatcher.Reset();
             }
-        }
-
-        private void InitToolStripBranchFilter()
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            if (!Module.IsValidGitWorkingDir())
-            {
-                ToolStripFilters.Enabled = false;
-                return;
-            }
-
-            ToolStripFilters.Enabled = true;
-            RefsFilter branchesFilter = ToolStripFilters.BranchesFilter;
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await TaskScheduler.Default;
-                string[] branches = Module.GetRefs(branchesFilter).Select(branch => branch.Name).ToArray();
-
-                await ToolStripFilters.SwitchToMainThreadAsync();
-                ToolStripFilters.BindBranches(branches);
-            }).FileAndForget();
         }
 
         private void OnActivate()
@@ -3320,11 +3296,6 @@ namespace GitUI.CommandsDialogs
         private void toolStripFilters_AdvancedFilterRequested(object sender, EventArgs e)
         {
             RevisionGrid.ShowRevisionFilterDialog();
-        }
-
-        private void toolStripFilters_BranchesUpdateRequested(object sender, EventArgs e)
-        {
-            InitToolStripBranchFilter();
         }
 
         private void toolStripFilters_BranchFilterApplied(object sender, BranchFilterEventArgs e)

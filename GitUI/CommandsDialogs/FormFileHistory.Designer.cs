@@ -335,7 +335,6 @@ namespace GitUI.CommandsDialogs
             this.ToolStripFilters.Size = new System.Drawing.Size(748, 25);
             this.ToolStripFilters.AdvancedFilterRequested += new System.EventHandler(this.toolStripFilters_AdvancedFilterRequested);
             this.ToolStripFilters.BranchFilterApplied += new System.EventHandler<GitUI.UserControls.BranchFilterEventArgs>(this.toolStripFilters_BranchFilterApplied);
-            this.ToolStripFilters.BranchesUpdateRequested += new System.EventHandler(this.toolStripFilters_BranchesUpdateRequested);
             this.ToolStripFilters.RevisionFilterApplied += new System.EventHandler<GitUI.UserControls.RevisionFilterEventArgs>(this.toolStripFilters_RevisionFilterApplied);
             this.ToolStripFilters.ShowFirstParentsCheckedChanged += new System.EventHandler(this.toolStripFilters_ShowFirstParentsCheckedChanged);
             // 

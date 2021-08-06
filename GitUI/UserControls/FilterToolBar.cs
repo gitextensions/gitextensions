@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
 {
     internal partial class FilterToolBar : ToolStripEx
     {
         private static readonly string[] _noResultsFound = { TranslatedStrings.NoResultsFound };
+        private Func<IGitModule>? _getModule;
         private bool _isApplyingFilter;
         private bool _filterBeingChanged;
 
@@ -23,11 +27,6 @@ namespace GitUI.UserControls
         /// Occurs whenever the branch filter is applied.
         /// </summary>
         public event EventHandler<BranchFilterEventArgs> BranchFilterApplied;
-
-        /// <summary>
-        /// Occurs whenever the branches filter dropdown needs to be udpated.
-        /// </summary>
-        public event EventHandler BranchesUpdateRequested;
 
         /// <summary>
         /// Occurs whenever the revision filter is applied.
@@ -116,6 +115,11 @@ namespace GitUI.UserControls
             _isApplyingFilter = false;
         }
 
+        public void Bind(Func<IGitModule> getModule)
+        {
+            _getModule = getModule ?? throw new ArgumentNullException(nameof(getModule));
+        }
+
         public void BindBranches(string[] branches)
         {
             var autoCompleteList = tscboBranchFilter.AutoCompleteCustomSource.Cast<string>();
@@ -139,38 +143,15 @@ namespace GitUI.UserControls
             tscboBranchFilter.SelectionStart = index;
         }
 
-        /// <summary>
-        ///  Clears the filter textbox without raising any events.
-        /// </summary>
-        public void ResetBranchesFilter() => tscboBranchFilter.Text = string.Empty;
-
-        /// <summary>
-        ///  Sets the branches filter and raises <see cref="BranchFilterApplied"/> event.
-        /// </summary>
-        /// <param name="filter">The filter to apply.</param>
-        /// <param name="refresh"><see langword="true"/> to request the revision grid to refresh; otherwise <see langword="false"/>.</param>
-        public void SetBranchFilter(string? filter, bool refresh)
+        private IGitModule GetModule()
         {
-            tscboBranchFilter.Text = filter;
-            ApplyBranchFilter(refresh);
-        }
+            IGitModule module = _getModule();
+            if (module is null)
+            {
+                throw new ArgumentException($"Require a valid instance of {nameof(GitModule)}");
+            }
 
-        /// <summary>
-        ///  Sets the revision filter and raises <see cref="RevisionFilterApplied"/> event.
-        /// </summary>
-        /// <param name="filter">The filter to apply.</param>
-        public void SetRevisionFilter(string filter)
-        {
-            tstxtRevisionFilter.Text = filter;
-            ApplyRevisionFilter();
-        }
-
-        public void SetFocus()
-        {
-            ToolStripControlHost filterToFocus = tstxtRevisionFilter.Focused
-                ? tscboBranchFilter
-                : tstxtRevisionFilter;
-            filterToFocus.Focus();
+            return module;
         }
 
         public void InitToolStripStyles(Color toolForeColor, Color toolBackColor)
@@ -204,10 +185,63 @@ namespace GitUI.UserControls
             tscboBranchFilter.Focus();
         }
 
+        /// <summary>
+        ///  Clears the filter textbox without raising any events.
+        /// </summary>
+        public void ResetBranchesFilter() => tscboBranchFilter.Text = string.Empty;
+
+        /// <summary>
+        ///  Sets the branches filter and raises <see cref="BranchFilterApplied"/> event.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        /// <param name="refresh"><see langword="true"/> to request the revision grid to refresh; otherwise <see langword="false"/>.</param>
+        public void SetBranchFilter(string? filter, bool refresh)
+        {
+            tscboBranchFilter.Text = filter;
+            ApplyBranchFilter(refresh);
+        }
+
+        public void SetFocus()
+        {
+            ToolStripControlHost filterToFocus = tstxtRevisionFilter.Focused
+                ? tscboBranchFilter
+                : tstxtRevisionFilter;
+            filterToFocus.Focus();
+        }
+
+        /// <summary>
+        ///  Sets the revision filter and raises <see cref="RevisionFilterApplied"/> event.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        public void SetRevisionFilter(string filter)
+        {
+            tstxtRevisionFilter.Text = filter;
+            ApplyRevisionFilter();
+        }
+
         private void UpdateBranchFilterItems()
         {
             tscboBranchFilter.Items.Clear();
-            BranchesUpdateRequested?.Invoke(this, EventArgs.Empty);
+
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            IGitModule module = GetModule();
+            if (!module.IsValidGitWorkingDir())
+            {
+                Enabled = false;
+                return;
+            }
+
+            Enabled = true;
+            RefsFilter branchesFilter = BranchesFilter;
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default;
+                string[] branches = module.GetRefs(branchesFilter).Select(branch => branch.Name).ToArray();
+
+                await this.SwitchToMainThreadAsync();
+                BindBranches(branches);
+            }).FileAndForget();
         }
 
         private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
