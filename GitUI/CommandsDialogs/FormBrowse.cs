@@ -3329,56 +3329,20 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripFilters_BranchFilterApplied(object sender, BranchFilterEventArgs e)
         {
-            // TODO: move the logic to RevisionGrid
-
-            bool success = RevisionGrid.SetAndApplyBranchFilter(e.Filter);
-            if (success && e.RequireRefresh)
-            {
-                RevisionGrid.ForceRefreshRevisions();
-            }
+            RevisionGrid.SetAndApplyBranchFilter(e.Filter, e.RequireRefresh);
         }
 
         private void toolStripFilters_RevisionFilterApplied(object sender, RevisionFilterEventArgs e)
         {
-            // TODO: move the logic to RevisionGrid
-
-            string revListArgs;
-            string inMemMessageFilter;
-            string inMemCommitterFilter;
-            string inMemAuthorFilter;
-
             try
             {
-                RevisionGrid.FormatQuickFilter(
-                    e.Filter, e.FilterByCommit, e.FilterByCommitter, e.FilterByAuthor, e.FilterByDiffContent,
-                    out revListArgs,
-                    out inMemMessageFilter,
-                    out inMemCommitterFilter,
-                    out inMemAuthorFilter);
+                RevisionGrid.SetAndApplyRevisionFilter(e.Filter);
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(this, ex.Message, "Filter error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 ToolStripFilters.SetRevisionFilter(string.Empty);
-                return;
             }
-
-            if ((RevisionGrid.QuickRevisionFilter == revListArgs) &&
-                (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
-                (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
-                (RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
-                RevisionGrid.InMemFilterIgnoreCase)
-            {
-                return;
-            }
-
-            RevisionGrid.QuickRevisionFilter = revListArgs;
-            RevisionGrid.InMemMessageFilter = inMemMessageFilter;
-            RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
-            RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
-            RevisionGrid.InMemFilterIgnoreCase = true;
-            RevisionGrid.Visible = true;
-            RevisionGrid.ForceRefreshRevisions();
         }
 
         private void toolStripFilters_ShowFirstParentsCheckedChanged(object sender, EventArgs e)

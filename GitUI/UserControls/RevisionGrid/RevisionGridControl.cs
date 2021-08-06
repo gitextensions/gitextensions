@@ -90,6 +90,7 @@ namespace GitUI
         private readonly TranslationString _areYouSureRebase = new("Are you sure you want to rebase? This action will rewrite commit history.");
         private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
         private readonly TranslationString _noMergeBaseCommit = new("There is no common ancestor for the selected commits.");
+        private readonly TranslationString _invalidDiffContainsFilter = new("Filter text '{0}' not valid for \"Diff contains\" filter.");
 
         private readonly FormRevisionFilter _revisionFilter = new();
         private readonly NavigationHistory _navigationHistory = new();
@@ -481,77 +482,81 @@ namespace GitUI
             _gridView.ContextMenuStrip = null;
         }
 
-        public void FormatQuickFilter(string filter,
-                                      bool filterCommit,
-                                      bool filterCommitter,
-                                      bool filterAuthor,
-                                      bool filterDiffContent,
-                                      out string revListArgs,
-                                      out string inMemMessageFilter,
-                                      out string inMemCommitterFilter,
-                                      out string inMemAuthorFilter)
+        /// <exception cref="InvalidOperationException">Invalid 'diff contains' filter.</exception>
+        private void FormatQuickFilter(RevisionFilter revisionFilter,
+                                       out string revListArgs,
+                                       out string inMemMessageFilter,
+                                       out string inMemCommitterFilter,
+                                       out string inMemAuthorFilter)
         {
             revListArgs = string.Empty;
             inMemMessageFilter = string.Empty;
             inMemCommitterFilter = string.Empty;
             inMemAuthorFilter = string.Empty;
 
-            if (!string.IsNullOrEmpty(filter))
+            if (!string.IsNullOrEmpty(revisionFilter.Filter))
             {
                 // hash filtering only possible in memory
-                var cmdLineSafe = GitVersion.Current.IsRegExStringCmdPassable(filter);
+                bool cmdLineSafe = GitVersion.Current.IsRegExStringCmdPassable(revisionFilter.Filter);
                 revListArgs = " --regexp-ignore-case ";
-                if (filterCommit)
+                if (revisionFilter.FilterByCommit)
                 {
-                    if (cmdLineSafe && !ObjectId.IsValidPartial(filter, minLength: 5))
+                    if (cmdLineSafe && !ObjectId.IsValidPartial(revisionFilter.Filter, minLength: 5))
                     {
-                        revListArgs += "--grep=\"" + filter + "\" ";
+                        revListArgs += "--grep=\"" + revisionFilter.Filter + "\" ";
                     }
                     else
                     {
-                        inMemMessageFilter = filter;
+                        inMemMessageFilter = revisionFilter.Filter;
                     }
                 }
 
-                if (filterCommitter && !string.IsNullOrWhiteSpace(filter))
+                if (revisionFilter.FilterByCommitter && !string.IsNullOrWhiteSpace(revisionFilter.Filter))
                 {
                     if (cmdLineSafe)
                     {
-                        revListArgs += "--committer=\"" + filter + "\" ";
+                        revListArgs += "--committer=\"" + revisionFilter.Filter + "\" ";
                     }
                     else
                     {
-                        inMemCommitterFilter = filter;
+                        inMemCommitterFilter = revisionFilter.Filter;
                     }
                 }
 
-                if (filterAuthor && !string.IsNullOrWhiteSpace(filter))
+                if (revisionFilter.FilterByAuthor && !string.IsNullOrWhiteSpace(revisionFilter.Filter))
                 {
                     if (cmdLineSafe)
                     {
-                        revListArgs += "--author=\"" + filter + "\" ";
+                        revListArgs += "--author=\"" + revisionFilter.Filter + "\" ";
                     }
                     else
                     {
-                        inMemAuthorFilter = filter;
+                        inMemAuthorFilter = revisionFilter.Filter;
                     }
                 }
 
-                if (filterDiffContent)
+                if (revisionFilter.FilterByDiffContent)
                 {
                     if (cmdLineSafe)
                     {
-                        revListArgs += "-G" + filter.Quote();
+                        revListArgs += "-G" + revisionFilter.Filter.Quote();
                     }
                     else
                     {
-                        throw new InvalidOperationException("Filter text not valid for \"Diff contains\" filter.");
+                        throw new InvalidOperationException(string.Format(_invalidDiffContainsFilter.Text, revisionFilter.Filter));
                     }
                 }
             }
         }
 
-        public bool SetAndApplyBranchFilter(string filter)
+        /// <summary>
+        ///  Applies a branch filter.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        /// <param name="requireRefresh">
+        ///  <see langword="true"/> to refresh the grid, if the filter applied successfully; <see langword="false"/> to not refresh the grid at all.
+        /// </param>
+        public void SetAndApplyBranchFilter(string filter, bool requireRefresh)
         {
             AppSettings.BranchFilterEnabled = !string.IsNullOrWhiteSpace(filter);
 
@@ -563,7 +568,43 @@ namespace GitUI
             _revisionFilter.SetBranchFilter(filter);
 
             SetShowBranches();
-            return true;
+
+            if (requireRefresh)
+            {
+                ForceRefreshRevisions();
+            }
+        }
+
+        /// <summary>
+        ///  Applies a revision filter.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        /// <exception cref="InvalidOperationException">Invalid 'diff contains' filter.</exception>
+        public void SetAndApplyRevisionFilter(RevisionFilter filter)
+        {
+            // This call may throw, let the caller deal with it
+            FormatQuickFilter(
+                filter,
+                out string revListArgs,
+                out string inMemMessageFilter,
+                out string inMemCommitterFilter,
+                out string inMemAuthorFilter);
+
+            if ((QuickRevisionFilter == revListArgs) &&
+                (InMemMessageFilter == inMemMessageFilter) &&
+                (InMemCommitterFilter == inMemCommitterFilter) &&
+                (InMemAuthorFilter == inMemAuthorFilter) &&
+                InMemFilterIgnoreCase)
+            {
+                return;
+            }
+
+            QuickRevisionFilter = revListArgs;
+            InMemMessageFilter = inMemMessageFilter;
+            InMemCommitterFilter = inMemCommitterFilter;
+            InMemAuthorFilter = inMemAuthorFilter;
+            InMemFilterIgnoreCase = true;
+            ForceRefreshRevisions();
         }
 
         public override void Refresh()

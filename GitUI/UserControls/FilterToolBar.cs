@@ -108,11 +108,11 @@ namespace GitUI.UserControls
 
             _isApplyingFilter = true;
             RevisionFilterApplied?.Invoke(this,
-                                          new RevisionFilterEventArgs(tstxtRevisionFilter.Text,
-                                                                      tsmiCommitFilter.Checked,
-                                                                      tsmiCommitter.Checked,
-                                                                      tsmiAuthor.Checked,
-                                                                      tsmiDiffContains.Checked));
+                new RevisionFilterEventArgs(new RevisionFilter(tstxtRevisionFilter.Text,
+                                                               tsmiCommitFilter.Checked,
+                                                               tsmiCommitter.Checked,
+                                                               tsmiAuthor.Checked,
+                                                               tsmiDiffContains.Checked)));
             _isApplyingFilter = false;
         }
 
