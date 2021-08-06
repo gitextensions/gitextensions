@@ -202,7 +202,7 @@ namespace GitUI.CommandsDialogs
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
             // TODO: dependency on FilterBranchHelper
-            repoObjectsTree.Initialize(_aheadBehindDataProvider, filterBranchHelper: null, RevisionGrid, RevisionGrid, RevisionGrid);
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, branchFilterAction: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
             revisionDiff.Bind(RevisionGrid, fileTree, () => RequestRefresh());
             fileTree.Bind(() => RequestRefresh());
 

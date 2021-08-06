@@ -339,7 +339,7 @@ namespace GitUI.BranchTreePanel
 
         private void FilterInRevisionGrid(BaseBranchNode branch)
         {
-            _filterBranchHelper?.SetBranchFilter(branch.FullPath, refresh: true);
+            _branchFilterAction(branch.FullPath, true);
         }
 
         private void contextMenu_Opening(object sender, CancelEventArgs e)
