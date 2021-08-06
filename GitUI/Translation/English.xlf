@@ -4767,12 +4767,12 @@ If you are not sure just close this window.</source>
         <source>Diff</source>
         <target />
       </trans-unit>
-      <trans-unit id="ShowFirstParent.ToolTipText">
-        <source>Show first parents</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ShowFullHistory.ToolTipText">
         <source>Show Full History</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ToolStripFilters.Text">
+        <source>Filters</source>
         <target />
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -4897,14 +4897,6 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="toolStripBlameOptions.Text">
         <source>Blame options</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripLabel1.Text">
-        <source>Branches:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripRevisionFilterLabel.Text">
-        <source>Filter:</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripSplitLoad.ToolTipText">
@@ -9837,6 +9829,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">
         <source>For you own protection dropping more than 10 patch files at once is blocked!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_invalidDiffContainsFilter.Text">
+        <source>Filter text '{0}' not valid for "Diff contains" filter.</source>
         <target />
       </trans-unit>
       <trans-unit id="_loadingControlAsync.Text">
