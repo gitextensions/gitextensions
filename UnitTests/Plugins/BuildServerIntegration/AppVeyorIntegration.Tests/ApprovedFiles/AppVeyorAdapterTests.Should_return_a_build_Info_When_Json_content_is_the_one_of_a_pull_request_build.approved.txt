@@ -7,12 +7,15 @@
   PullRequestText: PR#6326
   PullRequestTitle: Being able to navigate to a PR page of an AppVeyor build
   TestsResultText: ''
+  IsRunning: false
   Id: 3.1.0.5444
   StartDate: 2019-03-04T11:24:24.0204641Z
   Duration: 617524
   Status: Success
+  Description: 
   CommitHashList:
   - dfc541e7eda18a9eb620a0a352e1d6fe0141b34d
   Url: https://ci.appveyor.com/project/account/repo/build/3.1.0.5444
   ShowInBuildReportTab: true
+  Tooltip: 
   PullRequestUrl: https://github.com/gitextensions/gitextensions/pull/6326
