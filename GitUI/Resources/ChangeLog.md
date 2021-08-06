@@ -1,6 +1,23 @@
 Changelog
 =========
 
+### Version 3.5.2 (06 Aug 2021)
+
+#### Changes:
+* [9374] Make showing commit message body in the revision graph optional
+* [9351] Fixup user scripts running PS in foreground
+* [9350] Fixup main menu item `Git bash`
+* [9343] [NBug] An item with the same key has already been added.
+* [9342] GitRef: Remote may be as long as Name
+
+
+[9374]:https://github.com/gitextensions/gitextensions/pull/9374
+[9351]:https://github.com/gitextensions/gitextensions/pull/9351
+[9350]:https://github.com/gitextensions/gitextensions/pull/9350
+[9343]:https://github.com/gitextensions/gitextensions/issues/9343
+[9342]:https://github.com/gitextensions/gitextensions/pull/9342
+
+
 ### Version 3.5.1 (04 Jul 2021)
 
 #### Changes:

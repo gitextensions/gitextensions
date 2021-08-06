@@ -1,4 +1,4 @@
-version: 3.5.1.{build}
+version: 3.5.2.{build}
 
 branches:
   except:
