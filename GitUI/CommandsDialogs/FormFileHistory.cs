@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             ConfigureTabControl();
 
-            ToolStripFilters.Bind(() => Module);
+            ToolStripFilters.Bind(() => Module, RevisionGrid);
 
             Color toolForeColor = SystemColors.WindowText;
             Color toolBackColor = Color.Transparent;
@@ -705,34 +705,6 @@ namespace GitUI.CommandsDialogs
         private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
         {
             FormGitCommandLog.ShowOrActivate(this);
-        }
-
-        private void toolStripFilters_AdvancedFilterRequested(object sender, EventArgs e)
-        {
-            RevisionGrid.ShowRevisionFilterDialog();
-        }
-
-        private void toolStripFilters_BranchFilterApplied(object sender, BranchFilterEventArgs e)
-        {
-            RevisionGrid.SetAndApplyBranchFilter(e.Filter, e.RequireRefresh);
-        }
-
-        private void toolStripFilters_RevisionFilterApplied(object sender, RevisionFilterEventArgs e)
-        {
-            try
-            {
-                RevisionGrid.SetAndApplyRevisionFilter(e.Filter);
-            }
-            catch (InvalidOperationException ex)
-            {
-                MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ToolStripFilters.SetRevisionFilter(string.Empty);
-            }
-        }
-
-        private void toolStripFilters_ShowFirstParentsCheckedChanged(object sender, EventArgs e)
-        {
-            RevisionGrid.ShowFirstParent();
         }
     }
 }

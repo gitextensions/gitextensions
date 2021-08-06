@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
@@ -15,28 +15,9 @@ namespace GitUI.UserControls
     {
         private static readonly string[] _noResultsFound = { TranslatedStrings.NoResultsFound };
         private Func<IGitModule>? _getModule;
+        private IRevisionGridFilter? _revisionGridFilter;
         private bool _isApplyingFilter;
         private bool _filterBeingChanged;
-
-        /// <summary>
-        /// Occurs whenever the advanced filter button is clicked.
-        /// </summary>
-        public event EventHandler AdvancedFilterRequested;
-
-        /// <summary>
-        /// Occurs whenever the branch filter is applied.
-        /// </summary>
-        public event EventHandler<BranchFilterEventArgs> BranchFilterApplied;
-
-        /// <summary>
-        /// Occurs whenever the revision filter is applied.
-        /// </summary>
-        public event EventHandler<RevisionFilterEventArgs> RevisionFilterApplied;
-
-        /// <summary>
-        /// Occurs whenever the 'ShowFirstParents' checked state changed.
-        /// </summary>
-        public event EventHandler ShowFirstParentsCheckedChanged;
 
         public FilterToolBar()
         {
@@ -69,6 +50,11 @@ namespace GitUI.UserControls
             }
         }
 
+        private IRevisionGridFilter RevisionGridFilter
+        {
+            get => _revisionGridFilter ?? throw new InvalidOperationException($"{nameof(Bind)} is not called.");
+        }
+
         public bool ShowFirstParentChecked
         {
             get => tsmiShowFirstParent.Checked;
@@ -93,7 +79,7 @@ namespace GitUI.UserControls
                 filter = string.Empty;
             }
 
-            BranchFilterApplied?.Invoke(this, new BranchFilterEventArgs(filter, refresh));
+            RevisionGridFilter.SetAndApplyBranchFilter(filter, refresh);
 
             _isApplyingFilter = false;
         }
@@ -105,19 +91,30 @@ namespace GitUI.UserControls
                 return;
             }
 
-            _isApplyingFilter = true;
-            RevisionFilterApplied?.Invoke(this,
-                new RevisionFilterEventArgs(new RevisionFilter(tstxtRevisionFilter.Text,
-                                                               tsmiCommitFilter.Checked,
-                                                               tsmiCommitter.Checked,
-                                                               tsmiAuthor.Checked,
-                                                               tsmiDiffContains.Checked)));
-            _isApplyingFilter = false;
+            try
+            {
+                _isApplyingFilter = true;
+                RevisionGridFilter.SetAndApplyRevisionFilter(new RevisionFilter(tstxtRevisionFilter.Text,
+                                                                                tsmiCommitFilter.Checked,
+                                                                                tsmiCommitter.Checked,
+                                                                                tsmiAuthor.Checked,
+                                                                                tsmiDiffContains.Checked));
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                SetRevisionFilter(string.Empty);
+            }
+            finally
+            {
+                _isApplyingFilter = false;
+            }
         }
 
-        public void Bind(Func<IGitModule> getModule)
+        public void Bind(Func<IGitModule> getModule, IRevisionGridFilter revisionGridFilter)
         {
             _getModule = getModule ?? throw new ArgumentNullException(nameof(getModule));
+            _revisionGridFilter = revisionGridFilter ?? throw new ArgumentNullException(nameof(revisionGridFilter));
         }
 
         public void BindBranches(string[] branches)
@@ -145,6 +142,11 @@ namespace GitUI.UserControls
 
         private IGitModule GetModule()
         {
+            if (_getModule is null)
+            {
+                throw new InvalidOperationException($"{nameof(Bind)} is not called.");
+            }
+
             IGitModule module = _getModule();
             if (module is null)
             {
@@ -191,7 +193,7 @@ namespace GitUI.UserControls
         public void ResetBranchesFilter() => tscboBranchFilter.Text = string.Empty;
 
         /// <summary>
-        ///  Sets the branches filter and raises <see cref="BranchFilterApplied"/> event.
+        ///  Sets the branches filter.
         /// </summary>
         /// <param name="filter">The filter to apply.</param>
         /// <param name="refresh"><see langword="true"/> to request the revision grid to refresh; otherwise <see langword="false"/>.</param>
@@ -210,7 +212,7 @@ namespace GitUI.UserControls
         }
 
         /// <summary>
-        ///  Sets the revision filter and raises <see cref="RevisionFilterApplied"/> event.
+        ///  Sets the revision filter.
         /// </summary>
         /// <param name="filter">The filter to apply.</param>
         public void SetRevisionFilter(string filter)
@@ -260,7 +262,7 @@ namespace GitUI.UserControls
 
         private void tsbtnAdvancedFilter_Click(object sender, EventArgs e)
         {
-            AdvancedFilterRequested?.Invoke(tsbtnAdvancedFilter, EventArgs.Empty);
+            RevisionGridFilter.ShowRevisionFilterDialog();
         }
 
         private void tscboBranchFilter_Click(object sender, EventArgs e)
@@ -299,7 +301,7 @@ namespace GitUI.UserControls
 
         private void tsmiShowFirstParentt_Click(object sender, EventArgs e)
         {
-            ShowFirstParentsCheckedChanged?.Invoke(tsmiShowFirstParent, EventArgs.Empty);
+            RevisionGridFilter.ToggleShowFirstParent();
         }
     }
 }

@@ -58,7 +58,7 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRunScript
+    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRunScript, IRevisionGridFilter
     {
         public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
         public event EventHandler<EventArgs>? ShowFirstParentsToggled;
@@ -549,13 +549,6 @@ namespace GitUI
             }
         }
 
-        /// <summary>
-        ///  Applies a branch filter.
-        /// </summary>
-        /// <param name="filter">The filter to apply.</param>
-        /// <param name="requireRefresh">
-        ///  <see langword="true"/> to refresh the grid, if the filter applied successfully; <see langword="false"/> to not refresh the grid at all.
-        /// </param>
         public void SetAndApplyBranchFilter(string filter, bool requireRefresh)
         {
             AppSettings.BranchFilterEnabled = !string.IsNullOrWhiteSpace(filter);
@@ -1798,7 +1791,7 @@ namespace GitUI
             MenuCommands.TriggerMenuChanged();
         }
 
-        internal void ShowRevisionFilterDialog()
+        public void ShowRevisionFilterDialog()
         {
             _revisionFilter.ShowDialog(ParentForm);
             ForceRefreshRevisions();
@@ -2346,7 +2339,7 @@ namespace GitUI
             Refresh();
         }
 
-        internal void ShowFirstParent()
+        public void ToggleShowFirstParent()
         {
             AppSettings.ShowFirstParent = !AppSettings.ShowFirstParent;
 
@@ -2865,7 +2858,7 @@ namespace GitUI
                 case Command.ShowFilteredBranches: ShowFilteredBranches(); break;
                 case Command.ShowReflogReferences: ToggleShowReflogReferences(); break;
                 case Command.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
-                case Command.ShowFirstParent: ShowFirstParent(); break;
+                case Command.ShowFirstParent: ToggleShowFirstParent(); break;
                 case Command.ToggleBetweenArtificialAndHeadCommits: ToggleBetweenArtificialAndHeadCommits(); break;
                 case Command.SelectCurrentRevision: SetSelectedRevision(CurrentCheckout); break;
                 case Command.GoToCommit: MenuCommands.GotoCommitExecute(); break;

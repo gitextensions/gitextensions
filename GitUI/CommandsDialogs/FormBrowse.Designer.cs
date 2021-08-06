@@ -1692,13 +1692,6 @@ namespace GitUI.CommandsDialogs
             this._addUpstreamRemoteToolStripMenuItem.Text = "Add upstream remote";
             this._addUpstreamRemoteToolStripMenuItem.Click += new System.EventHandler(this._addUpstreamRemoteToolStripMenuItem_Click);
             // 
-            // ToolStripFilters
-            // 
-            this.ToolStripFilters.AdvancedFilterRequested += new System.EventHandler(this.toolStripFilters_AdvancedFilterRequested);
-            this.ToolStripFilters.BranchFilterApplied += new System.EventHandler<GitUI.UserControls.BranchFilterEventArgs>(this.toolStripFilters_BranchFilterApplied);
-            this.ToolStripFilters.RevisionFilterApplied += new System.EventHandler<GitUI.UserControls.RevisionFilterEventArgs>(this.toolStripFilters_RevisionFilterApplied);
-            this.ToolStripFilters.ShowFirstParentsCheckedChanged += new System.EventHandler(this.toolStripFilters_ShowFirstParentsCheckedChanged);
-            // 
             // toolStripScripts
             // 
             this.ToolStripScripts.ClickThrough = true;

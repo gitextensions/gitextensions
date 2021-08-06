@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs
                 RegisterPlugins();
             }).FileAndForget();
 
-            ToolStripFilters.Bind(() => Module);
+            ToolStripFilters.Bind(() => Module, RevisionGrid);
             ToolStripFilters.SetRevisionFilter(filter);
 
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
@@ -3291,34 +3291,6 @@ namespace GitUI.CommandsDialogs
         private void HelpToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             tsmiTelemetryEnabled.Checked = AppSettings.TelemetryEnabled ?? false;
-        }
-
-        private void toolStripFilters_AdvancedFilterRequested(object sender, EventArgs e)
-        {
-            RevisionGrid.ShowRevisionFilterDialog();
-        }
-
-        private void toolStripFilters_BranchFilterApplied(object sender, BranchFilterEventArgs e)
-        {
-            RevisionGrid.SetAndApplyBranchFilter(e.Filter, e.RequireRefresh);
-        }
-
-        private void toolStripFilters_RevisionFilterApplied(object sender, RevisionFilterEventArgs e)
-        {
-            try
-            {
-                RevisionGrid.SetAndApplyRevisionFilter(e.Filter);
-            }
-            catch (InvalidOperationException ex)
-            {
-                MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ToolStripFilters.SetRevisionFilter(string.Empty);
-            }
-        }
-
-        private void toolStripFilters_ShowFirstParentsCheckedChanged(object sender, EventArgs e)
-        {
-            RevisionGrid.ShowFirstParent();
         }
     }
 }

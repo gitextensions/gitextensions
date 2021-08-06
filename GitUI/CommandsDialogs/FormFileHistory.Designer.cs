@@ -333,10 +333,6 @@ namespace GitUI.CommandsDialogs
             this.gitcommandLogToolStripMenuItem});
             this.ToolStripFilters.Location = new System.Drawing.Point(0, 0);
             this.ToolStripFilters.Size = new System.Drawing.Size(748, 25);
-            this.ToolStripFilters.AdvancedFilterRequested += new System.EventHandler(this.toolStripFilters_AdvancedFilterRequested);
-            this.ToolStripFilters.BranchFilterApplied += new System.EventHandler<GitUI.UserControls.BranchFilterEventArgs>(this.toolStripFilters_BranchFilterApplied);
-            this.ToolStripFilters.RevisionFilterApplied += new System.EventHandler<GitUI.UserControls.RevisionFilterEventArgs>(this.toolStripFilters_RevisionFilterApplied);
-            this.ToolStripFilters.ShowFirstParentsCheckedChanged += new System.EventHandler(this.toolStripFilters_ShowFirstParentsCheckedChanged);
             // 
             // toolStripSeparator3
             // 
