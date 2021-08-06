@@ -177,6 +177,7 @@ namespace GitUI.UserControls
             // 
             this.Dock = System.Windows.Forms.DockStyle.None;
             this.GripMargin = new System.Windows.Forms.Padding(0);
+            this.GripStyle = ToolStripGripStyle.Hidden;
             this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbtnAdvancedFilter,

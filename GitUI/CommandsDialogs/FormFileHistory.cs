@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
@@ -15,6 +16,7 @@ using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -26,8 +28,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _buildReportTabCaption = new("Build Report");
         private readonly AsyncLoader _asyncLoader = new();
         private readonly ICommitDataManager _commitDataManager;
-        private readonly FilterRevisionsHelper _filterRevisionsHelper;
-        private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FormFileHistoryController _controller = new();
@@ -59,8 +59,13 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             ConfigureTabControl();
 
-            _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
-            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
+            Color toolForeColor = SystemColors.WindowText;
+            Color toolBackColor = Color.Transparent;
+            BackColor = SystemColors.Window;
+            ForeColor = toolForeColor;
+            ToolStripFilters.BackColor = toolBackColor;
+            ToolStripFilters.ForeColor = toolForeColor;
+            ToolStripFilters.InitToolStripStyles(toolForeColor, toolBackColor);
 
             _formBrowseMenus = new FormBrowseMenus(FileHistoryContextMenu);
             _formBrowseMenus.ResetMenuCommandSets();
@@ -133,7 +138,7 @@ namespace GitUI.CommandsDialogs
 
             if (filterByRevision && revision?.ObjectId is not null)
             {
-                _filterBranchHelper.SetBranchFilter(revision.Guid, false);
+                ToolStripFilters.SetRevisionFilter(revision.Guid);
             }
 
             tabControl1.SelectedTab = blameTabExists && showBlame ? BlameTab : DiffTab;
@@ -173,8 +178,6 @@ namespace GitUI.CommandsDialogs
                 _viewChangesSequence.Dispose();
 
                 // if the form was instantiated by the translation app, all of the following would be null
-                _filterRevisionsHelper?.Dispose();
-                _filterBranchHelper?.Dispose();
                 _formBrowseMenus?.Dispose();
 
                 components?.Dispose();
@@ -229,8 +232,7 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.SetPathFilters(FileName.QuoteNE());
             RevisionGrid.Load();
-
-            return;
+            InitToolStripBranchFilter();
         }
 
         private string? GetFileNameForRevision(GitRevision rev)
@@ -248,6 +250,28 @@ namespace GitUI.CommandsDialogs
         private void FileChangesSelectionChanged(object sender, EventArgs e)
         {
             UpdateSelectedFileViewers();
+        }
+
+        private void InitToolStripBranchFilter()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            if (!Module.IsValidGitWorkingDir())
+            {
+                ToolStripFilters.Enabled = false;
+                return;
+            }
+
+            ToolStripFilters.Enabled = true;
+            RefsFilter branchesFilter = ToolStripFilters.BranchesFilter;
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default;
+                string[] branches = Module.GetRefs(branchesFilter).Select(branch => branch.Name).ToArray();
+
+                await ToolStripFilters.SwitchToMainThreadAsync();
+                ToolStripFilters.BindBranches(branches);
+            }).FileAndForget();
         }
 
         private void SetTitle(string? alternativeFileName = null)
@@ -596,11 +620,6 @@ namespace GitUI.CommandsDialogs
             LoadFileHistory();
         }
 
-        private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
-        {
-            toolStripBranchFilterComboBox.DroppedDown = true;
-        }
-
         private void ignoreWhitespaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AppSettings.IgnoreWhitespaceOnBlame = !AppSettings.IgnoreWhitespaceOnBlame;
@@ -627,15 +646,13 @@ namespace GitUI.CommandsDialogs
         public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);
-            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, ToolStripFilters, translation);
         }
 
         public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
-            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(FormBrowseName, ToolStripFilters, translation);
         }
 
         #endregion
@@ -709,6 +726,75 @@ namespace GitUI.CommandsDialogs
         private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
         {
             FormGitCommandLog.ShowOrActivate(this);
+        }
+
+        private void toolStripFilters_AdvancedFilterRequested(object sender, EventArgs e)
+        {
+            RevisionGrid.ShowRevisionFilterDialog();
+        }
+
+        private void toolStripFilters_BranchesUpdateRequested(object sender, EventArgs e)
+        {
+            InitToolStripBranchFilter();
+        }
+
+        private void toolStripFilters_BranchFilterApplied(object sender, BranchFilterEventArgs e)
+        {
+            // TODO: move the logic to RevisionGrid
+
+            bool success = RevisionGrid.SetAndApplyBranchFilter(e.Filter);
+            if (success && e.RequireRefresh)
+            {
+                RevisionGrid.ForceRefreshRevisions();
+            }
+        }
+
+        private void toolStripFilters_RevisionFilterApplied(object sender, RevisionFilterEventArgs e)
+        {
+            // TODO: move the logic to RevisionGrid
+
+            string revListArgs;
+            string inMemMessageFilter;
+            string inMemCommitterFilter;
+            string inMemAuthorFilter;
+
+            try
+            {
+                RevisionGrid.FormatQuickFilter(
+                    e.Filter, e.FilterByCommit, e.FilterByCommitter, e.FilterByAuthor, e.FilterByDiffContent,
+                    out revListArgs,
+                    out inMemMessageFilter,
+                    out inMemCommitterFilter,
+                    out inMemAuthorFilter);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Filter error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ToolStripFilters.SetRevisionFilter(string.Empty);
+                return;
+            }
+
+            if ((RevisionGrid.QuickRevisionFilter == revListArgs) &&
+                (RevisionGrid.InMemMessageFilter == inMemMessageFilter) &&
+                (RevisionGrid.InMemCommitterFilter == inMemCommitterFilter) &&
+                (RevisionGrid.InMemAuthorFilter == inMemAuthorFilter) &&
+                RevisionGrid.InMemFilterIgnoreCase)
+            {
+                return;
+            }
+
+            RevisionGrid.QuickRevisionFilter = revListArgs;
+            RevisionGrid.InMemMessageFilter = inMemMessageFilter;
+            RevisionGrid.InMemCommitterFilter = inMemCommitterFilter;
+            RevisionGrid.InMemAuthorFilter = inMemAuthorFilter;
+            RevisionGrid.InMemFilterIgnoreCase = true;
+            RevisionGrid.Visible = true;
+            RevisionGrid.ForceRefreshRevisions();
+        }
+
+        private void toolStripFilters_ShowFirstParentsCheckedChanged(object sender, EventArgs e)
+        {
+            RevisionGrid.ShowFirstParent();
         }
     }
 }

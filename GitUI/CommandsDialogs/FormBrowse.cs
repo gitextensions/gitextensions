@@ -297,12 +297,11 @@ namespace GitUI.CommandsDialogs
             WorkaroundToolbarLocationBug();
             WorkaroundPaddingIncreaseBug();
 
-            var toolBackColor = SystemColors.Window;
-            var toolForeColor = SystemColors.WindowText;
-            BackColor = toolBackColor;
+            Color toolForeColor = SystemColors.WindowText;
+            BackColor = SystemColors.Window;
             ForeColor = toolForeColor;
-            mainMenuStrip.BackColor = toolBackColor;
             mainMenuStrip.ForeColor = toolForeColor;
+            InitToolStripStyles(toolForeColor, Color.Transparent);
 
             toolPanel.TopToolStripPanel.MouseClick += (s, e) =>
             {
@@ -311,8 +310,6 @@ namespace GitUI.CommandsDialogs
                     _formBrowseMenus.ShowToolStripContextMenu(Cursor.Position);
                 }
             };
-
-            InitToolStripStyles(toolForeColor, toolBackColor);
 
             foreach (var control in this.FindDescendants())
             {
@@ -334,12 +331,6 @@ namespace GitUI.CommandsDialogs
             FillUserShells(defaultShell: BashShell.ShellName);
 
             RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) => FocusRevisionDiffFileStatusList();
-
-            toolPanel.TopToolStripPanel.BackColor = Color.Transparent;
-            mainMenuStrip.BackColor = Color.Transparent;
-            ToolStripMain.BackColor = Color.Transparent;
-            ToolStripFilters.BackColor = Color.Transparent;
-            ToolStripScripts.BackColor = Color.Transparent;
 
             BackColor = OtherColors.BackgroundColor;
 
@@ -467,14 +458,17 @@ namespace GitUI.CommandsDialogs
                 toolPanel.TopToolStripPanel.BackColor = toolBackColor;
                 toolPanel.TopToolStripPanel.ForeColor = toolForeColor;
 
+                mainMenuStrip.BackColor = toolBackColor;
+
                 ToolStripMain.BackColor = toolBackColor;
                 ToolStripMain.ForeColor = toolForeColor;
+
                 ToolStripFilters.BackColor = toolBackColor;
                 ToolStripFilters.ForeColor = toolForeColor;
+                ToolStripFilters.InitToolStripStyles(toolForeColor, toolBackColor);
+
                 ToolStripScripts.BackColor = toolBackColor;
                 ToolStripScripts.ForeColor = toolForeColor;
-
-                ToolStripFilters.InitToolStripStyles(toolForeColor, toolBackColor);
             }
 
             Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
