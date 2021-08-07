@@ -1430,8 +1430,7 @@ namespace GitUI.Editor
                 { !stage, "--reverse" }
             };
 
-            string output = Module.GitExecutable.GetOutput(args, patch, throwOnErrorOutput: false);
-            ProcessApplyOutput(output, patch, patchUpdateDiff: true);
+            ProcessApplyOutput(args, patch, patchUpdateDiff: true);
         }
 
         /// <summary>
@@ -1500,15 +1499,7 @@ namespace GitUI.Editor
                 { currentItemStaged, "--reverse --index" }
             };
 
-            string output = Module.GitExecutable.GetOutput(args, patch, throwOnErrorOutput: false);
-            if (EnvUtils.RunningOnWindows())
-            {
-                // remove file mode warnings
-                Regex regEx = new("warning: .*has type .* expected .*", RegexOptions.Compiled);
-                output = output.RemoveLines(regEx.IsMatch);
-            }
-
-            ProcessApplyOutput(output, patch, patchUpdateDiff: true);
+            ProcessApplyOutput(args, patch, patchUpdateDiff: true);
         }
 
         /// <summary>
@@ -1557,18 +1548,33 @@ namespace GitUI.Editor
                 "--whitespace=nowarn"
             };
 
-            string output = Module.GitExecutable.GetOutput(args, patch, throwOnErrorOutput: false);
-            ProcessApplyOutput(output, patch);
+            ProcessApplyOutput(args, patch);
         }
 
-        private void ProcessApplyOutput(string output, byte[] patch, bool patchUpdateDiff = false)
+        private void ProcessApplyOutput(GitArgumentBuilder args, byte[] patch, bool patchUpdateDiff = false)
         {
-            if (!string.IsNullOrEmpty(output))
+            ExecutionResult result = Module.GitExecutable.Execute(args, inputWriter => inputWriter.BaseStream.Write(patch), throwOnErrorOutput: false);
+            string output = result.AllOutput.Trim();
+            if (EnvUtils.RunningOnWindows())
             {
-                if (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false))
-                {
-                    MessageBox.Show(this, output + "\n\n" + Encoding.GetString(patch), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                // remove file mode warnings
+                Regex regEx = new("warning: .*has type .* expected .*");
+                output = output.RemoveLines(regEx.IsMatch);
+            }
+
+            if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))
+            {
+                MessageBox.Show(this, $"{output}\n\n{Encoding.GetString(patch)}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (!result.ExitedSuccessfully || output.StartsWith("error: ") || output.StartsWith("warning: "))
+            {
+                // git-apply may fail on first attempt but succeed in subsequent attempts
+                // Trace such occurrences that may be interesting, some of these should maybe be presented to the user
+                Trace.WriteLineIf(!string.IsNullOrWhiteSpace(output), $"Patch output: {result.ExitCode}:{output} for: git {args}");
+            }
+            else if (!string.IsNullOrWhiteSpace(output))
+            {
+                Debug.WriteLine($"Patch output: {result.ExitCode}:{output} for: git {args}");
             }
 
             if (patchUpdateDiff && LinePatchingBlocksUntilReload)
