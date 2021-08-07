@@ -3162,7 +3162,7 @@ Do you want to continue?</source>
         <source>Text filter</source>
         <target />
       </trans-unit>
-      <trans-unit id="tsmiAuthor.Text">
+      <trans-unit id="tsmiAuthorFilter.Text">
         <source>Author</source>
         <target />
       </trans-unit>
@@ -3182,11 +3182,11 @@ Do you want to continue?</source>
         <source>Commit message and hash</source>
         <target />
       </trans-unit>
-      <trans-unit id="tsmiCommitter.Text">
+      <trans-unit id="tsmiCommitterFilter.Text">
         <source>Committer</source>
         <target />
       </trans-unit>
-      <trans-unit id="tsmiDiffContains.Text">
+      <trans-unit id="tsmiDiffContainsFilter.Text">
         <source>Diff contains (SLOW)</source>
         <target />
       </trans-unit>
