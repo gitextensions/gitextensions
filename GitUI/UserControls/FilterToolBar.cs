@@ -18,6 +18,7 @@ namespace GitUI.UserControls
         private IRevisionGridFilter? _revisionGridFilter;
         private bool _isApplyingFilter;
         private bool _filterBeingChanged;
+        private bool _isUnitTests;
 
         public FilterToolBar()
         {
@@ -96,13 +97,17 @@ namespace GitUI.UserControls
                 _isApplyingFilter = true;
                 RevisionGridFilter.SetAndApplyRevisionFilter(new RevisionFilter(tstxtRevisionFilter.Text,
                                                                                 tsmiCommitFilter.Checked,
-                                                                                tsmiCommitter.Checked,
-                                                                                tsmiAuthor.Checked,
-                                                                                tsmiDiffContains.Checked));
+                                                                                tsmiCommitterFilter.Checked,
+                                                                                tsmiAuthorFilter.Checked,
+                                                                                tsmiDiffContainsFilter.Checked));
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!_isUnitTests)
+                {
+                    MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
                 SetRevisionFilter(string.Empty);
             }
             finally
@@ -215,7 +220,7 @@ namespace GitUI.UserControls
         ///  Sets the revision filter.
         /// </summary>
         /// <param name="filter">The filter to apply.</param>
-        public void SetRevisionFilter(string filter)
+        public void SetRevisionFilter(string? filter)
         {
             tstxtRevisionFilter.Text = filter;
             ApplyRevisionFilter();
@@ -302,6 +307,47 @@ namespace GitUI.UserControls
         private void tsmiShowFirstParentt_Click(object sender, EventArgs e)
         {
             RevisionGridFilter.ToggleShowFirstParent();
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FilterToolBar _control;
+
+            public TestAccessor(FilterToolBar control)
+            {
+                _control = control;
+            }
+
+            public ToolStripMenuItem tsmiBranchLocal => _control.tsmiBranchLocal;
+            public ToolStripMenuItem tsmiBranchRemote => _control.tsmiBranchRemote;
+            public ToolStripMenuItem tsmiBranchTag => _control.tsmiBranchTag;
+            public ToolStripMenuItem tsmiCommitFilter => _control.tsmiCommitFilter;
+            public ToolStripMenuItem tsmiCommitterFilter => _control.tsmiCommitterFilter;
+            public ToolStripMenuItem tsmiAuthorFilter => _control.tsmiAuthorFilter;
+            public ToolStripMenuItem tsmiDiffContainsFilter => _control.tsmiDiffContainsFilter;
+            public ToolStripMenuItem tsmiHash => _control.tsmiHash;
+            public ToolStripButton tsmiShowFirstParent => _control.tsmiShowFirstParent;
+            public ToolStripTextBox tstxtRevisionFilter => _control.tstxtRevisionFilter;
+            public ToolStripLabel tslblRevisionFilter => _control.tslblRevisionFilter;
+            public ToolStripButton tsbtnAdvancedFilter => _control.tsbtnAdvancedFilter;
+            public ToolStripComboBox tscboBranchFilter => _control.tscboBranchFilter;
+            public ToolStripDropDownButton tsddbtnBranchFilter => _control.tsddbtnBranchFilter;
+            public ToolStripDropDownButton tsddbtnRevisionFilter => _control.tsddbtnRevisionFilter;
+            public bool _isApplyingFilter => _control._isApplyingFilter;
+            public bool _filterBeingChanged => _control._filterBeingChanged;
+
+            public IRevisionGridFilter RevisionGridFilter => _control.RevisionGridFilter;
+
+            public void ApplyBranchFilter(bool refresh) => _control.ApplyBranchFilter(refresh);
+
+            public void ApplyRevisionFilter() => _control.ApplyRevisionFilter();
+
+            public IGitModule GetModule() => _control.GetModule();
+
+            public bool SetUnitTestsMode() => _control._isUnitTests = true;
         }
     }
 }

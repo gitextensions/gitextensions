@@ -16,10 +16,10 @@ namespace GitUI.UserControls
             this.tsmiBranchRemote = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBranchTag = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiCommitFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiCommitter = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiAuthor = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiCommitterFilter = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAuthorFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiHash = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiDiffContains = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiDiffContainsFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.tsbtnAdvancedFilter = new System.Windows.Forms.ToolStripButton();
             this.tscboBranchFilter = new System.Windows.Forms.ToolStripComboBox();
@@ -40,15 +40,15 @@ namespace GitUI.UserControls
             // 
             // tsmiCommitter
             // 
-            this.tsmiCommitter.CheckOnClick = true;
-            this.tsmiCommitter.Name = "tsmiCommitter";
-            this.tsmiCommitter.Text = "Committer";
+            this.tsmiCommitterFilter.CheckOnClick = true;
+            this.tsmiCommitterFilter.Name = "tsmiCommitter";
+            this.tsmiCommitterFilter.Text = "Committer";
             // 
             // tsmiAuthor
             // 
-            this.tsmiAuthor.CheckOnClick = true;
-            this.tsmiAuthor.Name = "tsmiAuthor";
-            this.tsmiAuthor.Text = "Author";
+            this.tsmiAuthorFilter.CheckOnClick = true;
+            this.tsmiAuthorFilter.Name = "tsmiAuthor";
+            this.tsmiAuthorFilter.Text = "Author";
             // 
             // tsmiHash
             // 
@@ -58,9 +58,9 @@ namespace GitUI.UserControls
             // 
             // tsmiDiffContains
             // 
-            this.tsmiDiffContains.CheckOnClick = true;
-            this.tsmiDiffContains.Name = "tsmiDiffContains";
-            this.tsmiDiffContains.Text = "Diff contains (SLOW)";
+            this.tsmiDiffContainsFilter.CheckOnClick = true;
+            this.tsmiDiffContainsFilter.Name = "tsmiDiffContains";
+            this.tsmiDiffContainsFilter.Text = "Diff contains (SLOW)";
             // 
             // toolStripLabel1
             // 
@@ -154,9 +154,9 @@ namespace GitUI.UserControls
             this.tsddbtnRevisionFilter.Image = global::GitUI.Properties.Images.EditFilter;
             this.tsddbtnRevisionFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiCommitFilter,
-            this.tsmiCommitter,
-            this.tsmiAuthor,
-            this.tsmiDiffContains});
+            this.tsmiCommitterFilter,
+            this.tsmiAuthorFilter,
+            this.tsmiDiffContainsFilter});
             this.tsddbtnRevisionFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsddbtnRevisionFilter.Name = "tsddbtnRevisionFilter";
             this.tsddbtnRevisionFilter.Size = new System.Drawing.Size(29, 22);
@@ -211,9 +211,9 @@ namespace GitUI.UserControls
         private ToolStripMenuItem tsmiBranchRemote;
         private ToolStripMenuItem tsmiBranchTag;
         private ToolStripMenuItem tsmiCommitFilter;
-        private ToolStripMenuItem tsmiCommitter;
-        private ToolStripMenuItem tsmiAuthor;
-        private ToolStripMenuItem tsmiDiffContains;
+        private ToolStripMenuItem tsmiCommitterFilter;
+        private ToolStripMenuItem tsmiAuthorFilter;
+        private ToolStripMenuItem tsmiDiffContainsFilter;
         private ToolStripMenuItem tsmiHash;
         private ToolStripButton tsmiShowFirstParent;
         private ToolStripTextBox tstxtRevisionFilter;
