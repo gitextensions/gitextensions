@@ -29,24 +29,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 ListIncludedEncodings.EndUpdate();
             }
 
-            var availableEncoding = Encoding.GetEncodings()
+            object[] selectableEncodings = Encoding.GetEncodings()
                 .Select(ei => ei.GetEncoding())
+                .Select(e => e.GetType() == typeof(UTF8Encoding) ? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false) : e) // If exists utf-8, then replace to utf-8 without BOM
                 .Where(e => e != Encoding.UTF7) // UTF-7 is no longer supported, see: https://github.com/dotnet/docs/issues/19274
-                .Where(e => !includedEncoding.ContainsKey(e.HeaderName))
-                .ToList();
-
-            // If exists utf-8, then replace to utf-8 without BOM
-            var utf8 = availableEncoding.FirstOrDefault(e => typeof(UTF8Encoding) == e.GetType());
-            if (utf8 is not null)
-            {
-                availableEncoding.Remove(utf8);
-                availableEncoding.Add(new UTF8Encoding(false));
-            }
+                .Where(e => !includedEncoding.ContainsKey(e.WebName))
+                .GroupBy(e => e.WebName)
+                .Select(group => group.First()) // ignore encodings which cannot be distinguished, keep first only
+                .ToArray<object>();
 
             ListAvailableEncodings.BeginUpdate();
             try
             {
-                ListAvailableEncodings.Items.AddRange(availableEncoding.ToArray<object>());
+                ListAvailableEncodings.Items.AddRange(selectableEncodings);
                 ListAvailableEncodings.DisplayMember = nameof(Encoding.EncodingName);
             }
             finally
@@ -59,9 +54,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (ListAvailableEncodings.SelectedItem is not null)
             {
-                var index = ListAvailableEncodings.SelectedIndex;
                 ListIncludedEncodings.Items.Add(ListAvailableEncodings.SelectedItem);
-                ListAvailableEncodings.Items.RemoveAt(index);
+                ListAvailableEncodings.Items.RemoveAt(ListAvailableEncodings.SelectedIndex);
             }
         }
 
@@ -70,7 +64,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             AppSettings.AvailableEncodings.Clear();
             foreach (Encoding encoding in ListIncludedEncodings.Items)
             {
-                AppSettings.AvailableEncodings.Add(encoding.HeaderName, encoding);
+                AppSettings.AvailableEncodings.Add(encoding.WebName, encoding);
             }
 
             DialogResult = DialogResult.OK;

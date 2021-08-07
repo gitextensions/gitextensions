@@ -721,13 +721,13 @@ namespace GitUI.Editor
                 encodingToolStripComboBox.Items.AddRange(encodings);
                 encodingToolStripComboBox.ResizeDropDownWidth(50, 250);
 
-                var defaultEncodingName = Encoding.Default.EncodingName;
+                string defaultEncodingName = Encoding.Default.EncodingName;
 
                 for (int i = 0; i < encodings.Length; i++)
                 {
                     if (string.Equals(encodings[i], defaultEncodingName, StringComparison.OrdinalIgnoreCase))
                     {
-                        encodingToolStripComboBox.Items[i] = "Default (" + Encoding.Default.HeaderName + ")";
+                        encodingToolStripComboBox.Items[i] = $"Default ({defaultEncodingName})";
                         break;
                     }
                 }
