@@ -494,44 +494,44 @@ namespace GitUI
             inMemCommitterFilter = string.Empty;
             inMemAuthorFilter = string.Empty;
 
-            if (!string.IsNullOrEmpty(revisionFilter.Filter))
+            if (!string.IsNullOrEmpty(revisionFilter.Text))
             {
                 // hash filtering only possible in memory
-                bool cmdLineSafe = GitVersion.Current.IsRegExStringCmdPassable(revisionFilter.Filter);
+                bool cmdLineSafe = GitVersion.Current.IsRegExStringCmdPassable(revisionFilter.Text);
                 revListArgs = " --regexp-ignore-case ";
                 if (revisionFilter.FilterByCommit)
                 {
-                    if (cmdLineSafe && !ObjectId.IsValidPartial(revisionFilter.Filter, minLength: 5))
+                    if (cmdLineSafe && !ObjectId.IsValidPartial(revisionFilter.Text, minLength: 5))
                     {
-                        revListArgs += "--grep=\"" + revisionFilter.Filter + "\" ";
+                        revListArgs += "--grep=\"" + revisionFilter.Text + "\" ";
                     }
                     else
                     {
-                        inMemMessageFilter = revisionFilter.Filter;
+                        inMemMessageFilter = revisionFilter.Text;
                     }
                 }
 
-                if (revisionFilter.FilterByCommitter && !string.IsNullOrWhiteSpace(revisionFilter.Filter))
+                if (revisionFilter.FilterByCommitter && !string.IsNullOrWhiteSpace(revisionFilter.Text))
                 {
                     if (cmdLineSafe)
                     {
-                        revListArgs += "--committer=\"" + revisionFilter.Filter + "\" ";
+                        revListArgs += "--committer=\"" + revisionFilter.Text + "\" ";
                     }
                     else
                     {
-                        inMemCommitterFilter = revisionFilter.Filter;
+                        inMemCommitterFilter = revisionFilter.Text;
                     }
                 }
 
-                if (revisionFilter.FilterByAuthor && !string.IsNullOrWhiteSpace(revisionFilter.Filter))
+                if (revisionFilter.FilterByAuthor && !string.IsNullOrWhiteSpace(revisionFilter.Text))
                 {
                     if (cmdLineSafe)
                     {
-                        revListArgs += "--author=\"" + revisionFilter.Filter + "\" ";
+                        revListArgs += "--author=\"" + revisionFilter.Text + "\" ";
                     }
                     else
                     {
-                        inMemAuthorFilter = revisionFilter.Filter;
+                        inMemAuthorFilter = revisionFilter.Text;
                     }
                 }
 
@@ -539,11 +539,11 @@ namespace GitUI
                 {
                     if (cmdLineSafe)
                     {
-                        revListArgs += "-G" + revisionFilter.Filter.Quote();
+                        revListArgs += "-G" + revisionFilter.Text.Quote();
                     }
                     else
                     {
-                        throw new InvalidOperationException(string.Format(_invalidDiffContainsFilter.Text, revisionFilter.Filter));
+                        throw new InvalidOperationException(string.Format(_invalidDiffContainsFilter.Text, revisionFilter.Text));
                     }
                 }
             }

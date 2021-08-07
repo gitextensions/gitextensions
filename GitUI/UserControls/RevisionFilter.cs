@@ -4,16 +4,16 @@
     {
         // TODO: consider using a bit vector or an enum
 
-        public RevisionFilter(string filter, bool byCommit, bool byCommitter, bool byAuthor, bool byDiffContent)
+        public RevisionFilter(string text, bool byCommit, bool byCommitter, bool byAuthor, bool byDiffContent)
         {
-            Filter = filter;
+            Text = text;
             FilterByCommit = byCommit;
             FilterByCommitter = byCommitter;
             FilterByAuthor = byAuthor;
             FilterByDiffContent = byDiffContent;
         }
 
-        public string Filter { get; }
+        public string Text { get; }
         public bool FilterByCommit { get; }
         public bool FilterByCommitter { get; }
         public bool FilterByAuthor { get; }
