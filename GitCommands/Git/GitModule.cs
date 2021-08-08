@@ -3883,7 +3883,7 @@ namespace GitCommands
         [return: NotNullIfNotNull("s")]
         public static string? ReEncodeString(string? s, Encoding fromEncoding, Encoding toEncoding)
         {
-            if (s is null || fromEncoding.HeaderName == toEncoding.HeaderName)
+            if (s is null || fromEncoding.WebName == toEncoding.WebName)
             {
                 return s;
             }
@@ -3940,7 +3940,7 @@ namespace GitCommands
                 {
                     return Encoding.UTF8;
                 }
-                else if (encodingName.Equals(LosslessEncoding.HeaderName, StringComparison.InvariantCultureIgnoreCase))
+                else if (encodingName.Equals(LosslessEncoding.WebName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     // no recoding is needed
                     return null;
