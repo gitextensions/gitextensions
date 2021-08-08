@@ -44,13 +44,10 @@ namespace GitUI
         private IDisposable? _selectedIndexChangeSubscription;
         private IDisposable? _diffListSortSubscription;
 
+        // Enable menu item to disable AppSettings.ShowDiffForAllParents in some forms
+        private bool _enableDisablingShowDiffForAllParents = false;
+
         private bool _updatingColumnWidth;
-
-        // Currently bound revisions. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents is changed.
-        private IReadOnlyList<GitRevision>? _revisions;
-
-        // Function to retrieve revisions. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents is changed.
-        private Func<ObjectId, GitRevision?>? _getRevision;
 
         public delegate void EnterEventHandler(object sender, EnterEventArgs e);
 
@@ -198,6 +195,13 @@ namespace GitUI
                 };
                 return item;
             }
+        }
+
+        public void Bind(Func<ObjectId?, string>? describeRevision, Func<GitRevision, GitRevision> getActualRevision)
+        {
+            DescribeRevision = describeRevision;
+            _diffCalculator.DescribeRevision = describeRevision;
+            _diffCalculator.GetActualRevision = getActualRevision;
         }
 
         private string? SelectedItemAbsolutePath => _fullPathResolver.Resolve(SelectedItem?.Item.Name)?.NormalizePath();
@@ -669,11 +673,10 @@ namespace GitUI
             _nextIndexToSelect = -1;
         }
 
-        public void SetDiffs(IReadOnlyList<GitRevision> revisions, Func<ObjectId, GitRevision?>? getRevision = null)
+        public void SetDiffs(IReadOnlyList<GitRevision> revisions, ObjectId? headId = null)
         {
-            _revisions = revisions;
-            _getRevision = getRevision;
-            GitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, DescribeRevision, getRevision);
+            _enableDisablingShowDiffForAllParents = true;
+            GitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId);
         }
 
         /// <summary>
@@ -1267,8 +1270,7 @@ namespace GitUI
             }
 
             // Show 'Show file differences for all parents' menu item if it is possible that there are multiple first revisions
-            var mayBeMultipleRevs = _revisions is not null &&
-                                    (_revisions.Count > 1 || (_revisions.Count == 1 && _revisions[0].ParentIds?.Count > 1));
+            var mayBeMultipleRevs = _enableDisablingShowDiffForAllParents && _itemsWithDescription.Count > 1;
 
             const string showAllDifferencesItemName = "ShowDiffForAllParentsText";
             var diffItem = cm.Items.Find(showAllDifferencesItemName, true);
@@ -1291,7 +1293,7 @@ namespace GitUI
                 showAllDiferencesItem.CheckedChanged += (s, e) =>
                 {
                     AppSettings.ShowDiffForAllParents = showAllDiferencesItem.Checked;
-                    GitItemStatusesWithDescription = _diffCalculator.SetDiffs(_revisions, DescribeRevision, _getRevision);
+                    GitItemStatusesWithDescription = _diffCalculator.Reload();
                 };
 
                 cm.Items.Add(showAllDiferencesItem);

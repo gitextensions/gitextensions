@@ -79,6 +79,12 @@ namespace GitCommands
                     });
         }
 
+        /// <summary>
+        /// The parents for commits are replaced with the parent in the graph (as all commits may not be included)
+        /// See https://git-scm.com/docs/git-log#Documentation/git-log.txt---parents
+        /// </summary>
+        public bool ParentsAreRewritten { get; private set; } = false;
+
         private async Task ExecuteAsync(
             GitModule module,
             IReadOnlyList<IGitRef> refs,
@@ -161,7 +167,7 @@ namespace GitCommands
             string revisionFilter,
             string pathFilter)
         {
-            bool needParentRewrite = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
+            ParentsAreRewritten = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
             return new GitArgumentBuilder("log")
             {
                 { maxCount > 0, $"--max-count={maxCount}" },
@@ -200,7 +206,7 @@ namespace GitCommands
                 },
                 revisionFilter,
                 {
-                    needParentRewrite,
+                    ParentsAreRewritten,
                     new ArgumentBuilder
                     {
                         { AppSettings.FullHistoryInFileHistory, $"--full-history" },

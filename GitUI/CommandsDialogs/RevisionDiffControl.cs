@@ -212,7 +212,7 @@ namespace GitUI.CommandsDialogs
 
             var item = DiffFiles.SelectedItem;
             var oldDiffItem = DiffFiles.FirstGroupItems.Contains(item) ? item : null;
-            DiffFiles.SetDiffs(revisions, _revisionGrid.GetRevision);
+            DiffFiles.SetDiffs(revisions, _revisionGrid.CurrentCheckout);
 
             // Try to restore previous item
             if (oldDiffItem is not null && DiffFiles.FirstGroupItems.Any(i => i.Item.Name.Equals(oldDiffItem.Item.Name)))
@@ -226,6 +226,7 @@ namespace GitUI.CommandsDialogs
             _revisionGrid = revisionGrid;
             _revisionFileTree = revisionFileTree;
             _refreshGitStatus = refreshGitStatus;
+            DiffFiles.Bind(objectId => DescribeRevision(objectId), _revisionGrid.GetActualRevision);
         }
 
         public void InitSplitterManager(SplitterManager splitterManager)
@@ -235,7 +236,6 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnRuntimeLoad()
         {
-            DiffFiles.DescribeRevision = objectId => DescribeRevision(objectId);
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.FixedWidthFont;
             ReloadHotkeys();

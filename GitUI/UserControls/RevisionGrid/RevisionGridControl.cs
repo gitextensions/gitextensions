@@ -755,6 +755,12 @@ namespace GitUI
             return description;
         }
 
+        /// <summary>
+        /// Get the selected revisions in the grid.
+        /// Note that the parents may be rewritten if a filter is applied.
+        /// </summary>
+        /// <param name="direction">Sort direction if set.</param>
+        /// <returns>The selected revisions.</returns>
         public IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection? direction = null)
         {
             var rows = _gridView
@@ -798,9 +804,38 @@ namespace GitUI
             return _gridView.GetRevision(row);
         }
 
-        public GitRevision GetCurrentRevision()
+        /// <summary>
+        /// Get the actual GitRevision from grid or use GitModule if parents may be rewritten or the commit is not in the grid.
+        /// </summary>
+        /// <returns>The GitRevision or null if not found</returns>
+        public GitRevision? GetActualRevision(ObjectId objectId)
         {
-            return Module.GetRevision(CurrentCheckout, shortFormat: true, loadRefs: true);
+            GitRevision revision = GetRevision(objectId);
+            if (revision is not null)
+            {
+                return GetActualRevision(revision);
+            }
+
+            // Revision is not in grid, try get from Git
+            return Module.GetRevision(objectId, shortFormat: true, loadRefs: true);
+        }
+
+        /// <summary>
+        /// Get the GitRevision with the actual parents as they may be rewritten in filtered grids.
+        /// </summary>
+        /// <param name="revision">The revision, likely from the grid.</param>
+        /// <returns>The input GitRevision if no changes and a clone with actual parents if parents are rewritte.</returns>
+        public GitRevision GetActualRevision(GitRevision revision)
+        {
+            // Index commits must have HEAD as parent already
+            if (ParentsAreRewritten && !revision.IsArtificial)
+            {
+                // Grid is filtered and revision may have incorrect parents
+                revision = revision.Clone();
+                revision.ParentIds = Module.GetParents(revision.ObjectId).ToList();
+            }
+
+            return revision;
         }
 
         public void RefreshRevisions()
@@ -1128,6 +1163,7 @@ namespace GitUI
                 if (!firstRevisionReceived)
                 {
                     firstRevisionReceived = true;
+                    ParentsAreRewritten = _revisionReader.ParentsAreRewritten;
 
                     this.InvokeAsync(() => { ShowLoading(false); }).FileAndForget();
                 }
@@ -1274,6 +1310,12 @@ namespace GitUI
                 }
             }
         }
+
+        /// <summary>
+        /// The parents for commits are replaced with the parent in the graph (as all commits may not be included)
+        /// See https://git-scm.com/docs/git-log#Documentation/git-log.txt---parents
+        /// </summary>
+        private bool ParentsAreRewritten { get; set; } = false;
 
         private static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(GitModule gitModule, bool noLocks = false)
         {
@@ -2863,7 +2905,7 @@ namespace GitUI
         #region IScriptHostControl
 
         GitRevision IScriptHostControl.GetCurrentRevision()
-            => GetCurrentRevision();
+            => GetActualRevision(CurrentCheckout);
 
         GitRevision? IScriptHostControl.GetLatestSelectedRevision()
             => LatestSelectedRevision;
