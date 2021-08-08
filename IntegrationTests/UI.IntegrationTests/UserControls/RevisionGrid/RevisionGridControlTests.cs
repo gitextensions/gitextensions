@@ -130,7 +130,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
                     // Confirm the filter has been applied
                     ta.VisibleRevisionCount.Should().Be(4);
-                    ProcessUntil(() => revisionGridControl.LatestSelectedRevision.ObjectId.ToString(), _headCommit);
+                    ProcessUntil(() => revisionGridControl.LatestSelectedRevision.ObjectId.ToString(), GitRevision.WorkTreeGuid);
                 });
         }
 
@@ -159,7 +159,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
 
                     // ...assert nothing changed, applying the filter doesn't change the view
-                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(GitRevision.WorkTreeGuid);
 
                     // Refresh the grid, to reflect the filter
                     RefreshRevisions(revisionGridControl);
