@@ -558,6 +558,11 @@ namespace GitUI.UserControls.RevisionGrid
                 int curCount;
                 do
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return Task.CompletedTask;
+                    }
+
                     scrollTo = _backgroundScrollTo;
                     curCount = _revisionGraph.GetCachedCount();
                     UpdateGraph(curCount, scrollTo);
@@ -574,6 +579,11 @@ namespace GitUI.UserControls.RevisionGrid
 
             void UpdateGraph(int fromIndex, int toIndex)
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 // Cache the next item
                 _revisionGraph.CacheTo(toIndex, Math.Min(fromIndex + 1500, toIndex));
 
@@ -584,6 +594,11 @@ namespace GitUI.UserControls.RevisionGrid
 
                 void UpdateRowCount(int row)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
                     if (RowCount < _revisionGraph.Count)
                     {
                         SetRowCountAndSelectRowsIfReady(_revisionGraph.Count);
