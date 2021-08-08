@@ -185,32 +185,36 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <param name="insertAsFirst">Insert the (artificial) revision first in the graph.</param>
         public void Add(GitRevision revision, RevisionNodeFlags types, bool insertAsFirst = false)
         {
+            // The commits are sorted by the score (not contiuous numbering there may be gaps)
+            // This commit will be ordered after existing, _maxScore is a preliminary score
+            _maxScore++;
+
             bool updateParents = true;
             if (!_nodeByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))
             {
                 int score = insertAsFirst
 
                     // Insert first artificial (WorkTree) before first existing
-                    // _maxScore does not need to be updated
                     ? -1
 
                     // This revision is added from the log, but not seen before. This is probably a root node (new branch)
                     // OR the revisions are not in topo order. If this the case, we deal with it later.
-                    : ++_maxScore;
+                    : _maxScore;
                 revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, score);
                 _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
             }
             else
             {
                 // This revision was added earlier, but is now found in the log.
-                // Increase the score to the current maxScore to keep the order in tact.
                 if (!insertAsFirst)
                 {
-                    revisionGraphRevision.EnsureScoreIsAbove(++_maxScore);
+                    // Increase the score to the current maxScore to keep the order intact.
+                    revisionGraphRevision.EnsureScoreIsAbove(_maxScore);
                 }
                 else
                 {
-                    // Second artificial (Index), score already set
+                    // Second artificial (Index), score already set, no parent (HEAD not in grid)
+                    // No parent segment to be added
                     updateParents = false;
                 }
             }
@@ -221,13 +225,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // Build the revisions parent/child structure. The parents need to added here. The child structure is kept in synch in
             // the RevisionGraphRevision class.
-            if (!updateParents)
-            {
-                // score set already for the commit, force reorder
-                // Parent (HEAD) not in the graph, no segment added
-                _reorder = true;
-            }
-            else if (revision.ParentIds is not null)
+            if (revision.ParentIds is not null && updateParents)
             {
                 foreach (ObjectId parentObjectId in revision.ParentIds)
                 {
@@ -264,6 +262,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // Ensure all parents are loaded before adding it to the _nodes list. This is important for ordering.
             ImmutableInterlocked.Update(ref _nodes, (list, revision) => list.Add(revision), revisionGraphRevision);
+
+            if (!updateParents)
+            {
+                // The rows may already be cached, invalidate
+                _reorder = true;
+                CacheTo(0, 0);
+            }
         }
 
         /// <summary>
