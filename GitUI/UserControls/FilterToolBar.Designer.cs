@@ -200,11 +200,6 @@ namespace GitUI.UserControls
 
         }
 
-        private void TscboBranchFilter_KeyUp(object sender, KeyEventArgs e)
-        {
-            throw new System.NotImplementedException();
-        }
-
         #endregion
 
         private ToolStripMenuItem tsmiBranchLocal;

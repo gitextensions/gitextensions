@@ -144,9 +144,17 @@ namespace GitUI.UserControls.RevisionGrid
             return (!AppSettings.BranchFilterEnabled || AppSettings.ShowCurrentBranchOnly) ? "" : BranchFilter.Text;
         }
 
-        public void SetBranchFilter(string filter)
+        public bool SetBranchFilter(string? filter)
         {
-            BranchFilter.Text = filter?.Trim();
+            string newFilter = filter?.Trim() ?? string.Empty;
+            if (string.Equals(newFilter, BranchFilter.Text, StringComparison.Ordinal))
+            {
+                // The filter hasn't changed
+                return false;
+            }
+
+            BranchFilter.Text = newFilter;
+            return true;
         }
 
         public void SetPathFilter(string filter)

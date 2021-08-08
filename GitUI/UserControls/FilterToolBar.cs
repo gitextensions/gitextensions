@@ -26,6 +26,8 @@ namespace GitUI.UserControls
 
             tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
 
+            tscboBranchFilter.Leave += (s, e) => ApplyBranchFilter(refresh: true);
+
             tstxtRevisionFilter.Leave += (s, e) => ApplyRevisionFilter();
             tstxtRevisionFilter.KeyUp += (s, e) =>
             {

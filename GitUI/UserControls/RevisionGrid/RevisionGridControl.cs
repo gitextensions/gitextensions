@@ -92,7 +92,7 @@ namespace GitUI
         private readonly TranslationString _noMergeBaseCommit = new("There is no common ancestor for the selected commits.");
         private readonly TranslationString _invalidDiffContainsFilter = new("Filter text '{0}' not valid for \"Diff contains\" filter.");
 
-        private readonly FormRevisionFilter _revisionFilter = new();
+        private readonly FormRevisionFilter _formRevisionFilter = new();
         private readonly NavigationHistory _navigationHistory = new();
         private readonly Control _loadingControlAsync;
         private readonly Control _loadingControlSync;
@@ -312,7 +312,7 @@ namespace GitUI
                 //// _loadingControlSync handled by this.Controls
                 //// _loadingControlAsync handled by this.Controls
                 //// _navigationHistory not disposable
-                _revisionFilter.Dispose();
+                _formRevisionFilter.Dispose();
 
                 components?.Dispose();
 
@@ -411,7 +411,7 @@ namespace GitUI
 
         public void SetPathFilters(string path)
         {
-            _revisionFilter.SetPathFilter(path);
+            _formRevisionFilter.SetPathFilter(path);
         }
 
         private void InitiateRefAction(IReadOnlyList<IGitRef>? refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
@@ -558,13 +558,15 @@ namespace GitUI
             // And since we set a filter - we can't be showing the current branch.
             AppSettings.ShowCurrentBranchOnly = false;
 
-            _revisionFilter.SetBranchFilter(filter);
-
-            SetShowBranches();
+            requireRefresh = requireRefresh && _formRevisionFilter.SetBranchFilter(filter);
 
             if (requireRefresh)
             {
                 ForceRefreshRevisions();
+            }
+            else
+            {
+                SetShowBranches();
             }
         }
 
@@ -888,7 +890,7 @@ namespace GitUI
                 _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
 
                 // Apply filter from revision filter dialog
-                _branchFilter = _revisionFilter.GetBranchFilter();
+                _branchFilter = _formRevisionFilter.GetBranchFilter();
                 SetShowBranches();
 
                 _initialLoad = true;
@@ -956,10 +958,10 @@ namespace GitUI
                 RefFilterOptions = refFilterOptions;
 
                 var formFilter = RevisionGridInMemFilter.CreateIfNeeded(
-                    _revisionFilter.GetInMemAuthorFilter(),
-                    _revisionFilter.GetInMemCommitterFilter(),
-                    _revisionFilter.GetInMemMessageFilter(),
-                    _revisionFilter.GetIgnoreCase());
+                    _formRevisionFilter.GetInMemAuthorFilter(),
+                    _formRevisionFilter.GetInMemCommitterFilter(),
+                    _formRevisionFilter.GetInMemMessageFilter(),
+                    _formRevisionFilter.GetIgnoreCase());
 
                 var toolStripFilter = RevisionGridInMemFilter.CreateIfNeeded(
                     InMemAuthorFilter,
@@ -1008,15 +1010,15 @@ namespace GitUI
                 _gridView.SelectionChanged += OnGridViewSelectionChanged;
                 _gridView.ResumeLayout();
 
-                string pathFilter = BuildPathFilter(_revisionFilter.GetPathFilter());
+                string pathFilter = BuildPathFilter(_formRevisionFilter.GetPathFilter());
                 _revisionReader.Execute(
                     Module,
                     refs,
                     revisions,
-                    _revisionFilter.GetMaxCount(),
+                    _formRevisionFilter.GetMaxCount(),
                     refFilterOptions,
                     _branchFilter,
-                    _revisionFilter.GetRevisionFilter() + QuickRevisionFilter,
+                    _formRevisionFilter.GetRevisionFilter() + QuickRevisionFilter,
                     pathFilter,
                     predicate);
 
@@ -1349,7 +1351,7 @@ namespace GitUI
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(_branchFilter)) ||
                    !(string.IsNullOrEmpty(QuickRevisionFilter) &&
-                     !_revisionFilter.FilterEnabled() &&
+                     !_formRevisionFilter.FilterEnabled() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
                      string.IsNullOrEmpty(InMemMessageFilter));
@@ -1744,10 +1746,15 @@ namespace GitUI
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
 
-            _revisionFilter.SetBranchFilter(string.Empty);
-
-            SetShowBranches();
-            ForceRefreshRevisions();
+            bool refresh = _formRevisionFilter.SetBranchFilter(string.Empty);
+            if (refresh)
+            {
+                ForceRefreshRevisions();
+            }
+            else
+            {
+                SetShowBranches();
+            }
         }
 
         internal void ShowFilteredBranches()
@@ -1770,7 +1777,7 @@ namespace GitUI
             IsShowCurrentBranchOnlyChecked = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
             IsShowFilteredBranchesChecked = AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly;
 
-            _branchFilter = _revisionFilter.GetBranchFilter();
+            _branchFilter = _formRevisionFilter.GetBranchFilter();
 
             if (!AppSettings.BranchFilterEnabled)
             {
@@ -1793,7 +1800,7 @@ namespace GitUI
 
         public void ShowRevisionFilterDialog()
         {
-            _revisionFilter.ShowDialog(ParentForm);
+            _formRevisionFilter.ShowDialog(ParentForm);
             ForceRefreshRevisions();
         }
 
