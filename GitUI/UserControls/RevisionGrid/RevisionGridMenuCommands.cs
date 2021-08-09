@@ -214,7 +214,7 @@ namespace GitUI.UserControls.RevisionGrid
                     Name = "ShowArtificialCommits",
                     Text = "Show artificial commits",
                     ExecuteAction = () => _revisionGrid.ToggleShowArtificialCommits(),
-                    IsCheckedFunc = () => AppSettings.RevisionGraphShowWorkingDirChanges
+                    IsCheckedFunc = () => AppSettings.RevisionGraphShowArtificialCommits
                 },
                 new MenuCommand
                 {

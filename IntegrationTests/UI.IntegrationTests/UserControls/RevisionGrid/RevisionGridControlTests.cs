@@ -33,8 +33,6 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
             // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar.
             AppSettings.ShowAuthorAvatarColumn = false;
-
-            AppSettings.RevisionGraphShowWorkingDirChanges = true;
         }
 
         [SetUp]
@@ -53,6 +51,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _headCommit = _referenceRepository.CommitHash;
 
             _commands = new GitUICommands(_referenceRepository.Module);
+
+            AppSettings.RevisionGraphShowArtificialCommits = true;
         }
 
         [TearDown]
@@ -110,7 +110,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 {
                     var ta = revisionGridControl.GetTestAccessor();
                     Assert.False(revisionGridControl.IsShowFilteredBranchesChecked);
-                    ta.VisibleRevisionCount.Should().Be(6);
+                    ta.VisibleRevisionCount.Should().Be(4);
 
                     // Verify the view hasn't changed until we refresh
                     revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
@@ -129,8 +129,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     RefreshRevisions(revisionGridControl);
 
                     // Confirm the filter has been applied
-                    ta.VisibleRevisionCount.Should().Be(4);
-                    ProcessUntil(() => revisionGridControl.LatestSelectedRevision.ObjectId.ToString(), GitRevision.WorkTreeGuid);
+                    ta.VisibleRevisionCount.Should().Be(2);
+                    ProcessUntil(() => revisionGridControl.LatestSelectedRevision.ObjectId.ToString(), _branch1Commit);
                 });
         }
 
@@ -146,7 +146,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 {
                     var ta = revisionGridControl.GetTestAccessor();
                     Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
-                    ta.VisibleRevisionCount.Should().Be(4);
+                    ta.VisibleRevisionCount.Should().Be(2);
 
                     // Verify the view hasn't changed until we refresh
                     revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
@@ -159,13 +159,13 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
 
                     // ...assert nothing changed, applying the filter doesn't change the view
-                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(GitRevision.WorkTreeGuid);
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
 
                     // Refresh the grid, to reflect the filter
                     RefreshRevisions(revisionGridControl);
 
                     // Confirm the filter has been reset, all commits are shown
-                    ta.VisibleRevisionCount.Should().Be(6);
+                    ta.VisibleRevisionCount.Should().Be(4);
                 });
         }
 
@@ -311,6 +311,9 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
         private void RunSetAndApplyBranchFilterTest(string initialFilter, Action<RevisionGridControl> runTest)
         {
+            // Disable artificial commits as they appear to destabilise these tests
+            AppSettings.RevisionGraphShowArtificialCommits = false;
+
             UITest.RunForm<FormBrowse>(
                 showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
                 runTestAsync: async formBrowse =>
