@@ -395,7 +395,7 @@ namespace GitUI.CommandsDialogs
                     IReadOnlyList<GitItemStatus>? status = e?.ItemStatuses;
 
                     bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
-                    bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;
+                    bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowArtificialCommits;
 
                     var brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
@@ -789,7 +789,7 @@ namespace GitUI.CommandsDialogs
 
         private bool NeedsGitStatusMonitor()
         {
-            return AppSettings.ShowGitStatusInBrowseToolbar || (AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges);
+            return AppSettings.ShowGitStatusInBrowseToolbar || (AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowArtificialCommits);
         }
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)

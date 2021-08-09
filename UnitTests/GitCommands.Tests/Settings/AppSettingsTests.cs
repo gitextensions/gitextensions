@@ -212,7 +212,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.DetectCopyInAllOnBlame)], false, false, false);
                 yield return (properties[nameof(AppSettings.IgnoreWhitespaceOnBlame)], true, false, false);
                 yield return (properties[nameof(AppSettings.OpenSubmoduleDiffInSeparateWindow)], false, false, false);
-                yield return (properties[nameof(AppSettings.RevisionGraphShowWorkingDirChanges)], true, false, false);
+                yield return (properties[nameof(AppSettings.RevisionGraphShowArtificialCommits)], true, false, false);
                 yield return (properties[nameof(AppSettings.RevisionGraphDrawAlternateBackColor)], true, false, false);
                 yield return (properties[nameof(AppSettings.RevisionGraphDrawNonRelativesGray)], true, false, false);
                 yield return (properties[nameof(AppSettings.RevisionGraphDrawNonRelativesTextGray)], false, false, false);

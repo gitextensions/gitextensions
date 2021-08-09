@@ -1809,7 +1809,7 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(true);
             }
 
-            if (AppSettings.RevisionGraphShowWorkingDirChanges)
+            if (AppSettings.RevisionGraphShowArtificialCommits)
             {
                 UICommands.RepoChangedNotifier.Notify();
             }
@@ -2045,7 +2045,7 @@ namespace GitUI.CommandsDialogs
                 Amend.Enabled = true;
             }
 
-            if (AppSettings.RevisionGraphShowWorkingDirChanges)
+            if (AppSettings.RevisionGraphShowArtificialCommits)
             {
                 UICommands.RepoChangedNotifier.Notify();
             }
@@ -2122,7 +2122,7 @@ namespace GitUI.CommandsDialogs
                 toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
                 toolStripProgressBar1.Visible = false;
 
-                if (AppSettings.RevisionGraphShowWorkingDirChanges)
+                if (AppSettings.RevisionGraphShowArtificialCommits)
                 {
                     UICommands.RepoChangedNotifier.Notify();
                 }

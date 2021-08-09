@@ -1237,7 +1237,7 @@ namespace GitUI
             void AddArtificialRevisions(bool insertAsFirst)
             {
                 if (!ShowUncommittedChangesIfPossible
-                    || !AppSettings.RevisionGraphShowWorkingDirChanges
+                    || !AppSettings.RevisionGraphShowArtificialCommits
                     || Module.IsBareRepository())
                 {
                     return;
@@ -2204,7 +2204,7 @@ namespace GitUI
 
         internal void ToggleShowArtificialCommits()
         {
-            AppSettings.RevisionGraphShowWorkingDirChanges = !AppSettings.RevisionGraphShowWorkingDirChanges;
+            AppSettings.RevisionGraphShowArtificialCommits = !AppSettings.RevisionGraphShowArtificialCommits;
             ForceRefreshRevisions();
         }
 

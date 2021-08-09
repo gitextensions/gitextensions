@@ -874,7 +874,7 @@ namespace GitCommands
         /// <summary>
         /// Gets or sets whether to show artificial commits in the revision graph.
         /// </summary>
-        public static bool RevisionGraphShowWorkingDirChanges
+        public static bool RevisionGraphShowArtificialCommits
         {
             get => GetBool("revisiongraphshowworkingdirchanges", true);
             set => SetBool("revisiongraphshowworkingdirchanges", value);

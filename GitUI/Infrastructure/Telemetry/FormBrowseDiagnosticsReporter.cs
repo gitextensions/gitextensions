@@ -37,7 +37,7 @@ namespace GitUI.Infrastructure.Telemetry
                     { nameof(AppSettings.CurrentTranslation).FormatKey(), AppSettings.CurrentTranslation },
                     { nameof(AppSettings.ShowGitStatusInBrowseToolbar).FormatKey(), AppSettings.ShowGitStatusInBrowseToolbar.ToString() },
                     { nameof(AppSettings.ShowGitStatusForArtificialCommits).FormatKey(), AppSettings.ShowGitStatusForArtificialCommits.ToString() },
-                    { nameof(AppSettings.RevisionGraphShowWorkingDirChanges).FormatKey(), AppSettings.RevisionGraphShowWorkingDirChanges.ToString() },
+                    { nameof(AppSettings.RevisionGraphShowArtificialCommits).FormatKey(), AppSettings.RevisionGraphShowArtificialCommits.ToString() },
                 };
 
             DiagnosticsClient.TrackEvent($"{_owner.GetType().Name}Start", properties);
