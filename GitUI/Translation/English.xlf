@@ -2604,10 +2604,6 @@ compare with first:</source>
         <source>Refresh</source>
         <target />
       </trans-unit>
-      <trans-unit id="ShowFirstParent.ToolTipText">
-        <source>Show first parents</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ToolStripFilters.Text">
         <source>Filters</source>
         <target />
@@ -3094,14 +3090,6 @@ Do you want to continue?</source>
         <source>Toggle split view layout</source>
         <target />
       </trans-unit>
-      <trans-unit id="toolStripAdvancedFilterButton.ToolTipText">
-        <source>Advanced filter</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripBranchFilterDropDownButton.Text">
-        <source>Branch type</source>
-        <target />
-      </trans-unit>
       <trans-unit id="toolStripButtonCommit.Text">
         <source>Commit</source>
         <target />
@@ -3138,18 +3126,6 @@ Do you want to continue?</source>
         <source>Worktrees</source>
         <target />
       </trans-unit>
-      <trans-unit id="toolStripRevisionFilterDropDownButton.Text">
-        <source>Filter type</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripRevisionFilterLabel.Text">
-        <source>Filter:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripRevisionFilterLabel.ToolTipText">
-        <source>Text filter</source>
-        <target />
-      </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
         <source>Manage stashes</source>
         <target />
@@ -3166,8 +3142,60 @@ Do you want to continue?</source>
         <source>Translate</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
+        <source>Advanced filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsddbtnBranchFilter.Text">
+        <source>Branch type</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsddbtnRevisionFilter.Text">
+        <source>Filter type</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tslblRevisionFilter.Text">
+        <source>Filter:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tslblRevisionFilter.ToolTipText">
+        <source>Text filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiAuthorFilter.Text">
+        <source>Author</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiBranchLocal.Text">
+        <source>Local</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiBranchRemote.Text">
+        <source>Remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiBranchTag.Text">
+        <source>Tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCommitFilter.Text">
+        <source>Commit message and hash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCommitterFilter.Text">
+        <source>Committer</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiDiffContainsFilter.Text">
+        <source>Diff contains (SLOW)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
         <source>Favourite Repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiHash.Text">
+        <source>Hash</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiRecentRepositories.Text">
@@ -3176,6 +3204,10 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="tsmiRecentRepositoriesClear.Text">
         <source>Clear List</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowFirstParent.ToolTipText">
+        <source>Show first parents</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
@@ -4735,12 +4767,12 @@ If you are not sure just close this window.</source>
         <source>Diff</source>
         <target />
       </trans-unit>
-      <trans-unit id="ShowFirstParent.ToolTipText">
-        <source>Show first parents</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ShowFullHistory.ToolTipText">
         <source>Show Full History</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ToolStripFilters.Text">
+        <source>Filters</source>
         <target />
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -4865,14 +4897,6 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="toolStripBlameOptions.Text">
         <source>Blame options</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripLabel1.Text">
-        <source>Branches:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripRevisionFilterLabel.Text">
-        <source>Filter:</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripSplitLoad.ToolTipText">
@@ -9807,6 +9831,14 @@ See the changes in the commit form.</source>
         <source>For you own protection dropping more than 10 patch files at once is blocked!</source>
         <target />
       </trans-unit>
+      <trans-unit id="_formRevisionFilter.Text">
+        <source>Filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_invalidDiffContainsFilter.Text">
+        <source>Filter text '{0}' not valid for "Diff contains" filter.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_loadingControlAsync.Text">
         <source>Loading</source>
         <target />
@@ -9833,10 +9865,6 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_rebaseConfirmTitle.Text">
         <source>Rebase Confirmation</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_revisionFilter.Text">
-        <source>Filter</source>
         <target />
       </trans-unit>
       <trans-unit id="_strLoading.Text">

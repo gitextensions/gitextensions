@@ -871,6 +871,9 @@ namespace GitCommands
             set => SetBool("opensubmodulediffinseparatewindow", value);
         }
 
+        /// <summary>
+        /// Gets or sets whether to show artificial commits in the revision graph.
+        /// </summary>
         public static bool RevisionGraphShowWorkingDirChanges
         {
             get => GetBool("revisiongraphshowworkingdirchanges", true);

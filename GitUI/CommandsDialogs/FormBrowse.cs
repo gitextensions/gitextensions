@@ -87,8 +87,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormBrowse"));
         private readonly GitStatusMonitor _gitStatusMonitor;
-        private readonly FilterRevisionsHelper _filterRevisionsHelper;
-        private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
@@ -199,12 +197,12 @@ namespace GitUI.CommandsDialogs
                 RegisterPlugins();
             }).FileAndForget();
 
-            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
-            _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
+            ToolStripFilters.Bind(() => Module, RevisionGrid);
+            ToolStripFilters.SetRevisionFilter(filter);
+
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
-            repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, RevisionGrid, RevisionGrid, RevisionGrid);
-            toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, branchFilterAction: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
             revisionDiff.Bind(RevisionGrid, fileTree, () => RequestRefresh());
             fileTree.Bind(() => RequestRefresh());
 
@@ -219,6 +217,15 @@ namespace GitUI.CommandsDialogs
                 PuTTYToolStripMenuItem.Visible = false;
             }
 
+            RevisionGrid.RefFilterOptionsChanged += (sender, e) =>
+            {
+                if (e.RefFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
+                {
+                    // This means show all branches
+                    ToolStripFilters.SetBranchFilter(string.Empty, refresh: false);
+                }
+            };
+            RevisionGrid.ShowFirstParentsToggled += (sender, e) => ToolStripFilters.ShowFirstParentChecked = AppSettings.ShowFirstParent;
             RevisionGrid.SelectionChanged += (sender, e) =>
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
@@ -242,8 +249,6 @@ namespace GitUI.CommandsDialogs
                                 && (AppSettings.ShowCurrentBranchOnly || AppSettings.BranchFilterEnabled);
                 repoObjectsTree.ToggleFilterMode(isFiltering);
             };
-
-            _filterRevisionsHelper.SetFilter(filter);
 
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -292,12 +297,11 @@ namespace GitUI.CommandsDialogs
             WorkaroundToolbarLocationBug();
             WorkaroundPaddingIncreaseBug();
 
-            var toolBackColor = SystemColors.Window;
-            var toolForeColor = SystemColors.WindowText;
-            BackColor = toolBackColor;
+            Color toolForeColor = SystemColors.WindowText;
+            BackColor = SystemColors.Window;
             ForeColor = toolForeColor;
-            mainMenuStrip.BackColor = toolBackColor;
             mainMenuStrip.ForeColor = toolForeColor;
+            InitToolStripStyles(toolForeColor, Color.Transparent);
 
             toolPanel.TopToolStripPanel.MouseClick += (s, e) =>
             {
@@ -306,8 +310,6 @@ namespace GitUI.CommandsDialogs
                     _formBrowseMenus.ShowToolStripContextMenu(Cursor.Position);
                 }
             };
-
-            InitToolStripStyles(toolForeColor, toolBackColor);
 
             foreach (var control in this.FindDescendants())
             {
@@ -329,12 +331,6 @@ namespace GitUI.CommandsDialogs
             FillUserShells(defaultShell: BashShell.ShellName);
 
             RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) => FocusRevisionDiffFileStatusList();
-
-            toolPanel.TopToolStripPanel.BackColor = Color.Transparent;
-            mainMenuStrip.BackColor = Color.Transparent;
-            ToolStripMain.BackColor = Color.Transparent;
-            ToolStripFilters.BackColor = Color.Transparent;
-            ToolStripScripts.BackColor = Color.Transparent;
 
             BackColor = OtherColors.BackgroundColor;
 
@@ -462,25 +458,17 @@ namespace GitUI.CommandsDialogs
                 toolPanel.TopToolStripPanel.BackColor = toolBackColor;
                 toolPanel.TopToolStripPanel.ForeColor = toolForeColor;
 
+                mainMenuStrip.BackColor = toolBackColor;
+
                 ToolStripMain.BackColor = toolBackColor;
                 ToolStripMain.ForeColor = toolForeColor;
+
                 ToolStripFilters.BackColor = toolBackColor;
                 ToolStripFilters.ForeColor = toolForeColor;
+                ToolStripFilters.InitToolStripStyles(toolForeColor, toolBackColor);
+
                 ToolStripScripts.BackColor = toolBackColor;
                 ToolStripScripts.ForeColor = toolForeColor;
-
-                toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
-                toolStripRevisionFilterDropDownButton.ForeColor = toolForeColor;
-
-                var toolTextBoxBackColor = SystemColors.Window;
-                toolStripBranchFilterComboBox.BackColor = toolTextBoxBackColor;
-                toolStripBranchFilterComboBox.ForeColor = toolForeColor;
-                toolStripRevisionFilterTextBox.BackColor = toolTextBoxBackColor;
-                toolStripRevisionFilterTextBox.ForeColor = toolForeColor;
-
-                // Scale tool strip items according to DPI
-                toolStripBranchFilterComboBox.Size = DpiUtil.Scale(toolStripBranchFilterComboBox.Size);
-                toolStripRevisionFilterTextBox.Size = DpiUtil.Scale(toolStripRevisionFilterTextBox.Size);
             }
 
             Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
@@ -660,8 +648,6 @@ namespace GitUI.CommandsDialogs
                 // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslationApp
 
                 _formBrowseMenus?.Dispose();
-                _filterRevisionsHelper?.Dispose();
-                _filterBranchHelper?.Dispose();
                 components?.Dispose();
                 _gitStatusMonitor?.Dispose();
                 _windowsJumpListManager?.Dispose();
@@ -698,7 +684,6 @@ namespace GitUI.CommandsDialogs
             }
 
             RevisionGrid.Load();
-            _filterBranchHelper.InitToolStripBranchFilter();
 
             ActiveControl = RevisionGrid;
             RevisionGrid.IndexWatcher.Reset();
@@ -773,15 +758,13 @@ namespace GitUI.CommandsDialogs
         public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);
-            TranslationUtils.AddTranslationItemsFromFields(Name, _filterRevisionsHelper, translation);
-            TranslationUtils.AddTranslationItemsFromFields(Name, _filterBranchHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(Name, ToolStripFilters, translation);
         }
 
         public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
-            TranslationUtils.TranslateItemsFromFields(Name, _filterRevisionsHelper, translation);
-            TranslationUtils.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(Name, ToolStripFilters, translation);
         }
 
         public override void CancelButtonClick(object sender, EventArgs e)
@@ -790,14 +773,14 @@ namespace GitUI.CommandsDialogs
             if (RevisionGrid.FilterIsApplied(false))
             {
                 // Clear filter
-                _filterRevisionsHelper.SetFilter(string.Empty);
+                ToolStripFilters.SetRevisionFilter(string.Empty);
             }
 
             // If a branch filter is applied by text or using the menus "Show current branch only"
             else if (RevisionGrid.FilterIsApplied(true) || AppSettings.BranchFilterEnabled)
             {
                 // Clear branch filter
-                _filterBranchHelper.SetBranchFilter(string.Empty, true);
+                ToolStripFilters.SetBranchFilter(string.Empty, refresh: true);
 
                 // Execute the "Show all branches" menu option
                 RevisionGrid.ShowAllBranches();
@@ -1079,8 +1062,6 @@ namespace GitUI.CommandsDialogs
                 _createPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
                 _viewPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
 
-                _filterBranchHelper.InitToolStripBranchFilter();
-
                 if (repositoryToolStripMenuItem.Visible)
                 {
                     manageSubmodulesToolStripMenuItem.Enabled = !bareRepository;
@@ -1327,7 +1308,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_WorkingDir.DropDownItems.Add(mnuRecentReposSettings);
 
-            PreventToolStripSplitButtonClosing((ToolStripSplitButton)sender);
+            ToolStripFilters.PreventToolStripSplitButtonClosing((ToolStripSplitButton)sender);
         }
 
         private void WorkingDirClick(object sender, EventArgs e)
@@ -1996,7 +1977,7 @@ namespace GitUI.CommandsDialogs
             PluginRegistry.Unregister(UICommands);
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
-            _filterBranchHelper.SetBranchFilter(string.Empty, refresh: false);
+            ToolStripFilters.SetBranchFilter(string.Empty, refresh: false);
 
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
@@ -2114,7 +2095,7 @@ namespace GitUI.CommandsDialogs
             branchSelect.DropDownItems.Add(new ToolStripSeparator());
             AddBranchesMenuItems();
 
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
 
             void AddCheckoutBranchMenuItem()
             {
@@ -2282,12 +2263,6 @@ namespace GitUI.CommandsDialogs
             FillCommitInfo(revision);
         }
 
-        private void FocusFilter()
-        {
-            ToolStripControlHost filterToFocus = toolStripRevisionFilterTextBox.Focused ? (ToolStripControlHost)toolStripBranchFilterComboBox : (ToolStripControlHost)toolStripRevisionFilterTextBox;
-            filterToFocus.Focus();
-        }
-
         private void FindFileInSelectedCommit()
         {
             CommitInfoTabControl.SelectedTab = TreeTabPage;
@@ -2333,7 +2308,7 @@ namespace GitUI.CommandsDialogs
                 case Command.FocusBuildServerStatus: FocusTabOf(_buildReportTabPageExtension?.Control, (c, alreadyContainedFocus) => c.Focus()); break;
                 case Command.FocusNextTab: FocusNextTab(); break;
                 case Command.FocusPrevTab: FocusNextTab(forward: false); break;
-                case Command.FocusFilter: FocusFilter(); break;
+                case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
                 case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
                 case Command.AddNotes: AddNotes(); break;
                 case Command.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
@@ -2674,7 +2649,7 @@ namespace GitUI.CommandsDialogs
                     // and to make it possible we add explicit branch filter and refresh.
                     if (AppSettings.ShowFirstParent && !found)
                     {
-                        _filterBranchHelper.SetBranchFilter(revision?.ToString(), refresh: true);
+                        ToolStripFilters.SetBranchFilter(revision?.ToString(), refresh: true);
                         RevisionGrid.SetSelectedRevision(revision);
                     }
 
@@ -2708,35 +2683,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void PreventToolStripSplitButtonClosing(ToolStripSplitButton? control)
-        {
-            if (control is null || toolStripBranchFilterComboBox.Focused || toolStripRevisionFilterTextBox.Focused)
-            {
-                return;
-            }
-
-            control.Tag = this.FindFocusedControl();
-            control.DropDownClosed += ToolStripSplitButtonDropDownClosed;
-            toolStripBranchFilterComboBox.Focus();
-        }
-
-        private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
-        {
-            if (sender is ToolStripSplitButton control)
-            {
-                control.DropDownClosed -= ToolStripSplitButtonDropDownClosed;
-
-                if (control.Tag is Control controlToFocus)
-                {
-                    controlToFocus.Focus();
-                    control.Tag = null;
-                }
-            }
-        }
-
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
         {
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         #region Submodules
@@ -2963,7 +2912,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         /// <summary>
@@ -3071,11 +3020,6 @@ namespace GitUI.CommandsDialogs
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
         {
             UICommands.StartSparseWorkingCopyDialog(this);
-        }
-
-        private void toolStripBranches_DropDown_ResizeDropDownWidth(object sender, EventArgs e)
-        {
-            toolStripBranchFilterComboBox.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void toolStripMenuItemReflog_Click(object sender, EventArgs e)
@@ -3238,22 +3182,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripSplitStash_DropDownOpened(object sender, EventArgs e)
         {
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
-        }
-
-        private void AdvancedFilterButton_Click(object sender, EventArgs e)
-        {
-            RevisionGrid.ShowRevisionFilterDialog();
-        }
-
-        private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
-        {
-            if (toolStripBranchFilterComboBox.Items.Count == 0)
-            {
-                return;
-            }
-
-            toolStripBranchFilterComboBox.DroppedDown = true;
+            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)

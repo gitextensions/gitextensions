@@ -79,7 +79,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     Assert.False(revisionGridControl.IsShowFilteredBranchesChecked);
 
                     var ta = revisionGridControl.GetTestAccessor();
-                    ta.RefFilterOptions.Should().Be(RefFilterOptions.All | RefFilterOptions.Boundary | RefFilterOptions.ShowGitNotes);
+                    ta.RefFilterOptions.Should().Be(RefFilterOptions.All | RefFilterOptions.Boundary);
                 });
 
             RunSetAndApplyBranchFilterTest(
@@ -116,18 +116,21 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
 
                     // set filter
-                    revisionGridControl.SetAndApplyBranchFilter("Branch1");
+                    revisionGridControl.SetAndApplyBranchFilter("Branch1", requireRefresh: true);
                     Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
 
+                    // ...wait for the revisions to be loaded
+                    ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+
                     // ...assert nothing changed, applying the filter doesn't change the view
-                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
 
                     // Refresh the grid, to reflect the filter
                     RefreshRevisions(revisionGridControl);
 
                     // Confirm the filter has been applied
                     ta.VisibleRevisionCount.Should().Be(4);
-                    ProcessUntil(() => revisionGridControl.LatestSelectedRevision.ObjectId.ToString(), _branch1Commit);
+                    ProcessUntil(() => revisionGridControl.LatestSelectedRevision.ObjectId.ToString(), GitRevision.WorkTreeGuid);
                 });
         }
 
@@ -149,11 +152,14 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
 
                     // reset filter
-                    revisionGridControl.SetAndApplyBranchFilter("");
+                    revisionGridControl.SetAndApplyBranchFilter(string.Empty, requireRefresh: true);
                     Assert.False(revisionGridControl.IsShowFilteredBranchesChecked);
 
+                    // ...wait for the revisions to be loaded
+                    ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+
                     // ...assert nothing changed, applying the filter doesn't change the view
-                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
+                    revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(GitRevision.WorkTreeGuid);
 
                     // Refresh the grid, to reflect the filter
                     RefreshRevisions(revisionGridControl);
@@ -314,10 +320,10 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     // wait for the revisions to be loaded
                     await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                    formBrowse.RevisionGridControl.SetAndApplyBranchFilter(initialFilter);
+                    formBrowse.RevisionGridControl.SetAndApplyBranchFilter(initialFilter, requireRefresh: true);
 
-                    // Refresh the grid, to reflect the filter
-                    RefreshRevisions(formBrowse.RevisionGridControl);
+                    // wait for the revisions to be loaded
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                     try
                     {

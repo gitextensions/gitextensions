@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
@@ -15,6 +16,7 @@ using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -26,8 +28,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _buildReportTabCaption = new("Build Report");
         private readonly AsyncLoader _asyncLoader = new();
         private readonly ICommitDataManager _commitDataManager;
-        private readonly FilterRevisionsHelper _filterRevisionsHelper;
-        private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FormFileHistoryController _controller = new();
@@ -59,8 +59,15 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             ConfigureTabControl();
 
-            _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
-            _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
+            ToolStripFilters.Bind(() => Module, RevisionGrid);
+
+            Color toolForeColor = SystemColors.WindowText;
+            Color toolBackColor = Color.Transparent;
+            BackColor = SystemColors.Window;
+            ForeColor = toolForeColor;
+            ToolStripFilters.BackColor = toolBackColor;
+            ToolStripFilters.ForeColor = toolForeColor;
+            ToolStripFilters.InitToolStripStyles(toolForeColor, toolBackColor);
 
             _formBrowseMenus = new FormBrowseMenus(FileHistoryContextMenu);
             _formBrowseMenus.ResetMenuCommandSets();
@@ -133,7 +140,7 @@ namespace GitUI.CommandsDialogs
 
             if (filterByRevision && revision?.ObjectId is not null)
             {
-                _filterBranchHelper.SetBranchFilter(revision.Guid, false);
+                ToolStripFilters.SetRevisionFilter(revision.Guid);
             }
 
             tabControl1.SelectedTab = blameTabExists && showBlame ? BlameTab : DiffTab;
@@ -173,8 +180,6 @@ namespace GitUI.CommandsDialogs
                 _viewChangesSequence.Dispose();
 
                 // if the form was instantiated by the translation app, all of the following would be null
-                _filterRevisionsHelper?.Dispose();
-                _filterBranchHelper?.Dispose();
                 _formBrowseMenus?.Dispose();
 
                 components?.Dispose();
@@ -229,8 +234,6 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.SetPathFilters(FileName.QuoteNE());
             RevisionGrid.Load();
-
-            return;
         }
 
         private string? GetFileNameForRevision(GitRevision rev)
@@ -596,11 +599,6 @@ namespace GitUI.CommandsDialogs
             LoadFileHistory();
         }
 
-        private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
-        {
-            toolStripBranchFilterComboBox.DroppedDown = true;
-        }
-
         private void ignoreWhitespaceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AppSettings.IgnoreWhitespaceOnBlame = !AppSettings.IgnoreWhitespaceOnBlame;
@@ -627,15 +625,13 @@ namespace GitUI.CommandsDialogs
         public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);
-            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, ToolStripFilters, translation);
         }
 
         public override void TranslateItems(ITranslation translation)
         {
             base.TranslateItems(translation);
-            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(FormBrowseName, ToolStripFilters, translation);
         }
 
         #endregion

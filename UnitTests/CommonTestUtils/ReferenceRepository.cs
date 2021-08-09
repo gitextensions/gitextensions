@@ -36,6 +36,7 @@ namespace CommonTestUtils
         {
             using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
             repository.Branches.Add(branchName, commitHash, allowOverwrite);
+            Console.WriteLine($"Created branch: {commitHash}, message: {branchName}");
         }
 
         public void CreateCommit(string commitMessage, string content = null)
@@ -45,6 +46,7 @@ namespace CommonTestUtils
             repository.Index.Add("A.txt");
 
             _commitHash = Commit(repository, commitMessage);
+            Console.WriteLine($"Created commit: {_commitHash}, message: {commitMessage}");
         }
 
         public string CreateRepoFile(string fileName, string fileContent) => _moduleTestHelper.CreateRepoFile(fileName, fileContent);
