@@ -245,6 +245,13 @@ namespace GitExtensions.UITests.Script
 
         private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
         {
+            // Needed for FormBrowse, ScriptOptionsParser
+            ManagedExtensibility.Initialise(new[]
+            {
+                typeof(GitUI.GitExtensionsForm).Assembly,
+                typeof(GitCommands.GitModule).Assembly
+            });
+
             UITest.RunForm(
                 showForm: () => _uiCommands.StartBrowseDialog(owner: null).Should().BeTrue(),
                 testDriverAsync);
