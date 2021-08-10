@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
             new("At least one remote branch is unmerged. Are you sure you want to delete it?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
 
         private readonly HashSet<string> _mergedBranches = new();
-        private readonly string _defaultRemoteBranch;
+        private readonly IEnumerable<string> _defaultBranches;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -30,10 +30,10 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormDeleteRemoteBranch(GitUICommands commands, string defaultRemoteBranch)
+        public FormDeleteRemoteBranch(GitUICommands commands, IEnumerable<string> defaultBranches)
             : base(commands)
         {
-            _defaultRemoteBranch = defaultRemoteBranch;
+            _defaultBranches = defaultBranches;
             InitializeComponent();
             InitializeComplete();
         }
@@ -46,9 +46,9 @@ namespace GitUI.CommandsDialogs
                 _mergedBranches.Add(branch);
             }
 
-            if (_defaultRemoteBranch is not null)
+            if (_defaultBranches is not null)
             {
-                Branches.SetSelectedText(_defaultRemoteBranch);
+                Branches.SetSelectedText(_defaultBranches.Join(" "));
             }
         }
 

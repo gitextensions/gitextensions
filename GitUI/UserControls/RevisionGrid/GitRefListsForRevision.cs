@@ -13,25 +13,28 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly IGitRef[] _tags;
 
         public GitRefListsForRevision(GitRevision revision)
+            : this(new[] { revision ?? throw new ArgumentNullException(nameof(revision)) })
         {
-            if (revision is null)
-            {
-                throw new ArgumentNullException(nameof(revision));
-            }
+        }
 
-            if (revision.Refs is null)
-            {
-                throw new ArgumentNullException(nameof(revision.Refs));
-            }
+        public GitRefListsForRevision(IEnumerable<GitRevision> revisions)
+        {
+            _ = revisions ?? throw new ArgumentNullException(nameof(revisions));
 
-            _allBranches = revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
+            IGitRef[] refs = revisions.SelectMany(r => r.Refs).Where(r => r is not null).ToArray();
+
+            _allBranches = refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
             _localBranches = _allBranches.Where(b => !b.IsRemote).ToArray();
             _branchesWithNoIdenticalRemotes = _allBranches.Where(b => !b.IsRemote ||
                                                                       !_localBranches.Any(lb => lb.TrackingRemote == b.Remote && lb.MergeWith == b.LocalName))
                                                           .ToArray();
 
-            _tags = revision.Refs.Where(h => h.IsTag).ToArray();
+            _tags = refs.Where(h => h.IsTag).ToArray();
+
+            HasBranchesOrTags = _allBranches.Length > 0 | _tags.Length > 0;
         }
+
+        public bool HasBranchesOrTags { get; }
 
         public IReadOnlyList<IGitRef> LocalBranches => _localBranches;
 
@@ -41,30 +44,18 @@ namespace GitUI.UserControls.RevisionGrid
 
         public IReadOnlyList<IGitRef> BranchesWithNoIdenticalRemotes => _branchesWithNoIdenticalRemotes;
 
-        public IReadOnlyList<string> GetAllBranchNames()
-        {
-            return _allBranches.Select(b => b.Name).ToList();
-        }
+        public IReadOnlyList<string> GetAllBranchNames() => _allBranches.Select(b => b.Name).ToList();
 
-        public IReadOnlyList<string> GetAllTagNames()
-        {
-            return AllTags.Select(t => t.Name).ToList();
-        }
+        public IReadOnlyList<string> GetAllTagNames() => AllTags.Select(t => t.Name).ToList();
 
         /// <summary>
         /// Returns the collection of branches and tags which can be deleted.
         /// </summary>
-        public IReadOnlyList<IGitRef> GetDeletableRefs(string currentBranch)
-        {
-            return _allBranches.Where(b => b.IsRemote || b.Name != currentBranch).Union(_tags).ToArray();
-        }
+        public IReadOnlyList<IGitRef> GetDeletableRefs(string currentBranch) => _allBranches.Where(b => b.IsRemote || b.Name != currentBranch).Union(_tags).ToArray();
 
         /// <summary>
         /// Returns the collection of local branches which can be renamed.
         /// </summary>
-        public IReadOnlyList<IGitRef> GetRenameableLocalBranches()
-        {
-            return _localBranches.ToList();
-        }
+        public IReadOnlyList<IGitRef> GetRenameableLocalBranches() => _localBranches.ToList();
     }
 }
