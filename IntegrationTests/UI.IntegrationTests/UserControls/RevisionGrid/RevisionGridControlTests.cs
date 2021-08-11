@@ -137,6 +137,9 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 "Branch1",
                 revisionGridControl =>
                 {
+                    // ...wait for the revisions to be loaded
+                    ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+
                     var ta = revisionGridControl.GetTestAccessor();
                     Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
                     ta.VisibleRevisionCount.Should().Be(2);
