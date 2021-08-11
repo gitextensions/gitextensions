@@ -17,8 +17,9 @@ namespace GitUI.Shells
         {
             var shell = GetShell(shellType);
 
-            if (!shell.HasExecutable)
+            if (!shell.HasExecutable || shell.ExecutableCommandLine is null)
             {
+                // Fallback to default if ExecutableCommandLine is not set
                 return ConEmuConstants.DefaultConsoleCommandLine;
             }
 
