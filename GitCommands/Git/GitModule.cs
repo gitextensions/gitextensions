@@ -2964,7 +2964,7 @@ namespace GitCommands
             var remotes = GetRemoteNames();
 
             return _gitExecutable
-                .GetOutputLines(GitCommandHelpers.MergedBranchesCmd(includeRemote: true))
+                .GetOutputLines(GitCommandHelpers.MergedBranchesCmd(includeRemote: true), throwOnErrorOutput: false)
                 .Select(b => b.Trim())
                 .Where(b => b.StartsWith(remoteBranchPrefixForMergedBranches))
                 .Select(b => string.Concat(refsPrefix, b))

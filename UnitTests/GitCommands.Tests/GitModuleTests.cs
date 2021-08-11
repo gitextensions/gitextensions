@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using ApprovalTests;
 using ApprovalTests.Namers;
 using CommonTestUtils;
@@ -396,7 +397,7 @@ namespace GitCommandsTests
         public void RevParse_should_query_git_and_return_ObjectId_if_get_valid_hash()
         {
             var revisionExpression = "11111";
-            using (_executable.StageOutput($"rev-parse --quiet --verify \"{revisionExpression}~0\"", new string('1', ObjectId.Sha1CharCount), 0))
+            using (_executable.StageOutput($"rev-parse --quiet --verify \"{revisionExpression}~0\"", output: new string('1', ObjectId.Sha1CharCount)))
             {
                 _gitModule.RevParse(revisionExpression).Should().Be(ObjectId.WorkTreeId);
             }
@@ -406,7 +407,7 @@ namespace GitCommandsTests
         public void RevParse_should_query_git_and_return_null_if_invalid_response()
         {
             var revisionExpression = "11111";
-            using (_executable.StageOutput($"rev-parse --quiet --verify \"{revisionExpression}~0\"", "foo bar", 0))
+            using (_executable.StageOutput($"rev-parse --quiet --verify \"{revisionExpression}~0\"", output: "foo bar"))
             {
                 _gitModule.RevParse(revisionExpression).Should().BeNull();
             }
@@ -460,9 +461,9 @@ namespace GitCommandsTests
         [TestCase("error: something went wrong")]
         [TestCase("HEAD")]
         [TestCase("master")]
-        public void GetCurrentCheckout_should_query_git_and_return_null_if_response_is_not_sha(string msg)
+        public void GetCurrentCheckout_should_query_git_and_return_null_if_response_is_not_sha(string output)
         {
-            using (_executable.StageOutput($"rev-parse HEAD", msg, 0))
+            using (_executable.StageOutput($"rev-parse HEAD", output))
             {
                 _gitModule.GetCurrentCheckout().Should().BeNull();
             }
@@ -718,6 +719,25 @@ namespace GitCommandsTests
         {
             var stagedStatus = _gitModule.GetTestAccessor().GetStagedStatus(firstRevision, secondRevision, parentToSecond);
             Assert.AreEqual(status, stagedStatus);
+        }
+
+        [Test]
+        public void GetMergedRemoteBranches_should_ignore_warnings()
+        {
+            var givenRemotes = new[] { "origin", "upstream" };
+            var givenMergedRemotes = new[] { "remotes/origin/191", "remotes/origin/192", "remotes/origin/193" };
+            var expectedMergedRemotes = new[] { "refs/remotes/origin/191", "refs/remotes/origin/192", "refs/remotes/origin/193" };
+
+            using (_executable.StageOutput("remote", string.Join('\n', givenRemotes)))
+            {
+                using (_executable.StageOutput($"branch -a --merged",
+                    output: string.Join('\n', givenMergedRemotes),
+                    error: "warning: ignoring broken ref refs/remotes/remote/HEAD",
+                    exitCode: 0))
+                {
+                    Assert.AreEqual(expectedMergedRemotes, _gitModule.GetMergedRemoteBranches());
+                }
+            }
         }
 
         [Test]

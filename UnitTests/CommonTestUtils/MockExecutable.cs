@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -8,32 +9,30 @@ using System.Threading.Tasks;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace CommonTestUtils
 {
     public sealed class MockExecutable : IExecutable
     {
-        private readonly ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode)>> _outputStackByArguments = new();
+        private readonly ConcurrentDictionary<string, ConcurrentStack<(string? output, string? error, int? exitCode)>> _outputStackByArguments = new();
         private readonly ConcurrentDictionary<string, int> _commandArgumentsSet = new();
         private readonly List<MockProcess> _processes = new();
         private int _nextCommandId;
 
-        [MustUseReturnValue]
-        public IDisposable StageOutput(string arguments, string output, int? exitCode = 0)
+        public IDisposable StageOutput(string arguments, string? output, string? error = null, int? exitCode = 0)
         {
             var stack = _outputStackByArguments.GetOrAdd(
                 arguments,
-                args => new ConcurrentStack<(string output, int? exitCode)>());
+                args => new ConcurrentStack<(string? output, string? error, int? exitCode)>());
 
-            stack.Push((output, exitCode));
+            stack.Push((output, error, exitCode));
 
             return new DelegateDisposable(
                 () =>
                 {
-                    if (_outputStackByArguments.TryGetValue(arguments, out ConcurrentStack<(string output, int? exitCode)> queue) &&
-                        queue.TryPeek(out (string output, int? exitCode) item) &&
+                    if (_outputStackByArguments.TryGetValue(arguments, out ConcurrentStack<(string? output, string? error, int? exitCode)> queue) &&
+                        queue.TryPeek(out (string? output, string? error, int? exitCode) item) &&
                         output == item.output)
                     {
                         throw new AssertionException($"Staged output should have been consumed.\nArguments: {arguments}\nOutput: {output}");
@@ -41,7 +40,6 @@ namespace CommonTestUtils
                 });
         }
 
-        [MustUseReturnValue]
         public IDisposable StageCommand(string arguments)
         {
             var id = Interlocked.Increment(ref _nextCommandId);
@@ -77,15 +75,15 @@ namespace CommonTestUtils
         {
             System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
 
-            if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode)> queue) &&
-                queue.TryPop(out (string output, int? exitCode) item))
+            if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string? output, string? error, int? exitCode)> queue) &&
+                queue.TryPop(out (string? output, string? error, int? exitCode) item))
             {
                 if (queue.Count == 0)
                 {
                     _outputStackByArguments.TryRemove(arguments, out _);
                 }
 
-                MockProcess process = new(item.output, item.exitCode);
+                MockProcess process = new(item.output, item.error, throwOnErrorOutput, item.exitCode);
 
                 _processes.Add(process);
                 return process;
@@ -103,11 +101,15 @@ namespace CommonTestUtils
 
         private sealed class MockProcess : IProcess
         {
-            public MockProcess([CanBeNull] string output, int? exitCode = 0)
+            private readonly bool _throwOnErrorOutput;
+            private readonly int? _exitCode;
+
+            public MockProcess(string? output, string? error, bool throwOnErrorOutput, int? exitCode = 0)
             {
                 StandardOutput = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(output ?? "")));
-                StandardError = new StreamReader(new MemoryStream());
+                StandardError = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(error ?? "")));
                 StandardInput = new StreamWriter(new MemoryStream());
+                _throwOnErrorOutput = throwOnErrorOutput;
                 _exitCode = exitCode;
             }
 
@@ -119,7 +121,6 @@ namespace CommonTestUtils
                 _exitCode = 0;
             }
 
-            private int? _exitCode;
             public StreamWriter StandardInput { get; }
             public StreamReader StandardOutput { get; }
             public StreamReader StandardError { get; }
@@ -133,6 +134,18 @@ namespace CommonTestUtils
             {
                 if (_exitCode.HasValue)
                 {
+                    if (_throwOnErrorOutput)
+                    {
+#pragma warning disable VSTHRD103 // Call async methods when in an async method
+                        string errorOutput = StandardError.ReadToEnd().Trim();
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
+                        if (_exitCode.Value != 0 || errorOutput.Length > 0)
+                        {
+                            ExternalOperationException ex = new(exitCode: _exitCode, innerException: new Exception(errorOutput));
+                            return Task.FromException<int>(ex);
+                        }
+                    }
+
                     return Task.FromResult(_exitCode.Value);
                 }
                 else
@@ -158,7 +171,11 @@ namespace CommonTestUtils
             {
                 // all output should have been read
                 Assert.AreEqual(StandardOutput.BaseStream.Length, StandardOutput.BaseStream.Position);
-                Assert.AreEqual(StandardError.BaseStream.Length, StandardError.BaseStream.Position);
+
+                if (_throwOnErrorOutput)
+                {
+                    Assert.AreEqual(StandardError.BaseStream.Length, StandardError.BaseStream.Position);
+                }
 
                 // Only verify if std input is not closed.
                 // ExecutableExtensions.ExecuteAsync will close std input when writeInput action is specified
