@@ -197,7 +197,7 @@ namespace GitUI
             }
         }
 
-        public void Bind(Func<ObjectId?, string>? describeRevision, Func<GitRevision, GitRevision> getActualRevision)
+        public void Bind(Func<ObjectId, string> describeRevision, Func<GitRevision, GitRevision> getActualRevision)
         {
             DescribeRevision = describeRevision;
             _diffCalculator.DescribeRevision = describeRevision;
@@ -673,7 +673,7 @@ namespace GitUI
             _nextIndexToSelect = -1;
         }
 
-        public void SetDiffs(IReadOnlyList<GitRevision> revisions, ObjectId? headId = null)
+        public void SetDiffs(IReadOnlyList<GitRevision> revisions, ObjectId? headId)
         {
             _enableDisablingShowDiffForAllParents = true;
             GitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId);
