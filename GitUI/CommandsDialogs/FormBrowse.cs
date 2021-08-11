@@ -1979,6 +1979,7 @@ namespace GitUI.CommandsDialogs
             _submoduleStatusProvider.Init();
             ToolStripFilters.SetBranchFilter(string.Empty, refresh: false);
             ToolStripFilters.SetRevisionFilter(string.Empty);
+            RevisionGrid.DisableFilters();
 
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
