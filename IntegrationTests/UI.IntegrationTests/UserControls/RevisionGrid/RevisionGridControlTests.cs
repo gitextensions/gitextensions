@@ -323,6 +323,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     // wait for the revisions to be loaded
                     await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
+                    formBrowse.RevisionGridControl.SetSelectedRevision(ObjectId.Parse(_headCommit));
+
                     formBrowse.RevisionGridControl.SetAndApplyBranchFilter(initialFilter, requireRefresh: true);
 
                     // wait for the revisions to be loaded
