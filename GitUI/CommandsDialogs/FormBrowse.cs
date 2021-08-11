@@ -2982,7 +2982,7 @@ namespace GitUI.CommandsDialogs
                     WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
                 };
 
-                string? shellType = AppSettings.ConEmuTerminal.Value;
+                string shellType = AppSettings.ConEmuTerminal.Value;
                 startInfo.ConsoleProcessCommandLine = _shellProvider.GetShellCommandLine(shellType);
 
                 // Set path to git in this window (actually, effective with CMD only)
