@@ -149,7 +149,7 @@ namespace GitExtensions.Plugins.GitFlow
             GitArgumentBuilder args = new("flow") { typeBranch };
             var result = _gitUiCommands.GitModule.GitExecutable.Execute(args);
 
-            if (result.ExitCode != 0 || result.StandardOutput is null)
+            if (!result.ExitedSuccessfully || result.StandardOutput is null)
             {
                 return Array.Empty<string>();
             }
@@ -312,7 +312,7 @@ namespace GitExtensions.Plugins.GitFlow
             txtResult.Text = "running...";
             ForceRefresh(txtResult);
 
-            var result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText);
+            var result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText, throwOnErrorOutput: false);
 
             IsRefreshNeeded = true;
 
@@ -321,7 +321,7 @@ namespace GitExtensions.Plugins.GitFlow
 
             var resultText = Regex.Replace(result.AllOutput, @"\r\n?|\n", Environment.NewLine);
 
-            if (result.ExitCode == 0)
+            if (result.ExitedSuccessfully)
             {
                 pbResultCommand.Image = DpiUtil.Scale(Resource.success);
                 ShowToolTip(pbResultCommand, resultText);
@@ -335,7 +335,7 @@ namespace GitExtensions.Plugins.GitFlow
 
             txtResult.Text = resultText;
 
-            return result.ExitCode == 0;
+            return result.ExitedSuccessfully;
         }
 
         #endregion

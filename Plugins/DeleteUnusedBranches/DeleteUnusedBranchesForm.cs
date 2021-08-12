@@ -136,7 +136,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                  context.ReferenceBranch
             };
 
-            var result = context.Commands.GitExecutable.Execute(args);
+            var result = context.Commands.GitExecutable.Execute(args, throwOnErrorOutput: false);
 
             if (!result.ExitedSuccessfully)
             {
@@ -144,7 +144,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 return Array.Empty<string>();
             }
 
-            return _commandOutputParser.GetBranchNames(result.AllOutput)
+            return _commandOutputParser.GetBranchNames(result.StandardOutput)
                                         .Where(branchName => branchName != curBranch && branchName != context.ReferenceBranch)
                                         .Where(branchName => (!context.IncludeRemotes || branchName.StartsWith(context.RemoteRepositoryName + "/"))
                                                             && (regex is null || regex.IsMatch(branchName) == regexMustMatch));

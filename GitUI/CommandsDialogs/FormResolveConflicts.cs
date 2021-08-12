@@ -572,7 +572,7 @@ namespace GitUI.CommandsDialogs
 
                     // Check exitcode AND timestamp of the file. If exitcode is success and
                     // time timestamp is changed, we are pretty sure the merge was done.
-                    if (res.ExitCode == 0 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
+                    if (res.ExitedSuccessfully && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge)
                     {
                         StageFile(item.Filename);
                     }

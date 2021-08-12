@@ -880,7 +880,7 @@ namespace GitCommands
                 { !string.IsNullOrWhiteSpace(fileName), "--" },
                 fileName.ToPosixPath().QuoteNE()
             };
-            using var process = _gitExecutable.Start(args, createWindow: true, throwOnErrorOutput: true);
+            using var process = _gitExecutable.Start(args, createWindow: true);
             process.WaitForExit();
         }
 
@@ -2152,8 +2152,7 @@ namespace GitCommands
 
             static IReadOnlyList<Remote> ParseRemotes(ExecutionResult result)
             {
-                IEnumerable<string> lines = result.StandardOutput.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
-                    .Concat(result.StandardError.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries));
+                IEnumerable<string> lines = result.StandardOutput.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries);
                 List<Remote> remotes = new();
 
                 // See tests for explanation of the format
