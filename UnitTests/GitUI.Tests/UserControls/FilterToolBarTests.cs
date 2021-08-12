@@ -168,11 +168,11 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void ResetBranchesFilter_should_reset_text()
+        public void SetBranchFilter_should_reset_text()
         {
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Text = "bla";
 
-            _filterToolBar.ResetBranchesFilter();
+            _filterToolBar.SetBranchFilter(string.Empty, refresh: false);
 
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Text.Should().Be(string.Empty);
         }

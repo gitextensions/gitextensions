@@ -409,7 +409,12 @@ namespace GitUI
             return FindRenamesOpt() + findCopies;
         }
 
-        public void SetPathFilters(string path)
+        public void DisableFilters()
+        {
+            _formRevisionFilter.DisableFilters();
+        }
+
+        public void SetPathFilter(string path)
         {
             _formRevisionFilter.SetPathFilter(path);
         }

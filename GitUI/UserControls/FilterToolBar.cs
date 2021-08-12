@@ -195,11 +195,6 @@ namespace GitUI.UserControls
         }
 
         /// <summary>
-        ///  Clears the filter textbox without raising any events.
-        /// </summary>
-        public void ResetBranchesFilter() => tscboBranchFilter.Text = string.Empty;
-
-        /// <summary>
         ///  Sets the branches filter.
         /// </summary>
         /// <param name="filter">The filter to apply.</param>

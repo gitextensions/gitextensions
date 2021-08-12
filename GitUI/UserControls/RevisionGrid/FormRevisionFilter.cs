@@ -64,12 +64,24 @@ namespace GitUI.UserControls.RevisionGrid
 
         public bool FilterEnabled()
         {
-            return AuthorCheck.Checked ||
+            return SinceCheck.Checked ||
+                    CheckUntil.Checked ||
+                    AuthorCheck.Checked ||
                     CommitterCheck.Checked ||
                     MessageCheck.Checked ||
-                    SinceCheck.Checked ||
-                    CheckUntil.Checked ||
-                    FileFilterCheck.Checked;
+                    FileFilterCheck.Checked ||
+                    BranchFilterCheck.Checked;
+        }
+
+        public void DisableFilters()
+        {
+            SinceCheck.Checked = false;
+            CheckUntil.Checked = false;
+            AuthorCheck.Checked = false;
+            CommitterCheck.Checked = false;
+            MessageCheck.Checked = false;
+            FileFilterCheck.Checked = false;
+            BranchFilterCheck.Checked = false;
         }
 
         public ArgumentString GetRevisionFilter()
