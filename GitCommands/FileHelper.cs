@@ -75,8 +75,13 @@ namespace GitCommands
                 "--",
                 fileName.Quote()
             };
-            string result = module.GitExecutable.GetOutput(cmd, throwOnErrorOutput: false);
-            var lines = result.Split(Delimiters.NullAndLineFeed);
+            GitUIPluginInterfaces.ExecutionResult result = module.GitExecutable.Execute(cmd, throwOnErrorOutput: false);
+            if (!result.ExitedSuccessfully)
+            {
+                return null;
+            }
+
+            var lines = result.StandardOutput.Split(Delimiters.NullAndLineFeed);
             Dictionary<string, string> attributes = new();
             for (int i = 0; i < lines.Length - 2; i += 3)
             {
