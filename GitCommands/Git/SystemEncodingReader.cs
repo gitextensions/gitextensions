@@ -48,7 +48,7 @@ namespace GitCommands.Git
                     controlStr
                 };
 
-                ExecutionResult result = _module.GitExecutable.Execute(arguments, outputEncoding: Encoding.UTF8, throwOnErrorOutput: false);
+                ExecutionResult result = _module.GitExecutable.Execute(arguments, outputEncoding: Encoding.UTF8, throwOnErrorExit: false);
                 string? s = result.AllOutput;
                 if (s is not null && s.IndexOf(controlStr) != -1)
                 {

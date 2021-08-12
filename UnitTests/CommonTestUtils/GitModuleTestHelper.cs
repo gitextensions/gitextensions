@@ -136,7 +136,7 @@ namespace CommonTestUtils
             // Submodules require at least one commit
             subModuleHelper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial empty commit""");
 
-            Module.GitExecutable.Execute(GitCommandHelpers.AddSubmoduleCmd(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true), throwOnErrorOutput: false);
+            Module.GitExecutable.Execute(GitCommandHelpers.AddSubmoduleCmd(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true), throwOnErrorExit: false);
             Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
         }
 
@@ -146,7 +146,7 @@ namespace CommonTestUtils
         /// <returns>All submodule Modules</returns>
         public IEnumerable<GitModule> GetSubmodulesRecursive()
         {
-            Module.GitExecutable.Execute(@"submodule update --init --recursive", throwOnErrorOutput: false);
+            Module.GitExecutable.Execute(@"submodule update --init --recursive", throwOnErrorExit: false);
             var paths = Module.GetSubmodulesLocalPaths(recursive: true);
             return paths.Select(path =>
             {

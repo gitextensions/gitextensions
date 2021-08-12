@@ -127,8 +127,8 @@ namespace GitCommands.Git
                     var submodule = module.GetSubmodule(fileName);
                     if (submodule.IsValidGitWorkingDir())
                     {
-                        addedCommits = submodule.GetCommitCount(commitId.ToString(), oldCommitId.ToString(), cache: true, throwOnErrorOutput: false);
-                        removedCommits = submodule.GetCommitCount(oldCommitId.ToString(), commitId.ToString(), cache: true, throwOnErrorOutput: false);
+                        addedCommits = submodule.GetCommitCount(commitId.ToString(), oldCommitId.ToString(), cache: true, throwOnErrorExit: false);
+                        removedCommits = submodule.GetCommitCount(oldCommitId.ToString(), commitId.ToString(), cache: true, throwOnErrorExit: false);
                     }
                 }
             }

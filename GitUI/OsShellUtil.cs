@@ -13,7 +13,7 @@ namespace GitUI
         {
             try
             {
-                new Executable(filePath).Start(useShellExecute: true, throwOnErrorOutput: false);
+                new Executable(filePath).Start(useShellExecute: true, throwOnErrorExit: false);
             }
             catch (Exception)
             {
@@ -48,7 +48,7 @@ namespace GitUI
         {
             if (!string.IsNullOrWhiteSpace(url))
             {
-                new Executable(url).Start(useShellExecute: true, throwOnErrorOutput: false);
+                new Executable(url).Start(useShellExecute: true, throwOnErrorExit: false);
             }
         }
 

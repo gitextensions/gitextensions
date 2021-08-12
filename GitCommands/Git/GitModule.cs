@@ -341,7 +341,7 @@ namespace GitCommands
                     if (_gitCommonDirectory is null)
                     {
                         GitArgumentBuilder args = new("rev-parse") { "--git-common-dir" };
-                        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+                        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
                         string dir = result.StandardOutput.Trim().ToNativePath();
 
@@ -386,7 +386,7 @@ namespace GitCommands
                 "status",
                 submodulePath
             };
-            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
             return result.ExitedSuccessfully || IsSubmoduleRemoved();
 
@@ -695,7 +695,7 @@ namespace GitCommands
             };
 
             // ignore non-zero exit code, e.g. in case of missing submodule
-            ExecutionResult result = await _gitExecutable.ExecuteAsync(args, throwOnErrorOutput: false).ConfigureAwait(false);
+            ExecutionResult result = await _gitExecutable.ExecuteAsync(args, throwOnErrorExit: false).ConfigureAwait(false);
             var unmerged = result.StandardOutput.Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries);
 
             var item = new ConflictedFileData[3];
@@ -765,7 +765,7 @@ namespace GitCommands
             return _gitTreeParser.ParseSingle(output);
         }
 
-        public int? GetCommitCount(string parent, string child, bool cache = false, bool throwOnErrorOutput = true)
+        public int? GetCommitCount(string parent, string child, bool cache = false, bool throwOnErrorExit = true)
         {
             if (parent == child)
             {
@@ -778,7 +778,7 @@ namespace GitCommands
                 $"^{child}",
                 "--count"
             };
-            ExecutionResult result = _gitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorOutput: throwOnErrorOutput);
+            ExecutionResult result = _gitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: throwOnErrorExit);
             string output = result.StandardOutput;
 
             if (int.TryParse(output, out var commitCount))
@@ -1054,7 +1054,7 @@ namespace GitCommands
         public ObjectId? GetCurrentCheckout()
         {
             GitArgumentBuilder args = new("rev-parse") { "HEAD" };
-            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
             return result.ExitedSuccessfully && ObjectId.TryParse(result.StandardOutput, offset: 0, out var objectId)
                 ? objectId
@@ -1075,7 +1075,7 @@ namespace GitCommands
                 "--quiet",
                 $"{objectIdPrefix}^{{commit}}"
             };
-            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
             string output = result.StandardOutput.Trim();
 
             if (output.StartsWith(objectIdPrefix) && ObjectId.TryParse(output, out objectId))
@@ -1134,7 +1134,7 @@ namespace GitCommands
             };
 
             // Could fail if pulling interactively from remote where the specified branch does not exist
-            return _gitExecutable.Execute(args, throwOnErrorOutput: false).StandardOutput.LazySplit('\n').Any();
+            return _gitExecutable.Execute(args, throwOnErrorExit: false).StandardOutput.LazySplit('\n').Any();
         }
 
         public ConfigFile GetSubmoduleConfigFile()
@@ -1621,7 +1621,7 @@ namespace GitCommands
                     }
                 },
                 SystemEncoding,
-                throwOnErrorOutput: false);
+                throwOnErrorExit: false);
 
             wereErrors = !execution.ExitedSuccessfully;
             return execution.AllOutput;
@@ -1679,7 +1679,7 @@ namespace GitCommands
                         }
                     },
                     SystemEncoding,
-                    throwOnErrorOutput: false);
+                    throwOnErrorExit: false);
 
                 wereErrors |= !execution.ExitedSuccessfully;
                 output.AppendLine(execution.AllOutput);
@@ -1701,7 +1701,7 @@ namespace GitCommands
                         }
                     },
                     SystemEncoding,
-                    throwOnErrorOutput: false);
+                    throwOnErrorExit: false);
 
                 wereErrors |= !execution.ExitedSuccessfully;
                 output.Append(execution.AllOutput);
@@ -2148,7 +2148,7 @@ namespace GitCommands
 
         public async Task<IReadOnlyList<Remote>> GetRemotesAsync()
         {
-            ExecutionResult result = await _gitExecutable.ExecuteAsync("remote -v", throwOnErrorOutput: false);
+            ExecutionResult result = await _gitExecutable.ExecuteAsync("remote -v", throwOnErrorExit: false);
             ////TODO: Handle non-empty result.StandardError if not result.ExitedSuccessfully
             return result.ExitedSuccessfully
                 ? ParseRemotes(result)
@@ -2307,7 +2307,7 @@ namespace GitCommands
                 args,
                 cache: cache,
                 outputEncoding: LosslessEncoding,
-                throwOnErrorOutput: !nonZeroGitExitCode);
+                throwOnErrorExit: !nonZeroGitExitCode);
 
             string patch = result.StandardOutput;
             IReadOnlyList<Patch> patches = PatchProcessor.CreatePatchesFromString(patch, new Lazy<Encoding>(() => encoding)).ToList();
@@ -2395,7 +2395,7 @@ namespace GitCommands
                     _revisionDiffProvider.Get(firstRevision, secondRevision)
                 },
                 cache: noCache ? null : GitCommandCache,
-                throwOnErrorOutput: false);
+                throwOnErrorExit: false);
         }
 
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond)
@@ -2489,7 +2489,7 @@ namespace GitCommands
                 "--pretty=format:\"%T\"",
                 "--max-count=1"
             };
-            ExecutionResult executionResult = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult executionResult = _gitExecutable.Execute(args, throwOnErrorExit: false);
             if (executionResult.ExitedSuccessfully && ObjectId.TryParse(executionResult.StandardOutput, out ObjectId? treeId))
             {
                 var files = GetTreeFiles(treeId, full: true);
@@ -2532,7 +2532,7 @@ namespace GitCommands
             bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
             UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
-            ExecutionResult exec = _gitExecutable.Execute(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles), throwOnErrorOutput: false);
+            ExecutionResult exec = _gitExecutable.Execute(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles), throwOnErrorExit: false);
             List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
             if (!exec.ExitedSuccessfully)
             {
@@ -2649,7 +2649,7 @@ namespace GitCommands
                 "--name-status",
                 "--cached"
             };
-            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
             if (exec.ExitedSuccessfully)
             {
                 return GetDiffChangedFilesFromString(exec.StandardOutput, StagedStatus.Index);
@@ -2657,7 +2657,7 @@ namespace GitCommands
 
             // This command is a little more expensive because it will return both staged and unstaged files
             ArgumentString command = GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No);
-            exec = _gitExecutable.Execute(command, throwOnErrorOutput: false);
+            exec = _gitExecutable.Execute(command, throwOnErrorExit: false);
             List<GitItemStatus> res = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)
                                             .Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))
                                             .ToList();
@@ -2695,7 +2695,7 @@ namespace GitCommands
         public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = IgnoreSubmodulesMode.None)
         {
             ArgumentString args = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
-            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
             List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
             if (!exec.ExitedSuccessfully)
             {
@@ -2726,7 +2726,7 @@ namespace GitCommands
         private async Task<string?> GetFileContentsAsync(string? path)
         {
             GitArgumentBuilder args = new("show") { $"HEAD:{path.ToPosixPath().Quote()}" };
-            ExecutionResult result = await _gitExecutable.ExecuteAsync(args, throwOnErrorOutput: false).ConfigureAwaitRunInline();
+            ExecutionResult result = await _gitExecutable.ExecuteAsync(args, throwOnErrorExit: false).ConfigureAwaitRunInline();
 
             return result.ExitedSuccessfully
                 ? result.StandardOutput
@@ -2845,7 +2845,7 @@ namespace GitCommands
                 "--quiet",
                 "HEAD"
             };
-            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
             return result.ExitedSuccessfully
                 ? result.StandardOutput
@@ -2904,7 +2904,7 @@ namespace GitCommands
                         { branches, "--heads" },
                         remote.ToPosixPath().QuoteNE()
                     },
-                    throwOnErrorOutput: false);
+                    throwOnErrorExit: false);
 
             string output = executionResult.AllOutput;
 
@@ -2940,7 +2940,7 @@ namespace GitCommands
             const bool noLocks = true;
 
             ArgumentString cmd = GitCommandHelpers.GetRefsCmd(getRef, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
-            ExecutionResult result = _gitExecutable.Execute(cmd, throwOnErrorOutput: false);
+            ExecutionResult result = _gitExecutable.Execute(cmd, throwOnErrorExit: false);
             ////TODO: Handle non-empty result.StandardError
             return result.ExitedSuccessfully
                 ? ParseRefs(result.StandardOutput)
@@ -2950,7 +2950,7 @@ namespace GitCommands
         public async Task<string[]> GetMergedBranchesAsync(bool includeRemote = false, bool fullRefname = false, string? commit = null)
         {
             ExecutionResult result = await _gitExecutable
-                .ExecuteAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit), throwOnErrorOutput: false)
+                .ExecuteAsync(GitCommandHelpers.MergedBranchesCmd(includeRemote, fullRefname, commit), throwOnErrorExit: false)
                 .ConfigureAwait(false);
             ////TODO: Handle non-empty result.StandardError
             return result.StandardOutput.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
@@ -3051,7 +3051,7 @@ namespace GitCommands
                 "--contains",
                 objectId
             };
-            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no matches (no error presented to the user)
@@ -3086,7 +3086,7 @@ namespace GitCommands
         /// <param name="objectId">The sha1.</param>
         public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId)
         {
-            ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorOutput: false);
+            ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no matches (no error presented to the user)
@@ -3109,7 +3109,7 @@ namespace GitCommands
 
             tag = tag.Trim();
 
-            ExecutionResult exec = _gitExecutable.Execute($"tag -l -n10 {tag}", throwOnErrorOutput: false);
+            ExecutionResult exec = _gitExecutable.Execute($"tag -l -n10 {tag}", throwOnErrorExit: false);
 
             /*
              * $ git tag -l -n10 1.50
@@ -3649,7 +3649,7 @@ namespace GitCommands
                 "--verify",
                 $"\"{revisionExpression}~0\""
             };
-            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
             return result.ExitedSuccessfully && ObjectId.TryParse(result.StandardOutput, offset: 0, out objectId)
                 ? objectId
@@ -3668,7 +3668,7 @@ namespace GitCommands
                 a,
                 b
             };
-            ExecutionResult result = _gitExecutable.Execute(args, cache: GitCommandCache, throwOnErrorOutput: false);
+            ExecutionResult result = _gitExecutable.Execute(args, cache: GitCommandCache, throwOnErrorExit: false);
             string output = result.StandardOutput;
 
             return ObjectId.TryParse(output, offset: 0, out var objectId)
@@ -4111,7 +4111,7 @@ namespace GitCommands
                 "--cached",
                 filename.ToPosixPath().Quote()
             };
-            return _gitExecutable.Execute(args, throwOnErrorOutput: false).ExitedSuccessfully;
+            return _gitExecutable.Execute(args, throwOnErrorExit: false).ExitedSuccessfully;
         }
 
         /// <summary>
@@ -4129,7 +4129,7 @@ namespace GitCommands
                 commitId
             };
 
-            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
             return !exec.ExitedSuccessfully
                 ? exec.StandardOutput.TrimEnd()
                 : null;

@@ -75,7 +75,7 @@ namespace GitCommands
                 "--",
                 fileName.Quote()
             };
-            GitUIPluginInterfaces.ExecutionResult result = module.GitExecutable.Execute(cmd, throwOnErrorOutput: false);
+            GitUIPluginInterfaces.ExecutionResult result = module.GitExecutable.Execute(cmd, throwOnErrorExit: false);
             if (!result.ExitedSuccessfully)
             {
                 return null;

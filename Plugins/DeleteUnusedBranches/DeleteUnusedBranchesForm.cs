@@ -136,7 +136,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                  context.ReferenceBranch
             };
 
-            var result = context.Commands.GitExecutable.Execute(args, throwOnErrorOutput: false);
+            var result = context.Commands.GitExecutable.Execute(args, throwOnErrorExit: false);
 
             if (!result.ExitedSuccessfully)
             {

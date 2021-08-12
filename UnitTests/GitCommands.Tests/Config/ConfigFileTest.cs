@@ -55,7 +55,7 @@ namespace GitCommandsTests.Config
                 // Quote the key without unescaping internal quotes
                 $"\"{key}\""
             };
-            return Module.GitExecutable.Execute(args, throwOnErrorOutput: false).StandardOutput.TrimEnd('\n');
+            return Module.GitExecutable.Execute(args, throwOnErrorExit: false).StandardOutput.TrimEnd('\n');
         }
 
         private void CheckValueIsEqual(ConfigFile configFile, string key, string expectedValue)
