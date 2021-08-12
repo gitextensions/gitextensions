@@ -693,10 +693,9 @@ namespace GitCommands
                 filename.QuoteNE()
             };
 
-            var unmerged = (await _gitExecutable
-                .GetOutputAsync(args, throwOnErrorOutput: false) // ignore non-zero exit code, e.g. in case of missing submodule
-                .ConfigureAwait(false))
-                .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries);
+            // ignore non-zero exit code, e.g. in case of missing submodule
+            ExecutionResult result = await _gitExecutable.ExecuteAsync(args, throwOnErrorOutput: false).ConfigureAwait(false);
+            var unmerged = result.StandardOutput.Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries);
 
             var item = new ConflictedFileData[3];
 
@@ -778,7 +777,8 @@ namespace GitCommands
                 $"^{child}",
                 "--count"
             };
-            string output = _gitExecutable.GetOutput(args, cache: cache ? GitCommandCache : null, throwOnErrorOutput: throwOnErrorOutput);
+            ExecutionResult result = _gitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorOutput: throwOnErrorOutput);
+            string output = result.StandardOutput;
 
             if (int.TryParse(output, out var commitCount))
             {
@@ -1074,7 +1074,8 @@ namespace GitCommands
                 "--quiet",
                 $"{objectIdPrefix}^{{commit}}"
             };
-            string output = _gitExecutable.GetOutput(args, throwOnErrorOutput: false).Trim();
+            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorOutput: false);
+            string output = result.StandardOutput.Trim();
 
             if (output.StartsWith(objectIdPrefix) && ObjectId.TryParse(output, out objectId))
             {
@@ -1132,7 +1133,7 @@ namespace GitCommands
             };
 
             // Could fail if pulling interactively from remote where the specified branch does not exist
-            return _gitExecutable.GetOutputLines(args, throwOnErrorOutput: false).Any();
+            return _gitExecutable.Execute(args, throwOnErrorOutput: false).StandardOutput.LazySplit('\n').Any();
         }
 
         public ConfigFile GetSubmoduleConfigFile()
@@ -1192,7 +1193,8 @@ namespace GitCommands
             }
 
             GitArgumentBuilder args = new("submodule") { "status" };
-            var lines = _gitExecutable.GetOutputLines(args);
+            ExecutionResult result = _gitExecutable.Execute(args);
+            var lines = result.StandardOutput.LazySplit('\n');
 
             string? lastLine = null;
 
@@ -2135,8 +2137,9 @@ namespace GitCommands
         public IReadOnlyList<string> GetRemoteNames()
         {
             return _gitExecutable
-                .GetOutputLines("remote")
-                .Where(r => !string.IsNullOrWhiteSpace(r))
+                .Execute("remote")
+                .StandardOutput
+                .LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
         }
 
@@ -2161,12 +2164,6 @@ namespace GitCommands
                 while (enumerator.MoveNext())
                 {
                     var remoteLine = enumerator.Current;
-                    if (remoteLine.IndexOf("not a git repository", StringComparison.OrdinalIgnoreCase) >= 0)
-                    {
-                        // An invalid module is not an error; we simply return an empty list of remotes
-                        return remotes;
-                    }
-
                     var remoteMatch = _remoteVerboseLineRegex.Match(remoteLine);
                     if (!remoteMatch.Success
                         || (remoteMatch.Groups["direction"].Value != "fetch"
@@ -2305,12 +2302,13 @@ namespace GitCommands
                 : null;
 
             bool nonZeroGitExitCode = firstId == ObjectId.WorkTreeId && secondId is not null && !isTracked;
-            string patch = await _gitExecutable.GetOutputAsync(
+            ExecutionResult result = await _gitExecutable.ExecuteAsync(
                 args,
                 cache: cache,
                 outputEncoding: LosslessEncoding,
                 throwOnErrorOutput: !nonZeroGitExitCode);
 
+            string patch = result.StandardOutput;
             IReadOnlyList<Patch> patches = PatchProcessor.CreatePatchesFromString(patch, new Lazy<Encoding>(() => encoding)).ToList();
 
             return GetPatch(patches, fileName, oldFileName);
@@ -2961,9 +2959,10 @@ namespace GitCommands
             const string refsPrefix = "refs/";
 
             var remotes = GetRemoteNames();
+            ExecutionResult result = _gitExecutable.Execute(GitCommandHelpers.MergedBranchesCmd(includeRemote: true));
+            var lines = result.StandardOutput.LazySplit('\n');
 
-            return _gitExecutable
-                .GetOutputLines(GitCommandHelpers.MergedBranchesCmd(includeRemote: true))
+            return lines
                 .Select(b => b.Trim())
                 .Where(b => b.StartsWith(remoteBranchPrefixForMergedBranches))
                 .Select(b => string.Concat(refsPrefix, b))
@@ -3658,7 +3657,8 @@ namespace GitCommands
                 a,
                 b
             };
-            string output = _gitExecutable.GetOutput(args, cache: GitCommandCache, throwOnErrorOutput: false);
+            ExecutionResult result = _gitExecutable.Execute(args, cache: GitCommandCache, throwOnErrorOutput: false);
+            string output = result.StandardOutput;
 
             return ObjectId.TryParse(output, offset: 0, out var objectId)
                 ? objectId
@@ -4145,7 +4145,8 @@ namespace GitCommands
                 GetDateParameter("--until", until)
             };
 
-            var lines = _gitExecutable.GetOutputLines(args);
+            ExecutionResult result = _gitExecutable.Execute(args);
+            var lines = result.StandardOutput.LazySplit('\n');
 
             foreach (var line in lines)
             {
