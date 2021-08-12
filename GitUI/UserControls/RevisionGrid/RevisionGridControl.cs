@@ -1572,9 +1572,15 @@ namespace GitUI
 
         private void OnGridViewKeyUp(object sender, KeyEventArgs e)
         {
-            var selectedRevision = LatestSelectedRevision;
+            GitRevision? selectedRevision = LatestSelectedRevision;
 
             if (selectedRevision is null)
+            {
+                return;
+            }
+
+            // https://github.com/gitextensions/gitextensions/issues/5636
+            if (e.Modifiers != Keys.None)
             {
                 return;
             }
