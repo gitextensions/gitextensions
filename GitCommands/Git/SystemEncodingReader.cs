@@ -48,7 +48,8 @@ namespace GitCommands.Git
                     controlStr
                 };
 
-                string? s = _module.GitExecutable.GetOutput(arguments, outputEncoding: Encoding.UTF8, throwOnErrorOutput: false);
+                ExecutionResult result = _module.GitExecutable.Execute(arguments, outputEncoding: Encoding.UTF8, throwOnErrorOutput: false);
+                string? s = result.AllOutput;
                 if (s is not null && s.IndexOf(controlStr) != -1)
                 {
                     systemEncoding = new UTF8Encoding(false);

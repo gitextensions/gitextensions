@@ -146,7 +146,8 @@ namespace GitExtensions.Plugins.GitImpact
 
         private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
         {
-            using var lineEnumerator = module.GitExecutable.GetOutputLines(command).GetEnumerator();
+            ExecutionResult result = module.GitExecutable.Execute(command);
+            using var lineEnumerator = result.StandardOutput.Split('\n').ToList().GetEnumerator();
 
             // Analyze commit listing
             while (!token.IsCancellationRequested && lineEnumerator.MoveNext())

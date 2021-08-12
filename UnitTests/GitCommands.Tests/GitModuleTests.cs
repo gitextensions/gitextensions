@@ -482,31 +482,6 @@ namespace GitCommandsTests
             Assert.AreEqual(headId, objectId.ToString());
         }
 
-        [TestCase("fatal: not a git repository (or any of the parent directories): .git")] // git version 2.20.1 (Apple Git-117)
-        [TestCase("fatal: Not a git repository (or any of the parent directories): .git")] // git version 2.16.1.windows.4
-        public void GetRemotes_should_return_empty_list_not_inside_git_repo(string warning)
-        {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                using (_executable.StageOutput("remote -v", warning))
-                {
-                    var remotes = await _gitModule.GetRemotesAsync();
-
-                    remotes.Should().BeEmpty();
-                }
-            });
-        }
-
-        [TestCase("fatal: not a git repository (or any of the parent directories): .git")] // git version 2.20.1 (Apple Git-117)
-        [TestCase("fatal: Not a git repository (or any of the parent directories): .git")] // git version 2.16.1.windows.4
-        public void GetRemotes_should_not_throw_if_not_inside_git_repo(string warning)
-        {
-            using (_executable.StageOutput("remote -v", warning))
-            {
-                Assert.DoesNotThrowAsync(async () => await _gitModule.GetRemotesAsync());
-            }
-        }
-
         [TestCase("ignorenopush\tgit@github.com:drewnoakes/gitextensions.git (fetch)")]
         [TestCase("ignorenopull\tgit@github.com:drewnoakes/gitextensions.git (push)")]
         public async Task GetRemotes_should_throw_if_not_pairs(string line)
@@ -745,13 +720,13 @@ namespace GitCommandsTests
                     var child = moduleTestHelpers[i];
 
                     // Add child as submodule of parent
-                    parent.Module.GitExecutable.GetOutput(GitCommandHelpers.AddSubmoduleCmd(child.Module.WorkingDir.ToPosixPath(), $"repo{i}", null, true), throwOnErrorOutput: false);
+                    parent.Module.GitExecutable.Execute(GitCommandHelpers.AddSubmoduleCmd(child.Module.WorkingDir.ToPosixPath(), $"repo{i}", null, true), throwOnErrorOutput: false);
                     parent.Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
                 }
 
                 // Init all modules of root
                 var root = moduleTestHelpers[0];
-                root.Module.GitExecutable.GetOutput(@"submodule update --init --recursive", throwOnErrorOutput: false);
+                root.Module.GitExecutable.Execute(@"submodule update --init --recursive", throwOnErrorOutput: false);
 
                 var paths = root.Module.GetSubmodulesLocalPaths(recursive: true);
                 Assert.AreEqual(new string[] { "repo1", "repo1/repo2", "repo1/repo2/repo3" }, paths, $"Modules: {string.Join(" ", paths)}");
