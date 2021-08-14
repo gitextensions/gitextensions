@@ -153,7 +153,7 @@ namespace GitExtensions
                         {
                             if (!checklistSettingsPage.CheckSettings())
                             {
-                                if (!checkSettingsLogic.AutoSolveAllSettings())
+                                if (!checkSettingsLogic.AutoSolveAllSettings() || !checklistSettingsPage.CheckSettings())
                                 {
                                     uiCommands.StartSettingsDialog();
                                 }
