@@ -1590,9 +1590,23 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ReloadTranslation();
             fileTree.ReloadHotkeys();
             revisionDiff.ReloadHotkeys();
-            new CustomDiffMergeToolProvider().Clear();
-            revisionDiff.LoadCustomDifftools();
-            RevisionGrid.LoadCustomDifftools();
+
+            // Clear the separate caches for diff/merge tools
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await new CustomDiffMergeToolProvider().ClearAsync(isDiff: false);
+            }).FileAndForget();
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                revisionDiff.CancelLoadCustomDifftools();
+                RevisionGrid.CancelLoadCustomDifftools();
+
+                await new CustomDiffMergeToolProvider().ClearAsync(isDiff: true);
+
+                // The tool lists are created when the forms are init, must be redone after clearing the cache
+                revisionDiff.LoadCustomDifftools();
+                RevisionGrid.LoadCustomDifftools();
+            }).FileAndForget();
 
             _dashboard?.RefreshContent();
 

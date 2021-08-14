@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -18,10 +19,17 @@ namespace GitUI
         /// <summary>
         /// Clear the existing caches.
         /// </summary>
-        public void Clear()
+        /// <param name="isDiff">True if diff, false if merge.</param>
+        public async Task ClearAsync(bool isDiff)
         {
-            CustomDiffMergeToolCache.DiffToolCache.Clear();
-            CustomDiffMergeToolCache.MergeToolCache.Clear();
+            if (isDiff)
+            {
+                await CustomDiffMergeToolCache.DiffToolCache.ClearAsync();
+            }
+            else
+            {
+                await CustomDiffMergeToolCache.MergeToolCache.ClearAsync();
+            }
         }
 
         /// <summary>

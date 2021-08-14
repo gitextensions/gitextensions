@@ -664,6 +664,11 @@ namespace GitUI
             new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true);
         }
 
+        public void CancelLoadCustomDifftools()
+        {
+            _customDiffToolsSequence.CancelCurrent();
+        }
+
         private void SetSelectedIndex(int index, bool toggleSelection = false)
         {
             try
