@@ -16,8 +16,9 @@ namespace GitUI
         private FileStatusDiffCalculatorInfo _fileStatusDiffCalculatorInfo = new();
 
         // Default helper functions, can be set
-        public Func<ObjectId, string> DescribeRevision { get; set; } = objectId => objectId.ToShortString();
-        public Func<GitRevision, GitRevision> GetActualRevision { get; set; } = rev => rev;
+        public Func<ObjectId, string>? DescribeRevision { get; set; }
+        public Func<GitRevision, GitRevision>? GetActualRevision { get; set; }
+
         public FileStatusDiffCalculator(Func<GitModule> getModule)
         {
             _getModule = getModule;
@@ -46,7 +47,7 @@ namespace GitUI
             if (revisions!.Count == 1)
             {
                 // If the grid is filtered, parents may be rewritten
-                GitRevision actualRev = GetActualRevision(selectedRev);
+                GitRevision actualRev = GetActualRevisionForRevision(selectedRev);
 
                 if (actualRev.ParentIds is null || actualRev.ParentIds.Count == 0)
                 {
@@ -56,7 +57,7 @@ namespace GitUI
                     fileStatusDescs.Add(new FileStatusWithDescription(
                         firstRev: null,
                         secondRev: selectedRev,
-                        summary: DescribeRevision(selectedRev.ObjectId),
+                        summary: GetDescriptionForRevision(selectedRev.ObjectId),
                         statuses: module.GetTreeFiles(selectedRev.TreeGuid, full: true)));
                 }
                 else
@@ -70,7 +71,7 @@ namespace GitUI
                             new FileStatusWithDescription(
                                 firstRev: new GitRevision(parentId),
                                 secondRev: selectedRev,
-                                summary: TranslatedStrings.DiffWithParent + DescribeRevision(parentId),
+                                summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(parentId),
                                 statuses: module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, actualRev.ParentIds[0]))));
                 }
 
@@ -103,7 +104,7 @@ namespace GitUI
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: firstRev,
                 secondRev: selectedRev,
-                summary: TranslatedStrings.DiffWithParent + DescribeRevision(firstRev.ObjectId),
+                summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev.ObjectId),
                 statuses: module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId)));
 
             if (!AppSettings.ShowDiffForAllParents || revisions.Count > maxMultiCompare || headId is null)
@@ -151,7 +152,7 @@ namespace GitUI
                         .Select(rev => new FileStatusWithDescription(
                             firstRev: rev,
                             secondRev: selectedRev,
-                            summary: TranslatedStrings.DiffWithParent + DescribeRevision(rev.ObjectId),
+                            summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(rev.ObjectId),
                             statuses: module.GetDiffFilesWithSubmodulesStatus(rev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId))));
 
                 return fileStatusDescs;
@@ -171,17 +172,17 @@ namespace GitUI
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: selectedRev,
-                summary: TranslatedStrings.DiffBaseToB + DescribeRevision(selectedRev.ObjectId),
+                summary: TranslatedStrings.DiffBaseToB + GetDescriptionForRevision(selectedRev.ObjectId),
                 statuses: allBaseToB.Except(commonBaseToAandB, comparer).ToList()));
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: firstRev,
-                summary: TranslatedStrings.DiffBaseToB + DescribeRevision(firstRev.ObjectId),
+                summary: TranslatedStrings.DiffBaseToB + GetDescriptionForRevision(firstRev.ObjectId),
                 statuses: allBaseToA.Except(commonBaseToAandB, comparer).ToList()));
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: selectedRev,
-                summary: TranslatedStrings.DiffCommonBase + DescribeRevision(baseRevGuid),
+                summary: TranslatedStrings.DiffCommonBase + GetDescriptionForRevision(baseRevGuid),
                 statuses: commonBaseToAandB));
 
             if (!GitVersion.Current.SupportRangeDiffTool)
@@ -212,6 +213,12 @@ namespace GitUI
 
             static ObjectId GetRevisionOrHead(GitRevision rev, ObjectId headId)
                 => rev.IsArtificial ? headId : rev.ObjectId;
+
+            string GetDescriptionForRevision(ObjectId objectId)
+                => DescribeRevision is not null ? DescribeRevision(objectId) : objectId.ToShortString();
+
+            GitRevision GetActualRevisionForRevision(GitRevision revision)
+                => GetActualRevision is not null ? GetActualRevision(revision) : revision;
         }
 
         private GitModule GetModule()
