@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -40,7 +41,7 @@ namespace GitUI
         /// <param name="components">The calling Form components, to dispose correctly.</param>
         /// <param name="isDiff">True if diff, false if merge.</param>
         /// <param name="delay">The delay before starting the operation.</param>
-        public void LoadCustomDiffMergeTools(GitModule module, IList<CustomDiffMergeTool> menus, IContainer components, bool isDiff, int delay = FormBrowseToolDelay)
+        public void LoadCustomDiffMergeTools(GitModule module, IList<CustomDiffMergeTool> menus, IContainer components, bool isDiff, int delay = FormBrowseToolDelay, CancellationToken cancellationToken = default)
         {
             InitMenus(menus);
 
@@ -54,16 +55,17 @@ namespace GitUI
                 // get the tools, possibly with a delay as requesting requires considerable time
                 // cache is shared
                 List<string> tools = (await (isDiff ? CustomDiffMergeToolCache.DiffToolCache : CustomDiffMergeToolCache.MergeToolCache)
-                    .GetToolsAsync(module, delay))
+                    .GetToolsAsync(module, delay, cancellationToken))
                     .ToList();
 
-                if (tools.Count() <= 1)
+                if (tools.Count <= 1)
                 {
                     // No need to show the menu
                     return;
                 }
 
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
                 foreach (var menu in menus)
                 {
                     menu.MenuItem.DropDown = new ContextMenuStrip(components);

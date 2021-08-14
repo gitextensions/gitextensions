@@ -162,6 +162,7 @@ namespace GitUI.CommandsDialogs
         private readonly ToolStripMenuItem _addSelectionToCommitMessageToolStripMenuItem;
         private readonly AsyncLoader _unstagedLoader = new();
         private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
+        private readonly CancellationTokenSequence _customDiffToolsSequence = new();
         private readonly CancellationTokenSequence _interactiveAddSequence = new();
         private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("CommitDialog"));
@@ -411,6 +412,7 @@ namespace GitUI.CommandsDialogs
             if (disposing)
             {
                 _unstagedLoader.Dispose();
+                _customDiffToolsSequence.Dispose();
                 _interactiveAddSequence.Dispose();
                 _viewChangesSequence.Dispose();
                 components?.Dispose();
@@ -629,7 +631,7 @@ namespace GitUI.CommandsDialogs
                 new(stagedOpenDifftoolToolStripMenuItem9, stagedOpenDifftoolToolStripMenuItem9_Click),
             };
 
-            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true);
+            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
         }
 
         private void FileViewer_TopScrollReached(object sender, EventArgs e)

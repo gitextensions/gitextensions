@@ -108,6 +108,7 @@ namespace GitUI
         private DataGridViewColumn? _lastVisibleResizableColumn;
         private readonly ArtificialCommitChangeCount _workTreeChangeCount = new();
         private readonly ArtificialCommitChangeCount _indexChangeCount = new();
+        private readonly CancellationTokenSequence _customDiffToolsSequence = new();
 
         private RefFilterOptions _DONT_USE_ME_DIRECTLY_refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
 
@@ -299,6 +300,7 @@ namespace GitUI
                 //// _revisionGraphColumnProvider not disposable
                 //// _selectionTimer handled by this.components
                 _buildServerWatcher?.Dispose();
+                _customDiffToolsSequence.Dispose();
 
                 if (_indexWatcher.IsValueCreated)
                 {
@@ -661,7 +663,7 @@ namespace GitUI
                 new(openCommitsWithDiffToolMenuItem, diffSelectedCommitsMenuItem_Click)
             };
 
-            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true);
+            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
         }
 
         public void CancelLoadCustomDifftools()

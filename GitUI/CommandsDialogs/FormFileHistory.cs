@@ -31,6 +31,7 @@ namespace GitUI.CommandsDialogs
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly FormFileHistoryController _controller = new();
+        private readonly CancellationTokenSequence _customDiffToolsSequence = new();
         private readonly CancellationTokenSequence _viewChangesSequence = new();
 
         private BuildReportTabPageExtension? _buildReportTabPageExtension;
@@ -177,6 +178,7 @@ namespace GitUI.CommandsDialogs
             if (disposing)
             {
                 _asyncLoader.Dispose();
+                _customDiffToolsSequence.Dispose();
                 _viewChangesSequence.Dispose();
 
                 // if the form was instantiated by the translation app, all of the following would be null
@@ -215,7 +217,7 @@ namespace GitUI.CommandsDialogs
             };
 
             const int ToolDelay = 10000;
-            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, ToolDelay);
+            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, ToolDelay, cancellationToken: _customDiffToolsSequence.Next());
         }
 
         private void LoadFileHistory()
