@@ -293,8 +293,8 @@ namespace GitCommands.Submodules
         private async Task UpdateSubmodulesStatusAsync(GitModule module, IReadOnlyList<GitItemStatus>? gitStatus, CancellationToken cancelToken)
         {
             _previousSubmoduleUpdateTime = DateTime.Now;
-            cancelToken.ThrowIfCancellationRequested();
             await TaskScheduler.Default;
+            cancelToken.ThrowIfCancellationRequested();
 
             if (!_submoduleInfos.ContainsKey(module.WorkingDir) || _submoduleInfos[module.WorkingDir] is null)
             {
