@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Logging;
 using GitExtUtils;
@@ -231,6 +232,12 @@ namespace GitCommands
 
             /// <inheritdoc />
             public Task<int> WaitForExitAsync() => _exitTaskCompletionSource.Task;
+
+            /// <inheritdoc />
+            public Task WaitForProcessExitAsync(CancellationToken token)
+            {
+                return _process.WaitForExitAsync(token);
+            }
 
             /// <inheritdoc />
             public int WaitForExit()

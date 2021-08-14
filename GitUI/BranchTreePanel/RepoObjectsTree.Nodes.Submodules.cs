@@ -188,7 +188,6 @@ namespace GitUI.BranchTreePanel
                 }
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
-                token.ThrowIfCancellationRequested();
                 TreeViewNode.ToolTipText = toolTip;
             }
         }
@@ -322,7 +321,6 @@ namespace GitUI.BranchTreePanel
             private async Task LoadNodeDetailsAsync(Nodes loadedNodes, CancellationToken token)
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
-                token.ThrowIfCancellationRequested();
 
                 if (TreeViewNode.TreeView is not null)
                 {
