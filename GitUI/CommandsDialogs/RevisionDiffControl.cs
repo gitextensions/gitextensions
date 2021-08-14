@@ -190,6 +190,11 @@ namespace GitUI.CommandsDialogs
             new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true);
         }
 
+        public void CancelLoadCustomDifftools()
+        {
+            _customDiffToolsSequence.CancelCurrent();
+        }
+
         private string GetShortcutKeyDisplayString(Command cmd)
         {
             return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();

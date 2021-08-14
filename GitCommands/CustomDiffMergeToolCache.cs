@@ -26,23 +26,20 @@ namespace GitCommands
         public static CustomDiffMergeToolCache MergeToolCache { get; } = new(false);
 
         /// <summary>
-        /// Clear the existing caches
+        /// Clear the existing caches (await current calculation to finsh first)
         /// </summary>
-        public void Clear()
+        public async Task ClearAsync()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await _mutex.WaitAsync().ConfigureAwait(false);
+            await _mutex.WaitAsync().ConfigureAwait(false);
 
-                try
-                {
-                    _tools = null;
-                }
-                finally
-                {
-                    _mutex.Release();
-                }
-            }).FileAndForget();
+            try
+            {
+                _tools = null;
+            }
+            finally
+            {
+                _mutex.Release();
+            }
         }
 
         /// <summary>
