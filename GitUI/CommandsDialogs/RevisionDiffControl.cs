@@ -43,6 +43,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
+        private readonly CancellationTokenSequence _customDiffToolsSequence = new();
         private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly RememberFileContextMenuController _rememberFileContextMenuController
             = RememberFileContextMenuController.Default;
@@ -187,7 +188,7 @@ namespace GitUI.CommandsDialogs
                 new(diffTwoSelectedDifftoolToolStripMenuItem, diffTwoSelectedDiffToolToolStripMenuItem_Click)
             };
 
-            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true);
+            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
         }
 
         public void CancelLoadCustomDifftools()
@@ -257,6 +258,7 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
+                _customDiffToolsSequence.Dispose();
                 _viewChangesSequence.Dispose();
                 components?.Dispose();
             }

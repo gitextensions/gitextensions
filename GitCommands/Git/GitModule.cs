@@ -3568,11 +3568,12 @@ namespace GitCommands
         /// </summary>
         /// <param name="isDiff">diff or merge.</param>
         /// <returns>the Git output.</returns>
-        public string GetCustomDiffMergeTools(bool isDiff)
+        public string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken)
         {
             // Note that --gui has no effect here
             GitArgumentBuilder args = new(isDiff ? "difftool" : "mergetool") { "--tool-help" };
-            return _gitExecutable.GetOutput(args);
+            ExecutionResult result = _gitExecutable.Execute(args, cancellationToken: cancellationToken);
+            return result.StandardOutput;
         }
 
         public string OpenWithDifftoolDirDiff(string? firstRevision, string? secondRevision, string? customTool = null)

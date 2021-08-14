@@ -47,7 +47,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="module">The Git module</param>
         /// <param name="delay">The delay before starting the operation</param>
-        public async Task<IEnumerable<string>> GetToolsAsync(GitModule module, int delay)
+        public async Task<IEnumerable<string>> GetToolsAsync(GitModule module, int delay, CancellationToken cancellationToken)
         {
             if (_tools is not null)
             {
@@ -56,17 +56,20 @@ namespace GitCommands
 
             // The command will compete with other resources, avoid delaying startup
             // Do not bother with cancel tokens
-            await Task.Delay(delay);
+            await Task.Delay(delay, cancellationToken);
 
-            await _mutex.WaitAsync().ConfigureAwait(false);
+            await _mutex.WaitAsync(cancellationToken).ConfigureAwait(false);
+
             try
             {
                 if (_tools is null)
                 {
                     await TaskScheduler.Default;
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var toolKey = _isDiff ? SettingKeyString.DiffToolKey : SettingKeyString.MergeToolKey;
                     var defaultTool = module.GetEffectiveSetting(toolKey);
-                    string output = module.GetCustomDiffMergeTools(_isDiff);
+                    string output = module.GetCustomDiffMergeTools(_isDiff, cancellationToken);
                     _tools = ParseCustomDiffMergeTool(output, defaultTool);
                 }
             }

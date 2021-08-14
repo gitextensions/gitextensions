@@ -117,6 +117,7 @@ namespace GitUI.CommandsDialogs
         private int _filesDeletedLocallyAndModifiedRemotelySolved;
         private int _filesModifiedLocallyAndDeletedRemotelySolved;
         private int _conflictItemsCount;
+        private readonly CancellationTokenSequence _customDiffToolsSequence = new();
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -147,6 +148,17 @@ namespace GitUI.CommandsDialogs
 
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _customDiffToolsSequence.Dispose();
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         private void Mergetool_Click(object sender, EventArgs e)
@@ -302,8 +314,8 @@ namespace GitUI.CommandsDialogs
                 new(customMergetool, customMergetool_Click),
             };
 
-            const int ToolDelay = 5000;
-            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: false, ToolDelay);
+            const int ToolDelay = 500;
+            new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: false, ToolDelay, cancellationToken: _customDiffToolsSequence.Next());
         }
 
         private readonly Dictionary<string, string> _mergeScripts = new()
