@@ -66,8 +66,8 @@ If no, redirects select strings from stdout/stderr into an edit box. This is the
 
 Turn off if you experience problems with the console emulator.</source>
         <target>콘솔 프로그램 출력이 Clone이나 Pull과 같은 명령 대화상자에서 표시되는 방식을 제어합니다.
-이 설정을 활성화화면, 모든 기능을 갖춘 콘솔 에뮬레이터를 포함합니다. 이 기능은 실험적으로 제공되며 불안정할 수 있습니다.
-이 설정을 비활성화하면, stdout/stderr에서 가져온 내용을  편집상자로 리디렉션합니다. 이는 전형적인 모드입니다.
+이 설정을 활성화하면, 모든 기능을 갖춘 콘솔 에뮬레이터를 포함합니다. 이 기능은 실험적으로 제공되며 불안정할 수 있습니다.
+이 설정을 비활성화하면, stdout/stderr에서 가져온 내용을 편집상자로 리디렉션합니다. 이는 전형적인 모드입니다.
 콘솔 에뮬레이터에 문제가 있으면 이 설정을 비활성화합니다.</target>
         
       </trans-unit>
@@ -2586,10 +2586,12 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="Bad.Text">
         <source>Mark current revision &amp;bad</source>
+        <target>현재 리비전을 &amp;bad 로 표시</target>
         
       </trans-unit>
       <trans-unit id="Good.Text">
         <source>Mark current revision &amp;good</source>
+        <target>현재 리비전을 &amp;good 으로 표시</target>
         
       </trans-unit>
       <trans-unit id="Start.Text">
@@ -9319,6 +9321,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="btnDiffToolBrowse.AccessibleName">
         <source>Browse Difftool command</source>
+        <target>Difftool 명령어 열기</target>
         
       </trans-unit>
       <trans-unit id="btnDiffToolBrowse.Text">
@@ -9328,6 +9331,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="btnDiffToolCommandSuggest.AccessibleName">
         <source>Suggest Difftool command</source>
+        <target>Difftool 명령어 제안</target>
         
       </trans-unit>
       <trans-unit id="btnDiffToolCommandSuggest.Text">
@@ -9337,6 +9341,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="btnMergeToolBrowse.AccessibleName">
         <source>Browse Path to mergetool</source>
+        <target>Mergetool 경로 열기</target>
         
       </trans-unit>
       <trans-unit id="btnMergeToolBrowse.Text">
@@ -9346,6 +9351,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="btnMergeToolCommandSuggest.AccessibleName">
         <source>Suggest Mergetool command</source>
+        <target>Mergetool 명령어 제안</target>
         
       </trans-unit>
       <trans-unit id="btnMergeToolCommandSuggest.Text">
