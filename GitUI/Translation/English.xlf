@@ -8826,98 +8826,6 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RecentRepositoriesList" source-language="en">
-    <body>
-      <trans-unit id="_cannotOpenTheFolder.Text">
-        <source>Cannot open the folder</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_clearRecentCategoryCaption.Text">
-        <source>Clear recent repositories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_clearRecentCategoryQuestion.Text">
-        <source>Do you want to clear the list of recent repositories?
-
-The action cannot be undone.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteCategoryCaption.Text">
-        <source>Delete Category</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_deleteCategoryQuestion.Text">
-        <source>Do you want to delete category "{0}" with {1} repositories?
-
-The action cannot be undone.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_groupActions.Text">
-        <source>Actions</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_groupRecentRepositories.Text">
-        <source>Recent repositories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="clmhdrBranch.Text">
-        <source>Branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="clmhdrCategory.Text">
-        <source>Category</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="clmhdrPath.Text">
-        <source>Path</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblRecentRepositories.Text">
-        <source>Recent Repositories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnuConfigure.Text">
-        <source>&amp;Recent repositories settings</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiCategories.Text">
-        <source>Categories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiCategoryAdd.Text">
-        <source>Add new...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiCategoryClear.Text">
-        <source>Clear all recent repositories</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiCategoryDelete.Text">
-        <source>Delete category</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiCategoryNone.Text">
-        <source>(none)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiCategoryRename.Text">
-        <source>Rename category</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiOpenFolder.Text">
-        <source>Show in folder</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiRemoveFromList.Text">
-        <source>Remove project from the list</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiRemoveMissingReposFromList.Text">
-        <source>Remove missing projects from the list</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -10998,6 +10906,102 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_yes.Text">
         <source>Yes</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="UserRepositoriesList" source-language="en">
+    <body>
+      <trans-unit id="_cannotOpenTheFolder.Text">
+        <source>Cannot open the folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_clearRecentCategoryCaption.Text">
+        <source>Clear recent repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_clearRecentCategoryQuestion.Text">
+        <source>Do you want to clear the list of recent repositories?
+
+The action cannot be undone.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteCategoryCaption.Text">
+        <source>Delete Category</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_deleteCategoryQuestion.Text">
+        <source>Do you want to delete category "{0}" with {1} repositories?
+
+The action cannot be undone.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_groupActions.Text">
+        <source>Actions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_groupRecentRepositories.Text">
+        <source>Recent repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_repositorySearchPlaceholder.Text">
+        <source>Search repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="clmhdrBranch.Text">
+        <source>Branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="clmhdrCategory.Text">
+        <source>Category</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="clmhdrPath.Text">
+        <source>Path</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblRecentRepositories.Text">
+        <source>Recent Repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnuConfigure.Text">
+        <source>&amp;Recent repositories settings</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCategories.Text">
+        <source>Categories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCategoryAdd.Text">
+        <source>Add new...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCategoryClear.Text">
+        <source>Clear all recent repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCategoryDelete.Text">
+        <source>Delete category</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCategoryNone.Text">
+        <source>(none)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiCategoryRename.Text">
+        <source>Rename category</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiOpenFolder.Text">
+        <source>Show in folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiRemoveFromList.Text">
+        <source>Remove project from the list</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiRemoveMissingReposFromList.Text">
+        <source>Remove missing projects from the list</source>
         <target />
       </trans-unit>
     </body>
