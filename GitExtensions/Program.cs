@@ -156,7 +156,7 @@ namespace GitExtensions
                         using var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost);
                         if (!checklistSettingsPage.CheckSettings())
                         {
-                            if (!checkSettingsLogic.AutoSolveAllSettings())
+                            if (!checkSettingsLogic.AutoSolveAllSettings() || !checklistSettingsPage.CheckSettings())
                             {
                                 uiCommands.StartSettingsDialog();
                             }
