@@ -1,6 +1,19 @@
 Changelog
 =========
 
+### Version 3.5.3 (17 Aug 2021)
+
+#### Changes:
+* [9464] Show ChecklistSettings also for settings without an autosolver
+* [9471] Unable to start ConEmu console
+* [9396] Improve handling of encodings with conflicting names
+
+
+[9464]:https://github.com/gitextensions/gitextensions/issues/9464#issuecomment-898202703
+[9471]:https://github.com/gitextensions/gitextensions/issues/9471
+[9396]:https://github.com/gitextensions/gitextensions/pull/9396
+
+
 ### Version 3.5.2 (06 Aug 2021)
 
 #### Changes:
