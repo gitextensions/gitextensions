@@ -11,7 +11,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 
 <a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
-### Version 3.x
+### Version 3.6 ([build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions))
 
 <table>
   <tr>
@@ -23,8 +23,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Runtime environment
     </td>
     <td>
-      MS Windows 7SP1+ <br />
-      MS .NET Framework 4.6.1+
+      MS Windows 7SP1+ // MS .NET 5.0
     </td>
   </tr>
   <tr>
@@ -32,8 +31,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Development
     </td>
     <td>
-      MS VS 2019 (v16.8+), C# 9<br />
-      VC++ (inc. ATL for x86/x64 for installer)
+      MS VS 2019 (v16.9+), C# 9 // VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
   <tr>
@@ -54,7 +52,42 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
   </tr>
 </table>
 
-#### [Build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions)
+####
+
+### Version 3.0 - 3.5.x ([build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To:-build-instructions#v34-and-v35))
+
+<table>
+  <tr>
+    <th>&nbsp;</th>
+    <th>Windows only</th>
+  </tr>
+  <tr>
+    <td>
+      Runtime environment
+    </td>
+    <td>
+      MS Windows 7SP1+ // MS .NET Framework 4.6.1+
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Development
+    </td>
+    <td>
+      MS VS 2019 (v16.8+), C# 9 // VC++ (inc. ATL for x86/x64 for installer)
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Current dev status
+    </td>
+    <td>
+      <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/release/3.5"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/release/3.5?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/release/3.5/graph/badge.svg" style="max-width:100%;"></a>
+    </td>
+  </tr>
+</table>
+
+#### 
 
 ### Version 2.5x
 
@@ -132,11 +165,11 @@ If you want to **update a portable version**, you should delete all the files an
 <table>
   <tr>
     <td>
-      <strong>v3.5</strong>
+      <strong>v3.5.2</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
-      <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?label=GitHub%20downloads%20(latest)&cacheSeconds=3600"></a> <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions/v3.4.3.svg?label=SourceForge%20downloads%20(latest)&cacheSeconds=3600"></a>
+      <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?label=GitHub%20downloads%20(latest)&cacheSeconds=3600"></a> <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions/v3.5.2.svg?label=SourceForge%20downloads%20(latest)&cacheSeconds=3600"></a>
     </td>
   </tr>
   <tr>
@@ -253,12 +286,3 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 * Wiki: [github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
 * Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-
-# Release History (3.0.1)
-Watch us work on this project.
-
-[![Click to play](https://img.youtube.com/vi/k6DhHbzkZvM/0.jpg)](https://www.youtube.com/watch?v=k6DhHbzkZvM)
-
-# Code Quality Monitor
-
-[![Code quality status](https://codescene.io/projects/5326/status.svg) Full analysis results at **codescene.io**.](https://codescene.io/projects/5326/jobs/latest-successful/results)
