@@ -2588,7 +2588,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="Bad.Text">
         <source>Mark current revision &amp;bad</source>
-        <target>标记当前版本为好(&amp;B)</target>
+        <target>标记当前版本为坏的(&amp;B)</target>
         
       </trans-unit>
       <trans-unit id="Good.Text">

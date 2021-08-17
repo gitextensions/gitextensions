@@ -5007,7 +5007,7 @@ You can unset the template:
     <body>
       <trans-unit id="$this.Text">
         <source>Delete branch</source>
-        <target>ブランチを削除</target>
+        <target>ブランチの削除</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
@@ -5027,7 +5027,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_deleteBranchCaption.Text">
         <source>Delete branches</source>
-        <target>ブランチを削除</target>
+        <target>ブランチの削除</target>
         
       </trans-unit>
       <trans-unit id="_deleteBranchQuestion.Text">
@@ -5064,7 +5064,7 @@ When you want to delete a not-fully merged branch, you can override this using t
     <body>
       <trans-unit id="$this.Text">
         <source>Delete branch</source>
-        <target>ブランチを削除</target>
+        <target>ブランチの削除</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">

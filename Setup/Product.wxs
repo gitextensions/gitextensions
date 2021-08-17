@@ -796,6 +796,15 @@
       <Component Id="English.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\English.Plugins.xlf" />
       </Component>
+      <Component Id="French.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\French.gif" />
+      </Component>
+      <Component Id="French.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\French.xlf" />
+      </Component>
+      <Component Id="French.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\French.Plugins.xlf" />
+      </Component>
       <Component Id="German.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\German.gif" />
       </Component>
@@ -822,6 +831,15 @@
       </Component>
       <Component Id="Korean.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.Plugins.xlf" />
+      </Component>
+      <Component Id="Russian.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.gif" />
+      </Component>
+      <Component Id="Russian.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.xlf" />
+      </Component>
+      <Component Id="Russian.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.Plugins.xlf" />
       </Component>
       <Component Id="SimplifiedChinese.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.gif" />
@@ -1697,6 +1715,11 @@
         </Feature>
       </Feature>
       <Feature Id="Translation" Title="Translations" Level="1">
+        <Feature Id="French" Title="French" Level="1">
+          <ComponentRef Id="French.xlf" />
+          <ComponentRef Id="French.Plugins.xlf" />
+          <ComponentRef Id="French.gif" />
+        </Feature>
         <Feature Id="German" Title="German" Level="1">
           <ComponentRef Id="German.xlf" />
           <ComponentRef Id="German.Plugins.xlf" />
@@ -1711,6 +1734,11 @@
           <ComponentRef Id="Korean.xlf" />
           <ComponentRef Id="Korean.Plugins.xlf" />
           <ComponentRef Id="Korean.gif" />
+        </Feature>
+        <Feature Id="Russian" Title="Russian" Level="1">
+          <ComponentRef Id="Russian.xlf" />
+          <ComponentRef Id="Russian.Plugins.xlf" />
+          <ComponentRef Id="Russian.gif" />
         </Feature>
         <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
           <ComponentRef Id="SimplifiedChinese.xlf" />
