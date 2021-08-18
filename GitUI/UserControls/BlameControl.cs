@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
@@ -92,7 +93,7 @@ namespace GitUI.Blame
             CommitInfo.CommandClicked -= commitInfo_CommandClicked;
         }
 
-        public void LoadBlame(GitRevision revision, IReadOnlyList<ObjectId>? children, string? fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
+        public void LoadBlame(GitRevision revision, IReadOnlyList<ObjectId>? children, string? fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
         {
             var objectId = revision.ObjectId;
 
@@ -115,7 +116,7 @@ namespace GitUI.Blame
             _encoding = encoding;
 
             _blameLoader.LoadAsync(() => _blame = Module.Blame(fileName, objectId.ToString(), encoding),
-                () => ProcessBlame(fileName, revision, children, controlToMask, line, scrollPos));
+                () => ProcessBlame(fileName, revision, children, controlToMask, line, scrollPos, cancellationToken));
         }
 
         private void commitInfo_CommandClicked(object sender, CommandEventArgs e)
@@ -287,10 +288,11 @@ namespace GitUI.Blame
             _changingScrollPosition = false;
         }
 
-        private void ProcessBlame(string? filename, GitRevision revision, IReadOnlyList<ObjectId>? children, Control? controlToMask, int lineNumber, int scrollpos)
+        private void ProcessBlame(string? filename, GitRevision revision, IReadOnlyList<ObjectId>? children, Control? controlToMask, int lineNumber, int scrollpos, CancellationToken cancellationToken = default)
         {
             var avatarSize = BlameAuthor.Font.Height + 1;
             var (gutter, body, avatars) = BuildBlameContents(filename, avatarSize);
+            cancellationToken.ThrowIfCancellationRequested();
 
             BlameAuthor.SetGitBlameGutter(avatars);
 
@@ -298,8 +300,10 @@ namespace GitUI.Blame
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 () => BlameAuthor.ViewTextAsync("committer.txt", gutter));
+            cancellationToken.ThrowIfCancellationRequested();
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 () => BlameFile.ViewTextAsync(_fileName, body));
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (lineNumber > 0)
             {

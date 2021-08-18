@@ -469,7 +469,7 @@ namespace GitUI.CommandsDialogs
             GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
                 ? _revisionGrid.GetActualRevision(_revisionGrid.CurrentCheckout)
                 : DiffFiles.SelectedItem.SecondRevision;
-            BlameControl.LoadBlame(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGrid, controlToMask: null, DiffText.Encoding, line);
+            BlameControl.LoadBlame(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGrid, controlToMask: null, DiffText.Encoding, line, cancellationToken: _viewChangesSequence.Next());
         }
 
         private async Task ShowSelectedFileDiffAsync()
