@@ -482,6 +482,12 @@ namespace GitUI.Editor
 
         public int MaxLineNumber => TextEditor.ShowLineNumbers ? TotalNumberOfLines : _lineNumbersControl.MaxLineNumber;
 
+        public int CurrentFileLine(bool isDiff)
+        {
+            _currentViewPositionCache.Capture();
+            return _currentViewPositionCache.CurrentFileLine(isDiff);
+        }
+
         public int LineAtCaret
         {
             get => TextEditor.ActiveTextAreaControl.Caret.Position.Line;
@@ -688,6 +694,25 @@ namespace GitUI.Editor
                         _viewer.FirstVisibleLine = line;
                     }
                 }
+            }
+
+            public int CurrentFileLine(bool isDiff)
+            {
+                if (_viewer.TotalNumberOfLines <= 1)
+                {
+                    return 0;
+                }
+
+                var viewPosition = _currentViewPosition;
+                if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum is not null)
+                {
+                    // prefer the LeftLineNum because the base revision will not change
+                    return viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
+                        ? viewPosition.ActiveLineNum.LeftLineNumber
+                        : viewPosition.ActiveLineNum.RightLineNumber;
+                }
+
+                return viewPosition.CaretPosition.Line;
             }
 
             internal readonly struct TestAccessor

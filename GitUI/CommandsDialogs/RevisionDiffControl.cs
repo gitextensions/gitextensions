@@ -462,12 +462,14 @@ namespace GitUI.CommandsDialogs
 
         private void BlameSelectedFileDiff()
         {
+            int? line = DiffText.Visible ? DiffText.CurrentFileLine : null;
+
             BlameControl.Visible = true;
             DiffText.Visible = false;
             GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
                 ? _revisionGrid.GetActualRevision(_revisionGrid.CurrentCheckout)
                 : DiffFiles.SelectedItem.SecondRevision;
-            BlameControl.LoadBlame(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGrid, controlToMask: null, DiffText.Encoding);
+            BlameControl.LoadBlame(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGrid, controlToMask: null, DiffText.Encoding, line);
         }
 
         private async Task ShowSelectedFileDiffAsync()

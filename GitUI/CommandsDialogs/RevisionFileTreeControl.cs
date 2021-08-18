@@ -372,9 +372,10 @@ See the changes in the commit form.");
                             return ViewGitItemAsync(gitItem);
                         }
 
+                        int? line = FileText.Visible ? FileText.CurrentFileLine : null;
                         BlameControl.Visible = true;
                         FileText.Visible = false;
-                        BlameControl.LoadBlame(_revision, children: null, gitItem.FileName, _revisionGrid, controlToMask: null, FileText.Encoding);
+                        BlameControl.LoadBlame(_revision, children: null, gitItem.FileName, _revisionGrid, controlToMask: null, FileText.Encoding, line);
                         return Task.CompletedTask;
                     }
 
