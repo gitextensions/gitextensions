@@ -46,6 +46,7 @@ namespace GitUI.Blame
         private bool _changingScrollPosition;
         private IRepositoryHostPlugin? _gitHoster;
         private static readonly IList<Color> AgeBucketGradientColors = GetAgeBucketGradientColors();
+        private IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
 
         public BlameControl()
         {
@@ -71,6 +72,8 @@ namespace GitUI.Blame
             BlameFile.EscapePressed += () => EscapePressed?.Invoke();
 
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
+
+            _gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
         }
 
         public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin? gitHoster)
@@ -153,8 +156,26 @@ namespace GitUI.Blame
                 _tooltipCommit = blameCommit;
                 _lastTooltipX = newTooltipX;
                 _lastTooltipY = newTooltipY;
-                blameTooltip.Show(blameCommit.ToString(), this, newTooltipX, newTooltipY);
+                blameTooltip.Show(GetBlameToolTipText(blameCommit, _gitRevisionSummaryBuilder), this, newTooltipX, newTooltipY);
             }
+        }
+
+        private string GetBlameToolTipText(GitBlameCommit blameCommit,
+            IGitRevisionSummaryBuilder summaryBuilder)
+        {
+            GitBlameCommit commitWithTruncatedSummary = new(blameCommit.ObjectId,
+                blameCommit.Author,
+                blameCommit.AuthorMail,
+                blameCommit.AuthorTime,
+                blameCommit.AuthorTimeZone,
+                blameCommit.Committer,
+                blameCommit.CommitterMail,
+                blameCommit.CommitterTime,
+                blameCommit.CommitterTimeZone,
+                summaryBuilder.BuildSummary(blameCommit.Summary),
+                blameCommit.FileName);
+
+            return commitWithTruncatedSummary.ToString();
         }
 
         private void BlameFile_MouseMove(object sender, MouseEventArgs e)
@@ -663,6 +684,8 @@ namespace GitUI.Blame
                 => _control.BuildAuthorLine(line, lineBuilder, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
 
             public (string gutter, string body, List<GitBlameEntry> avatars) BuildBlameContents(string filename) => _control.BuildBlameContents(filename, avatarSize: 10);
+
+            public string GetBlameToolTipText(GitBlameCommit commit, IGitRevisionSummaryBuilder summaryBuilder) => _control.GetBlameToolTipText(commit, summaryBuilder);
 
             public List<GitBlameEntry> CalculateBlameGutterData(IReadOnlyList<GitBlameLine> blameLines)
                 => _control.CalculateBlameGutterData(blameLines);
