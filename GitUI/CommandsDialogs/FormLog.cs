@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions());
+                DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions(), RevisionGrid.CurrentCheckout);
             }
         }
 

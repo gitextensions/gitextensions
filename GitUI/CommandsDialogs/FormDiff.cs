@@ -131,17 +131,19 @@ namespace GitUI.CommandsDialogs
             lblHeadCommit.Text = _headCommitDisplayStr;
 
             Validates.NotNull(_headRevision);
-
+            GitRevision[] revisions;
             if (ckCompareToMergeBase.Checked)
             {
                 Validates.NotNull(_mergeBase);
-                DiffFiles.SetDiffs(new[] { _headRevision, _mergeBase });
+                revisions = new[] { _headRevision, _mergeBase };
             }
             else
             {
                 Validates.NotNull(_baseRevision);
-                DiffFiles.SetDiffs(new[] { _headRevision, _baseRevision });
+                revisions = new[] { _headRevision, _baseRevision };
             }
+
+            DiffFiles.SetDiffs(revisions, _headRevision.ObjectId);
 
             // Bug in git-for-windows: Comparing working directory to any branch, fails, due to -R
             // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
