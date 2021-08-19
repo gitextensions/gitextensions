@@ -493,7 +493,7 @@ namespace GitUI.CommandsDialogs
             var parts = contents.Split(' ');
             foreach (string s in parts)
             {
-                if (Uri.IsWellFormedUriString(s, UriKind.Absolute))
+                if (PathUtil.CanBeGitURL(s))
                 {
                     url = s;
                     break;
