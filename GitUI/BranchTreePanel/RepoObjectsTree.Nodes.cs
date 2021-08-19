@@ -502,6 +502,10 @@ namespace GitUI.BranchTreePanel
             {
             }
 
+            internal virtual void OnRename()
+            {
+            }
+
             public static Node GetNode(TreeNode treeNode)
             {
                 return (Node)treeNode.Tag;
