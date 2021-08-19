@@ -149,8 +149,7 @@ namespace GitUI.CommitInfo
         {
             if (disposing)
             {
-                _asyncLoadCancellation.CancelCurrent();
-                ThreadHelper.JoinPendingOperations(); // those run with FileAndForget
+                _asyncLoadCancellation.Dispose();
 
                 components?.Dispose();
             }
