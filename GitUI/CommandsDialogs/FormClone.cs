@@ -469,12 +469,11 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// Check whether the given string contains one or more valid URLs and extracts
+        /// Check whether the given string contains one or more valid git URLs and extracts
         /// the first URL that exists, if any.
         /// </summary>
         /// <remarks>
-        /// Uri.IsWellFormedUriString is used instead of Uri.TryCreate as file URIs
-        /// of the form X:\\directory\\filename should not be treated as URLs.
+        /// PathUtil.CanBeGitURL is used as a standard way to detect a git URL.
         /// The first URL extracted from <paramref name="contents"/> is assigned to
         /// <paramref name="url"/>. If <paramref name="contents"/> contains more than one URL,
         /// subsequent URLs are not extracted.
@@ -494,7 +493,7 @@ namespace GitUI.CommandsDialogs
             var parts = contents.Split(' ');
             foreach (string s in parts)
             {
-                if (Uri.IsWellFormedUriString(s, UriKind.Absolute))
+                if (PathUtil.CanBeGitURL(s))
                 {
                     url = s;
                     break;

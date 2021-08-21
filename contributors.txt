@@ -154,3 +154,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/02/10, mabako, Marcus Bauer, mabako(at)gmail.com
 2021/03/20, nyankoframe, Damit Senanayake, damit(at)outlook.com
 2021/06/18, jwfx, Jörg Winkler, jwfx at bitmx.net
+2021/08/19, BlythMeister, Chris Blyth, chris(at)blyth.me.uk
