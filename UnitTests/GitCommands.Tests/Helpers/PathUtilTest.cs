@@ -318,6 +318,7 @@ namespace GitCommandsTests.Helpers
         [TestCase("github.com/gitextensions/gitextensions.git", true)]
         [TestCase("HTTPS://MYPRIVATEGITHUB.COM:8080/LOUDREPO.GIT", true)]
         [TestCase("git://myurl/myrepo.git", true)]
+        [TestCase("git@github.com:gitextensions/gitextensions.git", true)]
         [TestCase("github.com/gitextensions", false)]
         [TestCase("github.com/gitextensions/gitextensions/pull/9018", false)]
         [TestCase("http://", false)]
