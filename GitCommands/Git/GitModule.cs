@@ -2344,7 +2344,8 @@ namespace GitCommands
             ExecutionResult result = await _gitExecutable.ExecuteAsync(
                 args,
                 cache: GitCommandCache,
-                outputEncoding: LosslessEncoding);
+                outputEncoding: LosslessEncoding,
+                cancellationToken: cancellationToken);
 
             return result.StandardOutput;
         }
