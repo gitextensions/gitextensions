@@ -574,6 +574,8 @@ namespace GitUI
             {
                 SetShowBranches();
             }
+
+            OnFilterChanged(nameof(IsShowFilteredBranchesChecked));
         }
 
         /// <summary>
@@ -1783,7 +1785,7 @@ namespace GitUI
             });
         }
 
-        internal void ShowCurrentBranchOnly()
+        public void ShowCurrentBranchOnly()
         {
             if (IsShowCurrentBranchOnlyChecked)
             {
@@ -1795,9 +1797,11 @@ namespace GitUI
 
             SetShowBranches();
             ForceRefreshRevisions();
+
+            OnFilterChanged(nameof(IsShowCurrentBranchOnlyChecked));
         }
 
-        internal void ShowAllBranches()
+        public void ShowAllBranches()
         {
             if (IsShowAllBranchesChecked)
             {
@@ -1816,9 +1820,11 @@ namespace GitUI
             {
                 SetShowBranches();
             }
+
+            OnFilterChanged(nameof(IsShowAllBranchesChecked));
         }
 
-        internal void ShowFilteredBranches()
+        public void ShowFilteredBranches()
         {
             if (IsShowFilteredBranchesChecked)
             {
@@ -1830,6 +1836,8 @@ namespace GitUI
 
             SetShowBranches();
             ForceRefreshRevisions();
+
+            OnFilterChanged(nameof(IsShowFilteredBranchesChecked));
         }
 
         private void SetShowBranches()

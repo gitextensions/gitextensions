@@ -29,6 +29,12 @@ namespace GitUI.UserControls.RevisionGrid
         /// <exception cref="InvalidOperationException">Invalid 'diff contains' filter.</exception>
         void SetAndApplyRevisionFilter(RevisionFilter filter);
 
+        void ShowAllBranches();
+
+        void ShowCurrentBranchOnly();
+
+        void ShowFilteredBranches();
+
         void ShowRevisionFilterDialog();
 
         void ToggleShowFirstParent();

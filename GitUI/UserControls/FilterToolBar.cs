@@ -17,6 +17,7 @@ namespace GitUI.UserControls
         private static readonly string[] _noResultsFound = { TranslatedStrings.NoResultsFound };
         private Func<IGitModule>? _getModule;
         private IRevisionGridFilter? _revisionGridFilter;
+        private byte _btnShowBranchesPositionNumber;
         private bool _isApplyingFilter;
         private bool _filterBeingChanged;
         private bool _isUnitTests;
@@ -28,7 +29,9 @@ namespace GitUI.UserControls
             tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
             tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
 
-            tscboBranchFilter.Leave += (s, e) => ApplyBranchFilter(refresh: true);
+            InitBranchSelectionFilter();
+
+            tscboBranchFilter.Leave += (s, e) => ApplyCustomBranchFilter(refresh: true);
 
             tstxtRevisionFilter.Leave += (s, e) => ApplyRevisionFilter();
             tstxtRevisionFilter.KeyUp += (s, e) =>
@@ -60,7 +63,26 @@ namespace GitUI.UserControls
             get => _revisionGridFilter ?? throw new InvalidOperationException($"{nameof(Bind)} is not called.");
         }
 
-        private void ApplyBranchFilter(bool refresh)
+        /// <summary>
+        ///  Applies the preset branch filters, such as "show all", "show current", and "show filtered".
+        /// </summary>
+        private void ApplyPresetBranchesFilter(Action filterAction)
+        {
+            _filterBeingChanged = true;
+
+            // Action the filter
+            filterAction();
+
+            // Update the toolbar button
+            InitBranchSelectionFilter();
+
+            _filterBeingChanged = false;
+        }
+
+        /// <summary>
+        ///  Applies custom branch filters supplied via the filter textbox.
+        /// </summary>
+        private void ApplyCustomBranchFilter(bool refresh)
         {
             if (_isApplyingFilter)
             {
@@ -122,24 +144,6 @@ namespace GitUI.UserControls
             _revisionGridFilter.FilterChanged += revisionGridFilter_FilterChanged;
         }
 
-        private void revisionGridFilter_FilterChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(AppSettings.ShowFirstParent):
-                    {
-                        tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
-                        break;
-                    }
-
-                case nameof(AppSettings.ShowReflogReferences):
-                    {
-                        tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
-                        break;
-                    }
-            }
-        }
-
         public void BindBranches(string[] branches)
         {
             var autoCompleteList = tscboBranchFilter.AutoCompleteCustomSource.Cast<string>();
@@ -179,6 +183,36 @@ namespace GitUI.UserControls
             return module;
         }
 
+        private void InitBranchSelectionFilter()
+        {
+            // Note: it is a weird combination, and it is mimicking the implementations in RevisionGridControl.
+            // Refer to it for more details.
+
+            if (!AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly)
+            {
+                // Show all branches
+                SelectShowBranchesFilterOption(0);
+                return;
+            }
+
+            if (AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly)
+            {
+                // Show current branch only
+                SelectShowBranchesFilterOption(1);
+                return;
+            }
+
+            if (AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly)
+            {
+                // Show filtered branches
+                SelectShowBranchesFilterOption(2);
+                return;
+            }
+
+            // We shouldn't be here... Don't crash the app though, just fallback to showing all branches.
+            SelectShowBranchesFilterOption(0);
+        }
+
         public void InitToolStripStyles(Color toolForeColor, Color toolBackColor)
         {
             tsddbtnRevisionFilter.BackColor = toolBackColor;
@@ -210,6 +244,20 @@ namespace GitUI.UserControls
             tscboBranchFilter.Focus();
         }
 
+        private void SelectShowBranchesFilterOption(byte selectedIndex)
+        {
+            _btnShowBranchesPositionNumber = selectedIndex;
+            if (_btnShowBranchesPositionNumber >= tssbtnShowBranches.DropDownItems.Count)
+            {
+                _btnShowBranchesPositionNumber = 0;
+            }
+
+            var selectedMenuItem = tssbtnShowBranches.DropDownItems[_btnShowBranchesPositionNumber];
+            tssbtnShowBranches.Image = selectedMenuItem.Image;
+            tssbtnShowBranches.Text = selectedMenuItem.Text;
+            tssbtnShowBranches.ToolTipText = selectedMenuItem.ToolTipText;
+        }
+
         /// <summary>
         ///  Sets the branches filter.
         /// </summary>
@@ -218,7 +266,7 @@ namespace GitUI.UserControls
         public void SetBranchFilter(string? filter, bool refresh)
         {
             tscboBranchFilter.Text = filter;
-            ApplyBranchFilter(refresh);
+            ApplyCustomBranchFilter(refresh);
         }
 
         public void SetFocus()
@@ -264,6 +312,38 @@ namespace GitUI.UserControls
             }).FileAndForget();
         }
 
+        private void revisionGridFilter_FilterChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(AppSettings.ShowFirstParent):
+                    {
+                        tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
+                        break;
+                    }
+
+                case nameof(AppSettings.ShowReflogReferences):
+                    {
+                        tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
+                        break;
+                    }
+
+                case nameof(RevisionGridControl.IsShowAllBranchesChecked):
+                case nameof(RevisionGridControl.IsShowCurrentBranchOnlyChecked):
+                case nameof(RevisionGridControl.IsShowFilteredBranchesChecked):
+                    {
+                        if (!_filterBeingChanged)
+                        {
+                            _filterBeingChanged = true;
+                            InitBranchSelectionFilter();
+                            _filterBeingChanged = false;
+                        }
+
+                        break;
+                    }
+            }
+        }
+
         private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
         {
             if (sender is ToolStripSplitButton control)
@@ -302,7 +382,7 @@ namespace GitUI.UserControls
         {
             if (e.KeyCode == Keys.Enter)
             {
-                ApplyBranchFilter(refresh: _filterBeingChanged);
+                ApplyCustomBranchFilter(refresh: _filterBeingChanged);
             }
         }
 
@@ -317,15 +397,29 @@ namespace GitUI.UserControls
             UpdateBranchFilterItems();
         }
 
-        private void tsmiShowFirstParent_Click(object sender, EventArgs e)
+        private void tssbtnShowBranches_Click(object sender, EventArgs e)
         {
-            RevisionGridFilter.ToggleShowFirstParent();
+            if (!tssbtnShowBranches.DropDownButtonPressed)
+            {
+                // Select the next available item in the list.
+                // NB: the method will modify _btnShowBranchesPositionNumber
+                SelectShowBranchesFilterOption((byte)(_btnShowBranchesPositionNumber + 1));
+
+                // Imitate a click on the select item, to action the filter bound to it.
+                var selectedMenuItem = tssbtnShowBranches.DropDownItems[_btnShowBranchesPositionNumber];
+                selectedMenuItem.PerformClick();
+            }
         }
 
-        private void tsmiShowReflogs_Click(object sender, EventArgs e)
-        {
-            RevisionGridFilter.ToggleShowReflogReferences();
-        }
+        private void tsmiShowBranchesAll_Click(object sender, EventArgs e) => ApplyPresetBranchesFilter(RevisionGridFilter.ShowAllBranches);
+
+        private void tsmiShowBranchesCurrent_Click(object sender, EventArgs e) => ApplyPresetBranchesFilter(RevisionGridFilter.ShowCurrentBranchOnly);
+
+        private void tsmiShowBranchesFiltered_Click(object sender, EventArgs e) => ApplyPresetBranchesFilter(RevisionGridFilter.ShowFilteredBranches);
+
+        private void tsmiShowFirstParent_Click(object sender, EventArgs e) => RevisionGridFilter.ToggleShowFirstParent();
+
+        private void tsmiShowReflogs_Click(object sender, EventArgs e) => RevisionGridFilter.ToggleShowReflogReferences();
 
         internal TestAccessor GetTestAccessor()
             => new(this);
@@ -352,6 +446,10 @@ namespace GitUI.UserControls
             public ToolStripTextBox tstxtRevisionFilter => _control.tstxtRevisionFilter;
             public ToolStripLabel tslblRevisionFilter => _control.tslblRevisionFilter;
             public ToolStripButton tsbtnAdvancedFilter => _control.tsbtnAdvancedFilter;
+            public ToolStripSplitButton tssbtnShowBranches => _control.tssbtnShowBranches;
+            public ToolStripMenuItem tsmiShowBranchesAll => _control.tsmiShowBranchesAll;
+            public ToolStripMenuItem tsmiShowBranchesCurrent => _control.tsmiShowBranchesCurrent;
+            public ToolStripMenuItem tsmiShowBranchesFiltered => _control.tsmiShowBranchesFiltered;
             public ToolStripComboBox tscboBranchFilter => _control.tscboBranchFilter;
             public ToolStripDropDownButton tsddbtnBranchFilter => _control.tsddbtnBranchFilter;
             public ToolStripDropDownButton tsddbtnRevisionFilter => _control.tsddbtnRevisionFilter;
@@ -360,7 +458,7 @@ namespace GitUI.UserControls
 
             public IRevisionGridFilter RevisionGridFilter => _control.RevisionGridFilter;
 
-            public void ApplyBranchFilter(bool refresh) => _control.ApplyBranchFilter(refresh);
+            public void ApplyCustomBranchFilter(bool refresh) => _control.ApplyCustomBranchFilter(refresh);
 
             public void ApplyRevisionFilter() => _control.ApplyRevisionFilter();
 
