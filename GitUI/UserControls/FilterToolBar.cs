@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace GitUI.UserControls
         {
             InitializeComponent();
 
+            tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
             tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
 
             tscboBranchFilter.Leave += (s, e) => ApplyBranchFilter(refresh: true);
@@ -56,12 +58,6 @@ namespace GitUI.UserControls
         private IRevisionGridFilter RevisionGridFilter
         {
             get => _revisionGridFilter ?? throw new InvalidOperationException($"{nameof(Bind)} is not called.");
-        }
-
-        public bool ShowFirstParentChecked
-        {
-            get => tsmiShowFirstParent.Checked;
-            set => tsmiShowFirstParent.Checked = value;
         }
 
         private void ApplyBranchFilter(bool refresh)
@@ -122,6 +118,26 @@ namespace GitUI.UserControls
         {
             _getModule = getModule ?? throw new ArgumentNullException(nameof(getModule));
             _revisionGridFilter = revisionGridFilter ?? throw new ArgumentNullException(nameof(revisionGridFilter));
+
+            _revisionGridFilter.FilterChanged += revisionGridFilter_FilterChanged;
+        }
+
+        private void revisionGridFilter_FilterChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(AppSettings.ShowFirstParent):
+                    {
+                        tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
+                        break;
+                    }
+
+                case nameof(AppSettings.ShowReflogReferences):
+                    {
+                        tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
+                        break;
+                    }
+            }
         }
 
         public void BindBranches(string[] branches)
@@ -301,9 +317,14 @@ namespace GitUI.UserControls
             UpdateBranchFilterItems();
         }
 
-        private void tsmiShowFirstParentt_Click(object sender, EventArgs e)
+        private void tsmiShowFirstParent_Click(object sender, EventArgs e)
         {
             RevisionGridFilter.ToggleShowFirstParent();
+        }
+
+        private void tsmiShowReflogs_Click(object sender, EventArgs e)
+        {
+            RevisionGridFilter.ToggleShowReflogReferences();
         }
 
         internal TestAccessor GetTestAccessor()
@@ -327,6 +348,7 @@ namespace GitUI.UserControls
             public ToolStripMenuItem tsmiDiffContainsFilter => _control.tsmiDiffContainsFilter;
             public ToolStripMenuItem tsmiHash => _control.tsmiHash;
             public ToolStripButton tsmiShowFirstParent => _control.tsmiShowFirstParent;
+            public ToolStripButton tsmiShowReflogs => _control.tsmiShowReflogs;
             public ToolStripTextBox tstxtRevisionFilter => _control.tstxtRevisionFilter;
             public ToolStripLabel tslblRevisionFilter => _control.tslblRevisionFilter;
             public ToolStripButton tsbtnAdvancedFilter => _control.tsbtnAdvancedFilter;

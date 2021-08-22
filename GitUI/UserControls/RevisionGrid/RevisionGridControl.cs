@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -61,7 +62,7 @@ namespace GitUI
     public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRunScript, IRevisionGridFilter
     {
         public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
-        public event EventHandler<EventArgs>? ShowFirstParentsToggled;
+        public event PropertyChangedEventHandler? FilterChanged;
         public event EventHandler? RevisionGraphLoaded;
         public event EventHandler? SelectionChanged;
 
@@ -641,6 +642,11 @@ namespace GitUI
         {
             base.OnCreateControl();
             ShowLoading();
+        }
+
+        private void OnFilterChanged([CallerMemberName] string propertyName = "")
+        {
+            FilterChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public new void Load()
@@ -2227,10 +2233,11 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        internal void ToggleShowReflogReferences()
+        public void ToggleShowReflogReferences()
         {
             AppSettings.ShowReflogReferences = !AppSettings.ShowReflogReferences;
             ForceRefreshRevisions();
+            OnFilterChanged(nameof(AppSettings.ShowReflogReferences));
         }
 
         internal void ToggleShowSuperprojectTags()
@@ -2404,10 +2411,8 @@ namespace GitUI
         public void ToggleShowFirstParent()
         {
             AppSettings.ShowFirstParent = !AppSettings.ShowFirstParent;
-
-            ShowFirstParentsToggled?.Invoke(this, EventArgs.Empty);
-
             ForceRefreshRevisions();
+            OnFilterChanged(nameof(AppSettings.ShowFirstParent));
         }
 
         internal void ToggleBetweenArtificialAndHeadCommits()

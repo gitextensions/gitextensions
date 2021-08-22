@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Threading;
 using FluentAssertions;
 using GitCommands;
@@ -18,6 +19,7 @@ namespace GitUITests.UserControls
     public class FilterToolBarTests
     {
         private bool _originalShowFirstParent;
+        private bool _originalShowReflogReferences;
         private FilterToolBar _filterToolBar;
         private IGitModule _gitModule;
         private IRevisionGridFilter _revisionGridFilter;
@@ -26,7 +28,9 @@ namespace GitUITests.UserControls
         public void Setup()
         {
             _originalShowFirstParent = AppSettings.ShowFirstParent;
+            _originalShowReflogReferences = AppSettings.ShowReflogReferences;
             AppSettings.ShowFirstParent = false;
+            AppSettings.ShowReflogReferences = false;
 
             _gitModule = Substitute.For<IGitModule>();
             _revisionGridFilter = Substitute.For<IRevisionGridFilter>();
@@ -40,6 +44,7 @@ namespace GitUITests.UserControls
         public void TearDown()
         {
             AppSettings.ShowFirstParent = _originalShowFirstParent;
+            AppSettings.ShowReflogReferences = _originalShowReflogReferences;
         }
 
         [Test]
@@ -54,48 +59,6 @@ namespace GitUITests.UserControls
         {
             ((Action)(() => _ = new FilterToolBar().GetTestAccessor().GetModule()))
                 .Should().Throw<InvalidOperationException>();
-        }
-
-        [Test]
-        public void ShowFirstParentChecked_should_behave_expected()
-        {
-            _filterToolBar.ShowFirstParentChecked.Should().Be(false);
-            _filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(false);
-
-            _filterToolBar.ShowFirstParentChecked = true;
-            _filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(true);
-        }
-
-        [Test]
-        public void ShowFirstParentChecked_should_reflect_button_state()
-        {
-            _filterToolBar.ShowFirstParentChecked.Should().Be(false);
-            _filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(false);
-
-            _filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked = true;
-            _filterToolBar.ShowFirstParentChecked.Should().Be(true);
-
-            _filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked = false;
-            _filterToolBar.ShowFirstParentChecked.Should().Be(false);
-        }
-
-        [TestCase(false)]
-        [TestCase(true)]
-        public void ShowFirstParentChecked_should_be_bound_from_AppSettings(bool settingValue)
-        {
-            bool original = AppSettings.ShowFirstParent;
-            try
-            {
-                AppSettings.ShowFirstParent = settingValue;
-
-                FilterToolBar filterToolBar = new();
-                filterToolBar.ShowFirstParentChecked.Should().Be(settingValue);
-                filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(settingValue);
-            }
-            finally
-            {
-                AppSettings.ShowFirstParent = original;
-            }
         }
 
         [TestCase(false)]
@@ -215,6 +178,92 @@ namespace GitUITests.UserControls
             receivedRevisionFilter.FilterByCommitter.Should().Be(byCommitter);
             receivedRevisionFilter.FilterByDiffContent.Should().Be(byDiffContains);
             return true;
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ShowFirstParent_should_be_bound_from_AppSettings(bool settingValue)
+        {
+            bool original = AppSettings.ShowFirstParent;
+            try
+            {
+                AppSettings.ShowFirstParent = settingValue;
+
+                FilterToolBar filterToolBar = new();
+                filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(settingValue);
+            }
+            finally
+            {
+                AppSettings.ShowFirstParent = original;
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ShowFirstParent_should_be_bound_via_FilterChanged(bool settingValue)
+        {
+            bool original = AppSettings.ShowFirstParent;
+            try
+            {
+                AppSettings.ShowFirstParent = settingValue;
+
+                _revisionGridFilter.FilterChanged += Raise.Event<PropertyChangedEventHandler>(_revisionGridFilter, new PropertyChangedEventArgs(nameof(AppSettings.ShowFirstParent)));
+                _filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(settingValue);
+            }
+            finally
+            {
+                AppSettings.ShowFirstParent = original;
+            }
+        }
+
+        [Test]
+        public void ShowFirstParent_should_invoke_ToggleShowFirstParent()
+        {
+            _filterToolBar.GetTestAccessor().tsmiShowFirstParent.PerformClick();
+            _revisionGridFilter.Received(1).ToggleShowFirstParent();
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ShowReflogs_should_be_bound_from_AppSettings(bool settingValue)
+        {
+            bool original = AppSettings.ShowReflogReferences;
+            try
+            {
+                AppSettings.ShowReflogReferences = settingValue;
+
+                FilterToolBar filterToolBar = new();
+                filterToolBar.GetTestAccessor().tsmiShowReflogs.Checked.Should().Be(settingValue);
+            }
+            finally
+            {
+                AppSettings.ShowReflogReferences = original;
+            }
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ShowReflogs_should_be_bound_via_FilterChanged(bool settingValue)
+        {
+            bool original = AppSettings.ShowReflogReferences;
+            try
+            {
+                AppSettings.ShowReflogReferences = settingValue;
+
+                _revisionGridFilter.FilterChanged += Raise.Event<PropertyChangedEventHandler>(_revisionGridFilter, new PropertyChangedEventArgs(nameof(AppSettings.ShowReflogReferences)));
+                _filterToolBar.GetTestAccessor().tsmiShowReflogs.Checked.Should().Be(settingValue);
+            }
+            finally
+            {
+                AppSettings.ShowReflogReferences = original;
+            }
+        }
+
+        [Test]
+        public void ShowReflogs_should_invoke_ToggleShowReflogReferences()
+        {
+            _filterToolBar.GetTestAccessor().tsmiShowReflogs.PerformClick();
+            _revisionGridFilter.Received(1).ToggleShowReflogReferences();
         }
     }
 }

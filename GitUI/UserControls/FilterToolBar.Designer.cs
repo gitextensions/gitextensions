@@ -28,6 +28,7 @@ namespace GitUI.UserControls
             this.tslblRevisionFilter = new System.Windows.Forms.ToolStripLabel();
             this.tstxtRevisionFilter = new System.Windows.Forms.ToolStripTextBox();
             this.tsddbtnRevisionFilter = new System.Windows.Forms.ToolStripDropDownButton();
+            this.tsmiShowReflogs = new System.Windows.Forms.ToolStripButton();
             this.tsmiShowFirstParent = new System.Windows.Forms.ToolStripButton();
             this.SuspendLayout();
             // 
@@ -78,6 +79,16 @@ namespace GitUI.UserControls
             this.tsbtnAdvancedFilter.Size = new System.Drawing.Size(23, 22);
             this.tsbtnAdvancedFilter.ToolTipText = "Advanced filter";
             this.tsbtnAdvancedFilter.Click += new System.EventHandler(this.tsbtnAdvancedFilter_Click);
+            // 
+            // tsmiShowReflogs
+            // 
+            this.tsmiShowReflogs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
+            this.tsmiShowReflogs.Image = global::GitUI.Properties.Images.Book;
+            this.tsmiShowReflogs.Name = "tsmiShowReflogs";
+            this.tsmiShowReflogs.Size = new System.Drawing.Size(23, 22);
+            this.tsmiShowReflogs.Text = "Reflogs";
+            this.tsmiShowReflogs.ToolTipText = "Show reflogs";
+            this.tsmiShowReflogs.Click += new System.EventHandler(this.tsmiShowReflogs_Click);
             // 
             // tscboBranchFilter
             // 
@@ -171,7 +182,7 @@ namespace GitUI.UserControls
             this.tsmiShowFirstParent.Name = "tsmiShowFirstParent";
             this.tsmiShowFirstParent.Size = new System.Drawing.Size(23, 20);
             this.tsmiShowFirstParent.ToolTipText = "Show first parents";
-            this.tsmiShowFirstParent.Click += new System.EventHandler(this.tsmiShowFirstParentt_Click);
+            this.tsmiShowFirstParent.Click += new System.EventHandler(this.tsmiShowFirstParent_Click);
             // 
             // FilterToolBar
             // 
@@ -181,6 +192,7 @@ namespace GitUI.UserControls
             this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbtnAdvancedFilter,
+            this.tsmiShowReflogs,
             this.toolStripLabel1,
             this.tscboBranchFilter,
             this.tsddbtnBranchFilter,
@@ -210,6 +222,7 @@ namespace GitUI.UserControls
         private ToolStripMenuItem tsmiAuthorFilter;
         private ToolStripMenuItem tsmiDiffContainsFilter;
         private ToolStripMenuItem tsmiHash;
+        private ToolStripButton tsmiShowReflogs;
         private ToolStripButton tsmiShowFirstParent;
         private ToolStripTextBox tstxtRevisionFilter;
         private ToolStripLabel tslblRevisionFilter;

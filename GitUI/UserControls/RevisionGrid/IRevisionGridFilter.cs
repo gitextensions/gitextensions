@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -7,6 +8,11 @@ namespace GitUI.UserControls.RevisionGrid
     /// </summary>
     public interface IRevisionGridFilter
     {
+        /// <summary>
+        ///  Occurs whenever filter changes.
+        /// </summary>
+        event PropertyChangedEventHandler? FilterChanged;
+
         /// <summary>
         ///  Applies a branch filter.
         /// </summary>
@@ -26,5 +32,7 @@ namespace GitUI.UserControls.RevisionGrid
         void ShowRevisionFilterDialog();
 
         void ToggleShowFirstParent();
+
+        void ToggleShowReflogReferences();
     }
 }

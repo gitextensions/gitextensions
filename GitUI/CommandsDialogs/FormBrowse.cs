@@ -225,7 +225,6 @@ namespace GitUI.CommandsDialogs
                     ToolStripFilters.SetBranchFilter(string.Empty, refresh: false);
                 }
             };
-            RevisionGrid.ShowFirstParentsToggled += (sender, e) => ToolStripFilters.ShowFirstParentChecked = AppSettings.ShowFirstParent;
             RevisionGrid.SelectionChanged += (sender, e) =>
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
