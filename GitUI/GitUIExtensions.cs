@@ -73,12 +73,13 @@ namespace GitUI
 
                 await fileViewer.ViewTextAsync("range-diff.sh", $"git range-diff {range}");
 
-                string output = fileViewer.Module.GetRangeDiff(
+                string output = await fileViewer.Module.GetRangeDiffAsync(
                         firstId,
                         item.SecondRevision.ObjectId,
                         item.BaseA,
                         item.BaseB,
-                        fileViewer.GetExtraDiffArguments(isRangeDiff: true));
+                        fileViewer.GetExtraDiffArguments(isRangeDiff: true),
+                        cancellationToken);
 
                 // Try set highlighting from first found filename
                 Match match = new Regex(@"\n\s*(@@|##)\s+(?<file>[^#:\n]+)").Match(output ?? "");

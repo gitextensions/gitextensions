@@ -9,6 +9,7 @@ using System.Net.Mail;
 using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -2314,12 +2315,13 @@ namespace GitCommands
             return GetPatch(patches, fileName, oldFileName);
         }
 
-        public string GetRangeDiff(
+        public async Task<string> GetRangeDiffAsync(
             ObjectId firstId,
             ObjectId secondId,
             ObjectId? firstBase,
             ObjectId? secondBase,
-            string extraDiffArguments)
+            string extraDiffArguments,
+            CancellationToken cancellationToken)
         {
             if (firstId.IsArtificial
                 || secondId.IsArtificial
@@ -2339,12 +2341,12 @@ namespace GitCommands
                 { firstBase is null || secondBase is null,  $"{firstId}...{secondId}", $"{firstBase}..{firstId} {secondBase}..{secondId}" }
             };
 
-            var patch = _gitExecutable.GetOutput(
+            ExecutionResult result = await _gitExecutable.ExecuteAsync(
                 args,
                 cache: GitCommandCache,
                 outputEncoding: LosslessEncoding);
 
-            return patch;
+            return result.StandardOutput;
         }
 
         private static Patch? GetPatch(IReadOnlyList<Patch> patches, string? fileName, string? oldFileName)
