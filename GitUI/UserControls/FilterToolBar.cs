@@ -17,7 +17,6 @@ namespace GitUI.UserControls
         private static readonly string[] _noResultsFound = { TranslatedStrings.NoResultsFound };
         private Func<IGitModule>? _getModule;
         private IRevisionGridFilter? _revisionGridFilter;
-        private byte _btnShowBranchesPositionNumber;
         private bool _isApplyingFilter;
         private bool _filterBeingChanged;
         private bool _isUnitTests;
@@ -246,13 +245,12 @@ namespace GitUI.UserControls
 
         private void SelectShowBranchesFilterOption(byte selectedIndex)
         {
-            _btnShowBranchesPositionNumber = selectedIndex;
-            if (_btnShowBranchesPositionNumber >= tssbtnShowBranches.DropDownItems.Count)
+            if (selectedIndex >= tssbtnShowBranches.DropDownItems.Count)
             {
-                _btnShowBranchesPositionNumber = 0;
+                selectedIndex = 0;
             }
 
-            var selectedMenuItem = tssbtnShowBranches.DropDownItems[_btnShowBranchesPositionNumber];
+            var selectedMenuItem = tssbtnShowBranches.DropDownItems[selectedIndex];
             tssbtnShowBranches.Image = selectedMenuItem.Image;
             tssbtnShowBranches.Text = selectedMenuItem.Text;
             tssbtnShowBranches.ToolTipText = selectedMenuItem.ToolTipText;
@@ -395,20 +393,6 @@ namespace GitUI.UserControls
         {
             _filterBeingChanged = true;
             UpdateBranchFilterItems();
-        }
-
-        private void tssbtnShowBranches_Click(object sender, EventArgs e)
-        {
-            if (!tssbtnShowBranches.DropDownButtonPressed)
-            {
-                // Select the next available item in the list.
-                // NB: the method will modify _btnShowBranchesPositionNumber
-                SelectShowBranchesFilterOption((byte)(_btnShowBranchesPositionNumber + 1));
-
-                // Imitate a click on the select item, to action the filter bound to it.
-                var selectedMenuItem = tssbtnShowBranches.DropDownItems[_btnShowBranchesPositionNumber];
-                selectedMenuItem.PerformClick();
-            }
         }
 
         private void tsmiShowBranchesAll_Click(object sender, EventArgs e) => ApplyPresetBranchesFilter(RevisionGridFilter.ShowAllBranches);
