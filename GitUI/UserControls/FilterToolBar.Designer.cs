@@ -240,18 +240,16 @@ namespace GitUI.UserControls
             this.tscboBranchFilter,
             this.tsddbtnBranchFilter,
             this.tsmiShowReflogs,
+            this.tsmiShowFirstParent,
             this.toolStripSeparator19,
             this.tslblRevisionFilter,
             this.tstxtRevisionFilter,
-            this.tsddbtnRevisionFilter,
-            this.tsmiShowFirstParent});
+            this.tsddbtnRevisionFilter});
             this.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.Location = new System.Drawing.Point(584, 0);
             this.Name = "ToolStripFilters";
             this.Padding = new System.Windows.Forms.Padding(0);
             this.Size = new System.Drawing.Size(339, 25);
-            this.TabIndex = 1;
-            this.Text = "Filters";
             this.ResumeLayout(false);
 
         }

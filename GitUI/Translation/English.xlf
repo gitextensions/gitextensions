@@ -3206,12 +3206,52 @@ Do you want to continue?</source>
         <source>Clear List</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiShowBranchesAll.Text">
+        <source>All branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowBranchesAll.ToolTipText">
+        <source>Show all branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowBranchesCurrent.Text">
+        <source>Current branch only</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowBranchesCurrent.ToolTipText">
+        <source>Show current branch only</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowBranchesFiltered.Text">
+        <source>Filtered branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowBranchesFiltered.ToolTipText">
+        <source>Show filtered branches</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiShowFirstParent.ToolTipText">
         <source>Show first parents</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiShowReflogs.Text">
+        <source>Reflogs</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowReflogs.ToolTipText">
+        <source>Show reflogs</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
         <source>Yes, I allow telemetry</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tssbtnShowBranches.Text">
+        <source>All branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tssbtnShowBranches.ToolTipText">
+        <source>Show all branches</source>
         <target />
       </trans-unit>
       <trans-unit id="undoLastCommitToolStripMenuItem.Text">
@@ -4769,10 +4809,6 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="ShowFullHistory.ToolTipText">
         <source>Show Full History</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="ToolStripFilters.Text">
-        <source>Filters</source>
         <target />
       </trans-unit>
       <trans-unit id="ViewTab.Text">

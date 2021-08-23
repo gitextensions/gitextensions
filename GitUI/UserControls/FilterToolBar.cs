@@ -140,6 +140,7 @@ namespace GitUI.UserControls
             _getModule = getModule ?? throw new ArgumentNullException(nameof(getModule));
             _revisionGridFilter = revisionGridFilter ?? throw new ArgumentNullException(nameof(revisionGridFilter));
 
+            InitBranchSelectionFilter();
             _revisionGridFilter.FilterChanged += revisionGridFilter_FilterChanged;
         }
 

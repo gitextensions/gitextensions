@@ -197,15 +197,6 @@ namespace GitUI.CommandsDialogs
                 RegisterPlugins();
             }).FileAndForget();
 
-            ToolStripFilters.Bind(() => Module, RevisionGrid);
-            ToolStripFilters.SetRevisionFilter(filter);
-
-            _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
-
-            repoObjectsTree.Initialize(_aheadBehindDataProvider, branchFilterAction: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
-            revisionDiff.Bind(RevisionGrid, fileTree, () => RequestRefresh());
-            fileTree.Bind(() => RequestRefresh());
-
             _appTitleGenerator = ManagedExtensibility.GetExport<IAppTitleGenerator>().Value;
             _windowsJumpListManager = ManagedExtensibility.GetExport<IWindowsJumpListManager>().Value;
 
@@ -321,6 +312,16 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.FirstId = firstId;
 
             InitializeComplete();
+
+            ToolStripFilters.Bind(() => Module, RevisionGrid);
+            ToolStripFilters.SetRevisionFilter(filter);
+
+            _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
+
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, branchFilterAction: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
+            revisionDiff.Bind(RevisionGrid, fileTree, () => RequestRefresh());
+            fileTree.Bind(() => RequestRefresh());
+
             UpdateCommitButtonAndGetBrush(null, AppSettings.ShowGitStatusInBrowseToolbar);
             RestorePosition();
 

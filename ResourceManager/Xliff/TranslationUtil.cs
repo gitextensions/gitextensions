@@ -183,6 +183,16 @@ namespace ResourceManager.Xliff
         {
             foreach (var (itemName, itemObj) in items)
             {
+                // If a user control is being translated through its host control (e.g. FilterToolBar is hosted on FormBrowse,
+                // and its translations are recorded under 'FormBrowse' node) then the host's "$this.Text" will be applied to
+                // the user control's "Text" property as well.
+                // Which is obviously incorrect, so skip any "$this" for types other than the host's type.
+                if (itemName == "$this" && itemObj.GetType().Name != category)
+                {
+                    Debug.WriteLine($"TRANSLATION: [{category}]: Skip '$this' for {itemObj.GetType().Name}");
+                    continue;
+                }
+
                 foreach (var propertyInfo in GetItemPropertiesEnumerator(itemName, itemObj))
                 {
                     var property = propertyInfo; // copy for lambda
