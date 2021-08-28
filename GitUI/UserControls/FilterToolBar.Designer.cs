@@ -94,6 +94,7 @@ namespace GitUI.UserControls
             this.tssbtnShowBranches.Image = global::GitUI.Properties.Images.BranchLocal;
             this.tssbtnShowBranches.Name = "tssbtnShowBranches";
             this.tssbtnShowBranches.Size = new System.Drawing.Size(32, 22);
+            this.tssbtnShowBranches.Click += new System.EventHandler(this.tssbtnShowBranches_Click);
             // 
             // commitInfoBelowMenuItem
             // 

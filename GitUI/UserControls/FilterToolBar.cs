@@ -405,6 +405,8 @@ namespace GitUI.UserControls
 
         private void tsmiShowReflogs_Click(object sender, EventArgs e) => RevisionGridFilter.ToggleShowReflogReferences();
 
+        private void tssbtnShowBranches_Click(object sender, EventArgs e) => tssbtnShowBranches.ShowDropDown();
+
         internal TestAccessor GetTestAccessor()
             => new(this);
 
