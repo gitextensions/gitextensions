@@ -324,6 +324,15 @@ namespace GitUI.UserControls
                 case nameof(AppSettings.ShowReflogReferences):
                     {
                         tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
+
+                        // If reflogs are shown, then we may need to refresh the preset filter dropdown selection
+                        if (!_filterBeingChanged)
+                        {
+                            _filterBeingChanged = true;
+                            InitBranchSelectionFilter();
+                            _filterBeingChanged = false;
+                        }
+
                         break;
                     }
 

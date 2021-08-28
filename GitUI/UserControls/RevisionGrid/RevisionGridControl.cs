@@ -1001,6 +1001,10 @@ namespace GitUI
                 if (AppSettings.ShowReflogReferences)
                 {
                     refFilterOptions |= RefFilterOptions.Reflogs;
+
+                    // If reflogs are shown, then we can't apply any filters
+                    AppSettings.BranchFilterEnabled = false;
+                    AppSettings.ShowCurrentBranchOnly = false;
                 }
 
                 RefFilterOptions = refFilterOptions;
