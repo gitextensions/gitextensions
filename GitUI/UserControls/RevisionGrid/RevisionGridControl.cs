@@ -62,7 +62,7 @@ namespace GitUI
     public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRunScript, IRevisionGridFilter
     {
         public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
-        public event PropertyChangedEventHandler? FilterChanged;
+        public event EventHandler? FilterChanged;
         public event EventHandler? RevisionGraphLoaded;
         public event EventHandler? SelectionChanged;
 
@@ -575,7 +575,7 @@ namespace GitUI
                 SetShowBranches();
             }
 
-            OnFilterChanged(nameof(IsShowFilteredBranchesChecked));
+            OnFilterChanged();
         }
 
         /// <summary>
@@ -646,9 +646,9 @@ namespace GitUI
             ShowLoading();
         }
 
-        private void OnFilterChanged([CallerMemberName] string propertyName = "")
+        private void OnFilterChanged()
         {
-            FilterChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            FilterChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public new void Load()
@@ -1001,10 +1001,6 @@ namespace GitUI
                 if (AppSettings.ShowReflogReferences)
                 {
                     refFilterOptions |= RefFilterOptions.Reflogs;
-
-                    // If reflogs are shown, then we can't apply any filters
-                    AppSettings.BranchFilterEnabled = false;
-                    AppSettings.ShowCurrentBranchOnly = false;
                 }
 
                 RefFilterOptions = refFilterOptions;
@@ -1798,11 +1794,12 @@ namespace GitUI
 
             AppSettings.BranchFilterEnabled = true;
             AppSettings.ShowCurrentBranchOnly = true;
+            AppSettings.ShowReflogReferences = false;
 
             SetShowBranches();
             ForceRefreshRevisions();
 
-            OnFilterChanged(nameof(IsShowCurrentBranchOnlyChecked));
+            OnFilterChanged();
         }
 
         public void ShowAllBranches()
@@ -1825,7 +1822,7 @@ namespace GitUI
                 SetShowBranches();
             }
 
-            OnFilterChanged(nameof(IsShowAllBranchesChecked));
+            OnFilterChanged();
         }
 
         public void ShowFilteredBranches()
@@ -1837,11 +1834,12 @@ namespace GitUI
 
             AppSettings.BranchFilterEnabled = true;
             AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.ShowReflogReferences = false;
 
             SetShowBranches();
             ForceRefreshRevisions();
 
-            OnFilterChanged(nameof(IsShowFilteredBranchesChecked));
+            OnFilterChanged();
         }
 
         private void SetShowBranches()
@@ -2248,8 +2246,15 @@ namespace GitUI
         public void ToggleShowReflogReferences()
         {
             AppSettings.ShowReflogReferences = !AppSettings.ShowReflogReferences;
+            if (AppSettings.ShowReflogReferences)
+            {
+                // If reflogs are shown, then we can't apply any filters
+                AppSettings.BranchFilterEnabled = false;
+                AppSettings.ShowCurrentBranchOnly = false;
+            }
+
             ForceRefreshRevisions();
-            OnFilterChanged(nameof(AppSettings.ShowReflogReferences));
+            OnFilterChanged();
         }
 
         internal void ToggleShowSuperprojectTags()
@@ -2424,7 +2429,7 @@ namespace GitUI
         {
             AppSettings.ShowFirstParent = !AppSettings.ShowFirstParent;
             ForceRefreshRevisions();
-            OnFilterChanged(nameof(AppSettings.ShowFirstParent));
+            OnFilterChanged();
         }
 
         internal void ToggleBetweenArtificialAndHeadCommits()

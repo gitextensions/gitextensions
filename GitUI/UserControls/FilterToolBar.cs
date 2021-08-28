@@ -311,45 +311,11 @@ namespace GitUI.UserControls
             }).FileAndForget();
         }
 
-        private void revisionGridFilter_FilterChanged(object? sender, PropertyChangedEventArgs e)
+        private void revisionGridFilter_FilterChanged(object? sender, EventArgs e)
         {
-            switch (e.PropertyName)
-            {
-                case nameof(AppSettings.ShowFirstParent):
-                    {
-                        tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
-                        break;
-                    }
-
-                case nameof(AppSettings.ShowReflogReferences):
-                    {
-                        tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
-
-                        // If reflogs are shown, then we may need to refresh the preset filter dropdown selection
-                        if (!_filterBeingChanged)
-                        {
-                            _filterBeingChanged = true;
-                            InitBranchSelectionFilter();
-                            _filterBeingChanged = false;
-                        }
-
-                        break;
-                    }
-
-                case nameof(RevisionGridControl.IsShowAllBranchesChecked):
-                case nameof(RevisionGridControl.IsShowCurrentBranchOnlyChecked):
-                case nameof(RevisionGridControl.IsShowFilteredBranchesChecked):
-                    {
-                        if (!_filterBeingChanged)
-                        {
-                            _filterBeingChanged = true;
-                            InitBranchSelectionFilter();
-                            _filterBeingChanged = false;
-                        }
-
-                        break;
-                    }
-            }
+            tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
+            tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
+            InitBranchSelectionFilter();
         }
 
         private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)

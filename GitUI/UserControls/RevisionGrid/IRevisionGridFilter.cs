@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// <summary>
         ///  Occurs whenever filter changes.
         /// </summary>
-        event PropertyChangedEventHandler? FilterChanged;
+        event EventHandler? FilterChanged;
 
         /// <summary>
         ///  Applies a branch filter.

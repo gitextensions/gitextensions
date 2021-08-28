@@ -207,7 +207,7 @@ namespace GitUITests.UserControls
             {
                 AppSettings.ShowFirstParent = settingValue;
 
-                _revisionGridFilter.FilterChanged += Raise.Event<PropertyChangedEventHandler>(_revisionGridFilter, new PropertyChangedEventArgs(nameof(AppSettings.ShowFirstParent)));
+                _revisionGridFilter.FilterChanged += Raise.Event<EventHandler>(_revisionGridFilter, EventArgs.Empty);
                 _filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(settingValue);
             }
             finally
@@ -250,7 +250,7 @@ namespace GitUITests.UserControls
             {
                 AppSettings.ShowReflogReferences = settingValue;
 
-                _revisionGridFilter.FilterChanged += Raise.Event<PropertyChangedEventHandler>(_revisionGridFilter, new PropertyChangedEventArgs(nameof(AppSettings.ShowReflogReferences)));
+                _revisionGridFilter.FilterChanged += Raise.Event<EventHandler>(_revisionGridFilter, EventArgs.Empty);
                 _filterToolBar.GetTestAccessor().tsmiShowReflogs.Checked.Should().Be(settingValue);
             }
             finally
