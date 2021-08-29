@@ -1,6 +1,7 @@
 using System;
 using GitCommands;
 using SmartFormat;
+using SmartFormat.Core.Settings;
 
 namespace ResourceManager
 {
@@ -50,6 +51,10 @@ Yes, I allow telemetry!");
         // public only because of FormTranslate
         public TranslatedStrings()
         {
+            // Our original implementations were create against SmartFormat.NET pre-dating v2.0.0.
+            // In v2.5.0 the default error action was changed to ThrowError. See https://github.com/axuno/SmartFormat/issues/192.
+            Smart.Default.Settings.FormatErrorAction = ErrorAction.Ignore;
+
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
