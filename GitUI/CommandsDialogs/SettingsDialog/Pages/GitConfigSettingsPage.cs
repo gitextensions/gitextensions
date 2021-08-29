@@ -6,6 +6,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
 
@@ -93,10 +94,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             txtDiffToolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(diffTool, DiffMergeToolType.Diff);
             txtDiffToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(diffTool, DiffMergeToolType.Diff);
 
-            globalAutoCrlfFalse.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.@false;
-            globalAutoCrlfInput.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.input;
-            globalAutoCrlfTrue.Checked = CurrentSettings.core.autocrlf.Value == AutoCRLFType.@true;
-            globalAutoCrlfNotSet.Checked = !CurrentSettings.core.autocrlf.Value.HasValue;
+            AutoCRLFType? autocrlf = CurrentSettings.ByPath("core")
+                .GetNullableEnum<AutoCRLFType>("autocrlf");
+
+            globalAutoCrlfFalse.Checked = autocrlf is AutoCRLFType.@false;
+            globalAutoCrlfInput.Checked = autocrlf is AutoCRLFType.input;
+            globalAutoCrlfTrue.Checked = autocrlf is AutoCRLFType.@true;
+            globalAutoCrlfNotSet.Checked = autocrlf is null;
         }
 
         /// <summary>
@@ -143,24 +147,26 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 _diffMergeToolConfigurationManager.UnsetCurrentTool(DiffMergeToolType.Merge);
             }
 
+            ISettingsSource coreSectionSettingsSource = CurrentSettings.ByPath("core");
+
             if (globalAutoCrlfFalse.Checked)
             {
-                CurrentSettings.core.autocrlf.Value = AutoCRLFType.@false;
+                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.@false);
             }
 
             if (globalAutoCrlfInput.Checked)
             {
-                CurrentSettings.core.autocrlf.Value = AutoCRLFType.input;
+                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.input);
             }
 
             if (globalAutoCrlfTrue.Checked)
             {
-                CurrentSettings.core.autocrlf.Value = AutoCRLFType.@true;
+                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.@true);
             }
 
             if (globalAutoCrlfNotSet.Checked)
             {
-                CurrentSettings.core.autocrlf.Value = null;
+                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", null);
             }
         }
 

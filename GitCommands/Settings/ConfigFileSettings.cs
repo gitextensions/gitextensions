@@ -14,7 +14,6 @@ namespace GitCommands.Settings
             SettingLevel settingLevel)
             : base(lowerPriority, settingsCache)
         {
-            core = new CorePath(this);
             SettingLevel = settingLevel;
         }
 
@@ -70,8 +69,6 @@ namespace GitCommands.Settings
             return new ConfigFileSettings(null,
                 ConfigFileSettingsCache.Create(configPath, false, allowCache), SettingLevel.SystemWide);
         }
-
-        public readonly CorePath core;
 
         public string GetValue(string setting)
         {
@@ -170,17 +167,6 @@ namespace GitCommands.Settings
         private void SetEncoding(string settingName, Encoding? encoding)
         {
             SetValue(settingName, encoding?.WebName);
-        }
-    }
-
-    public class CorePath : SettingsPath
-    {
-        public readonly ISetting<AutoCRLFType?> autocrlf;
-
-        public CorePath(ConfigFileSettings container)
-            : base(container, "core")
-        {
-            autocrlf = Setting.Create<AutoCRLFType>(this, nameof(autocrlf));
         }
     }
 }
