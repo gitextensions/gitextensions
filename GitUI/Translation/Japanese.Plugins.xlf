@@ -1222,7 +1222,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target>[prefix]/</target>
         
@@ -1300,7 +1300,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>無視するディレクトリ (EndsWith)</target>
+        <target>無視するディレクトリ (後方一致)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
@@ -1569,7 +1569,7 @@ Do you want to reset the configured path?</source>
         <target>プロキシが設定されていません。プラグインの設定で、プロキシのホスト名を設定してください。</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target>プロキシスイッチャ</target>
         

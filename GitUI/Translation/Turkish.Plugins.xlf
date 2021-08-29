@@ -1,442 +1,442 @@
 <?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>Zobrazit výsledky testů v souhrnu stavů sestavení pro každý výsledek sestavení (síťově náročné!)</target>
+        <target>Her derleme sonucu için derleme durumunun özetinde test sonuçlarını görüntüle (ağ yoğun!)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Auto compile SubModules</source>
-        <target>Automaticky přeložit podmoduly</target>
+        <target>Alt modüllerin otomatik olarak derlenmesi</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>Chcete sestavit {0}?
+        <target>{0} derlemek istiyor musun?
 
 {1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Prosím zadejte správnou cestu k programu MSBuild v nastavení zásuvného modulu a zkuste to znovu.</target>
+        <target>Eklenti Ayarları iletişim kutusuna doğru MSBuild yolunu girin ve tekrar deneyin.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>parametry msbuild.exe</target>
+        <target>msbuild.exe bağımsız değişkenleri</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>Povoleno</target>
+        <target>Etkin</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>Cesta k msbuild.exe</target>
+        <target>msbuild.exe dosyasının yolu</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Periodic background fetch</source>
-        <target>Pravidelné přenášení na pozadí</target>
+        <target>Periyodik arka plan getirmesi</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>Obnovit náhled po přenesení</target>
+        <target>Getirdikten sonra görünümü yenile</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>Přenést všechny podmoduly</target>
+        <target>Tüm alt modülleri getir</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>Prenášet každych ... sekund (0 = vypnuto)</target>
+        <target>Her şeyi getir (saniye) - devre dışı bırakmak için 0 yap</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
-        <target>Parametry pro spuštění příkazu git</target>
+        <target>Çalıştırılacak git komutunun bağımsız değişkenleri</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
-        <target>Zadejte základní adresu URL pro Bitbucket</target>
+        <target>Bitbucket için temel URL'yi belirtin</target>
         
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
         <source>Disable SSL verification</source>
-        <target>Vypnout SSL ověření</target>
+        <target>SSL doğrulamasını devre dışı bırak</target>
         
       </trans-unit>
       <trans-unit id="BitbucketPassword.Caption">
         <source>Bitbucket Password</source>
-        <target>Heslo k Bitbucket</target>
+        <target>Bitbucket Şifresi</target>
         
       </trans-unit>
       <trans-unit id="BitbucketUsername.Caption">
         <source>Bitbucket Username</source>
-        <target>Uživatelské jméno na Bitbucket</target>
+        <target>Bitbucket Kullanıcı adı</target>
         
       </trans-unit>
       <trans-unit id="Name.Text">
         <source>Bitbucket Server</source>
-        <target>Bitbucket server</target>
+        <target>Bitbucket Sunucusu</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>Váš repozitář není hostován na Bitbucket serveru</target>
+        <target>Deponuz, BitBucket Sunucusunda barındırılmıyor.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Bitbucket Server</source>
-        <target>Bitbucket server</target>
+        <target>Bitbucket Sunucusu</target>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
-        <target>{0} odevzdal
+        <target>{0} teslim edildi
 {1}</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>Chyba</target>
+        <target>Hata</target>
         
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
-        <target>Pravý klik pro zkopírování odkazu</target>
+        <target>Bağlantıyı kopyalamak için sağ tıklayın</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
-        <target>Úspěšné</target>
+        <target>Başarı</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
-        <target>Schválit</target>
+        <target>Onayla</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
         <source>Create</source>
-        <target>Vytvořit</target>
+        <target>Oluştur</target>
         
       </trans-unit>
       <trans-unit id="btnMerge.Text">
         <source>Merge</source>
-        <target>Sloučit</target>
+        <target>Birleştir</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
         <source>Pull Request Info</source>
-        <target>Informace o žádosti ke stažení</target>
+        <target>Çekme İsteği Bilgileri</target>
         
       </trans-unit>
       <trans-unit id="groupBoxInformation.Text">
         <source>Information</source>
-        <target>Informace</target>
+        <target>Bilgi</target>
         
       </trans-unit>
       <trans-unit id="groupBoxPullRequestInfo.Text">
         <source>Pull Request Info</source>
-        <target>Informace o žádosti ke stažení</target>
+        <target>Çekme İsteği Bilgileri</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSource.Text">
         <source>Source</source>
-        <target>Zdroj</target>
+        <target>Kaynak</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSourceRepoView.Text">
         <source>Source</source>
-        <target>Zdroj</target>
+        <target>Kaynak</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTarget.Text">
         <source>Target</source>
-        <target>Cíl</target>
+        <target>Hedef</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTargetRepoView.Text">
         <source>Target</source>
-        <target>Cíl</target>
+        <target>Hedef</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
-        <target>Autor</target>
+        <target>Yazar</target>
         
       </trans-unit>
       <trans-unit id="lblBranchView.Text">
         <source>Branch</source>
-        <target>Větev</target>
+        <target>Dal</target>
         
       </trans-unit>
       <trans-unit id="lblDescription.Text">
         <source>Description</source>
-        <target>Popis</target>
+        <target>Açıklama</target>
         
       </trans-unit>
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
-        <target>Popis</target>
+        <target>Açıklama</target>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>Repozitář</target>
+        <target>Depo</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
         <source>Reviewer (approved)</source>
-        <target>Kontrolor (schválený)</target>
+        <target>Gözden Geçiren (onaylı)</target>
         
       </trans-unit>
       <trans-unit id="lblSourceBranch.Text">
         <source>Branch</source>
-        <target>Větev</target>
+        <target>Dal</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>Repozitář</target>
+        <target>Depo</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>Repozitář</target>
+        <target>Depo</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
         <source>State</source>
-        <target>Stav</target>
+        <target>Durum</target>
         
       </trans-unit>
       <trans-unit id="lblTargetBranch.Text">
         <source>Branch</source>
-        <target>Větev</target>
+        <target>Dal</target>
         
       </trans-unit>
       <trans-unit id="lblTargetRepoView.Text">
         <source>Branch</source>
-        <target>Větev</target>
+        <target>Dal</target>
         
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
-        <target>Repozitář</target>
+        <target>Depo</target>
         
       </trans-unit>
       <trans-unit id="lblTitle.Text">
         <source>Title</source>
-        <target>Titulek</target>
+        <target>Başlık</target>
         
       </trans-unit>
       <trans-unit id="lblTitleView.Text">
         <source>Title</source>
-        <target>Titulek</target>
+        <target>Başlık</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>Vytvořit žádost o stažení</target>
+        <target>Çekme İsteği Oluştur</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>Zobrazit žádosti o stažení</target>
+        <target>Çekme İsteklerini Görüntüleme</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>Vytvořit místní sledovací větve</target>
+        <target>Yerel izleme dalları oluştur</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>Vytvořit místní sledovací větve</target>
+        <target>Yerel izleme dalları oluştur</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
-        <target>Vzdálený zdroj pro který mám vytvořit větve</target>
+        <target>İzleme dalları oluşturmak için uzak depo:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Create local tracking branches</source>
-        <target>Vytvořit místní sledovací větve</target>
+        <target>Yerel izleme dalları oluştur</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
-        <target>Smazat zastaralé větve</target>
+        <target>Eski dalları silme</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
-        <target>Poslední autor</target>
+        <target>Son yazar</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>Zavřít</target>
+        <target>Kapat</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Smazat</target>
+        <target>Sil</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>Smazat vzdálené větve z</target>
+        <target>Uzak depodaki dalları sil:</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
-        <target>Poslední zpráva</target>
+        <target>Son mesaj</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
-        <target>Prohledat větve</target>
+        <target>Dalları ara</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>Opravdu chcete smazat {0} vybrané větve?</target>
+        <target>Seçili {0} dalı silmek istediğinize emin misiniz?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
-        <target>Větví vybráno {0}/{1}.</target>
+        <target>{0}/{1} dal seçildi.</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
         <source>Cancel</source>
-        <target>Storno</target>
+        <target>İptal</target>
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>Vyberte větve ke smazání. Smazány mohou být pouze větve které jsou plně sloučeny ve větvi '{0}'. </target>
+        <target>Silmek için dalları seçin. Yalnızca '{0} ' ile tamamen birleştirilen dallar silinebilir.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>NEBEZPEČNÁ AKCE!
-Tyto větve budou smazány ve vzdáleném zdroji '{0}'. Tato akce nelze vrátit.
-Opravdu chcete pokračovat?</target>
+        <target>TEHLİKELİ EYLEM!
+'{0}' uzak deposu üzerindeki dallar silinecektir. Bu işlem geri alınamaz.
+Devam etmek istediğine emin misin?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Smazat</target>
+        <target>Sil</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
-        <target>Mažu větve...</target>
+        <target>Dallar siliniyor...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>Smazání nesloučených větví bude mít za následek &quot;plandavé&quot; odevzdání. Dávejte pozor!</target>
+        <target>Birleştirilmemiş dalların silinmesi, teslimlerin sarkmasına neden olur. Dikkatli kullanın!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>Načítám...</target>
+        <target>Yükleniyor...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
-        <target>Pro vyhledání větví ke smazání zmáčkněte '{0}'.</target>
+        <target>Silinecek dalları aramak için '{0}' düğmesine basın.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>Prohledat větve</target>
+        <target>Dalları ara</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>Vyberte větve ke smazání pomocí zatržítek ve sloupci '{0}'.</target>
+        <target>'{0}' sütunundaki onay kutularını kullanarak, silmek istediğiniz dalları seçin.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>Nastavení</target>
+        <target>Ayarlar</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
-        <target>Poslední aktivita</target>
+        <target>Son eylem</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Včetně nesloučených větví</target>
+        <target>Birleştirilmemiş dalları dahil et</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>Smazat větve starší než x dní</target>
+        <target>Günden daha eski dalları sil:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>Smazat větve plně sloučené do větve</target>
+        <target>Bu dalla, tamamen birleştirilen dalları sil</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>Název</target>
+        <target>Adı</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
-        <target>Nesouhlasí</target>
+        <target>Eşleşmiyor</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
@@ -446,347 +446,352 @@ Opravdu chcete pokračovat?</target>
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
-        <target>Citlivé na velikost písmen</target>
+        <target>Büyük-küçük harfe duyarlı</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>K filtrování větví použít regulérní výraz</target>
+        <target>Dalları filtrelemek için regex'i (düzenli ifadeleri) kullan</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Delete obsolete branches</source>
-        <target>Smazat zastaralé větve</target>
+        <target>Eski dalları sil</target>
         
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
-        <target>Smazat zastaralé větve starší než (dní)</target>
+        <target>Daha eski kullanılmayan dalları sil (gün)</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
-        <target>Smazat větev ze vzdáleného repozitáře</target>
+        <target>Uzaktaki depodan eski dalları sil</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
-        <target>Smazat nesloučené větve</target>
+        <target>Birleştirilmemiş dalları sil</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
-        <target>Větev ve které mají být sloučeny všechny větve</target>
+        <target>Tüm dalların birleştirilmesi gereken dal</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
+        <target>Regex (düzenli ifade) filtresi, büyük/küçük harf duyarlı mı?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
+        <target>Silinecek dalları filtrelemek için regex (düzenli ifadesi)</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
+        <target> Regex (düzenli ifadesi) ile eşleşmeyen dalları ara</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
+        <target>Eski dalları silmek için uzak depo adı:</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>K filtrování větví ke smazaní použít regulérní výraz</target>
+        <target>Silinecek dalları filtrelemek için regex'i (düzenli ifadeleri) kullan</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
-        <target>Najít velké soubory</target>
+        <target>Büyük dosyaları bul</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>Zavřít</target>
+        <target>Kapat</target>
         
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
-        <target>Komprimovaná velikost</target>
+        <target>Sıkıştırılmış boyut</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Smazat</target>
+        <target>Sil</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>Opravdu chcete smazat vybrané řádky?</target>
+        <target>Seçili dosyaları silmek istediğinize emin misiniz?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Smazat</target>
+        <target>Sil</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>Počet odevzdání</target>
+        <target>Teslim sayısı</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>Smazat</target>
+        <target>Sil</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>Obnovit místní změny před smazáním souborů. Vyberte soubory ke smazání. Pro nahrazení dat ve vzdáleném repozitáři vynuťte odeslání.</target>
+        <target>Dosyaları silmeden önce yerel değişiklikleri sıfırlayın. Silmek istediğiniz dosyaları seçin. Uzak depodaki verileri değiştirmek için zorla itin.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
-        <target>Datum posledního odevzdání</target>
+        <target>Son teslim tarihi</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
         <source>Path</source>
-        <target>Cesta</target>
+        <target>Yol</target>
         
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
         <source>SHA</source>
-        <target>SHA</target>
+        <target>SHA Kodu</target>
         
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
-        <target>Velikost</target>
+        <target>Boyut</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Find large files</source>
-        <target>Najít velké soubory</target>
+        <target>Büyük dosyaları bul</target>
         
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>Najít velké soubory větší než (Mb)</target>
+        <target>(Mb)'tan büyük dosyaları bul</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Change Submitted</source>
-        <target>Změny odeslány</target>
+        <target>Değişiklik Gönderildi</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
         <source>Close</source>
-        <target>Zavřít</target>
+        <target>Kapat</target>
         
       </trans-unit>
       <trans-unit id="labelSubmitted.Text">
         <source>Your change has been submitted for review at the following location:</source>
-        <target>Vaše změny byly odeslány ke shlédnutí na následující adrese:</target>
+        <target>Değişikliğiniz aşağıdaki konumda incelenmek üzere gönderildi:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Download Gerrit Change</source>
-        <target>Stáhnout změny z Gerritu</target>
+        <target>Gerrit Değişikliğini (Change'i) İndir</target>
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>Spravovat zdroje</target>
+        <target>Uzak depoları yönet</target>
         
       </trans-unit>
       <trans-unit id="Download.Text">
         <source>&amp;Download</source>
-        <target>Stáhnout (&amp;D)</target>
+        <target>&amp;İndir</target>
         
       </trans-unit>
       <trans-unit id="_cannotGetChangeDetails.Text">
         <source>Could not retrieve the change details</source>
-        <target>Nemohu získat detaily změny</target>
+        <target>Değişikliğin ayrıntıları alınamadı</target>
         
       </trans-unit>
       <trans-unit id="_downloadCaption.Text">
         <source>Download change {0}</source>
-        <target>Stáhnout změny {0}</target>
+        <target>{0} değişikliğini indir</target>
         
       </trans-unit>
       <trans-unit id="_downloadGerritChangeCaption.Text">
         <source>Download Gerrit Change</source>
-        <target>Stáhnout změny z Gerritu</target>
+        <target>Gerrit Değişikliğini (Change'i) İndir</target>
         
       </trans-unit>
       <trans-unit id="_selectChange.Text">
         <source>Please enter a change</source>
-        <target>Prosím zadejte změnu</target>
+        <target>Lütfen bir değişiklik girin</target>
         
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>Prosím zvolte vzdálený repozitář</target>
+        <target>Lütfen uzak bir depo seçin</target>
         
       </trans-unit>
       <trans-unit id="labelChange.Text">
         <source>Change:</source>
-        <target>Změna:</target>
+        <target>Değişiklik:</target>
         
       </trans-unit>
       <trans-unit id="labelEnterChangeIdOrNumber.Text">
         <source>Enter the Change-Id or the number from the Gerrit URL</source>
-        <target>Zadejte ID změny nebo číslo z URL Gerritu</target>
+        <target>Gerrit URL'sinden Change-Id veya numarasını girin</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
         <source>Remote:</source>
-        <target>Vzdálená:</target>
+        <target>Uzak Depo:</target>
         
       </trans-unit>
       <trans-unit id="labelTopicBranch.Text">
         <source>Topic branch:</source>
-        <target>Větev:</target>
+        <target>Konu dalı:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Publish Gerrit Change</source>
-        <target>Vydat změny z Gerritu</target>
+        <target>Gerrit Değişikliğini (Change) Yayınla</target>
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>Spravovat zdroje</target>
+        <target>Uzak depoları yönet</target>
         
       </trans-unit>
       <trans-unit id="Publish.Text">
         <source>&amp;Publish</source>
-        <target>Vydat (&amp;P)</target>
+        <target>&amp;Yayınla</target>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
         <source>Publish change</source>
-        <target>Vydat změny</target>
+        <target>Değişikliği yayınla</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
-        <target>Vydat změny z Gerritu</target>
+        <target>Gerrit Değişikliğini (Change) Yayınla</target>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
         <source>Please enter a branch</source>
-        <target>Prosím zadejte větev</target>
+        <target>Lütfen bir dal girin</target>
         
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>Prosím zvolte vzdálený repozitář</target>
+        <target>Lütfen uzak bir depo seçin</target>
         
       </trans-unit>
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
-        <target>Větev:</target>
+        <target>Dal:</target>
         
       </trans-unit>
       <trans-unit id="labelCc.Text">
         <source>CC:</source>
-        <target>CC:</target>
+        <target>CC (Kime):</target>
         
       </trans-unit>
       <trans-unit id="labelHashtag.Text">
         <source>Hashtag:</source>
-        <target>Hashtag:</target>
+        <target>Karma etiketi:</target>
         
       </trans-unit>
       <trans-unit id="labelPublishType.Text">
         <source>Publish Type:</source>
+        <target>Yayın Türü: </target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
         <source>Remote:</source>
-        <target>Vzdálená:</target>
+        <target>Uzak Depo:</target>
         
       </trans-unit>
       <trans-unit id="labelReviewers.Text">
         <source>Reviewer(s):</source>
-        <target>Kontrolor(ři):</target>
+        <target>Gözden Geçiren:</target>
         
       </trans-unit>
       <trans-unit id="labelTopic.Text">
         <source>Topic:</source>
-        <target>Předmět:</target>
+        <target>Konu:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .gitreview</source>
-        <target>Upravit .gitreview</target>
+        <target>.gitreview düzenle</target>
         
       </trans-unit>
       <trans-unit id="Save.Text">
         <source>Save</source>
-        <target>Uložit</target>
+        <target>Kaydet</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitreview.Text">
         <source>Failed to save .gitreview.
 Check if file is accessible.</source>
-        <target>Nemohu uložit .gitreview.
-Zkontrolujte jestli je soubor přístupný.</target>
+        <target>.gitreview kaydedilemedi
+Dosyanın erişilebilir olup olmadığını kontrol edin.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitreviewCaption.Text">
         <source>Failed to save .gitreview</source>
-        <target>Nemohu uložit .gitreview</target>
+        <target>.gitreview kaydedilemedi</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
         <source>.gitreview is only supported when there is a working directory.</source>
-        <target>.gitreview je podporovaný pouze v pracovní složce.</target>
+        <target>.gitreview yalnızca bir çalışma dizini olduğunda desteklenir.</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
-        <target>Pracovní složka není k dispozici</target>
+        <target>Çalışma dizini yok</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .gitreview?</source>
-        <target>Uložit změny do .gitreview?</target>
+        <target>.gitreview'de yapılan değişiklikler kaydedilsin mi?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestionCaption.Text">
         <source>Save changes?</source>
-        <target>Uložit změny?</target>
+        <target>Değişiklikler kaydedilsin mi?</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -802,10 +807,10 @@ project=department/project.git
 defaultbranch=master
 defaultremote=review
 defaultrebase=0</source>
-        <target>Poskytuje nastavení pro Gerrit
-souborem .gitreview.
+        <target>Gerrit'i kurmak için
+.gitreview yapılandırın.
 
-Příklad nastavení:
+Örnek yapılandırma:
 
 [gerrit]
 host=review.example.com
@@ -818,392 +823,399 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="lnkGitReviewHelp.Text">
         <source>GitHub page for git-review</source>
-        <target>Stránka git-review na GitHubu</target>
+        <target>git-review için GitHub sayfası</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
-        <target>Statistiky</target>
+        <target>İstatistikler</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
-        <target>Načítám...</target>
+        <target>Yükleniyor..</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
-        <target>Načítám...</target>
+        <target>Yükleniyor...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
-        <target>Načítám...</target>
+        <target>Yükleniyor...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
-        <target>Načítám...</target>
+        <target>Yükleniyor...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
-        <target>Načítám...</target>
+        <target>Yükleniyor...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
-        <target>Celkem odevzdání</target>
+        <target>Toplam teslim sayısı</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
-        <target>Celkem řádek kódu</target>
+        <target>Toplam kod satırı</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
-        <target>Celkem řádek kódu</target>
+        <target>Toplam kod satırı</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
-        <target>Celkem řádek kódu</target>
+        <target>Toplam kod satırı</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>{0:N0} prázdných řádků ({1:P1})</target>
+        <target>Boş satır sayısı: {0:N0}. ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0:N0} řádků komentářů ({1:P1})</target>
+        <target>Yorum satır sayısı: {0:N0}. ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
-        <target>{0:N0} odevzdání</target>
+        <target>Toplam Teslim Sayısı: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>{0:N0} odevzdání od {1}</target>
+        <target>{1} tarafından {0:N0} adet teslim yapıldı</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>{0:N0} řádků kódu</target>
+        <target>Toplam kod satırı: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{0:N0} řádků kódu v {1} souborech ({2:P1})</target>
+        <target>Toplam kod satırı: {0:N0} {1} dosyası. ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>{0:N0} řádků kódu ({1:P1})</target>
+        <target>Toplam kod satırı: {0:N0}. ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>{0:N0} řádků v souborech návrhu ({1:P1})</target>
+        <target>Tasarımcı dosyalarındaki satır sayısı: {0:N0}. ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>{0:N0} řádků produkčního kódu ({1:P1})</target>
+        <target>Üretim kod satır sayısı: {0:N0}. ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>{0:N0} řádků testovacího kódu</target>
+        <target>Toplam test kod satır sayısı: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>{0:N0} řádků testovacího kódu ({1:P1})</target>
+        <target>Toplam test kod satır sayısı: {0:N0}. ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
-        <target>Řádků kódu podle jazyka</target>
+        <target>Dil başına kod satırları</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
-        <target>Odevzdání na přispěvatele</target>
+        <target>Katılımcı başına teslim sayısı</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
-        <target>Řádků kódu podle typu</target>
+        <target>Tür başına kod satır sayısı</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
-        <target>Řádků testovacího kódu</target>
+        <target>Test kod satır sayısı</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
-        <target>Vliv</target>
+        <target>Katkı Grafiği</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} ({1} odevzdání, {2} změněných řádek)</target>
+        <target>{0} ({1} Adet Teslim, {2} Adet Değişmiş Satır)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
-        <target>Včetně podmodulů</target>
+        <target>Alt modüller dahil</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
-        <target>Autor</target>
+        <target>Yazar</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Gerrit Plugin</source>
-        <target>Zásuvný modul Gerrit</target>
+        <target>Gerrit Eklentisi</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
         <source>Close</source>
-        <target>Zavřít</target>
+        <target>Kapat</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
         <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target>Gerrit eklentisi, Git Extensions ile Gerrit arasında entegrasyon sağlar. Bu eklenti, git-review (inceleme) aracına dayanmaktadır.
+
+Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası oluşturulmalıdır. Bunu, Depo menüsündeki .gitreview düzenle içerisinde yapılabilirsiniz. .gitreview dosyası ve git-review aracı hakkında daha fazla bilgi için aşağıdaki bağlantıya bakabilirsiniz.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="tr">
     <body>
       <trans-unit id="_publishTypeDraft.Text">
         <source>Draft</source>
-        <target>Koncept</target>
+        <target>Taslak</target>
         
       </trans-unit>
       <trans-unit id="_publishTypePrivate.Text">
         <source>Private</source>
-        <target>Soukromý</target>
+        <target>Gizli</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeReview.Text">
         <source>For Review</source>
-        <target>Ke kontrole</target>
+        <target>İnceleme için</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeWip.Text">
         <source>Work-in-Progress</source>
-        <target>Rozpracované</target>
+        <target>Devam Eden işlemler</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Gerrit Code Review</source>
-        <target>Gerrit - Revize kódu</target>
+        <target>Gerrit Kod İncelemesi</target>
         
       </trans-unit>
       <trans-unit id="_downloadGerritChange.Text">
         <source>Download Gerrit Change</source>
-        <target>Stáhnout změny z Gerritu</target>
+        <target>Gerrit Değişikliğini (Change'i) İndir</target>
         
       </trans-unit>
       <trans-unit id="_editGitReview.Text">
         <source>Edit .gitreview</source>
-        <target>Upravit .gitreview</target>
+        <target>.gitreview düzenle</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHook.Text">
         <source>Install Hook</source>
-        <target>Nainstalovat hákovací skript</target>
+        <target>Kanca'yı (hook) Yükle</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
         <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>Nemohu stáhnout soubor commit-msg. Prosím nainstalujte hákovací skript commit-msg ručně.</target>
+        <target>Commit-msg dosyası indirilemedi. Lütfen, commit-msg kancasını (hook) manuel olarak yükleyin.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
         <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
+        <target>Hooks (kancalar) klasörü oluşturulamadı. Lütfen, klasörü manuel olarak oluşturun ve tekrar deneyin.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
         <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit požaduje nainstalovaný hákovací skript commit-msg. Chcete nainstalovat commit-msg do vašeho repozitáře?</target>
+        <target>Gerrit'i kullanmak için commit-msg kancasına (hook) ihtiyacınız var. Commit-msg kancasını (hook), deponuza yüklemek istiyor musunuz?</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookShortText.Text">
         <source>Install commit-msg hook</source>
-        <target>Instalovat hákovací skript commit-msg</target>
+        <target>Commit-msg kancasını (hook) yükle</target>
         
       </trans-unit>
       <trans-unit id="_predefinedGerritVersion.Caption">
         <source>Treat Gerrit as having version</source>
+        <target>Gerrit, bu sürümü varmış gibi davran:</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
         <source>Publish Gerrit Change</source>
-        <target>Vydat změny z Gerritu</target>
+        <target>Gerrit Değişikliğini (Change) Yayınla</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="tr">
     <body>
       <trans-unit id="_settingsError.Text">
         <source>Error loading .gitreview file.</source>
-        <target>Chyba při načítání souboru .gitreview.</target>
+        <target>.gitreview dosyası yüklenirken hata oluştu.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
         <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        <target>Vzdálený zdroj &quot;{0}&quot; uvedený nastavení &quot;dualremote&quot; v souboru .gitreview nevede na nastavený vzdálený zdroj. Buď vytvořte tento vzdálený zdroj nebo změňte soubor .gitreview.</target>
+        <target>.gitreview dosyasında &quot;defaultremote&quot; parametresinde belirtilen &quot;{0}&quot; uzak deposu, yapılandırılmış bir uzak depoya başvurmuyor. Bu deponun, uzak bağlantısını oluşturun veya .gitreview dosyası içerisindeki ayarı değiştirin.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorFileNotFound.Text">
         <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        <target>V pracovní složce nemohu nalézt soubor &quot;.gitreview&quot;.</target>
+        <target>Çalışma dizininde &quot;.gitreview&quot; dosyası bulunamıyor.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorHostNotEntered.Text">
         <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
-        <target>Nastavení &quot;host&quot; (hostitel) v souboru .gitreview je povinné.</target>
+        <target>.gitreview dosyasındaki &quot;ana bilgisayar (host)&quot; ayarı zorunludur.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorPortNotNumeric.Text">
         <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
-        <target>Nastavení &quot;port&quot; v souboru .gitreview může obsahovat pouze číslice.</target>
+        <target>.gitreview dosyasında belirtilen &quot;bağlantı noktası (port)&quot; yalnızca rakam-basamak içeremelidir.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorProjectNotEntered.Text">
         <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        <target>Nastavení &quot;projekt&quot; v souboru .gitreview je povinné.</target>
+        <target>.gitreview dosyasındaki &quot;proje&quot; ayarı zorunludur.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
-        <target>GitFlow</target>
+        <target>GitFlow (GitAkışı)</target>
         
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
-        <target>Výborný model větvení pro váš Git projekt...</target>
+        <target>Git ile projeniz için iyi bir dal modeli...</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>Načítám...</target>
+        <target>Yükleniyor...</target>
         
       </trans-unit>
       <trans-unit id="_noBranchExist.Text">
         <source>No {0} branches exist.</source>
-        <target>Neexistují žádné větve {0}.</target>
+        <target>Hiçbir {0} dalları mevcut değil.</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
         <source>Close</source>
-        <target>Zavřít</target>
+        <target>Kapat</target>
         
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
-        <target>Start!</target>
+        <target>Başlat!</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
-        <target>Konec</target>
+        <target>Bitir</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
-        <target>Zavést GitFlow</target>
+        <target>GitFlow'u başlat</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
-        <target>Vydat</target>
+        <target>Yayınla</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
         <source>Pull</source>
-        <target>Stáhnout</target>
+        <target>Çek</target>
         
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
-        <target>založeno na:</target>
+        <target>temel alarak:</target>
         
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
+        <target>Bitirdikten sonra it</target>
         
       </trans-unit>
       <trans-unit id="cbSquash.Text">
         <source>Squash</source>
+        <target>Üzerine yaz</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
-        <target>Spravovat dostupné větve:</target>
+        <target>Mevcut dalları yönet:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
-        <target>Založit větev:</target>
+        <target>Başlangıç dalı:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
-        <target>větev:</target>
+        <target>dal:</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
-        <target>Očekávané jméno:</target>
+        <target>Beklenen ad:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
-        <target>příkaz:</target>
+        <target>komut:</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
-        <target>Vzdálený zdroj pro stažení:</target>
+        <target>Uzak depodan çek :</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
-        <target>HEAD:</target>
+        <target>HEAD (BAŞ):</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
@@ -1211,33 +1223,33 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
-        <target>[prefix]/</target>
+        <target>[önek]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
-        <target>O GitFlow</target>
+        <target>GitFlow Hakkında</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
-        <target>Výsledky běhu příkazu git glow</target>
+        <target>Git (flow) akış komutunun çalıştırılmasının sonucu</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>GitFlow</source>
-        <target>GitFlow</target>
+        <target>GitFlow (GitAkışı)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>GitHub</source>
@@ -1246,57 +1258,60 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
+        <target>GitHub (Enterprise/Kurumsal) ana bilgisayar adı (hostname)</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
-        <target>OAuth token</target>
+        <target>OAuth Jetonu (Token)</target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        <target>Zaten bir tane OAuth jetonunuz (token) var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar'ı içerisinden eski jetonu (token'u) silin.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
+        <target>{0} içerisinde görüntüle</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Impact Graph</source>
-        <target>Graf vlivu</target>
+        <target>Katkı Grafiği</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Statistics</source>
-        <target>Statistiky</target>
+        <target>İstatistikler</target>
         
       </trans-unit>
       <trans-unit id="_codeFiles.Caption">
         <source>Code files</source>
-        <target>Soubory kódu</target>
+        <target>Kod dosyaları</target>
         
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>Složky pro ignorování (EndsWith)</target>
+        <target>Yok sayılacak dizin (sonun bitenlerle)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
-        <target>Podmoduly pro ignorování</target>
+        <target>Alt modülleri yoksay</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Gource</source>
@@ -1305,44 +1320,44 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
-        <target>Staženo {0} bytů.</target>
+        <target>{0} bayt indirildi.</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Nemohu najít Gource.
-Prosím stáhněte si Gource a nastavte cestu v dialogu nastavení zásuvného modulu.</target>
+        <target>Gource bulunamıyor.
+Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlayın.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>Současná složka není platným git repozitářem.
+        <target>Geçerli dizin geçerli bir git deposu değil.
 
-Gource můžete spustit pouze z platného git repozitáře.</target>
+Gource yalnızca geçerli bir git deposundan başlatılabilir. </target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
-        <target>Gource nemá nastavenou cestu.
+        <target>Yapılandırılmış Gource için bir yol yok.
 
-Chcete automaticky stáhnout Gource?</target>
+Gource'u otomatik olarak indirmek ister misin?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
-        <target>Stáhnout</target>
+        <target>İndir</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Stažení nebylo úspěšné.
-Prosím stáhněte Gource ručně a nastavte cestu v dialogu nastavení zásuvného modulu.</target>
+        <target>İndirme başarısız oldu.
+Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlayın.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1352,31 +1367,31 @@ Prosím stáhněte Gource ručně a nastavte cestu v dialogu nastavení zásuvn�
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
-        <target>Parametry</target>
+        <target>Bağımsız değişkenler</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
-        <target>Gource bylo staženo a rozbaleno.</target>
+        <target>Gource indirildi ve sıkıştırması açıldı.</target>
         
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>Cesta ke Gource</target>
+        <target>Gource'sun Yolu</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>Nemohu najít Gource v nastavené cestě: {0}.
+        <target>Yapılandırılmış yolda Gource bulunamıyor: {0}.
 
-Chcete znovu nastavit cestu?</target>
+Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
@@ -1385,348 +1400,364 @@ Chcete znovu nastavit cestu?</target>
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
-        <target>Parametry</target>
+        <target>Bağımsız değişkenler</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>Procházet</target>
+        <target>Gözat</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>Procházet</target>
+        <target>Gözat</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Start</source>
-        <target>Start</target>
+        <target>Başlat</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
-        <target>Cesta ke Gource</target>
+        <target>Gource'sun Yolu</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>Repozitář</target>
+        <target>Depo</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>Projekt Gource</target>
+        <target>Gource projesi</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
-        <target>Parametry příkazu Gource</target>
+        <target>Gource komut satırı</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
+        <target>Dal için derlemeyi yoksay</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>Adresa serveru Jenkins</target>
+        <target>Jenkins sunucusunun URL'si</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>Název projektu</target>
+        <target>Proje Adı</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Jira Commit Hint</source>
+        <target>Jira Teslim İpucu</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">
         <source>First Task Preview</source>
+        <target>İlk Görev Önizlemesi</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultMessage.Text">
         <source>[Empty Jira Query Result]</source>
+        <target>[Boş Jira Sorgu Sonucu]</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
         <source>Invalid Jira url</source>
+        <target>Jira url'si geçersiz</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
         <source>A valid url is required to launch the Jira query helper</source>
+        <target>Jira sorgu yardımcısını başlatmak için geçerli bir url gerekiyor</target>
         
       </trans-unit>
       <trans-unit id="JiraFieldsLabel.Text">
         <source>Jira fields</source>
+        <target>Jira alanları</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
         <source>Preview</source>
-        <target>Náhled</target>
+        <target>Önizleme</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperLinkText.Text">
         <source>Open the query helper inside Jira</source>
+        <target>Jira'nın içerisindeki sorgu yardımcısını aç</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
+        <target>Jira sorgu yardımcısı (query helper) açılamıyor</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
+        <target>Jira kimlik bilgileri</target>
         
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
+        <target>Jira ipucu eklentisi etkinleştirildi</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
-        <target>JQL Query</target>
+        <target>JQL Sorgusu (Query)</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
-        <target>Šablona zprávy</target>
+        <target>Mesaj Şablonu</target>
         
       </trans-unit>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
-        <target>Jira URL</target>
+        <target>Jira URL'si</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
-        <target>Přepínač proxy serverů</target>
+        <target>Vekil (Proxy) Değiştiricisi</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>Použít globálně</target>
+        <target>Global (Genel/küresel) olarak uygula</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
-        <target>Globální http.proxy:</target>
+        <target>Küresel(Global/Genel) http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
-        <target>Místní http.proxy:</target>
+        <target>Yerel http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
-        <target>Nastavit proxy</target>
+        <target>Vekili (proxy'yi) ayarla</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
-        <target>Od-nastavit proxy</target>
+        <target>Vekil (proxy) ayarını kaldır</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>Není nastaven žádný proxy server. Prosím nastavte proxy server v nastaveních zásuvného modulu.</target>
+        <target>Yapılandırılmış bir vekiili (proxy'si) yok. Lütfen, eklenti ayarlarında vekil (proxy) ana bilgisayarını ayarlayın.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
-        <target>Přepínač proxy serverů</target>
+        <target>Vekil (Proxy) Değiştiricisi</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Proxy Switcher</source>
-        <target>Přepínač proxy serverů</target>
+        <target>Vekil (Proxy) Değiştiricisi</target>
         
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
-        <target>HTTP proxy</target>
+        <target>HTTP vekili (proxy'si)</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
-        <target>port HTTP proxy</target>
+        <target>HTTP vekili (proxy'si) bağlantı noktası (port)</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
-        <target>Heslo</target>
+        <target>Şifre</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>Uživatelské jméno</target>
+        <target>Kullanıcı adı</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>Generátor poznámek k vydání</target>
+        <target>Sürüm Notları Oluşturucu</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
-        <target>Neplatný vstup</target>
+        <target>Geçersiz giriş</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Záznam odevzdání od '{0}' do '{1}' ({2}):</target>
+        <target>Teslim günlüğü '{0}' ile '{1}' ({2}) arasında:</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
+        <target>'Başlangıç' teslimi belirtilmelidir</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
+        <target>'Son' teslimi belirtilmelidir</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
-        <target>jako HTML tabulka</target>
+        <target>HTML tablosu olarak</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>jako textová tabulka (mezery)</target>
+        <target>metin tablosu olarak (boşluklar)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
-        <target>jako textová tabulka (tabelátory)</target>
+        <target>metin tablosu olarak (sekmeler)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
-        <target>původní výstup</target>
+        <target>orijinal çıktı</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
-        <target>Generovat</target>
+        <target>Oluştur</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
-        <target>Výsledek</target>
+        <target>Sonuç</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>Kopírovat do schránky</target>
+        <target>Panoya kopyala</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>Koncové odevzdání (včetně):</target>
+        <target>Teslim ifadesi &quot;Kime&quot; (dahil):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
-        <target>oddělovat sloupce mezerami</target>
+        <target>sütunları boşluklarla ayır</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>Do schránky bude zkopírován HTML kód (čistý text) a HTML formát
-který můžete vložit do programů jako MS Word nebo LibreOffice Writer.</target>
+        <target>HTML kodu (düz metin) ve HTML formatında panoya kopyalanıp,
+MS Word veya LibreOffice Writer gibi programlara yapıştırılabilir.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>Počáteční odevzdání (mimo):</target>
+        <target>Teslim ifadesi &quot;Kimden&quot; (hariç):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>parametry příkazu git log:</target>
+        <target>git günlük değişkenleri:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>{0} = začátek; {1} = konec</target>
+        <target>{0} = kimden; {1} = kime</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>Třídění: Nejnovější revize jsou navrchu.</target>
+        <target>Sıralama: En son revizyonlar en üstte listelenir.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
-        <target>Počet revizí =</target>
+        <target>Düzeltme(revizyon) sayısı = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
-        <target>(Výraz může být hash odevzdání,
-název větve, nebo značky)</target>
+        <target>(Teslim karmaları, dal adları ve etiket adları 
+teslim ifadeleri olabilir)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
-        <target>tak jak je</target>
+        <target>olduğu gibi</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>oddělit sloupce tabelátory</target>
+        <target>sütunları sekmelerle ayır</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
         <source>n/a</source>
-        <target>není k dispozici</target>
+        <target>Uygulanabilir değil</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="tr">
     <body>
       <trans-unit id="Name.Text">
         <source>Release Notes Generator</source>
-        <target>Generátor poznámek k vydání</target>
+        <target>Sürüm Notları Oluşturucu</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
+        <target>Panoya kopyalanan bir derleme sonucu url'sinden verileri çıkar</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
+        <target>Jeton (token) yönetim sayfasına git</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Could not extract data</source>
+        <target>Veriler çıkarılamadı</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1734,16 +1765,24 @@ název větve, nebo značky)</target>
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
+        <target>Pano, geçerli bir derleme url'si içermiyor.
+
+Lütfen, yeniden denemeden önce, derleme url'sini panoya kopyalayın.
+(En azından, &quot;buildId&quot; parametresini içermeli)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        <target>Url'den derleme tanım bilgisi alınmaya çalışılırken hata oluştu.
+
+Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bilgilerine erişiminizin olduğuna emin olun.</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
         <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        <target>Derleme tanım bilgileri, API jeton (token) olmadan alınamaz. Alan boş bırakılacaktır.</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1751,32 +1790,38 @@ Please ensure that the url is valid and that the API token has access to build a
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>Příklady:
-- https://dev.azure.com/yourorganization/projectname/
-- https://yourhost:8080/tfs/collectionname/projectname/
-- https://yourorganization.visualstudio.com/projectname/</target>
+        <target>Örnekler:
+ - https://dev.azure.com/sizinorganizasyonunuz/projeadi/
+ - https://sizinsunucunuz:8080/tfs/koleksiyonadi/projeadi/
+ - https://sizinorganizasyonunuz.visualstudio.com/projeadi/</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
  - 'Build (read)'
  - 'Project and team (read)'</source>
+        <target>Aşağıdaki kapsamlara sahip bir jeton (token) oluşturmanız gerekiyor:
+ - 'Build (read)' Derle (oku)
+ - 'Project and team (read)' Proje ve takım (oku)</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>'Derleme tanımlama adı' düzenli ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
+        <target>Derleme raporunu görüntülemek için misafir olarak günlüğe kaydet</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
+        <target>Derleme url'si geçerli değil</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1784,31 +1829,41 @@ Please ensure that the url is valid and that the API token has access to build a
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        <target>Pano, geçerli bir derleme url'si içermiyor.
+
+Lütfen, yeniden denemeden önce, derleme url'sini panoya kopyalayın.
+(En azından, &quot;buildTypeId&quot; parametresini içermeli)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
+        <target>Projeler ve derleme listesi yüklenirken hata oluştu</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
+        <target>Projeler ve derleme listesi yüklenemedi.
+Lütfen, sunucu URL'sini doğrulayın.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <target>&quot;Derleme Kimliği Filtresi (Build Id Filter)&quot; normal ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
+        <target>Panoya kopyalanan derleme url'sinden verileri çıkar</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="cs">
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>'Derleme tanımlama adı' düzenli ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
     </body>

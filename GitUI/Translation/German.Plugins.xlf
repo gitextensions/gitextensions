@@ -1224,7 +1224,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target>[prefix]/</target>
         
@@ -1571,7 +1571,7 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
         <target>Es ist kein Proxy konfiguriert. Bitte setzen Sie den Proxy-Host in den Plugin Einstellungen.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target>Proxy Wechsler</target>
         

@@ -1222,7 +1222,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target>[prefijo]/</target>
         
@@ -1568,7 +1568,7 @@ Do you want to reset the configured path?</source>
         <target>No hay ningún proxy configurado. Por favor configure el host del proxy en los ajustes del plugin.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target>Cambiador de proxy</target>
         
