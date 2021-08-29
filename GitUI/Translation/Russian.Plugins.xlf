@@ -1223,7 +1223,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target>[префикс]/</target>
         
@@ -1570,7 +1570,7 @@ Do you want to reset the configured path?</source>
         <target>Прокси не настроен. Пожалуйста, установите сервер прокси в настройках плагина.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target>Переключение прокси</target>
         

@@ -1209,7 +1209,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target>[prefix]/</target>
         
@@ -1547,7 +1547,7 @@ Wilt het het pad opnieuw instellen?</target>
         <target>Er is geen proxy ingesteld. Vul de proxy server in in het instellingen scherm van de plugin.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target>Proxy Switcher</target>
         

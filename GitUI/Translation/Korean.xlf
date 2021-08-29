@@ -34,6 +34,8 @@
       <trans-unit id="chkAutoNormaliseBranchName.ToolTipText">
         <source>Controls whether branch name should be automatically normalised as per git branch naming rules.
 If enabled, any illegal symbols will be replaced with the replacement symbol of your choice.</source>
+        <target>git 분기 이름 규칙에 따라 분기 이름을 자동으로 정규화하는지에 대한 여부를 제어합니다.
+이 옵션을 활성화하면, 잘못된 기호는 사용자가 선택한 사용 기호로 대체됩니다.</target>
         
       </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
@@ -63,6 +65,10 @@ If yes, embeds the fully functional console emulator. This is experimental and m
 If no, redirects select strings from stdout/stderr into an edit box. This is the classic mode.
 
 Turn off if you experience problems with the console emulator.</source>
+        <target>콘솔 프로그램 출력이 Clone이나 Pull과 같은 명령 대화상자에서 표시되는 방식을 제어합니다.
+이 설정을 활성화화면, 모든 기능을 갖춘 콘솔 에뮬레이터를 포함합니다. 이 기능은 실험적으로 제공되며 불안정할 수 있습니다.
+이 설정을 비활성화하면, stdout/stderr에서 가져온 내용을  편집상자로 리디렉션합니다. 이는 전형적인 모드입니다.
+콘솔 에뮬레이터에 문제가 있으면 이 설정을 비활성화합니다.</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -156,8 +162,8 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="AvatarProvider.Text">
-        <source>Gravatar</source>
-        <target>아바타 설정</target>
+        <source>Default</source>
+        <target>기본값</target>
         
       </trans-unit>
       <trans-unit id="ClearImageCache.Text">
@@ -180,6 +186,21 @@ This action will be performed without warning while checking out branch.</source
         <target>작성자 날짜별로 정렬하면 리비전 그래프의 렌더링이 지연될 수 있습니다.</target>
         
       </trans-unit>
+      <trans-unit id="_avatarProviderTooltip.Text">
+        <source>The avatar provider defines the source for user-defined avatar images.
+The &quot;Default&quot; provider uses GitHub and Gravatar,
+the &quot;Custom&quot; provider allows you to set custom provider URLs and
+&quot;None&quot; disables user-defined avatars.
+
+Click this info icon for more details.</source>
+        <target>아바타 공급자는 사용자가 정의한 아바타 이미지의 출처를 정의합니다.
+&quot;Default&quot; 공급자는 GitHub와 Gravatar를 사용합니다.
+&quot;Custom&quot; 공급자는 사용자 지정 공급자 URL을 설정할 수 있습니다.
+&quot;None&quot;은 사용자 정의 아바타를 비활성화합니다.
+
+이 아이콘을 클릭하여 더 자세한 내용 보기.</target>
+        
+      </trans-unit>
       <trans-unit id="_noDictFile.Text">
         <source>None</source>
         <target>없음</target>
@@ -191,11 +212,12 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="_noImageServiceTooltip.Text">
-        <source>A default image, if an email address has no matching Gravatar image.
-See http://en.gravatar.com/site/implement/images#default-image for more details.</source>
-        <target>이메일 주소에 그라바타 이미지가 없는 경우, 기본 이미지가 제공됩니다.
-자세한 내용은 아래 주소를 참조하십시오.
-http://en.gravatar.com/site/implement/images#default-image</target>
+        <source>A default image, if the provider has no image for the email address.
+
+Click this info icon for more details.</source>
+        <target>아바타 공급자에 이메일 주소에 대한 이미지가 없는 경우 기본 이미지를 표시합니다.
+
+이 아이콘을 클릭하여 더 자세한 내용 보기.</target>
         
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -268,6 +290,11 @@ http://en.gravatar.com/site/implement/images#default-image</target>
         <target>임시 저장(며칠)</target>
         
       </trans-unit>
+      <trans-unit id="lblCustomAvatarTemplate.Text">
+        <source>Custom avatar template</source>
+        <target>사용자 지정 아바타 템플릿</target>
+        
+      </trans-unit>
       <trans-unit id="lblLanguage.Text">
         <source>Language (restart required)</source>
         <target>언어 (재시작 필요)</target>
@@ -310,6 +337,53 @@ http://en.gravatar.com/site/implement/images#default-image</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="cbLoadTestResults.Text">
+        <source>Display test results in build status summary for each build result (network intensive!)</source>
+        <target>빌드 상태 요약에 각 빌드 결과에 대해 테스트 결과를 표시한다. (네트워크 집약적!)</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Auto compile SubModules</source>
+        <target>서브모듈 자동 컴파일</target>
+        
+      </trans-unit>
+      <trans-unit id="_doYouWantBuild.Text">
+        <source>Do you want to build {0}?
+
+{1}</source>
+        <target>빌드하시겠습니까{0}? 
+
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_enterCorrectMsBuildPath.Text">
+        <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target>플러그인 설정 대화상자에 올바른  MSBUILD 경로를 입력하고 다시 시도하세요</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildArguments.Caption">
+        <source>msbuild.exe arguments</source>
+        <target>msbuild.exe 매개변수</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildEnabled.Caption">
+        <source>Enabled</source>
+        <target>활성화됨</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildPath.Caption">
+        <source>Path to msbuild.exe</source>
+        <target>msbuild.exe 경로</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="AvatarControl" source-language="en" target-language="ko">
     <body>
       <trans-unit id="avatarProviderToolStripMenuItem.Text">
@@ -330,6 +404,235 @@ http://en.gravatar.com/site/implement/images#default-image</target>
       <trans-unit id="registerGravatarToolStripMenuItem.Text">
         <source>Register at gravatar.com</source>
         <target>gravatar.com 가입하기</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Periodic background fetch</source>
+        <target>주기적인 백그라운드 fetch</target>
+        
+      </trans-unit>
+      <trans-unit id="_autoRefresh.Caption">
+        <source>Refresh view after fetch</source>
+        <target>fetch 후 새로고침</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchAllSubmodules.Caption">
+        <source>Fetch all submodules</source>
+        <target>모든 서브모듈 fetch</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchInterval.Caption">
+        <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target>매 몇 (초)마다 fetch - 비활성화하려면 0으로 설정 </target>
+        
+      </trans-unit>
+      <trans-unit id="_gitCommand.Caption">
+        <source>Arguments of git command to run</source>
+        <target>실행할 git 명령의 매개변수</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="BitbucketBaseUrl.Caption">
+        <source>Specify the base URL to Bitbucket</source>
+        <target>Bitbucket 에 기본 URL 설정</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketDisableSsl.Caption">
+        <source>Disable SSL verification</source>
+        <target>SSL 인증 비활성화</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketPassword.Caption">
+        <source>Bitbucket Password</source>
+        <target>Bitbucket 패스워드</target>
+        
+      </trans-unit>
+      <trans-unit id="BitbucketUsername.Caption">
+        <source>Bitbucket Username</source>
+        <target>Bitbucket 사용자명</target>
+        
+      </trans-unit>
+      <trans-unit id="Description.Text">
+        <source>Bitbucket Server</source>
+        <target>Bitbucket 서버</target>
+        
+      </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
+        <source>Your repository is not hosted in BitBucket Server.</source>
+        <target>당신의 저장소는 BitBucket 서버에서 호스트되지 않습니다.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Bitbucket Server</source>
+        <target>Bitbucket 서버</target>
+        
+      </trans-unit>
+      <trans-unit id="_committed.Text">
+        <source>{0} committed
+{1}</source>
+        <target>{0} 커밋됨
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>에러</target>
+        
+      </trans-unit>
+      <trans-unit id="_linkLabelToolTip.Text">
+        <source>Right-click to copy link</source>
+        <target>링크를 복사하기 위해 우클릭하세요</target>
+        
+      </trans-unit>
+      <trans-unit id="_success.Text">
+        <source>Success</source>
+        <target>성공</target>
+        
+      </trans-unit>
+      <trans-unit id="btnApprove.Text">
+        <source>Approve</source>
+        <target>승인</target>
+        
+      </trans-unit>
+      <trans-unit id="btnCreate.Text">
+        <source>Create</source>
+        <target>생성</target>
+        
+      </trans-unit>
+      <trans-unit id="btnMerge.Text">
+        <source>Merge</source>
+        <target>머지(Merge)</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxCreatePullRequest.Text">
+        <source>Pull Request Info</source>
+        <target>Pull 요청 정보</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxInformation.Text">
+        <source>Information</source>
+        <target>정보</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxPullRequestInfo.Text">
+        <source>Pull Request Info</source>
+        <target>Pull 요청 정보</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxSource.Text">
+        <source>Source</source>
+        <target>소스</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxSourceRepoView.Text">
+        <source>Source</source>
+        <target>소스</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxTarget.Text">
+        <source>Target</source>
+        <target>타겟</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxTargetRepoView.Text">
+        <source>Target</source>
+        <target>타겟</target>
+        
+      </trans-unit>
+      <trans-unit id="lblAuthor.Text">
+        <source>Author</source>
+        <target>작성자</target>
+        
+      </trans-unit>
+      <trans-unit id="lblBranchView.Text">
+        <source>Branch</source>
+        <target>브랜치</target>
+        
+      </trans-unit>
+      <trans-unit id="lblDescription.Text">
+        <source>Description</source>
+        <target>내용</target>
+        
+      </trans-unit>
+      <trans-unit id="lblDescriptionView.Text">
+        <source>Description</source>
+        <target>내용</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRepositoryView.Text">
+        <source>Repository</source>
+        <target>저장소</target>
+        
+      </trans-unit>
+      <trans-unit id="lblReviewerView.Text">
+        <source>Reviewer (approved)</source>
+        <target>검토자 (승인됨)</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSourceBranch.Text">
+        <source>Branch</source>
+        <target>브랜치</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSourceRepoView.Text">
+        <source>Repository</source>
+        <target>저장소</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSourceRepository.Text">
+        <source>Repository</source>
+        <target>저장소</target>
+        
+      </trans-unit>
+      <trans-unit id="lblState.Text">
+        <source>State</source>
+        <target>상태</target>
+        
+      </trans-unit>
+      <trans-unit id="lblTargetBranch.Text">
+        <source>Branch</source>
+        <target>브랜치</target>
+        
+      </trans-unit>
+      <trans-unit id="lblTargetRepoView.Text">
+        <source>Branch</source>
+        <target>브랜치</target>
+        
+      </trans-unit>
+      <trans-unit id="lblTargetRepository.Text">
+        <source>Repository</source>
+        <target>저장소</target>
+        
+      </trans-unit>
+      <trans-unit id="lblTitle.Text">
+        <source>Title</source>
+        <target>제목</target>
+        
+      </trans-unit>
+      <trans-unit id="lblTitleView.Text">
+        <source>Title</source>
+        <target>제목</target>
+        
+      </trans-unit>
+      <trans-unit id="tabCreate.Text">
+        <source>Create Pull Request</source>
+        <target>Pull 요청 생성</target>
+        
+      </trans-unit>
+      <trans-unit id="tabView.Text">
+        <source>View Pull Requests</source>
+        <target>Pull 요청사항 보기</target>
         
       </trans-unit>
     </body>
@@ -437,6 +740,10 @@ http://en.gravatar.com/site/implement/images#default-image</target>
   </file>
   <file datatype="plaintext" original="BugReportForm" source-language="en" target-language="ko">
     <body>
+      <trans-unit id="IgnoreButton.Text">
+        <source>&amp;Ignore</source>
+        
+      </trans-unit>
       <trans-unit id="_noReproStepsSuppliedErrorMessage.Text">
         <source>Please provide as much as information as possible to help the developers solve this issue.</source>
         <target>개발자가 이 문제를 해결할 수 있도록 가능한 많은 정보를 제공하십시오.</target>
@@ -777,6 +1084,10 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
         <target>기본 SSH Client, OpenSSH 가 사용됩니다. (git pull, push, clone 명령어 실행시 실행창이 잠시 보여집니다)</target>
         
       </trans-unit>
+      <trans-unit id="_otherSshClient.Text">
+        <source>Other SSH client configured: {0}.</source>
+        
+      </trans-unit>
       <trans-unit id="_plinkputtyGenpageantNotFound.Text">
         <source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</source>
         <target>PuTTY 가 SSH 클라이언트로 설정 되었습니다만, plink.exe, puttygen.exe, pageant.exe 파일을 찾을 수 없습니다.</target>
@@ -844,9 +1155,8 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Git을 찾습니다</target>
         
       </trans-unit>
-      <trans-unit id="_unknownSshClient.Text">
-        <source>Unknown SSH client configured: {0}.</source>
-        <target>알려지지 않은 SSH 클라이언트가 설정되었습니다: {0}</target>
+      <trans-unit id="_sshClientNotFound.Text">
+        <source>SSH client not found: {0}.</source>
         
       </trans-unit>
       <trans-unit id="_wrongGitVersion.Text">
@@ -1165,13 +1475,16 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         
       </trans-unit>
       <trans-unit id="chkAutoPopStashAfterCheckout.Text">
-        <source>Apply stashed changes after successful checkout (stash will be popped automatically)</source>
-        <target>체크아웃이 완료되면 Stash 변경사항이 적용 됩니다 (자동으로 표시됨)</target>
+        <source>Apply stashed changes after successful checkout (else stash will be popped automatically)</source>
         
       </trans-unit>
       <trans-unit id="chkAutoPopStashAfterPull.Text">
-        <source>Apply stashed changes after successful pull (stash will be popped automatically)</source>
-        <target>Pull이 성공한 뒤, Stash 파일 자동 적용 (Stash 파일을 자동으로 표시해줌)</target>
+        <source>Apply stashed changes after successful pull (else stash will be popped automatically)</source>
+        
+      </trans-unit>
+      <trans-unit id="chkBranchDeleteUnmerged.Text">
+        <source>Delete unmerged branches</source>
+        <target>병합되지 않은 브랜치 삭제</target>
         
       </trans-unit>
       <trans-unit id="chkCommitAfterConflictsResolved.Text">
@@ -1215,8 +1528,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         
       </trans-unit>
       <trans-unit id="chkSwitchWorktree.Text">
-        <source>Switch Worktree</source>
-        <target>작업 트리 전환</target>
+        <source>Switch worktree</source>
         
       </trans-unit>
       <trans-unit id="chkUndoLastCommitConfirmation.Text">
@@ -1230,8 +1542,32 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         
       </trans-unit>
       <trans-unit id="gbConfirmations.Text">
-        <source>Don't ask to confirm to (use with caution)</source>
-        <target>실행 확인/경고 다이얼로그 표시하지 않기</target>
+        <source>Confirm actions</source>
+        
+      </trans-unit>
+      <trans-unit id="lblGroupBranches.Text">
+        <source>Branches:</source>
+        <target>Branches:</target>
+        
+      </trans-unit>
+      <trans-unit id="lblGroupCommits.Text">
+        <source>Commits:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblGroupConflictResolution.Text">
+        <source>Rebase / conflict resolution:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblGroupStashes.Text">
+        <source>Stash:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblGroupSubmodules.Text">
+        <source>Submodules:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblGroupWorktrees.Text">
+        <source>Worktrees:</source>
         
       </trans-unit>
     </body>
@@ -1241,6 +1577,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="$this.Text">
         <source>Console style</source>
         <target>콘솔 스타일</target>
+        
+      </trans-unit>
+      <trans-unit id="consoleFontChangeButton.Text">
+        <source>font name</source>
+        <target>파일비교시 글꼴 이름</target>
         
       </trans-unit>
       <trans-unit id="groupBoxConsoleSettings.Text">
@@ -1253,9 +1594,8 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>콘솔 스타일</target>
         
       </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Font size</source>
-        <target>글씨 크기</target>
+      <trans-unit id="lblFontName.Text">
+        <source>Font</source>
         
       </trans-unit>
     </body>
@@ -1304,6 +1644,33 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create local tracking branches</source>
+        <target>로컬 추적 브랜치 생성</target>
+        
+      </trans-unit>
+      <trans-unit id="button1.Text">
+        <source>Create local tracking branches</source>
+        <target>로컬 추적 브랜치 생성</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Remote to create tracking branches for</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Create local tracking branches</source>
+        <target>로컬 추적 브랜치 생성</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="CreatePullRequestForm" source-language="en" target-language="ko">
     <body>
       <trans-unit id="$this.Text">
@@ -1339,6 +1706,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="_strPullRequest.Text">
         <source>Pull request</source>
         <target>Pull 요청하기</target>
+        
+      </trans-unit>
+      <trans-unit id="_strRemoteFailToLoadBranches.Text">
+        <source>Fail to load target branches</source>
         
       </trans-unit>
       <trans-unit id="_strYouMustSpecifyATitle.Text">
@@ -1423,6 +1794,200 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="lblContribute.Text">
         <source>Contribute</source>
         <target>프로젝트 기여</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Delete obsolete branches</source>
+        <target>사용하지 않는 브랜치 삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="Author.HeaderText">
+        <source>Last author</source>
+        <target>마지막 작성자</target>
+        
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Close</source>
+        <target>닫기</target>
+        
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target>삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="IncludeRemoteBranches.Text">
+        <source>Delete remote branches from</source>
+        <target>원격 브랜치 삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="Message.HeaderText">
+        <source>Last message</source>
+        <target>마지막 메시지</target>
+        
+      </trans-unit>
+      <trans-unit id="RefreshBtn.Text">
+        <source>Search branches</source>
+        <target>브랜치 검색</target>
+        
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete {0} selected branches?</source>
+        <target>{0} 선택된 브랜치들을 삭제하시겠습니까?</target>
+        
+      </trans-unit>
+      <trans-unit id="_branchesSelected.Text">
+        <source>{0}/{1} branches selected.</source>
+        <target>{0}/{1} 브랜치들이 선택됨</target>
+        
+      </trans-unit>
+      <trans-unit id="_cancel.Text">
+        <source>Cancel</source>
+        <target>취소</target>
+        
+      </trans-unit>
+      <trans-unit id="_chooseBranchesToDelete.Text">
+        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
+        <target>제거할 브랜치를 선택하십시오. '{0}'에 완전히 병합된 브랜치만 제거됩니다.</target>
+        
+      </trans-unit>
+      <trans-unit id="_dangerousAction.Text">
+        <source>DANGEROUS ACTION!
+Branches will be deleted on the remote '{0}'. This can not be undone.
+Are you sure you want to continue?</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
+        <source>Delete</source>
+        <target>삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="_deletingBranches.Text">
+        <source>Deleting branches...</source>
+        <target>브랜치 삭제 중</target>
+        
+      </trans-unit>
+      <trans-unit id="_deletingUnmergedBranches.Text">
+        <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target>로딩...</target>
+        
+      </trans-unit>
+      <trans-unit id="_pressToSearch.Text">
+        <source>Press '{0}' to search for branches to delete.</source>
+        <target>삭제할 브랜치를 찾으려면 '{0}' 누름</target>
+        
+      </trans-unit>
+      <trans-unit id="_searchBranches.Text">
+        <source>Search branches</source>
+        <target>브랜치 검색</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectBranchesToDelete.Text">
+        <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        
+      </trans-unit>
+      <trans-unit id="buttonSettings.Text">
+        <source>Settings</source>
+        <target>설정</target>
+        
+      </trans-unit>
+      <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
+        <source>Last activity</source>
+        <target>마지막 활동</target>
+        
+      </trans-unit>
+      <trans-unit id="includeUnmergedBranches.Text">
+        <source>Include unmerged branches</source>
+        <target>병합되지 않은 브랜치 포함</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Delete branches older than x days</source>
+        <target>x 일 이상지난 브랜치 삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Delete branches fully merged into branch</source>
+        
+      </trans-unit>
+      <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
+        <source>Name</source>
+        <target>이름</target>
+        
+      </trans-unit>
+      <trans-unit id="regexDoesNotMatch.Text">
+        <source>Does not match</source>
+        <target>일치하지 않음</target>
+        
+      </trans-unit>
+      <trans-unit id="regexFilter.Text">
+        <source>/(feature|develop)/</source>
+        <target>/(기능|개발)/</target>
+        
+      </trans-unit>
+      <trans-unit id="useRegexCaseInsensitive.Text">
+        <source>Case insensitive</source>
+        <target>대소문자 무시</target>
+        
+      </trans-unit>
+      <trans-unit id="useRegexFilter.Text">
+        <source>Use regex to filter branches</source>
+        <target>regex를 사용하여 브랜치 필터링</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Delete obsolete branches</source>
+        <target>사용하지 않는 브랜치 삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="_daysOlderThan.Caption">
+        <source>Delete obsolete branches older than (days)</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
+        <source>Delete obsolete branches from remote</source>
+        <target>사용하지 않는 원격 브랜치 삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="_includeUnmergedBranchesFlag.Caption">
+        <source>Delete unmerged branches</source>
+        <target>병합되지 않은 브랜치 삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="_mergedInBranch.Caption">
+        <source>Branch where all branches should be merged in</source>
+        
+      </trans-unit>
+      <trans-unit id="_regexCaseInsensitiveFlag.Caption">
+        <source>Is regex filter case insensitive?</source>
+        
+      </trans-unit>
+      <trans-unit id="_regexFilter.Caption">
+        <source>Regex to filter branches to delete</source>
+        
+      </trans-unit>
+      <trans-unit id="_regexInvertedFlag.Caption">
+        <source>Search branches that does not match regex</source>
+        
+      </trans-unit>
+      <trans-unit id="_remoteName.Caption">
+        <source>Remote name obsoleted branches should be deleted from</source>
+        
+      </trans-unit>
+      <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
+        <source>Use regex to filter branches to delete</source>
         
       </trans-unit>
     </body>
@@ -1521,6 +2086,18 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="chkRememberShowSyntaxHighlightingInDiff.Text">
         <source>Remember the 'Show syntax highlighting' preference</source>
         <target>'구문 강조 표시'  설정 저장하기</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowAllCustomDiffTools.Text">
+        <source>Show all available difftools</source>
+        <target>사용 가능한 모든 difftools 표시</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowAllCustomDiffTools.ToolTipText">
+        <source>Show all configured difftools in a dropdown.
+The primary difftool can still be selected by clicking the main menu entry.</source>
+        <target>드롭다운에 구성된 모든 difftool를 표시합니다.
+주 difftool은 여전히  메인 메뉴 항목을 클릭하여 선택할 수 있습니다.</target>
         
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
@@ -1651,11 +2228,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="NoFiles.Text">
         <source>No changes</source>
         <target>변경 없음</target>
-        
-      </trans-unit>
-      <trans-unit id="_openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target>Git Extensions로 열기</target>
         
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
@@ -1942,6 +2514,20 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Find large files</source>
+        <target>큰 파일 검색</target>
+        
+      </trans-unit>
+      <trans-unit id="_sizeLargeFile.Caption">
+        <source>Find large files bigger than (Mb)</source>
+        <target>(MB) 보다 큰 파일 검색</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FolderBrowserButton" source-language="en" target-language="ko">
     <body>
       <trans-unit id="buttonBrowse.Text">
@@ -2050,11 +2636,6 @@ You will have push access. {2}</source>
       <trans-unit id="cloneSetupGB.Text">
         <source>Clone</source>
         <target>복제(Clone)</target>
-        
-      </trans-unit>
-      <trans-unit id="closeBtn.Text">
-        <source>Close</source>
-        <target>닫기</target>
         
       </trans-unit>
       <trans-unit id="columnHeaderMyReposForks.Text">
@@ -2545,13 +3126,13 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="Bad.Text">
-        <source>Mark current revision bad</source>
-        <target>비추천으로 표시하기</target>
+        <source>Mark current revision &amp;bad</source>
+        <target>현재 리비전을 &amp;bad (으)로 표시</target>
         
       </trans-unit>
       <trans-unit id="Good.Text">
-        <source>Mark current revision good</source>
-        <target>추천으로 표시하기</target>
+        <source>Mark current revision &amp;good</source>
+        <target>현재 리비전을 &amp;good 으로 표시</target>
         
       </trans-unit>
       <trans-unit id="Start.Text">
@@ -2570,8 +3151,7 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="btnSkip.Text">
-        <source>Skip current revision</source>
-        <target>현재 리비전 무시</target>
+        <source>&amp;Skip current revision</source>
         
       </trans-unit>
     </body>
@@ -2620,11 +3200,6 @@ compare with first:</source>
       <trans-unit id="RefreshButton.ToolTipText">
         <source>Refresh</source>
         <target>새로고침</target>
-        
-      </trans-unit>
-      <trans-unit id="ShowFirstParent.ToolTipText">
-        <source>Show first parents</source>
-        <target>루트 노드 표시</target>
         
       </trans-unit>
       <trans-unit id="ToolStripFilters.Text">
@@ -2689,6 +3264,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_indexLockCantDelete.Text">
         <source>Failed to delete index.lock</source>
+        <target>index.lock 파일 제거 실패</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -3235,6 +3811,11 @@ Do you want to continue?</source>
         <target>커밋</target>
         
       </trans-unit>
+      <trans-unit id="toolStripButtonLevelUp.ToolTipText">
+        <source>Submodules</source>
+        <target>서브모듈들</target>
+        
+      </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">
         <source>Pull</source>
         <target>Pull</target>
@@ -3255,6 +3836,11 @@ Do you want to continue?</source>
         <target>브랜치:</target>
         
       </trans-unit>
+      <trans-unit id="toolStripLabel1.ToolTipText">
+        <source>Branch filter</source>
+        <target>분기 필터</target>
+        
+      </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
         <source>Show reflog...</source>
         <target>참조 기록 보기...</target>
@@ -3263,11 +3849,6 @@ Do you want to continue?</source>
       <trans-unit id="toolStripMenuItemWorktrees.Text">
         <source>Worktrees</source>
         <target>작업 트리</target>
-        
-      </trans-unit>
-      <trans-unit id="toolStripRevisionFilterLabel.Text">
-        <source>Filter:</source>
-        <target>필터:</target>
         
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
@@ -3290,9 +3871,71 @@ Do you want to continue?</source>
         <target>다국어 번역 지원</target>
         
       </trans-unit>
+      <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
+        <source>Advanced filter</source>
+        
+      </trans-unit>
+      <trans-unit id="tsddbtnBranchFilter.Text">
+        <source>Branch type</source>
+        <target>분기 유형</target>
+        
+      </trans-unit>
+      <trans-unit id="tsddbtnRevisionFilter.Text">
+        <source>Filter type</source>
+        <target>필터 유형</target>
+        
+      </trans-unit>
+      <trans-unit id="tslblRevisionFilter.Text">
+        <source>Filter:</source>
+        <target>필터:</target>
+        
+      </trans-unit>
+      <trans-unit id="tslblRevisionFilter.ToolTipText">
+        <source>Text filter</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiAuthorFilter.Text">
+        <source>Author</source>
+        <target>작성자</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiBranchLocal.Text">
+        <source>Local</source>
+        <target>로컬</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiBranchRemote.Text">
+        <source>Remote</source>
+        <target>원격</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiBranchTag.Text">
+        <source>Tag</source>
+        <target>태그</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCommitFilter.Text">
+        <source>Commit message and hash</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCommitterFilter.Text">
+        <source>Committer</source>
+        <target>커밋한 사람</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDiffContainsFilter.Text">
+        <source>Diff contains (SLOW)</source>
+        <target>변경사항 포함 (느림)</target>
+        
+      </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
         <source>Favourite Repositories</source>
         <target>저장소 즐겨찾기</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiHash.Text">
+        <source>Hash</source>
+        <target>해쉬</target>
         
       </trans-unit>
       <trans-unit id="tsmiRecentRepositories.Text">
@@ -3303,6 +3946,11 @@ Do you want to continue?</source>
       <trans-unit id="tsmiRecentRepositoriesClear.Text">
         <source>Clear List</source>
         <target>목록 비우기</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowFirstParent.ToolTipText">
+        <source>Show first parents</source>
+        <target>루트 노드 표시</target>
         
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
@@ -3388,18 +4036,15 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="LocalBranch.Text">
-        <source>Local branch</source>
-        <target>로컬 브랜치</target>
+        <source>Local &amp;branch</source>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
-        <source>Checkout</source>
-        <target>체크아웃</target>
+        <source>&amp;Checkout</source>
         
       </trans-unit>
       <trans-unit id="Remotebranch.Text">
-        <source>Remote branch</source>
-        <target>원격 브랜치</target>
+        <source>Remote &amp;branch</source>
         
       </trans-unit>
       <trans-unit id="_applyStashedItemsAgain.Text">
@@ -3413,8 +4058,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_createBranch.Text">
-        <source>Create local branch with the name:</source>
-        <target>생성될 로컬 브랜치 이름:</target>
+        <source>Cr&amp;eate local branch with the name:</source>
         
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
@@ -3429,11 +4073,6 @@ Enter valid branch name or select predefined value.</source>
 Enter valid branch name or select predefined value.</source>
         <target>&quot;{0}&quot; 브랜치 이름은 유효하지 않습니다.
 유효한 브랜치 이름을 입력하거나 미리 정의된 값을 선택하세요.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again.</source>
-        <target>다음부터 표시하지 않음</target>
         
       </trans-unit>
       <trans-unit id="_invalidBranchName.Text">
@@ -3456,13 +4095,11 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
-        <source>Set as default</source>
-        <target>기본 설정</target>
+        <source>Set as &amp;default</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Select branch</source>
-        <target>브랜치 선택</target>
+        <source>&amp;Select branch</source>
         
       </trans-unit>
       <trans-unit id="localChangesGB.Text">
@@ -3471,38 +4108,33 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="rbCreateBranchWithCustomName.Text">
-        <source>Create local branch with custom name:</source>
-        <target>생성할 로컬 브랜치 이름:</target>
+        <source>Cr&amp;eate local branch with custom name:</source>
         
       </trans-unit>
       <trans-unit id="rbDontChange.Text">
-        <source>Don't change</source>
-        <target>변경하지 않음</target>
+        <source>Do&amp;n't change</source>
         
       </trans-unit>
       <trans-unit id="rbDontCreate.Text">
-        <source>Checkout remote branch</source>
-        <target>원격 브랜치 체크아웃</target>
+        <source>Ch&amp;eckout remote branch</source>
         
       </trans-unit>
       <trans-unit id="rbMerge.Text">
-        <source>Merge</source>
-        <target>머지(Merge)</target>
+        <source>&amp;Merge</source>
+        <target>머지 (&amp;Merge)</target>
         
       </trans-unit>
       <trans-unit id="rbReset.Text">
-        <source>Reset</source>
-        <target>리셋</target>
+        <source>&amp;Reset</source>
+        <target>리셋 (&amp;R)</target>
         
       </trans-unit>
       <trans-unit id="rbResetBranch.Text">
-        <source>Reset local branch with the name:</source>
-        <target>리셋할 로컬 브랜치 이름:</target>
+        <source>R&amp;eset local branch with the name:</source>
         
       </trans-unit>
       <trans-unit id="rbStash.Text">
-        <source>Stash</source>
-        <target>Stash</target>
+        <source>S&amp;tash</source>
         
       </trans-unit>
     </body>
@@ -3515,13 +4147,11 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="Force.Text">
-        <source>Force (reset local changes)</source>
-        <target>강제 실행 (로컬 변경사항 원복)</target>
+        <source>&amp;Force (reset local changes)</source>
         
       </trans-unit>
       <trans-unit id="OkCheckout.Text">
-        <source>Checkout</source>
-        <target>체크아웃</target>
+        <source>&amp;Checkout</source>
         
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBox.Text">
@@ -3535,8 +4165,7 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Checkout this revision</source>
-        <target>특정 리비전 체크아웃</target>
+        <source>Checkout this &amp;revision</source>
         
       </trans-unit>
     </body>
@@ -3549,8 +4178,7 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
-        <source>Automatically create a commit</source>
-        <target>커밋 자동 생성</target>
+        <source>&amp;Automatically create a commit</source>
         
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
@@ -3559,13 +4187,11 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="ParentsLabel.Text">
-        <source>This commit is a merge, select parent:</source>
-        <target>부모노드 선택:</target>
+        <source>This commit is a merge, select &amp;parent:</source>
         
       </trans-unit>
       <trans-unit id="Pick.Text">
-        <source>Cherry pick</source>
-        <target>체리픽</target>
+        <source>&amp;Cherry pick</source>
         
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
@@ -3574,8 +4200,7 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="checkAddReference.Text">
-        <source>Add commit reference to commit message</source>
-        <target>커밋 참조 메시지 추가</target>
+        <source>A&amp;dd commit reference to commit message</source>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -3599,10 +4224,8 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Choose another
+        <source>C&amp;hoose another
 revision:</source>
-        <target>리비전 변경
-리비전:</target>
         
       </trans-unit>
     </body>
@@ -3675,11 +4298,6 @@ revision:</source>
       <trans-unit id="AddPath.Text">
         <source>Add a path...</source>
         <target>패스(path) 추가하기</target>
-        
-      </trans-unit>
-      <trans-unit id="Cancel.Text">
-        <source>Cancel</source>
-        <target>취소</target>
         
       </trans-unit>
       <trans-unit id="Cleanup.Text">
@@ -3925,11 +4543,6 @@ gitex.cmd / gitex (GitExtensions.ex 와 같은 폴더에 있음)</target>
         <target>커밋 (&amp;C)</target>
         
       </trans-unit>
-      <trans-unit id="CommitAndPush.Text">
-        <source>Commit &amp;&amp; &amp;push</source>
-        <target>커밋 남기고 푸쉬하기</target>
-        
-      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>Commit</source>
         <target>커밋</target>
@@ -3990,6 +4603,11 @@ Git will never check if the file has changed that will improve status check perf
         <target>git이 이 파일의 성능 상태를 확인하는 걸 체크하지 않게 하십시오.
 파일이 크고 변경되지 않는 경우에 이 기능을 사용합니다.
 Git는 이 파일이 성능을 향상시키는 변경 사항이 있었는 지 결코 체크하지 않을 것입니다.</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitAndPush.Text">
+        <source>Commit &amp;&amp; &amp;push</source>
+        <target>커밋 남기고 푸쉬하기</target>
         
       </trans-unit>
       <trans-unit id="_commitAuthorInfo.Text">
@@ -4125,18 +4743,25 @@ Are you sure you want to commit?</source>
 계속 진행 할까요?</target>
         
       </trans-unit>
-      <trans-unit id="_noFilesStagedAndNothingToCommit.Text">
-        <source>There are no files staged for this commit.</source>
-        <target>스테이지 파일이 없습니다.</target>
+      <trans-unit id="_noFilesStagedCommitAllFilteredUnstagedOption.Text">
+        <source>Stage and commit the unstaged files that match your filter</source>
         
       </trans-unit>
-      <trans-unit id="_noFilesStagedButSuggestToCommitAllFilteredUnstaged.Text">
-        <source>There are no files staged for this commit. Stage and commit the unstaged files that match your filter?</source>
+      <trans-unit id="_noFilesStagedCommitAllUnstagedOption.Text">
+        <source>Stage and commit all unstaged files</source>
         
       </trans-unit>
-      <trans-unit id="_noFilesStagedButSuggestToCommitAllUnstaged.Text">
-        <source>There are no files staged for this commit. Stage and commit all unstaged files?</source>
-        <target>스테이지 파일이 없습니다. 스테이지 되지 않는 파일들을 추가 및 반영 할까요?</target>
+      <trans-unit id="_noFilesStagedCommitCaption.Text">
+        <source>Confirm commit</source>
+        
+      </trans-unit>
+      <trans-unit id="_noFilesStagedCommitInstructions.Text">
+        <source>There aren't any changes in the staging area.
+How do you want to proceed?</source>
+        
+      </trans-unit>
+      <trans-unit id="_noFilesStagedMakeEmptyCommitOption.Text">
+        <source>Make an empty commit</source>
         
       </trans-unit>
       <trans-unit id="_noStagedChanges.Text">
@@ -4197,6 +4822,7 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="_stageAll.Text">
         <source>Stage all</source>
+        <target>모두 Stage</target>
         
       </trans-unit>
       <trans-unit id="_stageDetails.Text">
@@ -4250,6 +4876,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="_unstageAll.Text">
         <source>Unstage all</source>
+        <target>모두 스테이징 취소</target>
         
       </trans-unit>
       <trans-unit id="_unstageFiltered.Text">
@@ -4414,11 +5041,6 @@ You can unset the template:
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
         <source>Show in folder</source>
         <target>폴더에 표시</target>
-        
-      </trans-unit>
-      <trans-unit id="openDiffMenuItem.Text">
-        <source>Open with difftool</source>
-        <target>파일비교툴로 열기</target>
         
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
@@ -4941,13 +5563,7 @@ You can unset the template:
         
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>Delete</source>
-        <target>제거</target>
-        
-      </trans-unit>
-      <trans-unit id="ForceDelete.Text">
-        <source>Force delete</source>
-        <target>무조건 삭제</target>
+        <source>&amp;Delete</source>
         
       </trans-unit>
       <trans-unit id="_cannotDeleteCurrentBranchMessage.Text">
@@ -4956,36 +5572,24 @@ You can unset the template:
         
       </trans-unit>
       <trans-unit id="_deleteBranchCaption.Text">
-        <source>Delete branches</source>
-        <target>브랜치 삭제</target>
+        <source>Delete Branches</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteBranchConfirmTitle.Text">
+        <source>Delete Confirmation</source>
         
       </trans-unit>
       <trans-unit id="_deleteBranchQuestion.Text">
-        <source>Are you sure you want to delete selected branches?
-Deleting a branch can cause commits to be deleted too!</source>
-        <target>선택된 브랜치를 삭제하시겠습니까?
-브랜치가 삭제시 포함되어 있는 커밋들도 함께 삭제됩니다.</target>
+        <source>The selected branch(es) have not been merged into HEAD.
+Proceed?</source>
         
       </trans-unit>
-      <trans-unit id="_deleteUnmergedBranchForcingSuggestion.Text">
-        <source>You cannot delete unmerged branch until you set “force delete” mode.</source>
-        <target>&quot;무조건 삭제&quot; 모드가 아니면 Unmerged 브랜치를 삭제할 수 없습니다.</target>
-        
-      </trans-unit>
-      <trans-unit id="labelDeleteBranchWarning.Text">
-        <source>You can only delete branches when they are fully merged in HEAD. 
-When you delete a branch the commits can get lost because nothing points to them.
-When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
-</source>
-        <target>HEAD에서 완전히 병합된 경우에만 브랜치를 삭제할 수 있습니다.
-브랜치를 삭제하면 커밋은 가리키는 브랜치가 없어져서 커밋이 손실될 수 있습니다.
-완전히 병합되지 않은 브랜치를 삭제하려면 '강제 삭제' 옵션을 사용해야합니다.
-</target>
+      <trans-unit id="_useReflogHint.Text">
+        <source>Did you know you can use reflog to restore deleted branches?</source>
         
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
-        <source>Select branches</source>
-        <target>브랜치 선택</target>
+        <source>Select &amp;branches</source>
         
       </trans-unit>
     </body>
@@ -5266,14 +5870,14 @@ If you are not sure just close this window.</source>
         <target>비교</target>
         
       </trans-unit>
-      <trans-unit id="ShowFirstParent.ToolTipText">
-        <source>Show first parents</source>
-        <target>루트 노드 표시</target>
-        
-      </trans-unit>
       <trans-unit id="ShowFullHistory.ToolTipText">
         <source>Show Full History</source>
         <target>전체 히스토리 표시</target>
+        
+      </trans-unit>
+      <trans-unit id="ToolStripFilters.Text">
+        <source>Filters</source>
+        <target>필터</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -5429,16 +6033,6 @@ If you are not sure just close this window.</source>
       <trans-unit id="toolStripBlameOptions.Text">
         <source>Blame options</source>
         <target>Blame 옵션</target>
-        
-      </trans-unit>
-      <trans-unit id="toolStripLabel1.Text">
-        <source>Branches:</source>
-        <target>Branches:</target>
-        
-      </trans-unit>
-      <trans-unit id="toolStripRevisionFilterLabel.Text">
-        <source>Filter:</source>
-        <target>필터:</target>
         
       </trans-unit>
       <trans-unit id="toolStripSplitLoad.ToolTipText">
@@ -5897,6 +6491,122 @@ _ReSharper*/</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Statistics</source>
+        <target>통계</target>
+        
+      </trans-unit>
+      <trans-unit id="CommitStatistics.Text">
+        <source>Loading..</source>
+        <target>로딩..</target>
+        
+      </trans-unit>
+      <trans-unit id="LinesOfCodePerLanguageText.Text">
+        <source>Loading...</source>
+        <target>로딩...</target>
+        
+      </trans-unit>
+      <trans-unit id="LinesOfCodePerTypeText.Text">
+        <source>Loading...</source>
+        <target>로딩...</target>
+        
+      </trans-unit>
+      <trans-unit id="LoadingLabel.Text">
+        <source>Loading...</source>
+        <target>로딩...</target>
+        
+      </trans-unit>
+      <trans-unit id="TestCodeText.Text">
+        <source>Loading...</source>
+        <target>로딩...</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalCommits.Text">
+        <source>Total commits</source>
+        <target>전체 커밋</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalLinesOfCode.Text">
+        <source>Total lines of code</source>
+        <target>코드 전체 라인</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalLinesOfCode2.Text">
+        <source>Total lines of code</source>
+        <target>코드 전체 라인</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalLinesOfTestCode.Text">
+        <source>Total lines of code</source>
+        <target>코드 전체 라인</target>
+        
+      </trans-unit>
+      <trans-unit id="_blankLinesP.Text">
+        <source>{0:N0} Blank lines ({1:P1})</source>
+        
+      </trans-unit>
+      <trans-unit id="_commentLinesP.Text">
+        <source>{0:N0} Comment lines ({1:P1})</source>
+        
+      </trans-unit>
+      <trans-unit id="_commits.Text">
+        <source>{0:N0} Commits</source>
+        <target>{0:N0} 커밋</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitsBy.Text">
+        <source>{0:N0} Commits by {1}</source>
+        <target>{0:N0} {1}에 의한 커밋</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCode.Text">
+        <source>{0:N0} Lines of code</source>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCodeInFiles.Text">
+        <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCodeP.Text">
+        <source>{0:N0} Lines of code ({1:P1})</source>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfDesignerFilesP.Text">
+        <source>{0:N0} Lines in designer files ({1:P1})</source>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfProductionCodeP.Text">
+        <source>{0:N0} Lines of production code ({1:P1})</source>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfTestCode.Text">
+        <source>{0:N0} Lines of test code</source>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfTestCodeP.Text">
+        <source>{0:N0} Lines of test code ({1:P1})</source>
+        
+      </trans-unit>
+      <trans-unit id="tabPage1.Text">
+        <source>Lines of code per language</source>
+        
+      </trans-unit>
+      <trans-unit id="tabPage2.Text">
+        <source>Commits per contributor</source>
+        
+      </trans-unit>
+      <trans-unit id="tabPage3.Text">
+        <source>Lines of code per type</source>
+        
+      </trans-unit>
+      <trans-unit id="tabPage4.Text">
+        <source>Lines of test code</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormGoToCommit" source-language="en" target-language="ko">
     <body>
       <trans-unit id="$this.Text">
@@ -5969,6 +6679,27 @@ _ReSharper*/</target>
       <trans-unit id="okBtn.Text">
         <source>OK</source>
         <target>확인</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Impact</source>
+        
+      </trans-unit>
+      <trans-unit id="_authorCommits.Text">
+        <source>{0} ({1} Commits, {2} Changed Lines)</source>
+        
+      </trans-unit>
+      <trans-unit id="cbIncludingSubmodules.Text">
+        <source>Including submodules</source>
+        
+      </trans-unit>
+      <trans-unit id="lblAuthor.Text">
+        <source>Author</source>
+        <target>작성자</target>
         
       </trans-unit>
     </body>
@@ -6160,11 +6891,6 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       <trans-unit id="_switchWorktreeTitle.Text">
         <source>Open a worktree</source>
         <target>작업 트리 열기</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonClose.Text">
-        <source>Close</source>
-        <target>닫기</target>
         
       </trans-unit>
       <trans-unit id="buttonPruneWorktrees.Text">
@@ -6523,11 +7249,6 @@ Rebase를 이 리비전으로 하시겠습니까?</target>
         <target>&amp;Pull</target>
         
       </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again.</source>
-        <target>다음부터 표시하지 않음</target>
-        
-      </trans-unit>
       <trans-unit id="_fetchAllBranchesCanOnlyWithFetch.Text">
         <source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
@@ -6689,8 +7410,7 @@ This will initialize and update all submodules recursive.</source>
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>원격 저장소 관리</target>
+        <source>&amp;Manage remotes</source>
         
       </trans-unit>
       <trans-unit id="BranchTab.Text">
@@ -6713,13 +7433,11 @@ This will initialize and update all submodules recursive.</source>
         
       </trans-unit>
       <trans-unit id="ForcePushBranches.Text">
-        <source>&amp;Force Push</source>
-        <target>&amp;Force Push</target>
+        <source>F&amp;orce push</source>
         
       </trans-unit>
       <trans-unit id="ForcePushTags.Text">
-        <source>&amp;Force Push</source>
-        <target>&amp;Force Push</target>
+        <source>&amp;Force push</source>
         
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
@@ -6743,13 +7461,7 @@ This will initialize and update all submodules recursive.</source>
         
       </trans-unit>
       <trans-unit id="Pull.Text">
-        <source>Pull</source>
-        <target>Pull</target>
-        
-      </trans-unit>
-      <trans-unit id="Push.Text">
-        <source>&amp;Push</source>
-        <target>&amp;Push</target>
+        <source>P&amp;ull</source>
         
       </trans-unit>
       <trans-unit id="PushColumn.HeaderText">
@@ -6758,13 +7470,11 @@ This will initialize and update all submodules recursive.</source>
         
       </trans-unit>
       <trans-unit id="PushToRemote.Text">
-        <source>Remote</source>
-        <target>원격</target>
+        <source>&amp;Remote</source>
         
       </trans-unit>
       <trans-unit id="PushToUrl.Text">
-        <source>Url</source>
-        <target>Url</target>
+        <source>U&amp;rl</source>
         
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
@@ -6788,8 +7498,7 @@ This will initialize and update all submodules recursive.</source>
         
       </trans-unit>
       <trans-unit id="ReplaceTrackingReference.Text">
-        <source>Replace tracking reference</source>
-        <target>트래킹 참조 교체</target>
+        <source>R&amp;eplace tracking reference</source>
         
       </trans-unit>
       <trans-unit id="ShowOptions.Text">
@@ -6804,6 +7513,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="TagTab.ToolTipText">
         <source>Push tags to remote repository</source>
+        <target>원격 리포지토리에 tag Push</target>
         
       </trans-unit>
       <trans-unit id="_branchNewForRemote.Text">
@@ -6821,13 +7531,7 @@ Would you like to do it now?</source>
         
       </trans-unit>
       <trans-unit id="_createPullRequestCB.Text">
-        <source>Create pull request after push</source>
-        <target>Push 한 뒤 Pull 요청 만들기</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Remember my decision.</source>
-        <target>내 의견 기억하기.</target>
+        <source>&amp;Create pull request after push</source>
         
       </trans-unit>
       <trans-unit id="_errorPushToRemoteCaption.Text">
@@ -6936,8 +7640,7 @@ Would you like to do it now?</source>
         
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
-        <source>Force With &amp;Lease</source>
-        <target>&amp; 강제 Lease</target>
+        <source>&amp;Force with lease</source>
         
       </trans-unit>
       <trans-unit id="groupBox2.Text">
@@ -6946,23 +7649,19 @@ Would you like to do it now?</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Tag to push</source>
-        <target>Push할 태그</target>
+        <source>&amp;Tag to push</source>
         
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Recursive submodules</source>
-        <target>반복된 서브모듈</target>
+        <source>Recursive &amp;submodules</source>
         
       </trans-unit>
       <trans-unit id="labelFrom.Text">
-        <source>Branch to push</source>
-        <target>Push할 브랜치</target>
+        <source>&amp;Branch to push</source>
         
       </trans-unit>
       <trans-unit id="labelTo.Text">
-        <source>to</source>
-        <target>to</target>
+        <source>&amp;to</source>
         
       </trans-unit>
       <trans-unit id="selectAllToolStripMenuItem.Text">
@@ -8372,8 +9071,7 @@ Do you want to use this custom merge script?</source>
         
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
-        <source>Automatically create a commit</source>
-        <target>커밋 자동 생성</target>
+        <source>&amp;Automatically create a commit</source>
         
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
@@ -8382,13 +9080,11 @@ Do you want to use this custom merge script?</source>
         
       </trans-unit>
       <trans-unit id="ParentsLabel.Text">
-        <source>This commit is a merge, select parent:</source>
-        <target>부모노드 선택:</target>
+        <source>This commit is a merge, select &amp;parent:</source>
         
       </trans-unit>
       <trans-unit id="Revert.Text">
-        <source>Revert this commit</source>
-        <target>이 커밋 되돌리기</target>
+        <source>&amp;Revert this commit</source>
         
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
@@ -8563,28 +9259,23 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="Apply.Text">
-        <source>Apply Selected Stash</source>
-        <target>선택한 Stash 적용하기</target>
+        <source>&amp;Apply Selected Stash</source>
         
       </trans-unit>
       <trans-unit id="Clear.Text">
-        <source>Drop Selected Stash</source>
-        <target>선택한 Stash 삭제하기</target>
+        <source>&amp;Drop Selected Stash</source>
         
       </trans-unit>
       <trans-unit id="Stash.Text">
-        <source>Stash all changes</source>
-        <target>Stash의 모든 변경사항</target>
+        <source>S&amp;tash all changes</source>
         
       </trans-unit>
       <trans-unit id="StashKeepIndex.Text">
-        <source>Keep index</source>
-        <target>인덱스 유지</target>
+        <source>&amp;Keep index</source>
         
       </trans-unit>
       <trans-unit id="StashSelectedFiles.Text">
-        <source>Stash selected changes</source>
-        <target>선택한 변경사항 Stash하기</target>
+        <source>Stash &amp;selected changes</source>
         
       </trans-unit>
       <trans-unit id="Stashes.ToolTipText">
@@ -8605,11 +9296,6 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       <trans-unit id="_currentWorkingDirChanges.Text">
         <source>Current working directory changes</source>
         <target>현재 작업 폴더 변경내역</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again.</source>
-        <target>다음부터 표시하지 않음</target>
         
       </trans-unit>
       <trans-unit id="_noStashes.Text">
@@ -8634,13 +9320,15 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="cherryPickFileChangesToolStripMenuItem.Text">
-        <source>Cherry pick file changes</source>
-        <target>파일변경사항 체리픽</target>
+        <source>&amp;Cherry pick file changes</source>
         
       </trans-unit>
       <trans-unit id="chkIncludeUntrackedFiles.Text">
-        <source>Include untracked files</source>
-        <target>Untracked 포함</target>
+        <source>&amp;Include untracked files</source>
+        
+      </trans-unit>
+      <trans-unit id="messageLabel.Text">
+        <source>&amp;Message:</source>
         
       </trans-unit>
       <trans-unit id="refreshToolStripButton.Text">
@@ -8649,17 +9337,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="showToolStripLabel.Text">
-        <source>Show:</source>
-        <target>표시:</target>
-        
-      </trans-unit>
-      <trans-unit id="toolStripButton_customMessage.Text">
-        <source>Custom stash message</source>
-        <target>사용자 Stash 메시지</target>
-        
-      </trans-unit>
-      <trans-unit id="toolStripButton_customMessage.ToolTipText">
-        <source>Write custom stash message</source>
+        <source>S&amp;how:</source>
         
       </trans-unit>
     </body>
@@ -9252,9 +9930,18 @@ Context menu for additional operations</source>
         <target>파일 선택</target>
         
       </trans-unit>
+      <trans-unit id="btnCommitTemplateBrowse.AccessibleName">
+        <source>Browse Path to commit template</source>
+        
+      </trans-unit>
       <trans-unit id="btnCommitTemplateBrowse.Text">
         <source>Browse</source>
         <target>찾기</target>
+        
+      </trans-unit>
+      <trans-unit id="btnDiffToolBrowse.AccessibleName">
+        <source>Browse Difftool command</source>
+        <target>Difftool 명령어 열기</target>
         
       </trans-unit>
       <trans-unit id="btnDiffToolBrowse.Text">
@@ -9262,14 +9949,29 @@ Context menu for additional operations</source>
         <target>찾기</target>
         
       </trans-unit>
+      <trans-unit id="btnDiffToolCommandSuggest.AccessibleName">
+        <source>Suggest Difftool command</source>
+        <target>Difftool 명령어 제안</target>
+        
+      </trans-unit>
       <trans-unit id="btnDiffToolCommandSuggest.Text">
         <source>Suggest</source>
         <target>제안하기</target>
         
       </trans-unit>
+      <trans-unit id="btnMergeToolBrowse.AccessibleName">
+        <source>Browse Path to mergetool</source>
+        <target>Mergetool 경로 열기</target>
+        
+      </trans-unit>
       <trans-unit id="btnMergeToolBrowse.Text">
         <source>Browse</source>
         <target>찾기</target>
+        
+      </trans-unit>
+      <trans-unit id="btnMergeToolCommandSuggest.AccessibleName">
+        <source>Suggest Mergetool command</source>
+        <target>Mergetool 명령어 제안</target>
         
       </trans-unit>
       <trans-unit id="btnMergeToolCommandSuggest.Text">
@@ -9376,6 +10078,52 @@ global settings.
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>GitFlow</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>GitHub</source>
+        <target>GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="GitHubHost.Caption">
+        <source>GitHub (Enterprise) hostname</source>
+        <target>GitHub (Enterprise) 호스트명</target>
+        
+      </trans-unit>
+      <trans-unit id="PersonalAccessToken.Caption">
+        <source>Personal Access Token</source>
+        
+      </trans-unit>
+      <trans-unit id="_generateToken.Text">
+        <source>Generate a GitHub personal access token</source>
+        
+      </trans-unit>
+      <trans-unit id="_manageToken.Text">
+        <source>Manage GitHub personal access token</source>
+        
+      </trans-unit>
+      <trans-unit id="_openLinkFailed.Text">
+        <source>Fail to open the link. Reason: </source>
+        
+      </trans-unit>
+      <trans-unit id="_tokenAlreadyExist.Text">
+        <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
+        
+      </trans-unit>
+      <trans-unit id="_viewInWebSite.Text">
+        <source>View in {0}</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitIgnoreModel" source-language="en" target-language="ko">
     <body>
       <trans-unit id="_cannotAccessGitignore.Text">
@@ -9403,6 +10151,14 @@ Check if file is accessible.</source>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .gitignore?</source>
         <target>모든 변경사항을 .gitignore에 저장할까요?</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Impact Graph</source>
         
       </trans-unit>
     </body>
@@ -9529,6 +10285,27 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       <trans-unit id="lblShPath.Text">
         <source>Path to linux tools (sh). Leave empty when it is in the path.</source>
         <target>리눅스 툴 (sh) 경로.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Statistics</source>
+        <target>통계</target>
+        
+      </trans-unit>
+      <trans-unit id="_codeFiles.Caption">
+        <source>Code files</source>
+        
+      </trans-unit>
+      <trans-unit id="_ignoreDirectories.Caption">
+        <source>Directories to ignore (EndsWith)</source>
+        
+      </trans-unit>
+      <trans-unit id="_ignoreSubmodules.Caption">
+        <source>Ignore submodules</source>
         
       </trans-unit>
     </body>
@@ -9688,6 +10465,71 @@ Would you like to save them?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Gource</source>
+        
+      </trans-unit>
+      <trans-unit id="_bytesDownloaded.Text">
+        <source>{0} bytes downloaded.</source>
+        
+      </trans-unit>
+      <trans-unit id="_cannotFindGource.Text">
+        <source>Cannot find Gource.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        
+      </trans-unit>
+      <trans-unit id="_currentDirectoryIsNotValidGit.Text">
+        <source>The current directory is not a valid git repository.
+
+Gource can be only be started from a valid git repository.</source>
+        <target>현재 디렉토리는 유효한 git 저장소가 아닙니다.
+
+Gource는 유효한 git  저장소에서 시작해야 합니다. </target>
+        
+      </trans-unit>
+      <trans-unit id="_doYouWantDownloadGource.Text">
+        <source>There is no path to Gource configured.
+
+Do you want to automatically download Gource?</source>
+        
+      </trans-unit>
+      <trans-unit id="_download.Text">
+        <source>Download</source>
+        <target>다운로드</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadingFailed.Text">
+        <source>Downloading failed.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        
+      </trans-unit>
+      <trans-unit id="_gource.Text">
+        <source>Gource</source>
+        
+      </trans-unit>
+      <trans-unit id="_gourceArguments.Caption">
+        <source>Arguments</source>
+        <target>인자값</target>
+        
+      </trans-unit>
+      <trans-unit id="_gourceDownloadedAndUnzipped.Text">
+        <source>Gource has been downloaded and unzipped.</source>
+        
+      </trans-unit>
+      <trans-unit id="_gourcePath.Caption">
+        <source>Path to Gource</source>
+        
+      </trans-unit>
+      <trans-unit id="_resetConfigPath.Text">
+        <source>Cannot find Gource in the configured path: {0}.
+
+Do you want to reset the configured path?</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="HelpImageDisplayUserControl" source-language="en" target-language="ko">
     <body>
       <trans-unit id="linkLabelHide.Text">
@@ -9767,6 +10609,23 @@ help</source>
       <trans-unit id="_rebase.Text">
         <source>Rebase</source>
         <target>Rebase</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="lblIgnoreBuildBranch.Text">
+        <source>Ignore build for branch</source>
+        
+      </trans-unit>
+      <trans-unit id="lblJenkinsServerUrl.Text">
+        <source>Jenkins server URL</source>
+        
+      </trans-unit>
+      <trans-unit id="lblProjectName.Text">
+        <source>Project name</source>
+        <target>프로젝트 이름</target>
         
       </trans-unit>
     </body>
@@ -10002,114 +10861,175 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RecentRepositoriesList" source-language="en" target-language="ko">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ko">
     <body>
-      <trans-unit id="_cannotOpenTheFolder.Text">
-        <source>Cannot open the folder</source>
-        <target>이 폴더를 열 수 없습니다.</target>
+      <trans-unit id="$this.Text">
+        <source>Proxy Switcher</source>
         
       </trans-unit>
-      <trans-unit id="_clearRecentCategoryCaption.Text">
-        <source>Clear recent repositories</source>
-        <target>최근 열어본 저장소 삭제</target>
+      <trans-unit id="ApplyGlobally_CheckBox.Text">
+        <source>Apply globally</source>
         
       </trans-unit>
-      <trans-unit id="_clearRecentCategoryQuestion.Text">
-        <source>Do you want to clear the list of recent repositories?
-
-The action cannot be undone.</source>
-        <target>최근 방문한 저장소 기록을 삭제하시겠습니까?
-
-이 작업은 실행 취소할 수 없습니다.</target>
+      <trans-unit id="GlobalHttpProxy_Label.Text">
+        <source>Global http.proxy:</source>
         
       </trans-unit>
-      <trans-unit id="_deleteCategoryCaption.Text">
-        <source>Delete Category</source>
-        <target>카테고리 삭제</target>
+      <trans-unit id="LocalHttpProxy_Label.Text">
+        <source>Local http.proxy:</source>
         
       </trans-unit>
-      <trans-unit id="_deleteCategoryQuestion.Text">
-        <source>Do you want to delete category &quot;{0}&quot; with {1} repositories?
-
-The action cannot be undone.</source>
-        <target>{1} 저장소에 있는 카테고리 &quot;{0}&quot;을 삭제하시겠습니까?
-
-이 작업은 실행 취소할 수 없습니다.</target>
+      <trans-unit id="SetProxy_Button.Text">
+        <source>Set proxy</source>
         
       </trans-unit>
-      <trans-unit id="_groupRecentRepositories.Text">
-        <source>Recent repositories</source>
-        <target>최근에 사용된 저장소</target>
+      <trans-unit id="UnsetProxy_Button.Text">
+        <source>Unset proxy</source>
         
       </trans-unit>
-      <trans-unit id="clmhdrBranch.Text">
-        <source>Branch</source>
-        <target>브랜치</target>
+      <trans-unit id="_pleaseSetProxy.Text">
+        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
         
       </trans-unit>
-      <trans-unit id="clmhdrCategory.Text">
-        <source>Category</source>
-        <target>카테고리</target>
+      <trans-unit id="_pluginDescription.Text">
+        <source>Proxy Switcher</source>
         
       </trans-unit>
-      <trans-unit id="clmhdrPath.Text">
-        <source>Path</source>
-        <target>경로</target>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Proxy Switcher</source>
         
       </trans-unit>
-      <trans-unit id="lblRecentRepositories.Text">
-        <source>Recent Repositories</source>
-        <target>최근에 사용된 저장소</target>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
         
       </trans-unit>
-      <trans-unit id="mnuConfigure.Text">
-        <source>&amp;Recent repositories settings</source>
-        <target>최근에 사용된 저장소 설정</target>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
         
       </trans-unit>
-      <trans-unit id="tsmiCategories.Text">
-        <source>Categories</source>
-        <target>카테고리</target>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
         
       </trans-unit>
-      <trans-unit id="tsmiCategoryAdd.Text">
-        <source>Add new...</source>
-        <target>추가...</target>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>사용자 이름</target>
         
       </trans-unit>
-      <trans-unit id="tsmiCategoryClear.Text">
-        <source>Clear all recent repositories</source>
-        <target>최근 열어본 저장소 삭제</target>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Release Notes Generator</source>
         
       </trans-unit>
-      <trans-unit id="tsmiCategoryDelete.Text">
-        <source>Delete category</source>
-        <target>카테고리 삭제</target>
+      <trans-unit id="_caption.Text">
+        <source>Invalid input</source>
         
       </trans-unit>
-      <trans-unit id="tsmiCategoryNone.Text">
-        <source>(none)</source>
-        <target>(없음)</target>
+      <trans-unit id="_commitLogFrom.Text">
+        <source>Commit log from '{0}' to '{1}' ({2}):</source>
         
       </trans-unit>
-      <trans-unit id="tsmiCategoryRename.Text">
-        <source>Rename category</source>
-        <target>카테고리 이름을 변경해주세요.</target>
+      <trans-unit id="_fromCommitNotSpecified.Text">
+        <source>'From' commit must be specified</source>
         
       </trans-unit>
-      <trans-unit id="tsmiOpenFolder.Text">
-        <source>Show in folder</source>
-        <target>폴더에 표시</target>
+      <trans-unit id="_toCommitNotSpecified.Text">
+        <source>'To' commit must be specified</source>
         
       </trans-unit>
-      <trans-unit id="tsmiRemoveFromList.Text">
-        <source>Remove project from the list</source>
-        <target>목록에서 프로젝트 제거</target>
+      <trans-unit id="buttonCopyAsHtml.Text">
+        <source>as HTML table</source>
         
       </trans-unit>
-      <trans-unit id="tsmiRemoveMissingReposFromList.Text">
-        <source>Remove missing projects from the list</source>
-        <target>목록에서 누락된 프로젝트 제거</target>
+      <trans-unit id="buttonCopyAsTextTableSpace.Text">
+        <source>as text table (spaces)</source>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyAsTextTableTab.Text">
+        <source>as text table (tabs)</source>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyOrigOutput.Text">
+        <source>original output</source>
+        
+      </trans-unit>
+      <trans-unit id="buttonGenerate.Text">
+        <source>Generate</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Result</source>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxCopy.Text">
+        <source>Copy to clipboard</source>
+        <target>클립보드 복사</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Commit expression &quot;To&quot; (including):</source>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>separate columns with spaces</source>
+        
+      </trans-unit>
+      <trans-unit id="label11.Text">
+        <source>Clipboard will contain HTML code (plain text) and HTML format
+which can be pasted to programs like MS Word or LibreOffice Writer.</source>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Commit expression &quot;From&quot; (excluding):</source>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>git log arguments:</source>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>{0} = from; {1} = to</source>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Sorting: Most recent revisions are listed on top.</source>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Revisions count = </source>
+        
+      </trans-unit>
+      <trans-unit id="label7.Text">
+        <source>(Commit expressions can be commit hashes,
+branch names, tag names)</source>
+        
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>as is</source>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>separate columns with tabs</source>
+        
+      </trans-unit>
+      <trans-unit id="labelRevCount.Text">
+        <source>n/a</source>
+        <target>n/a</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Release Notes Generator</source>
         
       </trans-unit>
     </body>
@@ -10186,13 +11106,14 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target>모든 원격 브랜치 Fetch 및 Prune</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.Text">
-        <source>Collapse All</source>
-        <target>Collapse All</target>
+      <trans-unit id="mnubtnCollapse.Text">
+        <source>Collapse</source>
+        <target>축소</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
+      <trans-unit id="mnubtnCollapse.ToolTipText">
+        <source>Collapse all subnodes</source>
+        <target>모든 서브노드 축소</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.Text">
@@ -10202,6 +11123,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.ToolTipText">
         <source>Commit changes in selected submodule</source>
+        <target>선택한 서브모듈의 변경사항 Commit</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCreateBranch.Text">
@@ -10211,6 +11133,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnCreateBranch.ToolTipText">
         <source>Create a local branch</source>
+        <target>로컬 분기 생성</target>
         
       </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.Text">
@@ -10220,6 +11143,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.ToolTipText">
         <source>Delete all child branchs, which must all be fully merged in its upstream branch or in HEAD</source>
+        <target>upstream 분기 또는 HEAD에서 완전히 병합되어야 하는 모든 자식분기 삭제</target>
         
       </trans-unit>
       <trans-unit id="mnubtnDisableRemote.Text">
@@ -10237,13 +11161,14 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target>&amp;활성화하고 Fetch</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.Text">
-        <source>Expand All</source>
-        <target>전부 펼치기</target>
+      <trans-unit id="mnubtnExpand.Text">
+        <source>Expand</source>
+        <target>확장</target>
         
       </trans-unit>
-      <trans-unit id="mnubtnExpandAll.ToolTipText">
-        <source>Expand all nodes</source>
+      <trans-unit id="mnubtnExpand.ToolTipText">
+        <source>Expand all subnodes</source>
+        <target>모든 서브노드 확장</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
@@ -10328,6 +11253,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnMoveDown.ToolTipText">
         <source>Move node down</source>
+        <target>노드를 아래로</target>
         
       </trans-unit>
       <trans-unit id="mnubtnMoveUp.Text">
@@ -10337,14 +11263,17 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnMoveUp.ToolTipText">
         <source>Move node up</source>
+        <target>노드를 위로</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenGESubmodule.Text">
         <source>O&amp;pen</source>
+        <target>열기 (&amp;O)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenGESubmodule.ToolTipText">
         <source>Open selected submodule in a new instance</source>
+        <target>선택된 서브모듈을 새 인스턴스로 열기</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
@@ -10354,6 +11283,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.ToolTipText">
         <source>Open selected submodule</source>
+        <target>선택된 서브모듈 열기</target>
         
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
@@ -10373,6 +11303,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.Text">
         <source>&amp;Reset</source>
+        <target>리셋 (&amp;R)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.ToolTipText">
@@ -10411,7 +11342,8 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">
-        <source>Collapse all nodes</source>
+        <source>Collapse all subnodes</source>
+        <target>모든 서브노드 축소</target>
         
       </trans-unit>
       <trans-unit id="tsbShowBranches.Text">
@@ -10504,128 +11436,99 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
-        <source>Blame</source>
-        <target>Blame</target>
+        <source>&amp;Blame</source>
         
       </trans-unit>
       <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
-        <source>Cherry pick changes</source>
-        <target>파일변경사항 체리픽</target>
+        <source>Cherr&amp;y pick changes</source>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
-        <source>Copy full path(s)</source>
-        <target>전체 경로(들) 복사</target>
+        <source>Copy full &amp;path(s)</source>
         
       </trans-unit>
       <trans-unit id="diffCommitSubmoduleChanges.Text">
-        <source>Commit submodule changes</source>
-        <target>서브모듈 변경사항 커밋</target>
+        <source>&amp;Commit submodule changes</source>
         
       </trans-unit>
       <trans-unit id="diffDeleteFileToolStripMenuItem.Text">
-        <source>Delete file</source>
-        <target>파일 삭제</target>
+        <source>De&amp;lete file</source>
         
       </trans-unit>
       <trans-unit id="diffEditWorkingDirectoryFileToolStripMenuItem.Text">
-        <source>Edit working directory file</source>
-        <target>작업 폴더 수정하기</target>
+        <source>&amp;Edit working directory file</source>
         
       </trans-unit>
       <trans-unit id="diffOpenRevisionFileToolStripMenuItem.Text">
-        <source>Open this revision (temp file)</source>
-        <target>이 리비전 열기 (임시 파일)</target>
+        <source>Ope&amp;n this revision (temp file)</source>
         
       </trans-unit>
       <trans-unit id="diffOpenRevisionFileWithToolStripMenuItem.Text">
-        <source>Open this revision with... (temp file)</source>
-        <target>이 리비전을 따로 열기 (임시 파일)</target>
+        <source>Open this revision &amp;with... (temp file)</source>
         
       </trans-unit>
       <trans-unit id="diffOpenWorkingDirectoryFileWithToolStripMenuItem.Text">
-        <source>Open working directory file with...</source>
-        <target>작업 폴더 파일 열기...</target>
+        <source>&amp;Open working directory file with...</source>
         
       </trans-unit>
       <trans-unit id="diffResetSubmoduleChanges.Text">
-        <source>Reset submodule changes</source>
-        <target>서브모듈 변경사항 원복</target>
+        <source>R&amp;eset submodule changes</source>
         
       </trans-unit>
       <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
-        <source>Show in File tree</source>
-        <target>파일트리에서 보기</target>
+        <source>Show in File &amp;tree</source>
         
       </trans-unit>
       <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
-        <source>Stash submodule changes</source>
-        <target>서브모듈 변경사항 Stash</target>
+        <source>S&amp;tash submodule changes</source>
         
       </trans-unit>
       <trans-unit id="diffTwoSelectedDifftoolToolStripMenuItem.Text">
-        <source>Diff the selected files</source>
-        <target>선택된 파일들 비교</target>
+        <source>&amp;Diff the selected files</source>
         
       </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
-        <source>Update submodule</source>
-        <target>서브모듈 업데이트</target>
+        <source>&amp;Update submodule</source>
         
       </trans-unit>
       <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File history</source>
-        <target>파일 히스토리</target>
+        <source>File &amp;history</source>
         
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>Find</source>
-        <target>찾기</target>
+        <source>&amp;Find</source>
         
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
-        <source>First -&gt; Working directory</source>
-        <target>First -&gt; 작업 폴더</target>
+        <source>First -&gt; &amp;Working directory</source>
         
       </trans-unit>
       <trans-unit id="firstToSelectedToolStripMenuItem.Text">
-        <source>First -&gt; Second</source>
-        <target>First -&gt; Second</target>
+        <source>&amp;First -&gt; Second</source>
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show in folder</source>
-        <target>폴더에 표시</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithCustomDifftoolToolStripMenuItem.Text">
-        <source>First -&gt; Second...</source>
-        <target>First -&gt; Second...</target>
+        <source>Show &amp;in folder</source>
         
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with difftool</source>
-        <target>파일비교툴로 열기</target>
+        <source>Open with &amp;difftool</source>
         
       </trans-unit>
       <trans-unit id="rememberFirstRevDiffToolStripMenuItem.Text">
-        <source>Remember First for diff</source>
-        <target>비교를 위해 첫 번째 파일 저장하기</target>
+        <source>R&amp;emember First for diff</source>
         
       </trans-unit>
       <trans-unit id="rememberSecondRevDiffToolStripMenuItem.Text">
-        <source>Remember Second for diff</source>
-        <target>비교를 위해 두 번째 파일 저장하기</target>
+        <source>&amp;Remember Second for diff</source>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
-        <source>Reset file(s) to</source>
-        <target>파일 Reset</target>
+        <source>&amp;Reset file(s) to</source>
         
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem1.Text">
-        <source>Save selected as...</source>
-        <target>...로 저장하기</target>
+        <source>S&amp;ave selected as...</source>
         
       </trans-unit>
       <trans-unit id="saveToolStripMenuItem.Text">
@@ -10634,18 +11537,15 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">
-        <source>Second -&gt; Working directory</source>
-        <target>Second -&gt; 작업 폴더</target>
+        <source>&amp;Second -&gt; Working directory</source>
         
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
-        <source>Stage file(s)</source>
-        <target>Stage 상태의 파일(들)</target>
+        <source>&amp;Stage file(s)</source>
         
       </trans-unit>
       <trans-unit id="unstageFileToolStripMenuItem.Text">
-        <source>Unstage file(s)</source>
-        <target>Unstage 상태 파일(들)</target>
+        <source>&amp;Unstage file(s)</source>
         
       </trans-unit>
     </body>
@@ -10749,8 +11649,8 @@ See the changes in the commit form.</source>
         
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Collapse all</source>
-        <target>모두 모으기</target>
+        <source>Collapse All</source>
+        <target>Collapse All</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem.Text">
@@ -10763,14 +11663,9 @@ See the changes in the commit form.</source>
         <target>작업 폴더 수정하기</target>
         
       </trans-unit>
-      <trans-unit id="expandAllToolStripMenuItem.Text">
-        <source>Expand all (takes a while on large trees)</source>
-        <target>모두 펼치기 (느려질 수 있음)</target>
-        
-      </trans-unit>
-      <trans-unit id="expandSubtreeToolStripMenuItem.Text">
-        <source>Expand subtree (takes a while on large subtrees)</source>
-        <target>서브트리 확장(대규모 서브트리에서 시간이 많이 소요될 수 있습니다)</target>
+      <trans-unit id="expandToolStripMenuItem.Text">
+        <source>Expand</source>
+        <target>확장</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -10809,8 +11704,7 @@ See the changes in the commit form.</source>
         
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>Open with Git Extensions</source>
-        <target>Git Extensions로 열기</target>
+        <source>&amp;Open with Git Extensions</source>
         
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
@@ -11030,6 +11924,10 @@ See the changes in the commit form.</source>
         <target>빌드 상태 텍스트 보기</target>
         
       </trans-unit>
+      <trans-unit id="showCommitMessageBodyToolStripMenuItem.Text">
+        <source>Show commit message body</source>
+        
+      </trans-unit>
       <trans-unit id="showDateColumnToolStripMenuItem.Text">
         <source>Show date column</source>
         <target>날자 보기</target>
@@ -11099,6 +11997,15 @@ See the changes in the commit form.</source>
         <target>한번에 10개 이상의 패치파일을 삭제하지 못하는 보호설정이 차단되었습니다!</target>
         
       </trans-unit>
+      <trans-unit id="_formRevisionFilter.Text">
+        <source>Filter</source>
+        <target>필터</target>
+        
+      </trans-unit>
+      <trans-unit id="_invalidDiffContainsFilter.Text">
+        <source>Filter text '{0}' not valid for &quot;Diff contains&quot; filter.</source>
+        
+      </trans-unit>
       <trans-unit id="_loadingControlAsync.Text">
         <source>Loading</source>
         <target>로딩</target>
@@ -11132,11 +12039,6 @@ See the changes in the commit form.</source>
       <trans-unit id="_rebaseConfirmTitle.Text">
         <source>Rebase Confirmation</source>
         <target>Rebase 확인</target>
-        
-      </trans-unit>
-      <trans-unit id="_revisionFilter.Text">
-        <source>Filter</source>
-        <target>필터</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -11183,6 +12085,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="compareToolStripMenuItem.Text">
         <source>Com&amp;pare</source>
+        <target>비교 (&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="compareWithCurrentBranchToolStripMenuItem.Text">
@@ -11204,14 +12107,17 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="deleteBranchToolStripMenuItem.Text">
         <source>&amp;Delete branch...</source>
+        <target>브런치 삭제 (&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">
         <source>De&amp;lete tag...</source>
+        <target>태그 제거 (&amp;L)</target>
         
       </trans-unit>
       <trans-unit id="editCommitToolStripMenuItem.Text">
         <source>&amp;Edit commit</source>
+        <target>커밋 편집 (&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
@@ -11224,6 +12130,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="manipulateCommitToolStripMenuItem.Text">
         <source>&amp;Advanced</source>
+        <target>고급설정(&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="markRevisionAsBadToolStripMenuItem.Text">
@@ -11242,6 +12149,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
         <source>&amp;Navigate</source>
+        <target>탐색(&amp;N)</target>
         
       </trans-unit>
       <trans-unit id="openBuildReportToolStripMenuItem.Text">
@@ -11267,42 +12175,52 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem.Text">
         <source>&amp;Selected commit</source>
+        <target>커밋 선택 (&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="rebaseWithAdvOptionsToolStripMenuItem.Text">
         <source>Selected commit with &amp;advanced options...</source>
+        <target>고급 옵션으로 선택된 커밋...(&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="renameBranchToolStripMenuItem.Text">
         <source>R&amp;ename branch...</source>
+        <target>브랜치 이름 변경 (&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="resetAnotherBranchToHereToolStripMenuItem.Text">
         <source>Reset an&amp;other branch to here...</source>
+        <target>다른 브랜치를 여기로 리셋 (&amp;O)</target>
         
       </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
         <source>Reset c&amp;urrent branch to here...</source>
+        <target>현재 브랜치를 여기로 리셋 (&amp;U)</target>
         
       </trans-unit>
       <trans-unit id="revertCommitToolStripMenuItem.Text">
         <source>Re&amp;vert this commit...</source>
+        <target>이 커밋 되돌리기 (&amp;V)</target>
         
       </trans-unit>
       <trans-unit id="rewordCommitToolStripMenuItem.Text">
         <source>&amp;Reword commit</source>
+        <target>커밋 메세지 변경 (&amp;R)</target>
         
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run &amp;script</source>
+        <target>스크립트 실행하기 (&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="selectAsBaseToolStripMenuItem.Text">
         <source>Select &amp;as BASE to compare</source>
+        <target>비교할 BASE로 선택 (&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
         <source>Create a &amp;squash commit...</source>
+        <target>Squash 커밋 생성... (&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
@@ -11600,6 +12518,62 @@ Current Branch:
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>데이터를 추출할 수 없습니다</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>예시:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>정규 표현식 '빌드 정의 이름'이 유효하지 않아 저장되지 않았습니다.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="ShellExtensionSettingsPage" source-language="en" target-language="ko">
     <body>
       <trans-unit id="$this.Text">
@@ -11806,10 +12780,89 @@ OpenSSH가 사용될 경우, 명령실행창(cmd)이 표시됩니다!
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="Strings" source-language="en" target-language="ko">
+  <file datatype="plaintext" original="TagMenuItemsStrings" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="CheckoutTooltip.Text">
+        <source>Checkout this tag</source>
+        <target>현재 태그 체크아웃하기</target>
+        
+      </trans-unit>
+      <trans-unit id="CreateTooltip.Text">
+        <source>Create a local branch from this tag</source>
+        <target>현재 태그에서 로컬 브랜치 생성</target>
+        
+      </trans-unit>
+      <trans-unit id="DeleteTooltip.Text">
+        <source>Delete this tag</source>
+        <target>현재 태그 삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="MergeTooltip.Text">
+        <source>Merge this tag into current branch</source>
+        <target>현재 브랜치에 현재 태그 머지하기</target>
+        
+      </trans-unit>
+      <trans-unit id="RebaseTooltip.Text">
+        <source>Rebase current branch to this tag</source>
+        <target>현재 브랜치를 현재 태그에 Rebase하기</target>
+        
+      </trans-unit>
+      <trans-unit id="ResetTooltip.Text">
+        <source>Reset current branch to here</source>
+        <target>현재 작업 브랜치를 여기에서 리셋</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="CheckBoxLogAsGuest.Text">
+        <source>Log as guest to display the build report</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Build url not valid</source>
+        <target>빌드 url이 올바르지 않습니다</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy in the clipboard the url of the build before retrying.
+(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        <target>클립보드가 올바른 빌드 url을 갖고 있지 않습니다. 
+
+재시도하기 전에 빌드 url을 클립보드에 복사해주세요.
+(최소한 &quot;buildTypeId&quot; 파라미터를 포함하고 있어야 합니다)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectCaption.Text">
+        <source>Error when loading the projects and build list</source>
+        <target>프로젝트와 빌드목록 읽기 실패</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectMessage.Text">
+        <source>Failed to load the projects and build list.
+Please verify the server url.</source>
+        <target>프로젝트와 빌드목록을 읽는데 실패했습니다. 서버 url을 확인해주세요</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        
+      </trans-unit>
+      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
+        <source>Extract the data from the build url copied in the clipboard</source>
+        <target>클립보드에 복사된 빌드 url로부터 데이터를 추출합니다</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TranslatedStrings" source-language="en" target-language="ko">
     <body>
       <trans-unit id="_argumentsText.Text">
         <source>Arguments</source>
+        <target>인자값</target>
         
       </trans-unit>
       <trans-unit id="_authorDateText.Text">
@@ -11860,6 +12913,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_buttonCloseApp.Text">
         <source>Close application</source>
+        <target>응용 닫기</target>
         
       </trans-unit>
       <trans-unit id="_buttonContinue.Text">
@@ -11877,8 +12931,19 @@ Select this commit to populate the full message.</source>
         <target>무시</target>
         
       </trans-unit>
+      <trans-unit id="_buttonPush.Text">
+        <source>&amp;Push</source>
+        <target>&amp;Push</target>
+        
+      </trans-unit>
       <trans-unit id="_buttonReportBug.Text">
         <source>Report bug!</source>
+        <target>버그를 리포트!</target>
+        
+      </trans-unit>
+      <trans-unit id="_buttonViewDetails.Text">
+        <source>View details</source>
+        <target>세부사항 보기</target>
         
       </trans-unit>
       <trans-unit id="_cancelText.Text">
@@ -11886,13 +12951,14 @@ Select this commit to populate the full message.</source>
         <target>취소</target>
         
       </trans-unit>
-      <trans-unit id="_captionFailedExecute.Text">
-        <source>Failed to execute</source>
-        
-      </trans-unit>
       <trans-unit id="_childrenText.Text">
         <source>{0:Child|Children}</source>
         <target>{0:자식노드}</target>
+        
+      </trans-unit>
+      <trans-unit id="_closeText.Text">
+        <source>Close</source>
+        <target>닫기</target>
         
       </trans-unit>
       <trans-unit id="_combinedDiff.Text">
@@ -11991,8 +13057,7 @@ Select this commit to populate the full message.</source>
         
       </trans-unit>
       <trans-unit id="_diffSelectedWithRememberedFile.Text">
-        <source>Diff with &quot;{0}&quot;</source>
-        <target>&quot;{0}&quot;과의 차이</target>
+        <source>&amp;Diff with &quot;{0}&quot;</source>
         
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
@@ -12003,6 +13068,14 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.</source>
         <target>선택한 항목은 올바른 git 저장소가 아닙니다.</target>
+        
+      </trans-unit>
+      <trans-unit id="_disableMenuItem.Text">
+        <source>Disable this dropdown</source>
+        
+      </trans-unit>
+      <trans-unit id="_dontShowAgain.Text">
+        <source>Don't show me this message again</source>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -12023,6 +13096,10 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_errorCaptionNotOnBranch.Text">
         <source>Not on a branch</source>
         <target>브랜치 소속이 아님</target>
+        
+      </trans-unit>
+      <trans-unit id="_exitCodeText.Text">
+        <source>Exit code</source>
         
       </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
@@ -12063,10 +13140,6 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_installGitInstructions.Text">
         <source>Install git...</source>
         <target>깃 설치...</target>
-        
-      </trans-unit>
-      <trans-unit id="_instructionOperationFailed.Text">
-        <source>Operation failed</source>
         
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
@@ -12124,6 +13197,11 @@ Select this commit to populate the full message.</source>
         <target>브랜치 없음</target>
         
       </trans-unit>
+      <trans-unit id="_noChanges.Text">
+        <source>No changes</source>
+        <target>변경 없음</target>
+        
+      </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
         <target>&lt;No results found&gt;</target>
@@ -12144,24 +13222,41 @@ Select this commit to populate the full message.</source>
         <target>열기</target>
         
       </trans-unit>
+      <trans-unit id="_openInVisualStudio.Text">
+        <source>Open in &amp;Visual Studio</source>
+        
+      </trans-unit>
+      <trans-unit id="_openInVisualStudioFailureCaption.Text">
+        <source>Unable to open file</source>
+        
+      </trans-unit>
+      <trans-unit id="_openInVisualStudioFailureText.Text">
+        <source>Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.</source>
+        
+      </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
         <target>레포트 열기</target>
         
       </trans-unit>
       <trans-unit id="_openWithGitExtensions.Text">
-        <source>Open with Git Extensions</source>
-        <target>Git Extensions로 열기</target>
+        <source>&amp;Open with Git Extensions</source>
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>{0:Parent|Parents}</source>
-        <target>{0:부모노드 또는 여러 부모노드들}</target>
+        <target>{0:부모노드|부모노드들}</target>
         
       </trans-unit>
       <trans-unit id="_remote.Text">
         <source>Remote</source>
         <target>원격</target>
+        
+      </trans-unit>
+      <trans-unit id="_remoteInError.Text">
+        <source>{0}
+
+Remote: {1}</source>
         
       </trans-unit>
       <trans-unit id="_remotesText.Text">
@@ -12181,6 +13276,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_reportBugText.Text">
         <source>If you think this was caused by Git Extensions, you can report a bug for the team to investigate.</source>
+        <target>Git Extensions에 의해서 오류가 발생했다고 생각되면 버그를 리포트 해 주십시오. </target>
         
       </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
@@ -12205,10 +13301,12 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_scriptConfirmExecuteText.Text">
         <source>Do you want to execute script</source>
+        <target>스크립트를 실행하겠습니까?</target>
         
       </trans-unit>
       <trans-unit id="_scriptErrorCantFindText.Text">
         <source>Unable to find script</source>
+        <target>스크립트를 찾을 수 없음</target>
         
       </trans-unit>
       <trans-unit id="_scriptErrorFailedToExecuteText.Text">
@@ -12218,14 +13316,17 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_scriptErrorOptionWithoutRevisionGridText.Text">
         <source>option is only supported when invoked from the revision grid</source>
+        <target>이 옵션은 리비젼 그리드에서 실행한 경우에만 지원됩니다. </target>
         
       </trans-unit>
       <trans-unit id="_scriptErrorOptionWithoutRevisionText.Text">
         <source>A valid revision is required to substitute the argument options</source>
+        <target>인자 옵션을 변경하기 위해서는 유효한 리비젼이 필요합니다. </target>
         
       </trans-unit>
       <trans-unit id="_scriptText.Text">
         <source>Script</source>
+        <target>스크립트</target>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">
@@ -12368,36 +13469,122 @@ Yes, I allow telemetry!</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TagMenuItemsStrings" source-language="en" target-language="ko">
+  <file datatype="plaintext" original="UserRepositoriesList" source-language="en" target-language="ko">
     <body>
-      <trans-unit id="CheckoutTooltip.Text">
-        <source>Checkout this tag</source>
-        <target>현재 태그 체크아웃하기</target>
+      <trans-unit id="_cannotOpenTheFolder.Text">
+        <source>Cannot open the folder</source>
+        <target>이 폴더를 열 수 없습니다.</target>
         
       </trans-unit>
-      <trans-unit id="CreateTooltip.Text">
-        <source>Create a local branch from this tag</source>
-        <target>현재 태그에서 로컬 브랜치 생성</target>
+      <trans-unit id="_clearRecentCategoryCaption.Text">
+        <source>Clear recent repositories</source>
+        <target>최근 열어본 저장소 삭제</target>
         
       </trans-unit>
-      <trans-unit id="DeleteTooltip.Text">
-        <source>Delete this tag</source>
-        <target>현재 태그 삭제</target>
+      <trans-unit id="_clearRecentCategoryQuestion.Text">
+        <source>Do you want to clear the list of recent repositories?
+
+The action cannot be undone.</source>
+        <target>최근 방문한 저장소 기록을 삭제하시겠습니까?
+
+이 작업은 실행 취소할 수 없습니다.</target>
         
       </trans-unit>
-      <trans-unit id="MergeTooltip.Text">
-        <source>Merge this tag into current branch</source>
-        <target>현재 브랜치에 현재 태그 머지하기</target>
+      <trans-unit id="_deleteCategoryCaption.Text">
+        <source>Delete Category</source>
+        <target>카테고리 삭제</target>
         
       </trans-unit>
-      <trans-unit id="RebaseTooltip.Text">
-        <source>Rebase current branch to this tag</source>
-        <target>현재 브랜치를 현재 태그에 Rebase하기</target>
+      <trans-unit id="_deleteCategoryQuestion.Text">
+        <source>Do you want to delete category &quot;{0}&quot; with {1} repositories?
+
+The action cannot be undone.</source>
+        <target>{1} 저장소에 있는 카테고리 &quot;{0}&quot;을 삭제하시겠습니까?
+
+이 작업은 실행 취소할 수 없습니다.</target>
         
       </trans-unit>
-      <trans-unit id="ResetTooltip.Text">
-        <source>Reset current branch to here</source>
-        <target>현재 작업 브랜치를 여기에서 리셋</target>
+      <trans-unit id="_groupActions.Text">
+        <source>Actions</source>
+        
+      </trans-unit>
+      <trans-unit id="_groupRecentRepositories.Text">
+        <source>Recent repositories</source>
+        <target>최근에 사용된 저장소</target>
+        
+      </trans-unit>
+      <trans-unit id="_repositorySearchPlaceholder.Text">
+        <source>Search repositories</source>
+        
+      </trans-unit>
+      <trans-unit id="clmhdrBranch.Text">
+        <source>Branch</source>
+        <target>브랜치</target>
+        
+      </trans-unit>
+      <trans-unit id="clmhdrCategory.Text">
+        <source>Category</source>
+        <target>카테고리</target>
+        
+      </trans-unit>
+      <trans-unit id="clmhdrPath.Text">
+        <source>Path</source>
+        <target>경로</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRecentRepositories.Text">
+        <source>Recent Repositories</source>
+        <target>최근에 사용된 저장소</target>
+        
+      </trans-unit>
+      <trans-unit id="mnuConfigure.Text">
+        <source>&amp;Recent repositories settings</source>
+        <target>최근에 사용된 저장소 설정</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCategories.Text">
+        <source>Categories</source>
+        <target>카테고리</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCategoryAdd.Text">
+        <source>Add new...</source>
+        <target>추가...</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCategoryClear.Text">
+        <source>Clear all recent repositories</source>
+        <target>최근 열어본 저장소 삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCategoryDelete.Text">
+        <source>Delete category</source>
+        <target>카테고리 삭제</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCategoryNone.Text">
+        <source>(none)</source>
+        <target>(없음)</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCategoryRename.Text">
+        <source>Rename category</source>
+        <target>카테고리 이름을 변경해주세요.</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenFolder.Text">
+        <source>Show in folder</source>
+        <target>폴더에 표시</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRemoveFromList.Text">
+        <source>Remove project from the list</source>
+        <target>목록에서 프로젝트 제거</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRemoveMissingReposFromList.Text">
+        <source>Remove missing projects from the list</source>
+        <target>목록에서 누락된 프로젝트 제거</target>
         
       </trans-unit>
     </body>
@@ -12479,6 +13666,10 @@ Yes, I allow telemetry!</source>
 Details: Is {1} expected {2}</source>
         <target>에러: 이름이 {0}인 원격이 이미 있지만 다른 리포지토리를 가리킵니다!
 세부사항: {1}이 원래는 {2}입니까?</target>
+        
+      </trans-unit>
+      <trans-unit id="_strRemoteIgnore.Text">
+        <source>Remote ignored</source>
         
       </trans-unit>
       <trans-unit id="_strUnableUnderstandPatch.Text">

@@ -994,6 +994,9 @@ defaultrebase=0</target>
         <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target>Wtyczka Gerrit dla Git Extensions zapewnia integrację z Gerrit. Działa ona na zasadzie narzędzia git-review.
+
+Aby aktywować Gerrit dla repozytorium, należy stworzyć plik .gitreview. Można to zrobić poprzez opcję w menu Repozytorium | Edytuj .gitreview. Sprawdź link poniżej, aby uzyskać więcej informacji o pliku .gitreview oraz narzędziu git-review.</target>
         
       </trans-unit>
     </body>
@@ -1216,7 +1219,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target>[prefiks]/</target>
         
@@ -1251,6 +1254,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
+        <target>Nazwa hosta GitHub (Enterprise)</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1560,7 +1564,7 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
         <target>Brak skonfigurowanego proxy. Proszę ustawić host proxy w ustawieniach wtyczki.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target>Zmiana proxy</target>
         

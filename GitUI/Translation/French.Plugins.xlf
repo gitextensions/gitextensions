@@ -298,7 +298,7 @@
     <body>
       <trans-unit id="Name.Text">
         <source>Create local tracking branches</source>
-        <target>Créer des branches de suivie locales</target>
+        <target>Créer des branches locales de suivie</target>
         
       </trans-unit>
     </body>
@@ -720,6 +720,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="labelCc.Text">
         <source>CC:</source>
+        <target>CC:</target>
         
       </trans-unit>
       <trans-unit id="labelHashtag.Text">
@@ -997,6 +998,7 @@ defaultrebase=0</target>
         <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target>L'extension Gerrit pour GitExtensions fourni l'intégration avec Gerrit pour GitExtensions. Cette extension est basée sur l'outil git-review.Pour activer le support de Gerrit pour un dossier, un fichier .gitreview doit être créé. Cela peut être fait à travers l'option du menu Paramètres | Modifier .gitreview. Visiter le lien ci-dessous pour pus d'information sur le fichier .gitreview et l'outil git-review.</target>
         
       </trans-unit>
     </body>
@@ -1069,6 +1071,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_predefinedGerritVersion.Caption">
         <source>Treat Gerrit as having version</source>
+        <target>Traiter Gerrit comme s'il a une version</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
@@ -1219,7 +1222,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target>[prefix]/</target>
         
@@ -1269,6 +1272,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
+        <target>Voir dans {0}</target>
         
       </trans-unit>
     </body>
@@ -1565,7 +1569,7 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <target>Il n'y a pas de proxy configuré. Activer l'hôte proxy dans les paramètres des plugins s'il vous plait. </target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target>Changeur de proxy</target>
         
