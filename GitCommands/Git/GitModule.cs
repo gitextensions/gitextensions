@@ -584,7 +584,7 @@ namespace GitCommands
             }
 
             var blobData = blobStream.ToArray();
-            if (EffectiveConfigFile.core.autocrlf.Value == AutoCRLFType.@true)
+            if (EffectiveConfigFile.ByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf") is AutoCRLFType.@true)
             {
                 if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
                 {
