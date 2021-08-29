@@ -38,35 +38,35 @@ namespace GitCommands.Settings
             LowerPriority?.Save();
         }
 
-        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
+        public override string? GetValue(string name)
         {
-            TryGetValue(name, defaultValue, decode, out var value);
+            TryGetValue(name, out var value);
             return value;
         }
 
         /// <summary>
         /// sets given value at the possible lowest priority level
         /// </summary>
-        public override void SetValue<T>(string name, T value, Func<T, string?> encode)
+        public override void SetValue(string name, string? value)
         {
             if (LowerPriority is null || SettingsCache.HasValue(name))
             {
-                SettingsCache.SetValue(name, value, encode);
+                SettingsCache.SetValue(name, value);
             }
             else
             {
-                LowerPriority.SetValue(name, value, encode);
+                LowerPriority.SetValue(name, value);
             }
         }
 
-        public virtual bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
+        public virtual bool TryGetValue(string name, out string? value)
         {
-            if (SettingsCache.TryGetValue(name, defaultValue, decode, out value))
+            if (SettingsCache.TryGetValue(name, out value))
             {
                 return true;
             }
 
-            if (LowerPriority is not null && LowerPriority.TryGetValue(name, defaultValue, decode, out value))
+            if (LowerPriority is not null && LowerPriority.TryGetValue(name, out value))
             {
                 return true;
             }

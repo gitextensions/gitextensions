@@ -34,34 +34,34 @@ namespace GitUI
             set => throw new InvalidOperationException(nameof(SettingLevel));
         }
 
-        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
+        public override string? GetValue(string name)
         {
             // for old plugin setting processing
             if (_pluginId == Guid.Empty)
             {
-                return ExternalSettings.GetValue($"{_pluginName}{name}", defaultValue, decode);
+                return ExternalSettings.GetValue($"{_pluginName}{name}");
             }
 
-            var value = ExternalSettings.GetValue($"{_pluginId}.{name}", defaultValue, decode);
+            var value = ExternalSettings.GetValue($"{_pluginId}.{name}");
 
             // for old plugin setting processing
-            if (value is null || value.Equals(defaultValue))
+            if (value is null)
             {
-                value = ExternalSettings.GetValue($"{_pluginName}{name}", defaultValue, decode);
+                value = ExternalSettings.GetValue($"{_pluginName}{name}");
             }
 
             return value;
         }
 
-        public override void SetValue<T>(string name, T value, Func<T, string?> encode)
+        public override void SetValue(string name, string? value)
         {
             if (_pluginId == Guid.Empty)
             {
-                ExternalSettings.SetValue($"{_pluginName}{name}", value, encode);
+                ExternalSettings.SetValue($"{_pluginName}{name}", value);
             }
             else
             {
-                ExternalSettings.SetValue($"{_pluginId}.{name}", value, encode);
+                ExternalSettings.SetValue($"{_pluginId}.{name}", value);
             }
         }
     }

@@ -615,7 +615,7 @@ namespace GitCommands
         /// It's currently a limitation by <see cref="SettingsCache"/> that a given setting can
         /// only ever use GetString/SetString or GetEnum/SetEnum but not both. This is the case
         /// because <see cref="SettingsCache"/> caches a typed/parsed value of the setting and
-        /// crashes at <see cref="SettingsCache.TryGetValue{T}(string, T, Func{string, T}, out T)"/>
+        /// crashes at <see cref="SettingsCache.TryGetValue(string, out string?)"/>
         /// if the type that is requested doesn't match the cached type.
         /// </remarks>
         private static TEnum GetEnumViaString<TEnum>(string settingName, TEnum defaultValue)
@@ -2178,14 +2178,14 @@ namespace GitCommands
         {
         }
 
-        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
+        public override string? GetValue(string name)
         {
-            return AppSettings.SettingsContainer.GetValue(PathFor(name), defaultValue, decode);
+            return AppSettings.SettingsContainer.GetValue(PathFor(name));
         }
 
-        public override void SetValue<T>(string name, T value, Func<T, string?> encode)
+        public override void SetValue(string name, string? value)
         {
-            AppSettings.SettingsContainer.SetValue(PathFor(name), value, encode);
+            AppSettings.SettingsContainer.SetValue(PathFor(name), value);
         }
     }
 }

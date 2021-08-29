@@ -6,7 +6,7 @@ namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
-        private readonly ConcurrentDictionary<string, object?> _byNameMap = new();
+        private readonly ConcurrentDictionary<string, string?> _byNameMap = new();
 
         public void Dispose()
         {
@@ -93,24 +93,6 @@ namespace GitCommands
         {
         }
 
-        private void SetValue(string name, string? value)
-        {
-            LockedAction(() =>
-            {
-                // will refresh EncodedNameMap if needed
-                string? inMemValue = GetValue(name);
-
-                if (string.Equals(inMemValue, value))
-                {
-                    return;
-                }
-
-                SetValueImpl(name, value);
-
-                SettingsChanged();
-            });
-        }
-
         private string? GetValue(string name)
         {
             return LockedAction(() =>
@@ -125,28 +107,30 @@ namespace GitCommands
             return GetValue(name) is not null;
         }
 
-        public bool HasADifferentValue<T>(string name, T value, Func<T, string?> encode)
+        public bool HasADifferentValue(string name, string? value)
         {
-            var s = value is not null
-                ? encode(value)
-                : null;
-
             return LockedAction(() =>
             {
                 string? inMemValue = GetValue(name);
-                return inMemValue is not null && !string.Equals(inMemValue, s);
+                return inMemValue is not null && !string.Equals(inMemValue, value);
             });
         }
 
-        public void SetValue<T>(string name, T value, Func<T, string?> encode)
+        public void SetValue(string name, string? value)
         {
-            var s = value is not null
-                ? encode(value)
-                : null;
-
             LockedAction(() =>
             {
-                SetValue(name, s);
+                // will refresh EncodedNameMap if needed
+                string? inMemValue = GetValue(name);
+
+                if (string.Equals(inMemValue, value))
+                {
+                    return;
+                }
+
+                SetValueImpl(name, value);
+
+                SettingsChanged();
 
                 _byNameMap.AddOrUpdate(name, value, (key, oldValue) => value);
             });
@@ -155,28 +139,21 @@ namespace GitCommands
         // This method will attempt to get the value from cache first. If the setting is not cached, it will call GetValue.
         // GetValue will not look in the cache. This method doesn't require a lock. A lock is only required when GetValue is
         // called. GetValue will set the lock.
-        public bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
+        public bool TryGetValue(string name, out string? value)
         {
-            if (decode is null)
-            {
-                throw new ArgumentNullException(nameof(decode), $"The decode parameter for setting {name} is null.");
-            }
-
-            value = defaultValue;
+            value = default;
 
             EnsureSettingsAreUpToDate();
 
-            if (_byNameMap.TryGetValue(name, out object? o))
+            if (_byNameMap.TryGetValue(name, out string? o))
             {
                 switch (o)
                 {
                     case null:
                         return false;
-                    case T t:
-                        value = t;
-                        return true;
                     default:
-                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                        value = o;
+                        return true;
                 }
             }
 
@@ -184,13 +161,12 @@ namespace GitCommands
 
             if (s is null)
             {
-                value = defaultValue;
+                value = default;
                 return false;
             }
 
-            T decodedValue = decode(s);
-            value = decodedValue;
-            _byNameMap.AddOrUpdate(name, decodedValue, (key, oldValue) => decodedValue);
+            value = s;
+            _byNameMap.AddOrUpdate(name, s, (key, oldValue) => s);
             return true;
         }
     }

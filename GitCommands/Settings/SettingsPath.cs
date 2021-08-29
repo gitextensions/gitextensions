@@ -20,16 +20,16 @@ namespace GitCommands.Settings
             return $"{_pathName}.{subPath}";
         }
 
-        public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
+        public override string? GetValue(string name)
         {
             Validates.NotNull(_parent);
-            return _parent.GetValue(PathFor(name), defaultValue, decode);
+            return _parent.GetValue(PathFor(name));
         }
 
-        public override void SetValue<T>(string name, T value, Func<T, string?> encode)
+        public override void SetValue(string name, string? value)
         {
             Validates.NotNull(_parent);
-            _parent.SetValue(PathFor(name), value, encode);
+            _parent.SetValue(PathFor(name), value);
         }
     }
 }
