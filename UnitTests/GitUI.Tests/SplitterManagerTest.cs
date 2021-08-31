@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace GitUITests
 {
     [TestFixture]
-    public class SplitterManagerTest
+    public partial class SplitterManagerTest
     {
         private MemorySettings _settings;
         private const int _designTimeSplitterWidth = 100;
@@ -156,7 +156,7 @@ namespace GitUITests
                 {
                     // Note: if the width of the splitter control itself is not regarded,
                     // this splitter control would move to the left every time the splitter container is restored.
-                    splitter.SplitterDistance.Should().Be(splitterDistance + deltaWidth + splitter.SplitterWidth - 2);
+                    splitter.SplitterDistance.Should().Be(splitterDistance + deltaWidth + splitter.SplitterWidth - /* doubled padding */2);
                 }
             }
         }
