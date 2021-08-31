@@ -4553,11 +4553,11 @@ Proceed?</source>
         <target />
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>Delete</source>
+        <source>&amp;Delete</source>
         <target />
       </trans-unit>
       <trans-unit id="DeleteRemote.Text">
-        <source>Delete branche(s) from remote repository</source>
+        <source>Delete branch(es) from &amp;remote repository</source>
         <target />
       </trans-unit>
       <trans-unit id="_confirmDeleteUnmergedRemoteBranchMessage.Text">
@@ -4569,16 +4569,8 @@ Deleting a branch can cause commits to be deleted too!</source>
         <source>Delete remote branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="labelDeleteBranchWarning.Text">
-        <source>The commits referenced by the deleted branch will be lost
-if no other branch or tag references them. Make sure there
-is a branch or tag referencing the commits you wish to keep.
-If you have accidentally deleted a wrong branch, go to Commands | Show reflog form
-in order to recover the lost commits.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
-        <source>Select branches</source>
+        <source>Select &amp;branches</source>
         <target />
       </trans-unit>
     </body>
