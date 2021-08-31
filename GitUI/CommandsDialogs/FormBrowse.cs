@@ -2000,7 +2000,12 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.InvalidateCount();
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
-            _filterBranchHelper.SetBranchFilter(string.Empty, refresh: false);
+
+            // Reset, if we're filtering but not showing the current branch (check SetShowBranches implementation).
+            if (AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly)
+            {
+                _filterBranchHelper.SetBranchFilter(string.Empty, refresh: false);
+            }
 
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
