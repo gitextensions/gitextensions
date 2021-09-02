@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -100,6 +101,104 @@ namespace GitExtensions.UITests.CommandsDialogs
                 });
         }
 
+        [Test]
+        public void Filters_should_behave_as_expected()
+        {
+            _referenceRepository.CreateCommit("Commit1", "Commit1");
+            _referenceRepository.CreateBranch("Branch1", _referenceRepository.CommitHash);
+            _referenceRepository.CreateCommit("Commit2", "Commit2");
+            _referenceRepository.CreateBranch("Branch2", _referenceRepository.CommitHash);
+
+            _referenceRepository.CreateCommit("head commit");
+
+            _referenceRepository.CheckoutBranch("Branch1");
+
+            bool branchFilterEnabled = AppSettings.BranchFilterEnabled;
+            bool showCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+            bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
+            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.RevisionGraphShowArtificialCommits = false;
+
+            RunFormTest(
+                form =>
+                {
+                    try
+                    {
+                        form.GetTestAccessor().ToolStripFilters.GetTestAccessor().UpdateBranchFilterItems();
+
+                        // 1. Cycle between "Show all branches" > "Show current branch" > "Show filterd branches"
+                        // ------------------------------------------------------------------------------------------------
+
+                        Console.WriteLine("Scenario 1: set 'Show all branches'");
+                        //// Assert
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
+                        AppSettings.BranchFilterEnabled.Should().BeFalse();
+                        AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
+
+                        Console.WriteLine("Scenario 1: set 'Show current branch'");
+                        form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesCurrent.PerformClick();
+                        //// Wait for reload to complete
+                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+                        //// Assert
+                        AppSettings.BranchFilterEnabled.Should().BeTrue();
+                        AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(2);
+
+                        Console.WriteLine("Scenario 1: set 'Show filtered branches' - absent of filter, reset to 'Show all branches'");
+                        form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesFiltered.PerformClick();
+                        //// Wait for reload to complete
+                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+                        //// Assert
+                        AppSettings.BranchFilterEnabled.Should().BeFalse();
+                        AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
+
+                        // 2. Apply a branch filter
+                        // ------------------------------------------------------------------------------------------------
+
+                        Console.WriteLine("Scenario 2: apply branch filter 'Branch2'");
+                        form.GetTestAccessor().ToolStripFilters.SetBranchFilter("Branch2", refresh: true);
+                        //// Wait for reload to complete
+                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+                        //// Assert
+                        AppSettings.BranchFilterEnabled.Should().BeTrue();
+                        AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(3);
+
+                        Console.WriteLine("Scenario 2: set 'Show current branch'");
+                        form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesCurrent.PerformClick();
+                        //// Wait for reload to complete
+                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+                        //// Assert
+                        AppSettings.BranchFilterEnabled.Should().BeTrue();
+                        AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(2);
+                        //// The filter text is still present
+                        form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tscboBranchFilter.Text.Should().Be("Branch2");
+
+                        // 3. Switch to another repo - "Show current branch" must remain, filter text must be erased
+                        // ------------------------------------------------------------------------------------------------
+
+                        Console.WriteLine("Scenario 3: switch repo");
+                        using ReferenceRepository repository = new();
+                        form.SetWorkingDir(repository.Module.WorkingDir);
+                        //// Wait for reload to complete
+                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+                        //// Assert
+                        AppSettings.BranchFilterEnabled.Should().BeTrue();
+                        AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
+                        form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tscboBranchFilter.Text.Should().BeEmpty();
+                    }
+                    finally
+                    {
+                        AppSettings.BranchFilterEnabled = branchFilterEnabled;
+                        AppSettings.ShowCurrentBranchOnly = showCurrentBranchOnly;
+                        AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
+                    }
+                });
+        }
+
         private void RunFormTest(Action<FormBrowse> testDriver)
         {
             RunFormTest(
@@ -115,6 +214,25 @@ namespace GitExtensions.UITests.CommandsDialogs
             UITest.RunForm(
                 showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
                 testDriverAsync);
+        }
+
+        private static void ProcessUntil(Func<string> getCurrent, string expected, int maxIterations = 100)
+        {
+            string current = "";
+            for (int iteration = 0; iteration < maxIterations; ++iteration)
+            {
+                current = getCurrent();
+                if (current == expected)
+                {
+                    Debug.WriteLine($"{nameof(ProcessUntil)} '{expected}' in iteration {iteration}");
+                    return;
+                }
+
+                Application.DoEvents();
+                Thread.Sleep(5);
+            }
+
+            Assert.Fail($"{current} != {expected} in {maxIterations} iterations");
         }
     }
 }

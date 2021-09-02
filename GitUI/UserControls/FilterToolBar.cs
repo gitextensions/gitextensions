@@ -30,9 +30,6 @@ namespace GitUI.UserControls
 
             InitBranchSelectionFilter();
 
-            tscboBranchFilter.Leave += (s, e) => ApplyCustomBranchFilter(refresh: true);
-
-            tstxtRevisionFilter.Leave += (s, e) => ApplyRevisionFilter();
             tstxtRevisionFilter.KeyUp += (s, e) =>
             {
                 if (e.KeyValue == (char)Keys.Enter)
@@ -165,6 +162,12 @@ namespace GitUI.UserControls
             tscboBranchFilter.Items.Clear();
             tscboBranchFilter.Items.AddRange(matches);
             tscboBranchFilter.SelectionStart = index;
+        }
+
+        public void ClearFilters()
+        {
+            tscboBranchFilter.Text =
+                tstxtRevisionFilter.Text = string.Empty;
         }
 
         private IGitModule GetModule()
@@ -427,6 +430,8 @@ namespace GitUI.UserControls
             public IGitModule GetModule() => _control.GetModule();
 
             public bool SetUnitTestsMode() => _control._isUnitTests = true;
+
+            public void UpdateBranchFilterItems() => _control.UpdateBranchFilterItems();
         }
     }
 }
