@@ -156,12 +156,11 @@ namespace GitUI.Blame
                 _tooltipCommit = blameCommit;
                 _lastTooltipX = newTooltipX;
                 _lastTooltipY = newTooltipY;
-                blameTooltip.Show(GetBlameToolTipText(blameCommit, _gitRevisionSummaryBuilder), this, newTooltipX, newTooltipY);
+                blameTooltip.Show(blameCommit.ToString(_gitRevisionSummaryBuilder.BuildSummary), this, newTooltipX, newTooltipY);
             }
         }
 
-        private string GetBlameToolTipText(GitBlameCommit blameCommit,
-            IGitRevisionSummaryBuilder summaryBuilder)
+        private string GetBlameToolTipText(GitBlameCommit blameCommit)
         {
             GitBlameCommit commitWithTruncatedSummary = new(blameCommit.ObjectId,
                 blameCommit.Author,
