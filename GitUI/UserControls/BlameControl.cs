@@ -160,23 +160,6 @@ namespace GitUI.Blame
             }
         }
 
-        private string GetBlameToolTipText(GitBlameCommit blameCommit)
-        {
-            GitBlameCommit commitWithTruncatedSummary = new(blameCommit.ObjectId,
-                blameCommit.Author,
-                blameCommit.AuthorMail,
-                blameCommit.AuthorTime,
-                blameCommit.AuthorTimeZone,
-                blameCommit.Committer,
-                blameCommit.CommitterMail,
-                blameCommit.CommitterTime,
-                blameCommit.CommitterTimeZone,
-                summaryBuilder.BuildSummary(blameCommit.Summary),
-                blameCommit.FileName);
-
-            return commitWithTruncatedSummary.ToString();
-        }
-
         private void BlameFile_MouseMove(object sender, MouseEventArgs e)
         {
             if (_blame is null)
@@ -683,8 +666,6 @@ namespace GitUI.Blame
                 => _control.BuildAuthorLine(line, lineBuilder, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
 
             public (string gutter, string body, List<GitBlameEntry> avatars) BuildBlameContents(string filename) => _control.BuildBlameContents(filename, avatarSize: 10);
-
-            public string GetBlameToolTipText(GitBlameCommit commit, IGitRevisionSummaryBuilder summaryBuilder) => _control.GetBlameToolTipText(commit, summaryBuilder);
 
             public List<GitBlameEntry> CalculateBlameGutterData(IReadOnlyList<GitBlameLine> blameLines)
                 => _control.CalculateBlameGutterData(blameLines);

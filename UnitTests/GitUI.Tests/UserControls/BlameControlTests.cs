@@ -254,33 +254,5 @@ namespace GitUITests.UserControls
             blameEntries[6].AgeBucketIndex.Should().Be(6);
             blameEntries[7].AgeBucketIndex.Should().Be(6);
         }
-
-        [Test]
-        public void GetBlameToolTipText_When_commit_present_Then_uses_summary_builder_to_truncate_summary()
-        {
-            // Given
-            var summaryBuilder = Substitute.For<IGitRevisionSummaryBuilder>();
-
-            var mockBody = "test long long long summary line";
-            summaryBuilder.BuildSummary(mockBody).Returns("test truncated summary line");
-            GitBlameCommit blameCommitForTooltip = new(
-                ObjectId.Random(),
-                "author1",
-                "author1@mail.fake",
-                new DateTime(2010, 3, 22, 12, 01, 02),
-                "authorTimeZone",
-                "committer1",
-                "committer1@authormail.com",
-                new DateTime(2010, 3, 22, 13, 01, 02),
-                "committerTimeZone",
-                mockBody,
-                "fileName.txt");
-
-            // When
-            var result = _blameControl.GetTestAccessor().GetBlameToolTipText(blameCommitForTooltip, summaryBuilder);
-
-            // Then
-            result.Should().Contain("Summary: test truncated summary line");
-        }
     }
 }
