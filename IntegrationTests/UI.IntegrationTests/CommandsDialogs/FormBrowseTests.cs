@@ -125,8 +125,6 @@ namespace GitExtensions.UITests.CommandsDialogs
                 {
                     try
                     {
-                        form.GetTestAccessor().ToolStripFilters.GetTestAccessor().UpdateBranchFilterItems();
-
                         // 1. Cycle between "Show all branches" > "Show current branch" > "Show filterd branches"
                         // ------------------------------------------------------------------------------------------------
 

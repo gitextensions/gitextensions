@@ -316,6 +316,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             ToolStripFilters.Bind(() => Module, RevisionGrid);
+            ToolStripFilters.UpdateBranchFilterItems();
             ToolStripFilters.SetRevisionFilter(filter);
 
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
@@ -2023,6 +2024,7 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.SetRevisionWithChildren(null, Array.Empty<ObjectId>());
                 UICommands.RepoChangedNotifier.Notify();
                 RevisionGrid.IndexWatcher.Reset();
+                ToolStripFilters.UpdateBranchFilterItems();
             }
             else
             {

@@ -141,7 +141,7 @@ namespace GitUI.UserControls
             _revisionGridFilter.FilterChanged += revisionGridFilter_FilterChanged;
         }
 
-        public void BindBranches(string[] branches)
+        private void BindBranches(string[] branches)
         {
             var autoCompleteList = tscboBranchFilter.AutoCompleteCustomSource.Cast<string>();
             if (!autoCompleteList.SequenceEqual(branches))
@@ -289,7 +289,7 @@ namespace GitUI.UserControls
             ApplyRevisionFilter();
         }
 
-        private void UpdateBranchFilterItems()
+        public void UpdateBranchFilterItems()
         {
             tscboBranchFilter.Items.Clear();
 
@@ -430,8 +430,6 @@ namespace GitUI.UserControls
             public IGitModule GetModule() => _control.GetModule();
 
             public bool SetUnitTestsMode() => _control._isUnitTests = true;
-
-            public void UpdateBranchFilterItems() => _control.UpdateBranchFilterItems();
         }
     }
 }
