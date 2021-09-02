@@ -8,7 +8,6 @@ using FluentAssertions;
 using GitCommands;
 using GitUI.Blame;
 using GitUIPluginInterfaces;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace GitUITests.UserControls
