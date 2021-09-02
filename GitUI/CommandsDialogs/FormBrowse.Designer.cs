@@ -1685,6 +1685,12 @@ namespace GitUI.CommandsDialogs
             this.toolPanel.TopToolStripPanel.Controls.Add(this.ToolStripFilters);
             this.toolPanel.TopToolStripPanel.Controls.Add(this.ToolStripScripts);
             // 
+            // ToolStripFilters
+            // 
+            this.ToolStripFilters.Name = "ToolStripFilters";
+            this.ToolStripFilters.TabIndex = 1;
+            this.ToolStripFilters.Text = "Filters";
+            // 
             // addUpstreamRemoteToolStripMenuItem
             // 
             this._addUpstreamRemoteToolStripMenuItem.Name = "_addUpstreamRemoteToolStripMenuItem";
@@ -1702,7 +1708,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStripScripts.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripScripts.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStripScripts.Location = new System.Drawing.Point(890, 0);
-            this.ToolStripScripts.Name = "toolStripScripts";
+            this.ToolStripScripts.Name = "ToolStripScripts";
             this.ToolStripScripts.Padding = new System.Windows.Forms.Padding(0);
             this.ToolStripScripts.Size = new System.Drawing.Size(43, 25);
             this.ToolStripScripts.TabIndex = 2;

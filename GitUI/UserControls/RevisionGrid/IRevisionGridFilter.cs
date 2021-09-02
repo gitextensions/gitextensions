@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -7,6 +8,11 @@ namespace GitUI.UserControls.RevisionGrid
     /// </summary>
     public interface IRevisionGridFilter
     {
+        /// <summary>
+        ///  Occurs whenever filter changes.
+        /// </summary>
+        event EventHandler? FilterChanged;
+
         /// <summary>
         ///  Applies a branch filter.
         /// </summary>
@@ -23,8 +29,16 @@ namespace GitUI.UserControls.RevisionGrid
         /// <exception cref="InvalidOperationException">Invalid 'diff contains' filter.</exception>
         void SetAndApplyRevisionFilter(RevisionFilter filter);
 
+        void ShowAllBranches();
+
+        void ShowCurrentBranchOnly();
+
+        void ShowFilteredBranches();
+
         void ShowRevisionFilterDialog();
 
         void ToggleShowFirstParent();
+
+        void ToggleShowReflogReferences();
     }
 }
