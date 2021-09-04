@@ -14,6 +14,7 @@ using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;
 using GitCommands.Remotes;
+using GitCommands.Settings;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
@@ -310,7 +311,7 @@ namespace GitUI.CommitInfo
 
             if (_revision is not null && !_revision.IsArtificial)
             {
-                StartAsyncDataLoad();
+                StartAsyncDataLoad(Module.EffectiveSettings);
             }
 
             return;
@@ -336,7 +337,7 @@ namespace GitUI.CommitInfo
                 rtbxCommitMessage.SetXHTMLText(commitMessage);
             }
 
-            void StartAsyncDataLoad()
+            void StartAsyncDataLoad(RepoDistSettings settings)
             {
                 var cancellationToken = _asyncLoadCancellation.Next();
                 var initialRevision = _revision;
@@ -345,7 +346,7 @@ namespace GitUI.CommitInfo
                 {
                     List<Task> tasks = new();
 
-                    tasks.Add(LoadLinksForRevisionAsync(initialRevision));
+                    tasks.Add(LoadLinksForRevisionAsync(initialRevision, settings));
 
                     // No branch/tag data for artificial commands
                     if (AppSettings.CommitInfoShowContainedInBranches)
@@ -386,10 +387,12 @@ namespace GitUI.CommitInfo
 
                 return;
 
-                async Task LoadLinksForRevisionAsync(GitRevision revision)
+                async Task LoadLinksForRevisionAsync(GitRevision revision, RepoDistSettings settings)
                 {
                     await TaskScheduler.Default;
-                    var linksInfo = GetLinksForRevision();
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var linksInfo = GetLinksForRevision(settings);
 
                     // Most commits do not have link; do not switch to main thread if nothing is changed
                     if (_linksInfo == linksInfo)
@@ -402,9 +405,11 @@ namespace GitUI.CommitInfo
 
                     return;
 
-                    string GetLinksForRevision()
+                    string GetLinksForRevision(RepoDistSettings settings)
                     {
-                        var links = _gitRevisionExternalLinksParser.Parse(revision, Module.EffectiveSettings);
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        var links = _gitRevisionExternalLinksParser.Parse(revision, settings);
                         var result = string.Join(", ", links.Distinct().Select(link => _linkFactory.CreateLink(link.Caption, link.Uri)));
 
                         if (string.IsNullOrEmpty(result))
