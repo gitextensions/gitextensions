@@ -127,6 +127,9 @@ namespace GitCommands
 
             using (var process = module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
+#if DEBUG
+                Debug.WriteLine($"git {arguments}");
+#endif
                 token.ThrowIfCancellationRequested();
 
                 var buffer = new byte[4096];

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.Ok = new System.Windows.Forms.Button();
-            this._NO_TRANSLATE_Limit = new System.Windows.Forms.NumericUpDown();
+            this._NO_TRANSLATE_CommitsLimit = new System.Windows.Forms.NumericUpDown();
             this.Message = new System.Windows.Forms.TextBox();
             this.Author = new System.Windows.Forms.TextBox();
             this.Since = new System.Windows.Forms.DateTimePicker();
@@ -49,17 +49,17 @@
             this.CommitterCheck = new System.Windows.Forms.CheckBox();
             this.MessageCheck = new System.Windows.Forms.CheckBox();
             this.IgnoreCase = new System.Windows.Forms.CheckBox();
-            this.LimitCheck = new System.Windows.Forms.CheckBox();
+            this.CommitsLimitCheck = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.FileFilterCheck = new System.Windows.Forms.CheckBox();
-            this.FileFilter = new System.Windows.Forms.TextBox();
+            this.PathFilterCheck = new System.Windows.Forms.CheckBox();
+            this.PathFilter = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.BranchFilterCheck = new System.Windows.Forms.CheckBox();
             this.BranchFilter = new System.Windows.Forms.TextBox();
             this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
             this.SimplifyByDecorationCheck = new System.Windows.Forms.CheckBox();
             this.MainPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_Limit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitsLimit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -79,17 +79,22 @@
             this.Ok.UseVisualStyleBackColor = true;
             this.Ok.Click += new System.EventHandler(this.OkClick);
             // 
-            // _NO_TRANSLATE_Limit
+            // _NO_TRANSLATE_CommitsLimit
             // 
-            this._NO_TRANSLATE_Limit.Dock = System.Windows.Forms.DockStyle.Left;
-            this._NO_TRANSLATE_Limit.Location = new System.Drawing.Point(96, 168);
-            this._NO_TRANSLATE_Limit.Maximum = new decimal(new int[] {
+            this._NO_TRANSLATE_CommitsLimit.Dock = System.Windows.Forms.DockStyle.Left;
+            this._NO_TRANSLATE_CommitsLimit.Increment = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this._NO_TRANSLATE_CommitsLimit.Location = new System.Drawing.Point(96, 168);
+            this._NO_TRANSLATE_CommitsLimit.Maximum = new decimal(new int[] {
             1000000,
             0,
             0,
             0});
-            this._NO_TRANSLATE_Limit.Name = "_NO_TRANSLATE_Limit";
-            this._NO_TRANSLATE_Limit.Size = new System.Drawing.Size(116, 23);
+            this._NO_TRANSLATE_CommitsLimit.Name = "_NO_TRANSLATE_CommitsLimit";
+            this._NO_TRANSLATE_CommitsLimit.Size = new System.Drawing.Size(116, 23);
             // 
             // Message
             // 
@@ -220,11 +225,11 @@
             this.tableLayoutPanel1.Controls.Add(this.label6, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.IgnoreCase, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.label7, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.LimitCheck, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_Limit, 2, 6);
+            this.tableLayoutPanel1.Controls.Add(this.CommitsLimitCheck, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_CommitsLimit, 2, 6);
             this.tableLayoutPanel1.Controls.Add(this.label8, 0, 7);
-            this.tableLayoutPanel1.Controls.Add(this.FileFilterCheck, 1, 7);
-            this.tableLayoutPanel1.Controls.Add(this.FileFilter, 2, 7);
+            this.tableLayoutPanel1.Controls.Add(this.PathFilterCheck, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.PathFilter, 2, 7);
             this.tableLayoutPanel1.Controls.Add(this.label9, 0, 8);
             this.tableLayoutPanel1.Controls.Add(this.BranchFilterCheck, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.BranchFilter, 2, 8);
@@ -257,7 +262,7 @@
             this.SinceCheck.Name = "SinceCheck";
             this.SinceCheck.Size = new System.Drawing.Size(14, 14);
             this.SinceCheck.UseVisualStyleBackColor = true;
-            this.SinceCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
+            this.SinceCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // CheckUntil
             // 
@@ -267,7 +272,7 @@
             this.CheckUntil.Name = "CheckUntil";
             this.CheckUntil.Size = new System.Drawing.Size(14, 14);
             this.CheckUntil.UseVisualStyleBackColor = true;
-            this.CheckUntil.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
+            this.CheckUntil.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // AuthorCheck
             // 
@@ -277,7 +282,7 @@
             this.AuthorCheck.Name = "AuthorCheck";
             this.AuthorCheck.Size = new System.Drawing.Size(14, 14);
             this.AuthorCheck.UseVisualStyleBackColor = true;
-            this.AuthorCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
+            this.AuthorCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // CommitterCheck
             // 
@@ -287,7 +292,7 @@
             this.CommitterCheck.Name = "CommitterCheck";
             this.CommitterCheck.Size = new System.Drawing.Size(14, 14);
             this.CommitterCheck.UseVisualStyleBackColor = true;
-            this.CommitterCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
+            this.CommitterCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // MessageCheck
             // 
@@ -297,7 +302,7 @@
             this.MessageCheck.Name = "MessageCheck";
             this.MessageCheck.Size = new System.Drawing.Size(14, 14);
             this.MessageCheck.UseVisualStyleBackColor = true;
-            this.MessageCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
+            this.MessageCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // IgnoreCase
             // 
@@ -310,15 +315,15 @@
             this.IgnoreCase.Size = new System.Drawing.Size(14, 14);
             this.IgnoreCase.UseVisualStyleBackColor = true;
             // 
-            // LimitCheck
+            // CommitsLimitCheck
             // 
-            this.LimitCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.LimitCheck.AutoSize = true;
-            this.LimitCheck.Location = new System.Drawing.Point(76, 172);
-            this.LimitCheck.Name = "LimitCheck";
-            this.LimitCheck.Size = new System.Drawing.Size(14, 14);
-            this.LimitCheck.UseVisualStyleBackColor = true;
-            this.LimitCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
+            this.CommitsLimitCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.CommitsLimitCheck.AutoSize = true;
+            this.CommitsLimitCheck.Location = new System.Drawing.Point(76, 172);
+            this.CommitsLimitCheck.Name = "CommitsLimitCheck";
+            this.CommitsLimitCheck.Size = new System.Drawing.Size(14, 14);
+            this.CommitsLimitCheck.UseVisualStyleBackColor = true;
+            this.CommitsLimitCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // label8
             // 
@@ -327,25 +332,25 @@
             this.label8.Location = new System.Drawing.Point(3, 194);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(67, 29);
-            this.label8.Text = "File filter";
+            this.label8.Text = "Path filter";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // FileFilterCheck
+            // PathFilterCheck
             // 
-            this.FileFilterCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.FileFilterCheck.AutoSize = true;
-            this.FileFilterCheck.Location = new System.Drawing.Point(76, 201);
-            this.FileFilterCheck.Name = "FileFilterCheck";
-            this.FileFilterCheck.Size = new System.Drawing.Size(14, 14);
-            this.FileFilterCheck.UseVisualStyleBackColor = true;
-            this.FileFilterCheck.CheckedChanged += new System.EventHandler(this.SinceCheckCheckedChanged);
+            this.PathFilterCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.PathFilterCheck.AutoSize = true;
+            this.PathFilterCheck.Location = new System.Drawing.Point(76, 201);
+            this.PathFilterCheck.Name = "PathFilterCheck";
+            this.PathFilterCheck.Size = new System.Drawing.Size(14, 14);
+            this.PathFilterCheck.UseVisualStyleBackColor = true;
+            this.PathFilterCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
-            // FileFilter
+            // PathFilter
             // 
-            this.FileFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FileFilter.Location = new System.Drawing.Point(96, 197);
-            this.FileFilter.Name = "FileFilter";
-            this.FileFilter.Size = new System.Drawing.Size(285, 23);
+            this.PathFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PathFilter.Location = new System.Drawing.Point(96, 197);
+            this.PathFilter.Name = "PathFilter";
+            this.PathFilter.Size = new System.Drawing.Size(285, 23);
             // 
             // label9
             // 
@@ -365,7 +370,7 @@
             this.BranchFilterCheck.Name = "BranchFilterCheck";
             this.BranchFilterCheck.Size = new System.Drawing.Size(14, 14);
             this.BranchFilterCheck.UseVisualStyleBackColor = true;
-            this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.OnBranchFilterCheckedChanged);
+            this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // BranchFilter
             // 
@@ -383,7 +388,7 @@
             this.CurrentBranchOnlyCheck.Size = new System.Drawing.Size(285, 19);
             this.CurrentBranchOnlyCheck.Text = "Show current branch only";
             this.CurrentBranchOnlyCheck.UseVisualStyleBackColor = true;
-            this.CurrentBranchOnlyCheck.CheckedChanged += new System.EventHandler(this.OnShowCurrentBranchOnlyCheckedChanged);
+            this.CurrentBranchOnlyCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // SimplifyByDecorationCheck
             // 
@@ -394,7 +399,7 @@
             this.SimplifyByDecorationCheck.Size = new System.Drawing.Size(285, 19);
             this.SimplifyByDecorationCheck.Text = "Simplify by decoration";
             this.SimplifyByDecorationCheck.UseVisualStyleBackColor = true;
-            this.SimplifyByDecorationCheck.CheckedChanged += new System.EventHandler(this.OnSimplifyByDecorationCheckedChanged);
+            this.SimplifyByDecorationCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // FormRevisionFilter
             // 
@@ -407,9 +412,8 @@
             this.Name = "FormRevisionFilter";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Filter";
-            this.Load += new System.EventHandler(this.FormRevisionFilterLoad);
             this.MainPanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_Limit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitsLimit)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
@@ -420,7 +424,7 @@
         #endregion
 
         private System.Windows.Forms.Button Ok;
-        private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_Limit;
+        private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_CommitsLimit;
         private System.Windows.Forms.TextBox Message;
         private System.Windows.Forms.TextBox Author;
         private System.Windows.Forms.DateTimePicker Since;
@@ -434,7 +438,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.CheckBox LimitCheck;
+        private System.Windows.Forms.CheckBox CommitsLimitCheck;
         private System.Windows.Forms.CheckBox IgnoreCase;
         private System.Windows.Forms.CheckBox MessageCheck;
         private System.Windows.Forms.CheckBox CommitterCheck;
@@ -442,8 +446,8 @@
         private System.Windows.Forms.CheckBox CheckUntil;
         private System.Windows.Forms.CheckBox SinceCheck;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.CheckBox FileFilterCheck;
-        private System.Windows.Forms.TextBox FileFilter;
+        private System.Windows.Forms.CheckBox PathFilterCheck;
+        private System.Windows.Forms.TextBox PathFilter;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox BranchFilter;
         private System.Windows.Forms.CheckBox CurrentBranchOnlyCheck;

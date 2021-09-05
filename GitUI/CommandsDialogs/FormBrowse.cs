@@ -261,9 +261,6 @@ namespace GitUI.CommandsDialogs
             _appTitleGenerator = ManagedExtensibility.GetExport<IAppTitleGenerator>().Value;
             _windowsJumpListManager = ManagedExtensibility.GetExport<IWindowsJumpListManager>().Value;
 
-            _appTitleGenerator = ManagedExtensibility.GetExport<IAppTitleGenerator>().Value;
-            _windowsJumpListManager = ManagedExtensibility.GetExport<IWindowsJumpListManager>().Value;
-
             _formBrowseDiagnosticsReporter = new FormBrowseDiagnosticsReporter(this);
 
             MainSplitContainer.Visible = false;
@@ -280,6 +277,10 @@ namespace GitUI.CommandsDialogs
             InitCountArtificial(out _gitStatusMonitor);
 
             _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
+
+            RevisionGrid.SuspendRefreshRevisions();
+
+            ToolStripFilters.Bind(() => Module, RevisionGrid);
             InitMenusAndToolbars(args.RevFilter, args.PathFilter);
 
             InitRevisionGrid(args.SelectedId, args.FirstId);
@@ -309,8 +310,6 @@ namespace GitUI.CommandsDialogs
                 control.DragDrop += FormBrowse_DragDrop;
             }
 
-            ToolStripFilters.Bind(() => Module, RevisionGrid);
-
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
             toolStripButtonPush.Initialize(_aheadBehindDataProvider);
@@ -320,6 +319,8 @@ namespace GitUI.CommandsDialogs
 
             // We're launching the main form, and whilst the module has been set for us we still need to formally switch to it
             SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
+
+            RevisionGrid.ResumeRefreshRevisions();
 
             return;
 
@@ -557,7 +558,7 @@ namespace GitUI.CommandsDialogs
             else if (RevisionGrid.FilterIsApplied(true) || AppSettings.BranchFilterEnabled)
             {
                 // Clear branch filter
-                ToolStripFilters.SetBranchFilter(string.Empty, refresh: true);
+                ToolStripFilters.SetBranchFilter(string.Empty);
 
                 // Execute the "Show all branches" menu option
                 RevisionGrid.ShowAllBranches();
@@ -571,10 +572,9 @@ namespace GitUI.CommandsDialogs
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
-            ToolStripFilters.UpdateBranchFilterItems();
-
             this.InvokeAsync(RefreshRevisions).FileAndForget();
 
+            ToolStripFilters.UpdateBranchFilterItems();
             UpdateSubmodulesStructure();
             UpdateStashCount();
 
@@ -608,7 +608,7 @@ namespace GitUI.CommandsDialogs
         private void RefreshSelection()
         {
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
-            var selectedRevision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
+            var selectedRevision = selectedRevisions.FirstOrDefault();
 
             FillFileTree(selectedRevision);
             FillDiff(selectedRevisions);
@@ -627,11 +627,6 @@ namespace GitUI.CommandsDialogs
             repoObjectsTree.SelectionChanged(selectedRevisions);
         }
 
-        private void revisionGrid_PathFilterChanged(object? sender, EventArgs e)
-        {
-            Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), branchSelect.Text, TranslatedStrings.NoBranch, RevisionGrid.GetPathFilter());
-        }
-
         #region IBrowseRepo
 
         public void GoToRef(string refName, bool showNoRevisionMsg, bool toggleSelection = false)
@@ -646,11 +641,9 @@ namespace GitUI.CommandsDialogs
 
         public void SetPathFilter(string pathFilter)
         {
-            RevisionGrid.SetPathFilter(pathFilter.QuoteNE());
             revisionDiff.FallbackFollowedFile = pathFilter;
             fileTree.FallbackFollowedFile = pathFilter;
-            Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), branchSelect.Text, TranslatedStrings.NoBranch, RevisionGrid.GetPathFilter());
-            RevisionGrid.ForceRefreshRevisions();
+            RevisionGrid.SetAndApplyPathFilter(pathFilter.QuoteNE());
         }
 
         private void ShowDashboard()
@@ -894,7 +887,6 @@ namespace GitUI.CommandsDialogs
                 }
 
                 RefreshWorkingDirComboText();
-                Text = _appTitleGenerator.Generate(Module.WorkingDir, validBrowseDir, branchSelect.Text, TranslatedStrings.NoBranch, RevisionGrid.GetPathFilter());
 
                 OnActivate();
 
@@ -1796,12 +1788,6 @@ namespace GitUI.CommandsDialogs
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
 
-            // If we're applying custom branch or revision filters - reset them
-            ToolStripFilters.ClearFilters();
-            AppSettings.BranchFilterEnabled = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
-
-            RevisionGrid.DisableFilters();
-
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
             {
@@ -1814,6 +1800,7 @@ namespace GitUI.CommandsDialogs
                 if (!string.Equals(originalWorkingDir, Module.WorkingDir, StringComparison.Ordinal))
                 {
                     ChangeTerminalActiveFolder(Module.WorkingDir);
+
 #if DEBUG
                     // Current encodings
                     Debug.WriteLine($"Encodings for {Module.WorkingDir}");
@@ -2482,7 +2469,7 @@ namespace GitUI.CommandsDialogs
                     // and to make it possible we add explicit branch filter and refresh.
                     if (AppSettings.ShowFirstParent && !found)
                     {
-                        ToolStripFilters.SetBranchFilter(revision?.ToString(), refresh: true);
+                        ToolStripFilters.SetBranchFilter(revision?.ToString());
                         RevisionGrid.SetSelectedRevision(revision);
                     }
 

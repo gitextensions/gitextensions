@@ -234,7 +234,7 @@ namespace GitUI.CommandsDialogs
             // browse dialog.
             FileName = FileName.ToPosixPath();
 
-            RevisionGrid.SetPathFilter(FileName.QuoteNE());
+            RevisionGrid.SetAndApplyPathFilter(FileName);
             RevisionGrid.Load();
         }
 

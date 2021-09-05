@@ -37,7 +37,7 @@ namespace GitUI.BranchTreePanel
         private TagTree _tagTree;
         private SubmoduleTree _submoduleTree;
         private List<TreeNode>? _searchResult;
-        private Action<string?, bool> _branchFilterAction;
+        private Action<string?> _branchFilterAction;
         private IAheadBehindDataProvider? _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
@@ -231,7 +231,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, Action<string?, bool> branchFilterAction, ICheckRefs refsSource, IScriptHostControl scriptHost, IRunScript scriptRunner)
+        public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, Action<string?> branchFilterAction, ICheckRefs refsSource, IScriptHostControl scriptHost, IRunScript scriptRunner)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _branchFilterAction = branchFilterAction;

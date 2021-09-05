@@ -1,11 +1,11 @@
 ﻿using System;
-using GitCommands;
-using GitExtUtils;
 
 namespace GitUI.UserControls.RevisionGrid
 {
     public partial class FormRevisionFilter : GitExtensionsDialog
     {
+        private readonly FilterInfo _filterInfo;
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormRevisionFilter()
@@ -14,48 +14,61 @@ namespace GitUI.UserControls.RevisionGrid
             InitializeComponent();
         }
 
-        public FormRevisionFilter(GitUICommands commands)
+        public FormRevisionFilter(GitUICommands commands, FilterInfo filterInfo)
             : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
             InitializeComplete();
 
+            _filterInfo = filterInfo;
+
             // work-around the designer bug that can't add controls to FlowLayoutPanel
             ControlsPanel.Controls.Add(Ok);
             AcceptButton = Ok;
-
-            _NO_TRANSLATE_Limit.Value = AppSettings.MaxRevisionGraphCommits;
         }
 
-        private void FormRevisionFilterLoad(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            EnableFilters();
+            base.OnLoad(e);
+
+            FilterInfo rawFilterInfo = _filterInfo with { IsRaw = true };
+
+            SinceCheck.Checked = rawFilterInfo.ByDateFrom;
+            Since.Value = rawFilterInfo.DateFrom == DateTime.MinValue ? DateTime.Today : rawFilterInfo.DateFrom;
+            CheckUntil.Checked = rawFilterInfo.ByDateTo;
+            Until.Value = rawFilterInfo.DateTo == DateTime.MinValue ? DateTime.Today : rawFilterInfo.DateTo;
+            AuthorCheck.Checked = rawFilterInfo.ByAuthor;
+            Author.Text = rawFilterInfo.Author;
+            CommitterCheck.Checked = rawFilterInfo.ByCommitter;
+            Committer.Text = rawFilterInfo.Committer;
+            MessageCheck.Checked = rawFilterInfo.ByMessage;
+            Message.Text = rawFilterInfo.Message;
+            IgnoreCase.Checked = rawFilterInfo.IgnoreCase;
+            IgnoreCase.Enabled = Author.Enabled || Committer.Enabled || MessageCheck.Checked;
+            CommitsLimitCheck.Checked = rawFilterInfo.ByCommitsLimit;
+            _NO_TRANSLATE_CommitsLimit.Value = rawFilterInfo.CommitsLimit;
+            PathFilterCheck.Checked = rawFilterInfo.ByPathFilter;
+            PathFilter.Text = rawFilterInfo.PathFilter;
+            BranchFilterCheck.Checked = rawFilterInfo.IsShowFilteredBranchesChecked || rawFilterInfo.IsShowCurrentBranchOnlyChecked;
+            BranchFilter.Text = rawFilterInfo.BranchFilter;
+            CurrentBranchOnlyCheck.Checked = rawFilterInfo.ShowCurrentBranchOnly;
+            SimplifyByDecorationCheck.Checked = rawFilterInfo.ShowSimplifyByDecoration;
+
+            UpdateFilters();
         }
 
-        private void SinceCheckCheckedChanged(object sender, EventArgs e)
+        private void option_CheckedChanged(object sender, EventArgs e)
         {
-            EnableFilters();
+            UpdateFilters();
+
+            // If CommitsLimitCheck was changed, the displayed value may need to be updated too
+            if (sender == CommitsLimitCheck && !CommitsLimitCheck.Checked)
+            {
+                _NO_TRANSLATE_CommitsLimit.Value = _filterInfo.CommitsLimitDefault;
+            }
         }
 
-        private void OnBranchFilterCheckedChanged(object sender, EventArgs e)
-        {
-            AppSettings.BranchFilterEnabled = BranchFilterCheck.Checked;
-            EnableFilters();
-        }
-
-        private void OnShowCurrentBranchOnlyCheckedChanged(object sender, EventArgs e)
-        {
-            AppSettings.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
-            EnableFilters();
-        }
-
-        private void OnSimplifyByDecorationCheckedChanged(object sender, EventArgs e)
-        {
-            AppSettings.ShowSimplifyByDecoration = SimplifyByDecorationCheck.Checked;
-            EnableFilters();
-        }
-
-        private void EnableFilters()
+        private void UpdateFilters()
         {
             Since.Enabled = SinceCheck.Checked;
             Until.Enabled = CheckUntil.Checked;
@@ -63,12 +76,8 @@ namespace GitUI.UserControls.RevisionGrid
             Committer.Enabled = CommitterCheck.Checked;
             Message.Enabled = MessageCheck.Checked;
             IgnoreCase.Enabled = Author.Enabled || Committer.Enabled || MessageCheck.Checked;
-            _NO_TRANSLATE_Limit.Enabled = LimitCheck.Checked;
-            FileFilter.Enabled = FileFilterCheck.Checked;
-
-            BranchFilterCheck.Checked = AppSettings.BranchFilterEnabled;
-            CurrentBranchOnlyCheck.Checked = AppSettings.ShowCurrentBranchOnly;
-            SimplifyByDecorationCheck.Checked = AppSettings.ShowSimplifyByDecoration;
+            _NO_TRANSLATE_CommitsLimit.Enabled = CommitsLimitCheck.Checked;
+            PathFilter.Enabled = PathFilterCheck.Checked;
 
             CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
             SimplifyByDecorationCheck.Enabled = BranchFilterCheck.Checked;
@@ -76,127 +85,27 @@ namespace GitUI.UserControls.RevisionGrid
                                    !CurrentBranchOnlyCheck.Checked;
         }
 
-        public bool FilterEnabled()
-        {
-            return SinceCheck.Checked ||
-                    CheckUntil.Checked ||
-                    AuthorCheck.Checked ||
-                    CommitterCheck.Checked ||
-                    MessageCheck.Checked ||
-                    FileFilterCheck.Checked ||
-                    BranchFilterCheck.Checked;
-        }
-
-        public void DisableFilters()
-        {
-            SinceCheck.Checked = false;
-            CheckUntil.Checked = false;
-            AuthorCheck.Checked = false;
-            CommitterCheck.Checked = false;
-            MessageCheck.Checked = false;
-            FileFilterCheck.Checked = false;
-            BranchFilterCheck.Checked = false;
-        }
-
-        public ArgumentString GetRevisionFilter()
-        {
-            ArgumentBuilder filter = new();
-
-            if (AuthorCheck.Checked)
-            {
-                filter.Add($"--author=\"{Author.Text}\"");
-            }
-
-            if (CommitterCheck.Checked)
-            {
-                filter.Add($"--committer=\"{Committer.Text}\"");
-            }
-
-            if (MessageCheck.Checked)
-            {
-                filter.Add($"--grep=\"{Message.Text}\"");
-            }
-
-            if (!filter.IsEmpty && IgnoreCase.Checked)
-            {
-                filter.Add("--regexp-ignore-case");
-            }
-
-            if (SinceCheck.Checked)
-            {
-                filter.Add($"--since=\"{Since.Value:yyyy-MM-dd hh:mm:ss}\"");
-            }
-
-            if (CheckUntil.Checked)
-            {
-                filter.Add($"--until=\"{Until.Value:yyyy-MM-dd hh:mm:ss}\"");
-            }
-
-            return filter;
-        }
-
-        public int GetMaxCount()
-        {
-            return LimitCheck.Checked ? (int)_NO_TRANSLATE_Limit.Value : AppSettings.MaxRevisionGraphCommits;
-        }
-
-        public string GetPathFilter()
-        {
-            return FileFilterCheck.Checked ? FileFilter.Text : "";
-        }
-
-        public string GetInMemAuthorFilter()
-        {
-            return AuthorCheck.Checked ? Author.Text : "";
-        }
-
-        public string GetInMemCommitterFilter()
-        {
-            return CommitterCheck.Checked ? Committer.Text : "";
-        }
-
-        public string GetInMemMessageFilter()
-        {
-            return MessageCheck.Checked ? Message.Text : "";
-        }
-
-        public bool GetIgnoreCase()
-        {
-            return IgnoreCase.Checked;
-        }
-
-        public string GetBranchFilter()
-        {
-            return (!AppSettings.BranchFilterEnabled || AppSettings.ShowCurrentBranchOnly) ? "" : BranchFilter.Text;
-        }
-
-        public bool SetBranchFilter(string? filter)
-        {
-            string newFilter = filter?.Trim() ?? string.Empty;
-            if (string.Equals(newFilter, BranchFilter.Text, StringComparison.Ordinal))
-            {
-                // The filter hasn't changed
-                return false;
-            }
-
-            BranchFilter.Text = newFilter;
-            return true;
-        }
-
-        public void SetPathFilter(string? filter)
-        {
-            // If null the value is set from forms, then just uncheck
-            if (filter is not null)
-            {
-                FileFilter.Text = filter;
-            }
-
-            FileFilterCheck.Checked = !string.IsNullOrWhiteSpace(filter);
-        }
-
         private void OkClick(object sender, EventArgs e)
         {
-            Close();
+            _filterInfo.ByDateFrom = SinceCheck.Checked;
+            _filterInfo.DateFrom = Since.Value;
+            _filterInfo.ByDateTo = CheckUntil.Checked;
+            _filterInfo.DateTo = Until.Value;
+            _filterInfo.ByAuthor = AuthorCheck.Checked;
+            _filterInfo.Author = Author.Text;
+            _filterInfo.ByCommitter = CommitterCheck.Checked;
+            _filterInfo.Committer = Committer.Text;
+            _filterInfo.ByMessage = MessageCheck.Checked;
+            _filterInfo.Message = Message.Text;
+            _filterInfo.IgnoreCase = IgnoreCase.Checked;
+            _filterInfo.ByCommitsLimit = CommitsLimitCheck.Checked;
+            _filterInfo.CommitsLimit = (int)_NO_TRANSLATE_CommitsLimit.Value;
+            _filterInfo.ByPathFilter = PathFilterCheck.Checked;
+            _filterInfo.PathFilter = PathFilter.Text;
+            _filterInfo.ByBranchFilter = BranchFilterCheck.Checked;
+            _filterInfo.BranchFilter = BranchFilter.Text;
+            _filterInfo.ShowCurrentBranchOnly = BranchFilterCheck.Checked && CurrentBranchOnlyCheck.Checked;
+            _filterInfo.ShowSimplifyByDecoration = BranchFilterCheck.Checked && SimplifyByDecorationCheck.Checked;
         }
     }
 }

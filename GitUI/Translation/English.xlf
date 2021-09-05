@@ -7408,7 +7408,7 @@ Do you want to use this custom merge script?</source>
         <target />
       </trans-unit>
       <trans-unit id="label8.Text">
-        <source>File filter</source>
+        <source>Path filter</source>
         <target />
       </trans-unit>
       <trans-unit id="label9.Text">
@@ -9781,10 +9781,6 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">
         <source>For you own protection dropping more than 10 patch files at once is blocked!</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_formRevisionFilter.Text">
-        <source>Filter</source>
         <target />
       </trans-unit>
       <trans-unit id="_invalidDiffContainsFilter.Text">

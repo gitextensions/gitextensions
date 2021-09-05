@@ -23,16 +23,9 @@ namespace GitUI.CommandsDialogs
                     .FileAndForget();
             };
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
-            RevisionGrid.PathFilterChanged += revisionGrid_PathFilterChanged;
-            RevisionGrid.RefFilterOptionsChanged += (sender, e) =>
+            RevisionGrid.FilterChanged += (sender, e) =>
             {
-                if (e.RefFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
-                {
-                    // This means show all branches
-                    ToolStripFilters.ClearFilters();
-                    AppSettings.BranchFilterEnabled =
-                        AppSettings.ShowCurrentBranchOnly = false;
-                }
+                Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), branchSelect.Text, TranslatedStrings.NoBranch, e.PathFilter);
             };
             RevisionGrid.RevisionGraphLoaded += (sender, e) =>
             {

@@ -287,7 +287,7 @@
             // _NO_TRANSLATE_MaxCommits
             // 
             this._NO_TRANSLATE_MaxCommits.Increment = new decimal(new int[] {
-            100,
+            10000,
             0,
             0,
             0});
