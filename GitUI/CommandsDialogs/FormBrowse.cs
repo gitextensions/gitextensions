@@ -213,7 +213,9 @@ namespace GitUI.CommandsDialogs
                 if (e.RefFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
                 {
                     // This means show all branches
-                    ToolStripFilters.SetBranchFilter(string.Empty, refresh: false);
+                    ToolStripFilters.ClearFilters();
+                    AppSettings.BranchFilterEnabled =
+                        AppSettings.ShowCurrentBranchOnly = false;
                 }
             };
             RevisionGrid.SelectionChanged += (sender, e) =>
@@ -314,6 +316,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             ToolStripFilters.Bind(() => Module, RevisionGrid);
+            ToolStripFilters.UpdateBranchFilterItems();
             ToolStripFilters.SetRevisionFilter(filter);
 
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
@@ -1991,8 +1994,11 @@ namespace GitUI.CommandsDialogs
             PluginRegistry.Unregister(UICommands);
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
-            ToolStripFilters.SetBranchFilter(string.Empty, refresh: false);
-            ToolStripFilters.SetRevisionFilter(string.Empty);
+
+            // If we're applying custom branch or revision filters - reset them
+            ToolStripFilters.ClearFilters();
+            AppSettings.BranchFilterEnabled = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
+
             RevisionGrid.DisableFilters();
 
             UICommands = new GitUICommands(module);
@@ -2018,6 +2024,7 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.SetRevisionWithChildren(null, Array.Empty<ObjectId>());
                 UICommands.RepoChangedNotifier.Notify();
                 RevisionGrid.IndexWatcher.Reset();
+                ToolStripFilters.UpdateBranchFilterItems();
             }
             else
             {
@@ -3219,20 +3226,18 @@ namespace GitUI.CommandsDialogs
         {
             private readonly FormBrowse _form;
 
-            public FullBleedTabControl CommitInfoTabControl => _form.CommitInfoTabControl;
-
-            public TabPage DiffTabPage => _form.DiffTabPage;
-
-            public RevisionDiffControl RevisionDiffControl => _form.revisionDiff;
-
-            public TabPage TreeTabPage => _form.TreeTabPage;
-
             public TestAccessor(FormBrowse form)
             {
                 _form = form;
             }
 
+            public FullBleedTabControl CommitInfoTabControl => _form.CommitInfoTabControl;
+            public TabPage DiffTabPage => _form.DiffTabPage;
             public RepoObjectsTree RepoObjectsTree => _form.repoObjectsTree;
+            public RevisionDiffControl RevisionDiffControl => _form.revisionDiff;
+            public RevisionGridControl RevisionGrid => _form.RevisionGridControl;
+            public TabPage TreeTabPage => _form.TreeTabPage;
+            public FilterToolBar ToolStripFilters => _form.ToolStripFilters;
 
             public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, IList<Repository> repositoryHistory)
             {

@@ -9,8 +9,8 @@ namespace CommonTestUtils
 {
     public class ReferenceRepository : IDisposable
     {
-        private static GitModuleTestHelper _moduleTestHelper;
-        private static string _commitHash;
+        private GitModuleTestHelper _moduleTestHelper;
+        private string _commitHash;
 
         public ReferenceRepository()
         {
@@ -63,10 +63,10 @@ namespace CommonTestUtils
             Commands.Checkout(repository, CommitHash, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
         }
 
-        public void CheckoutMaster()
+        public void CheckoutBranch(string branchName)
         {
             using LibGit2Sharp.Repository repository = new(Module.WorkingDir);
-            Commands.Checkout(repository, "master", new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
+            Commands.Checkout(repository, branchName, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
         }
 
         public void CreateRemoteForMasterBranch()

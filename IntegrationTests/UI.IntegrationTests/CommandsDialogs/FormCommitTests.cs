@@ -100,7 +100,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_display_branch_and_no_remote_info_in_statusbar()
         {
-            _referenceRepository.CheckoutMaster();
+            _referenceRepository.CheckoutBranch("master");
             RunFormTest(async form =>
             {
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
