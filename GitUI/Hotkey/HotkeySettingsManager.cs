@@ -352,7 +352,8 @@ namespace GitUI.Hotkey
                     Hk(RevisionDiffControl.Command.ShowHistory, ShowHistoryHotkey),
                     Hk(RevisionDiffControl.Command.ResetSelectedFiles, Keys.R),
                     Hk(RevisionDiffControl.Command.StageSelectedFile, Keys.S),
-                    Hk(RevisionDiffControl.Command.UnStageSelectedFile, Keys.U)),
+                    Hk(RevisionDiffControl.Command.UnStageSelectedFile, Keys.U),
+                    Hk(RevisionDiffControl.Command.ShowFileTree, Keys.T)),
                 new HotkeySettings(
                     RevisionFileTreeControl.HotkeySettingsName,
                     Hk(RevisionFileTreeControl.Command.Blame, BlameHotkey),

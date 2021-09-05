@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
@@ -69,6 +70,7 @@ namespace GitUI.Blame
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
             BlameFile.MouseMove += BlameFile_MouseMove;
             BlameFile.EscapePressed += () => EscapePressed?.Invoke();
+            BlameFile.EnableAutomaticContinuousScroll = false;
 
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
         }
@@ -84,7 +86,14 @@ namespace GitUI.Blame
             BlameAuthor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
         }
 
-        public void LoadBlame(GitRevision revision, IReadOnlyList<ObjectId>? children, string? fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
+        public void HideCommitInfo()
+        {
+            splitContainer1.Panel1Collapsed = true;
+            CommitInfo.Visible = false;
+            CommitInfo.CommandClicked -= commitInfo_CommandClicked;
+        }
+
+        public void LoadBlame(GitRevision revision, IReadOnlyList<ObjectId>? children, string? fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
         {
             var objectId = revision.ObjectId;
 
@@ -107,7 +116,7 @@ namespace GitUI.Blame
             _encoding = encoding;
 
             _blameLoader.LoadAsync(() => _blame = Module.Blame(fileName, objectId.ToString(), encoding),
-                () => ProcessBlame(fileName, revision, children, controlToMask, line, scrollPos));
+                () => ProcessBlame(fileName, revision, children, controlToMask, line, scrollPos, cancellationToken));
         }
 
         private void commitInfo_CommandClicked(object sender, CommandEventArgs e)
@@ -232,7 +241,6 @@ namespace GitUI.Blame
                 return;
             }
 
-            // TODO: Request GitRevision from RevisionGrid that contain all commits
             var newBlameLine = _blame.Lines[selectedLine];
 
             if (ReferenceEquals(_lastBlameLine?.Commit, newBlameLine.Commit))
@@ -241,7 +249,7 @@ namespace GitUI.Blame
             }
 
             _lastBlameLine = newBlameLine;
-            CommitInfo.Revision = Module.GetRevision(_lastBlameLine.Commit.ObjectId);
+            CommitInfo.Revision = _revGrid.GetActualRevision(_lastBlameLine.Commit.ObjectId);
         }
 
         private void BlameAuthor_HScrollPositionChanged(object sender, EventArgs e)
@@ -280,10 +288,11 @@ namespace GitUI.Blame
             _changingScrollPosition = false;
         }
 
-        private void ProcessBlame(string? filename, GitRevision revision, IReadOnlyList<ObjectId>? children, Control? controlToMask, int lineNumber, int scrollpos)
+        private void ProcessBlame(string? filename, GitRevision revision, IReadOnlyList<ObjectId>? children, Control? controlToMask, int lineNumber, int scrollpos, CancellationToken cancellationToken = default)
         {
             var avatarSize = BlameAuthor.Font.Height + 1;
             var (gutter, body, avatars) = BuildBlameContents(filename, avatarSize);
+            cancellationToken.ThrowIfCancellationRequested();
 
             BlameAuthor.SetGitBlameGutter(avatars);
 
@@ -291,8 +300,10 @@ namespace GitUI.Blame
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 () => BlameAuthor.ViewTextAsync("committer.txt", gutter));
+            cancellationToken.ThrowIfCancellationRequested();
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 () => BlameFile.ViewTextAsync(_fileName, body));
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (lineNumber > 0)
             {
@@ -306,7 +317,10 @@ namespace GitUI.Blame
             _clickedBlameLine = null;
 
             _blameId = revision.ObjectId;
-            CommitInfo.SetRevisionWithChildren(revision, children);
+            if (CommitInfo.Visible)
+            {
+                CommitInfo.SetRevisionWithChildren(revision, children);
+            }
 
             controlToMask?.UnMask();
         }

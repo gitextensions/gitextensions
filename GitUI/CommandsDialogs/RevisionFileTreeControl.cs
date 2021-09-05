@@ -51,11 +51,12 @@ See the changes in the commit form.");
         private readonly Stack<string> _lastSelectedNodes = new();
         private readonly IRevisionFileTreeController _revisionFileTreeController;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly IFindFilePredicateProvider _findFilePredicateProvider;
+        private readonly IFindFilePredicateProvider _findFilePredicateProvider = new FindFilePredicateProvider();
         private GitRevision? _revision;
         private readonly RememberFileContextMenuController _rememberFileContextMenuController
             = RememberFileContextMenuController.Default;
         private Action? _refreshGitStatus;
+        private RevisionGridControl? _revisionGrid;
 
         public RevisionFileTreeControl()
         {
@@ -63,14 +64,16 @@ See the changes in the commit form.");
             InitializeComplete();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _findFilePredicateProvider = new FindFilePredicateProvider();
             _revisionFileTreeController = new RevisionFileTreeController(() => Module.WorkingDir,
                                                                          new GitRevisionInfoProvider(() => Module),
                                                                          new FileAssociatedIconProvider());
+            BlameControl.HideCommitInfo();
+            blameToolStripMenuItem1.Checked = AppSettings.RevisionFileTreeShowBlame;
         }
 
-        public void Bind(Action refreshGitStatus)
+        public void Bind(RevisionGridControl revisionGrid, Action? refreshGitStatus)
         {
+            _revisionGrid = revisionGrid;
             _refreshGitStatus = refreshGitStatus;
         }
 
@@ -212,6 +215,8 @@ See the changes in the commit form.");
 
                 if (tvGitTree.SelectedNode is null)
                 {
+                    BlameControl.Visible = false;
+                    FileText.Visible = true;
                     FileText.Clear();
                 }
             }
@@ -351,33 +356,58 @@ See the changes in the commit form.");
             Task ViewItem()
             {
                 return e.Node?.Tag is GitItem gitItem
-                    ? ViewGitItemAsync(gitItem)
-                    : Task.CompletedTask;
+                    ? ShowGitItemAsync(gitItem)
+                    : ClearOutputAsync();
+            }
+        }
+
+        private Task ShowGitItemAsync(GitItem gitItem)
+        {
+            switch (gitItem.ObjectType)
+            {
+                case GitObjectType.Blob:
+                    {
+                        if (!blameToolStripMenuItem1.Checked)
+                        {
+                            return ViewGitItemAsync(gitItem);
+                        }
+
+                        int? line = FileText.Visible ? FileText.CurrentFileLine : null;
+                        BlameControl.Visible = true;
+                        FileText.Visible = false;
+                        BlameControl.LoadBlame(_revision, children: null, gitItem.FileName, _revisionGrid, controlToMask: null, FileText.Encoding, line);
+                        return Task.CompletedTask;
+                    }
+
+                case GitObjectType.Commit:
+                    {
+                        return ViewGitItemAsync(gitItem);
+                    }
+
+                default:
+                    return ClearOutputAsync();
             }
 
             Task ViewGitItemAsync(GitItem gitItem)
             {
-                switch (gitItem.ObjectType)
+                GitItemStatus file = new(name: gitItem.FileName)
                 {
-                    case GitObjectType.Blob:
-                    case GitObjectType.Commit:
-                    {
-                        GitItemStatus file = new(name: gitItem.FileName)
-                        {
-                            IsTracked = true,
-                            TreeGuid = gitItem.ObjectId,
-                            IsSubmodule = gitItem.ObjectType == GitObjectType.Commit
-                        };
+                    IsTracked = true,
+                    TreeGuid = gitItem.ObjectId,
+                    IsSubmodule = gitItem.ObjectType == GitObjectType.Commit
+                };
 
-                        return FileText.ViewGitItemAsync(file, gitItem.ObjectId);
-                    }
-
-                    default:
-                    {
-                        return FileText.ViewTextAsync("", "");
-                    }
-                }
+                BlameControl.Visible = false;
+                FileText.Visible = true;
+                return FileText.ViewGitItemAsync(file, gitItem.ObjectId);
             }
+        }
+
+        private Task ClearOutputAsync()
+        {
+            BlameControl.Visible = false;
+            FileText.Visible = true;
+            return FileText.ViewTextAsync("", "");
         }
 
         private void tvGitTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)
@@ -428,10 +458,15 @@ See the changes in the commit form.");
 
         private void blameMenuItem_Click(object sender, EventArgs e)
         {
-            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
+            if (tvGitTree.SelectedNode?.Tag is not GitItem gitItem)
             {
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, true, true);
+                return;
             }
+
+            blameToolStripMenuItem1.Checked = !blameToolStripMenuItem1.Checked;
+            AppSettings.RevisionFileTreeShowBlame = blameToolStripMenuItem1.Checked;
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem));
         }
 
         private void copyFilenameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
@@ -827,7 +862,14 @@ See the changes in the commit form.");
         {
             if (alreadyContainedFocus && tvGitTree.Focused)
             {
-                FileText.Focus();
+                if (BlameControl.Visible)
+                {
+                    BlameControl.Focus();
+                }
+                else
+                {
+                    FileText.Focus();
+                }
             }
             else
             {

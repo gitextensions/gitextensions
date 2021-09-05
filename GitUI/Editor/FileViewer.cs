@@ -227,6 +227,14 @@ namespace GitUI.Editor
             set => internalFileViewer.IsReadOnly = value;
         }
 
+        [DefaultValue(true)]
+        [Category("Behavior")]
+        public bool EnableAutomaticContinuousScroll
+        {
+            get => automaticContinuousScrollToolStripMenuItem.Visible;
+            set => automaticContinuousScrollToolStripMenuItem.Visible = value;
+        }
+
         [DefaultValue(null)]
         [Description("If true line numbers are shown in the textarea")]
         [Category("Appearance")]
@@ -387,6 +395,8 @@ namespace GitUI.Editor
         {
             return internalFileViewer.GetLineFromVisualPosY(visualPosY);
         }
+
+        public int CurrentFileLine => internalFileViewer.CurrentFileLine(IsDiffView(_viewMode));
 
         public void HighlightLines(int startLine, int endLine, Color color)
         {

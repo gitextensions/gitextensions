@@ -59,6 +59,7 @@
             this.expandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileText = new GitUI.Editor.FileViewer();
+            this.BlameControl = new Blame.BlameControl();
             ((System.ComponentModel.ISupportInitialize)(this.FileTreeSplitContainer)).BeginInit();
             this.FileTreeSplitContainer.Panel1.SuspendLayout();
             this.FileTreeSplitContainer.Panel2.SuspendLayout();
@@ -81,6 +82,7 @@
             // FileTreeSplitContainer.Panel2
             // 
             this.FileTreeSplitContainer.Panel2.Controls.Add(this.FileText);
+            this.FileTreeSplitContainer.Panel2.Controls.Add(this.BlameControl);
             this.FileTreeSplitContainer.Size = new System.Drawing.Size(793, 303);
             this.FileTreeSplitContainer.SplitterDistance = 300;
             this.FileTreeSplitContainer.SplitterWidth = 6;
@@ -339,6 +341,15 @@
             this.FileText.Size = new System.Drawing.Size(487, 303);
             this.FileText.TabIndex = 0;
             // 
+            // BlameControl
+            // 
+            this.BlameControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BlameControl.Location = new System.Drawing.Point(0, 0);
+            this.BlameControl.Margin = new System.Windows.Forms.Padding(0);
+            this.BlameControl.Name = "blameControl";
+            this.BlameControl.Size = new System.Drawing.Size(487, 303);
+            this.BlameControl.TabIndex = 0;
+            // 
             // RevisionFileTreeControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -360,6 +371,7 @@
         private System.Windows.Forms.SplitContainer FileTreeSplitContainer;
         private UserControls.NativeTreeView tvGitTree;
         private Editor.FileViewer FileText;
+        private Blame.BlameControl BlameControl;
         private System.Windows.Forms.ContextMenuStrip FileTreeContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem diffWithRememberedFileToolStripMenuItem;
