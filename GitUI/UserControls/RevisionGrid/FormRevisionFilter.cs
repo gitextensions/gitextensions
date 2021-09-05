@@ -4,12 +4,25 @@ using GitExtUtils;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    public partial class FormRevisionFilter : GitExtensionsForm
+    public partial class FormRevisionFilter : GitExtensionsDialog
     {
-        public FormRevisionFilter()
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        private FormRevisionFilter()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        {
+            InitializeComponent();
+        }
+
+        public FormRevisionFilter(GitUICommands commands)
+            : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
             InitializeComplete();
+
+            // work-around the designer bug that can't add controls to FlowLayoutPanel
+            ControlsPanel.Controls.Add(Ok);
+            AcceptButton = Ok;
 
             _NO_TRANSLATE_Limit.Value = AppSettings.MaxRevisionGraphCommits;
         }

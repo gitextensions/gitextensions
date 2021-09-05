@@ -93,7 +93,7 @@ namespace GitUI
         private readonly TranslationString _noMergeBaseCommit = new("There is no common ancestor for the selected commits.");
         private readonly TranslationString _invalidDiffContainsFilter = new("Filter text '{0}' not valid for \"Diff contains\" filter.");
 
-        private readonly FormRevisionFilter _formRevisionFilter = new();
+        private FormRevisionFilter _formRevisionFilter;
         private readonly NavigationHistory _navigationHistory = new();
         private readonly Control _loadingControlAsync;
         private readonly Control _loadingControlSync;
@@ -581,6 +581,10 @@ namespace GitUI
             {
                 ReloadHotkeys();
             }
+
+            _formRevisionFilter?.Dispose();
+            Debug.Assert(UICommands is not null, "UICommands must be set");
+            _formRevisionFilter = new(UICommands);
 
             ForceRefreshRevisions();
             LoadCustomDifftools();
@@ -1742,7 +1746,7 @@ namespace GitUI
             IsShowCurrentBranchOnlyChecked = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
             IsShowFilteredBranchesChecked = AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly;
 
-            _branchFilter = _formRevisionFilter.GetBranchFilter();
+            _branchFilter = _formRevisionFilter?.GetBranchFilter() ?? string.Empty;
 
             if (!AppSettings.BranchFilterEnabled)
             {
