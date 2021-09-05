@@ -38,7 +38,8 @@
             GoToMergeBaseCommit = 31,
             OpenCommitsWithDifftool = 32,
             ToggleBetweenArtificialAndHeadCommits = 33,
-            ShowReflogReferences = 34
+            ShowReflogReferences = 34,
+            ShowLatestStash = 35,
         }
     }
 }

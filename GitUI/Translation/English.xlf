@@ -9655,6 +9655,10 @@ See the changes in the commit form.</source>
         <source>Show filtered branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="ShowLatestStash.Text">
+        <source>Show latest stash</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ShowReflogReferences.Text">
         <source>Show reflog references</source>
         <target />

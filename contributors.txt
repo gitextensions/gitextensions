@@ -163,3 +163,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/07/20, ransontech, Nicholas Ranson, nickjranson(at)gmail.com
 2021/08/18, yerudako, Yelyzaveta Rudakova, yelyzaveta.rudakova(at)gmail.com
 2021/08/19, BlythMeister, Chris Blyth, chris(at)blyth.me.uk
+2021/09/25, Kableado, Valeriano Alfonso Rodriguez, valen.alfonso(at)protonmail.com

@@ -1104,6 +1104,12 @@ namespace GitCommands
             set => SetBool("showReflogReferences", value);
         }
 
+        public static bool ShowLatestStash
+        {
+            get => GetBool("showLatestStash", true);
+            set => SetBool("showLatestStash", value);
+        }
+
         public static bool ShowSuperprojectTags
         {
             get => GetBool("showSuperprojectTags", false);

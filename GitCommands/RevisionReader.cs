@@ -194,6 +194,10 @@ namespace GitCommands
                                     !string.IsNullOrWhiteSpace(branchFilter) && !IsSimpleBranchFilter(branchFilter),
                                     "--branches=" + branchFilter
                                 },
+                                {
+                                    refFilterOptions.HasFlag(RefFilterOptions.Branches) && string.IsNullOrWhiteSpace(branchFilter),
+                                    "--branches"
+                                },
                                 { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
                                 { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
                             }.ToString()

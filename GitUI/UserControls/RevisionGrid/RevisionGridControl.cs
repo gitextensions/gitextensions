@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -1019,6 +1018,11 @@ namespace GitUI
                 if (AppSettings.ShowReflogReferences)
                 {
                     refFilterOptions |= RefFilterOptions.Reflogs;
+                }
+
+                if (!AppSettings.ShowLatestStash)
+                {
+                    refFilterOptions &= ~RefFilterOptions.Stashes;
                 }
 
                 RefFilterOptions = refFilterOptions;
@@ -2274,6 +2278,12 @@ namespace GitUI
 
             ForceRefreshRevisions();
             OnFilterChanged();
+        }
+
+        internal void ToggleShowLatestStash()
+        {
+            AppSettings.ShowLatestStash = !AppSettings.ShowLatestStash;
+            ForceRefreshRevisions();
         }
 
         internal void ToggleShowSuperprojectTags()
