@@ -50,7 +50,7 @@ namespace GitCommandsTests.Git
             var authorTime = DateTime.Now;
             var commitHash = ObjectId.Random();
 
-            Func<string?, string?> summaryBuilder = (input) => "SOME BUILDER TEXT: " + input;
+            Func<string?, string?> summaryBuilder = (input) => $"SOME BUILDER TEXT: {input}";
 
             StringBuilder str = new();
 
