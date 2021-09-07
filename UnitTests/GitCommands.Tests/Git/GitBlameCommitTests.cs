@@ -19,10 +19,10 @@ namespace GitCommandsTests.Git
             StringBuilder str = new();
 
             str.AppendLine("Author: Author");
-            str.AppendLine("Author date: " + authorTime);
+            str.AppendLine($"Author date: {authorTime}");
             str.AppendLine("Committer: committer");
-            str.AppendLine("Commit date: " + committerTime);
-            str.AppendLine("Commit hash: " + commitHash.ToShortString());
+            str.AppendLine($"Commit date: {committerTime}");
+            str.AppendLine($"Commit hash: {commitHash.ToShortString()}");
             str.AppendLine("Summary: test summary");
             str.AppendLine();
             str.Append("FileName: fileName.txt");
@@ -55,10 +55,10 @@ namespace GitCommandsTests.Git
             StringBuilder str = new();
 
             str.AppendLine("Author: Author");
-            str.AppendLine("Author date: " + authorTime);
+            str.AppendLine($"Author date: {authorTime}");
             str.AppendLine("Committer: committer");
-            str.AppendLine("Commit date: " + committerTime);
-            str.AppendLine("Commit hash: " + commitHash.ToShortString());
+            str.AppendLine($"Commit date: {committerTime}");
+            str.AppendLine($"Commit hash: {commitHash.ToShortString()}");
             str.AppendLine("Summary: SOME BUILDER TEXT: test summary");
             str.AppendLine();
             str.Append("FileName: fileName.txt");
@@ -91,10 +91,10 @@ namespace GitCommandsTests.Git
             StringBuilder str = new();
 
             str.AppendLine("Author: Author");
-            str.AppendLine("Author date: " + authorTime);
+            str.AppendLine($"Author date: {authorTime}");
             str.AppendLine("Committer: committer");
-            str.AppendLine("Commit date: " + committerTime);
-            str.AppendLine("Commit hash: " + commitHash.ToShortString());
+            str.AppendLine($"Commit date: {committerTime}");
+            str.AppendLine($"Commit hash: {commitHash.ToShortString()}");
             str.AppendLine("Summary: test summary");
             str.AppendLine();
             str.Append("FileName: fileName.txt");
