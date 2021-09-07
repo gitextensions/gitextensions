@@ -2378,6 +2378,13 @@ namespace GitCommands
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
 
+            // It is possible that a commit does not exist, should not raise an error to the user:
+            // * Create a commit in a submodule, do not push
+            // * Commit submodule changes
+            // * Open the repo in a worktree clone
+            // * Checkout the commit
+            // * Select the submodule in the diff tab
+            // This should not raise a popup to the user, but describe the error message
             return _gitExecutable.Execute(
                 new GitArgumentBuilder("diff")
                 {
