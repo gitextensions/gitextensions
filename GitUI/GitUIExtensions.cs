@@ -91,7 +91,7 @@ namespace GitUI
                 return;
             }
 
-            string selectedPatch = (await GetSelectedPatchAsync(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item))
+            string selectedPatch = (await GetSelectedPatchAsync(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item, cancellationToken))
                 ?? defaultText;
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -121,13 +121,15 @@ namespace GitUI
                 FileViewer fileViewer,
                 ObjectId firstId,
                 ObjectId selectedId,
-                GitItemStatus file)
+                GitItemStatus file,
+                CancellationToken cancellationToken)
             {
                 if (firstId == ObjectId.CombinedDiffId)
                 {
                     var diffOfConflict = fileViewer.Module.GetCombinedDiffContent(selectedId, file.Name,
                         fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
 
+                    cancellationToken.ThrowIfCancellationRequested();
                     return string.IsNullOrWhiteSpace(diffOfConflict)
                         ? TranslatedStrings.UninterestingDiffOmitted
                         : diffOfConflict;
@@ -140,6 +142,7 @@ namespace GitUI
                     // Patch already evaluated
                     var status = await task;
 
+                    cancellationToken.ThrowIfCancellationRequested();
                     return status is not null
                         ? LocalizationHelpers.ProcessSubmoduleStatus(fileViewer.Module, status)
                         : $"Failed to get status for submodule \"{file.Name}\"";
@@ -148,6 +151,7 @@ namespace GitUI
                 var patch = await GetItemPatchAsync(fileViewer.Module, file, firstId, selectedId,
                     fileViewer.GetExtraDiffArguments(), fileViewer.Encoding);
 
+                cancellationToken.ThrowIfCancellationRequested();
                 return file.IsSubmodule
                     ? LocalizationHelpers.ProcessSubmodulePatch(fileViewer.Module, file.Name, patch)
                     : patch?.Text;
