@@ -5,6 +5,7 @@ using System.Text;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Patches;
+using GitUIPluginInterfaces;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManager
@@ -283,30 +284,28 @@ namespace ResourceManager
                     }
                 }
 
-                // It is possible that a commit does not exist, should not raise an error to the user:
-                // * Create a commit in a submodule, do not push
-                // * Commit submodule changes
-                // * Open the repo in a worktree clone
-                // * Checkout the commit
-                // * Select the submodule in the diff tab
-                // This should not raise a popup to the user, but describe the error message
-                string diffs = gitModule.GetDiffFiles(status.OldCommit.ToString(), status.Commit.ToString(), nullSeparated: false)
-                    .AllOutput;
-
-                if (!string.IsNullOrEmpty(diffs))
+                if (gitModule.IsValidGitWorkingDir())
                 {
-                    sb.AppendLine("\nDifferences:");
-                    if (limitOutput)
+                    ExecutionResult exec = gitModule.GetDiffFiles(status.OldCommit.ToString(), status.Commit.ToString(), nullSeparated: false);
+                    if (exec.ExitedSuccessfully)
                     {
-                        var txt = diffs.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
-                        if (txt.Length > maxLimitedLines)
+                        string diffs = exec.StandardOutput;
+                        if (!string.IsNullOrEmpty(diffs))
                         {
-                            diffs = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +
-                                $"{Environment.NewLine} {txt.Length - maxLimitedLines} more differences";
+                            sb.AppendLine("\nDifferences:");
+                            if (limitOutput)
+                            {
+                                var txt = diffs.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+                                if (txt.Length > maxLimitedLines)
+                                {
+                                    diffs = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +
+                                        $"{Environment.NewLine} {txt.Length - maxLimitedLines} more differences";
+                                }
+                            }
+
+                            sb.Append(diffs);
                         }
                     }
-
-                    sb.Append(diffs);
                 }
             }
 
