@@ -47,6 +47,7 @@ namespace GitUI.Blame
         private bool _changingScrollPosition;
         private IRepositoryHostPlugin? _gitHoster;
         private static readonly IList<Color> AgeBucketGradientColors = GetAgeBucketGradientColors();
+        private IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
 
         public BlameControl()
         {
@@ -73,6 +74,8 @@ namespace GitUI.Blame
             BlameFile.EnableAutomaticContinuousScroll = false;
 
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
+
+            _gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
         }
 
         public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin? gitHoster)
@@ -162,7 +165,7 @@ namespace GitUI.Blame
                 _tooltipCommit = blameCommit;
                 _lastTooltipX = newTooltipX;
                 _lastTooltipY = newTooltipY;
-                blameTooltip.Show(blameCommit.ToString(), this, newTooltipX, newTooltipY);
+                blameTooltip.Show(blameCommit.ToString(_gitRevisionSummaryBuilder.BuildSummary), this, newTooltipX, newTooltipY);
             }
         }
 

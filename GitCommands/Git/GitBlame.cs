@@ -61,7 +61,17 @@ namespace GitCommands
             FileName = fileName;
         }
 
+        public string ToString(Func<string?, string?> summaryBuilderFunc)
+        {
+            return ToString(summaryBuilderFunc(Summary) ?? Summary);
+        }
+
         public override string ToString()
+        {
+            return ToString(Summary);
+        }
+
+        private string ToString(string summary)
         {
             StringBuilder s = new();
 
@@ -74,7 +84,7 @@ namespace GitCommands
             }
 
             s.Append("Commit hash: ").AppendLine(ObjectId.ToShortString());
-            s.Append("Summary: ").AppendLine(Summary);
+            s.Append("Summary: ").AppendLine(summary);
             s.AppendLine();
             s.Append("FileName: ").Append(FileName);
 
