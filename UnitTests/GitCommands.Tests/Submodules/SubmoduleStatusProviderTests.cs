@@ -183,7 +183,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
 
             // Revert the change
-            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             await CheckRevertedStatus(result);
         }
 
@@ -219,7 +219,7 @@ namespace GitCommandsTests.Submodules
 
             // Revert the change
             File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
-            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             await CheckRevertedStatus(result);
         }
 
@@ -302,7 +302,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
 
             // Revert the change
-            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             await CheckRevertedStatus(result);
         }
 
@@ -337,7 +337,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.Status.Should().BeEquivalentTo(SubmoduleStatus.Unknown);
 
             // Revert the change
-            _repo3Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo3Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             await CheckRevertedStatus(result);
         }
 
@@ -401,7 +401,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.Should().BeNull();
 
             // Revert the change
-            _repo1Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo1Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             await CheckRevertedStatus(result);
         }
 
@@ -500,7 +500,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
             // Revert the change
-            _repo3Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo3Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             await CheckRevertedStatus(result);
         }
 
@@ -561,7 +561,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.Should().BeNull();
 
             // Revert the change
-            _repo3Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo3Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             await CheckRevertedStatus(result);
         }
 
@@ -590,7 +590,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.Should().BeNull();
 
             // Revert the change
-            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             await CheckRevertedStatus(result);
         }
 
@@ -678,7 +678,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
             // Revert the change
-            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             await CheckRevertedStatus(result);
         }
 
@@ -705,11 +705,11 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.Should().BeNull();
 
             // Revert the change
-            _repo1Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo1Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));
-            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
-            _repo3Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo3Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
             await CheckRevertedStatus(result);
         }
@@ -744,7 +744,7 @@ namespace GitCommandsTests.Submodules
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
             // Revert the change
-            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorOutput: false);
+            _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
             File.Delete(Path.Combine(_repo3Module.WorkingDir, "test.txt"));
             await CheckRevertedStatus(result);
         }

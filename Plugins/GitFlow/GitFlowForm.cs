@@ -312,7 +312,7 @@ namespace GitExtensions.Plugins.GitFlow
             txtResult.Text = "running...";
             ForceRefresh(txtResult);
 
-            var result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText, throwOnErrorOutput: false);
+            var result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText, throwOnErrorExit: false);
 
             IsRefreshNeeded = true;
 

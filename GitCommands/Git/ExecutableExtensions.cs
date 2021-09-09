@@ -111,7 +111,7 @@ namespace GitCommands
                 redirectInput: input is not null,
                 redirectOutput: true,
                 outputEncoding,
-                throwOnErrorOutput: true);
+                throwOnErrorExit: true);
             if (input is not null)
             {
                 await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
@@ -239,7 +239,7 @@ namespace GitCommands
         /// <param name="writeInput">A callback that writes bytes to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
-        /// <param name="throwOnErrorOutput">A flag configuring whether to throw an exception if the exit code is not 0 or if the output to StandardError is not empty.</param>
+        /// <param name="throwOnErrorExit">A flag configuring whether to throw an exception if the exit code is not 0.</param>
         /// <param name="cancellationToken">An optional token to cancel the asynchronous operation.</param>
         /// <returns>An <see cref="ExecutionResult"/> object that gives access to exit code, standard output and standard error values.</returns>
         [MustUseReturnValue("If execution result is not required, use " + nameof(RunCommand) + " instead")]
@@ -250,11 +250,11 @@ namespace GitCommands
             Encoding? outputEncoding = null,
             CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true,
-            bool throwOnErrorOutput = true,
+            bool throwOnErrorExit = true,
             CancellationToken cancellationToken = default)
         {
             return GitUI.ThreadHelper.JoinableTaskFactory.Run(
-                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, stripAnsiEscapeCodes, throwOnErrorOutput, cancellationToken));
+                () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, stripAnsiEscapeCodes, throwOnErrorExit, cancellationToken));
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace GitCommands
         /// <param name="writeInput">A callback that writes bytes to the process's standard input stream, or <c>null</c> if no input is required.</param>
         /// <param name="outputEncoding">The text encoding to use when decoding bytes read from the process's standard output and standard error streams, or <c>null</c> if the default encoding is to be used.</param>
         /// <param name="stripAnsiEscapeCodes">A flag indicating whether ANSI escape codes should be removed from output strings.</param>
-        /// <param name="throwOnErrorOutput">A flag configuring whether to throw an exception if the exit code is not 0 or if the output to StandardError is not empty.</param>
+        /// <param name="throwOnErrorExit">A flag configuring whether to throw an exception if the exit code is not 0.</param>
         /// <param name="cancellationToken">An optional token to cancel the asynchronous operation.</param>
         /// <returns>A task that yields an <see cref="ExecutionResult"/> object that gives access to exit code, standard output and standard error values.</returns>
         public static async Task<ExecutionResult> ExecuteAsync(
@@ -275,7 +275,7 @@ namespace GitCommands
             Encoding? outputEncoding = null,
             CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true,
-            bool throwOnErrorOutput = true,
+            bool throwOnErrorExit = true,
             CancellationToken cancellationToken = default)
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
@@ -288,7 +288,7 @@ namespace GitCommands
                     exitCode: 0);
             }
 
-            using IProcess process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding, throwOnErrorOutput: throwOnErrorOutput);
+            using IProcess process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding, throwOnErrorExit: throwOnErrorExit);
             MemoryStream outputBuffer = new();
             MemoryStream errorBuffer = new();
             var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);

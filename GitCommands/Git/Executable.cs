@@ -35,7 +35,7 @@ namespace GitCommands
                               bool redirectOutput = false,
                               Encoding? outputEncoding = null,
                               bool useShellExecute = false,
-                              bool throwOnErrorOutput = true)
+                              bool throwOnErrorExit = true)
         {
             // TODO should we set these on the child process only?
             EnvironmentConfiguration.SetEnvironmentVariables();
@@ -44,7 +44,7 @@ namespace GitCommands
 
             var fileName = _fileNameProvider();
 
-            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorOutput);
+            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit);
         }
 
         #region ProcessWrapper
@@ -64,7 +64,7 @@ namespace GitCommands
             private readonly ProcessOperation _logOperation;
             private readonly bool _redirectInput;
             private readonly bool _redirectOutput;
-            private readonly bool _throwOnErrorOutput;
+            private readonly bool _throwOnErrorExit;
 
             private MemoryStream? _emptyStream;
             private StreamReader? _emptyReader;
@@ -79,15 +79,15 @@ namespace GitCommands
                                   bool redirectOutput,
                                   Encoding? outputEncoding,
                                   bool useShellExecute,
-                                  bool throwOnErrorOutput)
+                                  bool throwOnErrorExit)
             {
                 Debug.Assert(redirectOutput == (outputEncoding is not null), "redirectOutput == (outputEncoding is not null)");
                 _redirectInput = redirectInput;
                 _redirectOutput = redirectOutput;
-                _throwOnErrorOutput = throwOnErrorOutput;
+                _throwOnErrorExit = throwOnErrorExit;
 
                 Encoding errorEncoding = outputEncoding;
-                if (throwOnErrorOutput)
+                if (throwOnErrorExit)
                 {
                     errorEncoding ??= Encoding.Default;
                 }
@@ -103,7 +103,7 @@ namespace GitCommands
                         CreateNoWindow = !createWindow,
                         RedirectStandardInput = redirectInput,
                         RedirectStandardOutput = redirectOutput,
-                        RedirectStandardError = redirectOutput || throwOnErrorOutput,
+                        RedirectStandardError = redirectOutput || throwOnErrorExit,
                         StandardOutputEncoding = outputEncoding,
                         StandardErrorEncoding = errorEncoding,
                         FileName = fileName,
@@ -151,20 +151,17 @@ namespace GitCommands
                             int exitCode = _process.ExitCode;
                             _logOperation.LogProcessEnd(exitCode);
 
-                            if (_throwOnErrorOutput)
+                            if (_throwOnErrorExit && exitCode != 0)
                             {
                                 string errorOutput = _process.StandardError.ReadToEnd().Trim();
-                                if (exitCode != 0 || errorOutput.Length > 0)
-                                {
-                                    ExternalOperationException ex
-                                        = new(command: _process.StartInfo.FileName,
-                                              _process.StartInfo.Arguments,
-                                              _process.StartInfo.WorkingDirectory,
-                                              exitCode,
-                                              new Exception(errorOutput));
-                                    _logOperation.LogProcessEnd(ex);
-                                    _exitTaskCompletionSource.TrySetException(ex);
-                                }
+                                ExternalOperationException ex
+                                    = new(command: _process.StartInfo.FileName,
+                                            _process.StartInfo.Arguments,
+                                            _process.StartInfo.WorkingDirectory,
+                                            exitCode,
+                                            new Exception(errorOutput));
+                                _logOperation.LogProcessEnd(ex);
+                                _exitTaskCompletionSource.TrySetException(ex);
                             }
 
                             _exitTaskCompletionSource.TrySetResult(exitCode);
@@ -211,12 +208,12 @@ namespace GitCommands
             {
                 get
                 {
-                    if (!_redirectOutput && !_throwOnErrorOutput)
+                    if (!_redirectOutput && !_throwOnErrorExit)
                     {
                         throw new InvalidOperationException("Process was not created with redirected output.");
                     }
 
-                    if (!_throwOnErrorOutput)
+                    if (!_throwOnErrorExit)
                     {
                         return _process.StandardError;
                     }

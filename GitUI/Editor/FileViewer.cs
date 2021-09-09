@@ -1563,7 +1563,7 @@ namespace GitUI.Editor
 
         private void ProcessApplyOutput(GitArgumentBuilder args, byte[] patch, bool patchUpdateDiff = false)
         {
-            ExecutionResult result = Module.GitExecutable.Execute(args, inputWriter => inputWriter.BaseStream.Write(patch), throwOnErrorOutput: false);
+            ExecutionResult result = Module.GitExecutable.Execute(args, inputWriter => inputWriter.BaseStream.Write(patch), throwOnErrorExit: false);
             string output = result.AllOutput.Trim();
             if (EnvUtils.RunningOnWindows())
             {

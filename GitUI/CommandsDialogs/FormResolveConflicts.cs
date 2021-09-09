@@ -570,7 +570,7 @@ namespace GitUI.CommandsDialogs
                     GitUIPluginInterfaces.ExecutionResult res;
                     try
                     {
-                        res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments, throwOnErrorOutput: false);
+                        res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments, throwOnErrorExit: false);
                     }
                     catch (Exception)
                     {

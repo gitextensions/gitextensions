@@ -1171,7 +1171,7 @@ namespace GitUI
                 };
 
                 HashSet<string?> setOfFileNames = new();
-                ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorOutput: false);
+                ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
                 var lines = result.StandardOutput.LazySplit('\n');
 
                 // TODO Check the exit code and warn the user that rename detection could not be done.
@@ -1513,7 +1513,7 @@ namespace GitUI
                 objectId
             };
 
-            ExecutionResult result = Module.GitExecutable.Execute(args, throwOnErrorOutput: false);
+            ExecutionResult result = Module.GitExecutable.Execute(args, throwOnErrorExit: false);
             foreach (var line in result.StandardOutput.LazySplit('\n'))
             {
                 if (ObjectId.TryParse(line, out var parentId))
