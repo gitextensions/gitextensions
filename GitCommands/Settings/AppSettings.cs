@@ -1945,6 +1945,7 @@ namespace GitCommands
         // Return false whilst we're in the designer.
         public static bool IsPortable() => !IsDesignMode && Properties.Settings.Default.IsPortable;
 
+        // Set manually in settings file
         public static bool WriteErrorLog
         {
             get => GetBool("WriteErrorLog", false);

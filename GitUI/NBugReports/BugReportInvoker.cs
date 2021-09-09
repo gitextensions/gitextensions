@@ -21,12 +21,11 @@ namespace GitUI.NBugReports
             => OwnerForm?.Handle ?? IntPtr.Zero;
 
         /// <summary>
-        /// Appends the exception data and gets the root error.
+        /// Gets the root error.
         /// </summary>
-        /// <param name="text">A StringBuilder to which the exception data is appended.</param>
         /// <param name="exception">An Exception to describe.</param>
         /// <returns>The inner-most exception message.</returns>
-        internal static string Append(StringBuilder text, Exception exception)
+        internal static string GetRootError(Exception exception)
         {
             string rootError = exception.Message;
             for (Exception innerException = exception.InnerException; innerException is not null; innerException = innerException.InnerException)
@@ -37,6 +36,17 @@ namespace GitUI.NBugReports
                 }
             }
 
+            return rootError;
+        }
+
+        /// <summary>
+        /// Get the exception data.
+        /// </summary>
+        /// <param name="exception">An Exception to describe.</param>
+        internal static StringBuilder GetExceptionInfo(Exception exception)
+        {
+            StringBuilder text = new();
+
             if (exception is UserExternalOperationException userExternalOperationException && !string.IsNullOrWhiteSpace(userExternalOperationException.Context))
             {
                 // Context contains an error message as UserExternalOperationException is currently used. So append just "<context>"
@@ -46,7 +56,7 @@ namespace GitUI.NBugReports
             if (exception is ExternalOperationException externalOperationException)
             {
                 // Exit code: <n>
-                AppendIfNotEmpty($"{externalOperationException.ExitCode}{Environment.NewLine}", TranslatedStrings.ExitCode);
+                AppendIfNotEmpty(externalOperationException.ExitCode.ToString(), TranslatedStrings.ExitCode);
 
                 // Command: <command>
                 AppendIfNotEmpty(externalOperationException.Command, TranslatedStrings.Command);
@@ -58,7 +68,7 @@ namespace GitUI.NBugReports
                 AppendIfNotEmpty(externalOperationException.WorkingDirectory, TranslatedStrings.WorkingDirectory);
             }
 
-            return rootError;
+            return text;
 
             void AppendIfNotEmpty(string? value, string designation)
             {
@@ -96,6 +106,7 @@ namespace GitUI.NBugReports
             if (isTerminating)
             {
                 // TODO: this is not very efficient
+                // GetExceptionInfo() info is lost
                 SerializableException serializableException = new(exception);
                 string xml = serializableException.ToXmlString();
                 string encoded = Base64Encode(xml);
@@ -113,8 +124,8 @@ namespace GitUI.NBugReports
                                                  or PathTooLongException
                                                  or Win32Exception;
 
-            StringBuilder text = new();
-            string rootError = Append(text, exception);
+            StringBuilder text = GetExceptionInfo(exception);
+            string rootError = GetRootError(exception);
 
             TaskDialogPage page = new()
             {
@@ -167,7 +178,9 @@ namespace GitUI.NBugReports
         private static void ShowNBug(IWin32Window? owner, Exception exception, bool isExternalOperation, bool isTerminating)
         {
             using BugReportForm form = new();
-            DialogResult result = form.ShowDialog(owner, new SerializableException(exception),
+            DialogResult result = form.ShowDialog(owner,
+                new SerializableException(exception),
+                GetExceptionInfo(exception).ToString(),
                 UserEnvironmentInformation.GetInformation(),
                 canIgnore: !isTerminating,
                 showIgnore: isExternalOperation,

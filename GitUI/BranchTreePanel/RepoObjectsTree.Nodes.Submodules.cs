@@ -354,6 +354,10 @@ namespace GitUI.BranchTreePanel
                         catch (OperationCanceledException)
                         {
                         }
+                        //// Comment out to debug BugReporter
+                        ////catch (GitExtUtils.ExternalOperationException)
+                        ////{
+                        ////}
                     });
 #pragma warning restore VSTHRD101 // Avoid unsupported async delegates
             }
