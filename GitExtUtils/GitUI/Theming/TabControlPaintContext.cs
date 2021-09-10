@@ -106,7 +106,10 @@ namespace GitExtUtils.GitUI.Theming
         {
             using var borderPen = CreateBorderPen();
             var outerRect = GetOuterTabRect(index);
-            _graphics.FillRectangle(GetBackgroundBrush(index), outerRect);
+            using (var backgroundBrush = CreateBackgroundBrusScope(index))
+            {
+                _graphics.FillRectangle(backgroundBrush.Brush, outerRect);
+            }
 
             List<Point> points = new(4);
             if (index <= _selectedIndex)
@@ -262,8 +265,12 @@ namespace GitExtUtils.GitUI.Theming
                 return;
             }
 
-            _graphics.FillRectangle(GetBackgroundBrush(_selectedIndex), pageRect);
-            using var borderPen = CreateBorderPen();
+            using (var backgroundBrush = CreateBackgroundBrusScope(_selectedIndex))
+            {
+                _graphics.FillRectangle(backgroundBrush.Brush, pageRect);
+            }
+
+            using (var borderPen = CreateBorderPen())
             {
                 _graphics.DrawRectangle(borderPen, pageRect);
             }
@@ -285,17 +292,17 @@ namespace GitExtUtils.GitUI.Theming
             return SystemColors.Window;
         }
 
-        private Brush GetBackgroundBrush(int index)
+        private BrushScope CreateBackgroundBrusScope(int index)
         {
             if (index == _selectedIndex)
             {
-                return SystemBrushes.Window;
+                return BrushScope.ForSystemBrush(SystemBrushes.Window);
             }
 
             bool isHighlighted = _tabRects[index].Contains(_mouseCursor);
             return isHighlighted
-                ? new SolidBrush(ColorHelper.Lerp(SystemColors.Control, SystemColors.HotTrack, 64f / 255f))
-                : SystemBrushes.Control;
+                ? BrushScope.ForRegularBrush(new SolidBrush(ColorHelper.Lerp(SystemColors.Control, SystemColors.HotTrack, 64f / 255f)))
+                : BrushScope.ForSystemBrush(SystemBrushes.Control);
         }
 
         private Pen CreateBorderPen() =>
