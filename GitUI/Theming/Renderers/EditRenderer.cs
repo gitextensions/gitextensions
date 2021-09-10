@@ -15,7 +15,8 @@ namespace GitUI.Theming
             {
                 case Parts.EP_EDITTEXT:
                     return RenderEditText(ctx, stateid, prect);
-
+                case Parts.EP_BACKGROUND:
+                    return RenderProperBackground(ctx, stateid, prect);
                 case Parts.EP_EDITBORDER_NOSCROLL:
                     return RenderEditBorderNoScroll(ctx, stateid, prect);
             }
@@ -94,6 +95,31 @@ namespace GitUI.Theming
             ctx.Graphics.FillRectangle(backBrush, prect);
             ctx.Graphics.DrawRectangle(borderPen, prect.Inclusive());
 
+            return Handled;
+        }
+
+        private int RenderProperBackground(Context ctx, int stateid, Rectangle prect)
+        {
+            Brush backBrush;
+            switch ((State.Background)stateid)
+            {
+                case State.Background.EBS_NORMAL:
+                case State.Background.EBS_HOT:
+                case State.Background.EBS_FOCUSED:
+                case State.Background.EBS_READONLY:
+                    // fix numeric updown border
+                    backBrush = SystemBrushes.Window;
+                    break;
+
+                case State.Background.EBS_DISABLED:
+                    backBrush = SystemBrushes.Control;
+                    break;
+
+                default:
+                    return Unhandled;
+            }
+
+            ctx.Graphics.FillRectangle(backBrush, prect);
             return Handled;
         }
 
