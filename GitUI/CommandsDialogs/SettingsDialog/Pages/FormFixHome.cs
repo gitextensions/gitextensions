@@ -46,9 +46,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     return true;
                 }
 
-                if (File.Exists(Path.Combine(home, ".gitconfig")))
+                try
                 {
+                    using FileStream fs = File.Open(Path.Combine(home, ".gitconfig"), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+                    // file is readable, no further checks
                     return false;
+                }
+                catch (IOException)
+                {
                 }
 
                 string[] candidates =
