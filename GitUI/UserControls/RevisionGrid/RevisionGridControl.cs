@@ -153,11 +153,6 @@ namespace GitUI
 
         // NOTE internal properties aren't serialised by the WinForms designer
 
-        internal string QuickRevisionFilter { get; set; } = "";
-        internal bool InMemFilterIgnoreCase { get; set; } = true;
-        internal string InMemAuthorFilter { get; set; } = "";
-        internal string InMemCommitterFilter { get; set; } = "";
-        internal string InMemMessageFilter { get; set; } = "";
         internal ObjectId? CurrentCheckout { get; private set; }
         internal bool ShowUncommittedChangesIfPossible { get; set; } = true;
         internal bool ShowBuildServerInfo { get; set; }
@@ -495,73 +490,6 @@ namespace GitUI
             _gridView.ContextMenuStrip = null;
         }
 
-        /// <exception cref="InvalidOperationException">Invalid 'diff contains' filter.</exception>
-        private void FormatQuickFilter(RevisionFilter revisionFilter,
-                                       out string revListArgs,
-                                       out string inMemMessageFilter,
-                                       out string inMemCommitterFilter,
-                                       out string inMemAuthorFilter)
-        {
-            revListArgs = string.Empty;
-            inMemMessageFilter = string.Empty;
-            inMemCommitterFilter = string.Empty;
-            inMemAuthorFilter = string.Empty;
-
-            if (!string.IsNullOrEmpty(revisionFilter.Text))
-            {
-                // hash filtering only possible in memory
-                bool cmdLineSafe = GitVersion.Current.IsRegExStringCmdPassable(revisionFilter.Text);
-                revListArgs = " --regexp-ignore-case ";
-                if (revisionFilter.FilterByCommit)
-                {
-                    if (cmdLineSafe && !ObjectId.IsValidPartial(revisionFilter.Text, minLength: 5))
-                    {
-                        revListArgs += "--grep=\"" + revisionFilter.Text + "\" ";
-                    }
-                    else
-                    {
-                        inMemMessageFilter = revisionFilter.Text;
-                    }
-                }
-
-                if (revisionFilter.FilterByCommitter && !string.IsNullOrWhiteSpace(revisionFilter.Text))
-                {
-                    if (cmdLineSafe)
-                    {
-                        revListArgs += "--committer=\"" + revisionFilter.Text + "\" ";
-                    }
-                    else
-                    {
-                        inMemCommitterFilter = revisionFilter.Text;
-                    }
-                }
-
-                if (revisionFilter.FilterByAuthor && !string.IsNullOrWhiteSpace(revisionFilter.Text))
-                {
-                    if (cmdLineSafe)
-                    {
-                        revListArgs += "--author=\"" + revisionFilter.Text + "\" ";
-                    }
-                    else
-                    {
-                        inMemAuthorFilter = revisionFilter.Text;
-                    }
-                }
-
-                if (revisionFilter.FilterByDiffContent)
-                {
-                    if (cmdLineSafe)
-                    {
-                        revListArgs += "-G" + revisionFilter.Text.Quote();
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException(string.Format(_invalidDiffContainsFilter.Text, revisionFilter.Text));
-                    }
-                }
-            }
-        }
-
         public void SetAndApplyBranchFilter(string filter, bool requireRefresh)
         {
             AppSettings.BranchFilterEnabled = !string.IsNullOrWhiteSpace(filter);
@@ -592,28 +520,12 @@ namespace GitUI
         /// <exception cref="InvalidOperationException">Invalid 'diff contains' filter.</exception>
         public void SetAndApplyRevisionFilter(RevisionFilter filter)
         {
-            // This call may throw, let the caller deal with it
-            FormatQuickFilter(
-                filter,
-                out string revListArgs,
-                out string inMemMessageFilter,
-                out string inMemCommitterFilter,
-                out string inMemAuthorFilter);
-
-            if ((QuickRevisionFilter == revListArgs) &&
-                (InMemMessageFilter == inMemMessageFilter) &&
-                (InMemCommitterFilter == inMemCommitterFilter) &&
-                (InMemAuthorFilter == inMemAuthorFilter) &&
-                InMemFilterIgnoreCase)
+            bool changed = false; // TODO: ...Apply(filter);
+            if (!changed)
             {
                 return;
             }
 
-            QuickRevisionFilter = revListArgs;
-            InMemMessageFilter = inMemMessageFilter;
-            InMemCommitterFilter = inMemCommitterFilter;
-            InMemAuthorFilter = inMemAuthorFilter;
-            InMemFilterIgnoreCase = true;
             ForceRefreshRevisions();
         }
 
@@ -1027,37 +939,6 @@ namespace GitUI
 
                 RefFilterOptions = refFilterOptions;
 
-                var formFilter = RevisionGridInMemFilter.CreateIfNeeded(
-                    _formRevisionFilter.GetInMemAuthorFilter(),
-                    _formRevisionFilter.GetInMemCommitterFilter(),
-                    _formRevisionFilter.GetInMemMessageFilter(),
-                    _formRevisionFilter.GetIgnoreCase());
-
-                var toolStripFilter = RevisionGridInMemFilter.CreateIfNeeded(
-                    InMemAuthorFilter,
-                    InMemCommitterFilter,
-                    InMemMessageFilter,
-                    InMemFilterIgnoreCase);
-
-                Func<GitRevision, bool>? predicate;
-                if (formFilter is not null && toolStripFilter is not null)
-                {
-                    // either or
-                    predicate = r => formFilter.Predicate(r) || toolStripFilter.Predicate(r);
-                }
-                else if (formFilter is not null)
-                {
-                    predicate = formFilter.Predicate;
-                }
-                else if (toolStripFilter is not null)
-                {
-                    predicate = toolStripFilter.Predicate;
-                }
-                else
-                {
-                    predicate = null;
-                }
-
                 _isReadingRevisions = true;
                 Subject<GitRevision> revisions = new();
                 _revisionSubscription?.Dispose();
@@ -1088,9 +969,8 @@ namespace GitUI
                     _formRevisionFilter.GetMaxCount(),
                     refFilterOptions,
                     _branchFilter,
-                    _formRevisionFilter.GetRevisionFilter() + QuickRevisionFilter,
-                    pathFilter,
-                    predicate);
+                    _formRevisionFilter.GetRevisionFilter(),
+                    pathFilter);
 
                 if (_initialLoad)
                 {
@@ -1427,20 +1307,12 @@ namespace GitUI
 
         internal bool FilterIsApplied(bool inclBranchFilter)
         {
-            return (inclBranchFilter && !string.IsNullOrEmpty(_branchFilter)) ||
-                   !(string.IsNullOrEmpty(QuickRevisionFilter) &&
-                     !_formRevisionFilter.FilterEnabled() &&
-                     string.IsNullOrEmpty(InMemAuthorFilter) &&
-                     string.IsNullOrEmpty(InMemCommitterFilter) &&
-                     string.IsNullOrEmpty(InMemMessageFilter));
+            return _formRevisionFilter.FilterEnabled() || (inclBranchFilter && !string.IsNullOrEmpty(_branchFilter));
         }
 
         internal bool ShouldHideGraph(bool inclBranchFilter)
         {
-            return (inclBranchFilter && !string.IsNullOrEmpty(_branchFilter)) ||
-                   !(string.IsNullOrEmpty(InMemAuthorFilter) &&
-                     string.IsNullOrEmpty(InMemCommitterFilter) &&
-                     string.IsNullOrEmpty(InMemMessageFilter));
+            return inclBranchFilter && !string.IsNullOrEmpty(_branchFilter);
         }
 
         /// <summary>

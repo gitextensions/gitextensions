@@ -89,17 +89,17 @@ namespace GitUI.UserControls.RevisionGrid
         {
             ArgumentBuilder filter = new();
 
-            if (AuthorCheck.Checked && GitVersion.Current.IsRegExStringCmdPassable(Author.Text))
+            if (AuthorCheck.Checked)
             {
                 filter.Add($"--author=\"{Author.Text}\"");
             }
 
-            if (CommitterCheck.Checked && GitVersion.Current.IsRegExStringCmdPassable(Committer.Text))
+            if (CommitterCheck.Checked)
             {
                 filter.Add($"--committer=\"{Committer.Text}\"");
             }
 
-            if (MessageCheck.Checked && GitVersion.Current.IsRegExStringCmdPassable(Message.Text))
+            if (MessageCheck.Checked)
             {
                 filter.Add($"--grep=\"{Message.Text}\"");
             }
@@ -134,17 +134,17 @@ namespace GitUI.UserControls.RevisionGrid
 
         public string GetInMemAuthorFilter()
         {
-            return (AuthorCheck.Checked && !GitVersion.Current.IsRegExStringCmdPassable(Author.Text)) ? Author.Text : "";
+            return AuthorCheck.Checked ? Author.Text : "";
         }
 
         public string GetInMemCommitterFilter()
         {
-            return (CommitterCheck.Checked && !GitVersion.Current.IsRegExStringCmdPassable(Committer.Text)) ? Committer.Text : "";
+            return CommitterCheck.Checked ? Committer.Text : "";
         }
 
         public string GetInMemMessageFilter()
         {
-            return (MessageCheck.Checked && !GitVersion.Current.IsRegExStringCmdPassable(Message.Text)) ? Message.Text : "";
+            return MessageCheck.Checked ? Message.Text : "";
         }
 
         public bool GetIgnoreCase()

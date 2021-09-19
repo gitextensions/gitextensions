@@ -66,11 +66,10 @@ namespace GitCommands
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
-            string pathFilter,
-            Func<GitRevision, bool>? revisionPredicate)
+            string pathFilter)
         {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(() => ExecuteAsync(module, refs, subject, maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
+                .RunAsync(() => ExecuteAsync(module, refs, subject, maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter))
                 .FileAndForget(
                     ex =>
                     {
@@ -93,8 +92,7 @@ namespace GitCommands
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
-            string pathFilter,
-            Func<GitRevision, bool>? revisionPredicate)
+            string pathFilter)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -137,8 +135,7 @@ namespace GitCommands
                 {
                     token.ThrowIfCancellationRequested();
 
-                    if (TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out var revision)
-                        && (revisionPredicate is null || revisionPredicate(revision)))
+                    if (TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out GitRevision? revision))
                     {
                         // Look up any refs associated with this revision
                         revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
