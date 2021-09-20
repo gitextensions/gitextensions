@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using GitExtUtils;
 using GitUIPluginInterfaces;
@@ -194,14 +195,17 @@ namespace GitCommands.Git.Commands
         /// </summary>
         /// <param name="gitRef">The branch to move.</param>
         /// <param name="targetId">The commit to move to.</param>
-        /// <param name="repoDir">Directory to the current repo.</param>
+        /// <param name="repoDir">Directory to the current repo in Posix format.</param>
         /// <param name="force">Push the reference also if commits are lost.</param>
         /// <returns>The Git command to execute.</returns>
         public static ArgumentString PushLocalCmd(string gitRef, ObjectId targetId, string repoDir, bool force = false)
         {
+            Debug.Assert(repoDir.IndexOf(PathUtil.NativeDirectorySeparatorChar) >= 0,
+                $"'PushLocalCmd' must be called with 'repoDir' in Posix format");
+
             return new GitArgumentBuilder("push")
             {
-                $@"""file://{repoDir.ToPosixPath()}""",
+                $@"""file://{repoDir}""",
                 $"{targetId}:{gitRef}".QuoteNE(),
                 { force, "--force" }
             };
@@ -210,6 +214,8 @@ namespace GitCommands.Git.Commands
         /// <summary>
         /// Git Clone.
         /// </summary>
+        /// <param name="fromPath">URL or file system path in Posix format.</param>
+        /// <param name="toPath">Directory to the destination path in Posix format.</param>
         /// <param name="central">Makes a bare repo.</param>
         /// <param name="branch">
         /// <para><c>NULL</c>: do not checkout working copy (--no-checkout).</para>
@@ -224,7 +230,10 @@ namespace GitCommands.Git.Commands
         /// </param>
         public static ArgumentString CloneCmd(string fromPath, string toPath, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
         {
-            var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
+            Debug.Assert(fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) >= 0,
+               $"'CloneCmd' must be called with 'fromPath' in Posix format");
+            Debug.Assert(toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) >= 0,
+               $"'CloneCmd' must be called with 'toPath' in Posix format");
 
             return new GitArgumentBuilder("clone")
             {
@@ -237,8 +246,8 @@ namespace GitCommands.Git.Commands
                 "--progress",
                 { branch is null, "--no-checkout" },
                 { !string.IsNullOrEmpty(branch), $"--branch {branch}" },
-                from.Trim().Quote(),
-                toPath.ToPosixPath().Trim().Quote()
+                fromPath.Trim().Quote(),
+                toPath.Trim().Quote()
             };
         }
 
@@ -521,7 +530,9 @@ namespace GitCommands.Git.Commands
                 { squash, "--squash" },
                 { noCommit, "--no-commit" },
                 { allowUnrelatedHistories, "--allow-unrelated-histories" },
-                { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F \"{mergeCommitFilePath}\"" }, // let git fail, if the file doesn't exist
+
+                 // let git fail, if the file doesn't exist
+                { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F \"{mergeCommitFilePath}\"" },
                 { log is not null && log.Value > 0, $"--log={log}" },
                 branch
             };

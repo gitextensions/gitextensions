@@ -533,7 +533,8 @@ namespace GitUI.CommandsDialogs
                 {
                     if (!form.ProcessArguments.Contains(" -f ") && !form.ProcessArguments.Contains(" --force"))
                     {
-                        Trace.Assert(form.ProcessArguments.StartsWith("push "), "Arguments should start with 'push' command");
+                        // Note that WSL may add other arguments prior to the actual command so "push" may not be first.
+                        Debug.Assert(form.ProcessArguments.Contains("push "), "Arguments should start with 'push' command");
 
                         form.ProcessArguments = form.ProcessArguments.Insert("push".Length, " --force-with-lease");
                     }

@@ -108,7 +108,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             GitArgumentBuilder args = new("worktree")
             {
                 "add",
-                WorktreeDirectory.Quote(),
+                Path.GetRelativePath(Module.WorkingDir, WorktreeDirectory).ToPosixPath().Quote(),
                 {
                     radioButtonCreateNewBranch.Checked,
                     $"-b {textBoxNewBranchName.Text}",

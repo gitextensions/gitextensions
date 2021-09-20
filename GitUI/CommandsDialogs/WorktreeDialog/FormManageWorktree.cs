@@ -64,7 +64,12 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void Initialize()
         {
-            var lines = Module.GitExecutable.GetOutput("worktree list --porcelain");
+            GitArgumentBuilder args = new("worktree")
+            {
+                "list",
+                "--porcelain"
+            };
+            string lines = Module.GitExecutable.GetOutput(args);
 
             _worktrees = new List<WorkTree>();
             WorkTree? currentWorktree = null;
@@ -78,7 +83,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 var strings = line.Split(' ');
                 if (strings[0] == "worktree")
                 {
-                    currentWorktree = new WorkTree { Path = line.Substring(9) };
+                    currentWorktree = new WorkTree { Path = Module.GetWindowsPath(line.Substring(9)) };
                     currentWorktree.IsDeleted = !Directory.Exists(currentWorktree.Path);
                     _worktrees.Add(currentWorktree);
                 }

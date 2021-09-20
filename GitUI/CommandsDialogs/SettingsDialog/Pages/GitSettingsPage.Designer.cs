@@ -73,7 +73,7 @@
             tlpnlEnvironment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlEnvironment.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlEnvironment.Size = new System.Drawing.Size(609, 98);
-            tlpnlEnvironment.TabIndex = 0;
+            tlpnlEnvironment.TabIndex = 8;
             // 
             // ChangeHomeButton
             // 
@@ -81,7 +81,7 @@
             this.ChangeHomeButton.Location = new System.Drawing.Point(3, 70);
             this.ChangeHomeButton.Name = "ChangeHomeButton";
             this.ChangeHomeButton.Size = new System.Drawing.Size(90, 25);
-            this.ChangeHomeButton.TabIndex = 2;
+            this.ChangeHomeButton.TabIndex = 9;
             this.ChangeHomeButton.Text = "Change HOME";
             this.ChangeHomeButton.UseVisualStyleBackColor = true;
             this.ChangeHomeButton.Click += new System.EventHandler(this.ChangeHomeButton_Click);
@@ -142,8 +142,7 @@
             this.label50.Name = "label50";
             this.label50.Size = new System.Drawing.Size(603, 13);
             this.label50.TabIndex = 0;
-            this.label50.Text = "Git Extensions can use Git for Windows or cygwin to access git repositories. Set " +
-    "the correct paths below.";
+            this.label50.Text = "Set the correct paths to Git for Windows. (WSL Git will be used for WSL repositories).";
             this.label50.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // downloadGitForWindows

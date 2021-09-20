@@ -97,7 +97,11 @@ namespace GitCommands.Logging
 
                 var fileName = FileName;
 
-                if (fileName.EndsWith("git.exe"))
+                if (fileName.StartsWith("wsl "))
+                {
+                    fileName = "wsl";
+                }
+                else if (fileName.EndsWith("git.exe"))
                 {
                     fileName = "git";
                 }

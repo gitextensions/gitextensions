@@ -16,16 +16,18 @@ namespace GitCommands
     {
         private readonly string _workingDir;
         private readonly Func<string> _fileNameProvider;
+        private readonly string _prefixArguments;
 
         public Executable(string fileName, string workingDir = "")
             : this(() => fileName, workingDir)
         {
         }
 
-        public Executable(Func<string> fileNameProvider, string workingDir = "")
+        public Executable(Func<string> fileNameProvider, string workingDir = "", string prefixArguments = "")
         {
             _workingDir = workingDir;
             _fileNameProvider = fileNameProvider;
+            _prefixArguments = prefixArguments;
         }
 
         /// <inheritdoc />
@@ -44,7 +46,7 @@ namespace GitCommands
 
             var fileName = _fileNameProvider();
 
-            return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit);
+            return new ProcessWrapper(fileName, _prefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit);
         }
 
         #region ProcessWrapper
@@ -72,6 +74,7 @@ namespace GitCommands
             private bool _disposed;
 
             public ProcessWrapper(string fileName,
+                                  string prefixArguments,
                                   string arguments,
                                   string workDir,
                                   bool createWindow,
@@ -107,12 +110,12 @@ namespace GitCommands
                         StandardOutputEncoding = outputEncoding,
                         StandardErrorEncoding = errorEncoding,
                         FileName = fileName,
-                        Arguments = arguments,
+                        Arguments = $"{prefixArguments}{arguments}",
                         WorkingDirectory = workDir
                     }
                 };
 
-                _logOperation = CommandLog.LogProcessStart(fileName, arguments, workDir);
+                _logOperation = CommandLog.LogProcessStart($"{fileName} {prefixArguments}".Trim(), arguments, workDir);
 
                 _process.Exited += OnProcessExit;
 
@@ -134,7 +137,7 @@ namespace GitCommands
                     Dispose();
 
                     _logOperation.LogProcessEnd(ex);
-                    throw new ExternalOperationException(fileName, arguments, workDir, innerException: ex);
+                    throw new ExternalOperationException($"{fileName} {prefixArguments}".Trim(), arguments, workDir, innerException: ex);
                 }
             }
 

@@ -55,7 +55,7 @@ namespace GitCommands.Git.Tag
                 _fileSystem.File.WriteAllText(tagMessageFileName, args.TagMessage);
             }
 
-            GitCreateTagCmd createTagCmd = new(args, tagMessageFileName);
+            GitCreateTagCmd createTagCmd = new(args, _uiCommands.GitModule.GetGitExecPath(tagMessageFileName));
             try
             {
                 return _uiCommands.StartCommandLineProcessDialog(parentWindow, createTagCmd);

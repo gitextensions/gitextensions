@@ -245,9 +245,11 @@ namespace GitUI.CommandsDialogs
                     branch = null;
                 }
 
-                string sourceRepo = _NO_TRANSLATE_From.Text;
+                string sourceRepo = PathUtil.IsLocalFile(_NO_TRANSLATE_From.Text)
+                    ? UICommands.Module.GetGitExecPath(_NO_TRANSLATE_From.Text)
+                    : _NO_TRANSLATE_From.Text;
                 var cloneCmd = GitCommandHelpers.CloneCmd(sourceRepo,
-                    dirTo,
+                    UICommands.Module.GetGitExecPath(dirTo),
                     CentralRepository.Checked,
                     cbIntializeAllSubmodules.Checked,
                     branch, depth, isSingleBranch);

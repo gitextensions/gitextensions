@@ -38,16 +38,20 @@ namespace GitUIPluginInterfaces
         void SetSetting(string setting, string value);
         void UnsetSetting(string setting);
 
-        /// <summary>Gets the directory which contains the git repository.</summary>
+        /// <summary>
+        /// Gets the directory which contains the git repository.
+        /// </summary>
         string WorkingDir { get; }
 
         /// <summary>
-        /// Gets the access to the current git executable associated with this module.
+        /// Gets the default Git executable associated with this module.
+        /// This executable can be non-native (i.e. WSL).
         /// </summary>
         IExecutable GitExecutable { get; }
 
         /// <summary>
         /// Gets the access to the current git executable associated with this module.
+        /// This commandrunner can be non-native (i.e. WSL).
         /// </summary>
         IGitCommandRunner GitCommandRunner { get; }
 
@@ -69,6 +73,20 @@ namespace GitUIPluginInterfaces
 
         /// <summary>Indicates HEAD is not pointing to a branch (i.e. it is detached).</summary>
         bool IsDetachedHead();
+
+        /// <summary>
+        /// Convert the path for the Git executable. For WSL Git, the path will be adjusted.
+        /// </summary>
+        /// <param name="path">The Windows (native) path as seen by the application.</param>
+        /// <returns>The Posix path if Windows Git, WSL path for WSL Git.</returns>
+        public string GetGitExecPath(string? path);
+
+        /// <summary>
+        /// Convert a path to Windows application (native) format.
+        /// </summary>
+        /// <param name="path">Path as seen by the Git executable, possibly WSL Git.</param>
+        /// <returns>The path in Windows format with native file separators.</returns>
+        public string GetWindowsPath(string path);
 
         bool TryResolvePartialCommitId(string objectIdPrefix, [NotNullWhen(returnValue: true)] out ObjectId? objectId);
 
