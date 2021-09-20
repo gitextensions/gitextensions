@@ -196,14 +196,16 @@ namespace GitUI.CommandsDialogs
 
                 if (PatchFileMode.Checked)
                 {
+                    string gitPatch = Module.GetGitExecPath(patchFile);
                     var arguments = IsDiffFile(patchFile)
-                        ? GitCommandHelpers.ApplyDiffPatchCmd(ignoreWhiteSpace, patchFile)
-                        : GitCommandHelpers.ApplyMailboxPatchCmd(signOff, ignoreWhiteSpace, patchFile);
+                        ? GitCommandHelpers.ApplyDiffPatchCmd(ignoreWhiteSpace, gitPatch)
+                        : GitCommandHelpers.ApplyMailboxPatchCmd(signOff, ignoreWhiteSpace, gitPatch);
 
                     FormProcess.ShowDialog(this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
                 }
                 else
                 {
+                    // No need for PathUtil.GetRepoPath(), file streamed
                     var arguments = GitCommandHelpers.ApplyMailboxPatchCmd(signOff, ignoreWhiteSpace);
 
                     Module.ApplyPatch(dirText, arguments);

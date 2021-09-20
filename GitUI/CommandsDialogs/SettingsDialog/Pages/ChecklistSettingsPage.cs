@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private readonly TranslationString _solveGitCommandFailed =
             new("The command to run git could not be determined automatically." + Environment.NewLine +
-                "Please make sure git (Git for Windows or cygwin) is installed or set the correct command manually.");
+                "Please make sure that Git for Windows is installed or set the correct command manually.");
 
         private readonly TranslationString _shellExtRegistered =
             new("Shell extensions registered properly.");

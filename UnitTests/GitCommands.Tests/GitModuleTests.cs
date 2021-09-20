@@ -542,9 +542,9 @@ namespace GitCommandsTests
                     Assert.AreEqual("https://github.com/gitextensions/push.git", remotes[3].PushUrls[0]);
 
                     Assert.AreEqual("with-space", remotes[4].Name);
-                    Assert.AreEqual("c:\\Bare Repo", remotes[4].FetchUrl);
+                    Assert.AreEqual("c:/Bare Repo", remotes[4].FetchUrl);
                     Assert.AreEqual(1, remotes[4].PushUrls.Count);
-                    Assert.AreEqual("c:\\Bare Repo", remotes[4].PushUrls[0]);
+                    Assert.AreEqual("c:/Bare Repo", remotes[4].PushUrls[0]);
 
                     Assert.AreEqual("multi", remotes[5].Name);
                     Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[5].FetchUrl);

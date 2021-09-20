@@ -919,7 +919,7 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
       </trans-unit>
       <trans-unit id="_solveGitCommandFailed.Text">
         <source>The command to run git could not be determined automatically.
-Please make sure git (Git for Windows or cygwin) is installed or set the correct command manually.</source>
+Please make sure that Git for Windows is installed or set the correct command manually.</source>
         <target />
       </trans-unit>
       <trans-unit id="_solveGitCommandFailedCaption.Text">
@@ -8294,7 +8294,7 @@ Check if file is accessible.</source>
         <target />
       </trans-unit>
       <trans-unit id="label50.Text">
-        <source>Git Extensions can use Git for Windows or cygwin to access git repositories. Set the correct paths below.</source>
+        <source>Set the correct paths to Git for Windows. (WSL Git will be used for WSL repositories).</source>
         <target />
       </trans-unit>
       <trans-unit id="lblGitCommand.Text">

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitExtUtils.GitUI;
@@ -93,7 +94,7 @@ namespace GitUI.HelperDialogs
                 return;
             }
 
-            var command = GitCommandHelpers.PushLocalCmd(gitRefToReset.CompleteName, _revision.ObjectId, Module.WorkingDir, ForceReset.Checked);
+            var command = GitCommandHelpers.PushLocalCmd(gitRefToReset.CompleteName, _revision.ObjectId, Module.GetGitExecPath(Module.WorkingDir), ForceReset.Checked);
             bool success = FormProcess.ShowDialog(this, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (success)
             {

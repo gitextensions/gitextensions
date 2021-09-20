@@ -36,11 +36,22 @@ namespace GitUI.HelperDialogs
         {
             ProcessCallback = ProcessStart;
             AbortCallback = ProcessAbort;
-            ProcessString = process ?? AppSettings.GitCommand;
-            ProcessArguments = arguments;
             Remote = "";
             ProcessInput = input;
             WorkingDirectory = workingDirectory;
+
+            if (process is null)
+            {
+                string wslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(workingDirectory) : "";
+                if (!string.IsNullOrEmpty(wslDistro))
+                {
+                    process = AppSettings.WslGitCommand;
+                    arguments = $"-d {wslDistro} git {arguments}";
+                }
+            }
+
+            ProcessString = process ?? AppSettings.GitCommand;
+            ProcessArguments = arguments;
 
             var displayPath = PathUtil.GetDisplayPath(WorkingDirectory);
             if (!string.IsNullOrWhiteSpace(displayPath))

@@ -47,8 +47,18 @@ namespace GitCommands
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
         private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
+
+        // The executable may use Windows Git (native to the app, always used in special situations) or WSL Git.
         private readonly IGitCommandRunner _gitCommandRunner;
+        private readonly IGitCommandRunner _gitWindowsCommandRunner;
         private readonly IExecutable _gitExecutable;
+        private readonly IExecutable _gitWindowsExecutable;
+
+        /// <summary>
+        /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
+        /// This can be seen as the Git "instance" identifier.
+        /// </summary>
+        private readonly string _wslDistro;
 
         public GitModule(string? workingDir)
         {
@@ -56,9 +66,21 @@ namespace GitCommands
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
-            _gitExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
-            _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
             _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
+            _gitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
+            _gitWindowsCommandRunner = new GitCommandRunner(_gitWindowsExecutable, () => SystemEncoding);
+
+            _wslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(WorkingDir) : "";
+            if (!string.IsNullOrEmpty(_wslDistro))
+            {
+                _gitExecutable = new Executable(() => AppSettings.WslGitCommand, WorkingDir, $"-d {_wslDistro} git ");
+                _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
+            }
+            else
+            {
+                _gitExecutable = _gitWindowsExecutable;
+                _gitCommandRunner = _gitWindowsCommandRunner;
+            }
 
             // If this is a submodule, populate relevant properties.
             // If this is not a submodule, these will all be null.
@@ -130,25 +152,30 @@ namespace GitCommands
             }
         }
 
-        /// <summary>
-        /// Gets the directory which contains the git repository.
-        /// </summary>
+        /// <inherit/>
         public string WorkingDir { get; }
 
         /// <summary>
-        /// Gets the access to the current git executable associated with this module.
+        /// GitVersion for the default GitExecutable.
         /// </summary>
+        public GitVersion GitVersion => GitVersion.CurrentVersion(_wslDistro);
+
+        /// <inherit/>
         public IExecutable GitExecutable => _gitExecutable;
 
-        /// <summary>
-        /// Gets the access to the current git executable associated with this module.
-        /// </summary>
+        /// <inherit/>
         public IGitCommandRunner GitCommandRunner => _gitCommandRunner;
 
         /// <summary>
         /// Gets the location of .git directory for the current working folder.
         /// </summary>
         public string WorkingDirGitDir { get; private set; }
+
+        /// <inherit/>
+        public string GetGitExecPath(string? path) => PathUtil.GetGitExecPath(path, _wslDistro);
+
+        /// <inherit/>
+        public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, _wslDistro);
 
         /// <summary>
         /// If this module is a submodule, returns its name, otherwise <c>null</c>.
@@ -311,7 +338,7 @@ namespace GitCommands
             };
             var gitPath = _gitExecutable.GetOutput(args);
 
-            var systemPath = gitPath.Trim().ToNativePath();
+            var systemPath = GetWindowsPath(gitPath).Trim();
 
             if (systemPath.StartsWith(".git\\"))
             {
@@ -346,7 +373,7 @@ namespace GitCommands
                         GitArgumentBuilder args = new("rev-parse") { "--git-common-dir" };
                         ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
-                        string dir = result.StandardOutput.Trim().ToNativePath();
+                        string dir = GetWindowsPath(result.StandardOutput).Trim();
 
                         if (!result.ExitedSuccessfully || dir == ".git" || dir == "." || !Directory.Exists(dir))
                         {
@@ -884,7 +911,9 @@ namespace GitCommands
                 { !string.IsNullOrWhiteSpace(fileName), "--" },
                 fileName.ToPosixPath().QuoteNE()
             };
-            using var process = _gitExecutable.Start(args, createWindow: true);
+
+            // Use native (Windows) Git if custom tool is selected as the list is native
+            using var process = (string.IsNullOrWhiteSpace(customTool) ? _gitExecutable : _gitNativeExecutable).Start(args, createWindow: true);
             process.WaitForExit();
         }
 
@@ -895,6 +924,9 @@ namespace GitCommands
                 { bare, "--bare" },
                 { shared, "--shared=all" }
             };
+
+            // Note that the output contains the path to the repo for the Git executable.
+            // This means that the WSL path is presented in WSL repos, not the Windows path (native to the app).
             var output = _gitExecutable.GetOutput(args);
 
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
@@ -1338,7 +1370,7 @@ namespace GitCommands
                     "--break-rewrites",
                     { start is not null, $"--start-number {start}" },
                     { !string.IsNullOrEmpty(from), $"{from.Quote()}..{to.Quote()}", $"--root {to.Quote()}" },
-                    $"-o {output.ToPosixPath().Quote()}"
+                    $"-o {GetGitExecPath(output).Quote()}"
                 });
         }
 
@@ -2102,7 +2134,7 @@ namespace GitCommands
                 { !string.IsNullOrEmpty(author), $"--author=\"{author?.Trim().Trim('"')}\"" },
                 { gpgSign && string.IsNullOrWhiteSpace(gpgKeyId), "-S" },
                 { gpgSign && !string.IsNullOrWhiteSpace(gpgKeyId), $"-S{gpgKeyId}" },
-                { useExplicitCommitMessage, $"-F \"{Path.Combine(GetGitDirectory(), "COMMITMESSAGE")}\"" },
+                { useExplicitCommitMessage, $"-F \"{GetGitExecPath(Path.Combine(GetGitDirectory(), "COMMITMESSAGE"))}\"" },
                 { allowEmpty, "--allow-empty" }
             };
         }
@@ -2151,7 +2183,7 @@ namespace GitCommands
                 {
                     "add",
                     name.Quote(),
-                    path.ToPosixPath().QuoteNE()
+                    GetGitExecPath(path).QuoteNE()
                 });
         }
 
@@ -2168,13 +2200,13 @@ namespace GitCommands
 
         public async Task<IReadOnlyList<Remote>> GetRemotesAsync()
         {
-            ExecutionResult result = await _gitExecutable.ExecuteAsync("remote -v", throwOnErrorExit: false);
+            ExecutionResult result = await _gitExecutable.ExecuteAsync(new GitArgumentBuilder("remote") { "-v" }, throwOnErrorExit: false);
             ////TODO: Handle non-empty result.StandardError if not result.ExitedSuccessfully
             return result.ExitedSuccessfully
                 ? ParseRemotes(result)
                 : Array.Empty<Remote>();
 
-            static IReadOnlyList<Remote> ParseRemotes(ExecutionResult result)
+            IReadOnlyList<Remote> ParseRemotes(ExecutionResult result)
             {
                 IEnumerable<string> lines = result.StandardOutput.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries);
                 List<Remote> remotes = new();
@@ -2196,6 +2228,11 @@ namespace GitCommands
 
                     var name = remoteMatch.Groups["name"].Value;
                     var remoteUrl = remoteMatch.Groups["url"].Value;
+                    if (PathUtil.IsLocalFile(remoteUrl))
+                    {
+                        remoteUrl = GetWindowsPath(remoteUrl).ToPosixPath();
+                    }
+
                     if (remoteMatch.Groups["direction"].Value == "push")
                     {
                         if (remotes.Count <= 0 || name != remotes[remotes.Count - 1].Name)
@@ -2220,6 +2257,11 @@ namespace GitCommands
                     }
 
                     var pushUrl = pushMatch.Groups["url"].Value;
+                    if (PathUtil.IsLocalFile(pushUrl))
+                    {
+                        pushUrl = GetWindowsPath(pushUrl).ToPosixPath();
+                    }
+
                     if (name != pushMatch.Groups["name"].Value)
                     {
                         throw new Exception("Fetch and push remote names must match: " +
@@ -3580,9 +3622,10 @@ namespace GitCommands
         /// <returns>the Git output.</returns>
         public string GetCustomDiffMergeTools(bool isDiff, CancellationToken cancellationToken)
         {
+            // Use a global list of custom tools, always use Windows tools (native paths for the app).
             // Note that --gui has no effect here
             GitArgumentBuilder args = new(isDiff ? "difftool" : "mergetool") { "--tool-help" };
-            ExecutionResult result = _gitExecutable.Execute(args, cancellationToken: cancellationToken);
+            ExecutionResult result = _gitWindowsExecutable.Execute(args, cancellationToken: cancellationToken);
             return result.StandardOutput;
         }
 
@@ -3593,7 +3636,9 @@ namespace GitCommands
 
         public string OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
         {
-            _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
+            // Use Windows Git if custom tool is selected as the list is native to the application.
+            (string.IsNullOrWhiteSpace(customTool) ? _gitCommandRunner : _gitWindowsCommandRunner)
+                .RunDetached(new GitArgumentBuilder("difftool")
             {
                 { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
                 "--find-renames",
@@ -3621,7 +3666,9 @@ namespace GitCommands
                 return null;
             }
 
-            _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
+            // Use Windows Git if custom tool is selected as the list is native to the application.
+            (string.IsNullOrWhiteSpace(customTool) ? _gitCommandRunner : _gitWindowsCommandRunner)
+                .RunDetached(new GitArgumentBuilder("difftool")
             {
                 { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
                 "--find-renames",

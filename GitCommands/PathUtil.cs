@@ -12,6 +12,7 @@ namespace GitCommands
     {
         private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
         private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
+        private const string WslPrefix = @"\\wsl$\";
 
         public static readonly char PosixDirectorySeparatorChar = '/';
         public static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
@@ -159,7 +160,94 @@ namespace GitCommands
 
         internal static bool IsWslPath(string path)
         {
-            return path.ToLower().StartsWith(@"\\wsl$\");
+            return path.ToLower().StartsWith(WslPrefix);
+        }
+
+        /// <summary>
+        /// Get the name of the distribution (like "Ubuntu-20.04") for WSL2 paths.
+        /// </summary>
+        /// <param name="path">The directory path.</param>
+        /// <returns>The name of the distro or empty for non WSL2 paths</returns>
+        public static string GetWslDistro(string? path)
+        {
+            int distroLen = GetWslDistroLength(path);
+            return distroLen <= 0 ? "" : path.Substring(WslPrefix.Length, distroLen);
+
+            static int GetWslDistroLength(string? path)
+            {
+                if (string.IsNullOrWhiteSpace(path) || !IsWslPath(path))
+                {
+                    return -1;
+                }
+
+                return path.IndexOfAny(new[] { '\\', '/' }, WslPrefix.Length) - WslPrefix.Length;
+            }
+        }
+
+        /// <summary>
+        /// Convert a path for the Git executable.
+        /// For Windows Git (native for the app) the path is unchanged, for WSL Git the path may be converted.
+        /// </summary>
+        /// <param name="path">The path as seen by the Git Extensions Windows (native) application.</param>
+        /// <param name="wslDistro">The name of the distro or empty for non WSL paths.</param>
+        /// <returns>The Posix path if Windows Git (not a WSL distro), WSL path for WSL Git.</returns>
+        public static string GetGitExecPath(string? path, string? wslDistro)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return path ?? "";
+            }
+
+            if (string.IsNullOrEmpty(wslDistro))
+            {
+                return path.ToPosixPath();
+            }
+
+            string pathDistro = GetWslDistro(path);
+            if (!string.IsNullOrEmpty(pathDistro))
+            {
+                // Unexpected but not handled as an error
+                if (pathDistro != wslDistro)
+                {
+                    return path.ToPosixPath();
+                }
+
+                return path[(WslPrefix.Length + pathDistro.Length)..].ToPosixPath();
+            }
+
+            if (path.Length > 2 && char.IsLetter(path[0]) && path[1] == ':')
+            {
+                return $"/mnt/{char.ToLower(path[0])}{path[2..].ToPosixPath()}";
+            }
+
+            return path.ToPosixPath();
+        }
+
+        /// <summary>
+        /// Convert a path to Windows format, native to the application.
+        /// If the app is supported on other OSes, the method should be renamed.
+        /// </summary>
+        /// <param name="path">The path as seen by the Git executable, possibly WSL Git.</param>
+        /// <param name="wslDistro">The name of the distro or empty for non WSL paths.</param>
+        /// <returns>The path in Windows format with native file separators.</returns>
+        public static string GetWindowsPath(string? path, string? wslDistro)
+        {
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(wslDistro))
+            {
+                return path?.ToNativePath() ?? "";
+            }
+
+            if (path.StartsWith("/mnt/") && path.Length > 7)
+            {
+                return $"{char.ToUpper(path[5])}:{path[6..]}".ToNativePath();
+            }
+
+            if (path[0] is '\\' or '/')
+            {
+                return $@"{WslPrefix}{wslDistro}{path}".ToNativePath();
+            }
+
+            return $@"{WslPrefix}{wslDistro}\{path}".ToNativePath();
         }
 
         public static string GetRepositoryName(string? repositoryUrl)
