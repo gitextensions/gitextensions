@@ -1602,7 +1602,7 @@ namespace GitUI
             }
 
             // https://github.com/gitextensions/gitextensions/issues/5636
-            if (e.Modifiers != Keys.None)
+            if (e.Modifiers != Keys.None && e.Modifiers != Keys.Shift)
             {
                 return;
             }
@@ -1620,8 +1620,18 @@ namespace GitUI
 
                 case Keys.Delete:
                     {
+                        var gitRefListsForRevision = new GitRefListsForRevision(selectedRevision).GetDeletableRefs(Module.GetSelectedBranch());
+
+                        // Shift key enables quick and forcible delete
+                        var forceDelete = e.Modifiers == Keys.Shift;
+
+                        if (forceDelete)
+                        {
+                            gitRefListsForRevision = new IGitRef[] { gitRefListsForRevision.FirstOrDefault() };
+                        }
+
                         InitiateRefAction(
-                            new GitRefListsForRevision(selectedRevision).GetDeletableRefs(Module.GetSelectedBranch()),
+                            gitRefListsForRevision,
                             gitRef =>
                             {
                                 if (gitRef.IsTag)
@@ -1630,11 +1640,11 @@ namespace GitUI
                                 }
                                 else if (gitRef.IsRemote)
                                 {
-                                    UICommands.StartDeleteRemoteBranchDialog(ParentForm, gitRef.Name);
+                                    UICommands.StartDeleteRemoteBranchDialog(ParentForm, gitRef.Name, forceDelete);
                                 }
                                 else
                                 {
-                                    UICommands.StartDeleteBranchDialog(ParentForm, gitRef.Name);
+                                    UICommands.StartDeleteBranchDialog(ParentForm, gitRef.Name, forceDelete);
                                 }
                             },
                             FormQuickGitRefSelector.Action.Delete);

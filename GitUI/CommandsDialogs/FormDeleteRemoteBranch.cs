@@ -23,6 +23,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly HashSet<string> _mergedBranches = new();
         private readonly string _defaultRemoteBranch;
+        private readonly bool _forceDeleteRemote;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -32,10 +33,11 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormDeleteRemoteBranch(GitUICommands commands, string defaultRemoteBranch)
+        public FormDeleteRemoteBranch(GitUICommands commands, string defaultRemoteBranch, bool forceDeleteRemote)
             : base(commands, enablePositionRestore: false)
         {
             _defaultRemoteBranch = defaultRemoteBranch;
+            _forceDeleteRemote = forceDeleteRemote;
             InitializeComponent();
 
             // work-around the designer bug that can't add controls to FlowLayoutPanel
@@ -43,6 +45,8 @@ namespace GitUI.CommandsDialogs
             AcceptButton = Delete;
 
             InitializeComplete();
+
+            DeleteRemote.Checked = _forceDeleteRemote;
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -92,7 +96,7 @@ namespace GitUI.CommandsDialogs
             List<IGitRef> selectedBranches = Branches.GetSelectedBranches().ToList();
 
             bool hasUnmergedBranches = selectedBranches.Any(branch => !_mergedBranches.Contains(branch.CompleteName));
-            if (hasUnmergedBranches)
+            if (hasUnmergedBranches && !_forceDeleteRemote)
             {
                 if (MessageBox.Show(this,
                                     _confirmDeleteUnmergedRemoteBranchMessage.Text,

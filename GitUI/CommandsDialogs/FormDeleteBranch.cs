@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _useReflogHint = new("Did you know you can use reflog to restore deleted branches?");
 
         private readonly IEnumerable<string> _defaultBranches;
+        private readonly bool _forceDeleteUnmergedBranch;
         private readonly HashSet<string> _mergedBranches = new();
         private string? _currentBranch;
 
@@ -32,11 +33,11 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormDeleteBranch(GitUICommands commands, IEnumerable<string> defaultBranches)
+        public FormDeleteBranch(GitUICommands commands, IEnumerable<string> defaultBranches, bool forceDeleteUnmergedBranch = false)
             : base(commands, enablePositionRestore: false)
         {
             _defaultBranches = defaultBranches;
-
+            _forceDeleteUnmergedBranch = forceDeleteUnmergedBranch;
             InitializeComponent();
 
             // work-around the designer bug that can't add controls to FlowLayoutPanel
@@ -106,7 +107,7 @@ namespace GitUI.CommandsDialogs
 
             // always treat branches as unmerged if there is no current branch (HEAD is detached)
             bool hasUnmergedBranches = _currentBranch is null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
-            if (hasUnmergedBranches && !AppSettings.DontConfirmDeleteUnmergedBranch)
+            if (hasUnmergedBranches && !AppSettings.DontConfirmDeleteUnmergedBranch && !_forceDeleteUnmergedBranch)
             {
                 TaskDialogPage page = new()
                 {

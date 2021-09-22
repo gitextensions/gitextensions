@@ -138,26 +138,26 @@ namespace GitUI
             FormProcess.ShowDialog(owner, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
-        public bool StartDeleteBranchDialog(IWin32Window? owner, string branch)
+        public bool StartDeleteBranchDialog(IWin32Window? owner, string branch, bool forceDeleteUnmergedBranch = false)
         {
-            return StartDeleteBranchDialog(owner, new[] { branch });
+            return StartDeleteBranchDialog(owner, new[] { branch }, forceDeleteUnmergedBranch);
         }
 
-        public bool StartDeleteBranchDialog(IWin32Window? owner, IEnumerable<string> branches)
+        public bool StartDeleteBranchDialog(IWin32Window? owner, IEnumerable<string> branches, bool forceDeleteUnmergedBranch = false)
         {
             return DoActionOnRepo(owner, action: () =>
             {
-                using FormDeleteBranch form = new(this, branches);
+                using FormDeleteBranch form = new(this, branches, forceDeleteUnmergedBranch);
                 form.ShowDialog(owner);
                 return true;
             }, changesRepo: false);
         }
 
-        public bool StartDeleteRemoteBranchDialog(IWin32Window? owner, string remoteBranch)
+        public bool StartDeleteRemoteBranchDialog(IWin32Window? owner, string remoteBranch, bool forceDeleteRemote = false)
         {
             return DoActionOnRepo(owner, action: () =>
             {
-                using FormDeleteRemoteBranch form = new(this, remoteBranch);
+                using FormDeleteRemoteBranch form = new(this, remoteBranch, forceDeleteRemote);
                 form.ShowDialog(owner);
                 return true;
             }, changesRepo: false);
