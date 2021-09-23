@@ -1173,9 +1173,11 @@ namespace GitUI.CommandsDialogs
 
                 if (scripts.Count == 0)
                 {
+                    ToolStripScripts.GripStyle = ToolStripGripStyle.Hidden;
                     return;
                 }
 
+                ToolStripScripts.GripStyle = ToolStripGripStyle.Visible;
                 foreach (var script in scripts)
                 {
                     var button = new ToolStripButton

@@ -246,8 +246,8 @@ namespace GitUI.CommandsDialogs
             this.ToolStripMain.ClickThrough = true;
             this.ToolStripMain.Dock = System.Windows.Forms.DockStyle.None;
             this.ToolStripMain.DrawBorder = false;
+            this.ToolStripMain.GripEnabled = false;
             this.ToolStripMain.GripMargin = new System.Windows.Forms.Padding(0);
-            this.ToolStripMain.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripMain.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RefreshButton,
@@ -281,8 +281,8 @@ namespace GitUI.CommandsDialogs
             this.ToolStripFilters.ClickThrough = true;
             this.ToolStripFilters.Dock = System.Windows.Forms.DockStyle.None;
             this.ToolStripFilters.DrawBorder = false;
+            this.ToolStripFilters.GripEnabled = false;
             this.ToolStripFilters.GripMargin = new System.Windows.Forms.Padding(0);
-            this.ToolStripFilters.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripFilters.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripFilters.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
@@ -1799,8 +1799,8 @@ namespace GitUI.CommandsDialogs
             this.ToolStripScripts.ClickThrough = true;
             this.ToolStripScripts.Dock = System.Windows.Forms.DockStyle.None;
             this.ToolStripScripts.DrawBorder = false;
+            this.ToolStripScripts.GripEnabled = false;
             this.ToolStripScripts.GripMargin = new System.Windows.Forms.Padding(0);
-            this.ToolStripScripts.GripStyle = ToolStripGripStyle.Hidden;
             this.ToolStripScripts.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ToolStripScripts.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStripScripts.Location = new System.Drawing.Point(890, 0);
