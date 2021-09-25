@@ -1268,7 +1268,7 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
-        <target>Zaten bir tane OAuth jetonunuz (token) var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar'ı içerisinden eski jetonu (token) silin.</target>
+        <target>Zaten bir tane OAuth jetonunuz (token) var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar'ı içerisinden eski jetonu (token'u) silin.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">

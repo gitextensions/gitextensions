@@ -8168,6 +8168,8 @@ Birleştirme çakışması çözüldü mü?</target>
       <trans-unit id="_fileBinaryChooseLocalBaseRemote.Text">
         <source>File ({0}) appears to be a binary file.
 Choose to keep the local ({1}), remote ({2}) or base file.</source>
+        <target>({0}) dosyası, ikili (binary) bir dosya gibi görünüyor.
+Yerel ({1}), uzak ({2}) veya temel (base) dosyayı korumayı seçin.</target>
         
       </trans-unit>
       <trans-unit id="_fileChangeLocallyAndRemotely.Text">
@@ -9256,6 +9258,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="lblCommitsLimit.Text">
         <source>Limit number of commits to be loaded</source>
+        <target>Yüklenecek teslim sayısını sınırla</target>
         
       </trans-unit>
       <trans-unit id="lblDefaultCloneDestination.Text">
@@ -9710,10 +9713,12 @@ nActual command line: {0}</source>
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToFalseForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to False for the local repository.</source>
+        <target>Yerel depo için Git “{0}” özelliğini False olarak ayarlar.</target>
         
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToTrueForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to True for the local repository.</source>
+        <target>Yerel depo için Git “{0}” özelliğini True olarak ayarlar.</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopy.Text">
@@ -9952,6 +9957,7 @@ göster</target>
       </trans-unit>
       <trans-unit id="_reason.Text">
         <source>Reason</source>
+        <target>Sebep</target>
         
       </trans-unit>
       <trans-unit id="_rememberChoice.Text">
@@ -9973,6 +9979,9 @@ göster</target>
         <source>The server's host key is not cached in the registry.
 
 Do you want to trust this host key and then try again?</source>
+        <target>Sunucunun ana bilgisayar(host) anahtarı, kayıt defterinde önbelleğe alınmaz.
+
+Bu ana bilgisayar(host) anahtarına güvenip yeniden denemek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="_shellNotFound.Text">
@@ -12069,6 +12078,7 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_containedInCurrentCommitText.Text">
         <source>'{0}' is contained in the currently selected commit</source>
+        <target>'{0}', şu anda seçili teslimde yer alıyor</target>
         
       </trans-unit>
       <trans-unit id="_containedInNoBranchText.Text">
@@ -12178,6 +12188,7 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_generalGitConfigExceptionMessage.Text">
         <source>Failed to read &quot;{0}&quot; due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.</source>
+        <target>Aşağıdaki hata nedeniyle &quot;{0}&quot; okunamadı:{1}{1}{2}{1}{1}Bu sorunun doğası gereği, uygulamanın davranışı garanti edilemez ve kapatılması gerekir.{1}{1}Lütfen bu sorunu düzeltin ve Git Extensions'ı(Uzantılarını) yeniden açın.</target>
         
       </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
@@ -12612,6 +12623,8 @@ Evet, telemetriye (izlemeye) izin veyorum!</target>
       <trans-unit id="_strRemoteAlreadyExist.Text">
         <source>ERROR: Remote with name {0} already exists but it points to a different repository!
 Details: Is {1} expected {2}</source>
+        <target>HATA: {0} isimli uzak depo zaten var, ancak farklı bir depoya işaret ediyor!
+Ayrıntılar: {1} bekleniyor mu {2}</target>
         
       </trans-unit>
       <trans-unit id="_strUnableUnderstandPatch.Text">

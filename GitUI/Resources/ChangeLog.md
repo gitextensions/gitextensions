@@ -1,6 +1,25 @@
 Changelog
 =========
 
+### Version 3.5.4 (25 Sep 2021)
+
+#### Changes:
+* [9589] Show toolbar grips
+* [9566] Fix leaking brushes
+* [9551] fix: Show current branch resets when switch repos
+* [9550] Restore splitter persistence
+* [9521] Fix Clone URL Population
+* [9505] CommitDiff: Do not Join() in Dispose()
+
+
+[9589]:https://github.com/gitextensions/gitextensions/pull/9589
+[9566]:https://github.com/gitextensions/gitextensions/pull/9566
+[9551]:https://github.com/gitextensions/gitextensions/pull/9551
+[9550]:https://github.com/gitextensions/gitextensions/pull/9550
+[9521]:https://github.com/gitextensions/gitextensions/pull/9521
+[9505]:https://github.com/gitextensions/gitextensions/pull/9505
+
+
 ### Version 3.5.3 (17 Aug 2021)
 
 #### Changes:

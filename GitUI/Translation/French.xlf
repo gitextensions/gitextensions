@@ -11143,7 +11143,7 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
       </trans-unit>
       <trans-unit id="checkoutRevisionToolStripMenuItem.Text">
         <source>Checkout &amp;this commit...</source>
-        <target>Extraire ce commit</target>
+        <target>Charger ce commit...</target>
         
       </trans-unit>
       <trans-unit id="cherryPickCommitToolStripMenuItem.Text">

@@ -217,6 +217,9 @@ Click this info icon for more details.</source>
         <source>A default image, if the provider has no image for the email address.
 
 Click this info icon for more details.</source>
+        <target>Изображение аватара по умолчанию, если у поставщика аватаров нет изображения для e-mail какого-либо пользователя.
+
+Кликните эту иконку для получения подробной информации.</target>
         
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -6781,6 +6784,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="BranchTab.ToolTipText">
         <source>Push branches and commits to remote repository.</source>
+        <target>Отправить ветки и коммиты во внешний репозиторий.</target>
         
       </trans-unit>
       <trans-unit id="DeleteColumn.HeaderText">
@@ -6820,6 +6824,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="NewColumn.HeaderText">
         <source>Ahead/Behind</source>
+        <target>Опережение/отставание</target>
         
       </trans-unit>
       <trans-unit id="Pull.Text">
@@ -6879,6 +6884,7 @@ This will initialize and update all submodules recursive.</source>
       </trans-unit>
       <trans-unit id="TagTab.ToolTipText">
         <source>Push tags to remote repository</source>
+        <target>Отправить метки во внешний репозиторий</target>
         
       </trans-unit>
       <trans-unit id="_branchNewForRemote.Text">
@@ -6937,6 +6943,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_pullDefaultButton.Text">
         <source>Pull with the default pull action ({0})</source>
+        <target>Получить с действие по умолчанию ({0})</target>
         
       </trans-unit>
       <trans-unit id="_pullMergeButton.Text">
@@ -6956,6 +6963,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_pullRepositoryForceInstruction.Text">
         <source>The push was rejected because the tip of your current branch is behind its remote counterpart</source>
+        <target>Отправка была отклонена, потому ваша текущая ветка отстает от ее внешней копии.</target>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryMainForceInstruction.Text">
@@ -6980,6 +6988,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_pushForceButton.Text">
         <source>Force push with lease</source>
+        <target>Принудительная отправка с извлечением</target>
         
       </trans-unit>
       <trans-unit id="_pushToCaption.Text">
@@ -7044,6 +7053,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="selectTrackedToolStripMenuItem.Text">
         <source>Select tracked</source>
+        <target>Выбрать отслеживаемый</target>
         
       </trans-unit>
       <trans-unit id="unselectAllToolStripMenuItem.Text">
@@ -7239,6 +7249,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="chkCommitterDateIsAuthorDate.Text">
         <source>Committer date is author date</source>
+        <target>Дата коммитера как дата автора</target>
         
       </trans-unit>
       <trans-unit id="chkIgnoreDate.Text">
@@ -7491,6 +7502,7 @@ Stash them before if you don't want to lose them.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>FormRemoteProcess</source>
+        <target>FormRemoteProcess</target>
         
       </trans-unit>
       <trans-unit id="Abort.Text">
@@ -7805,6 +7817,7 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="ForceReset.Text">
         <source>&amp;Force reset for a non-fast-forward reset</source>
+        <target>Принудительный сброс без перемещения вперед</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -7814,11 +7827,14 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="_localRefInvalid.Text">
         <source>The entered value '{0}' is not the name of an existing local branch.</source>
+        <target>Введенное значение '{0}' не является именем существующей локальной ветки</target>
         
       </trans-unit>
       <trans-unit id="labelResetBranchWarning.Text">
         <source>You can only reset a branch safely if there is a direct path from it to selected revision.
 Forcing a branch to reset if it has not been merged might leave some commits unreachable.</source>
+        <target>Вы можете безопасно сбросить ветку, только если от нее есть прямой путь к выбранной ревизии.
+Принудительный сброс ветки, если она не была объединена, может сделать некоторые коммиты недоступными.</target>
         
       </trans-unit>
     </body>
@@ -7879,11 +7895,15 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       <trans-unit id="Keep.Text">
         <source>Keep: update working directory to the commit 
 (abort if there are local changes), reset index</source>
+        <target>Обновить рабочий каталог до состояния коммита 
+(удалить все локальные изменения), сбросить индекс</target>
         
       </trans-unit>
       <trans-unit id="Merge.Text">
         <source>Merge: update working directory to the commit and keep local changes 
 (abort if there are conflicts), reset index</source>
+        <target>Объединить: обновить рабочий каталог до состояния коммита и сохранить локальные изменения 
+(прервать при наличии конфликтов), сбросить индекс</target>
         
       </trans-unit>
       <trans-unit id="Mixed.Text">
@@ -8209,6 +8229,10 @@ Are you sure you want to open this file in {0}?</source>
 The file has been modified locally ({1}) but deleted remotely ({2}).
 
 Choose to delete the file or keep the modified version.</source>
+        <target>Файл {0} не существует во внешней ревизии.
+Файл был изменен локально({1}) и удален извне({2}).
+
+Можно оставить локальную версию или удалить файл.</target>
         
       </trans-unit>
       <trans-unit id="_fileUnchangedAfterMerge.Text">
@@ -8225,6 +8249,10 @@ The merge conflict will not be marked as solved. Please try again.</source>
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
+        <target>{0} и {1} выбранные в {2} отсутствуют в длокальной ревизии.
+Файлы были удалены локально и изменены во внешнем.
+
+Выберите удаление файлов или сохранение изменений.</target>
         
       </trans-unit>
       <trans-unit id="_filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected.Text">
@@ -8232,6 +8260,10 @@ Choose to delete the files or keep the modified versions.</source>
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
+        <target>{0} и {1} отсутствуют в локальной ревизии.
+Файлы были удалены локально и изменены во внешнем.
+
+Выберите удаление файлов или сохранение изменений.</target>
         
       </trans-unit>
       <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLong.Text">
@@ -8239,6 +8271,10 @@ Choose to delete the files or keep the modified versions.</source>
 The files have been modified locally, but deleted remotely.
 
 Choose to delete the files or keep the modified versions.</source>
+        <target>{0} и {1} выбранные в {2} отсутствуют во внешней ревизии.
+Файлы были изменены локально и удалены во внешнем.
+
+Выберите удаление файлов или сохранение изменений.</target>
         
       </trans-unit>
       <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected.Text">
@@ -8246,6 +8282,10 @@ Choose to delete the files or keep the modified versions.</source>
 The files have been modified locally, but deleted remotely.
 
 Choose to delete the files or keep the modified versions.</source>
+        <target>{0} и {1} отсутствуют во внешней ревизии.
+Файлы были изменены локально и удалены во внешнем.
+
+Выберите удаление файлов или сохранение изменений.</target>
         
       </trans-unit>
       <trans-unit id="_keepBaseButtonText.Text">
@@ -8311,6 +8351,7 @@ Please go to settings and configure the mergetool!</source>
       </trans-unit>
       <trans-unit id="_solveMergeConflictApplyToAllCheckBoxText.Text">
         <source>Apply to {0} and {1} other file(s)</source>
+        <target>Применить к {0} и другим {1} файлам</target>
         
       </trans-unit>
       <trans-unit id="_solveMergeConflictDialogCaption.Text">
@@ -8700,6 +8741,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="toolStripButton_customMessage.ToolTipText">
         <source>Write custom stash message</source>
+        <target>Написать свое сообщение для спрятанных изменений</target>
         
       </trans-unit>
     </body>
@@ -9297,6 +9339,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="btnCommitTemplateBrowse.AccessibleName">
         <source>Browse Path to commit template</source>
+        <target>Открыть путь к шаблону коммита</target>
         
       </trans-unit>
       <trans-unit id="btnCommitTemplateBrowse.Text">
@@ -9306,6 +9349,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="btnDiffToolBrowse.AccessibleName">
         <source>Browse Difftool command</source>
+        <target>Открыть инструмент сравнения</target>
         
       </trans-unit>
       <trans-unit id="btnDiffToolBrowse.Text">
@@ -9315,6 +9359,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="btnDiffToolCommandSuggest.AccessibleName">
         <source>Suggest Difftool command</source>
+        <target>Предложить команду инструмента сравнения</target>
         
       </trans-unit>
       <trans-unit id="btnDiffToolCommandSuggest.Text">
@@ -9324,6 +9369,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="btnMergeToolBrowse.AccessibleName">
         <source>Browse Path to mergetool</source>
+        <target>Открыть путь к инструменту слияния</target>
         
       </trans-unit>
       <trans-unit id="btnMergeToolBrowse.Text">
@@ -9333,6 +9379,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="btnMergeToolCommandSuggest.AccessibleName">
         <source>Suggest Mergetool command</source>
+        <target>Предложить команду инструмента слияния</target>
         
       </trans-unit>
       <trans-unit id="btnMergeToolCommandSuggest.Text">
@@ -9902,6 +9949,7 @@ help</source>
       </trans-unit>
       <trans-unit id="_failedToRunShell.Text">
         <source>Failed to run shell</source>
+        <target>Ошибка выполнения команды системы</target>
         
       </trans-unit>
       <trans-unit id="_middleOfPatchApply.Text">
@@ -9951,6 +9999,7 @@ help</source>
       </trans-unit>
       <trans-unit id="_selectOnlyOneOrTwoRevisions.Text">
         <source>Select only one or two revisions. Abort.</source>
+        <target>Нужно выбрать одну или две ревизизии. Прервано.</target>
         
       </trans-unit>
       <trans-unit id="_serverHostkeyNotCachedText.Text">
@@ -10241,6 +10290,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnuBtnOpenRemoteUrlInBrowser.ToolTipText">
         <source>Redirects you to the actual repository page</source>
+        <target>Перенаправляет вас на страницу репозитория</target>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
@@ -10255,10 +10305,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnCollapse.Text">
         <source>Collapse</source>
+        <target>Свернуть</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCollapse.ToolTipText">
         <source>Collapse all subnodes</source>
+        <target>Свернуть все дочерние узлы</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.Text">
@@ -10268,6 +10320,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnCommitSubmodule.ToolTipText">
         <source>Commit changes in selected submodule</source>
+        <target>Зафиксировать изменения выбранного субмодуля</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCreateBranch.Text">
@@ -10287,6 +10340,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.ToolTipText">
         <source>Delete all child branchs, which must all be fully merged in its upstream branch or in HEAD</source>
+        <target>Удалите все дочерние ветки, которые должны быть полностью объединены во внешней ветке или в HEAD.</target>
         
       </trans-unit>
       <trans-unit id="mnubtnDisableRemote.Text">
@@ -10306,10 +10360,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnExpand.Text">
         <source>Expand</source>
+        <target>Раскрыть</target>
         
       </trans-unit>
       <trans-unit id="mnubtnExpand.ToolTipText">
         <source>Expand all subnodes</source>
+        <target>Раскрыть все дочерние узлы</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchAllBranchesFromARemote.Text">
@@ -10324,6 +10380,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnFetchCreateBranch.ToolTipText">
         <source>Fetch then create a local branch from the remote branch</source>
+        <target>Получить и затем создайть локальную ветвь из внешней ветки</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchOneBranch.Text">
@@ -10333,6 +10390,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnFetchOneBranch.ToolTipText">
         <source>Fetch the new remote branch</source>
+        <target>Получить новую внешную ветку</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.Text">
@@ -10342,6 +10400,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.ToolTipText">
         <source>Fetch &amp; Rebase current branch to this branch</source>
+        <target>Забрать и переместить текущую ветку к этой</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFilterLocalBranchInRevisionGrid.Text">
@@ -10395,6 +10454,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnMoveDown.ToolTipText">
         <source>Move node down</source>
+        <target>Переместить узел вниз</target>
         
       </trans-unit>
       <trans-unit id="mnubtnMoveUp.Text">
@@ -10404,6 +10464,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnMoveUp.ToolTipText">
         <source>Move node up</source>
+        <target>Переместить узел вверх</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenGESubmodule.Text">
@@ -10413,6 +10474,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnOpenGESubmodule.ToolTipText">
         <source>Open selected submodule in a new instance</source>
+        <target>Открыть выбранный субмодуль в новом экземпляре</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
@@ -10447,14 +10509,17 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.ToolTipText">
         <source>Reset selected submodule</source>
+        <target>Сбросить выбранный субмодуль</target>
         
       </trans-unit>
       <trans-unit id="mnubtnStashSubmodule.Text">
         <source>&amp;Stash</source>
+        <target>Спрятать</target>
         
       </trans-unit>
       <trans-unit id="mnubtnStashSubmodule.ToolTipText">
         <source>Stash changes in selected submodule</source>
+        <target>Спрятать изменения выбранного субмодуля</target>
         
       </trans-unit>
       <trans-unit id="mnubtnSynchronizeSubmodules.Text">
@@ -10464,6 +10529,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnSynchronizeSubmodules.ToolTipText">
         <source>Synchronize selected submodule recursively</source>
+        <target>Синхронизировать выбранный субмодуль рекурсивно</target>
         
       </trans-unit>
       <trans-unit id="mnubtnUpdateSubmodule.Text">
@@ -10473,6 +10539,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnUpdateSubmodule.ToolTipText">
         <source>Update selected submodule recursively</source>
+        <target>Обновить выбранный субмодуль рекурсивно</target>
         
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
@@ -10482,6 +10549,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">
         <source>Collapse all subnodes</source>
+        <target>Свернуть все дочерние узлы</target>
         
       </trans-unit>
       <trans-unit id="tsbShowBranches.Text">
@@ -10635,6 +10703,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="diffTwoSelectedDifftoolToolStripMenuItem.Text">
         <source>Diff the selected files</source>
+        <target>Сравнить выбранные файлы</target>
         
       </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
@@ -10659,6 +10728,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="firstToSelectedToolStripMenuItem.Text">
         <source>First -&gt; Second</source>
+        <target>Первый -&gt; Второй</target>
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
@@ -10673,10 +10743,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="rememberFirstRevDiffToolStripMenuItem.Text">
         <source>Remember First for diff</source>
+        <target>Запомнить первым для сравнения</target>
         
       </trans-unit>
       <trans-unit id="rememberSecondRevDiffToolStripMenuItem.Text">
         <source>Remember Second for diff</source>
+        <target>Запомнить вторым для сравнения</target>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
@@ -10696,6 +10768,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">
         <source>Second -&gt; Working directory</source>
+        <target>Второй -&gt; Рабочий каталог</target>
         
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
@@ -10826,6 +10899,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="expandToolStripMenuItem.Text">
         <source>Expand</source>
+        <target>Раскрыть</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
@@ -10880,6 +10954,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="rememberFileStripMenuItem.Text">
         <source>Remember file for diff</source>
+        <target>Запомнить файл для сравнения</target>
         
       </trans-unit>
       <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
@@ -10947,6 +11022,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="GotoMergeBaseCommit.ToolTipText">
         <source>Selects the common ancestor commit (merge base), which is the most recent shared ancestor of the selected commits (or if only one commit is selected, between it and the checked out commit (HEAD))</source>
+        <target>Выбирает коммит общего предка (базу для слияния), который является самым последним общим предком выбранных коммитов (или, если выбран только коммит, между ним и HEAD)</target>
         
       </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
@@ -11200,6 +11276,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="archiveRevisionToolStripMenuItem.Text">
         <source>Arch&amp;ive this commit...</source>
+        <target>Архивировать этот коммит...</target>
         
       </trans-unit>
       <trans-unit id="bisectSkipRevisionToolStripMenuItem.Text">
@@ -11209,30 +11286,37 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="checkoutBranchToolStripMenuItem.Text">
         <source>Chec&amp;kout branch...</source>
+        <target>Переключиться на ветку...</target>
         
       </trans-unit>
       <trans-unit id="checkoutRevisionToolStripMenuItem.Text">
         <source>Checkout &amp;this commit...</source>
+        <target>Переключиться на этот коммит...</target>
         
       </trans-unit>
       <trans-unit id="cherryPickCommitToolStripMenuItem.Text">
         <source>Cherr&amp;y pick this commit...</source>
+        <target>Забрать этот коммит:</target>
         
       </trans-unit>
       <trans-unit id="compareSelectedCommitsMenuItem.Text">
         <source>Compare &amp;selected commits</source>
+        <target>Сравнить выбранные коммиты</target>
         
       </trans-unit>
       <trans-unit id="compareToBaseToolStripMenuItem.Text">
         <source>Compare to &amp;BASE</source>
+        <target>Сравнить с БАЗОЙ</target>
         
       </trans-unit>
       <trans-unit id="compareToBranchToolStripMenuItem.Text">
         <source>Compare &amp;to branch...</source>
+        <target>Сравнить с веткой...</target>
         
       </trans-unit>
       <trans-unit id="compareToWorkingDirectoryMenuItem.Text">
         <source>Compare to &amp;working directory</source>
+        <target>Сравнить с рабочим каталогом</target>
         
       </trans-unit>
       <trans-unit id="compareToolStripMenuItem.Text">
@@ -11242,6 +11326,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="compareWithCurrentBranchToolStripMenuItem.Text">
         <source>Compare with &amp;current branch</source>
+        <target>Сравнить с текущей веткой</target>
         
       </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
@@ -11251,34 +11336,42 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="createNewBranchToolStripMenuItem.Text">
         <source>Create new branc&amp;h here...</source>
+        <target>Создать новую ветку здесь...</target>
         
       </trans-unit>
       <trans-unit id="createTagToolStripMenuItem.Text">
         <source>Create new ta&amp;g here...</source>
+        <target>Создать новую метку здесь...</target>
         
       </trans-unit>
       <trans-unit id="deleteBranchToolStripMenuItem.Text">
         <source>&amp;Delete branch...</source>
+        <target>Удалить ветку...</target>
         
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">
         <source>De&amp;lete tag...</source>
+        <target>Удалить метку...</target>
         
       </trans-unit>
       <trans-unit id="editCommitToolStripMenuItem.Text">
         <source>&amp;Edit commit</source>
+        <target>Редактировать коммит</target>
         
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
         <source>Create a &amp;fixup commit...</source>
+        <target>Создать коммит с исправлениями...</target>
         
       </trans-unit>
       <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
         <source>Get &amp;help on how to use these features</source>
+        <target>Получить справку об использовании этих функций</target>
         
       </trans-unit>
       <trans-unit id="manipulateCommitToolStripMenuItem.Text">
         <source>&amp;Advanced</source>
+        <target>Дополнительно</target>
         
       </trans-unit>
       <trans-unit id="markRevisionAsBadToolStripMenuItem.Text">
@@ -11293,14 +11386,17 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
         <source>&amp;Merge into current branch...</source>
+        <target>Объединить с текущей веткой...</target>
         
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
         <source>&amp;Navigate</source>
+        <target>Навигация</target>
         
       </trans-unit>
       <trans-unit id="openBuildReportToolStripMenuItem.Text">
         <source>View &amp;build report in a browser</source>
+        <target>Открыть отчет сборки в браузере</target>
         
       </trans-unit>
       <trans-unit id="openCommitsWithDiffToolMenuItem.Text">
@@ -11310,54 +11406,67 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
         <source>Vie&amp;w pull request in a browser</source>
+        <target>Просмотр пулл-реквеста в браузере</target>
         
       </trans-unit>
       <trans-unit id="rebaseInteractivelyToolStripMenuItem.Text">
         <source>Selected commit &amp;interactively...</source>
+        <target>Выбранный коммит интерактивно...</target>
         
       </trans-unit>
       <trans-unit id="rebaseOnToolStripMenuItem.Text">
         <source>&amp;Rebase current branch on</source>
+        <target>Переместить текущую ветку на</target>
         
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem.Text">
         <source>&amp;Selected commit</source>
+        <target>Выбранный коммит</target>
         
       </trans-unit>
       <trans-unit id="rebaseWithAdvOptionsToolStripMenuItem.Text">
         <source>Selected commit with &amp;advanced options...</source>
+        <target>Выбранный коммит с расширенными опциями...</target>
         
       </trans-unit>
       <trans-unit id="renameBranchToolStripMenuItem.Text">
         <source>R&amp;ename branch...</source>
+        <target>Переименовать ветку...</target>
         
       </trans-unit>
       <trans-unit id="resetAnotherBranchToHereToolStripMenuItem.Text">
         <source>Reset an&amp;other branch to here...</source>
+        <target>Сбросить текущую ветку сюда...</target>
         
       </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
         <source>Reset c&amp;urrent branch to here...</source>
+        <target>Сбросить текущую ветку сюда...</target>
         
       </trans-unit>
       <trans-unit id="revertCommitToolStripMenuItem.Text">
         <source>Re&amp;vert this commit...</source>
+        <target>Отменить этот коммит...</target>
         
       </trans-unit>
       <trans-unit id="rewordCommitToolStripMenuItem.Text">
         <source>&amp;Reword commit</source>
+        <target>Переделать коммит</target>
         
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run &amp;script</source>
+        <target>Запустить скрипт</target>
         
       </trans-unit>
       <trans-unit id="selectAsBaseToolStripMenuItem.Text">
         <source>Select &amp;as BASE to compare</source>
+        <target>Выбрать в качестве БАЗЫ для сравнения</target>
         
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
         <source>Create a &amp;squash commit...</source>
+        <target>Создать объединяющий коммит...</target>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
@@ -11558,6 +11667,55 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}</source>
+        <target>Использовать {option} для обычной замены.
+Использовать {{option}} для замены в кавычках.
+
+Ввод пользователем:
+{UserInput}
+{UserFiles}
+
+Рабочий каталог:
+{WorkingDir}
+
+Репозиторий:
+{RepoName}
+
+Выбранные коммиты:
+{sHashes}
+
+Выбранная ветка:
+{sTag}
+{sBranch}
+{sLocalBranch}
+{sRemoteBranch}
+{sRemoteBranchName}   (без внешнего имени)
+{sRemote}
+{sRemoteUrl}
+{sRemotePathFromUrl}
+{sHash}
+{sMessage}
+{sSubject}
+{sAuthor}
+{sCommitter}
+{sAuthorDate}
+{sCommitDate}
+
+Текущая ветка:
+{cTag}
+{cBranch}
+{cLocalBranch}
+{cRemoteBranch}
+{cRemoteBranchName}   (без внешнего имени)
+{cHash}
+{cMessage}
+{cSubject}
+{cAuthor}
+{cCommitter}
+{cAuthorDate}
+{cCommitDate}
+{cDefaultRemote}
+{cDefaultRemoteUrl}
+{cDefaultRemotePathFromUrl}</target>
         
       </trans-unit>
       <trans-unit id="chdrCommand.Text">
@@ -11867,6 +12025,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_buttonCloseApp.Text">
         <source>Close application</source>
+        <target>Закрыть приложение</target>
         
       </trans-unit>
       <trans-unit id="_buttonContinue.Text">
@@ -11891,10 +12050,12 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_buttonReportBug.Text">
         <source>Report bug!</source>
+        <target>Зарегистрировать ошибку!</target>
         
       </trans-unit>
       <trans-unit id="_buttonViewDetails.Text">
         <source>View details</source>
+        <target>Посмотреть подробности</target>
         
       </trans-unit>
       <trans-unit id="_cancelText.Text">
@@ -11949,6 +12110,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_containedInCurrentCommitText.Text">
         <source>'{0}' is contained in the currently selected commit</source>
+        <target>'{0}' содержится в текущем выбранном коммите</target>
         
       </trans-unit>
       <trans-unit id="_containedInNoBranchText.Text">
@@ -11998,6 +12160,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_diffRange.Text">
         <source>Range diff</source>
+        <target>Отличие в диапазоне</target>
         
       </trans-unit>
       <trans-unit id="_diffSelectedWithRememberedFile.Text">
@@ -12017,6 +12180,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_disableMenuItem.Text">
         <source>Disable this dropdown</source>
+        <target>Отключить это выпадающее меню</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -12081,6 +12245,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
         <source>'{0}' is not currently visible</source>
+        <target>'{0}' в настоящее время не отображается</target>
         
       </trans-unit>
       <trans-unit id="_loadingDataText.Text">
@@ -12190,6 +12355,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_reportBugText.Text">
         <source>If you think this was caused by Git Extensions, you can report a bug for the team to investigate.</source>
+        <target>Если вы считаете, что это было вызвано Git Extensions, вы можете сообщить об ошибке, чтобы команда исследовала ее.</target>
         
       </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
@@ -12209,14 +12375,17 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_rotInactive.Text">
         <source>[ Inactive ]</source>
+        <target>[ Inactive ]</target>
         
       </trans-unit>
       <trans-unit id="_scriptConfirmExecuteText.Text">
         <source>Do you want to execute script</source>
+        <target>Вы хотите выполнить скрипт</target>
         
       </trans-unit>
       <trans-unit id="_scriptErrorCantFindText.Text">
         <source>Unable to find script</source>
+        <target>Скрипт не найден</target>
         
       </trans-unit>
       <trans-unit id="_scriptErrorFailedToExecuteText.Text">
@@ -12226,14 +12395,17 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_scriptErrorOptionWithoutRevisionGridText.Text">
         <source>option is only supported when invoked from the revision grid</source>
+        <target>опция поддерживается только при вызове из списка ревизий</target>
         
       </trans-unit>
       <trans-unit id="_scriptErrorOptionWithoutRevisionText.Text">
         <source>A valid revision is required to substitute the argument options</source>
+        <target>Для замены параметров аргумента нужна правильная ревизия.</target>
         
       </trans-unit>
       <trans-unit id="_scriptText.Text">
         <source>Script</source>
+        <target>Скрипт</target>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">
