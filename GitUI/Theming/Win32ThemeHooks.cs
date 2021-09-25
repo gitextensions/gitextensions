@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -40,6 +39,7 @@ namespace GitUI.Theming
         internal static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
         private static readonly HashSet<NativeListView> InitializingListViews = new HashSet<NativeListView>();
+        private static readonly SystemBrushesCache _systemBrushesCache = new();
         private static ScrollBarRenderer _scrollBarRenderer;
         private static ListViewRenderer _listViewRenderer;
         private static HeaderRenderer _headerRenderer;
@@ -136,6 +136,7 @@ namespace GitUI.Theming
             var editorHandle = new ICSharpCode.TextEditor.TextEditorControl().Handle;
             var listViewHandle = new NativeListView().Handle;
             var treeViewHandle = new NativeTreeView().Handle;
+
             _scrollBarRenderer.AddThemeData(editorHandle);
             _scrollBarRenderer.AddThemeData(listViewHandle);
             _headerRenderer.AddThemeData(listViewHandle);
@@ -153,6 +154,7 @@ namespace GitUI.Theming
             _drawThemeTextHook?.Dispose();
             _drawThemeTextExHook?.Dispose();
             _createWindowExHook?.Dispose();
+            _systemBrushesCache.Dispose();
 
             if (_renderers is not null)
             {
@@ -213,8 +215,7 @@ namespace GitUI.Theming
                 if (color != Color.Empty)
                 {
                     int colorref = ColorTranslator.ToWin32(color);
-                    var hbrush = NativeMethods.CreateSolidBrush(colorref);
-                    return hbrush;
+                    return _systemBrushesCache.GetBrush(colorref);
                 }
             }
 
