@@ -87,25 +87,16 @@ namespace GitUI.Editor.Diff
                 var diffLine = _diffLines[curLine + 1];
                 if (diffLine.LineType != DiffLineType.Context)
                 {
-                    var brush = default(Brush);
-                    switch (diffLine.LineType)
+                    using Brush brush = diffLine.LineType switch
                     {
-                        case DiffLineType.Context:
-                            break;
-                        case DiffLineType.Plus:
-                            brush = new SolidBrush(AppColor.DiffAdded.GetThemeColor());
-                            break;
-                        case DiffLineType.Minus:
-                            brush = new SolidBrush(AppColor.DiffRemoved.GetThemeColor());
-                            break;
-                        case DiffLineType.Header:
-                            brush = new SolidBrush(AppColor.DiffSection.GetThemeColor());
-                            break;
-                    }
+                        DiffLineType.Plus => new SolidBrush(AppColor.DiffAdded.GetThemeColor()),
+                        DiffLineType.Minus => new SolidBrush(AppColor.DiffRemoved.GetThemeColor()),
+                        DiffLineType.Header => new SolidBrush(AppColor.DiffSection.GetThemeColor()),
+                        _ => default(Brush)
+                    };
 
                     Debug.Assert(brush is not null, string.Format("brush is not null, unknow diff line style {0}", diffLine.LineType));
                     g.FillRectangle(brush, new Rectangle(0, backgroundRectangle.Top, leftWidth, backgroundRectangle.Height));
-
                     g.FillRectangle(brush, new Rectangle(leftWidth, backgroundRectangle.Top, rightWidth, backgroundRectangle.Height));
                 }
 
