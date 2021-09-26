@@ -261,20 +261,8 @@ namespace GitUI.CommandsDialogs
 
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            UICommandsChanged += (a, e) =>
-            {
-                var oldCommands = e.OldCommands;
-                RefreshDefaultPullAction();
 
-                if (oldCommands is not null)
-                {
-                    oldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
-                    oldCommands.BrowseRepo = null;
-                }
-
-                UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
-                UICommands.BrowseRepo = this;
-            };
+            UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
 
             pullToolStripMenuItem1.Tag = AppSettings.PullAction.None;
             mergeToolStripMenuItem.Tag = AppSettings.PullAction.Merge;
@@ -675,14 +663,10 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslationApp
-
                 _formBrowseMenus?.Dispose();
                 components?.Dispose();
                 _gitStatusMonitor?.Dispose();
                 _windowsJumpListManager?.Dispose();
-
-                // ReSharper restore ConstantConditionalAccessQualifier
             }
 
             base.Dispose(disposing);
@@ -762,6 +746,23 @@ namespace GitUI.CommandsDialogs
         {
             PluginRegistry.Unregister(UICommands);
             base.OnClosed(e);
+        }
+
+        protected override void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
+        {
+            var oldCommands = e.OldCommands;
+            RefreshDefaultPullAction();
+
+            if (oldCommands is not null)
+            {
+                oldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
+                oldCommands.BrowseRepo = null;
+            }
+
+            UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+            UICommands.BrowseRepo = this;
+
+            base.OnUICommandsChanged(e);
         }
 
         public override void AddTranslationItems(ITranslation translation)
@@ -2631,6 +2632,12 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshDefaultPullAction()
         {
+            if (setDefaultPullButtonActionToolStripMenuItem is null)
+            {
+                // We may get called while instantiating the form
+                return;
+            }
+
             var defaultPullAction = AppSettings.DefaultPullAction;
 
             foreach (ToolStripMenuItem menuItem in setDefaultPullButtonActionToolStripMenuItem.DropDown.Items)
