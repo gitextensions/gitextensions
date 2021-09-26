@@ -334,8 +334,16 @@ namespace GitUI.CommandsDialogs
 
             ToolStripFilters.Bind(() => Module, RevisionGrid);
             ToolStripFilters.UpdateBranchFilterItems();
-            ToolStripFilters.SetRevisionFilter(revFilter);
-            SetPathFilter(pathFilter);
+
+            if (!string.IsNullOrWhiteSpace(revFilter))
+            {
+                ToolStripFilters.SetRevisionFilter(revFilter);
+            }
+
+            if (!string.IsNullOrWhiteSpace(pathFilter))
+            {
+                SetPathFilter(pathFilter);
+            }
 
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
