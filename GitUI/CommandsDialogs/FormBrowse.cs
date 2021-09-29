@@ -200,7 +200,6 @@ namespace GitUI.CommandsDialogs
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
-            toolStripButtonPush.Initialize(_aheadBehindDataProvider);
             repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, RevisionGrid, RevisionGrid, RevisionGrid);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree, () => RequestRefresh());
@@ -218,18 +217,6 @@ namespace GitUI.CommandsDialogs
                 PuTTYToolStripMenuItem.Visible = false;
             }
 
-            RevisionGrid.IndexWatcher.Changed += (_, args) =>
-            {
-                bool indexChanged = args.IsIndexChanged;
-                this.InvokeAsync(
-                        () =>
-                        {
-                            RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
-                                ? Images.ReloadRevisionsDirty
-                                : Images.ReloadRevisions;
-                        })
-                    .FileAndForget();
-            };
             RevisionGrid.SelectionChanged += (sender, e) =>
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
@@ -696,19 +683,43 @@ namespace GitUI.CommandsDialogs
             HideVariableMainMenuItems();
             RefreshSplitViewLayout();
             LayoutRevisionInfo();
-            SetSplitterPositions();
             InternalInitialize(false);
 
-            if (Module.IsValidGitWorkingDir())
+            SetSplitterPositions();
+
+            if (!Module.IsValidGitWorkingDir())
             {
-                // When loading the app with 'browse <repo>' args, we don't go through UICommands.PostRepositoryChanged event
-                // and need to manually load the revisions in to the grid.
-                RevisionGrid.Load();
+                base.OnLoad(e);
+                return;
             }
 
-            base.OnLoad(e);
+            RevisionGrid.Load();
+            _filterBranchHelper.InitToolStripBranchFilter();
+
+            ActiveControl = RevisionGrid;
+            RevisionGrid.IndexWatcher.Reset();
+
+            RevisionGrid.IndexWatcher.Changed += (_, args) =>
+            {
+                bool indexChanged = args.IsIndexChanged;
+                this.InvokeAsync(
+                        () =>
+                        {
+                            RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
+                                ? Images.ReloadRevisionsDirty
+                                : Images.ReloadRevisions;
+                        })
+                    .FileAndForget();
+            };
+            UpdateSubmodulesStructure();
+            UpdateStashCount();
+
+            toolStripButtonPush.Initialize(_aheadBehindDataProvider);
+            toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
 
             _formBrowseDiagnosticsReporter.Report();
+
+            base.OnLoad(e);
         }
 
         protected override void OnActivated(EventArgs e)
@@ -1116,13 +1127,6 @@ namespace GitUI.CommandsDialogs
                     _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.MenuCommands.ViewMenuCommands);
 
                     _formBrowseMenus.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
-
-                    toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
-
-                    _filterBranchHelper.InitToolStripBranchFilter();
-
-                    ActiveControl = RevisionGrid;
-                    RevisionGrid.IndexWatcher.Reset();
                 }
                 else
                 {
