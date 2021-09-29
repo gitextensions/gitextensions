@@ -685,6 +685,8 @@ namespace GitUI.CommandsDialogs
             LayoutRevisionInfo();
             InternalInitialize(false);
 
+            SetSplitterPositions();
+
             if (!Module.IsValidGitWorkingDir())
             {
                 base.OnLoad(e);
@@ -718,8 +720,6 @@ namespace GitUI.CommandsDialogs
             _formBrowseDiagnosticsReporter.Report();
 
             base.OnLoad(e);
-
-            SetSplitterPositions();
         }
 
         protected override void OnActivated(EventArgs e)
