@@ -404,6 +404,12 @@ namespace GitUI.BranchTreePanel
                 foreach (var submoduleInfo in result.AllSubmodules)
                 {
                     string superPath = GetSubmoduleSuperPath(submoduleInfo.Path);
+                    if (string.IsNullOrEmpty(superPath))
+                    {
+                        // Ignore bad paths defined as submodule.
+                        continue;
+                    }
+
                     string localPath = Path.GetDirectoryName(submoduleInfo.Path.Substring(superPath.Length)).ToPosixPath();
 
                     var isCurrent = submoduleInfo.Bold;
@@ -420,7 +426,6 @@ namespace GitUI.BranchTreePanel
                 string GetSubmoduleSuperPath(string submodulePath)
                 {
                     var superPath = modulePaths.Find(path => submodulePath != path && submodulePath.Contains(path));
-                    Validates.NotNull(superPath);
                     return superPath;
                 }
             }
