@@ -99,7 +99,7 @@
             this.Soft.Padding = new System.Windows.Forms.Padding(3);
             this.Soft.Size = new System.Drawing.Size(431, 36);
             this.Soft.TabIndex = 0;
-            this.Soft.Text = "Soft: leave working directory and index untouched";
+            this.Soft.Text = "&Soft: leave working directory and index untouched";
             this.Soft.UseVisualStyleBackColor = false;
             // 
             // Mixed
@@ -115,7 +115,7 @@
             this.Mixed.Size = new System.Drawing.Size(431, 36);
             this.Mixed.TabIndex = 1;
             this.Mixed.TabStop = true;
-            this.Mixed.Text = "Mixed: leave working directory untouched, reset index";
+            this.Mixed.Text = "Mi&xed: leave working directory untouched, reset index";
             this.Mixed.UseVisualStyleBackColor = false;
             // 
             // Keep
@@ -129,7 +129,7 @@
             this.Keep.Padding = new System.Windows.Forms.Padding(3);
             this.Keep.Size = new System.Drawing.Size(431, 36);
             this.Keep.TabIndex = 2;
-            this.Keep.Text = "Keep: update working directory to the commit \r\n(abort if there are local changes)" +
+            this.Keep.Text = "&Keep: update working directory to the commit \r\n(abort if there are local changes)" +
     ", reset index";
             this.Keep.UseVisualStyleBackColor = false;
             // 
@@ -144,7 +144,7 @@
             this.Merge.Padding = new System.Windows.Forms.Padding(3);
             this.Merge.Size = new System.Drawing.Size(431, 36);
             this.Merge.TabIndex = 3;
-            this.Merge.Text = "Merge: update working directory to the commit and keep local changes \r\n(abort if " +
+            this.Merge.Text = "&Merge: update working directory to the commit and keep local changes \r\n(abort if " +
     "there are conflicts), reset index";
             this.Merge.UseVisualStyleBackColor = false;
             // 
@@ -159,7 +159,7 @@
             this.Hard.Padding = new System.Windows.Forms.Padding(3);
             this.Hard.Size = new System.Drawing.Size(431, 36);
             this.Hard.TabIndex = 4;
-            this.Hard.Text = "Hard: reset working directory and index\r\n(discard ALL local changes, even uncommi" +
+            this.Hard.Text = "&Hard: reset working directory and index\r\n(discard ALL local changes, even uncommi" +
     "tted changes)";
             this.Hard.UseVisualStyleBackColor = false;
             // 
