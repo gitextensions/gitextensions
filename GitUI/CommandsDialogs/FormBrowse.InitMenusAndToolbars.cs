@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs
     {
         // This file is dedicated to init logic for FormBrowse menus and toolbars
 
-        private void InitMenusAndToolbars(string revFilter, string pathFilter)
+        private void InitMenusAndToolbars(string? revFilter, string? pathFilter)
         {
             commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
 

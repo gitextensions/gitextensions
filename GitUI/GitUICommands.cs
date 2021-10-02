@@ -17,6 +17,7 @@ using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
+using static GitUI.CommandsDialogs.FormBrowse;
 
 namespace GitUI
 {
@@ -1124,13 +1125,10 @@ namespace GitUI
         /// Open Browse - main GUI including dashboard.
         /// </summary>
         /// <param name="owner">current window owner.</param>
-        /// <param name="revFilter">revision filter to apply to browse.</param>
-        /// <param name="pathFilter">path filter to apply to browse.</param>
-        /// <param name="selectedId">Currently (last) selected commit id.</param>
-        /// <param name="firstId">First selected commit id (as in a diff).</param>
-        public bool StartBrowseDialog(IWin32Window? owner = null, string revFilter = "", string pathFilter = "", ObjectId? selectedId = null, ObjectId? firstId = null)
+        /// <param name="args">The start up arguments.</param>
+        public bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null)
         {
-            FormBrowse form = new(this, revFilter, pathFilter, selectedId, firstId);
+            FormBrowse form = new(this, args ?? new BrowseArguments());
 
             if (Application.MessageLoop)
             {
@@ -1565,18 +1563,24 @@ namespace GitUI
             var arg = GetParameterOrEmptyStringAsDefault(args, "-commit");
             if (arg == "")
             {
-                return StartBrowseDialog(null,
-                    GetParameterOrEmptyStringAsDefault(args, "-filter"),
-                    GetParameterOrEmptyStringAsDefault(args, PathFilterArg));
+                return StartBrowseDialog(owner: null,
+                    new BrowseArguments
+                    {
+                        RevFilter = GetParameterOrEmptyStringAsDefault(args, "-filter"),
+                        PathFilter = GetParameterOrEmptyStringAsDefault(args, PathFilterArg)
+                    });
             }
 
-            if (TryGetObjectIds(arg, Module, out var selectedId, out var firstId))
+            if (TryGetObjectIds(arg, Module, out ObjectId? selectedId, out ObjectId? firstId))
             {
-                return StartBrowseDialog(null,
-                    GetParameterOrEmptyStringAsDefault(args, "-filter"),
-                    GetParameterOrEmptyStringAsDefault(args, PathFilterArg),
-                    selectedId,
-                    firstId);
+                return StartBrowseDialog(owner: null,
+                    new BrowseArguments
+                    {
+                        RevFilter = GetParameterOrEmptyStringAsDefault(args, "-filter"),
+                        PathFilter = GetParameterOrEmptyStringAsDefault(args, PathFilterArg),
+                        SelectedId = selectedId,
+                        FirstId = firstId
+                    });
             }
 
             Console.Error.WriteLine($"No commit found matching: {arg}");
@@ -1641,7 +1645,12 @@ namespace GitUI
                 }
             }
 
-            return c.StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), GetParameterOrEmptyStringAsDefault(args, PathFilterArg));
+            return c.StartBrowseDialog(owner: null,
+                new BrowseArguments
+                {
+                    RevFilter = GetParameterOrEmptyStringAsDefault(args, "-filter"),
+                    PathFilter = GetParameterOrEmptyStringAsDefault(args, PathFilterArg)
+                });
         }
 
         private bool RunSynchronizeCommand(IReadOnlyDictionary<string, string?> arguments)

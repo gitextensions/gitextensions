@@ -121,12 +121,9 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Open Browse - main GUI including dashboard.
         /// </summary>
-        /// <param name="commands">commands in the current form.</param>
-        /// <param name="revFilter">revision filter to apply to browse.</param>
-        /// <param name="pathFilter">path filter to apply to browse.</param>
-        /// <param name="selectedId">Currently (last) selected commit id.</param>
-        /// <param name="firstId">First selected commit id (as in a diff).</param>
-        public FormBrowse(GitUICommands commands, string revFilter, string pathFilter, ObjectId? selectedId = null, ObjectId? firstId = null)
+        /// <param name="commands">The commands in the current form.</param>
+        /// <param name="args">The start up arguments.</param>
+        public FormBrowse(GitUICommands commands, BrowseArguments args)
             : base(commands)
         {
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
@@ -158,9 +155,9 @@ namespace GitUI.CommandsDialogs
             InitCountArtificial(out _gitStatusMonitor);
 
             _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
-            InitMenusAndToolbars(revFilter, pathFilter);
+            InitMenusAndToolbars(args.RevFilter, args.PathFilter);
 
-            InitRevisionGrid(selectedId, firstId);
+            InitRevisionGrid(args.SelectedId, args.FirstId);
             InitCommitDetails();
 
             InitializeComplete();
