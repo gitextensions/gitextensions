@@ -111,6 +111,17 @@ namespace CommonTestUtils
             new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding).ResetCommitMessage();
         }
 
+        public void Stash(string stashMessage, string content = null)
+        {
+            using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
+            _moduleTestHelper.CreateRepoFile("A.txt", content ?? stashMessage);
+            repository.Index.Add("A.txt");
+
+            LibGit2Sharp.Signature author = new("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
+            Stash stash = repository.Stashes.Add(author, stashMessage);
+            Console.WriteLine($"Created stash: {stash.Index.Sha}, message: {stashMessage}");
+        }
+
         public void Dispose()
         {
             Dispose(true);

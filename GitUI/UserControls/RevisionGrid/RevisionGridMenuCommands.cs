@@ -224,6 +224,14 @@ namespace GitUI.UserControls.RevisionGrid
                     ExecuteAction = () => _revisionGrid.ToggleShowReflogReferences(),
                     IsCheckedFunc = () => AppSettings.ShowReflogReferences
                 },
+                new MenuCommand
+                {
+                    Name = "ShowLatestStash",
+                    Text = "Show latest stash",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ShowLatestStash),
+                    ExecuteAction = () => _revisionGrid.ToggleShowLatestStash(),
+                    IsCheckedFunc = () => AppSettings.ShowLatestStash
+                },
 
                 MenuCommand.CreateSeparator(),
 
