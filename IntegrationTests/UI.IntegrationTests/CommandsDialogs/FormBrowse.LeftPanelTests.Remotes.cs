@@ -207,6 +207,8 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private TreeNode GetRemoteNode(FormBrowse form)
         {
+            Assert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
+
             // Wait for reload to complete
             ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
 
@@ -230,7 +232,13 @@ namespace GitExtensions.UITests.CommandsDialogs
         private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
         {
             UITest.RunForm(
-                showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
+                showForm: () =>
+                {
+                    _commands.StartBrowseDialog(owner: null).Should().BeTrue();
+
+                    // Await updated FileViewer
+                    ThreadHelper.JoinPendingOperations();
+                },
                 testDriverAsync);
         }
 
