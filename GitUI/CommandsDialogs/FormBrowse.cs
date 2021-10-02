@@ -741,7 +741,6 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            Console.WriteLine($"{nameof(FormBrowse)} form closing");
             SaveApplicationSettings();
 
             foreach (var control in this.FindDescendants())
@@ -755,14 +754,12 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            Console.WriteLine($"{nameof(FormBrowse)} closing");
             _splitterManager.SaveSplitters();
             base.OnClosing(e);
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            Console.WriteLine($"{nameof(FormBrowse)} closed");
             PluginRegistry.Unregister(UICommands);
             base.OnClosed(e);
         }

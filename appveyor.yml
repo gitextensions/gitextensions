@@ -64,13 +64,13 @@ build_script:
         # ignore warning about line-endings conversion
         $global:LASTEXITCODE = 0
     }
-#- ps: |
-#    # Verify that new strings (if any) have been processed and ready for localisation
-#    # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
-#    Push-Location .\GitExtensions
-#    dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
-#    Pop-Location
-#    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+- ps: |
+    # Verify that new strings (if any) have been processed and ready for localisation
+    # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
+    Push-Location .\GitExtensions
+    dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
+    Pop-Location
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 # to run your custom scripts instead of automatic tests
 test_script:
@@ -79,15 +79,15 @@ test_script:
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 # scripts to run after tests
-#after_test:
-#- ps: |
-#    Write-Host "Preparing build artifacts..."
-#    dotnet publish -c Release --no-build /bl:.\artifacts\log\publish.binlog
-#    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+after_test:
+- ps: |
+    Write-Host "Preparing build artifacts..."
+    dotnet publish -c Release --no-build /bl:.\artifacts\log\publish.binlog
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 
-#artifacts:
-#  - path: artifacts\Release\publish\*.zip
+artifacts:
+  - path: artifacts\Release\publish\*.zip
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

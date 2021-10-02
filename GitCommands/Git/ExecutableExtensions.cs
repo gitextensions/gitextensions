@@ -126,7 +126,6 @@ namespace GitCommands
                 System.Diagnostics.Debug.WriteLine($"git {arguments}");
             }
 #endif
-            Console.WriteLine($"> git {arguments}");
 
             MemoryStream outputBuffer = new();
             var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
@@ -142,9 +141,7 @@ namespace GitCommands
                 cache.Add(arguments, output, error);
             }
 
-            string soutput = ComposeOutput();
-            Console.WriteLine($"{soutput}");
-            return soutput;
+            return ComposeOutput();
 
             string ComposeOutput()
             {
@@ -326,7 +323,6 @@ namespace GitCommands
                 System.Diagnostics.Debug.WriteLine($"git {arguments}");
             }
 #endif
-            Console.WriteLine($"> git {arguments}");
 
             // Wait for the process to exit (or be cancelled)
             await process.WaitForProcessExitAsync(cancellationToken);
@@ -338,7 +334,6 @@ namespace GitCommands
             var output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
             var error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
             var exitCode = await process.WaitForExitAsync();
-            Console.WriteLine($"{output}");
 
             if (cache is not null && exitCode == 0)
             {
