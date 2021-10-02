@@ -114,9 +114,18 @@ namespace GitCommands
                 throwOnErrorExit: true);
             if (input is not null)
             {
+#if DEBUG
+                System.Diagnostics.Debug.WriteLine($"git {arguments} {Encoding.UTF8.GetString(input)}");
+#endif
                 await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
                 process.StandardInput.Close();
             }
+#if DEBUG
+            else
+            {
+                System.Diagnostics.Debug.WriteLine($"git {arguments}");
+            }
+#endif
 
             MemoryStream outputBuffer = new();
             var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);

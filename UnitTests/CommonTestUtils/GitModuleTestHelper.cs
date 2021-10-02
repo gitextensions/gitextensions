@@ -39,6 +39,7 @@ namespace CommonTestUtils
             //         Failed to register submodule 'repo2'
             module.GitExecutable.GetOutput(@"config core.safecrlf false");
 
+            Console.WriteLine($"{nameof(GitModuleTestHelper)} initialised at {path}");
             return;
 
             string GetTemporaryPath()
@@ -158,6 +159,8 @@ namespace CommonTestUtils
 
         public void Dispose()
         {
+            Console.WriteLine($"{nameof(GitModuleTestHelper)} disposing");
+
             try
             {
                 // if settings have been set, the corresponding local config file is in the directory
@@ -198,6 +201,8 @@ namespace CommonTestUtils
             {
                 // do nothing
             }
+
+            Console.WriteLine($"{nameof(GitModuleTestHelper)} disposed");
         }
 
         private void EnsureCreatedInTempFolder(string path)

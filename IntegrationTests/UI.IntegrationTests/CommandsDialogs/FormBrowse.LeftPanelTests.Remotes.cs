@@ -209,6 +209,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
             var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
             remotesNode.Should().NotBeNull();
+            Console.WriteLine($"GetRemoteNode: loaded {remotesNode.Nodes.Count} nodes");
             return remotesNode;
         }
 

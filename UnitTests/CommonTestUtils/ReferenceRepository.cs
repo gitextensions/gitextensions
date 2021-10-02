@@ -115,6 +115,7 @@ namespace CommonTestUtils
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+            Console.WriteLine($"{nameof(ReferenceRepository)} disposed");
         }
 
         protected virtual void Dispose(bool disposing)
