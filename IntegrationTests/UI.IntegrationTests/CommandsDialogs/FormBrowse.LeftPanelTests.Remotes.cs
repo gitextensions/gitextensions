@@ -93,15 +93,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    try
-                    {
-                        remotesNode.Nodes.Count.Should().Be(RemoteNames.Length);
-                    }
-                    catch (AssertionException ex)
-                        when (ex.Message.Contains("Expected remotesNode.Nodes.Count to be 5, but found 0."))
-                    {
-                        Console.WriteLine("IGNORING failed assertion of flaky test - issue #7743");
-                    }
+                    remotesNode.Nodes.Count.Should().Be(RemoteNames.Length);
                 });
         }
 
@@ -116,16 +108,8 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                     // assert
                     var names = remotesNode.Nodes.OfType<TreeNode>().Select(x => x.Text).ToList();
-                    try
-                    {
-                        names.Should().BeEquivalentTo(RemoteNames);
-                        names.Should().BeInAscendingOrder();
-                    }
-                    catch (AssertionException ex)
-                        when (ex.Message.Contains("Expected names to be a collection with 5 item(s), but found an empty collection."))
-                    {
-                        Console.WriteLine("IGNORING failed assertion of flaky test - issue #7743");
-                    }
+                    names.Should().BeEquivalentTo(RemoteNames);
+                    names.Should().BeInAscendingOrder();
                 });
         }
 
@@ -206,9 +190,15 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private TreeNode GetRemoteNode(FormBrowse form)
         {
+            Assert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
+
+            // Await all async operation such as load of branches and remotes in the left panel
+            ThreadHelper.JoinPendingOperations();
+
             var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
             var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
             remotesNode.Should().NotBeNull();
+
             return remotesNode;
         }
 
