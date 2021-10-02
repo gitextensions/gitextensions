@@ -70,7 +70,7 @@ namespace GitCommands.Settings
                 ConfigFileSettingsCache.Create(configPath, false, allowCache), SettingLevel.SystemWide);
         }
 
-        public string GetValue(string setting)
+        public new string GetValue(string setting)
         {
             return GetString(setting, string.Empty);
         }
@@ -80,7 +80,7 @@ namespace GitCommands.Settings
             return SettingsCache.GetValues(setting);
         }
 
-        public void SetValue(string setting, string? value)
+        public new void SetValue(string setting, string? value)
         {
             if (string.IsNullOrEmpty(value))
             {

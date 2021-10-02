@@ -118,6 +118,11 @@ namespace GitCommandsTests.Settings
                     Assert.That(storedValue, Is.EqualTo(value ?? defaultValue));
                 }
             }
+            else if (Type.GetTypeCode(property.PropertyType) == TypeCode.DateTime)
+            {
+                // We keep only the date
+                Assert.That(storedValue, Is.EqualTo(((DateTime)value).Date));
+            }
             else
             {
                 Assert.That(storedValue, Is.EqualTo(value));

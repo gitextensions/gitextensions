@@ -71,7 +71,7 @@ namespace GitExtensions.Plugins.Gource
 
                 if (result == DialogResult.Yes)
                 {
-                    Settings.SetValue(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
+                    Settings.SetValue(_gourcePath.Name, _gourcePath.DefaultValue);
                     pathToGource = _gourcePath.DefaultValue;
                 }
             }
@@ -115,8 +115,8 @@ namespace GitExtensions.Plugins.Gource
 
             using GourceStart gourceStart = new(pathToGource, args, _gourceArguments.ValueOrDefault(Settings));
             gourceStart.ShowDialog(args.OwnerForm);
-            Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
-            Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
+            Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments);
+            Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource);
 
             return false;
         }

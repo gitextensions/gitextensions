@@ -171,68 +171,69 @@ namespace GitCommands.Settings
 
             private object? GetValue(string name)
             {
-                return SettingsSource
-                    .GetValue<object?>(name, null, value =>
-                    {
-                        var type = typeof(T);
-                        var underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+                string? stringValue = SettingsSource.GetValue(name);
 
-                        switch (Type.GetTypeCode(underlyingType))
+                Type type = typeof(T);
+                Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
+
+                switch (Type.GetTypeCode(underlyingType))
+                {
+                    case TypeCode.String:
+                        return stringValue;
+                    case TypeCode.Object:
+                        try
                         {
-                            case TypeCode.String:
-                                return (string)value;
-                            case TypeCode.Object:
-                                try
-                                {
-                                    return JsonConvert
-                                        .DeserializeObject<T>(value);
-                                }
-                                catch
-                                {
-                                    return null;
-                                }
-
-                            default:
-                                var converter = TypeDescriptor
-                                    .GetConverter(underlyingType);
-
-                                try
-                                {
-                                    return converter
-                                        .ConvertFromInvariantString(value);
-                                }
-                                catch
-                                {
-                                    return null;
-                                }
+                            return JsonConvert
+                                .DeserializeObject<T>(stringValue);
                         }
-                    });
+                        catch
+                        {
+                            return null;
+                        }
+
+                    default:
+                        TypeConverter converter = TypeDescriptor
+                            .GetConverter(underlyingType);
+
+                        try
+                        {
+                            return converter
+                                .ConvertFromInvariantString(stringValue);
+                        }
+                        catch
+                        {
+                            return null;
+                        }
+                }
             }
 
             private void SetValue(string name, object? value)
             {
-                SettingsSource
-                    .SetValue<object?>(name, value, value =>
-                    {
-                        var type = typeof(T);
-                        var underlyingType = Nullable
-                            .GetUnderlyingType(type) ?? type;
+                string? stringValue;
 
-                        switch (Type.GetTypeCode(underlyingType))
-                        {
-                            case TypeCode.String:
-                                return (string?)value;
-                            case TypeCode.Object:
-                                return JsonConvert
-                                    .SerializeObject(value);
-                            default:
-                                var converter = TypeDescriptor
-                                    .GetConverter(underlyingType);
+                Type type = typeof(T);
+                Type underlyingType = Nullable
+                    .GetUnderlyingType(type) ?? type;
 
-                                return converter
-                                    .ConvertToInvariantString(value);
-                        }
-                    });
+                switch (Type.GetTypeCode(underlyingType))
+                {
+                    case TypeCode.String:
+                        stringValue = (string?)value;
+                        break;
+                    case TypeCode.Object:
+                        stringValue = JsonConvert
+                            .SerializeObject(value);
+                        break;
+                    default:
+                        TypeConverter converter = TypeDescriptor
+                            .GetConverter(underlyingType);
+
+                        stringValue = converter
+                            .ConvertToInvariantString(value);
+                        break;
+                }
+
+                SettingsSource.SetValue(name, stringValue);
             }
         }
     }
