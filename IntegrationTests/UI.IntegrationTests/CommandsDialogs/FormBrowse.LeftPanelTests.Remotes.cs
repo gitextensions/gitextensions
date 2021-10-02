@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -93,15 +94,15 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                     // assert
-                    try
+                    ////try
                     {
                         remotesNode.Nodes.Count.Should().Be(RemoteNames.Length);
                     }
-                    catch (AssertionException ex)
-                        when (ex.Message.Contains("Expected remotesNode.Nodes.Count to be 5, but found 0."))
-                    {
-                        Console.WriteLine("IGNORING failed assertion of flaky test - issue #7743");
-                    }
+                    ////catch (AssertionException ex)
+                    ////    when (ex.Message.Contains("Expected remotesNode.Nodes.Count to be 5, but found 0."))
+                    ////{
+                    ////    Console.WriteLine("IGNORING failed assertion of flaky test - issue #7743");
+                    ////}
                 });
         }
 
@@ -116,16 +117,16 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                     // assert
                     var names = remotesNode.Nodes.OfType<TreeNode>().Select(x => x.Text).ToList();
-                    try
+                    ////try
                     {
                         names.Should().BeEquivalentTo(RemoteNames);
                         names.Should().BeInAscendingOrder();
                     }
-                    catch (AssertionException ex)
-                        when (ex.Message.Contains("Expected names to be a collection with 5 item(s), but found an empty collection."))
-                    {
-                        Console.WriteLine("IGNORING failed assertion of flaky test - issue #7743");
-                    }
+                    ////catch (AssertionException ex)
+                    ////    when (ex.Message.Contains("Expected names to be a collection with 5 item(s), but found an empty collection."))
+                    ////{
+                    ////    Console.WriteLine("IGNORING failed assertion of flaky test - issue #7743");
+                    ////}
                 });
         }
 
@@ -206,6 +207,9 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private TreeNode GetRemoteNode(FormBrowse form)
         {
+            // Wait for reload to complete
+            ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+
             var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
             var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
             remotesNode.Should().NotBeNull();
@@ -228,6 +232,25 @@ namespace GitExtensions.UITests.CommandsDialogs
             UITest.RunForm(
                 showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
                 testDriverAsync);
+        }
+
+        private static void ProcessUntil(Func<string> getCurrent, string expected, int maxIterations = 100)
+        {
+            string current = "";
+            for (int iteration = 0; iteration < maxIterations; ++iteration)
+            {
+                current = getCurrent();
+                if (current == expected)
+                {
+                    Debug.WriteLine($"{nameof(ProcessUntil)} '{expected}' in iteration {iteration}");
+                    return;
+                }
+
+                Application.DoEvents();
+                Thread.Sleep(5);
+            }
+
+            Assert.Fail($"{current} != {expected} in {maxIterations} iterations");
         }
     }
 }
