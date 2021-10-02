@@ -212,6 +212,9 @@ namespace GitExtensions.UITests.CommandsDialogs
             // Wait for reload to complete
             ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
 
+            // Await updated FileViewer
+            ThreadHelper.JoinPendingOperations();
+
             var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
             var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
             remotesNode.Should().NotBeNull();
