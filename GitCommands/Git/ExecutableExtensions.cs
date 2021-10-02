@@ -126,6 +126,7 @@ namespace GitCommands
                 System.Diagnostics.Debug.WriteLine($"git {arguments}");
             }
 #endif
+            Console.WriteLine($"git {arguments}");
 
             MemoryStream outputBuffer = new();
             var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
@@ -323,6 +324,7 @@ namespace GitCommands
                 System.Diagnostics.Debug.WriteLine($"git {arguments}");
             }
 #endif
+            Console.WriteLine($"git {arguments}");
 
             // Wait for the process to exit (or be cancelled)
             await process.WaitForProcessExitAsync(cancellationToken);
