@@ -193,6 +193,9 @@ namespace GitUI.CommandsDialogs
             revisionDiff.Bind(RevisionGrid, fileTree, RequestRefresh);
             fileTree.Bind(RevisionGrid, RequestRefresh);
 
+            // We're launching the main form, and whilst the module has been set for us we still need to formally switch to it
+            SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
+
             return;
 
             void ManageWorktreeSupport()
@@ -329,6 +332,7 @@ namespace GitUI.CommandsDialogs
             base.OnApplicationActivated();
         }
 
+        // Contains app init logics ONLY. All repo-specific logic must be placed UICommands.PostRepositoryChanged handler.
         protected override void OnLoad(EventArgs e)
         {
             _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
@@ -338,17 +342,6 @@ namespace GitUI.CommandsDialogs
             LayoutRevisionInfo();
             SetSplitterPositions();
             InternalInitialize(false);
-
-            if (Module.IsValidGitWorkingDir())
-            {
-                // When loading the app with 'browse <repo>' args, we don't go through UICommands.PostRepositoryChanged event
-                // and need to manually load the revisions in to the grid.
-                RevisionGrid.Load();
-                UpdateSubmodulesStructure();
-                UpdateStashCount();
-
-                ToolStripFilters.UpdateBranchFilterItems();
-            }
 
             base.OnLoad(e);
 
@@ -453,10 +446,27 @@ namespace GitUI.CommandsDialogs
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
+            ChangeTerminalActiveFolder(Module.WorkingDir);
+
+#if DEBUG
+            // Current encodings
+            Debug.WriteLine($"Encodings for {Module.WorkingDir}");
+            Debug.WriteLine($"Files content encoding: {Module.FilesEncoding.EncodingName}");
+            Debug.WriteLine($"Commit encoding: {Module.CommitEncoding.EncodingName}");
+            if (Module.LogOutputEncoding.CodePage != Module.CommitEncoding.CodePage)
+            {
+                Debug.WriteLine($"Log output encoding: {Module.LogOutputEncoding.EncodingName}");
+            }
+#endif
+
             SetPathFilter(null);
+            ToolStripFilters.UpdateBranchFilterItems();
+
             this.InvokeAsync(RefreshRevisions).FileAndForget();
+
             UpdateSubmodulesStructure();
             UpdateStashCount();
+
             revisionDiff.UICommands_PostRepositoryChanged(sender, e);
         }
 
@@ -474,6 +484,8 @@ namespace GitUI.CommandsDialogs
             {
                 revisionDiff.RefreshArtificial();
                 RevisionGrid.ForceRefreshRevisions();
+                RevisionGrid.IndexWatcher.Reset();
+
                 InternalInitialize(true);
             }
 
@@ -1676,24 +1688,13 @@ namespace GitUI.CommandsDialogs
                 var path = Module.WorkingDir;
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
                 AppSettings.RecentWorkingDir = path;
-                ChangeTerminalActiveFolder(path);
-
-#if DEBUG
-                // Current encodings
-                Debug.WriteLine("Encodings for " + path);
-                Debug.WriteLine("Files content encoding: " + module.FilesEncoding.EncodingName);
-                Debug.WriteLine("Commit encoding: " + module.CommitEncoding.EncodingName);
-                if (module.LogOutputEncoding.CodePage != module.CommitEncoding.CodePage)
-                {
-                    Debug.WriteLine("Log output encoding: " + module.LogOutputEncoding.EncodingName);
-                }
-#endif
 
                 HideDashboard();
-                RevisionInfo.SetRevisionWithChildren(null, Array.Empty<ObjectId>());
+
+                RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
+
+                // This will raise UICommands.PostRepositoryChanged event
                 UICommands.RepoChangedNotifier.Notify();
-                RevisionGrid.IndexWatcher.Reset();
-                ToolStripFilters.UpdateBranchFilterItems();
             }
             else
             {
