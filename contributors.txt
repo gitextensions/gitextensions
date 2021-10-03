@@ -164,3 +164,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/08/18, yerudako, Yelyzaveta Rudakova, yelyzaveta.rudakova(at)gmail.com
 2021/08/19, BlythMeister, Chris Blyth, chris(at)blyth.me.uk
 2021/09/25, Kableado, Valeriano Alfonso Rodriguez, valen.alfonso(at)protonmail.com
+2021/10/03, Greybird, Arnaud Tamaillon, arnaud.dev(at)gmail.com
