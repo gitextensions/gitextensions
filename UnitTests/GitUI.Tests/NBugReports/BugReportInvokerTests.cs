@@ -14,8 +14,8 @@ namespace GitUITests.NBugReports
         [Test, TestCaseSource(typeof(TestExceptions), "TestCases")]
         public void Append(Exception exception, string expectedRootError, string expectedText)
         {
-            StringBuilder text = new();
-            string rootError = BugReportInvoker.Append(text, exception);
+            StringBuilder text = BugReportInvoker.GetExceptionInfo(exception);
+            string rootError = BugReportInvoker.GetRootError(exception);
             rootError.Should().Be(expectedRootError);
             text.ToString().Should().Be(expectedText);
         }
@@ -49,7 +49,7 @@ namespace GitUITests.NBugReports
                     new ExternalOperationException(_command, _arguments, _directory, _exitCode, new Exception(_messageOuter, new Exception(_messageInner)))),
                     _messageInner,
                     $"{_context}{Environment.NewLine}"
-                    + $"Exit code: {_exitCode}{Environment.NewLine}{Environment.NewLine}"
+                    + $"Exit code: {_exitCode}{Environment.NewLine}"
                     + $"Command: {_command}{Environment.NewLine}"
                     + $"Arguments: {_arguments}{Environment.NewLine}"
                     + $"Working directory: {_directory}{Environment.NewLine}");

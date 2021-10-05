@@ -6,12 +6,12 @@ namespace BugReporter
 {
     public interface IErrorReportMarkDownBodyBuilder
     {
-        string Build(SerializableException exception, string? environmentInfo, string? additionalInfo);
+        string Build(SerializableException exception, string exceptionInfo, string? environmentInfo, string? additionalInfo);
     }
 
     public sealed class ErrorReportMarkDownBodyBuilder : IErrorReportMarkDownBodyBuilder
     {
-        public string Build(SerializableException exception, string? environmentInfo, string? additionalInfo)
+        public string Build(SerializableException exception, string exceptionInfo, string? environmentInfo, string? additionalInfo)
         {
             if (exception is null)
             {
@@ -40,6 +40,12 @@ namespace BugReporter
 
 
 ## Error Details");
+            if (!string.IsNullOrEmpty(exceptionInfo))
+            {
+                sb.AppendLine();
+                sb.AppendLine(exceptionInfo);
+            }
+
             sb.AppendLine("```");
             sb.AppendLine(exception.ToString());
             sb.AppendLine("```");
