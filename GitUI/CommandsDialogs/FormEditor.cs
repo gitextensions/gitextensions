@@ -142,7 +142,7 @@ namespace GitUI.CommandsDialogs
                 {
                     using MemoryStream bytes = new();
                     bytes.Write(fileViewer.FilePreamble, 0, fileViewer.FilePreamble.Length);
-                    using (var writer = new StreamWriter(bytes, Module.FilesEncoding))
+                    using (StreamWriter writer = new(bytes, Module.FilesEncoding))
                     {
                         writer.Write(fileViewer.GetText());
                     }

@@ -990,7 +990,7 @@ namespace GitUI.CommandsDialogs
             ToolStripMenuItem mnuRecentReposSettings = new(_configureWorkingDirMenu.Text);
             mnuRecentReposSettings.Click += (hs, he) =>
             {
-                using (var frm = new FormRecentReposSettings())
+                using (FormRecentReposSettings frm = new())
                 {
                     frm.ShowDialog(this);
                 }
@@ -1772,7 +1772,7 @@ namespace GitUI.CommandsDialogs
 
         private void BisectClick(object sender, EventArgs e)
         {
-            using (var frm = new FormBisect(RevisionGrid))
+            using (FormBisect frm = new(RevisionGrid))
             {
                 frm.ShowDialog(this);
             }

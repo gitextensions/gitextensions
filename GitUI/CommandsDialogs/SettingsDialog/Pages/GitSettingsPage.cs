@@ -89,7 +89,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void ChangeHomeButton_Click(object sender, EventArgs e)
         {
             PageHost.SaveAll();
-            using (var frm = new FormFixHome())
+            using (FormFixHome frm = new())
             {
                 frm.ShowDialog(this);
             }
@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // original:
             ////            throw new NotImplementedException(@"
             ////            Save();
-            ////            using (var frm = new FormFixHome()) frm.ShowDialog(this);
+            ////            using (FormFixHome frm = new()) frm.ShowDialog(this);
             ////            LoadSettings();
             ////            Rescan_Click(null, null);
             ////            ");
