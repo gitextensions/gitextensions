@@ -3196,7 +3196,7 @@ namespace GitUI.CommandsDialogs
                     ToolStripMenuItem settingsItem = new(_commitMessageSettings.Text, Images.Settings);
                     settingsItem.Click += delegate
                     {
-                        using (var frm = new FormCommitTemplateSettings())
+                        using (FormCommitTemplateSettings frm = new())
                         {
                             frm.ShowDialog(this);
                         }

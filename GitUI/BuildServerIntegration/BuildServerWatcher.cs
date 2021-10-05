@@ -157,7 +157,7 @@ namespace GitUI.BuildServerIntegration
                             using MemoryStream memoryStream = new(unprotectedData);
                             ConfigFile credentialsConfig = new("", false);
 
-                            using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
+                            using (StreamReader textReader = new(memoryStream, Encoding.UTF8))
                             {
                                 credentialsConfig.LoadFromString(textReader.ReadToEnd());
                             }
@@ -206,7 +206,7 @@ namespace GitUI.BuildServerIntegration
 
                         using var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Write, FileShare.None);
                         using MemoryStream memoryStream = new();
-                        using (var textWriter = new StreamWriter(memoryStream, Encoding.UTF8))
+                        using (StreamWriter textWriter = new(memoryStream, Encoding.UTF8))
                         {
                             textWriter.Write(credentialsConfig.GetAsString());
                         }

@@ -2892,7 +2892,7 @@ namespace GitUI
                 LatestSelectedRevision.FirstParentId?.ToString(), interactive: true, preserveMerges: false,
                 autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false);
 
-            using (var formProcess = new FormProcess(UICommands, process: null, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true))
+            using (FormProcess formProcess = new(UICommands, process: null, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true))
             {
                 formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));
                 formProcess.ShowDialog(ParentForm);

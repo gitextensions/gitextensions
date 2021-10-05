@@ -60,7 +60,7 @@ namespace GitUI
         /// <returns>The path selected by the user, or null if the user cancels the dialog.</returns>
         public static string? PickFolder(IWin32Window ownerWindow, string? selectedPath = null)
         {
-            using (var dialog = new FolderBrowserDialog())
+            using (FolderBrowserDialog dialog = new())
             {
                 if (selectedPath is not null)
                 {

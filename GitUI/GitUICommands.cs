@@ -102,7 +102,7 @@ namespace GitUI
 
             try
             {
-                using (var writer = new StreamWriter(tempFile))
+                using (StreamWriter writer = new(tempFile))
                 {
                     writer.WriteLine("@prompt $G");
                     writer.Write(batchFile);

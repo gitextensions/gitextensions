@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
 
         private void AddSubmoduleClick(object sender, EventArgs e)
         {
-            using (var formAddSubmodule = new FormAddSubmodule(UICommands))
+            using (FormAddSubmodule formAddSubmodule = new(UICommands))
             {
                 formAddSubmodule.ShowDialog(this);
             }

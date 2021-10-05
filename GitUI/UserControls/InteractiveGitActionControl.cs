@@ -241,7 +241,7 @@ namespace GitUI.UserControls
                         return;
                     }
 
-                    using (var frm = new FormBisect(Form.RevisionGridControl))
+                    using (FormBisect frm = new(Form.RevisionGridControl))
                     {
                         frm.ShowDialog(this);
                     }

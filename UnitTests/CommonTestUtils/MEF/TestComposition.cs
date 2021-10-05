@@ -86,7 +86,7 @@ namespace CommonTestUtils.MEF
 
         private IExportProviderFactory GetOrCreateFactory()
         {
-            var key = new CacheKey(Assemblies, Parts, ExcludedPartTypes);
+            CacheKey key = new(Assemblies, Parts, ExcludedPartTypes);
 
             lock (_factoryCache)
             {
@@ -198,7 +198,7 @@ namespace CommonTestUtils.MEF
         {
             var configuration = CompositionConfiguration.Create(GetCatalog());
 
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             foreach (var errorGroup in configuration.CompositionErrors)
             {
                 foreach (var error in errorGroup)

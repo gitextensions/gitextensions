@@ -55,7 +55,7 @@ namespace GitCommands.Git
             int? addedCommits = null;
             int? removedCommits = null;
 
-            using (var reader = new StringReader(text))
+            using (StringReader reader = new(text))
             {
                 string? line = reader.ReadLine();
 
