@@ -31,7 +31,7 @@ namespace GitUI.HelperDialogs
         {
         }
 
-        private FormProcess(GitUICommands? commands, ConsoleOutputControl? outputControl, string? process, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings)
+        private FormProcess(GitUICommands? commands, ConsoleOutputControl? outputControl, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process)
             : base(commands, outputControl, useDialogSettings)
         {
             ProcessCallback = ProcessStart;
@@ -52,25 +52,25 @@ namespace GitUI.HelperDialogs
             ConsoleOutput.DataReceived += DataReceivedCore;
         }
 
-        public FormProcess(GitUICommands? commands, string? process, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings)
-            : this(commands, outputControl: null, process, arguments, workingDirectory, input, useDialogSettings)
+        public FormProcess(GitUICommands? commands, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process = null)
+            : this(commands, outputControl: null, arguments, workingDirectory, input, useDialogSettings, process)
         {
         }
 
-        public static bool ShowDialog(IWin32Window? owner, string? process, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings)
+        public static bool ShowDialog(IWin32Window? owner, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process = null)
         {
             Debug.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
 
-            using FormProcess formProcess = new(commands: null, process, arguments, workingDirectory, input, useDialogSettings);
+            using FormProcess formProcess = new(commands: null, arguments, workingDirectory, input, useDialogSettings, process);
             formProcess.ShowDialog(owner);
             return !formProcess.ErrorOccurred();
         }
 
-        public static string ReadDialog(IWin32Window? owner, string? process, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings)
+        public static string ReadDialog(IWin32Window? owner, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings)
         {
             Debug.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
 
-            using FormProcess formProcess = new(commands: null, process, arguments, workingDirectory, input, useDialogSettings);
+            using FormProcess formProcess = new(commands: null, arguments, workingDirectory, input, useDialogSettings);
             formProcess.ShowDialog(owner);
             return formProcess.GetOutputString();
         }

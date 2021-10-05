@@ -94,7 +94,7 @@ namespace GitUI.HelperDialogs
             }
 
             var command = GitCommandHelpers.PushLocalCmd(gitRefToReset.CompleteName, _revision.ObjectId, ForceReset.Checked);
-            bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+            bool success = FormProcess.ShowDialog(this, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (success)
             {
                 UICommands.RepoChangedNotifier.Notify();

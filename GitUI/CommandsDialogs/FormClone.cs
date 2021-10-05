@@ -257,7 +257,7 @@ namespace GitUI.CommandsDialogs
                                                           CentralRepository.Checked,
                                                           cbIntializeAllSubmodules.Checked,
                                                           branch, depth, isSingleBranch, cbLfs.Checked);
-                using (FormRemoteProcess fromProcess = new(UICommands, AppSettings.GitCommand, cloneCmd))
+                using (FormRemoteProcess fromProcess = new(UICommands, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(sourceRepo);
                     fromProcess.ShowDialog(this);

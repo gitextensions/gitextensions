@@ -473,7 +473,7 @@ namespace GitUI.CommandsDialogs
             _candidateForRebasingMergeCommit = PushToRemote.Checked && (_selectedBranch != AllRefs) && TabControlTagBranch.SelectedTab == BranchTab;
             _selectedRemoteBranchName = RemoteBranch.Text;
 
-            using FormRemoteProcess form = new(UICommands, process: null, pushCmd)
+            using FormRemoteProcess form = new(UICommands, pushCmd)
             {
                 Remote = remote,
                 Text = string.Format(_pushToCaption.Text, destination),
@@ -997,7 +997,7 @@ namespace GitUI.CommandsDialogs
                 {
                     EnsurePageant(remote);
 
-                    FormRemoteProcess formProcess = new(UICommands, process: null, $"ls-remote --heads \"{remote}\"")
+                    FormRemoteProcess formProcess = new(UICommands, $"ls-remote --heads \"{remote}\"")
                     {
                         Remote = remote
                     };

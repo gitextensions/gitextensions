@@ -138,11 +138,11 @@ namespace GitUI.CommandsDialogs
                     ? GitCommandHelpers.CreateOrphanCmd(branchName, objectId)
                     : GitCommandHelpers.BranchCmd(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
 
-                bool success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+                bool success = FormProcess.ShowDialog(this, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (Orphan.Checked && success && ClearOrphan.Checked)
                 {
                     // orphan AND orphan creation success AND clear
-                    FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.RemoveCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(this, arguments: GitCommandHelpers.RemoveCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                 }
 
                 if (success && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
