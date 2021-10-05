@@ -2414,13 +2414,13 @@ namespace GitUI
             }
 
             string? command = GitCommandHelpers.ContinueBisectCmd(bisectOption, LatestSelectedRevision.ObjectId);
-            FormProcess.ShowDialog(ParentForm, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: false);
+            FormProcess.ShowDialog(ParentForm, arguments: command, Module.WorkingDir, input: null, useDialogSettings: false);
             RefreshRevisions();
         }
 
         private void StopBisectToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FormProcess.ShowDialog(ParentForm, process: null, arguments: GitCommandHelpers.StopBisectCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(ParentForm, arguments: GitCommandHelpers.StopBisectCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
             RefreshRevisions();
         }
 
@@ -2892,7 +2892,7 @@ namespace GitUI
                 LatestSelectedRevision.FirstParentId?.ToString(), interactive: true, preserveMerges: false,
                 autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false);
 
-            using (FormProcess formProcess = new(UICommands, process: null, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true))
+            using (FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true))
             {
                 formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));
                 formProcess.ShowDialog(ParentForm);

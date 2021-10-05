@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void PruneWorktrees()
         {
-            UICommands.StartCommandLineProcessDialog(this, "git", "worktree prune");
+            UICommands.StartCommandLineProcessDialog(this, command: null, "worktree prune");
             Initialize();
         }
 

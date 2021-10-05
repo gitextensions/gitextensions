@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using FormRemoteProcess form = new(UICommands, process: null, pushCmd);
+            using FormRemoteProcess form = new(UICommands, pushCmd);
             ////Remote = currentRemote,
             ////Text = string.Format(_deleteFromCaption.Text, currentRemote),
             form.ShowDialog();

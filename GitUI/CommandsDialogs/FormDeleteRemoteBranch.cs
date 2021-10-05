@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 GitDeleteRemoteBranchesCmd cmd = new(remote, branches.Select(x => x.LocalName));
-                using FormRemoteProcess form = new(UICommands, process: null, cmd.Arguments)
+                using FormRemoteProcess form = new(UICommands, cmd.Arguments)
                 {
                     Remote = remote
                 };

@@ -38,15 +38,15 @@ Do you want to register the host's fingerprint and restart the process?");
             InitializeComponent();
         }
 
-        public FormRemoteProcess(GitUICommands commands, string? process, ArgumentString arguments)
-            : base(commands, process, arguments, commands.Module.WorkingDir, null, true)
+        public FormRemoteProcess(GitUICommands commands, ArgumentString arguments)
+            : base(commands, arguments, commands.Module.WorkingDir, input: null, useDialogSettings: true)
         {
             Commands = commands ?? throw new ArgumentNullException(nameof(commands));
         }
 
         public static bool ShowDialog(IWin32Window? owner, GitUICommands commands, ArgumentString arguments)
         {
-            using FormRemoteProcess formRemoteProcess = new(commands, process: null, arguments);
+            using FormRemoteProcess formRemoteProcess = new(commands, arguments);
             formRemoteProcess.ShowDialog(owner);
             return !formRemoteProcess.ErrorOccurred();
         }

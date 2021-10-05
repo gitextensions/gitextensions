@@ -135,7 +135,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleSyncCmd(SubModuleLocalPath.Text), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SubmoduleSyncCmd(SubModuleLocalPath.Text), Module.WorkingDir, input: null, useDialogSettings: true);
                 Initialize();
             }
         }
@@ -144,7 +144,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(SubModuleLocalPath.Text), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(SubModuleLocalPath.Text), Module.WorkingDir, input: null, useDialogSettings: true);
                 Initialize();
             }
         }

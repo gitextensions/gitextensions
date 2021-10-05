@@ -108,7 +108,7 @@ namespace GitUI
                     writer.Write(batchFile);
                 }
 
-                FormProcess.ShowDialog(null, process: "cmd.exe", arguments: $"/C \"{tempFile}\"", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(null, arguments: $"/C \"{tempFile}\"", Module.WorkingDir, input: null, useDialogSettings: true, process: "cmd.exe");
             }
             finally
             {
@@ -120,7 +120,7 @@ namespace GitUI
         {
             bool success = command.AccessesRemote
                 ? FormRemoteProcess.ShowDialog(owner, this, command.Arguments)
-                : FormProcess.ShowDialog(owner, process: null, arguments: command.Arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+                : FormProcess.ShowDialog(owner, arguments: command.Arguments, Module.WorkingDir, input: null, useDialogSettings: true);
 
             if (success && command.ChangesRepoState)
             {
@@ -130,14 +130,14 @@ namespace GitUI
             return success;
         }
 
-        public void StartCommandLineProcessDialog(IWin32Window? owner, string command, ArgumentString arguments)
+        public void StartCommandLineProcessDialog(IWin32Window? owner, string? command, ArgumentString arguments)
         {
-            FormProcess.ShowDialog(owner, command, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true, process: command);
         }
 
         public void StartGitCommandProcessDialog(IWin32Window? owner, ArgumentString arguments)
         {
-            FormProcess.ShowDialog(owner, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
         public bool StartDeleteBranchDialog(IWin32Window? owner, string branch)
@@ -193,7 +193,7 @@ namespace GitUI
             bool Action()
             {
                 var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message, selectedFiles);
-                FormProcess.ShowDialog(owner, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
                 return true;
@@ -206,7 +206,7 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, process: null, arguments: "stash pop", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, arguments: "stash pop", Module.WorkingDir, input: null, useDialogSettings: true);
                 MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
@@ -220,7 +220,7 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, process: null, arguments: $"stash drop {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, arguments: $"stash drop {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
                 return true;
@@ -233,7 +233,7 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, process: null, arguments: $"stash apply {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, arguments: $"stash apply {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
                 MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
@@ -1064,7 +1064,7 @@ namespace GitUI
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), Module.WorkingDir, input: null, useDialogSettings: true);
+                return FormProcess.ShowDialog(owner, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, Action, postEvent: PostUpdateSubmodules);
@@ -1075,7 +1075,7 @@ namespace GitUI
             bool Action()
             {
                 // Execute the submodule update comment from the submodule's parent directory
-                return FormProcess.ShowDialog(owner, null, GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), submoduleParentPath, null, true);
+                return FormProcess.ShowDialog(owner, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), submoduleParentPath, null, true);
             }
 
             return DoActionOnRepo(owner, Action, postEvent: PostUpdateSubmodules);
@@ -1085,7 +1085,7 @@ namespace GitUI
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, process: null, arguments: GitCommandHelpers.SubmoduleSyncCmd(""), Module.WorkingDir, input: null, useDialogSettings: true);
+                return FormProcess.ShowDialog(owner, arguments: GitCommandHelpers.SubmoduleSyncCmd(""), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, Action);
@@ -1902,7 +1902,7 @@ namespace GitUI
                     throw new InvalidOperationException("CommandText is required");
                 }
 
-                using FormRemoteProcess form = new(_commands, process: null, CommandText);
+                using FormRemoteProcess form = new(_commands, CommandText);
                 if (Title is not null)
                 {
                     form.Text = Title;
