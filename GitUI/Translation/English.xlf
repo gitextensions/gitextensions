@@ -2362,11 +2362,11 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort patch</source>
+        <source>Abo&amp;rt patch</source>
         <target />
       </trans-unit>
       <trans-unit id="AddFiles.Text">
-        <source>Add files</source>
+        <source>&amp;Add files</source>
         <target />
       </trans-unit>
       <trans-unit id="Apply.Text">
@@ -2374,27 +2374,27 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="BrowseDir.Text">
-        <source>Browse</source>
+        <source>Bro&amp;wse</source>
         <target />
       </trans-unit>
       <trans-unit id="BrowsePatch.Text">
-        <source>Browse</source>
+        <source>&amp;Browse</source>
         <target />
       </trans-unit>
       <trans-unit id="IgnoreWhitespace.Text">
-        <source>Ignore Wh.spc.</source>
+        <source>&amp;Ignore Wh.spc.</source>
         <target />
       </trans-unit>
       <trans-unit id="Mergetool.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
-        <source>Patch directory</source>
+        <source>Patch &amp;directory</source>
         <target />
       </trans-unit>
       <trans-unit id="PatchFileMode.Text">
-        <source>Patch file</source>
+        <source>Patch &amp;file</source>
         <target />
       </trans-unit>
       <trans-unit id="Resolved.Text">
@@ -2402,11 +2402,11 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="SignOff.Text">
-        <source>Sign-Off</source>
+        <source>Sign-&amp;Off</source>
         <target />
       </trans-unit>
       <trans-unit id="Skip.Text">
-        <source>Skip patch</source>
+        <source>S&amp;kip patch</source>
         <target />
       </trans-unit>
       <trans-unit id="SolveMergeConflicts.Text">
@@ -2419,7 +2419,7 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="_conflictMergetoolText.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="_conflictResolvedText.Text">
@@ -6311,19 +6311,19 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort</source>
+        <source>A&amp;bort</source>
         <target />
       </trans-unit>
       <trans-unit id="AddFiles.Text">
-        <source>Add files</source>
+        <source>&amp;Add files</source>
         <target />
       </trans-unit>
       <trans-unit id="Commit.Text">
-        <source>Commit...</source>
+        <source>C&amp;ommit...</source>
         <target />
       </trans-unit>
       <trans-unit id="Mergetool.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -6331,7 +6331,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="Resolved.Text">
-        <source>Continue rebase</source>
+        <source>&amp;Continue rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowOptions.Text">
@@ -6339,7 +6339,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="Skip.Text">
-        <source>Skip currently applying commit</source>
+        <source>S&amp;kip currently applying commit</source>
         <target />
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
@@ -6357,11 +6357,11 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="_continueRebaseText.Text">
-        <source>Continue rebase</source>
+        <source>&amp;Continue rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="_continueRebaseText2.Text">
-        <source>&gt;Continue rebase&lt;</source>
+        <source>&gt;&amp;Continue rebase&lt;</source>
         <target />
       </trans-unit>
       <trans-unit id="_hoverShowImageLabelText.Text">
@@ -6373,50 +6373,46 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="_solveConflictsText.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="_solveConflictsText2.Text">
-        <source>&gt;Solve conflicts&lt;</source>
+        <source>&gt;&amp;Solve conflicts&lt;</source>
         <target />
       </trans-unit>
       <trans-unit id="chkAutosquash.Text">
-        <source>Autosquash</source>
+        <source>Autos&amp;quash</source>
         <target />
       </trans-unit>
       <trans-unit id="chkCommitterDateIsAuthorDate.Text">
-        <source>Committer date is author date</source>
+        <source>Co&amp;mmitter date is author date</source>
         <target />
       </trans-unit>
       <trans-unit id="chkIgnoreDate.Text">
-        <source>Ignore date</source>
+        <source>Ignore &amp;date</source>
         <target />
       </trans-unit>
       <trans-unit id="chkInteractive.Text">
-        <source>Interactive Rebase</source>
+        <source>&amp;Interactive Rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="chkPreserveMerges.Text">
-        <source>Preserve Merges</source>
+        <source>&amp;Preserve Merges</source>
         <target />
       </trans-unit>
       <trans-unit id="chkSpecificRange.Text">
-        <source>Specific range</source>
+        <source>Sp&amp;ecific range</source>
         <target />
       </trans-unit>
       <trans-unit id="chkStash.Text">
-        <source>Auto stash</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Rebase current branch on top of another branch</source>
+        <source>A&amp;uto stash</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Rebase on</source>
+        <source>&amp;Rebase on</source>
         <target />
       </trans-unit>
-      <trans-unit id="label3.Text">
+      <trans-unit id="lblCommitsToReapply.Text">
         <source>Commits to re-apply:</source>
         <target />
       </trans-unit>
@@ -6425,11 +6421,15 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRangeFrom.Text">
-        <source>From (exc.)</source>
+        <source>&amp;From (exc.)</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRangeTo.Text">
-        <source>To</source>
+        <source>&amp;To</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblRebase.Text">
+        <source>Rebase current branch on top of another branch</source>
         <target />
       </trans-unit>
     </body>

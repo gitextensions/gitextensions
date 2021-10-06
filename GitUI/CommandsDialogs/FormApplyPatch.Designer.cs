@@ -40,24 +40,24 @@
             this.BrowseDir = new System.Windows.Forms.Button();
             this.PatchDirMode = new System.Windows.Forms.RadioButton();
             this.PatchFileMode = new System.Windows.Forms.RadioButton();
-            this.patchGrid1 = new GitUI.PatchGrid();
+            this.PatchGrid = new GitUI.PatchGrid();
             this.SolveMergeConflicts = new System.Windows.Forms.Button();
             this.IgnoreWhitespace = new System.Windows.Forms.CheckBox();
             this.ContinuePanel = new System.Windows.Forms.Panel();
             this.MergeToolPanel = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.PanelBR = new System.Windows.Forms.FlowLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.MainLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            this.PanelTR = new System.Windows.Forms.FlowLayoutPanel();
             this.SignOff = new System.Windows.Forms.CheckBox();
-            this.panel4 = new System.Windows.Forms.Panel();
+            this.PanelTL = new System.Windows.Forms.Panel();
             this.ContinuePanel.SuspendLayout();
             this.MergeToolPanel.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.flowLayoutPanel2.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.PanelBR.SuspendLayout();
+            this.MainLayoutPanel.SuspendLayout();
+            this.PanelTR.SuspendLayout();
+            this.PanelTL.SuspendLayout();
             this.SuspendLayout();
             // 
             // BrowsePatch
@@ -65,8 +65,8 @@
             this.BrowsePatch.Location = new System.Drawing.Point(450, 7);
             this.BrowsePatch.Name = "BrowsePatch";
             this.BrowsePatch.Size = new System.Drawing.Size(100, 25);
-            this.BrowsePatch.TabIndex = 2;
-            this.BrowsePatch.Text = "Browse";
+            this.BrowsePatch.TabIndex = 4;
+            this.BrowsePatch.Text = "&Browse";
             this.BrowsePatch.UseVisualStyleBackColor = true;
             this.BrowsePatch.Click += new System.EventHandler(this.BrowsePatch_Click);
             // 
@@ -76,15 +76,16 @@
             this.PatchFile.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.FileSystem;
             this.PatchFile.Location = new System.Drawing.Point(163, 9);
             this.PatchFile.Name = "PatchFile";
-            this.PatchFile.Size = new System.Drawing.Size(281, 20);
-            this.PatchFile.TabIndex = 1;
+            this.PatchFile.Size = new System.Drawing.Size(281, 23);
+            this.PatchFile.TabIndex = 3;
             // 
             // Apply
             // 
+            this.Apply.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Apply.Location = new System.Drawing.Point(3, 3);
             this.Apply.Name = "Apply";
             this.Apply.Size = new System.Drawing.Size(125, 25);
-            this.Apply.TabIndex = 7;
+            this.Apply.TabIndex = 10;
             this.Apply.Text = "Apply patch";
             this.Apply.UseVisualStyleBackColor = true;
             this.Apply.Click += new System.EventHandler(this.Apply_Click);
@@ -98,8 +99,8 @@
             this.Mergetool.Location = new System.Drawing.Point(3, 3);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(119, 25);
-            this.Mergetool.TabIndex = 7;
-            this.Mergetool.Text = "Solve conflicts";
+            this.Mergetool.TabIndex = 15;
+            this.Mergetool.Text = "&Solve conflicts";
             this.Mergetool.UseVisualStyleBackColor = true;
             this.Mergetool.Click += new System.EventHandler(this.Mergetool_Click);
             // 
@@ -109,8 +110,8 @@
             this.Skip.Location = new System.Drawing.Point(3, 151);
             this.Skip.Name = "Skip";
             this.Skip.Size = new System.Drawing.Size(125, 25);
-            this.Skip.TabIndex = 10;
-            this.Skip.Text = "Skip patch";
+            this.Skip.TabIndex = 21;
+            this.Skip.Text = "S&kip patch";
             this.Skip.UseVisualStyleBackColor = true;
             this.Skip.Click += new System.EventHandler(this.Skip_Click);
             // 
@@ -120,8 +121,8 @@
             this.Abort.Location = new System.Drawing.Point(3, 182);
             this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(125, 25);
-            this.Abort.TabIndex = 11;
-            this.Abort.Text = "Abort patch";
+            this.Abort.TabIndex = 22;
+            this.Abort.Text = "Abo&rt patch";
             this.Abort.UseVisualStyleBackColor = true;
             this.Abort.Click += new System.EventHandler(this.Abort_Click);
             // 
@@ -132,7 +133,7 @@
             this.Resolved.Location = new System.Drawing.Point(3, 3);
             this.Resolved.Name = "Resolved";
             this.Resolved.Size = new System.Drawing.Size(119, 25);
-            this.Resolved.TabIndex = 9;
+            this.Resolved.TabIndex = 20;
             this.Resolved.Text = "Conflicts resolved";
             this.Resolved.UseVisualStyleBackColor = true;
             this.Resolved.Click += new System.EventHandler(this.Resolved_Click);
@@ -143,8 +144,8 @@
             this.AddFiles.Location = new System.Drawing.Point(3, 61);
             this.AddFiles.Name = "AddFiles";
             this.AddFiles.Size = new System.Drawing.Size(125, 25);
-            this.AddFiles.TabIndex = 8;
-            this.AddFiles.Text = "Add files";
+            this.AddFiles.TabIndex = 17;
+            this.AddFiles.Text = "&Add files";
             this.AddFiles.UseVisualStyleBackColor = true;
             this.AddFiles.Click += new System.EventHandler(this.AddFiles_Click);
             // 
@@ -155,8 +156,8 @@
             this.PatchDir.Enabled = false;
             this.PatchDir.Location = new System.Drawing.Point(163, 35);
             this.PatchDir.Name = "PatchDir";
-            this.PatchDir.Size = new System.Drawing.Size(281, 20);
-            this.PatchDir.TabIndex = 1;
+            this.PatchDir.Size = new System.Drawing.Size(281, 23);
+            this.PatchDir.TabIndex = 6;
             // 
             // BrowseDir
             // 
@@ -164,8 +165,8 @@
             this.BrowseDir.Location = new System.Drawing.Point(450, 33);
             this.BrowseDir.Name = "BrowseDir";
             this.BrowseDir.Size = new System.Drawing.Size(100, 25);
-            this.BrowseDir.TabIndex = 2;
-            this.BrowseDir.Text = "Browse";
+            this.BrowseDir.TabIndex = 7;
+            this.BrowseDir.Text = "Bro&wse";
             this.BrowseDir.UseVisualStyleBackColor = true;
             this.BrowseDir.Click += new System.EventHandler(this.BrowseDir_Click);
             // 
@@ -174,9 +175,9 @@
             this.PatchDirMode.AutoSize = true;
             this.PatchDirMode.Location = new System.Drawing.Point(10, 35);
             this.PatchDirMode.Name = "PatchDirMode";
-            this.PatchDirMode.Size = new System.Drawing.Size(96, 17);
-            this.PatchDirMode.TabIndex = 1;
-            this.PatchDirMode.Text = "Patch directory";
+            this.PatchDirMode.Size = new System.Drawing.Size(105, 19);
+            this.PatchDirMode.TabIndex = 5;
+            this.PatchDirMode.Text = "Patch &directory";
             this.PatchDirMode.UseVisualStyleBackColor = true;
             // 
             // PatchFileMode
@@ -185,22 +186,23 @@
             this.PatchFileMode.Checked = true;
             this.PatchFileMode.Location = new System.Drawing.Point(10, 10);
             this.PatchFileMode.Name = "PatchFileMode";
-            this.PatchFileMode.Size = new System.Drawing.Size(69, 17);
-            this.PatchFileMode.TabIndex = 0;
+            this.PatchFileMode.Size = new System.Drawing.Size(74, 19);
+            this.PatchFileMode.TabIndex = 2;
             this.PatchFileMode.TabStop = true;
-            this.PatchFileMode.Text = "Patch file";
+            this.PatchFileMode.Text = "Patch &file";
             this.PatchFileMode.UseVisualStyleBackColor = true;
             this.PatchFileMode.CheckedChanged += new System.EventHandler(this.PatchFileMode_CheckedChanged);
             // 
-            // patchGrid1
+            // PatchGrid
             // 
-            this.patchGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.patchGrid1.Location = new System.Drawing.Point(3, 85);
-            this.patchGrid1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.patchGrid1.Name = "patchGrid1";
-            this.patchGrid1.Size = new System.Drawing.Size(568, 349);
-            this.patchGrid1.TabIndex = 10;
-            this.patchGrid1.TabStop = false;
+            this.PatchGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PatchGrid.IsManagingRebase = false;
+            this.PatchGrid.Location = new System.Drawing.Point(3, 89);
+            this.PatchGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.PatchGrid.Name = "PatchGrid";
+            this.PatchGrid.Size = new System.Drawing.Size(568, 345);
+            this.PatchGrid.TabIndex = 8;
+            this.PatchGrid.TabStop = false;
             // 
             // SolveMergeConflicts
             // 
@@ -210,7 +212,7 @@
             this.SolveMergeConflicts.Location = new System.Drawing.Point(3, 213);
             this.SolveMergeConflicts.Name = "SolveMergeConflicts";
             this.SolveMergeConflicts.Size = new System.Drawing.Size(125, 78);
-            this.SolveMergeConflicts.TabIndex = 12;
+            this.SolveMergeConflicts.TabIndex = 23;
             this.SolveMergeConflicts.Text = "There are unresolved merge conflicts\r\n";
             this.SolveMergeConflicts.UseVisualStyleBackColor = false;
             this.SolveMergeConflicts.Visible = false;
@@ -221,9 +223,9 @@
             this.IgnoreWhitespace.AutoSize = true;
             this.IgnoreWhitespace.Location = new System.Drawing.Point(3, 34);
             this.IgnoreWhitespace.Name = "IgnoreWhitespace";
-            this.IgnoreWhitespace.Size = new System.Drawing.Size(99, 17);
-            this.IgnoreWhitespace.TabIndex = 5;
-            this.IgnoreWhitespace.Text = "Ignore Wh.spc.";
+            this.IgnoreWhitespace.Size = new System.Drawing.Size(105, 19);
+            this.IgnoreWhitespace.TabIndex = 11;
+            this.IgnoreWhitespace.Text = "&Ignore Wh.spc.";
             this.IgnoreWhitespace.UseVisualStyleBackColor = true;
             this.IgnoreWhitespace.CheckedChanged += new System.EventHandler(this.IgnoreWhitespace_CheckedChanged);
             // 
@@ -235,7 +237,7 @@
             this.ContinuePanel.Location = new System.Drawing.Point(3, 113);
             this.ContinuePanel.Name = "ContinuePanel";
             this.ContinuePanel.Size = new System.Drawing.Size(125, 32);
-            this.ContinuePanel.TabIndex = 12;
+            this.ContinuePanel.TabIndex = 19;
             // 
             // MergeToolPanel
             // 
@@ -246,98 +248,98 @@
             this.MergeToolPanel.Location = new System.Drawing.Point(3, 3);
             this.MergeToolPanel.Name = "MergeToolPanel";
             this.MergeToolPanel.Size = new System.Drawing.Size(125, 31);
-            this.MergeToolPanel.TabIndex = 13;
+            this.MergeToolPanel.TabIndex = 14;
             // 
-            // flowLayoutPanel1
+            // PanelBR
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.MergeToolPanel);
-            this.flowLayoutPanel1.Controls.Add(this.panel2);
-            this.flowLayoutPanel1.Controls.Add(this.AddFiles);
-            this.flowLayoutPanel1.Controls.Add(this.panel3);
-            this.flowLayoutPanel1.Controls.Add(this.ContinuePanel);
-            this.flowLayoutPanel1.Controls.Add(this.Skip);
-            this.flowLayoutPanel1.Controls.Add(this.Abort);
-            this.flowLayoutPanel1.Controls.Add(this.SolveMergeConflicts);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(577, 86);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(131, 347);
-            this.flowLayoutPanel1.TabIndex = 11;
-            this.flowLayoutPanel1.WrapContents = false;
+            this.PanelBR.AutoSize = true;
+            this.PanelBR.Controls.Add(this.MergeToolPanel);
+            this.PanelBR.Controls.Add(this.panel2);
+            this.PanelBR.Controls.Add(this.AddFiles);
+            this.PanelBR.Controls.Add(this.panel3);
+            this.PanelBR.Controls.Add(this.ContinuePanel);
+            this.PanelBR.Controls.Add(this.Skip);
+            this.PanelBR.Controls.Add(this.Abort);
+            this.PanelBR.Controls.Add(this.SolveMergeConflicts);
+            this.PanelBR.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PanelBR.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.PanelBR.Location = new System.Drawing.Point(577, 90);
+            this.PanelBR.Name = "PanelBR";
+            this.PanelBR.Size = new System.Drawing.Size(131, 343);
+            this.PanelBR.TabIndex = 13;
+            this.PanelBR.WrapContents = false;
             // 
             // panel2
             // 
             this.panel2.Location = new System.Drawing.Point(3, 40);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(10, 15);
-            this.panel2.TabIndex = 15;
+            this.panel2.TabIndex = 16;
             // 
             // panel3
             // 
             this.panel3.Location = new System.Drawing.Point(3, 92);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(10, 15);
-            this.panel3.TabIndex = 16;
+            this.panel3.TabIndex = 18;
             // 
-            // tableLayoutPanel1
+            // MainLayoutPanel
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.patchGrid1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel4, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(711, 436);
-            this.tableLayoutPanel1.TabIndex = 12;
+            this.MainLayoutPanel.ColumnCount = 2;
+            this.MainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.MainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.MainLayoutPanel.Controls.Add(this.PatchGrid, 0, 1);
+            this.MainLayoutPanel.Controls.Add(this.PanelBR, 1, 1);
+            this.MainLayoutPanel.Controls.Add(this.PanelTR, 1, 0);
+            this.MainLayoutPanel.Controls.Add(this.PanelTL, 0, 0);
+            this.MainLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.MainLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.MainLayoutPanel.Name = "MainLayoutPanel";
+            this.MainLayoutPanel.RowCount = 2;
+            this.MainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.MainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.MainLayoutPanel.Size = new System.Drawing.Size(711, 436);
+            this.MainLayoutPanel.TabIndex = 0;
             // 
-            // flowLayoutPanel2
+            // PanelTR
             // 
-            this.flowLayoutPanel2.AutoSize = true;
-            this.flowLayoutPanel2.Controls.Add(this.Apply);
-            this.flowLayoutPanel2.Controls.Add(this.IgnoreWhitespace);
-            this.flowLayoutPanel2.Controls.Add(this.SignOff);
-            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(577, 3);
-            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(131, 77);
-            this.flowLayoutPanel2.TabIndex = 1;
-            this.flowLayoutPanel2.WrapContents = false;
+            this.PanelTR.AutoSize = true;
+            this.PanelTR.Controls.Add(this.Apply);
+            this.PanelTR.Controls.Add(this.IgnoreWhitespace);
+            this.PanelTR.Controls.Add(this.SignOff);
+            this.PanelTR.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PanelTR.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.PanelTR.Location = new System.Drawing.Point(577, 3);
+            this.PanelTR.Name = "PanelTR";
+            this.PanelTR.Size = new System.Drawing.Size(131, 81);
+            this.PanelTR.TabIndex = 9;
+            this.PanelTR.WrapContents = false;
             // 
             // SignOff
             // 
             this.SignOff.AutoSize = true;
-            this.SignOff.Location = new System.Drawing.Point(3, 57);
+            this.SignOff.Location = new System.Drawing.Point(3, 59);
             this.SignOff.Name = "SignOff";
-            this.SignOff.Size = new System.Drawing.Size(64, 17);
-            this.SignOff.TabIndex = 6;
-            this.SignOff.Text = "Sign-Off";
+            this.SignOff.Size = new System.Drawing.Size(71, 19);
+            this.SignOff.TabIndex = 12;
+            this.SignOff.Text = "Sign-&Off";
             this.SignOff.UseVisualStyleBackColor = true;
             this.SignOff.CheckedChanged += new System.EventHandler(this.SignOff_CheckedChanged);
             // 
-            // panel4
+            // PanelTL
             // 
-            this.panel4.Controls.Add(this.PatchDir);
-            this.panel4.Controls.Add(this.PatchFileMode);
-            this.panel4.Controls.Add(this.BrowseDir);
-            this.panel4.Controls.Add(this.BrowsePatch);
-            this.panel4.Controls.Add(this.PatchDirMode);
-            this.panel4.Controls.Add(this.PatchFile);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(3, 3);
-            this.panel4.MinimumSize = new System.Drawing.Size(560, 65);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(568, 77);
-            this.panel4.TabIndex = 0;
+            this.PanelTL.Controls.Add(this.PatchDir);
+            this.PanelTL.Controls.Add(this.PatchFileMode);
+            this.PanelTL.Controls.Add(this.BrowseDir);
+            this.PanelTL.Controls.Add(this.BrowsePatch);
+            this.PanelTL.Controls.Add(this.PatchDirMode);
+            this.PanelTL.Controls.Add(this.PatchFile);
+            this.PanelTL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PanelTL.Location = new System.Drawing.Point(3, 3);
+            this.PanelTL.MinimumSize = new System.Drawing.Size(560, 65);
+            this.PanelTL.Name = "PanelTL";
+            this.PanelTL.Size = new System.Drawing.Size(568, 81);
+            this.PanelTL.TabIndex = 1;
             // 
             // FormApplyPatch
             // 
@@ -345,23 +347,22 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(711, 436);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.MainLayoutPanel);
             this.MinimumSize = new System.Drawing.Size(720, 410);
-            this.Load += new System.EventHandler(this.FormApplyPatchLoad);
             this.Name = "FormApplyPatch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply patch";
             this.Load += new System.EventHandler(this.MergePatch_Load);
             this.ContinuePanel.ResumeLayout(false);
             this.MergeToolPanel.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel2.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
+            this.PanelBR.ResumeLayout(false);
+            this.PanelBR.PerformLayout();
+            this.MainLayoutPanel.ResumeLayout(false);
+            this.MainLayoutPanel.PerformLayout();
+            this.PanelTR.ResumeLayout(false);
+            this.PanelTR.PerformLayout();
+            this.PanelTL.ResumeLayout(false);
+            this.PanelTL.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -376,7 +377,7 @@
         private System.Windows.Forms.Button Abort;
         private System.Windows.Forms.Button Resolved;
         private System.Windows.Forms.Button AddFiles;
-        private PatchGrid patchGrid1;
+        private PatchGrid PatchGrid;
         private System.Windows.Forms.TextBox PatchDir;
         private System.Windows.Forms.Button BrowseDir;
         private System.Windows.Forms.RadioButton PatchDirMode;
@@ -385,12 +386,12 @@
         private System.Windows.Forms.CheckBox IgnoreWhitespace;
         private System.Windows.Forms.Panel ContinuePanel;
         private System.Windows.Forms.Panel MergeToolPanel;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel PanelBR;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.TableLayoutPanel MainLayoutPanel;
+        private System.Windows.Forms.FlowLayoutPanel PanelTR;
+        private System.Windows.Forms.Panel PanelTL;
         private System.Windows.Forms.CheckBox SignOff;
     }
 }
