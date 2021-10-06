@@ -662,6 +662,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.Size = new System.Drawing.Size(350, 209);
+            this.RevisionGrid.ShowBuildServerInfo = true;
             this.RevisionGrid.TabIndex = 2;
             // 
             // notificationBarBisectInProgress

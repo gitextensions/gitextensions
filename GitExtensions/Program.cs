@@ -178,7 +178,7 @@ namespace GitExtensions
 
             if (args.Length <= 1)
             {
-                commands.StartBrowseDialog();
+                commands.StartBrowseDialog(owner: null);
             }
             else
             {
