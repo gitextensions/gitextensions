@@ -6894,22 +6894,22 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <target />
       </trans-unit>
       <trans-unit id="Hard.Text">
-        <source>Hard: reset working directory and index
+        <source>&amp;Hard: reset working directory and index
 (discard ALL local changes, even uncommitted changes)</source>
         <target />
       </trans-unit>
       <trans-unit id="Keep.Text">
-        <source>Keep: update working directory to the commit 
+        <source>&amp;Keep: update working directory to the commit 
 (abort if there are local changes), reset index</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
-        <source>Merge: update working directory to the commit and keep local changes 
+        <source>&amp;Merge: update working directory to the commit and keep local changes 
 (abort if there are conflicts), reset index</source>
         <target />
       </trans-unit>
       <trans-unit id="Mixed.Text">
-        <source>Mixed: leave working directory untouched, reset index</source>
+        <source>Mi&amp;xed: leave working directory untouched, reset index</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -6917,7 +6917,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <target />
       </trans-unit>
       <trans-unit id="Soft.Text">
-        <source>Soft: leave working directory and index untouched</source>
+        <source>&amp;Soft: leave working directory and index untouched</source>
         <target />
       </trans-unit>
       <trans-unit id="_branchInfo.Text">
@@ -8621,7 +8621,7 @@ help</source>
   <file datatype="plaintext" original="MenuItemsStrings" source-language="en">
     <body>
       <trans-unit id="Checkout.Text">
-        <source>Checkout</source>
+        <source>Chec&amp;kout</source>
         <target />
       </trans-unit>
       <trans-unit id="CreateBranch.Text">
@@ -8629,7 +8629,7 @@ help</source>
         <target />
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>Delete</source>
+        <source>&amp;Delete</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
@@ -8641,7 +8641,7 @@ help</source>
         <target />
       </trans-unit>
       <trans-unit id="Rename.Text">
-        <source>Rename</source>
+        <source>R&amp;ename</source>
         <target />
       </trans-unit>
       <trans-unit id="Reset.Text">
