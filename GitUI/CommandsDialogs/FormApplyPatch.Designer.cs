@@ -66,7 +66,7 @@
             this.BrowsePatch.Name = "BrowsePatch";
             this.BrowsePatch.Size = new System.Drawing.Size(100, 25);
             this.BrowsePatch.TabIndex = 4;
-            this.BrowsePatch.Text = "&Browse";
+            this.BrowsePatch.Text = "B&rowse";
             this.BrowsePatch.UseVisualStyleBackColor = true;
             this.BrowsePatch.Click += new System.EventHandler(this.BrowsePatch_Click);
             // 
@@ -122,7 +122,7 @@
             this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(125, 25);
             this.Abort.TabIndex = 22;
-            this.Abort.Text = "Abo&rt patch";
+            this.Abort.Text = "A&bort patch";
             this.Abort.UseVisualStyleBackColor = true;
             this.Abort.Click += new System.EventHandler(this.Abort_Click);
             // 

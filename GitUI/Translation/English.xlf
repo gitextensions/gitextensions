@@ -2362,7 +2362,7 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abo&amp;rt patch</source>
+        <source>A&amp;bort patch</source>
         <target />
       </trans-unit>
       <trans-unit id="AddFiles.Text">
@@ -2378,7 +2378,7 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="BrowsePatch.Text">
-        <source>&amp;Browse</source>
+        <source>B&amp;rowse</source>
         <target />
       </trans-unit>
       <trans-unit id="IgnoreWhitespace.Text">

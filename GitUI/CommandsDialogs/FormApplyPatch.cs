@@ -18,13 +18,13 @@ namespace GitUI.CommandsDialogs
         #region Mnemonics
         // Available: CEGHJLMNPQTUVXYZ
         // A add files
-        // B Browse file
+        // B abort
         // D directory
         // F file
         // I ignore whitespace
         // K skip patch
         // O sign-off
-        // R abort
+        // R Browse file
         // S solve conflicts
         // W Browse dir
         #endregion
