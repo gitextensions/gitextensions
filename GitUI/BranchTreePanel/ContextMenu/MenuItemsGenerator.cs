@@ -107,9 +107,10 @@ namespace GitUI.BranchTreePanel.ContextMenu
         {
             if (Implements<ICanDelete>())
             {
-                yield return _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
-                    node => ((ICanDelete)node).Delete(), Strings.Delete, GetTooltip(MenuItemKey.Delete), Properties.Images.BranchDelete)
-                    .WithKey(MenuItemKey.Delete);
+                ToolStripMenuItem item = _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
+                    node => ((ICanDelete)node).Delete(), Strings.Delete, GetTooltip(MenuItemKey.Delete), Properties.Images.BranchDelete);
+                item.ShortcutKeys = Keys.Delete;
+                yield return item.WithKey(MenuItemKey.Delete);
             }
         }
 

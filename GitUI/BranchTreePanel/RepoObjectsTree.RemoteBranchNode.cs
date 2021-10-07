@@ -48,6 +48,11 @@ namespace GitUI.BranchTreePanel
                 return new RemoteBranchInfo(remote, branch);
             }
 
+            internal override void OnDelete()
+            {
+                Delete();
+            }
+
             public bool CreateBranch()
             {
                 return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, FullPath);
