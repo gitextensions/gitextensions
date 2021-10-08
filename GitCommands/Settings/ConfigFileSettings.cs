@@ -23,9 +23,8 @@ namespace GitCommands.Settings
 
         public IReadOnlyList<string> GetValues(string setting)
         {
-            ConfigFileSettingsCache settingsCache = SettingsCaches.First();
-
-            return settingsCache.GetValues(setting);
+            return SettingsCaches.First()
+                .GetValues(setting);
         }
 
         public new void SetValue(string setting, string? value)
@@ -52,9 +51,8 @@ namespace GitCommands.Settings
 
         public IReadOnlyList<IConfigSection> GetConfigSections()
         {
-            ConfigFileSettingsCache settingsCache = SettingsCaches.First();
-
-            return settingsCache.GetConfigSections();
+            return SettingsCaches.First()
+                .GetConfigSections();
         }
 
         /// <summary>
@@ -63,9 +61,8 @@ namespace GitCommands.Settings
         /// <param name="configSection">The configuration section.</param>
         public void AddConfigSection(IConfigSection configSection)
         {
-            ConfigFileSettingsCache settingsCache = SettingsCaches.First();
-
-            settingsCache.AddConfigSection(configSection);
+            SettingsCaches.First()
+                .AddConfigSection(configSection);
         }
 
         /// <summary>
@@ -75,9 +72,8 @@ namespace GitCommands.Settings
         /// <param name="performSave">If <see langword="true"/> the configuration changes will be saved immediately.</param>
         public void RemoveConfigSection(string configSectionName, bool performSave = false)
         {
-            ConfigFileSettingsCache settingsCache = SettingsCaches.First();
-
-            settingsCache.RemoveConfigSection(configSectionName, performSave);
+            SettingsCaches.First()
+                .RemoveConfigSection(configSectionName, performSave);
         }
 
         [MaybeNull]

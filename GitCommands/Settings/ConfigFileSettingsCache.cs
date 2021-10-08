@@ -33,18 +33,11 @@ namespace GitCommands.Settings
 
         public static ConfigFileSettingsCache? CreateSystemWideCache(bool allowCache = true)
         {
-            // Git 2.xx
             string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Git", "config");
 
             if (!File.Exists(configPath))
             {
-                // Git 1.xx
-                configPath = Path.Combine(AppSettings.GitBinDir, "..", "etc", "gitconfig");
-
-                if (!File.Exists(configPath))
-                {
-                    return null;
-                }
+                return null;
             }
 
             return Create(configPath, isLocal: false, allowCache);
@@ -57,7 +50,7 @@ namespace GitCommands.Settings
                 return FromCache(settingsFilePath, isLocal);
             }
 
-            return new ConfigFileSettingsCache(settingsFilePath, false, isLocal);
+            return new ConfigFileSettingsCache(settingsFilePath, autoSave: false, isLocal);
         }
 
         private static ConfigFileSettingsCache FromCache(string settingsFilePath, bool isLocal)

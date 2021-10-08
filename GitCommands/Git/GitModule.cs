@@ -233,7 +233,10 @@ namespace GitCommands
                 {
                     lock (_lock)
                     {
-                        CreateConfigFileSettings();
+                        if (_effectiveConfigFile is null)
+                        {
+                            CreateConfigFileSettings();
+                        }
                     }
                 }
 
@@ -249,7 +252,10 @@ namespace GitCommands
                 {
                     lock (_lock)
                     {
-                        CreateConfigFileSettings();
+                        if (_localConfigFile is null)
+                        {
+                            CreateConfigFileSettings();
+                        }
                     }
                 }
 
@@ -259,32 +265,20 @@ namespace GitCommands
 
         private void CreateConfigFileSettings()
         {
-            ConfigFileSettingsCache configLocalCache = null;
+            ConfigFileSettingsCache configLocalCache = ConfigFileSettingsCache.CreateLocalCache(this);
+            ConfigFileSettingsCache configGlobalCache = ConfigFileSettingsCache.CreateGlobalCache();
+            ConfigFileSettingsCache? configSystemWideCache = ConfigFileSettingsCache.CreateSystemWideCache();
 
-            if (_effectiveConfigFile is null || _localConfigFile is null)
+            if (configSystemWideCache is null)
             {
-                configLocalCache = ConfigFileSettingsCache.CreateLocalCache(this);
+                _effectiveConfigFile = new(SettingLevel.Effective, configLocalCache, configGlobalCache);
+            }
+            else
+            {
+                _effectiveConfigFile = new(SettingLevel.Effective, configLocalCache, configGlobalCache, configSystemWideCache);
             }
 
-            if (_effectiveConfigFile is null)
-            {
-                ConfigFileSettingsCache configGlobalCache = ConfigFileSettingsCache.CreateGlobalCache();
-                ConfigFileSettingsCache? configSystemWideCache = ConfigFileSettingsCache.CreateSystemWideCache();
-
-                if (configSystemWideCache is null)
-                {
-                    _effectiveConfigFile = new(SettingLevel.Effective, configLocalCache, configGlobalCache);
-                }
-                else
-                {
-                    _effectiveConfigFile = new(SettingLevel.Effective, configLocalCache, configGlobalCache, configSystemWideCache);
-                }
-            }
-
-            if (_localConfigFile is null)
-            {
-                _localConfigFile = new(SettingLevel.Local, configLocalCache);
-            }
+            _localConfigFile = new(SettingLevel.Local, configLocalCache);
         }
 
         IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;
