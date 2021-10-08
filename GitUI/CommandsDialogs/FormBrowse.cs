@@ -446,20 +446,6 @@ namespace GitUI.CommandsDialogs
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
-            ChangeTerminalActiveFolder(Module.WorkingDir);
-
-#if DEBUG
-            // Current encodings
-            Debug.WriteLine($"Encodings for {Module.WorkingDir}");
-            Debug.WriteLine($"Files content encoding: {Module.FilesEncoding.EncodingName}");
-            Debug.WriteLine($"Commit encoding: {Module.CommitEncoding.EncodingName}");
-            if (Module.LogOutputEncoding.CodePage != Module.CommitEncoding.CodePage)
-            {
-                Debug.WriteLine($"Log output encoding: {Module.LogOutputEncoding.EncodingName}");
-            }
-#endif
-
-            SetPathFilter(null);
             ToolStripFilters.UpdateBranchFilterItems();
 
             this.InvokeAsync(RefreshRevisions).FileAndForget();
@@ -1670,6 +1656,8 @@ namespace GitUI.CommandsDialogs
 
         private void SetGitModule(object sender, GitModuleEventArgs e)
         {
+            string originalWorkingDir = Module.WorkingDir;
+
             var module = e.GitModule;
             HideVariableMainMenuItems();
             PluginRegistry.Unregister(UICommands);
@@ -1690,6 +1678,29 @@ namespace GitUI.CommandsDialogs
                 AppSettings.RecentWorkingDir = path;
 
                 HideDashboard();
+
+                if (!string.Equals(originalWorkingDir, Module.WorkingDir, StringComparison.Ordinal))
+                {
+                    ChangeTerminalActiveFolder(Module.WorkingDir);
+#if DEBUG
+                    // Current encodings
+                    Debug.WriteLine($"Encodings for {Module.WorkingDir}");
+                    Debug.WriteLine($"Files content encoding: {Module.FilesEncoding.EncodingName}");
+                    Debug.WriteLine($"Commit encoding: {Module.CommitEncoding.EncodingName}");
+                    if (Module.LogOutputEncoding.CodePage != Module.CommitEncoding.CodePage)
+                    {
+                        Debug.WriteLine($"Log output encoding: {Module.LogOutputEncoding.EncodingName}");
+                    }
+#endif
+
+                    // Reset the filter when switching repos
+
+                    // If we're applying custom branch or revision filters - reset them
+                    RevisionGrid.DisableFilters();
+                    SetPathFilter(pathFilter: null);
+                    ToolStripFilters.ClearFilters();
+                    AppSettings.BranchFilterEnabled = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
+                }
 
                 RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
 
