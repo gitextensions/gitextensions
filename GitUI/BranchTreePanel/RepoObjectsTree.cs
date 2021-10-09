@@ -531,6 +531,9 @@ namespace GitUI.BranchTreePanel
                 case Keys.F3:
                     OnBtnSearchClicked(this, EventArgs.Empty);
                     break;
+                case Keys.Delete:
+                    Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnDelete());
+                    break;
             }
         }
 
