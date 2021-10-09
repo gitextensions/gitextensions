@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
 using GitUIPluginInterfaces;
 
@@ -95,6 +95,22 @@ namespace GitCommands.Settings
                 // the settings is not assigned on this level, recurse to the lower level
                 LowerPriority!.SetValue(name, value);
             }
+        }
+
+        // Split to work with each level separately
+        public ISettingsSource[] Split()
+        {
+            List<ISettingsSource> result = new();
+            RepoDistSettings current = this;
+
+            while (current is not null)
+            {
+                result.Add(new RepoDistSettings(null, current.SettingsCache, SettingLevel.Unknown));
+
+                current = current.LowerPriority;
+            }
+
+            return result.ToArray();
         }
     }
 }
