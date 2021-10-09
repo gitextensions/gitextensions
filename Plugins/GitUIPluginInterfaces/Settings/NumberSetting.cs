@@ -19,11 +19,65 @@ namespace GitUIPluginInterfaces
         public string Name { get; }
         public string Caption { get; }
         public T DefaultValue { get; }
-        public TextBox? CustomControl { get; set; }
+        public Control? CustomControl { get; set; }
 
         public ISettingControlBinding CreateControlBinding()
         {
-            return new TextBoxBinding(this, CustomControl);
+            if (typeof(T) == typeof(int))
+            {
+                return new NumericUpDownBinding(this as NumberSetting<int>, CustomControl as NumericUpDown);
+            }
+            else
+            {
+                return new TextBoxBinding(this, CustomControl as TextBox);
+            }
+        }
+
+        // TODO: honestly, NumericUpDownBinding might be a better choice than TextBox in general since its internal type is `decimal`.
+        //       We would just need to appropriately choose an increment based on NumberSetting's type.
+        private class NumericUpDownBinding : SettingControlBinding<NumberSetting<int>, NumericUpDown>
+        {
+            public NumericUpDownBinding(NumberSetting<int> setting, NumericUpDown? customControl)
+                : base(setting, customControl)
+            {
+            }
+
+            public override NumericUpDown CreateControl()
+            {
+                NumericUpDown upDown = new();
+
+                // TODO: if we need negative values, int.MinValue should be the Minimum.
+                //       Or, we can attempt to introduce a NumberSetting<int> constructor that accepts a min and max value parameter.
+                upDown.Minimum = 0;
+                upDown.Maximum = int.MaxValue;
+
+                Setting.CustomControl = upDown;
+                return Setting.CustomControl as NumericUpDown;
+            }
+
+            public override void LoadSetting(ISettingsSource settings, NumericUpDown control)
+            {
+                object? settingVal = settings.SettingLevel == SettingLevel.Effective
+                    ? Setting.ValueOrDefault(settings)
+                    : Setting[settings];
+
+                control.Value = (int)settingVal;
+            }
+
+            public override void SaveSetting(ISettingsSource settings, NumericUpDown control)
+            {
+                var controlValue = control.Value;
+
+                if (settings.SettingLevel == SettingLevel.Effective)
+                {
+                    if (Setting.ValueOrDefault(settings) == controlValue)
+                    {
+                        return;
+                    }
+                }
+
+                Setting[settings] = controlValue;
+            }
         }
 
         private class TextBoxBinding : SettingControlBinding<NumberSetting<T>, TextBox>
@@ -36,7 +90,7 @@ namespace GitUIPluginInterfaces
             public override TextBox CreateControl()
             {
                 Setting.CustomControl = new TextBox();
-                return Setting.CustomControl;
+                return Setting.CustomControl as TextBox;
             }
 
             public override void LoadSetting(ISettingsSource settings, TextBox control)
