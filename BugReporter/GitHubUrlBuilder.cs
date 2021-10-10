@@ -11,11 +11,11 @@ namespace BugReporter
 {
     public sealed class GitHubUrlBuilder
     {
-        private readonly IErrorReportMarkDownBodyBuilder _errorReportMarkDownBodyBuilder;
+        private readonly IErrorReportUrlBuilder _errorReportUrlBuilder;
 
-        public GitHubUrlBuilder(IErrorReportMarkDownBodyBuilder errorReportMarkDownBodyBuilder)
+        public GitHubUrlBuilder(IErrorReportUrlBuilder errorReportUrlBuilder)
         {
-            _errorReportMarkDownBodyBuilder = errorReportMarkDownBodyBuilder;
+            _errorReportUrlBuilder = errorReportUrlBuilder;
         }
 
         /// <summary>
@@ -50,9 +50,8 @@ namespace BugReporter
                 subject = subject.Substring(0, 66) + "...";
             }
 
-            string body = Uri.EscapeDataString(_errorReportMarkDownBodyBuilder.Build(exception, exceptionInfo, environmentInfo, additionalInfo));
-
-            return $"{validatedUri}{separator}title={Uri.EscapeDataString(subject)}&body={body}";
+            string urlEncodedError = _errorReportUrlBuilder.Build(exception, exceptionInfo, environmentInfo, additionalInfo);
+            return $"{validatedUri}{separator}title={Uri.EscapeDataString(subject)}&{urlEncodedError}";
         }
     }
 }
