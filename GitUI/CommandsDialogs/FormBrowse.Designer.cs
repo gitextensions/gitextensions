@@ -1764,8 +1764,8 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         internal SplitContainer MainSplitContainer;
-        private SplitContainer RightSplitContainer;
-        private SplitContainer RevisionsSplitContainer;
+        internal SplitContainer RightSplitContainer;
+        internal SplitContainer RevisionsSplitContainer;
 
         private FullBleedTabControl CommitInfoTabControl;
         private TabPage CommitInfoTabPage;
@@ -1779,8 +1779,8 @@ namespace GitUI.CommandsDialogs
         private CommitInfo.CommitInfo RevisionInfo;
         private GitUI.BranchTreePanel.RepoObjectsTree repoObjectsTree;
         private ToolTip FilterToolTip;
-        private RevisionFileTreeControl fileTree;
-        private RevisionDiffControl revisionDiff;
+        internal RevisionFileTreeControl fileTree;
+        internal RevisionDiffControl revisionDiff;
         private ToolStripContainer toolPanel;
         private RevisionGpgInfoControl revisionGpgInfo1;
 

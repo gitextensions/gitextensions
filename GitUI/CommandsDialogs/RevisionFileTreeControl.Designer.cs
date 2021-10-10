@@ -377,7 +377,7 @@
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer FileTreeSplitContainer;
+        internal System.Windows.Forms.SplitContainer FileTreeSplitContainer;
         private UserControls.NativeTreeView tvGitTree;
         private Editor.FileViewer FileText;
         private Blame.BlameControl BlameControl;

@@ -2184,6 +2184,13 @@ namespace GitUI.CommandsDialogs
 
             _splitterManager.RestoreSplitters();
             RefreshLayoutToggleButtonStates();
+
+            // Since #8849 and #8557 we have a geometry bug, which pushes the splitter up by 4px.
+            // Account for this shift. This is a workaround at best in the same way as for FormCommit.
+            if (!RevisionsSplitContainer.Panel2Collapsed)
+            {
+                RevisionsSplitContainer.SplitterDistance -= 4;
+            }
         }
 
         private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)

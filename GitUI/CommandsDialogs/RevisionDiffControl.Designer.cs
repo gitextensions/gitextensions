@@ -513,7 +513,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem diffWithRememberedDifftoolToolStripMenuItem;
         private ToolStripMenuItem rememberSecondRevDiffToolStripMenuItem;
         private ToolStripMenuItem rememberFirstRevDiffToolStripMenuItem;
-        private SplitContainer DiffSplitContainer;
+        internal SplitContainer DiffSplitContainer;
         private ContextMenuStrip DiffContextMenu;
         private FileStatusList DiffFiles;
         private Editor.FileViewer DiffText;
