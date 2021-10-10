@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
@@ -19,64 +18,11 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormResolveConflicts : GitModuleForm
     {
-        private sealed class SortableConflictDataList : BindingList<ConflictData>
+        private sealed class SortableConflictDataList : SortableBindingList<ConflictData>
         {
-            public void AddRange(IEnumerable<ConflictData> conflictDataItems)
+            static SortableConflictDataList()
             {
-                ConflictDataItems.AddRange(conflictDataItems);
-
-                // NOTE: adding items via wrapper's AddRange doesn't generate ListChanged event, so DataGridView doesn't update itself
-                // There are two solutions:
-                //  0. Add items one by one using direct this.Add method (without IList<T> wrapper).
-                //     Too many ListChanged events will be generated (one per item), too many updates for gridview. Bad performance.
-                //  1. Batch add items through Items wrapper's AddRange method.
-                //     One reset event will be generated, one batch update for gridview. Ugly but fast code.
-                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-            }
-
-            protected override bool SupportsSortingCore => true;
-
-            protected override void ApplySortCore(PropertyDescriptor propertyDescriptor, ListSortDirection direction)
-            {
-                ConflictDataItems.Sort(ConflictDataComparer.Create(propertyDescriptor, direction == ListSortDirection.Descending));
-            }
-
-            private List<ConflictData> ConflictDataItems => (List<ConflictData>)Items;
-
-            private static class ConflictDataComparer
-            {
-                private static readonly Dictionary<string, Comparison<ConflictData>> PropertyComparers = new Dictionary<string, Comparison<ConflictData>>();
-
-                static ConflictDataComparer()
-                {
-                    AddSortableProperty(conflictData => conflictData.Filename, (x, y) => string.Compare(x.Filename, y.Filename, StringComparison.Ordinal));
-                }
-
-                /// <summary>
-                /// Creates a comparer to sort lostObjects by specified property.
-                /// </summary>
-                /// <param name="propertyDescriptor">Property to sort by.</param>
-                /// <param name="isReversedComparing">Use reversed sorting order.</param>
-                public static Comparison<ConflictData> Create(PropertyDescriptor propertyDescriptor, bool isReversedComparing)
-                {
-                    if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out var comparer))
-                    {
-                        return isReversedComparing ? (x, y) => comparer(y, x) : comparer;
-                    }
-
-                    throw new NotSupportedException(string.Format("Custom sort by {0} property is not supported.", propertyDescriptor.Name));
-                }
-
-                /// <summary>
-                /// Adds custom property comparer.
-                /// </summary>
-                /// <typeparam name="T">Property type.</typeparam>
-                /// <param name="expr">Property to sort by.</param>
-                /// <param name="propertyComparer">Property values comparer.</param>
-                private static void AddSortableProperty<T>(Expression<Func<ConflictData, T>> expr, Comparison<ConflictData> propertyComparer)
-                {
-                    PropertyComparers[((MemberExpression)expr.Body).Member.Name] = propertyComparer;
-                }
+                AddSortableProperty(conflictData => conflictData.Filename, (x, y) => string.Compare(x.Filename, y.Filename, StringComparison.Ordinal));
             }
         }
 

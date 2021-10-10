@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,66 +17,13 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormReflog : GitModuleForm
     {
-        private sealed class SortableRefLineList : BindingList<RefLine>
+        private sealed class SortableRefLineList : SortableBindingList<RefLine>
         {
-            public void AddRange(IEnumerable<RefLine> refLines)
+            static SortableRefLineList()
             {
-                RefLines.AddRange(refLines);
-
-                // NOTE: adding items via wrapper's AddRange doesn't generate ListChanged event, so DataGridView doesn't update itself
-                // There are two solutions:
-                //  0. Add items one by one using direct this.Add method (without IList<T> wrapper).
-                //     Too many ListChanged events will be generated (one per item), too many updates for gridview. Bad performance.
-                //  1. Batch add items through Items wrapper's AddRange method.
-                //     One reset event will be generated, one batch update for gridview. Ugly but fast code.
-                OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-            }
-
-            protected override bool SupportsSortingCore => true;
-
-            protected override void ApplySortCore(PropertyDescriptor propertyDescriptor, ListSortDirection direction)
-            {
-                RefLines.Sort(RefLineComparer.Create(propertyDescriptor, direction == ListSortDirection.Descending));
-            }
-
-            private List<RefLine> RefLines => (List<RefLine>)Items;
-
-            private static class RefLineComparer
-            {
-                private static readonly Dictionary<string, Comparison<RefLine>> PropertyComparers = new Dictionary<string, Comparison<RefLine>>();
-
-                static RefLineComparer()
-                {
-                    AddSortableProperty(refLine => refLine.Sha, (x, y) => x.Sha.CompareTo(y.Sha));
-                    AddSortableProperty(refLine => refLine.Ref, (x, y) => string.Compare(x.Ref, y.Ref, StringComparison.Ordinal));
-                    AddSortableProperty(refLine => refLine.Action, (x, y) => string.Compare(x.Action, y.Action, StringComparison.CurrentCulture));
-                }
-
-                /// <summary>
-                /// Creates a comparer to sort lostObjects by specified property.
-                /// </summary>
-                /// <param name="propertyDescriptor">Property to sort by.</param>
-                /// <param name="isReversedComparing">Use reversed sorting order.</param>
-                public static Comparison<RefLine> Create(PropertyDescriptor propertyDescriptor, bool isReversedComparing)
-                {
-                    if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out var comparer))
-                    {
-                        return isReversedComparing ? (x, y) => comparer(y, x) : comparer;
-                    }
-
-                    throw new NotSupportedException(string.Format("Custom sort by {0} property is not supported.", propertyDescriptor.Name));
-                }
-
-                /// <summary>
-                /// Adds custom property comparer.
-                /// </summary>
-                /// <typeparam name="T">Property type.</typeparam>
-                /// <param name="expr">Property to sort by.</param>
-                /// <param name="propertyComparer">Property values comparer.</param>
-                private static void AddSortableProperty<T>(Expression<Func<RefLine, T>> expr, Comparison<RefLine> propertyComparer)
-                {
-                    PropertyComparers[((MemberExpression)expr.Body).Member.Name] = propertyComparer;
-                }
+                AddSortableProperty(refLine => refLine.Sha, (x, y) => x.Sha.CompareTo(y.Sha));
+                AddSortableProperty(refLine => refLine.Ref, (x, y) => string.Compare(x.Ref, y.Ref, StringComparison.Ordinal));
+                AddSortableProperty(refLine => refLine.Action, (x, y) => string.Compare(x.Action, y.Action, StringComparison.CurrentCulture));
             }
         }
 
