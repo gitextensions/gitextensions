@@ -17,6 +17,16 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormRemotes : GitModuleForm
     {
+        private sealed class SortableGitRefList : SortableBindingList<IGitRef>
+        {
+            static SortableGitRefList()
+            {
+                AddSortableProperty(gitRef => gitRef.LocalName, (x, y) => string.Compare(x.LocalName, y.LocalName, StringComparison.Ordinal));
+                AddSortableProperty(gitRef => gitRef.TrackingRemote, (x, y) => string.Compare(x.TrackingRemote, y.TrackingRemote, StringComparison.Ordinal));
+                AddSortableProperty(gitRef => gitRef.MergeWith, (x, y) => string.Compare(x.MergeWith, y.MergeWith, StringComparison.Ordinal));
+            }
+        }
+
         private readonly FormRemotesController _formRemotesController = new();
         private IConfigFileRemoteSettingsManager? _remotesManager;
         private ConfigFileRemote? _selectedRemote;
@@ -279,6 +289,8 @@ Inactive remote is completely invisible to git.");
         private void InitialiseTabDefaultPullBehaviors(string? preselectLocal = null)
         {
             var heads = Module.GetRefs(RefsFilter.Heads).OrderBy(r => r.LocalName).ToList();
+            var headsList = new SortableGitRefList();
+            headsList.AddRange(heads);
 
             RemoteRepositoryCombo.Sorted = false;
             RemoteRepositoryCombo.DataSource = new[] { new ConfigFileRemote() }.Union(UserGitRemotes).ToList();
@@ -287,7 +299,7 @@ Inactive remote is completely invisible to git.");
             RemoteBranches.AutoGenerateColumns = false;
             RemoteBranches.SelectionChanged -= RemoteBranchesSelectionChanged;
             RemoteBranches.DataError += RemoteBranchesDataError;
-            RemoteBranches.DataSource = heads;
+            RemoteBranches.DataSource = headsList;
             RemoteBranches.ClearSelection();
             RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
             var preselectLocalRow = RemoteBranches.Rows.Cast<DataGridViewRow>().

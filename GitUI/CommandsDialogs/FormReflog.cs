@@ -17,6 +17,16 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormReflog : GitModuleForm
     {
+        private sealed class SortableRefLineList : SortableBindingList<RefLine>
+        {
+            static SortableRefLineList()
+            {
+                AddSortableProperty(refLine => refLine.Sha, (x, y) => x.Sha.CompareTo(y.Sha));
+                AddSortableProperty(refLine => refLine.Ref, (x, y) => string.Compare(x.Ref, y.Ref, StringComparison.Ordinal));
+                AddSortableProperty(refLine => refLine.Action, (x, y) => string.Compare(x.Action, y.Action, StringComparison.CurrentCulture));
+            }
+        }
+
         private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new("You have changes in your working directory that could be lost.\n\nDo you want to continue?");
         private readonly TranslationString _continueResetCurrentBranchCaptionText = new("Changes not committed...");
 
@@ -81,7 +91,9 @@ namespace GitUI.CommandsDialogs
                 var refLines = ConvertReflogOutput().ToList();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 _lastHitRowIndex = 0;
-                gridReflog.DataSource = refLines;
+                var refLinesList = new SortableRefLineList();
+                refLinesList.AddRange(refLines);
+                gridReflog.DataSource = refLinesList;
 
                 IEnumerable<RefLine> ConvertReflogOutput()
                     => from line in output.LazySplit('\n')

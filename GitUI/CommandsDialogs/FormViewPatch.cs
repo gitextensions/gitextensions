@@ -11,6 +11,16 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormViewPatch : GitModuleForm
     {
+        private sealed class SortablePatchesList : SortableBindingList<Patch>
+        {
+            static SortablePatchesList()
+            {
+                AddSortableProperty(patch => patch.FileNameA, (x, y) => string.Compare(x.FileNameA, y.FileNameA, StringComparison.Ordinal));
+                AddSortableProperty(patch => patch.ChangeType, (x, y) => string.Compare(x.ChangeType.ToString(), y.ChangeType.ToString(), StringComparison.Ordinal));
+                AddSortableProperty(patch => patch.FileType, (x, y) => string.Compare(x.FileType.ToString(), y.FileType.ToString(), StringComparison.Ordinal));
+            }
+        }
+
         private readonly TranslationString _patchFileFilterString = new("Patch file (*.Patch)");
         private readonly TranslationString _patchFileFilterTitle = new("Select patch file");
 
@@ -85,8 +95,9 @@ namespace GitUI.CommandsDialogs
             {
                 var text = System.IO.File.ReadAllText(PatchFileNameEdit.Text, GitModule.LosslessEncoding);
                 var patches = PatchProcessor.CreatePatchesFromString(text, new Lazy<Encoding>(() => Module.FilesEncoding)).ToList();
-
-                GridChangedFiles.DataSource = patches;
+                var patchesList = new SortablePatchesList();
+                patchesList.AddRange(patches);
+                GridChangedFiles.DataSource = patchesList;
             }
             catch
             {

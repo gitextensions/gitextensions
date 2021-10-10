@@ -18,6 +18,14 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormResolveConflicts : GitModuleForm
     {
+        private sealed class SortableConflictDataList : SortableBindingList<ConflictData>
+        {
+            static SortableConflictDataList()
+            {
+                AddSortableProperty(conflictData => conflictData.Filename, (x, y) => string.Compare(x.Filename, y.Filename, StringComparison.Ordinal));
+            }
+        }
+
         #region Translation
         private readonly TranslationString _uskUseCustomMergeScript = new("There is a custom merge script ({0}) for this file type." + Environment.NewLine + Environment.NewLine + "Do you want to use this custom merge script?");
         private readonly TranslationString _uskUseCustomMergeScriptCaption = new("Custom merge script");
@@ -191,7 +199,9 @@ namespace GitUI.CommandsDialogs
                     isLastRow = ConflictedFiles.Rows.Count - 1 == oldSelectedRow;
                 }
 
-                ConflictedFiles.DataSource = ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictsAsync());
+                SortableConflictDataList conflictDataList = new SortableConflictDataList();
+                conflictDataList.AddRange(ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictsAsync()));
+                ConflictedFiles.DataSource = conflictDataList;
                 ConflictedFiles.Columns[0].DataPropertyName = nameof(ConflictData.Filename);
 
                 // if the last row was previously selected, select the last row again
