@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs
                 string format = GetSelectedOutputFormat() == OutputFormat.Zip ? "zip" : "tar";
 
                 var arguments = string.Format("archive --format={0} {1} --output \"{2}\" {3}", format, revision, saveFileDialog.FileName, GetPathArgumentFromGui());
-                FormProcess.ShowDialog(this, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
                 Close();
             }
         }

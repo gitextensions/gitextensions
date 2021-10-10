@@ -1359,7 +1359,7 @@ namespace GitUI.CommandsDialogs
                         toolStripGpgKeyTextBox.Text,
                         Staged.IsEmpty);
 
-                    success = FormProcess.ShowDialog(this, process: null, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                    success = FormProcess.ShowDialog(this, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
 
                     UICommands.RepoChangedNotifier.Notify();
 
@@ -2272,7 +2272,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            FormProcess.ShowDialog(this, process: null, arguments: "clean -f", Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(this, arguments: "clean -f", Module.WorkingDir, input: null, useDialogSettings: true);
             Initialize();
         }
 
@@ -3101,7 +3101,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
-                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(item.Name), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(item.Name), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             Initialize();
@@ -3196,7 +3196,7 @@ namespace GitUI.CommandsDialogs
                     ToolStripMenuItem settingsItem = new(_commitMessageSettings.Text, Images.Settings);
                     settingsItem.Click += delegate
                     {
-                        using (var frm = new FormCommitTemplateSettings())
+                        using (FormCommitTemplateSettings frm = new())
                         {
                             frm.ShowDialog(this);
                         }

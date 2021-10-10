@@ -506,6 +506,10 @@ namespace GitUI.BranchTreePanel
             {
             }
 
+            internal virtual void OnDelete()
+            {
+            }
+
             public static Node GetNode(TreeNode treeNode)
             {
                 return (Node)treeNode.Tag;

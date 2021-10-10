@@ -112,7 +112,7 @@ namespace GitUI.Theming
             switch (stateid)
             {
                 case State.ListItem.LISS_SELECTEDNOTFOCUS:
-                    using (var brush = new SolidBrush(Color.FromArgb(64, SystemColors.HotTrack)))
+                    using (SolidBrush brush = new(Color.FromArgb(64, SystemColors.HotTrack)))
                     {
                         ctx.Graphics.FillRectangle(brush, prect);
                         return Handled;

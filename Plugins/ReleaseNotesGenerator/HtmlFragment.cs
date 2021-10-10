@@ -51,12 +51,11 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
             int startHtml = 0;
             int startFragment = 0;
 
-            Match m;
-
-            var r = new Regex(
+            Regex r = new(
                 "([a-zA-Z]+):(.+?)[\r\n]",
                 RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+            Match m;
             for (m = r.Match(rawClipboardText); m.Success; m = m.NextMatch())
             {
                 string key = m.Groups[1].Value.ToLower();

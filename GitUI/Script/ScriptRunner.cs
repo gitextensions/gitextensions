@@ -148,7 +148,7 @@ namespace GitUI.Script
 
             if (!scriptInfo.RunInBackground)
             {
-                bool success = FormProcess.ShowDialog(owner, command, argument, module.WorkingDir, null, true);
+                bool success = FormProcess.ShowDialog(owner, argument, module.WorkingDir, null, true, process: command);
                 if (!success)
                 {
                     return false;

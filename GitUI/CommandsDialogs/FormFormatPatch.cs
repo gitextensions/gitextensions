@@ -225,7 +225,7 @@ namespace GitUI.CommandsDialogs
                     EnableSsl = AppSettings.SmtpUseSsl
                 };
 
-                using (var credentials = new SmtpCredentials())
+                using (SmtpCredentials credentials = new())
                 {
                     credentials.login.Text = from;
 

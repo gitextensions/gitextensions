@@ -11,7 +11,7 @@ namespace GitUI.BranchTreePanel
     public partial class RepoObjectsTree
     {
         [DebuggerDisplay("(Remote) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
-        private sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICanDelete, ICanRename
+        private sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICanDelete
         {
             public RemoteBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool visible)
                 : base(tree, objectId, fullPath, visible, nameof(Images.BranchRemote), nameof(Images.BranchRemoteMerged))
@@ -48,6 +48,11 @@ namespace GitUI.BranchTreePanel
                 return new RemoteBranchInfo(remote, branch);
             }
 
+            internal override void OnDelete()
+            {
+                Delete();
+            }
+
             public bool CreateBranch()
             {
                 return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, FullPath);
@@ -57,11 +62,6 @@ namespace GitUI.BranchTreePanel
             {
                 var remoteBranchInfo = GetRemoteBranchInfo();
                 return UICommands.StartDeleteRemoteBranchDialog(TreeViewNode.TreeView, remoteBranchInfo.Remote + '/' + remoteBranchInfo.BranchName);
-            }
-
-            public bool Rename()
-            {
-                return UICommands.StartRenameDialog(TreeViewNode.TreeView, FullPath);
             }
 
             public bool Checkout()

@@ -41,6 +41,11 @@ namespace GitUI.BranchTreePanel
                 CreateBranch();
             }
 
+            internal override void OnDelete()
+            {
+                Delete();
+            }
+
             public bool CreateBranch()
             {
                 return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, ObjectId);

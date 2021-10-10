@@ -257,7 +257,7 @@ namespace GitUI.CommandsDialogs
                                                           CentralRepository.Checked,
                                                           cbIntializeAllSubmodules.Checked,
                                                           branch, depth, isSingleBranch, cbLfs.Checked);
-                using (var fromProcess = new FormRemoteProcess(UICommands, AppSettings.GitCommand, cloneCmd))
+                using (FormRemoteProcess fromProcess = new(UICommands, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(sourceRepo);
                     fromProcess.ShowDialog(this);
@@ -286,7 +286,7 @@ namespace GitUI.CommandsDialogs
                 {
                     Hide();
                     GitUICommands uiCommands = new(dirTo);
-                    uiCommands.StartBrowseDialog();
+                    uiCommands.StartBrowseDialog(owner: null);
                 }
                 else if (ShowInTaskbar == false && _gitModuleChanged is not null &&
                     AskIfNewRepositoryShouldBeOpened(dirTo))

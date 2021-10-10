@@ -462,7 +462,7 @@ namespace GitUI.Script
                     break;
 
                 case "UserInput":
-                    using (var prompt = new SimplePrompt())
+                    using (SimplePrompt prompt = new())
                     {
                         prompt.ShowDialog();
                         newString = prompt.UserInput;

@@ -39,6 +39,7 @@ Send report anyway?");
         private static readonly GitHubUrlBuilder UrlBuilder;
         private SerializableException? _lastException;
         private Report? _lastReport;
+        private string _exceptionInfo;
         private string? _environmentInfo;
 
         static BugReportForm()
@@ -78,10 +79,11 @@ Send report anyway?");
             mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
         }
 
-        public DialogResult ShowDialog(IWin32Window? owner, SerializableException exception, string environmentInfo, bool canIgnore, bool showIgnore, bool focusDetails)
+        public DialogResult ShowDialog(IWin32Window? owner, SerializableException exception, string exceptionInfo, string environmentInfo, bool canIgnore, bool showIgnore, bool focusDetails)
         {
             _lastException = exception;
             _lastReport = new Report(_lastException);
+            _exceptionInfo = exceptionInfo;
             _environmentInfo = environmentInfo;
 
             Validates.NotNull(_lastReport.GeneralInfo);
@@ -158,8 +160,8 @@ Send report anyway?");
 
             Validates.NotNull(_lastException);
 
-            string? url = UrlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", _lastException, _environmentInfo, descriptionTextBox.Text);
-            new Executable(url!).Start(useShellExecute: true);
+            string? url = UrlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", _lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
+            new Executable(url!).Start(useShellExecute: true, throwOnErrorExit: false);
 
             DialogResult = DialogResult.Abort;
             Close();
@@ -169,7 +171,7 @@ Send report anyway?");
         {
             Validates.NotNull(_lastException);
 
-            var report = ErrorReportBodyBuilder.Build(_lastException, _environmentInfo, descriptionTextBox.Text);
+            var report = ErrorReportBodyBuilder.Build(_lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
             if (string.IsNullOrWhiteSpace(report))
             {
                 return;

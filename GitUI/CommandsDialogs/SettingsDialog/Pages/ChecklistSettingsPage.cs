@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void translationConfig_Click(object sender, EventArgs e)
         {
-            using (var frm = new FormChooseTranslation())
+            using (FormChooseTranslation frm = new())
             {
                 frm.ShowDialog(this); // will set Settings.Translation
             }

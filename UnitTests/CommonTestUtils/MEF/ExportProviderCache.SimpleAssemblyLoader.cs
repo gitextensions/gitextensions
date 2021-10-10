@@ -19,7 +19,7 @@ namespace CommonTestUtils.MEF
 
             public Assembly LoadAssembly(string assemblyFullName, string codeBasePath)
             {
-                var assemblyName = new AssemblyName(assemblyFullName);
+                AssemblyName assemblyName = new(assemblyFullName);
                 if (!string.IsNullOrEmpty(codeBasePath))
                 {
                     assemblyName.CodeBase = codeBasePath;

@@ -143,7 +143,7 @@ namespace GitUI.Theming
             switch (stateid)
             {
                 case State.Item.TREIS_SELECTEDNOTFOCUS:
-                    using (var brush = new SolidBrush(Color.FromArgb(64, SystemColors.HotTrack)))
+                    using (SolidBrush brush = new(Color.FromArgb(64, SystemColors.HotTrack)))
                     {
                         ctx.Graphics.FillRectangle(brush, prect);
                         return Handled;
@@ -174,7 +174,7 @@ namespace GitUI.Theming
             };
 
             using (ctx.HighQuality())
-            using (var forePen = new Pen(foreColor, DpiUtil.Scale(2)))
+            using (Pen forePen = new(foreColor, DpiUtil.Scale(2)))
             {
                 ctx.Graphics.DrawLines(forePen, arrowPoints);
             }
@@ -200,7 +200,7 @@ namespace GitUI.Theming
             };
 
             using (ctx.HighQuality())
-            using (var forePen = new Pen(foreColor, DpiUtil.Scale(2)))
+            using (Pen forePen = new(foreColor, DpiUtil.Scale(2)))
             {
                 ctx.Graphics.DrawLines(forePen, arrowPoints);
             }

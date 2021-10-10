@@ -64,7 +64,7 @@ namespace GitUI.Theming
                 case State.Push.PBS_DEFAULTED:
                 case State.Push.PBS_DEFAULTED_ANIMATING:
                     ctx.Graphics.FillRectangle(SystemBrushes.Control, prect);
-                    using (var pen = new Pen(SystemColors.HotTrack, 2))
+                    using (Pen pen = new(SystemColors.HotTrack, 2))
                     {
                         border.Inflate(-1, -1);
                         ctx.Graphics.DrawRectangle(pen, border);

@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 string command = GitCommandHelpers.CheckoutCmd(selectedObjectId.ToString(), Force.Checked ? LocalChangesAction.Reset : 0);
-                success = FormProcess.ShowDialog(this, process: null, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+                success = FormProcess.ShowDialog(this, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (success)
                 {
                     if (selectedObjectId != checkedOutObjectId)

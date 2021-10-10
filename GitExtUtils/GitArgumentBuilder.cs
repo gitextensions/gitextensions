@@ -27,7 +27,7 @@ namespace GitExtUtils
     /// </remarks>
     /// <example>
     /// <code>
-    /// var args = new GitArgumentBuilder("commit")
+    /// GitArgumentBuilder args = new("commit")
     /// {
     ///     "-S",                       // added unconditionally
     ///     { isAmend, "--amend" },     // adds the option only if isAmend == true

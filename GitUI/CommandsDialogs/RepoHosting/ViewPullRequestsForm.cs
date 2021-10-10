@@ -441,7 +441,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}",
                 _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, _currentPullRequestInfo.FetchBranch);
-            var success = FormProcess.ShowDialog(this, process: AppSettings.GitCommand, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+            var success = FormProcess.ShowDialog(this, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
             if (!success)
             {
                 return;
@@ -491,7 +491,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
 
                 var cmd = string.Format("fetch --no-tags --progress {0} {1}:{0}/{1}", remoteName, remoteRef);
-                var success = FormProcess.ShowDialog(this, process: AppSettings.GitCommand, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                var success = FormProcess.ShowDialog(this, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (!success)
                 {
                     return;
@@ -500,7 +500,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 UICommands.RepoChangedNotifier.Notify();
 
                 cmd = string.Format("checkout {0}/{1}", remoteName, remoteRef);
-                success = FormProcess.ShowDialog(this, process: AppSettings.GitCommand, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                success = FormProcess.ShowDialog(this, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (success)
                 {
                     UICommands.RepoChangedNotifier.Notify();
