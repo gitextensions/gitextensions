@@ -18,28 +18,51 @@ typedef HRESULT (WINAPI *FN_EndBufferedPaint) (HPAINTBUFFER hBufferedPaint, BOOL
 /////////////////////////////////////////////////////////////////////////////
 // CGitExtensionsShellEx
 
-// don't change indexes because of FormSettings
-enum GitExCommands
+// don't change indices; defined by GitExtension's FormSettings
+enum GitExtCommandIndexInPreferenceStrings
 {
-    gcAddFiles,
-    gcApplyPatch,
-    gcBrowse,
-    gcCreateBranch,
-    gcCheckoutBranch,
-    gcCheckoutRevision,
-    gcClone,
-    gcCommit,
-    gcCreateRepository,
-    gcDiffTool,
-    gcFileHistory,
-    gcPull,
-    gcPush,
-    gcResetFileChanges,
-    gcRevert,
-    gcSettings,
-    gcStash,
-    gcViewDiff,
-    gcMaxValue
+    eAddFiles = 0,
+    eApplyPatch = 1,
+    eBrowse = 2,
+    eCreateBranch = 3,
+    eCheckoutBranch = 4,
+    eCheckoutRevision = 5,
+    eClone = 6,
+    eCommit = 7,
+    eCreateRepository = 8,
+    eDiffTool = 9,
+    eFileHistory = 10,
+    ePull = 11,
+    ePush = 12,
+    eResetFileChanges = 13,
+    // TODO: why is there no revert command in the context menu?
+    //       Seems like "Reset file changes..." used to call "revert" but
+    //       was refactored by 60a849e14e90021c04576795b51514bfb620bde8 to
+    //       use "reset".
+    eRevert = 14,
+    eSettings = 15,
+    eStash = 16,
+    eViewDiff = 17,
+    eMaxValue = 18
+};
+
+struct GitExtCommand {
+    const LPTSTR commandLineArg;
+    const LPTSTR menuItemString;
+    const GitExtCommandIndexInPreferenceStrings prefIndex;
+    const int iconId;
+    const bool validGitDirOnlyCommand;
+    const bool folderOnlyCommand;
+    const bool requiresSeparatorInSubmenu;
+
+    GitExtCommand(const LPTSTR commandLineArg, const LPTSTR menuItemString,
+                  GitExtCommandIndexInPreferenceStrings prefIndex, int iconId,
+                  bool validGitDirOnlyCommand, bool folderOnlyCommand = false,
+                  bool requiresSeparatorInSubmenu = false)
+        : commandLineArg(commandLineArg), menuItemString(menuItemString),
+          validGitDirOnlyCommand(validGitDirOnlyCommand), prefIndex(prefIndex),
+          iconId(iconId), folderOnlyCommand(folderOnlyCommand), requiresSeparatorInSubmenu(requiresSeparatorInSubmenu)
+    {}
 };
 
 class ATL_NO_VTABLE CGitExtensionsShellEx : 
@@ -84,7 +107,7 @@ private:
     TCHAR m_szFile[MAX_PATH];
     std::map<UINT_PTR, int> myIDMap;
     std::map<UINT, HBITMAP> bitmaps;
-    std::map<int, int> commandsId;
+    std::map<int, const GitExtCommand&> commandIdToGitExtCommand;
 
     HMODULE hUxTheme;
     FN_BufferedPaintInit pfnBufferedPaintInit;
