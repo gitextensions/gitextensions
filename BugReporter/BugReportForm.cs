@@ -35,7 +35,7 @@ Send report anyway?");
         private readonly TranslationString _toolTipQuit = new("Quit application without reporting the issue");
         private readonly TranslationString _noReproStepsSuppliedErrorMessage = new(@"Please provide as much as information as possible to help the developers solve this issue.");
 
-        private static readonly IErrorReportMarkDownBodyBuilder ErrorReportBodyBuilder;
+        private static readonly IErrorReportUrlBuilder ErrorReportBodyBuilder;
         private static readonly GitHubUrlBuilder UrlBuilder;
         private SerializableException? _lastException;
         private Report? _lastReport;
@@ -44,7 +44,7 @@ Send report anyway?");
 
         static BugReportForm()
         {
-            ErrorReportBodyBuilder = new ErrorReportMarkDownBodyBuilder();
+            ErrorReportBodyBuilder = new ErrorReportUrlBuilder();
             UrlBuilder = new GitHubUrlBuilder(ErrorReportBodyBuilder);
         }
 
