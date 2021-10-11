@@ -475,34 +475,15 @@ namespace GitUI.UserControls.RevisionGrid
 
                 try
                 {
-                    if (_backgroundQueue.IsEmpty)
-                    {
-                        if (_backgroundQueue.IsCompleted)
-                        {
-                            // Normal completion of background work
-                            return;
-                        }
-
-                        continue;
-                    }
-
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        // Normal cancellation of background queue during clear
-                        return;
-                    }
-
-                    CancellationToken timeoutToken = CancellationToken.None;
                     Func<CancellationToken, Task> backgroundOperation;
                     CancellationToken backgroundOperationCancellation;
-                    try
-                    {
-                        using CancellationTokenSource timeoutTokenSource = new(TimeSpan.FromMilliseconds(200));
-                        using var linkedCancellation = timeoutTokenSource.Token.CombineWith(cancellationToken);
-                        timeoutToken = timeoutTokenSource.Token;
-                        (backgroundOperation, backgroundOperationCancellation) = await _backgroundQueue.DequeueAsync(linkedCancellation.Token);
-                    }
-                    catch (OperationCanceledException) when (timeoutToken.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+                    using CancellationTokenSource timeoutTokenSource = new(TimeSpan.FromMilliseconds(200));
+                    using var linkedCancellation = timeoutTokenSource.Token.CombineWith(cancellationToken);
+                    CancellationToken timeoutToken = timeoutTokenSource.Token;
+                    var dequeueTask = _backgroundQueue.DequeueAsync(linkedCancellation.Token);
+                    await dequeueTask.ContinueWith(_ => { }, TaskScheduler.Default); // Silence any exceptions at this point
+
+                    if (!dequeueTask.IsCompletedSuccessfully && timeoutToken.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
                     {
                         // No work was received from the queue within the timeout.
                         if (RowCount < _revisionGraph.Count)
@@ -512,6 +493,8 @@ namespace GitUI.UserControls.RevisionGrid
 
                         continue;
                     }
+
+                    (backgroundOperation, backgroundOperationCancellation) = await dequeueTask;
 
                     if (backgroundOperationCancellation.IsCancellationRequested)
                     {
