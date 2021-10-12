@@ -9,17 +9,17 @@ namespace GitUI.BranchTreePanel.ContextMenu
         // the name of the members act as keys for the generated entries in the translation files (xlf)
 
         /// <see cref="IGitRefActions"/>
-        internal readonly TranslationString Checkout = new("Chec&kout");
-        internal readonly TranslationString Merge = new("&Merge");
-        internal readonly TranslationString Rebase = new("&Rebase");
+        internal readonly TranslationString Checkout = new("Chec&kout...");
+        internal readonly TranslationString Merge = new("&Merge...");
+        internal readonly TranslationString Rebase = new("&Rebase...");
         internal readonly TranslationString CreateBranch = new("Create &Branch...");
-        internal readonly TranslationString Reset = new("Re&set");
+        internal readonly TranslationString Reset = new("Re&set...");
 
         /// <see cref="ICanRename"/>
-        internal readonly TranslationString Rename = new("R&ename");
+        internal readonly TranslationString Rename = new("R&ename...");
 
         /// <see cref="ICanDelete"/>
-        internal readonly TranslationString Delete = new("&Delete");
+        internal readonly TranslationString Delete = new("&Delete...");
 
         internal Dictionary<MenuItemKey, TranslationString> Tooltips { get; } = new Dictionary<MenuItemKey, TranslationString>();
     }

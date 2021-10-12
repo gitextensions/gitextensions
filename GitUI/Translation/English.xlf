@@ -8621,7 +8621,7 @@ help</source>
   <file datatype="plaintext" original="MenuItemsStrings" source-language="en">
     <body>
       <trans-unit id="Checkout.Text">
-        <source>Chec&amp;kout</source>
+        <source>Chec&amp;kout...</source>
         <target />
       </trans-unit>
       <trans-unit id="CreateBranch.Text">
@@ -8629,23 +8629,23 @@ help</source>
         <target />
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>&amp;Delete</source>
+        <source>&amp;Delete...</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
-        <source>&amp;Merge</source>
+        <source>&amp;Merge...</source>
         <target />
       </trans-unit>
       <trans-unit id="Rebase.Text">
-        <source>&amp;Rebase</source>
+        <source>&amp;Rebase...</source>
         <target />
       </trans-unit>
       <trans-unit id="Rename.Text">
-        <source>R&amp;ename</source>
+        <source>R&amp;ename...</source>
         <target />
       </trans-unit>
       <trans-unit id="Reset.Text">
-        <source>Re&amp;set</source>
+        <source>Re&amp;set...</source>
         <target />
       </trans-unit>
     </body>
