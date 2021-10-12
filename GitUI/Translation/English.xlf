@@ -3255,7 +3255,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="undoLastCommitToolStripMenuItem.Text">
-        <source>Undo last commit</source>
+        <source>Undo last commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="updateAllSubmodulesToolStripMenuItem.Text">

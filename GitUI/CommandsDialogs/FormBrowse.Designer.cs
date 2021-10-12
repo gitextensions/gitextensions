@@ -1197,7 +1197,7 @@ namespace GitUI.CommandsDialogs
             this.undoLastCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetFileTo;
             this.undoLastCommitToolStripMenuItem.Name = "undoLastCommitToolStripMenuItem";
             this.undoLastCommitToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.undoLastCommitToolStripMenuItem.Text = "Undo last commit";
+            this.undoLastCommitToolStripMenuItem.Text = "Undo last commit...";
             this.undoLastCommitToolStripMenuItem.Click += new System.EventHandler(this.undoLastCommitToolStripMenuItem_Click);
             // 
             // pullToolStripMenuItem
