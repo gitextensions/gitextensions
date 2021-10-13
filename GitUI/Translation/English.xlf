@@ -5789,7 +5789,7 @@ ancestor tree.</source>
         <target />
       </trans-unit>
       <trans-unit id="AddRemote.Text">
-        <source>&amp;Manage remotes</source>
+        <source>Mana&amp;ge remotes</source>
         <target />
       </trans-unit>
       <trans-unit id="AllTags.Text">
@@ -5821,7 +5821,7 @@ ancestor tree.</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
-        <source>Mer&amp;ge remote branch into current branch</source>
+        <source>&amp;Merge remote branch into current branch</source>
         <target />
       </trans-unit>
       <trans-unit id="Mergetool.Text">
