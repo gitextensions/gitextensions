@@ -2247,46 +2247,73 @@ namespace GitUI.CommandsDialogs
 
         internal enum Command
         {
-            GitBash = 0,
-            GitGui = 1,
-            GitGitK = 2,
+            // Focus or visuals
             FocusRevisionGrid = 3,
             FocusCommitInfo = 4,
             FocusDiff = 5,
             FocusFileTree = 6,
-            Commit = 7,
-            AddNotes = 8,
-            FindFileInSelectedCommit = 9,
-            CheckoutBranch = 10,
-            QuickFetch = 11,
-            QuickPull = 12,
-            QuickPush = 13,
-
-            /* deprecated: RotateApplicationIcon = 14, */
-            CloseRepository = 15,
-            Stash = 16,
-            StashPop = 17,
             FocusFilter = 18,
-            OpenWithDifftool = 19,
-            OpenSettings = 20,
             ToggleBranchTreePanel = 21,
-            EditFile = 22,
-            OpenAsTempFile = 23,
-            OpenAsTempFileWith = 24,
             FocusBranchTree = 25,
             FocusGpgInfo = 26,
-            GoToSuperproject = 27,
-            GoToSubmodule = 28,
             FocusGitConsole = 29,
             FocusBuildServerStatus = 30,
             FocusNextTab = 31,
             FocusPrevTab = 32,
+
+            // START menu
+
+            // DASHBOARD menu
+
+            // REPOSITORY menu
+            CloseRepository = 15,
+
+            // COMMANDS menu
+            Commit = 7,
+            CheckoutBranch = 10,
+            PullOrFetch = 39,
+            Push = 40,
+            CreateBranch = 41,
+            MergeBranches = 42,
+            CreateTag = 43,
+            Rebase = 44,
+
+            // PLUGINS menu
+
+            // TOOLS menu
+            GitBash = 0,
+            GitGui = 1,
+            GitGitK = 2,
+            OpenSettings = 20,
+
+            // HELP menu
+
+            // Toolbar
+            AddNotes = 8,
+            FindFileInSelectedCommit = 9,
+            QuickFetch = 11,
+            QuickPull = 12,
+            QuickPush = 13,
+            Stash = 16,
+            StashPop = 17,
+            GoToSuperproject = 27,
+            GoToSubmodule = 28,
+
+            // Diff or File Tree tab
+            OpenWithDifftool = 19,
+            EditFile = 22,
+            OpenAsTempFile = 23,
+            OpenAsTempFileWith = 24,
             OpenWithDifftoolFirstToLocal = 33,
             OpenWithDifftoolSelectedToLocal = 34,
+
+            // Revision grid
             OpenCommitsWithDifftool = 35,
             ToggleBetweenArtificialAndHeadCommits = 36,
             GoToChild = 37,
             GoToParent = 38
+
+            /* deprecated: RotateApplicationIcon = 14, */
         }
 
         internal Keys GetShortcutKeys(Command cmd)
@@ -2378,6 +2405,12 @@ namespace GitUI.CommandsDialogs
                 case Command.ToggleBetweenArtificialAndHeadCommits: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.ToggleBetweenArtificialAndHeadCommits); break;
                 case Command.GoToChild: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToChild)); break;
                 case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
+                case Command.PullOrFetch: PullToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.Push: PushToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.CreateBranch: CreateBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.MergeBranches: MergeBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.CreateTag: TagToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.Rebase: RebaseToolStripMenuItemClick(this, EventArgs.Empty); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
