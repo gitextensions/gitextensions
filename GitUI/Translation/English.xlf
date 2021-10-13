@@ -3255,7 +3255,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="undoLastCommitToolStripMenuItem.Text">
-        <source>Undo last commit</source>
+        <source>Undo last commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="updateAllSubmodulesToolStripMenuItem.Text">
@@ -8621,31 +8621,31 @@ help</source>
   <file datatype="plaintext" original="MenuItemsStrings" source-language="en">
     <body>
       <trans-unit id="Checkout.Text">
-        <source>Chec&amp;kout</source>
+        <source>Chec&amp;kout branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="CreateBranch.Text">
-        <source>Create &amp;Branch...</source>
+        <source>Create &amp;branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>&amp;Delete</source>
+        <source>&amp;Delete branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
-        <source>&amp;Merge</source>
+        <source>&amp;Merge branches...</source>
         <target />
       </trans-unit>
       <trans-unit id="Rebase.Text">
-        <source>&amp;Rebase</source>
+        <source>&amp;Rebase...</source>
         <target />
       </trans-unit>
       <trans-unit id="Rename.Text">
-        <source>R&amp;ename</source>
+        <source>R&amp;ename branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="Reset.Text">
-        <source>Re&amp;set</source>
+        <source>Re&amp;set current branch to here...</source>
         <target />
       </trans-unit>
     </body>

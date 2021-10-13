@@ -166,3 +166,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/09/25, Kableado, Valeriano Alfonso Rodriguez, valen.alfonso(at)protonmail.com
 2021/10/03, Greybird, Arnaud Tamaillon, arnaud.dev(at)gmail.com
 2021/10/04, Timwi, Timwi Heizmann, github(at)timwi.de
+2021/10/12, simonmckenzie, Simon McKenzie, simonmckenzie(at)alumni.unimelb.edu.au
