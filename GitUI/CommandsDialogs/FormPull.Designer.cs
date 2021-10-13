@@ -291,7 +291,7 @@
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(150, 25);
             this.AddRemote.TabIndex = 7;
-            this.AddRemote.Text = "&Manage remotes";
+            this.AddRemote.Text = "Mana&ge remotes";
             this.AddRemote.UseVisualStyleBackColor = true;
             this.AddRemote.Click += new System.EventHandler(this.AddRemoteClick);
             // 
@@ -358,7 +358,7 @@
             this.Merge.Size = new System.Drawing.Size(261, 21);
             this.Merge.TabIndex = 17;
             this.Merge.TabStop = true;
-            this.Merge.Text = "Mer&ge remote branch into current branch";
+            this.Merge.Text = "&Merge remote branch into current branch";
             this.Merge.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.Merge.UseVisualStyleBackColor = true;
             this.Merge.CheckedChanged += new System.EventHandler(this.MergeCheckedChanged);

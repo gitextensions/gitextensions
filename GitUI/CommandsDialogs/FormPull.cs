@@ -31,10 +31,10 @@ namespace GitUI.CommandsDialogs
         // D Prune remote branches and tags
         // E Rebase
         // F Do not merge, only fetch
-        // G Merge
+        // G Manage remotes
         // H Auto stash
         // L Local branch
-        // M Manage remotes
+        // M Merge
         // N Fetch no tag
         // O Remote branch
         // P Prune remote branches
