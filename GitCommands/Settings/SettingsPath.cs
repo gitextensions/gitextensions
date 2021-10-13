@@ -1,5 +1,4 @@
-﻿using System;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace GitCommands.Settings
@@ -20,13 +19,13 @@ namespace GitCommands.Settings
             return $"{_pathName}.{subPath}";
         }
 
-        public override string? GetValue(string name)
+        public virtual string? GetValue(string name)
         {
             Validates.NotNull(_parent);
             return _parent.GetValue(PathFor(name));
         }
 
-        public override void SetValue(string name, string? value)
+        public virtual void SetValue(string name, string? value)
         {
             Validates.NotNull(_parent);
             _parent.SetValue(PathFor(name), value);

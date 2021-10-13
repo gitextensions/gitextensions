@@ -5,17 +5,20 @@ using System.Globalization;
 
 namespace GitUIPluginInterfaces
 {
-    public abstract class ISettingsSource
+    public interface ISettingsSource
     {
-        public virtual SettingLevel SettingLevel { get; set; } = SettingLevel.Unknown;
+        SettingLevel SettingLevel { get => SettingLevel.Unknown; }
 
-        public abstract string? GetValue(string name);
+        string? GetValue(string name);
 
-        public abstract void SetValue(string name, string? value);
+        void SetValue(string name, string? value);
+    }
 
-        public bool? GetBool(string name)
+    public static class ISettingsSourceExtensions
+    {
+        public static bool? GetBool(this ISettingsSource source, string name)
         {
-            string? stringValue = GetValue(name);
+            string? stringValue = source.GetValue(name);
 
             if (string.Equals(stringValue, "true", StringComparison.OrdinalIgnoreCase))
             {
@@ -30,28 +33,21 @@ namespace GitUIPluginInterfaces
             return null;
         }
 
-        public bool GetBool(string name, bool defaultValue)
+        public static bool GetBool(this ISettingsSource source, string name, bool defaultValue)
         {
-            return GetBool(name) ?? defaultValue;
+            return source.GetBool(name) ?? defaultValue;
         }
 
-        public void SetBool(string name, bool? value)
+        public static void SetBool(this ISettingsSource source, string name, bool? value)
         {
             string? stringValue = value.HasValue ? (value.Value ? "true" : "false") : null;
 
-            SetValue(name, stringValue);
+            source.SetValue(name, stringValue);
         }
 
-        public void SetInt(string name, int? value)
+        public static int? GetInt(this ISettingsSource source, string name)
         {
-            string? stringValue = value.HasValue ? value.ToString() : null;
-
-            SetValue(name, stringValue);
-        }
-
-        public int? GetInt(string name)
-        {
-            string? stringValue = GetValue(name);
+            string? stringValue = source.GetValue(name);
 
             if (int.TryParse(stringValue, out var result))
             {
@@ -61,16 +57,21 @@ namespace GitUIPluginInterfaces
             return null;
         }
 
-        public void SetFloat(string name, float? value)
+        public static int GetInt(this ISettingsSource source, string name, int defaultValue)
+        {
+            return source.GetInt(name) ?? defaultValue;
+        }
+
+        public static void SetInt(this ISettingsSource source, string name, int? value)
         {
             string? stringValue = value.HasValue ? value.ToString() : null;
 
-            SetValue(name, stringValue);
+            source.SetValue(name, stringValue);
         }
 
-        public float? GetFloat(string name)
+        public static float? GetFloat(this ISettingsSource source, string name)
         {
-            string? stringValue = GetValue(name);
+            string? stringValue = source.GetValue(name);
 
             if (float.TryParse(stringValue, out var result))
             {
@@ -80,23 +81,18 @@ namespace GitUIPluginInterfaces
             return null;
         }
 
-        public DateTime GetDate(string name, DateTime defaultValue)
+        public static void SetFloat(this ISettingsSource source, string name, float? value)
         {
-            return GetDate(name) ?? defaultValue;
+            string? stringValue = value.HasValue ? value.ToString() : null;
+
+            source.SetValue(name, stringValue);
         }
 
-        public void SetDate(string name, DateTime? value)
+        public static DateTime? GetDate(this ISettingsSource source, string name)
         {
-            string? stringValue = value?.ToString("yyyy/M/dd", CultureInfo.InvariantCulture);
+            string? stringValue = source.GetValue(name);
 
-            SetValue(name, stringValue);
-        }
-
-        public DateTime? GetDate(string name)
-        {
-            string? stringValue = GetValue(name);
-
-            if (DateTime.TryParseExact(stringValue, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var result))
+            if (DateTime.TryParseExact(stringValue, "yyyy/M/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime result))
             {
                 return result;
             }
@@ -104,28 +100,35 @@ namespace GitUIPluginInterfaces
             return null;
         }
 
-        public int GetInt(string name, int defaultValue)
+        public static DateTime GetDate(this ISettingsSource source, string name, DateTime defaultValue)
         {
-            return GetInt(name) ?? defaultValue;
+            return source.GetDate(name) ?? defaultValue;
         }
 
-        public void SetFont(string name, Font value)
+        public static void SetDate(this ISettingsSource source, string name, DateTime? value)
         {
-            string? stringValue = value.AsString();
+            string? stringValue = value?.ToString("yyyy/M/dd", CultureInfo.InvariantCulture);
 
-            SetValue(name, stringValue);
+            source.SetValue(name, stringValue);
         }
 
-        public Font GetFont(string name, Font defaultValue)
+        public static Font GetFont(this ISettingsSource source, string name, Font defaultValue)
         {
-            string? stringValue = GetValue(name);
+            string? stringValue = source.GetValue(name);
 
             return stringValue.Parse(defaultValue);
         }
 
-        public Color GetColor(string name, Color defaultValue)
+        public static void SetFont(this ISettingsSource source, string name, Font value)
         {
-            string? stringValue = GetValue(name);
+            string? stringValue = value.AsString();
+
+            source.SetValue(name, stringValue);
+        }
+
+        public static Color GetColor(this ISettingsSource source, string name, Color defaultValue)
+        {
+            string? stringValue = source.GetValue(name);
 
             try
             {
@@ -137,16 +140,9 @@ namespace GitUIPluginInterfaces
             }
         }
 
-        public void SetEnum<T>(string name, T value) where T : Enum
+        public static T GetEnum<T>(this ISettingsSource source, string name, T defaultValue) where T : struct, Enum
         {
-            string? stringValue = value.ToString();
-
-            SetValue(name, stringValue);
-        }
-
-        public T GetEnum<T>(string name, T defaultValue) where T : struct, Enum
-        {
-            string? stringValue = GetValue(name);
+            string? stringValue = source.GetValue(name);
 
             if (Enum.TryParse(stringValue, true, out T result))
             {
@@ -156,16 +152,16 @@ namespace GitUIPluginInterfaces
             return defaultValue;
         }
 
-        public void SetNullableEnum<T>(string name, T? value) where T : struct, Enum
+        public static void SetEnum<T>(this ISettingsSource source, string name, T value) where T : Enum
         {
-            string? stringValue = value.HasValue ? value.ToString() : string.Empty;
+            string? stringValue = value.ToString();
 
-            SetValue(name, stringValue);
+            source.SetValue(name, stringValue);
         }
 
-        public T? GetNullableEnum<T>(string name) where T : struct
+        public static T? GetNullableEnum<T>(this ISettingsSource source, string name) where T : struct
         {
-            string? stringValue = GetValue(name);
+            string? stringValue = source.GetValue(name);
 
             if (string.IsNullOrEmpty(stringValue))
             {
@@ -180,19 +176,26 @@ namespace GitUIPluginInterfaces
             return null;
         }
 
-        public void SetString(string name, string? value)
+        public static void SetNullableEnum<T>(this ISettingsSource source, string name, T? value) where T : struct, Enum
         {
-            string? stringValue = value;
+            string? stringValue = value.HasValue ? value.ToString() : string.Empty;
 
-            SetValue(name, stringValue);
+            source.SetValue(name, stringValue);
         }
 
         [return: NotNullIfNotNull("defaultValue")]
-        public string? GetString(string name, string? defaultValue)
+        public static string? GetString(this ISettingsSource source, string name, string? defaultValue)
         {
-            string? stringValue = GetValue(name);
+            string? stringValue = source.GetValue(name);
 
             return stringValue ?? defaultValue;
+        }
+
+        public static void SetString(this ISettingsSource source, string name, string? value)
+        {
+            string? stringValue = value;
+
+            source.SetValue(name, stringValue);
         }
     }
 }

@@ -28,13 +28,13 @@ namespace GitUI
 
         private ISettingsSource ExternalSettings => _settingsSource ?? AppSettings.SettingsContainer;
 
-        public override SettingLevel SettingLevel
+        public SettingLevel SettingLevel
         {
             get => ExternalSettings.SettingLevel;
             set => throw new InvalidOperationException(nameof(SettingLevel));
         }
 
-        public override string? GetValue(string name)
+        public virtual string? GetValue(string name)
         {
             // for old plugin setting processing
             if (_pluginId == Guid.Empty)
@@ -53,7 +53,7 @@ namespace GitUI
             return value;
         }
 
-        public override void SetValue(string name, string? value)
+        public virtual void SetValue(string name, string? value)
         {
             if (_pluginId == Guid.Empty)
             {
