@@ -2880,7 +2880,10 @@ namespace GitUI.CommandsDialogs
             public TabPage DiffTabPage => _form.DiffTabPage;
             public RepoObjectsTree RepoObjectsTree => _form.repoObjectsTree;
             public RevisionDiffControl RevisionDiffControl => _form.revisionDiff;
+            public RevisionFileTreeControl RevisionFileTreeControl => _form.fileTree;
             public RevisionGridControl RevisionGrid => _form.RevisionGridControl;
+            public SplitContainer RevisionsSplitContainer => _form.RevisionsSplitContainer;
+            public SplitContainer RightSplitContainer => _form.RightSplitContainer;
             public TabPage TreeTabPage => _form.TreeTabPage;
             public FilterToolBar ToolStripFilters => _form.ToolStripFilters;
 

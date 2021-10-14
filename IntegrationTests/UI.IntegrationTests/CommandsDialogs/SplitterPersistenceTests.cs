@@ -76,27 +76,31 @@ namespace GitExtensions.UITests.CommandsDialogs
             RunFormTest(
                 form =>
                 {
-                    ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions, false);
+                    FormBrowse.TestAccessor ta = form.GetTestAccessor();
+
+                    ProcessUntil(() => ta.RevisionGrid.GetTestAccessor().IsRefreshingRevisions, false);
 
                     form.MainSplitContainer.SplitterDistance = LeftPanelWidth;
-                    form.RevisionsSplitContainer.SplitterDistance = form.RevisionsSplitContainer.Width - CommitInfoWidth;
-                    form.RightSplitContainer.SplitterDistance = RevisionGridHeight;
-                    form.revisionDiff.DiffSplitContainer.SplitterDistance = FileListWidth;
-                    form.fileTree.FileTreeSplitContainer.SplitterDistance = FileTreeWidth;
+                    ta.RevisionsSplitContainer.SplitterDistance = ta.RevisionsSplitContainer.Width - CommitInfoWidth;
+                    ta.RightSplitContainer.SplitterDistance = RevisionGridHeight;
+                    ta.RevisionDiffControl.GetTestAccessor().DiffSplitContainer.SplitterDistance = FileListWidth;
+                    ta.RevisionFileTreeControl.GetTestAccessor().FileTreeSplitContainer.SplitterDistance = FileTreeWidth;
                 });
             AppSettings.SaveSettings();
             RunFormTest(
                 form =>
                 {
-                    ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions, false);
+                    FormBrowse.TestAccessor ta = form.GetTestAccessor();
+
+                    ProcessUntil(() => ta.RevisionGrid.GetTestAccessor().IsRefreshingRevisions, false);
                     Thread.Sleep(1000);
 
                     form.MainSplitContainer.Panel1Collapsed.Should().Be(leftPanelVisible);
                     //// does not work: form.MainSplitContainer.SplitterDistance.Should().Be(LeftPanelWidth);
-                    form.RevisionsSplitContainer.SplitterDistance.Should().Be(form.RevisionsSplitContainer.Width - CommitInfoWidth);
-                    form.RightSplitContainer.SplitterDistance.Should().Be(RevisionGridHeight);
-                    form.revisionDiff.DiffSplitContainer.SplitterDistance.Should().Be(FileListWidth);
-                    form.fileTree.FileTreeSplitContainer.SplitterDistance.Should().Be(FileTreeWidth);
+                    ta.RevisionsSplitContainer.SplitterDistance.Should().Be(ta.RevisionsSplitContainer.Width - CommitInfoWidth);
+                    ta.RightSplitContainer.SplitterDistance.Should().Be(RevisionGridHeight);
+                    ta.RevisionDiffControl.GetTestAccessor().DiffSplitContainer.SplitterDistance.Should().Be(FileListWidth);
+                    ta.RevisionFileTreeControl.GetTestAccessor().FileTreeSplitContainer.SplitterDistance.Should().Be(FileTreeWidth);
                 });
         }
 
