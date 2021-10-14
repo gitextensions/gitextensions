@@ -44,18 +44,16 @@ namespace GitUI.UserControls.RevisionGrid
 
         private VisibleRowRange _visibleRowRange;
 
-        private readonly Font _normalFont;
-        private readonly Font _boldFont;
-        private readonly Font _monospaceFont;
+        private Font _normalFont;
+        private Font _boldFont;
+        private Font _monospaceFont;
 
         public bool UpdatingVisibleRows { get; private set; }
         public bool IsBackgroundUpdaterActive => _backgroundUpdater.IsExecuting;
 
         public RevisionDataGridView()
         {
-            _normalFont = AppSettings.Font;
-            _boldFont = new Font(AppSettings.Font, FontStyle.Bold);
-            _monospaceFont = AppSettings.MonospaceFont;
+            InitFonts();
 
             _backgroundUpdater = new BackgroundUpdater(UpdateVisibleRowRangeInternalAsync, 25);
 
@@ -434,6 +432,13 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void UpdateVisibleRowRange()
         {
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+            {
+                // TODO: Switch to IsDesignMode? See Github discussion in #8809
+                // Don't run background operations in the designer.
+                return;
+            }
+
             _backgroundUpdater.ScheduleExcecution();
         }
 
@@ -464,7 +469,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                             do
                             {
-                                scrollTo = _backgroundScrollTo;
+                                scrollTo = newBackgroundScrollTo;
                                 curCount = _revisionGraph.GetCachedCount();
                                 await UpdateGraphAsync(fromIndex: curCount, toIndex: scrollTo);
                             }
@@ -507,9 +512,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public override void Refresh()
         {
-            // TODO allow custom grid font
-            ////NormalFont = AppSettings.RevisionGridFont;
-            ////NormalFont = new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
+            InitFonts();
 
             UpdateRowHeight();
             UpdateVisibleRowRange();
@@ -674,6 +677,13 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 base.OnMouseWheel(e);
             }
+        }
+
+        private void InitFonts()
+        {
+            _normalFont = AppSettings.Font;
+            _boldFont = new Font(_normalFont, FontStyle.Bold);
+            _monospaceFont = AppSettings.MonospaceFont;
         }
 
         private static Color getHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
