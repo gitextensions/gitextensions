@@ -476,7 +476,7 @@ namespace GitUI.UserControls.RevisionGrid
                         }
                     }
 
-                    this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
+                    await this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged);
                 }
             }
 
