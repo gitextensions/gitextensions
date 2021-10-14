@@ -56,7 +56,7 @@ namespace GitUI.UserControls.RevisionGrid
             _boldFont = new Font(AppSettings.Font, FontStyle.Bold);
             _monospaceFont = AppSettings.MonospaceFont;
 
-            _backgroundUpdater = new BackgroundUpdater(() => UpdateVisibleRowRangeInternalAsync(), 25);
+            _backgroundUpdater = new BackgroundUpdater(UpdateVisibleRowRangeInternalAsync, 25);
 
             InitializeComponent();
             DoubleBuffered = true;
