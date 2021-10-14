@@ -119,8 +119,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     revisionGridControl.SetAndApplyBranchFilter("Branch1", requireRefresh: true);
                     Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
 
-                    // ...wait for the revisions to be loaded
-                    ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+                    WaitForRevisionsToBeLoaded(revisionGridControl);
 
                     // Confirm the filter has been applied
                     ta.VisibleRevisionCount.Should().Be(2);
@@ -137,8 +136,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 "Branch1",
                 revisionGridControl =>
                 {
-                    // ...wait for the revisions to be loaded
-                    ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+                    WaitForRevisionsToBeLoaded(revisionGridControl);
 
                     var ta = revisionGridControl.GetTestAccessor();
                     Assert.True(revisionGridControl.IsShowFilteredBranchesChecked);
@@ -151,8 +149,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     revisionGridControl.SetAndApplyBranchFilter(string.Empty, requireRefresh: true);
                     Assert.False(revisionGridControl.IsShowFilteredBranchesChecked);
 
-                    // ...wait for the revisions to be loaded
-                    ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
+                    WaitForRevisionsToBeLoaded(revisionGridControl);
 
                     // Confirm the filter has been reset, all commits are shown
                     ta.VisibleRevisionCount.Should().Be(4);
@@ -381,30 +378,9 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             }
         }
 
-        private static void RefreshRevisions(RevisionGridControl revisionGridControl)
+        private static void WaitForRevisionsToBeLoaded(RevisionGridControl revisionGridControl)
         {
-            revisionGridControl.ForceRefreshRevisions();
-
-            ProcessUntil(() => revisionGridControl.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
-        }
-
-        private static void ProcessUntil(Func<string> getCurrent, string expected, int maxIterations = 100)
-        {
-            string current = "";
-            for (int iteration = 0; iteration < maxIterations; ++iteration)
-            {
-                current = getCurrent();
-                if (current == expected)
-                {
-                    Debug.WriteLine($"{nameof(ProcessUntil)} '{expected}' in iteration {iteration}");
-                    return;
-                }
-
-                Application.DoEvents();
-                Thread.Sleep(5);
-            }
-
-            Assert.Fail($"{current} != {expected} in {maxIterations} iterations");
+            UITest.ProcessUntil("Loading Revisions", () => revisionGridControl.GetTestAccessor().IsUiStable);
         }
     }
 }

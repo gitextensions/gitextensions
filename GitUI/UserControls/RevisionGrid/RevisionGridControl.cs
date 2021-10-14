@@ -3049,7 +3049,9 @@ namespace GitUI
 
             public int VisibleRevisionCount => _revisionGridControl._gridView.RowCount;
 
-            public bool IsRefreshingRevisions => _revisionGridControl._isRefreshingRevisions;
+            public bool IsUiStable =>
+                !_revisionGridControl._isRefreshingRevisions &&
+                !_revisionGridControl._gridView.IsBackgroundUpdaterActive;
         }
     }
 }

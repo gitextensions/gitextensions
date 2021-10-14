@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -22,6 +23,8 @@ namespace GitUI.UserControls.RevisionGrid
                 _operation = operation ?? throw new ArgumentNullException(nameof(operation));
                 _cooldownMilliseconds = cooldownMilliseconds;
             }
+
+            public bool IsExecuting => _executing;
 
             public void ScheduleExcecution()
             {

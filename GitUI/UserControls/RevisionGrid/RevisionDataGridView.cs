@@ -49,6 +49,7 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly Font _monospaceFont;
 
         public bool UpdatingVisibleRows { get; private set; }
+        public bool IsBackgroundUpdaterActive => _backgroundUpdater.IsExecuting;
 
         public RevisionDataGridView()
         {
