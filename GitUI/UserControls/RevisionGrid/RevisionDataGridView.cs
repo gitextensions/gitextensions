@@ -471,7 +471,7 @@ namespace GitUI.UserControls.RevisionGrid
                         }
                         else
                         {
-                            await UpdateGraphAsync(_revisionGraph.Count, _revisionGraph.Count);
+                            await UpdateGraphAsync(fromIndex: _revisionGraph.Count, toIndex: _revisionGraph.Count);
                         }
                     }
 
