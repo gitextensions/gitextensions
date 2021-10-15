@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using GitExtUtils;
 
 namespace GitCommands
@@ -24,8 +25,22 @@ namespace GitCommands
         private static readonly GitVersion v2_19_0 = new("2.19.0");
         private static readonly GitVersion v2_20_0 = new("2.20.0");
 
-        public static readonly GitVersion LastSupportedVersion = v2_19_0;
-        public static readonly GitVersion LastRecommendedVersion = new("2.30.0");
+        /// <summary>
+        /// The recommonded Git version (normally latest official before a GE release).
+        /// This and later versions are green in the settings check.
+        /// </summary>
+        public static readonly GitVersion LastRecommendedVersion = new("2.33.0");
+
+        /// <summary>
+        /// The oldest version with reasonable reliable support in GE.
+        /// Older than this version is red in settings.
+        /// </summary>
+        public static readonly GitVersion LastSupportedVersion = new("2.25.0");
+
+        /// <summary>
+        /// The oldest Git version without known incompatibilities.
+        /// </summary>
+        public static readonly GitVersion LastFailVersion = new("2.15.2");
 
         private static GitVersion? _current;
 
@@ -37,6 +52,10 @@ namespace GitCommands
                 {
                     string output = new Executable(AppSettings.GitCommand).GetOutput("--version");
                     _current = new GitVersion(output);
+                    if (_current < LastFailVersion)
+                    {
+                        MessageBox.Show(null, $"{_current} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
 
                 return _current;
