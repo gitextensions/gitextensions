@@ -10600,6 +10600,10 @@ Select this commit to populate the full message.</source>
         <source>Unique diff BASE with b/</source>
         <target />
       </trans-unit>
+      <trans-unit id="_diffBothChanged.Text">
+        <source>Both changed to BASE</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_diffCommonBase.Text">
         <source>Common diff with BASE a/</source>
         <target />

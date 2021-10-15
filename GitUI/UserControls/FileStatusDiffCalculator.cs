@@ -167,8 +167,14 @@ namespace GitUI
 
             GitItemStatusNameEqualityComparer comparer = new();
             var commonBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();
+            var bothChangedAandB = allAToB.Intersect(allBaseToB, comparer).Intersect(allBaseToA, comparer).ToList();
 
             GitRevision revBase = new(baseRevGuid);
+            fileStatusDescs.Add(new FileStatusWithDescription(
+                firstRev: firstRev,
+                secondRev: selectedRev,
+                summary: TranslatedStrings.DiffBothChanged,
+                statuses: bothChangedAandB));
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: selectedRev,

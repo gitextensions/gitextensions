@@ -77,6 +77,7 @@ namespace GitUI
         private readonly TranslationString _diffWithParent = new("Diff with a/");
         private readonly TranslationString _diffBaseToB = new("Unique diff BASE with b/");
         private readonly TranslationString _diffCommonBase = new("Common diff with BASE a/");
+        private readonly TranslationString _diffBothChanged = new("Both changed to BASE");
         private readonly TranslationString _diffRange = new("Range diff");
         private readonly TranslationString _combinedDiff = new("Combined diff");
 
@@ -208,6 +209,7 @@ namespace GitUI
         public static string DiffWithParent => _instance.Value._diffWithParent.Text;
         public static string DiffBaseToB => _instance.Value._diffBaseToB.Text;
         public static string DiffCommonBase => _instance.Value._diffCommonBase.Text;
+        public static string DiffBothChanged => _instance.Value._diffBothChanged.Text;
         public static string DiffRange => _instance.Value._diffRange.Text;
         public static string CombinedDiff => _instance.Value._combinedDiff.Text;
         public static string ShowDiffForAllParentsText => _instance.Value._showDiffForAllParentsText.Text;
