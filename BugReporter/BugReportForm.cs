@@ -171,7 +171,7 @@ Send report anyway?");
         {
             Validates.NotNull(_lastException);
 
-            var report = ErrorReportBodyBuilder.Build(_lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
+            var report = ErrorReportBodyBuilder.CopyText(_lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
             if (string.IsNullOrWhiteSpace(report))
             {
                 return;
