@@ -35,6 +35,9 @@ namespace GitCommands
         private static readonly Regex CpEncodingPattern = new("cp\\d+", RegexOptions.Compiled);
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
+        // the amount of lines we must skip in order to get to an annotated tag's message when doing git cat-file -p <tag_name>
+        private static readonly int StandardCatFileTagHeaderLength = 5;
+
         public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
         public static CommandCache GitCommandCache { get; } = new();
 
@@ -3109,24 +3112,7 @@ namespace GitCommands
 
             tag = tag.Trim();
 
-            ExecutionResult exec = _gitExecutable.Execute($"tag -l -n10 {tag}", throwOnErrorExit: false);
-
-            /*
-             * $ git tag -l -n10 1.50
-             * 1.50            Added close checkbox to process dialog
-             *
-             * $ git tag -l -n10 1.57
-             * 1.57            Minor changes.
-             *
-             *     Packed with Git-1.6.1 to avoid a bug in Git-1.6.2
-             *     When installing 64bit version, both 32bit and 64bit shell extensions will be registered
-             *     Application settings are saved when closing settings dialog instead of when application exits
-             *     Revert commit handles merge conflicts better
-             *     Diff in browse dialog now shows the diff between revisions if 2 revisions are selected
-             *     Bug solved: files in diff viewer are not shown correctly when 2 revisions are selected
-             *     Format path dialog improved
-             */
-
+            ExecutionResult exec = _gitExecutable.Execute($"cat-file -p {tag}", throwOnErrorExit: false);
             if (!exec.ExitedSuccessfully)
             {
                 // Error occurred, no message (no error presented to the user)
@@ -3134,18 +3120,25 @@ namespace GitCommands
             }
 
             string output = exec.StandardOutput;
-            if (!output.StartsWith(tag))
+            string[] messageLines = output.Split(
+                new string[] { "\r\n", "\r", "\n" },
+                StringSplitOptions.None);
+
+            if (messageLines.Length <= StandardCatFileTagHeaderLength)
             {
                 return null;
             }
 
-            output = output.Substring(tag.Length).Trim();
-            if (output.Length == 0)
+            StringBuilder annotationBuilder = new();
+
+            // skip the last line as it will always be an empty line (for nice console output)
+            for (int i = StandardCatFileTagHeaderLength; i < messageLines.Length - 1; ++i)
             {
-                return null;
+                annotationBuilder.AppendLine(messageLines[i]);
             }
 
-            return output;
+            // return message, trimming off last new line (added by AppendLine)
+            return annotationBuilder.ToString().Trim();
         }
 
         /// <summary>
