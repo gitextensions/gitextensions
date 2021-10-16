@@ -1163,6 +1163,12 @@ namespace GitUI.CommandsDialogs
                 kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGitK).ToShortcutKeyDisplayString();
                 checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CheckoutBranch).ToShortcutKeyDisplayString();
                 settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.OpenSettings).ToShortcutKeyDisplayString();
+                branchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CreateBranch).ToShortcutKeyDisplayString();
+                tagToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CreateTag).ToShortcutKeyDisplayString();
+                mergeBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.MergeBranches).ToShortcutKeyDisplayString();
+                pullToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.PullOrFetch).ToShortcutKeyDisplayString();
+                pushToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Push).ToShortcutKeyDisplayString();
+                rebaseToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
 
                 // TODO: add more
             }
@@ -1615,6 +1621,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ReloadTranslation();
             fileTree.ReloadHotkeys();
             revisionDiff.ReloadHotkeys();
+            InternalInitialize(false);
 
             // Clear the separate caches for diff/merge tools
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
