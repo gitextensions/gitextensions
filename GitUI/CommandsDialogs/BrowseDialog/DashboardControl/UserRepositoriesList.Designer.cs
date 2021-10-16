@@ -289,7 +289,7 @@
             this.mnuConfigure.Image = global::GitUI.Properties.Images.Settings;
             this.mnuConfigure.Name = "mnuConfigure";
             this.mnuConfigure.Size = new System.Drawing.Size(218, 22);
-            this.mnuConfigure.Text = "&Recent repositories settings";
+            this.mnuConfigure.Text = "Recent repositories &settings";
             this.mnuConfigure.Click += new System.EventHandler(this.mnuConfigure_Click);
             // 
             // listView1

@@ -350,13 +350,13 @@ namespace GitUI.CommandsDialogs
             _navigateToolStripMenuItem ??= new ToolStripMenuItem
             {
                 Name = "navigateToolStripMenuItem",
-                Text = "Navigate"
+                Text = "&Navigate"
             };
 
             _viewToolStripMenuItem ??= new ToolStripMenuItem
             {
                 Name = "viewToolStripMenuItem",
-                Text = "View"
+                Text = "&View"
             };
 
             if (_toolbarsMenuItem is null)

@@ -49,6 +49,131 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
+        #region Mnemonics
+        /*
+            MENUS
+            ═════
+                    ABEFGIJKLMOQUWXYZ
+                C   Commands
+                D   Dashboard
+                H   Help
+                N   Navigate (inserted by FormBrowseMenus)
+                P   Plugins
+                R   Repository
+                S   Start
+                T   Tools
+                V   View (inserted by FormBrowseMenus)
+                    GitHub (inserted dynamically)
+
+            START menu
+            ══════════
+                    ABDEGHIJKMNPQSTUVWYZ
+                C   Create new repository...
+                F   Favourite Repositories
+                L   Clone Repository...
+                O   Open...
+                R   Recent Repositories
+                X   Exit
+
+            DASHBOARD menu
+            ══════════════
+                R   Refresh
+                S   Recent repositories settings
+
+            REPOSITORY menu
+            ═══════════════
+                    DFHJLNPQVYZ
+                A   Edit .gitattributes
+                B   Synchronize all submodules
+                C   Close (go to Dashboard)
+                E   Edit .git/info/exclude
+                G   Git maintenance
+                I   Edit .gitignore
+                K   Sparse Working Copy
+                M   Edit .mailmap
+                O   Repository settings
+                R   Refresh
+                S   Manage submodules...
+                T   Remote repositories...
+                U   Update all submodules
+                W   Worktrees
+                X   File Explorer
+
+            REPOSITORY ▷ WORKTREES submenu
+            ══════════════════════════════
+                C   Create a worktree...
+                M   Manage worktrees...
+
+            REPOSITORY ▷ GIT MAINTENANCE submenu
+            ════════════════════════════════════
+                C   Compress git database
+                R   Recover lost objects...
+                D   Delete index.lock
+                E   Edit .git/config
+
+            COMMANDS menu
+            ═════════════
+                    JQXZ
+                /   Pull/Fetch...
+                A   Apply patch...
+                B   Create branch...
+                C   Commit...
+                D   Delete tag...
+                E   Rebase...
+                F   Format patch...
+                G   Show reflog...
+                H   View patch file...
+                I   Bisect...
+                K   Checkout branch...
+                L   Delete branch...
+                M   Merge branches...
+                N   Manage stashes...
+                O   Checkout revision...
+                P   Push...
+                R   Reset changes...
+                S   Solve merge conflicts...
+                T   Create tag...
+                U   Undo last commit
+                V   Archive revision...
+                W   Clean working directory...
+                Y   Cherry pick...
+
+            GITHUB (Repository hosts) menu
+            ══════════════════════════════
+                    BDEGHIJKLMNOQRSTUVWXYZ
+                A   Add upstream remote
+                C   Create pull requests...
+                F   Fork/Clone repository
+                P   View pull requests...
+
+            PLUGINS menu
+            ════════════
+                S   Plugin Settings
+
+            TOOLS menu
+            ══════════
+                    ADEFHIJLMNOQRTUVWXYZ
+                B   Git bash
+                C   Git command log
+                G   Git GUI
+                K   GitK
+                P   PuTTY
+                S   Settings
+
+            HELP menu
+            ═════════
+                    BEFGHIJKLNOPQSVWXZ
+                A   About
+                C   Changelog
+                D   Donate
+                M   User Manual
+                R   Report an issue
+                T   Translate
+                U   Check for updates
+                Y   Yes, I allow telemetry
+        */
+        #endregion
+
         #region Translation
 
         private readonly TranslationString _noSubmodulesPresent = new("No submodules");
