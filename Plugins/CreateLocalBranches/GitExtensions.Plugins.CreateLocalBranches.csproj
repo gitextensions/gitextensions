@@ -1,9 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj" />
-    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
-    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
+      <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj">
+      <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

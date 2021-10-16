@@ -25,7 +25,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="WiX" />
+    <!-- This is needed for scripts\Publish.targets to resolve .NET references -->
+    <PackageReference Include="NETStandard.Library" IsImplicitlyDefined="true" GeneratePathProperty="true">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="WiX">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

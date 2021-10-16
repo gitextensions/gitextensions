@@ -32,6 +32,7 @@
 
     <!-- Setup infra -->
     <PackageReference Update="WiX" Version="3.11.2" />
+    <PackageReference Update="NETStandard.Library" Version="2.0.0" />
 
     <!-- Test infra -->
     <PackageReference Update="ApprovalTests" Version="4.4.0" />

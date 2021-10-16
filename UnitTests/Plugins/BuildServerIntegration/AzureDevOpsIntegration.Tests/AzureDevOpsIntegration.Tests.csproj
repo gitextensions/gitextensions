@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Plugins\BuildServerIntegration\AzureDevOpsIntegration\AzureDevOpsIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\ResourceManager\ResourceManager.csproj" />
     <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
   </ItemGroup>
 
