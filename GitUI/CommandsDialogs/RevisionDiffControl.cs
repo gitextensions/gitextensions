@@ -1263,5 +1263,20 @@ namespace GitUI.CommandsDialogs
             ResetSelectedItemsTo(actsAsChild: false);
             return true;
         }
+
+        internal TestAccessor GetTestAccessor()
+            => new(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly RevisionDiffControl _control;
+
+            public TestAccessor(RevisionDiffControl control)
+            {
+                _control = control;
+            }
+
+            public SplitContainer DiffSplitContainer => _control.DiffSplitContainer;
+        }
     }
 }
