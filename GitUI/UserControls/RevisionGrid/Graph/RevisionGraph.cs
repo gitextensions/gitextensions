@@ -320,13 +320,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 // The list containing the segments is created later. We can set the correct capacity then, to prevent resizing
                 List<RevisionGraphSegment> segments;
+                RevisionGraphSegment[] revisionStartSegments = revision.GetStartSegments();
 
                 if (nextIndex == 0)
                 {
                     // This is the first row. Start with only the startsegments of this row
-                    segments = new List<RevisionGraphSegment>(revision.StartSegments);
+                    segments = new List<RevisionGraphSegment>(revisionStartSegments);
 
-                    foreach (var startSegment in revision.StartSegments)
+                    foreach (var startSegment in revisionStartSegments)
                     {
                         startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: null);
                     }
@@ -337,7 +338,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     RevisionGraphRow previousRevisionGraphRow = localOrderedRowCache[nextIndex - 1];
 
                     // Create segments list with te correct capacity
-                    segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revision.StartSegments.Count);
+                    segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revisionStartSegments.Length);
 
                     // Loop through all segments that do not end in the previous row
                     foreach (var segment in previousRevisionGraphRow.Segments.Where(s => s.Parent != previousRevisionGraphRow.Revision))
@@ -351,12 +352,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             if (!startSegmentsAdded)
                             {
                                 startSegmentsAdded = true;
-                                segments.AddRange(revision.StartSegments);
+                                segments.AddRange(revisionStartSegments);
                             }
 
-                            foreach (var startSegment in revision.StartSegments)
+                            foreach (var startSegment in revisionStartSegments)
                             {
-                                if (startSegment == revision.StartSegments.First())
+                                if (startSegment == revisionStartSegments[0])
                                 {
                                     if (startSegment.LaneInfo is null || startSegment.LaneInfo.StartScore > segment.LaneInfo?.StartScore)
                                     {
@@ -378,9 +379,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     if (!startSegmentsAdded)
                     {
                         // Add new segments started by this revision to the end
-                        segments.AddRange(revision.StartSegments);
+                        segments.AddRange(revisionStartSegments);
 
-                        foreach (var startSegment in revision.StartSegments)
+                        foreach (var startSegment in revisionStartSegments)
                         {
                             startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: null);
                         }
