@@ -628,7 +628,7 @@ namespace GitCommandsTests.Config
         }
 
         /// <summary>
-        /// Always delete the test config file after each test
+        /// Always delete the test config file after each test.
         /// </summary>
         [TearDown]
         public void Cleanup()
