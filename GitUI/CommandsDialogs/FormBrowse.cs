@@ -2153,8 +2153,8 @@ namespace GitUI.CommandsDialogs
             {
                 ToolStripMenuItem checkoutBranchItem = new(checkoutBranchToolStripMenuItem.Text, Images.BranchCheckout)
                 {
-                    ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys,
-                    ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString
+                    ShortcutKeys = GetShortcutKeys(Command.CheckoutBranch),
+                    ShortcutKeyDisplayString = GetShortcutKeys(Command.CheckoutBranch).ToShortcutKeyDisplayString()
                 };
 
                 branchSelect.DropDownItems.Add(checkoutBranchItem);
