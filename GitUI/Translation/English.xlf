@@ -5789,19 +5789,35 @@ ancestor tree.</source>
         <target />
       </trans-unit>
       <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
+        <source>Mana&amp;ge remotes</source>
         <target />
       </trans-unit>
       <trans-unit id="AllTags.Text">
-        <source>Fetch all tags</source>
+        <source>Fetch &amp;all tags</source>
         <target />
       </trans-unit>
       <trans-unit id="AutoStash.Text">
-        <source>Auto stash</source>
+        <source>Auto stas&amp;h</source>
         <target />
       </trans-unit>
       <trans-unit id="Fetch.Text">
         <source>Do not merge, only &amp;fetch remote changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GroupBranch.Text">
+        <source>Branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GroupMergeOptions.Text">
+        <source>Merge options</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GroupPullFrom.Text">
+        <source>Pull from</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GroupTagOptions.Text">
+        <source>Tag options</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
@@ -5809,47 +5825,47 @@ ancestor tree.</source>
         <target />
       </trans-unit>
       <trans-unit id="Mergetool.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="NoTags.Text">
-        <source>Fetch no tag</source>
+        <source>Fetch &amp;no tag</source>
         <target />
       </trans-unit>
       <trans-unit id="Prune.Text">
-        <source>Prune remote branches</source>
+        <source>&amp;Prune remote branches</source>
         <target />
       </trans-unit>
       <trans-unit id="PruneTags.Text">
-        <source>Prune remote branches and tags</source>
+        <source>Prune remote branches an&amp;d tags</source>
         <target />
       </trans-unit>
       <trans-unit id="Pull.Text">
-        <source>&amp;Pull</source>
+        <source>Pull</source>
         <target />
       </trans-unit>
       <trans-unit id="PullFromRemote.Text">
-        <source>Remote</source>
+        <source>&amp;Remote</source>
         <target />
       </trans-unit>
       <trans-unit id="PullFromUrl.Text">
-        <source>Url</source>
+        <source>&amp;URL</source>
         <target />
       </trans-unit>
       <trans-unit id="ReachableTags.Text">
-        <source>Follow tagopt, if not specified, fetch tags reachable from remote HEAD</source>
+        <source>Follow &amp;tagopt, if not specified, fetch tags reachable from remote HEAD</source>
         <target />
       </trans-unit>
       <trans-unit id="Rebase.Text">
-        <source>&amp;Rebase current branch on top of remote branch, creates linear history (use with caution)</source>
+        <source>R&amp;ebase current branch on top of remote branch, creates linear history (use with caution)</source>
         <target />
       </trans-unit>
       <trans-unit id="Stash.Text">
-        <source>Stash changes</source>
+        <source>Stash &amp;changes</source>
         <target />
       </trans-unit>
       <trans-unit id="Unshallow.Text">
-        <source>Download full history</source>
+        <source>Do&amp;wnload full history</source>
         <target />
       </trans-unit>
       <trans-unit id="_allMergeConflictSolvedQuestion.Text">
@@ -5976,28 +5992,12 @@ This will initialize and update all submodules recursive.</source>
         <source>Please select a source directory</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Merge options</source>
+      <trans-unit id="lblLocalBranch.Text">
+        <source>&amp;Local branch</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox2.Text">
-        <source>Pull from</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBox3.Text">
-        <source>Branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBox4.Text">
-        <source>Tag options</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Local branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Remote branch</source>
+      <trans-unit id="lblRemoteBranch.Text">
+        <source>Rem&amp;ote branch</source>
         <target />
       </trans-unit>
     </body>

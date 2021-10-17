@@ -24,6 +24,27 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormPull : GitModuleForm
     {
+        #region Mnemonics
+        // Available: BIJKQVXYZ
+        // A Fetch all tags
+        // C Stash changes
+        // D Prune remote branches and tags
+        // E Rebase
+        // F Do not merge, only fetch
+        // G Manage remotes
+        // H Auto stash
+        // L Local branch
+        // M Merge
+        // N Fetch no tag
+        // O Remote branch
+        // P Prune remote branches
+        // R Remote
+        // S Solve conflicts
+        // T Follow tagopt
+        // U URL
+        // W Download full history
+        #endregion
+
         #region Translation
         private readonly TranslationString _areYouSureYouWantToRebaseMerge =
             new("The current commit is a merge." + Environment.NewLine +
@@ -122,8 +143,8 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
 
-            helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
-            helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
+            PanelLeftImage.Visible = !AppSettings.DontShowHelpImages;
+            PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
 
             _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
             _branch = Module.GetSelectedBranch();
@@ -1024,9 +1045,9 @@ namespace GitUI.CommandsDialogs
 
             localBranch.Enabled = false;
             localBranch.Text = _branch;
-            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullMerge.AdaptLightness());
-            helpImageDisplayUserControl1.Image2 = DpiUtil.Scale(Images.HelpPullMergeFastForward.AdaptLightness());
-            helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
+            PanelLeftImage.Image1 = DpiUtil.Scale(Images.HelpPullMerge.AdaptLightness());
+            PanelLeftImage.Image2 = DpiUtil.Scale(Images.HelpPullMergeFastForward.AdaptLightness());
+            PanelLeftImage.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
             Prune.Enabled = false;
             PruneTags.Enabled = false;
@@ -1047,8 +1068,8 @@ namespace GitUI.CommandsDialogs
 
             localBranch.Enabled = false;
             localBranch.Text = _branch;
-            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullRebase.AdaptLightness());
-            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            PanelLeftImage.Image1 = DpiUtil.Scale(Images.HelpPullRebase.AdaptLightness());
+            PanelLeftImage.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
             Prune.Enabled = false;
             PruneTags.Enabled = false;
@@ -1070,8 +1091,8 @@ namespace GitUI.CommandsDialogs
             localBranch.Enabled = true;
             localBranch.Text = string.Empty;
 
-            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullFetch.AdaptLightness());
-            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            PanelLeftImage.Image1 = DpiUtil.Scale(Images.HelpPullFetch.AdaptLightness());
+            PanelLeftImage.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
             Prune.Enabled = true;
             PruneTags.Enabled = true;
