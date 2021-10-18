@@ -29,8 +29,6 @@ namespace GitUI
 
                 try
                 {
-                    ManagedExtensibility.SetUserPluginsPath(AppSettings.UserPluginsPath);
-
                     foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
                     {
                         Validates.NotNull(plugin.Description);
