@@ -8770,14 +8770,6 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="Plugin" source-language="en">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Plugin Manager</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="PluginRootIntroductionPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
