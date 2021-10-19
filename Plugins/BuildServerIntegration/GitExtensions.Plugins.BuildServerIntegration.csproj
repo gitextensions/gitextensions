@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <Compile Include="..\..\GitExtUtils\Validates.cs" Link="Validates.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Adapters\TfsIntegration\**" />
+    <EmbeddedResource Remove="Adapters\TfsIntegration\**" />
+    <None Remove="Adapters\TfsIntegration\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
+      <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
+      <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ResourceManager\ResourceManager.csproj">
+      <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Resources -->
+    <EmbeddedResource Update="Properties\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs" />
+  </ItemGroup>
+
+</Project>

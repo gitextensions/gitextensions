@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using AzureDevOpsIntegration;
 using FluentAssertions;
+using GitExtensions.Plugins.BuildServerIntegration.Adapters.AzureDevOpsIntegration;
 using NUnit.Framework;
 
 namespace AzureDevOpsIntegrationTests

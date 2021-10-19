@@ -17,6 +17,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     {
         private const int IconColumnWidth = 16;
         private const int TextColumnWidth = 150;
+        private const string PluginId = "6BF184BF-D34E-4B0B-BA13-F050BE8C359D";
 
         private readonly RevisionGridControl _grid;
         private readonly RevisionDataGridView _gridView;
@@ -43,7 +44,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             var showIcon = AppSettings.ShowBuildStatusIconColumn;
             var showText = AppSettings.ShowBuildStatusTextColumn;
 
-            IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings()
+            IBuildServerSettings buildServerSettings = _module()
+                .GetEffectiveSettings()
+                .ByPath(PluginId.ToLower())
                 .BuildServer();
 
             var columnVisible = buildServerSettings.EnableIntegration

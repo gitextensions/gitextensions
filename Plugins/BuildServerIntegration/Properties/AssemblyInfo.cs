@@ -1,0 +1,6 @@
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+
+[assembly: AssemblyDescription("GitExtensions plugin for integration with build servers")]
+[assembly: InternalsVisibleTo("AppVeyorIntegration.Tests")]
+[assembly: InternalsVisibleTo("AzureDevOpsIntegration.Tests")]

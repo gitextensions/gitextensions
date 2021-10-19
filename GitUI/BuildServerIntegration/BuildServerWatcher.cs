@@ -15,7 +15,6 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.Settings;
-using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -29,6 +28,8 @@ namespace GitUI.BuildServerIntegration
 {
     public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
+        private const string PluginId = "6BF184BF-D34E-4B0B-BA13-F050BE8C359D";
+
         private static readonly TimeSpan ShortPollInterval = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan LongPollInterval = TimeSpan.FromSeconds(120);
         private readonly CancellationTokenSequence _launchCancellation = new();
@@ -297,6 +298,7 @@ namespace GitUI.BuildServerIntegration
             await TaskScheduler.Default;
 
             IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings()
+                .ByPath(PluginId.ToLower())
                 .BuildServer();
 
             if (!buildServerSettings.EnableIntegration)
@@ -325,14 +327,24 @@ namespace GitUI.BuildServerIntegration
                     }
 
                     var buildServerAdapter = export.Value;
+                    ISettingsSource settingsByAdapter = _module()
+                        .GetEffectiveSettings()
+                        .ByPath(PluginId.ToLower())
+                        .ByPath(buildServerSettings.Type!);
 
-                    buildServerAdapter.Initialize(this, _module().GetEffectiveSettings().ByPath(buildServerSettings.Type!),
+                    buildServerAdapter.Initialize(this, settingsByAdapter,
                         () =>
                         {
                             // To run the `StartSettingsDialog()` in the UI Thread
                             _revisionGrid.Invoke((Action)(() =>
                             {
-                                _revisionGrid.UICommands.StartSettingsDialog(typeof(BuildServerIntegrationSettingsPage));
+                                IGitPlugin plugin = PluginRegistry.Plugins
+                                    .FirstOrDefault(x => x.Id == new Guid(PluginId));
+
+                                if (plugin is not null)
+                                {
+                                    _revisionGrid.UICommands.StartSettingsDialog(plugin);
+                                }
                             }));
                         }, objectId => _revisionGrid.GetRevision(objectId) is not null);
                     return buildServerAdapter;
