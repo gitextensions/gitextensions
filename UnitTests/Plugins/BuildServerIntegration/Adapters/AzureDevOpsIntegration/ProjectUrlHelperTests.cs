@@ -2,7 +2,7 @@
 using GitExtensions.Plugins.BuildServerIntegration.Adapters.AzureDevOpsIntegration.Settings;
 using NUnit.Framework;
 
-namespace AzureDevOpsIntegrationTests
+namespace GitExtensions.Plugins.BuildServerIntegrationTests.Adapters.AzureDevOpsIntegration
 {
     [TestFixture]
     public class ProjectUrlHelperTests

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Settings;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -16,8 +17,6 @@ namespace GitUI.CommandsDialogs
 {
     public class BuildReportTabPageExtension
     {
-        private const string PluginId = "6BF184BF-D34E-4B0B-BA13-F050BE8C359D";
-
         private readonly TabControl _tabControl;
         private readonly string _caption;
         private readonly Func<IGitModule> _getModule;
@@ -225,7 +224,7 @@ namespace GitUI.CommandsDialogs
         {
             IBuildServerSettings buildServerSettings = GetModule()
                 .GetEffectiveSettings()
-                .ByPath(PluginId.ToLower())
+                .ByPath(AppSettings.BuildServerIntegrationPluginId)
                 .BuildServer();
 
             return buildServerSettings.ShowBuildResultPage;

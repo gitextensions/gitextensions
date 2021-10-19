@@ -15,7 +15,7 @@ using ResourceManager;
 
 namespace GitExtensions.Plugins.BuildServerIntegration
 {
-    public partial class SettingsControl : GitExtensionsControl
+    public partial class BuildServerIntegrationSettingsControl : GitExtensionsControl
     {
         private static readonly char[] PathSeparators = { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
@@ -26,7 +26,7 @@ namespace GitExtensions.Plugins.BuildServerIntegration
         private IGitModule _gitModule;
         private ISettingsSource? _currentSettings;
 
-        public SettingsControl(IGitModule gitModule)
+        public BuildServerIntegrationSettingsControl(IGitModule gitModule)
         {
             InitializeComponent();
             Text = "Build server integration";

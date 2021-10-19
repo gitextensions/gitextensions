@@ -8,11 +8,11 @@ using ResourceManager;
 namespace GitExtensions.Plugins.BuildServerIntegration
 {
     [Export(typeof(IGitPlugin))]
-    internal sealed class Plugin : GitPluginBase, IGitPluginForRepository
+    internal sealed class BuildServerIntegrationPlugin : GitPluginBase, IGitPluginForRepository
     {
         private IGitUICommands? _gitUiCommands;
 
-        public Plugin()
+        public BuildServerIntegrationPlugin()
             : base(true)
         {
             Id = new Guid("6BF184BF-D34E-4B0B-BA13-F050BE8C359D");

@@ -28,8 +28,6 @@ namespace GitUI.BuildServerIntegration
 {
     public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
-        private const string PluginId = "6BF184BF-D34E-4B0B-BA13-F050BE8C359D";
-
         private static readonly TimeSpan ShortPollInterval = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan LongPollInterval = TimeSpan.FromSeconds(120);
         private readonly CancellationTokenSequence _launchCancellation = new();
@@ -298,7 +296,7 @@ namespace GitUI.BuildServerIntegration
             await TaskScheduler.Default;
 
             IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings()
-                .ByPath(PluginId.ToLower())
+                .ByPath(AppSettings.BuildServerIntegrationPluginId)
                 .BuildServer();
 
             if (!buildServerSettings.EnableIntegration)
@@ -329,7 +327,7 @@ namespace GitUI.BuildServerIntegration
                     var buildServerAdapter = export.Value;
                     ISettingsSource settingsByAdapter = _module()
                         .GetEffectiveSettings()
-                        .ByPath(PluginId.ToLower())
+                        .ByPath(AppSettings.BuildServerIntegrationPluginId)
                         .ByPath(buildServerSettings.Type!);
 
                     buildServerAdapter.Initialize(this, settingsByAdapter,
@@ -339,7 +337,7 @@ namespace GitUI.BuildServerIntegration
                             _revisionGrid.Invoke((Action)(() =>
                             {
                                 IGitPlugin plugin = PluginRegistry.Plugins
-                                    .FirstOrDefault(x => x.Id == new Guid(PluginId));
+                                    .FirstOrDefault(x => x.Id == AppSettings.BuildServerIntegrationPluginGuid);
 
                                 if (plugin is not null)
                                 {

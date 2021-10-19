@@ -5,12 +5,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Adapters\TfsIntegration\**" />
-    <EmbeddedResource Remove="Adapters\TfsIntegration\**" />
-    <None Remove="Adapters\TfsIntegration\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
       <Private>false</Private>
@@ -30,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="SettingsControl.cs">
+    <Compile Update="BuildServerIntegrationSettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">

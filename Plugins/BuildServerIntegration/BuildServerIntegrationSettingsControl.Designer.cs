@@ -1,6 +1,6 @@
 namespace GitExtensions.Plugins.BuildServerIntegration
 {
-    partial class SettingsControl
+    partial class BuildServerIntegrationSettingsControl
     {
         private System.ComponentModel.IContainer components = null;
 

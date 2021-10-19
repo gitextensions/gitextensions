@@ -1499,7 +1499,7 @@ Please verify the server url.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsControl" source-language="en">
+  <file datatype="plaintext" original="BuildServerIntegrationSettingsControl" source-language="en">
     <body>
       <trans-unit id="$this.Text">
         <source>Build server integration</source>

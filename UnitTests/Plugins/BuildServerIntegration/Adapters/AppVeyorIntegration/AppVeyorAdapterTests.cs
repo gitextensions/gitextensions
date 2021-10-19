@@ -15,7 +15,7 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace AppVeyorIntegrationTests
+namespace GitExtensions.Plugins.BuildServerIntegrationTests.Adapters.AppVeyorIntegration
 {
     [TestFixture]
     public class AppVeyorAdapterTests

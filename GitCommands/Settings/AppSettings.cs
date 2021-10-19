@@ -76,6 +76,9 @@ namespace GitCommands
         public static readonly int BranchDropDownMinWidth = 300;
         public static readonly int BranchDropDownMaxWidth = 600;
 
+        public const string BuildServerIntegrationPluginId = "6bf184bf-d34e-4b0b-ba13-f050be8c359d";
+        public static readonly Guid BuildServerIntegrationPluginGuid = new(BuildServerIntegrationPluginId);
+
         public static event Action? Saved;
 
         static AppSettings()
@@ -1623,6 +1626,29 @@ namespace GitCommands
             }
             catch
             {
+            }
+        }
+
+        public static void MigrateBuildServerIntegrationSettings()
+        {
+            try
+            {
+                const string settingsName = "__MigrateBuildServerIntegrationSettings";
+
+                bool migrated = GetBool(settingsName, false);
+
+                if (!migrated)
+                {
+                    string settingsFileText = File.ReadAllText(SettingsFilePath);
+                    string result = settingsFileText.Replace("BuildServer.", $"{BuildServerIntegrationPluginId}.");
+                    File.WriteAllText(SettingsFilePath, result);
+                }
+
+                SetBool(settingsName, true);
+            }
+            catch
+            {
+                // ignored
             }
         }
 

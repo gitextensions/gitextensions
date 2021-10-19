@@ -8,7 +8,7 @@ namespace GitExtensions.Plugins.BuildServerIntegration
         public Settings(string name, IGitModule module)
         {
             Name = name;
-            Control = new SettingsControl(module);
+            Control = new BuildServerIntegrationSettingsControl(module);
         }
 
         public string Name { get; }
@@ -16,7 +16,7 @@ namespace GitExtensions.Plugins.BuildServerIntegration
         public string Caption
             => string.Empty;
 
-        public SettingsControl Control { get; }
+        public BuildServerIntegrationSettingsControl Control { get; }
 
         public ISettingControlBinding CreateControlBinding()
             => this;
