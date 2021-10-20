@@ -78,7 +78,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 {
                     FormBrowse.TestAccessor ta = form.GetTestAccessor();
 
-                    ProcessUntil(() => ta.RevisionGrid.GetTestAccessor().IsRefreshingRevisions, false);
+                    WaitForRevisionsToBeLoaded(ta.RevisionGrid);
 
                     form.MainSplitContainer.SplitterDistance = LeftPanelWidth;
                     ta.RevisionsSplitContainer.SplitterDistance = ta.RevisionsSplitContainer.Width - CommitInfoWidth;
@@ -92,7 +92,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 {
                     FormBrowse.TestAccessor ta = form.GetTestAccessor();
 
-                    ProcessUntil(() => ta.RevisionGrid.GetTestAccessor().IsRefreshingRevisions, false);
+                    WaitForRevisionsToBeLoaded(ta.RevisionGrid);
                     Thread.Sleep(1000);
 
                     form.MainSplitContainer.Panel1Collapsed.Should().Be(leftPanelVisible);
@@ -138,6 +138,11 @@ namespace GitExtensions.UITests.CommandsDialogs
             }
 
             Assert.Fail($"{current} != {expected} in {maxIterations} iterations");
+        }
+
+        private static void WaitForRevisionsToBeLoaded(RevisionGridControl revisionGridControl)
+        {
+            UITest.ProcessUntil("Loading Revisions", () => revisionGridControl.GetTestAccessor().IsUiStable);
         }
     }
 }
