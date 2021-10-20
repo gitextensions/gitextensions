@@ -86,12 +86,6 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (!GitVersion.Current.SupportMergeUnrelatedHistory)
-            {
-                allowUnrelatedHistories.Visible = false;
-                allowUnrelatedHistories.Checked = false;
-            }
-
             Branches.Select();
         }
 

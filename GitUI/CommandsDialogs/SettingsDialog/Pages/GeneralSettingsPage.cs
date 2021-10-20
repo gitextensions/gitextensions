@@ -87,7 +87,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUpdateModules.CheckState = ToCheckboxState(AppSettings.UpdateSubmodulesOnCheckout);
             chkShowStashCountInBrowseWindow.Checked = AppSettings.ShowStashCount;
             chkShowAheadBehindDataInBrowseWindow.Checked = AppSettings.ShowAheadBehindData;
-            chkShowAheadBehindDataInBrowseWindow.Enabled = GitVersion.Current.SupportAheadBehindData;
             chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
             chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits;
             chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus;

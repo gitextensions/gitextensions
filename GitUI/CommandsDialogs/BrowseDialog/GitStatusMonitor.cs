@@ -376,9 +376,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Validates.NotNull(UICommandsSource);
             Validates.NotNull(Module);
 
-            if (IsMinimized()
-                || UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
-                (GitVersion.Current.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess()))
+            if (IsMinimized() || UICommandsSource.UICommands.RepoChangedNotifier.IsLocked)
             {
                 // No run for minimized,
                 // don't update status while repository is being modified by GitExt,

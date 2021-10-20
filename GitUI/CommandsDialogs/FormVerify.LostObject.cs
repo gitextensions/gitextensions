@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
             private static readonly string LogCommandArgumentsFormat = (ArgumentString)new GitArgumentBuilder("log")
             {
                 "-n1",
-                "--pretty=format:\"%aN, %e, %s, %ct, %P\" {0}"
+                "--pretty=format:\"%aN, %s, %ct, %P\" {0}"
             };
 
             private static readonly string TagCommandArgumentsFormat = (ArgumentString)new GitArgumentBuilder("cat-file")
@@ -111,12 +111,11 @@ namespace GitUI.CommandsDialogs
                     if (logPatternMatch.Success)
                     {
                         result.Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
-                        string encodingName = logPatternMatch.Groups[2].Value;
-                        result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName) ?? "";
-                        result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
-                        if (logPatternMatch.Groups.Count >= 5)
+                        result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups[2].Value) ?? "";
+                        result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[3].Value);
+                        if (logPatternMatch.Groups.Count >= 4)
                         {
-                            var parentId = logPatternMatch.Groups[5].Value.LazySplit(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                            var parentId = logPatternMatch.Groups[4].Value.LazySplit(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
                             if (parentId is not null)
                             {
                                 result.Parent = ObjectId.Parse(parentId);

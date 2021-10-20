@@ -28,14 +28,7 @@ namespace GitCommands.Git
         /// <seealso href="https://git-scm.com/docs/git-status"/>
         public IReadOnlyList<GitItemStatus> Parse(string getAllChangedFilesCommandOutput)
         {
-            if (GitVersion.Current.SupportStatusPorcelainV2)
-            {
-                return GetAllChangedFilesFromString_v2(getAllChangedFilesCommandOutput);
-            }
-            else
-            {
-                return GetAllChangedFilesFromString_v1(getAllChangedFilesCommandOutput, false, StagedStatus.Unset);
-            }
+            return GetAllChangedFilesFromString_v2(getAllChangedFilesCommandOutput);
         }
 
         /// <summary>

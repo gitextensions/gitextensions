@@ -31,7 +31,6 @@
     "Body": "wip tests\n\nsecond line\nthird line before multiple whitespace",
     "HasMultiLineMessage": true,
     "HasNotes": false,
-    "MessageEncoding": null,
     "IsArtificial": false,
     "HasParent": true,
     "FirstParentId": {

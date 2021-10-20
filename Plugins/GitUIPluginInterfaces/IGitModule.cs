@@ -125,7 +125,7 @@ namespace GitUIPluginInterfaces
 
         string? ReEncodeStringFromLossless(string? s);
 
-        string ReEncodeCommitMessage(string s, string? toEncodingName);
+        string ReEncodeCommitMessage(string s);
 
         string? GetDescribe(ObjectId commitId);
 

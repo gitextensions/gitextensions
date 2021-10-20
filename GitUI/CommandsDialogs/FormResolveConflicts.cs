@@ -199,7 +199,7 @@ namespace GitUI.CommandsDialogs
                     isLastRow = ConflictedFiles.Rows.Count - 1 == oldSelectedRow;
                 }
 
-                SortableConflictDataList conflictDataList = new SortableConflictDataList();
+                SortableConflictDataList conflictDataList = new();
                 conflictDataList.AddRange(ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictsAsync()));
                 ConflictedFiles.DataSource = conflictDataList;
                 ConflictedFiles.Columns[0].DataPropertyName = nameof(ConflictData.Filename);

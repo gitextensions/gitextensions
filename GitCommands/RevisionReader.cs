@@ -45,7 +45,6 @@ namespace GitCommands
             /* Parent IDs      */ "%P%n" +
             /* Author date     */ "%at%n" +
             /* Commit date     */ "%ct%n" +
-            /* Encoding        */ "%e%n" +
 
             // Items below here must be decoded as strings to support non-ASCII.
             /* Author name     */ "%aN%n" +
@@ -123,7 +122,6 @@ namespace GitCommands
 
             var logOutputEncoding = module.LogOutputEncoding;
             long sixMonths = new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(30 * 6)).ToUnixTimeSeconds();
-            Func<string?, Encoding> getEncodingByGitName = (name) => module.GetEncodingByGitName(name);
 
             using (var process = module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
@@ -138,7 +136,7 @@ namespace GitCommands
                 {
                     token.ThrowIfCancellationRequested();
 
-                    if (TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out GitRevision? revision))
+                    if (TryParseRevision(chunk, logOutputEncoding, sixMonths, out GitRevision? revision))
                     {
                         // Look up any refs associated with this revision
                         revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
@@ -249,7 +247,7 @@ namespace GitCommands
             }
         }
 
-        private static bool TryParseRevision(in ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, in Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
+        private static bool TryParseRevision(in ArraySegment<byte> chunk, in Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -366,41 +364,10 @@ namespace GitCommands
 
             #endregion
 
-            #region Encoding
-
-            // Line is the name of the encoding used by git, or an empty string, terminated by `\n`
-            string? encodingName;
-            Encoding encoding;
-
-            var encodingNameEndLength = array[offset..].IndexOf((byte)'\n');
-
-            if (encodingNameEndLength == -1)
-            {
-                ParseAssert($"Log parse error, no encoding name for {objectId}");
-                revision = default;
-                return false;
-            }
-
-            if (encodingNameEndLength == 0)
-            {
-                // No encoding specified, this is the normal case since Git 1.8.4
-                encoding = logOutputEncoding;
-                encodingName = null;
-            }
-            else
-            {
-                encodingName = logOutputEncoding.GetString(array.Slice(offset, encodingNameEndLength));
-                encoding = getEncodingByGitName(encodingName) ?? Encoding.UTF8;
-            }
-
-            offset += encodingNameEndLength + 1;
-
-            #endregion
-
             #region Encoded string values (names, emails, subject, body)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
-            ReadOnlySpan<char> s = encoding.GetString(array[offset..]).AsSpan();
+            ReadOnlySpan<char> s = logOutputEncoding.GetString(array[offset..]).AsSpan();
             StringLineReader reader = new(in s);
 
             var author = reader.ReadLine();
@@ -434,7 +401,6 @@ namespace GitCommands
                 Committer = committer,
                 CommitterEmail = committerEmail,
                 CommitUnixTime = commitUnixTime,
-                MessageEncoding = encodingName,
                 Subject = subject,
                 Body = body,
                 HasMultiLineMessage = hasMultiLineMessage,
@@ -537,8 +503,8 @@ namespace GitCommands
                 string branchFilter, string revisionFilter, string pathFilter) =>
                 _revisionReader.BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
-            internal static bool TryParseRevision(ArraySegment<byte> chunk, Func<string?, Encoding?> getEncodingByGitName, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
-                RevisionReader.TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out revision);
+            internal static bool TryParseRevision(ArraySegment<byte> chunk, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
+                RevisionReader.TryParseRevision(chunk, logOutputEncoding, sixMonths, out revision);
 
             internal static int NoOfParseError
             {

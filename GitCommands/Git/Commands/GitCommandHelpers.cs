@@ -64,10 +64,7 @@ namespace GitCommands.Git.Commands
         public static ArgumentString GetCurrentChangesCmd(string? fileName, string? oldFileName, bool staged,
             string extraDiffArguments, bool noLocks)
         {
-            return new GitArgumentBuilder("diff", gitOptions:
-                    noLocks && GitVersion.Current.SupportNoOptionalLocks
-                        ? (ArgumentString)"--no-optional-locks"
-                        : default)
+            return new GitArgumentBuilder("diff", gitOptions: noLocks ? (ArgumentString)"--no-optional-locks" : default)
                 {
                     "--find-renames",
                     "--find-copies",
@@ -85,9 +82,7 @@ namespace GitCommands.Git.Commands
             bool hasTags = (getRef == RefsFilter.NoFilter) || (getRef & RefsFilter.Tags) != 0;
 
             GitArgumentBuilder cmd = new("for-each-ref",
-                gitOptions: noLocks && GitVersion.Current.SupportNoOptionalLocks
-                    ? (ArgumentString)"--no-optional-locks"
-                    : default)
+                gitOptions: noLocks ? (ArgumentString)"--no-optional-locks" : default)
             {
                 SortCriteria(hasTags, sortBy, sortOrder),
                 GitRefsFormat(hasTags),
@@ -100,11 +95,6 @@ namespace GitCommands.Git.Commands
             static ArgumentString SortCriteria(bool needTags, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder)
             {
                 if (sortBy == GitRefsSortBy.Default)
-                {
-                    return string.Empty;
-                }
-
-                if (!GitVersion.Current.SupportRefSort)
                 {
                     return string.Empty;
                 }
@@ -232,14 +222,12 @@ namespace GitCommands.Git.Commands
         /// <para><c>False</c>: --no-single-branch.</para>
         /// <para><c>NULL</c>: don't pass any such param to git.</para>
         /// </param>
-        /// <param name="lfs">True to use the <c>git lfs clone</c> command instead of <c>git clone</c>.</param>
-        public static ArgumentString CloneCmd(string fromPath, string toPath, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null, bool lfs = false)
+        public static ArgumentString CloneCmd(string fromPath, string toPath, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
 
-            return new GitArgumentBuilder(lfs ? "lfs" : "clone")
+            return new GitArgumentBuilder("clone")
             {
-                { lfs, "clone" },
                 "-v",
                 { central, "--bare" },
                 { initSubmodules, "--recurse-submodules" },
@@ -316,7 +304,7 @@ namespace GitCommands.Git.Commands
         {
             return new GitPush(remote.ToPosixPath(), pushActions)
             {
-                ReportProgress = GitVersion.Current.PushCanAskForProgress
+                ReportProgress = true
             }.ToString();
         }
 
@@ -331,7 +319,7 @@ namespace GitCommands.Git.Commands
             return new GitArgumentBuilder("push")
             {
                 force,
-                { GitVersion.Current.PushCanAskForProgress, "--progress" },
+                "--progress",
                 path.ToPosixPath().Trim().Quote(),
                 { all, "--tags" },
                 { !all, $"tag {tag.Replace(" ", "")}" }
@@ -347,7 +335,7 @@ namespace GitCommands.Git.Commands
             return new GitArgumentBuilder("stash")
             {
                 { isPartialStash, "push", "save" },
-                { untracked && GitVersion.Current.StashUntrackedFilesSupported, "-u" },
+                { untracked, "-u" },
                 { keepIndex, "--keep-index" },
                 { isPartialStash && !string.IsNullOrWhiteSpace(message), "-m" },
                 { !string.IsNullOrWhiteSpace(message), message.Quote() },
@@ -508,12 +496,9 @@ namespace GitCommands.Git.Commands
 
         public static ArgumentString GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
-            GitArgumentBuilder args = new("status", gitOptions:
-                noLocks && GitVersion.Current.SupportNoOptionalLocks
-                    ? (ArgumentString)"--no-optional-locks"
-                    : default)
+            GitArgumentBuilder args = new("status", gitOptions: noLocks ? (ArgumentString)"--no-optional-locks" : default)
             {
-                $"--porcelain{(GitVersion.Current.SupportStatusPorcelainV2 ? "=2" : "")} -z",
+                $"--porcelain=2 -z",
                 untrackedFiles,
                 { !excludeIgnoredFiles, "--ignored" }
             };

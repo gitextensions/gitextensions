@@ -8,20 +8,6 @@ namespace GitCommands
 {
     public class GitVersion : IComparable<GitVersion>
     {
-        private static readonly GitVersion v1_7_1 = new("1.7.1");
-        private static readonly GitVersion v1_7_7 = new("1.7.7");
-        private static readonly GitVersion v1_7_11 = new("1.7.11");
-        private static readonly GitVersion v1_8_4 = new("1.8.4");
-        private static readonly GitVersion v1_8_5 = new("1.8.5");
-        private static readonly GitVersion v2_0_1 = new("2.0.1");
-        private static readonly GitVersion v2_5_0 = new("2.5.0");
-        private static readonly GitVersion v2_5_1 = new("2.5.1");
-        private static readonly GitVersion v2_7_0 = new("2.7.0");
-        private static readonly GitVersion v2_9_0 = new("2.9.0");
-        private static readonly GitVersion v2_11_0 = new("2.11.0");
-        private static readonly GitVersion v2_14_6 = new("2.14.6");
-        private static readonly GitVersion v2_15_0 = new("2.15.0");
-        private static readonly GitVersion v2_15_2 = new("2.15.2");
         private static readonly GitVersion v2_19_0 = new("2.19.0");
         private static readonly GitVersion v2_20_0 = new("2.20.0");
 
@@ -122,42 +108,8 @@ namespace GitCommands
             }
         }
 
-        public bool FetchCanAskForProgress => this >= v1_7_1;
-
-        public bool LogFormatRecodesCommitMessage => this >= v1_8_4;
-
-        public bool PushCanAskForProgress => this >= v1_7_1;
-
-        public bool StashUntrackedFilesSupported => this >= v1_7_7;
-
-        public bool SupportPushWithRecursiveSubmodulesCheck => this >= v1_7_7;
-
-        public bool SupportPushWithRecursiveSubmodulesOnDemand => this >= v1_7_11;
-
-        public bool SupportPushForceWithLease => this >= v1_8_5;
-
-        public bool RaceConditionWhenGitStatusIsUpdatingIndex => this < v2_0_1;
-
-        public bool SupportAheadBehindData => this >= v2_5_0;
-
-        public bool SupportWorktree => this >= v2_5_1;
-
-        public bool SupportWorktreeList => this >= v2_7_0;
-
-        public bool SupportMergeUnrelatedHistory => this >= v2_9_0;
-
-        public bool SupportStatusPorcelainV2 => this >= v2_11_0;
-
-        public bool DepreciatedLfsClone => this >= v2_15_0;
-
-        public bool SupportNoOptionalLocks => this >= v2_15_2;
-
         public bool SupportRebaseMerges => this >= v2_19_0;
-
-        public bool SupportRefSort => this >= v2_14_6;
-
         public bool SupportGuiMergeTool => this >= v2_20_0;
-
         public bool SupportRangeDiffTool => this >= v2_19_0;
 
         public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
@@ -210,10 +162,10 @@ namespace GitCommands
         public override string ToString()
         {
             return Full
-                .Replace(".msysgit.0", "")
-                .Replace(".msysgit.1", "")
                 .Replace(".windows.0", "")
-                .Replace(".windows.1", "");
+                .Replace(".windows.1", "")
+                .Replace(".windows.2", "")
+                .Replace(".windows.3", "");
         }
     }
 }

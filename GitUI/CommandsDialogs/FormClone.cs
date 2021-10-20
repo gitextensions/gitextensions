@@ -184,13 +184,6 @@ namespace GitUI.CommandsDialogs
             }
 
             FromTextUpdate(this, EventArgs.Empty);
-
-            cbLfs.Visible = !GitVersion.Current.DepreciatedLfsClone;
-            cbLfs.Enabled = Module.HasLfsSupport();
-            if (!cbLfs.Enabled || !cbLfs.Visible)
-            {
-                cbLfs.Checked = false;
-            }
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -253,10 +246,11 @@ namespace GitUI.CommandsDialogs
                 }
 
                 string sourceRepo = _NO_TRANSLATE_From.Text;
-                var cloneCmd = GitCommandHelpers.CloneCmd(sourceRepo, dirTo,
-                                                          CentralRepository.Checked,
-                                                          cbIntializeAllSubmodules.Checked,
-                                                          branch, depth, isSingleBranch, cbLfs.Checked);
+                var cloneCmd = GitCommandHelpers.CloneCmd(sourceRepo,
+                    dirTo,
+                    CentralRepository.Checked,
+                    cbIntializeAllSubmodules.Checked,
+                    branch, depth, isSingleBranch);
                 using (FormRemoteProcess fromProcess = new(UICommands, cloneCmd))
                 {
                     fromProcess.SetUrlTryingToConnect(sourceRepo);

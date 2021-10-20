@@ -19,7 +19,6 @@ namespace GitCommandsTests
     {
         private RevisionReader _revisionReader;
 
-        private Func<string?, Encoding?> _getEncodingByGitName;
         private Encoding _logOutputEncoding = Encoding.UTF8;
         private long _sixMonths = new DateTimeOffset(new DateTime(2021, 01, 01)).ToUnixTimeSeconds();
 
@@ -27,9 +26,6 @@ namespace GitCommandsTests
         public void Setup()
         {
             _revisionReader = new RevisionReader();
-
-            // The normal encoding is _logOutputEncoding ("i18n.logoutputencoding") since Git 1.8.4
-            _getEncodingByGitName = (encoding) => _logOutputEncoding;
         }
 
         [TestCase(0, false)]
@@ -114,7 +110,7 @@ namespace GitCommandsTests
         {
             ArraySegment<byte> chunk = null;
 
-            bool res = RevisionReader.TestAccessor.TryParseRevision(chunk, _getEncodingByGitName, _logOutputEncoding, _sixMonths, out _);
+            bool res = RevisionReader.TestAccessor.TryParseRevision(chunk, _logOutputEncoding, _sixMonths, out _);
             res.Should().BeFalse();
         }
 
@@ -131,7 +127,6 @@ namespace GitCommandsTests
         [TestCase("empty", false)]
         [TestCase("illegal_timestamp", true, true)]
         [TestCase("multi_pathfilter", true)]
-        [TestCase("no_encoding", false)]
         [TestCase("no_subject", true)]
         [TestCase("normal", true)]
         [TestCase("short_sha", false)]
@@ -147,7 +142,7 @@ namespace GitCommandsTests
 
                 // Set to a high value so Debug.Assert do not raise exceptions
                 RevisionReader.TestAccessor.NoOfParseError = 100;
-                RevisionReader.TestAccessor.TryParseRevision(chunk, _getEncodingByGitName, _logOutputEncoding, _sixMonths, out GitRevision rev)
+                RevisionReader.TestAccessor.TryParseRevision(chunk, _logOutputEncoding, _sixMonths, out GitRevision rev)
                     .Should().Be(expectedReturn);
 
                 // No LocalTime for the time stamps
