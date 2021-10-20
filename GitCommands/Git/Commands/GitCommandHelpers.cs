@@ -204,13 +204,14 @@ namespace GitCommands.Git.Commands
         /// </summary>
         /// <param name="gitRef">The branch to move.</param>
         /// <param name="targetId">The commit to move to.</param>
+        /// <param name="repoDir">Directory to the current repo.</param>
         /// <param name="force">Push the reference also if commits are lost.</param>
         /// <returns>The Git command to execute.</returns>
-        public static ArgumentString PushLocalCmd(string gitRef, ObjectId targetId, bool force = false)
+        public static ArgumentString PushLocalCmd(string gitRef, ObjectId targetId, string repoDir, bool force = false)
         {
             return new GitArgumentBuilder("push")
             {
-                ".",
+                $@"""file://{repoDir}""",
                 $"{targetId}:{gitRef}".QuoteNE(),
                 { force, "--force" }
             };
