@@ -42,7 +42,7 @@ namespace GitCommands
     {
         private const string CommitDataFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B";
         private const string CommitDataWithNotesFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
-        private const string BodyAndNotesFormat = "%H%n%e%n%B%nNotes:%n%-N";
+        private const string BodyAndNotesFormat = "%H%n%B%nNotes:%n%-N";
 
         private readonly Func<IGitModule> _getModule;
 
@@ -70,20 +70,18 @@ namespace GitCommands
             // Notes:
 
             // commit id
-            // encoding
             // commit message
             // ...
 
             var lines = data.Split(Delimiters.LineFeed);
 
             var guid = lines[0];
-            var commitEncoding = lines[1];
-            var message = ProcessDiffNotes(startIndex: 2, lines);
+            var message = ProcessDiffNotes(startIndex: 1, lines);
 
             Debug.Assert(commitData.ObjectId.ToString() == guid, "Guid in response doesn't match that of request");
 
             // Commit message is not re-encoded by git when format is given
-            commitData.Body = GetModule().ReEncodeCommitMessage(message, commitEncoding);
+            commitData.Body = GetModule().ReEncodeCommitMessage(message);
         }
 
         /// <inheritdoc />
@@ -117,7 +115,6 @@ namespace GitCommands
             // 1521115435
             // GitHub <noreply@github.com>
             // 1521115435
-            //
             // Merge pull request #4615 from drewnoakes/modernise-3
             //
             // New language features
@@ -130,7 +127,6 @@ namespace GitCommands
             // authored date (unix time)
             // committer
             // committed date (unix time)
-            // encoding (may be blank)
             // diff notes
             // ...
 
@@ -147,11 +143,10 @@ namespace GitCommands
             var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
             var committer = module.ReEncodeStringFromLossless(lines[5]);
             var commitDate = DateTimeUtils.ParseUnixTime(lines[6]);
-            var commitEncoding = lines[7];
-            var message = ProcessDiffNotes(startIndex: 8, lines);
+            var message = ProcessDiffNotes(startIndex: 7, lines);
 
             // commit message is not re-encoded by git when format is given
-            var body = module.ReEncodeCommitMessage(message, commitEncoding);
+            var body = module.ReEncodeCommitMessage(message);
 
             Validates.NotNull(author);
             Validates.NotNull(committer);

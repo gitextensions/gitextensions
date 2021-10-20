@@ -113,18 +113,9 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
 
-            if (!GitVersion.Current.SupportPushForceWithLease)
-            {
-                ckForceWithLease.Visible = false;
-                ForcePushTags.DataBindings.Add("Checked", ForcePushBranches, "Checked",
-                    formattingEnabled: false, updateMode: DataSourceUpdateMode.OnPropertyChanged);
-            }
-            else
-            {
-                ForcePushTags.DataBindings.Add("Checked", ckForceWithLease, "Checked",
-                    formattingEnabled: false, updateMode: DataSourceUpdateMode.OnPropertyChanged);
-                toolTip1.SetToolTip(ckForceWithLease, _forceWithLeaseTooltips.Text);
-            }
+            ForcePushTags.DataBindings.Add("Checked", ckForceWithLease, "Checked",
+                formattingEnabled: false, updateMode: DataSourceUpdateMode.OnPropertyChanged);
+            toolTip1.SetToolTip(ckForceWithLease, _forceWithLeaseTooltips.Text);
 
             // can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
             // they are reset to false
@@ -134,20 +125,7 @@ namespace GitUI.CommandsDialogs
             void Init()
             {
                 _gitRefs = Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes);
-                if (GitVersion.Current.SupportPushWithRecursiveSubmodulesCheck)
-                {
-                    RecursiveSubmodules.Enabled = true;
-                    RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
-                    if (!GitVersion.Current.SupportPushWithRecursiveSubmodulesOnDemand)
-                    {
-                        RecursiveSubmodules.Items.RemoveAt(2);
-                    }
-                }
-                else
-                {
-                    RecursiveSubmodules.Enabled = false;
-                    RecursiveSubmodules.SelectedIndex = 0;
-                }
+                RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
 
                 _currentBranchName = Module.GetSelectedBranch();
 
@@ -387,21 +365,18 @@ namespace GitUI.CommandsDialogs
 
                 if (ForcePushBranches.Checked)
                 {
-                    if (GitVersion.Current.SupportPushForceWithLease)
+                    var choice = MessageBox.Show(owner,
+                                                 _useForceWithLeaseInstead.Text,
+                                                 "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
+                                                 MessageBoxDefaultButton.Button1);
+                    switch (choice)
                     {
-                        var choice = MessageBox.Show(owner,
-                                                     _useForceWithLeaseInstead.Text,
-                                                     "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
-                                                     MessageBoxDefaultButton.Button1);
-                        switch (choice)
-                        {
-                            case DialogResult.Yes:
-                                ForcePushBranches.Checked = false;
-                                ckForceWithLease.Checked = true;
-                                break;
-                            case DialogResult.Cancel:
-                                return false;
-                        }
+                        case DialogResult.Yes:
+                            ForcePushBranches.Checked = false;
+                            ckForceWithLease.Checked = true;
+                            break;
+                        case DialogResult.Cancel:
+                            return false;
                     }
                 }
 
@@ -560,8 +535,7 @@ namespace GitUI.CommandsDialogs
                     {
                         Trace.Assert(form.ProcessArguments.StartsWith("push "), "Arguments should start with 'push' command");
 
-                        string forceArg = GitVersion.Current.SupportPushForceWithLease ? " --force-with-lease" : " -f";
-                        form.ProcessArguments = form.ProcessArguments.Insert("push".Length, forceArg);
+                        form.ProcessArguments = form.ProcessArguments.Insert("push".Length, " --force-with-lease");
                     }
 
                     form.Retry();
@@ -1053,10 +1027,8 @@ namespace GitUI.CommandsDialogs
 
                 Validates.NotNull(_branchTable);
                 _branchTable.BeginLoadData();
-                AheadBehindDataProvider? aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData
-                    ? new AheadBehindDataProvider(() => Module.GitExecutable)
-                    : null;
-                var aheadBehindData = aheadBehindDataProvider?.GetData();
+                AheadBehindDataProvider aheadBehindDataProvider = new(() => Module.GitExecutable);
+                var aheadBehindData = aheadBehindDataProvider.GetData();
 
                 // Add all the local branches.
                 foreach (var head in localHeads)

@@ -3693,10 +3693,6 @@ Do you want to open the new repository "{0}" now?</source>
         <source>Initialize all submodules</source>
         <target />
       </trans-unit>
-      <trans-unit id="cbLfs.Text">
-        <source>Use LFS extension</source>
-        <target />
-      </trans-unit>
       <trans-unit id="destinationLabel.Text">
         <source>&amp;Destination:</source>
         <target />
@@ -7521,14 +7517,6 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="_stashDropConfirmTitle.Text">
         <source>Drop Stash Confirmation</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_stashUntrackedFilesNotSupportedCaption.Text">
-        <source>Stash untracked files</source>
         <target />
       </trans-unit>
       <trans-unit id="cherryPickFileChangesToolStripMenuItem.Text">

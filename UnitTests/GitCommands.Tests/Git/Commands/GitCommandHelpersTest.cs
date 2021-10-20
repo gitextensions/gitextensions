@@ -218,9 +218,6 @@ namespace GitCommandsTests.Git.Commands
             Assert.AreEqual(
                 "clone -v --progress --no-checkout \"from\" \"to\"",
                 GitCommandHelpers.CloneCmd("from", "to", branch: null).Arguments);
-            Assert.AreEqual(
-                "lfs clone -v --progress \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", lfs: true).Arguments);
         }
 
         [Test]
@@ -284,9 +281,6 @@ namespace GitCommandsTests.Git.Commands
         [Test]
         public void PushTagCmd()
         {
-            // TODO test case where this is false
-            Assert.True(GitVersion.Current.PushCanAskForProgress);
-
             Assert.AreEqual(
                 "push --progress \"path\" tag tag",
                 GitCommandHelpers.PushTagCmd("path", "tag", all: false).Arguments);
@@ -318,9 +312,6 @@ namespace GitCommandsTests.Git.Commands
             // TODO test case where message string contains quotes
             // TODO test case where message string contains newlines
             // TODO test case where selectedFiles contains whitespaces (not currently quoted)
-
-            // TODO test case where this is false
-            Assert.True(GitVersion.Current.StashUntrackedFilesSupported);
 
             Assert.AreEqual(
                 "stash save",

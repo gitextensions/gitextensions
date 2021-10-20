@@ -17,8 +17,6 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _currentWorkingDirChanges = new("Current working directory changes");
         private readonly TranslationString _noStashes = new("There are no stashes.");
-        private readonly TranslationString _stashUntrackedFilesNotSupportedCaption = new("Stash untracked files");
-        private readonly TranslationString _stashUntrackedFilesNotSupported = new("Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.");
         private readonly TranslationString _stashDropConfirmTitle = new("Drop Stash Confirmation");
         private readonly TranslationString _cannotBeUndone = new("This action cannot be undone.");
         private readonly TranslationString _areYouSure = new("Are you sure you want to drop the stash? This action cannot be undone.");
@@ -306,12 +304,6 @@ namespace GitUI.CommandsDialogs
 
         private void StashClick(object sender, EventArgs e)
         {
-            if (chkIncludeUntrackedFiles.Checked && !GitVersion.Current.StashUntrackedFilesSupported)
-            {
-                MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             using (WaitCursorScope.Enter())
             {
                 var msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;
@@ -322,12 +314,6 @@ namespace GitUI.CommandsDialogs
 
         private void StashSelectedFiles_Click(object sender, EventArgs e)
         {
-            if (chkIncludeUntrackedFiles.Checked && !GitVersion.Current.StashUntrackedFilesSupported)
-            {
-                MessageBox.Show(_stashUntrackedFilesNotSupported.Text, _stashUntrackedFilesNotSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             using (WaitCursorScope.Enter())
             {
                 var msg = !string.IsNullOrWhiteSpace(StashMessage.Text) ? " " + StashMessage.Text.Trim() : string.Empty;

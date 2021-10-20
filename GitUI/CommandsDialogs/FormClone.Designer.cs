@@ -40,7 +40,6 @@
             this.LoadSSHKey = new System.Windows.Forms.Button();
             this.tpnlMain = new System.Windows.Forms.TableLayoutPanel();
             this.optionsPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.cbLfs = new System.Windows.Forms.CheckBox();
             this.ttHints = new System.Windows.Forms.ToolTip(this.components);
             this.MainPanel.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -353,24 +352,12 @@
             this.optionsPanel.AutoSize = true;
             this.optionsPanel.Controls.Add(this.cbIntializeAllSubmodules);
             this.optionsPanel.Controls.Add(this.cbDownloadFullHistory);
-            this.optionsPanel.Controls.Add(this.cbLfs);
             this.optionsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.optionsPanel.Location = new System.Drawing.Point(0, 272);
             this.optionsPanel.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.optionsPanel.Name = "optionsPanel";
             this.optionsPanel.Size = new System.Drawing.Size(625, 23);
             this.optionsPanel.TabIndex = 2;
-            // 
-            // cbLfs
-            // 
-            this.cbLfs.AutoSize = true;
-            this.cbLfs.Location = new System.Drawing.Point(321, 3);
-            this.cbLfs.Margin = new System.Windows.Forms.Padding(15, 3, 9, 3);
-            this.cbLfs.Name = "cbLfs";
-            this.cbLfs.Size = new System.Drawing.Size(115, 17);
-            this.cbLfs.TabIndex = 5;
-            this.cbLfs.Text = "Use LFS extension";
-            this.ttHints.SetToolTip(this.cbLfs, resources.GetString("cbLfs.ToolTip"));
             // 
             // FormClone
             // 
@@ -428,6 +415,5 @@
         private System.Windows.Forms.TableLayoutPanel tpnlMain;
         private System.Windows.Forms.ToolTip ttHints;
         private System.Windows.Forms.FlowLayoutPanel optionsPanel;
-        private System.Windows.Forms.CheckBox cbLfs;
     }
 }

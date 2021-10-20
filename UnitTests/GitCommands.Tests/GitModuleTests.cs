@@ -121,9 +121,6 @@ namespace GitCommandsTests
         [Test]
         public void FetchCmd()
         {
-            // TODO test case where this is false
-            Assert.IsTrue(GitVersion.Current.FetchCanAskForProgress);
-
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
@@ -170,9 +167,6 @@ namespace GitCommandsTests
         [Test]
         public void PushAllCmd()
         {
-            // TODO test case where this is false
-            Assert.IsTrue(GitVersion.Current.PushCanAskForProgress);
-
             Assert.AreEqual(
                 "push --progress --all \"remote\"",
                 _gitModule.PushAllCmd("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments);

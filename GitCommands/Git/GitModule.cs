@@ -917,8 +917,7 @@ namespace GitCommands
                 /* Author Date    */ "%at%n" +
                 /* Committer Name */ "%cN%n" +
                 /* Committer EMail*/ "%cE%n" +
-                /* Committer Date */ "%ct%n" +
-                /* Encoding       */ "%e%n";
+                /* Committer Date */ "%ct%n";
 
             var format = formatString + (shortFormat ? "%s" : "%B%nNotes:%n%-N");
 
@@ -943,22 +942,21 @@ namespace GitCommands
                 Committer = ReEncodeStringFromLossless(lines[6]),
                 CommitterEmail = ReEncodeStringFromLossless(lines[7]),
                 AuthorUnixTime = long.Parse(lines[5]),
-                CommitUnixTime = long.Parse(lines[8]),
-                MessageEncoding = lines[9]
+                CommitUnixTime = long.Parse(lines[8])
             };
 
             revision.HasNotes = !shortFormat;
             if (shortFormat)
             {
-                revision.Subject = ReEncodeCommitMessage(lines[10], revision.MessageEncoding) ?? "";
+                revision.Subject = ReEncodeCommitMessage(lines[9]) ?? "";
             }
             else
             {
-                string message = ProcessDiffNotes(startIndex: 10);
+                string message = ProcessDiffNotes(startIndex: 9);
 
                 // commit message is not re-encoded by git when format is given
                 // See also RevisionReader for parsing commit body
-                string body = ReEncodeCommitMessage(message, revision.MessageEncoding);
+                string body = ReEncodeCommitMessage(message);
                 revision.Body = body;
 
                 ReadOnlySpan<char> span = (body ?? "").AsSpan();
@@ -1440,7 +1438,7 @@ namespace GitCommands
         {
             return new GitArgumentBuilder("fetch")
             {
-                { GitVersion.Current.FetchCanAskForProgress, "--progress" },
+                "--progress",
                 {
                     !string.IsNullOrEmpty(remote) || !string.IsNullOrEmpty(remoteBranch) || !string.IsNullOrEmpty(localBranch),
                     GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow, pruneRemoteBranches, pruneRemoteBranchesAndTags)
@@ -1453,7 +1451,7 @@ namespace GitCommands
             return new GitArgumentBuilder("pull")
             {
                 { rebase, "--rebase" },
-                { GitVersion.Current.FetchCanAskForProgress, "--progress" },
+                "--progress",
                 GetFetchArgs(remote, remoteBranch, null, fetchTags, isUnshallow)
             };
         }
@@ -1535,7 +1533,7 @@ namespace GitCommands
                 { track, "-u" },
                 { recursiveSubmodules == 1, "--recurse-submodules=check" },
                 { recursiveSubmodules == 2, "--recurse-submodules=on-demand" },
-                { GitVersion.Current.PushCanAskForProgress, "--progress" },
+                "--progress",
                 "--all",
                 remote.ToPosixPath().Trim().Quote()
             };
@@ -1569,7 +1567,7 @@ namespace GitCommands
                 { track, "-u" },
                 { recursiveSubmodules == 1, "--recurse-submodules=check" },
                 { recursiveSubmodules == 2, "--recurse-submodules=on-demand" },
-                { GitVersion.Current.PushCanAskForProgress, "--progress" },
+                "--progress",
                 remote.ToPosixPath().Trim().Quote(),
                 { string.IsNullOrEmpty(toBranch), fromBranch },
                 { !string.IsNullOrEmpty(toBranch), $"{fromBranch}:{toBranch}" }
@@ -2268,10 +2266,7 @@ namespace GitCommands
 
         internal GitArgumentBuilder GetStashesCmd(bool noLocks)
         {
-            return new GitArgumentBuilder("stash", gitOptions:
-                    noLocks && GitVersion.Current.SupportNoOptionalLocks
-                        ? (ArgumentString)"--no-optional-locks"
-                        : default)
+            return new GitArgumentBuilder("stash", gitOptions: noLocks ? (ArgumentString)"--no-optional-locks" : default)
                 { "list" };
         }
 
@@ -3558,7 +3553,7 @@ namespace GitCommands
                 "-z",
                 $"-n {count}",
                 revision,
-                "--pretty=format:%e%n%B",
+                "--pretty=format:%B",
                 { !string.IsNullOrEmpty(authorPattern), string.Concat("--author=\"", authorPattern, "\"") }
             };
 
@@ -3573,11 +3568,7 @@ namespace GitCommands
 
             return messages.Select(cm =>
                 {
-                    int idx = cm.IndexOf('\n');
-                    string encodingName = cm.Substring(0, idx);
-                    cm = cm.Substring(idx + 1, cm.Length - idx - 1);
-                    cm = ReEncodeCommitMessage(cm, encodingName);
-                    return cm;
+                     return ReEncodeCommitMessage(cm);
                 });
         }
 
@@ -3934,54 +3925,9 @@ namespace GitCommands
             return ReEncodeStringFromLossless(s, LogOutputEncoding);
         }
 
-        // there was a bug: Git before v1.8.4 did not recode commit message when format is given
-        // Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
-        // characters could be replaced by replacement character while re-encoding to LogOutputEncoding
-        public string? ReEncodeCommitMessage(string s, string? toEncodingName)
+        public string? ReEncodeCommitMessage(string s)
         {
-            Encoding? encoding;
-            try
-            {
-                encoding = GetEncodingByGitName(toEncodingName);
-            }
-            catch
-            {
-                return s + "\n\n! Unsupported commit message encoding: " + toEncodingName + " !";
-            }
-
-            return ReEncodeStringFromLossless(s, encoding)?.Trim();
-        }
-
-        public Encoding? GetEncodingByGitName(string? encodingName)
-        {
-            bool isABug = !GitVersion.Current.LogFormatRecodesCommitMessage;
-
-            if (isABug)
-            {
-                if (string.IsNullOrEmpty(encodingName))
-                {
-                    return Encoding.UTF8;
-                }
-                else if (encodingName.Equals(LosslessEncoding.WebName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    // no recoding is needed
-                    return null;
-                }
-                else if (CpEncodingPattern.IsMatch(encodingName))
-                {
-                    // Encodings written as e.g. "cp1251", which is not a supported encoding string
-                    return Encoding.GetEncoding(int.Parse(encodingName.Substring(2)));
-                }
-                else
-                {
-                    return Encoding.GetEncoding(encodingName);
-                }
-            }
-            else
-            {
-                // bug is fixed in Git v1.8.4, Git recodes commit message to LogOutputEncoding
-                return LogOutputEncoding;
-            }
+            return ReEncodeStringFromLossless(s, LogOutputEncoding)?.Trim();
         }
 
         /// <summary>
@@ -4108,12 +4054,6 @@ namespace GitCommands
             var patches = PatchProcessor.CreatePatchesFromString(patch, new Lazy<Encoding>(() => encoding)).ToList();
 
             return GetPatch(patches, filePath, filePath)?.Text;
-        }
-
-        public bool HasLfsSupport()
-        {
-            GitArgumentBuilder args = new("lfs") { "version" };
-            return _gitExecutable.RunCommand(args);
         }
 
         public bool StopTrackingFile(string filename)

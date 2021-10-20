@@ -20,7 +20,7 @@ namespace GitCommandsTests
         {
             _module = Substitute.For<IGitModule>();
             _module.ReEncodeStringFromLossless(Arg.Any<string>()).Returns(x => x[0]);
-            _module.ReEncodeCommitMessage(Arg.Any<string>(), Arg.Any<string>()).Returns(x => x[0]);
+            _module.ReEncodeCommitMessage(Arg.Any<string>()).Returns(x => x[0]);
 
             _getModule = () => _module;
             _commitDataManager = new CommitDataManager(_getModule);
@@ -40,7 +40,6 @@ namespace GitCommandsTests
                           "1508676972\n" +
                           "John Doe <John.Doe@test.com>\n" +
                           "1508676972\n" +
-                          "\n" +
                           body;
 
             var data = _commitDataManager.CreateFromFormattedData(rawData);

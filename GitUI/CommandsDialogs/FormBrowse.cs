@@ -301,8 +301,6 @@ namespace GitUI.CommandsDialogs
             _submoduleStatusProvider.StatusUpdating += SubmoduleStatusProvider_StatusUpdating;
             _submoduleStatusProvider.StatusUpdated += SubmoduleStatusProvider_StatusUpdated;
 
-            ManageWorktreeSupport();
-
             foreach (var control in this.FindDescendants())
             {
                 control.AllowDrop = true;
@@ -310,8 +308,7 @@ namespace GitUI.CommandsDialogs
                 control.DragDrop += FormBrowse_DragDrop;
             }
 
-            _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
-
+            _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
             toolStripButtonPush.Initialize(_aheadBehindDataProvider);
             repoObjectsTree.Initialize(_aheadBehindDataProvider, branchFilterAction: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
             revisionDiff.Bind(RevisionGrid, fileTree, RequestRefresh);
@@ -323,19 +320,6 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ResumeRefreshRevisions();
 
             return;
-
-            void ManageWorktreeSupport()
-            {
-                if (!GitVersion.Current.SupportWorktree)
-                {
-                    createWorktreeToolStripMenuItem.Enabled = false;
-                }
-
-                if (!GitVersion.Current.SupportWorktreeList)
-                {
-                    manageWorktreeToolStripMenuItem.Enabled = false;
-                }
-            }
 
             void InitCountArtificial(out GitStatusMonitor gitStatusMonitor)
             {
