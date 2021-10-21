@@ -2,7 +2,7 @@
 
 namespace GitUI
 {
-    internal sealed class ToolStripExRenderer : ToolStripSystemRenderer
+    internal sealed class ToolStripExSystemRenderer : ToolStripSystemRenderer
     {
         protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
         {

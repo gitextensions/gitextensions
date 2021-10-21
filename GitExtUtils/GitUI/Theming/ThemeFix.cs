@@ -74,15 +74,14 @@ namespace GitExtUtils.GitUI.Theming
 
         private static void SetupToolStrip(ToolStrip strip)
         {
-            strip.EnableTheming(enable: true);
-
+            strip.UseExtendedThemeAwareRenderer();
             strip.Items.OfType<ToolStripLabel>()
                 .ForEach(SetupToolStripLabel);
         }
 
         private static void SetupContextMenu(ContextMenuStrip strip)
         {
-            strip.EnableTheming(enable: true);
+            strip.UseExtendedThemeAwareRenderer();
         }
 
         private static void SetupToolStripLabel(ToolStripLabel label)

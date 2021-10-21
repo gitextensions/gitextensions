@@ -14,7 +14,7 @@ namespace GitUI
 
         public ToolStripEx()
         {
-            this.UseCustomRenderer();
+            this.UseExtendedRenderer();
 
             PropertyInfo propGrip = GetType().GetProperty("Grip", BindingFlags.Instance | BindingFlags.NonPublic);
             _gripButton = propGrip.GetValue(this) as ToolStripButton;

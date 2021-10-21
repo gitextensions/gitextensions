@@ -27,6 +27,10 @@ namespace GitUI.UserControls.RevisionGrid
 
         /// <summary>
         /// no mouse over effect for disabled menu items, if the Tag is "caption".
+        /// TODO: in Windows 10 both ToolStripProfessionalRenderer and ToolStripSystemRenderer do
+        /// not render background of disabled item on mouse over, so MenuItemBackgroundFilter is not needed.
+        /// Someone needs to check if MenuItemBackgroundFilter is neither necessary in Windows 7.
+        /// If so, remove it together with associated code
         /// </summary>
         private sealed class MenuItemBackgroundFilter : IMenuItemBackgroundFilter
         {
