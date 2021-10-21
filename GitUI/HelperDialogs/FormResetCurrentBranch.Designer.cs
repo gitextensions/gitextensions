@@ -92,6 +92,7 @@
             // 
             this.Soft.AutoSize = true;
             this.Soft.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.Soft.Checked = true;
             this.Soft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Soft.ForeColor = System.Drawing.Color.Black;
             this.Soft.Location = new System.Drawing.Point(3, 3);
@@ -106,7 +107,6 @@
             // 
             this.Mixed.AutoSize = true;
             this.Mixed.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.Mixed.Checked = true;
             this.Mixed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Mixed.ForeColor = System.Drawing.Color.Black;
             this.Mixed.Location = new System.Drawing.Point(3, 45);
