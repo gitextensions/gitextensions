@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Git.Commands;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -81,11 +82,27 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
+            var commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding);
+
+            string existingCommitMessage = commitMessageManager.MergeOrCommitMessage;
+
             var command = GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex);
 
             // Don't verify whether the command is successful.
             // If it fails, likely there is a conflict that needs to be resolved.
             FormProcess.ShowDialog(this, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+
+            if (!string.IsNullOrWhiteSpace(existingCommitMessage))
+            {
+                try
+                {
+                    string newCommitMessageContent = $"{existingCommitMessage}\n\n{commitMessageManager.MergeOrCommitMessage}";
+                    commitMessageManager.WriteCommitMessageToFile(newCommitMessageContent, CommitMessageType.Merge, usingCommitTemplate: false,  ensureCommitMessageSecondLineEmpty: false);
+                }
+                catch (Exception)
+                {
+                }
+            }
 
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
             DialogResult = DialogResult.OK;
