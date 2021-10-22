@@ -527,7 +527,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!IsSubmodulesInitialized())
                 {
-                    if (AskIfSubmodulesShouldBeInitialized())
+                    if ((AppSettings.UpdateSubmodulesOnCheckout ?? AppSettings.DontConfirmUpdateSubmodulesOnCheckout) != false && AskIfSubmodulesShouldBeInitialized())
                     {
                         UICommands.StartUpdateSubmodulesDialog(this);
                     }
