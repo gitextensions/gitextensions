@@ -19,7 +19,6 @@
     <PackageReference Include="ExCSS" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" />
-    <PackageReference Include="System.IO.Abstractions" />
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
 

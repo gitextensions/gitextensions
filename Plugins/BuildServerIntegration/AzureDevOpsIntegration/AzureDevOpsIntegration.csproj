@@ -6,8 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
-    <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="System.Reactive.Linq" />
   </ItemGroup>
 
   <ItemGroup>

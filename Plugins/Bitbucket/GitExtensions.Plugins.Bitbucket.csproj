@@ -5,7 +5,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="RestSharp" />
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>

@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <PackageReference Include="System.IO.Abstractions" />
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" />
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>

@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Composition" />
     <PackageReference Include="System.Collections.Immutable" />
-    <PackageReference Include="System.Reactive.Interfaces" />
     <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
   </ItemGroup>
 
