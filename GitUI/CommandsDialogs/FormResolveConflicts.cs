@@ -632,6 +632,7 @@ namespace GitUI.CommandsDialogs
 
         private bool InitMergetool()
         {
+            // All _mergetool related is for native ("Windows")
             if (GitVersion.Current.SupportGuiMergeTool)
             {
                 _mergetool = Module.GetEffectiveSetting(SettingKeyString.MergeToolKey);

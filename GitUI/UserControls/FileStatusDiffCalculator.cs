@@ -185,7 +185,7 @@ namespace GitUI
                 summary: TranslatedStrings.DiffCommonBase + GetDescriptionForRevision(baseRevGuid),
                 statuses: commonBaseToAandB));
 
-            if (!GitVersion.Current.SupportRangeDiffTool)
+            if (!module.GitVersion.SupportRangeDiffTool)
             {
                 return fileStatusDescs;
             }

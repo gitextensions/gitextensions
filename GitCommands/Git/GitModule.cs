@@ -904,7 +904,9 @@ namespace GitCommands
 
         public void RunMergeTool(string? fileName = "", string? customTool = null)
         {
-            var gui = GitVersion.Current.SupportGuiMergeTool ? "--gui" : string.Empty;
+            // Use Windows Git if custom tool is selected as the list is native to the application.
+            bool isWindowsGit = !string.IsNullOrWhiteSpace(customTool);
+            string gui = (isWindowsGit ? GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
             GitArgumentBuilder args = new("mergetool")
             {
                 { string.IsNullOrWhiteSpace(customTool), gui, $"--tool={customTool}" },
@@ -912,8 +914,7 @@ namespace GitCommands
                 fileName.ToPosixPath().QuoteNE()
             };
 
-            // Use native (Windows) Git if custom tool is selected as the list is native
-            using var process = (string.IsNullOrWhiteSpace(customTool) ? _gitExecutable : _gitNativeExecutable).Start(args, createWindow: true);
+            using IProcess process = (isWindowsGit ? _gitWindowsExecutable : _gitExecutable).Start(args, createWindow: true);
             process.WaitForExit();
         }
 
