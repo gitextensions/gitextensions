@@ -418,8 +418,8 @@ namespace GitCommandsTests.Git.Commands
                 "-c rebase.autoSquash=false rebase -i --no-autosquash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
             Assert.AreEqual(
-                GitVersion.Current.SupportRebaseMerges ? "-c rebase.autoSquash=false rebase --rebase-merges \"branch\"" : "-c rebase.autoSquash=false rebase --preserve-merges \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
+                "-c rebase.autoSquash=false rebase --rebase-merges \"branch\"",
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false, supportRebaseMerges: true).Arguments);
             Assert.AreEqual(
                 "-c rebase.autoSquash=false rebase \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autoStash: false, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
@@ -448,8 +448,8 @@ namespace GitCommandsTests.Git.Commands
                 "-c rebase.autoSquash=false rebase --committer-date-is-author-date --autostash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: true).Arguments);
             Assert.AreEqual(
-                GitVersion.Current.SupportRebaseMerges ? "-c rebase.autoSquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"" : "-c rebase.autoSquash=false rebase -i --autosquash --preserve-merges --autostash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false).Arguments);
+                "-c rebase.autoSquash=false rebase -i --autosquash --rebase-merges --autostash \"branch\"",
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false, supportRebaseMerges: true).Arguments);
 
             // TODO quote 'onto'?
 

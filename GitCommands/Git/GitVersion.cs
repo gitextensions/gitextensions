@@ -28,29 +28,36 @@ namespace GitCommands
         /// </summary>
         public static readonly GitVersion LastFailVersion = new("2.15.2");
 
-        private static GitVersion? _current;
+        private static readonly Dictionary<string, GitVersion> _current = new();
 
-        public static GitVersion Current
+        /// <summary>
+        /// GitVersion for the native ("Windows") Git
+        /// </summary>
+        public static GitVersion Current => CurrentVersion();
+
+        /// <summary>
+        /// The GitVersion for the gitIdentifiable
+        /// </summary>
+        /// <param name="gitIdentifiable">The unique identification of the Git executable</param>
+        /// <returns>The GitVersion</returns>
+        public static GitVersion CurrentVersion(string gitIdentifiable = "")
         {
-            get
+            if (!_current.ContainsKey(gitIdentifiable) || _current[gitIdentifiable] is null || _current[gitIdentifiable].IsUnknown)
             {
-                if (_current is null || _current.IsUnknown)
+                string output = new Executable(AppSettings.GitCommand).GetOutput("--version");
+                _current[gitIdentifiable] = new GitVersion(output);
+                if (_current[gitIdentifiable] < LastFailVersion)
                 {
-                    string output = new Executable(AppSettings.GitCommand).GetOutput("--version");
-                    _current = new GitVersion(output);
-                    if (_current < LastFailVersion)
-                    {
-                        MessageBox.Show(null, $"{_current} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    MessageBox.Show(null, $"{_current[gitIdentifiable]} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
-                return _current;
             }
+
+            return _current[gitIdentifiable];
         }
 
         public static void ResetVersion()
         {
-            _current = null;
+            _current.Clear();
         }
 
         public readonly string Full;

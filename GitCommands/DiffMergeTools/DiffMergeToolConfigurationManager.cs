@@ -36,6 +36,7 @@ namespace GitCommands.DiffMergeTools
         {
             get
             {
+                // Only used in settings, returns native (Windows) Git tool
                 string? mergetool = "";
                 if (GitVersion.Current.SupportGuiMergeTool)
                 {
