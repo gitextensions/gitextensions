@@ -124,7 +124,7 @@ namespace GitCommandsTests.Git.Commands
         public void TestMergedBranchesCmd([Values(true, false)] bool includeRemote, [Values(true, false)] bool fullRefname,
             [Values(null, "", " ", "HEAD", "1234567890")] string commit)
         {
-            string formatArg = fullRefname ? " --format=%(refname)" : string.Empty;
+            string formatArg = fullRefname ? @" --format=""%(refname)""" : string.Empty;
             string remoteArg = includeRemote ? " -a" : string.Empty;
             string commitArg = string.IsNullOrWhiteSpace(commit) ? string.Empty : $" {commit}";
             string expected = $"branch{formatArg}{remoteArg} --merged{commitArg}";
@@ -653,8 +653,8 @@ namespace GitCommandsTests.Git.Commands
                         else
                         {
                             string prefix = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
-                            sortCondition = $" --sort={prefix}{sortBy}";
-                            sortConditionRef = $" --sort={prefix}*{sortBy}";
+                            sortCondition = $@" --sort=""{prefix}{sortBy}""";
+                            sortConditionRef = $@" --sort=""{prefix}*{sortBy}""";
                         }
 
                         yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,
