@@ -234,8 +234,8 @@ namespace GitUI.CommitInfo
         {
             GitArgumentBuilder args = new("for-each-ref")
             {
-                "--sort=-taggerdate",
-                "--format=\"%(refname)\"",
+                @"--sort=""-taggerdate""",
+                @"--format=""%(refname)""",
                 "refs/tags/"
             };
 

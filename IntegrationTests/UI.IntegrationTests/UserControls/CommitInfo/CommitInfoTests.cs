@@ -56,7 +56,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         {
             RunCommitInfoTest(commitInfo =>
             {
-                _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/",
+                _gitExecutable.StageOutput(@"for-each-ref --sort=""-taggerdate"" --format=""%(refname)"" refs/tags/",
                     "refs/heads/master\nwarning: message");
 
                 ((Action)(() => commitInfo.GetTestAccessor().GetSortedTags())).Should().Throw<RefsWarningException>();
@@ -68,7 +68,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         {
             RunCommitInfoTest(commitInfo =>
             {
-                _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/",
+                _gitExecutable.StageOutput(@"for-each-ref --sort=""-taggerdate"" --format=""%(refname)"" refs/tags/",
                     "refs/remotes/origin/master\nrefs/heads/master\nrefs/heads/warning"); // does not contain "warning:"
 
                 Dictionary<string, int> expected = new()
@@ -90,7 +90,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         {
             RunCommitInfoTest(commitInfo =>
             {
-                _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/",
+                _gitExecutable.StageOutput(@"for-each-ref --sort=""-taggerdate"" --format=""%(refname)"" refs/tags/",
                     "refs/remotes/origin/master\nrefs/heads/master\nrefs/remotes/origin/bugfix/YS-38651-test-twist-changes-r100-on-s375\nrefs/remotes/origin/bugfix/ys-38651-test-twist-changes-r100-on-s375"); // case sensitive duplicates
 
                 Dictionary<string, int> expected = new()
@@ -113,7 +113,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         {
             RunCommitInfoTest(commitInfo =>
             {
-                _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/",
+                _gitExecutable.StageOutput(@"for-each-ref --sort=""-taggerdate"" --format=""%(refname)"" refs/tags/",
                     "refs/remotes/origin/master\nrefs/heads/master\nrefs/tags/v3.1\nrefs/tags/v3.1 \n refs/tags/v3.1"); // have leading and trailing spaces
 
                 Dictionary<string, int> expected = new()
@@ -137,7 +137,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         {
             RunCommitInfoTest(commitInfo =>
             {
-                _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/",
+                _gitExecutable.StageOutput(@"for-each-ref --sort=""-taggerdate"" --format=""%(refname)"" refs/tags/",
                     "refs/remotes/origin/master\nrefs/remotes/foo/duplicate\nrefs/remotes/foo/bar\nrefs/remotes/foo/duplicate\nrefs/remotes/foo/last"); // exact duplicates
 
                 Dictionary<string, int> expected = new()
@@ -164,7 +164,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                     uiCommandsSource.UICommands.Returns(x => _commands);
 
                     // the following assignment of CommitInfo.UICommandsSource will already call this command
-                    _gitExecutable.StageOutput("for-each-ref --sort=-taggerdate --format=\"%(refname)\" refs/tags/", "");
+                    _gitExecutable.StageOutput(@"for-each-ref --sort=""-taggerdate"" --format=""%(refname)"" refs/tags/", "");
 
                     return new GitUI.CommitInfo.CommitInfo
                     {

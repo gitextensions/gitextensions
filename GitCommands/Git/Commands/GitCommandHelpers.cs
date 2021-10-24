@@ -112,7 +112,7 @@ namespace GitCommands.Git.Commands
                 string order = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
                 if (!needTags)
                 {
-                    return $"--sort={order}{sortBy}";
+                    return $@"--sort=""{order}{sortBy}""";
                 }
 
                 // Sort by dereferenced data
@@ -124,7 +124,7 @@ namespace GitCommands.Git.Commands
                 // ref ordering (i.e. local and remote branches), and this is generally a significantly
                 // greater of two evils.
                 // Refer to https://github.com/gitextensions/gitextensions/issues/8621 for more info.
-                return $"--sort={order}*{sortBy} --sort={order}{sortBy}";
+                return $@"--sort=""{order}*{sortBy}"" --sort=""{order}{sortBy}""";
             }
 
             static ArgumentString GitRefsFormat(bool needTags)
@@ -303,7 +303,7 @@ namespace GitCommands.Git.Commands
         {
             return new GitArgumentBuilder("branch")
             {
-                { fullRefname, "--format=%(refname)" },
+                { fullRefname, @"--format=""%(refname)""" },
                 { includeRemote, "-a" },
                 "--merged",
                 commit
