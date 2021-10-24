@@ -23,7 +23,7 @@ namespace GitUI.HelperDialogs
             Hard
         }
 
-        public static FormResetCurrentBranch Create(GitUICommands commands, GitRevision revision, ResetType resetType = ResetType.Mixed)
+        public static FormResetCurrentBranch Create(GitUICommands commands, GitRevision revision, ResetType resetType = ResetType.Soft)
             => new(commands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision), resetType);
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
