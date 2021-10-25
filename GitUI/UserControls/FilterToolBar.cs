@@ -226,10 +226,6 @@ namespace GitUI.UserControls
             tscboBranchFilter.ForeColor = toolForeColor;
             tstxtRevisionFilter.BackColor = toolTextBoxBackColor;
             tstxtRevisionFilter.ForeColor = toolForeColor;
-
-            // Scale tool strip items according to DPI
-            tscboBranchFilter.Size = DpiUtil.Scale(tscboBranchFilter.Size);
-            tstxtRevisionFilter.Size = DpiUtil.Scale(tstxtRevisionFilter.Size);
         }
 
         public void PreventToolStripSplitButtonClosing(ToolStripSplitButton? control)
