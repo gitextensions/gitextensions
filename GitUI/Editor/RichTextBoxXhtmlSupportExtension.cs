@@ -15,6 +15,8 @@ namespace GitUI.Editor.RichTextBoxExtension
 {
     internal static class RichTextBoxXhtmlSupportExtension
     {
+        private const string LinkSeparator = "|||";
+
         /// <summary>
         /// Maintains performance while updating.
         /// </summary>
@@ -1143,10 +1145,9 @@ namespace GitUI.Editor.RichTextBoxExtension
                     ++to;
                 }
 
-                if (to < text.Length && text[to] == '#')
+                if (to < text.Length && DoesMatchLinkSeparatorPattern(text, to))
                 {
-                    ++to;
-                    from = to;
+                    from = to + LinkSeparator.Length;
                     while (to < text.Length && !char.IsWhiteSpace(text[to]) && text[to] != ',')
                     {
                         ++to;
@@ -1156,7 +1157,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 // prior to net47 links were created via hidden text, and had the following format: "text#link"
                 // extract the link portion only
                 string linkOldFormat = text.Substring(from, to - from);
-                return linkOldFormat.Substring(linkOldFormat.IndexOf("#") + 1);
+                return linkOldFormat.Substring(linkOldFormat.IndexOf(LinkSeparator) + LinkSeparator.Length);
             }
             catch
             {
@@ -1171,6 +1172,19 @@ namespace GitUI.Editor.RichTextBoxExtension
                 rtb.EndUpdate(oldMask);
                 rtb.Invalidate();
             }
+        }
+
+        private static bool DoesMatchLinkSeparatorPattern(string text, int index)
+        {
+            for (int ls = 0; ls < LinkSeparator.Length && index < text.Length; ls++, index++)
+            {
+                if (text[index] != LinkSeparator[ls])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -1519,7 +1533,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             {
                                 string head = rtfText.Substring(0, idx);
                                 string tail = rtfText.Substring(idx);
-                                RtbSetSelectedRtf(rtb, head + @"\v #" + cs.hyperlink + @"\v0" + tail);
+                                RtbSetSelectedRtf(rtb, head + @"\v " + LinkSeparator + cs.hyperlink + @"\v0" + tail);
                                 length = rtb.TextLength - cs.hyperlinkStart;
                             }
                         }
