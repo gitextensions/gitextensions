@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
+using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -18,6 +19,11 @@ namespace GitUI
         public BranchComboBox()
         {
             InitializeComponent();
+
+            // Workaround for WinForms bug https://github.com/dotnet/winforms/issues/5774 when DPI scaling != 100%
+            // Revert the commit introducing this change when it will be fixed in .net
+            branches.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+
             InitializeComplete();
 
             branches.DisplayMember = nameof(IGitRef.Name);

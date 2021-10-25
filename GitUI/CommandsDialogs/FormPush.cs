@@ -104,6 +104,24 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
 
+            // Workaround for WinForms bug https://github.com/dotnet/winforms/issues/5774 when DPI scaling != 100%
+            // Revert the commit introducing this change when it will be fixed in .net
+            if (DpiUtil.IsNonStandard)
+            {
+                // ComboBoxes have a big blank height that:
+                // 1. make that the "to" label appears too low when value is set to 'DockStyle.Fill'
+                labelTo.Dock = DockStyle.Top;
+
+                // 2. overflow the below controls
+                var newY = ShowOptions.Location.Y + DpiUtil.Scale(38) - 15; // Add some vertical margin for something working from scale 125% to 350%
+                ShowOptions.Location = new Point(6, newY);
+                PushOptionsPanel.Location = new Point(8, newY);
+            }
+            else
+            {
+                PushOptionsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            }
+
             Push.Text = TranslatedStrings.ButtonPush;
 
             NewColumn.Width = DpiUtil.Scale(97);

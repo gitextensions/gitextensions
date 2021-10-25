@@ -533,9 +533,6 @@
             // 
             // PushOptionsPanel
             // 
-            this.PushOptionsPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.PushOptionsPanel.Controls.Add(this.flowLayoutPanel1);
             this.PushOptionsPanel.Controls.Add(this.ReplaceTrackingReference);
             this.PushOptionsPanel.Controls.Add(this.ForcePushOptionPanel);
