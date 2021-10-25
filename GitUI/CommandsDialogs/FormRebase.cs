@@ -360,10 +360,23 @@ namespace GitUI.CommandsDialogs
 
         private void btnChooseFromRevision_Click(object sender, EventArgs e)
         {
-            using FormChooseCommit chooseForm = new(UICommands, txtFrom.Text);
-            if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
+            bool previousValueBranchFilterEnabled = AppSettings.BranchFilterEnabled;
+            bool previousValueShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+            bool previousValueShowReflogReferences = AppSettings.ShowReflogReferences;
+
+            try
             {
-                txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
+                using FormChooseCommit chooseForm = new(UICommands, txtFrom.Text, showCurrentBranchOnly: true);
+                if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
+                {
+                    txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
+                }
+            }
+            finally
+            {
+                AppSettings.BranchFilterEnabled = previousValueBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly = previousValueShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences = previousValueShowReflogReferences;
             }
         }
 
