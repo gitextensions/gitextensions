@@ -1,0 +1,35 @@
+name: Feature Proposal
+description: Propose a new feature
+labels: 'type: feature request'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ Review existing issues to see whether someone else has already requested this feature or created a similar issue.
+        📖 Please also read [CONTRIBUTING.md](https://github.com/gitextensions/gitextensions/blob/master/CONTRIBUTING.md).
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature description
+      description: |
+        Think through your proposal and describe it clearly.
+
+        Note that features are only added to the most recent version of Git Extensions.
+    validations:
+      required: true
+  - type: textarea
+    id: about
+    attributes:
+      label: Environment
+      description: Use _Help > About_ in Git Extensions to copy this information to the clipboard automatically.
+      value: |
+        - GitExtensions version:
+        - GIT version: 
+        - OS version: 
+        - .NET version: 
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        ❤️ Git Extensions? Please consider supporting our collective: https://opencollective.com/gitextensions
