@@ -5,8 +5,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="System.Reactive.Linq" />
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
 

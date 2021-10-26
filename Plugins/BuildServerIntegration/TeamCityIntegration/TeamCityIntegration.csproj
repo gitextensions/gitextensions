@@ -5,10 +5,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Reactive.Linq" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>
       <Private>false</Private>
