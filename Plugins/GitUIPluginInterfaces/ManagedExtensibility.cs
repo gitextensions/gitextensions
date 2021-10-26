@@ -104,8 +104,10 @@ namespace GitUIPluginInterfaces
             }
         }
 
-        public static void Initialise(IEnumerable<Assembly> assemblies)
+        public static void Initialise(IEnumerable<Assembly> assemblies, string userPluginsPath = null)
         {
+            SetUserPluginsPath(userPluginsPath);
+
             PartDiscovery? discovery = PartDiscovery.Combine(
               new AttributedPartDiscoveryV1(Resolver.DefaultInstance),
               new AttributedPartDiscovery(Resolver.DefaultInstance, isNonPublicSupported: true));
