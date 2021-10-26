@@ -91,8 +91,6 @@ namespace GitUI.Script
                     new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir));
             }
 
-            Validates.NotNull(argument);
-
             string command = OverrideCommandWhenNecessary(originalCommand);
             command = ExpandCommandVariables(command, module);
 
