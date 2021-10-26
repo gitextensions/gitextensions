@@ -929,22 +929,6 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            void SetShortcutKeyDisplayStringsFromHotkeySettings()
-            {
-                // Add shortcuts to the menu items
-                gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitBash).ToShortcutKeyDisplayString();
-                commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Commit).ToShortcutKeyDisplayString();
-                stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Stash).ToShortcutKeyDisplayString();
-                stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.StashPop).ToShortcutKeyDisplayString();
-                closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CloseRepository).ToShortcutKeyDisplayString();
-                gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGui).ToShortcutKeyDisplayString();
-                kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGitK).ToShortcutKeyDisplayString();
-                checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CheckoutBranch).ToShortcutKeyDisplayString();
-                settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.OpenSettings).ToShortcutKeyDisplayString();
-
-                // TODO: add more
-            }
-
             void LoadUserMenu()
             {
                 var scripts = ScriptManager.GetScripts()
@@ -1001,6 +985,30 @@ namespace GitUI.CommandsDialogs
 
                 RevisionGrid.IndexWatcher.Reset();
             }
+        }
+
+        private void SetShortcutKeyDisplayStringsFromHotkeySettings()
+        {
+            // Add shortcuts to the menu items
+            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitBash).ToShortcutKeyDisplayString();
+            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Commit).ToShortcutKeyDisplayString();
+            stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Stash).ToShortcutKeyDisplayString();
+            stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.StashPop).ToShortcutKeyDisplayString();
+            closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CloseRepository).ToShortcutKeyDisplayString();
+            gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGui).ToShortcutKeyDisplayString();
+            kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGitK).ToShortcutKeyDisplayString();
+            checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CheckoutBranch).ToShortcutKeyDisplayString();
+            settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.OpenSettings).ToShortcutKeyDisplayString();
+            branchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CreateBranch).ToShortcutKeyDisplayString();
+            tagToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CreateTag).ToShortcutKeyDisplayString();
+            mergeBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.MergeBranches).ToShortcutKeyDisplayString();
+            pullToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.PullOrFetch).ToShortcutKeyDisplayString();
+            pullToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeys(Command.PullOrFetch).ToShortcutKeyDisplayString();
+            pushToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Push).ToShortcutKeyDisplayString();
+            rebaseToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
+            rebaseToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
+
+            // TODO: add more
         }
 
         private void OnActivate()
@@ -1385,6 +1393,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ReloadTranslation();
             fileTree.ReloadHotkeys();
             revisionDiff.ReloadHotkeys();
+            SetShortcutKeyDisplayStringsFromHotkeySettings();
 
             // Clear the separate caches for diff/merge tools
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
@@ -1412,9 +1421,7 @@ namespace GitUI.CommandsDialogs
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var revision = RevisionGrid.LatestSelectedRevision;
-
-            UICommands.StartCreateTagDialog(this, revision);
+            UICommands.StartCreateTagDialog(this, RevisionGrid.LatestSelectedRevision);
         }
 
         private void KGitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1930,8 +1937,8 @@ namespace GitUI.CommandsDialogs
             {
                 ToolStripMenuItem checkoutBranchItem = new(checkoutBranchToolStripMenuItem.Text, Images.BranchCheckout)
                 {
-                    ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys,
-                    ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString
+                    ShortcutKeys = GetShortcutKeys(Command.CheckoutBranch),
+                    ShortcutKeyDisplayString = GetShortcutKeys(Command.CheckoutBranch).ToShortcutKeyDisplayString()
                 };
 
                 branchSelect.DropDownItems.Add(checkoutBranchItem);
@@ -2031,46 +2038,73 @@ namespace GitUI.CommandsDialogs
 
         internal enum Command
         {
-            GitBash = 0,
-            GitGui = 1,
-            GitGitK = 2,
+            // Focus or visuals
             FocusRevisionGrid = 3,
             FocusCommitInfo = 4,
             FocusDiff = 5,
             FocusFileTree = 6,
-            Commit = 7,
-            AddNotes = 8,
-            FindFileInSelectedCommit = 9,
-            CheckoutBranch = 10,
-            QuickFetch = 11,
-            QuickPull = 12,
-            QuickPush = 13,
-
-            /* deprecated: RotateApplicationIcon = 14, */
-            CloseRepository = 15,
-            Stash = 16,
-            StashPop = 17,
             FocusFilter = 18,
-            OpenWithDifftool = 19,
-            OpenSettings = 20,
             ToggleBranchTreePanel = 21,
-            EditFile = 22,
-            OpenAsTempFile = 23,
-            OpenAsTempFileWith = 24,
             FocusBranchTree = 25,
             FocusGpgInfo = 26,
-            GoToSuperproject = 27,
-            GoToSubmodule = 28,
             FocusGitConsole = 29,
             FocusBuildServerStatus = 30,
             FocusNextTab = 31,
             FocusPrevTab = 32,
+
+            // START menu
+
+            // DASHBOARD menu
+
+            // REPOSITORY menu
+            CloseRepository = 15,
+
+            // COMMANDS menu
+            Commit = 7,
+            CheckoutBranch = 10,
+            PullOrFetch = 39,
+            Push = 40,
+            CreateBranch = 41,
+            MergeBranches = 42,
+            CreateTag = 43,
+            Rebase = 44,
+
+            // PLUGINS menu
+
+            // TOOLS menu
+            GitBash = 0,
+            GitGui = 1,
+            GitGitK = 2,
+            OpenSettings = 20,
+
+            // HELP menu
+
+            // Toolbar
+            AddNotes = 8,
+            FindFileInSelectedCommit = 9,
+            QuickFetch = 11,
+            QuickPull = 12,
+            QuickPush = 13,
+            Stash = 16,
+            StashPop = 17,
+            GoToSuperproject = 27,
+            GoToSubmodule = 28,
+
+            // Diff or File Tree tab
+            OpenWithDifftool = 19,
+            EditFile = 22,
+            OpenAsTempFile = 23,
+            OpenAsTempFileWith = 24,
             OpenWithDifftoolFirstToLocal = 33,
             OpenWithDifftoolSelectedToLocal = 34,
+
+            // Revision grid
             OpenCommitsWithDifftool = 35,
             ToggleBetweenArtificialAndHeadCommits = 36,
             GoToChild = 37,
             GoToParent = 38
+
+            /* deprecated: RotateApplicationIcon = 14, */
         }
 
         internal Keys GetShortcutKeys(Command cmd)
@@ -2138,30 +2172,36 @@ namespace GitUI.CommandsDialogs
                 case Command.FocusNextTab: FocusNextTab(); break;
                 case Command.FocusPrevTab: FocusNextTab(forward: false); break;
                 case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
-                case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.Commit: UICommands.StartCommitDialog(this); break;
                 case Command.AddNotes: AddNotes(); break;
                 case Command.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
-                case Command.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.CheckoutBranch: UICommands.StartCheckoutBranch(this); break;
                 case Command.QuickFetch: QuickFetch(); break;
-                case Command.QuickPull: mergeToolStripMenuItem_Click(this, EventArgs.Empty); break;
+                case Command.QuickPull: DoPull(pullAction: AppSettings.PullAction.Merge, isSilent: true); break;
                 case Command.QuickPush: UICommands.StartPushDialog(this, true); break;
-                case Command.CloseRepository: CloseToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.CloseRepository: SetWorkingDir(""); break;
                 case Command.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
                 case Command.StashPop: UICommands.StashPop(this); break;
                 case Command.OpenCommitsWithDifftool: RevisionGrid.DiffSelectedCommitsWithDifftool(); break;
                 case Command.OpenWithDifftool: OpenWithDifftool(); break;
                 case Command.OpenWithDifftoolFirstToLocal: OpenWithDifftoolFirstToLocal(); break;
                 case Command.OpenWithDifftoolSelectedToLocal: OpenWithDifftoolSelectedToLocal(); break;
-                case Command.OpenSettings: OnShowSettingsClick(this, EventArgs.Empty); break;
-                case Command.ToggleBranchTreePanel: toggleBranchTreePanel_Click(this, EventArgs.Empty); break;
+                case Command.OpenSettings: EditSettings.PerformClick(); break;
+                case Command.ToggleBranchTreePanel: toggleBranchTreePanel.PerformClick(); break;
                 case Command.EditFile: EditFile(); break;
                 case Command.OpenAsTempFile when fileTree.Visible: fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenAsTempFile); break;
                 case Command.OpenAsTempFileWith when fileTree.Visible: fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenAsTempFileWith); break;
-                case Command.GoToSuperproject: toolStripButtonLevelUp_ButtonClick(this, EventArgs.Empty); break;
+                case Command.GoToSuperproject: toolStripButtonLevelUp.PerformClick(); break;
                 case Command.GoToSubmodule: toolStripButtonLevelUp.ShowDropDown(); break;
                 case Command.ToggleBetweenArtificialAndHeadCommits: RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.ToggleBetweenArtificialAndHeadCommits); break;
                 case Command.GoToChild: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToChild)); break;
                 case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
+                case Command.PullOrFetch: DoPull(pullAction: AppSettings.FormPullAction, isSilent: false); break;
+                case Command.Push: UICommands.StartPushDialog(this, pushOnShow: ModifierKeys.HasFlag(Keys.Shift)); break;
+                case Command.CreateBranch: UICommands.StartCreateBranchDialog(this, RevisionGrid.LatestSelectedRevision?.ObjectId); break;
+                case Command.MergeBranches: UICommands.StartMergeBranchDialog(this, null); break;
+                case Command.CreateTag: UICommands.StartCreateTagDialog(this, RevisionGrid.LatestSelectedRevision); break;
+                case Command.Rebase: rebaseToolStripMenuItem.PerformClick(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 

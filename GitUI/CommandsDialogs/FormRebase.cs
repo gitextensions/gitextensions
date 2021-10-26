@@ -15,12 +15,32 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormRebase : GitModuleForm
     {
-        private static readonly List<PatchFile> Skipped = new();
-        private readonly TranslationString _continueRebaseText = new("Continue rebase");
-        private readonly TranslationString _solveConflictsText = new("Solve conflicts");
+        #region Mnemonics
+        // Available: GHJLNVWXYZ
+        // A Add files
+        // B Abort
+        // C Continue rebase
+        // D Ignore date
+        // E Specific range
+        // F From
+        // I Interactive
+        // K Skip
+        // M Committer date
+        // O Commit...
+        // P Preserve Merges
+        // Q Autosquash
+        // R Rebase on
+        // S Solve conflicts
+        // T To
+        // U Auto stash
+        #endregion
 
-        private readonly TranslationString _solveConflictsText2 = new(">Solve conflicts<");
-        private readonly TranslationString _continueRebaseText2 = new(">Continue rebase<");
+        #region Translation
+        private readonly TranslationString _continueRebaseText = new("&Continue rebase");
+        private readonly TranslationString _solveConflictsText = new("&Solve conflicts");
+
+        private readonly TranslationString _solveConflictsText2 = new(">&Solve conflicts<");
+        private readonly TranslationString _continueRebaseText2 = new(">&Continue rebase<");
 
         private readonly TranslationString _noBranchSelectedText = new("Please select a branch");
 
@@ -29,6 +49,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _branchUpToDateCaption = new("Rebase");
 
         private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
+        #endregion
+
+        private static readonly List<PatchFile> Skipped = new();
 
         private readonly string? _defaultBranch;
         private readonly string? _defaultToBranch;
@@ -47,11 +70,11 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeconflicts.SetForeColorForBackColor();
-            helpImageDisplayUserControl1.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
+            PanelLeftImage.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
             InitializeComplete();
-            helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
-            helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
-            patchGrid1.SetSkipped(Skipped);
+            PanelLeftImage.Visible = !AppSettings.DontShowHelpImages;
+            PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
+            PatchGrid.SetSkipped(Skipped);
             if (AppSettings.AlwaysShowAdvOpt)
             {
                 ShowOptions_LinkClicked(this, null!);
@@ -62,7 +85,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormRebase_Shown(object sender, EventArgs e)
         {
-            patchGrid1.SelectCurrentlyApplyingPatch();
+            PatchGrid.SelectCurrentlyApplyingPatch();
         }
 
         public FormRebase(GitUICommands commands, string? from, string? to, string? defaultBranch, bool interactive = false, bool startRebaseImmediately = true)
@@ -227,7 +250,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 EnableButtons();
-                patchGrid1.Initialize();
+                PatchGrid.Initialize();
             }
         }
 
@@ -235,7 +258,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var applyingPatch = patchGrid1.PatchFiles.FirstOrDefault(p => p.IsNext);
+                var applyingPatch = PatchGrid.PatchFiles.FirstOrDefault(p => p.IsNext);
                 if (applyingPatch is not null)
                 {
                     applyingPatch.IsSkipped = true;
@@ -251,7 +274,7 @@ namespace GitUI.CommandsDialogs
 
                 EnableButtons();
 
-                patchGrid1.RefreshGrid();
+                PatchGrid.RefreshGrid();
             }
         }
 
@@ -268,7 +291,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 EnableButtons();
-                patchGrid1.Initialize();
+                PatchGrid.Initialize();
             }
         }
 
@@ -313,7 +336,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 EnableButtons();
-                patchGrid1.Initialize();
+                PatchGrid.Initialize();
             }
         }
 
