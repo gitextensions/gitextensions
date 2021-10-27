@@ -97,6 +97,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             imageList1.Images.Add(Images.DashboardFolderGit);
             imageList1.Images.Add(Images.DashboardFolderError);
 
+            imageList2.Images.Clear();
+            imageList2.ImageSize = DpiUtil.Scale(imageList2.ImageSize);
+            imageList2.Images.Add(Images.Branch);
+            imageList2.Images.Add(Images.Warning);
+
             DragEnter += OnDragEnter;
             DragDrop += OnDragDrop;
         }
@@ -313,6 +318,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 listView1.Groups.AddRange(groups);
                 BindRepositories(recentRepositories, isFavourite: false);
                 BindRepositories(favouriteRepositories, isFavourite: true);
+                listView1.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             }
             finally
             {
