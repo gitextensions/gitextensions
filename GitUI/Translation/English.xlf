@@ -2633,7 +2633,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
-        <source>Configure this menu</source>
+        <source>&amp;Configure this menu</source>
         <target />
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">
@@ -2795,15 +2795,15 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="commitInfoBelowMenuItem.Text">
-        <source>Commit info below graph</source>
+        <source>Commit info &amp;below graph</source>
         <target />
       </trans-unit>
       <trans-unit id="commitInfoLeftwardMenuItem.Text">
-        <source>Commit info left of graph</source>
+        <source>Commit info &amp;left of graph</source>
         <target />
       </trans-unit>
       <trans-unit id="commitInfoRightwardMenuItem.Text">
-        <source>Commit info right of graph</source>
+        <source>Commit info &amp;right of graph</source>
         <target />
       </trans-unit>
       <trans-unit id="commitToolStripMenuItem.Text">
@@ -2815,7 +2815,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="createAStashToolStripMenuItem.Text">
-        <source>Create a stash...</source>
+        <source>&amp;Create a stash...</source>
         <target />
       </trans-unit>
       <trans-unit id="createWorktreeToolStripMenuItem.Text">
@@ -2867,7 +2867,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchAllToolStripMenuItem.Text">
-        <source>Fetch all</source>
+        <source>Fetch &amp;all</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchAllToolStripMenuItem.ToolTipText">
@@ -2875,7 +2875,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchPruneAllToolStripMenuItem.Text">
-        <source>Fetch and prune all</source>
+        <source>F&amp;etch and prune all</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchPruneAllToolStripMenuItem.ToolTipText">
@@ -2883,7 +2883,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchToolStripMenuItem.Text">
-        <source>Fetch</source>
+        <source>&amp;Fetch</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchToolStripMenuItem.ToolTipText">
@@ -2939,7 +2939,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="manageStashesToolStripMenuItem.Text">
-        <source>Manage stashes...</source>
+        <source>&amp;Manage stashes...</source>
         <target />
       </trans-unit>
       <trans-unit id="manageStashesToolStripMenuItem.ToolTipText">
@@ -2967,7 +2967,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
-        <source>Pull - merge</source>
+        <source>Pull - &amp;merge</source>
         <target />
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -2995,7 +2995,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
-        <source>Open pull dialog...</source>
+        <source>Open &amp;pull dialog...</source>
         <target />
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
@@ -3007,7 +3007,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
-        <source>Pull - rebase</source>
+        <source>Pull - &amp;rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="recoverLostObjectsToolStripMenuItem.Text">
@@ -3043,7 +3043,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="setDefaultPullButtonActionToolStripMenuItem.Text">
-        <source>Set default Pull button action</source>
+        <source>Set &amp;default Pull button action</source>
         <target />
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
@@ -3055,7 +3055,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.Text">
-        <source>Stash</source>
+        <source>&amp;Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.ToolTipText">
@@ -3063,7 +3063,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.Text">
-        <source>Stash pop</source>
+        <source>Stash &amp;pop</source>
         <target />
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.ToolTipText">
@@ -3163,31 +3163,31 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiAuthorFilter.Text">
-        <source>Author</source>
+        <source>&amp;Author</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiBranchLocal.Text">
-        <source>Local</source>
+        <source>&amp;Local</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiBranchRemote.Text">
-        <source>Remote</source>
+        <source>&amp;Remote</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiBranchTag.Text">
-        <source>Tag</source>
+        <source>&amp;Tag</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCommitFilter.Text">
-        <source>Commit message and hash</source>
+        <source>Commit &amp;message and hash</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCommitterFilter.Text">
-        <source>Committer</source>
+        <source>&amp;Committer</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiDiffContainsFilter.Text">
-        <source>Diff contains (SLOW)</source>
+        <source>&amp;Diff contains (SLOW)</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
@@ -3195,7 +3195,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiHash.Text">
-        <source>Hash</source>
+        <source>&amp;Hash</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiRecentRepositories.Text">
@@ -3207,7 +3207,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesAll.Text">
-        <source>All branches</source>
+        <source>&amp;All branches</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesAll.ToolTipText">
@@ -3215,7 +3215,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesCurrent.Text">
-        <source>Current branch only</source>
+        <source>&amp;Current branch only</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesCurrent.ToolTipText">
@@ -3223,7 +3223,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesFiltered.Text">
-        <source>Filtered branches</source>
+        <source>&amp;Filtered branches</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesFiltered.ToolTipText">
@@ -3247,7 +3247,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tssbtnShowBranches.Text">
-        <source>All branches</source>
+        <source>&amp;All branches</source>
         <target />
       </trans-unit>
       <trans-unit id="tssbtnShowBranches.ToolTipText">
@@ -6139,15 +6139,15 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullDefaultButton.Text">
-        <source>Pull with the default pull action ({0})</source>
+        <source>&amp;Pull with the default pull action ({0})</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullMergeButton.Text">
-        <source>Pull with merge</source>
+        <source>Pull with &amp;merge</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullRebaseButton.Text">
-        <source>Pull with rebase</source>
+        <source>Pull with &amp;rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
@@ -6175,7 +6175,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="_pushForceButton.Text">
-        <source>Force push with lease</source>
+        <source>&amp;Force push with lease</source>
         <target />
       </trans-unit>
       <trans-unit id="_pushToCaption.Text">
@@ -10641,7 +10641,7 @@ Select this commit to populate the full message.</source>
         <target />
       </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again</source>
+        <source>&amp;Don't show me this message again</source>
         <target />
       </trans-unit>
       <trans-unit id="_error.Text">

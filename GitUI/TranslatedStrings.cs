@@ -13,7 +13,7 @@ namespace GitUI
         private readonly TranslationString _okText = new("OK");
         private readonly TranslationString _cancelText = new("Cancel");
         private readonly TranslationString _closeText = new("Close");
-        private readonly TranslationString _dontShowAgain = new("Don't show me this message again");
+        private readonly TranslationString _dontShowAgain = new("&Don't show me this message again");
 
         private readonly TranslationString _buttonCheckoutBranch = new("Checkout branch");
         private readonly TranslationString _buttonContinue = new("Continue");
