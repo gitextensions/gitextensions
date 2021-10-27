@@ -325,6 +325,12 @@ namespace GitCommands
             set => WriteStringRegValue("CascadeShellMenuItems", value);
         }
 
+        public static string ShellExtendedMenuItems
+        {
+            get => ReadStringRegValue("ShellExtendedMenuItems", "000000000000000000");
+            set => WriteStringRegValue("ShellExtendedMenuItems", value);
+        }
+
         public static string SshPath
         {
             get => ReadStringRegValue("gitssh", "");

@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             for (int i = 0; i < AppSettings.CascadeShellMenuItems.Length; i++)
             {
                 chlMenuEntries.SetItemChecked(i, AppSettings.CascadeShellMenuItems[i] == '1');
+                chlExtendedContextMenuEntries.SetItemChecked(i, AppSettings.ShellExtendedMenuItems[i] == '1');
             }
 
             cbAlwaysShowAllCommands.Checked = AppSettings.AlwaysShowAllCommands;
@@ -31,6 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             string l_CascadeShellMenuItems = "";
+            string l_ShellExtendedMenuItems = "";
 
             for (int i = 0; i < chlMenuEntries.Items.Count; i++)
             {
@@ -42,9 +44,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 {
                     l_CascadeShellMenuItems += "0";
                 }
+
+                if (chlExtendedContextMenuEntries.GetItemChecked(i))
+                {
+                    l_ShellExtendedMenuItems += "1";
+                }
+                else
+                {
+                    l_ShellExtendedMenuItems += "0";
+                }
             }
 
             AppSettings.CascadeShellMenuItems = l_CascadeShellMenuItems;
+            AppSettings.ShellExtendedMenuItems = l_ShellExtendedMenuItems;
             AppSettings.AlwaysShowAllCommands = cbAlwaysShowAllCommands.Checked;
         }
 

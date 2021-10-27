@@ -32,7 +32,7 @@ void XTrace(LPCTSTR lpszFormat, ...)
 // Forward declaration of functions not declared in the header
 static CString GetRegistryValue (HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path);
 static bool GetRegistryBoolValue(HKEY hOpenKey, LPCTSTR szKey, LPCTSTR path);
-static bool DisplayInSubmenu(CString settings, int id);
+static bool IsBitfieldItemSet(CString settings, int id);
 
 static HRESULT Create32BitHBITMAP(HDC hdc, const SIZE* psize, __deref_opt_out void** ppvBits, __out HBITMAP* phBmp);
 static bool HasAlpha(__in ARGB* pargb, SIZE& sizImage, int cxRow);
@@ -412,9 +412,14 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
     CString szCascadeShellMenuItems = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"CascadeShellMenuItems");
     if (szCascadeShellMenuItems.IsEmpty())
         szCascadeShellMenuItems = "110111000111111111";
-    bool cascadeContextMenu = szCascadeShellMenuItems.Find('1') != -1;
-    SHORT keyState = GetKeyState(VK_SHIFT);
-    bool alwaysShowAllCommands = (keyState & 0x8000) || GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"AlwaysShowAllCommands");
+
+    CString szShellExtendedMenuItems = GetRegistryValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"ShellExtendedMenuItems");
+    if (szShellExtendedMenuItems.IsEmpty())
+        szShellExtendedMenuItems = "000000000000000000";
+
+    const bool cascadeContextMenu = szCascadeShellMenuItems.Find('1') != -1;
+    const bool shiftIsHeld = 0 != (GetKeyState(VK_SHIFT) & 0x8000);
+    const bool alwaysShowAllCommands = GetRegistryBoolValue(HKEY_CURRENT_USER, L"SOFTWARE\\GitExtensions", L"AlwaysShowAllCommands");
 
     HMENU popupMenu = NULL;
     if (cascadeContextMenu)
@@ -489,9 +494,13 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
                 showMenuItem = true;
         }
 
+        if (!alwaysShowAllCommands && !shiftIsHeld && IsBitfieldItemSet(szShellExtendedMenuItems, command.prefIndex))
+            continue;
+
         if (showMenuItem)
         {
-            isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, command.prefIndex);
+
+            isSubMenu = IsBitfieldItemSet(szCascadeShellMenuItems, command.prefIndex);
             if (command.requiresSeparatorInSubmenu && isSubMenu && submenuIndex > 0)
             {
                 InsertMenu(popupMenu, submenuIndex++, MF_SEPARATOR | MF_BYPOSITION, 0, nullptr);
@@ -549,7 +558,7 @@ UINT CGitExtensionsShellEx::AddMenuItem(HMENU hMenu, LPTSTR text, int resource, 
     return id;
 }
 
-static bool DisplayInSubmenu(CString settings, int id)
+static bool IsBitfieldItemSet(CString settings, int id)
 {
     if (settings.GetLength() < id)
     {
