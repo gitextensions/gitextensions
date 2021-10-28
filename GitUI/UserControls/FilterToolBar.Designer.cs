@@ -41,31 +41,31 @@ namespace GitUI.UserControls
             this.tsmiCommitFilter.Checked = true;
             this.tsmiCommitFilter.CheckOnClick = true;
             this.tsmiCommitFilter.Name = "tsmiCommitFilter";
-            this.tsmiCommitFilter.Text = "Commit message and hash";
+            this.tsmiCommitFilter.Text = "Commit &message and hash";
             // 
             // tsmiCommitter
             // 
             this.tsmiCommitterFilter.CheckOnClick = true;
             this.tsmiCommitterFilter.Name = "tsmiCommitter";
-            this.tsmiCommitterFilter.Text = "Committer";
+            this.tsmiCommitterFilter.Text = "&Committer";
             // 
             // tsmiAuthor
             // 
             this.tsmiAuthorFilter.CheckOnClick = true;
             this.tsmiAuthorFilter.Name = "tsmiAuthor";
-            this.tsmiAuthorFilter.Text = "Author";
+            this.tsmiAuthorFilter.Text = "&Author";
             // 
             // tsmiHash
             // 
             this.tsmiHash.CheckOnClick = true;
             this.tsmiHash.Name = "tsmiHash";
-            this.tsmiHash.Text = "Hash";
+            this.tsmiHash.Text = "&Hash";
             // 
             // tsmiDiffContains
             // 
             this.tsmiDiffContainsFilter.CheckOnClick = true;
             this.tsmiDiffContainsFilter.Name = "tsmiDiffContains";
-            this.tsmiDiffContainsFilter.Text = "Diff contains (SLOW)";
+            this.tsmiDiffContainsFilter.Text = "&Diff contains (SLOW)";
             // 
             // toolStripLabel1
             // 
@@ -101,7 +101,7 @@ namespace GitUI.UserControls
             this.tsmiShowBranchesAll.Image = global::GitUI.Properties.Images.BranchLocal;
             this.tsmiShowBranchesAll.Name = "tsmiShowAllBranches";
             this.tsmiShowBranchesAll.Size = new System.Drawing.Size(259, 22);
-            this.tsmiShowBranchesAll.Text = "All branches";
+            this.tsmiShowBranchesAll.Text = "&All branches";
             this.tsmiShowBranchesAll.ToolTipText = "Show all branches";
             this.tsmiShowBranchesAll.Click += new System.EventHandler(this.tsmiShowBranchesAll_Click);
             // 
@@ -110,7 +110,7 @@ namespace GitUI.UserControls
             this.tsmiShowBranchesCurrent.Image = global::GitUI.Properties.Images.BranchFilter;
             this.tsmiShowBranchesCurrent.Name = "tsmiShowCurrentBranch";
             this.tsmiShowBranchesCurrent.Size = new System.Drawing.Size(259, 22);
-            this.tsmiShowBranchesCurrent.Text = "Current branch only";
+            this.tsmiShowBranchesCurrent.Text = "&Current branch only";
             this.tsmiShowBranchesCurrent.ToolTipText = "Show current branch only";
             this.tsmiShowBranchesCurrent.Click += new System.EventHandler(this.tsmiShowBranchesCurrent_Click);
             // 
@@ -119,7 +119,7 @@ namespace GitUI.UserControls
             this.tsmiShowBranchesFiltered.Image = global::GitUI.Properties.Images.BranchFilter;
             this.tsmiShowBranchesFiltered.Name = "tsmiShowFilteredBranches";
             this.tsmiShowBranchesFiltered.Size = new System.Drawing.Size(259, 22);
-            this.tsmiShowBranchesFiltered.Text = "Filtered branches";
+            this.tsmiShowBranchesFiltered.Text = "&Filtered branches";
             this.tsmiShowBranchesFiltered.ToolTipText = "Show filtered branches";
             this.tsmiShowBranchesFiltered.Click += new System.EventHandler(this.tsmiShowBranchesFiltered_Click);
             // 
@@ -153,19 +153,19 @@ namespace GitUI.UserControls
             this.tsmiBranchLocal.Checked = true;
             this.tsmiBranchLocal.CheckOnClick = true;
             this.tsmiBranchLocal.Name = "tsmiBranchLocal";
-            this.tsmiBranchLocal.Text = "Local";
+            this.tsmiBranchLocal.Text = "&Local";
             // 
             // tsmiBranchRemote
             // 
             this.tsmiBranchRemote.CheckOnClick = true;
             this.tsmiBranchRemote.Name = "tsmiBranchRemote";
-            this.tsmiBranchRemote.Text = "Remote";
+            this.tsmiBranchRemote.Text = "&Remote";
             // 
             // tsmiBranchTag
             // 
             this.tsmiBranchTag.CheckOnClick = true;
             this.tsmiBranchTag.Name = "tsmiBranchTag";
-            this.tsmiBranchTag.Text = "Tag";
+            this.tsmiBranchTag.Text = "&Tag";
             // 
             // tsddbtnBranchFilter
             // 

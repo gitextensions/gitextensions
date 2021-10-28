@@ -75,10 +75,10 @@ namespace GitUI.CommandsDialogs
                 "Merge the remote changes before pushing again.");
         private readonly TranslationString _pullRepositoryForceInstruction =
             new("The push was rejected because the tip of your current branch is behind its remote counterpart");
-        private readonly TranslationString _pullDefaultButton = new("Pull with the default pull action ({0})");
-        private readonly TranslationString _pullRebaseButton = new("Pull with rebase");
-        private readonly TranslationString _pullMergeButton = new("Pull with merge");
-        private readonly TranslationString _pushForceButton = new("Force push with lease");
+        private readonly TranslationString _pullDefaultButton = new("&Pull with the default pull action ({0})");
+        private readonly TranslationString _pullRebaseButton = new("Pull with &rebase");
+        private readonly TranslationString _pullMergeButton = new("Pull with &merge");
+        private readonly TranslationString _pushForceButton = new("&Force push with lease");
         private readonly TranslationString _pullActionNone = new("none");
         private readonly TranslationString _pullActionFetch = new("fetch");
         private readonly TranslationString _pullActionRebase = new("rebase");
