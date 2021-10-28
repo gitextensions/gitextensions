@@ -670,7 +670,8 @@ namespace GitUI.CommandsDialogs
             OpenFile = 13,
             OpenFileWith = 14,
             EditFile = 15,
-            AddSelectionToCommitMessage = 16
+            AddSelectionToCommitMessage = 16,
+            CreateBranch = 17
         }
 
         private string GetShortcutKeyDisplayString(Command cmd)
@@ -857,6 +858,7 @@ namespace GitUI.CommandsDialogs
                 case Command.OpenFileWith: openWithToolStripMenuItem.PerformClick(); return true;
                 case Command.EditFile: editFileToolStripMenuItem.PerformClick(); return true;
                 case Command.AddSelectionToCommitMessage: return AddSelectionToCommitMessage();
+                case Command.CreateBranch: createBranchToolStripButton.PerformClick(); return true;
                 default: return base.ExecuteCommand(cmd);
             }
         }

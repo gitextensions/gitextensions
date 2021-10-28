@@ -227,6 +227,7 @@ namespace GitUI.Hotkey
                     FormCommit.HotkeySettingsName,
                     Hk(FormCommit.Command.AddSelectionToCommitMessage, Keys.C),
                     Hk(FormCommit.Command.AddToGitIgnore, Keys.None),
+                    Hk(FormCommit.Command.CreateBranch, Keys.Control | Keys.B),
                     Hk(FormCommit.Command.DeleteSelectedFiles, Keys.Delete),
                     Hk(FormCommit.Command.EditFile, EditFileHotkey),
                     Hk(FormCommit.Command.FocusUnstagedFiles, Keys.Control | Keys.D1),
