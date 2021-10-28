@@ -1819,11 +1819,30 @@ namespace GitCommands
             return shouldRescanChanges;
         }
 
+        private async Task<bool> ExpressIntentToAddAsync(GitItemStatus file)
+        {
+            return await _gitExecutable.RunCommandAsync(
+                new GitArgumentBuilder("add")
+                {
+                    "--intent-to-add",
+                    file.Name.Quote()
+                });
+        }
+
         public async Task<bool> AddInteractiveAsync(GitItemStatus file)
         {
+            if (file.IsNew)
+            {
+                bool result = await ExpressIntentToAddAsync(file);
+                if (!result)
+                {
+                    return result;
+                }
+            }
+
             GitArgumentBuilder args = new("add")
             {
-                "-p",
+                "--patch",
                 file.Name.Quote()
             };
 
