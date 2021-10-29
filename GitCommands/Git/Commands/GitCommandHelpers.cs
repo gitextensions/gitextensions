@@ -211,7 +211,7 @@ namespace GitCommands.Git.Commands
         {
             return new GitArgumentBuilder("push")
             {
-                $@"""file://{repoDir}""",
+                $@"""file://{repoDir.ToPosixPath()}""",
                 $"{targetId}:{gitRef}".QuoteNE(),
                 { force, "--force" }
             };
