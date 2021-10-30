@@ -228,8 +228,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         {
                             if (prevStatus == GitStatusMonitorState.Inactive)
                             {
-                                // Timer is already running, schedule new update
-                                ScheduleNextInteractiveTime();
+                                // Timer is already running, schedule a new command only if a command is not running,
+                                // to avoid that many commands are started (and cancelled) if quickly switching Inactive/Running
+                                // If data has changed when Inactive it should be updated by normal means
+                                if (!_commandIsRunning)
+                                {
+                                    ScheduleNextInteractiveTime();
+                                }
+
                                 break;
                             }
 
@@ -313,8 +319,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void GitUICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
             {
-                CurrentStatus = GitStatusMonitorState.Inactive;
-                CurrentStatus = GitStatusMonitorState.Running;
                 _isFirstPostRepoChanged = true;
             }
         }
@@ -463,9 +467,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         }
                         finally
                         {
-                            if (!ModuleHasChanged() && !cancelToken.IsCancellationRequested)
+                            lock (_statusSequence)
                             {
-                                lock (_statusSequence)
+                                if (_commandIsRunning && !ModuleHasChanged() && !cancelToken.IsCancellationRequested)
                                 {
                                     if (isSuccess)
                                     {
@@ -478,7 +482,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                             _nextUpdateTime = _nextEarliestTime;
                                         }
                                     }
+                                }
 
+                                if (!cancelToken.IsCancellationRequested)
+                                {
                                     _commandIsRunning = false;
                                 }
                             }
