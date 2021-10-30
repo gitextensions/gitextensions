@@ -498,6 +498,7 @@ namespace GitCommandsTests.Git.Commands
 
         [TestCase("mybranch", ".", false, ExpectedResult = @"push ""file://."" ""1111111111111111111111111111111111111111:mybranch""")]
         [TestCase("branch2", "/my/path", true, ExpectedResult = @"push ""file:///my/path"" ""1111111111111111111111111111111111111111:branch2"" --force")]
+        [TestCase("branchx", @"c:\my\path", true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force")]
         public string PushLocalCmd(string gitRef, string repoDir, bool force)
         {
             return GitCommandHelpers.PushLocalCmd(gitRef, ObjectId.WorkTreeId, repoDir, force).Arguments;
