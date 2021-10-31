@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,16 +20,13 @@ namespace GitUI.UserControls
         private IRevisionGridFilter? _revisionGridFilter;
         private bool _isApplyingFilter;
         private bool _filterBeingChanged;
-        private bool _isUnitTests;
 
         public FilterToolBar()
         {
             InitializeComponent();
 
-            tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
-            tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
-
-            InitBranchSelectionFilter();
+            // Select an option until we get a filter bound.
+            SelectShowBranchesFilterOption(selectedIndex: 0);
 
             tstxtRevisionFilter.KeyUp += (s, e) =>
             {
@@ -69,16 +67,13 @@ namespace GitUI.UserControls
             // Action the filter
             filterAction();
 
-            // Update the toolbar button
-            InitBranchSelectionFilter();
-
             _filterBeingChanged = false;
         }
 
         /// <summary>
         ///  Applies custom branch filters supplied via the filter textbox.
         /// </summary>
-        private void ApplyCustomBranchFilter(bool refresh)
+        private void ApplyCustomBranchFilter()
         {
             if (_isApplyingFilter)
             {
@@ -96,7 +91,7 @@ namespace GitUI.UserControls
                 filter = string.Empty;
             }
 
-            RevisionGridFilter.SetAndApplyBranchFilter(filter, refresh);
+            RevisionGridFilter.SetAndApplyBranchFilter(filter);
 
             _isApplyingFilter = false;
         }
@@ -108,36 +103,21 @@ namespace GitUI.UserControls
                 return;
             }
 
-            try
-            {
-                _isApplyingFilter = true;
-                RevisionGridFilter.SetAndApplyRevisionFilter(new RevisionFilter(tstxtRevisionFilter.Text,
-                                                                                tsmiCommitFilter.Checked,
-                                                                                tsmiCommitterFilter.Checked,
-                                                                                tsmiAuthorFilter.Checked,
-                                                                                tsmiDiffContainsFilter.Checked));
-            }
-            catch (InvalidOperationException ex)
-            {
-                if (!_isUnitTests)
-                {
-                    MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
-                SetRevisionFilter(string.Empty);
-            }
-            finally
-            {
-                _isApplyingFilter = false;
-            }
+            _isApplyingFilter = true;
+            RevisionGridFilter.SetAndApplyRevisionFilter(new RevisionFilter(tstxtRevisionFilter.Text,
+                                                                            tsmiCommitFilter.Checked,
+                                                                            tsmiCommitterFilter.Checked,
+                                                                            tsmiAuthorFilter.Checked,
+                                                                            tsmiDiffContainsFilter.Checked));
+            _isApplyingFilter = false;
         }
 
         public void Bind(Func<IGitModule> getModule, IRevisionGridFilter revisionGridFilter)
         {
             _getModule = getModule ?? throw new ArgumentNullException(nameof(getModule));
-            _revisionGridFilter = revisionGridFilter ?? throw new ArgumentNullException(nameof(revisionGridFilter));
 
-            InitBranchSelectionFilter();
+            Debug.Assert(_revisionGridFilter is null, $"{nameof(Bind)} must be invoked only once.");
+            _revisionGridFilter = revisionGridFilter ?? throw new ArgumentNullException(nameof(revisionGridFilter));
             _revisionGridFilter.FilterChanged += revisionGridFilter_FilterChanged;
         }
 
@@ -186,34 +166,32 @@ namespace GitUI.UserControls
             return module;
         }
 
-        private void InitBranchSelectionFilter()
+        private void InitBranchSelectionFilter(FilterChangedEventArgs e)
         {
             // Note: it is a weird combination, and it is mimicking the implementations in RevisionGridControl.
             // Refer to it for more details.
 
-            if (!AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly)
+            byte selectedIndex = 0;
+
+            if (e.ShowAllBranches)
             {
                 // Show all branches
-                SelectShowBranchesFilterOption(0);
-                return;
+                selectedIndex = 0;
             }
 
-            if (AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly)
+            if (e.ShowCurrentBranchOnly)
             {
                 // Show current branch only
-                SelectShowBranchesFilterOption(1);
-                return;
+                selectedIndex = 1;
             }
 
-            if (AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly)
+            if (e.ShowFilteredBranches)
             {
                 // Show filtered branches
-                SelectShowBranchesFilterOption(2);
-                return;
+                selectedIndex = 2;
             }
 
-            // We shouldn't be here... Don't crash the app though, just fallback to showing all branches.
-            SelectShowBranchesFilterOption(0);
+            SelectShowBranchesFilterOption(selectedIndex);
         }
 
         public void InitToolStripStyles(Color toolForeColor, Color toolBackColor)
@@ -260,11 +238,10 @@ namespace GitUI.UserControls
         ///  Sets the branches filter.
         /// </summary>
         /// <param name="filter">The filter to apply.</param>
-        /// <param name="refresh"><see langword="true"/> to request the revision grid to refresh; otherwise <see langword="false"/>.</param>
-        public void SetBranchFilter(string? filter, bool refresh)
+        public void SetBranchFilter(string? filter)
         {
             tscboBranchFilter.Text = filter;
-            ApplyCustomBranchFilter(refresh);
+            ApplyCustomBranchFilter();
         }
 
         public void SetFocus()
@@ -281,6 +258,12 @@ namespace GitUI.UserControls
         /// <param name="filter">The filter to apply.</param>
         public void SetRevisionFilter(string? filter)
         {
+            if (string.IsNullOrEmpty(tstxtRevisionFilter.Text) && string.IsNullOrEmpty(filter))
+            {
+                // The current filter is empty and the new filter is empty. No-op
+                return;
+            }
+
             tstxtRevisionFilter.Text = filter;
             ApplyRevisionFilter();
         }
@@ -288,8 +271,6 @@ namespace GitUI.UserControls
         public void UpdateBranchFilterItems()
         {
             tscboBranchFilter.Items.Clear();
-
-            ThreadHelper.ThrowIfNotOnUIThread();
 
             IGitModule module = GetModule();
             if (!module.IsValidGitWorkingDir())
@@ -310,11 +291,11 @@ namespace GitUI.UserControls
             }).FileAndForget();
         }
 
-        private void revisionGridFilter_FilterChanged(object? sender, EventArgs e)
+        private void revisionGridFilter_FilterChanged(object? sender, FilterChangedEventArgs e)
         {
-            tsmiShowFirstParent.Checked = AppSettings.ShowFirstParent;
-            tsmiShowReflogs.Checked = AppSettings.ShowReflogReferences;
-            InitBranchSelectionFilter();
+            tsmiShowFirstParent.Checked = e.ShowFirstParent;
+            tsmiShowReflogs.Checked = e.ShowReflogReferences;
+            InitBranchSelectionFilter(e);
         }
 
         private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
@@ -355,7 +336,7 @@ namespace GitUI.UserControls
         {
             if (e.KeyCode == Keys.Enter)
             {
-                ApplyCustomBranchFilter(refresh: _filterBeingChanged);
+                ApplyCustomBranchFilter();
             }
         }
 
@@ -419,13 +400,11 @@ namespace GitUI.UserControls
 
             public IRevisionGridFilter RevisionGridFilter => _control.RevisionGridFilter;
 
-            public void ApplyCustomBranchFilter(bool refresh) => _control.ApplyCustomBranchFilter(refresh);
+            public void ApplyCustomBranchFilter() => _control.ApplyCustomBranchFilter();
 
             public void ApplyRevisionFilter() => _control.ApplyRevisionFilter();
 
             public IGitModule GetModule() => _control.GetModule();
-
-            public bool SetUnitTestsMode() => _control._isUnitTests = true;
         }
     }
 }

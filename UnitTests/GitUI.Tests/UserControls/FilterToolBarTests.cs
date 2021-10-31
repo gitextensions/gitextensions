@@ -37,7 +37,6 @@ namespace GitUITests.UserControls
 
             _filterToolBar = new();
             _filterToolBar.Bind(() => _gitModule, _revisionGridFilter);
-            _filterToolBar.GetTestAccessor().SetUnitTestsMode();
         }
 
         [TearDown]
@@ -61,41 +60,38 @@ namespace GitUITests.UserControls
                 .Should().Throw<InvalidOperationException>();
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public void ApplyBranchFilter_should_invoke_RevisionGridFilter_with_no_branches(bool refresh)
+        [Test]
+        public void ApplyBranchFilter_should_invoke_RevisionGridFilter_with_no_branches()
         {
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.Count.Should().Be(0);
 
-            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter(refresh);
+            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter();
 
-            _revisionGridFilter.Received().SetAndApplyBranchFilter(string.Empty, refresh);
+            _revisionGridFilter.Received().SetAndApplyBranchFilter(string.Empty);
             _filterToolBar.GetTestAccessor()._isApplyingFilter.Should().BeFalse();
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public void ApplyBranchFilter_should_invoke_RevisionGridFilter_with_NoResultsFound(bool refresh)
+        [Test]
+        public void ApplyBranchFilter_should_invoke_RevisionGridFilter_with_NoResultsFound()
         {
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.AddRange(new[] { "one", "two" });
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Text = TranslatedStrings.NoResultsFound;
 
-            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter(refresh);
+            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter();
 
-            _revisionGridFilter.Received().SetAndApplyBranchFilter(string.Empty, refresh);
+            _revisionGridFilter.Received().SetAndApplyBranchFilter(string.Empty);
             _filterToolBar.GetTestAccessor()._isApplyingFilter.Should().BeFalse();
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public void ApplyBranchFilter_should_invoke_RevisionGridFilter_with_branches(bool refresh)
+        [Test]
+        public void ApplyBranchFilter_should_invoke_RevisionGridFilter_with_branches()
         {
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.AddRange(new[] { "one", "two" });
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Text = "on";
 
-            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter(refresh);
+            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter();
 
-            _revisionGridFilter.Received().SetAndApplyBranchFilter("on", refresh);
+            _revisionGridFilter.Received().SetAndApplyBranchFilter("on");
             _filterToolBar.GetTestAccessor()._isApplyingFilter.Should().BeFalse();
         }
 
@@ -118,24 +114,11 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void ApplyRevisionFilter_should_reset_filer_if_RevisionGridFilter_throws_IOE()
-        {
-            _revisionGridFilter
-                .When(x => x.SetAndApplyRevisionFilter(Arg.Any<RevisionFilter>()))
-                .Do(x => throw new InvalidOperationException("Boom!"));
-            _filterToolBar.GetTestAccessor().tstxtRevisionFilter.Text = "on";
-
-            _filterToolBar.GetTestAccessor().ApplyRevisionFilter();
-
-            _filterToolBar.GetTestAccessor().tstxtRevisionFilter.Text.Should().Be(string.Empty);
-        }
-
-        [Test]
         public void SetBranchFilter_should_reset_text()
         {
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Text = "bla";
 
-            _filterToolBar.SetBranchFilter(string.Empty, refresh: false);
+            _filterToolBar.SetBranchFilter(string.Empty);
 
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Text.Should().Be(string.Empty);
         }
@@ -147,14 +130,22 @@ namespace GitUITests.UserControls
         {
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.AddRange(new[] { "one", "two" });
 
-            _filterToolBar.SetBranchFilter(given, true);
+            _filterToolBar.SetBranchFilter(given);
 
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Text.Should().Be(expected);
-            _revisionGridFilter.Received().SetAndApplyBranchFilter(expected, true);
+            _revisionGridFilter.Received().SetAndApplyBranchFilter(expected);
         }
 
         [TestCase(null, "")]
         [TestCase("", "")]
+        public void SetRevisionFilter_when_empty(string given, string expected)
+        {
+            _filterToolBar.SetRevisionFilter(given);
+
+            _filterToolBar.GetTestAccessor().tstxtRevisionFilter.Text.Should().Be(expected);
+            _revisionGridFilter.DidNotReceive().SetAndApplyRevisionFilter(Arg.Any<RevisionFilter>());
+        }
+
         [TestCase("foo", "foo")]
         public void SetRevisionFilter(string given, string expected)
         {
@@ -182,24 +173,6 @@ namespace GitUITests.UserControls
 
         [TestCase(false)]
         [TestCase(true)]
-        public void ShowFirstParent_should_be_bound_from_AppSettings(bool settingValue)
-        {
-            bool original = AppSettings.ShowFirstParent;
-            try
-            {
-                AppSettings.ShowFirstParent = settingValue;
-
-                FilterToolBar filterToolBar = new();
-                filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(settingValue);
-            }
-            finally
-            {
-                AppSettings.ShowFirstParent = original;
-            }
-        }
-
-        [TestCase(false)]
-        [TestCase(true)]
         public void ShowFirstParent_should_be_bound_via_FilterChanged(bool settingValue)
         {
             bool original = AppSettings.ShowFirstParent;
@@ -207,7 +180,7 @@ namespace GitUITests.UserControls
             {
                 AppSettings.ShowFirstParent = settingValue;
 
-                _revisionGridFilter.FilterChanged += Raise.Event<EventHandler>(_revisionGridFilter, EventArgs.Empty);
+                _revisionGridFilter.FilterChanged += Raise.EventWith(_revisionGridFilter, new FilterChangedEventArgs(new()));
                 _filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(settingValue);
             }
             finally
@@ -225,24 +198,6 @@ namespace GitUITests.UserControls
 
         [TestCase(false)]
         [TestCase(true)]
-        public void ShowReflogs_should_be_bound_from_AppSettings(bool settingValue)
-        {
-            bool original = AppSettings.ShowReflogReferences;
-            try
-            {
-                AppSettings.ShowReflogReferences = settingValue;
-
-                FilterToolBar filterToolBar = new();
-                filterToolBar.GetTestAccessor().tsmiShowReflogs.Checked.Should().Be(settingValue);
-            }
-            finally
-            {
-                AppSettings.ShowReflogReferences = original;
-            }
-        }
-
-        [TestCase(false)]
-        [TestCase(true)]
         public void ShowReflogs_should_be_bound_via_FilterChanged(bool settingValue)
         {
             bool original = AppSettings.ShowReflogReferences;
@@ -250,7 +205,7 @@ namespace GitUITests.UserControls
             {
                 AppSettings.ShowReflogReferences = settingValue;
 
-                _revisionGridFilter.FilterChanged += Raise.Event<EventHandler>(_revisionGridFilter, EventArgs.Empty);
+                _revisionGridFilter.FilterChanged += Raise.EventWith(_revisionGridFilter, new FilterChangedEventArgs(new()));
                 _filterToolBar.GetTestAccessor().tsmiShowReflogs.Checked.Should().Be(settingValue);
             }
             finally
@@ -264,29 +219,6 @@ namespace GitUITests.UserControls
         {
             _filterToolBar.GetTestAccessor().tsmiShowReflogs.PerformClick();
             _revisionGridFilter.Received(1).ToggleShowReflogReferences();
-        }
-
-        [TestCase(false, false, 0)]
-        [TestCase(true, true, 1)]
-        [TestCase(true, false, 2)]
-        [TestCase(false, true, 0)]
-        public void ShowBranches_should_be_bound_from_AppSettings(bool settingValueBranchFilterEnabled, bool settingValueShowCurrentBranchOnly, byte expectedIndex)
-        {
-            bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
-            bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
-            try
-            {
-                AppSettings.BranchFilterEnabled = settingValueBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = settingValueShowCurrentBranchOnly;
-
-                FilterToolBar filterToolBar = new();
-                filterToolBar.GetTestAccessor().tssbtnShowBranches.Text.Should().Be(filterToolBar.GetTestAccessor().tssbtnShowBranches.DropDownItems[expectedIndex].Text);
-            }
-            finally
-            {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-            }
         }
 
         [Test]

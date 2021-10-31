@@ -21,6 +21,8 @@ namespace GitUI.CommandsDialogs
         {
             commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
 
+            InitFilters();
+
             toolPanel.TopToolStripPanel.MouseClick += (s, e) =>
             {
                 if (e.Button == MouseButtons.Right)
@@ -75,16 +77,6 @@ namespace GitUI.CommandsDialogs
 
             WorkaroundToolbarLocationBug();
 
-            if (!string.IsNullOrWhiteSpace(revFilter))
-            {
-                ToolStripFilters.SetRevisionFilter(revFilter);
-            }
-
-            if (!string.IsNullOrWhiteSpace(pathFilter))
-            {
-                SetPathFilter(pathFilter);
-            }
-
             return;
 
             void InitToolStripStyles(Color toolForeColor, Color toolBackColor)
@@ -103,6 +95,21 @@ namespace GitUI.CommandsDialogs
 
                 ToolStripScripts.BackColor = toolBackColor;
                 ToolStripScripts.ForeColor = toolForeColor;
+            }
+
+            void InitFilters()
+            {
+                ToolStripFilters.UpdateBranchFilterItems();
+
+                if (!string.IsNullOrWhiteSpace(revFilter))
+                {
+                    ToolStripFilters.SetRevisionFilter(revFilter);
+                }
+
+                if (!string.IsNullOrWhiteSpace(pathFilter))
+                {
+                    SetPathFilter(pathFilter);
+                }
             }
 
             void WorkaroundToolbarLocationBug()
