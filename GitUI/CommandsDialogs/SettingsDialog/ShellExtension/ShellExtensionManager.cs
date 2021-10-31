@@ -35,40 +35,45 @@ namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension
         }
 
         /// <summary>
-        /// Performs shell extensions registration
+        /// Register shell extensions
         /// </summary>
         /// <exception cref="FileNotFoundException">If at least one necessary for registration file wasn't found</exception>
         /// <exception cref="Win32Exception">If user canceled elevation dialog</exception>
-        public static void Register()
+        public static void Register() => RunRegSvrForShellExtensionDlls("{0}");
+
+        /// <summary>
+        /// Unregister shell extensions
+        /// </summary>
+        /// <exception cref="FileNotFoundException">If at least one necessary for registration file wasn't found</exception>
+        /// <exception cref="Win32Exception">If user canceled elevation dialog</exception>
+        public static void Unregister() => RunRegSvrForShellExtensionDlls("/u {0}");
+
+        private static void RunRegSvrForShellExtensionDlls(string argumentsPattern)
         {
-            string path32 = FindFileInBinFolders(CommonLogic.GitExtensionsShellEx32Name);
-            if (string.IsNullOrEmpty(path32))
+            RunRegSvrForSingleDll(CommonLogic.GitExtensionsShellEx32Name, argumentsPattern);
+            if (Environment.Is64BitOperatingSystem)
             {
-                throw new FileNotFoundException(null, CommonLogic.GitExtensionsShellEx32Name);
+                RunRegSvrForSingleDll(CommonLogic.GitExtensionsShellEx64Name, argumentsPattern);
+            }
+        }
+
+        private static void RunRegSvrForSingleDll(string dllName, string argumentsPattern)
+        {
+            string path = FindFileInBinFolders(dllName);
+            if (string.IsNullOrEmpty(path))
+            {
+                throw new FileNotFoundException(null, dllName);
             }
 
-            ProcessStartInfo pi = new()
+            string arguments = string.Format(argumentsPattern, path);
+            ProcessStartInfo pi = new ProcessStartInfo()
             {
                 FileName = "regsvr32",
-                Arguments = path32.Quote(),
+                Arguments = arguments,
                 Verb = "RunAs",
                 UseShellExecute = true
             };
-
             Process.Start(pi)?.WaitForExit();
-
-            if (Environment.Is64BitOperatingSystem)
-            {
-                string path64 = FindFileInBinFolders(CommonLogic.GitExtensionsShellEx64Name);
-                if (string.IsNullOrEmpty(path64))
-                {
-                    throw new FileNotFoundException(null, CommonLogic.GitExtensionsShellEx64Name);
-                }
-
-                pi.Arguments = path64.Quote();
-
-                Process.Start(pi)?.WaitForExit();
-            }
         }
 
         private static IEnumerable<string> BinDirectories()

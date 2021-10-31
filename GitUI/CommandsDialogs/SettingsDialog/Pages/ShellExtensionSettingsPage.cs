@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -24,6 +25,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             cbAlwaysShowAllCommands.Checked = AppSettings.AlwaysShowAllCommands;
+            if (ShellExtensionManager.CheckFilesFound())
+            {
+                cbEnableIntegration.Enabled = true;
+                cbEnableIntegration.Checked = ShellExtensionManager.CheckIfRegistered();
+            }
+            else
+            {
+                cbEnableIntegration.Enabled = false;
+                cbEnableIntegration.Checked = false;
+            }
 
             UpdatePreview();
         }
@@ -46,6 +57,25 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.CascadeShellMenuItems = l_CascadeShellMenuItems;
             AppSettings.AlwaysShowAllCommands = cbAlwaysShowAllCommands.Checked;
+
+            if (ShellExtensionManager.CheckFilesFound() && cbEnableIntegration.Checked != ShellExtensionManager.CheckIfRegistered())
+            {
+                try
+                {
+                    if (cbEnableIntegration.Checked)
+                    {
+                        ShellExtensionManager.Register();
+                    }
+                    else
+                    {
+                        ShellExtensionManager.Unregister();
+                    }
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
         }
 
         private void chlMenuEntries_SelectedValueChanged(object sender, EventArgs e)

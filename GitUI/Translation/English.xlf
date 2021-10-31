@@ -10197,6 +10197,10 @@ Please ensure that the url is valid and that the API token has access to build a
         <source>Always show all commands</source>
         <target />
       </trans-unit>
+      <trans-unit id="cbEnableIntegration.Text">
+        <source>Enable Windows Explorer integration</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chlMenuEntries.Item0">
         <source>Add files...</source>
         <target />

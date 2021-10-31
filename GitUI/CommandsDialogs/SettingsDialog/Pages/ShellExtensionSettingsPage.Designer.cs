@@ -33,6 +33,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblMenuEntries = new System.Windows.Forms.Label();
             this.chlMenuEntries = new System.Windows.Forms.CheckedListBox();
+            this.cbEnableIntegration = new System.Windows.Forms.CheckBox();
             this.cbAlwaysShowAllCommands = new System.Windows.Forms.CheckBox();
             this.tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
             this.gbShellExtensions = new System.Windows.Forms.GroupBox();
@@ -117,6 +118,20 @@
             this.chlMenuEntries.Size = new System.Drawing.Size(315, 110);
             this.chlMenuEntries.TabIndex = 3;
             this.chlMenuEntries.SelectedValueChanged += new System.EventHandler(this.chlMenuEntries_SelectedValueChanged);
+
+            // 
+            // cbEnableIntegration
+            // 
+            this.cbEnableIntegration.AutoSize = true;
+            this.tlpnlCascadingMenu.SetColumnSpan(this.cbEnableIntegration, 2);
+            this.cbEnableIntegration.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cbEnableIntegration.Location = new System.Drawing.Point(3, 3);
+            this.cbEnableIntegration.Name = "cbAlwaysShowAllCommands";
+            this.cbEnableIntegration.Size = new System.Drawing.Size(636, 19);
+            this.cbEnableIntegration.TabIndex = 1;
+            this.cbEnableIntegration.Text = "Enable Windows Explorer integration";
+            this.cbEnableIntegration.UseVisualStyleBackColor = true;
+
             // 
             // cbAlwaysShowAllCommands
             // 
@@ -167,14 +182,16 @@
             this.tlpnlCascadingMenu.ColumnCount = 2;
             this.tlpnlCascadingMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpnlCascadingMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpnlCascadingMenu.Controls.Add(this.cbAlwaysShowAllCommands, 0, 0);
-            this.tlpnlCascadingMenu.Controls.Add(this.lblMenuEntries, 0, 2);
-            this.tlpnlCascadingMenu.Controls.Add(this.chlMenuEntries, 0, 3);
-            this.tlpnlCascadingMenu.Controls.Add(panel1, 1, 3);
+            this.tlpnlCascadingMenu.Controls.Add(this.cbEnableIntegration, 0, 0);
+            this.tlpnlCascadingMenu.Controls.Add(this.cbAlwaysShowAllCommands, 0, 1);
+            this.tlpnlCascadingMenu.Controls.Add(this.lblMenuEntries, 0, 3);
+            this.tlpnlCascadingMenu.Controls.Add(this.chlMenuEntries, 0, 4);
+            this.tlpnlCascadingMenu.Controls.Add(panel1, 1, 4);
             this.tlpnlCascadingMenu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlCascadingMenu.Location = new System.Drawing.Point(8, 24);
             this.tlpnlCascadingMenu.Name = "tlpnlCascadingMenu";
-            this.tlpnlCascadingMenu.RowCount = 4;
+            this.tlpnlCascadingMenu.RowCount = 5;
+            this.tlpnlCascadingMenu.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlCascadingMenu.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlCascadingMenu.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpnlCascadingMenu.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -209,6 +226,7 @@
         private System.Windows.Forms.CheckedListBox chlMenuEntries;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelPreview;
+        private System.Windows.Forms.CheckBox cbEnableIntegration;
         private System.Windows.Forms.CheckBox cbAlwaysShowAllCommands;
         private System.Windows.Forms.TableLayoutPanel tlpnlCascadingMenu;
         private System.Windows.Forms.TableLayoutPanel tlpnlMain;
