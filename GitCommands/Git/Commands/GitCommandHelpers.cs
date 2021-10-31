@@ -112,7 +112,7 @@ namespace GitCommands.Git.Commands
                 string order = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
                 if (!needTags)
                 {
-                    return $"--sort={order}{sortBy}";
+                    return $@"--sort=""{order}{sortBy}""";
                 }
 
                 // Sort by dereferenced data
@@ -124,7 +124,7 @@ namespace GitCommands.Git.Commands
                 // ref ordering (i.e. local and remote branches), and this is generally a significantly
                 // greater of two evils.
                 // Refer to https://github.com/gitextensions/gitextensions/issues/8621 for more info.
-                return $"--sort={order}*{sortBy} --sort={order}{sortBy}";
+                return $@"--sort=""{order}*{sortBy}"" --sort=""{order}{sortBy}""";
             }
 
             static ArgumentString GitRefsFormat(bool needTags)
@@ -204,13 +204,14 @@ namespace GitCommands.Git.Commands
         /// </summary>
         /// <param name="gitRef">The branch to move.</param>
         /// <param name="targetId">The commit to move to.</param>
+        /// <param name="repoDir">Directory to the current repo.</param>
         /// <param name="force">Push the reference also if commits are lost.</param>
         /// <returns>The Git command to execute.</returns>
-        public static ArgumentString PushLocalCmd(string gitRef, ObjectId targetId, bool force = false)
+        public static ArgumentString PushLocalCmd(string gitRef, ObjectId targetId, string repoDir, bool force = false)
         {
             return new GitArgumentBuilder("push")
             {
-                ".",
+                $@"""file://{repoDir.ToPosixPath()}""",
                 $"{targetId}:{gitRef}".QuoteNE(),
                 { force, "--force" }
             };
@@ -303,7 +304,7 @@ namespace GitCommands.Git.Commands
         {
             return new GitArgumentBuilder("branch")
             {
-                { fullRefname, "--format=%(refname)" },
+                { fullRefname, @"--format=""%(refname)""" },
                 { includeRemote, "-a" },
                 "--merged",
                 commit

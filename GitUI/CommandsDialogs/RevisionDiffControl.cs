@@ -225,7 +225,7 @@ namespace GitUI.CommandsDialogs
         /// When switching commits, the last selected file is "followed" if available in the new commit,
         /// this file is used as a fallback.
         /// </summary>
-        public string? FallbackFollowedFile { private get; set; } = null;
+        public string? FallbackFollowedFile { get; set; } = null;
 
         private void SetDiffs(IReadOnlyList<GitRevision> revisions)
         {
@@ -1157,7 +1157,7 @@ namespace GitUI.CommandsDialogs
         {
             var submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
 
-            FormProcess.ShowDialog(FindForm() as FormBrowse, process: null, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodules), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(FindForm() as FormBrowse, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodules), Module.WorkingDir, input: null, useDialogSettings: true);
             RequestRefresh();
         }
 
@@ -1262,6 +1262,21 @@ namespace GitUI.CommandsDialogs
             // Reset to first (parent)
             ResetSelectedItemsTo(actsAsChild: false);
             return true;
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly RevisionDiffControl _control;
+
+            public TestAccessor(RevisionDiffControl control)
+            {
+                _control = control;
+            }
+
+            public SplitContainer DiffSplitContainer => _control.DiffSplitContainer;
         }
     }
 }

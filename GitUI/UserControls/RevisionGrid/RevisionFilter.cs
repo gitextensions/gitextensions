@@ -1,12 +1,15 @@
-﻿namespace GitUI.UserControls
+﻿namespace GitUI.UserControls.RevisionGrid
 {
+    /// <summary>
+    ///  Represents a simple data structure that defines a revision filter.
+    /// </summary>
     public class RevisionFilter
     {
         // TODO: consider using a bit vector or an enum
 
         public RevisionFilter(string text, bool byCommit, bool byCommitter, bool byAuthor, bool byDiffContent)
         {
-            Text = text;
+            Text = text ?? string.Empty;
             FilterByCommit = byCommit;
             FilterByCommitter = byCommitter;
             FilterByAuthor = byAuthor;

@@ -133,7 +133,7 @@ namespace GitExtensions.Plugins.Gource
                 }
 
                 using (var zipFileStream = File.OpenRead(zipPathAndFile))
-                using (var zipInputStream = new ZipInputStream(zipFileStream))
+                using (ZipInputStream zipInputStream = new(zipFileStream))
                 {
                     while (true)
                     {

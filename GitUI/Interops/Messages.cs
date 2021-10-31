@@ -56,6 +56,11 @@
         public const int WM_NCPAINT = 0x0085;
 
         /// <summary>
+        /// The WM_CTLCOLORSCROLLBAR message is sent to the parent window of a scroll bar control when the control is about to be drawn.
+        /// </summary>
+        public const int WM_CTLCOLORSCROLLBAR = 0x0137;
+
+        /// <summary>
         /// The WM_MOUSEHOVER message is posted to a window when the cursor hovers over the client area of the window for the period of time specified in a prior call to TrackMouseEvent.
         /// </summary>
         public const int WM_MOUSEHOVER = 0x02A1;

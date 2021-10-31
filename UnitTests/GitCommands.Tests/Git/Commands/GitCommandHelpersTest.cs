@@ -124,7 +124,7 @@ namespace GitCommandsTests.Git.Commands
         public void TestMergedBranchesCmd([Values(true, false)] bool includeRemote, [Values(true, false)] bool fullRefname,
             [Values(null, "", " ", "HEAD", "1234567890")] string commit)
         {
-            string formatArg = fullRefname ? " --format=%(refname)" : string.Empty;
+            string formatArg = fullRefname ? @" --format=""%(refname)""" : string.Empty;
             string remoteArg = includeRemote ? " -a" : string.Empty;
             string commitArg = string.IsNullOrWhiteSpace(commit) ? string.Empty : $" {commit}";
             string expected = $"branch{formatArg}{remoteArg} --merged{commitArg}";
@@ -496,11 +496,12 @@ namespace GitCommandsTests.Git.Commands
                 () => GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, commit: hash, file: "file.txt"));
         }
 
-        [TestCase("mybranch", false, ExpectedResult = @"push . ""1111111111111111111111111111111111111111:mybranch""")]
-        [TestCase("branch2", true, ExpectedResult = @"push . ""1111111111111111111111111111111111111111:branch2"" --force")]
-        public string PushLocalCmd(string gitRef, bool force)
+        [TestCase("mybranch", ".", false, ExpectedResult = @"push ""file://."" ""1111111111111111111111111111111111111111:mybranch""")]
+        [TestCase("branch2", "/my/path", true, ExpectedResult = @"push ""file:///my/path"" ""1111111111111111111111111111111111111111:branch2"" --force")]
+        [TestCase("branchx", @"c:\my\path", true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force")]
+        public string PushLocalCmd(string gitRef, string repoDir, bool force)
         {
-            return GitCommandHelpers.PushLocalCmd(gitRef, ObjectId.WorkTreeId, force).Arguments;
+            return GitCommandHelpers.PushLocalCmd(gitRef, ObjectId.WorkTreeId, repoDir, force).Arguments;
         }
 
         [TestCase(ResetMode.ResetIndex, "tree-ish", null, @"reset ""tree-ish"" --")]
@@ -653,8 +654,8 @@ namespace GitCommandsTests.Git.Commands
                         else
                         {
                             string prefix = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
-                            sortCondition = $" --sort={prefix}{sortBy}";
-                            sortConditionRef = $" --sort={prefix}*{sortBy}";
+                            sortCondition = $@" --sort=""{prefix}{sortBy}""";
+                            sortConditionRef = $@" --sort=""{prefix}*{sortBy}""";
                         }
 
                         yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,

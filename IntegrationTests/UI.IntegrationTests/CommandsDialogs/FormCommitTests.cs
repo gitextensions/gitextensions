@@ -79,7 +79,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
 
-                using (var tempForm = new Form())
+                using (Form tempForm = new())
                 {
                     tempForm.Owner = form;
                     tempForm.Show();
@@ -235,7 +235,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(async form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
                 {
                     await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
                 }
@@ -245,7 +245,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(async form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
                 {
                     await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
                 }
@@ -279,7 +279,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(async form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
                 {
                     await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
                 }
@@ -289,7 +289,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             RunFormTest(async form =>
             {
-                using (var cts = new CancellationTokenSource(AsyncTestHelper.UnexpectedTimeout))
+                using (CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout))
                 {
                     await ThreadHelper.JoinPendingOperationsAsync(cts.Token);
                 }

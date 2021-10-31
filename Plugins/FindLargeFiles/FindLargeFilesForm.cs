@@ -213,7 +213,7 @@ namespace GitExtensions.Plugins.FindLargeFiles
                         AppSettings.GitCommand, gitObject.Path));
                 }
 
-                sb.AppendLine(string.Format("for /f %%a IN ('\"{0}\" for-each-ref --format=%%^(refname^) refs/original/') DO \"{0}\" update-ref -d %%a",
+                sb.AppendLine(string.Format(@"for /f %%a IN ('""{0}"" for-each-ref --format=""%%^(refname^)"" refs/original/') DO ""{0}"" update-ref -d %%a",
                     AppSettings.GitCommand));
                 sb.AppendLine(string.Format("\"{0}\" reflog expire --expire=now --all",
                     AppSettings.GitCommand));

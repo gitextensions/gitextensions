@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -15,7 +14,6 @@ using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -28,39 +26,36 @@ namespace GitUI.UserControls.RevisionGrid
         OnlyFirstParent = 4
     }
 
-    public sealed class RevisionDataGridView : DataGridView
+    public sealed partial class RevisionDataGridView : DataGridView
     {
         private readonly SolidBrush _alternatingRowBackgroundBrush;
         private readonly SolidBrush _authoredHighlightBrush;
 
+        private readonly BackgroundUpdater _backgroundUpdater;
+        private readonly Stopwatch _lastRepaint = Stopwatch.StartNew();
+
         internal RevisionGraph _revisionGraph = new();
 
         private readonly List<ColumnProvider> _columnProviders = new();
-        private readonly CancellationTokenSequence _backgroundCancellationSequence;
-        private readonly AsyncQueue<(Func<CancellationToken, Task> backgroundOperation, CancellationToken cancellationToken)> _backgroundQueue =
-            new();
-        private CancellationToken _backgroundCancellationToken;
-        private JoinableTask? _backgroundProcessingTask;
-        private int _backgroundScrollTo;
 
+        private int _backgroundScrollTo;
+        private int _consecutiveScrollMessageCnt = 0; // Is used to detect if a forced repaint is needed.
         private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
+
         private VisibleRowRange _visibleRowRange;
 
-        private readonly Font _normalFont;
-        private readonly Font _boldFont;
-        private readonly Font _monospaceFont;
+        private Font _normalFont;
+        private Font _boldFont;
+        private Font _monospaceFont;
 
         public bool UpdatingVisibleRows { get; private set; }
+        public bool IsBackgroundUpdaterActive => _backgroundUpdater.IsExecuting;
 
         public RevisionDataGridView()
         {
-            _backgroundCancellationSequence = new CancellationTokenSequence();
-            _backgroundCancellationToken = _backgroundCancellationSequence.Next();
-            StartBackgroundProcessingTask(_backgroundCancellationToken);
+            InitFonts();
 
-            _normalFont = AppSettings.Font;
-            _boldFont = new Font(AppSettings.Font, FontStyle.Bold);
-            _monospaceFont = AppSettings.MonospaceFont;
+            _backgroundUpdater = new BackgroundUpdater(UpdateVisibleRowRangeInternalAsync, 25);
 
             InitializeComponent();
             DoubleBuffered = true;
@@ -78,10 +73,13 @@ namespace GitUI.UserControls.RevisionGrid
                     provider.OnColumnWidthChanged(e);
                 }
             };
-            Scroll += delegate { UpdateVisibleRowRange(); };
-            Resize += delegate { UpdateVisibleRowRange(); };
+
+            Scroll += (_, _) => UpdateVisibleRowRange();
+            Resize += (_, _) => UpdateVisibleRowRange();
             GotFocus += (_, _) => InvalidateSelectedRows();
             LostFocus += (_, _) => InvalidateSelectedRows();
+            RowPrePaint += (_, _) => _lastRepaint.Restart();
+
             CellPainting += OnCellPainting;
             CellFormatting += (_, e) =>
             {
@@ -158,14 +156,6 @@ namespace GitUI.UserControls.RevisionGrid
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                // Make sure to mark the background queue as complete before disposing the cancellation token sequence.
-                _backgroundQueue.Complete();
-                _backgroundCancellationSequence.Dispose();
-                _backgroundProcessingTask?.Join();
-            }
-
             base.Dispose(disposing);
         }
 
@@ -272,6 +262,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void OnCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
+            _lastRepaint.Restart();
+
             Debug.Assert(_rowHeight != 0, "_rowHeight != 0");
 
             var revision = GetRevision(e.RowIndex);
@@ -322,10 +314,6 @@ namespace GitUI.UserControls.RevisionGrid
         {
             _backgroundScrollTo = 0;
 
-            // Cancel all outstanding background operations, and provide a new cancellation token for future work.
-            var cancellationToken = _backgroundCancellationToken = _backgroundCancellationSequence.Next();
-            _backgroundProcessingTask?.Join();
-
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
             SetRowCount(0);
             _revisionGraph.Clear();
@@ -340,8 +328,6 @@ namespace GitUI.UserControls.RevisionGrid
             // Redraw
             UpdateVisibleRowRange();
             Invalidate(invalidateChildren: true);
-
-            StartBackgroundProcessingTask(cancellationToken);
         }
 
         public void LoadingCompleted()
@@ -359,13 +345,6 @@ namespace GitUI.UserControls.RevisionGrid
         /// <returns><see langword="true"/>, if the given hash if found; otherwise <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="objectId"/> is <see langword="null"/>.</exception>
         public bool Contains(ObjectId objectId) => _revisionGraph.Contains(objectId);
-
-        private void StartBackgroundProcessingTask(CancellationToken cancellationToken)
-        {
-            // Start the background processing via JoinableTaskContext.Factory to avoid tracking the long-running
-            // operation in JoinPendingOperationsAsync.
-            _backgroundProcessingTask = ThreadHelper.JoinableTaskContext.Factory.RunAsync(() => RunBackgroundAsync(cancellationToken));
-        }
 
         public bool RowIsRelative(int rowIndex)
         {
@@ -451,96 +430,19 @@ namespace GitUI.UserControls.RevisionGrid
             SelectRowsIfReady(rowCount);
         }
 
-        private async Task RunBackgroundAsync(CancellationToken cancellationToken)
+        private void UpdateVisibleRowRange()
         {
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
             {
+                // TODO: Switch to IsDesignMode? See Github discussion in #8809
                 // Don't run background operations in the designer.
                 return;
             }
 
-            await TaskScheduler.Default;
-
-            while (true)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    // The background thread is requesting shutdown. Return immediately unless the work queue is marked
-                    // as completed (meaning the background thread will not be restarted) and still contains work items.
-                    if (!_backgroundQueue.IsCompleted || _backgroundQueue.IsEmpty)
-                    {
-                        return;
-                    }
-                }
-
-                try
-                {
-                    if (_backgroundQueue.IsEmpty)
-                    {
-                        if (_backgroundQueue.IsCompleted)
-                        {
-                            // Normal completion of background work
-                            return;
-                        }
-
-                        continue;
-                    }
-
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        // Normal cancellation of background queue during clear
-                        return;
-                    }
-
-                    CancellationToken timeoutToken = CancellationToken.None;
-                    Func<CancellationToken, Task> backgroundOperation;
-                    CancellationToken backgroundOperationCancellation;
-                    try
-                    {
-                        using CancellationTokenSource timeoutTokenSource = new(TimeSpan.FromMilliseconds(200));
-                        using var linkedCancellation = timeoutTokenSource.Token.CombineWith(cancellationToken);
-                        timeoutToken = timeoutTokenSource.Token;
-                        (backgroundOperation, backgroundOperationCancellation) = await _backgroundQueue.DequeueAsync(linkedCancellation.Token);
-                    }
-                    catch (OperationCanceledException) when (timeoutToken.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
-                    {
-                        // No work was received from the queue within the timeout.
-                        if (RowCount < _revisionGraph.Count)
-                        {
-                            this.InvokeAsync(() => { SetRowCountAndSelectRowsIfReady(_revisionGraph.Count); }).FileAndForget();
-                        }
-
-                        continue;
-                    }
-
-                    if (backgroundOperationCancellation.IsCancellationRequested)
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        await backgroundOperation(backgroundOperationCancellation);
-                    }
-                    catch (OperationCanceledException) when (backgroundOperationCancellation.IsCancellationRequested)
-                    {
-                        // Normal cancellation of background work
-                    }
-                }
-                catch (OperationCanceledException) when (_backgroundQueue.IsCompleted && _backgroundQueue.IsEmpty)
-                {
-                    // Normal completion of background work
-                    return;
-                }
-                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-                {
-                    // Normal cancellation of background queue during clear
-                    return;
-                }
-            }
+            _backgroundUpdater.ScheduleExcecution();
         }
 
-        private void UpdateVisibleRowRange()
+        private async Task UpdateVisibleRowRangeInternalAsync()
         {
             var fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
             var visibleRowCount = _rowHeight > 0 ? (Height / _rowHeight) + 2 /*Add 2 for rounding*/ : 0;
@@ -559,67 +461,43 @@ namespace GitUI.UserControls.RevisionGrid
                     if (_backgroundScrollTo != newBackgroundScrollTo)
                     {
                         _backgroundScrollTo = newBackgroundScrollTo;
-                        _backgroundQueue.Enqueue((BackgroundUpdateAsync, _backgroundCancellationToken));
+
+                        if (AppSettings.ShowRevisionGridGraphColumn)
+                        {
+                            int scrollTo;
+                            int curCount;
+
+                            do
+                            {
+                                scrollTo = newBackgroundScrollTo;
+                                curCount = _revisionGraph.GetCachedCount();
+                                await UpdateGraphAsync(fromIndex: curCount, toIndex: scrollTo);
+                            }
+                            while (curCount < scrollTo);
+                        }
+                        else
+                        {
+                            await UpdateGraphAsync(fromIndex: _revisionGraph.Count, toIndex: _revisionGraph.Count);
+                        }
                     }
 
-                    this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
+                    await this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged);
                 }
             }
-        }
 
-        private Task BackgroundUpdateAsync(CancellationToken cancellationToken)
-        {
-            if (AppSettings.ShowRevisionGridGraphColumn)
+            return;
+
+            async Task UpdateGraphAsync(int fromIndex, int toIndex)
             {
-                int scrollTo;
-                int curCount;
-                do
-                {
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return Task.CompletedTask;
-                    }
-
-                    scrollTo = _backgroundScrollTo;
-                    curCount = _revisionGraph.GetCachedCount();
-                    UpdateGraph(curCount, scrollTo);
-                }
-                while (curCount < scrollTo);
-            }
-            else
-            {
-                UpdateGraph(_revisionGraph.Count, _revisionGraph.Count);
-            }
-
-            this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
-            return Task.CompletedTask;
-
-            void UpdateGraph(int fromIndex, int toIndex)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-
                 // Cache the next item
-                _revisionGraph.CacheTo(toIndex, Math.Min(fromIndex + 1500, toIndex));
+                _revisionGraph.CacheTo(currentRowIndex: toIndex, lastToCacheRowIndex: Math.Min(fromIndex + 1500, toIndex));
 
-                var rowIndex = _revisionGraph.GetCachedCount();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                this.InvokeAsync(UpdateRowCount, toIndex).FileAndForget();
-                return;
-
-                void UpdateRowCount(int row)
+                int rowCount = _revisionGraph.Count;
+                if (RowCount < rowCount)
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
-
-                    if (RowCount < _revisionGraph.Count)
-                    {
-                        SetRowCountAndSelectRowsIfReady(_revisionGraph.Count);
-                    }
+                    SetRowCountAndSelectRowsIfReady(rowCount);
                 }
             }
         }
@@ -634,9 +512,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public override void Refresh()
         {
-            // TODO allow custom grid font
-            ////NormalFont = AppSettings.RevisionGridFont;
-            ////NormalFont = new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
+            InitFonts();
 
             UpdateRowHeight();
             UpdateVisibleRowRange();
@@ -725,6 +601,41 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            ConditionalRepaintInjector(m);
+            base.WndProc(ref m);
+        }
+
+        /// <summary>
+        /// Forces a repaint if the last repaint was more than 50ms ago.
+        /// </summary>
+        /// <remarks>
+        /// In situations where the mouse wheel is spinning fast (for example with free-spinning mouse wheels),
+        /// the message pump is flooded with WM_CTLCOLORSCROLLBAR messages and the DataGridView is not repainted.
+        /// This method injects a WM_PAINT message in such cases to make the GUI feel more responsive.
+        /// </remarks>
+        private void ConditionalRepaintInjector(Message m)
+        {
+            if (m.Msg != NativeMethods.WM_CTLCOLORSCROLLBAR)
+            {
+                _consecutiveScrollMessageCnt = 0;
+                return;
+            }
+
+            _consecutiveScrollMessageCnt++;
+
+            if (_consecutiveScrollMessageCnt > 5 && _lastRepaint.ElapsedMilliseconds > 50)
+            {
+                // inject paint message
+                var mm = new Message() { HWnd = Handle, Msg = NativeMethods.WM_PAINT };
+                base.WndProc(ref mm);
+
+                _consecutiveScrollMessageCnt = 0;
+                _lastRepaint.Restart();
+            }
+        }
+
         protected override void OnMouseDown(MouseEventArgs e)
         {
             var hit = HitTest(e.X, e.Y);
@@ -766,6 +677,13 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 base.OnMouseWheel(e);
             }
+        }
+
+        private void InitFonts()
+        {
+            _normalFont = AppSettings.Font;
+            _boldFont = new Font(_normalFont, FontStyle.Bold);
+            _monospaceFont = AppSettings.MonospaceFont;
         }
 
         private static Color getHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>

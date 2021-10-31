@@ -24,6 +24,27 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormPull : GitModuleForm
     {
+        #region Mnemonics
+        // Available: BIJKQVXYZ
+        // A Fetch all tags
+        // C Stash changes
+        // D Prune remote branches and tags
+        // E Rebase
+        // F Do not merge, only fetch
+        // G Manage remotes
+        // H Auto stash
+        // L Local branch
+        // M Merge
+        // N Fetch no tag
+        // O Remote branch
+        // P Prune remote branches
+        // R Remote
+        // S Solve conflicts
+        // T Follow tagopt
+        // U URL
+        // W Download full history
+        #endregion
+
         #region Translation
         private readonly TranslationString _areYouSureYouWantToRebaseMerge =
             new("The current commit is a merge." + Environment.NewLine +
@@ -122,8 +143,8 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
 
-            helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
-            helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
+            PanelLeftImage.Visible = !AppSettings.DontShowHelpImages;
+            PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
 
             _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
             _branch = Module.GetSelectedBranch();
@@ -506,7 +527,10 @@ namespace GitUI.CommandsDialogs
 
                 if (!IsSubmodulesInitialized())
                 {
-                    if (AskIfSubmodulesShouldBeInitialized())
+                    // If the "Update submodules on checkout" option is `true`, initialize and update
+                    // all submodules. If it's `false` don't initialize/update the submodules. If it's
+                    // indeterminate, ask the user what they'd like to do.
+                    if (AppSettings.UpdateSubmodulesOnCheckout ?? AppSettings.DontConfirmUpdateSubmodulesOnCheckout ?? AskIfSubmodulesShouldBeInitialized())
                     {
                         UICommands.StartUpdateSubmodulesDialog(this);
                     }
@@ -657,12 +681,12 @@ namespace GitUI.CommandsDialogs
         {
             if (Fetch.Checked)
             {
-                return new FormRemoteProcess(UICommands, process: null, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked, PruneTags.Checked));
+                return new FormRemoteProcess(UICommands, Module.FetchCmd(source, curRemoteBranch, curLocalBranch, GetTagsArg(), Unshallow.Checked, Prune.Checked, PruneTags.Checked));
             }
 
             Debug.Assert(Merge.Checked || Rebase.Checked, "Merge.Checked || Rebase.Checked");
 
-            return new FormRemoteProcess(UICommands, process: null, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked))
+            return new FormRemoteProcess(UICommands, Module.PullCmd(source, curRemoteBranch, Rebase.Checked, GetTagsArg(), Unshallow.Checked))
             {
                 HandleOnExitCallback = HandlePullOnExit
             };
@@ -705,7 +729,7 @@ namespace GitUI.CommandsDialogs
                     {
                         string remote = _NO_TRANSLATE_Remotes.Text;
                         string pruneCmd = "remote prune " + remote;
-                        using FormRemoteProcess formPrune = new(UICommands, process: null, pruneCmd)
+                        using FormRemoteProcess formPrune = new(UICommands, pruneCmd)
                         {
                             Remote = remote,
                             Text = string.Format(_pruneFromCaption.Text, remote)
@@ -1024,9 +1048,9 @@ namespace GitUI.CommandsDialogs
 
             localBranch.Enabled = false;
             localBranch.Text = _branch;
-            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullMerge.AdaptLightness());
-            helpImageDisplayUserControl1.Image2 = DpiUtil.Scale(Images.HelpPullMergeFastForward.AdaptLightness());
-            helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
+            PanelLeftImage.Image1 = DpiUtil.Scale(Images.HelpPullMerge.AdaptLightness());
+            PanelLeftImage.Image2 = DpiUtil.Scale(Images.HelpPullMergeFastForward.AdaptLightness());
+            PanelLeftImage.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
             Prune.Enabled = false;
             PruneTags.Enabled = false;
@@ -1047,8 +1071,8 @@ namespace GitUI.CommandsDialogs
 
             localBranch.Enabled = false;
             localBranch.Text = _branch;
-            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullRebase.AdaptLightness());
-            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            PanelLeftImage.Image1 = DpiUtil.Scale(Images.HelpPullRebase.AdaptLightness());
+            PanelLeftImage.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
             Prune.Enabled = false;
             PruneTags.Enabled = false;
@@ -1070,8 +1094,8 @@ namespace GitUI.CommandsDialogs
             localBranch.Enabled = true;
             localBranch.Text = string.Empty;
 
-            helpImageDisplayUserControl1.Image1 = DpiUtil.Scale(Images.HelpPullFetch.AdaptLightness());
-            helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            PanelLeftImage.Image1 = DpiUtil.Scale(Images.HelpPullFetch.AdaptLightness());
+            PanelLeftImage.IsOnHoverShowImage2 = false;
             AllTags.Enabled = true;
             Prune.Enabled = true;
             PruneTags.Enabled = true;

@@ -1,0 +1,59 @@
+name: Bug
+description: Report a bug or other issue
+labels: ':eyeglasses: status: needs review'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+        ⚠️ Review existing issues to see whether someone else has already reported your issue.
+        📖 Please also read [CONTRIBUTING.md](https://github.com/gitextensions/gitextensions/blob/master/CONTRIBUTING.md).
+  - type: textarea
+    id: about
+    attributes:
+      label: Environment
+      description: Use _Help > About_ in Git Extensions to copy this information to the clipboard automatically.
+      value: |
+        - GitExtensions version:
+        - GIT version: 
+        - OS version: 
+        - .NET version: 
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue description
+      description: |
+        Be as specific and detailed as possible to help us triaging your issue. Screenshots and/or animations can be very useful in helping to understand the issue you're facing.
+
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+        Tip: You can use https://www.screentogif.com/ to record animations and videos.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Take some time to try and reproduce the issue, then explain how to do so here. 
+    validations:
+      required: true
+  - type: textarea
+    id: regression
+    attributes:
+      label: Did this work in previous version of GitExtensions?
+      description: If so, which version?
+    validations:
+      required: false
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: If relevant, as described at https://github.com/gitextensions/gitextensions/wiki/Diagnosing-problems.
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        ❤️ Git Extensions? Please consider supporting our collective: https://opencollective.com/gitextensions

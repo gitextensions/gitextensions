@@ -2362,11 +2362,11 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort patch</source>
+        <source>A&amp;bort patch</source>
         <target />
       </trans-unit>
       <trans-unit id="AddFiles.Text">
-        <source>Add files</source>
+        <source>&amp;Add files</source>
         <target />
       </trans-unit>
       <trans-unit id="Apply.Text">
@@ -2374,27 +2374,27 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="BrowseDir.Text">
-        <source>Browse</source>
+        <source>Bro&amp;wse</source>
         <target />
       </trans-unit>
       <trans-unit id="BrowsePatch.Text">
-        <source>Browse</source>
+        <source>B&amp;rowse</source>
         <target />
       </trans-unit>
       <trans-unit id="IgnoreWhitespace.Text">
-        <source>Ignore Wh.spc.</source>
+        <source>&amp;Ignore Wh.spc.</source>
         <target />
       </trans-unit>
       <trans-unit id="Mergetool.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="PatchDirMode.Text">
-        <source>Patch directory</source>
+        <source>Patch &amp;directory</source>
         <target />
       </trans-unit>
       <trans-unit id="PatchFileMode.Text">
-        <source>Patch file</source>
+        <source>Patch &amp;file</source>
         <target />
       </trans-unit>
       <trans-unit id="Resolved.Text">
@@ -2402,11 +2402,11 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="SignOff.Text">
-        <source>Sign-Off</source>
+        <source>Sign-&amp;Off</source>
         <target />
       </trans-unit>
       <trans-unit id="Skip.Text">
-        <source>Skip patch</source>
+        <source>S&amp;kip patch</source>
         <target />
       </trans-unit>
       <trans-unit id="SolveMergeConflicts.Text">
@@ -2419,7 +2419,7 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="_conflictMergetoolText.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="_conflictResolvedText.Text">
@@ -2597,7 +2597,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="PuTTYToolStripMenuItem.Text">
-        <source>PuTTY</source>
+        <source>&amp;PuTTY</source>
         <target />
       </trans-unit>
       <trans-unit id="RefreshButton.ToolTipText">
@@ -2621,7 +2621,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_addUpstreamRemoteToolStripMenuItem.Text">
-        <source>Add upstream remote</source>
+        <source>&amp;Add upstream remote</source>
         <target />
       </trans-unit>
       <trans-unit id="_buildReportTabCaption.Text">
@@ -2633,7 +2633,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
-        <source>Configure this menu</source>
+        <source>&amp;Configure this menu</source>
         <target />
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">
@@ -2641,11 +2641,11 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_createPullRequestsToolStripMenuItem.Text">
-        <source>Create pull requests...</source>
+        <source>&amp;Create pull requests...</source>
         <target />
       </trans-unit>
       <trans-unit id="_forkCloneRepositoryToolStripMenuItem.Text">
-        <source>Fork/Clone repository...</source>
+        <source>&amp;Fork/Clone repository...</source>
         <target />
       </trans-unit>
       <trans-unit id="_goToSuperProject.Text">
@@ -2727,23 +2727,23 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="_viewPullRequestsToolStripMenuItem.Text">
-        <source>View pull requests...</source>
+        <source>View &amp;pull requests...</source>
         <target />
       </trans-unit>
       <trans-unit id="aboutToolStripMenuItem.Text">
-        <source>About</source>
+        <source>&amp;About</source>
         <target />
       </trans-unit>
       <trans-unit id="applyPatchToolStripMenuItem.Text">
-        <source>Apply patch...</source>
+        <source>&amp;Apply patch...</source>
         <target />
       </trans-unit>
       <trans-unit id="archiveToolStripMenuItem.Text">
-        <source>Archive revision...</source>
+        <source>Archi&amp;ve revision...</source>
         <target />
       </trans-unit>
       <trans-unit id="bisectToolStripMenuItem.Text">
-        <source>Bisect...</source>
+        <source>B&amp;isect...</source>
         <target />
       </trans-unit>
       <trans-unit id="branchSelect.Text">
@@ -2755,39 +2755,39 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="branchToolStripMenuItem.Text">
-        <source>Create branch...</source>
+        <source>Create &amp;branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="changelogToolStripMenuItem.Text">
-        <source>Changelog</source>
+        <source>&amp;Changelog</source>
         <target />
       </trans-unit>
       <trans-unit id="checkForUpdatesToolStripMenuItem.Text">
-        <source>Check for updates</source>
+        <source>Check for &amp;updates</source>
         <target />
       </trans-unit>
       <trans-unit id="checkoutBranchToolStripMenuItem.Text">
-        <source>Checkout branch...</source>
+        <source>Chec&amp;kout branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="checkoutToolStripMenuItem.Text">
-        <source>Checkout revision...</source>
+        <source>Check&amp;out revision...</source>
         <target />
       </trans-unit>
       <trans-unit id="cherryPickToolStripMenuItem.Text">
-        <source>Cherry pick...</source>
+        <source>Cherr&amp;y pick...</source>
         <target />
       </trans-unit>
       <trans-unit id="cleanupToolStripMenuItem.Text">
-        <source>Clean working directory...</source>
+        <source>Clean &amp;working directory...</source>
         <target />
       </trans-unit>
       <trans-unit id="cloneToolStripMenuItem.Text">
-        <source>Clone repository...</source>
+        <source>C&amp;lone repository...</source>
         <target />
       </trans-unit>
       <trans-unit id="closeToolStripMenuItem.Text">
-        <source>Close (go to Dashboard)</source>
+        <source>&amp;Close (go to Dashboard)</source>
         <target />
       </trans-unit>
       <trans-unit id="commandsToolStripMenuItem.Text">
@@ -2795,31 +2795,31 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="commitInfoBelowMenuItem.Text">
-        <source>Commit info below graph</source>
+        <source>Commit info &amp;below graph</source>
         <target />
       </trans-unit>
       <trans-unit id="commitInfoLeftwardMenuItem.Text">
-        <source>Commit info left of graph</source>
+        <source>Commit info &amp;left of graph</source>
         <target />
       </trans-unit>
       <trans-unit id="commitInfoRightwardMenuItem.Text">
-        <source>Commit info right of graph</source>
+        <source>Commit info &amp;right of graph</source>
         <target />
       </trans-unit>
       <trans-unit id="commitToolStripMenuItem.Text">
-        <source>Commit...</source>
+        <source>&amp;Commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="compressGitDatabaseToolStripMenuItem.Text">
-        <source>Compress git database</source>
+        <source>&amp;Compress git database</source>
         <target />
       </trans-unit>
       <trans-unit id="createAStashToolStripMenuItem.Text">
-        <source>Create a stash...</source>
+        <source>&amp;Create a stash...</source>
         <target />
       </trans-unit>
       <trans-unit id="createWorktreeToolStripMenuItem.Text">
-        <source>Create a worktree...</source>
+        <source>&amp;Create a worktree...</source>
         <target />
       </trans-unit>
       <trans-unit id="dashboardToolStripMenuItem.Text">
@@ -2827,47 +2827,47 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteBranchToolStripMenuItem.Text">
-        <source>Delete branch...</source>
+        <source>De&amp;lete branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteIndexLockToolStripMenuItem.Text">
-        <source>Delete index.lock</source>
+        <source>&amp;Delete index.lock</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">
-        <source>Delete tag...</source>
+        <source>&amp;Delete tag...</source>
         <target />
       </trans-unit>
       <trans-unit id="donateToolStripMenuItem.Text">
-        <source>Donate</source>
+        <source>&amp;Donate</source>
         <target />
       </trans-unit>
       <trans-unit id="editGitAttributesToolStripMenuItem.Text">
-        <source>Edit .gitattributes</source>
+        <source>Edit .git&amp;attributes</source>
         <target />
       </trans-unit>
       <trans-unit id="editLocalGitConfigToolStripMenuItem.Text">
-        <source>Edit .git/config</source>
+        <source>&amp;Edit .git/config</source>
         <target />
       </trans-unit>
       <trans-unit id="editgitignoreToolStripMenuItem1.Text">
-        <source>Edit .gitignore</source>
+        <source>Edit .git&amp;ignore</source>
         <target />
       </trans-unit>
       <trans-unit id="editgitinfoexcludeToolStripMenuItem.Text">
-        <source>Edit .git/info/exclude</source>
+        <source>Edit .git/info/&amp;exclude</source>
         <target />
       </trans-unit>
       <trans-unit id="editmailmapToolStripMenuItem.Text">
-        <source>Edit .mailmap</source>
+        <source>Edit .&amp;mailmap</source>
         <target />
       </trans-unit>
       <trans-unit id="exitToolStripMenuItem.Text">
-        <source>Exit</source>
+        <source>E&amp;xit</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchAllToolStripMenuItem.Text">
-        <source>Fetch all</source>
+        <source>Fetch &amp;all</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchAllToolStripMenuItem.ToolTipText">
@@ -2875,7 +2875,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchPruneAllToolStripMenuItem.Text">
-        <source>Fetch and prune all</source>
+        <source>F&amp;etch and prune all</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchPruneAllToolStripMenuItem.ToolTipText">
@@ -2883,7 +2883,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchToolStripMenuItem.Text">
-        <source>Fetch</source>
+        <source>&amp;Fetch</source>
         <target />
       </trans-unit>
       <trans-unit id="fetchToolStripMenuItem.ToolTipText">
@@ -2891,7 +2891,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="fileExplorerToolStripMenuItem.Text">
-        <source>File Explorer</source>
+        <source>File E&amp;xplorer</source>
         <target />
       </trans-unit>
       <trans-unit id="fileToolStripMenuItem.Text">
@@ -2899,7 +2899,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="formatPatchToolStripMenuItem.Text">
-        <source>Format patch...</source>
+        <source>&amp;Format patch...</source>
         <target />
       </trans-unit>
       <trans-unit id="generateOrImportKeyToolStripMenuItem.Text">
@@ -2907,19 +2907,19 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="gitBashToolStripMenuItem.Text">
-        <source>Git bash</source>
+        <source>Git &amp;bash</source>
         <target />
       </trans-unit>
       <trans-unit id="gitGUIToolStripMenuItem.Text">
-        <source>Git GUI</source>
+        <source>Git &amp;GUI</source>
         <target />
       </trans-unit>
       <trans-unit id="gitMaintenanceToolStripMenuItem.Text">
-        <source>Git maintenance</source>
+        <source>&amp;Git maintenance</source>
         <target />
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Git command log</source>
+        <source>Git &amp;command log</source>
         <target />
       </trans-unit>
       <trans-unit id="helpToolStripMenuItem.Text">
@@ -2927,19 +2927,19 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="initNewRepositoryToolStripMenuItem.Text">
-        <source>Create new repository...</source>
+        <source>&amp;Create new repository...</source>
         <target />
       </trans-unit>
       <trans-unit id="kGitToolStripMenuItem.Text">
-        <source>GitK</source>
+        <source>Git&amp;K</source>
         <target />
       </trans-unit>
       <trans-unit id="manageRemoteRepositoriesToolStripMenuItem1.Text">
-        <source>Remote repositories...</source>
+        <source>Remo&amp;te repositories...</source>
         <target />
       </trans-unit>
       <trans-unit id="manageStashesToolStripMenuItem.Text">
-        <source>Manage stashes...</source>
+        <source>&amp;Manage stashes...</source>
         <target />
       </trans-unit>
       <trans-unit id="manageStashesToolStripMenuItem.ToolTipText">
@@ -2947,11 +2947,11 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="manageSubmodulesToolStripMenuItem.Text">
-        <source>Manage submodules...</source>
+        <source>Manage &amp;submodules...</source>
         <target />
       </trans-unit>
       <trans-unit id="manageWorktreeToolStripMenuItem.Text">
-        <source>Manage worktrees...</source>
+        <source>&amp;Manage worktrees...</source>
         <target />
       </trans-unit>
       <trans-unit id="menuCommitInfoPosition.ToolTipText">
@@ -2959,31 +2959,31 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="menuitemSparse.Text">
-        <source>Sparse Working Copy</source>
+        <source>Sparse Wor&amp;king Copy</source>
         <target />
       </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
-        <source>Merge branches...</source>
+        <source>&amp;Merge branches...</source>
         <target />
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
-        <source>Pull - merge</source>
+        <source>Pull - &amp;merge</source>
         <target />
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
-        <source>Navigate</source>
+        <source>&amp;Navigate</source>
         <target />
       </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
-        <source>Open...</source>
+        <source>&amp;Open...</source>
         <target />
       </trans-unit>
       <trans-unit id="patchToolStripMenuItem.Text">
-        <source>View patch file...</source>
+        <source>View patc&amp;h file...</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Plugin Settings</source>
+        <source>Plugin &amp;Settings</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginsToolStripMenuItem.Text">
@@ -2991,27 +2991,27 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem.Text">
-        <source>Pull/Fetch...</source>
+        <source>Pull&amp;/Fetch...</source>
         <target />
       </trans-unit>
       <trans-unit id="pullToolStripMenuItem1.Text">
-        <source>Open pull dialog...</source>
+        <source>Open &amp;pull dialog...</source>
         <target />
       </trans-unit>
       <trans-unit id="pushToolStripMenuItem.Text">
-        <source>Push...</source>
+        <source>&amp;Push...</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem.Text">
-        <source>Rebase...</source>
+        <source>R&amp;ebase...</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
-        <source>Pull - rebase</source>
+        <source>Pull - &amp;rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="recoverLostObjectsToolStripMenuItem.Text">
-        <source>Recover lost objects...</source>
+        <source>&amp;Recover lost objects...</source>
         <target />
       </trans-unit>
       <trans-unit id="refreshDashboardToolStripMenuItem.Text">
@@ -3019,15 +3019,15 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="refreshToolStripMenuItem.Text">
-        <source>Refresh</source>
+        <source>&amp;Refresh</source>
         <target />
       </trans-unit>
       <trans-unit id="repoSettingsToolStripMenuItem.Text">
-        <source>Repository settings</source>
+        <source>Rep&amp;ository settings</source>
         <target />
       </trans-unit>
       <trans-unit id="reportAnIssueToolStripMenuItem.Text">
-        <source>Report an issue</source>
+        <source>&amp;Report an issue</source>
         <target />
       </trans-unit>
       <trans-unit id="repositoryToolStripMenuItem.Text">
@@ -3035,19 +3035,19 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="resetToolStripMenuItem.Text">
-        <source>Reset changes...</source>
+        <source>&amp;Reset changes...</source>
         <target />
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
-        <source>Solve merge conflicts...</source>
+        <source>&amp;Solve merge conflicts...</source>
         <target />
       </trans-unit>
       <trans-unit id="setDefaultPullButtonActionToolStripMenuItem.Text">
-        <source>Set default Pull button action</source>
+        <source>Set &amp;default Pull button action</source>
         <target />
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>&amp;Settings</source>
         <target />
       </trans-unit>
       <trans-unit id="startAuthenticationAgentToolStripMenuItem.Text">
@@ -3055,7 +3055,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.Text">
-        <source>Stash</source>
+        <source>&amp;Stash</source>
         <target />
       </trans-unit>
       <trans-unit id="stashChangesToolStripMenuItem.ToolTipText">
@@ -3063,7 +3063,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.Text">
-        <source>Stash pop</source>
+        <source>Stash &amp;pop</source>
         <target />
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.ToolTipText">
@@ -3071,15 +3071,15 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="stashToolStripMenuItem.Text">
-        <source>Manage stashes...</source>
+        <source>Ma&amp;nage stashes...</source>
         <target />
       </trans-unit>
       <trans-unit id="synchronizeAllSubmodulesToolStripMenuItem.Text">
-        <source>Synchronize all submodules</source>
+        <source>Synchronize all su&amp;bmodules</source>
         <target />
       </trans-unit>
       <trans-unit id="tagToolStripMenuItem.Text">
-        <source>Create tag...</source>
+        <source>Create &amp;tag...</source>
         <target />
       </trans-unit>
       <trans-unit id="toggleBranchTreePanel.ToolTipText">
@@ -3107,7 +3107,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripFileExplorer.ToolTipText">
-        <source>File Explorer</source>
+        <source>File E&amp;xplorer</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripLabel1.Text">
@@ -3119,11 +3119,11 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
-        <source>Show reflog...</source>
+        <source>Show reflo&amp;g...</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripMenuItemWorktrees.Text">
-        <source>Worktrees</source>
+        <source>&amp;Worktrees</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
@@ -3139,7 +3139,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="translateToolStripMenuItem.Text">
-        <source>Translate</source>
+        <source>&amp;Translate</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
@@ -3163,43 +3163,43 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiAuthorFilter.Text">
-        <source>Author</source>
+        <source>&amp;Author</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiBranchLocal.Text">
-        <source>Local</source>
+        <source>&amp;Local</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiBranchRemote.Text">
-        <source>Remote</source>
+        <source>&amp;Remote</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiBranchTag.Text">
-        <source>Tag</source>
+        <source>&amp;Tag</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCommitFilter.Text">
-        <source>Commit message and hash</source>
+        <source>Commit &amp;message and hash</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCommitterFilter.Text">
-        <source>Committer</source>
+        <source>&amp;Committer</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiDiffContainsFilter.Text">
-        <source>Diff contains (SLOW)</source>
+        <source>&amp;Diff contains (SLOW)</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
-        <source>Favourite Repositories</source>
+        <source>&amp;Favourite Repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiHash.Text">
-        <source>Hash</source>
+        <source>&amp;Hash</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiRecentRepositories.Text">
-        <source>Recent Repositories</source>
+        <source>&amp;Recent Repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiRecentRepositoriesClear.Text">
@@ -3207,7 +3207,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesAll.Text">
-        <source>All branches</source>
+        <source>&amp;All branches</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesAll.ToolTipText">
@@ -3215,7 +3215,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesCurrent.Text">
-        <source>Current branch only</source>
+        <source>&amp;Current branch only</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesCurrent.ToolTipText">
@@ -3223,7 +3223,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesFiltered.Text">
-        <source>Filtered branches</source>
+        <source>&amp;Filtered branches</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesFiltered.ToolTipText">
@@ -3243,11 +3243,11 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
-        <source>Yes, I allow telemetry</source>
+        <source>&amp;Yes, I allow telemetry</source>
         <target />
       </trans-unit>
       <trans-unit id="tssbtnShowBranches.Text">
-        <source>All branches</source>
+        <source>&amp;All branches</source>
         <target />
       </trans-unit>
       <trans-unit id="tssbtnShowBranches.ToolTipText">
@@ -3255,23 +3255,23 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="undoLastCommitToolStripMenuItem.Text">
-        <source>Undo last commit</source>
+        <source>&amp;Undo last commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="updateAllSubmodulesToolStripMenuItem.Text">
-        <source>Update all submodules</source>
+        <source>&amp;Update all submodules</source>
         <target />
       </trans-unit>
       <trans-unit id="userManualToolStripMenuItem.Text">
-        <source>User Manual</source>
+        <source>User &amp;Manual</source>
         <target />
       </trans-unit>
       <trans-unit id="userShell.ToolTipText">
-        <source>Git bash</source>
+        <source>Git &amp;bash</source>
         <target />
       </trans-unit>
       <trans-unit id="viewToolStripMenuItem.Text">
-        <source>View</source>
+        <source>&amp;View</source>
         <target />
       </trans-unit>
     </body>
@@ -5789,19 +5789,35 @@ ancestor tree.</source>
         <target />
       </trans-unit>
       <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
+        <source>Mana&amp;ge remotes</source>
         <target />
       </trans-unit>
       <trans-unit id="AllTags.Text">
-        <source>Fetch all tags</source>
+        <source>Fetch &amp;all tags</source>
         <target />
       </trans-unit>
       <trans-unit id="AutoStash.Text">
-        <source>Auto stash</source>
+        <source>Auto stas&amp;h</source>
         <target />
       </trans-unit>
       <trans-unit id="Fetch.Text">
         <source>Do not merge, only &amp;fetch remote changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GroupBranch.Text">
+        <source>Branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GroupMergeOptions.Text">
+        <source>Merge options</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GroupPullFrom.Text">
+        <source>Pull from</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GroupTagOptions.Text">
+        <source>Tag options</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
@@ -5809,47 +5825,47 @@ ancestor tree.</source>
         <target />
       </trans-unit>
       <trans-unit id="Mergetool.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="NoTags.Text">
-        <source>Fetch no tag</source>
+        <source>Fetch &amp;no tag</source>
         <target />
       </trans-unit>
       <trans-unit id="Prune.Text">
-        <source>Prune remote branches</source>
+        <source>&amp;Prune remote branches</source>
         <target />
       </trans-unit>
       <trans-unit id="PruneTags.Text">
-        <source>Prune remote branches and tags</source>
+        <source>Prune remote branches an&amp;d tags</source>
         <target />
       </trans-unit>
       <trans-unit id="Pull.Text">
-        <source>&amp;Pull</source>
+        <source>Pull</source>
         <target />
       </trans-unit>
       <trans-unit id="PullFromRemote.Text">
-        <source>Remote</source>
+        <source>&amp;Remote</source>
         <target />
       </trans-unit>
       <trans-unit id="PullFromUrl.Text">
-        <source>Url</source>
+        <source>&amp;URL</source>
         <target />
       </trans-unit>
       <trans-unit id="ReachableTags.Text">
-        <source>Follow tagopt, if not specified, fetch tags reachable from remote HEAD</source>
+        <source>Follow &amp;tagopt, if not specified, fetch tags reachable from remote HEAD</source>
         <target />
       </trans-unit>
       <trans-unit id="Rebase.Text">
-        <source>&amp;Rebase current branch on top of remote branch, creates linear history (use with caution)</source>
+        <source>R&amp;ebase current branch on top of remote branch, creates linear history (use with caution)</source>
         <target />
       </trans-unit>
       <trans-unit id="Stash.Text">
-        <source>Stash changes</source>
+        <source>Stash &amp;changes</source>
         <target />
       </trans-unit>
       <trans-unit id="Unshallow.Text">
-        <source>Download full history</source>
+        <source>Do&amp;wnload full history</source>
         <target />
       </trans-unit>
       <trans-unit id="_allMergeConflictSolvedQuestion.Text">
@@ -5976,28 +5992,12 @@ This will initialize and update all submodules recursive.</source>
         <source>Please select a source directory</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Merge options</source>
+      <trans-unit id="lblLocalBranch.Text">
+        <source>&amp;Local branch</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox2.Text">
-        <source>Pull from</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBox3.Text">
-        <source>Branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBox4.Text">
-        <source>Tag options</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Local branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Remote branch</source>
+      <trans-unit id="lblRemoteBranch.Text">
+        <source>Rem&amp;ote branch</source>
         <target />
       </trans-unit>
     </body>
@@ -6139,15 +6139,15 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullDefaultButton.Text">
-        <source>Pull with the default pull action ({0})</source>
+        <source>&amp;Pull with the default pull action ({0})</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullMergeButton.Text">
-        <source>Pull with merge</source>
+        <source>Pull with &amp;merge</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullRebaseButton.Text">
-        <source>Pull with rebase</source>
+        <source>Pull with &amp;rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
@@ -6175,7 +6175,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="_pushForceButton.Text">
-        <source>Force push with lease</source>
+        <source>&amp;Force push with lease</source>
         <target />
       </trans-unit>
       <trans-unit id="_pushToCaption.Text">
@@ -6311,19 +6311,19 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort</source>
+        <source>A&amp;bort</source>
         <target />
       </trans-unit>
       <trans-unit id="AddFiles.Text">
-        <source>Add files</source>
+        <source>&amp;Add files</source>
         <target />
       </trans-unit>
       <trans-unit id="Commit.Text">
-        <source>Commit...</source>
+        <source>C&amp;ommit...</source>
         <target />
       </trans-unit>
       <trans-unit id="Mergetool.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -6331,7 +6331,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="Resolved.Text">
-        <source>Continue rebase</source>
+        <source>&amp;Continue rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowOptions.Text">
@@ -6339,7 +6339,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="Skip.Text">
-        <source>Skip currently applying commit</source>
+        <source>S&amp;kip currently applying commit</source>
         <target />
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">
@@ -6357,11 +6357,11 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="_continueRebaseText.Text">
-        <source>Continue rebase</source>
+        <source>&amp;Continue rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="_continueRebaseText2.Text">
-        <source>&gt;Continue rebase&lt;</source>
+        <source>&gt;&amp;Continue rebase&lt;</source>
         <target />
       </trans-unit>
       <trans-unit id="_hoverShowImageLabelText.Text">
@@ -6373,50 +6373,46 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="_solveConflictsText.Text">
-        <source>Solve conflicts</source>
+        <source>&amp;Solve conflicts</source>
         <target />
       </trans-unit>
       <trans-unit id="_solveConflictsText2.Text">
-        <source>&gt;Solve conflicts&lt;</source>
+        <source>&gt;&amp;Solve conflicts&lt;</source>
         <target />
       </trans-unit>
       <trans-unit id="chkAutosquash.Text">
-        <source>Autosquash</source>
+        <source>Autos&amp;quash</source>
         <target />
       </trans-unit>
       <trans-unit id="chkCommitterDateIsAuthorDate.Text">
-        <source>Committer date is author date</source>
+        <source>Co&amp;mmitter date is author date</source>
         <target />
       </trans-unit>
       <trans-unit id="chkIgnoreDate.Text">
-        <source>Ignore date</source>
+        <source>Ignore &amp;date</source>
         <target />
       </trans-unit>
       <trans-unit id="chkInteractive.Text">
-        <source>Interactive Rebase</source>
+        <source>&amp;Interactive Rebase</source>
         <target />
       </trans-unit>
       <trans-unit id="chkPreserveMerges.Text">
-        <source>Preserve Merges</source>
+        <source>&amp;Preserve Merges</source>
         <target />
       </trans-unit>
       <trans-unit id="chkSpecificRange.Text">
-        <source>Specific range</source>
+        <source>Sp&amp;ecific range</source>
         <target />
       </trans-unit>
       <trans-unit id="chkStash.Text">
-        <source>Auto stash</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Rebase current branch on top of another branch</source>
+        <source>A&amp;uto stash</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Rebase on</source>
+        <source>&amp;Rebase on</source>
         <target />
       </trans-unit>
-      <trans-unit id="label3.Text">
+      <trans-unit id="lblCommitsToReapply.Text">
         <source>Commits to re-apply:</source>
         <target />
       </trans-unit>
@@ -6425,11 +6421,15 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRangeFrom.Text">
-        <source>From (exc.)</source>
+        <source>&amp;From (exc.)</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRangeTo.Text">
-        <source>To</source>
+        <source>&amp;To</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblRebase.Text">
+        <source>Rebase current branch on top of another branch</source>
         <target />
       </trans-unit>
     </body>
@@ -6894,22 +6894,22 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <target />
       </trans-unit>
       <trans-unit id="Hard.Text">
-        <source>Hard: reset working directory and index
+        <source>&amp;Hard: reset working directory and index
 (discard ALL local changes, even uncommitted changes)</source>
         <target />
       </trans-unit>
       <trans-unit id="Keep.Text">
-        <source>Keep: update working directory to the commit 
+        <source>&amp;Keep: update working directory to the commit 
 (abort if there are local changes), reset index</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
-        <source>Merge: update working directory to the commit and keep local changes 
+        <source>&amp;Merge: update working directory to the commit and keep local changes 
 (abort if there are conflicts), reset index</source>
         <target />
       </trans-unit>
       <trans-unit id="Mixed.Text">
-        <source>Mixed: leave working directory untouched, reset index</source>
+        <source>Mi&amp;xed: leave working directory untouched, reset index</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -6917,7 +6917,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <target />
       </trans-unit>
       <trans-unit id="Soft.Text">
-        <source>Soft: leave working directory and index untouched</source>
+        <source>&amp;Soft: leave working directory and index untouched</source>
         <target />
       </trans-unit>
       <trans-unit id="_branchInfo.Text">
@@ -7408,7 +7408,7 @@ Do you want to use this custom merge script?</source>
         <target />
       </trans-unit>
       <trans-unit id="label8.Text">
-        <source>File filter</source>
+        <source>Path filter</source>
         <target />
       </trans-unit>
       <trans-unit id="label9.Text">
@@ -8621,31 +8621,31 @@ help</source>
   <file datatype="plaintext" original="MenuItemsStrings" source-language="en">
     <body>
       <trans-unit id="Checkout.Text">
-        <source>Checkout</source>
+        <source>Chec&amp;kout branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="CreateBranch.Text">
-        <source>Create &amp;Branch...</source>
+        <source>Create &amp;branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>Delete</source>
+        <source>&amp;Delete branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
-        <source>&amp;Merge</source>
+        <source>&amp;Merge branches...</source>
         <target />
       </trans-unit>
       <trans-unit id="Rebase.Text">
-        <source>&amp;Rebase</source>
+        <source>&amp;Rebase...</source>
         <target />
       </trans-unit>
       <trans-unit id="Rename.Text">
-        <source>Rename</source>
+        <source>R&amp;ename branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="Reset.Text">
-        <source>Re&amp;set</source>
+        <source>Re&amp;set current branch to here...</source>
         <target />
       </trans-unit>
     </body>
@@ -9588,23 +9588,23 @@ See the changes in the commit form.</source>
   <file datatype="plaintext" original="RevisionGrid" source-language="en">
     <body>
       <trans-unit id="AuthorDateSort.Text">
-        <source>Sort commits by author date</source>
+        <source>&amp;Sort commits by author date</source>
         <target />
       </trans-unit>
       <trans-unit id="GotoChildCommit.Text">
-        <source>Go to child commit</source>
+        <source>Go to c&amp;hild commit</source>
         <target />
       </trans-unit>
       <trans-unit id="GotoCommit.Text">
-        <source>Go to commit...</source>
+        <source>Go to &amp;commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="GotoCurrentRevision.Text">
-        <source>Go to current revision</source>
+        <source>Go to c&amp;urrent revision</source>
         <target />
       </trans-unit>
       <trans-unit id="GotoMergeBaseCommit.Text">
-        <source>Go to common ancestor (merge base)</source>
+        <source>Go to common &amp;ancestor (merge base)</source>
         <target />
       </trans-unit>
       <trans-unit id="GotoMergeBaseCommit.ToolTipText">
@@ -9612,27 +9612,27 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
-        <source>Go to parent commit</source>
+        <source>Go to &amp;parent commit</source>
         <target />
       </trans-unit>
       <trans-unit id="NavigateBackward.Text">
-        <source>Navigate backward</source>
+        <source>Navigate &amp;backward</source>
         <target />
       </trans-unit>
       <trans-unit id="NavigateForward.Text">
-        <source>Navigate forward</source>
+        <source>Navigate &amp;forward</source>
         <target />
       </trans-unit>
       <trans-unit id="NextQuickSearch.Text">
-        <source>Quick search next</source>
+        <source>Quick search &amp;next</source>
         <target />
       </trans-unit>
       <trans-unit id="PrevQuickSearch.Text">
-        <source>Quick search previous</source>
+        <source>Quick search p&amp;revious</source>
         <target />
       </trans-unit>
       <trans-unit id="QuickSearch.Text">
-        <source>Quick search</source>
+        <source>&amp;Quick search</source>
         <target />
       </trans-unit>
       <trans-unit id="QuickSearch.ToolTipText">
@@ -9640,47 +9640,47 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
-        <source>Show all branches</source>
+        <source>Show &amp;all branches</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowArtificialCommits.Text">
-        <source>Show artificial commits</source>
+        <source>Show artificial c&amp;ommits</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowCurrentBranchOnly.Text">
-        <source>Show current branch only</source>
+        <source>Show &amp;current branch only</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowFilteredBranches.Text">
-        <source>Show filtered branches</source>
+        <source>Show &amp;filtered branches</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowLatestStash.Text">
-        <source>Show latest stash</source>
+        <source>Show &amp;latest stash</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowReflogReferences.Text">
-        <source>Show reflog references</source>
+        <source>Show &amp;reflog references</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowRemoteBranches.Text">
-        <source>Show remote branches</source>
+        <source>Show remote &amp;branches</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowSuperprojectBranches.Text">
-        <source>Show superproject branches</source>
+        <source>Show sup&amp;erproject branches</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowSuperprojectRemoteBranches.Text">
-        <source>Show superproject remote branches</source>
+        <source>Show superpro&amp;ject remote branches</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowSuperprojectTags.Text">
-        <source>Show superproject tags</source>
+        <source>Show su&amp;perproject tags</source>
         <target />
       </trans-unit>
       <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
-        <source>Toggle between artificial and HEAD commits</source>
+        <source>&amp;Toggle between artificial and HEAD commits</source>
         <target />
       </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
@@ -9696,7 +9696,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="drawNonrelativesGrayToolStripMenuItem.Text">
-        <source>Draw non relatives gray</source>
+        <source>Draw non relatives gra&amp;y</source>
         <target />
       </trans-unit>
       <trans-unit id="filterToolStripMenuItem.Text">
@@ -9704,23 +9704,23 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="showAuthorAvatarColumnToolStripMenuItem.Text">
-        <source>Show author avatar column</source>
+        <source>Show aut&amp;hor avatar column</source>
         <target />
       </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
-        <source>Show author date</source>
+        <source>Sho&amp;w author date</source>
         <target />
       </trans-unit>
       <trans-unit id="showAuthorNameColumnToolStripMenuItem.Text">
-        <source>Show author name column</source>
+        <source>Show a&amp;uthor name column</source>
         <target />
       </trans-unit>
       <trans-unit id="showBuildStatusIconToolStripMenuItem.Text">
-        <source>Show build status icon</source>
+        <source>Show build status &amp;icon</source>
         <target />
       </trans-unit>
       <trans-unit id="showBuildStatusTextToolStripMenuItem.Text">
-        <source>Show build status text</source>
+        <source>Show build status te&amp;xt</source>
         <target />
       </trans-unit>
       <trans-unit id="showCommitMessageBodyToolStripMenuItem.Text">
@@ -9728,7 +9728,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="showDateColumnToolStripMenuItem.Text">
-        <source>Show date column</source>
+        <source>Show &amp;date column</source>
         <target />
       </trans-unit>
       <trans-unit id="showFirstParent.Text">
@@ -9736,27 +9736,27 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
-        <source>Show git notes</source>
+        <source>Show git &amp;notes</source>
         <target />
       </trans-unit>
       <trans-unit id="showIdColumnToolStripMenuItem.Text">
-        <source>Show SHA-1 column</source>
+        <source>Show SHA&amp;-1 column</source>
         <target />
       </trans-unit>
       <trans-unit id="showMergeCommitsToolStripMenuItem.Text">
-        <source>Show merge commits</source>
+        <source>Show &amp;merge commits</source>
         <target />
       </trans-unit>
       <trans-unit id="showRelativeDateToolStripMenuItem.Text">
-        <source>Show relative date</source>
+        <source>Show relati&amp;ve date</source>
         <target />
       </trans-unit>
       <trans-unit id="showRevisionGraphColumnToolStripMenuItem.Text">
-        <source>Show revision graph column</source>
+        <source>Show revision &amp;graph column</source>
         <target />
       </trans-unit>
       <trans-unit id="showTagsToolStripMenuItem.Text">
-        <source>Show tags</source>
+        <source>Show &amp;tags</source>
         <target />
       </trans-unit>
     </body>
@@ -9781,10 +9781,6 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_droppingFilesBlocked.Text">
         <source>For you own protection dropping more than 10 patch files at once is blocked!</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_formRevisionFilter.Text">
-        <source>Filter</source>
         <target />
       </trans-unit>
       <trans-unit id="_invalidDiffContainsFilter.Text">
@@ -10641,7 +10637,7 @@ Select this commit to populate the full message.</source>
         <target />
       </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again</source>
+        <source>&amp;Don't show me this message again</source>
         <target />
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -11013,7 +11009,7 @@ The action cannot be undone.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuConfigure.Text">
-        <source>&amp;Recent repositories settings</source>
+        <source>Recent repositories &amp;settings</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCategories.Text">

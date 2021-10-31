@@ -155,7 +155,7 @@ See the changes in the commit form.");
         /// When switching commits, the last selected file is "followed" if available in the new commit,
         /// this file is used as a fallback.
         /// </summary>
-        public string? FallbackFollowedFile { private get; set; } = null;
+        public string? FallbackFollowedFile { get; set; } = null;
 
         public void LoadRevision(GitRevision? revision)
         {
@@ -903,6 +903,21 @@ See the changes in the commit form.");
             }
 
             return _revisionFileTreeController.SelectFileOrFolder(tvGitTree, filePath.Substring(Module.WorkingDir.Length));
+        }
+
+        internal TestAccessor GetTestAccessor()
+             => new(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly RevisionFileTreeControl _control;
+
+            public TestAccessor(RevisionFileTreeControl control)
+            {
+                _control = control;
+            }
+
+            public SplitContainer FileTreeSplitContainer => _control.FileTreeSplitContainer;
         }
     }
 }

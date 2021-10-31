@@ -14,6 +14,18 @@ namespace GitUI
 {
     public partial class PatchGrid : GitModuleControl
     {
+        private sealed class SortablePatchFilesList : SortableBindingList<PatchFile>
+        {
+            static SortablePatchFilesList()
+            {
+                AddSortableProperty(patchFile => patchFile.Status, (x, y) => string.Compare(x.Status, y.Status, StringComparison.CurrentCulture));
+                AddSortableProperty(patchFile => patchFile.Name, (x, y) => string.Compare(x.Name, y.Name, StringComparison.CurrentCulture));
+                AddSortableProperty(patchFile => patchFile.Subject, (x, y) => string.Compare(x.Subject, y.Subject, StringComparison.CurrentCulture));
+                AddSortableProperty(patchFile => patchFile.Author, (x, y) => string.Compare(x.Author, y.Author, StringComparison.CurrentCulture));
+                AddSortableProperty(patchFile => patchFile.Date, (x, y) => string.Compare(x.Date, y.Date, StringComparison.CurrentCulture));
+            }
+        }
+
         private readonly TranslationString _unableToShowPatchDetails = new("Unable to show details of patch file.");
 
         private List<PatchFile>? _skipped;
@@ -113,7 +125,9 @@ namespace GitUI
         private void DisplayPatches(IReadOnlyList<PatchFile> patchFiles)
         {
             PatchFiles = patchFiles;
-            Patches.DataSource = patchFiles;
+            SortablePatchFilesList patchFilesList = new SortablePatchFilesList();
+            patchFilesList.AddRange(patchFiles);
+            Patches.DataSource = patchFilesList;
 
             if (patchFiles.Any())
             {

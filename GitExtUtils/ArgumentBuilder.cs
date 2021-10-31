@@ -26,7 +26,7 @@ namespace GitExtUtils
     /// </remarks>
     /// <example>
     /// <code>
-    /// var args = new ArgumentBuilder
+    /// ArgumentBuilder args = new
     /// {
     ///     "commit",                   // adds the string unconditionally
     ///     { isAmend, "--amend" },     // adds the option only if isAmend == true

@@ -11,16 +11,13 @@ namespace GitUI.UserControls.RevisionGrid
         /// <summary>
         ///  Occurs whenever filter changes.
         /// </summary>
-        event EventHandler? FilterChanged;
+        event EventHandler<FilterChangedEventArgs>? FilterChanged;
 
         /// <summary>
         ///  Applies a branch filter.
         /// </summary>
         /// <param name="filter">The filter to apply.</param>
-        /// <param name="requireRefresh">
-        ///  <see langword="true"/> to refresh the grid, if the filter applied successfully; <see langword="false"/> to not refresh the grid at all.
-        /// </param>
-        void SetAndApplyBranchFilter(string filter, bool requireRefresh);
+        void SetAndApplyBranchFilter(string filter);
 
         /// <summary>
         ///  Applies a revision filter.

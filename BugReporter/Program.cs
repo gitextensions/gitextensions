@@ -56,9 +56,11 @@ namespace BugReporter
                 }
             }
 
+            // No specific info extracted from these exceptions
+            string exceptionInfo = "";
             exception ??= new(new Exception("Missing error payload"));
 
-            new BugReportForm().ShowDialog(owner: null, exception, UserEnvironmentInformation.GetInformation(), canIgnore: true, showIgnore: false, focusDetails: false);
+            new BugReportForm().ShowDialog(owner: null, exception, exceptionInfo, UserEnvironmentInformation.GetInformation(), canIgnore: true, showIgnore: false, focusDetails: false);
         }
 
         private static string Base64Decode(string base64EncodedData)

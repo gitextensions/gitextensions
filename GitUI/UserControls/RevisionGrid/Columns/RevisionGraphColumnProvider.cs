@@ -417,11 +417,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Refresh(int rowHeight, in VisibleRowRange range)
         {
-            // Hide graph column when there it is disabled OR when a filter is active
-            // allowing for special case when history of a single file is being displayed
-            Column.Visible
-                = AppSettings.ShowRevisionGridGraphColumn &&
-                  !_grid.ShouldHideGraph(inclBranchFilter: false);
+            // Hide graph column when there it is disabled
+            Column.Visible = AppSettings.ShowRevisionGridGraphColumn;
             if (!Column.Visible)
             {
                 return;

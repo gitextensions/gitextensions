@@ -66,11 +66,10 @@ namespace GitCommands
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
-            string pathFilter,
-            Func<GitRevision, bool>? revisionPredicate)
+            string pathFilter)
         {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(() => ExecuteAsync(module, refs, subject, maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
+                .RunAsync(() => ExecuteAsync(module, refs, subject, maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter))
                 .FileAndForget(
                     ex =>
                     {
@@ -93,8 +92,7 @@ namespace GitCommands
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
-            string pathFilter,
-            Func<GitRevision, bool>? revisionPredicate)
+            string pathFilter)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
@@ -129,6 +127,9 @@ namespace GitCommands
 
             using (var process = module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
+#if DEBUG
+                Debug.WriteLine($"git {arguments}");
+#endif
                 token.ThrowIfCancellationRequested();
 
                 var buffer = new byte[4096];
@@ -137,8 +138,7 @@ namespace GitCommands
                 {
                     token.ThrowIfCancellationRequested();
 
-                    if (TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out var revision)
-                        && (revisionPredicate is null || revisionPredicate(revision)))
+                    if (TryParseRevision(chunk, getEncodingByGitName, logOutputEncoding, sixMonths, out GitRevision? revision))
                     {
                         // Look up any refs associated with this revision
                         revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();

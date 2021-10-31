@@ -83,6 +83,8 @@
     -->
   <Target Name="CreatePortable" BeforeTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_DownloadPluginManager">
     <PropertyGroup>
+      <ContinuousIntegrationBuild Condition="'$(ContinuousIntegrationBuild)' == ''">false</ContinuousIntegrationBuild>
+
       <_TargetAppConfig>@(AppConfigFileDestination)</_TargetAppConfig>
 
       <_UserDictionariesSourceDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'Bin', 'Dictionaries'))</_UserDictionariesSourceDir>
@@ -110,13 +112,13 @@
       <_PublishedPath>$([MSBuild]::NormalizeDirectory('$(PublishDir)'))</_PublishedPath>
     </PropertyGroup>
 
-    <!-- Determine plugins assemblies and their required references
+    <!-- Determine plugins assemblies and their required references -->
     <_GetPluginAssembliesCodeTask
           SolutionPath="$(SolutionPath)"
           BuildConfiguration="$(Configuration)"
           IsContinuousIntegrationBuild="$(ContinuousIntegrationBuild)">
       <Output ItemName="CollectedPluginAssemblies" TaskParameter="Output"/>
-    </_GetPluginAssembliesCodeTask> -->
+    </_GetPluginAssembliesCodeTask>
 
     <ItemGroup>
       <UserDictionaries Include="$(_UserDictionariesSourceDir)\*.dic" />

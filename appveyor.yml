@@ -82,7 +82,7 @@ test_script:
 after_test:
 - ps: |
     Write-Host "Preparing build artifacts..."
-    dotnet publish -c Release --no-build /bl:.\artifacts\log\publish.binlog
+    dotnet publish -c Release --no-build /bl:.\artifacts\log\publish.binlog /p:ContinuousIntegrationBuild=true
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 

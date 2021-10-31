@@ -75,10 +75,11 @@ namespace GitExtensions.UITests.NBugReports
                     Assert.AreEqual(listView.Items.Count - 1, index);
                 },
                 exception,
-                null);
+                exceptionInfo: "",
+                environmentInfo: "");
         }
 
-        private void RunFormTest(Action<BugReportForm> testDriver, SerializableException exception, string environmentInfo)
+        private void RunFormTest(Action<BugReportForm> testDriver, SerializableException exception, string exceptionInfo, string environmentInfo)
         {
             RunFormTest(
                 form =>
@@ -86,16 +87,16 @@ namespace GitExtensions.UITests.NBugReports
                     testDriver(form);
                     return Task.CompletedTask;
                 },
-                exception, environmentInfo,
+                exception, exceptionInfo, environmentInfo,
                 expected: DialogResult.Cancel);
         }
 
-        private void RunFormTest(Func<BugReportForm, Task> testDriverAsync, SerializableException exception, string environmentInfo, DialogResult expected)
+        private void RunFormTest(Func<BugReportForm, Task> testDriverAsync, SerializableException exception, string exceptionInfo, string environmentInfo, DialogResult expected)
         {
             UITest.RunForm(
                 () =>
                 {
-                    Assert.AreEqual(expected, _form.ShowDialog(owner: null, exception, environmentInfo, canIgnore: true, showIgnore: false, focusDetails: false));
+                    Assert.AreEqual(expected, _form.ShowDialog(owner: null, exception, exceptionInfo, environmentInfo, canIgnore: true, showIgnore: false, focusDetails: false));
                 },
                 testDriverAsync);
         }

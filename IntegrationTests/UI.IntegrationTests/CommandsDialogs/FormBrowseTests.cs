@@ -129,26 +129,24 @@ namespace GitExtensions.UITests.CommandsDialogs
                         // ------------------------------------------------------------------------------------------------
 
                         Console.WriteLine("Scenario 1: set 'Show all branches'");
-                        //// Assert
+                        // Assert
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
                         AppSettings.BranchFilterEnabled.Should().BeFalse();
                         AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
 
                         Console.WriteLine("Scenario 1: set 'Show current branch'");
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesCurrent.PerformClick();
-                        //// Wait for reload to complete
-                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
-                        //// Assert
+                        WaitForRevisionsToBeLoaded(form);
+                        // Assert
                         AppSettings.BranchFilterEnabled.Should().BeTrue();
                         AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(2);
 
-                        Console.WriteLine("Scenario 1: set 'Show filtered branches' - absent of filter, reset to 'Show all branches'");
+                        Console.WriteLine("Scenario 1: set 'Show filtered branches'");
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesFiltered.PerformClick();
-                        //// Wait for reload to complete
-                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
-                        //// Assert
-                        AppSettings.BranchFilterEnabled.Should().BeFalse();
+                        WaitForRevisionsToBeLoaded(form);
+                        // Assert
+                        AppSettings.BranchFilterEnabled.Should().BeTrue();
                         AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
 
@@ -156,23 +154,21 @@ namespace GitExtensions.UITests.CommandsDialogs
                         // ------------------------------------------------------------------------------------------------
 
                         Console.WriteLine("Scenario 2: apply branch filter 'Branch2'");
-                        form.GetTestAccessor().ToolStripFilters.SetBranchFilter("Branch2", refresh: true);
-                        //// Wait for reload to complete
-                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
-                        //// Assert
+                        form.GetTestAccessor().ToolStripFilters.SetBranchFilter("Branch2");
+                        WaitForRevisionsToBeLoaded(form);
+                        // Assert
                         AppSettings.BranchFilterEnabled.Should().BeTrue();
                         AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(3);
 
                         Console.WriteLine("Scenario 2: set 'Show current branch'");
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesCurrent.PerformClick();
-                        //// Wait for reload to complete
-                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
-                        //// Assert
+                        WaitForRevisionsToBeLoaded(form);
+                        // Assert
                         AppSettings.BranchFilterEnabled.Should().BeTrue();
                         AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(2);
-                        //// The filter text is still present
+                        // The filter text is still present
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tscboBranchFilter.Text.Should().Be("Branch2");
 
                         // 3. Switch to another repo - "Show current branch" must remain, filter text must be erased
@@ -181,10 +177,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                         Console.WriteLine("Scenario 3: switch repo");
                         using ReferenceRepository repository = new();
                         form.SetWorkingDir(repository.Module.WorkingDir);
-                        //// Wait for reload to complete
-                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
-                        //// Assert
-                        AppSettings.BranchFilterEnabled.Should().BeTrue();
+                        WaitForRevisionsToBeLoaded(form);
+                        // Assert
+                        AppSettings.BranchFilterEnabled.Should().BeFalse();
                         AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tscboBranchFilter.Text.Should().BeEmpty();
                     }
@@ -221,16 +216,15 @@ namespace GitExtensions.UITests.CommandsDialogs
                     {
                         // 1. Check with ShowLatestStash disabled
                         Console.WriteLine("Scenario 1: set 'Show latest stash' to false");
-                        //// Assert
+                        // Assert
                         AppSettings.ShowLatestStash.Should().BeFalse();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
 
                         // 2. Change ShowLatestStash to enabled
                         Console.WriteLine("Scenario 1: change 'Show latest stash' to enabled");
                         form.GetTestAccessor().RevisionGrid.ToggleShowLatestStash();
-                        //// Wait for reload to complete
-                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
-                        //// Assert
+                        WaitForRevisionsToBeLoaded(form);
+                        // Assert
                         AppSettings.ShowLatestStash.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(6);
                     }
@@ -267,16 +261,15 @@ namespace GitExtensions.UITests.CommandsDialogs
                     {
                         // 2. Check with ShowLatestStash enabled
                         Console.WriteLine("Scenario 2: set 'Show latest stash' to true");
-                        //// Assert
+                        // Assert
                         AppSettings.ShowLatestStash.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(6);
 
                         // 2. Change ShowLatestStash to disabled
                         Console.WriteLine("Scenario 2: change 'Show latest stash' to disabled");
                         form.GetTestAccessor().RevisionGrid.ToggleShowLatestStash();
-                        //// Wait for reload to complete
-                        ProcessUntil(() => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsRefreshingRevisions.ToString(), false.ToString());
-                        //// Assert
+                        WaitForRevisionsToBeLoaded(form);
+                        // Assert
                         AppSettings.ShowLatestStash.Should().BeFalse();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
                     }
@@ -317,23 +310,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                 testDriverAsync);
         }
 
-        private static void ProcessUntil(Func<string> getCurrent, string expected, int maxIterations = 100)
+        private static void WaitForRevisionsToBeLoaded(FormBrowse form)
         {
-            string current = "";
-            for (int iteration = 0; iteration < maxIterations; ++iteration)
-            {
-                current = getCurrent();
-                if (current == expected)
-                {
-                    Debug.WriteLine($"{nameof(ProcessUntil)} '{expected}' in iteration {iteration}");
-                    return;
-                }
-
-                Application.DoEvents();
-                Thread.Sleep(5);
-            }
-
-            Assert.Fail($"{current} != {expected} in {maxIterations} iterations");
+            UITest.ProcessUntil("Loading Revisions", () => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsUiStable);
         }
     }
 }

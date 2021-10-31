@@ -15,12 +15,26 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormApplyPatch : GitModuleForm
     {
+        #region Mnemonics
+        // Available: CEGHJLMNPQTUVXYZ
+        // A add files
+        // B abort
+        // D directory
+        // F file
+        // I ignore whitespace
+        // K skip patch
+        // O sign-off
+        // R Browse file
+        // S solve conflicts
+        // W Browse dir
+        #endregion
+
         #region Translation
 
         private readonly TranslationString _conflictResolvedText =
             new("Conflicts resolved");
         private readonly TranslationString _conflictMergetoolText =
-            new("Solve conflicts");
+            new("&Solve conflicts");
 
         private readonly TranslationString _selectPatchFileFilter =
             new("Patch file (*.Patch)");
@@ -49,7 +63,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
 
-            patchGrid1.SetSkipped(Skipped);
+            PatchGrid.SetSkipped(Skipped);
 
             SolveMergeConflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeConflicts.SetForeColorForBackColor();
@@ -115,13 +129,13 @@ namespace GitUI.CommandsDialogs
                 Abort.Enabled = false;
             }
 
-            if (patchGrid1.PatchFiles is null || patchGrid1.PatchFiles.Count == 0)
+            if (PatchGrid.PatchFiles is null || PatchGrid.PatchFiles.Count == 0)
             {
-                patchGrid1.Initialize();
+                PatchGrid.Initialize();
             }
             else
             {
-                patchGrid1.RefreshGrid();
+                PatchGrid.RefreshGrid();
             }
 
             SolveMergeConflicts.Visible = Module.InTheMiddleOfConflictedMerge();
@@ -186,7 +200,7 @@ namespace GitUI.CommandsDialogs
                         ? GitCommandHelpers.ApplyDiffPatchCmd(ignoreWhiteSpace, patchFile)
                         : GitCommandHelpers.ApplyMailboxPatchCmd(signOff, ignoreWhiteSpace, patchFile);
 
-                    FormProcess.ShowDialog(this, process: null, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
                 }
                 else
                 {
@@ -234,14 +248,14 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var applyingPatch = patchGrid1.PatchFiles.FirstOrDefault(p => p.IsNext);
+                var applyingPatch = PatchGrid.PatchFiles.FirstOrDefault(p => p.IsNext);
                 if (applyingPatch is not null)
                 {
                     applyingPatch.IsSkipped = true;
                     Skipped.Add(applyingPatch);
                 }
 
-                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.SkipCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SkipCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                 EnableButtons();
             }
         }
@@ -250,7 +264,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.ResolvedCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.ResolvedCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                 EnableButtons();
             }
         }
@@ -259,7 +273,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, process: null, arguments: GitCommandHelpers.AbortCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.AbortCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                 Skipped.Clear();
                 EnableButtons();
             }

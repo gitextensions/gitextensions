@@ -91,8 +91,6 @@ namespace GitUI.Script
                     new ExternalOperationException(scriptInfo.Command, arguments, module.WorkingDir));
             }
 
-            Validates.NotNull(argument);
-
             string command = OverrideCommandWhenNecessary(originalCommand);
             command = ExpandCommandVariables(command, module);
 
@@ -148,7 +146,7 @@ namespace GitUI.Script
 
             if (!scriptInfo.RunInBackground)
             {
-                bool success = FormProcess.ShowDialog(owner, command, argument, module.WorkingDir, null, true);
+                bool success = FormProcess.ShowDialog(owner, argument, module.WorkingDir, null, true, process: command);
                 if (!success)
                 {
                     return false;

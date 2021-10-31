@@ -55,6 +55,11 @@ namespace GitUI.BranchTreePanel
                 Rename();
             }
 
+            internal override void OnDelete()
+            {
+                Delete();
+            }
+
             public bool Checkout()
             {
                 return UICommands.StartCheckoutBranch(ParentWindow(), branch: FullPath, remote: false);

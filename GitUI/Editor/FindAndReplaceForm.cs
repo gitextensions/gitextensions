@@ -291,7 +291,7 @@ namespace GitUI
         private void FindAndReplaceForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // Prevent dispose, as this form can be re-used
-            if (e.CloseReason != CloseReason.FormOwnerClosing)
+            if (e.CloseReason == CloseReason.UserClosing)
             {
                 Owner?.Select(); // prevent another app from being activated instead
 

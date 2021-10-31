@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
@@ -102,6 +104,23 @@ namespace GitExtensions.UITests
                     Application.Run(form);
                 },
                 runTestAsync: form => runTestAsync(control));
+        }
+
+        public static void ProcessUntil(string processName, Func<bool> condition, int maxIterations = 100)
+        {
+            for (int iteration = 0; iteration < maxIterations; ++iteration)
+            {
+                if (condition())
+                {
+                    Debug.WriteLine($"'{processName}' successfully finished in iteration {iteration}");
+                    return;
+                }
+
+                Application.DoEvents();
+                Thread.Sleep(5);
+            }
+
+            Assert.Fail($"'{processName}' didn't finish in {maxIterations} iterations");
         }
 
         private readonly struct VoidResult

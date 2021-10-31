@@ -11,18 +11,24 @@ namespace BugReporter
 {
     public sealed class GitHubUrlBuilder
     {
-        private readonly IErrorReportMarkDownBodyBuilder _errorReportMarkDownBodyBuilder;
+        private readonly IErrorReportUrlBuilder _errorReportUrlBuilder;
 
-        public GitHubUrlBuilder(IErrorReportMarkDownBodyBuilder errorReportMarkDownBodyBuilder)
+        public GitHubUrlBuilder(IErrorReportUrlBuilder errorReportUrlBuilder)
         {
-            _errorReportMarkDownBodyBuilder = errorReportMarkDownBodyBuilder;
+            _errorReportUrlBuilder = errorReportUrlBuilder;
         }
 
         /// <summary>
         /// Generates a URL to create a new issue on GitHub.
-        /// </summary>
         /// <see href="https://help.github.com/en/articles/about-automation-for-issues-and-pull-requests-with-query-parameters"/>
-        public string? Build(string url, SerializableException exception, string? environmentInfo, string? additionalInfo)
+        /// </summary>
+        /// <param name="url">url to create a new issue for the project.</param>
+        /// <param name="exception">The exception to report.</param>
+        /// <param name="exceptionInfo">Info string for GE specific exceptions (like GitExtUtils.ExternalOperationException) unknown in BugReporter.</param>
+        /// <param name="environmentInfo">Git version, directory etc.</param>
+        /// <param name="additionalInfo">Information from the popup textbox.</param>
+        /// <returns>The URL as a string</returns>
+        public string? Build(string url, SerializableException exception, string exceptionInfo, string? environmentInfo, string? additionalInfo)
         {
             if (string.IsNullOrWhiteSpace(url) || exception is null)
             {
@@ -44,9 +50,8 @@ namespace BugReporter
                 subject = subject.Substring(0, 66) + "...";
             }
 
-            string body = Uri.EscapeDataString(_errorReportMarkDownBodyBuilder.Build(exception, environmentInfo, additionalInfo));
-
-            return $"{validatedUri}{separator}title={Uri.EscapeDataString(subject)}&body={body}";
+            string urlEncodedError = _errorReportUrlBuilder.Build(exception, exceptionInfo, environmentInfo, additionalInfo);
+            return $"{validatedUri}{separator}title={Uri.EscapeDataString(subject)}&{urlEncodedError}";
         }
     }
 }

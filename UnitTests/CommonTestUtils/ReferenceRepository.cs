@@ -51,6 +51,14 @@ namespace CommonTestUtils
 
         public string CreateRepoFile(string fileName, string fileContent) => _moduleTestHelper.CreateRepoFile(fileName, fileContent);
 
+        public void CreateAnnotatedTag(string tagName, string commitHash, string message)
+        {
+            LibGit2Sharp.Signature author = new("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
+
+            using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
+            repository.Tags.Add(tagName, commitHash, author, message);
+        }
+
         public void CreateTag(string tagName, string commitHash, bool allowOverwrite = false)
         {
             using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
