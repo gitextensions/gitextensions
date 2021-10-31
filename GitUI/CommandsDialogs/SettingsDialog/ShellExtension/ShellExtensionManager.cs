@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension
         {
             string path32 = FindFileInBinFolders(CommonLogic.GitExtensionsShellEx32Name);
             string path64 = FindFileInBinFolders(CommonLogic.GitExtensionsShellEx64Name);
-            return !(string.IsNullOrEmpty(path32) || (IntPtr.Size == 8 && string.IsNullOrEmpty(path64)));
+            return !(string.IsNullOrEmpty(path32) || (Environment.Is64BitOperatingSystem && string.IsNullOrEmpty(path64)));
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension
 
             Process.Start(pi)?.WaitForExit();
 
-            if (IntPtr.Size == 8)
+            if (Environment.Is64BitOperatingSystem)
             {
                 string path64 = FindFileInBinFolders(CommonLogic.GitExtensionsShellEx64Name);
                 if (string.IsNullOrEmpty(path64))
