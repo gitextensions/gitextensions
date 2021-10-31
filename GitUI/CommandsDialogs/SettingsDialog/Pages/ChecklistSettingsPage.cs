@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Utils;
+using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
 using Microsoft;
-using Microsoft.Win32;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -226,54 +224,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
-            string path = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
-
-            if (!File.Exists(path))
+            try
             {
-                path = Assembly.GetAssembly(GetType()).Location;
-                path = Path.GetDirectoryName(path);
-                path = Path.Combine(path, CommonLogic.GitExtensionsShellEx32Name);
+                ShellExtensionManager.Register();
             }
-
-            if (File.Exists(path))
+            catch (FileNotFoundException exception)
             {
-                try
-                {
-                    ProcessStartInfo pi = new()
-                    {
-                        FileName = "regsvr32",
-                        Arguments = path.Quote(),
-                        Verb = "RunAs",
-                        UseShellExecute = true
-                    };
-
-                    var process = Process.Start(pi);
-                    process.WaitForExit();
-
-                    if (IntPtr.Size == 8)
-                    {
-                        path = path.Replace(CommonLogic.GitExtensionsShellEx32Name, CommonLogic.GitExtensionsShellEx64Name);
-                        if (File.Exists(path))
-                        {
-                            pi.Arguments = path.Quote();
-
-                            var process64 = Process.Start(pi);
-                            process64.WaitForExit();
-                        }
-                        else
-                        {
-                            MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx64Name), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                }
-                catch (System.ComponentModel.Win32Exception)
-                {
-                    // User cancel operation, continue;
-                }
+                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, exception.FileName), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else
+            catch (System.ComponentModel.Win32Exception)
             {
-                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, CommonLogic.GitExtensionsShellEx32Name), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // User cancel operation, continue;
             }
 
             CheckSettings();
@@ -562,22 +523,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             ShellExtensionsRegistered.Visible = true;
 
-            if (string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved",
-                                                      "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
-                string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
-                                                      @"*\shellex\ContextMenuHandlers\GitExtensions2", null)) ||
-                string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
-                                                      @"Directory\shellex\ContextMenuHandlers\GitExtensions2", null)) ||
-                string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
-                                                      @"Directory\Background\shellex\ContextMenuHandlers\GitExtensions2",
-                                                      null)))
+            if (!ShellExtensionManager.CheckIfRegistered())
             {
                 // Check if shell extensions are installed
-                string? installDir = AppSettings.GetInstallDir();
-                Validates.NotNull(installDir);
-                string path32 = Path.Combine(installDir, CommonLogic.GitExtensionsShellEx32Name);
-                string path64 = Path.Combine(installDir, CommonLogic.GitExtensionsShellEx64Name);
-                if (!File.Exists(path32) || (IntPtr.Size == 8 && !File.Exists(path64)))
+                if (!ShellExtensionManager.CheckFilesFound())
                 {
                     RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtNoInstalled.Text);
                     return true;
