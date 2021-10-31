@@ -56,6 +56,6 @@ namespace GitUI
         }
 
         internal static bool IsThemingEnabled(this ToolStrip toolStrip) =>
-            toolStrip.Renderer is ToolStripExThemeAwareRenderer;
+            toolStrip.Renderer is ToolStripProfessionalRenderer;
     }
 }
