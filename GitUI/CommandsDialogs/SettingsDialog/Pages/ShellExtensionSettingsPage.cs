@@ -25,6 +25,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             cbAlwaysShowAllCommands.Checked = AppSettings.AlwaysShowAllCommands;
+            CheckShellIntegrationSettings();
+            UpdatePreview();
+        }
+
+        public override void OnPageShown()
+        {
+            CheckShellIntegrationSettings();
+        }
+
+        private void CheckShellIntegrationSettings()
+        {
             if (ShellExtensionManager.CheckFilesFound())
             {
                 cbEnableIntegration.Enabled = true;
@@ -35,8 +46,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 cbEnableIntegration.Enabled = false;
                 cbEnableIntegration.Checked = false;
             }
-
-            UpdatePreview();
         }
 
         protected override void PageToSettings()
