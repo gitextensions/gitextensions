@@ -15,6 +15,7 @@ namespace GitUITests.Editor
         private const string _defaultLinkUri = "https://uri.org";
         private const string _defaultPrefix = "pre ";
         private const string _defaultSuffix = " suf";
+        private const string _linkSeparator = "|||";
 
         private RichTextBox _rtb;
         private ILinkFactory _linkFactory;
@@ -86,10 +87,33 @@ namespace GitUITests.Editor
         public void GetLink_should_return_null_if_right_of_link()
         {
             SetupDefaultLink();
-            for (int index = _defaultPrefix.Length + _defaultLinkText.Length + _defaultLinkUri.Length + 1; index < _rtb.Text.Length; ++index)
+            for (int index = _defaultPrefix.Length + _defaultLinkText.Length + _defaultLinkUri.Length + _linkSeparator.Length; index < _rtb.Text.Length; ++index)
             {
                 _rtb.GetLink(index).Should().BeNull();
             }
+        }
+
+        [Test]
+        public void GetLink_should_return_uri_if_text_contains_hash()
+        {
+            SetupLink(prefix: string.Empty, linkText: "#hash", uri: _defaultLinkUri, suffix: string.Empty);
+            _rtb.GetLink(0).Should().Be(_defaultLinkUri);
+        }
+
+        [Test]
+        public void GetLink_should_return_uri_if_uri_contains_hash()
+        {
+            string uri = _defaultLinkUri + "#hash";
+            SetupLink(prefix: string.Empty, linkText: _defaultLinkText, uri: uri, suffix: string.Empty);
+            _rtb.GetLink(0).Should().Be(uri);
+        }
+
+        [Test]
+        public void GetLink_should_return_uri_if_text_and_uri_contain_hash()
+        {
+            string uri = _defaultLinkUri + "#hash";
+            SetupLink(prefix: string.Empty, linkText: "#text", uri: uri, suffix: string.Empty);
+            _rtb.GetLink(0).Should().Be(uri);
         }
 
         [Test]
