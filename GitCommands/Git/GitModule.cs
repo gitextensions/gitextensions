@@ -223,6 +223,7 @@ namespace GitCommands
         }
 
         private ConfigFileSettings? _effectiveConfigFile;
+        private ConfigFileSettings? _localConfigFile;
 
         public ConfigFileSettings EffectiveConfigFile
         {
@@ -232,7 +233,10 @@ namespace GitCommands
                 {
                     lock (_lock)
                     {
-                        _effectiveConfigFile ??= ConfigFileSettings.CreateEffective(this);
+                        if (_effectiveConfigFile is null)
+                        {
+                            CreateConfigFileSettings();
+                        }
                     }
                 }
 
@@ -240,7 +244,42 @@ namespace GitCommands
             }
         }
 
-        public ConfigFileSettings LocalConfigFile => new(null, EffectiveConfigFile.SettingsCache, SettingLevel.Local);
+        public ConfigFileSettings LocalConfigFile
+        {
+            get
+            {
+                if (_localConfigFile is null)
+                {
+                    lock (_lock)
+                    {
+                        if (_localConfigFile is null)
+                        {
+                            CreateConfigFileSettings();
+                        }
+                    }
+                }
+
+                return _localConfigFile;
+            }
+        }
+
+        private void CreateConfigFileSettings()
+        {
+            ConfigFileSettingsCache configLocalCache = ConfigFileSettingsCache.CreateLocalCache(this);
+            ConfigFileSettingsCache configGlobalCache = ConfigFileSettingsCache.CreateGlobalCache();
+            ConfigFileSettingsCache? configSystemWideCache = ConfigFileSettingsCache.CreateSystemWideCache();
+
+            if (configSystemWideCache is null)
+            {
+                _effectiveConfigFile = new(SettingLevel.Effective, configLocalCache, configGlobalCache);
+            }
+            else
+            {
+                _effectiveConfigFile = new(SettingLevel.Effective, configLocalCache, configGlobalCache, configSystemWideCache);
+            }
+
+            _localConfigFile = new(SettingLevel.Local, configLocalCache);
+        }
 
         IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;
 
@@ -2355,7 +2394,7 @@ namespace GitCommands
                 "--find-copies",
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 extraDiffArguments,
-                { firstBase is null || secondBase is null,  $"{firstId}...{secondId}", $"{firstBase}..{firstId} {secondBase}..{secondId}" }
+                { firstBase is null || secondBase is null, $"{firstId}...{secondId}", $"{firstBase}..{firstId} {secondBase}..{secondId}" }
             };
 
             ExecutionResult result = await _gitExecutable.ExecuteAsync(

@@ -1,21 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
-    public class ConfigFileSettingsCache : FileSettingsCache
+    public sealed class ConfigFileSettingsCache : FileSettingsCache
     {
         private Lazy<ConfigFile> _configFile;
 
-        public ConfigFileSettingsCache(string configFileName, bool autoSave, bool isLocal)
-            : base(configFileName, autoSave)
+        #region Factories
+
+        public static ConfigFileSettingsCache CreateLocalCache(GitModule module, bool allowCache = true)
         {
-            _configFile = new Lazy<ConfigFile>(() => new ConfigFile(SettingsFilePath, isLocal));
+            string configPath = Path.Combine(module.GitCommonDirectory, "config");
+
+            return Create(configPath, isLocal: true, allowCache);
         }
 
-        public static ConfigFileSettingsCache FromCache(string settingsFilePath, bool isLocal)
+        public static ConfigFileSettingsCache CreateGlobalCache(bool allowCache = true)
+        {
+            string configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".config", "git", "config");
+
+            if (!File.Exists(configPath))
+            {
+                configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".gitconfig");
+            }
+
+            return Create(configPath, isLocal: false, allowCache);
+        }
+
+        public static ConfigFileSettingsCache? CreateSystemWideCache(bool allowCache = true)
+        {
+            string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Git", "config");
+
+            if (!File.Exists(configPath))
+            {
+                return null;
+            }
+
+            return Create(configPath, isLocal: false, allowCache);
+        }
+
+        private static ConfigFileSettingsCache Create(string settingsFilePath, bool isLocal, bool allowCache = true)
+        {
+            if (allowCache)
+            {
+                return FromCache(settingsFilePath, isLocal);
+            }
+
+            return new ConfigFileSettingsCache(settingsFilePath, autoSave: false, isLocal);
+        }
+
+        private static ConfigFileSettingsCache FromCache(string settingsFilePath, bool isLocal)
         {
             Lazy<ConfigFileSettingsCache> createSettingsCache = new(
                 () => new ConfigFileSettingsCache(settingsFilePath, true, isLocal));
@@ -23,16 +61,12 @@ namespace GitCommands.Settings
             return FromCache(settingsFilePath, createSettingsCache);
         }
 
-        public static ConfigFileSettingsCache Create(string settingsFilePath, bool isLocal, bool allowCache = true)
+        #endregion Factories
+
+        public ConfigFileSettingsCache(string configFileName, bool autoSave, bool isLocal)
+            : base(configFileName, autoSave)
         {
-            if (allowCache)
-            {
-                return FromCache(settingsFilePath, isLocal);
-            }
-            else
-            {
-                return new ConfigFileSettingsCache(settingsFilePath, false, isLocal);
-            }
+            _configFile = new Lazy<ConfigFile>(() => new ConfigFile(SettingsFilePath, isLocal));
         }
 
         protected override void WriteSettings(string fileName)

@@ -1518,7 +1518,8 @@ namespace GitUI
 
         private static bool UninstallEditor()
         {
-            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
+            ConfigFileSettingsCache configGlobalCache = ConfigFileSettingsCache.CreateGlobalCache(allowCache: false);
+            ConfigFileSettings configFileGlobalSettings = new(SettingLevel.Global, configGlobalCache);
 
             var coreEditor = configFileGlobalSettings.GetValue("core.editor");
             var path = AppSettings.GetInstallDir().ToPosixPath();

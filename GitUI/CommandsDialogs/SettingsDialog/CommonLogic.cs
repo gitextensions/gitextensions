@@ -46,16 +46,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 repoDistLocalSettings.SettingsCache,
                 SettingLevel.Effective);
 
-            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-            var configFileLocalSettings = ConfigFileSettings.CreateLocal(module, false);
-            ConfigFileSettings configFileEffectiveSettings = new(
-                configFileGlobalSettings, configFileLocalSettings.SettingsCache, SettingLevel.Effective);
-
             RepoDistSettingsSet = new RepoDistSettingsSet(
                 repoDistEffectiveSettings,
                 repoDistLocalSettings,
                 repoDistPulledSettings,
                 repoDistGlobalSettings);
+
+            ConfigFileSettingsCache configLocalCache = ConfigFileSettingsCache.CreateLocalCache(module, allowCache: false);
+            ConfigFileSettingsCache configGlobalCache = ConfigFileSettingsCache.CreateGlobalCache(allowCache: false);
+
+            ConfigFileSettings configFileEffectiveSettings = new(SettingLevel.Effective, configLocalCache, configGlobalCache);
+            ConfigFileSettings configFileLocalSettings = new(SettingLevel.Local, configLocalCache);
+            ConfigFileSettings configFileGlobalSettings = new(SettingLevel.Global, configGlobalCache);
 
             ConfigFileSettingsSet = new ConfigFileSettingsSet(
                 configFileEffectiveSettings,

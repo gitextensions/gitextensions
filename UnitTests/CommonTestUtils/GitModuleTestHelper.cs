@@ -164,7 +164,7 @@ namespace CommonTestUtils
                 // we want to delete, so we need to make sure the timers that will try to auto-save there
                 // are stopped before actually deleting, else the timers will throw on a background thread.
                 // Note that the intermittent failures mentioned below are likely related too.
-                Module.EffectiveConfigFile.SettingsCache.Dispose();
+                Module.EffectiveConfigFile.Dispose();
                 Module.EffectiveSettings.SettingsCache.Dispose();
 
                 // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
