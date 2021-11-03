@@ -28,6 +28,12 @@
     <DeterministicSourcePaths>false</DeterministicSourcePaths>
   </PropertyGroup>
 
+  <!-- Exclude *.resources
+       https://docs.microsoft.com/dotnet/core/project-sdk/msbuild-props#satelliteresourcelanguages -->
+  <PropertyGroup>
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+  </PropertyGroup>
+
   <!-- For the purposes of generating code coverage as part of the build -->
   <PropertyGroup Condition="'$(Coverage)' == 'true'">
     <!-- Coverlet assumes PDB files exist on disk https://github.com/tonerdo/coverlet/issues/362 -->
