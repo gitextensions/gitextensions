@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="vswhere" Version="2.8.4" IsImplicitlyDefined="true" GeneratePathProperty="true" />
+    <PackageReference Include="vswhere" IsImplicitlyDefined="true" GeneratePathProperty="true" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
@@ -28,6 +28,9 @@
     </Exec>
 
     <PropertyGroup>
+      <_ArtifactsLogDir>$([MSBuild]::NormalizePath('$(ArtifactsLogDir)', '..', '..', 'log'))</_ArtifactsLogDir>
+      <_OutputPath>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)\'))</_OutputPath>
+
       <_MSBuildCurrentPath>$([MSBuild]::NormalizePath('$(_VSInstallPath)', 'MSBuild', 'Current', 'Bin'))</_MSBuildCurrentPath>
 
       <_GitExtSshAskPassPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', '..', 'GitExtSshAskPass', 'GitExtSshAskPass.sln'))</_GitExtSshAskPassPath>
@@ -39,7 +42,7 @@
 
     <!-- Build GitExtSshAskPass project, x86 -->
     <Exec
-        Command="msbuild.exe $(_GitExtSshAskPassPath) $(_ProjectArgs32)"
+        Command="msbuild.exe $(_GitExtSshAskPassPath) $(_ProjectArgs32_) /p:OutDir=$(_OutputPath)GitExtSshAskPass\ /bl:$(_ArtifactsLogDir)\GitExtSshAskPass.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
         ConsoleToMsBuild="true"
@@ -47,7 +50,7 @@
     </Exec>
     <!-- Build GitExtensionsShellEx project, x86 -->
     <Exec
-        Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgs32)"
+        Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgs32) /p:OutDir=$(_OutputPath)GitExtensionsShellEx\ /bl:$(_ArtifactsLogDir)\GitExtensionsShellEx32.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
         ConsoleToMsBuild="true"
@@ -55,7 +58,7 @@
     </Exec>
     <!-- Build GitExtensionsShellEx project, x64 -->
     <Exec
-        Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgs64)"
+        Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgs64) /p:OutDir=$(_OutputPath)GitExtensionsShellEx\ /bl:$(_ArtifactsLogDir)\GitExtensionsShellEx64.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
         ConsoleToMsBuild="true"

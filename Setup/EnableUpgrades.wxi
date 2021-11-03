@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
 
-  <Property Id="PREVIOUSVERSIONSINSTALLED" Secure="yes"/>
+  <Upgrade Id="$(var.UpgradeCode)">
+    <UpgradeVersion Property="UPGRADE" Minimum="$(var.MinSupportedVersion)" Maximum="$(var.Version)" />
+    <UpgradeVersion Property="DONTUPGRADE" Maximum="$(var.MinSupportedVersion)" IncludeMaximum="no" />
+    <UpgradeVersion Minimum="0.0.0" Property="PREVIOUSVERSIONSINSTALLED" MigrateFeatures="yes" IncludeMinimum="yes" />
+  </Upgrade>
 
-  <!-- Upgrade WiX installations -->
+  <Condition Message="The installed version is not upgradeable to $(var.Version).&#13;&#10;Uninstall the previous version first.&#13;&#10;&#13;&#10;Setup will now exit.">
+    <![CDATA[NOT (PREVIOUSVERSIONSINSTALLED AND DONTUPGRADE)]]>
+  </Condition>
+
+   <!-- Upgrade WiX installations -->
   <MajorUpgrade
     Schedule="afterInstallInitialize"
     DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit."
     AllowSameVersionUpgrades="yes"/>
-
 
   <SetProperty After="FindRelatedProducts" Id="FirstInstall" Value="true">
       NOT Installed AND NOT WIX_UPGRADE_DETECTED AND NOT WIX_DOWNGRADE_DETECTED

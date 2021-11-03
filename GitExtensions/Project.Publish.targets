@@ -73,19 +73,44 @@
 
   <!--
     ============================================================
-                       CreatePortable
+                       _CleanupBeforePack
 
-    Creates a portable archive.
+    Removes all files not eligible for packing.
     ============================================================
     -->
-  <!-- Any errors in targets that executed as 'AfterTargets' don't break the build: https://github.com/microsoft/msbuild/issues/3345
-       A fix is going out in VS16.6p3, but it is way too long for us to wait.
+  <Target Name="_CleanupBeforePack">
+    <PropertyGroup>
+      <_AppPluginsPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Plugins'))</_AppPluginsPublishDir>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <UnnecessaryFiles Include="$(AppPublishDir)\*.pdb"/>
+      <UnnecessaryFiles Include="$(AppPublishDir)\*.exe.config"/>
+      <UnnecessaryFiles Include="$(AppPublishDir)\*.dll.config"/>
+      <UnnecessaryFiles Include="$(AppPublishDir)\*.xml"/>
+      <UnnecessaryFiles Include="$(AppPublishDir)\TranslationApp.*"/>
+      <UnnecessaryFiles Include="$(AppPublishDir)\ApplicationInsights.config"/>
+      <!-- Duplicates -->
+      <UnnecessaryFiles Include="$(_AppPluginsPublishDir)\Newtonsoft.Json.dll"/>
+
+      <!-- Keep this one -->
+      <UnnecessaryFiles Remove="$(AppPublishDir)\GitExtensions.dll.*"/>
+    </ItemGroup>
+
+    <Delete Files="@(UnnecessaryFiles)" />
+
+  </Target>
+
+  <!--
+    ============================================================
+                       _EnsureBundleContent
+
+    Copies all necessary files for the pack step.
+    ============================================================
     -->
-  <Target Name="CreatePortable" BeforeTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_DownloadPluginManager">
+  <Target Name="_EnsureBundleContent">
     <PropertyGroup>
       <ContinuousIntegrationBuild Condition="'$(ContinuousIntegrationBuild)' == ''">false</ContinuousIntegrationBuild>
-
-      <_TargetAppConfig>@(AppConfigFileDestination)</_TargetAppConfig>
 
       <_UserDictionariesSourceDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'Bin', 'Dictionaries'))</_UserDictionariesSourceDir>
       <_UserDictionariesPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Dictionaries'))</_UserDictionariesPublishDir>
@@ -93,23 +118,9 @@
       <_AppPluginsPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'Plugins'))</_AppPluginsPublishDir>
       <_AppUserPluginsPublishDir>$([MSBuild]::NormalizeDirectory('$(AppPublishDir)', 'UserPlugins'))</_AppUserPluginsPublishDir>
 
-      <!-- Resolve app.config, so we can set/unset "portable" flag -->
-      <_PublishAppConfig>$([System.IO.Path]::GetFileName('$(_TargetAppConfig)'))</_PublishAppConfig>
-      <_PublishAppConfigPath>$([System.IO.Path]::Combine('$(PublishDir)', '$(_PublishAppConfig)'))</_PublishAppConfigPath>
-
-      <!-- Resolve the output file -->
-      <_PublishPortableVersionSuffix>-$(CurrentBuildVersion.ToString())</_PublishPortableVersionSuffix>
-      <_PublishPortableCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishPortableCommitHashSuffix>
-      <_PublishPortableCommitHashSuffix Condition="'$(env:APPVEYOR_REPO_COMMIT)' != ''">-$(env:APPVEYOR_REPO_COMMIT)</_PublishPortableCommitHashSuffix>
-      <_PublishPortableCommitHashSuffix Condition="'$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)' != ''">-$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)</_PublishPortableCommitHashSuffix>
-      <_PublishPortableFileName>GitExtensions-Portable$(_PublishPortableVersionSuffix)$(_PublishPortableCommitHashSuffix).zip</_PublishPortableFileName>
-      <_PublishPortablePath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)', '$(_PublishPortableFileName)'))</_PublishPortablePath>
 
       <_PluginManagerBinPath>$([MSBuild]::NormalizeDirectory('$(_PluginManagerPath)', 'Output'))</_PluginManagerBinPath>
       <_PluginManagerPublishDir>$([MSBuild]::NormalizeDirectory('$(_AppUserPluginsPublishDir)', 'GitExtensions.PluginManager'))</_PluginManagerPublishDir>
-
-      <!-- We want to archive the whole publish folder, so get one level up -->
-      <_PublishedPath>$([MSBuild]::NormalizeDirectory('$(PublishDir)'))</_PublishedPath>
     </PropertyGroup>
 
     <!-- Determine plugins assemblies and their required references -->
@@ -147,6 +158,18 @@
             ContinueOnError="ErrorAndStop"
           />
 
+    <ItemGroup>
+      <NativeAssemblies Include="$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'GitExtSshAskPass'))\*.dll" />
+      <NativeAssemblies Include="$([MSBuild]::NormalizePath('$(ArtifactsBinDir)', 'GitExtensionsShellEx'))\*.dll" />
+    </ItemGroup>
+
+    <!-- Copy the native components -->
+    <Copy
+            SourceFiles="@(NativeAssemblies)"
+            DestinationFolder="$(AppPublishDir)"
+            ContinueOnError="ErrorAndStop"
+          />
+
     <!-- Copy the plugins to the Plugins folder -->
     <Copy
             SourceFiles="@(PluginAssemblies)"
@@ -165,6 +188,38 @@
             DestinationFolder="$(_PluginManagerPublishDir)\%(RecursiveDir)"
             ContinueOnError="ErrorAndStop"
           />
+
+  </Target>
+
+  <!--
+    ============================================================
+                       CreatePortable
+
+    Creates a portable archive.
+    ============================================================
+    -->
+  <!-- Any errors in targets that executed as 'AfterTargets' don't break the build: https://github.com/microsoft/msbuild/issues/3345
+       A fix is going out in VS16.6p3, but it is way too long for us to wait.
+    -->
+  <Target Name="CreatePortable" AfterTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_DownloadPluginManager;_EnsureBundleContent;_CleanupBeforePack">
+    <PropertyGroup>
+      <_TargetAppConfig>@(AppConfigFileDestination)</_TargetAppConfig>
+
+      <!-- Resolve app.config, so we can set/unset "portable" flag -->
+      <_PublishAppConfig>$([System.IO.Path]::GetFileName('$(_TargetAppConfig)'))</_PublishAppConfig>
+      <_PublishAppConfigPath>$([System.IO.Path]::Combine('$(PublishDir)', '$(_PublishAppConfig)'))</_PublishAppConfigPath>
+
+      <!-- Resolve the output file -->
+      <_PublishPortableVersionSuffix>-$(CurrentBuildVersion.ToString())</_PublishPortableVersionSuffix>
+      <_PublishPortableCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishPortableCommitHashSuffix>
+      <_PublishPortableCommitHashSuffix Condition="'$(env:APPVEYOR_REPO_COMMIT)' != ''">-$(env:APPVEYOR_REPO_COMMIT)</_PublishPortableCommitHashSuffix>
+      <_PublishPortableCommitHashSuffix Condition="'$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)' != ''">-$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)</_PublishPortableCommitHashSuffix>
+      <_PublishPortableFileName>GitExtensions-Portable$(_PublishPortableVersionSuffix)$(_PublishPortableCommitHashSuffix).zip</_PublishPortableFileName>
+      <_PublishPortablePath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)', '$(_PublishPortableFileName)'))</_PublishPortablePath>
+
+      <!-- We want to archive the whole publish folder, so get one level up -->
+      <_PublishedPath>$([MSBuild]::NormalizeDirectory('$(PublishDir)'))</_PublishedPath>
+    </PropertyGroup>
 
     <!-- Mark the package as "portable" -->
     <XmlPoke XmlInputPath="$(_PublishAppConfigPath)"
@@ -197,7 +252,7 @@
     -->
   <Target Name="CreateMsi" AfterTargets="CreatePortable">
     <PropertyGroup>
-      <_PublishMsiVersionSuffix>-$(CurrentBuildVersion.ToString())</_PublishMsiVersionSuffix>
+      <_PublishMsiVersionSuffix>-$(CurrentBuildVersion.ToString())$(env:ARTIFACT_BUILD_SUFFIX)</_PublishMsiVersionSuffix>
       <_PublishMsiCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishMsiCommitHashSuffix>
       <_PublishMsiCommitHashSuffix Condition="'$(env:APPVEYOR_REPO_COMMIT)' != ''">-$(env:APPVEYOR_REPO_COMMIT)</_PublishMsiCommitHashSuffix>
       <_PublishMsiCommitHashSuffix Condition="'$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)' != ''">-$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)</_PublishMsiCommitHashSuffix>
@@ -210,17 +265,50 @@
       <_WiX Include="@(PackageReference)"  Condition="$([System.String]::Copy('%(Identity)')) == 'WiX'" />
     </ItemGroup>
     <Error Text="WiX package reference can't be found" Condition="'@(_WiX->Count())' != 1" />
+
     <PropertyGroup>
       <_WiXVersion>%(_WiX.Version)</_WiXVersion>
     </PropertyGroup>
 
-    <!-- WiX isn't yet compatible with .NET. See: https://github.com/wixtoolset/issues/issues/5627 -->
-    <!-- <MSBuild 
+    <!-- Work out VS installation path, so we can find MSBuild.exe -->
+    <PropertyGroup>
+      <VSWherePath>$([MSBuild]::NormalizePath('$(Pkgvswhere)', 'tools'))</VSWherePath>
+    </PropertyGroup>
+
+    <Exec
+        Command="vswhere.exe -latest -prerelease -property installationPath -requires Microsoft.Component.MSBuild"
+        WorkingDirectory="$(VSWherePath)"
+        EchoOff="true"
+        ConsoleToMsBuild="true"
+        StandardOutputImportance="Low">
+        <Output TaskParameter="ConsoleOutput" PropertyName="_VSInstallPath" />
+    </Exec>
+
+    <PropertyGroup>
+      <_MSBuildCurrentPath>$([MSBuild]::NormalizePath('$(_VSInstallPath)', 'MSBuild', 'Current', 'Bin'))</_MSBuildCurrentPath>
+      <_SetupArgs>/p:Configuration=$(Configuration);Platform=x86;WiXVersion=$(_WiXVersion);Version=$(CurrentBuildVersion);ArtifactsBinPath=$(ArtifactsBinDir);ArtifactsPublishPath=$(AppPublishDir);OutputPath=$(_PublishMsiPath.TrimEnd('\'));TargetName=$(_PublishMsiFileName)</_SetupArgs>
+    </PropertyGroup>
+
+    <!-- WiX isn't yet compatible with .NET. See: https://github.com/wixtoolset/issues/issues/5627 
+         So can't use the normal tool chain (i.e. dotnet publish or MSBuild task) and must fall back
+         to manually invoke msbuild.exe.
+
+         When WiX becomes .NET compatible we may be able to invoke the following:
+
+    <MSBuild 
         Projects="$(ProjectDir)\..\Setup\Setup.wixproj"
         Targets="Build"
         Properties="Configuration=$(Configuration);Platform=x86;WiXVersion=$(_WiXVersion);Version=$(CurrentBuildVersion);ArtifactsBinPath=$(ArtifactsBinDir);ArtifactsPublishPath=$(AppPublishDir);OutputPath=$(_PublishMsiPath.TrimEnd('\'));TargetName=$(_PublishMsiFileName)"
         StopOnFirstFailure="true"
-        /> -->
+        />
+      -->
+    <Exec
+        Command="msbuild.exe $(ProjectDir)\..\Setup\Setup.wixproj /v:q /t:Build $(_SetupArgs) /bl:$(ArtifactsLogDir)\setup.binlog"
+        WorkingDirectory="$(_MSBuildCurrentPath)"
+        EchoOff="true"
+        ConsoleToMsBuild="true"
+        StandardOutputImportance="High">
+    </Exec>
   </Target>
 
 </Project>

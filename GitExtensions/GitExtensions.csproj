@@ -33,7 +33,10 @@
     <PackageReference Include="NETStandard.Library" IsImplicitlyDefined="true" GeneratePathProperty="true">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="WiX">
+    <PackageReference Include="vswhere" IsImplicitlyDefined="true" GeneratePathProperty="true">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="WiX" IsImplicitlyDefined="true">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
