@@ -67,15 +67,15 @@ build_script:
 - ps: |
     # Verify that new strings (if any) have been processed and ready for localisation
     # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
-    Push-Location .\GitExtensions
-    dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
-    Pop-Location
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    #Push-Location .\GitExtensions
+    #dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
+    #Pop-Location
+    #if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
-    dotnet test -c Release --no-restore --nologo --verbosity q --test-adapter-path:. --logger:Appveyor --logger:trx /bl:.\artifacts\log\tests.binlog
+    # dotnet test -c Release --no-restore --nologo --verbosity q --test-adapter-path:. --logger:Appveyor --logger:trx /bl:.\artifacts\log\tests.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 # scripts to run after tests
@@ -88,6 +88,8 @@ after_test:
 
 artifacts:
   - path: artifacts\Release\publish\*.zip
+  - path: artifacts\Release\publish\*.msi
+  - path: artifacts\log\*.binlog
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
