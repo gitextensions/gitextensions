@@ -579,6 +579,12 @@ namespace GitUI
             {
                 _gridView.Select();
 
+                // Prevent exception when changing of reporsitory because the grid still contains no rows.
+                if (index >= _gridView.Rows.Count)
+                {
+                    return;
+                }
+
                 bool shallSelect;
                 bool wasSelected = _gridView.Rows[index].Selected;
                 if (toggleSelection)
