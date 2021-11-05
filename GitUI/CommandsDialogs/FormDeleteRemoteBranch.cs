@@ -1,6 +1,6 @@
+using System.Text;
 using GitCommands;
 using GitCommands.Git;
-using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUI.Infrastructure;
 using GitUI.ScriptsEngine;
@@ -14,6 +14,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _deleteRemoteBranchesCaption = new("Delete remote branches");
         private readonly TranslationString _confirmDeleteUnmergedRemoteBranchMessage =
             new("At least one remote branch is unmerged. Are you sure you want to delete it?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
+        private readonly TranslationString _toDeleteCandidates = new("Local tracking branche(s) candidate to deletion:");
+        private readonly TranslationString _andMore = new("and {0} more...");
 
         private readonly string _defaultRemoteBranch;
         private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
@@ -45,24 +47,54 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnShown(EventArgs e)
         {
-            RecalculateSizeConstraints();
+            CheckDeleteTrackingAllowed();
             base.OnShown(e);
             Branches.Focus();
         }
 
-        private void RecalculateSizeConstraints()
+        private List<IGitRef> GetSelectedRemotRefs() => Branches.GetSelectedBranches().ToList();
+        private void CheckDeleteTrackingAllowed()
         {
-            SuspendLayout();
-            MinimumSize = MaximumSize = Size.Empty;
+            string[] localTracking = GetTrackingReferenceOfRemoteRefs(GetSelectedRemotRefs());
+            bool localTrackingBranchesExists = localTracking.Any();
+            const int maxDisplayed = 8;
 
-            int height = ControlsPanel.Height + MainPanel.Padding.Top + MainPanel.Padding.Bottom
-                       + tlpnlMain.Height + tlpnlMain.Margin.Top + tlpnlMain.Margin.Bottom + DpiUtil.Scale(42);
+            if (!localTrackingBranchesExists)
+            {
+                DeleteLocalTrackingBranch.Checked = false;
+                DeleteLocalTrackingBranch.Enabled = false;
+                _NO_TRANSLATE_labelLocalTrackingBranches.Text = string.Empty;
+            }
+            else
+            {
+                DeleteLocalTrackingBranch.Enabled = true;
 
-            MinimumSize = new Size(tlpnlMain.PreferredSize.Width + DpiUtil.Scale(70), height);
-            MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, height);
-            Size = new Size(Width, height);
-            ResumeLayout();
+                StringBuilder branchesToDelete = new();
+                branchesToDelete.AppendLine(_toDeleteCandidates.Text);
+                foreach (string branch in localTracking.Take(maxDisplayed))
+                {
+                    branchesToDelete.Append(" - ").AppendLine(branch);
+                }
+
+                if (localTracking.Length > maxDisplayed)
+                {
+                    branchesToDelete
+                        .AppendLine()
+                        .AppendFormat(_andMore.Text, localTracking.Length - maxDisplayed);
+                }
+
+                _NO_TRANSLATE_labelLocalTrackingBranches.Text = branchesToDelete.ToString();
+            }
         }
+
+        private string[] GetTrackingReferenceOfRemoteRefs(List<IGitRef> remoteRefs)
+            => Module.GetRefs(RefsFilter.Heads)
+                     .Where(b => remoteRefs.Any(r => b.IsTrackingRemote(r)))
+                     .Select(r => r.LocalName)
+                     .ToArray();
+
+        private void Branches_SelectedValueChanged(object? sender, EventArgs e)
+            => CheckDeleteTrackingAllowed();
 
         private void Delete_Click(object sender, EventArgs e)
         {
@@ -71,7 +103,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            List<IGitRef> selectedBranches = Branches.GetSelectedBranches().ToList();
+            List<IGitRef> selectedBranches = GetSelectedRemotRefs();
 
             // wait for _mergedBranches to be filled
             _taskManager.JoinPendingOperations();
@@ -110,6 +142,10 @@ namespace GitUI.CommandsDialogs
                 if (!form.ErrorOccurred() && !Module.InTheMiddleOfAction())
                 {
                     ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
+                    if (DeleteLocalTrackingBranch.Checked)
+                    {
+                        UICommands.StartDeleteBranchDialog(this, GetTrackingReferenceOfRemoteRefs(selectedBranches));
+                    }
                 }
             }
 

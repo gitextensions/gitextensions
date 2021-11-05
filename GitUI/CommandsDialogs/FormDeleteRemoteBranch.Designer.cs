@@ -30,9 +30,11 @@
         {
             Delete = new Button();
             labelSelectBranches = new Label();
-            Branches = new GitUI.BranchComboBox();
+            Branches = new BranchComboBox();
+            DeleteLocalTrackingBranch = new CheckBox();
             tlpnlMain = new TableLayoutPanel();
             DeleteRemote = new CheckBox();
+            _NO_TRANSLATE_labelLocalTrackingBranches = new Label();
             MainPanel.SuspendLayout();
             ControlsPanel.SuspendLayout();
             tlpnlMain.SuspendLayout();
@@ -40,15 +42,17 @@
             // 
             // MainPanel
             // 
+            MainPanel.AutoSize = true;
+            MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             MainPanel.Controls.Add(tlpnlMain);
             MainPanel.Padding = new Padding(9);
-            MainPanel.Size = new Size(394, 73);
+            MainPanel.Size = new Size(403, 145);
             // 
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(Delete);
-            ControlsPanel.Location = new Point(0, 73);
-            ControlsPanel.Size = new Size(394, 41);
+            ControlsPanel.Location = new Point(0, 145);
+            ControlsPanel.Size = new Size(403, 41);
             // 
             // Delete
             // 
@@ -57,7 +61,7 @@
             Delete.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Delete.Enabled = false;
             Delete.ForeColor = SystemColors.ControlText;
-            Delete.Location = new Point(306, 8);
+            Delete.Location = new Point(315, 8);
             Delete.MinimumSize = new Size(75, 23);
             Delete.Name = "Delete";
             Delete.Size = new Size(75, 25);
@@ -80,31 +84,50 @@
             // 
             // Branches
             // 
+            Branches.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             Branches.BranchesToSelect = null;
-            Branches.Dock = DockStyle.Fill;
             Branches.Location = new Point(95, 0);
             Branches.Margin = new Padding(0);
             Branches.Name = "Branches";
-            Branches.Size = new Size(286, 28);
+            Branches.Size = new Size(290, 28);
             Branches.TabIndex = 1;
+            Branches.SelectedValueChanged += Branches_SelectedValueChanged;
+            // 
+            // DeleteLocalTrackingBranch
+            // 
+            DeleteLocalTrackingBranch.AutoSize = true;
+            DeleteLocalTrackingBranch.Dock = DockStyle.Fill;
+            DeleteLocalTrackingBranch.Location = new Point(98, 56);
+            DeleteLocalTrackingBranch.Name = "DeleteLocalTrackingBranch";
+            DeleteLocalTrackingBranch.Size = new Size(284, 19);
+            DeleteLocalTrackingBranch.TabIndex = 3;
+            DeleteLocalTrackingBranch.Text = "Delete local tracking branch (if available)";
+            DeleteLocalTrackingBranch.UseVisualStyleBackColor = true;
+            DeleteLocalTrackingBranch.CheckedChanged += DeleteRemote_CheckedChanged;
             // 
             // tlpnlMain
             // 
+            tlpnlMain.AutoSize = true;
+            tlpnlMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tlpnlMain.ColumnCount = 2;
             tlpnlMain.ColumnStyles.Add(new ColumnStyle());
             tlpnlMain.ColumnStyles.Add(new ColumnStyle());
             tlpnlMain.Controls.Add(labelSelectBranches, 0, 0);
             tlpnlMain.Controls.Add(Branches, 1, 0);
             tlpnlMain.Controls.Add(DeleteRemote, 1, 1);
+            tlpnlMain.Controls.Add(DeleteLocalTrackingBranch, 1, 2);
+            tlpnlMain.Controls.Add(_NO_TRANSLATE_labelLocalTrackingBranches, 1, 3);
             tlpnlMain.Dock = DockStyle.Fill;
             tlpnlMain.Location = new Point(9, 9);
             tlpnlMain.Margin = new Padding(0);
             tlpnlMain.Name = "tlpnlMain";
-            tlpnlMain.RowCount = 3;
+            tlpnlMain.RowCount = 5;
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
-            tlpnlMain.Size = new Size(376, 55);
+            tlpnlMain.RowStyles.Add(new RowStyle());
+            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlMain.Size = new Size(385, 127);
             tlpnlMain.TabIndex = 0;
             // 
             // DeleteRemote
@@ -113,18 +136,28 @@
             DeleteRemote.Dock = DockStyle.Fill;
             DeleteRemote.Location = new Point(98, 31);
             DeleteRemote.Name = "DeleteRemote";
-            DeleteRemote.Size = new Size(280, 19);
-            DeleteRemote.TabIndex = 3;
+            DeleteRemote.Size = new Size(284, 19);
+            DeleteRemote.TabIndex = 2;
             DeleteRemote.Text = "Delete branch(es) from &remote repository";
             DeleteRemote.UseVisualStyleBackColor = true;
             DeleteRemote.CheckedChanged += DeleteRemote_CheckedChanged;
+            // 
+            // _NO_TRANSLATE_labelLocalTrackingBranches
+            // 
+            _NO_TRANSLATE_labelLocalTrackingBranches.AutoSize = true;
+            _NO_TRANSLATE_labelLocalTrackingBranches.Location = new Point(98, 78);
+            _NO_TRANSLATE_labelLocalTrackingBranches.Name = "_NO_TRANSLATE_labelLocalTrackingBranches";
+            _NO_TRANSLATE_labelLocalTrackingBranches.Size = new Size(184, 15);
+            _NO_TRANSLATE_labelLocalTrackingBranches.TabIndex = 4;
+            _NO_TRANSLATE_labelLocalTrackingBranches.Text = "local tracking deletion candidates";
             // 
             // FormDeleteRemoteBranch
             // 
             AcceptButton = Delete;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(394, 114);
+            AutoSize = true;
+            ClientSize = new Size(403, 186);
             HelpButton = true;
             ManualSectionAnchorName = "delete-branch";
             ManualSectionSubfolder = "branches";
@@ -135,13 +168,13 @@
             StartPosition = FormStartPosition.CenterParent;
             Text = "Delete branch";
             MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
             ControlsPanel.ResumeLayout(false);
             ControlsPanel.PerformLayout();
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
@@ -151,5 +184,7 @@
         private CheckBox DeleteRemote;
         private BranchComboBox Branches;
         private TableLayoutPanel tlpnlMain;
+        private CheckBox DeleteLocalTrackingBranch;
+        private Label _NO_TRANSLATE_labelLocalTrackingBranches;
     }
 }
