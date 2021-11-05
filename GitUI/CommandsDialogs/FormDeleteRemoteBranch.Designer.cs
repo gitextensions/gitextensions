@@ -30,7 +30,8 @@
         {
             Delete = new Button();
             labelSelectBranches = new Label();
-            Branches = new GitUI.BranchComboBox();
+            Branches = new BranchComboBox();
+            DeleteLocalTrackingBranch = new CheckBox();
             tlpnlMain = new TableLayoutPanel();
             DeleteRemote = new CheckBox();
             MainPanel.SuspendLayout();
@@ -42,12 +43,12 @@
             // 
             MainPanel.Controls.Add(tlpnlMain);
             MainPanel.Padding = new Padding(9);
-            MainPanel.Size = new Size(394, 73);
+            MainPanel.Size = new Size(394, 93);
             // 
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(Delete);
-            ControlsPanel.Location = new Point(0, 73);
+            ControlsPanel.Location = new Point(0, 93);
             ControlsPanel.Size = new Size(394, 41);
             // 
             // Delete
@@ -87,6 +88,19 @@
             Branches.Name = "Branches";
             Branches.Size = new Size(286, 28);
             Branches.TabIndex = 1;
+            Branches.SelectedValueChanged += Branches_SelectedValueChanged;
+            // 
+            // DeleteLocalTrackingBranch
+            // 
+            DeleteLocalTrackingBranch.AutoSize = true;
+            DeleteLocalTrackingBranch.Dock = DockStyle.Fill;
+            DeleteLocalTrackingBranch.Location = new Point(97, 56);
+            DeleteLocalTrackingBranch.Name = "DeleteLocalTrackingBranch";
+            DeleteLocalTrackingBranch.Size = new Size(197, 19);
+            DeleteLocalTrackingBranch.TabIndex = 3;
+            DeleteLocalTrackingBranch.Text = "Delete also local tracking branch";
+            DeleteLocalTrackingBranch.UseVisualStyleBackColor = true;
+            DeleteLocalTrackingBranch.CheckedChanged += DeleteRemote_CheckedChanged;
             // 
             // tlpnlMain
             // 
@@ -96,15 +110,17 @@
             tlpnlMain.Controls.Add(labelSelectBranches, 0, 0);
             tlpnlMain.Controls.Add(Branches, 1, 0);
             tlpnlMain.Controls.Add(DeleteRemote, 1, 1);
+            tlpnlMain.Controls.Add(DeleteLocalTrackingBranch, 1, 2);
             tlpnlMain.Dock = DockStyle.Fill;
             tlpnlMain.Location = new Point(9, 9);
             tlpnlMain.Margin = new Padding(0);
             tlpnlMain.Name = "tlpnlMain";
-            tlpnlMain.RowCount = 3;
+            tlpnlMain.RowCount = 4;
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
-            tlpnlMain.Size = new Size(376, 55);
+            tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tlpnlMain.Size = new Size(376, 75);
             tlpnlMain.TabIndex = 0;
             // 
             // DeleteRemote
@@ -114,7 +130,7 @@
             DeleteRemote.Location = new Point(98, 31);
             DeleteRemote.Name = "DeleteRemote";
             DeleteRemote.Size = new Size(280, 19);
-            DeleteRemote.TabIndex = 3;
+            DeleteRemote.TabIndex = 2;
             DeleteRemote.Text = "Delete branch(es) from &remote repository";
             DeleteRemote.UseVisualStyleBackColor = true;
             DeleteRemote.CheckedChanged += DeleteRemote_CheckedChanged;
@@ -124,7 +140,7 @@
             AcceptButton = Delete;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(394, 114);
+            ClientSize = new Size(394, 134);
             HelpButton = true;
             ManualSectionAnchorName = "delete-branch";
             ManualSectionSubfolder = "branches";
@@ -141,7 +157,6 @@
             tlpnlMain.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
@@ -151,5 +166,6 @@
         private CheckBox DeleteRemote;
         private BranchComboBox Branches;
         private TableLayoutPanel tlpnlMain;
+        private CheckBox DeleteLocalTrackingBranch;
     }
 }

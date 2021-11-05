@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.ComponentModel;
+using GitCommands;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -18,6 +19,11 @@ namespace GitUI
 
             branches.DisplayMember = nameof(IGitRef.Name);
         }
+
+        [Browsable(true)]
+        [Category("Action")]
+        [Description("Invoked when branch selection changed")]
+        public event EventHandler SelectedValueChanged;
 
         private IReadOnlyList<IGitRef>? _branchesToSelect;
         public IReadOnlyList<IGitRef>? BranchesToSelect
@@ -95,6 +101,13 @@ namespace GitUI
             }
 
             branches.Text = branchesText;
+
+            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void branches_SelectedValueChanged(object sender, EventArgs e)
+        {
+            SelectedValueChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }
