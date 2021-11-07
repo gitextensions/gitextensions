@@ -252,11 +252,12 @@
     -->
   <Target Name="CreateMsi" AfterTargets="CreatePortable">
     <PropertyGroup>
-      <_PublishMsiVersionSuffix>-$(CurrentBuildVersion.ToString())$(env:ARTIFACT_BUILD_SUFFIX)</_PublishMsiVersionSuffix>
+      <_AppVeyorSuffix>$(ARTIFACT_BUILD_SUFFIX)</_AppVeyorSuffix>
+      <_PublishMsiVersionSuffix>-$(CurrentBuildVersion.ToString())$(_AppVeyorSuffix)</_PublishMsiVersionSuffix>
       <_PublishMsiCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishMsiCommitHashSuffix>
       <_PublishMsiCommitHashSuffix Condition="'$(env:APPVEYOR_REPO_COMMIT)' != ''">-$(env:APPVEYOR_REPO_COMMIT)</_PublishMsiCommitHashSuffix>
       <_PublishMsiCommitHashSuffix Condition="'$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)' != ''">-$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)</_PublishMsiCommitHashSuffix>
-      <_PublishMsiFileName>GitExtensions$(_PublishPortableVersionSuffix)$(_PublishPortableCommitHashSuffix)</_PublishMsiFileName>
+      <_PublishMsiFileName>GitExtensions$(_PublishMsiVersionSuffix)$(_PublishMsiCommitHashSuffix)</_PublishMsiFileName>
       <_PublishMsiPath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)'))</_PublishMsiPath>
     </PropertyGroup>
 
