@@ -122,11 +122,31 @@ namespace GitUI
                 {
                     (nameof(Images.FileStatusUnknown), ScaleHeight(Images.FileStatusUnknown)),
                     (nameof(Images.FileStatusModified), ScaleHeight(Images.FileStatusModified)),
+                    (nameof(Images.FileStatusModifiedOnlyA), ScaleHeight(Images.FileStatusModifiedOnlyA)),
+                    (nameof(Images.FileStatusModifiedOnlyB), ScaleHeight(Images.FileStatusModifiedOnlyB)),
+                    (nameof(Images.FileStatusModifiedSame), ScaleHeight(Images.FileStatusModifiedSame)),
+                    (nameof(Images.FileStatusModifiedUnequal), ScaleHeight(Images.FileStatusModifiedUnequal)),
                     (nameof(Images.FileStatusAdded), ScaleHeight(Images.FileStatusAdded)),
+                    (nameof(Images.FileStatusAddedOnlyA), ScaleHeight(Images.FileStatusAddedOnlyA)),
+                    (nameof(Images.FileStatusAddedOnlyB), ScaleHeight(Images.FileStatusAddedOnlyB)),
+                    (nameof(Images.FileStatusAddedSame), ScaleHeight(Images.FileStatusAddedSame)),
+                    (nameof(Images.FileStatusAddedUnequal), ScaleHeight(Images.FileStatusAddedUnequal)),
                     (nameof(Images.FileStatusRemoved), ScaleHeight(Images.FileStatusRemoved)),
+                    (nameof(Images.FileStatusRemovedOnlyA), ScaleHeight(Images.FileStatusRemovedOnlyA)),
+                    (nameof(Images.FileStatusRemovedOnlyB), ScaleHeight(Images.FileStatusRemovedOnlyB)),
+                    (nameof(Images.FileStatusRemovedSame), ScaleHeight(Images.FileStatusRemovedSame)),
+                    (nameof(Images.FileStatusRemovedUnequal), ScaleHeight(Images.FileStatusRemovedUnequal)),
                     (nameof(Images.Conflict), ScaleHeight(Images.Conflict)),
                     (nameof(Images.FileStatusRenamed), ScaleHeight(Images.FileStatusRenamed.AdaptLightness())),
+                    (nameof(Images.FileStatusRenamedOnlyA), ScaleHeight(Images.FileStatusRenamedOnlyA)),
+                    (nameof(Images.FileStatusRenamedOnlyB), ScaleHeight(Images.FileStatusRenamedOnlyB)),
+                    (nameof(Images.FileStatusRenamedSame), ScaleHeight(Images.FileStatusRenamedSame)),
+                    (nameof(Images.FileStatusRenamedUnequal), ScaleHeight(Images.FileStatusRenamedUnequal)),
                     (nameof(Images.FileStatusCopied), ScaleHeight(Images.FileStatusCopied)),
+                    (nameof(Images.FileStatusCopiedOnlyA), ScaleHeight(Images.FileStatusCopiedOnlyA)),
+                    (nameof(Images.FileStatusCopiedOnlyB), ScaleHeight(Images.FileStatusCopiedOnlyB)),
+                    (nameof(Images.FileStatusCopiedSame), ScaleHeight(Images.FileStatusCopiedSame)),
+                    (nameof(Images.FileStatusCopiedUnequal), ScaleHeight(Images.FileStatusCopiedUnequal)),
                     (nameof(Images.SubmodulesManage), ScaleHeight(Images.SubmodulesManage)),
                     (nameof(Images.FolderSubmodule), ScaleHeight(Images.FolderSubmodule)),
                     (nameof(Images.SubmoduleDirty), ScaleHeight(Images.SubmoduleDirty)),
@@ -1021,7 +1041,14 @@ namespace GitUI
 
                 if (gitItemStatus.IsDeleted)
                 {
-                    return nameof(Images.FileStatusRemoved);
+                    return gitItemStatus.DiffStatus switch
+                    {
+                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRemovedOnlyA),
+                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRemovedOnlyB),
+                        DiffBranchStatus.SameChange => nameof(Images.FileStatusRemovedSame),
+                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRemovedUnequal),
+                        _ => nameof(Images.FileStatusRemoved)
+                    };
                 }
 
                 if (gitItemStatus.IsRangeDiff)
@@ -1031,7 +1058,14 @@ namespace GitUI
 
                 if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))
                 {
-                    return nameof(Images.FileStatusAdded);
+                    return gitItemStatus.DiffStatus switch
+                    {
+                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusAddedOnlyA),
+                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusAddedOnlyB),
+                        DiffBranchStatus.SameChange => nameof(Images.FileStatusAddedSame),
+                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusAddedUnequal),
+                        _ => nameof(Images.FileStatusAdded)
+                    };
                 }
 
                 if (gitItemStatus.IsConflict)
@@ -1072,19 +1106,47 @@ namespace GitUI
 
                 if (gitItemStatus.IsChanged)
                 {
-                    return nameof(Images.FileStatusModified);
+                    return gitItemStatus.DiffStatus switch
+                    {
+                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusModifiedOnlyA),
+                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusModifiedOnlyB),
+                        DiffBranchStatus.SameChange => nameof(Images.FileStatusModifiedSame),
+                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusModifiedUnequal),
+                        _ => nameof(Images.FileStatusModified)
+                    };
                 }
 
                 if (gitItemStatus.IsRenamed)
                 {
                     return gitItemStatus.RenameCopyPercentage == "100"
-                        ? nameof(Images.FileStatusRenamed)
-                        : nameof(Images.FileStatusModified);
+                        ? gitItemStatus.DiffStatus switch
+                        {
+                            DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRenamedOnlyA),
+                            DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRenamedOnlyB),
+                            DiffBranchStatus.SameChange => nameof(Images.FileStatusRenamedSame),
+                            DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRenamedUnequal),
+                            _ => nameof(Images.FileStatusRenamed)
+                        }
+                        : gitItemStatus.DiffStatus switch
+                        {
+                            DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusModifiedOnlyA),
+                            DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusModifiedOnlyB),
+                            DiffBranchStatus.SameChange => nameof(Images.FileStatusModifiedSame),
+                            DiffBranchStatus.UnequalChange => nameof(Images.FileStatusModifiedUnequal),
+                            _ => nameof(Images.FileStatusModified)
+                        };
                 }
 
                 if (gitItemStatus.IsCopied)
                 {
-                    return nameof(Images.FileStatusCopied);
+                    return gitItemStatus.DiffStatus switch
+                        {
+                            DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusCopiedOnlyA),
+                            DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusCopiedOnlyB),
+                            DiffBranchStatus.SameChange => nameof(Images.FileStatusCopiedSame),
+                            DiffBranchStatus.UnequalChange => nameof(Images.FileStatusCopiedUnequal),
+                            _ => nameof(Images.FileStatusCopied)
+                        };
                 }
 
                 return nameof(Images.FileStatusUnknown);
@@ -1780,11 +1842,16 @@ namespace GitUI
                     return 1;
                 }
 
-                var statusResult = x.ImageIndex.CompareTo(y.ImageIndex);
-
+                // All indexes, does not have "overlay", check explicitly
+                // Sort in reverse alphabetic order with Unequal first
+                var statusResult = -((FileStatusItem)x.Tag).Item.DiffStatus.CompareTo(((FileStatusItem)y.Tag).Item.DiffStatus);
                 if (statusResult == 0)
                 {
-                    return ThenBy.Compare(x, y);
+                    statusResult = x.ImageIndex.CompareTo(y.ImageIndex);
+                    if (statusResult == 0)
+                    {
+                        return ThenBy.Compare(x, y);
+                    }
                 }
 
                 return statusResult;
