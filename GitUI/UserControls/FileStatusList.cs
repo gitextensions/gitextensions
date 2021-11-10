@@ -931,9 +931,15 @@ namespace GitUI
                 ListViewGroup? group = null;
                 if (i.FirstRev is not null)
                 {
-                    group = new ListViewGroup(i.Summary)
+                    string name = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
+                        ? i.Summary
+                        : $"({i.Statuses.Count}) {i.Summary}";
+                    group = new ListViewGroup(name)
                     {
-                        CollapsedState = ListViewGroupCollapsedState.Expanded,
+                        // Collapse some groups for diffs with common BASE
+                        CollapsedState = i.Statuses.Count <= 7 || GitItemStatusesWithDescription.Count < 3 || i == GitItemStatusesWithDescription[0]
+                            ? ListViewGroupCollapsedState.Expanded
+                            : ListViewGroupCollapsedState.Collapsed,
                         Tag = i.FirstRev
                     };
 
