@@ -55,8 +55,7 @@ namespace GitUI.BranchTreePanel
                 base.ApplyStyle();
 
                 TreeViewNode.ForeColor = Visible && TreeViewNode.TreeView is not null ? TreeViewNode.TreeView.ForeColor : Color.Silver.AdaptTextColor();
-                TreeViewNode.ImageKey =
-                    TreeViewNode.SelectedImageKey = Visible ? null : nameof(Images.EyeClosed);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = Visible ? null : nameof(Images.EyeClosed);
             }
 
             public override int GetHashCode() => FullPath.GetHashCode() ^ Visible.GetHashCode();

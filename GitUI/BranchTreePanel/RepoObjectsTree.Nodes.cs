@@ -234,8 +234,7 @@ namespace GitUI.BranchTreePanel
 
             protected abstract Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs);
 
-            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node
-                => Nodes.DepthEnumerator<TNode>();
+            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node => Nodes.DepthEnumerator<TNode>();
 
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
@@ -379,8 +378,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            private static readonly Dictionary<Type, ContextMenuStrip> DefaultContextMenus
-                = new();
+            private static readonly Dictionary<Type, ContextMenuStrip> DefaultContextMenus = new();
 
             public static void RegisterContextMenu(Type type, ContextMenuStrip menu)
             {

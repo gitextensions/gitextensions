@@ -173,9 +173,7 @@ namespace GitUI.BranchTreePanel
         private void ContextMenuSort(ContextMenuStrip contextMenu)
         {
             // We can only sort refs, i.e. branches and tags
-            if (contextMenu != menuBranch &&
-                contextMenu != menuRemote &&
-                contextMenu != menuTag)
+            if (contextMenu != menuBranch && contextMenu != menuRemote && contextMenu != menuTag)
             {
                 return;
             }
@@ -189,12 +187,7 @@ namespace GitUI.BranchTreePanel
             if (!contextMenu.Items.Contains(_sortOrderContextMenuItem))
             {
                 AddContextMenuItems(contextMenu,
-                    new ToolStripItem[]
-                    {
-                        _tsmiSortMenuSpacer,
-                        _sortByContextMenuItem,
-                        _sortOrderContextMenuItem,
-                    },
+                    new ToolStripItem[] { _tsmiSortMenuSpacer, _sortByContextMenuItem, _sortOrderContextMenuItem },
                     insertBefore: tsmiMainMenuSpacer1);
             }
 

@@ -412,7 +412,7 @@ namespace GitUI.BranchTreePanel
             _rootNodes.Add(tree);
 
             tree.Attached();
-         }
+        }
 
         private void RemoveTree(Tree tree)
         {

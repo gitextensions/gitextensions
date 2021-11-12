@@ -311,8 +311,8 @@ namespace GitUI.BranchTreePanel
                     }
 
                     Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
-            }).FileAndForget();
-        }
+                }).FileAndForget();
+            }
 
             private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)
             {
