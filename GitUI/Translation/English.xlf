@@ -7375,42 +7375,6 @@ Do you want to use this custom merge script?</source>
         <source>Simplify by decoration</source>
         <target />
       </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Since</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Until</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Author</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>Committer</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label5.Text">
-        <source>Message</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label6.Text">
-        <source>Ignore case</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label7.Text">
-        <source>Limit</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label8.Text">
-        <source>Path filter</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>Branches</source>
-        <target />
-      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormSelectMultipleBranches" source-language="en">
@@ -10457,6 +10421,10 @@ Please verify the server url.</source>
         <source>Arguments</source>
         <target />
       </trans-unit>
+      <trans-unit id="_author.Text">
+        <source>Author</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_authorDateText.Text">
         <source>{0:Author date|Author dates}</source>
         <target />
@@ -10550,6 +10518,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_committed.Text">
         <source>committed</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_committer.Text">
+        <source>Committer</source>
         <target />
       </trans-unit>
       <trans-unit id="_committerText.Text">
@@ -10676,6 +10648,10 @@ Select this commit to populate the full message.</source>
         <source>{0} {1:hour|hours} ago</source>
         <target />
       </trans-unit>
+      <trans-unit id="_ignoreCase.Text">
+        <source>Ignore case</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_indexText.Text">
         <source>Commit index</source>
         <target />
@@ -10686,6 +10662,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
         <source>'{0}' is not currently visible</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_limit.Text">
+        <source>Limit</source>
         <target />
       </trans-unit>
       <trans-unit id="_loadingDataText.Text">
@@ -10706,6 +10686,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_markBisectAsGood.Text">
         <source>Marked as good in bisect</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_message.Text">
+        <source>Message</source>
         <target />
       </trans-unit>
       <trans-unit id="_messageText.Text">
@@ -10770,6 +10754,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>{0:Parent|Parents}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pathFilter.Text">
+        <source>Path filter</source>
         <target />
       </trans-unit>
       <trans-unit id="_remote.Text">
@@ -10867,6 +10855,10 @@ Remote: {1}</source>
 - For more than four selected commits, show the difference from the first to the last selected commit.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_since.Text">
+        <source>Since</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_sortBy.Text">
         <source>&amp;Sort by...</source>
         <target />
@@ -10910,6 +10902,10 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_unstageSelectedLines.Text">
         <source>Unstage selected line(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_until.Text">
+        <source>Until</source>
         <target />
       </trans-unit>
       <trans-unit id="_viewPullRequest.Text">

@@ -713,6 +713,33 @@ namespace GitUITests.UserControls
             filterInfo.ByBranchFilter.Should().BeFalse();
         }
 
-        // TODO: GetRevisionFilter
+        [TestCase("committer1", "author2", "message3", "pathFilter4", "branchFilter5",
+            "Path filter: pathFilter4\r\nBranches: branchFilter5\r\nAuthor: committer1\r\nCommitter: author2\r\nMessage: message3\r\nSince: 10/1/2021 1:30:34 AM\r\nUntil: 11/1/2021 1:30:34 AM\r\n",
+            @"--author=""committer1"" --committer=""author2"" --grep=""message3"" --regexp-ignore-case --since=""2021-10-01 01:30:34"" --until=""2021-11-01 01:30:34""")]
+        public void FilterInfo_GetRevisionFilter(string author, string committer, string message, string pathFilter, string branchFilter, string expectedSummary, string expectedArgs)
+        {
+            DateTime dateFrom = new(2021, 10, 1, 1, 30, 34, DateTimeKind.Local);
+            DateTime dateTo = new(2021, 11, 1, 1, 30, 34, DateTimeKind.Local);
+            FilterInfo filterInfo = new()
+            {
+                DateFrom = dateFrom,
+                ByDateFrom = dateFrom != DateTime.MinValue,
+                DateTo = dateTo,
+                ByDateTo = dateTo != DateTime.MinValue,
+                Author = author,
+                ByAuthor = !string.IsNullOrEmpty(author),
+                Committer = committer,
+                ByCommitter = !string.IsNullOrEmpty(committer),
+                Message = message,
+                ByMessage = !string.IsNullOrEmpty(message),
+                PathFilter = pathFilter,
+                ByPathFilter = !string.IsNullOrEmpty(pathFilter),
+                BranchFilter = branchFilter,
+                ByBranchFilter = !string.IsNullOrEmpty(branchFilter)
+            };
+
+            filterInfo.GetSummary().Should().Be(expectedSummary);
+            filterInfo.GetRevisionFilter().ToString().Should().Be(expectedArgs);
+        }
     }
 }

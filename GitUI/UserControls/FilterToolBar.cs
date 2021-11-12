@@ -296,6 +296,9 @@ namespace GitUI.UserControls
             tsmiShowFirstParent.Checked = e.ShowFirstParent;
             tsmiShowReflogs.Checked = e.ShowReflogReferences;
             InitBranchSelectionFilter(e);
+            tsbtnAdvancedFilter.Checked = e.HasFilter;
+            tsbtnAdvancedFilter.AutoToolTip = e.HasFilter;
+            tsbtnAdvancedFilter.ToolTipText = e.FilterSummary;
         }
 
         private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)

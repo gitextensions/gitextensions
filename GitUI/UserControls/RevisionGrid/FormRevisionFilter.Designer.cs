@@ -33,15 +33,15 @@
             this.Message = new System.Windows.Forms.TextBox();
             this.Author = new System.Windows.Forms.TextBox();
             this.Since = new System.Windows.Forms.DateTimePicker();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_lblSince = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_lblUntil = new System.Windows.Forms.Label();
             this.Until = new System.Windows.Forms.DateTimePicker();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_lblAuthor = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_lblCommitter = new System.Windows.Forms.Label();
             this.Committer = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_lblMessage = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_lblLimit = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_lblIgnoreCase = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.SinceCheck = new System.Windows.Forms.CheckBox();
             this.CheckUntil = new System.Windows.Forms.CheckBox();
@@ -50,10 +50,10 @@
             this.MessageCheck = new System.Windows.Forms.CheckBox();
             this.IgnoreCase = new System.Windows.Forms.CheckBox();
             this.CommitsLimitCheck = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_lblPathFilter = new System.Windows.Forms.Label();
             this.PathFilterCheck = new System.Windows.Forms.CheckBox();
             this.PathFilter = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
+            this._NO_TRANSLATE_lblBranches = new System.Windows.Forms.Label();
             this.BranchFilterCheck = new System.Windows.Forms.CheckBox();
             this.BranchFilter = new System.Windows.Forms.TextBox();
             this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
@@ -117,25 +117,25 @@
             this.Since.Name = "Since";
             this.Since.Size = new System.Drawing.Size(200, 23);
             // 
-            // label1
+            // _NO_TRANSLATE_lblSince
             // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(67, 29);
-            this.label1.Text = "Since";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_lblSince.AutoSize = true;
+            this._NO_TRANSLATE_lblSince.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblSince.Location = new System.Drawing.Point(3, 0);
+            this._NO_TRANSLATE_lblSince.Name = "_NO_TRANSLATE_lblSince";
+            this._NO_TRANSLATE_lblSince.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblSince.Text = "Since";
+            this._NO_TRANSLATE_lblSince.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label2
+            // _NO_TRANSLATE_lblUntil
             // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Location = new System.Drawing.Point(3, 29);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(67, 29);
-            this.label2.Text = "Until";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_lblUntil.AutoSize = true;
+            this._NO_TRANSLATE_lblUntil.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblUntil.Location = new System.Drawing.Point(3, 29);
+            this._NO_TRANSLATE_lblUntil.Name = "_NO_TRANSLATE_lblUntil";
+            this._NO_TRANSLATE_lblUntil.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblUntil.Text = "Until";
+            this._NO_TRANSLATE_lblUntil.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Until
             // 
@@ -144,25 +144,25 @@
             this.Until.Name = "Until";
             this.Until.Size = new System.Drawing.Size(200, 23);
             // 
-            // label3
+            // _NO_TRANSLATE_lblAuthor
             // 
-            this.label3.AutoSize = true;
-            this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label3.Location = new System.Drawing.Point(3, 58);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(67, 29);
-            this.label3.Text = "Author";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_lblAuthor.AutoSize = true;
+            this._NO_TRANSLATE_lblAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblAuthor.Location = new System.Drawing.Point(3, 58);
+            this._NO_TRANSLATE_lblAuthor.Name = "_NO_TRANSLATE_lblAuthor";
+            this._NO_TRANSLATE_lblAuthor.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblAuthor.Text = "Author";
+            this._NO_TRANSLATE_lblAuthor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label4
+            // _NO_TRANSLATE_lblCommitter
             // 
-            this.label4.AutoSize = true;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(3, 87);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(67, 29);
-            this.label4.Text = "Committer";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_lblCommitter.AutoSize = true;
+            this._NO_TRANSLATE_lblCommitter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblCommitter.Location = new System.Drawing.Point(3, 87);
+            this._NO_TRANSLATE_lblCommitter.Name = "_NO_TRANSLATE_lblCommitter";
+            this._NO_TRANSLATE_lblCommitter.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblCommitter.Text = "Committer";
+            this._NO_TRANSLATE_lblCommitter.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Committer
             // 
@@ -171,35 +171,35 @@
             this.Committer.Name = "Committer";
             this.Committer.Size = new System.Drawing.Size(285, 23);
             // 
-            // label5
+            // _NO_TRANSLATE_lblMessage
             // 
-            this.label5.AutoSize = true;
-            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Location = new System.Drawing.Point(3, 116);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(67, 29);
-            this.label5.Text = "Message";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_lblMessage.AutoSize = true;
+            this._NO_TRANSLATE_lblMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblMessage.Location = new System.Drawing.Point(3, 116);
+            this._NO_TRANSLATE_lblMessage.Name = "_NO_TRANSLATE_lblMessage";
+            this._NO_TRANSLATE_lblMessage.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblMessage.Text = "Message";
+            this._NO_TRANSLATE_lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label7
+            // _NO_TRANSLATE_lblLimit
             // 
-            this.label7.AutoSize = true;
-            this.label7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label7.Location = new System.Drawing.Point(3, 165);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(67, 29);
-            this.label7.Text = "Limit";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_lblLimit.AutoSize = true;
+            this._NO_TRANSLATE_lblLimit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblLimit.Location = new System.Drawing.Point(3, 165);
+            this._NO_TRANSLATE_lblLimit.Name = "_NO_TRANSLATE_lblLimit";
+            this._NO_TRANSLATE_lblLimit.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblLimit.Text = "Limit";
+            this._NO_TRANSLATE_lblLimit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label6
+            // _NO_TRANSLATE_lblIgnoreCase
             // 
-            this.label6.AutoSize = true;
-            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(3, 145);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(67, 20);
-            this.label6.Text = "Ignore case";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_lblIgnoreCase.AutoSize = true;
+            this._NO_TRANSLATE_lblIgnoreCase.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblIgnoreCase.Location = new System.Drawing.Point(3, 145);
+            this._NO_TRANSLATE_lblIgnoreCase.Name = "_NO_TRANSLATE_lblIgnoreCase";
+            this._NO_TRANSLATE_lblIgnoreCase.Size = new System.Drawing.Size(67, 20);
+            this._NO_TRANSLATE_lblIgnoreCase.Text = "Ignore case";
+            this._NO_TRANSLATE_lblIgnoreCase.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanel1
             // 
@@ -207,30 +207,30 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblSince, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.SinceCheck, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.Since, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblUntil, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.CheckUntil, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.Until, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label3, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblAuthor, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.AuthorCheck, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.Author, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblCommitter, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.CommitterCheck, 1, 3);
             this.tableLayoutPanel1.Controls.Add(this.Committer, 2, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label5, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblMessage, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.MessageCheck, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.Message, 2, 4);
-            this.tableLayoutPanel1.Controls.Add(this.label6, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblIgnoreCase, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.IgnoreCase, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.label7, 0, 6);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblLimit, 0, 6);
             this.tableLayoutPanel1.Controls.Add(this.CommitsLimitCheck, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_CommitsLimit, 2, 6);
-            this.tableLayoutPanel1.Controls.Add(this.label8, 0, 7);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblPathFilter, 0, 7);
             this.tableLayoutPanel1.Controls.Add(this.PathFilterCheck, 1, 7);
             this.tableLayoutPanel1.Controls.Add(this.PathFilter, 2, 7);
-            this.tableLayoutPanel1.Controls.Add(this.label9, 0, 8);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblBranches, 0, 8);
             this.tableLayoutPanel1.Controls.Add(this.BranchFilterCheck, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.BranchFilter, 2, 8);
             this.tableLayoutPanel1.Controls.Add(this.CurrentBranchOnlyCheck, 2, 9);
@@ -325,15 +325,15 @@
             this.CommitsLimitCheck.UseVisualStyleBackColor = true;
             this.CommitsLimitCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
-            // label8
+            // _NO_TRANSLATE_lblPathFilter
             // 
-            this.label8.AutoSize = true;
-            this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label8.Location = new System.Drawing.Point(3, 194);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(67, 29);
-            this.label8.Text = "Path filter";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_lblPathFilter.AutoSize = true;
+            this._NO_TRANSLATE_lblPathFilter.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblPathFilter.Location = new System.Drawing.Point(3, 194);
+            this._NO_TRANSLATE_lblPathFilter.Name = "_NO_TRANSLATE_lblPathFilter";
+            this._NO_TRANSLATE_lblPathFilter.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblPathFilter.Text = "Path filter";
+            this._NO_TRANSLATE_lblPathFilter.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PathFilterCheck
             // 
@@ -352,15 +352,15 @@
             this.PathFilter.Name = "PathFilter";
             this.PathFilter.Size = new System.Drawing.Size(285, 23);
             // 
-            // label9
+            // _NO_TRANSLATE_lblBranches
             // 
-            this.label9.AutoSize = true;
-            this.label9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label9.Location = new System.Drawing.Point(3, 223);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(67, 29);
-            this.label9.Text = "Branches";
-            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_lblBranches.AutoSize = true;
+            this._NO_TRANSLATE_lblBranches.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblBranches.Location = new System.Drawing.Point(3, 223);
+            this._NO_TRANSLATE_lblBranches.Name = "_NO_TRANSLATE_lblBranches";
+            this._NO_TRANSLATE_lblBranches.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblBranches.Text = "Branches";
+            this._NO_TRANSLATE_lblBranches.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // BranchFilterCheck
             // 
@@ -428,15 +428,15 @@
         private System.Windows.Forms.TextBox Message;
         private System.Windows.Forms.TextBox Author;
         private System.Windows.Forms.DateTimePicker Since;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblSince;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblUntil;
         private System.Windows.Forms.DateTimePicker Until;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblAuthor;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblCommitter;
         private System.Windows.Forms.TextBox Committer;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblMessage;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblLimit;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblIgnoreCase;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.CheckBox CommitsLimitCheck;
         private System.Windows.Forms.CheckBox IgnoreCase;
@@ -445,10 +445,10 @@
         private System.Windows.Forms.CheckBox AuthorCheck;
         private System.Windows.Forms.CheckBox CheckUntil;
         private System.Windows.Forms.CheckBox SinceCheck;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblPathFilter;
         private System.Windows.Forms.CheckBox PathFilterCheck;
         private System.Windows.Forms.TextBox PathFilter;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblBranches;
         private System.Windows.Forms.TextBox BranchFilter;
         private System.Windows.Forms.CheckBox CurrentBranchOnlyCheck;
         private System.Windows.Forms.CheckBox BranchFilterCheck;

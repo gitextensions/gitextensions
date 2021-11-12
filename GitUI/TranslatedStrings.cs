@@ -114,6 +114,16 @@ namespace GitUI
 
         private readonly TranslationString _noChanges = new("No changes");
 
+        // FormRevisionFilter
+        private readonly TranslationString _since = new("Since");
+        private readonly TranslationString _until = new("Until");
+        private readonly TranslationString _author = new("Author");
+        private readonly TranslationString _committer = new("Committer");
+        private readonly TranslationString _message = new("Message");
+        private readonly TranslationString _limit = new("Limit");
+        private readonly TranslationString _ignoreCase = new("Ignore case");
+        private readonly TranslationString _pathFilter = new("Path filter");
+
         // public only because of FormTranslate
         public TranslatedStrings()
         {
@@ -231,6 +241,15 @@ namespace GitUI
         public static string OpenInVisualStudioFailureCaption => _instance.Value._openInVisualStudioFailureCaption.Text;
         public static string RemoteInError => _instance.Value._remoteInError.Text;
         public static string NoChanges => _instance.Value._noChanges.Text;
+
+        public static string Since = _instance.Value._since.Text;
+        public static string Until = _instance.Value._until.Text;
+        public static string Author = _instance.Value._author.Text;
+        public static string Committer = _instance.Value._committer.Text;
+        public static string Message = _instance.Value._message.Text;
+        public static string Limit = _instance.Value._limit.Text;
+        public static string IgnoreCase = _instance.Value._ignoreCase.Text;
+        public static string PathFilter = _instance.Value._pathFilter.Text;
 
         #region Scripts
 

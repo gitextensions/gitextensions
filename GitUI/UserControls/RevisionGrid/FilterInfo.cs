@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 using GitCommands;
 using GitExtUtils;
 
@@ -337,6 +338,55 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             return filter;
+        }
+
+        public string GetSummary()
+        {
+            StringBuilder filter = new();
+
+            if (ByPathFilter)
+            {
+                filter.AppendLine($"{TranslatedStrings.PathFilter}: {PathFilter}");
+            }
+
+            if (ByBranchFilter)
+            {
+                filter.AppendLine($"{TranslatedStrings.Branches}: {BranchFilter}");
+            }
+
+            if (ByAuthor && !string.IsNullOrWhiteSpace(Author))
+            {
+                filter.AppendLine($"{TranslatedStrings.Author}: {Author}");
+            }
+
+            if (ByCommitter && !string.IsNullOrWhiteSpace(Committer))
+            {
+                filter.AppendLine($"{TranslatedStrings.Committer}: {Committer}");
+            }
+
+            if (ByMessage && !string.IsNullOrEmpty(Message))
+            {
+                filter.AppendLine($"{TranslatedStrings.Message}: {Message}");
+            }
+
+            if (ByDiffContent && !string.IsNullOrEmpty(DiffContent))
+            {
+                filter.AppendLine($"{TranslatedStrings.Message}: {DiffContent}");
+            }
+
+            if (ByDateFrom)
+            {
+                filter.AppendLine($"{TranslatedStrings.Since}: {DateFrom}");
+            }
+
+            if (ByDateTo)
+            {
+                filter.AppendLine($"{TranslatedStrings.Until}: {DateTo}");
+            }
+
+            // Ignore IgnoreCase, CurrentBranchOnlyCheck, SimplifyByDecorationCheck
+
+            return filter.ToString();
         }
 
         private T GetValue<T>(bool condition, T valueTrue, T valueFalse)
