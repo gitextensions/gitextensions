@@ -9040,6 +9040,11 @@ branch names, tag names)</source>
 To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
         <target />
       </trans-unit>
+      <trans-unit id="_showCheckedBranchesOnly.Text">
+        <source>Filter the revision grid to show checked branches only
+To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_sortByContextMenuItem.Text">
         <source>&amp;Sort by...</source>
         <target />
@@ -9268,6 +9273,24 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run script</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showCheckedLocalBranchesInRevisionGridButton.Text">
+        <source>Show checked branches only</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showCheckedLocalBranchesInRevisionGridButton.ToolTipText">
+        <source>Filter the revision grid to show checked branches only
+To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showCheckedRemoteBranchesInRevisionGridButton.Text">
+        <source>Show checked branches only</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showCheckedRemoteBranchesInRevisionGridButton.ToolTipText">
+        <source>Filter the revision grid to show checked branches only
+To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">

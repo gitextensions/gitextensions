@@ -28,6 +28,8 @@ namespace GitUI.BranchTreePanel
         private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
         private readonly TranslationString _showBranchOnly =
             new("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
+        private readonly TranslationString _showCheckedBranchesOnly =
+             new("Filter the revision grid to show checked branches only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
         private readonly TranslationString _searchTooltip = new("Search");
 
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
@@ -92,6 +94,43 @@ namespace GitUI.BranchTreePanel
 
             mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
             mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
+
+            #region enable checkboxes (used for selecting multiple branches)
+
+            /* Note that this enables checkboxes for all TreeNodes.
+             * Use Tree.HideCheckBox() or Tree.HideCheckBoxesInSubTree() to hide them from nodes that don't use them. */
+            treeMain.CheckBoxes = true;
+
+            showCheckedLocalBranchesInRevisionGridButton.ToolTipText =
+            showCheckedRemoteBranchesInRevisionGridButton.ToolTipText = _showCheckedBranchesOnly.Text;
+
+            // from https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.treeview.aftercheck
+            void ToggleDescendantsChecked(TreeNode treeNode, bool nodeChecked)
+            {
+                foreach (TreeNode node in treeNode.Nodes)
+                {
+                    node.Checked = nodeChecked;
+
+                    if (node.Nodes.Count > 0)
+                    {
+                        ToggleDescendantsChecked(node, nodeChecked);
+                    }
+                }
+            }
+
+            treeMain.AfterCheck += (sender, eventArgs) =>
+            {
+                // apply same checkbox state to all descendants, if any
+                if (eventArgs.Action != TreeViewAction.Unknown && eventArgs.Node.Nodes.Count > 0)
+                {
+                    ToggleDescendantsChecked(eventArgs.Node, eventArgs.Node.Checked);
+                }
+
+                // toggle "Show checked branches only" menu items depending on whether there are checked branches
+                showCheckedLocalBranchesInRevisionGridButton.Enabled =
+                showCheckedRemoteBranchesInRevisionGridButton.Enabled = GetCheckedBranches().Any();
+            };
+            #endregion
 
             return;
 
@@ -369,6 +408,13 @@ namespace GitUI.BranchTreePanel
                     ContextMenuStrip = menuRemotes
                 }
             };
+        }
+
+        private IEnumerable<BaseBranchLeafNode> GetCheckedBranches()
+        {
+            var locals = _branchesTree.DepthEnumerator<BaseBranchLeafNode>();
+            var remotes = _remotesTree.DepthEnumerator<BaseBranchLeafNode>();
+            return locals.Concat(remotes).Where(b => b.TreeViewNode.Checked);
         }
 
         private void CreateTags()

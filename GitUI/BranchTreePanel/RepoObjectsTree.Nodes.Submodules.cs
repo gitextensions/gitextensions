@@ -371,6 +371,9 @@ namespace GitUI.BranchTreePanel
                 if (firstTime)
                 {
                     TreeViewNode.ExpandAll();
+
+                    // checkboxes are only used for selecting multiple branches at the time of writing
+                    HideCheckBoxesInSubTree(TreeViewNode);
                 }
             }
 
