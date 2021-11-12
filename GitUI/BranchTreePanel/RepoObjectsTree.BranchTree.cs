@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Git;
-using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft;

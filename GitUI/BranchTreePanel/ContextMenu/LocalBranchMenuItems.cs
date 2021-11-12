@@ -13,7 +13,6 @@ namespace GitUI.BranchTreePanel.ContextMenu
                 {
                     MenuItemKey.GitRefCheckout,
                     MenuItemKey.GitRefMerge,
-                    MenuItemKey.GitRefMerge,
                     MenuItemKey.GitRefRebase,
                     MenuItemKey.GitRefReset,
                     MenuItemKey.GitRefActionsSeparator,

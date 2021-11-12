@@ -9040,10 +9040,6 @@ branch names, tag names)</source>
 To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
         <target />
       </trans-unit>
-      <trans-unit id="_showHideRefsTooltip.Text">
-        <source>Show/hide branches/remotes/tags</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_sortByContextMenuItem.Text">
         <source>&amp;Sort by...</source>
         <target />

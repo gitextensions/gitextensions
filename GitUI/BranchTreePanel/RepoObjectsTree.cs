@@ -29,7 +29,6 @@ namespace GitUI.BranchTreePanel
         private readonly TranslationString _showBranchOnly =
             new("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
         private readonly TranslationString _searchTooltip = new("Search");
-        private readonly TranslationString _showHideRefsTooltip = new("Show/hide branches/remotes/tags");
 
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
@@ -47,9 +46,7 @@ namespace GitUI.BranchTreePanel
         private IScriptHostControl _scriptHost;
         private IRunScript _scriptRunner;
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public RepoObjectsTree()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             Disposed += (s, e) => _selectionCancellationTokenSequence.Dispose();
 
