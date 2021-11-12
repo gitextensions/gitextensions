@@ -514,7 +514,8 @@ namespace GitCommands
                 "-z",
                 "--unmerged"
             };
-            return !string.IsNullOrEmpty(_gitExecutable.GetOutput(args));
+            var result = _gitExecutable.Execute(args);
+            return result.ExitedSuccessfully && !string.IsNullOrEmpty(result.StandardOutput);
         }
 
         public bool HandleConflictSelectSide(string fileName, string side)
