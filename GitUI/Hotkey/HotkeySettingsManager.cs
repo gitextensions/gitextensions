@@ -297,6 +297,7 @@ namespace GitUI.Hotkey
                     Hk(RevisionGridControl.Command.CompareToCurrentBranch, Keys.None),
                     Hk(RevisionGridControl.Command.CompareToWorkingDirectory, Keys.Control | Keys.D),
                     Hk(RevisionGridControl.Command.CreateFixupCommit, Keys.Control | Keys.X),
+                    Hk(RevisionGridControl.Command.DisableRevisionFilter, Keys.Control | Keys.Shift | Keys.F),
                     Hk(RevisionGridControl.Command.GoToChild, Keys.Control | Keys.N),
                     Hk(RevisionGridControl.Command.GoToCommit, Keys.Control | Keys.Shift | Keys.G),
                     Hk(RevisionGridControl.Command.GoToParent, Keys.Control | Keys.P),

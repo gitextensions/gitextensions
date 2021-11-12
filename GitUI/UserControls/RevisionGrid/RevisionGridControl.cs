@@ -382,6 +382,12 @@ namespace GitUI
             _filterInfo.DisableFilters();
         }
 
+        public void DisableRevisionFilter()
+        {
+            _filterInfo.DisableFilters();
+            ForceRefreshRevisions();
+        }
+
         public void SetAndApplyPathFilter(string filter)
         {
             _filterInfo.ByPathFilter = !string.IsNullOrWhiteSpace(filter);
@@ -2715,6 +2721,7 @@ namespace GitUI
             {
                 case Command.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
                 case Command.RevisionFilter: ShowRevisionFilterDialog(); break;
+                case Command.DisableRevisionFilter: DisableRevisionFilter(); break;
                 case Command.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
                 case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(EventArgs.Empty); break;
                 case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
