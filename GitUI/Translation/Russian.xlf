@@ -141,7 +141,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="label36.Text">
         <source>Monospace font</source>
-        <target>Моноширный шрифт</target>
+        <target>Моноширинный шрифт</target>
         
       </trans-unit>
       <trans-unit id="label56.Text">
@@ -1245,7 +1245,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="lblRestartNeeded.Text">
         <source>Restart required to apply changes</source>
-        <target>Требуется перезапуск для применения измений</target>
+        <target>Требуется перезапуск для применения изменений</target>
         
       </trans-unit>
       <trans-unit id="sbOpenThemeFolder.Text">
@@ -1482,12 +1482,12 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkAutoPopStashAfterCheckout.Text">
         <source>Apply stashed changes after successful checkout (else stash will be popped automatically)</source>
-        <target>Применить спрятанные изменения после успешного переключения (иначе дилог откроется автоматически)</target>
+        <target>Применить спрятанные изменения после успешного переключения (иначе диалог откроется автоматически)</target>
         
       </trans-unit>
       <trans-unit id="chkAutoPopStashAfterPull.Text">
         <source>Apply stashed changes after successful pull (else stash will be popped automatically)</source>
-        <target>Применить спрятанные изменения после успешного получения (иначе дилог откроется автоматически)</target>
+        <target>Применить спрятанные изменения после успешного получения (иначе диалог откроется автоматически)</target>
         
       </trans-unit>
       <trans-unit id="chkBranchDeleteUnmerged.Text">
@@ -1577,7 +1577,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="lblGroupSubmodules.Text">
         <source>Submodules:</source>
-        <target>Сабмодули:</target>
+        <target>Субмодули:</target>
         
       </trans-unit>
       <trans-unit id="lblGroupWorktrees.Text">
@@ -2250,7 +2250,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
     <body>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files using a regular expression...</source>
-        <target>Найти файлы, используя регуляное выражение...</target>
+        <target>Найти файлы, используя регулярное выражение...</target>
         
       </trans-unit>
       <trans-unit id="NoFiles.Text">
@@ -2279,7 +2279,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
-        <target>Этот файл размером {0:N1} МБ. Отображение больших файлов может быть меделенным. Нажмите, чтобы все равно показать его.</target>
+        <target>Этот файл размером {0:N1} МБ. Отображение больших файлов может быть медленным. Нажмите, чтобы все равно показать его.</target>
         
       </trans-unit>
       <trans-unit id="automaticContinuousScrollToolStripMenuItem.Text">
@@ -2594,12 +2594,12 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="_strFailedToFork.Text">
         <source>Failed to fork:</source>
-        <target>Неудалось создать fork:</target>
+        <target>Не удалось создать fork:</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToGetRepos.Text">
         <source>Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu &quot;Plugins/{0}&quot;.</source>
-        <target>Неудалось получить репозитории. Скорее всего это означает что вы не настроили {0}, пожалуйста сделайте это через меню &quot;Плагины/{0}&quot;.</target>
+        <target>Не удалось получить репозитории. Скорее всего это означает что вы не настроили {0}, пожалуйста сделайте это через меню &quot;Плагины/{0}&quot;.</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -2728,7 +2728,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="getFromUserBtn.Text">
         <source>Get from user</source>
-        <target>Получить отпользователя</target>
+        <target>Получить от пользователя</target>
         
       </trans-unit>
       <trans-unit id="helpTextLbl.Text">
@@ -3181,7 +3181,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="btnSkip.Text">
         <source>&amp;Skip current revision</source>
-        <target>П&amp;ропустить текущую ревизию</target>
+        <target>&amp;Пропустить текущую ревизию</target>
         
       </trans-unit>
     </body>
@@ -6355,7 +6355,7 @@ Change the default behaviour only if you experience problems.</source>
       <trans-unit id="_cannotAccessGitattributes.Text">
         <source>Failed to save .gitattributes.
 Check if file is accessible.</source>
-        <target>Неудалось сохранить .gitattributes.
+        <target>Не удалось сохранить .gitattributes.
 Проверьте, что файл доступен.</target>
         
       </trans-unit>
@@ -8895,12 +8895,12 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_failureWhileOpenFile.Text">
         <source>Open temporary file failed.</source>
-        <target>Неудалось открыть временный файл.</target>
+        <target>Не удалось открыть временный файл.</target>
         
       </trans-unit>
       <trans-unit id="_failureWhileSaveFile.Text">
         <source>Save file failed.</source>
-        <target>Неудалось сохранить файл.</target>
+        <target>Не удалось сохранить файл.</target>
         
       </trans-unit>
       <trans-unit id="_fileBinaryChooseLocalBaseRemote.Text">
@@ -10001,7 +10001,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="lblDefaultCloneDestination.Text">
         <source>Default clone destination</source>
-        <target>Путь назначения по умолчанияю при клонировании</target>
+        <target>Путь назначения по умолчанию при клонировании</target>
         
       </trans-unit>
       <trans-unit id="lblDefaultPullAction.Text">
@@ -11388,7 +11388,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnFetchCreateBranch.ToolTipText">
         <source>Fetch then create a local branch from the remote branch</source>
-        <target>Получить и затем создайть локальную ветвь из внешней</target>
+        <target>Получить и затем создать локальную ветвь из внешней</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchOneBranch.Text">
@@ -12075,7 +12075,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="ShowArtificialCommits.Text">
         <source>Show artificial commits</source>
-        <target>Показывать искуственные коммиты</target>
+        <target>Показывать искусственные коммиты</target>
         
       </trans-unit>
       <trans-unit id="ShowCurrentBranchOnly.Text">
@@ -13939,7 +13939,7 @@ The action cannot be undone.</source>
       </trans-unit>
       <trans-unit id="_strFailedToLoadDiffData.Text">
         <source>Failed to load diff data!</source>
-        <target>Не удалось загурзить список изменений!</target>
+        <target>Не удалось загрузить список изменений!</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToLoadDiscussionItem.Text">
