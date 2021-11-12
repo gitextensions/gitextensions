@@ -19,6 +19,15 @@ namespace GitUI.UserControls.RevisionGrid
         {
             InitializeComponent();
             InitializeComplete();
+            _NO_TRANSLATE_lblSince.Text = TranslatedStrings.Since;
+            _NO_TRANSLATE_lblUntil.Text = TranslatedStrings.Until;
+            _NO_TRANSLATE_lblAuthor.Text = TranslatedStrings.Author;
+            _NO_TRANSLATE_lblCommitter.Text = TranslatedStrings.Committer;
+            _NO_TRANSLATE_lblMessage.Text = TranslatedStrings.Message;
+            _NO_TRANSLATE_lblIgnoreCase.Text = TranslatedStrings.IgnoreCase;
+            _NO_TRANSLATE_lblLimit.Text = TranslatedStrings.Limit;
+            _NO_TRANSLATE_lblPathFilter.Text = TranslatedStrings.PathFilter;
+            _NO_TRANSLATE_lblBranches.Text = TranslatedStrings.Branches;
 
             _filterInfo = filterInfo;
 
