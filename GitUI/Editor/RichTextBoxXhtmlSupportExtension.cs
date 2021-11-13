@@ -1074,9 +1074,15 @@ namespace GitUI.Editor.RichTextBoxExtension
                 //--------------------------------
                 for (int i = from; i < to; i++)
                 {
-                    // select one character
+                    // (try to) select one character
                     rtb.Select(i, 1);
-                    text.Append(rtb.SelectedText);
+                    string selectedText = rtb.SelectedText;
+
+                    // For every character of a link, the current RichTextBox returns the entire link (but should be the empty string). So, skip the links.
+                    if (!selectedText.StartsWith(LinkSeparator))
+                    {
+                        text.Append(selectedText);
+                    }
                 }
             }
             catch (Exception /*ex*/)
