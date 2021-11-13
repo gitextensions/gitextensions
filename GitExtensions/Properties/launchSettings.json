@@ -3,6 +3,9 @@
     "GitExtensions": {
       "commandName": "Project",
       "commandLineArgs": "browse \"$(MSBuildThisFileDirectory)..\""
+    },
+    "Dashboard": {
+      "commandName": "Project"
     }
   }
 }
