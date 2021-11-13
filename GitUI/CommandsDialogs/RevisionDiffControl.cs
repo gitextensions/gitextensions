@@ -619,6 +619,7 @@ namespace GitUI.CommandsDialogs
 
             // Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
             diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+            diffFilterFileInGridToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
             fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
             blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectionInfo);
         }
