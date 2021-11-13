@@ -311,14 +311,11 @@ namespace GitUI.CommandsDialogs
             _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
             toolStripButtonPush.Initialize(_aheadBehindDataProvider);
             repoObjectsTree.Initialize(_aheadBehindDataProvider, branchFilterAction: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
-            revisionDiff.Bind(RevisionGrid, fileTree, RequestRefresh);
-            fileTree.Bind(RevisionGrid, RequestRefresh);
-
-            // We're launching the main form, and whilst the module has been set for us we still need to formally switch to it
-            SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
-
+            revisionDiff.Bind(RevisionGrid, fileTree, RefreshGitStatusMonitor);
+            fileTree.Bind(RevisionGrid, RefreshGitStatusMonitor);
             RevisionGrid.ResumeRefreshRevisions();
 
+            // Application is init, the repo related operations are triggered in OnLoad()
             return;
 
             void InitCountArtificial(out GitStatusMonitor gitStatusMonitor)
@@ -442,20 +439,20 @@ namespace GitUI.CommandsDialogs
             base.OnApplicationActivated();
         }
 
-        // Contains app init logics ONLY. All repo-specific logic must be placed UICommands.PostRepositoryChanged handler.
         protected override void OnLoad(EventArgs e)
         {
             _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
 
-            HideVariableMainMenuItems();
             RefreshSplitViewLayout();
             LayoutRevisionInfo();
             SetSplitterPositions();
-            InternalInitialize(false);
 
             base.OnLoad(e);
 
             _formBrowseDiagnosticsReporter.Report();
+
+            // All app init is done, make all repo related similar to switching repos (like triggering RefreshRevisions())
+            SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
         }
 
         protected override void OnActivated(EventArgs e)
@@ -572,22 +569,28 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
-            RequestRefresh();
-
-            if (_dashboard is null || !_dashboard.Visible)
+            bool isDashboard = string.IsNullOrEmpty(Module.WorkingDir) || (_dashboard?.Visible ?? false);
+            if (isDashboard)
             {
-                revisionDiff.RefreshArtificial();
-                RevisionGrid.ForceRefreshRevisions();
-                RevisionGrid.IndexWatcher.Reset();
+                // Explicit call: Title is normally updated on RevisionGrid filter change
+                _appTitleGenerator.Generate();
 
-                InternalInitialize(true);
+                // "Repo" related methods, creates _dashboard
+                InternalInitialize();
+
+                return;
             }
 
-            toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
+            Debug.Assert(RevisionGrid.CanRefresh, "Already loading revisions when running RefreshRevisions(). This could cause the commits in the grid to be loaded several times.");
+            RevisionGrid.PerformRefreshRevisions();
+
+            InternalInitialize();
+
+            RefreshGitStatusMonitor();
+            revisionDiff.RefreshArtificial();
         }
 
-        private void RequestRefresh() => _gitStatusMonitor?.RequestRefresh();
+        private void RefreshGitStatusMonitor() => _gitStatusMonitor?.RequestRefresh();
 
         private void RefreshSelection()
         {
@@ -658,7 +661,7 @@ namespace GitUI.CommandsDialogs
         private void HideDashboard()
         {
             MainSplitContainer.Visible = true;
-            if (_dashboard is null || !_dashboard.Visible)
+            if (!_dashboard?.Visible ?? true)
             {
                 return;
             }
@@ -714,6 +717,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
                         {
+                            _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
                             RefreshRevisions();
                         }
                     };
@@ -772,7 +776,7 @@ namespace GitUI.CommandsDialogs
             mainMenuStrip.Refresh();
         }
 
-        private void InternalInitialize(bool hard)
+        private void InternalInitialize()
         {
             toolPanel.SuspendLayout();
             toolPanel.TopToolStripPanel.SuspendLayout();
@@ -798,7 +802,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 bool bareRepository = Module.IsBareRepository();
-                bool isDashboard = _dashboard is not null && _dashboard.Visible;
+                bool isDashboard = _dashboard?.Visible ?? false;
                 bool validBrowseDir = !isDashboard && Module.IsValidGitWorkingDir();
 
                 branchSelect.Text = validBrowseDir ? Module.GetSelectedBranch() : "";
@@ -834,7 +838,8 @@ namespace GitUI.CommandsDialogs
                 _createPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
                 _viewPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
 
-                if (repositoryToolStripMenuItem.Visible)
+                // repositoryToolStripMenuItem.Visible
+                if (validBrowseDir)
                 {
                     manageSubmodulesToolStripMenuItem.Enabled = !bareRepository;
                     updateAllSubmodulesToolStripMenuItem.Enabled = !bareRepository;
@@ -844,7 +849,8 @@ namespace GitUI.CommandsDialogs
                     editmailmapToolStripMenuItem.Enabled = !bareRepository;
                 }
 
-                if (commandsToolStripMenuItem.Visible)
+                // commandsToolStripMenuItem.Visible
+                if (validBrowseDir)
                 {
                     commitToolStripMenuItem.Enabled = !bareRepository;
                     mergeToolStripMenuItem.Enabled = !bareRepository;
@@ -863,7 +869,7 @@ namespace GitUI.CommandsDialogs
 
                 SetShortcutKeyDisplayStringsFromHotkeySettings();
 
-                if (hard && hasWorkingDir)
+                if (hasWorkingDir)
                 {
                     ShowRevisions();
                 }
@@ -885,7 +891,7 @@ namespace GitUI.CommandsDialogs
 
                     _formBrowseMenus.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
 
-                    toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
+                    toolStripButtonPush.DisplayAheadBehindInformation(branchSelect.Text);
 
                     ActiveControl = RevisionGrid;
                     RevisionGrid.IndexWatcher.Reset();
@@ -1309,7 +1315,7 @@ namespace GitUI.CommandsDialogs
         private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UICommands.StartResetChangesDialog(this);
-            RequestRefresh();
+            RefreshGitStatusMonitor();
             revisionDiff.RefreshArtificial();
         }
 
@@ -1773,6 +1779,7 @@ namespace GitUI.CommandsDialogs
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
             {
+                RevisionGrid.SuspendRefreshRevisions();
                 var path = Module.WorkingDir;
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
                 AppSettings.RecentWorkingDir = path;
@@ -1803,8 +1810,9 @@ namespace GitUI.CommandsDialogs
                 }
 
                 RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
+                RevisionGrid.ResumeRefreshRevisions();
 
-                // This will raise UICommands.PostRepositoryChanged event
+                // This will raise UICommands.PostRepositoryChanged -> RefreshRevisions()
                 UICommands.RepoChangedNotifier.Notify();
             }
             else
@@ -2993,7 +3001,7 @@ namespace GitUI.CommandsDialogs
                 var args = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
                 Module.GitExecutable.GetOutput(args);
                 refreshToolStripMenuItem.PerformClick();
-                RequestRefresh();
+                RefreshGitStatusMonitor();
             }
         }
 
