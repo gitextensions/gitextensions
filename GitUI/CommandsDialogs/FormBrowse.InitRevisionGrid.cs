@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
             RevisionGrid.FilterChanged += (sender, e) =>
             {
-                Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), branchSelect.Text, TranslatedStrings.NoBranch, e.PathFilter);
+                Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), Module.GetSelectedBranch(), TranslatedStrings.NoBranch, e.PathFilter);
             };
             RevisionGrid.RevisionGraphLoaded += (sender, e) =>
             {
