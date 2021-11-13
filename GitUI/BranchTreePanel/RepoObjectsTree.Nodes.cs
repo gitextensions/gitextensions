@@ -336,29 +336,6 @@ namespace GitUI.BranchTreePanel
                     NativeMethods.SendMessageW(hwnd, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SBH.LEFT, IntPtr.Zero);
                 }
             }
-
-            #region hide checkboxes of tree nodes
-
-            /// <summary>Hides the checkbox of the specified <paramref name="node"/> in a TreeView with <see cref="TreeView.CheckBoxes"/> enabled.
-            /// Inspired by https://stackoverflow.com/a/4826740 .</summary>
-            private static void HideCheckBox(TreeNode node)
-            {
-                var tvi = new NativeMethods.TVITEM { hItem = node.Handle, mask = NativeMethods.TVIF_STATE, stateMask = NativeMethods.TVIS_STATEIMAGEMASK, state = 0 };
-                NativeMethods.SendMessage(node.TreeView.Handle, NativeMethods.TVM_SETITEM, IntPtr.Zero, ref tvi);
-            }
-
-            /// <summary>Hides the checkboxes of the specified <paramref name="node"/> and its descendants (<see cref="TreeNode.Nodes"/>)
-            /// in a TreeView with <see cref="TreeView.CheckBoxes"/> enabled..</summary>
-            internal static void HideCheckBoxesInSubTree(TreeNode node)
-            {
-                HideCheckBox(node);
-
-                foreach (TreeNode child in node.Nodes)
-                {
-                    HideCheckBoxesInSubTree(child);
-                }
-            }
-            #endregion
         }
 
         internal abstract class Node : INode
@@ -513,6 +490,21 @@ namespace GitUI.BranchTreePanel
                 if (node is not null)
                 {
                     action(node);
+                }
+            }
+
+            protected internal void MultiSelect(bool select, bool includingDescendants = false)
+            {
+                TreeViewNode.Checked = select;
+                TreeViewNode.BackColor = select ? SystemColors.GradientInactiveCaption : TreeViewNode.TreeView.BackColor;
+
+                // recursively process descendants if required
+                if (includingDescendants && this.HasChildren())
+                {
+                    foreach (Node child in Nodes)
+                    {
+                        child.MultiSelect(select, includingDescendants);
+                    }
                 }
             }
         }

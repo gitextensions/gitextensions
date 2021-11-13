@@ -9035,14 +9035,10 @@ branch names, tag names)</source>
         <source>Search</source>
         <target />
       </trans-unit>
-      <trans-unit id="_showBranchOnly.Text">
-        <source>Filter the revision grid to show this branch only
-To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_showCheckedBranchesOnly.Text">
-        <source>Filter the revision grid to show checked branches only
-To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
+      <trans-unit id="_showSelectedBranchesOnly.Text">
+        <source>Filter the revision grid to show selected branches only.
+Use Ctrl + left click in these branch trees to extend or narrow the selection.
+To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
         <target />
       </trans-unit>
       <trans-unit id="_sortByContextMenuItem.Text">
@@ -9162,21 +9158,23 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFilterLocalBranchInRevisionGrid.Text">
-        <source>Show this branch only</source>
+        <source>&amp;Filter for selected</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFilterLocalBranchInRevisionGrid.ToolTipText">
-        <source>Filter the revision grid to show this branch only
-To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
+        <source>Filter the revision grid to show selected branches only.
+Use Ctrl + left click in these branch trees to extend or narrow the selection.
+To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFilterRemoteBranchInRevisionGrid.Text">
-        <source>Show this branch only</source>
+        <source>&amp;Filter for selected</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText">
-        <source>Filter the revision grid to show this branch only
-To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
+        <source>Filter the revision grid to show selected branches only.
+Use Ctrl + left click in these branch trees to extend or narrow the selection.
+To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
@@ -9273,24 +9271,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
         <source>Run script</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showCheckedLocalBranchesInRevisionGridButton.Text">
-        <source>Show checked branches only</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showCheckedLocalBranchesInRevisionGridButton.ToolTipText">
-        <source>Filter the revision grid to show checked branches only
-To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showCheckedRemoteBranchesInRevisionGridButton.Text">
-        <source>Show checked branches only</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showCheckedRemoteBranchesInRevisionGridButton.ToolTipText">
-        <source>Filter the revision grid to show checked branches only
-To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">

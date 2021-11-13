@@ -26,11 +26,12 @@ namespace GitUI.BranchTreePanel
         public const string HotkeySettingsName = "LeftPanel";
 
         private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
-        private readonly TranslationString _showBranchOnly =
-            new("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
-        private readonly TranslationString _showCheckedBranchesOnly =
-             new("Filter the revision grid to show checked branches only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
         private readonly TranslationString _searchTooltip = new("Search");
+
+        private readonly TranslationString _showSelectedBranchesOnly = new(
+            "Filter the revision grid to show selected branches only." +
+            "\nUse Ctrl + left click in these branch trees to extend or narrow the selection." +
+            "\nTo reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.");
 
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
@@ -92,45 +93,8 @@ namespace GitUI.BranchTreePanel
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
 
-            mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
-            mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
-
-            #region enable checkboxes (used for selecting multiple branches)
-
-            /* Note that this enables checkboxes for all TreeNodes.
-             * Use Tree.HideCheckBox() or Tree.HideCheckBoxesInSubTree() to hide them from nodes that don't use them. */
-            treeMain.CheckBoxes = true;
-
-            showCheckedLocalBranchesInRevisionGridButton.ToolTipText =
-            showCheckedRemoteBranchesInRevisionGridButton.ToolTipText = _showCheckedBranchesOnly.Text;
-
-            // from https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.treeview.aftercheck
-            void ToggleDescendantsChecked(TreeNode treeNode, bool nodeChecked)
-            {
-                foreach (TreeNode node in treeNode.Nodes)
-                {
-                    node.Checked = nodeChecked;
-
-                    if (node.Nodes.Count > 0)
-                    {
-                        ToggleDescendantsChecked(node, nodeChecked);
-                    }
-                }
-            }
-
-            treeMain.AfterCheck += (sender, eventArgs) =>
-            {
-                // apply same checkbox state to all descendants, if any
-                if (eventArgs.Action != TreeViewAction.Unknown && eventArgs.Node.Nodes.Count > 0)
-                {
-                    ToggleDescendantsChecked(eventArgs.Node, eventArgs.Node.Checked);
-                }
-
-                // toggle "Show checked branches only" menu items depending on whether there are checked branches
-                showCheckedLocalBranchesInRevisionGridButton.Enabled =
-                showCheckedRemoteBranchesInRevisionGridButton.Enabled = GetCheckedBranches().Any();
-            };
-            #endregion
+            mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText =
+            mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = _showSelectedBranchesOnly.Text;
 
             return;
 
@@ -409,7 +373,7 @@ namespace GitUI.BranchTreePanel
             };
         }
 
-        private IEnumerable<BaseBranchLeafNode> GetCheckedBranches()
+        private IEnumerable<BaseBranchLeafNode> GetSelectedBranches()
         {
             var locals = _branchesTree.DepthEnumerator<BaseBranchLeafNode>();
             var remotes = _remotesTree.DepthEnumerator<BaseBranchLeafNode>();
@@ -602,7 +566,25 @@ namespace GitUI.BranchTreePanel
 
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            Node.OnNode<Node>(e.Node, node => node.OnClick());
+            var node = Node.GetNodeSafe<Node>(e.Node);
+
+            if (node is null || e.Button == MouseButtons.Right)
+            {
+                return; // don't change selection on opening context menu
+            }
+
+            if (ModifierKeys == Keys.Control)
+            {
+                // toggle clicked node checked, including descendants
+                node.MultiSelect(!e.Node.Checked, includingDescendants: true);
+            }
+            else
+            {
+                treeMain.AllNodes().Where(n => n.Checked).ForEach(node => (node.Tag as Node)?.MultiSelect(false)); // uncheck all checked nodes
+                node.MultiSelect(true); // and only check the clicked one
+            }
+
+            node.OnClick();
         }
 
         private void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)

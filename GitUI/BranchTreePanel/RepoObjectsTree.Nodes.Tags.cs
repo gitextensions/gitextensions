@@ -145,9 +145,6 @@ namespace GitUI.BranchTreePanel
                 if (firstTime)
                 {
                     TreeViewNode.Collapse();
-
-                    // checkboxes are only used for selecting multiple branches at the time of writing
-                    HideCheckBoxesInSubTree(TreeViewNode);
                 }
             }
         }

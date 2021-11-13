@@ -112,8 +112,6 @@ namespace GitUI.BranchTreePanel
             this.mnubtnStashSubmodule = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnCommitSubmodule = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAllSubmodules = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.showCheckedLocalBranchesInRevisionGridButton = new System.Windows.Forms.ToolStripMenuItem();
-            this.showCheckedRemoteBranchesInRevisionGridButton = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuRemotes.SuspendLayout();
@@ -196,7 +194,6 @@ namespace GitUI.BranchTreePanel
             // menuBranch
             // 
             this.menuBranch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showCheckedLocalBranchesInRevisionGridButton,
             this.mnubtnFilterLocalBranchInRevisionGrid,
             this.runScriptToolStripMenuItem});
             this.menuBranch.Name = "contextmenuBranch";
@@ -207,8 +204,8 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnFilterLocalBranchInRevisionGrid.Image = global::GitUI.Properties.Images.ShowThisBranchOnly;
             this.mnubtnFilterLocalBranchInRevisionGrid.Name = "mnubtnFilterLocalBranchInRevisionGrid";
-            this.mnubtnFilterLocalBranchInRevisionGrid.Size = new System.Drawing.Size(191, 22);
-            this.mnubtnFilterLocalBranchInRevisionGrid.Text = "Show this branch only";
+            this.mnubtnFilterLocalBranchInRevisionGrid.Size = new System.Drawing.Size(214, 26);
+            this.mnubtnFilterLocalBranchInRevisionGrid.Text = "&Filter for selected";
             // 
             // runScriptToolStripMenuItem
             // 
@@ -221,8 +218,8 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnFilterRemoteBranchInRevisionGrid.Image = global::GitUI.Properties.Images.ShowThisBranchOnly;
             this.mnubtnFilterRemoteBranchInRevisionGrid.Name = "mnubtnFilterRemoteBranchInRevisionGrid";
-            this.mnubtnFilterRemoteBranchInRevisionGrid.Size = new System.Drawing.Size(193, 22);
-            this.mnubtnFilterRemoteBranchInRevisionGrid.Text = "Show this branch only";
+            this.mnubtnFilterRemoteBranchInRevisionGrid.Size = new System.Drawing.Size(229, 26);
+            this.mnubtnFilterRemoteBranchInRevisionGrid.Text = "&Filter for selected";
             // 
             // menuTags
             // 
@@ -270,8 +267,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnFetchCreateBranch,
             this.mnubtnFetchOneBranch,
             this.toolStripSeparator1,
-            this.mnubtnFilterRemoteBranchInRevisionGrid,
-            this.showCheckedRemoteBranchesInRevisionGridButton});
+            this.mnubtnFilterRemoteBranchInRevisionGrid});
             this.menuRemote.Name = "contextmenuRemote";
             this.menuRemote.Size = new System.Drawing.Size(194, 142);
             this.menuRemote.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
@@ -639,22 +635,6 @@ namespace GitUI.BranchTreePanel
             this.menuAllSubmodules.Size = new System.Drawing.Size(61, 4);
             this.menuAllSubmodules.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
-            // showCheckedLocalBranchesInRevisionGridButton
-            // 
-            this.showCheckedLocalBranchesInRevisionGridButton.Enabled = false;
-            this.showCheckedLocalBranchesInRevisionGridButton.Image = global::GitUI.Properties.Images.ShowThisBranchOnly;
-            this.showCheckedLocalBranchesInRevisionGridButton.Name = "showCheckedLocalBranchesInRevisionGridButton";
-            this.showCheckedLocalBranchesInRevisionGridButton.Size = new System.Drawing.Size(271, 26);
-            this.showCheckedLocalBranchesInRevisionGridButton.Text = "Show checked branches only";
-            // 
-            // showCheckedRemoteBranchesInRevisionGridButton
-            // 
-            this.showCheckedRemoteBranchesInRevisionGridButton.Enabled = false;
-            this.showCheckedRemoteBranchesInRevisionGridButton.Image = global::GitUI.Properties.Images.ShowThisBranchOnly;
-            this.showCheckedRemoteBranchesInRevisionGridButton.Name = "showCheckedRemoteBranchesInRevisionGridButton";
-            this.showCheckedRemoteBranchesInRevisionGridButton.Size = new System.Drawing.Size(271, 26);
-            this.showCheckedRemoteBranchesInRevisionGridButton.Text = "Show checked branches only";
-            // 
             // RepoObjectsTree
             // 
             this.Controls.Add(this.repoTreePanel);
@@ -740,8 +720,6 @@ namespace GitUI.BranchTreePanel
         private ToolStripButton tsbShowRemotes;
         private ToolStripButton tsbShowTags;
         private ToolStripButton tsbShowSubmodules;
-        private ToolStripMenuItem showCheckedLocalBranchesInRevisionGridButton;
-        private ToolStripMenuItem showCheckedRemoteBranchesInRevisionGridButton;
 
 #nullable restore
     }

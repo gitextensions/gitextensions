@@ -265,8 +265,7 @@ namespace GitUI.BranchTreePanel
             RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
             RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
 
-            RegisterClick<LocalBranchNode>(mnubtnFilterLocalBranchInRevisionGrid, FilterInRevisionGrid);
-            RegisterClick(showCheckedLocalBranchesInRevisionGridButton, FilterCheckedBranchesInRevisionGrid);
+            RegisterClick(mnubtnFilterLocalBranchInRevisionGrid, FilterSelectedBranchesInRevisionGrid);
             Node.RegisterContextMenu(typeof(LocalBranchNode), menuBranch);
 
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
@@ -276,8 +275,7 @@ namespace GitUI.BranchTreePanel
 
             RegisterClick<RemoteBranchNode>(mnubtnFetchOneBranch, remoteBranch => remoteBranch.Fetch());
             RegisterClick<RemoteBranchNode>(mnubtnPullFromRemoteBranch, remoteBranch => remoteBranch.FetchAndMerge());
-            RegisterClick<RemoteBranchNode>(mnubtnFilterRemoteBranchInRevisionGrid, FilterInRevisionGrid);
-            RegisterClick(showCheckedRemoteBranchesInRevisionGridButton, FilterCheckedBranchesInRevisionGrid);
+            RegisterClick(mnubtnFilterRemoteBranchInRevisionGrid, FilterSelectedBranchesInRevisionGrid);
             RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchFetchAndCheckout, remoteBranch => remoteBranch.FetchAndCheckout());
             RegisterClick<RemoteBranchNode>(mnubtnFetchCreateBranch, remoteBranch => remoteBranch.FetchAndCreateBranch());
             RegisterClick<RemoteBranchNode>(mnubtnFetchRebase, remoteBranch => remoteBranch.FetchAndRebase());
@@ -322,12 +320,7 @@ namespace GitUI.BranchTreePanel
             };
         }
 
-        private void FilterInRevisionGrid(BaseBranchNode branch)
-        {
-            _branchFilterAction(branch.FullPath);
-        }
-
-        private void FilterCheckedBranchesInRevisionGrid() => _branchFilterAction(GetCheckedBranches().Select(b => b.FullPath).Join(" "));
+        private void FilterSelectedBranchesInRevisionGrid() => _branchFilterAction(GetSelectedBranches().Select(b => b.FullPath).Join(" "));
 
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {
