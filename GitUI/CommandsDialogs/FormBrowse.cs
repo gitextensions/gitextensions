@@ -625,8 +625,6 @@ namespace GitUI.CommandsDialogs
 
         public void SetPathFilter(string pathFilter)
         {
-            revisionDiff.FallbackFollowedFile = pathFilter;
-            fileTree.FallbackFollowedFile = pathFilter;
             RevisionGrid.SetAndApplyPathFilter(pathFilter.QuoteNE());
         }
 
@@ -1800,7 +1798,6 @@ namespace GitUI.CommandsDialogs
 
                     // If we're applying custom branch or revision filters - reset them
                     RevisionGrid.DisableFilters();
-                    SetPathFilter(pathFilter: null);
                     ToolStripFilters.ClearFilters();
                     AppSettings.BranchFilterEnabled = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
                 }

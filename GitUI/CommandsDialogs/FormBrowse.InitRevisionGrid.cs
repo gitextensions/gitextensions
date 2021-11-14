@@ -26,6 +26,17 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.FilterChanged += (sender, e) =>
             {
                 Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), Module.GetSelectedBranch(), TranslatedStrings.NoBranch, e.PathFilter);
+
+                // PathFilter is a free text field and may contain wildcards, quoting is optional.
+                // This is will adjust the string at least for paths added from context menus.
+                string? path = e.PathFilter;
+                if (path is not null && path.Length > 1 && path[0] == '"' && path[path.Length - 1] == '"')
+                {
+                    path = path[1..(path.Length - 2)];
+                }
+
+                revisionDiff.FallbackFollowedFile = path;
+                fileTree.FallbackFollowedFile = path;
             };
             RevisionGrid.RevisionGraphLoaded += (sender, e) =>
             {
