@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                var buildResultPageEnabled = IsBuildResultPageEnabled();
+                var buildResultPageEnabled = revision is not null && IsBuildResultPageEnabled();
                 var buildInfoIsAvailable = !string.IsNullOrEmpty(revision?.BuildStatus?.Url);
 
                 if (buildResultPageEnabled && buildInfoIsAvailable)

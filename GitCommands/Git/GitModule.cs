@@ -153,7 +153,7 @@ namespace GitCommands
         }
 
         /// <inherit/>
-        public string WorkingDir { get; }
+        public string WorkingDir { get; init; }
 
         /// <summary>
         /// GitVersion for the default GitExecutable.
@@ -359,6 +359,13 @@ namespace GitCommands
         {
             get
             {
+                if (string.IsNullOrEmpty(WorkingDir))
+                {
+                    // No directory for this module, so the common directory must be empty too
+                    // (should not be retrieved from the GE start directory)
+                    return "";
+                }
+
                 // Get a cache of the common dir
                 // Lock needed as the command is called rapidly when creating the module
                 if (_gitCommonDirectory is not null)

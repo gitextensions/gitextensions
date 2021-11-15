@@ -72,14 +72,8 @@ namespace GitCommandsTests
         [Test]
         public void ParseGitBlame()
         {
-            GitBlame result;
-
-            using (_executable.StageOutput("rev-parse --git-common-dir", ".git"))
-            {
-                var path = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/README.blame");
-
-                result = _gitModule.ParseGitBlame(File.ReadAllText(path), Encoding.UTF8);
-            }
+            var path = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/README.blame");
+            GitBlame result = _gitModule.ParseGitBlame(File.ReadAllText(path), Encoding.UTF8);
 
             Assert.AreEqual(80, result.Lines.Count);
 
