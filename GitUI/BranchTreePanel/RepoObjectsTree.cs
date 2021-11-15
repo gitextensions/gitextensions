@@ -262,7 +262,8 @@ namespace GitUI.BranchTreePanel
         {
             // If we arrived here through the chain of events after selecting a node in the tree,
             // and the selected revision is the one we have selected - do nothing.
-            if (selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId == GetSelectedNodeObjectId(treeMain.SelectedNode))
+            if ((selectedRevisions.Count == 0 && treeMain.SelectedNode is null)
+                || (selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId == GetSelectedNodeObjectId(treeMain.SelectedNode)))
             {
                 return;
             }
@@ -270,7 +271,11 @@ namespace GitUI.BranchTreePanel
             var cancellationToken = _selectionCancellationTokenSequence.Next();
 
             GitRevision selectedRevision = selectedRevisions.FirstOrDefault();
-            string selectedGuid = selectedRevision?.IsArtificial ?? true ? "HEAD" : selectedRevision.Guid;
+            string? selectedGuid = selectedRevision is null
+                ? null
+                : selectedRevision.IsArtificial
+                    ? "HEAD"
+                    : selectedRevision.Guid;
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
