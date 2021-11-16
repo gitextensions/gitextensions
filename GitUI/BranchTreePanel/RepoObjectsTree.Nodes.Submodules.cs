@@ -212,7 +212,7 @@ namespace GitUI.BranchTreePanel
                 SubmoduleStatusProvider.Default.StatusUpdated += Provider_StatusUpdated;
             }
 
-            protected override Task<Nodes> LoadNodesAsync(CancellationToken token)
+            protected override Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 return Task.FromResult(new Nodes(null));
             }
@@ -275,12 +275,13 @@ namespace GitUI.BranchTreePanel
 
                     if (_currentNodes is null)
                     {
-                        await ReloadNodesAsync(token =>
+                        // Module.GetRefs() is not used for Submodules
+                        await ReloadNodesAsync((token, _) =>
                         {
                             cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
                             loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
                             return loadNodesTask;
-                        }).ConfigureAwait(false);
+                        }, null).ConfigureAwait(false);
                     }
 
                     if (cts is not null && loadNodesTask is not null)

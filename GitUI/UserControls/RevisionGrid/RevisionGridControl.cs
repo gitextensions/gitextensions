@@ -840,7 +840,7 @@ namespace GitUI
         ///  Queries git for the new set of revisions and refreshes the grid.
         /// </summary>
         /// <exception cref="AggregateException"></exception>
-        public void PerformRefreshRevisions()
+        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null)
         {
             ThreadHelper.AssertOnUIThread();
 
@@ -902,7 +902,7 @@ namespace GitUI
                 _revisionReader ??= new RevisionReader();
 
                 // Find all ambiguous refs (including stash, notes etc)
-                var refs = Module.GetRefs(RefsFilter.NoFilter);
+                IReadOnlyList<IGitRef> refs = (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
                 _ambiguousRefs = GitRef.GetAmbiguousRefNames(refs);
 
                 _gridView.SuspendLayout();

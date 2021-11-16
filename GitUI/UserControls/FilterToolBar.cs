@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -268,7 +269,7 @@ namespace GitUI.UserControls
             ApplyRevisionFilter();
         }
 
-        public void UpdateBranchFilterItems()
+        public void UpdateBranchFilterItems(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null)
         {
             tscboBranchFilter.Items.Clear();
 
@@ -284,7 +285,9 @@ namespace GitUI.UserControls
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
-                string[] branches = module.GetRefs(branchesFilter).Select(branch => branch.Name).ToArray();
+                IReadOnlyList<IGitRef> refs = (getRefs ?? module.GetRefs)(branchesFilter);
+
+                string[] branches = refs.Select(branch => branch.Name).ToArray();
 
                 await this.SwitchToMainThreadAsync();
                 BindBranches(branches);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -101,10 +102,10 @@ namespace GitUI.BranchTreePanel
                 IsFiltering.Value = false;
             }
 
-            protected override Task PostRepositoryChangedAsync()
+            protected override Task PostRepositoryChangedAsync(GitUIEventArgs e)
             {
                 IsFiltering.Value = false;
-                return ReloadNodesAsync(LoadNodesAsync);
+                return ReloadNodesAsync(LoadNodesAsync, e.GetRefs);
             }
 
             /// <inheritdoc/>
@@ -116,14 +117,14 @@ namespace GitUI.BranchTreePanel
                 base.Refresh();
             }
 
-            protected override async Task<Nodes> LoadNodesAsync(CancellationToken token)
+            protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
                 if (!IsFiltering.Value || _loadedTags is null)
                 {
-                    _loadedTags = Module.GetRefs(RefsFilter.Tags);
+                    _loadedTags = getRefs(RefsFilter.Tags);
                     token.ThrowIfCancellationRequested();
                 }
 
