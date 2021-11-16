@@ -212,17 +212,6 @@ namespace GitUI.BranchTreePanel
                 SubmoduleStatusProvider.Default.StatusUpdated += Provider_StatusUpdated;
             }
 
-            protected override Task OnAttachedAsync()
-            {
-                var e = _currentSubmoduleInfo;
-                if (e is not null)
-                {
-                    OnStatusUpdated(e);
-                }
-
-                return Task.CompletedTask;
-            }
-
             protected override Task<Nodes> LoadNodesAsync(CancellationToken token)
             {
                 return Task.FromResult(new Nodes(null));
