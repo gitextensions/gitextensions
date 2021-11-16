@@ -200,15 +200,14 @@ namespace GitUI.BranchTreePanel
             protected bool IsAttached { get; private set; }
             protected virtual bool SupportsFiltering { get; } = false;
 
-            public Task AttachedAsync()
+            public void Attached()
             {
                 IsAttached = true;
-                return OnAttachedAsync();
+                OnAttached();
             }
 
-            protected virtual Task OnAttachedAsync()
+            protected virtual void OnAttached()
             {
-                return Task.CompletedTask;
             }
 
             public void Detached()

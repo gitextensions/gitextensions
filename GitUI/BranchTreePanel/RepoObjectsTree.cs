@@ -399,11 +399,8 @@ namespace GitUI.BranchTreePanel
             treeMain.Font = AppSettings.Font;
             _rootNodes.Add(tree);
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await tree.AttachedAsync();
-            }).FileAndForget();
-        }
+            tree.Attached();
+         }
 
         private void RemoveTree(Tree tree)
         {
