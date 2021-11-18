@@ -1,13 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-
   <PropertyGroup>
     <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
     <WixPropsPath>$(NuGetPackageRoot)\WiX\$(WiXVersion)\build\wix.props</WixPropsPath>
   </PropertyGroup>
-
   <Import Project="$(WixPropsPath)" Condition="Exists('$(WixPropsPath)')" />
-
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -19,17 +16,14 @@
     <OutputName>GitExtensions</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
-
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-
     <PluginManagerSourceDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinPath)', '..', 'publish'))</PluginManagerSourceDir>
     <DefineConstants>Version=$(Version);NumericVersion=$(Version);ArtifactsBinPath=$(ArtifactsBinPath);ArtifactsPublishPath=$(ArtifactsPublishPath);PluginManagerSourceDir=$(PluginManagerSourceDir)\GitExtensions.PluginManager\Output</DefineConstants>
     <DefineConstants Condition=" '$(Configuration)' == 'Debug' ">Debug;$(DefineConstants)</DefineConstants>
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="Product.wxs" />
     <Compile Include="UI\CancelDlg.wxs" />
@@ -42,7 +36,6 @@
     <Compile Include="UI\MaintenanceTypeDlg.wxs" />
     <Compile Include="UI\MaintenanceWelcomeDlg.wxs" />
     <Compile Include="UI\ProgressDlg.wxs" />
-    <Compile Include="UI\SSHClientDlg.wxs" />
     <Compile Include="UI\UserExit.wxs" />
     <Compile Include="UI\VerifyReadyDlg.wxs" />
     <Compile Include="UI\WelcomeDlg.wxs" />
@@ -52,8 +45,6 @@
     <Content Include="AddRemove.wxi" />
     <Content Include="Config.wxi" />
     <Content Include="EnableUpgrades.wxi" />
-    <None Include="MakePortableArchive.cmd" />
-    <Content Include="packages.config" />
     <Content Include="RegisterShellExtension.wxi" />
   </ItemGroup>
   <ItemGroup>
@@ -77,16 +68,13 @@
   <ItemGroup>
     <Folder Include="UI" />
   </ItemGroup>
-
   <Import Project="$(WixTargetsPath)" Condition="Exists('$(WixTargetsPath)')" />
-
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(NuGetPackageRoot)\WiX\$(WiXVersion)\build\wix.props')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackageRoot)\WiX\$(WiXVersion)\build\wix.props'))" />
   </Target>
-
   <Target Name="DownloadPluginManager" BeforeTargets="BeforeBuild">
     <Exec
       Condition="!Exists('$(PluginManagerSourceDir)\GitExtensions.PluginManager')"
