@@ -11,4 +11,7 @@
   <!-- upgrade code never changes -->
   <?define UpgradeCode = "140e80ea-5053-42dc-ab0e-6ff0e49e6bcf" ?>
 
+  <!-- Prevent upgrade from previous versions. This is the minimum required version to install -->
+  <?define MinSupportedVersion = '4.0.0' ?>
+
 </Include>
