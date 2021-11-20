@@ -105,7 +105,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void ContextMenuBranchSpecific(ContextMenuStrip contextMenu)
+        private void ContextMenuBranchSpecific(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
             if (contextMenu != menuBranch)
             {
@@ -117,12 +117,14 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            var isNotActiveBranch = !node.IsActive;
-            _localBranchMenuItems.GetInactiveBranchItems().ForEach(t => t.Item.Visible = isNotActiveBranch);
+            _localBranchMenuItems.ForEach(t => t.Item.Visible = !areMultipleBranchesSelected // hide items if multiple branches are selected
+
+                // otherwise display all items for inactive (i.e. not current) branches and hide those applyin gonly to inactive branches for the active/current branch
+                && (!node.IsActive || !LocalBranchMenuItems<LocalBranchNode>.InactiveBranchFilterKeys.Contains(t.Key)));
 
             _menuBranchCopyContextMenuItems.ForEach(x => x.Visible = node.Visible);
 
-            if (node.Visible)
+            if (node.Visible && !areMultipleBranchesSelected)
             {
                 contextMenu.AddUserScripts(runScriptToolStripMenuItem, _scriptRunner.Execute);
             }
@@ -132,7 +134,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void ContextMenuRemoteSpecific(ContextMenuStrip contextMenu)
+        private void ContextMenuRemoteSpecific(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
             if (contextMenu != menuRemote)
             {
@@ -143,6 +145,16 @@ namespace GitUI.BranchTreePanel
             {
                 return;
             }
+
+            _remoteBranchMenuItems.ForEach(i => i.Item.Visible = !areMultipleBranchesSelected);
+
+            // toggle remote branch menu items operating on a single branch
+            mnubtnFetchOneBranch.Visible =
+            mnubtnPullFromRemoteBranch.Visible =
+            mnubtnRemoteBranchFetchAndCheckout.Visible =
+            mnubtnFetchCreateBranch.Visible =
+            mnubtnFetchRebase.Visible =
+            toolStripSeparator1.Visible = !areMultipleBranchesSelected;
 
             _menuRemoteCopyContextMenuItems.ForEach(x => x.Visible = node.Visible);
         }
@@ -329,10 +341,12 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
+            var areMultipleBranchesSelected = GetSelectedBranches().Count() > 1;
+
             ContextMenuAddExpandCollapseTree(contextMenu);
             ContextMenuSort(contextMenu);
-            ContextMenuBranchSpecific(contextMenu);
-            ContextMenuRemoteSpecific(contextMenu);
+            ContextMenuBranchSpecific(contextMenu, areMultipleBranchesSelected);
+            ContextMenuRemoteSpecific(contextMenu, areMultipleBranchesSelected);
             ContextMenuRemoteRepoSpecific(contextMenu);
             ContextMenuSubmoduleSpecific(contextMenu);
 
