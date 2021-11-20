@@ -84,7 +84,11 @@ after_test:
     Write-Host "Preparing build artifacts..."
     dotnet publish -c Release --no-build /bl:.\artifacts\log\publish.binlog /p:ContinuousIntegrationBuild=true
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-
+- ps: |
+    if ([bool]$env:APPVEYOR_PULL_REQUEST_TITLE -and [bool]$env:ARTIFACT_PUBLISH_PULL_REQUEST_MSI) {
+        $msi = (Resolve-Path .\artifacts\Release\publish\GitExtensions-*.msi)[0].Path;
+        Get-ChildItem $msi | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+    }
 
 artifacts:
   - path: artifacts\Release\publish\*.zip
