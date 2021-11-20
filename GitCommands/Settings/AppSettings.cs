@@ -61,7 +61,11 @@ namespace GitCommands
         public static readonly string ApplicationId = ApplicationName.Replace(" ", "");
         public static readonly string SettingsFileName = ApplicationId + ".settings";
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
-        private static string _applicationExecutablePath = Application.ExecutablePath;
+
+        // Under DotnetRuntimeBootstrapper this points to C:\Program Files\dotnet\dotnet.exe
+        // whereas we need our executable
+        private static string _applicationExecutablePath = Assembly.GetEntryAssembly().Location.Replace(".dll", ".exe");
+
         private static string? _documentationBaseUrl;
 
         public static Lazy<string?> ApplicationDataPath { get; private set; }
@@ -1809,6 +1813,7 @@ namespace GitCommands
 
         public static string GetGitExtensionsFullPath()
         {
+            Debug.Assert(_applicationExecutablePath.EndsWith("GitExtensions.exe"), $"{_applicationExecutablePath} must point to GitExtensions.exe");
             return _applicationExecutablePath;
         }
 
