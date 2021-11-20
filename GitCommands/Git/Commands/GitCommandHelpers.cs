@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using GitCommands.Utils;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
@@ -200,7 +201,7 @@ namespace GitCommands.Git.Commands
         /// <returns>The Git command to execute.</returns>
         public static ArgumentString PushLocalCmd(string gitRef, ObjectId targetId, string repoDir, bool force = false)
         {
-            Debug.Assert(repoDir.IndexOf(PathUtil.NativeDirectorySeparatorChar) >= 0,
+            Debug.Assert(!EnvUtils.RunningOnWindows() || repoDir.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                 $"'PushLocalCmd' must be called with 'repoDir' in Posix format");
 
             return new GitArgumentBuilder("push")
@@ -230,9 +231,9 @@ namespace GitCommands.Git.Commands
         /// </param>
         public static ArgumentString CloneCmd(string fromPath, string toPath, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
         {
-            Debug.Assert(fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) >= 0,
+            Debug.Assert(!EnvUtils.RunningOnWindows() || fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                $"'CloneCmd' must be called with 'fromPath' in Posix format");
-            Debug.Assert(toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) >= 0,
+            Debug.Assert(!EnvUtils.RunningOnWindows() || toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
                $"'CloneCmd' must be called with 'toPath' in Posix format");
 
             return new GitArgumentBuilder("clone")
