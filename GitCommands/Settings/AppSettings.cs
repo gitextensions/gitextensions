@@ -1826,15 +1826,18 @@ namespace GitCommands
         public static string GetGitExtensionsFullPath()
         {
 #if DEBUG
-#pragma warning disable SA1515 // Single-line comment should be preceded by blank line
             bool isExpectedExe =
+
                 // The app's entry point is GitExtensions.exe
                 _applicationExecutablePath.EndsWith("GitExtensions.exe", StringComparison.InvariantCultureIgnoreCase) ||
+
                 // Tests are run by testhost.exe
-                _applicationExecutablePath.EndsWith("testhost.exe", StringComparison.InvariantCultureIgnoreCase);
+                _applicationExecutablePath.EndsWith("testhost.exe", StringComparison.InvariantCultureIgnoreCase) ||
+
+                // Translations
+                _applicationExecutablePath.EndsWith("TranslationApp.exe", StringComparison.InvariantCultureIgnoreCase);
 
             Debug.Assert(isExpectedExe, $"{_applicationExecutablePath} must point to GitExtensions.exe");
-#pragma warning restore SA1515 // Single-line comment should be preceded by blank line
 #endif
 
             return _applicationExecutablePath;
