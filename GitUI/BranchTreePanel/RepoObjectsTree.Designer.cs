@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows.Forms;
+using GitUI.CommandsDialogs;
 using GitUI.UserControls;
 
 namespace GitUI.BranchTreePanel
@@ -94,10 +95,10 @@ namespace GitUI.BranchTreePanel
             this.repoTreePanel = new System.Windows.Forms.TableLayoutPanel();
             this.leftPanelToolStrip = new GitUI.ToolStripEx();
             this.tsbCollapseAll = new System.Windows.Forms.ToolStripButton();
-            this.tsbShowBranches = new System.Windows.Forms.ToolStripButton();
-            this.tsbShowRemotes = new System.Windows.Forms.ToolStripButton();
-            this.tsbShowTags = new System.Windows.Forms.ToolStripButton();
-            this.tsbShowSubmodules = new System.Windows.Forms.ToolStripButton();
+            this.tsbShowBranches = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
+            this.tsbShowRemotes = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
+            this.tsbShowTags = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
+            this.tsbShowSubmodules = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
             this.branchSearchPanel = new System.Windows.Forms.TableLayoutPanel();
             this.btnSearch = new System.Windows.Forms.Button();
             this.menuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -716,10 +717,10 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnuBtnOpenRemoteUrlInBrowser;
         private ToolStripEx leftPanelToolStrip;
         private ToolStripButton tsbCollapseAll;
-        private ToolStripButton tsbShowBranches;
-        private ToolStripButton tsbShowRemotes;
-        private ToolStripButton tsbShowTags;
-        private ToolStripButton tsbShowSubmodules;
+        private ToggleToolStripPushButton tsbShowBranches;
+        private ToggleToolStripPushButton tsbShowRemotes;
+        private ToggleToolStripPushButton tsbShowTags;
+        private ToggleToolStripPushButton tsbShowSubmodules;
 
 #nullable restore
     }

@@ -46,17 +46,17 @@ namespace GitUI.Editor
             this.increaseNumberOfLines = new System.Windows.Forms.ToolStripButton();
             this.decreaseNumberOfLines = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.showEntireFileButton = new System.Windows.Forms.ToolStripButton();
-            this.showNonPrintChars = new System.Windows.Forms.ToolStripButton();
-            this.ignoreWhitespaceAtEol = new System.Windows.Forms.ToolStripButton();
-            this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
+            this.showEntireFileButton = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
+            this.showNonPrintChars = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
+            this.ignoreWhitespaceAtEol = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
+            this.ignoreWhiteSpaces = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
             this.settingsButton = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.ignoreAllWhitespaces = new System.Windows.Forms.ToolStripButton();
+            this.ignoreAllWhitespaces = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
             this.PictureBox = new System.Windows.Forms.PictureBox();
             this._NO_TRANSLATE_lblShowPreview = new System.Windows.Forms.LinkLabel();
             this.internalFileViewer = new GitUI.Editor.FileViewerInternal();
-            this.showSyntaxHighlighting = new System.Windows.Forms.ToolStripButton();
+            this.showSyntaxHighlighting = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
             this.contextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
@@ -472,13 +472,13 @@ namespace GitUI.Editor
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton increaseNumberOfLines;
         private System.Windows.Forms.ToolStripButton decreaseNumberOfLines;
-        private System.Windows.Forms.ToolStripButton showEntireFileButton;
+        private GitUI.CommandsDialogs.ToggleToolStripPushButton showEntireFileButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripButton showNonPrintChars;
+        private GitUI.CommandsDialogs.ToggleToolStripPushButton showNonPrintChars;
         private System.Windows.Forms.ToolStripMenuItem automaticContinuousScrollToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showNonprintableCharactersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton ignoreWhitespaceAtEol;
-        private System.Windows.Forms.ToolStripButton ignoreWhiteSpaces;
+        private GitUI.CommandsDialogs.ToggleToolStripPushButton ignoreWhitespaceAtEol;
+        private GitUI.CommandsDialogs.ToggleToolStripPushButton ignoreWhiteSpaces;
         private System.Windows.Forms.ToolStripButton settingsButton;
         private System.Windows.Forms.PictureBox PictureBox;
         private System.Windows.Forms.ToolStripComboBox encodingToolStripComboBox;
@@ -488,9 +488,9 @@ namespace GitUI.Editor
         private System.Windows.Forms.ToolStripMenuItem stageSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unstageSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetSelectedLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton ignoreAllWhitespaces;
+        private GitUI.CommandsDialogs.ToggleToolStripPushButton ignoreAllWhitespaces;
         private System.Windows.Forms.ToolStripMenuItem ignoreAllWhitespaceChangesToolStripMenuItem;
         private LinkLabel _NO_TRANSLATE_lblShowPreview;
-        private ToolStripButton showSyntaxHighlighting;
+        private GitUI.CommandsDialogs.ToggleToolStripPushButton showSyntaxHighlighting;
     }
 }

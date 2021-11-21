@@ -32,8 +32,8 @@ namespace GitUI.UserControls
             this.tslblRevisionFilter = new System.Windows.Forms.ToolStripLabel();
             this.tstxtRevisionFilter = new System.Windows.Forms.ToolStripTextBox();
             this.tsddbtnRevisionFilter = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsmiShowReflogs = new System.Windows.Forms.ToolStripButton();
-            this.tsmiShowFirstParent = new System.Windows.Forms.ToolStripButton();
+            this.tsmiShowReflogs = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
+            this.tsmiShowFirstParent = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
             this.SuspendLayout();
             // 
             // tsmiCommitFilter
@@ -264,8 +264,8 @@ namespace GitUI.UserControls
         private ToolStripMenuItem tsmiAuthorFilter;
         private ToolStripMenuItem tsmiDiffContainsFilter;
         private ToolStripMenuItem tsmiHash;
-        private ToolStripButton tsmiShowReflogs;
-        private ToolStripButton tsmiShowFirstParent;
+        private GitUI.CommandsDialogs.ToggleToolStripPushButton tsmiShowReflogs;
+        private GitUI.CommandsDialogs.ToggleToolStripPushButton tsmiShowFirstParent;
         private ToolStripTextBox tstxtRevisionFilter;
         private ToolStripLabel tslblRevisionFilter;
         private ToolStripSeparator toolStripSeparator19;

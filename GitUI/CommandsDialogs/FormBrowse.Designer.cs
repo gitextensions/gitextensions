@@ -26,8 +26,8 @@ namespace GitUI.CommandsDialogs
             this.ToolStripMain = new GitUI.ToolStripEx();
             this.RefreshButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator0 = new System.Windows.Forms.ToolStripSeparator();
-            this.toggleBranchTreePanel = new System.Windows.Forms.ToolStripButton();
-            this.toggleSplitViewLayout = new System.Windows.Forms.ToolStripButton();
+            this.toggleBranchTreePanel = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
+            this.toggleSplitViewLayout = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
             this.menuCommitInfoPosition = new System.Windows.Forms.ToolStripSplitButton();
             this.commitInfoBelowMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.commitInfoLeftwardMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1797,8 +1797,8 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem manageStashesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator17;
         private ToolStripSplitButton branchSelect;
-        private ToolStripButton toggleBranchTreePanel;
-        private ToolStripButton toggleSplitViewLayout;
+        private ToggleToolStripPushButton toggleBranchTreePanel;
+        private ToggleToolStripPushButton toggleSplitViewLayout;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
