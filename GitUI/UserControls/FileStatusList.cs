@@ -1822,8 +1822,44 @@ namespace GitUI
                 StatusComparer = gitStatusItemSorter;
             }
 
+            // RangeDiff should always be sorted last in the group
+            public static int CompareRangeDiff(ListViewItem x, ListViewItem y)
+            {
+                if (ReferenceEquals(x, y))
+                {
+                    return 0;
+                }
+                else if (x?.Tag is null)
+                {
+                    return -1;
+                }
+                else if (y?.Tag is null)
+                {
+                    return 1;
+                }
+
+                if (((FileStatusItem)x.Tag).Item.IsRangeDiff)
+                {
+                    return 1;
+                }
+                else if (((FileStatusItem)y.Tag).Item.IsRangeDiff)
+                {
+                    return -1;
+                }
+
+                return 0;
+            }
+
             public override int Compare(ListViewItem x, ListViewItem y)
-                => StatusComparer.Compare(((FileStatusItem)x.Tag).Item, ((FileStatusItem)y.Tag).Item);
+            {
+                int statusResult = CompareRangeDiff(x, y);
+                if (statusResult != 0)
+                {
+                    return statusResult;
+                }
+
+                return StatusComparer.Compare(((FileStatusItem)x.Tag).Item, ((FileStatusItem)y.Tag).Item);
+            }
         }
 
         private class ImageIndexListSorter : Comparer<ListViewItem>
@@ -1835,22 +1871,15 @@ namespace GitUI
 
             public override int Compare(ListViewItem x, ListViewItem y)
             {
-                if (ReferenceEquals(x, y))
+                int statusResult = GitStatusListSorter.CompareRangeDiff(x, y);
+                if (statusResult != 0)
                 {
-                    return 0;
-                }
-                else if (x is null)
-                {
-                    return -1;
-                }
-                else if (y is null)
-                {
-                    return 1;
+                    return statusResult;
                 }
 
                 // All indexes, does not have "overlay", check explicitly
                 // Sort in reverse alphabetic order with Unequal first
-                var statusResult = -((FileStatusItem)x.Tag).Item.DiffStatus.CompareTo(((FileStatusItem)y.Tag).Item.DiffStatus);
+                statusResult = -((FileStatusItem)x.Tag).Item.DiffStatus.CompareTo(((FileStatusItem)y.Tag).Item.DiffStatus);
                 if (statusResult == 0)
                 {
                     statusResult = x.ImageIndex.CompareTo(y.ImageIndex);

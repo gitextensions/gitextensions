@@ -200,8 +200,7 @@ namespace GitUI
                 return fileStatusDescs;
             }
 
-            // Add rangeDiff as a separate group (range is not the same as diff with artificial commits)
-            List<GitItemStatus> statuses = new() { new GitItemStatus(name: TranslatedStrings.DiffRange) { IsRangeDiff = true } };
+            // Add rangeDiff as a FileStatus item (even with artificial commits)
             var first = firstRev.ObjectId == firstRevHead ? firstRev : new GitRevision(firstRevHead);
             var selected = selectedRev.ObjectId == selectedRevHead ? selectedRev : new GitRevision(selectedRevHead);
             var (baseToFirstCount, baseToSecondCount) = module.GetCommitRangeDiffCount(first.ObjectId, selected.ObjectId);
@@ -209,15 +208,16 @@ namespace GitUI
             // first and selected has a common merge base and count must be available
             // Only a printout, so no Validates
             var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑ BASE {GetDescriptionForRevision(baseRevGuid)}";
+            allAToB = allAToB.Append(new GitItemStatus(name: desc) { IsRangeDiff = true }).ToList();
 
-            FileStatusWithDescription rangeDiff = new(
-                firstRev: first,
-                secondRev: selected,
-                summary: desc,
-                statuses: statuses,
-                baseA: baseA,
-                baseB: baseB);
-            fileStatusDescs.Add(rangeDiff);
+            // Replace the A->B group with new statuses
+            fileStatusDescs[0] = new(
+                firstRev: fileStatusDescs[0].FirstRev,
+                secondRev: fileStatusDescs[0].SecondRev,
+                summary: fileStatusDescs[0].Summary,
+                statuses: allAToB,
+                baseA: fileStatusDescs[0].BaseA,
+                baseB: fileStatusDescs[0].BaseB);
 
             return fileStatusDescs;
 
