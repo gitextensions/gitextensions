@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs
                 string? path = e.PathFilter;
                 if (path is not null && path.Length > 1 && path[0] == '"' && path[path.Length - 1] == '"')
                 {
-                    path = path[1..(path.Length - 2)];
+                    path = path[1..(path.Length - 1)];
                 }
 
                 revisionDiff.FallbackFollowedFile = path;
