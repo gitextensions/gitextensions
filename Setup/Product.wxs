@@ -8,15 +8,6 @@
     <!--
       Read the currently configured value.
      -->
-    <Property Id="CURRENT_SSHCLIENT" Secure="yes">
-      <RegistrySearch Id="CurrentSshClient" Root="HKCU" Key="$(var.AppRegKey)" Name="gitssh" Type="raw" />
-    </Property>
-    <!--
-      Use OpenSSH by default. If we read a value from the registry - assume PuTTY.
-      These values are used only if the app is installed for the first time
-     -->
-    <Property Id="SSHCLIENT" Value="OpenSSH" Secure="yes" />
-    <SetProperty Action="SetSSHCLIENT0" Id="SSHCLIENT" After="CostInitialize" Value="PuTTY"><![CDATA[CURRENT_SSHCLIENT<>""]]></SetProperty>
     <Icon Id="gitextensions.ico" SourceFile="..\Logo\git-extensions-logo.ico" />
     <?include AddRemove.wxi?>
     <?include EnableUpgrades.wxi?>
@@ -31,7 +22,6 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
-          <Directory Id="PuttyDir" Name="PuTTY" />
           <Directory Id="PluginsDir" Name="Plugins" />
           <Directory Id="DictionariesDir" Name="Dictionaries" />
           <Directory Id="TranslationsDir" Name="Translation" />
@@ -545,38 +535,6 @@
         <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.Plugins.xlf" />
       </Component>
     </DirectoryRef>
-    <DirectoryRef Id="PuttyDir">
-      <Component Id="plink.exe" Guid="*">
-        <File Source="..\Bin\plink.exe" />
-      </Component>
-      <Component Id="pageant.exe" Guid="*">
-        <File Source="..\Bin\pageant.exe" />
-      </Component>
-      <Component Id="puttygen.exe" Guid="*">
-        <File Source="..\Bin\puttygen.exe" />
-      </Component>
-      <Component Id="gitssh_openssh.reg" Guid="5f730698-ac38-4e63-ad5d-505b21d1fa22">
-        <Condition><![CDATA[NOT Upgrading AND SSHCLIENT="OpenSSH"]]></Condition>
-        <RegistryValue Name="gitssh" Value="" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
-      </Component>
-      <Component Id="gitssh_putty.reg" Guid="2cb64776-8035-413e-9266-4ad9e5ecbad3">
-        <Condition><![CDATA[NOT Upgrading AND SSHCLIENT="PuTTY"]]></Condition>
-        <RegistryValue Name="gitssh" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
-      </Component>
-      <Component Id="gitssh_current.reg" Guid="44F8A1D4-B107-457B-A599-58AB346986E1">
-        <Condition><![CDATA[Upgrading]]></Condition>
-        <RegistryValue Name="gitssh" Value="[CURRENT_SSHCLIENT]" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
-      </Component>
-      <Component Id="plink.reg" Guid="*">
-        <RegistryValue Name="plink" Value="[INSTALLDIR]PuTTY\plink.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
-      </Component>
-      <Component Id="pageant.reg" Guid="*">
-        <RegistryValue Name="pageant" Value="[INSTALLDIR]PuTTY\pageant.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
-      </Component>
-      <Component Id="puttygen.reg" Guid="*">
-        <RegistryValue Name="puttygen" Value="[INSTALLDIR]PuTTY\puttygen.exe" Root="HKCU" Key="$(var.AppRegKey)" Type="string" />
-      </Component>
-    </DirectoryRef>
     <DirectoryRef Id="DirConEmu">
       <Component Id="File.CER00" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\ConEmu\CmdInit.cmd" />
@@ -716,15 +674,6 @@
       <ComponentRef Id="set_telemetry" />
       <ComponentRef Id="checksettings.reg" />
       <ComponentRef Id="InstallDir.reg" />
-      <ComponentRef Id="gitssh_openssh.reg" />
-      <ComponentRef Id="gitssh_putty.reg" />
-      <ComponentRef Id="gitssh_current.reg" />
-      <ComponentRef Id="plink.exe" />
-      <ComponentRef Id="plink.reg" />
-      <ComponentRef Id="pageant.exe" />
-      <ComponentRef Id="pageant.reg" />
-      <ComponentRef Id="puttygen.exe" />
-      <ComponentRef Id="puttygen.reg" />
       <ComponentRef Id="GitExtSshAskPass.exe" />
       <ComponentRef Id="GitExtensions.newstartmenu" />
       <ComponentRef Id="GitExtensions.startmenu" />
