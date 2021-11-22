@@ -385,7 +385,7 @@ namespace GitUI
         public void DisableRevisionFilter()
         {
             _filterInfo.DisableFilters();
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         public void SetAndApplyPathFilter(string filter)
@@ -393,7 +393,7 @@ namespace GitUI
             _filterInfo.ByPathFilter = !string.IsNullOrWhiteSpace(filter);
             _filterInfo.PathFilter = filter;
 
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         private void InitiateRefAction(IReadOnlyList<IGitRef>? refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
@@ -465,23 +465,18 @@ namespace GitUI
         }
 
         /// <summary>
-        ///  Prevents revisions refreshes and stops <see cref="ForceRefreshRevisions"/> from executing
+        ///  Prevents revisions refreshes and stops <see cref="PerformRefreshRevisions"/> from executing
         ///  until <see cref="ResumeRefreshRevisions"/> is called.
         /// </summary>
         internal void SuspendRefreshRevisions() => _updatingFilters++;
 
         /// <summary>
-        ///  Resume revisions refreshes and invokes <see cref="ForceRefreshRevisions"/>.
+        ///  Resume revisions refreshes.
         /// </summary>
         internal void ResumeRefreshRevisions()
         {
             --_updatingFilters;
             Debug.Assert(_updatingFilters >= 0, $"{nameof(ResumeRefreshRevisions)} was called without matching {nameof(SuspendRefreshRevisions)}!");
-
-            if (_updatingFilters == 0)
-            {
-                ForceRefreshRevisions();
-            }
         }
 
         public void SetAndApplyBranchFilter(string filter)
@@ -497,7 +492,7 @@ namespace GitUI
             _filterInfo.ByBranchFilter = !string.IsNullOrWhiteSpace(newFilter);
             _filterInfo.BranchFilter = newFilter;
 
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         /// <summary>
@@ -513,7 +508,7 @@ namespace GitUI
                 return;
             }
 
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         public override void Refresh()
@@ -559,7 +554,7 @@ namespace GitUI
                 ReloadHotkeys();
             }
 
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
 
             LoadCustomDifftools();
         }
@@ -800,11 +795,14 @@ namespace GitUI
             return revision;
         }
 
+        /// <summary>
+        ///  Refreshes the revision grid, if there are any changes reported by <see cref="IndexWatcher.IndexChanged"/>.
+        /// </summary>
         public void RefreshRevisions()
         {
             if (IndexWatcher.IndexChanged)
             {
-                ForceRefreshRevisions();
+                PerformRefreshRevisions();
             }
         }
 
@@ -831,11 +829,22 @@ namespace GitUI
             _loadingControlAsync.BringToFront();
         }
 
-        public void ForceRefreshRevisions()
+        /// <summary>
+        ///  Indicates whether the revision grid can be refreshed, i.e. it is not currently being refreshed
+        ///  or it is not in a middle of reconfiguration process guarded by <see cref="SuspendRefreshRevisions"/>
+        ///  and <see cref="ResumeRefreshRevisions"/>.
+        /// </summary>
+        public bool CanRefresh => !_isRefreshingRevisions && _updatingFilters == 0;
+
+        /// <summary>
+        ///  Queries git for the new set of revisions and refreshes the grid.
+        /// </summary>
+        /// <exception cref="AggregateException"></exception>
+        public void PerformRefreshRevisions()
         {
             ThreadHelper.AssertOnUIThread();
 
-            if (_isRefreshingRevisions || _updatingFilters != 0)
+            if (!CanRefresh)
             {
                 return;
             }
@@ -1629,7 +1638,7 @@ namespace GitUI
             _filterInfo.ShowCurrentBranchOnly = true;
             _filterInfo.ShowReflogReferences = false;
 
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         public void ShowAllBranches()
@@ -1642,7 +1651,7 @@ namespace GitUI
             _filterInfo.ByBranchFilter = false;
             _filterInfo.ShowCurrentBranchOnly = false;
 
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         public void ShowFilteredBranches()
@@ -1656,7 +1665,7 @@ namespace GitUI
             _filterInfo.ShowCurrentBranchOnly = false;
             _filterInfo.ShowReflogReferences = false;
 
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         public void ShowRevisionFilterDialog()
@@ -1664,7 +1673,7 @@ namespace GitUI
             using FormRevisionFilter form = new(UICommands, _filterInfo);
             if (form.ShowDialog(ParentForm) == DialogResult.OK)
             {
-                ForceRefreshRevisions();
+                PerformRefreshRevisions();
             }
         }
 
@@ -2027,43 +2036,43 @@ namespace GitUI
         internal void ToggleShowArtificialCommits()
         {
             AppSettings.RevisionGraphShowArtificialCommits = !AppSettings.RevisionGraphShowArtificialCommits;
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         internal void ToggleAuthorDateSort()
         {
             AppSettings.SortByAuthorDate = !AppSettings.SortByAuthorDate;
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         public void ToggleShowReflogReferences()
         {
             _filterInfo.ShowReflogReferences = !_filterInfo.ShowReflogReferences;
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         internal void ToggleShowLatestStash()
         {
             AppSettings.ShowLatestStash = !AppSettings.ShowLatestStash;
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         internal void ToggleShowSuperprojectTags()
         {
             AppSettings.ShowSuperprojectTags = !AppSettings.ShowSuperprojectTags;
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         internal void ShowSuperprojectBranches_ToolStripMenuItemClick()
         {
             AppSettings.ShowSuperprojectBranches = !AppSettings.ShowSuperprojectBranches;
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         internal void ShowSuperprojectRemoteBranches_ToolStripMenuItemClick()
         {
             AppSettings.ShowSuperprojectRemoteBranches = !AppSettings.ShowSuperprojectRemoteBranches;
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
@@ -2191,7 +2200,7 @@ namespace GitUI
         internal void ToggleShowGitNotes()
         {
             AppSettings.ShowGitNotes = !AppSettings.ShowGitNotes;
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         internal void ToggleShowMergeCommits()
@@ -2206,7 +2215,7 @@ namespace GitUI
                 AppSettings.ShowRevisionGridGraphColumn = !AppSettings.ShowRevisionGridGraphColumn;
             }
 
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         internal void ToggleShowCommitBodyInRevisionGrid()
@@ -2219,7 +2228,7 @@ namespace GitUI
         public void ToggleShowFirstParent()
         {
             _filterInfo.ShowFirstParent = !_filterInfo.ShowFirstParent;
-            ForceRefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         internal void ToggleBetweenArtificialAndHeadCommits()
@@ -2268,7 +2277,7 @@ namespace GitUI
             if (!AppSettings.ShowMergeCommits && AppSettings.ShowRevisionGridGraphColumn)
             {
                 AppSettings.ShowMergeCommits = true;
-                ForceRefreshRevisions();
+                PerformRefreshRevisions();
             }
             else
             {
