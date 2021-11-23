@@ -101,6 +101,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                 });
         }
 
+#if !DEBUG
+        [Ignore("This test is unstable in AppVeyor")]
+#endif
         [Test]
         public void Filters_should_behave_as_expected()
         {
