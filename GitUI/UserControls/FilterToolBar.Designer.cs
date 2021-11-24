@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using GitUI.CommandsDialogs;
 
 namespace GitUI.UserControls
 {
@@ -21,7 +22,7 @@ namespace GitUI.UserControls
             this.tsmiHash = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiDiffContainsFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.tsbtnAdvancedFilter = new System.Windows.Forms.ToolStripButton();
+            this.tsbtnAdvancedFilter = new GitUI.CommandsDialogs.ToggleToolStripPushButton();
             this.tssbtnShowBranches = new System.Windows.Forms.ToolStripSplitButton();
             this.tsmiShowBranchesAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowBranchesCurrent = new System.Windows.Forms.ToolStripMenuItem();
@@ -264,12 +265,12 @@ namespace GitUI.UserControls
         private ToolStripMenuItem tsmiAuthorFilter;
         private ToolStripMenuItem tsmiDiffContainsFilter;
         private ToolStripMenuItem tsmiHash;
-        private GitUI.CommandsDialogs.ToggleToolStripPushButton tsmiShowReflogs;
-        private GitUI.CommandsDialogs.ToggleToolStripPushButton tsmiShowFirstParent;
+        private ToggleToolStripPushButton tsmiShowReflogs;
+        private ToggleToolStripPushButton tsmiShowFirstParent;
         private ToolStripTextBox tstxtRevisionFilter;
         private ToolStripLabel tslblRevisionFilter;
         private ToolStripSeparator toolStripSeparator19;
-        private ToolStripButton tsbtnAdvancedFilter;
+        private ToggleToolStripPushButton tsbtnAdvancedFilter;
         private ToolStripSplitButton tssbtnShowBranches;
         private ToolStripMenuItem tsmiShowBranchesAll;
         private ToolStripMenuItem tsmiShowBranchesCurrent;
