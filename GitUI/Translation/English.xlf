@@ -9226,7 +9226,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
-        <source>First: a/</source>
+        <source>First: A </source>
         <target />
       </trans-unit>
       <trans-unit id="_multipleDescription.Text">
@@ -9246,7 +9246,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
-        <source>Second: b/</source>
+        <source>Second: B </source>
         <target />
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -10568,12 +10568,8 @@ Select this commit to populate the full message.</source>
         <source>{0:Delete file|Delete files}</source>
         <target />
       </trans-unit>
-      <trans-unit id="_diffBaseToB.Text">
-        <source>Unique diff BASE with b/</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_diffCommonBase.Text">
-        <source>Common diff with BASE a/</source>
+      <trans-unit id="_diffBaseWith.Text">
+        <source>Diff BASE with</source>
         <target />
       </trans-unit>
       <trans-unit id="_diffRange.Text">
@@ -10585,7 +10581,7 @@ Select this commit to populate the full message.</source>
         <target />
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
-        <source>Diff with a/</source>
+        <source>Diff with A </source>
         <target />
       </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepository.Text">

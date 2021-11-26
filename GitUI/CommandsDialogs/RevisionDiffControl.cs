@@ -30,8 +30,8 @@ namespace GitUI.CommandsDialogs
             new("Are you sure you want to delete the selected file(s)?");
         private readonly TranslationString _deleteFailed = new("Delete file failed");
         private readonly TranslationString _multipleDescription = new("<multiple>");
-        private readonly TranslationString _selectedRevision = new("Second: b/");
-        private readonly TranslationString _firstRevision = new("First: a/");
+        private readonly TranslationString _selectedRevision = new("Second: B ");
+        private readonly TranslationString _firstRevision = new("First: A ");
 
         private readonly TranslationString _resetSelectedChangesText =
             new("Are you sure you want to reset all selected files to {0}?");
