@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -55,7 +56,9 @@ namespace GitCommands.Settings
                 CheckCharacters = false
             };
 
-            using var xr = XmlReader.Create(fileName, readerSettings);
+            // StreamReader required for \\wsl$\ that is an illegal URI
+            using StreamReader sr = new(fileName);
+            using XmlReader xr = XmlReader.Create(sr, readerSettings);
             try
             {
                 _encodedNameMap.ReadXml(xr);
