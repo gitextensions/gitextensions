@@ -12,6 +12,8 @@ namespace GitCommands
     {
         private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
         private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
+
+        // Windows build 21354 supports wsl.localhost too, not supported for WSL Git
         private const string WslPrefix = @"\\wsl$\";
 
         public static readonly char PosixDirectorySeparatorChar = '/';
@@ -232,7 +234,7 @@ namespace GitCommands
         /// <returns>The path in Windows format with native file separators.</returns>
         public static string GetWindowsPath(string? path, string? wslDistro)
         {
-            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(wslDistro))
+            if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(wslDistro) || path.StartsWith($"{WslPrefix}"))
             {
                 return path?.ToNativePath() ?? "";
             }
