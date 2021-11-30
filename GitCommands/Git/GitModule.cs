@@ -329,6 +329,7 @@ namespace GitCommands
         /// See https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-pathltpathgt.
         /// </summary>
         /// <param name="relativePath">A path relative to the .git directory.</param>
+        /// <returns>An absolute path in Windows format.</returns>
         public string ResolveGitInternalPath(string relativePath)
         {
             GitArgumentBuilder args = new("rev-parse")
@@ -336,16 +337,14 @@ namespace GitCommands
                 "--git-path",
                 relativePath.Quote()
             };
-            var gitPath = _gitExecutable.GetOutput(args);
+            string gitPath = _gitExecutable.GetOutput(args).Trim();
 
-            var systemPath = GetWindowsPath(gitPath).Trim();
-
-            if (systemPath.StartsWith(".git\\"))
+            if (gitPath.StartsWith(".git/"))
             {
-                systemPath = Path.Combine(GetGitDirectory(), systemPath.Substring(".git\\".Length));
+                gitPath = Path.Combine(GetGitDirectory(), gitPath[".git/".Length..]);
             }
 
-            return systemPath;
+            return GetWindowsPath(gitPath);
         }
 
         private string? _gitCommonDirectory;
