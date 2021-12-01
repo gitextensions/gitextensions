@@ -145,10 +145,6 @@ This action will be performed without warning while checking out branch.</source
         <source>Show author's avatar in the commit info view</source>
         <target />
       </trans-unit>
-      <trans-unit id="_authorDateSortWarningTooltip.Text">
-        <source>Sorting by author date may delay rendering of the revision graph.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_avatarProviderTooltip.Text">
         <source>The avatar provider defines the source for user-defined avatar images.
 The "Default" provider uses GitHub and Gravatar,
@@ -172,6 +168,10 @@ Click this info icon for more details.</source>
 Click this info icon for more details.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_revisionSortWarningTooltip.Text">
+        <source>Sorting revisions may delay rendering of the revision graph.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
         <source>Auto scale user interface when high DPI is used</source>
         <target />
@@ -186,10 +186,6 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="chkShowRepoCurrentBranch.Text">
         <source>Show current branch names in the dashboard and the recent repositories dropdown menu</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="chkSortByAuthorDate.Text">
-        <source>Sort by author date</source>
         <target />
       </trans-unit>
       <trans-unit id="downloadDictionary.Text">
@@ -238,6 +234,10 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="lblNoImageService.Text">
         <source>Fallback generated avatar style</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblRevisionsSortBy.Text">
+        <source>Sort revisions by</source>
         <target />
       </trans-unit>
       <trans-unit id="lblSpellingDictionary.Text">
@@ -9689,7 +9689,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowArtificialCommits.Text">
-        <source>Show artificial c&amp;ommits</source>
+        <source>Show artificial commits</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowCurrentBranchOnly.Text">
@@ -9730,6 +9730,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
         <source>Highlight selected branch (until refresh)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="TopoOrder.Text">
+        <source>Arrange commits by t&amp;opo order (ancestor order)</source>
         <target />
       </trans-unit>
       <trans-unit id="_quickSearchQuickHelp.Text">

@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _noDictFile = new("None");
         private readonly TranslationString _noDictFilesFound = new("No dictionary files found in: {0}");
         private readonly TranslationString _noImageServiceTooltip = new($"A default image, if the provider has no image for the email address.\r\n\r\nClick this info icon for more details.");
-        private readonly TranslationString _authorDateSortWarningTooltip = new("Sorting by author date may delay rendering of the revision graph.");
+        private readonly TranslationString _revisionSortWarningTooltip = new("Sorting revisions may delay rendering of the revision graph.");
         private readonly TranslationString _avatarProviderTooltip = new($"The avatar provider defines the source for user-defined avatar images.\r\nThe \"Default\" provider uses GitHub and Gravatar,\r\nthe \"Custom\" provider allows you to set custom provider URLs and\r\n\"None\" disables user-defined avatars.\r\n\r\nClick this info icon for more details.");
 
         public AppearanceSettingsPage()
@@ -30,6 +30,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Appearance";
             InitializeComplete();
 
+            FillComboBoxWithEnumValues<RevisionSortOrder>(_NO_TRANSLATE_cmbRevisionsSortBy);
             FillComboBoxWithEnumValues<GitRefsSortOrder>(_NO_TRANSLATE_cmbBranchesOrder);
             FillComboBoxWithEnumValues<GitRefsSortBy>(_NO_TRANSLATE_cmbBranchesSortBy);
             FillComboBoxWithEnumValues<AvatarProvider>(AvatarProvider);
@@ -50,9 +51,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.OnRuntimeLoad();
 
             ToolTip.SetToolTip(_NO_TRANSLATE_NoImageService, _noImageServiceTooltip.Text);
+            ToolTip.SetToolTip(RevisionSortOrderHelp, _revisionSortWarningTooltip.Text);
             ToolTip.SetToolTip(pictureAvatarHelp, _noImageServiceTooltip.Text);
             ToolTip.SetToolTip(avatarProviderHelp, _avatarProviderTooltip.Text);
-            chkSortByAuthorDate.ToolTipText = _authorDateSortWarningTooltip.Text;
+            RevisionSortOrderHelp.Size = DpiUtil.Scale(RevisionSortOrderHelp.Size);
             pictureAvatarHelp.Size = DpiUtil.Scale(pictureAvatarHelp.Size);
             avatarProviderHelp.Size = DpiUtil.Scale(avatarProviderHelp.Size);
 
@@ -83,7 +85,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
             ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
-            chkSortByAuthorDate.Checked = AppSettings.SortByAuthorDate;
+            _NO_TRANSLATE_cmbRevisionsSortBy.SelectedIndex = (int)AppSettings.RevisionSortOrder;
             AvatarProvider.SelectedValue = AppSettings.AvatarProvider;
             _NO_TRANSLATE_NoImageService.SelectedValue = AppSettings.AvatarFallbackType;
             txtCustomAvatarTemplate.Text = AppSettings.CustomAvatarTemplate;
@@ -149,7 +151,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
             AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
             AppSettings.CustomAvatarTemplate = txtCustomAvatarTemplate.Text;
-            AppSettings.SortByAuthorDate = chkSortByAuthorDate.Checked;
+            AppSettings.RevisionSortOrder = (RevisionSortOrder)_NO_TRANSLATE_cmbRevisionsSortBy.SelectedIndex;
             AppSettings.RefsSortOrder = (GitRefsSortOrder)_NO_TRANSLATE_cmbBranchesOrder.SelectedIndex;
             AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
 

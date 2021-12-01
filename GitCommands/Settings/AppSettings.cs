@@ -19,6 +19,14 @@ using Microsoft.Win32;
 
 namespace GitCommands
 {
+    public enum CommitInfoPosition
+    {
+        // DO NOT RENAME THESE -- doing so will break user preferences
+        BelowList = 0,
+        LeftwardFromList = 1,
+        RightwardFromList = 2
+    }
+
     public enum LocalChangesAction
     {
         // DO NOT RENAME THESE -- doing so will break user preferences
@@ -28,13 +36,12 @@ namespace GitCommands
         Stash
     }
 
-    public enum TruncatePathMethod
+    public enum RevisionSortOrder
     {
         // DO NOT RENAME THESE -- doing so will break user preferences
-        None,
-        Compact,
-        TrimStart,
-        FileNameOnly
+        GitDefault,
+        AuthorDate,
+        Topology
     }
 
     public enum ShorteningRecentRepoPathStrategy
@@ -45,11 +52,13 @@ namespace GitCommands
         MiddleDots
     }
 
-    public enum CommitInfoPosition
+    public enum TruncatePathMethod
     {
-        BelowList = 0,
-        LeftwardFromList = 1,
-        RightwardFromList = 2
+        // DO NOT RENAME THESE -- doing so will break user preferences
+        None,
+        Compact,
+        TrimStart,
+        FileNameOnly
     }
 
     public static class AppSettings
@@ -524,10 +533,10 @@ namespace GitCommands
             set => SetBool("showgitstatusforartificialcommits", value);
         }
 
-        public static bool SortByAuthorDate
+        public static RevisionSortOrder RevisionSortOrder
         {
-            get => GetBool("sortbyauthordate", false);
-            set => SetBool("sortbyauthordate", value);
+            get => GetEnum("RevisionSortOrder", RevisionSortOrder.GitDefault);
+            set => SetEnum("RevisionSortOrder", value);
         }
 
         public static bool CommitInfoShowContainedInBranches => CommitInfoShowContainedInBranchesLocal ||
