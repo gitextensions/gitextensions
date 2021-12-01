@@ -1039,12 +1039,6 @@ namespace GitUI
 
             static string GetItemImageKey(GitItemStatus gitItemStatus)
             {
-                if (!gitItemStatus.IsNew && !gitItemStatus.IsDeleted && !gitItemStatus.IsTracked && !gitItemStatus.IsRangeDiff)
-                {
-                    // Illegal flag combinations or no flags set?
-                    return nameof(Images.FileStatusUnknown);
-                }
-
                 if (gitItemStatus.IsDeleted)
                 {
                     return gitItemStatus.DiffStatus switch
@@ -1110,7 +1104,7 @@ namespace GitUI
                     };
                 }
 
-                if (gitItemStatus.IsChanged)
+                if (gitItemStatus.IsChanged || (gitItemStatus.IsRenamed && gitItemStatus.RenameCopyPercentage != "100"))
                 {
                     return gitItemStatus.DiffStatus switch
                     {
@@ -1124,37 +1118,29 @@ namespace GitUI
 
                 if (gitItemStatus.IsRenamed)
                 {
-                    return gitItemStatus.RenameCopyPercentage == "100"
-                        ? gitItemStatus.DiffStatus switch
-                        {
-                            DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRenamedOnlyA),
-                            DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRenamedOnlyB),
-                            DiffBranchStatus.SameChange => nameof(Images.FileStatusRenamedSame),
-                            DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRenamedUnequal),
-                            _ => nameof(Images.FileStatusRenamed)
-                        }
-                        : gitItemStatus.DiffStatus switch
-                        {
-                            DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusModifiedOnlyA),
-                            DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusModifiedOnlyB),
-                            DiffBranchStatus.SameChange => nameof(Images.FileStatusModifiedSame),
-                            DiffBranchStatus.UnequalChange => nameof(Images.FileStatusModifiedUnequal),
-                            _ => nameof(Images.FileStatusModified)
-                        };
+                    return gitItemStatus.DiffStatus switch
+                    {
+                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusRenamedOnlyA),
+                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusRenamedOnlyB),
+                        DiffBranchStatus.SameChange => nameof(Images.FileStatusRenamedSame),
+                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusRenamedUnequal),
+                        _ => nameof(Images.FileStatusRenamed)
+                    };
                 }
 
                 if (gitItemStatus.IsCopied)
                 {
                     return gitItemStatus.DiffStatus switch
-                        {
-                            DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusCopiedOnlyA),
-                            DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusCopiedOnlyB),
-                            DiffBranchStatus.SameChange => nameof(Images.FileStatusCopiedSame),
-                            DiffBranchStatus.UnequalChange => nameof(Images.FileStatusCopiedUnequal),
-                            _ => nameof(Images.FileStatusCopied)
-                        };
+                    {
+                        DiffBranchStatus.OnlyAChange => nameof(Images.FileStatusCopiedOnlyA),
+                        DiffBranchStatus.OnlyBChange => nameof(Images.FileStatusCopiedOnlyB),
+                        DiffBranchStatus.SameChange => nameof(Images.FileStatusCopiedSame),
+                        DiffBranchStatus.UnequalChange => nameof(Images.FileStatusCopiedUnequal),
+                        _ => nameof(Images.FileStatusCopied)
+                    };
                 }
 
+                // Illegal flag combinations or no flags set?
                 return nameof(Images.FileStatusUnknown);
             }
         }
