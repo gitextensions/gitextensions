@@ -72,7 +72,7 @@ namespace GitUI.BranchTreePanel
                 Dictionary<string, BaseBranchNode> pathToNodes = new();
 
                 List<RemoteRepoNode> enabledRemoteRepoNodes = new();
-                var remoteByName = (await Module.GetRemotesAsync().ConfigureAwaitRunInline()).ToDictionary(r => r.Name);
+                Dictionary<string, Remote> remoteByName = (await Module.GetRemotesAsync().ConfigureAwaitRunInline()).ToDictionary(r => r.Name);
 
                 ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
 
@@ -101,7 +101,7 @@ namespace GitUI.BranchTreePanel
                 }
 
                 // Create nodes for enabled remotes without branches
-                var enabledRemotesNoBranches = remotesManager.GetEnabledRemoteNamesWithoutBranches();
+                var enabledRemotesNoBranches = GetEnabledRemoteNamesWithoutBranches(branches, remoteByName);
                 foreach (var remoteName in enabledRemotesNoBranches)
                 {
                     if (remoteByName.TryGetValue(remoteName, out var remote))
@@ -145,6 +145,17 @@ namespace GitUI.BranchTreePanel
                     }
 
                     return new BasePathNode(tree, parentPath);
+                }
+
+                IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches(IReadOnlyList<IGitRef> branches, Dictionary<string, Remote> remoteByName)
+                {
+                    HashSet<string> remotesWithBranches = branches
+                        .Select(branch => branch.Name.SubstringUntil('/'))
+                        .ToHashSet();
+
+                    HashSet<string> allRemotes = remoteByName.Select(kv => kv.Value.Name).ToHashSet();
+
+                    return allRemotes.Except(remotesWithBranches).ToList();
                 }
             }
 
