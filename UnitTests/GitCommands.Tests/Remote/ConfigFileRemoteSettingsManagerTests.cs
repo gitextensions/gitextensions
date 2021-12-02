@@ -389,30 +389,6 @@ namespace GitCommandsTests.Remote
         }
 
         [Test]
-        public void GetEnabledRemotesNameWithoutBranches_returns_enabled_remotes_without_branches_only()
-        {
-            string enabledRemoteNameWithBranches = "enabledRemote1";
-            string enabledRemoteNameNoBranches = "enabledRemote2";
-            string disabledRemoteName = "disabledRemote";
-
-            _module.GetRemoteNames().Returns(x => new[] { enabledRemoteNameWithBranches, enabledRemoteNameNoBranches });
-
-            var refs = new[]
-            {
-                CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", $"refs/remotes/{enabledRemoteNameWithBranches}/develop", $"{enabledRemoteNameWithBranches}"),
-            };
-
-            _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
-
-            List<IConfigSection> sections = new() { new ConfigSection($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{disabledRemoteName}", true) };
-            _configFile.GetConfigSections().Returns(x => sections);
-
-            var enabledRemotesNoBranches = _remotesManager.GetEnabledRemoteNamesWithoutBranches();
-            Assert.AreEqual(1, enabledRemotesNoBranches.Count);
-            Assert.AreEqual(enabledRemoteNameNoBranches, enabledRemotesNoBranches[0]);
-        }
-
-        [Test]
         public void EnabledRemoteExists_returns_true_for_enabled_remotes_only()
         {
             string enabledRemoteName = "enabledRemote";

@@ -80,11 +80,6 @@ namespace GitCommands.Remotes
         /// Retrieves enabled remote names.
         /// </summary>
         IReadOnlyList<string> GetEnabledRemoteNames();
-
-        /// <summary>
-        /// Retrieves enabled remote names of remotes without branches (i.e. that require a fetch).
-        /// </summary>
-        IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches();
     }
 
     public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
@@ -196,20 +191,6 @@ namespace GitCommands.Remotes
         public IReadOnlyList<string> GetEnabledRemoteNames()
         {
             return GetModule().GetRemoteNames();
-        }
-
-        /// <summary>
-        /// Retrieves enabled remote names of remotes without branches (i.e. that require a fetch).
-        /// </summary>
-        public IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches()
-        {
-            HashSet<string> remotesWithBranches = GetModule().GetRefs(RefsFilter.Remotes)
-                .Select(branch => branch.Name.SubstringUntil('/'))
-                .ToHashSet();
-
-            HashSet<string> allRemotes = GetEnabledRemoteNames().ToHashSet();
-
-            return allRemotes.Except(remotesWithBranches).ToList();
         }
 
         /// <summary>
