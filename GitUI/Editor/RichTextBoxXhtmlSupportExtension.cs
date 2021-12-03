@@ -1074,7 +1074,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 //--------------------------------
                 for (int i = from; i < to; i++)
                 {
-                    // (try to) select one character
+                    // try to select one visible character (RichTextBox returns a string, can be empty, may contain more than what is visible)
                     rtb.Select(i, 1);
                     string selectedText = rtb.SelectedText;
 
