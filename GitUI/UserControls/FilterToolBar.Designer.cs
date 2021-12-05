@@ -72,7 +72,7 @@ namespace GitUI.UserControls
             this.toolStripLabel1.Name = "toolStripLabel1";
             this.toolStripLabel1.Size = new System.Drawing.Size(58, 22);
             this.toolStripLabel1.Tag = "ToolBar_group:Branch filter";
-            this.toolStripLabel1.Text = "Branches:";
+            this.toolStripLabel1.Text = "&Branches:";
             this.toolStripLabel1.ToolTipText = "Branch filter";
             // 
             // tsbtnAdvancedFilter
@@ -129,7 +129,7 @@ namespace GitUI.UserControls
             this.tsmiShowReflogs.Image = global::GitUI.Properties.Images.Book;
             this.tsmiShowReflogs.Name = "tsmiShowReflogs";
             this.tsmiShowReflogs.Size = new System.Drawing.Size(23, 22);
-            this.tsmiShowReflogs.Text = "Reflogs";
+            this.tsmiShowReflogs.Text = "R&eflogs";
             this.tsmiShowReflogs.ToolTipText = "Show reflogs";
             this.tsmiShowReflogs.Click += new System.EventHandler(this.tsmiShowReflogs_Click);
             // 
@@ -190,7 +190,7 @@ namespace GitUI.UserControls
             this.tslblRevisionFilter.Name = "tslblRevisionFilter";
             this.tslblRevisionFilter.Size = new System.Drawing.Size(36, 22);
             this.tslblRevisionFilter.Tag = "ToolBar_group:Text filter";
-            this.tslblRevisionFilter.Text = "Filter:";
+            this.tslblRevisionFilter.Text = "&Filter:";
             this.tslblRevisionFilter.ToolTipText = "Text filter";
             // 
             // tstxtRevisionFilter
