@@ -48,11 +48,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         // Timestamps to schedule status updates, limit the update interval dynamically
         // Note that TickCount wraps after 25 days uptime, always compare diff
+
+        // Next scheduled update time
         private int _nextUpdateTime;
+
+        // Earliest time for an scheduled update (interactive requests bypasses this)
         private int _nextEarliestTime;
 
-        // Track changes detected (used while command is running)
-        private bool _pendingUpdate;
         private GitStatusMonitorState _currentStatus;
 
         public bool Active
@@ -184,9 +186,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _statusSequence.Dispose();
         }
 
-        private bool GitDirWatcherEnableRaisingEvents()
+        private void EnableRaisingEvents()
         {
-            return Directory.Exists(_gitDirWatcher.Path)
+            _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
+            _gitDirWatcher.EnableRaisingEvents = Directory.Exists(_gitDirWatcher.Path)
                     && !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
         }
 
@@ -229,27 +232,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                     case GitStatusMonitorState.Running:
                         {
-                            if (prevStatus == GitStatusMonitorState.Inactive)
+                            if (prevStatus == GitStatusMonitorState.Inactive || prevStatus == GitStatusMonitorState.Running)
                             {
-                                // Timer is already running, schedule new update
-                                ScheduleNextInteractiveTime();
+                                // Timer is already running, schedule a new command only if a command is not running,
+                                // to avoid that many commands are started (and cancelled) if quickly switching Inactive/Running
+                                // If data has changed when Inactive it should be updated by normal means
+                                if (!_commandIsRunning)
+                                {
+                                    ScheduleNextInteractiveTime();
+                                }
+
                                 break;
                             }
 
-                            _workTreeWatcher.EnableRaisingEvents = Directory.Exists(_workTreeWatcher.Path);
-                            _gitDirWatcher.EnableRaisingEvents = GitDirWatcherEnableRaisingEvents();
+                            EnableRaisingEvents();
 
-                            lock (_statusSequence)
-                            {
-                                // An interactive update will be requested separately
-                                _nextUpdateTime
-                                    = _nextEarliestTime
-                                    = Environment.TickCount + FileChangedUpdateDelay;
-                                _pendingUpdate = true;
-                                _commandIsRunning = false;
-                                _statusSequence.CancelCurrent();
-                            }
-
+                            // An interactive update may be requested separately
+                            ScheduleNextInteractiveTime(FileChangedUpdateDelay);
                             _timerRefresh.Start();
                         }
 
@@ -316,9 +315,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void GitUICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
             {
-                CurrentStatus = GitStatusMonitorState.Inactive;
-                CurrentStatus = GitStatusMonitorState.Running;
-                _isFirstPostRepoChanged = true;
+                lock (_statusSequence)
+                {
+                    // First time after open a repo, trigger an update with locked buffers (to speed up subsequent updates)
+                    _isFirstPostRepoChanged = true;
+                }
             }
         }
 
@@ -390,17 +391,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             else if (CurrentStatus == GitStatusMonitorState.Inactive)
             {
+                // Schedule a new update
                 CurrentStatus = GitStatusMonitorState.Running;
             }
 
-            if (_nextUpdateTime - Environment.TickCount > 0)
+            int commandStartTime = Environment.TickCount;
+            if (_nextUpdateTime - commandStartTime > 0)
             {
                 return;
             }
 
             IGitModule module;
             CancellationToken cancelToken;
-            int commandStartTime;
+            bool noLocks;
 
             lock (_statusSequence)
             {
@@ -415,39 +418,35 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     return;
                 }
 
-                _workTreeWatcher.EnableRaisingEvents = true;
-                _gitDirWatcher.EnableRaisingEvents = GitDirWatcherEnableRaisingEvents();
+                EnableRaisingEvents();
 
                 // capture a consistent state in the main thread
                 module = Module;
                 cancelToken = _statusSequence.Next();
+                noLocks = !_isFirstPostRepoChanged;
 
                 // Schedule update every 5 min, even if we don't know that anything changed
-                _nextUpdateTime = Environment.TickCount + PeriodicUpdateInterval;
-                commandStartTime = Environment.TickCount;
-                _pendingUpdate = false;
+                _nextUpdateTime = commandStartTime + PeriodicUpdateInterval;
+                _nextEarliestTime = commandStartTime + MinUpdateInterval;
+                _isFirstPostRepoChanged = false;
                 _commandIsRunning = true;
             }
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
                     {
-                        bool isSuccess = false;
                         try
                         {
-                            var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default,
-                                noLocks: !_isFirstPostRepoChanged);
-                            _isFirstPostRepoChanged = false;
-                            var output = await module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
-                            IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
+                            GitExtUtils.ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: noLocks);
+                            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, cancellationToken: cancelToken).ConfigureAwait(false);
 
-                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-                            if (!ModuleHasChanged())
+                            if (result.ExitedSuccessfully && !ModuleHasChanged())
                             {
-                                isSuccess = !cancelToken.IsCancellationRequested;
-
                                 // Update callers also if cancelled, this is for the correct module
+                                string output = result.StandardOutput;
+                                IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
+
+                                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                                 GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(changedFiles));
                             }
                         }
@@ -467,22 +466,24 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         }
                         finally
                         {
-                            if (!ModuleHasChanged() && !cancelToken.IsCancellationRequested)
+                            lock (_statusSequence)
                             {
-                                lock (_statusSequence)
+                                if (_commandIsRunning && !ModuleHasChanged() && !cancelToken.IsCancellationRequested)
                                 {
-                                    if (isSuccess)
+                                    // Adjust the min time to next update
+                                    int endTime = Environment.TickCount;
+                                    int commandTime = endTime - commandStartTime;
+                                    int minDelay = Math.Max(MinUpdateInterval, 2 * commandTime);
+                                    _nextEarliestTime = endTime + minDelay;
+                                    if (_nextUpdateTime - commandStartTime < _nextEarliestTime - commandStartTime)
                                     {
-                                        // Adjust the min time to next update
-                                        var commandTime = Environment.TickCount - commandStartTime;
-                                        _nextEarliestTime = commandStartTime + Math.Max(MinUpdateInterval, 3 * commandTime);
-                                        if (_pendingUpdate)
-                                        {
-                                            // Schedule the update, a request is pending
-                                            _nextUpdateTime = _nextEarliestTime;
-                                        }
+                                        // Postpone the requested update
+                                        _nextUpdateTime = _nextEarliestTime;
                                     }
+                                }
 
+                                if (!cancelToken.IsCancellationRequested)
+                                {
                                     _commandIsRunning = false;
                                 }
                             }
@@ -508,35 +509,38 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             lock (_statusSequence)
             {
-                // If the previous status call hasn't exited yet,
-                // schedule new update when command is finished
-                _pendingUpdate = true;
-
-                var ticks = Environment.TickCount;
-                var currDelay = _nextUpdateTime - ticks;
-                if (delay < currDelay)
+                // Enforce a minimal time between updates, to not update too frequently
+                int ticks = Environment.TickCount;
+                int currDelay = _nextUpdateTime - ticks;
+                int minDelay = Math.Max(delay, _nextEarliestTime - ticks);
+                if (minDelay < currDelay)
                 {
-                    // Enforce a minimal time between updates, to not update too frequently
-                    var minDelay = _nextEarliestTime - ticks;
-                    _nextUpdateTime = ticks + Math.Max(delay, minDelay);
+                    _nextUpdateTime = ticks + minDelay;
                 }
             }
         }
 
         /// <summary>
         /// Schedule a status update from interactive changes (repo changed or refreshed)
+        /// Cancel any ongoing requests.
         /// A short delay is added.
         /// </summary>
-        private void ScheduleNextInteractiveTime()
+        /// <param name="delay">delay in milliseconds.</param>
+        private void ScheduleNextInteractiveTime(int delay = InteractiveUpdateDelay)
         {
             // Start commands, also if running already
             lock (_statusSequence)
             {
                 _commandIsRunning = false;
                 _statusSequence.CancelCurrent();
-                _nextUpdateTime
-                    = _nextEarliestTime
-                    = Environment.TickCount + InteractiveUpdateDelay;
+
+                int ticks = Environment.TickCount;
+                _nextEarliestTime = ticks + MinUpdateInterval;
+                int currDelay = _nextUpdateTime - ticks;
+                if (delay < currDelay)
+                {
+                    _nextUpdateTime = ticks + delay;
+                }
             }
         }
     }
