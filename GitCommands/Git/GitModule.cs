@@ -3610,10 +3610,7 @@ namespace GitCommands
                 return new[] { string.Empty };
             }
 
-            return messages.Select(cm =>
-                {
-                     return ReEncodeCommitMessage(cm);
-                });
+            return messages.Select(ReEncodeCommitMessage);
         }
 
         /// <summary>

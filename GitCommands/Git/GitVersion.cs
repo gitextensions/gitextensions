@@ -26,7 +26,7 @@ namespace GitCommands
         /// <summary>
         /// The oldest Git version without known incompatibilities.
         /// </summary>
-        public static readonly GitVersion LastFailVersion = new("2.15.2");
+        public static readonly GitVersion LastVersionWithoutKnownLimitations = new("2.15.2");
 
         private static readonly Dictionary<string, GitVersion> _current = new();
 
@@ -46,8 +46,9 @@ namespace GitCommands
             {
                 string output = new Executable(AppSettings.GitCommand).GetOutput("--version");
                 _current[gitIdentifiable] = new GitVersion(output);
-                if (_current[gitIdentifiable] < LastFailVersion)
+                if (_current[gitIdentifiable] < LastVersionWithoutKnownLimitations)
                 {
+                    // Report the last supported version rather than the last version without known issues
                     MessageBox.Show(null, $"{_current[gitIdentifiable]} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
