@@ -1068,15 +1068,21 @@ namespace GitUI.Editor.RichTextBoxExtension
             try
             {
                 //--------------------------------
-                // this is an inefficient method to get text format
-                // but RichTextBox doesn't provide another method to
-                // get something like an array of charformat and paraformat
+                // This is an inefficient method to get text format.
+                // But RichTextBox doesn't provide another method to
+                // get something like an array of charformat and paraformat.
                 //--------------------------------
                 for (int i = from; i < to; i++)
                 {
-                    // select one character
+                    // Try to select one visible character (RichTextBox returns a string, can be empty, may contain more than what is visible)
                     rtb.Select(i, 1);
-                    text.Append(rtb.SelectedText);
+                    string selectedText = rtb.SelectedText;
+
+                    // For every character of a link, the current RichTextBox returns the entire link (but should be the empty string). So, skip the links.
+                    if (!selectedText.StartsWith(LinkSeparator))
+                    {
+                        text.Append(selectedText);
+                    }
                 }
             }
             catch (Exception /*ex*/)
