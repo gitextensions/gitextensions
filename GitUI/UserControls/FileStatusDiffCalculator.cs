@@ -216,8 +216,8 @@ namespace GitUI
                 secondRev: fileStatusDescs[0].SecondRev,
                 summary: fileStatusDescs[0].Summary,
                 statuses: allAToB,
-                baseA: fileStatusDescs[0].BaseA,
-                baseB: fileStatusDescs[0].BaseB);
+                baseA: baseA,
+                baseB: baseB);
 
             return fileStatusDescs;
 

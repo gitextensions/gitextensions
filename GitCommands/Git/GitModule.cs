@@ -2391,12 +2391,13 @@ namespace GitCommands
             string extraDiffArguments,
             CancellationToken cancellationToken)
         {
-            if (firstId.IsArtificial
-                || secondId.IsArtificial
-                || (firstBase?.IsArtificial ?? false)
-                || (secondBase?.IsArtificial ?? false))
+            // range-diff is not possible for artificial commits, use HEAD
+            string first = firstId.IsArtificial ? "HEAD" : firstId.ToString();
+            string second = secondId.IsArtificial ? "HEAD" : secondId.ToString();
+
+            if ((firstBase?.IsArtificial is true) || (secondBase?.IsArtificial is true))
             {
-                throw new ArgumentException($"Tried to get range diff for artificial commit: {firstId} and file: {secondId}");
+                throw new ArgumentException($"Cannot get range diff for artificial commit base of A: {firstBase} or base of B: {secondBase}.");
             }
 
             // Supported since Git 2.19 (checks when adding the command)
@@ -2406,7 +2407,7 @@ namespace GitCommands
                 "--find-copies",
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 extraDiffArguments,
-                { firstBase is null || secondBase is null,  $"{firstId}...{secondId}", $"{firstBase}..{firstId} {secondBase}..{secondId}" }
+                { firstBase is null || secondBase is null,  $"{first}...{second}", $"{firstBase}..{first} {secondBase}..{second}" }
             };
 
             ExecutionResult result = await _gitExecutable.ExecuteAsync(
