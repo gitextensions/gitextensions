@@ -328,7 +328,7 @@ namespace GitUI.CommitInfo
 
                 if (_revision.Body is null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
                 {
-                    _commitDataManager.UpdateBody(data, out _);
+                    _commitDataManager.UpdateBody(data, appendNotesOnly: _revision.Body is not null, out _);
                     _revision.Body = data.Body;
                     _revision.HasNotes = true;
                 }

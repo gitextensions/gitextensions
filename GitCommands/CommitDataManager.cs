@@ -35,14 +35,15 @@ namespace GitCommands
         /// <summary>
         /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
         /// </summary>
-        void UpdateBody(CommitData commitData, out string? error);
+        void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error);
     }
 
     public sealed class CommitDataManager : ICommitDataManager
     {
         private const string CommitDataFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B";
         private const string CommitDataWithNotesFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
-        private const string BodyAndNotesFormat = "%H%n%B%nNotes:%n%-N";
+        private const string BodyAndNotesFormat = "%B%nNotes:%n%-N";
+        private const string NotesFormat = "%-N";
 
         private readonly Func<IGitModule> _getModule;
 
@@ -52,36 +53,35 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public void UpdateBody(CommitData commitData, out string? error)
+        public void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error)
         {
-            if (!TryGetCommitLog(commitData.ObjectId.ToString(), BodyAndNotesFormat, out error, out var data, cache: false))
+            if (!TryGetCommitLog(commitData.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out error, out var data, cache: false))
             {
                 return;
             }
 
-            // $ git log --pretty="format:%H%n%e%n%B%nNotes:%n%-N" -1
-            // 8c601c9bb040e575af75c9eee6e14441e2a1b207
-            //
-            // Remove redundant parameter
-            //
-            // The sha1 parameter must match CommitData.Guid.
-            // There's no point passing it. It only creates opportunity for bugs.
-            //
-            // Notes:
+            if (appendNotesOnly)
+            {
+                if (!string.IsNullOrWhiteSpace(data))
+                {
+                    commitData.Body += $"\nNotes:\n    {GetModule().ReEncodeCommitMessage(data)}";
+                }
+            }
+            else
+            {
+                // $ git log --pretty="format:%B%nNotes:%n%-N" -1
+                // Remove redundant parameter
+                //
+                // The sha1 parameter must match CommitData.Guid.
+                // There's no point passing it. It only creates opportunity for bugs.
+                //
+                // Notes:
 
-            // commit id
-            // commit message
-            // ...
+                var lines = data.Split(Delimiters.LineFeed);
 
-            var lines = data.Split(Delimiters.LineFeed);
-
-            var guid = lines[0];
-            var message = ProcessDiffNotes(startIndex: 1, lines);
-
-            Debug.Assert(commitData.ObjectId.ToString() == guid, "Guid in response doesn't match that of request");
-
-            // Commit message is not re-encoded by git when format is given
-            commitData.Body = GetModule().ReEncodeCommitMessage(message);
+                // Commit message is not re-encoded by Git when format is given
+                commitData.Body = GetModule().ReEncodeCommitMessage(ProcessDiffNotes(startIndex: 0, lines));
+            }
         }
 
         /// <inheritdoc />
@@ -231,6 +231,7 @@ namespace GitCommands
             int endIndex = lines.Length - 1;
             if (lines[endIndex] == "Notes:")
             {
+                // No Notes, ignore
                 endIndex--;
             }
 
