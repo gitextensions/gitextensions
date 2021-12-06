@@ -7,7 +7,7 @@
     <PackageReference Update="AppInsights.WindowsDesktop" Version="2.17.10" />
     <PackageReference Update="Ben.Demystifier" Version="0.4.1" />
     <PackageReference Update="ConEmu.Core" Version="21.7.18" />
-    <PackageReference Update="DotnetRuntimeBootstrapper" Version="1.1.2" />
+    <PackageReference Update="DotnetRuntimeBootstrapper" Version="2.0.2" />
     <PackageReference Update="EnvDTE" Version="16.10.31320.204" />
     <PackageReference Update="ExCSS" Version="4.1.0" />
     <PackageReference Update="GitInfo" Version="2.1.2" />
