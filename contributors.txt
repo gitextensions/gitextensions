@@ -170,3 +170,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/10/22, calebnhay, Caleb N. Hay, caleb(at)calebnhay(dot)com
 2021/10/28, matthiaslischka, Matthias Lischka, matthias.lischka(at)gmx.at
 2021/11/13, h0lg, Holger Schmidt, leroyz.mailaccount(at)gmx.net
+2021/12/06, Tyrrrz, Alexey Golub, tyrrrz(at)gmail.com

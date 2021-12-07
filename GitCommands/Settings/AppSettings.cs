@@ -61,11 +61,7 @@ namespace GitCommands
         public static readonly string ApplicationId = ApplicationName.Replace(" ", "");
         public static readonly string SettingsFileName = ApplicationId + ".settings";
         public static readonly string UserPluginsDirectoryName = "UserPlugins";
-
-        // Under DotnetRuntimeBootstrapper this points to C:\Program Files\dotnet\dotnet.exe
-        // whereas we need our executable
-        private static string _applicationExecutablePath = Assembly.GetEntryAssembly().Location.Replace(".dll", ".exe");
-
+        private static string _applicationExecutablePath = Application.ExecutablePath;
         private static string? _documentationBaseUrl;
 
         public static Lazy<string?> ApplicationDataPath { get; private set; }

@@ -20,13 +20,11 @@
     <Nullable>annotations</Nullable>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+  <ItemGroup>
     <PackageReference Include="DotnetRuntimeBootstrapper">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="GitInfo">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
