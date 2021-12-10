@@ -2134,6 +2134,16 @@ namespace GitUI.CommandsDialogs
             UICommands.RepoChangedNotifier.Notify();
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            return !IsDesignMode && HotkeysEnabled
+                && (base.ProcessCmdKey(ref msg, keyData) // upstream
+                    || (!GitExtensionsControl.IsTextEditKey(keyData) // downstream (without keys for quick search)
+                        && (RevisionGridControl.ProcessHotkey(keyData)
+                            || (CommitInfoTabControl.SelectedTab == DiffTabPage && revisionDiff.ProcessHotkey(keyData))
+                            || (CommitInfoTabControl.SelectedTab == TreeTabPage && fileTree.ProcessHotkey(keyData)))));
+        }
+
         protected override CommandStatus ExecuteCommand(int cmd)
         {
             switch ((Command)cmd)

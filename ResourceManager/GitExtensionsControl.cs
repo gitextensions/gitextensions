@@ -74,6 +74,18 @@ namespace ResourceManager
 
         #region Hotkeys
 
+        /// <summary>Checks if a hotkey wants to handle the key and execute it.</summary>
+        public virtual bool ProcessHotkey(Keys keyData)
+        {
+            if (!HotkeysEnabled)
+            {
+                return false;
+            }
+
+            HotkeyCommand? hotkey = Hotkeys?.FirstOrDefault(hotkey => hotkey?.KeyData == keyData);
+            return hotkey is not null && ExecuteCommand(hotkey.CommandCode).Executed;
+        }
+
         /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>
         protected bool HotkeysEnabled { get; set; }
 
@@ -83,18 +95,7 @@ namespace ResourceManager
         /// <summary>Checks if a hotkey wants to handle the key before letting the message propagate.</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (HotkeysEnabled && Hotkeys is not null)
-            {
-                foreach (var hotkey in Hotkeys)
-                {
-                    if (hotkey is not null && hotkey.KeyData == keyData)
-                    {
-                        return ExecuteCommand(hotkey.CommandCode).Executed;
-                    }
-                }
-            }
-
-            return base.ProcessCmdKey(ref msg, keyData);
+            return ProcessHotkey(keyData) || base.ProcessCmdKey(ref msg, keyData);
         }
 
         protected Keys GetShortcutKeys(int commandCode)
