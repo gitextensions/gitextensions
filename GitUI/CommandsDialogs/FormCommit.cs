@@ -618,9 +618,12 @@ namespace GitUI.CommandsDialogs
             if (keyData == Keys.F5)
             {
                 RescanChanges();
+                return true;
             }
 
-            return base.ProcessCmdKey(ref msg, keyData);
+            return base.ProcessCmdKey(ref msg, keyData) // upstream
+                || (!IsDesignMode && HotkeysEnabled && !GitExtensionsControl.IsTextEditKey(keyData, multiLine: true) // downstream
+                    && SelectedDiff.ProcessHotkey(keyData));
         }
 
         public void LoadCustomDifftools()
