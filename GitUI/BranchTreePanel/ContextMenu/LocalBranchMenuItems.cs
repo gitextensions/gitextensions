@@ -6,7 +6,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
     internal class LocalBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
         where TNode : class, INode
     {
-        /// <summary> Keys of menu items only applying to inactive (i.e. not the current) branches.</summary>
+        /// <summary> Keys of menu items only applying to branches that are not currently checked out.</summary>
         internal static MenuItemKey[] InactiveBranchFilterKeys =
                 new[]
                 {

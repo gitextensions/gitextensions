@@ -14,20 +14,21 @@ namespace GitUI.BranchTreePanel
             public LocalBranchNode(Tree tree, in ObjectId? objectId, string fullPath, bool isCurrent, bool visible)
                 : base(tree, objectId, fullPath, visible, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
             {
-                IsActive = isCurrent;
+                IsCurrent = isCurrent;
             }
 
-            public bool IsActive { get; }
+            /// <summary>Indicates whether this is the currently checked-out branch.</summary>
+            public bool IsCurrent { get; }
 
-            protected override FontStyle GetFontStyle() => base.GetFontStyle() | (IsActive ? FontStyle.Bold : FontStyle.Regular);
+            protected override FontStyle GetFontStyle() => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
 
             public override bool Equals(object obj)
                 => base.Equals(obj)
                     && obj is LocalBranchNode localBranchNode
-                    && IsActive == localBranchNode.IsActive;
+                    && IsCurrent == localBranchNode.IsCurrent;
 
             public override int GetHashCode()
-                => base.GetHashCode() ^ IsActive.GetHashCode();
+                => base.GetHashCode() ^ IsCurrent.GetHashCode();
 
             internal override void OnDoubleClick()
             {

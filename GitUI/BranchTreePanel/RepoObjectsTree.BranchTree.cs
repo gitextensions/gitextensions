@@ -136,8 +136,8 @@ namespace GitUI.BranchTreePanel
                     return;
                 }
 
-                var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);
-                TreeViewNode.TreeView.SelectedNode = activeBranch?.TreeViewNode;
+                var currentBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsCurrent);
+                TreeViewNode.TreeView.SelectedNode = currentBranch?.TreeViewNode;
             }
         }
     }

@@ -112,19 +112,20 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            if ((contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not LocalBranchNode node)
+            if ((contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not LocalBranchNode localBranch)
             {
                 return;
             }
 
             _localBranchMenuItems.ForEach(t => t.Item.Visible = !areMultipleBranchesSelected // hide items if multiple branches are selected
+                && (!localBranch.IsCurrent // otherwise display all items for non-current branches
 
-                // otherwise display all items for inactive (i.e. not current) branches and hide those applyin gonly to inactive branches for the active/current branch
-                && (!node.IsActive || !LocalBranchMenuItems<LocalBranchNode>.InactiveBranchFilterKeys.Contains(t.Key)));
+                    // and hide those applying only to non-current branches for the current branch
+                    || !LocalBranchMenuItems<LocalBranchNode>.InactiveBranchFilterKeys.Contains(t.Key)));
 
-            _menuBranchCopyContextMenuItems.ForEach(x => x.Visible = node.Visible);
+            _menuBranchCopyContextMenuItems.ForEach(x => x.Visible = localBranch.Visible);
 
-            if (node.Visible && !areMultipleBranchesSelected)
+            if (localBranch.Visible && !areMultipleBranchesSelected)
             {
                 contextMenu.AddUserScripts(runScriptToolStripMenuItem, _scriptRunner.Execute);
             }

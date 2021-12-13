@@ -43,7 +43,7 @@ namespace GitUITests.BranchTreePanel
             // Arrange
             var group = CreateGenerator(_factory);
             new LocalBranchMenuItemsStrings().ApplyTo(group.Strings);
-            WithInactiveBranch_HasAllMenuItems(group);
+            WithNonCurrentBranch_HasAllMenuItems(group);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace GitUITests.BranchTreePanel
             // Arrange
             var group = CreateGenerator(_factory);
             new RemoteBranchMenuItemsStrings().ApplyTo(group.Strings);
-            WithInactiveBranch_HasAllMenuItems(group);
+            WithNonCurrentBranch_HasAllMenuItems(group);
         }
 
         [Test]
@@ -64,10 +64,10 @@ namespace GitUITests.BranchTreePanel
 
             // mock rename to keep the test simple
             group.Strings.Tooltips[MenuItemKey.Rename] = new TranslationString("Rename");
-            WithInactiveBranch_HasAllMenuItems(group);
+            WithNonCurrentBranch_HasAllMenuItems(group);
         }
 
-        private void WithInactiveBranch_HasAllMenuItems(MenuItemsGenerator<TestBranchNode> group)
+        private void WithNonCurrentBranch_HasAllMenuItems(MenuItemsGenerator<TestBranchNode> group)
         {
             // Act
             var menuItems = group.ToArray();
@@ -85,7 +85,7 @@ namespace GitUITests.BranchTreePanel
         }
 
         [Test]
-        public void WithActiveBranch_HasFilteredItems()
+        public void WithCurrentBranch_HasFilteredItems()
         {
             // Arrange
             LocalBranchMenuItems<TestBranchNode> generator = new(_factory);
