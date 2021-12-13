@@ -93,7 +93,7 @@ namespace GitUITests.BranchTreePanel
             // Act
             const int notFiltered = 2; // create branch, rename
             int expectedFiltered = expectedTotal - notFiltered;
-            var menuItems = generator.Where(t => LocalBranchMenuItems<TestBranchNode>.InactiveBranchFilterKeys.Contains(t.Key)).ToArray();
+            var menuItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
             Assert.AreEqual(menuItems.Count(), expectedFiltered);
             int testIndex = 0;
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Checkout));

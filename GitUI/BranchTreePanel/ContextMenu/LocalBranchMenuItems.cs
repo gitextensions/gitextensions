@@ -6,17 +6,9 @@ namespace GitUI.BranchTreePanel.ContextMenu
     internal class LocalBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
         where TNode : class, INode
     {
-        /// <summary> Keys of menu items only applying to branches that are not currently checked out.</summary>
-        internal static MenuItemKey[] InactiveBranchFilterKeys =
-                new[]
-                {
-                    MenuItemKey.GitRefCheckout,
-                    MenuItemKey.GitRefMerge,
-                    MenuItemKey.GitRefRebase,
-                    MenuItemKey.GitRefReset,
-                    MenuItemKey.GitRefActionsSeparator,
-                    MenuItemKey.Delete
-                };
+        /// <summary>Keys of local branch menu items applying to the currently checked out branch.
+        /// See <see cref="RepoObjectsTree.LocalBranchNode.IsCurrent"/> and <see cref="MenuItemsGenerator{TNode}"/>.</summary>
+        internal static MenuItemKey[] CurrentBranchItemKeys = new[] { MenuItemKey.GitRefCreateBranch, MenuItemKey.Rename };
 
         public LocalBranchMenuItems(IMenuItemFactory menuItemFactory) : base(menuItemFactory)
         {

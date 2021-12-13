@@ -119,9 +119,7 @@ namespace GitUI.BranchTreePanel
 
             _localBranchMenuItems.ForEach(t => t.Item.Visible = !areMultipleBranchesSelected // hide items if multiple branches are selected
                 && (!localBranch.IsCurrent // otherwise display all items for non-current branches
-
-                    // and hide those applying only to non-current branches for the current branch
-                    || !LocalBranchMenuItems<LocalBranchNode>.InactiveBranchFilterKeys.Contains(t.Key)));
+                    || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(t.Key))); // or only those applying to the current branch
 
             _menuBranchCopyContextMenuItems.ForEach(x => x.Visible = localBranch.Visible);
 
