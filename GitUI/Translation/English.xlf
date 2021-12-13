@@ -9036,7 +9036,7 @@ branch names, tag names)</source>
         <target />
       </trans-unit>
       <trans-unit id="_showSelectedBranchesOnly.Text">
-        <source>Filter the revision grid to show selected branches only.
+        <source>Filter the revision grid to show selected (underlined) branches only.
 Use Ctrl + left click in these branch trees to extend or narrow the selection.
 To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
         <target />
@@ -9162,7 +9162,7 @@ To reset the filter, right click the revision grid, select 'View' and then 'Show
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFilterLocalBranchInRevisionGrid.ToolTipText">
-        <source>Filter the revision grid to show selected branches only.
+        <source>Filter the revision grid to show selected (underlined) branches only.
 Use Ctrl + left click in these branch trees to extend or narrow the selection.
 To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
         <target />
@@ -9172,7 +9172,7 @@ To reset the filter, right click the revision grid, select 'View' and then 'Show
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText">
-        <source>Filter the revision grid to show selected branches only.
+        <source>Filter the revision grid to show selected (underlined) branches only.
 Use Ctrl + left click in these branch trees to extend or narrow the selection.
 To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
         <target />

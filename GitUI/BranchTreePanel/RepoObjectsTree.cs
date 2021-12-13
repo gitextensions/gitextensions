@@ -29,7 +29,7 @@ namespace GitUI.BranchTreePanel
         private readonly TranslationString _searchTooltip = new("Search");
 
         private readonly TranslationString _showSelectedBranchesOnly = new(
-            "Filter the revision grid to show selected branches only." +
+            "Filter the revision grid to show selected (underlined) branches only." +
             "\nUse Ctrl + left click in these branch trees to extend or narrow the selection." +
             "\nTo reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.");
 

@@ -41,8 +41,9 @@ namespace GitUI.BranchTreePanel
             {
                 base.ApplyStyle();
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.FolderClosed);
-                SetNodeFont(FontStyle.Italic);
             }
+
+            protected override FontStyle GetFontStyle() => base.GetFontStyle() | FontStyle.Italic;
         }
 
         // Node representing a submodule
@@ -137,15 +138,10 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-
-                if (IsCurrent)
-                {
-                    TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
-                }
-
-                // Note that status is applied also after the tree is created, when status is applied
-                ApplyStatus();
+                ApplyStatus(); // Note that status is applied also after the tree is created, when status is applied
             }
+
+            protected override FontStyle GetFontStyle() => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
 
             private void ApplyStatus()
             {

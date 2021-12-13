@@ -19,12 +19,7 @@ namespace GitUI.BranchTreePanel
 
             public bool IsActive { get; }
 
-            protected override void ApplyStyle()
-            {
-                base.ApplyStyle();
-
-                SetNodeFont(IsActive ? FontStyle.Bold : FontStyle.Regular);
-            }
+            protected override FontStyle GetFontStyle() => base.GetFontStyle() | (IsActive ? FontStyle.Bold : FontStyle.Regular);
 
             public override bool Equals(object obj)
                 => base.Equals(obj)

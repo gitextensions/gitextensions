@@ -414,15 +414,14 @@ namespace GitUI.BranchTreePanel
                 return DisplayText();
             }
 
-            protected void SetNodeFont(FontStyle style)
+            private void SetFont(FontStyle style)
             {
                 if (style == FontStyle.Regular)
                 {
                     // For regular, set to null to use the NativeTreeView font
                     if (TreeViewNode.NodeFont is not null)
                     {
-                        TreeViewNode.NodeFont.Dispose();
-                        TreeViewNode.NodeFont = null;
+                        ResetFont();
                     }
                 }
                 else
@@ -430,13 +429,18 @@ namespace GitUI.BranchTreePanel
                     // If current font doesn't have the input style, get rid of it
                     if (TreeViewNode.NodeFont is not null && !TreeViewNode.NodeFont.Style.HasFlag(style))
                     {
-                        TreeViewNode.NodeFont.Dispose();
-                        TreeViewNode.NodeFont = null;
+                        ResetFont();
                     }
 
                     // If non-null, our font is already valid, otherwise create a new one
                     TreeViewNode.NodeFont ??= new Font(AppSettings.Font, style);
                 }
+            }
+
+            private void ResetFont()
+            {
+                TreeViewNode.NodeFont.Dispose();
+                TreeViewNode.NodeFont = null;
             }
 
             protected void ApplyText()
@@ -449,9 +453,11 @@ namespace GitUI.BranchTreePanel
 
             protected virtual void ApplyStyle()
             {
-                SetNodeFont(FontStyle.Regular);
+                SetFont(GetFontStyle());
                 TreeViewNode.ToolTipText = string.Empty;
             }
+
+            protected virtual FontStyle GetFontStyle() => TreeViewNode.Checked ? FontStyle.Underline : FontStyle.Regular;
 
             internal virtual void OnSelected()
             {
@@ -496,7 +502,7 @@ namespace GitUI.BranchTreePanel
             protected internal void MultiSelect(bool select, bool includingDescendants = false)
             {
                 TreeViewNode.Checked = select;
-                TreeViewNode.BackColor = select ? SystemColors.GradientInactiveCaption : TreeViewNode.TreeView.BackColor;
+                ApplyStyle(); // toggle multi-selected node style
 
                 // recursively process descendants if required
                 if (includingDescendants && this.HasChildren())
