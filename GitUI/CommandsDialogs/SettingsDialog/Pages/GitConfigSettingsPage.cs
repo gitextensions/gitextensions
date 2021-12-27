@@ -332,5 +332,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 CommonLogic.FillEncodings(Global_FilesEncoding);
             }
         }
+
+        private void txtMergeToolPath_TextChanged(object sender, EventArgs e)
+        {
+            if (txtMergeToolPath.Focused && sender == txtMergeToolPath)
+            {
+                SuggestMergeToolCommand();
+            }
+        }
+
+        private void txtDiffToolPath_TextChanged(object sender, EventArgs e)
+        {
+            if (txtDiffToolPath.Focused && sender == txtDiffToolPath)
+            {
+                SuggestDiffToolCommand();
+            }
+        }
     }
 }
