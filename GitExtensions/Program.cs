@@ -11,6 +11,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.NBugReports;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
@@ -42,8 +43,8 @@ namespace GitExtensions
 
             AppSettings.SetDocumentationBaseUrl(ThisAssembly.Git.Branch);
 
-#if SUPPORT_THEMES
             ThemeModule.Load();
+#if SUPPORT_THEME_HOOKS
             Application.ApplicationExit += (s, e) => ThemeModule.Unload();
 
             SystemEvents.UserPreferenceChanged += (s, e) =>

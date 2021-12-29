@@ -78,7 +78,7 @@ namespace GitUI.Theming
             {
                 try
                 {
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
                     InstallHooks(theme);
 #endif
                 }
@@ -94,7 +94,7 @@ namespace GitUI.Theming
 
         private static void ResetGdiCaches()
         {
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
             var systemDrawingAssembly = typeof(Color).Assembly;
 
             var colorTableField =

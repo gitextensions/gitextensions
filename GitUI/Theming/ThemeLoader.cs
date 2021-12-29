@@ -39,16 +39,10 @@ namespace GitUI.Theming
 
         private void LoadThemeColors(string themeFileName, string[] cssImportChain, in IReadOnlyList<string> allowedClasses, ThemeColors themeColors)
         {
+            // TODO ExCSS.Stylesheet 4.1 does not handle parse errors.
+            // This could be rewritten as a simple regex parser instead.
             string content = _themeFileReader.ReadThemeFile(themeFileName);
             Stylesheet stylesheet = _parser.Parse(content);
-
-#if SUPPORT_THEMES
-            if (stylesheet.Errors.Count > 0)
-            {
-                throw new ThemeException(
-                    $"Error parsing CSS:{Environment.NewLine}{string.Join(Environment.NewLine, stylesheet.Errors)}", themeFileName);
-            }
-#endif
 
             foreach (var importDirective in stylesheet.ImportRules)
             {
@@ -89,11 +83,9 @@ namespace GitUI.Theming
         private static void ParseRule(string themeFileName, StyleRule rule, in IReadOnlyList<string> allowedClasses, ThemeColors themeColors)
         {
             var color = GetColor(themeFileName, rule);
-
-#if SUPPORT_THEMES
             var classNames = GetClassNames(themeFileName, rule);
 
-            var colorName = classNames[0];
+            string colorName = classNames[0];
             if (!classNames.Skip(1).All(allowedClasses.Contains))
             {
                 return;
@@ -120,19 +112,11 @@ namespace GitUI.Theming
             }
 
             throw new ThemeException($"Unknown color name \"{colorName}\"", themeFileName);
-#endif
         }
 
-#if SUPPORT_THEMES
         private static string[] GetClassNames(string themeFileName, StyleRule rule)
         {
-            var selector = rule.Selector;
-            if (!(selector is SimpleSelector simpleSelector))
-            {
-                throw StyleRuleThemeException(rule, themeFileName);
-            }
-
-            var selectorText = simpleSelector.ToString();
+            var selectorText = rule.Selector.Text;
             if (!selectorText.StartsWith(ClassSelector))
             {
                 throw StyleRuleThemeException(rule, themeFileName);
@@ -142,7 +126,6 @@ namespace GitUI.Theming
                 .Substring(ClassSelector.Length)
                 .Split(new[] { ClassSelector }, StringSplitOptions.RemoveEmptyEntries);
         }
-#endif
 
         private static Color GetColor(string themeFileName, StyleRule rule)
         {
