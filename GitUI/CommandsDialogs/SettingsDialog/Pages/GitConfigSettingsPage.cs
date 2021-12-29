@@ -254,9 +254,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (txtMergeToolPath.Focused && sender == txtMergeToolPath)
             {
-                // we only want to suggest command for known tool types
+                // we only want to suggest command for known built-in tool types
                 var toolName = _NO_TRANSLATE_cboMergeTool.Text;
-                if (!string.IsNullOrWhiteSpace(toolName))
+                if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Merge).Contains(toolName))
                 {
                     SuggestMergeToolCommand();
                 }
@@ -267,9 +267,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             if (txtDiffToolPath.Focused && sender == txtDiffToolPath)
             {
-                // we only want to suggest command for known tool types
+                // we only want to suggest command for known built-in tool types
                 var toolName = _NO_TRANSLATE_cboDiffTool.Text;
-                if (!string.IsNullOrWhiteSpace(toolName))
+                if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Diff).Contains(toolName))
                 {
                     SuggestDiffToolCommand();
                 }
