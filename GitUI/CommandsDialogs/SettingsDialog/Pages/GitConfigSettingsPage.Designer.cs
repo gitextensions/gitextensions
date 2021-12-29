@@ -170,7 +170,6 @@
             this.txtDiffToolPath.Location = new System.Drawing.Point(129, 200);
             this.txtDiffToolPath.Name = "txtDiffToolPath";
             this.txtDiffToolPath.Size = new System.Drawing.Size(902, 20);
-            this.txtDiffToolPath.TabIndex = 17;
             this.txtDiffToolPath.TextChanged += new System.EventHandler(this.txtDiffToolPath_TextChanged);
             this.txtDiffToolPath.LostFocus += new System.EventHandler(this.txtDiffMergeToolPath_LostFocus);
             // 
@@ -290,7 +289,6 @@
             this.txtMergeToolPath.Location = new System.Drawing.Point(129, 111);
             this.txtMergeToolPath.Name = "txtMergeToolPath";
             this.txtMergeToolPath.Size = new System.Drawing.Size(902, 20);
-            this.txtMergeToolPath.TabIndex = 9;
             this.txtMergeToolPath.TextChanged += new System.EventHandler(this.txtMergeToolPath_TextChanged);
             this.txtMergeToolPath.LostFocus += new System.EventHandler(this.txtDiffMergeToolPath_LostFocus);
             // 

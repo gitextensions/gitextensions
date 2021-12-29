@@ -250,6 +250,32 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
+        private void txtMergeToolPath_TextChanged(object sender, EventArgs e)
+        {
+            if (txtMergeToolPath.Focused && sender == txtMergeToolPath)
+            {
+                // we only want to suggest command for known tool types
+                var toolName = _NO_TRANSLATE_cboMergeTool.Text;
+                if (!string.IsNullOrWhiteSpace(toolName))
+                {
+                    SuggestMergeToolCommand();
+                }
+            }
+        }
+
+        private void txtDiffToolPath_TextChanged(object sender, EventArgs e)
+        {
+            if (txtDiffToolPath.Focused && sender == txtDiffToolPath)
+            {
+                // we only want to suggest command for known tool types
+                var toolName = _NO_TRANSLATE_cboDiffTool.Text;
+                if (!string.IsNullOrWhiteSpace(toolName))
+                {
+                    SuggestDiffToolCommand();
+                }
+            }
+        }
+
         private void btnMergeToolBrowse_Click(object sender, EventArgs e)
         {
             txtMergeToolPath.Text = BrowseDiffMergeTool(_NO_TRANSLATE_cboMergeTool.Text, txtMergeToolPath.Text, DiffMergeToolType.Merge).ToPosixPath();
@@ -330,22 +356,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 Global_FilesEncoding.Items.Clear();
                 CommonLogic.FillEncodings(Global_FilesEncoding);
-            }
-        }
-
-        private void txtMergeToolPath_TextChanged(object sender, EventArgs e)
-        {
-            if (txtMergeToolPath.Focused && sender == txtMergeToolPath)
-            {
-                SuggestMergeToolCommand();
-            }
-        }
-
-        private void txtDiffToolPath_TextChanged(object sender, EventArgs e)
-        {
-            if (txtDiffToolPath.Focused && sender == txtDiffToolPath)
-            {
-                SuggestDiffToolCommand();
             }
         }
     }
