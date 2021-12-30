@@ -252,27 +252,31 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void txtMergeToolPath_TextChanged(object sender, EventArgs e)
         {
-            if (txtMergeToolPath.Focused && sender == txtMergeToolPath)
+            if (!txtMergeToolPath.Focused || sender != txtMergeToolPath)
             {
-                // we only want to suggest command for known built-in tool types
-                var toolName = _NO_TRANSLATE_cboMergeTool.Text;
-                if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Merge).Contains(toolName))
-                {
-                    SuggestMergeToolCommand();
-                }
+                return;
+            }
+
+            // we only want to suggest command for known built-in tool types
+            var toolName = _NO_TRANSLATE_cboMergeTool.Text;
+            if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Merge).Contains(toolName))
+            {
+                SuggestMergeToolCommand();
             }
         }
 
         private void txtDiffToolPath_TextChanged(object sender, EventArgs e)
         {
-            if (txtDiffToolPath.Focused && sender == txtDiffToolPath)
+            if (!txtDiffToolPath.Focused || sender != txtDiffToolPath)
             {
-                // we only want to suggest command for known built-in tool types
-                var toolName = _NO_TRANSLATE_cboDiffTool.Text;
-                if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Diff).Contains(toolName))
-                {
-                    SuggestDiffToolCommand();
-                }
+                return;
+            }
+
+            // we only want to suggest command for known built-in tool types
+            var toolName = _NO_TRANSLATE_cboDiffTool.Text;
+            if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Diff).Contains(toolName))
+            {
+                SuggestDiffToolCommand();
             }
         }
 
