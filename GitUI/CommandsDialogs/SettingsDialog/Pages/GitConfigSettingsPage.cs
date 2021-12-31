@@ -250,6 +250,36 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
+        private void txtMergeToolPath_TextChanged(object sender, EventArgs e)
+        {
+            if (!txtMergeToolPath.Focused || sender != txtMergeToolPath)
+            {
+                return;
+            }
+
+            // we only want to suggest command for known built-in tool types
+            var toolName = _NO_TRANSLATE_cboMergeTool.Text;
+            if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Merge).Contains(toolName))
+            {
+                SuggestMergeToolCommand();
+            }
+        }
+
+        private void txtDiffToolPath_TextChanged(object sender, EventArgs e)
+        {
+            if (!txtDiffToolPath.Focused || sender != txtDiffToolPath)
+            {
+                return;
+            }
+
+            // we only want to suggest command for known built-in tool types
+            var toolName = _NO_TRANSLATE_cboDiffTool.Text;
+            if (!string.IsNullOrWhiteSpace(toolName) && RegisteredDiffMergeTools.All(DiffMergeToolType.Diff).Contains(toolName))
+            {
+                SuggestDiffToolCommand();
+            }
+        }
+
         private void btnMergeToolBrowse_Click(object sender, EventArgs e)
         {
             txtMergeToolPath.Text = BrowseDiffMergeTool(_NO_TRANSLATE_cboMergeTool.Text, txtMergeToolPath.Text, DiffMergeToolType.Merge).ToPosixPath();

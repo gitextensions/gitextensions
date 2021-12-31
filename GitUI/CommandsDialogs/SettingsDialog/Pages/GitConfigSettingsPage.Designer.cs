@@ -171,6 +171,7 @@
             this.txtDiffToolPath.Name = "txtDiffToolPath";
             this.txtDiffToolPath.Size = new System.Drawing.Size(902, 20);
             this.txtDiffToolPath.LostFocus += new System.EventHandler(this.txtDiffMergeToolPath_LostFocus);
+            this.txtDiffToolPath.TextChanged += new System.EventHandler(this.txtDiffToolPath_TextChanged);
             // 
             // _NO_TRANSLATE_cboDiffTool
             // 
@@ -289,6 +290,7 @@
             this.txtMergeToolPath.Name = "txtMergeToolPath";
             this.txtMergeToolPath.Size = new System.Drawing.Size(902, 20);
             this.txtMergeToolPath.LostFocus += new System.EventHandler(this.txtDiffMergeToolPath_LostFocus);
+            this.txtMergeToolPath.TextChanged += new System.EventHandler(this.txtMergeToolPath_TextChanged);
             // 
             // lblMergeTool
             // 
