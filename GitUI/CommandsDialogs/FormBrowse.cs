@@ -553,16 +553,20 @@ namespace GitUI.CommandsDialogs
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
-            this.InvokeAsync(RefreshRevisions).FileAndForget();
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await this.SwitchToMainThreadAsync();
+                RefreshRevisions(e.GetRefs);
+            }).FileAndForget();
 
-            ToolStripFilters.UpdateBranchFilterItems();
+            ToolStripFilters.UpdateBranchFilterItems(e.GetRefs);
             UpdateSubmodulesStructure();
             UpdateStashCount();
 
             revisionDiff.UICommands_PostRepositoryChanged(sender, e);
         }
 
-        private void RefreshRevisions()
+        private void RefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
             if (RevisionGrid.IsDisposed || IsDisposed || Disposing)
             {
@@ -573,7 +577,7 @@ namespace GitUI.CommandsDialogs
             if (isDashboard)
             {
                 // Explicit call: Title is normally updated on RevisionGrid filter change
-                _appTitleGenerator.Generate();
+                Text = _appTitleGenerator.Generate();
 
                 // "Repo" related methods, creates _dashboard
                 InternalInitialize();
@@ -582,7 +586,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Debug.Assert(RevisionGrid.CanRefresh, "Already loading revisions when running RefreshRevisions(). This could cause the commits in the grid to be loaded several times.");
-            RevisionGrid.PerformRefreshRevisions();
+            RevisionGrid.PerformRefreshRevisions(getRefs);
 
             InternalInitialize();
 
@@ -718,7 +722,7 @@ namespace GitUI.CommandsDialogs
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
                         {
                             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
-                            RefreshRevisions();
+                            RefreshRevisions(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs);
                         }
                     };
 

@@ -179,11 +179,11 @@ namespace GitUI.BranchTreePanel
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    await PostRepositoryChangedAsync();
+                    await PostRepositoryChangedAsync(e);
                 }).FileAndForget();
             }
 
-            protected virtual Task PostRepositoryChangedAsync()
+            protected virtual Task PostRepositoryChangedAsync(GitUIEventArgs e)
             {
                 return Task.CompletedTask;
             }
@@ -231,7 +231,8 @@ namespace GitUI.BranchTreePanel
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     IsFiltering.Value = _isCurrentlyFiltering;
-                    await ReloadNodesAsync(LoadNodesAsync);
+
+                    await ReloadNodesAsync(LoadNodesAsync, new FilteredGitRefsProvider(Module).GetRefs);
                 });
             }
 
@@ -260,11 +261,12 @@ namespace GitUI.BranchTreePanel
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     IsFiltering.Value = true;
-                    await ReloadNodesAsync(LoadNodesAsync);
+
+                    await ReloadNodesAsync(LoadNodesAsync, new FilteredGitRefsProvider(Module).GetRefs);
                 });
             }
 
-            protected abstract Task<Nodes> LoadNodesAsync(CancellationToken token);
+            protected abstract Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs);
 
             public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node
                 => Nodes.DepthEnumerator<TNode>();
@@ -272,7 +274,7 @@ namespace GitUI.BranchTreePanel
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
             // making sure to disable/enable the control.
-            protected async Task ReloadNodesAsync(Func<CancellationToken, Task<Nodes>> loadNodesTask)
+            protected async Task ReloadNodesAsync(Func<CancellationToken, Func<RefsFilter, IReadOnlyList<IGitRef>>, Task<Nodes>> loadNodesTask, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 var token = _reloadCancellationTokenSequence.Next();
 
@@ -283,7 +285,7 @@ namespace GitUI.BranchTreePanel
                 }
 
                 // Module is invalid in Dashboard
-                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(token) : new(tree: null);
+                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(token, getRefs) : new(tree: null);
 
                 await treeView.SwitchToMainThreadAsync(token);
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Remotes;
+using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -37,20 +38,20 @@ namespace GitUI.BranchTreePanel
                 IsFiltering.Value = false;
             }
 
-            protected override Task PostRepositoryChangedAsync()
+            protected override Task PostRepositoryChangedAsync(GitUIEventArgs e)
             {
                 IsFiltering.Value = false;
-                return ReloadNodesAsync(LoadNodesAsync);
+                return ReloadNodesAsync(LoadNodesAsync, e.GetRefs);
             }
 
-            protected override async Task<Nodes> LoadNodesAsync(CancellationToken token)
+            protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
                 if (!IsFiltering.Value || _loadedBranches is null)
                 {
-                    _loadedBranches = Module.GetRefs(RefsFilter.Remotes).ToList();
+                    _loadedBranches = getRefs(RefsFilter.Remotes);
                     token.ThrowIfCancellationRequested();
                 }
 
