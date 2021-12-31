@@ -39,8 +39,6 @@ namespace GitUITests.Theming
         private const string MockAppThemesDirectory = "c:\\gitextensions\\themes";
         private const string MockUserThemesDirectory = "c:\\appdata\\gitextensions\\themes";
 
-#if SUPPORT_THEMES
-
         [Test]
         public void Should_load_any_themable_system_color(
             [ValueSource(nameof(ThemableSystemColorNames))] KnownColor colorName,
@@ -134,6 +132,7 @@ namespace GitUITests.Theming
                 .Which.Message.Should().Contain("InvalidColorName");
         }
 
+        [Ignore("ExCSS version >= 3 do not report parsing errors.")]
         [Test]
         public void Should_throw_When_css_syntax_error()
         {
@@ -194,7 +193,6 @@ namespace GitUITests.Theming
             var theme = loader.LoadTheme(themePath, new ThemeId("theme", isBuiltin: true), allowedClasses: ThemeVariations.None);
             theme.GetColor(colorName).ToArgb().Should().Be(colorOverride.ToArgb());
         }
-#endif
 
         [Test]
         public void Should_throw_When_cyclic_css_imports()
@@ -266,7 +264,7 @@ namespace GitUITests.Theming
             string.Join(
                 Environment.NewLine,
                 colorByName.Select(
-                    pair => $".{pair.Key}: {{ color: {ThemePersistence.TestAccessor.FormatColor(pair.Value)}; }}"));
+                    pair => $".{pair.Key} {{ color: {ThemePersistence.TestAccessor.FormatColor(pair.Value)}; }}"));
 
         private static Theme LoadTheme(ThemeLoader loader, params string[] variations) =>
             loader.LoadTheme(

@@ -91,7 +91,7 @@ namespace EasyHook
 
             m_IsExclusive = false;
 
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
             if (m_Handle == IntPtr.Zero)
                NativeAPI.LhSetGlobalInclusiveACL(m_ACL, m_ACL.Length);
             else
@@ -126,7 +126,7 @@ namespace EasyHook
 
             m_IsExclusive = true;
 
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
             if (m_Handle == IntPtr.Zero)
                NativeAPI.LhSetGlobalExclusiveACL(m_ACL, m_ACL.Length);
             else
@@ -231,7 +231,7 @@ namespace EasyHook
                 }
 
                 IntPtr address = IntPtr.Zero;
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
                 NativeAPI.LhGetHookBypassAddress(m_Handle, out address);
 #endif
                 return address;
@@ -302,7 +302,7 @@ namespace EasyHook
                 throw new ObjectDisposedException(typeof(LocalHook).FullName);
             }
 
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
             NativeAPI.LhIsThreadIntercepted(m_Handle, InThreadID, out Result);
 #endif
 
@@ -338,7 +338,7 @@ namespace EasyHook
                     return;
                 }
 
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
                 NativeAPI.LhUninstallHook(m_Handle);
 #endif
 
@@ -414,7 +414,7 @@ namespace EasyHook
 
             try
             {
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
                 NativeAPI.LhInstallHook(
                    InTargetProc,
                    Marshal.GetFunctionPointerForDelegate(Result.m_HookProc),
@@ -462,7 +462,7 @@ namespace EasyHook
             String InModule,
             String InSymbolName)
         {
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
             IntPtr Module = NativeAPI.GetModuleHandle(InModule);
 
             if (Module == IntPtr.Zero)
@@ -487,7 +487,7 @@ namespace EasyHook
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-#if SUPPORT_THEMES
+#if SUPPORT_THEME_HOOKS
             NativeAPI.LhWaitForPendingRemovals();
 #endif
         }
