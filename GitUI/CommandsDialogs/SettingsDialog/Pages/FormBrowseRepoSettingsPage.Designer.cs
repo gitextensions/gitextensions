@@ -85,7 +85,7 @@
             this.chkUseBrowseForFileHistory.Name = "chkUseBrowseForFileHistory";
             this.chkUseBrowseForFileHistory.Size = new System.Drawing.Size(212, 17);
             this.chkUseBrowseForFileHistory.TabIndex = 4;
-            this.chkUseBrowseForFileHistory.Text = "Use Browse For FileHistory";
+            this.chkUseBrowseForFileHistory.Text = "Show file history in the main window";
             this.chkUseBrowseForFileHistory.UseVisualStyleBackColor = true;
             // 
             // gbGeneral
