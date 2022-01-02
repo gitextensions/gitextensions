@@ -1416,7 +1416,7 @@ namespace GitUI
                     return RunBlameCommand(args);
                 case "branch":
                     return StartCreateBranchDialog();
-                case "browse":      // [path] [-filter]
+                case "browse":      // [path] [--pathFilter=filname] [-filter] [-commit=selected[,first]]
                     return RunBrowseCommand(args);
                 case "checkout":
                 case "checkoutbranch":
@@ -1725,8 +1725,22 @@ namespace GitUI
                 filterByRevision = true;
             }
 
-            ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
+            // Similar to StartFileHistoryDialog(), tests works better with this setup
+            if (AppSettings.UseBrowseForFileHistory.Value)
+            {
+                ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
+                                () => new FormBrowse(commands: this, new BrowseArguments
+                                {
+                                    RevFilter = filterByRevision ? revision?.ObjectId.ToString() : null,
+                                    PathFilter = fileHistoryFileName,
+                                    SelectedId = revision?.ObjectId
+                                }));
+            }
+            else
+            {
+                ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
                 () => new FormFileHistory(commands: this, fileHistoryFileName, revision, filterByRevision, showBlame));
+            }
 
             return true;
         }
