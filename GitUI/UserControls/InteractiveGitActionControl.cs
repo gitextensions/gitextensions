@@ -73,12 +73,13 @@ namespace GitUI.UserControls
             bool hasConflicts;
             try
             {
-                hasConflicts = Module.InTheMiddleOfConflictedMerge();
+                // This command can be executed seemingly in the background (selecting Browse),
+                // do not notify the user (this can occur if Git is upgraded)
+                // The command also occasionally fails when "reactivating" WSL Git.
+                hasConflicts = Module.InTheMiddleOfConflictedMerge(true);
             }
             catch (Win32Exception)
             {
-                // This command can be executed seemingly in the background (selecting Browse),
-                // do not notify the user (this can occur if Git is upgraded)
                 hasConflicts = false;
             }
 

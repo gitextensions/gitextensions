@@ -513,14 +513,16 @@ namespace GitCommands
             return _gitExecutable.RunCommand(arguments, createWindow: createWindow);
         }
 
-        public bool InTheMiddleOfConflictedMerge()
+        public bool InTheMiddleOfConflictedMerge(bool background = false)
         {
             GitArgumentBuilder args = new("ls-files")
             {
                 "-z",
                 "--unmerged"
             };
-            var result = _gitExecutable.Execute(args);
+
+            // Do not report errors for commands called in the background
+            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: !background);
             return result.ExitedSuccessfully && !string.IsNullOrEmpty(result.StandardOutput);
         }
 
