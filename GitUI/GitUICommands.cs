@@ -1725,21 +1725,21 @@ namespace GitUI
                 filterByRevision = true;
             }
 
-            // Similar to StartFileHistoryDialog(), tests works better with this setup
+            // Similar to StartFileHistoryDialog()
             if (AppSettings.UseBrowseForFileHistory.Value)
             {
                 ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
-                                () => new FormBrowse(commands: this, new BrowseArguments
-                                {
-                                    RevFilter = filterByRevision ? revision?.ObjectId.ToString() : null,
-                                    PathFilter = fileHistoryFileName,
-                                    SelectedId = revision?.ObjectId
-                                }));
+                                 () => new FormBrowse(commands: this, new BrowseArguments
+                                 {
+                                     RevFilter = filterByRevision ? revision?.ObjectId.ToString() : null,
+                                     PathFilter = fileHistoryFileName,
+                                     SelectedId = revision?.ObjectId
+                                 }));
             }
             else
             {
                 ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
-                () => new FormFileHistory(commands: this, fileHistoryFileName, revision, filterByRevision, showBlame));
+                                 () => new FormFileHistory(commands: this, fileHistoryFileName, revision, filterByRevision, showBlame));
             }
 
             return true;
