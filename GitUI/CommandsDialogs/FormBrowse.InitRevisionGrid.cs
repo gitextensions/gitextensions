@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
                 this.InvokeAsync(
                         () =>
                         {
-                            RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
+                            RefreshButton.Image = indexChanged && AppSettings.ShowGitStatusInBrowseToolbar && Module.IsValidGitWorkingDir()
                                 ? Images.ReloadRevisionsDirty
                                 : Images.ReloadRevisions;
                         })

@@ -95,7 +95,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_MaxCommits.Enabled = AppSettings.MaxRevisionGraphCommits != 0;
             chkCloseProcessDialog.Checked = AppSettings.CloseProcessDialog;
             chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
-            chkUseFastChecks.Checked = AppSettings.UseFastChecks;
             cbDefaultCloneDestination.Text = AppSettings.DefaultCloneDestinationPath;
             cboDefaultPullAction.SelectedValue
                 = AppSettings.DefaultPullAction != AppSettings.PullAction.Default ?
@@ -118,7 +117,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowGitStatusForArtificialCommits = chkShowGitStatusForArtificialCommits.Checked;
             AppSettings.CloseProcessDialog = chkCloseProcessDialog.Checked;
             AppSettings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
-            AppSettings.UseFastChecks = chkUseFastChecks.Checked;
             AppSettings.MaxRevisionGraphCommits = lblCommitsLimit.Checked ? (int)_NO_TRANSLATE_MaxCommits.Value : 0;
             AppSettings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;

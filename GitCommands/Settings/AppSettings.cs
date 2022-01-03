@@ -1188,12 +1188,6 @@ namespace GitCommands
             set => SetBool("relativedate", value);
         }
 
-        public static bool UseFastChecks
-        {
-            get => GetBool("usefastchecks", false);
-            set => SetBool("usefastchecks", value);
-        }
-
         public static bool ShowGitNotes
         {
             get => GetBool("showgitnotes", false);

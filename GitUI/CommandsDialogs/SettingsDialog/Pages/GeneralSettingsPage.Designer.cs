@@ -41,7 +41,6 @@
             this.chkShowGitStatusForArtificialCommits = new System.Windows.Forms.CheckBox();
             this.chkShowStashCountInBrowseWindow = new System.Windows.Forms.CheckBox();
             this.chkShowSubmoduleStatusInBrowse = new System.Windows.Forms.CheckBox();
-            this.chkUseFastChecks = new System.Windows.Forms.CheckBox();
             this.lblCommitsLimit = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_MaxCommits = new System.Windows.Forms.NumericUpDown();
             this.groupBoxBehaviour = new System.Windows.Forms.GroupBox();
@@ -166,20 +165,18 @@
             this.tlpnlPerformance.ColumnCount = 2;
             this.tlpnlPerformance.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlPerformance.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlPerformance.Controls.Add(this.chkShowAheadBehindDataInBrowseWindow, 0, 5);
-            this.tlpnlPerformance.Controls.Add(this.chkCheckForUncommittedChangesInCheckoutBranch, 0, 6);
+            this.tlpnlPerformance.Controls.Add(this.chkShowAheadBehindDataInBrowseWindow, 0, 4);
+            this.tlpnlPerformance.Controls.Add(this.chkCheckForUncommittedChangesInCheckoutBranch, 0, 5);
             this.tlpnlPerformance.Controls.Add(this.chkShowGitStatusInToolbar, 0, 0);
             this.tlpnlPerformance.Controls.Add(this.chkShowGitStatusForArtificialCommits, 0, 1);
-            this.tlpnlPerformance.Controls.Add(this.chkShowStashCountInBrowseWindow, 0, 4);
+            this.tlpnlPerformance.Controls.Add(this.chkShowStashCountInBrowseWindow, 0, 3);
             this.tlpnlPerformance.Controls.Add(this.chkShowSubmoduleStatusInBrowse, 0, 2);
-            this.tlpnlPerformance.Controls.Add(this.chkUseFastChecks, 0, 3);
-            this.tlpnlPerformance.Controls.Add(this.lblCommitsLimit, 0, 7);
-            this.tlpnlPerformance.Controls.Add(this._NO_TRANSLATE_MaxCommits, 1, 7);
+            this.tlpnlPerformance.Controls.Add(this.lblCommitsLimit, 0, 6);
+            this.tlpnlPerformance.Controls.Add(this._NO_TRANSLATE_MaxCommits, 1, 6);
             this.tlpnlPerformance.Dock = System.Windows.Forms.DockStyle.Top;
             this.tlpnlPerformance.Location = new System.Drawing.Point(8, 21);
             this.tlpnlPerformance.Name = "tlpnlPerformance";
-            this.tlpnlPerformance.RowCount = 8;
-            this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlPerformance.RowCount = 7;
             this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -261,17 +258,6 @@
             this.chkShowSubmoduleStatusInBrowse.TabIndex = 2;
             this.chkShowSubmoduleStatusInBrowse.Text = "Show submodule status in browse menu";
             this.chkShowSubmoduleStatusInBrowse.UseVisualStyleBackColor = true;
-            // 
-            // chkUseFastChecks
-            // 
-            this.chkUseFastChecks.AutoSize = true;
-            this.chkUseFastChecks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkUseFastChecks.Location = new System.Drawing.Point(3, 72);
-            this.chkUseFastChecks.Name = "chkUseFastChecks";
-            this.chkUseFastChecks.Size = new System.Drawing.Size(347, 17);
-            this.chkUseFastChecks.TabIndex = 4;
-            this.chkUseFastChecks.Text = "Use FileSystemWatcher to check if index is changed";
-            this.chkUseFastChecks.UseVisualStyleBackColor = true;
             // 
             // lblCommitsLimit
             // 
@@ -587,7 +573,6 @@
         private System.Windows.Forms.CheckBox chkCheckForUncommittedChangesInCheckoutBranch;
         private System.Windows.Forms.CheckBox chkShowGitStatusInToolbar;
         private System.Windows.Forms.CheckBox chkShowGitStatusForArtificialCommits;
-        private System.Windows.Forms.CheckBox chkUseFastChecks;
         private System.Windows.Forms.CheckBox chkShowStashCountInBrowseWindow;
         private System.Windows.Forms.CheckBox chkShowSubmoduleStatusInBrowse;
         private System.Windows.Forms.CheckBox lblCommitsLimit;

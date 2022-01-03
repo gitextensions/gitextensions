@@ -53,7 +53,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 try
                 {
-                    _enabled = AppSettings.UseFastChecks;
+                    _enabled = AppSettings.ShowGitStatusInBrowseToolbar;
 
                     _gitDirPath = Module.WorkingDirGitDir;
 
@@ -116,7 +116,7 @@ namespace GitUI.UserControls.RevisionGrid
             RefreshWatcher();
         }
 
-        public void Clear()
+        private void Clear()
         {
             IndexChanged = true;
             RefreshWatcher();
@@ -124,7 +124,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void RefreshWatcher()
         {
-            if (_gitDirPath != Module.WorkingDirGitDir || _enabled != AppSettings.UseFastChecks)
+            if (_gitDirPath != Module.WorkingDirGitDir || _enabled != AppSettings.ShowGitStatusInBrowseToolbar)
             {
                 SetFileSystemWatcher();
             }
@@ -134,6 +134,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             _enabled = false;
             GitIndexWatcher.EnableRaisingEvents = false;
+            RefsWatcher.EnableRaisingEvents = false;
             GitIndexWatcher.Changed -= fileSystemWatcher_Changed;
             RefsWatcher.Changed -= fileSystemWatcher_Changed;
             GitIndexWatcher.Dispose();
