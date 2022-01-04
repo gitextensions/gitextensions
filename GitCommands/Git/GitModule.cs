@@ -513,7 +513,7 @@ namespace GitCommands
             return _gitExecutable.RunCommand(arguments, createWindow: createWindow);
         }
 
-        public bool InTheMiddleOfConflictedMerge(bool background = false)
+        public bool InTheMiddleOfConflictedMerge(bool throwOnErrorExit = true)
         {
             GitArgumentBuilder args = new("ls-files")
             {
@@ -522,7 +522,7 @@ namespace GitCommands
             };
 
             // Do not report errors for commands called in the background
-            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: !background);
+            ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: throwOnErrorExit);
             return result.ExitedSuccessfully && !string.IsNullOrEmpty(result.StandardOutput);
         }
 

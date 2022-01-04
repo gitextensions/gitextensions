@@ -76,7 +76,7 @@ namespace GitUI.UserControls
                 // This command can be executed seemingly in the background (selecting Browse),
                 // do not notify the user (this can occur if Git is upgraded)
                 // The command also occasionally fails when "reactivating" WSL Git.
-                hasConflicts = Module.InTheMiddleOfConflictedMerge(true);
+                hasConflicts = Module.InTheMiddleOfConflictedMerge(throwOnErrorExit: false);
             }
             catch (Win32Exception)
             {
