@@ -260,7 +260,6 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.ShowAheadBehindData)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowSubmoduleStatus)], false, false, false);
                 yield return (properties[nameof(AppSettings.RelativeDate)], true, false, false);
-                yield return (properties[nameof(AppSettings.UseFastChecks)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowGitNotes)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowAnnotatedTagsMessages)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowMergeCommits)], true, false, false);
