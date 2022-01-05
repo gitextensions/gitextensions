@@ -39,6 +39,7 @@ namespace GitUITests.GitUICommandsTests
 
                 AppSettings.UseConsoleEmulatorForCommands = false;
                 AppSettings.CloseProcessDialog = true;
+                AppSettings.UseBrowseForFileHistory.Value = false;
             }
             else
             {
