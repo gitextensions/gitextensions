@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using ResourceManager.Properties;
 
@@ -34,6 +35,10 @@ namespace ResourceManager
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;
             Icon = Resources.GitExtensionsLogoIcon;
+
+#if !SUPPORT_THEME_HOOKS
+            Load += (s, e) => ((Form)s!).FixVisualStyle();
+#endif
         }
 
         protected bool IsDesignMode => _initialiser.IsDesignMode;
