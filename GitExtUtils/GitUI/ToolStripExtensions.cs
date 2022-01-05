@@ -6,13 +6,14 @@ namespace GitUI
 {
     public static class ToolStripExtensions
     {
-        private static ConditionalWeakTable<ToolStrip, IMenuItemBackgroundFilter> MenuItemBackgroundFilters = new();
-        private static ConditionalWeakTable<ToolStrip, ToolStripExRenderer> Renderers = new();
-        private static ConditionalWeakTable<ToolStrip, ToolStripExThemeAwareRenderer> RenderersThemeAware = new();
+        private static readonly ConditionalWeakTable<ToolStrip, IMenuItemBackgroundFilter> MenuItemBackgroundFilters = new();
+        private static readonly ConditionalWeakTable<ToolStrip, ToolStripExSystemRenderer> ExtendedSystemRenderers = new();
+        private static readonly ConditionalWeakTable<ToolStrip, ToolStripExProfessionalRenderer> ExtendedProfessionalRenderers = new();
+        private static readonly ConditionalWeakTable<ToolStrip, ToolStripExThemeAwareRenderer> ExtendedThemeAwareRenderers = new();
 
         public static void AttachMenuItemBackgroundFilter(this ToolStrip toolStrip, IMenuItemBackgroundFilter? value)
         {
-            toolStrip.UseCustomRenderer();
+            toolStrip.UseExtendedRenderer();
             MenuItemBackgroundFilters.Remove(toolStrip);
 
             if (value is not null)
@@ -21,27 +22,23 @@ namespace GitUI
             }
         }
 
-        public static void UseCustomRenderer(this ToolStrip toolStrip)
+        private static void UseExtendedRenderer(this ToolStrip toolStrip)
         {
-            // use either ToolStripExRenderer or ToolStripExThemeAwareRenderer
-            toolStrip.EnableTheming(enable: toolStrip.IsThemingEnabled());
+            if (toolStrip.Renderer is ToolStripSystemRenderer and not ToolStripExSystemRenderer)
+            {
+                toolStrip.Renderer = ExtendedSystemRenderers.GetOrCreateValue(toolStrip);
+            }
+            else if (toolStrip.Renderer is ToolStripProfessionalRenderer and not ToolStripExProfessionalRenderer)
+            {
+                toolStrip.Renderer = ExtendedProfessionalRenderers.GetOrCreateValue(toolStrip);
+            }
         }
 
-        internal static void EnableTheming(this ToolStrip toolStrip, bool enable)
+        internal static void UseExtendedThemeAwareRenderer(this ToolStrip toolStrip)
         {
-            if (enable)
+            if (toolStrip.Renderer is not ToolStripExThemeAwareRenderer)
             {
-                if (toolStrip.Renderer is not ToolStripExThemeAwareRenderer)
-                {
-                    toolStrip.Renderer = RenderersThemeAware.GetOrCreateValue(toolStrip);
-                }
-            }
-            else
-            {
-                if (toolStrip.Renderer is not ToolStripExRenderer)
-                {
-                    toolStrip.Renderer = Renderers.GetOrCreateValue(toolStrip);
-                }
+                toolStrip.Renderer = ExtendedThemeAwareRenderers.GetOrCreateValue(toolStrip);
             }
         }
 
@@ -54,8 +51,5 @@ namespace GitUI
 
             return null;
         }
-
-        internal static bool IsThemingEnabled(this ToolStrip toolStrip) =>
-            toolStrip.Renderer is ToolStripProfessionalRenderer;
     }
 }
