@@ -5,7 +5,7 @@ using GitExtUtils.GitUI.Theming;
 
 namespace GitUI
 {
-    internal sealed class ToolStripExThemeAwareRenderer : ToolStripProfessionalRenderer
+    internal sealed class ToolStripExThemeAwareRenderer : ToolStripExProfessionalRenderer
     {
         private static readonly ConditionalWeakTable<Bitmap, Bitmap> AdaptedImagesCache = new();
 
@@ -25,23 +25,6 @@ namespace GitUI
 
             base.OnRenderItemCheck(new ToolStripItemImageRenderEventArgs(
                 e.Graphics, e.Item, adapted, e.ImageRectangle));
-        }
-
-        protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
-        {
-            if (e.ToolStrip.GetMenuItemBackgroundFilter()?.ShouldRenderMenuItemBackground(e) != false)
-            {
-                base.OnRenderMenuItemBackground(e);
-            }
-        }
-
-        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
-        {
-            if (e.ToolStrip is not IToolStripEx { DrawBorder: false })
-            {
-                // render border
-                base.OnRenderToolStripBorder(e);
-            }
         }
     }
 }
