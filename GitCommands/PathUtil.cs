@@ -121,7 +121,7 @@ namespace GitCommands
                 throw new ArgumentException(nameof(path));
             }
 
-            return IsWslPath(path) ? ResolveWsl(path, relativePath) : ResolveRelativePath(path, relativePath);
+            return IsWslPrefixPath(path) ? ResolveWsl(path, relativePath) : ResolveRelativePath(path, relativePath);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace GitCommands
         /// </summary>
         internal static string ResolveWsl(string path, string relativePath = "")
         {
-            if (string.IsNullOrWhiteSpace(path) || !IsWslPath(path))
+            if (string.IsNullOrWhiteSpace(path) || !IsWslPrefixPath(path))
             {
                 throw new ArgumentException(nameof(path));
             }
@@ -160,7 +160,24 @@ namespace GitCommands
             return tempPath.LocalPath;
         }
 
-        internal static bool IsWslPath(string path)
+        /// <summary>
+        /// Check if the path is any known path for WSL that may require special handling
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns>true if a path is a known WSL path</returns>
+        public static bool IsWslPath(string path)
+        {
+            return !string.IsNullOrWhiteSpace(path)
+                && (IsWslPrefixPath(path)
+                    || path.ToLower().StartsWith(@"\\wsl.localhost\"));
+        }
+
+        /// <summary>
+        /// Check if the path is has handled specially for WSL
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns>true if the path is a WSL path with internal handling</returns>
+        private static bool IsWslPrefixPath(string path)
         {
             return path.ToLower().StartsWith(WslPrefix);
         }
@@ -177,7 +194,7 @@ namespace GitCommands
 
             static int GetWslDistroLength(string? path)
             {
-                if (string.IsNullOrWhiteSpace(path) || !IsWslPath(path))
+                if (string.IsNullOrWhiteSpace(path) || !IsWslPrefixPath(path))
                 {
                     return -1;
                 }
@@ -481,6 +498,11 @@ namespace GitCommands
             }
 
             return true;
+        }
+
+        internal readonly struct TestAccessor
+        {
+            public static bool IsWslPrefixPath(string path) => PathUtil.IsWslPrefixPath(path);
         }
     }
 }
