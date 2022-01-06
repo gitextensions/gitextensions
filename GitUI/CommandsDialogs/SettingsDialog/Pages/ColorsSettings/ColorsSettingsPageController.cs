@@ -90,9 +90,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (counter == 0)
             {
                 _page.LabelRestartIsNeededVisible = SettingsAreModified;
-                _page.IsChoosingThemeVariationsEnabled =
-                    _page.IsChoosingVisualStyleEnabled =
-                        _page.SelectedThemeId != ThemeId.Default;
+                _page.IsChoosingVisualStyleEnabled =
+                    _page.SelectedThemeId != ThemeId.Default;
             }
 
             if (_page.SelectedThemeId != ThemeId.Default)

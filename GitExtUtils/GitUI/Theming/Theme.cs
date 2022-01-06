@@ -105,9 +105,9 @@ namespace GitExtUtils.GitUI.Theming
             return result;
         }
 
-        private static Theme CreateDefaultTheme()
+        public static Theme CreateDefaultTheme(string[]? variations = null)
         {
-            var appColors = AppColorNames.ToDictionary(name => name, AppColorDefaults.GetBy);
+            var appColors = AppColorNames.ToDictionary(name => name, name => AppColorDefaults.GetBy(name, variations));
             var sysColors = SysColorNames.ToDictionary(name => name, GetFixedColor);
             return new Theme(appColors, sysColors, ThemeId.Default);
         }

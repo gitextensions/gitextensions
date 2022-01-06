@@ -34,15 +34,24 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
         }
 
         [Test]
-        public void When_current_theme_is_default_choosing_visual_style_or_theme_variation_should_be_disabled()
+        public void When_current_theme_is_default_choosing_visual_style_should_be_disabled()
+        {
+            AppSettings.ThemeId = ThemeId.Default;
+            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
+
+            _context.Controller.ShowThemeSettings();
+            _context.Page.IsChoosingVisualStyleEnabled.Should().BeFalse();
+        }
+
+        [Test]
+        public void When_current_theme_is_default_choosing_theme_variation_should_be_enabled()
         {
             AppSettings.ThemeId = ThemeId.Default;
             ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
             _context.Controller.ShowThemeSettings();
 
-            _context.Page.IsChoosingThemeVariationsEnabled.Should().BeFalse();
-            _context.Page.IsChoosingVisualStyleEnabled.Should().BeFalse();
+            _context.Page.IsChoosingThemeVariationsEnabled.Should().BeTrue();
         }
 
         [Test]
