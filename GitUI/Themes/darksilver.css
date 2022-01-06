@@ -33,20 +33,18 @@
 .MenuHighlight           { color: #7fabfd; }
 
 /* Application colors */
-.OtherTag                { color: #cccccc; }
-.AuthoredHighlight       { color: #373832; }
-.HighlightAllOccurences  { color: #606020; }
-.Tag                     { color: #408080; }
-.Graph                   { color: #882d00; }
-.Branch                  { color: #00d76b; }
-.DiffSection             { color: #4f4f4f; }
-.DiffAdded               { color: #054e2a; }
-.DiffAddedExtra          { color: #058545; }
-
-
+.OtherTag                    { color: #cccccc; }
+.AuthoredHighlight           { color: #373832; }
+.HighlightAllOccurences      { color: #606020; }
+.Tag                         { color: #408080; }
+.Graph                       { color: #882d00; }
+.Branch                      { color: #00d76b; }
 .RemoteBranch                { color: #ff8080; } /* hsl(0,   100%, 75%) */
 .RemoteBranch.colorblind     { color: #0080ff; } /* hsl(210, 100%, 50%) */
+.DiffSection                 { color: #4f4f4f; }
 .DiffRemoved                 { color: #5a0707; } /* hsl(0,   86%,  19%) */
 .DiffRemoved.colorblind      { color: #090755; } /* hsl(242, 85%,  18%) */
 .DiffRemovedExtra            { color: #7f0505; } /* hsl(0,   92%,  26%) */
 .DiffRemovedExtra.colorblind { color: #0b0698; } /* hsl(242, 92%,  31%) */
+.DiffAdded                   { color: #054e2a; }
+.DiffAddedExtra              { color: #058545; }
