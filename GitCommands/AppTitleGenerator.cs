@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.ComponentModel.Composition;
+using System.IO;
 using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
 
@@ -49,19 +50,34 @@ namespace GitCommands
             branchName = branchName?.Trim('(', ')') ?? defaultBranchName;
 
             // Pathname normally have quotes already
-            pathName = string.IsNullOrWhiteSpace(pathName)
-                ? ""
-                    : pathName.StartsWith(@"""") && pathName.EndsWith(@"""")
-                        ? $"{pathName} "
-                        : $"{pathName.Quote()} ";
+            pathName = GetFileName(pathName);
 
             var description = _descriptionProvider.Get(workingDir);
 
 #if DEBUG
-            return $"{description} ({branchName}) {pathName}- {AppSettings.ApplicationName}{_extraInfo}";
+            return $"{pathName}{description} ({branchName}) - {AppSettings.ApplicationName}{_extraInfo}";
 #else
-            return $"{description} ({branchName}) {pathName}- {AppSettings.ApplicationName}";
+            return $"{pathName}{description} ({branchName}) - {AppSettings.ApplicationName}";
 #endif
+
+            string? GetFileName(string? path)
+            {
+                if (string.IsNullOrWhiteSpace(pathName))
+                {
+                    return null;
+                }
+
+                string filePart = Path.GetFileName(pathName.Trim('"')).QuoteNE();
+                if (string.IsNullOrWhiteSpace(filePart))
+                {
+                    // No file, just quote the pathFilter
+                    filePart = pathName.StartsWith(@"""") && pathName.EndsWith(@"""")
+                        ? pathName
+                        : $"{pathName.Quote()}";
+                }
+
+                return $"{filePart} ";
+            }
         }
 
         public static void Initialise(string sha, string buildBranch)

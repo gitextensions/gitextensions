@@ -71,7 +71,7 @@ namespace GitCommandsTests
             string branchName = "feature/my_(test)_branch";
             string pathName = "folder/folder/file";
             string title = _appTitleGenerator.Generate("a", true, branchName: "(" + branchName + ")", pathName: pathName);
-            title.Should().StartWith($@"{MockRepositoryDescriptionProvider.ShortName} ({branchName}) ""{pathName}"" - {AppSettings.ApplicationName}");
+            title.Should().StartWith($@"""file"" {MockRepositoryDescriptionProvider.ShortName} ({branchName}) - {AppSettings.ApplicationName}");
         }
 
         [Test]
@@ -79,7 +79,16 @@ namespace GitCommandsTests
         {
             string pathName = @"""folder/folder/file""";
             string title = _appTitleGenerator.Generate("a", true, pathName: pathName, defaultBranchName: _defaultBranchName);
-            title.Should().StartWith($@"{MockRepositoryDescriptionProvider.ShortName} ({_defaultBranchName}) {pathName} - {AppSettings.ApplicationName}");
+            title.Should().StartWith($@"""file"" {MockRepositoryDescriptionProvider.ShortName} ({_defaultBranchName}) - {AppSettings.ApplicationName}");
+        }
+
+        [TestCase(@"""folder/folder/""", @"folder/folder/")]
+        [TestCase(@"folder/folder/", @"folder/folder/")]
+        [TestCase(@"""folder/folder/f*ile extra""", @"f*ile extra")]
+        public void Generate_should_quote_paths_where_filenames_cannot_be_resolved(string pathName, string expectedPath)
+        {
+            string title = _appTitleGenerator.Generate("a", true, pathName: pathName, defaultBranchName: _defaultBranchName);
+            title.Should().StartWith($@"""{expectedPath}"" {MockRepositoryDescriptionProvider.ShortName} ({_defaultBranchName}) - {AppSettings.ApplicationName}");
         }
 
 #if DEBUG
