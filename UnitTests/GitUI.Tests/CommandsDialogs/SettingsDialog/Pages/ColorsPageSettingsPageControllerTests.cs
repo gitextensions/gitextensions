@@ -44,24 +44,12 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
         }
 
         [Test]
-        public void When_current_theme_is_default_choosing_theme_variation_should_be_enabled()
-        {
-            AppSettings.ThemeId = ThemeId.Default;
-            ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
-
-            _context.Controller.ShowThemeSettings();
-
-            _context.Page.IsChoosingThemeVariationsEnabled.Should().BeTrue();
-        }
-
-        [Test]
-        public void When_current_theme_is_non_default_choosing_visual_style_or_theme_variation_should_be_enabled()
+        public void When_current_theme_is_non_default_choosing_visual_style_should_be_enabled()
         {
             AppSettings.ThemeId = new ThemeId("non_default", isBuiltin: true);
             ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
-            _context.Controller.ShowThemeSettings();
 
-            _context.Page.IsChoosingThemeVariationsEnabled.Should().BeTrue();
+            _context.Controller.ShowThemeSettings();
             _context.Page.IsChoosingVisualStyleEnabled.Should().BeTrue();
         }
 
@@ -178,7 +166,6 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
             public string[] SelectedThemeVariations { get; set; }
             public bool UseSystemVisualStyle { get; set; }
             public bool LabelRestartIsNeededVisible { get; set; }
-            public bool IsChoosingThemeVariationsEnabled { get; set; }
             public bool IsChoosingVisualStyleEnabled { get; set; }
 
             public void ShowThemeLoadingErrorMessage(ThemeId themeId, string[] variations, Exception ex) =>

@@ -86,12 +86,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             set => lblRestartNeeded.Visible = value;
         }
 
-        public bool IsChoosingThemeVariationsEnabled
-        {
-            get => chkColorblind.Enabled;
-            set => chkColorblind.Enabled = value;
-        }
-
         public bool IsChoosingVisualStyleEnabled
         {
             get => chkUseSystemVisualStyle.Enabled;
