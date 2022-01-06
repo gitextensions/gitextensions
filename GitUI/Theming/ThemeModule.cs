@@ -58,9 +58,10 @@ namespace GitUI.Theming
             }
 
             ThemeId themeId = AppSettings.ThemeId;
+            string[] variations = AppSettings.ThemeVariations;
             if (string.IsNullOrEmpty(themeId.Name))
             {
-                return CreateFallbackSettings(invariantTheme);
+                return CreateFallbackSettings(invariantTheme, variations);
             }
 
             Theme theme;
@@ -71,7 +72,7 @@ namespace GitUI.Theming
             catch (ThemeException ex)
             {
                 MessageBoxes.ShowError(null, $"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex}");
-                return CreateFallbackSettings(invariantTheme);
+                return CreateFallbackSettings(invariantTheme, variations);
             }
 
             if (!AppSettings.UseSystemVisualStyle && !_suppressWin32HooksForTests)
@@ -85,7 +86,7 @@ namespace GitUI.Theming
                 catch (Exception ex)
                 {
                     MessageBoxes.ShowError(null, $"Failed to install Win32 theming hooks: {ex}");
-                    return CreateFallbackSettings(invariantTheme);
+                    return CreateFallbackSettings(invariantTheme, variations);
                 }
             }
 
@@ -150,8 +151,8 @@ namespace GitUI.Theming
             }
         }
 
-        private static ThemeSettings CreateFallbackSettings(Theme invariantTheme) =>
-            new(Theme.Default, invariantTheme, ThemeVariations.None, useSystemVisualStyle: true);
+        private static ThemeSettings CreateFallbackSettings(Theme invariantTheme, string[] variations) =>
+            new(Theme.CreateDefaultTheme(variations), invariantTheme, variations, useSystemVisualStyle: true);
 
         internal static class TestAccessor
         {

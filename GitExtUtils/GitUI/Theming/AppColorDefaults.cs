@@ -24,11 +24,45 @@ namespace GitExtUtils.GitUI.Theming
                 { AppColor.DiffAddedExtra, Color.FromArgb(135, 255, 135) }
             };
 
-        public static Color GetBy(AppColor name)
+        private static readonly Dictionary<string, Dictionary<AppColor, Color>> Variations = new()
         {
-            return Values.TryGetValue(name, out var result)
-                ? result
-                : FallbackColor;
+            {
+                "colorblind", new()
+                {
+                   { AppColor.Graph, Color.FromArgb(0x06, 0x00, 0xa8) },
+                   { AppColor.RemoteBranch, Color.FromArgb(0x06, 0x00, 0xa8) },
+                   { AppColor.DiffRemoved, Color.FromArgb(0x94, 0xcb, 0xff) },
+                   { AppColor.DiffRemovedExtra, Color.FromArgb(0x4d, 0xa6, 0xff) },
+                }
+            }
+        };
+
+        public static Color GetBy(AppColor name, string[]? variations = null)
+        {
+            if (!Values.TryGetValue(name, out var result))
+            {
+                result = FallbackColor;
+            }
+
+            if (variations == null)
+            {
+                return result;
+            }
+
+            foreach (string variation in variations)
+            {
+                if (!Variations.TryGetValue(variation, out var colorOverrides))
+                {
+                    continue;
+                }
+
+                if (colorOverrides.TryGetValue(name, out var colorOverride))
+                {
+                    result = colorOverride;
+                }
+            }
+
+            return result;
         }
     }
 }
