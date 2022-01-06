@@ -14,8 +14,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         bool LabelRestartIsNeededVisible { get; set; }
 
-        bool IsChoosingThemeVariationsEnabled { get; set; }
-
         bool IsChoosingVisualStyleEnabled { get; set; }
 
         void ShowThemeLoadingErrorMessage(ThemeId themeId, string[] variations, Exception ex);
