@@ -40,7 +40,8 @@
             ToggleBetweenArtificialAndHeadCommits = 33,
             ShowReflogReferences = 34,
             ShowLatestStash = 35,
-            DisableRevisionFilter = 36,
+            ResetRevisionFilter = 36,
+            ResetPathRevisionFilter = 37,
         }
     }
 }

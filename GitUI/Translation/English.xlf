@@ -3219,6 +3219,10 @@ Do you want to continue?</source>
         <source>Text filter</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiAdvancedFilter.Text">
+        <source>&amp;Advanced filter</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiAuthorFilter.Text">
         <source>&amp;Author</source>
         <target />
@@ -3261,6 +3265,14 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="tsmiRecentRepositoriesClear.Text">
         <source>Clear List</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiResetAllFilters.Text">
+        <source>&amp;Reset revision filters</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiResetPathFilters.Text">
+        <source>Reset &amp;path filter</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowBranchesAll.Text">

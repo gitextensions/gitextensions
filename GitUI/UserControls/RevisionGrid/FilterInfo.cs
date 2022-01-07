@@ -284,7 +284,7 @@ namespace GitUI.UserControls.RevisionGrid
             return false;
         }
 
-        public void DisableFilters()
+        public void ResetAllFilters()
         {
             ByDateFrom = false;
             ByDateTo = false;

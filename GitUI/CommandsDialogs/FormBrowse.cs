@@ -992,6 +992,9 @@ namespace GitUI.CommandsDialogs
             rebaseToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
             rebaseToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
 
+            // Set shortcuts on the Browse toolbar with commands in RevGrid
+            RevisionGrid.SetFilterShortcutKeys(ToolStripFilters);
+
             // TODO: add more
         }
 
@@ -1808,8 +1811,8 @@ namespace GitUI.CommandsDialogs
                     // Reset the filter when switching repos
 
                     // If we're applying custom branch or revision filters - reset them
-                    RevisionGrid.DisableFilters();
-                    ToolStripFilters.ClearFilters();
+                    RevisionGrid.ResetAllFilters();
+                    ToolStripFilters.ClearQuickFilters();
                     AppSettings.BranchFilterEnabled = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
                 }
 
