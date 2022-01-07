@@ -4852,10 +4852,6 @@ If you are not sure just close this window.</source>
         <source>Detect and follow renames</source>
         <target />
       </trans-unit>
-      <trans-unit id="fullHistoryToolStripMenuItem.Text">
-        <source>Full history</source>
-        <target />
-      </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.ToolTipText">
         <source>Git command log</source>
         <target />
@@ -4905,7 +4901,7 @@ If you are not sure just close this window.</source>
         <target />
       </trans-unit>
       <trans-unit id="showFullHistoryToolStripMenuItem.Text">
-        <source>Show Full History</source>
+        <source>Show full history</source>
         <target />
       </trans-unit>
       <trans-unit id="showLineNumbersToolStripMenuItem.Text">
@@ -4916,12 +4912,8 @@ If you are not sure just close this window.</source>
         <source>Show original file path</source>
         <target />
       </trans-unit>
-      <trans-unit id="simplifyMergesContextMenuItem.Text">
-        <source>Simplify Merges</source>
-        <target />
-      </trans-unit>
       <trans-unit id="simplifyMergesToolStripMenuItem.Text">
-        <source>Simplify Merges</source>
+        <source>Simplify merges</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripBlameOptions.Text">
@@ -9652,6 +9644,10 @@ See the changes in the commit form.</source>
         <source>Set advanced filter</source>
         <target />
       </trans-unit>
+      <trans-unit id="fullHistory.Text">
+        <source>Full history</source>
+        <target />
+      </trans-unit>
       <trans-unit id="showAuthorAvatarColumnToolStripMenuItem.Text">
         <source>Show aut&amp;hor avatar column</source>
         <target />
@@ -9706,6 +9702,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="showTagsToolStripMenuItem.Text">
         <source>Show &amp;tags</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="simplifyMerges.Text">
+        <source>Simplify merges</source>
         <target />
       </trans-unit>
     </body>

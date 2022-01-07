@@ -2231,6 +2231,18 @@ namespace GitUI
             PerformRefreshRevisions();
         }
 
+        public void ToggleFullHistory()
+        {
+            AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
+            PerformRefreshRevisions();
+        }
+
+        public void ToggleSimplifyMerges()
+        {
+            AppSettings.SimplifyMergesInFileHistory = !AppSettings.SimplifyMergesInFileHistory;
+            PerformRefreshRevisions();
+        }
+
         internal void ToggleBetweenArtificialAndHeadCommits()
         {
             GoToRef(GetIdToSelect()?.ToString(), showNoRevisionMsg: false);

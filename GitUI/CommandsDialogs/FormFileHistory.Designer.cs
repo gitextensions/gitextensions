@@ -26,8 +26,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.followFileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.followFileHistoryRenamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.fullHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.simplifyMergesContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.tabControl1 = new GitUI.CommandsDialogs.FullBleedTabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
@@ -115,8 +113,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator1,
             this.followFileHistoryToolStripMenuItem,
             this.followFileHistoryRenamesToolStripMenuItem,
-            this.fullHistoryToolStripMenuItem,
-            this.simplifyMergesContextMenuItem,
             this.toolStripSeparator4});
             this.FileHistoryContextMenu.Name = "DiffContextMenu";
             this.FileHistoryContextMenu.Size = new System.Drawing.Size(340, 226);
@@ -206,20 +202,6 @@ namespace GitUI.CommandsDialogs
             this.followFileHistoryRenamesToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.followFileHistoryRenamesToolStripMenuItem.Text = "Detect and follow - exact renames and copies only";
             this.followFileHistoryRenamesToolStripMenuItem.Click += new System.EventHandler(this.followFileHistoryRenamesToolStripMenuItem_Click);
-            // 
-            // fullHistoryToolStripMenuItem
-            // 
-            this.fullHistoryToolStripMenuItem.Name = "fullHistoryToolStripMenuItem";
-            this.fullHistoryToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
-            this.fullHistoryToolStripMenuItem.Text = "Full history";
-            this.fullHistoryToolStripMenuItem.Click += new System.EventHandler(this.fullHistoryToolStripMenuItem_Click);
-            // 
-            // simplifyMergesContextMenuItem
-            // 
-            this.simplifyMergesContextMenuItem.Name = "simplifyMergesContextMenuItem";
-            this.simplifyMergesContextMenuItem.Size = new System.Drawing.Size(339, 22);
-            this.simplifyMergesContextMenuItem.Text = "Simplify Merges";
-            this.simplifyMergesContextMenuItem.Click += new System.EventHandler(this.simplifyMergesContextMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
@@ -386,14 +368,14 @@ namespace GitUI.CommandsDialogs
             // 
             this.showFullHistoryToolStripMenuItem.Name = "showFullHistoryToolStripMenuItem";
             this.showFullHistoryToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.showFullHistoryToolStripMenuItem.Text = "Show Full History";
+            this.showFullHistoryToolStripMenuItem.Text = "Show full history";
             this.showFullHistoryToolStripMenuItem.Click += new System.EventHandler(this.showFullHistoryToolStripMenuItem_Click);
             // 
             // simplifyMergesToolStripMenuItem
             // 
             this.simplifyMergesToolStripMenuItem.Name = "simplifyMergesToolStripMenuItem";
             this.simplifyMergesToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.simplifyMergesToolStripMenuItem.Text = "Simplify Merges";
+            this.simplifyMergesToolStripMenuItem.Text = "Simplify merges";
             this.simplifyMergesToolStripMenuItem.Click += new System.EventHandler(this.simplifyMergesToolStripMenuItem_Click);
             // 
             // toolStripBlameOptions
@@ -563,7 +545,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem followFileHistoryToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fullHistoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cherryPickThisCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;
@@ -584,7 +565,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripDropDownButton ShowFullHistory;
         private System.Windows.Forms.ToolStripMenuItem showFullHistoryToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem simplifyMergesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem simplifyMergesContextMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem displayAuthorFirstToolStripMenuItem;
