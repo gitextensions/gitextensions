@@ -15,6 +15,10 @@ namespace GitCommands.Settings
         private readonly FileSystemWatcher _fileWatcher = new();
         private readonly bool _canEnableFileWatcher;
 
+        // The FileSystemWatcher is not reporting changes for WSL
+        // https://github.com/microsoft/WSL/issues/4581
+        private readonly bool _forceFileChangeChecks;
+
         private Timer? _saveTimer;
         private readonly bool _autoSave;
 
@@ -43,6 +47,9 @@ namespace GitCommands.Settings
                 _fileWatcher.Filter = Path.GetFileName(SettingsFilePath);
                 _canEnableFileWatcher = true;
                 _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
+
+                // The file exists, but notifications may not fire
+                _forceFileChangeChecks = PathUtil.IsWslPath(SettingsFilePath);
             }
 
             FileChanged();
@@ -162,6 +169,7 @@ namespace GitCommands.Settings
                 }
                 catch (Exception ex)
                 {
+                    _lastFileRead = null;
                     throw new SaveSettingsException(ex);
                 }
 
@@ -184,6 +192,11 @@ namespace GitCommands.Settings
             {
                 try
                 {
+                    if (_forceFileChangeChecks)
+                    {
+                        _lastFileModificationDate = GetLastFileModificationUtc();
+                    }
+
                     ReadSettings(SettingsFilePath);
                     _lastFileRead = DateTime.UtcNow;
                     _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
@@ -191,18 +204,23 @@ namespace GitCommands.Settings
                 catch (Exception e)
                 {
                     // TODO: should we report it to the user somehow?
-                    Debug.WriteLine(e.Message);
+                    Trace.WriteLine($"Failed to load {SettingsFilePath}: {e.Message}");
                 }
             }
             else
             {
-                _lastFileRead = DateTime.UtcNow;
-                _lastFileModificationDate = _lastFileRead.Value;
+                _lastFileModificationDate = DateTime.UtcNow;
+                _lastFileRead = _lastFileModificationDate;
             }
         }
 
         protected override bool NeedRefresh()
         {
+            if (_forceFileChangeChecks)
+            {
+                _lastFileModificationDate = GetLastFileModificationUtc();
+            }
+
             return !_lastFileRead.HasValue || _lastFileModificationDate > _lastFileRead.Value;
         }
 
@@ -221,8 +239,7 @@ namespace GitCommands.Settings
         // Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
         private void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
         {
-            var t = (System.Timers.Timer)source;
-            t.Stop();
+            ((Timer)source).Stop();
             Save();
         }
 

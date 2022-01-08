@@ -36,6 +36,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private const int PeriodicUpdateInterval = 5 * 60 * 1000;
 
+        /// <summary>
+        /// Periodic update in WSL, where FileSystemWatcher may not report changes
+        /// https://github.com/microsoft/WSL/issues/4581
+        /// </summary>
+        private const int PeriodicUpdateIntervalWSL = 60 * 1000;
+
         private readonly FileSystemWatcher _workTreeWatcher = new();
         private readonly FileSystemWatcher _gitDirWatcher = new();
         private readonly System.Windows.Forms.Timer _timerRefresh;
@@ -425,8 +431,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 cancelToken = _statusSequence.Next();
                 noLocks = !_isFirstPostRepoChanged;
 
-                // Schedule update every 5 min, even if we don't know that anything changed
-                _nextUpdateTime = commandStartTime + PeriodicUpdateInterval;
+                // Schedule periodic update, even if we don't know that anything changed
+                _nextUpdateTime = commandStartTime
+                    + (PathUtil.IsWslPath(_workTreeWatcher.Path) ? PeriodicUpdateIntervalWSL : PeriodicUpdateInterval);
                 _nextEarliestTime = commandStartTime + MinUpdateInterval;
                 _isFirstPostRepoChanged = false;
                 _commandIsRunning = true;

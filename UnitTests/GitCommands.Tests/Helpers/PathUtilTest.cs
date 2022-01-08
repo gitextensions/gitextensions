@@ -223,18 +223,15 @@ namespace GitCommandsTests.Helpers
             Assert.Throws(expectedException, () => PathUtil.ResolveWsl(input));
         }
 
-        [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", true)]
-        [TestCase(@"\\wsl$\Ubuntu\work\..\GitExtensions\", true)]
-        [TestCase(@"C:\work\..\GitExtensions\", false)]
-        public void IsWslPath(string path, bool expected)
+        [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", true, true)]
+        [TestCase(@"\\wsl$\Ubuntu\work\..\GitExtensions\", true, true)]
+        [TestCase(@"C:\work\..\GitExtensions\", false, false)]
+        [TestCase(@"\\Wsl$/Ubuntu\work\..\GitExtensions\", false, false)]
+        [TestCase(@"\\Wsl.localhost\GitExtensions\", true, false)]
+        public void IsWslPath(string path, bool expected, bool expectedPrefix)
         {
             PathUtil.IsWslPath(path).Should().Be(expected);
-        }
-
-        [TestCase(@"\\Wsl$/Ubuntu\work\..\GitExtensions\", false)]
-        public void IsWslPath_unexpected_usage(string path, bool expected)
-        {
-            PathUtil.IsWslPath(path).Should().Be(expected);
+            PathUtil.TestAccessor.IsWslPrefixPath(path).Should().Be(expectedPrefix);
         }
 
         [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", "Ubuntu")]
