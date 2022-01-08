@@ -44,7 +44,7 @@
             this.chkShowGpgInformation.AutoSize = true;
             this.chkShowGpgInformation.Location = new System.Drawing.Point(9, 48);
             this.chkShowGpgInformation.Name = "chkShowGpgInformation";
-            this.chkShowGpgInformation.Size = new System.Drawing.Size(212, 17);
+            this.chkShowGpgInformation.Size = new System.Drawing.Size(147, 19);
             this.chkShowGpgInformation.TabIndex = 7;
             this.chkShowGpgInformation.Text = "Show GPG information";
             this.chkShowGpgInformation.UseVisualStyleBackColor = true;
@@ -54,7 +54,7 @@
             this.chkChowConsoleTab.AutoSize = true;
             this.chkChowConsoleTab.Location = new System.Drawing.Point(9, 25);
             this.chkChowConsoleTab.Name = "chkChowConsoleTab";
-            this.chkChowConsoleTab.Size = new System.Drawing.Size(209, 17);
+            this.chkChowConsoleTab.Size = new System.Drawing.Size(141, 19);
             this.chkChowConsoleTab.TabIndex = 6;
             this.chkChowConsoleTab.Text = "Show the Console tab";
             this.chkChowConsoleTab.UseVisualStyleBackColor = true;
@@ -66,7 +66,7 @@
             this.cboTerminal.Location = new System.Drawing.Point(146, 22);
             this.cboTerminal.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cboTerminal.Name = "cboTerminal";
-            this.cboTerminal.Size = new System.Drawing.Size(262, 21);
+            this.cboTerminal.Size = new System.Drawing.Size(262, 23);
             this.cboTerminal.TabIndex = 3;
             // 
             // label2
@@ -74,7 +74,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 25);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 13);
+            this.label2.Size = new System.Drawing.Size(72, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "Default shell";
             // 
@@ -83,7 +83,7 @@
             this.chkUseBrowseForFileHistory.AutoSize = true;
             this.chkUseBrowseForFileHistory.Location = new System.Drawing.Point(9, 48);
             this.chkUseBrowseForFileHistory.Name = "chkUseBrowseForFileHistory";
-            this.chkUseBrowseForFileHistory.Size = new System.Drawing.Size(212, 17);
+            this.chkUseBrowseForFileHistory.Size = new System.Drawing.Size(165, 19);
             this.chkUseBrowseForFileHistory.TabIndex = 4;
             this.chkUseBrowseForFileHistory.Text = "Show file history in the main window";
             this.chkUseBrowseForFileHistory.UseVisualStyleBackColor = true;
@@ -97,7 +97,7 @@
             this.gbGeneral.Controls.Add(this.chkUseBrowseForFileHistory);
             this.gbGeneral.Location = new System.Drawing.Point(11, 11);
             this.gbGeneral.Name = "gbGeneral";
-            this.gbGeneral.Size = new System.Drawing.Size(1487, 81);
+            this.gbGeneral.Size = new System.Drawing.Size(435, 81);
             this.gbGeneral.TabIndex = 1;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
@@ -108,9 +108,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbTabs.Controls.Add(this.chkShowGpgInformation);
             this.gbTabs.Controls.Add(this.chkChowConsoleTab);
-            this.gbTabs.Location = new System.Drawing.Point(11, 86);
+            this.gbTabs.Location = new System.Drawing.Point(11, 98);
             this.gbTabs.Name = "gbTabs";
-            this.gbTabs.Size = new System.Drawing.Size(1487, 82);
+            this.gbTabs.Size = new System.Drawing.Size(435, 82);
             this.gbTabs.TabIndex = 5;
             this.gbTabs.TabStop = false;
             this.gbTabs.Text = "Tabs (restart required)";
@@ -123,7 +123,7 @@
             this.Controls.Add(this.gbGeneral);
             this.Name = "FormBrowseRepoSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1509, 596);
+            this.Size = new System.Drawing.Size(457, 192);
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
             this.gbTabs.ResumeLayout(false);
