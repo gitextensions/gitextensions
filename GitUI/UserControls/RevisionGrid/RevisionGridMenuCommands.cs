@@ -444,6 +444,21 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
+                    Name = "fullHistory",
+                    Text = "Full history",
+                    ExecuteAction = () => _revisionGrid.ToggleFullHistory(),
+                    IsCheckedFunc = () => AppSettings.FullHistoryInFileHistory
+                },
+                new MenuCommand
+                {
+                    Name = "simplifyMerges",
+                    Text = "Simplify merges",
+                    ExecuteAction = () => _revisionGrid.ToggleSimplifyMerges(),
+                    IsCheckedFunc = () => AppSettings.SimplifyMergesInFileHistory,
+                    IsEnabledFunc = () => AppSettings.FullHistoryInFileHistory
+                },
+                new MenuCommand
+                {
                     Name = "filterToolStripMenuItem",
                     Text = "Set advanced filter",
                     Image = Images.EditFilter,

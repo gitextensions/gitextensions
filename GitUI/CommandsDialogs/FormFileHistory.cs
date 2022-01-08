@@ -6,7 +6,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
@@ -16,7 +15,6 @@ using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
-using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -113,12 +111,9 @@ namespace GitUI.CommandsDialogs
 
             UpdateFollowHistoryMenuItems();
 
-            fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
             showFullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
             simplifyMergesToolStripMenuItem.Checked = AppSettings.SimplifyMergesInFileHistory;
             simplifyMergesToolStripMenuItem.Enabled = AppSettings.FullHistoryInFileHistory;
-            simplifyMergesContextMenuItem.Checked = AppSettings.SimplifyMergesInFileHistory;
-            simplifyMergesContextMenuItem.Enabled = AppSettings.FullHistoryInFileHistory;
 
             loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow && blameTabExists;
@@ -469,16 +464,6 @@ namespace GitUI.CommandsDialogs
             ToggleFullHistoryFlag();
         }
 
-        private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ToggleFullHistoryFlag();
-        }
-
-        private void simplifyMergesContextMenuItem_Click(object sender, EventArgs e)
-        {
-            ToggleSimplifyMergesFlag();
-        }
-
         private void simplifyMergesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToggleSimplifyMergesFlag();
@@ -488,7 +473,6 @@ namespace GitUI.CommandsDialogs
         {
             AppSettings.SimplifyMergesInFileHistory = !AppSettings.SimplifyMergesInFileHistory;
             simplifyMergesToolStripMenuItem.Checked = AppSettings.SimplifyMergesInFileHistory;
-            simplifyMergesContextMenuItem.Checked = AppSettings.SimplifyMergesInFileHistory;
 
             if (AppSettings.FullHistoryInFileHistory)
             {
@@ -499,10 +483,8 @@ namespace GitUI.CommandsDialogs
         private void ToggleFullHistoryFlag()
         {
             AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
-            fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
             showFullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
 
-            simplifyMergesContextMenuItem.Enabled = AppSettings.FullHistoryInFileHistory;
             simplifyMergesToolStripMenuItem.Enabled = AppSettings.FullHistoryInFileHistory;
 
             LoadFileHistory();
