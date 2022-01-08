@@ -28,6 +28,7 @@ namespace GitUI.UserControls.RevisionGrid
             _NO_TRANSLATE_lblLimit.Text = TranslatedStrings.Limit;
             _NO_TRANSLATE_lblPathFilter.Text = TranslatedStrings.PathFilter;
             _NO_TRANSLATE_lblBranches.Text = TranslatedStrings.Branches;
+            _NO_TRANSLATE_lblSimplifyByDecoration.Text = TranslatedStrings.SimplifyByDecoration;
 
             _filterInfo = filterInfo;
 
@@ -89,9 +90,7 @@ namespace GitUI.UserControls.RevisionGrid
             PathFilter.Enabled = PathFilterCheck.Checked;
 
             CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
-            SimplifyByDecorationCheck.Enabled = BranchFilterCheck.Checked;
-            BranchFilter.Enabled = BranchFilterCheck.Checked &&
-                                   !CurrentBranchOnlyCheck.Checked;
+            BranchFilter.Enabled = BranchFilterCheck.Checked && !CurrentBranchOnlyCheck.Checked;
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -114,7 +113,7 @@ namespace GitUI.UserControls.RevisionGrid
             _filterInfo.ByBranchFilter = BranchFilterCheck.Checked;
             _filterInfo.BranchFilter = BranchFilter.Text;
             _filterInfo.ShowCurrentBranchOnly = BranchFilterCheck.Checked && CurrentBranchOnlyCheck.Checked;
-            _filterInfo.ShowSimplifyByDecoration = BranchFilterCheck.Checked && SimplifyByDecorationCheck.Checked;
+            _filterInfo.ShowSimplifyByDecoration = SimplifyByDecorationCheck.Checked;
         }
     }
 }

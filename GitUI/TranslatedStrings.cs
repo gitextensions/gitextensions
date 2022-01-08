@@ -123,6 +123,7 @@ the last selected commit.");
         private readonly TranslationString _limit = new("Limit");
         private readonly TranslationString _ignoreCase = new("Ignore case");
         private readonly TranslationString _pathFilter = new("Path filter");
+        private readonly TranslationString _simplifyByDecoration = new("Simplify by decoration");
 
         // public only because of FormTranslate
         public TranslatedStrings()
@@ -249,6 +250,7 @@ the last selected commit.");
         public static string Limit = _instance.Value._limit.Text;
         public static string IgnoreCase = _instance.Value._ignoreCase.Text;
         public static string PathFilter = _instance.Value._pathFilter.Text;
+        public static string SimplifyByDecoration = _instance.Value._simplifyByDecoration.Text;
 
         #region Scripts
 

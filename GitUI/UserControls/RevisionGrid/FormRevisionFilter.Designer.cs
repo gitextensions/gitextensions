@@ -58,6 +58,7 @@
             this.BranchFilter = new System.Windows.Forms.TextBox();
             this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
             this.SimplifyByDecorationCheck = new System.Windows.Forms.CheckBox();
+            this._NO_TRANSLATE_lblSimplifyByDecoration = new System.Windows.Forms.Label();
             this.MainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitsLimit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -234,7 +235,8 @@
             this.tableLayoutPanel1.Controls.Add(this.BranchFilterCheck, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.BranchFilter, 2, 8);
             this.tableLayoutPanel1.Controls.Add(this.CurrentBranchOnlyCheck, 2, 9);
-            this.tableLayoutPanel1.Controls.Add(this.SimplifyByDecorationCheck, 2, 10);
+            this.tableLayoutPanel1.Controls.Add(this.SimplifyByDecorationCheck, 1, 10);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblSimplifyByDecoration, 2, 10);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -394,12 +396,21 @@
             // 
             this.SimplifyByDecorationCheck.AutoSize = true;
             this.SimplifyByDecorationCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SimplifyByDecorationCheck.Location = new System.Drawing.Point(96, 280);
+            this.SimplifyByDecorationCheck.Location = new System.Drawing.Point(76, 280);
             this.SimplifyByDecorationCheck.Name = "SimplifyByDecorationCheck";
             this.SimplifyByDecorationCheck.Size = new System.Drawing.Size(285, 19);
-            this.SimplifyByDecorationCheck.Text = "Simplify by decoration";
             this.SimplifyByDecorationCheck.UseVisualStyleBackColor = true;
             this.SimplifyByDecorationCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
+            // 
+            // _NO_TRANSLATE_lblSimplifyByDecoration
+            // 
+            this._NO_TRANSLATE_lblSimplifyByDecoration.AutoSize = true;
+            this._NO_TRANSLATE_lblSimplifyByDecoration.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblSimplifyByDecoration.Location = new System.Drawing.Point(96, 280);
+            this._NO_TRANSLATE_lblSimplifyByDecoration.Name = "_NO_TRANSLATE_lblSimplifyByDecoration";
+            this._NO_TRANSLATE_lblSimplifyByDecoration.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblSimplifyByDecoration.Text = "Simplify by decoration";
+            this._NO_TRANSLATE_lblSimplifyByDecoration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FormRevisionFilter
             // 
@@ -453,5 +464,6 @@
         private System.Windows.Forms.CheckBox CurrentBranchOnlyCheck;
         private System.Windows.Forms.CheckBox BranchFilterCheck;
         private System.Windows.Forms.CheckBox SimplifyByDecorationCheck;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblSimplifyByDecoration;
     }
 }

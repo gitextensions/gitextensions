@@ -7420,10 +7420,6 @@ Do you want to use this custom merge script?</source>
         <source>OK</source>
         <target />
       </trans-unit>
-      <trans-unit id="SimplifyByDecorationCheck.Text">
-        <source>Simplify by decoration</source>
-        <target />
-      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormSelectMultipleBranches" source-language="en">
@@ -10903,6 +10899,10 @@ See documentation for more details about icons and range diffs.
 all the first selected with the last selected commit.
 - For more than four selected commits, show the difference from the first to
 the last selected commit.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_simplifyByDecoration.Text">
+        <source>Simplify by decoration</source>
         <target />
       </trans-unit>
       <trans-unit id="_since.Text">
