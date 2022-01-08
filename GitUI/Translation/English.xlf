@@ -541,6 +541,62 @@ Click this info icon for more details.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="BlameViewerSettingsPage" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Blame Viewer</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
+        <source>Detect move and copy in all files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbDetectMoveAndCopyInThisFile.Text">
+        <source>Detect move and copy in this file</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbDisplayAuthorFirst.Text">
+        <source>Display author first</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbIgnoreWhitespace.Text">
+        <source>Ignore whitespace</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbShowAuthor.Text">
+        <source>Show author</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbShowAuthorAvatar.Text">
+        <source>Show author avatar</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbShowAuthorDate.Text">
+        <source>Show author date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbShowAuthorTime.Text">
+        <source>Show author time</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbShowLineNumbers.Text">
+        <source>Show line numbers</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbShowOriginalFilePath.Text">
+        <source>Show original file path</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBoxBlameSettings.Text">
+        <source>Blame settings</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="groupBoxDisplayResult.Text">
+        <source>Display result settings</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="BranchComboBox" source-language="en">
     <body>
       <trans-unit id="_branchCheckoutError.Text">
