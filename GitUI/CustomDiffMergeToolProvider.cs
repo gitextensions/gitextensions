@@ -15,7 +15,7 @@ namespace GitUI
         /// Time to wait before loading custom diff tools in FormBrowse
         /// Avoid loading while git-log and git-diff run.
         /// </summary>
-        private const int FormBrowseToolDelay = 15000;
+        private const int FormBrowseToolDelay = 8000;
 
         /// <summary>
         /// Clear the existing caches.
