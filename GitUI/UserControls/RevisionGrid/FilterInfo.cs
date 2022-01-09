@@ -198,6 +198,7 @@ namespace GitUI.UserControls.RevisionGrid
                     // If reflogs are shown, then we can't apply any filters
                     ByBranchFilter = false;
                     ShowCurrentBranchOnly = false;
+                    ShowSimplifyByDecoration = false;
                 }
             }
         }
@@ -216,7 +217,8 @@ namespace GitUI.UserControls.RevisionGrid
                    ByCommitter ||
                    ByMessage ||
                    ByPathFilter ||
-                   ByBranchFilter;
+                   ByBranchFilter ||
+                   ShowSimplifyByDecoration;
         }
 
         /// <summary>
@@ -291,6 +293,7 @@ namespace GitUI.UserControls.RevisionGrid
             ByMessage = false;
             ByPathFilter = false;
             ByBranchFilter = false;
+            ShowSimplifyByDecoration = false;
         }
 
         public ArgumentString GetRevisionFilter()
@@ -384,7 +387,12 @@ namespace GitUI.UserControls.RevisionGrid
                 filter.AppendLine($"{TranslatedStrings.Until}: {DateTo}");
             }
 
-            // Ignore IgnoreCase, CurrentBranchOnlyCheck, SimplifyByDecorationCheck
+            if (ShowSimplifyByDecoration)
+            {
+                filter.AppendLine($"{TranslatedStrings.SimplifyByDecoration}");
+            }
+
+            // Ignore IgnoreCase, CurrentBranchOnlyCheck
 
             return filter.ToString();
         }
