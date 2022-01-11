@@ -15,9 +15,9 @@ namespace GitCommandsTests.ExternalLinks
     public class ConfiguredLinkDefinitionsProviderTests
     {
         private GitModuleTestHelper _testHelper;
-        private string _level1;
-        private string _level2;
-        private string _level3;
+        private string _repoLocalConfigFilePath;
+        private string _repoDistributedConfigFilePath;
+        private string _userRoamingConfigFilePath;
         private RepoDistSettings _userRoaming;
         private RepoDistSettings _repoDistributed;
         private RepoDistSettings _repoLocal;
@@ -30,15 +30,15 @@ namespace GitCommandsTests.ExternalLinks
             _testHelper = new GitModuleTestHelper();
 
             var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level1_repogit_GitExtensions.settings.xml");
-            _level1 = _testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
+            _repoLocalConfigFilePath = _testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
             content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level2_repodist_GitExtensions.settings.xml");
-            _level2 = _testHelper.CreateFile(_testHelper.TemporaryPath + "/RoamingProfile", "GitExtensions.settings", content);
+            _repoDistributedConfigFilePath = _testHelper.CreateFile(_testHelper.TemporaryPath + "/RoamingProfile", "GitExtensions.settings", content);
             content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level3_roaming_GitExtensions.settings.xml");
-            _level3 = _testHelper.CreateRepoFile("GitExtensions.settings", content);
+            _userRoamingConfigFilePath = _testHelper.CreateRepoFile("GitExtensions.settings", content);
 
-            _userRoaming = new RepoDistSettings(null, new GitExtSettingsCache(_level3), SettingLevel.Global);
-            _repoDistributed = new RepoDistSettings(_userRoaming, new GitExtSettingsCache(_level2), SettingLevel.Distributed);
-            _repoLocal = new RepoDistSettings(_repoDistributed, new GitExtSettingsCache(_level1), SettingLevel.Local);
+            _userRoaming = new RepoDistSettings(null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
+            _repoDistributed = new RepoDistSettings(_userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
+            _repoLocal = new RepoDistSettings(_repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
 
             _externalLinksStorage = Substitute.For<IExternalLinksStorage>();
 

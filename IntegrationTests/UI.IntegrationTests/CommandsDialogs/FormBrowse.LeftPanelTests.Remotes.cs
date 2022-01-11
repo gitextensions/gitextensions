@@ -21,7 +21,6 @@ namespace GitExtensions.UITests.CommandsDialogs
     public class FormBrowse_LeftPanel_RemotesTests
     {
         // Created once for the fixture
-        private TestComposition _composition;
         private ReferenceRepository _referenceRepository;
 
         // Track the original setting value
@@ -68,12 +67,11 @@ namespace GitExtensions.UITests.CommandsDialogs
             _commands = new GitUICommands(_referenceRepository.Module);
             _remotesManager = new ConfigFileRemoteSettingsManager(() => _referenceRepository.Module);
 
-            _composition = TestComposition.Empty
+            var composition = TestComposition.Empty
                 .AddParts(typeof(MockWindowsJumpListManager))
                 .AddParts(typeof(MockRepositoryDescriptionProvider))
                 .AddParts(typeof(MockAppTitleGenerator));
-
-            ExportProvider mefExportProvider = _composition.ExportProviderFactory.CreateExportProvider();
+            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
             ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
