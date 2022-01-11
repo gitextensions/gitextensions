@@ -17,9 +17,6 @@ namespace CommonTestUtils.MEF
     public static partial class ExportProviderCache
     {
         private static readonly PartDiscovery _partDiscovery = CreatePartDiscovery(Resolver.DefaultInstance);
-        private static readonly Scope _localCompositionScope = new("local");
-
-        internal static ExportProvider? LocalExportProviderForCleanup => _localCompositionScope.CurrentExportProvider;
 
         /// <summary>
         /// Use to create <see cref="IExportProviderFactory"/> for default instances of <see cref="MefHostServices"/>.
@@ -84,7 +81,7 @@ namespace CommonTestUtils.MEF
 
         public static IExportProviderFactory CreateExportProviderFactory(ComposableCatalog catalog, bool isRemoteHostComposition)
         {
-            var scope = _localCompositionScope;
+            var scope = new Scope("local");
             var configuration = CompositionConfiguration.Create(catalog.WithCompositionService());
             var runtimeComposition = RuntimeComposition.CreateRuntimeComposition(configuration);
             var exportProviderFactory = runtimeComposition.CreateExportProviderFactory();

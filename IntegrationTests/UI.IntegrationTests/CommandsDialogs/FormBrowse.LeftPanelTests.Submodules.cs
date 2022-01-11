@@ -21,7 +21,6 @@ namespace GitExtensions.UITests.CommandsDialogs
     public class FormBrowse_LeftPanel_SubmodulesTests
     {
         // Created once for each test
-        private TestComposition _composition;
         private GitUICommands _commands;
 
         // Track the original setting value
@@ -53,11 +52,6 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
             AppSettings.ShowAuthorAvatarColumn = false;
-
-            _composition = TestComposition.Empty
-                .AddParts(typeof(MockWindowsJumpListManager))
-                .AddParts(typeof(MockRepositoryDescriptionProvider))
-                .AddParts(typeof(MockAppTitleGenerator));
         }
 
         [OneTimeTearDown]
@@ -87,7 +81,11 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             _commands = new GitUICommands(_repo1Module);
 
-            ExportProvider mefExportProvider = _composition.ExportProviderFactory.CreateExportProvider();
+            var composition = TestComposition.Empty
+                .AddParts(typeof(MockWindowsJumpListManager))
+                .AddParts(typeof(MockRepositoryDescriptionProvider))
+                .AddParts(typeof(MockAppTitleGenerator));
+            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
             ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 

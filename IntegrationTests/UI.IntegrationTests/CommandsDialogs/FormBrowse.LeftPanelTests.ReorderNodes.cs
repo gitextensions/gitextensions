@@ -23,7 +23,6 @@ namespace GitExtensions.UITests.CommandsDialogs
     public class FormBrowse_LeftPanel_ReorderNodesTest
     {
         // Created once for each test
-        private TestComposition _composition;
         private GitUICommands _commands;
 
         // Track the original setting value
@@ -56,11 +55,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.RepoObjectsTreeShowRemotes = true;
             AppSettings.RepoObjectsTreeShowTags = true;
             AppSettings.RepoObjectsTreeShowSubmodules = true;
-
-            _composition = TestComposition.Empty
-                .AddParts(typeof(MockWindowsJumpListManager))
-                .AddParts(typeof(MockRepositoryDescriptionProvider))
-                .AddParts(typeof(MockAppTitleGenerator));
         }
 
         [OneTimeTearDown]
@@ -81,7 +75,11 @@ namespace GitExtensions.UITests.CommandsDialogs
             _repo1 = new GitModuleTestHelper("repo1");
             _commands = new GitUICommands(_repo1.Module);
 
-            ExportProvider mefExportProvider = _composition.ExportProviderFactory.CreateExportProvider();
+            var composition = TestComposition.Empty
+                .AddParts(typeof(MockWindowsJumpListManager))
+                .AddParts(typeof(MockRepositoryDescriptionProvider))
+                .AddParts(typeof(MockAppTitleGenerator));
+            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
             ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
