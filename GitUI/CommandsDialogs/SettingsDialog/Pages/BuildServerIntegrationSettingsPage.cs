@@ -82,8 +82,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             IBuildServerSettings buildServerSettings = GetCurrentSettings().GetBuildServerSettings();
 
             buildServerSettings.ServerName = GetSelectedBuildServerType();
-            buildServerSettings.IntegrationEnabled = checkBoxEnableBuildServerIntegration.Checked;
-            buildServerSettings.ShowBuildResultPage = checkBoxShowBuildResultPage.Checked;
+            buildServerSettings.IntegrationEnabled = checkBoxEnableBuildServerIntegration.CheckState == CheckState.Indeterminate
+                ? null
+                : checkBoxEnableBuildServerIntegration.Checked;
+            buildServerSettings.ShowBuildResultPage = checkBoxShowBuildResultPage.CheckState == CheckState.Indeterminate
+                ? null
+                : checkBoxShowBuildResultPage.Checked;
 
             var control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
             control?.SaveSettings(buildServerSettings.SettingsSource);
@@ -149,6 +153,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void BuildServerType_SelectedIndexChanged(object sender, EventArgs e)
         {
             ActivateBuildServerSettingsControl();
+        }
+
+        internal TestAccessor GetTestAccessor() => new(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly BuildServerIntegrationSettingsPage _form;
+
+            public TestAccessor(BuildServerIntegrationSettingsPage form)
+            {
+                _form = form;
+            }
+
+            public Panel buildServerSettingsPanel => _form.buildServerSettingsPanel;
+            public ComboBox BuildServerType => _form.BuildServerType;
+            public CheckBox checkBoxEnableBuildServerIntegration => _form.checkBoxEnableBuildServerIntegration;
+            public CheckBox checkBoxShowBuildResultPage => _form.checkBoxShowBuildResultPage;
         }
     }
 }

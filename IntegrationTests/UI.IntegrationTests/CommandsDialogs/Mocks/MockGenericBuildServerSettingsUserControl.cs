@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
@@ -6,16 +6,16 @@ using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 
-namespace AppVeyorIntegration.Settings
+namespace GitExtensions.UITests.CommandsDialogs
 {
     [Export(typeof(IBuildServerSettingsUserControl))]
-    [BuildServerSettingsUserControlMetadata(AppVeyorAdapter.PluginName)]
+    [BuildServerSettingsUserControlMetadata("GenericBuildServerMock")]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public partial class AppVeyorSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
+    public partial class MockGenericBuildServerSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
         private string? _defaultProjectName;
 
-        public AppVeyorSettingsUserControl()
+        public MockGenericBuildServerSettingsUserControl()
         {
             InitializeComponent();
             InitializeComplete();
@@ -30,26 +30,24 @@ namespace AppVeyorIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            AppVeyorProjectName.Text = buildServerConfig.GetString("AppVeyorProjectName", _defaultProjectName);
-            AppVeyorAccountName.Text = buildServerConfig.GetString("AppVeyorAccountName", null);
-            AppVeyorAccountToken.Text = buildServerConfig.GetString("AppVeyorAccountToken", null);
-            cbLoadTestResults.CheckState = SetNullableChecked(buildServerConfig.GetBool("AppVeyorLoadTestsResults"));
+            txtProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
+            txtAccountName.Text = buildServerConfig.GetString("AccountName", null);
+            cbLoadTestResults.CheckState = SetNullableChecked(buildServerConfig.GetBool("LoadTestsResults"));
             return;
 
             static CheckState SetNullableChecked(bool? value)
             {
                 return value.HasValue
-                ? value.Value ? CheckState.Checked : CheckState.Unchecked
-                : CheckState.Indeterminate;
+                    ? value.Value ? CheckState.Checked : CheckState.Unchecked
+                    : CheckState.Indeterminate;
             }
         }
 
         public void SaveSettings(ISettingsSource buildServerConfig)
         {
-            buildServerConfig.SetString("AppVeyorProjectName", AppVeyorProjectName.Text.NullIfEmpty());
-            buildServerConfig.SetString("AppVeyorAccountName", AppVeyorAccountName.Text.NullIfEmpty());
-            buildServerConfig.SetString("AppVeyorAccountToken", AppVeyorAccountToken.Text.NullIfEmpty());
-            buildServerConfig.SetBool("AppVeyorLoadTestsResults", NullIfIndeterminate(cbLoadTestResults));
+            buildServerConfig.SetString("ProjectName", txtProjectName.Text.NullIfEmpty());
+            buildServerConfig.SetString("AccountName", txtAccountName.Text.NullIfEmpty());
+            buildServerConfig.SetBool("LoadTestsResults", NullIfIndeterminate(cbLoadTestResults));
             return;
 
             // if the setting is empty, do not set any value (as this could override lower priority levels)

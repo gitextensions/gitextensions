@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dictionary>
+  <item>
+    <key>
+      <string>BuildServer.ShowBuildResultPage</string>
+    </key>
+    <value>
+      <string>false</string>
+    </value>
+  </item>
+</dictionary>

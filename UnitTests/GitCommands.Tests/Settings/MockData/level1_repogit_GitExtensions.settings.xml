@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dictionary>
+  <item>
+    <key>
+      <string>BuildServer.AppVeyor.AppVeyorProjectName</string>
+    </key>
+    <value>
+      <string>gitextensions/gitextensions</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.EnableIntegration</string>
+    </key>
+    <value>
+      <string>true</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.Type</string>
+    </key>
+    <value>
+      <string>AppVeyor</string>
+    </value>
+  </item>
+</dictionary>

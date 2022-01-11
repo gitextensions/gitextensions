@@ -1,6 +1,5 @@
 ﻿using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using Microsoft;
 
 namespace GitCommands.Settings
 {
@@ -8,11 +7,6 @@ namespace GitCommands.Settings
     {
         private const string BuildServerGroupName = "BuildServer";
         private const string BuildServerTypeName = "Type";
-
-        private const string? TypeDefault = null;
-        private const bool EnableIntegrationDefault = false;
-        private const bool ShowBuildResultPageDefault = true;
-
         private const string BuildServerIntegrationEnabledName = "EnableIntegration";
         private readonly ISettingsSource _settingsSource;
 
@@ -37,9 +31,9 @@ namespace GitCommands.Settings
             }
         }
 
-        public bool IntegrationEnabled
+        public bool? IntegrationEnabled
         {
-            get => _settingsSource.GetBool($"{BuildServerGroupName}.{BuildServerIntegrationEnabledName}", EnableIntegrationDefault);
+            get => _settingsSource.GetBool($"{BuildServerGroupName}.{BuildServerIntegrationEnabledName}");
             set
             {
                 if (IntegrationEnabled == value)
@@ -51,9 +45,9 @@ namespace GitCommands.Settings
             }
         }
 
-        public bool ShowBuildResultPage
+        public bool? ShowBuildResultPage
         {
-            get => _settingsSource.GetBool($"{BuildServerGroupName}.{nameof(ShowBuildResultPage)}", ShowBuildResultPageDefault);
+            get => _settingsSource.GetBool($"{BuildServerGroupName}.{nameof(ShowBuildResultPage)}");
             set
             {
                 if (ShowBuildResultPage == value)

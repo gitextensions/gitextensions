@@ -39,23 +39,38 @@ namespace TeamCityIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            if (buildServerConfig is not null)
+            TeamCityServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", null);
+            TeamCityProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
+            TeamCityBuildIdFilter.Text = buildServerConfig.GetString("BuildIdFilter", null);
+            CheckBoxLogAsGuest.CheckState = SetNullableChecked(buildServerConfig.GetBool("LogAsGuest", false));
+            return;
+
+            static CheckState SetNullableChecked(bool? value)
             {
-                TeamCityServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
-                TeamCityProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
-                TeamCityBuildIdFilter.Text = buildServerConfig.GetString("BuildIdFilter", string.Empty);
-                CheckBoxLogAsGuest.Checked = buildServerConfig.GetBool("LogAsGuest", false);
+                return value.HasValue
+                    ? value.Value ? CheckState.Checked : CheckState.Unchecked
+                    : CheckState.Indeterminate;
             }
         }
 
         public void SaveSettings(ISettingsSource buildServerConfig)
         {
-            if (BuildServerSettingsHelper.IsRegexValid(TeamCityBuildIdFilter.Text))
+            if (!BuildServerSettingsHelper.IsRegexValid(TeamCityBuildIdFilter.Text))
             {
-                buildServerConfig.SetString("BuildServerUrl", TeamCityServerUrl.Text);
-                buildServerConfig.SetString("ProjectName", TeamCityProjectName.Text);
-                buildServerConfig.SetString("BuildIdFilter", TeamCityBuildIdFilter.Text);
-                buildServerConfig.SetBool("LogAsGuest", CheckBoxLogAsGuest.Checked);
+                return;
+            }
+
+            // Empty string is handled as unset, not overriding lower priority levels
+            buildServerConfig.SetString("BuildServerUrl", TeamCityServerUrl.Text.NullIfEmpty());
+            buildServerConfig.SetString("ProjectName", TeamCityProjectName.Text.NullIfEmpty());
+            buildServerConfig.SetString("BuildIdFilter", TeamCityBuildIdFilter.Text.NullIfEmpty());
+            buildServerConfig.SetBool("LogAsGuest", NullIfIndeterminate(CheckBoxLogAsGuest));
+            return;
+
+            // if the setting is empty, do not set any value (as this could override lower priority levels)
+            static bool? NullIfIndeterminate(CheckBox s)
+            {
+                return s.CheckState == CheckState.Indeterminate ? null : s.Checked;
             }
         }
 

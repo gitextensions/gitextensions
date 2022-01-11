@@ -181,11 +181,7 @@ namespace GitUIPluginInterfaces
         }
 
         public void SetString(string name, string? value)
-        {
-            string? stringValue = value;
-
-            SetValue(name, stringValue);
-        }
+            => SetValue(name, value);
 
         [return: NotNullIfNotNull("defaultValue")]
         public string? GetString(string name, string? defaultValue)

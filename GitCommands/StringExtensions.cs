@@ -276,5 +276,12 @@ namespace System
         {
             return str.IndexOf(other, stringComparison) != -1;
         }
+
+        /// <summary>
+        ///  Returns a <see langword="null"/> for an empty string. Primarily used to store settings.
+        /// </summary>
+        [Pure]
+        public static string? NullIfEmpty(this string? text)
+            => string.IsNullOrEmpty(text) ? null : text;
     }
 }
