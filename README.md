@@ -184,6 +184,14 @@ If you want to **update a portable version**, you should delete all the files an
   </tr>
   <tr>
     <td>
+      <strong>Visual Studio VSIX (2022)</strong>
+    </td>
+    <td>
+      <a href="https://marketplace.visualstudio.com/items?itemName=GitExtensionsApp.VS2022">[ Download ]</a> or install from Visual Studio via Extensions
+    </td>
+  </tr>
+  <tr>
+    <td>
       <strong>Visual Studio VSIX (2015/2017/2019)</strong>
     </td>
     <td>
