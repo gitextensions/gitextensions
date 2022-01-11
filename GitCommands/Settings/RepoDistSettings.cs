@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
@@ -16,8 +15,16 @@ namespace GitCommands.Settings
             SettingLevel = settingLevel;
         }
 
-        #region CreateXXX
+        #region CreateRepoDistSettings
 
+        /// <summary>
+        /// Returns an effective setting object where Git Extensions settings are read from the first available of:
+        /// * Local (in .git dir).
+        /// * Distributed (stored in repo).
+        /// * Global (user home).
+        /// </summary>
+        /// <param name="module">The GitModule.</param>
+        /// <returns>the settings.</returns>
         public static RepoDistSettings CreateEffective(GitModule module)
         {
             return CreateLocal(module, CreateDistributed(module, CreateGlobal()), SettingLevel.Effective);
@@ -26,7 +33,6 @@ namespace GitCommands.Settings
         private static RepoDistSettings CreateLocal(GitModule module, RepoDistSettings? lowerPriority,
             SettingLevel settingLevel, bool allowCache = true)
         {
-            ////if (module.IsBareRepository()
             return new RepoDistSettings(lowerPriority,
                 GitExtSettingsCache.Create(Path.Combine(module.GitCommonDirectory, AppSettings.SettingsFileName), allowCache),
                 settingLevel);
@@ -59,6 +65,13 @@ namespace GitCommands.Settings
 
         public override void SetValue(string name, string? value)
         {
+            // For the effective level read the effective value explicitly
+            // as the SetValue below just check the explicit level
+            if (SettingLevel == SettingLevel.Effective && value == GetValue(name))
+            {
+                return;
+            }
+
             bool isEffectiveLevel = LowerPriority?.LowerPriority is not null;
             bool isDetachedOrGlobal = LowerPriority is null;
 
