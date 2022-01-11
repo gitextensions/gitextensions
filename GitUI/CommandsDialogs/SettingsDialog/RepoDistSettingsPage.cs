@@ -39,19 +39,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
         }
 
-        public override void SetGlobalSettings()
-        {
-            if (RepoDistSettingsSet is not null)
-            {
-                SetCurrentSettings(RepoDistSettingsSet.GlobalSettings);
-            }
-        }
-
         public void SetRepoDistSettings()
         {
             if (RepoDistSettingsSet is not null)
             {
                 SetCurrentSettings(RepoDistSettingsSet.RepoDistSettings);
+            }
+        }
+
+        public override void SetGlobalSettings()
+        {
+            if (RepoDistSettingsSet is not null)
+            {
+                SetCurrentSettings(RepoDistSettingsSet.GlobalSettings);
             }
         }
 

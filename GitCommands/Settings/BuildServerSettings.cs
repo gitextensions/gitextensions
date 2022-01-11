@@ -1,16 +1,19 @@
 ﻿using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
+using GitUIPluginInterfaces.BuildServerIntegration;
+using Microsoft;
 
 namespace GitCommands.Settings
 {
     internal sealed class BuildServerSettings : IBuildServerSettings
     {
         private const string BuildServerGroupName = "BuildServer";
+        private const string BuildServerTypeName = "Type";
 
         private const string? TypeDefault = null;
         private const bool EnableIntegrationDefault = false;
         private const bool ShowBuildResultPageDefault = true;
 
+        private const string BuildServerIntegrationEnabledName = "EnableIntegration";
         private readonly ISettingsSource _settingsSource;
 
         public BuildServerSettings(ISettingsSource settingsSource)
@@ -18,31 +21,33 @@ namespace GitCommands.Settings
             _settingsSource = settingsSource;
         }
 
-        public string? Type
+        public ISettingsSource SettingsSource => new SettingsPath(_settingsSource, $"{BuildServerGroupName}.{ServerName}");
+
+        public string? ServerName
         {
-            get => _settingsSource.GetString($"{BuildServerGroupName}.{nameof(Type)}", TypeDefault);
+            get => _settingsSource.GetString($"{BuildServerGroupName}.{BuildServerTypeName}", defaultValue: null);
             set
             {
-                if (Type == value)
+                if (ServerName == value)
                 {
                     return;
                 }
 
-                _settingsSource.SetString($"{BuildServerGroupName}.{nameof(Type)}", value);
+                _settingsSource.SetString($"{BuildServerGroupName}.{BuildServerTypeName}", value);
             }
         }
 
-        public bool EnableIntegration
+        public bool IntegrationEnabled
         {
-            get => _settingsSource.GetBool($"{BuildServerGroupName}.{nameof(EnableIntegration)}", EnableIntegrationDefault);
+            get => _settingsSource.GetBool($"{BuildServerGroupName}.{BuildServerIntegrationEnabledName}", EnableIntegrationDefault);
             set
             {
-                if (EnableIntegration == value)
+                if (IntegrationEnabled == value)
                 {
                     return;
                 }
 
-                _settingsSource.SetBool($"{BuildServerGroupName}.{nameof(EnableIntegration)}", value);
+                _settingsSource.SetBool($"{BuildServerGroupName}.{BuildServerIntegrationEnabledName}", value);
             }
         }
 

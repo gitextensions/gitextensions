@@ -93,7 +93,7 @@ namespace AzureDevOpsIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            var settings = IntegrationSettings.ReadFrom(buildServerConfig);
+            IntegrationSettings settings = IntegrationSettings.ReadFrom(buildServerConfig);
 
             if (string.IsNullOrWhiteSpace(settings.ProjectUrl))
             {
