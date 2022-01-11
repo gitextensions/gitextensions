@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dictionary>
+  <item>
+    <key>
+      <string>Azure DevOps and Team Foundation Server (since TFS2015).BuildDefinitionNameFilter</string>
+    </key>
+    <value>
+      <string>repo CI</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>Azure DevOps and Team Foundation Server (since TFS2015).ProjectUrl</string>
+    </key>
+    <value>
+      <string>https://dev.azure.com/org/public</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>Azure DevOps and Team Foundation Server (since TFS2015).RestApiToken</string>
+    </key>
+    <value>
+      <string>token</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.EnableIntegration</string>
+    </key>
+    <value>
+      <string>true</string>
+    </value>
+  </item>
+  <item>
+    <key>
+      <string>BuildServer.Type</string>
+    </key>
+    <value>
+      <string>Azure DevOps and Team Foundation Server (since TFS2015)</string>
+    </value>
+  </item>
+</dictionary>

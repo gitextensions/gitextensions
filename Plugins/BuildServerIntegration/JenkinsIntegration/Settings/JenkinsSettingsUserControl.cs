@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
@@ -29,16 +30,19 @@ namespace JenkinsIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            JenkinsServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", string.Empty);
+            JenkinsServerUrl.Text = buildServerConfig.GetString("BuildServerUrl", null);
             JenkinsProjectName.Text = buildServerConfig.GetString("ProjectName", _defaultProjectName);
-            IgnoreBuildBranch.Text = buildServerConfig.GetString("IgnoreBuildBranch", string.Empty);
+            IgnoreBuildBranch.Text = buildServerConfig.GetString("IgnoreBuildBranch", null);
         }
 
         public void SaveSettings(ISettingsSource buildServerConfig)
         {
-            buildServerConfig.SetString("BuildServerUrl", JenkinsServerUrl.Text);
-            buildServerConfig.SetString("ProjectName", JenkinsProjectName.Text);
-            buildServerConfig.SetString("IgnoreBuildBranch", IgnoreBuildBranch.Text);
+            buildServerConfig.SetString("BuildServerUrl", JenkinsServerUrl.Text.NullIfEmpty());
+            buildServerConfig.SetString("ProjectName", JenkinsProjectName.Text.NullIfEmpty());
+
+            // While an empty value is valid as as override for lower level settings,
+            // the behaviour requiring that the "effective" value is set is considered a worse limitation.
+            buildServerConfig.SetString("IgnoreBuildBranch", IgnoreBuildBranch.Text.NullIfEmpty());
         }
     }
 }
