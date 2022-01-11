@@ -2,22 +2,6 @@
 <dictionary>
   <item>
     <key>
-      <string>BuildServer.AppVeyor.AppVeyorDisplayGitHubPullRequests</string>
-    </key>
-    <value>
-      <string>false</string>
-    </value>
-  </item>
-  <item>
-    <key>
-      <string>BuildServer.AppVeyor.AppVeyorLoadTestsResults</string>
-    </key>
-    <value>
-      <string>false</string>
-    </value>
-  </item>
-  <item>
-    <key>
       <string>BuildServer.AppVeyor.AppVeyorProjectName</string>
     </key>
     <value>
@@ -30,38 +14,6 @@
     </key>
     <value>
       <string>true</string>
-    </value>
-  </item>
-  <item>
-    <key>
-      <string>BuildServer.TeamCity.BuildIdFilter</string>
-    </key>
-    <value>
-      <string>GitExtensions_.?</string>
-    </value>
-  </item>
-  <item>
-    <key>
-      <string>BuildServer.TeamCity.BuildServerUrl</string>
-    </key>
-    <value>
-      <string>https://teamcity.jetbrains.com</string>
-    </value>
-  </item>
-  <item>
-    <key>
-      <string>BuildServer.TeamCity.LogAsGuest</string>
-    </key>
-    <value>
-      <string>true</string>
-    </value>
-  </item>
-  <item>
-    <key>
-      <string>BuildServer.TeamCity.ProjectName</string>
-    </key>
-    <value>
-      <string>cb_GitExtensions</string>
     </value>
   </item>
   <item>

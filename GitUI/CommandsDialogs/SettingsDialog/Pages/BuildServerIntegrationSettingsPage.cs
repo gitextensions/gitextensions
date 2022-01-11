@@ -6,7 +6,6 @@ using GitCommands.Remotes;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -68,32 +67,26 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                     await this.SwitchToMainThreadAsync();
 
-                    IBuildServerSettings buildServerSettings = GetCurrentSettings()
-                        .BuildServer();
+                    IBuildServerSettings buildServerSettings = GetCurrentSettings().GetBuildServerSettings();
 
-                    checkBoxEnableBuildServerIntegration.SetNullableChecked(buildServerSettings.EnableIntegration);
+                    checkBoxEnableBuildServerIntegration.SetNullableChecked(buildServerSettings.IntegrationEnabled);
                     checkBoxShowBuildResultPage.SetNullableChecked(buildServerSettings.ShowBuildResultPage);
 
-                    BuildServerType.SelectedItem = buildServerSettings.Type ?? _noneItem.Text;
+                    BuildServerType.SelectedItem = buildServerSettings.ServerName ?? _noneItem.Text;
+                    ActivateBuildServerSettingsControl();
                 });
         }
 
         protected override void PageToSettings()
         {
-            IBuildServerSettings buildServerSettings = GetCurrentSettings()
-                .BuildServer();
+            IBuildServerSettings buildServerSettings = GetCurrentSettings().GetBuildServerSettings();
 
-            buildServerSettings.EnableIntegration = checkBoxEnableBuildServerIntegration.Checked;
+            buildServerSettings.ServerName = GetSelectedBuildServerType();
+            buildServerSettings.IntegrationEnabled = checkBoxEnableBuildServerIntegration.Checked;
             buildServerSettings.ShowBuildResultPage = checkBoxShowBuildResultPage.Checked;
 
-            var selectedBuildServerType = GetSelectedBuildServerType();
-
-            buildServerSettings.Type = selectedBuildServerType;
-
-            var control =
-                buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>()
-                                        .SingleOrDefault();
-            control?.SaveSettings(GetCurrentSettings().ByPath(buildServerSettings.Type!));
+            var control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
+            control?.SaveSettings(buildServerSettings.SettingsSource);
         }
 
         private void ActivateBuildServerSettingsControl()
@@ -108,10 +101,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (control is not null)
             {
-                IBuildServerSettings buildServerSettings = GetCurrentSettings()
-                    .BuildServer();
+                IBuildServerSettings buildServerSettings = GetCurrentSettings().GetBuildServerSettings();
 
-                control.LoadSettings(GetCurrentSettings().ByPath(buildServerSettings.Type!));
+                control.LoadSettings(buildServerSettings.SettingsSource);
 
                 buildServerSettingsPanel.Controls.Add((Control)control);
                 ((Control)control).Dock = DockStyle.Fill;

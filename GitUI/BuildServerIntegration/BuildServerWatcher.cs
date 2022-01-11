@@ -296,22 +296,20 @@ namespace GitUI.BuildServerIntegration
         {
             await TaskScheduler.Default;
 
-            IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings()
-                .BuildServer();
-
-            if (!buildServerSettings.EnableIntegration)
+            IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings().GetBuildServerSettings();
+            if (!buildServerSettings.IntegrationEnabledOrDefault)
             {
                 return null;
             }
 
-            var buildServerType = buildServerSettings.Type;
-            if (string.IsNullOrEmpty(buildServerType))
+            var buildServerName = buildServerSettings.ServerName;
+            if (string.IsNullOrEmpty(buildServerName))
             {
                 return null;
             }
 
             var exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-            var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerType);
+            var export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerName);
 
             if (export is not null)
             {
@@ -326,7 +324,7 @@ namespace GitUI.BuildServerIntegration
 
                     var buildServerAdapter = export.Value;
 
-                    buildServerAdapter.Initialize(this, _module().GetEffectiveSettings().ByPath(buildServerSettings.Type!),
+                    buildServerAdapter.Initialize(this, buildServerSettings.SettingsSource,
                         () =>
                         {
                             // To run the `StartSettingsDialog()` in the UI Thread

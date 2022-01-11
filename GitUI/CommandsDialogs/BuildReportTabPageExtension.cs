@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using GitCommands.Settings;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.Settings;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs
@@ -221,11 +221,8 @@ namespace GitUI.CommandsDialogs
 
         private bool IsBuildResultPageEnabled()
         {
-            IBuildServerSettings buildServerSettings = GetModule()
-                .GetEffectiveSettings()
-                .BuildServer();
-
-            return buildServerSettings.ShowBuildResultPage;
+            IBuildServerSettings buildServerSettings = GetModule().GetEffectiveSettings().GetBuildServerSettings();
+            return buildServerSettings.ShowBuildResultPageOrDefault;
         }
 
         private IGitModule GetModule()

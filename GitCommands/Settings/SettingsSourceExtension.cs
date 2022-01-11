@@ -1,4 +1,5 @@
 ﻿using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.BuildServerIntegration;
 using GitUIPluginInterfaces.Settings;
 
 namespace GitCommands.Settings
@@ -11,7 +12,7 @@ namespace GitCommands.Settings
         public static IDetailedSettings Detailed(this ISettingsSource settingsSource)
             => new DetailedSettings(settingsSource);
 
-        public static IBuildServerSettings BuildServer(this ISettingsSource settingsSource)
+        public static IBuildServerSettings GetBuildServerSettings(this ISettingsSource settingsSource)
             => new BuildServerSettings(settingsSource);
 
         public static IDetachedSettings Detached(this ISettingsSource settingsSource)
