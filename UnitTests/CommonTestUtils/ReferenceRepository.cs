@@ -23,6 +23,8 @@ namespace CommonTestUtils
 
         public string CommitHash => _commitHash;
 
+        private const string _fileName = "A.txt";
+
         private string Commit(Repository repository, string commitMessage)
         {
             LibGit2Sharp.Signature author = new("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
@@ -39,14 +41,28 @@ namespace CommonTestUtils
             Console.WriteLine($"Created branch: {commitHash}, message: {branchName}");
         }
 
-        public void CreateCommit(string commitMessage, string content = null)
+        public string CreateCommit(string commitMessage, string content = null)
         {
             using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
-            _moduleTestHelper.CreateRepoFile("A.txt", content ?? commitMessage);
-            repository.Index.Add("A.txt");
+            _moduleTestHelper.CreateRepoFile(_fileName, content ?? commitMessage);
+            repository.Index.Add(_fileName);
 
             _commitHash = Commit(repository, commitMessage);
             Console.WriteLine($"Created commit: {_commitHash}, message: {commitMessage}");
+            return _commitHash;
+        }
+
+        public string CreateCommit(string commitMessage, string content1, string fileName1, string content2, string fileName2)
+        {
+            using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
+            _moduleTestHelper.CreateRepoFile(fileName1, content1);
+            repository.Index.Add(fileName1);
+            _moduleTestHelper.CreateRepoFile(fileName2, content2);
+            repository.Index.Add(fileName2);
+
+            _commitHash = Commit(repository, commitMessage);
+            Console.WriteLine($"Created commit: {_commitHash}, message: {commitMessage}");
+            return _commitHash;
         }
 
         public string CreateRepoFile(string fileName, string fileContent) => _moduleTestHelper.CreateRepoFile(fileName, fileContent);
@@ -122,8 +138,8 @@ namespace CommonTestUtils
         public void Stash(string stashMessage, string content = null)
         {
             using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
-            _moduleTestHelper.CreateRepoFile("A.txt", content ?? stashMessage);
-            repository.Index.Add("A.txt");
+            _moduleTestHelper.CreateRepoFile(_fileName, content ?? stashMessage);
+            repository.Index.Add(_fileName);
 
             LibGit2Sharp.Signature author = new("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
             Stash stash = repository.Stashes.Add(author, stashMessage);

@@ -452,26 +452,33 @@ namespace GitUI.Editor
 
         public void GoToLine(int lineNumber)
         {
-            TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, GetCaretLine(lineNumber, rightFile: true));
+            TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, GetCaretOffset(lineNumber, rightFile: true));
         }
 
-        private int GetCaretLine(int lineNumber, bool rightFile)
+        /// <summary>
+        /// Convert the line number to the offset for the caret.
+        /// </summary>
+        /// <param name="lineNumber">The line number seen in the editor.</param>
+        /// <param name="rightFile">If the line number for the right file is preferred.</param>
+        /// <returns>The caret offset</returns>
+        private int GetCaretOffset(int lineNumber, bool rightFile)
         {
             if (TextEditor.ShowLineNumbers)
             {
+                // All contents is shown, just translate the lineNumber (that is an offset)
                 return lineNumber - 1;
             }
             else
             {
-                for (int line = 0; line < TotalNumberOfLines; ++line)
+                for (int offset = 0; offset < TotalNumberOfLines; ++offset)
                 {
-                    DiffLineInfo diffLineNum = _lineNumbersControl.GetLineInfo(line);
+                    DiffLineInfo diffLineNum = _lineNumbersControl.GetLineInfo(offset);
                     if (diffLineNum is not null)
                     {
                         int diffLine = rightFile ? diffLineNum.RightLineNumber : diffLineNum.LeftLineNumber;
                         if (diffLine != DiffLineInfo.NotApplicableLineNum && diffLine >= lineNumber)
                         {
-                            return line;
+                            return offset;
                         }
                     }
                 }
@@ -682,8 +689,8 @@ namespace GitUI.Editor
                 {
                     // prefer the LeftLineNum because the base revision will not change
                     int line = viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
-                        ? _viewer.GetCaretLine(viewPosition.ActiveLineNum.LeftLineNumber, rightFile: false)
-                        : _viewer.GetCaretLine(viewPosition.ActiveLineNum.RightLineNumber, rightFile: true);
+                        ? _viewer.GetCaretOffset(viewPosition.ActiveLineNum.LeftLineNumber, rightFile: false)
+                        : _viewer.GetCaretOffset(viewPosition.ActiveLineNum.RightLineNumber, rightFile: true);
                     if (viewPosition.CaretVisible)
                     {
                         _viewer.TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(viewPosition.CaretPosition.Column, line);
@@ -696,13 +703,13 @@ namespace GitUI.Editor
                 }
             }
 
+            /// <summary>
+            /// Get the line number at the current view position offset.
+            /// </summary>
+            /// <param name="isDiff">If the current contents is a file diff.</param>
+            /// <returns>The current line number at the caret offset</returns>
             public int CurrentFileLine(bool isDiff)
             {
-                if (_viewer.TotalNumberOfLines <= 1)
-                {
-                    return 0;
-                }
-
                 var viewPosition = _currentViewPosition;
                 if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum is not null)
                 {
@@ -712,7 +719,8 @@ namespace GitUI.Editor
                         : viewPosition.ActiveLineNum.RightLineNumber;
                 }
 
-                return viewPosition.CaretPosition.Line;
+                // Convert from offset to line number
+                return viewPosition.CaretPosition.Line + 1;
             }
 
             internal readonly struct TestAccessor
