@@ -328,6 +328,11 @@ namespace GitUI.Editor
             }
         }
 
+        public void ClearBlameGutter()
+        {
+            internalFileViewer.ShowGutterAvatars = false;
+        }
+
         public void ReloadHotkeys()
         {
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -649,9 +654,11 @@ namespace GitUI.Editor
             }
         }
 
+        public Task ClearAsync() => ViewTextAsync("", "");
+
         public void Clear()
         {
-            ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync("", ""));
+            ThreadHelper.JoinableTaskFactory.Run(() => ClearAsync());
         }
 
         /// <summary>
@@ -863,24 +870,25 @@ namespace GitUI.Editor
             }
         }
 
-        private Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc)
+        private async Task ShowOrDeferAsync(long contentLength, Func<Task> showFunc)
         {
             const long maxLength = 5 * 1024 * 1024;
 
             if (contentLength > maxLength)
             {
-                Clear();
+                await ClearAsync();
                 Refresh();
                 _NO_TRANSLATE_lblShowPreview.Text = string.Format(_largeFileSizeWarning.Text, contentLength / (1024d * 1024));
                 _NO_TRANSLATE_lblShowPreview.Show();
                 _deferShowFunc = showFunc;
-                return Task.CompletedTask;
+                return;
             }
             else
             {
                 _NO_TRANSLATE_lblShowPreview.Hide();
                 _deferShowFunc = null;
-                return showFunc();
+                await showFunc();
+                return;
             }
         }
 

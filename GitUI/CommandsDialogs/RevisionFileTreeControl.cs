@@ -57,6 +57,7 @@ See the changes in the commit form.");
             = RememberFileContextMenuController.Default;
         private Action? _refreshGitStatus;
         private RevisionGridControl? _revisionGrid;
+        private readonly CancellationTokenSequence _viewBlameSequence = new();
 
         public RevisionFileTreeControl()
         {
@@ -290,6 +291,21 @@ See the changes in the commit form.");
 
         #endregion
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _viewBlameSequence.Dispose();
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         protected override void OnRuntimeLoad()
         {
             tvGitTree.ImageList = new ImageList(components)
@@ -391,8 +407,7 @@ See the changes in the commit form.");
                         int? line = FileText.Visible ? FileText.CurrentFileLine : null;
                         BlameControl.Visible = true;
                         FileText.Visible = false;
-                        BlameControl.LoadBlame(_revision, children: null, gitItem.FileName, _revisionGrid, controlToMask: null, FileText.Encoding, line);
-                        return Task.CompletedTask;
+                        return BlameControl.LoadBlameAsync(_revision, children: null, gitItem.FileName, _revisionGrid, controlToMask: null, FileText.Encoding, line, cancellationToken: _viewBlameSequence.Next());
                     }
 
                 case GitObjectType.Commit:
@@ -423,7 +438,7 @@ See the changes in the commit form.");
         {
             BlameControl.Visible = false;
             FileText.Visible = true;
-            return FileText.ViewTextAsync("", "");
+            return FileText.ClearAsync();
         }
 
         private void tvGitTree_BeforeExpand(object sender, TreeViewCancelEventArgs e)

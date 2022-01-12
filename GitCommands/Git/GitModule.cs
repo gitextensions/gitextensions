@@ -3260,7 +3260,7 @@ namespace GitCommands
             return _gitTreeParser.Parse(tree);
         }
 
-        public GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines = null)
+        public GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines = null, CancellationToken cancellationToken = default)
         {
             GitArgumentBuilder args = new("blame")
             {
@@ -3275,7 +3275,13 @@ namespace GitCommands
                 fileName.ToPosixPath().Quote()
             };
 
-            var output = _gitExecutable.GetOutput(args, cache: GitCommandCache, outputEncoding: LosslessEncoding);
+            ExecutionResult result = _gitExecutable.Execute(
+                args,
+                cache: GitCommandCache,
+                outputEncoding: LosslessEncoding,
+                cancellationToken: cancellationToken);
+
+            var output = result.StandardOutput;
 
             try
             {
