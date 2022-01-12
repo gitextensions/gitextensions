@@ -48,6 +48,10 @@ namespace GitUI.CommandsDialogs
         private readonly RememberFileContextMenuController _rememberFileContextMenuController
             = RememberFileContextMenuController.Default;
         private Action? _refreshGitStatus;
+        private FileStatusItem? _selectedBlameItem;
+        private string? _fallbackFollowedFile;
+        private FileStatusItem? _lastExplicitlySelectedItem;
+        private bool _isImplicitListSelection = false;
 
         public RevisionDiffControl()
         {
@@ -228,7 +232,9 @@ namespace GitUI.CommandsDialogs
         public void DisplayDiffTab(IReadOnlyList<GitRevision> revisions)
         {
             SetDiffs(revisions);
-            if (DiffFiles.SelectedItem is null)
+
+            // Select something by default, except range diff
+            if (DiffFiles.SelectedItem is null && !(DiffFiles.FirstGroupItems.Count() == 1 && DiffFiles.FirstGroupItems.FirstOrDefault().Item.IsRangeDiff))
             {
                 DiffFiles.SelectFirstVisibleItem();
             }
@@ -239,25 +245,47 @@ namespace GitUI.CommandsDialogs
         /// When switching commits, the last selected file is "followed" if available in the new commit,
         /// this file is used as a fallback.
         /// </summary>
-        public string? FallbackFollowedFile { get; set; } = null;
+        public string? FallbackFollowedFile
+        {
+            get => _fallbackFollowedFile;
+            set
+            {
+                _fallbackFollowedFile = value;
+                _lastExplicitlySelectedItem = null;
+            }
+        }
 
         private void SetDiffs(IReadOnlyList<GitRevision> revisions)
         {
             Validates.NotNull(_revisionGrid);
 
-            var item = DiffFiles.SelectedItem;
-            var oldDiffItem = DiffFiles.FirstGroupItems.Contains(item) ? item : null;
+            FileStatusItem prevSelectedItem = DiffFiles.SelectedItem;
+            FileStatusItem prevDiffItem = DiffFiles.FirstGroupItems.Contains(prevSelectedItem) ? prevSelectedItem : null;
             DiffFiles.SetDiffs(revisions, _revisionGrid.CurrentCheckout);
 
-            // Try to restore previous item
-            if (oldDiffItem is not null && DiffFiles.FirstGroupItems.Any(i => i.Item.Name.Equals(oldDiffItem.Item.Name)))
+            _isImplicitListSelection = true;
+
+            // First try the last item explicitly selected
+            if (_lastExplicitlySelectedItem is not null
+                && DiffFiles.FirstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(_lastExplicitlySelectedItem.Item.Name))?.Item is GitItemStatus explicitItem)
             {
-                DiffFiles.SelectedGitItem = oldDiffItem.Item;
+                DiffFiles.SelectedGitItem = explicitItem;
+                return;
             }
-            else if (!string.IsNullOrWhiteSpace(FallbackFollowedFile)
-                && DiffFiles.FirstGroupItems.Where(i => i.Item.Name.Equals(FallbackFollowedFile)).FirstOrDefault()?.Item is GitItemStatus listItem)
+
+            // Second go back to the filtered file
+            if (!string.IsNullOrWhiteSpace(FallbackFollowedFile)
+                && DiffFiles.FirstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(FallbackFollowedFile))?.Item is GitItemStatus fallbackItem)
             {
-                DiffFiles.SelectedGitItem = listItem;
+                DiffFiles.SelectedGitItem = fallbackItem;
+                return;
+            }
+
+            // Third try to restore the previous item
+            if (prevDiffItem is not null
+                && DiffFiles.FirstGroupItems.FirstOrDefault(i => i.Item.Name.Equals(prevDiffItem.Item.Name))?.Item is GitItemStatus prevItem)
+            {
+                DiffFiles.SelectedGitItem = prevItem;
             }
         }
 
@@ -490,10 +518,28 @@ namespace GitUI.CommandsDialogs
             RequestRefresh();
         }
 
-        private async Task ShowSelectedFileBlameAsync(int? line = null)
+        /// <summary>
+        /// Show the file in the BlameViewer if Blame is visible.
+        /// </summary>
+        /// <param name="line">The line to start at.</param>
+        /// <returns>a task</returns>
+        private async Task ShowSelectedFileBlameAsync(bool ensureNoSwitchToFilter, int? line)
         {
-            BlameControl.Visible = true;
+            if (DiffFiles.SelectedItem is null)
+            {
+                await ShowSelectedFileDiffAsync(ensureNoSwitchToFilter);
+                return;
+            }
+
             DiffText.Visible = false;
+            BlameControl.Visible = true;
+
+            // Avoid that focus is switched to the file filter after changing visibility
+            if (ensureNoSwitchToFilter && DiffFiles.FilterFocused)
+            {
+                BlameControl.Focus();
+            }
+
             GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
                 ? _revisionGrid.GetActualRevision(_revisionGrid.CurrentCheckout)
                 : DiffFiles.SelectedItem.SecondRevision;
@@ -501,10 +547,22 @@ namespace GitUI.CommandsDialogs
                 controlToMask: null, DiffText.Encoding, line, cancellationToken: _viewChangesSequence.Next());
         }
 
-        private async Task ShowSelectedFileDiffAsync()
+        /// <summary>
+        /// Show selected item as a file diff
+        /// Activate diffviewer if Blame is visible
+        /// </summary>
+        /// <returns>a task</returns>
+        private async Task ShowSelectedFileDiffAsync(bool ensureNoSwitchToFilter = false)
         {
             BlameControl.Visible = false;
             DiffText.Visible = true;
+
+            // Avoid that focus is switched to the file filter after changing visibility
+            if (ensureNoSwitchToFilter && DiffFiles.FilterFocused)
+            {
+                DiffText.Focus();
+            }
+
             await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
                 openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick(),
                 cancellationToken: _viewChangesSequence.Next());
@@ -513,13 +571,32 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Show selected item as diff or blame
         /// </summary>
-        private void ShowSelectedFile(int? line = null) =>
+        private void ShowSelectedFile(bool ensureNoSwitchToFilter = false, int? line = null) =>
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            await (DiffText.Visible ? ShowSelectedFileDiffAsync() : ShowSelectedFileBlameAsync(line))).FileAndForget();
+                await (!blameToolStripMenuItem.Checked
+                    ? ShowSelectedFileDiffAsync(ensureNoSwitchToFilter)
+                    : ShowSelectedFileBlameAsync(ensureNoSwitchToFilter, line)))
+            .FileAndForget();
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(ShowSelectedFileDiffAsync).FileAndForget();
+            // Switch to diff if the selection changes
+            FileStatusItem? item = DiffFiles.SelectedItem;
+            if (item is not null && blameToolStripMenuItem.Checked && item.Item.Name != _selectedBlameItem?.Item.Name)
+            {
+                blameToolStripMenuItem.Checked = false;
+            }
+
+            // If this is not occurring after a revision change (implicit selection)
+            // save the selected item so it can be the "preferred" selection
+            if (!_isImplicitListSelection && item is not null && !item.Item.IsRangeDiff)
+            {
+                _lastExplicitlySelectedItem = item;
+                _selectedBlameItem = null;
+            }
+
+            _isImplicitListSelection = false;
+            ShowSelectedFile();
         }
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
@@ -550,7 +627,7 @@ namespace GitUI.CommandsDialogs
 
         private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(ShowSelectedFileDiffAsync).FileAndForget();
+            ShowSelectedFile(ensureNoSwitchToFilter: true);
         }
 
         private void DiffText_PatchApplied(object sender, EventArgs e)
@@ -630,6 +707,10 @@ namespace GitUI.CommandsDialogs
             blameToolStripMenuItem.Enabled = AppSettings.UseDiffViewerForBlame.Value
                 ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
                 : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+            if (!blameToolStripMenuItem.Enabled)
+            {
+                blameToolStripMenuItem.Checked = false;
+            }
         }
 
         private void DiffContextMenu_Opening(object sender, CancelEventArgs e)
@@ -649,9 +730,8 @@ namespace GitUI.CommandsDialogs
             {
                 int? line = DiffText.Visible ? DiffText.CurrentFileLine : null;
                 blameToolStripMenuItem.Checked = !blameToolStripMenuItem.Checked;
-                BlameControl.Visible = blameToolStripMenuItem.Checked;
-                DiffText.Visible = !blameToolStripMenuItem.Checked;
-                ShowSelectedFile(line);
+                _selectedBlameItem = blameToolStripMenuItem.Checked ? DiffFiles.SelectedItem : null;
+                ShowSelectedFile(ensureNoSwitchToFilter: true, line);
                 return;
             }
 
