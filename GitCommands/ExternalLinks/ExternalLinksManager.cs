@@ -2,25 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.ExternalLinks
 {
     // NB: this implementation is stateful
     public sealed class ExternalLinksManager
     {
-        private readonly RepoDistSettings _cachedSettings;
-        private readonly ExternalLinksManager? _lowerPriority;
+        private readonly ISettingsSource[] _cachedSettingsList;
         private readonly IExternalLinksStorage _externalLinksStorage = new ExternalLinksStorage();
-        private readonly List<ExternalLinkDefinition> _definitions;
+        private readonly List<List<ExternalLinkDefinition>> _definitionsList = new();
 
         public ExternalLinksManager(RepoDistSettings settings)
         {
-            _cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
-            _definitions = _externalLinksStorage.Load(_cachedSettings).ToList();
+            _cachedSettingsList = settings.Split();
 
-            if (settings.LowerPriority is not null)
+            foreach (ISettingsSource cachedSettings in _cachedSettingsList)
             {
-                _lowerPriority = new ExternalLinksManager(settings.LowerPriority);
+                List<ExternalLinkDefinition> definitions = _externalLinksStorage
+                    .Load(cachedSettings)
+                    .ToList();
+
+                _definitionsList.Add(definitions);
             }
         }
 
@@ -35,18 +38,29 @@ namespace GitCommands.ExternalLinks
                 throw new ArgumentNullException(nameof(definition));
             }
 
-            if (_lowerPriority is null || _lowerPriority.Contains(definition.Name))
+            foreach (int index in Enumerable.Range(0, _definitionsList.Count))
             {
-                if (!Contains(definition.Name))
+                List<ExternalLinkDefinition> definitions = _definitionsList[index];
+                List<ExternalLinkDefinition> lowerPriorityDefinitions = null;
+
+                if (index + 1 < _definitionsList.Count)
                 {
-                    _definitions.Add(definition);
+                    lowerPriorityDefinitions = _definitionsList[index + 1];
                 }
 
-                // TODO: else notify the user?
-            }
-            else
-            {
-                _lowerPriority.Add(definition);
+                if (lowerPriorityDefinitions is null || Contains(lowerPriorityDefinitions, definition.Name))
+                {
+                    if (!Contains(definitions, definition.Name))
+                    {
+                        definitions.Add(definition);
+                    }
+
+                    // TODO: else notify the user?
+                }
+                else
+                {
+                    lowerPriorityDefinitions.Add(definition);
+                }
             }
         }
 
@@ -61,20 +75,10 @@ namespace GitCommands.ExternalLinks
                 throw new ArgumentNullException(nameof(definitions));
             }
 
-            foreach (var externalLinkDefinition in definitions)
+            foreach (ExternalLinkDefinition externalLinkDefinition in definitions)
             {
                 Add(externalLinkDefinition);
             }
-        }
-
-        /// <summary>
-        /// Checks if a definition with the supplied name exists in any level of available settings.
-        /// </summary>
-        /// <param name="definitionName">The name of the definition to find.</param>
-        /// <returns><see langword="true"/> if a definition already exists; otherwise <see langword="false"/>.</returns>
-        public bool Contains(string? definitionName)
-        {
-            return _definitions.Any(linkDef => linkDef.Name == definitionName);
         }
 
         /// <summary>
@@ -83,8 +87,15 @@ namespace GitCommands.ExternalLinks
         /// <returns>A collection of all available definitions.</returns>
         public IReadOnlyList<ExternalLinkDefinition> GetEffectiveSettings()
         {
-            return _definitions
-                .Union(_lowerPriority?.GetEffectiveSettings() ?? Enumerable.Empty<ExternalLinkDefinition>())
+            IEnumerable<ExternalLinkDefinition> result = Enumerable.Empty<ExternalLinkDefinition>();
+
+            foreach (List<ExternalLinkDefinition> definitions in _definitionsList)
+            {
+                result = result
+                    .Union(definitions);
+            }
+
+            return result
                 .ToList();
         }
 
@@ -94,9 +105,12 @@ namespace GitCommands.ExternalLinks
         /// <param name="definition">External link definition.</param>
         public void Remove(ExternalLinkDefinition definition)
         {
-            if (!_definitions.Remove(definition))
+            foreach (List<ExternalLinkDefinition> definitions in _definitionsList)
             {
-                _lowerPriority?.Remove(definition);
+                if (definitions.Remove(definition))
+                {
+                    return;
+                }
             }
         }
 
@@ -105,8 +119,23 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public void Save()
         {
-            _lowerPriority?.Save();
-            _externalLinksStorage.Save(_cachedSettings, _definitions);
+            foreach (int index in Enumerable.Range(0, _cachedSettingsList.Length))
+            {
+                ISettingsSource cachedSettings = _cachedSettingsList[index];
+                List<ExternalLinkDefinition> definitions = _definitionsList[index];
+
+                _externalLinksStorage.Save(cachedSettings, definitions);
+            }
+        }
+
+        /// <summary>
+        /// Checks if a definition with the supplied name exists in any level of available settings.
+        /// </summary>
+        /// <param name="definitionName">The name of the definition to find.</param>
+        /// <returns><see langword="true"/> if a definition already exists; otherwise <see langword="false"/>.</returns>
+        private static bool Contains(IEnumerable<ExternalLinkDefinition> definitions, string? definitionName)
+        {
+            return definitions.Any(x => x.Name == definitionName);
         }
     }
 }

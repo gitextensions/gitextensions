@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using GitCommands.Settings;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.ExternalLinks
 {
@@ -14,12 +14,12 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads external link definitions from the settings.
         /// </summary>
-        IReadOnlyList<ExternalLinkDefinition>? Load(RepoDistSettings settings);
+        IReadOnlyList<ExternalLinkDefinition> Load(ISettingsSource settings);
 
         /// <summary>
         /// Saves the provided external link definitions to the settings.
         /// </summary>
-        void Save(RepoDistSettings settings, IReadOnlyList<ExternalLinkDefinition> definitions);
+        void Save(ISettingsSource settings, IReadOnlyList<ExternalLinkDefinition> definitions);
     }
 
     public sealed class ExternalLinksStorage : IExternalLinksStorage
@@ -29,7 +29,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads external link definitions from the settings.
         /// </summary>
-        public IReadOnlyList<ExternalLinkDefinition>? Load(RepoDistSettings settings)
+        public IReadOnlyList<ExternalLinkDefinition> Load(ISettingsSource settings)
         {
             var xml = settings.GetString(SettingName, null);
             return LoadFromXmlString(xml);
@@ -38,7 +38,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Saves the provided external link definitions to the settings.
         /// </summary>
-        public void Save(RepoDistSettings settings, IReadOnlyList<ExternalLinkDefinition> definitions)
+        public void Save(ISettingsSource settings, IReadOnlyList<ExternalLinkDefinition> definitions)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace GitCommands.ExternalLinks
         }
 
         // TODO: refactor and outsource to the centralised SettingsSerializer implementations.
-        private static IReadOnlyList<ExternalLinkDefinition>? LoadFromXmlString(string? xmlString)
+        private static IReadOnlyList<ExternalLinkDefinition> LoadFromXmlString(string? xmlString)
         {
             if (string.IsNullOrWhiteSpace(xmlString))
             {
@@ -83,7 +83,11 @@ namespace GitCommands.ExternalLinks
                 XmlSerializer serializer = new(typeof(List<ExternalLinkDefinition>));
                 using StringReader stringReader = new(xmlString);
                 using XmlTextReader xmlReader = new(stringReader);
-                return serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>;
+
+                if (serializer.Deserialize(xmlReader) is List<ExternalLinkDefinition> result)
+                {
+                    return result;
+                }
             }
             catch (Exception ex)
             {
