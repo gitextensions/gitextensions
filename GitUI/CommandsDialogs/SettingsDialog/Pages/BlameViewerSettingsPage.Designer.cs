@@ -81,6 +81,7 @@
             // 
             // cbIgnoreWhitespace
             // 
+            this.cbIgnoreWhitespace.AutoSize = true; 
             this.cbIgnoreWhitespace.Location = new System.Drawing.Point(3, 3);
             this.cbIgnoreWhitespace.Name = "cbIgnoreWhitespace";
             this.cbIgnoreWhitespace.Size = new System.Drawing.Size(247, 22);
@@ -89,6 +90,7 @@
             // 
             // cbDetectMoveAndCopyInThisFile
             // 
+            this.cbDetectMoveAndCopyInThisFile.AutoSize = true; 
             this.cbDetectMoveAndCopyInThisFile.Location = new System.Drawing.Point(3, 31);
             this.cbDetectMoveAndCopyInThisFile.Name = "cbDetectMoveAndCopyInThisFile";
             this.cbDetectMoveAndCopyInThisFile.Size = new System.Drawing.Size(247, 22);
@@ -97,6 +99,7 @@
             // 
             // cbDetectMoveAndCopyInAllFiles
             // 
+            this.cbDetectMoveAndCopyInAllFiles.AutoSize = true; 
             this.cbDetectMoveAndCopyInAllFiles.Location = new System.Drawing.Point(3, 59);
             this.cbDetectMoveAndCopyInAllFiles.Name = "cbDetectMoveAndCopyInAllFiles";
             this.cbDetectMoveAndCopyInAllFiles.Size = new System.Drawing.Size(247, 22);
@@ -144,6 +147,7 @@
             // 
             // cbDisplayAuthorFirst
             // 
+            this.cbDisplayAuthorFirst.AutoSize = true; 
             this.cbDisplayAuthorFirst.Location = new System.Drawing.Point(3, 3);
             this.cbDisplayAuthorFirst.Name = "cbDisplayAuthorFirst";
             this.cbDisplayAuthorFirst.Size = new System.Drawing.Size(247, 22);
@@ -152,6 +156,7 @@
             // 
             // cbShowAuthor
             // 
+            this.cbShowAuthor.AutoSize = true; 
             this.cbShowAuthor.Location = new System.Drawing.Point(3, 31);
             this.cbShowAuthor.Name = "cbShowAuthor";
             this.cbShowAuthor.Size = new System.Drawing.Size(247, 22);
@@ -160,6 +165,7 @@
             // 
             // cbShowAuthorDate
             // 
+            this.cbShowAuthorDate.AutoSize = true; 
             this.cbShowAuthorDate.Location = new System.Drawing.Point(3, 59);
             this.cbShowAuthorDate.Name = "cbShowAuthorDate";
             this.cbShowAuthorDate.Size = new System.Drawing.Size(247, 22);
@@ -168,6 +174,7 @@
             // 
             // cbShowAuthorTime
             // 
+            this.cbShowAuthorTime.AutoSize = true; 
             this.cbShowAuthorTime.Location = new System.Drawing.Point(3, 87);
             this.cbShowAuthorTime.Name = "cbShowAuthorTime";
             this.cbShowAuthorTime.Size = new System.Drawing.Size(247, 22);
@@ -176,6 +183,7 @@
             // 
             // cbShowLineNumbers
             // 
+            this.cbShowLineNumbers.AutoSize = true; 
             this.cbShowLineNumbers.Location = new System.Drawing.Point(3, 115);
             this.cbShowLineNumbers.Name = "cbShowLineNumbers";
             this.cbShowLineNumbers.Size = new System.Drawing.Size(247, 22);
@@ -184,6 +192,7 @@
             // 
             // cbShowOriginalFilePath
             // 
+            this.cbShowOriginalFilePath.AutoSize = true; 
             this.cbShowOriginalFilePath.Location = new System.Drawing.Point(3, 143);
             this.cbShowOriginalFilePath.Name = "cbShowOriginalFilePath";
             this.cbShowOriginalFilePath.Size = new System.Drawing.Size(247, 22);
@@ -192,6 +201,7 @@
             // 
             // cbShowAuthorAvatar
             // 
+            this.cbShowAuthorAvatar.AutoSize = true; 
             this.cbShowAuthorAvatar.Location = new System.Drawing.Point(3, 171);
             this.cbShowAuthorAvatar.Name = "cbShowAuthorAvatar";
             this.cbShowAuthorAvatar.Size = new System.Drawing.Size(247, 22);
