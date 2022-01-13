@@ -6,6 +6,7 @@ using System.Text;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git.Commands;
+using GitUIPluginInterfaces;
 
 namespace CommonTestUtils
 {

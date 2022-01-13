@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using GitCommands;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor

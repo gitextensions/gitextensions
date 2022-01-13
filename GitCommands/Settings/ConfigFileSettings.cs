@@ -72,7 +72,7 @@ namespace GitCommands.Settings
 
         public new string GetValue(string setting)
         {
-            return GetString(setting, string.Empty);
+            return ((ISettingsSource)this).GetString(setting, string.Empty);
         }
 
         public IReadOnlyList<string> GetValues(string setting)
@@ -88,7 +88,7 @@ namespace GitCommands.Settings
                 value = null;
             }
 
-            SetString(setting, value);
+            ((ISettingsSource)this).SetString(setting, value);
         }
 
         public void SetPathValue(string setting, string? value)

@@ -16,6 +16,8 @@ namespace GitCommands.Settings
             SettingsCache = settingsCache;
         }
 
+        public SettingLevel SettingLevel { get; set; }
+
         public void LockedAction(Action action)
         {
             SettingsCache.LockedAction(() =>
@@ -38,7 +40,7 @@ namespace GitCommands.Settings
             LowerPriority?.Save();
         }
 
-        public override string? GetValue(string name)
+        public virtual string? GetValue(string name)
         {
             TryGetValue(name, out var value);
             return value;
@@ -47,7 +49,7 @@ namespace GitCommands.Settings
         /// <summary>
         /// sets given value at the possible lowest priority level
         /// </summary>
-        public override void SetValue(string name, string? value)
+        public virtual void SetValue(string name, string? value)
         {
             if (LowerPriority is null || SettingsCache.HasValue(name))
             {
