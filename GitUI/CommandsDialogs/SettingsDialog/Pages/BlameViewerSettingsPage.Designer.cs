@@ -81,7 +81,8 @@
             // 
             // cbIgnoreWhitespace
             // 
-            this.cbIgnoreWhitespace.AutoSize = true; 
+            this.cbIgnoreWhitespace.AutoSize = true;
+            this.cbIgnoreWhitespace.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbIgnoreWhitespace.Location = new System.Drawing.Point(3, 3);
             this.cbIgnoreWhitespace.Name = "cbIgnoreWhitespace";
             this.cbIgnoreWhitespace.Size = new System.Drawing.Size(247, 17);
@@ -90,7 +91,8 @@
             // 
             // cbDetectMoveAndCopyInThisFile
             // 
-            this.cbDetectMoveAndCopyInThisFile.AutoSize = true; 
+            this.cbDetectMoveAndCopyInThisFile.AutoSize = true;
+            this.cbDetectMoveAndCopyInThisFile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbDetectMoveAndCopyInThisFile.Location = new System.Drawing.Point(3, 26);
             this.cbDetectMoveAndCopyInThisFile.Name = "cbDetectMoveAndCopyInThisFile";
             this.cbDetectMoveAndCopyInThisFile.Size = new System.Drawing.Size(247, 17);
@@ -99,7 +101,8 @@
             // 
             // cbDetectMoveAndCopyInAllFiles
             // 
-            this.cbDetectMoveAndCopyInAllFiles.AutoSize = true; 
+            this.cbDetectMoveAndCopyInAllFiles.AutoSize = true;
+            this.cbDetectMoveAndCopyInAllFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbDetectMoveAndCopyInAllFiles.Location = new System.Drawing.Point(3, 49);
             this.cbDetectMoveAndCopyInAllFiles.Name = "cbDetectMoveAndCopyInAllFiles";
             this.cbDetectMoveAndCopyInAllFiles.Size = new System.Drawing.Size(247, 17);
@@ -112,7 +115,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxDisplayResult.AutoSize = true;
             this.groupBoxDisplayResult.Controls.Add(this.tableLayoutPanelDisplayResult);
-            this.groupBoxDisplayResult.Location = new System.Drawing.Point(11, 124);
+            this.groupBoxDisplayResult.Location = new System.Drawing.Point(11, 114);
             this.groupBoxDisplayResult.Name = "groupBoxDisplayResult";
             this.groupBoxDisplayResult.Size = new System.Drawing.Size(319, 183);
             this.groupBoxDisplayResult.TabIndex = 1;
@@ -147,7 +150,8 @@
             // 
             // cbDisplayAuthorFirst
             // 
-            this.cbDisplayAuthorFirst.AutoSize = true; 
+            this.cbDisplayAuthorFirst.AutoSize = true;
+            this.cbDisplayAuthorFirst.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbDisplayAuthorFirst.Location = new System.Drawing.Point(3, 3);
             this.cbDisplayAuthorFirst.Name = "cbDisplayAuthorFirst";
             this.cbDisplayAuthorFirst.Size = new System.Drawing.Size(247, 17);
@@ -156,7 +160,8 @@
             // 
             // cbShowAuthor
             // 
-            this.cbShowAuthor.AutoSize = true; 
+            this.cbShowAuthor.AutoSize = true;
+            this.cbShowAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbShowAuthor.Location = new System.Drawing.Point(3, 26);
             this.cbShowAuthor.Name = "cbShowAuthor";
             this.cbShowAuthor.Size = new System.Drawing.Size(247, 17);
@@ -165,7 +170,8 @@
             // 
             // cbShowAuthorDate
             // 
-            this.cbShowAuthorDate.AutoSize = true; 
+            this.cbShowAuthorDate.AutoSize = true;
+            this.cbShowAuthorDate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbShowAuthorDate.Location = new System.Drawing.Point(3, 49);
             this.cbShowAuthorDate.Name = "cbShowAuthorDate";
             this.cbShowAuthorDate.Size = new System.Drawing.Size(247, 17);
@@ -174,7 +180,8 @@
             // 
             // cbShowAuthorTime
             // 
-            this.cbShowAuthorTime.AutoSize = true; 
+            this.cbShowAuthorTime.AutoSize = true;
+            this.cbShowAuthorTime.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbShowAuthorTime.Location = new System.Drawing.Point(3, 72);
             this.cbShowAuthorTime.Name = "cbShowAuthorTime";
             this.cbShowAuthorTime.Size = new System.Drawing.Size(247, 17);
@@ -183,7 +190,8 @@
             // 
             // cbShowLineNumbers
             // 
-            this.cbShowLineNumbers.AutoSize = true; 
+            this.cbShowLineNumbers.AutoSize = true;
+            this.cbShowLineNumbers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbShowLineNumbers.Location = new System.Drawing.Point(3, 95);
             this.cbShowLineNumbers.Name = "cbShowLineNumbers";
             this.cbShowLineNumbers.Size = new System.Drawing.Size(247, 17);
@@ -192,7 +200,8 @@
             // 
             // cbShowOriginalFilePath
             // 
-            this.cbShowOriginalFilePath.AutoSize = true; 
+            this.cbShowOriginalFilePath.AutoSize = true;
+            this.cbShowOriginalFilePath.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbShowOriginalFilePath.Location = new System.Drawing.Point(3, 118);
             this.cbShowOriginalFilePath.Name = "cbShowOriginalFilePath";
             this.cbShowOriginalFilePath.Size = new System.Drawing.Size(247, 17);
@@ -201,7 +210,8 @@
             // 
             // cbShowAuthorAvatar
             // 
-            this.cbShowAuthorAvatar.AutoSize = true; 
+            this.cbShowAuthorAvatar.AutoSize = true;
+            this.cbShowAuthorAvatar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbShowAuthorAvatar.Location = new System.Drawing.Point(3, 141);
             this.cbShowAuthorAvatar.Name = "cbShowAuthorAvatar";
             this.cbShowAuthorAvatar.Size = new System.Drawing.Size(247, 17);
