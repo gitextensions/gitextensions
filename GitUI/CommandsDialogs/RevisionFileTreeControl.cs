@@ -345,7 +345,14 @@ See the changes in the commit form.");
 
         private void SpawnCommitBrowser(GitItem item)
         {
-            GitUICommands.LaunchBrowse(workingDir: _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator()) ?? "", selectedId: item.ObjectId);
+            string path = _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator()) ?? "";
+            if (!Directory.Exists(path))
+            {
+                MessageBoxes.SubmoduleDirectoryDoesNotExist(this, path, item.Name);
+                return;
+            }
+
+            GitUICommands.LaunchBrowse(workingDir: path, selectedId: item.ObjectId);
         }
 
         private void tvGitTree_AfterSelect(object sender, TreeViewEventArgs e)

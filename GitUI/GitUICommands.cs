@@ -369,9 +369,14 @@ namespace GitUI
         /// <param name="workingDir">The working directory for the new process.</param>
         /// <param name="selectedId">The optional commit to be selected.</param>
         /// <param name="firstId">The first commit to be selected, the first commit in a diff.</param>
-        /// <returns>The <see cref="IProcess"/> object for controlling the launched instance.</returns>
-        public static IProcess LaunchBrowse(string workingDir = "", ObjectId? selectedId = null, ObjectId? firstId = null)
+        public static void LaunchBrowse(string workingDir = "", ObjectId? selectedId = null, ObjectId? firstId = null)
         {
+            if (!Directory.Exists(workingDir))
+            {
+                MessageBoxes.GitExtensionsDirectoryDoesNotExist(owner: null, workingDir);
+                return;
+            }
+
             StringBuilder arguments = new("browse");
 
             if (selectedId is null)
@@ -389,7 +394,7 @@ namespace GitUI
                 }
             }
 
-            return Launch(arguments.ToString(), workingDir);
+            Launch(arguments.ToString(), workingDir);
         }
 
         public bool StartCompareRevisionsDialog(IWin32Window? owner = null)

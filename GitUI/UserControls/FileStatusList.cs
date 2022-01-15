@@ -852,7 +852,14 @@ namespace GitUI
                 : status?.Commit;
             ObjectId? firstId = status?.OldCommit;
 
-            GitUICommands.LaunchBrowse(workingDir: _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator()) ?? "", selectedId, firstId);
+            string path = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator()) ?? "";
+            if (!Directory.Exists(path))
+            {
+                MessageBoxes.SubmoduleDirectoryDoesNotExist(this, path, submoduleName);
+                return;
+            }
+
+            GitUICommands.LaunchBrowse(workingDir: path, selectedId, firstId);
         }
 
         private void SelectItems(Func<ListViewItem, bool> predicate)

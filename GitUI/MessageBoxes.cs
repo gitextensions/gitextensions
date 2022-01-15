@@ -44,6 +44,11 @@ namespace GitUI
         private readonly TranslationString _shellNotFound = new("The selected shell is not installed, or is not on your path.");
         private readonly TranslationString _resetChangesCaption = new("Reset changes");
 
+        private readonly TranslationString _submoduleDirectoryDoesNotExist = new(@"The directory ""{0}"" does not exist for submodule ""{1}"".");
+        private readonly TranslationString _directoryDoesNotExist = new(@"The directory ""{0}"" does not exist.");
+        private readonly TranslationString _cannotOpenSubmoduleCaption = new("Cannot open submodule");
+        private readonly TranslationString _cannotOpenGitExtensionsCaption = new("Cannot open Git Extensions");
+
         // internal for FormTranslate
         internal MessageBoxes()
         {
@@ -80,6 +85,15 @@ namespace GitUI
 
         public static void SelectOnlyOneOrTwoRevisions(IWin32Window? owner)
             => ShowError(owner, Instance._selectOnlyOneOrTwoRevisions.Text, Instance._archiveRevisionCaption.Text);
+
+        public static void SubmoduleDirectoryDoesNotExist(IWin32Window? owner, string directory, string submoduleName)
+            => ShowError(owner, string.Format(Instance._submoduleDirectoryDoesNotExist.Text, directory, submoduleName), Instance._cannotOpenSubmoduleCaption.Text);
+
+        public static void SubmoduleDirectoryDoesNotExist(IWin32Window? owner, string directory)
+            => ShowError(owner, string.Format(Instance._directoryDoesNotExist.Text, directory), Instance._cannotOpenSubmoduleCaption.Text);
+
+        public static void GitExtensionsDirectoryDoesNotExist(IWin32Window? owner, string directory)
+            => ShowError(owner, string.Format(Instance._directoryDoesNotExist.Text, directory), Instance._cannotOpenGitExtensionsCaption.Text);
 
         public static bool CacheHostkey(IWin32Window? owner)
             => Confirm(owner, Instance._serverHostkeyNotCachedText.Text, "SSH");

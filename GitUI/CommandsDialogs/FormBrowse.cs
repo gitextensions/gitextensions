@@ -2490,10 +2490,19 @@ namespace GitUI.CommandsDialogs
 
         private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem menuSender)
+            if (sender is not ToolStripMenuItem menuSender)
             {
-                SetWorkingDir(menuSender.Tag as string);
+                return;
             }
+
+            string path = menuSender.Tag as string;
+            if (!Directory.Exists(path))
+            {
+                MessageBoxes.SubmoduleDirectoryDoesNotExist(this, path);
+                return;
+            }
+
+            SetWorkingDir(path);
         }
 
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)

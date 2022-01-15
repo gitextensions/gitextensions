@@ -93,6 +93,12 @@ namespace GitUI.BranchTreePanel
 
             public void Open()
             {
+                if (!Directory.Exists(Info.Path))
+                {
+                    MessageBoxes.SubmoduleDirectoryDoesNotExist(owner: null, Info.Path, Info.Text);
+                    return;
+                }
+
                 if (Info.Detailed?.RawStatus is not null)
                 {
                     UICommands.BrowseSetWorkingDir(Info.Path, ObjectId.WorkTreeId, Info.Detailed.RawStatus.OldCommit);
@@ -104,6 +110,12 @@ namespace GitUI.BranchTreePanel
 
             public void LaunchGitExtensions()
             {
+                if (!Directory.Exists(Info.Path))
+                {
+                    MessageBoxes.SubmoduleDirectoryDoesNotExist(owner: null, Info.Path, Info.Text);
+                    return;
+                }
+
                 GitUICommands.LaunchBrowse(workingDir: Info.Path.EnsureTrailingPathSeparator(), ObjectId.WorkTreeId, Info?.Detailed?.RawStatus?.OldCommit);
             }
 
@@ -268,7 +280,9 @@ namespace GitUI.BranchTreePanel
 
                         if (infos.Count > 0)
                         {
-                            Debug.Fail($"{infos.Count} status info records remains after matching current nodes, structure seem to mismatch ({nodes.Count}/{e.Info.AllSubmodules.Count})");
+                            // This normally occurs with illegal paths
+                            Trace.WriteLine($"{infos.Count} status info records remains after matching current nodes, structure seem to mismatch ({nodes.Count}/{e.Info.AllSubmodules.Count}: {string.Join(",", infos.Keys.ToList())})");
+
                             _currentNodes = null;
                         }
                     }
@@ -397,7 +411,13 @@ namespace GitUI.BranchTreePanel
 
                 foreach (var submoduleInfo in result.AllSubmodules)
                 {
-                    string superPath = GetSubmoduleSuperPath(submoduleInfo.Path);
+                    string? superPath = GetSubmoduleSuperPath(submoduleInfo.Path);
+                    if (!Directory.Exists(superPath))
+                    {
+                        MessageBoxes.SubmoduleDirectoryDoesNotExist(owner: null, superPath ?? submoduleInfo.Path, submoduleInfo.Text);
+                        continue;
+                    }
+
                     string localPath = Path.GetDirectoryName(submoduleInfo.Path.Substring(superPath.Length)).ToPosixPath();
 
                     var isCurrent = submoduleInfo.Bold;
@@ -411,12 +431,8 @@ namespace GitUI.BranchTreePanel
 
                 return;
 
-                string GetSubmoduleSuperPath(string submodulePath)
-                {
-                    var superPath = modulePaths.Find(path => submodulePath != path && submodulePath.Contains(path));
-                    Validates.NotNull(superPath);
-                    return superPath;
-                }
+                string? GetSubmoduleSuperPath(string submodulePath) =>
+                    modulePaths.Find(path => submodulePath != path && submodulePath.Contains(path));
             }
 
             private string GetNodeRelativePath(GitModule topModule, SubmoduleNode node)
