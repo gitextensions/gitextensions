@@ -271,19 +271,41 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                toolPanel.TopToolStripPanel.SuspendLayout();
+                // NOTE: do not suspend/resume layout of toolPanel.TopToolStripPanel as it has tendency to lay strips incorrectly.
+
                 toolPanel.TopToolStripPanel.Controls.Clear();
 
                 // Reset padding to zero before restoring. Refer to https://github.com/gitextensions/gitextensions/issues/8680#issuecomment-922801438
                 toolPanel.TopToolStripPanel.Padding = new Padding(0, 0, 0, 0);
 
                 IToolStripSettingsManager manager = ManagedExtensibility.GetExport<IToolStripSettingsManager>().Value;
-                manager.Load(this, _managedToolStrips);
+                manager.Load(
+                    ownerForm: this,
+                    invalidSettingsHandler: toolStrips =>
+                    {
+                        // In event there is no settings for the strips (e.g., we're loading for the 1st time, or the user has cleared the settings)
+                        // we need to add the strips manually
+                        for (int i = 0; i < toolStrips.Length; i++)
+                        {
+                            ToolStrip toolStrip = toolStrips[i];
+                            if (i == 0)
+                            {
+                                toolStrip.Location = new();
+                            }
+                            else
+                            {
+                                Rectangle previousBounds = toolStrips[i - 1].Bounds;
+                                toolStrip.Location = new(previousBounds.X + previousBounds.Width + 1, 0);
+                            }
+
+                            toolPanel.TopToolStripPanel.Controls.Add(toolStrip);
+                        }
+                    },
+                    _managedToolStrips);
             }
             finally
             {
                 toolPanel.TopToolStripPanel.Padding = originalPadding;
-                toolPanel.TopToolStripPanel.ResumeLayout();
             }
         }
 

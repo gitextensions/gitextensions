@@ -13,7 +13,7 @@ namespace GitUI
 
     public interface IToolStripSettingsManager
     {
-        void Load(Form ownerForm, params ToolStrip[]? toolStrips);
+        void Load(Form ownerForm, Action<ToolStrip[]> invalidSettingsHandler, params ToolStrip[]? toolStrips);
         void Save(Form ownerForm, params ToolStrip[]? toolStrips);
     }
 
@@ -32,32 +32,13 @@ namespace GitUI
 
             foreach (var toolStripSettings in toolStripSettingsToApply)
             {
-                string? destinationPanel = !string.IsNullOrEmpty(toolStripSettings.Value.ToolStripPanelName) ? toolStripSettings.Value.ToolStripPanelName : null;
-                if (destinationPanel is null)
+                string destinationPanel = toolStripSettings.Value.ToolStripPanelName!;
+                if (!toolStripPanelDestinations.ContainsKey(destinationPanel))
                 {
-                    // Not in a panel.
-
-                    if (!toolStripSettings.Value.IsDefault)
-                    {
-                        // NOTE: any toolstrip that we want to track the location of must be placed in a ToolStripPanel.
-                        // Whilst the original ToolStripSettingsManager supports tracking of toolstrips outside panels, we don't.
-                        // Please rework the UI as necessary.
-
-                        Debug.Assert(false, $"ToolStrip '{toolStripSettings.Key.Name}' must be parented to a panel.");
-                    }
-
-                    return;
+                    toolStripPanelDestinations[destinationPanel] = new();
                 }
-                else
-                {
-                    // This toolStrip is in a ToolStripPanel. We will process it below.
-                    if (!toolStripPanelDestinations.ContainsKey(destinationPanel))
-                    {
-                        toolStripPanelDestinations[destinationPanel] = new();
-                    }
 
-                    toolStripPanelDestinations[destinationPanel].Add(toolStripSettings.Key);
-                }
+                toolStripPanelDestinations[destinationPanel].Add(toolStripSettings.Key);
             }
 
             // Build up a list of the toolstrippanels to party on.
@@ -176,20 +157,55 @@ namespace GitUI
             return name;
         }
 
-        public void Load(Form ownerForm, params ToolStrip[]? toolStrips)
+        public void Load(Form ownerForm, Action<ToolStrip[]> invalidSettingsHandler, params ToolStrip[]? toolStrips)
         {
             if (toolStrips is null || toolStrips.Length == 0)
             {
                 throw new ArgumentException($"At least one ToolStrip is required.", nameof(toolStrips));
             }
 
+            bool settingsValid = true;
             var settings = new Dictionary<ToolStrip, ToolStripExSettings>(toolStrips.Length);
             foreach (ToolStrip toolStrip in toolStrips)
             {
-                settings[toolStrip] = new(GetSettingsKey(ownerForm, toolStrip.Name));
+                ToolStripExSettings toolStripSettings = new(GetSettingsKey(ownerForm, toolStrip.Name));
+                settings[toolStrip] = toolStripSettings;
+
+                settingsValid &= HasValidDestinationPanel(toolStripSettings, toolStrip.Name);
             }
 
-            ApplySettings(ownerForm, settings);
+            if (settingsValid)
+            {
+                ApplySettings(ownerForm, settings);
+            }
+            else
+            {
+                invalidSettingsHandler(toolStrips);
+            }
+
+            return;
+
+            bool HasValidDestinationPanel(ToolStripExSettings toolStripSettings, string toolStripName)
+            {
+                string? destinationPanel = !string.IsNullOrEmpty(toolStripSettings.ToolStripPanelName) ? toolStripSettings.ToolStripPanelName : null;
+                if (destinationPanel is null)
+                {
+                    // Not in a panel.
+
+                    if (!toolStripSettings.IsDefault)
+                    {
+                        // NOTE: any toolstrip that we want to track the location of must be placed in a ToolStripPanel.
+                        // Whilst the original ToolStripSettingsManager supports tracking of toolstrips outside panels, we don't.
+                        // Please rework the UI as necessary.
+
+                        Debug.Assert(false, $"ToolStrip '{toolStripName}' must be parented to a panel.");
+                    }
+
+                    return false;
+                }
+
+                return true;
+            }
         }
 
         public void Save(Form ownerForm, params ToolStrip[]? toolStrips)
@@ -218,18 +234,18 @@ namespace GitUI
         private class YXComparer : IComparer<Control>
         {
             public int Compare(Control? first, Control? second)
-            {
+        {
                 if (first!.Bounds.Y < second!.Bounds.Y)
+            {
+                    return -1;
+            }
+
+                if (first.Bounds.Y == second.Bounds.Y)
+            {
+                    if (first.Bounds.X < second.Bounds.X)
                 {
                     return -1;
                 }
-
-                if (first.Bounds.Y == second.Bounds.Y)
-                {
-                    if (first.Bounds.X < second.Bounds.X)
-                    {
-                        return -1;
-                    }
 
                     return 1;
                 }
