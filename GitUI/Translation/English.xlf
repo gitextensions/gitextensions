@@ -754,6 +754,14 @@ A valid GitHub account is required</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="BuildServerIntegrationPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Build Server Integration</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="BuildServerIntegrationSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">

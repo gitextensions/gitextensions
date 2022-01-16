@@ -112,6 +112,7 @@ namespace GitExtensions
                 },
                 AppSettings.UserPluginsPath);
 
+            AppSettings.MigrateBuildServerIntegrationSettings();
             AppSettings.LoadSettings();
 
             if (EnvUtils.RunningOnWindows())

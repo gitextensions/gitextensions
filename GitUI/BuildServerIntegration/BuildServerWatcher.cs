@@ -15,7 +15,6 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.Settings;
-using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -297,6 +296,7 @@ namespace GitUI.BuildServerIntegration
             await TaskScheduler.Default;
 
             IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings()
+                .ByPath(AppSettings.BuildServerIntegrationPluginId)
                 .BuildServer();
 
             if (!buildServerSettings.EnableIntegration)
@@ -325,14 +325,24 @@ namespace GitUI.BuildServerIntegration
                     }
 
                     var buildServerAdapter = export.Value;
+                    ISettingsSource settingsByAdapter = _module()
+                        .GetEffectiveSettings()
+                        .ByPath(AppSettings.BuildServerIntegrationPluginId)
+                        .ByPath(buildServerSettings.Type!);
 
-                    buildServerAdapter.Initialize(this, _module().GetEffectiveSettings().ByPath(buildServerSettings.Type!),
+                    buildServerAdapter.Initialize(this, settingsByAdapter,
                         () =>
                         {
                             // To run the `StartSettingsDialog()` in the UI Thread
                             _revisionGrid.Invoke((Action)(() =>
                             {
-                                _revisionGrid.UICommands.StartSettingsDialog(typeof(BuildServerIntegrationSettingsPage));
+                                IGitPlugin plugin = PluginRegistry.Plugins
+                                    .FirstOrDefault(x => x.Id == AppSettings.BuildServerIntegrationPluginGuid);
+
+                                if (plugin is not null)
+                                {
+                                    _revisionGrid.UICommands.StartSettingsDialog(plugin);
+                                }
                             }));
                         }, objectId => _revisionGrid.GetRevision(objectId) is not null);
                     return buildServerAdapter;

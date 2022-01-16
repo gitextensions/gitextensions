@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Adapters\AppVeyorIntegration\ApprovedFiles\AppVeyorAdapterTests.Should_return_a_build_Info_When_Json_content_is_the_one_of_a_master_build.approved.txt" />
+    <Content Include="Adapters\AppVeyorIntegration\ApprovedFiles\AppVeyorAdapterTests.Should_return_a_build_Info_When_Json_content_is_the_one_of_a_pull_request_build.approved.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Adapters\AppVeyorIntegration\MockData\AppVeyorResult_master.json" />
+    <EmbeddedResource Include="Adapters\AppVeyorIntegration\MockData\AppVeyorResult_pull_request_build.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Plugins\BuildServerIntegration\GitExtensions.Plugins.BuildServerIntegration.csproj" />
+    <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -43,7 +43,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             var showIcon = AppSettings.ShowBuildStatusIconColumn;
             var showText = AppSettings.ShowBuildStatusTextColumn;
 
-            IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings()
+            IBuildServerSettings buildServerSettings = _module()
+                .GetEffectiveSettings()
+                .ByPath(AppSettings.BuildServerIntegrationPluginId)
                 .BuildServer();
 
             var columnVisible = buildServerSettings.EnableIntegration

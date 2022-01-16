@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Settings;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -223,6 +224,7 @@ namespace GitUI.CommandsDialogs
         {
             IBuildServerSettings buildServerSettings = GetModule()
                 .GetEffectiveSettings()
+                .ByPath(AppSettings.BuildServerIntegrationPluginId)
                 .BuildServer();
 
             return buildServerSettings.ShowBuildResultPage;
