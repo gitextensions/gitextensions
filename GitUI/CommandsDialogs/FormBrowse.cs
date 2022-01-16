@@ -284,6 +284,7 @@ namespace GitUI.CommandsDialogs
             InitCountArtificial(out _gitStatusMonitor);
 
             _formBrowseMenus = new FormBrowseMenus(mainMenuStrip);
+            _formBrowseMenus.ResetToolStrips += (s, e) => ResetToolbarsLayout();
 
             RevisionGrid.SuspendRefreshRevisions();
 
@@ -454,7 +455,7 @@ namespace GitUI.CommandsDialogs
 
             base.OnLoad(e);
 
-            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
+            _formBrowseMenus.CreateToolbarsMenus(_managedToolStrips);
 
             // The toolbars layouts must be restored *after* WindowPositionManager is called.
             RestoreToolbarsLayout();
@@ -919,7 +920,7 @@ namespace GitUI.CommandsDialogs
                 UICommands.RaisePostBrowseInitialize(this);
             }
 
-            toolPanel.TopToolStripPanel.ResumeLayout();
+            toolPanel.TopToolStripPanel.ResumeLayout(performLayout: false);
             toolPanel.ResumeLayout();
 
             return;
@@ -2361,30 +2362,27 @@ namespace GitUI.CommandsDialogs
             // Some commands like delete branch could be available for artificial as no default is used,
             // but hide for consistency
             branchToolStripMenuItem.Enabled =
-            deleteBranchToolStripMenuItem.Enabled =
-            mergeBranchToolStripMenuItem.Enabled =
-            rebaseToolStripMenuItem.Enabled =
-            checkoutBranchToolStripMenuItem.Enabled =
-            cherryPickToolStripMenuItem.Enabled =
-            checkoutToolStripMenuItem.Enabled =
-            bisectToolStripMenuItem.Enabled =
-                singleNormalCommit && !Module.IsBareRepository();
+                deleteBranchToolStripMenuItem.Enabled =
+                mergeBranchToolStripMenuItem.Enabled =
+                rebaseToolStripMenuItem.Enabled =
+                checkoutBranchToolStripMenuItem.Enabled =
+                cherryPickToolStripMenuItem.Enabled =
+                checkoutToolStripMenuItem.Enabled =
+                bisectToolStripMenuItem.Enabled = singleNormalCommit && !Module.IsBareRepository();
 
             tagToolStripMenuItem.Enabled =
-            deleteTagToolStripMenuItem.Enabled =
-            archiveToolStripMenuItem.Enabled =
-                singleNormalCommit;
+                deleteTagToolStripMenuItem.Enabled =
+                archiveToolStripMenuItem.Enabled = singleNormalCommit;
 
             // Not operating on selected revision
             commitToolStripMenuItem.Enabled =
-            undoLastCommitToolStripMenuItem.Enabled =
-            runMergetoolToolStripMenuItem.Enabled =
-            stashToolStripMenuItem.Enabled =
-            resetToolStripMenuItem.Enabled =
-            cleanupToolStripMenuItem.Enabled =
-            toolStripMenuItemReflog.Enabled =
-            applyPatchToolStripMenuItem.Enabled =
-                !Module.IsBareRepository();
+                undoLastCommitToolStripMenuItem.Enabled =
+                runMergetoolToolStripMenuItem.Enabled =
+                stashToolStripMenuItem.Enabled =
+                resetToolStripMenuItem.Enabled =
+                cleanupToolStripMenuItem.Enabled =
+                toolStripMenuItemReflog.Enabled =
+                applyPatchToolStripMenuItem.Enabled = !Module.IsBareRepository();
         }
 
         private void PullToolStripMenuItemClick(object sender, EventArgs e)

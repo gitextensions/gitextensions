@@ -98,6 +98,8 @@ the last selected commit.");
         private readonly TranslationString _resetSelectedLinesConfirmation = new("Are you sure you want to reset the changes to the selected lines?");
         private readonly TranslationString _resetChangesCaption = new("Reset changes");
 
+        private readonly TranslationString _resetToolbarsCaption = new("Reset");
+
         private readonly TranslationString _rotInactive = new("[ Inactive ]");
 
         private readonly TranslationString _argumentsText = new("Arguments");
@@ -228,6 +230,8 @@ the last selected commit.");
         public static string ResetSelectedLines => _instance.Value._resetSelectedLines.Text;
         public static string ResetSelectedLinesConfirmation => _instance.Value._resetSelectedLinesConfirmation.Text;
         public static string ResetChangesCaption => _instance.Value._resetChangesCaption.Text;
+
+        public static string ResetToolbarsCaption => _instance.Value._resetToolbarsCaption.Text;
 
         public static string Inactive => _instance.Value._rotInactive.Text;
 

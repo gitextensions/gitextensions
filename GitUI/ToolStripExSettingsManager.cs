@@ -14,7 +14,7 @@ namespace GitUI
 
     public interface IToolStripSettingsManager
     {
-        void Load(Form ownerForm, Action<ToolStrip[]> invalidSettingsHandler, params ToolStrip[]? toolStrips);
+        void Load(Form ownerForm, Action invalidSettingsHandler, params ToolStrip[]? toolStrips);
         void Save(Form ownerForm, params ToolStrip[]? toolStrips);
     }
 
@@ -168,7 +168,7 @@ namespace GitUI
             return name;
         }
 
-        public void Load(Form ownerForm, Action<ToolStrip[]> invalidSettingsHandler, params ToolStrip[]? toolStrips)
+        public void Load(Form ownerForm, Action invalidSettingsHandler, params ToolStrip[]? toolStrips)
         {
             if (toolStrips is null || toolStrips.Length == 0)
             {
@@ -191,7 +191,7 @@ namespace GitUI
             }
             else
             {
-                invalidSettingsHandler(toolStrips);
+                invalidSettingsHandler();
             }
 
             return;
@@ -234,6 +234,7 @@ namespace GitUI
                 toolStripSettings.Visible = toolStrip.Visible;
 
                 // This is O(n^2), but we don't have many strips to iterate over.
+                toolStripSettings.DockedToNeighbour = false;
                 foreach (ToolStrip strip in toolStrips)
                 {
                     if (strip.Bounds.Contains(toolStrip.Location.X - 2, toolStrip.Location.Y + 2))

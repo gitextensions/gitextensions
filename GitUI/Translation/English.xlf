@@ -10843,6 +10843,10 @@ Remote: {1}</source>
         <source>Are you sure you want to reset the changes to the selected lines?</source>
         <target />
       </trans-unit>
+      <trans-unit id="_resetToolbarsCaption.Text">
+        <source>Reset</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_rotInactive.Text">
         <source>[ Inactive ]</source>
         <target />

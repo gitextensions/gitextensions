@@ -265,6 +265,29 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void ResetToolbarsLayout()
+        {
+            ToolStrip[] toolStrips = _managedToolStrips;
+
+            toolPanel.TopToolStripPanel.Controls.Clear();
+
+            for (int i = 0; i < toolStrips.Length; i++)
+            {
+                ToolStrip toolStrip = toolStrips[i];
+                if (i == 0)
+                {
+                    toolStrip.Location = new();
+                }
+                else
+                {
+                    Rectangle previousBounds = toolStrips[i - 1].Bounds;
+                    toolStrip.Location = new(previousBounds.X + previousBounds.Width + 1, 0);
+                }
+
+                toolPanel.TopToolStripPanel.Controls.Add(toolStrip);
+            }
+        }
+
         private void RestoreToolbarsLayout()
         {
             Padding originalPadding = toolPanel.TopToolStripPanel.Padding;
@@ -276,31 +299,12 @@ namespace GitUI.CommandsDialogs
                 toolPanel.TopToolStripPanel.Controls.Clear();
 
                 // Reset padding to zero before restoring. Refer to https://github.com/gitextensions/gitextensions/issues/8680#issuecomment-922801438
-                toolPanel.TopToolStripPanel.Padding = new Padding(0, 0, 0, 0);
+                toolPanel.TopToolStripPanel.Padding = new(0);
 
                 IToolStripSettingsManager manager = ManagedExtensibility.GetExport<IToolStripSettingsManager>().Value;
                 manager.Load(
                     ownerForm: this,
-                    invalidSettingsHandler: toolStrips =>
-                    {
-                        // In event there is no settings for the strips (e.g., we're loading for the 1st time, or the user has cleared the settings)
-                        // we need to add the strips manually
-                        for (int i = 0; i < toolStrips.Length; i++)
-                        {
-                            ToolStrip toolStrip = toolStrips[i];
-                            if (i == 0)
-                            {
-                                toolStrip.Location = new();
-                            }
-                            else
-                            {
-                                Rectangle previousBounds = toolStrips[i - 1].Bounds;
-                                toolStrip.Location = new(previousBounds.X + previousBounds.Width + 1, 0);
-                            }
-
-                            toolPanel.TopToolStripPanel.Controls.Add(toolStrip);
-                        }
-                    },
+                    invalidSettingsHandler: () => ResetToolbarsLayout(),
                     _managedToolStrips);
             }
             finally

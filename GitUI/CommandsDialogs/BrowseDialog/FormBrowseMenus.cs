@@ -39,6 +39,11 @@ namespace GitUI.CommandsDialogs
         // location (RevisionGrid) can register items too!
         private readonly List<ToolStripMenuItem> _itemsRegisteredWithMenuCommand = new();
 
+        /// <summary>
+        ///  Occurs whenever there's a request to reset layout of the managed toolstrips.
+        /// </summary>
+        public event EventHandler ResetToolStrips;
+
         public FormBrowseMenus(ToolStrip menuStrip)
         {
             _mainMenuStrip = menuStrip;
@@ -86,7 +91,7 @@ namespace GitUI.CommandsDialogs
         /// and will allow to toggle visibility of the toolbars.
         /// </summary>
         /// <param name="toolStrips">The list of toobars to toggle visibility for.</param>
-        public void CreateToolbarsMenus(params ToolStripEx[] toolStrips)
+        public void CreateToolbarsMenus(ToolStrip[] toolStrips)
         {
             Validates.NotNull(_toolbarsMenuItem);
 
@@ -97,6 +102,11 @@ namespace GitUI.CommandsDialogs
                 _toolStripContextMenu.Items.Add(CreateItem(toolStrip));
                 _toolbarsMenuItem.DropDownItems.Add(CreateItem(toolStrip));
             }
+
+            CreateResetItem(_toolStripContextMenu.Items);
+            CreateResetItem(_toolbarsMenuItem.DropDownItems);
+
+            return;
 
             static ToolStripItem CreateItem(ToolStrip senderToolStrip)
             {
@@ -124,6 +134,19 @@ namespace GitUI.CommandsDialogs
                 };
 
                 return toolStripItem;
+            }
+
+            void CreateResetItem(ToolStripItemCollection container)
+            {
+                container.Add(new ToolStripSeparator());
+
+                ToolStripMenuItem toolStripItem = new(TranslatedStrings.ResetToolbarsCaption);
+                toolStripItem.Click += (s, e) =>
+                {
+                    ResetToolStrips?.Invoke(this, EventArgs.Empty);
+                };
+
+                container.Add(toolStripItem);
             }
         }
 
@@ -447,12 +470,16 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RefreshToolbarsMenuItemCheckedState(ToolStripItemCollection toolStripItems)
+        private static void RefreshToolbarsMenuItemCheckedState(ToolStripItemCollection toolStripItems)
         {
-            foreach (ToolStripMenuItem item in toolStripItems)
+            foreach (ToolStripItem item in toolStripItems)
             {
-                Debug.Assert(item.Tag is ToolStrip, "Toolbars context menu items must reference Toolstrips via Tag property.");
-                item.Checked = ((ToolStrip)item.Tag).Visible;
+                if (item is not ToolStripMenuItem menuItem || menuItem.Tag is not ToolStrip toolStrip)
+                {
+                    continue;
+                }
+
+                menuItem.Checked = toolStrip.Visible;
             }
         }
     }
