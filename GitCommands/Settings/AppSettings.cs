@@ -2174,7 +2174,7 @@ namespace GitCommands
 
         private static bool? _isDesignMode;
 
-        private static bool IsDesignMode
+        public static bool IsDesignMode
         {
             get
             {

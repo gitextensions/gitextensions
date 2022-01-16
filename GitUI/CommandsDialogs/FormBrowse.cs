@@ -454,10 +454,10 @@ namespace GitUI.CommandsDialogs
 
             base.OnLoad(e);
 
+            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
+
             // The toolbars layouts must be restored *after* WindowPositionManager is called.
             RestoreToolbarsLayout();
-
-            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
 
             _formBrowseDiagnosticsReporter.Report();
 

@@ -17,6 +17,14 @@ namespace GitUI
         {
         }
 
+        [UserScopedSetting]
+        [DefaultSettingValue("false")]
+        public bool DockedToNeighbour
+        {
+            get => (bool)this[nameof(DockedToNeighbour)];
+            set => this[nameof(DockedToNeighbour)] = value;
+        }
+
         // Indicates whether the settings was persisted, and not a "default" settigns object when there's no settings in user.config.
         [UserScopedSetting]
         [DefaultSettingValue("true")]

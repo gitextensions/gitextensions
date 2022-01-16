@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 
@@ -65,22 +66,32 @@ namespace GitUI
 
                     toolStripPanel.BeginInit();
 
-                    // We need to sort the toolstrips, so that we add with the bottom-most/right-most strips first. This ensures
-                    // correct order of strips.
+                    // Add the strips in the desired (i.e. as persisted) order - by location top-bottom/left-right.
                     //
                     // NOTE: since we currently only support the horizontal orientation, hence we use YXComparer.
                     // In the future, if we decide to support vertical strips orientation, we'll need to use a XYComparer.
                     // Refer to https://github.com/dotnet/winforms/blob/main/src/System.Windows.Forms/src/System/Windows/Forms/ToolStripPanel.ToolStripPanelControlCollection.XYComparer.cs
-                    toolStrips.Sort(new YXComparer());
+                    toolStrips.Sort(new YXComparer(toolStripSettingsToApply));
 
-                    foreach (var toolStrip in toolStrips)
+                    foreach (ToolStrip toolStrip in toolStrips)
                     {
-                        var settings = toolStripSettingsToApply[toolStrip];
+                        ToolStripExSettings settings = toolStripSettingsToApply[toolStrip];
 
                         toolStrip.Visible = settings.Visible;
 
                         // The location is scaled to the current dpi
-                        toolStripPanel.Join(toolStrip, DpiUtil.Scale(settings.Location));
+                        Point location = DpiUtil.Scale(settings.Location);
+
+                        // If the strip was docked to its neighbour when saved, we may need to adjust the strip's location
+                        // because the strips have variable length when the app is running, e.g., the working directory selector
+                        // has a variable length, so does the branches selector.
+                        if (settings.DockedToNeighbour && toolStripPanel.Controls.Count > 0)
+                        {
+                            ToolStrip neighbour = (ToolStrip)toolStripPanel.Controls[toolStripPanel.Controls.Count - 1];
+                            location = new(neighbour.Bounds.X + neighbour.Bounds.Width + 1, toolStrip.Location.Y);
+                        }
+
+                        toolStripPanel.Join(toolStrip, location);
                     }
 
                     toolStripPanel.EndInit();
@@ -222,6 +233,16 @@ namespace GitUI
                 toolStripSettings.ToolStripPanelName = GetToolStripPanelName(toolStrip);
                 toolStripSettings.Visible = toolStrip.Visible;
 
+                // This is O(n^2), but we don't have many strips to iterate over.
+                foreach (ToolStrip strip in toolStrips)
+                {
+                    if (strip.Bounds.Contains(toolStrip.Location.X - 2, toolStrip.Location.Y + 2))
+                    {
+                        toolStripSettings.DockedToNeighbour = true;
+                        break;
+                    }
+                }
+
                 // Store the location at 96dpi
                 toolStripSettings.Location = DpiUtil.Scale(toolStrip.Location, 96);
 
@@ -229,25 +250,30 @@ namespace GitUI
             }
         }
 
-        // Copied from https://github.com/dotnet/winforms/blob/main/src/System.Windows.Forms/src/System/Windows/Forms/ToolStripPanel.ToolStripPanelControlCollection.YXComparer.cs
+        // Inspired by https://github.com/dotnet/winforms/blob/main/src/System.Windows.Forms/src/System/Windows/Forms/ToolStripPanel.ToolStripPanelControlCollection.YXComparer.cs
         // Sort by Y, then X.
-        private class YXComparer : IComparer<Control>
+        private class YXComparer : IComparer<ToolStrip>
         {
-            public int Compare(Control? first, Control? second)
-        {
-                if (first!.Bounds.Y < second!.Bounds.Y)
+            private readonly Dictionary<ToolStrip, ToolStripExSettings> _toolStripSettingsToApply;
+
+            public YXComparer(Dictionary<ToolStrip, ToolStripExSettings> toolStripSettingsToApply)
             {
-                    return -1;
+                _toolStripSettingsToApply = toolStripSettingsToApply;
             }
 
-                if (first.Bounds.Y == second.Bounds.Y)
+            public int Compare(ToolStrip? first, ToolStrip? second)
             {
-                    if (first.Bounds.X < second.Bounds.X)
+                ToolStripExSettings firstSettings = _toolStripSettingsToApply[first!];
+                ToolStripExSettings secondSettings = _toolStripSettingsToApply[second!];
+
+                if (firstSettings.Location.Y < secondSettings.Location.Y)
                 {
                     return -1;
                 }
 
-                    return 1;
+                if (firstSettings.Location.Y == secondSettings.Location.Y)
+                {
+                    return firstSettings.Location.X - secondSettings.Location.X;
                 }
 
                 return 1;
