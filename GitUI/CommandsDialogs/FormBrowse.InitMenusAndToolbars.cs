@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -10,6 +9,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUI.Shells;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
@@ -75,8 +75,6 @@ namespace GitUI.CommandsDialogs
 
             FillUserShells(defaultShell: BashShell.ShellName);
 
-            WorkaroundToolbarLocationBug();
-
             return;
 
             void InitToolStripStyles(Color toolForeColor, Color toolBackColor)
@@ -86,15 +84,13 @@ namespace GitUI.CommandsDialogs
 
                 mainMenuStrip.BackColor = toolBackColor;
 
-                ToolStripMain.BackColor = toolBackColor;
-                ToolStripMain.ForeColor = toolForeColor;
+                foreach (ToolStrip toolStrip in _managedToolStrips)
+                {
+                    toolStrip.BackColor = toolBackColor;
+                    toolStrip.ForeColor = toolForeColor;
+                }
 
-                ToolStripFilters.BackColor = toolBackColor;
-                ToolStripFilters.ForeColor = toolForeColor;
                 ToolStripFilters.InitToolStripStyles(toolForeColor, toolBackColor);
-
-                ToolStripScripts.BackColor = toolBackColor;
-                ToolStripScripts.ForeColor = toolForeColor;
             }
 
             void InitFilters()
@@ -110,37 +106,6 @@ namespace GitUI.CommandsDialogs
                 {
                     SetPathFilter(pathFilter);
                 }
-            }
-
-            void WorkaroundToolbarLocationBug()
-            {
-                // Layout engine bug (?) which may change the order of toolbars
-                // if the 1st one becomes longer than the 2nd toolbar's Location.X
-                // the layout engine will be place the 2nd toolbar first
-
-                // 1. Clear all toolbars
-                toolPanel.TopToolStripPanel.Controls.Clear();
-
-                // 2. Add all the toolbars back in a reverse order, every added toolbar pushing existing ones to the right
-                ToolStrip[] toolStrips = new[] { ToolStripScripts, ToolStripFilters, ToolStripMain };
-                foreach (ToolStrip toolStrip in toolStrips)
-                {
-                    toolPanel.TopToolStripPanel.Controls.Add(toolStrip);
-                }
-
-#if DEBUG
-                // 3. Assert all toolbars on the same row
-                foreach (ToolStrip toolStrip in toolStrips)
-                {
-                    Debug.Assert(toolStrip.Top == 0, $"{toolStrip.Name} must be placed on the 1st row");
-                }
-
-                // 4. Assert the correct order of toolbars
-                for (int i = toolStrips.Length - 1; i > 0; i--)
-                {
-                    Debug.Assert(toolStrips[i].Left < toolStrips[i - 1].Left, $"{toolStrips[i - 1].Name} must be placed before {toolStrips[i].Name}");
-                }
-#endif
             }
         }
 
@@ -239,6 +204,18 @@ namespace GitUI.CommandsDialogs
             gitBashToolStripMenuItem.Tag = _shellProvider.GetShell(BashShell.ShellName);
         }
 
+        private void PersistToolbarsLayout()
+        {
+            // NOTE: this method is called when the app is being closed, so to save cycles
+            // we aren't suspending/restoring layouts, etc.
+
+            // Reset padding to zero before saving. Refer to https://github.com/gitextensions/gitextensions/issues/8680#issuecomment-922801438
+            toolPanel.TopToolStripPanel.Padding = new Padding(0, 0, 0, 0);
+
+            IToolStripSettingsManager manager = ManagedExtensibility.GetExport<IToolStripSettingsManager>().Value;
+            manager.Save(this, _managedToolStrips);
+        }
+
         private void RefreshDefaultPullAction()
         {
             if (setDefaultPullButtonActionToolStripMenuItem is null)
@@ -285,6 +262,28 @@ namespace GitUI.CommandsDialogs
                     toolStripButtonPull.Image = Images.Pull.AdaptLightness();
                     toolStripButtonPull.ToolTipText = _pullOpenDialog.Text;
                     break;
+            }
+        }
+
+        private void RestoreToolbarsLayout()
+        {
+            Padding originalPadding = toolPanel.TopToolStripPanel.Padding;
+
+            try
+            {
+                toolPanel.TopToolStripPanel.SuspendLayout();
+                toolPanel.TopToolStripPanel.Controls.Clear();
+
+                // Reset padding to zero before restoring. Refer to https://github.com/gitextensions/gitextensions/issues/8680#issuecomment-922801438
+                toolPanel.TopToolStripPanel.Padding = new Padding(0, 0, 0, 0);
+
+                IToolStripSettingsManager manager = ManagedExtensibility.GetExport<IToolStripSettingsManager>().Value;
+                manager.Load(this, _managedToolStrips);
+            }
+            finally
+            {
+                toolPanel.TopToolStripPanel.Padding = originalPadding;
+                toolPanel.TopToolStripPanel.ResumeLayout();
             }
         }
 

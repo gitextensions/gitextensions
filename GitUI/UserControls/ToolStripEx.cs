@@ -10,14 +10,9 @@ namespace GitUI
     /// </summary>
     public class ToolStripEx : ToolStrip, IToolStripEx
     {
-        private readonly ToolStripButton _gripButton;
-
         public ToolStripEx()
         {
             Renderer = new ToolStripExSystemRenderer();
-
-            PropertyInfo propGrip = GetType().GetProperty("Grip", BindingFlags.Instance | BindingFlags.NonPublic);
-            _gripButton = propGrip.GetValue(this) as ToolStripButton;
         }
 
         /// <summary>
@@ -35,17 +30,6 @@ namespace GitUI
         [Category("Appearance")]
         [DefaultValue(true)]
         public bool DrawBorder { get; set; } = true;
-
-        /// <summary>
-        ///  Gets or sets whether the ToolStrip grip button is enabled.
-        /// </summary>
-        [Category("Appearance")]
-        [DefaultValue(true)]
-        public bool GripEnabled
-        {
-            get => _gripButton.Enabled;
-            set => _gripButton.Enabled = value;
-        }
 
         protected override void WndProc(ref Message m)
         {

@@ -225,10 +225,15 @@ namespace GitUI.CommandsDialogs
         private readonly ShellProvider _shellProvider = new();
         private ConEmuControl? _terminal;
         private Dashboard? _dashboard;
-
         private TabPage? _consoleTabPage;
 
         private readonly Dictionary<Brush, Icon> _overlayIconByBrush = new();
+
+        /// <summary>
+        ///  Contains the list of toolstrips that get their location tracked across app sessions.
+        ///  Only these toolstrip will be present in toolPanel.TopToolStripPanel.
+        /// </summary>
+        private readonly ToolStrip[] _managedToolStrips;
 
         private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
@@ -254,6 +259,8 @@ namespace GitUI.CommandsDialogs
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
 
             InitializeComponent();
+
+            _managedToolStrips = new[] { ToolStripMain, ToolStripFilters, ToolStripScripts };
             BackColor = OtherColors.BackgroundColor;
 
             WorkaroundPaddingIncreaseBug();
@@ -441,13 +448,16 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
-            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
-
             RefreshSplitViewLayout();
             LayoutRevisionInfo();
             SetSplitterPositions();
 
             base.OnLoad(e);
+
+            // The toolbars layouts must be restored *after* WindowPositionManager is called.
+            RestoreToolbarsLayout();
+
+            _formBrowseMenus.CreateToolbarsMenus(ToolStripMain, ToolStripFilters, ToolStripScripts);
 
             _formBrowseDiagnosticsReporter.Report();
 
@@ -474,6 +484,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            PersistToolbarsLayout();
             SaveApplicationSettings();
 
             foreach (var control in this.FindDescendants())

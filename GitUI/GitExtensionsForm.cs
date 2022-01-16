@@ -31,6 +31,11 @@ namespace GitUI
         /// will be restored upon being re-opened.</param>
         protected GitExtensionsForm(bool enablePositionRestore)
         {
+            if (IsDesignMode)
+            {
+                return;
+            }
+
             var needsPositionSave = enablePositionRestore;
             _needsPositionRestore = enablePositionRestore;
 
