@@ -129,7 +129,6 @@ namespace GitUI.UserControls
             this.tsmiShowReflogs.Image = global::GitUI.Properties.Images.Book;
             this.tsmiShowReflogs.Name = "tsmiShowReflogs";
             this.tsmiShowReflogs.Size = new System.Drawing.Size(23, 22);
-            this.tsmiShowReflogs.Text = "R&eflogs";
             this.tsmiShowReflogs.ToolTipText = "Show reflogs";
             this.tsmiShowReflogs.Click += new System.EventHandler(this.tsmiShowReflogs_Click);
             // 
