@@ -124,7 +124,8 @@ namespace GitUI.CommandsDialogs
             StageSelectedFile = 10,
             UnStageSelectedFile = 11,
             ShowFileTree = 12,
-            FilterFileInGrid = 13
+            FilterFileInGrid = 13,
+            SelectFirstGroupChanges = 14
         }
 
         public CommandStatus ExecuteCommand(Command cmd)
@@ -157,11 +158,24 @@ namespace GitUI.CommandsDialogs
                 case Command.UnStageSelectedFile: return UnstageSelectedFiles();
                 case Command.ShowFileTree: diffShowInFileTreeToolStripMenuItem.PerformClick(); break;
                 case Command.FilterFileInGrid: diffFilterFileInGridToolStripMenuItem.PerformClick(); break;
+                case Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFileNotFocused();
 
                 default: return base.ExecuteCommand(cmd);
             }
 
             return true;
+
+            bool SelectFirstGroupChangesIfFileNotFocused()
+            {
+                if (ContainsFocus && !DiffFiles.Focused)
+                {
+                    return false;
+                }
+
+                DiffFiles.SelectedItems = DiffFiles.FirstGroupItems;
+                DiffFiles.Focus();
+                return true;
+            }
         }
 
         public void ReloadHotkeys()
