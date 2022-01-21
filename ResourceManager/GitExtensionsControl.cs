@@ -74,7 +74,12 @@ namespace ResourceManager
 
         #region Hotkeys
 
-        /// <summary>Checks if a hotkey wants to handle the key and execute it.</summary>
+        /// <summary>
+        /// Checks if a hotkey wants to handle the key and execute that hotkey
+        /// (without propagating an unhandled key to the base class function <cref>ProcessCmdKey</cref>).
+        /// Can be overridden in order to execute a hotkey of other (visible) subcontrols
+        /// if this focused/queried control does not have such an (active) hotkey itself.
+        /// </summary>
         public virtual bool ProcessHotkey(Keys keyData)
         {
             if (!HotkeysEnabled)

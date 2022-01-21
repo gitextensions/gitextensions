@@ -621,7 +621,7 @@ namespace GitUI.CommandsDialogs
                 return true;
             }
 
-            return base.ProcessCmdKey(ref msg, keyData) // upstream
+            return base.ProcessCmdKey(ref msg, keyData) // generic handling of this form's hotkeys (upstream)
                 || (!IsDesignMode && HotkeysEnabled && !GitExtensionsControl.IsTextEditKey(keyData, multiLine: true) // downstream
                     && SelectedDiff.ProcessHotkey(keyData));
         }
