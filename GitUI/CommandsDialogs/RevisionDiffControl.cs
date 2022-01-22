@@ -476,10 +476,8 @@ namespace GitUI.CommandsDialogs
             RequestRefresh();
         }
 
-        private void BlameSelectedFileDiff()
+        private void BlameSelectedFileDiff(int? line = null)
         {
-            int? line = DiffText.Visible ? DiffText.CurrentFileLine : null;
-
             BlameControl.Visible = true;
             DiffText.Visible = false;
             GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
@@ -550,11 +548,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffShowInFileTreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Validates.NotNull(_revisionFileTree);
-
-            // switch to view (and fills the first level of file tree data model if not already done)
-            (FindForm() as FormBrowse)?.ExecuteCommand(FormBrowse.Command.FocusFileTree);
-            _revisionFileTree.ExpandToFile(DiffFiles.SelectedItems.First().Item.Name);
+            OpenInFileTreeTab(requestBlame: false);
         }
 
         private void diffFilterFileInGridToolStripMenuItem_Click(object sender, EventArgs e)
@@ -621,7 +615,9 @@ namespace GitUI.CommandsDialogs
             diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
             diffFilterFileInGridToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
             fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
-            blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectionInfo);
+            blameToolStripMenuItem.Enabled = AppSettings.UseDiffViewerForBlame.Value
+                ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
+                : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         }
 
         private void DiffContextMenu_Opening(object sender, CancelEventArgs e)
@@ -637,8 +633,29 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            blameToolStripMenuItem.Checked = !blameToolStripMenuItem.Checked;
-            BlameSelectedFileDiff();
+            if (AppSettings.UseDiffViewerForBlame.Value)
+            {
+                blameToolStripMenuItem.Checked = !blameToolStripMenuItem.Checked;
+                BlameSelectedFileDiff();
+                return;
+            }
+
+            blameToolStripMenuItem.Checked = false;
+            OpenInFileTreeTab(requestBlame: true);
+        }
+
+        /// <summary>
+        /// Open the selected item in the FileTree tab
+        /// </summary>
+        /// <param name="requestBlame">Request that Blame is shown in the FileTree</param>
+        private void OpenInFileTreeTab(bool requestBlame)
+        {
+            Validates.NotNull(_revisionFileTree);
+
+            // switch to view (and fills the first level of file tree data model if not already done)
+            string name = DiffFiles.SelectedItems.First().Item.Name;
+            (FindForm() as FormBrowse)?.ExecuteCommand(FormBrowse.Command.FocusFileTree);
+            _revisionFileTree.ExpandToFile(name, requestBlame);
         }
 
         private void StageFileToolStripMenuItemClick(object sender, EventArgs e)

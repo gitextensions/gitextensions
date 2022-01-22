@@ -33,6 +33,7 @@
             this.cboTerminal = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.chkUseBrowseForFileHistory = new System.Windows.Forms.CheckBox();
+            this.chkUseDiffViewerForBlame = new System.Windows.Forms.CheckBox();
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.gbTabs = new System.Windows.Forms.GroupBox();
             this.gbGeneral.SuspendLayout();
@@ -88,6 +89,16 @@
             this.chkUseBrowseForFileHistory.Text = "Show file history in the main window";
             this.chkUseBrowseForFileHistory.UseVisualStyleBackColor = true;
             // 
+            // chkUseDiffViewerForBlame
+            // 
+            this.chkUseDiffViewerForBlame.AutoSize = true;
+            this.chkUseDiffViewerForBlame.Location = new System.Drawing.Point(9, 71);
+            this.chkUseDiffViewerForBlame.Name = "chkUseDiffViewerForBlame";
+            this.chkUseDiffViewerForBlame.Size = new System.Drawing.Size(162, 19);
+            this.chkUseDiffViewerForBlame.TabIndex = 5;
+            this.chkUseDiffViewerForBlame.Text = "Show blame in diff viewer";
+            this.chkUseDiffViewerForBlame.UseVisualStyleBackColor = true;
+            // 
             // gbGeneral
             // 
             this.gbGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -95,9 +106,10 @@
             this.gbGeneral.Controls.Add(this.cboTerminal);
             this.gbGeneral.Controls.Add(this.label2);
             this.gbGeneral.Controls.Add(this.chkUseBrowseForFileHistory);
+            this.gbGeneral.Controls.Add(this.chkUseDiffViewerForBlame);
             this.gbGeneral.Location = new System.Drawing.Point(11, 11);
             this.gbGeneral.Name = "gbGeneral";
-            this.gbGeneral.Size = new System.Drawing.Size(435, 81);
+            this.gbGeneral.Size = new System.Drawing.Size(435, 104);
             this.gbGeneral.TabIndex = 1;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
@@ -108,7 +120,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbTabs.Controls.Add(this.chkShowGpgInformation);
             this.gbTabs.Controls.Add(this.chkChowConsoleTab);
-            this.gbTabs.Location = new System.Drawing.Point(11, 98);
+            this.gbTabs.Location = new System.Drawing.Point(11, 121);
             this.gbTabs.Name = "gbTabs";
             this.gbTabs.Size = new System.Drawing.Size(435, 82);
             this.gbTabs.TabIndex = 5;
@@ -123,7 +135,7 @@
             this.Controls.Add(this.gbGeneral);
             this.Name = "FormBrowseRepoSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(457, 192);
+            this.Size = new System.Drawing.Size(457, 215);
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
             this.gbTabs.ResumeLayout(false);
@@ -139,6 +151,7 @@
         private System.Windows.Forms.ComboBox cboTerminal;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox chkUseBrowseForFileHistory;
+        private System.Windows.Forms.CheckBox chkUseDiffViewerForBlame;
         private System.Windows.Forms.GroupBox gbGeneral;
         private System.Windows.Forms.GroupBox gbTabs;
     }
