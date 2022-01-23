@@ -122,6 +122,7 @@ namespace GitUI.CommandsDialogs
             this.Commit = new System.Windows.Forms.Button();
             this.CommitAndPush = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.CheckBox();
+            this.ResetAuthor = new System.Windows.Forms.CheckBox();
             this.Reset = new System.Windows.Forms.Button();
             this.ResetUnStaged = new System.Windows.Forms.Button();
             this.toolbarCommit = new GitUI.ToolStripEx();
@@ -1111,6 +1112,9 @@ namespace GitUI.CommandsDialogs
             this.flowCommitButtons.Controls.Add(this.CommitAndPush);
             this.flowCommitButtons.Controls.Add(this.StageInSuperproject);
             this.flowCommitButtons.Controls.Add(this.Amend);
+            var resetAuthorPanel = new Panel{ AutoSize = false, Size = this.ResetAuthor.Size, Margin = new Padding(0) };
+            resetAuthorPanel.Controls.Add(this.ResetAuthor);
+            this.flowCommitButtons.Controls.Add(resetAuthorPanel);
             this.flowCommitButtons.Controls.Add(this.Reset);
             this.flowCommitButtons.Controls.Add(this.ResetUnStaged);
             this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1153,7 +1157,7 @@ namespace GitUI.CommandsDialogs
             // Amend
             // 
             this.Amend.AutoSize = true;
-            this.Amend.Location = new System.Drawing.Point(0, 93);
+            this.Amend.Location = new System.Drawing.Point(0, 64);
             this.Amend.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.Amend.Name = "Amend";
             this.Amend.Size = new System.Drawing.Size(97, 17);
@@ -1162,12 +1166,24 @@ namespace GitUI.CommandsDialogs
             this.Amend.UseVisualStyleBackColor = true;
             this.Amend.CheckedChanged += new System.EventHandler(this.Amend_CheckedChanged);
             // 
+            // ResetAuthor
+            // 
+            this.ResetAuthor.AutoSize = true;
+            this.ResetAuthor.Location = new System.Drawing.Point(0, 0);
+            this.ResetAuthor.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.ResetAuthor.Name = "ResetAuthor";
+            this.ResetAuthor.Size = new System.Drawing.Size(97, 17);
+            this.ResetAuthor.TabIndex = 0;
+            this.ResetAuthor.Text = "R&eset Author";
+            this.ResetAuthor.UseVisualStyleBackColor = true;
+            this.ResetAuthor.Visible = false;
+            // 
             // Reset
             // 
             this.Reset.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
             this.Reset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Reset.Location = new System.Drawing.Point(0, 122);
-            this.Reset.Margin = new System.Windows.Forms.Padding(0, 9, 0, 3);
+            this.Reset.Location = new System.Drawing.Point(0, 110);
+            this.Reset.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(171, 26);
             this.Reset.TabIndex = 11;
@@ -1180,7 +1196,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.ResetUnStaged.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
             this.ResetUnStaged.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ResetUnStaged.Location = new System.Drawing.Point(0, 154);
+            this.ResetUnStaged.Location = new System.Drawing.Point(0, 142);
             this.ResetUnStaged.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ResetUnStaged.Name = "ResetUnStaged";
             this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
@@ -1665,6 +1681,7 @@ namespace GitUI.CommandsDialogs
         private Button CommitAndPush;
         private Button Reset;
         private CheckBox Amend;
+        private CheckBox ResetAuthor;
         private CheckBox StageInSuperproject;
         private Button ResetUnStaged;
         private ToolStripMenuItem resetUnstagedChangesToolStripMenuItem;

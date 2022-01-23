@@ -2134,7 +2134,7 @@ namespace GitCommands
             }
         }
 
-        public ArgumentString CommitCmd(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = true, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "", bool allowEmpty = false)
+        public ArgumentString CommitCmd(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = true, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
         {
             return new GitArgumentBuilder("commit")
             {
@@ -2145,7 +2145,8 @@ namespace GitCommands
                 { gpgSign && string.IsNullOrWhiteSpace(gpgKeyId), "-S" },
                 { gpgSign && !string.IsNullOrWhiteSpace(gpgKeyId), $"-S{gpgKeyId}" },
                 { useExplicitCommitMessage, $"-F \"{GetGitExecPath(Path.Combine(GetGitDirectory(), "COMMITMESSAGE"))}\"" },
-                { allowEmpty, "--allow-empty" }
+                { allowEmpty, "--allow-empty" },
+                { resetAuthor && amend, "--reset-author" }
             };
         }
 
