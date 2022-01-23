@@ -635,6 +635,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.UseDiffViewerForBlame.Value)
             {
+                int? line = DiffText.Visible ? DiffText.CurrentFileLine : null;
                 blameToolStripMenuItem.Checked = !blameToolStripMenuItem.Checked;
                 BlameSelectedFileDiff();
                 return;
