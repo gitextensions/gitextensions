@@ -260,6 +260,14 @@ See the changes in the commit form.");
             return true;
         }
 
+        public override bool ProcessHotkey(Keys keyData)
+        {
+            return base.ProcessHotkey(keyData)
+                || (!GitExtensionsControl.IsTextEditKey(keyData) // downstream (without keys for quick search)
+                    && ((FileText.Visible && FileText.ProcessHotkey(keyData))
+                        || (BlameControl.Visible && BlameControl.ProcessHotkey(keyData))));
+        }
+
         public void ReloadHotkeys()
         {
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
