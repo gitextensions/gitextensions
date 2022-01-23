@@ -2490,20 +2490,16 @@ namespace GitUI.CommandsDialogs
             {
                 case "gotocommit":
                     Validates.NotNull(e.Data);
-                    var found = Module.TryResolvePartialCommitId(e.Data, out var revision);
-
-                    if (found)
+                    if (!Module.TryResolvePartialCommitId(e.Data, out ObjectId commitId) || !RevisionGrid.SetSelectedRevision(commitId))
                     {
-                        found = RevisionGrid.SetSelectedRevision(revision);
-                    }
+                        if (commitId is null)
+                        {
+                            return;
+                        }
 
-                    // When 'git log --first-parent' filtration is used, user can click on child commit
-                    // that is not present in the shown git log. User still wants to see the child commit
-                    // and to make it possible we add explicit branch filter and refresh.
-                    if (AppSettings.ShowFirstParent && !found)
-                    {
-                        ToolStripFilters.SetBranchFilter(revision?.ToString());
-                        RevisionGrid.SetSelectedRevision(revision);
+                        // This may occur at various filters, like AppSettings.ShowFirstParent
+                        // will hide other than the first parent.
+                        MessageBoxes.RevisionFilteredInGrid(this, commitId);
                     }
 
                     break;
@@ -2511,9 +2507,14 @@ namespace GitUI.CommandsDialogs
                 case "gototag":
                     Validates.NotNull(e.Data);
                     CommitData? commit = _commitDataManager.GetCommitData(e.Data, out _);
-                    if (commit is not null)
+                    if (commit is null)
                     {
-                        RevisionGrid.SetSelectedRevision(commit.ObjectId);
+                        break;
+                    }
+
+                    if (!RevisionGrid.SetSelectedRevision(commit.ObjectId))
+                    {
+                        MessageBoxes.RevisionFilteredInGrid(this, commit.ObjectId);
                     }
 
                     break;

@@ -2,15 +2,18 @@
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI
 {
     public class MessageBoxes : Translate
     {
-        private readonly TranslationString _archiveRevisionCaption = new("Archive revision");
+        private readonly TranslationString _cannotFindRevisionFilter = new(@"Revision ""{0}"" is not visible in the revision grid. Remove the revision filter.");
+        private readonly TranslationString _cannotFindRevisionCaption = new("Cannot find revision");
+        private readonly TranslationString _noRevisionFoundError = new("No revision found.");
 
-        private readonly TranslationString _failedToExecuteScript = new("Failed to execute script");
+        private readonly TranslationString _archiveRevisionCaption = new("Archive revision");
 
         private readonly TranslationString _failedToRunShell = new("Failed to run shell");
 
@@ -58,6 +61,12 @@ namespace GitUI
         private static MessageBoxes? instance;
 
         private static MessageBoxes Instance => instance ??= new();
+
+        public static void RevisionFilteredInGrid(IWin32Window? owner, ObjectId objectId)
+            => ShowError(owner, string.Format(Instance._cannotFindRevisionFilter.Text, objectId.ToShortString()), Instance._cannotFindRevisionCaption.Text);
+
+        public static void CannotFindGitRevision(IWin32Window? owner)
+            => ShowError(owner, Instance._noRevisionFoundError.Text, Instance._cannotFindRevisionCaption.Text);
 
         public static void FailedToRunShell(IWin32Window? owner, string shell, Exception ex)
             => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"

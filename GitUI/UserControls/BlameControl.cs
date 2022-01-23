@@ -499,15 +499,18 @@ namespace GitUI.Blame
                 return;
             }
 
-            if (_revGrid is not null)
+            ObjectId selectedId = _lastBlameLine.Commit.ObjectId;
+            if (_revGrid is null)
             {
-                _clickedBlameLine = _lastBlameLine;
-                _revGrid.SetSelectedRevision(_lastBlameLine.Commit.ObjectId);
-            }
-            else
-            {
-                using FormCommitDiff frm = new(UICommands, _lastBlameLine.Commit.ObjectId);
+                using FormCommitDiff frm = new(UICommands, selectedId);
                 frm.ShowDialog(this);
+                return;
+            }
+
+            _clickedBlameLine = _lastBlameLine;
+            if (!_revGrid.SetSelectedRevision(selectedId))
+            {
+                MessageBoxes.RevisionFilteredInGrid(this, selectedId);
             }
         }
 
@@ -624,7 +627,11 @@ namespace GitUI.Blame
         {
             if (_revGrid is not null)
             {
-                _revGrid.SetSelectedRevision(revisionId);
+                if (!_revGrid.SetSelectedRevision(revisionId))
+                {
+                    MessageBoxes.RevisionFilteredInGrid(this, revisionId);
+                }
+
                 return;
             }
 
