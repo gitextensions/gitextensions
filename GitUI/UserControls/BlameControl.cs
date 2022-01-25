@@ -98,25 +98,28 @@ namespace GitUI.Blame
 
         public void LoadBlame(GitRevision revision, IReadOnlyList<ObjectId>? children, string? fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
         {
-            var objectId = revision.ObjectId;
+            ObjectId objectId = revision.ObjectId;
 
             // refresh only when something changed
             if (!force && objectId == _blameId && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
             {
+                if (initialLine is not null)
+                {
+                    BlameFile.GoToLine(initialLine.Value);
+                }
+
                 return;
             }
-
-            controlToMask?.Mask();
-
-            var scrollPos = BlameFile.VScrollPosition;
-
-            var line = _clickedBlameLine is not null && _clickedBlameLine.Commit.ObjectId == objectId
-                ? _clickedBlameLine.OriginLineNumber
-                : initialLine ?? 0;
 
             _revGrid = revGrid;
             _fileName = fileName;
             _encoding = encoding;
+
+            controlToMask?.Mask();
+            int scrollPos = BlameFile.VScrollPosition;
+            int line = _clickedBlameLine is not null && _clickedBlameLine.Commit.ObjectId == objectId
+                ? _clickedBlameLine.OriginLineNumber
+                : initialLine ?? 0;
 
             _blameLoader.LoadAsync(() => _blame = Module.Blame(fileName, objectId.ToString(), encoding),
                 () => ProcessBlame(fileName, revision, children, controlToMask, line, scrollPos, cancellationToken));
