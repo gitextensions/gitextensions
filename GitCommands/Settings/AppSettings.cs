@@ -482,6 +482,7 @@ namespace GitCommands
         public static ISetting<string> ConEmuStyle => Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "<Solarized Light>");
         public static ISetting<string> ConEmuTerminal => Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
         public static ISetting<bool> UseBrowseForFileHistory => Setting.Create(DetailedSettingsPath, nameof(UseBrowseForFileHistory), true);
+        public static ISetting<bool> UseDiffViewerForBlame => Setting.Create(DetailedSettingsPath, nameof(UseDiffViewerForBlame), false);
         public static ISetting<bool> ShowGpgInformation => Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
 
         public static CommitInfoPosition CommitInfoPosition

@@ -78,7 +78,12 @@ See the changes in the commit form.");
             _refreshGitStatus = refreshGitStatus;
         }
 
-        public void ExpandToFile(string filePath)
+        /// <summary>
+        /// Expand the tree for the path and show the contents
+        /// </summary>
+        /// <param name="filePath">The path to the file</param>
+        /// <param name="requestBlame">Request that Blame is shown in the FileTree</param>
+        public void ExpandToFile(string filePath, bool requestBlame = false)
         {
             if (string.IsNullOrWhiteSpace(filePath))
             {
@@ -128,6 +133,11 @@ See the changes in the commit form.");
                 if (isIncompleteMatch)
                 {
                     MessageBox.Show(_nodeNotFoundNextAvailableParentSelected.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                if (requestBlame && !AppSettings.RevisionFileTreeShowBlame)
+                {
+                    blameToolStripMenuItem1.Checked = AppSettings.RevisionFileTreeShowBlame = true;
                 }
 
                 tvGitTree.SelectedNode = foundNode;
