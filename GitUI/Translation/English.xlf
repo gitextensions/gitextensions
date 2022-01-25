@@ -8653,6 +8653,18 @@ help</source>
         <source>Archive revision</source>
         <target />
       </trans-unit>
+      <trans-unit id="_cannotOpenGitExtensionsCaption.Text">
+        <source>Cannot open Git Extensions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotOpenSubmoduleCaption.Text">
+        <source>Cannot open submodule</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_directoryDoesNotExist.Text">
+        <source>The directory "{0}" does not exist.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_failedToExecuteScript.Text">
         <source>Failed to execute script</source>
         <target />
@@ -8713,6 +8725,10 @@ Do you want to trust this host key and then try again?</source>
       </trans-unit>
       <trans-unit id="_shellNotFoundCaption.Text">
         <source>Shell not found</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_submoduleDirectoryDoesNotExist.Text">
+        <source>The directory "{0}" does not exist for submodule "{1}".</source>
         <target />
       </trans-unit>
       <trans-unit id="_theRepositorySubmodules.Text">
