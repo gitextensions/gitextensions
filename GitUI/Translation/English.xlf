@@ -3168,7 +3168,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripLabel1.Text">
-        <source>Branches:</source>
+        <source>&amp;Branches:</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripLabel1.ToolTipText">
@@ -3212,7 +3212,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tslblRevisionFilter.Text">
-        <source>Filter:</source>
+        <source>&amp;Filter:</source>
         <target />
       </trans-unit>
       <trans-unit id="tslblRevisionFilter.ToolTipText">
@@ -3289,10 +3289,6 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="tsmiShowFirstParent.ToolTipText">
         <source>Show first parents</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="tsmiShowReflogs.Text">
-        <source>Reflogs</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowReflogs.ToolTipText">
