@@ -1432,16 +1432,30 @@ namespace GitCommands
 
         public static ThemeId ThemeId
         {
+            // Updating key names in v4.0, to force resetting to default
+            // (as dark themes look bad due to SUPPORT_THEME_HOOKS no longer supported)
             get
             {
                 return new ThemeId(
-                    GetString("uitheme", ThemeId.Default.Name),
-                    GetBool("uithemeisbuiltin", ThemeId.Default.IsBuiltin));
+                    GetString("uitheme_v2", ThemeId.Default.Name),
+                    GetBool("uithemeisbuiltin_v2", ThemeId.Default.IsBuiltin));
             }
             set
             {
-                SetString("uitheme", value.Name ?? string.Empty);
-                SetBool("uithemeisbuiltin", value.IsBuiltin);
+                SetString("uitheme_v2", value.Name ?? string.Empty);
+                SetBool("uithemeisbuiltin_v2", value.IsBuiltin);
+            }
+        }
+
+        public static string? ThemeIdName_v1
+        {
+            get
+            {
+                return GetString("uitheme", null);
+            }
+            set
+            {
+                SetString("uitheme", value);
             }
         }
 

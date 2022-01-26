@@ -26,6 +26,7 @@ namespace GitUI.Theming
             Win32ThemeHooks.ThemeSettings = Settings;
         }
 
+#if SUPPORT_THEME_HOOKS
         private static void InstallHooks(Theme theme)
         {
             Win32ThemeHooks.WindowCreated += Handle_WindowCreated;
@@ -42,6 +43,7 @@ namespace GitUI.Theming
 
             ResetGdiCaches();
         }
+#endif
 
         private static ThemeSettings LoadThemeSettings(IThemeRepository repository)
         {
@@ -55,6 +57,19 @@ namespace GitUI.Theming
                 // Not good, ColorHelper needs actual InvariantTheme to correctly transform colors.
                 MessageBoxes.ShowError(null, $"Failed to load invariant theme: {ex}");
                 return ThemeSettings.Default;
+            }
+
+            string oldThemeName = AppSettings.ThemeIdName_v1;
+            if (oldThemeName is not null)
+            {
+                // Migrate to default theme
+                AppSettings.ThemeIdName_v1 = null;
+                AppSettings.ThemeId = ThemeId.Default;
+                if (oldThemeName != ThemeId.Default.Name)
+                {
+                    MessageBox.Show($"The theme ({oldThemeName}) is reset to default as the theme support is limited in this Git Extensions version.",
+                        TranslatedStrings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
 
             ThemeId themeId = AppSettings.ThemeId;
@@ -93,9 +108,9 @@ namespace GitUI.Theming
             return new ThemeSettings(theme, invariantTheme, AppSettings.ThemeVariations, AppSettings.UseSystemVisualStyle);
         }
 
+#if SUPPORT_THEME_HOOKS
         private static void ResetGdiCaches()
         {
-#if SUPPORT_THEME_HOOKS
             var systemDrawingAssembly = typeof(Color).Assembly;
 
             var colorTableField =
@@ -127,7 +142,6 @@ namespace GitUI.Theming
 
             threadData[systemBrushesKey] = null;
             threadData[systemPensKey] = null;
-#endif
         }
 
         public static void Unload()
@@ -150,6 +164,7 @@ namespace GitUI.Theming
                     break;
             }
         }
+#endif
 
         private static ThemeSettings CreateFallbackSettings(Theme invariantTheme, string[] variations) =>
             new(Theme.CreateDefaultTheme(variations), invariantTheme, variations, useSystemVisualStyle: true);
