@@ -294,7 +294,7 @@ namespace GitUI.UserControls
 
         public void SetShortcutKeys(Action<ToolStripMenuItem, RevisionGridControl.Command> setShortcutString)
         {
-            setShortcutString(tsmiResetPathFilters, RevisionGridControl.Command.ResetPathRevisionFilter);
+            setShortcutString(tsmiResetPathFilters, RevisionGridControl.Command.ResetRevisionPathFilter);
             setShortcutString(tsmiResetAllFilters, RevisionGridControl.Command.ResetRevisionFilter);
             setShortcutString(tsmiAdvancedFilter, RevisionGridControl.Command.RevisionFilter);
         }

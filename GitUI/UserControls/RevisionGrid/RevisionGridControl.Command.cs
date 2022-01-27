@@ -41,7 +41,7 @@
             ShowReflogReferences = 34,
             ShowLatestStash = 35,
             ResetRevisionFilter = 36,
-            ResetPathRevisionFilter = 37,
+            ResetRevisionPathFilter = 37,
         }
     }
 }

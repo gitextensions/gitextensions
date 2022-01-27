@@ -303,7 +303,7 @@ namespace GitUI.Hotkey
                     Hk(RevisionGridControl.Command.NextQuickSearch, Keys.Alt | Keys.Down),
                     Hk(RevisionGridControl.Command.OpenCommitsWithDifftool, Keys.None),
                     Hk(RevisionGridControl.Command.PrevQuickSearch, Keys.Alt | Keys.Up),
-                    Hk(RevisionGridControl.Command.ResetPathRevisionFilter, Keys.Control | Keys.Shift | Keys.H),
+                    Hk(RevisionGridControl.Command.ResetRevisionPathFilter, Keys.Control | Keys.Shift | Keys.H),
                     Hk(RevisionGridControl.Command.ResetRevisionFilter, Keys.Control | Keys.Shift | Keys.I),
                     Hk(RevisionGridControl.Command.RevisionFilter, Keys.Control | Keys.I),
                     Hk(RevisionGridControl.Command.SelectCurrentRevision, Keys.Control | Keys.Shift | Keys.C),

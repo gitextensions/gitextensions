@@ -2748,7 +2748,7 @@ namespace GitUI
                 case Command.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
                 case Command.RevisionFilter: ShowRevisionFilterDialog(); break;
                 case Command.ResetRevisionFilter: ResetAllFiltersAndRefresh(); break;
-                case Command.ResetPathRevisionFilter: SetAndApplyPathFilter(""); break;
+                case Command.ResetRevisionPathFilter: SetAndApplyPathFilter(""); break;
                 case Command.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
                 case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(EventArgs.Empty); break;
                 case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
