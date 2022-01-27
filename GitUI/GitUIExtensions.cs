@@ -48,7 +48,7 @@ namespace GitUI
                     return;
                 }
 
-                fileViewer.Clear();
+                await fileViewer.ClearAsync();
                 return;
             }
 

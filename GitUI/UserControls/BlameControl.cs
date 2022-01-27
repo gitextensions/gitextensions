@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
@@ -96,7 +97,7 @@ namespace GitUI.Blame
             CommitInfo.CommandClicked -= commitInfo_CommandClicked;
         }
 
-        public void LoadBlame(GitRevision revision, IReadOnlyList<ObjectId>? children, string? fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
+        public async Task LoadBlameAsync(GitRevision revision, IReadOnlyList<ObjectId>? children, string? fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
         {
             ObjectId objectId = revision.ObjectId;
 
@@ -121,7 +122,12 @@ namespace GitUI.Blame
                 ? _clickedBlameLine.OriginLineNumber
                 : initialLine ?? 0;
 
-            _blameLoader.LoadAsync(() => _blame = Module.Blame(fileName, objectId.ToString(), encoding),
+            // Clear the contents of the viewer while loading
+            BlameAuthor.ClearBlameGutter();
+            await BlameAuthor.ClearAsync();
+            await BlameFile.ClearAsync();
+
+            await _blameLoader.LoadAsync(cancellationToken => _blame = Module.Blame(fileName, objectId.ToString(), encoding, cancellationToken: cancellationToken),
                 () => ProcessBlame(fileName, revision, children, controlToMask, line, scrollPos, cancellationToken));
         }
 

@@ -340,7 +340,7 @@ namespace GitUI.CommandsDialogs
 
             if (tabControl1.SelectedTab == BlameTab)
             {
-                Blame.LoadBlame(revision, children, fileName, RevisionGrid, BlameTab, Diff.Encoding, force: force);
+                _ = Blame.LoadBlameAsync(revision, children, fileName, RevisionGrid, BlameTab, Diff.Encoding, force: force, cancellationToken: _viewChangesSequence.Next());
             }
             else if (tabControl1.SelectedTab == ViewTab)
             {

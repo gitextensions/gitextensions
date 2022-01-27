@@ -476,14 +476,15 @@ namespace GitUI.CommandsDialogs
             RequestRefresh();
         }
 
-        private void BlameSelectedFileDiff(int? line = null)
+        private async Task ShowSelectedFileBlameAsync(int? line = null)
         {
             BlameControl.Visible = true;
             DiffText.Visible = false;
             GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
                 ? _revisionGrid.GetActualRevision(_revisionGrid.CurrentCheckout)
                 : DiffFiles.SelectedItem.SecondRevision;
-            BlameControl.LoadBlame(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGrid, controlToMask: null, DiffText.Encoding, line, cancellationToken: _viewChangesSequence.Next());
+            await BlameControl.LoadBlameAsync(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGrid,
+                controlToMask: null, DiffText.Encoding, line, cancellationToken: _viewChangesSequence.Next());
         }
 
         private async Task ShowSelectedFileDiffAsync()
@@ -495,12 +496,16 @@ namespace GitUI.CommandsDialogs
                 cancellationToken: _viewChangesSequence.Next());
         }
 
+        /// <summary>
+        /// Show selected item as diff or blame
+        /// </summary>
+        private void ShowSelectedFile(int? line = null) =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            await (DiffText.Visible ? ShowSelectedFileDiffAsync() : ShowSelectedFileBlameAsync(line))).FileAndForget();
+
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ShowSelectedFileDiffAsync();
-            }).FileAndForget();
+            ThreadHelper.JoinableTaskFactory.RunAsync(ShowSelectedFileDiffAsync).FileAndForget();
         }
 
         private void DiffFiles_DoubleClick(object sender, EventArgs e)
@@ -513,11 +518,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.OpenSubmoduleDiffInSeparateWindow && item.Item.IsSubmodule)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
-                    {
-                        await DiffFiles.OpenSubmoduleAsync();
-                    });
+                ThreadHelper.JoinableTaskFactory.RunAsync(DiffFiles.OpenSubmoduleAsync);
             }
             else
             {
@@ -535,10 +536,7 @@ namespace GitUI.CommandsDialogs
 
         private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ShowSelectedFileDiffAsync();
-            }).FileAndForget();
+            ThreadHelper.JoinableTaskFactory.RunAsync(ShowSelectedFileDiffAsync).FileAndForget();
         }
 
         private void DiffText_PatchApplied(object sender, EventArgs e)
@@ -637,7 +635,9 @@ namespace GitUI.CommandsDialogs
             {
                 int? line = DiffText.Visible ? DiffText.CurrentFileLine : null;
                 blameToolStripMenuItem.Checked = !blameToolStripMenuItem.Checked;
-                BlameSelectedFileDiff(line);
+                BlameControl.Visible = blameToolStripMenuItem.Checked;
+                DiffText.Visible = !blameToolStripMenuItem.Checked;
+                ShowSelectedFile(line);
                 return;
             }
 
