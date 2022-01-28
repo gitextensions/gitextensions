@@ -106,7 +106,7 @@ namespace ResourceManager.CommitDataRenders
             }
 
             var parentIds = commitData.ParentIds;
-            if (parentIds.Count != 0)
+            if (parentIds?.Count > 0)
             {
                 header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.GetParents(parentIds.Count), padding) + RenderObjectIds(parentIds, showRevisionsAsLinks));
             }
