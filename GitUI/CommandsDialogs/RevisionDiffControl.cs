@@ -655,8 +655,9 @@ namespace GitUI.CommandsDialogs
 
             // switch to view (and fills the first level of file tree data model if not already done)
             string name = DiffFiles.SelectedItems.First().Item.Name;
+            int? line = DiffText.Visible ? DiffText.CurrentFileLine : null;
             (FindForm() as FormBrowse)?.ExecuteCommand(FormBrowse.Command.FocusFileTree);
-            _revisionFileTree.ExpandToFile(name, requestBlame);
+            _revisionFileTree.ExpandToFile(name, line, requestBlame);
         }
 
         private void StageFileToolStripMenuItemClick(object sender, EventArgs e)
