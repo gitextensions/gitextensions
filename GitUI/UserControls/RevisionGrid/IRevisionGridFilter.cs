@@ -14,6 +14,11 @@ namespace GitUI.UserControls.RevisionGrid
         event EventHandler<FilterChangedEventArgs>? FilterChanged;
 
         /// <summary>
+        ///  Resets all revision filters.
+        /// </summary>
+        void ResetAllFiltersAndRefresh();
+
+        /// <summary>
         ///  Applies a branch filter.
         /// </summary>
         /// <param name="filter">The filter to apply.</param>
@@ -25,6 +30,12 @@ namespace GitUI.UserControls.RevisionGrid
         /// <param name="filter">The filter to apply.</param>
         /// <exception cref="InvalidOperationException">Invalid 'diff contains' filter.</exception>
         void SetAndApplyRevisionFilter(RevisionFilter filter);
+
+        /// <summary>
+        ///  Applies a path filter.
+        /// </summary>
+        /// <param name="filter">The filter to apply.</param>
+        void SetAndApplyPathFilter(string filter);
 
         void ShowAllBranches();
 

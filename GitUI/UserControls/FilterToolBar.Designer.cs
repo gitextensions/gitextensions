@@ -21,7 +21,11 @@ namespace GitUI.UserControls
             this.tsmiHash = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiDiffContainsFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.tsbtnAdvancedFilter = new System.Windows.Forms.ToolStripButton();
+            this.tsbtnAdvancedFilter = new System.Windows.Forms.ToolStripSplitButton();
+            this.tsmiResetPathFilters = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiResetAllFilters = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorAdvancedFilter = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiAdvancedFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.tssbtnShowBranches = new System.Windows.Forms.ToolStripSplitButton();
             this.tsmiShowBranchesAll = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowBranchesCurrent = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,11 +82,43 @@ namespace GitUI.UserControls
             // tsbtnAdvancedFilter
             // 
             this.tsbtnAdvancedFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbtnAdvancedFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiResetPathFilters,
+            this.tsmiResetAllFilters,
+            this.toolStripSeparatorAdvancedFilter,
+            this.tsmiAdvancedFilter});
             this.tsbtnAdvancedFilter.Image = global::GitUI.Properties.Images.FunnelPencil;
             this.tsbtnAdvancedFilter.Name = "tsbtnAdvancedFilter";
-            this.tsbtnAdvancedFilter.Size = new System.Drawing.Size(23, 22);
+            this.tsbtnAdvancedFilter.Size = new System.Drawing.Size(32, 22);
             this.tsbtnAdvancedFilter.ToolTipText = "Advanced filter";
-            this.tsbtnAdvancedFilter.Click += new System.EventHandler(this.tsbtnAdvancedFilter_Click);
+            this.tsbtnAdvancedFilter.ButtonClick += new System.EventHandler(this.tsbtnAdvancedFilter_ButtonClick);
+            this.tsbtnAdvancedFilter.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
+            // 
+            // tsmiResetPathFilters
+            // 
+            this.tsmiResetPathFilters.Name = "tsmiResetPathFilters";
+            this.tsmiResetPathFilters.Size = new System.Drawing.Size(259, 22);
+            this.tsmiResetPathFilters.Text = "Reset &path filter";
+            this.tsmiResetPathFilters.Click += new System.EventHandler(this.tsmiDisablePathFilters_Click);
+            // 
+            // tsmiResetAllFilters
+            // 
+            this.tsmiResetAllFilters.Name = "tsmiResetAllFilters";
+            this.tsmiResetAllFilters.Size = new System.Drawing.Size(259, 22);
+            this.tsmiResetAllFilters.Text = "&Reset revision filters";
+            this.tsmiResetAllFilters.Click += new System.EventHandler(this.tsmiDisableAllFilters_Click);
+            // 
+            // toolStripSeparatorAdvancedFilter
+            // 
+            this.toolStripSeparatorAdvancedFilter.Name = "toolStripSeparatorAdvancedFilter";
+            this.toolStripSeparatorAdvancedFilter.Size = new System.Drawing.Size(6, 25);
+            // 
+            // tsmiAdvancedFilter
+            // 
+            this.tsmiAdvancedFilter.Name = "tsmiAdvancedFilter";
+            this.tsmiAdvancedFilter.Size = new System.Drawing.Size(259, 22);
+            this.tsmiAdvancedFilter.Text = "&Advanced filter";
+            this.tsmiAdvancedFilter.Click += new System.EventHandler(this.tsmiAdvancedFilter_Click);
             // 
             // menuCommitInfoPosition
             // 
@@ -268,7 +304,11 @@ namespace GitUI.UserControls
         private ToolStripTextBox tstxtRevisionFilter;
         private ToolStripLabel tslblRevisionFilter;
         private ToolStripSeparator toolStripSeparator19;
-        private ToolStripButton tsbtnAdvancedFilter;
+        private ToolStripSplitButton tsbtnAdvancedFilter;
+        private ToolStripMenuItem tsmiResetPathFilters;
+        private ToolStripMenuItem tsmiResetAllFilters;
+        private ToolStripSeparator toolStripSeparatorAdvancedFilter;
+        private ToolStripMenuItem tsmiAdvancedFilter;
         private ToolStripSplitButton tssbtnShowBranches;
         private ToolStripMenuItem tsmiShowBranchesAll;
         private ToolStripMenuItem tsmiShowBranchesCurrent;

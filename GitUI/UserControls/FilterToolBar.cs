@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -145,7 +143,7 @@ namespace GitUI.UserControls
             tscboBranchFilter.SelectionStart = index;
         }
 
-        public void ClearFilters()
+        public void ClearQuickFilters()
         {
             tscboBranchFilter.Text =
                 tstxtRevisionFilter.Text = string.Empty;
@@ -294,14 +292,23 @@ namespace GitUI.UserControls
             }).FileAndForget();
         }
 
+        public void SetShortcutKeys(Action<ToolStripMenuItem, RevisionGridControl.Command> setShortcutString)
+        {
+            setShortcutString(tsmiResetPathFilters, RevisionGridControl.Command.ResetRevisionPathFilter);
+            setShortcutString(tsmiResetAllFilters, RevisionGridControl.Command.ResetRevisionFilter);
+            setShortcutString(tsmiAdvancedFilter, RevisionGridControl.Command.RevisionFilter);
+        }
+
         private void revisionGridFilter_FilterChanged(object? sender, FilterChangedEventArgs e)
         {
             tsmiShowFirstParent.Checked = e.ShowFirstParent;
             tsmiShowReflogs.Checked = e.ShowReflogReferences;
             InitBranchSelectionFilter(e);
-            tsbtnAdvancedFilter.Checked = e.HasFilter;
             tsbtnAdvancedFilter.AutoToolTip = e.HasFilter;
             tsbtnAdvancedFilter.ToolTipText = e.FilterSummary;
+            tsbtnAdvancedFilter.Image = e.HasFilter ? Properties.Images.FunnelExclamation : Properties.Images.FunnelPencil;
+            tsmiResetPathFilters.Enabled = !string.IsNullOrEmpty(e.PathFilter);
+            tsmiResetAllFilters.Enabled = e.HasFilter;
         }
 
         private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
@@ -318,9 +325,16 @@ namespace GitUI.UserControls
             }
         }
 
-        private void tsbtnAdvancedFilter_Click(object sender, EventArgs e)
+        private void tsbtnAdvancedFilter_ButtonClick(object sender, EventArgs e)
         {
-            RevisionGridFilter.ShowRevisionFilterDialog();
+            if (!tsmiResetAllFilters.Enabled)
+            {
+                RevisionGridFilter.ShowRevisionFilterDialog();
+            }
+            else
+            {
+                tsbtnAdvancedFilter.ShowDropDown();
+            }
         }
 
         private void tscboBranchFilter_Click(object sender, EventArgs e)
@@ -356,6 +370,17 @@ namespace GitUI.UserControls
             _filterBeingChanged = true;
             UpdateBranchFilterItems();
         }
+
+        private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
+        {
+            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+        }
+
+        private void tsmiDisablePathFilters_Click(object sender, EventArgs e) => RevisionGridFilter.SetAndApplyPathFilter("");
+
+        private void tsmiDisableAllFilters_Click(object sender, EventArgs e) => RevisionGridFilter.ResetAllFiltersAndRefresh();
+
+        private void tsmiAdvancedFilter_Click(object sender, EventArgs e) => RevisionGridFilter.ShowRevisionFilterDialog();
 
         private void tsmiShowBranchesAll_Click(object sender, EventArgs e) => ApplyPresetBranchesFilter(RevisionGridFilter.ShowAllBranches);
 
@@ -393,7 +418,7 @@ namespace GitUI.UserControls
             public ToolStripButton tsmiShowReflogs => _control.tsmiShowReflogs;
             public ToolStripTextBox tstxtRevisionFilter => _control.tstxtRevisionFilter;
             public ToolStripLabel tslblRevisionFilter => _control.tslblRevisionFilter;
-            public ToolStripButton tsbtnAdvancedFilter => _control.tsbtnAdvancedFilter;
+            public ToolStripSplitButton tsbtnAdvancedFilter => _control.tsbtnAdvancedFilter;
             public ToolStripSplitButton tssbtnShowBranches => _control.tssbtnShowBranches;
             public ToolStripMenuItem tsmiShowBranchesAll => _control.tsmiShowBranchesAll;
             public ToolStripMenuItem tsmiShowBranchesCurrent => _control.tsmiShowBranchesCurrent;

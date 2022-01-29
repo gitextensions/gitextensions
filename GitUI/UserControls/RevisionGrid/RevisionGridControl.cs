@@ -377,14 +377,14 @@ namespace GitUI
             return FindRenamesOpt() + findCopies;
         }
 
-        public void DisableFilters()
+        public void ResetAllFilters()
         {
-            _filterInfo.DisableFilters();
+            _filterInfo.ResetAllFilters();
         }
 
-        public void DisableRevisionFilter()
+        public void ResetAllFiltersAndRefresh()
         {
-            _filterInfo.DisableFilters();
+            _filterInfo.ResetAllFilters();
             PerformRefreshRevisions();
         }
 
@@ -2485,6 +2485,11 @@ namespace GitUI
             }
         }
 
+        internal void SetFilterShortcutKeys(FilterToolBar filterBar)
+        {
+            filterBar.SetShortcutKeys(SetShortcutString);
+        }
+
         internal void SetShortcutKeys()
         {
             SetShortcutString(fixupCommitToolStripMenuItem, Command.CreateFixupCommit);
@@ -2742,7 +2747,8 @@ namespace GitUI
             {
                 case Command.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
                 case Command.RevisionFilter: ShowRevisionFilterDialog(); break;
-                case Command.DisableRevisionFilter: DisableRevisionFilter(); break;
+                case Command.ResetRevisionFilter: ResetAllFiltersAndRefresh(); break;
+                case Command.ResetRevisionPathFilter: SetAndApplyPathFilter(""); break;
                 case Command.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
                 case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(EventArgs.Empty); break;
                 case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;

@@ -689,7 +689,7 @@ namespace GitUITests.UserControls
         // TODO: Apply
 
         [TestCaseSource(nameof(FilterInfo_HasFilterTestCases))]
-        public void FilterInfo_DisableFilters_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byPathFilter, bool byBranchFilter)
+        public void FilterInfo_ResetAllFilters_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byPathFilter, bool byBranchFilter)
         {
             FilterInfo filterInfo = new()
             {
@@ -702,7 +702,7 @@ namespace GitUITests.UserControls
                 ByBranchFilter = byBranchFilter
             };
 
-            filterInfo.DisableFilters();
+            filterInfo.ResetAllFilters();
 
             filterInfo.ByDateFrom.Should().BeFalse();
             filterInfo.ByDateTo.Should().BeFalse();
