@@ -1879,7 +1879,8 @@ namespace GitUI.Editor
             PreviousOccurrence = 11,
             StageLines = 12,
             UnstageLines = 13,
-            ResetLines = 14
+            ResetLines = 14,
+            IgnoreAllWhitespace = 15,
         }
 
         protected override CommandStatus ExecuteCommand(int cmd)
@@ -1891,18 +1892,19 @@ namespace GitUI.Editor
                 case Command.Find: internalFileViewer.Find(); break;
                 case Command.FindNextOrOpenWithDifftool: ThreadHelper.JoinableTaskFactory.RunAsync(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: true)); break;
                 case Command.FindPrevious: ThreadHelper.JoinableTaskFactory.RunAsync(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: false)); break;
-                case Command.GoToLine: goToLineToolStripMenuItem_Click(this, EventArgs.Empty); break;
-                case Command.IncreaseNumberOfVisibleLines: IncreaseNumberOfLinesToolStripMenuItemClick(this, EventArgs.Empty); break;
-                case Command.DecreaseNumberOfVisibleLines: DecreaseNumberOfLinesToolStripMenuItemClick(this, EventArgs.Empty); break;
-                case Command.ShowEntireFile: ShowEntireFileToolStripMenuItemClick(this, EventArgs.Empty); break;
-                case Command.TreatFileAsText: TreatAllFilesAsTextToolStripMenuItemClick(this, EventArgs.Empty); break;
-                case Command.NextChange: NextChangeButtonClick(this, EventArgs.Empty); break;
-                case Command.PreviousChange: PreviousChangeButtonClick(this, EventArgs.Empty); break;
+                case Command.GoToLine: goToLineToolStripMenuItem.PerformClick(); break;
+                case Command.IncreaseNumberOfVisibleLines: increaseNumberOfLinesToolStripMenuItem.PerformClick(); break;
+                case Command.DecreaseNumberOfVisibleLines: decreaseNumberOfLinesToolStripMenuItem.PerformClick(); break;
+                case Command.ShowEntireFile: showEntireFileToolStripMenuItem.PerformClick(); break;
+                case Command.TreatFileAsText: treatAllFilesAsTextToolStripMenuItem.PerformClick(); break;
+                case Command.NextChange: nextChangeButton.PerformClick(); break;
+                case Command.PreviousChange: previousChangeButton.PerformClick(); break;
                 case Command.NextOccurrence: internalFileViewer.GoToNextOccurrence(); break;
                 case Command.PreviousOccurrence: internalFileViewer.GoToPreviousOccurrence(); break;
                 case Command.StageLines: return StageSelectedLines();
                 case Command.UnstageLines: return UnstageSelectedLines();
                 case Command.ResetLines: return ResetSelectedLines();
+                case Command.IgnoreAllWhitespace: ignoreAllWhitespaceChangesToolStripMenuItem.PerformClick(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
