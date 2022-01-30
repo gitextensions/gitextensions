@@ -202,6 +202,19 @@ namespace GitUI
             return DoActionOnRepo(owner, Action);
         }
 
+        public bool StashStaged(IWin32Window? owner)
+        {
+            bool Action()
+            {
+                FormProcess.ShowDialog(owner, arguments: "stash --staged", Module.WorkingDir, input: null, useDialogSettings: true);
+
+                // git-stash may have changed commits also if aborted, the grid must be refreshed
+                return true;
+            }
+
+            return DoActionOnRepo(owner, Action);
+        }
+
         public bool StashPop(IWin32Window? owner)
         {
             bool Action()

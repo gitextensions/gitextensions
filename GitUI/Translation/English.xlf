@@ -3127,6 +3127,14 @@ Do you want to continue?</source>
         <source>Apply and drop single stash</source>
         <target />
       </trans-unit>
+      <trans-unit id="stashStagedToolStripMenuItem.Text">
+        <source>S&amp;tash staged</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="stashStagedToolStripMenuItem.ToolTipText">
+        <source>Stash staged changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="stashToolStripMenuItem.Text">
         <source>Ma&amp;nage stashes...</source>
         <target />
@@ -3838,6 +3846,10 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="StageInSuperproject.Text">
         <source>Stage &amp;in Superproject</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="StashStaged.Text">
+        <source>S&amp;tash staged changes</source>
         <target />
       </trans-unit>
       <trans-unit id="_addSelectionToCommitMessage.Text">

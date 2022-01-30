@@ -123,6 +123,7 @@ namespace GitUI.CommandsDialogs
             this.CommitAndPush = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.CheckBox();
             this.ResetAuthor = new System.Windows.Forms.CheckBox();
+            this.StashStaged = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
             this.ResetUnStaged = new System.Windows.Forms.Button();
             this.toolbarCommit = new GitUI.ToolStripEx();
@@ -1115,6 +1116,7 @@ namespace GitUI.CommandsDialogs
             var resetAuthorPanel = new Panel{ AutoSize = false, Size = this.ResetAuthor.Size, Margin = new Padding(0) };
             resetAuthorPanel.Controls.Add(this.ResetAuthor);
             this.flowCommitButtons.Controls.Add(resetAuthorPanel);
+            this.flowCommitButtons.Controls.Add(this.StashStaged);
             this.flowCommitButtons.Controls.Add(this.Reset);
             this.flowCommitButtons.Controls.Add(this.ResetUnStaged);
             this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1178,11 +1180,25 @@ namespace GitUI.CommandsDialogs
             this.ResetAuthor.UseVisualStyleBackColor = true;
             this.ResetAuthor.Visible = false;
             // 
+            // StashStaged
+            // 
+            this.StashStaged.Image = global::GitUI.Properties.Images.Stash;
+            this.StashStaged.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.StashStaged.Location = new System.Drawing.Point(0, 110);
+            this.StashStaged.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.StashStaged.Name = "StashStaged";
+            this.StashStaged.Size = new System.Drawing.Size(171, 26);
+            this.StashStaged.TabIndex = 14;
+            this.StashStaged.TabStop = false;
+            this.StashStaged.Text = "S&tash staged changes";
+            this.StashStaged.UseVisualStyleBackColor = true;
+            this.StashStaged.Click += new System.EventHandler(this.StashStagedClick);
+            // 
             // Reset
             // 
             this.Reset.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
             this.Reset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Reset.Location = new System.Drawing.Point(0, 110);
+            this.Reset.Location = new System.Drawing.Point(0, 142);
             this.Reset.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(171, 26);
@@ -1196,7 +1212,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.ResetUnStaged.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
             this.ResetUnStaged.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ResetUnStaged.Location = new System.Drawing.Point(0, 142);
+            this.ResetUnStaged.Location = new System.Drawing.Point(0, 174);
             this.ResetUnStaged.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ResetUnStaged.Name = "ResetUnStaged";
             this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
@@ -1679,10 +1695,11 @@ namespace GitUI.CommandsDialogs
         private FlowLayoutPanel flowCommitButtons;
         private Button Commit;
         private Button CommitAndPush;
-        private Button Reset;
+        private CheckBox StageInSuperproject;
         private CheckBox Amend;
         private CheckBox ResetAuthor;
-        private CheckBox StageInSuperproject;
+        private Button StashStaged;
+        private Button Reset;
         private Button ResetUnStaged;
         private ToolStripMenuItem resetUnstagedChangesToolStripMenuItem;
         private ToolStripMenuItem noVerifyToolStripMenuItem;

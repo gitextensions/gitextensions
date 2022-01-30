@@ -39,6 +39,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSplitStash = new System.Windows.Forms.ToolStripSplitButton();
             this.stashChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stashStagedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stashPopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.manageStashesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -389,6 +390,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripSplitStash.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stashChangesToolStripMenuItem,
+            this.stashStagedToolStripMenuItem,
             this.stashPopToolStripMenuItem,
             this.toolStripSeparator9,
             this.manageStashesToolStripMenuItem,
@@ -408,6 +410,14 @@ namespace GitUI.CommandsDialogs
             this.stashChangesToolStripMenuItem.Text = "&Stash";
             this.stashChangesToolStripMenuItem.ToolTipText = "Stash changes";
             this.stashChangesToolStripMenuItem.Click += new System.EventHandler(this.StashChangesToolStripMenuItemClick);
+            // 
+            // stashStagedToolStripMenuItem
+            // 
+            this.stashStagedToolStripMenuItem.Name = "stashStagedToolStripMenuItem";
+            this.stashStagedToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.stashStagedToolStripMenuItem.Text = "S&tash staged";
+            this.stashStagedToolStripMenuItem.ToolTipText = "Stash staged changes";
+            this.stashStagedToolStripMenuItem.Click += new System.EventHandler(this.StashStagedToolStripMenuItemClick);
             // 
             // stashPopToolStripMenuItem
             // 
@@ -1792,6 +1802,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripPushButton toolStripButtonPush;
         private ToolStripSplitButton toolStripSplitStash;
         private ToolStripMenuItem stashChangesToolStripMenuItem;
+        private ToolStripMenuItem stashStagedToolStripMenuItem;
         private ToolStripMenuItem stashPopToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripMenuItem manageStashesToolStripMenuItem;

@@ -266,6 +266,8 @@ namespace GitUI.CommandsDialogs
             MainSplitContainer.Visible = false;
             MainSplitContainer.SplitterDistance = DpiUtil.Scale(260);
 
+            stashStagedToolStripMenuItem.Visible = GitVersion.Current.SupportStashStaged;
+
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
@@ -1589,6 +1591,12 @@ namespace GitUI.CommandsDialogs
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
+            UpdateStashCount();
+        }
+
+        private void StashStagedToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UICommands.StashStaged(this);
             UpdateStashCount();
         }
 
