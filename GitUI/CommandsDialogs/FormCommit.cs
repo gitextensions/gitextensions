@@ -1176,7 +1176,7 @@ namespace GitUI.CommandsDialogs
             ExecuteCommitCommand();
         }
 
-        private void CheckForStagedAndCommit(bool amend, bool push)
+        private void CheckForStagedAndCommit(bool amend, bool push, bool resetAuthor)
         {
             BypassFormActivatedEventHandler(() =>
             {
@@ -1362,7 +1362,8 @@ namespace GitUI.CommandsDialogs
                         noVerifyToolStripMenuItem.Checked,
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
                         toolStripGpgKeyTextBox.Text,
-                        Staged.IsEmpty);
+                        Staged.IsEmpty,
+                        resetAuthor);
 
                     success = FormProcess.ShowDialog(this, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
 
@@ -2750,7 +2751,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            CheckForStagedAndCommit(Amend.Checked, push: true);
+            CheckForStagedAndCommit(amend: Amend.Checked, push: true, resetAuthor: Amend.Checked && ResetAuthor.Checked);
         }
 
         private void UpdateAuthorInfo()
@@ -2811,7 +2812,7 @@ namespace GitUI.CommandsDialogs
 
         private void ExecuteCommitCommand()
         {
-            CheckForStagedAndCommit(Amend.Checked, push: false);
+            CheckForStagedAndCommit(amend: Amend.Checked, push: false, resetAuthor: Amend.Checked && ResetAuthor.Checked);
         }
 
         private void Message_KeyDown(object sender, KeyEventArgs e)
@@ -3265,6 +3266,13 @@ namespace GitUI.CommandsDialogs
 
         private void Amend_CheckedChanged(object sender, EventArgs e)
         {
+            ResetAuthor.Visible = Amend.Checked;
+
+            if (!Amend.Checked && ResetAuthor.Checked)
+            {
+                ResetAuthor.Checked = false;
+            }
+
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
                 ReplaceMessage(Module.GetPreviousCommitMessages(1).FirstOrDefault()?.Trim());
@@ -3388,6 +3396,10 @@ namespace GitUI.CommandsDialogs
             internal CommandStatus ExecuteCommand(Command command) => _formCommit.ExecuteCommand((int)command);
 
             internal Rectangle Bounds => _formCommit.Bounds;
+
+            internal CheckBox ResetAuthor => _formCommit.ResetAuthor;
+
+            internal CheckBox Amend => _formCommit.Amend;
         }
     }
 
