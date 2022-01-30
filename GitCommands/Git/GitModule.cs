@@ -1177,7 +1177,8 @@ namespace GitCommands
             };
 
             // Could fail if pulling interactively from remote where the specified branch does not exist
-            return _gitExecutable.Execute(args, throwOnErrorExit: false).StandardOutput.LazySplit('\n').Any();
+            string mergeCommitsOutput = _gitExecutable.Execute(args, throwOnErrorExit: false).StandardOutput;
+            return !string.IsNullOrWhiteSpace(mergeCommitsOutput);
         }
 
         public ConfigFile GetSubmoduleConfigFile()
