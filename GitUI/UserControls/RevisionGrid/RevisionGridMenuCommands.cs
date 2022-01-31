@@ -146,7 +146,7 @@ namespace GitUI.UserControls.RevisionGrid
                     Name = "NavigateBackward",
                     Text = "Navigate &backward",
                     Image = Images.NavigateBackward,
-                    ShortcutKeyDisplayString = (Keys.Alt | Keys.Left).ToShortcutKeyDisplayString(),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.NavigateBackward),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Command.NavigateBackward)
                 },
                 new MenuCommand
@@ -154,7 +154,7 @@ namespace GitUI.UserControls.RevisionGrid
                     Name = "NavigateForward",
                     Text = "Navigate &forward",
                     Image = Images.NavigateForward,
-                    ShortcutKeyDisplayString = (Keys.Alt | Keys.Right).ToShortcutKeyDisplayString(),
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.NavigateForward),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Command.NavigateForward)
                 },
                 MenuCommand.CreateSeparator(),
