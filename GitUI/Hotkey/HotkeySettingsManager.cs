@@ -300,6 +300,8 @@ namespace GitUI.Hotkey
                     Hk(RevisionGridControl.Command.GoToChild, Keys.Control | Keys.N),
                     Hk(RevisionGridControl.Command.GoToCommit, Keys.Control | Keys.Shift | Keys.G),
                     Hk(RevisionGridControl.Command.GoToParent, Keys.Control | Keys.P),
+                    Hk(RevisionGridControl.Command.NavigateBackward, Keys.Alt | Keys.Left),
+                    Hk(RevisionGridControl.Command.NavigateForward, Keys.Alt | Keys.Right),
                     Hk(RevisionGridControl.Command.NextQuickSearch, Keys.Alt | Keys.Down),
                     Hk(RevisionGridControl.Command.OpenCommitsWithDifftool, Keys.None),
                     Hk(RevisionGridControl.Command.PrevQuickSearch, Keys.Alt | Keys.Up),

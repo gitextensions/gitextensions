@@ -1412,16 +1412,16 @@ namespace GitUI
             switch (e.KeyCode)
             {
                 case Keys.BrowserBack:
-                case Keys.Left when e.Modifiers.HasFlag(Keys.Alt):
                     {
                         NavigateBackward();
+                        e.Handled = true;
                         break;
                     }
 
                 case Keys.BrowserForward:
-                case Keys.Right when e.Modifiers.HasFlag(Keys.Alt):
                     {
                         NavigateForward();
+                        e.Handled = true;
                         break;
                     }
             }
@@ -1450,6 +1450,7 @@ namespace GitUI
                             new GitRefListsForRevision(selectedRevision).GetRenameableLocalBranches(),
                             gitRef => UICommands.StartRenameDialog(ParentForm, gitRef.Name),
                             FormQuickGitRefSelector.Action.Rename);
+                        e.Handled = true;
                         break;
                     }
 
@@ -1473,6 +1474,7 @@ namespace GitUI
                                 }
                             },
                             FormQuickGitRefSelector.Action.Delete);
+                        e.Handled = true;
                         break;
                     }
             }
