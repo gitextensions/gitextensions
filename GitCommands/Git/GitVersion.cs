@@ -46,11 +46,7 @@ namespace GitCommands
         {
             if (!_current.ContainsKey(gitIdentifiable) || _current[gitIdentifiable] is null || _current[gitIdentifiable].IsUnknown)
             {
-                if (gitExec is null)
-                {
-                    gitExec = new Executable(AppSettings.GitCommand);
-                }
-
+                gitExec ??= new Executable(AppSettings.GitCommand);
                 string output = gitExec.GetOutput("--version");
                 _current[gitIdentifiable] = new GitVersion(output);
                 if (_current[gitIdentifiable] < LastVersionWithoutKnownLimitations)
