@@ -266,8 +266,6 @@ namespace GitUI.CommandsDialogs
             MainSplitContainer.Visible = false;
             MainSplitContainer.SplitterDistance = DpiUtil.Scale(260);
 
-            stashStagedToolStripMenuItem.Visible = Module.GitVersion.SupportStashStaged;
-
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
@@ -871,6 +869,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 stashChangesToolStripMenuItem.Enabled = !bareRepository;
+                stashStagedToolStripMenuItem.Visible = Module.GitVersion.SupportStashStaged;
                 gitGUIToolStripMenuItem.Enabled = !bareRepository;
 
                 SetShortcutKeyDisplayStringsFromHotkeySettings();

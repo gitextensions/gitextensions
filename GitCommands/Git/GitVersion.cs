@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
@@ -41,11 +42,16 @@ namespace GitCommands
         /// </summary>
         /// <param name="gitIdentifiable">The unique identification of the Git executable</param>
         /// <returns>The GitVersion</returns>
-        public static GitVersion CurrentVersion(string gitIdentifiable = "")
+        public static GitVersion CurrentVersion(IExecutable gitExec = null, string gitIdentifiable = "")
         {
             if (!_current.ContainsKey(gitIdentifiable) || _current[gitIdentifiable] is null || _current[gitIdentifiable].IsUnknown)
             {
-                string output = new Executable(AppSettings.GitCommand).GetOutput("--version");
+                if (gitExec is null)
+                {
+                    gitExec = new Executable(AppSettings.GitCommand);
+                }
+
+                string output = gitExec.GetOutput("--version");
                 _current[gitIdentifiable] = new GitVersion(output);
                 if (_current[gitIdentifiable] < LastVersionWithoutKnownLimitations)
                 {
