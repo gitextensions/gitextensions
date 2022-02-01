@@ -713,10 +713,10 @@ namespace GitUI.Editor
                 var viewPosition = _currentViewPosition;
                 if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum is not null)
                 {
-                    // prefer the LeftLineNum because the base revision will not change
-                    return viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
-                        ? viewPosition.ActiveLineNum.LeftLineNumber
-                        : viewPosition.ActiveLineNum.RightLineNumber;
+                    // prefer the RightLineNum that is for the currentl revision
+                    return viewPosition.ActiveLineNum.RightLineNumber != DiffLineInfo.NotApplicableLineNum
+                        ? viewPosition.ActiveLineNum.RightLineNumber
+                        : viewPosition.ActiveLineNum.LeftLineNumber;
                 }
 
                 // Convert from offset to line number
