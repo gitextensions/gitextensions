@@ -1695,11 +1695,11 @@ namespace GitUI.CommandsDialogs
         private FlowLayoutPanel flowCommitButtons;
         private Button Commit;
         private Button CommitAndPush;
-        private CheckBox StageInSuperproject;
-        private CheckBox Amend;
-        private CheckBox ResetAuthor;
         private Button StashStaged;
         private Button Reset;
+        private CheckBox Amend;
+        private CheckBox ResetAuthor;
+        private CheckBox StageInSuperproject;
         private Button ResetUnStaged;
         private ToolStripMenuItem resetUnstagedChangesToolStripMenuItem;
         private ToolStripMenuItem noVerifyToolStripMenuItem;

@@ -307,7 +307,7 @@ namespace GitUI.CommandsDialogs
             selectionFilter.Size = DpiUtil.Scale(selectionFilter.Size);
             toolStripStatusBranchIcon.Width = DpiUtil.Scale(toolStripStatusBranchIcon.Width);
 
-            if (!GitVersion.Current.SupportStashStaged)
+            if (!Module.GitVersion.SupportStashStaged)
             {
                 flowCommitButtons.Controls.Remove(StashStaged);
             }
