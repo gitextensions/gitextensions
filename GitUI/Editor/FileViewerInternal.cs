@@ -453,6 +453,7 @@ namespace GitUI.Editor
         public void GoToLine(int lineNumber)
         {
             TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, GetCaretOffset(lineNumber, rightFile: true));
+            TextEditor.ActiveTextAreaControl.CenterViewOn(TextEditor.ActiveTextAreaControl.Caret.Position.Line, treshold: 5);
         }
 
         /// <summary>
