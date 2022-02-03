@@ -72,14 +72,7 @@ namespace GitUITests.UserControls
                 new GitBlameLine(blameCommit2, 4, 4, "line4"),
             });
 
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
 
             // Creates/updates a file with name in DefaultRepoFileName
             _referenceRepository.CreateCommit("1",

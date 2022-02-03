@@ -19,15 +19,7 @@ namespace GitUITests.CommandsDialogs
         [SetUp]
         public void Setup()
         {
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
-
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
             _localRepositoryManager = Substitute.For<ILocalRepositoryManager>();
         }
 

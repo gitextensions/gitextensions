@@ -41,15 +41,7 @@ namespace GitExtensions.UITests.Script
         [SetUp]
         public void Setup()
         {
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
-
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
             _uiCommands = new GitUICommands(_referenceRepository.Module);
 
             _module = Substitute.For<IGitModule>();

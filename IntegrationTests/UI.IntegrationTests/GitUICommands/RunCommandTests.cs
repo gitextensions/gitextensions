@@ -27,10 +27,11 @@ namespace GitUITests.GitUICommandsTests
         [SetUp]
         public void SetUp()
         {
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
+            bool first = _referenceRepository is null;
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
 
+            if (first)
+            {
                 string cmdPath = (Environment.GetEnvironmentVariable("COMSPEC") ?? "C:/WINDOWS/system32/cmd.exe").ToPosixPath().QuoteNE();
                 _referenceRepository.Module.GitExecutable.RunCommand($"config --local difftool.cmd.path {cmdPath}").Should().BeTrue();
                 _referenceRepository.Module.GitExecutable.RunCommand($"config --local mergetool.cmd.path {cmdPath}").Should().BeTrue();
@@ -40,10 +41,6 @@ namespace GitUITests.GitUICommandsTests
                 AppSettings.UseConsoleEmulatorForCommands = false;
                 AppSettings.CloseProcessDialog = true;
                 AppSettings.UseBrowseForFileHistory.Value = false;
-            }
-            else
-            {
-                _referenceRepository.Reset();
             }
 
             _commands = new GitUICommands(_referenceRepository.Module);

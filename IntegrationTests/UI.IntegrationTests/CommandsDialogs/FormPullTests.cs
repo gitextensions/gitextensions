@@ -29,15 +29,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _originalFormPullAction = AppSettings.FormPullAction;
             _originalAutoStash = AppSettings.AutoStash;
 
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
-
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
             _commands = new GitUICommands(_referenceRepository.Module);
         }
 

@@ -30,15 +30,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
-
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
             _commands = new GitUICommands(_referenceRepository.Module);
         }
 
@@ -228,7 +220,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_stage_only_filtered_on_StageAll()
         {
-            _referenceRepository.Reset();
             _referenceRepository.CreateRepoFile("file1A.txt", "Test");
             _referenceRepository.CreateRepoFile("file1B.txt", "Test");
             _referenceRepository.CreateRepoFile("file2.txt", "Test");
@@ -272,7 +263,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_unstage_only_filtered_on_UnstageAll()
         {
-            _referenceRepository.Reset();
             _referenceRepository.CreateRepoFile("file1A-Привет.txt", "Test");   // escaped and not escaped in the same string
             _referenceRepository.CreateRepoFile("file1B-두다.txt", "Test");      // escaped octal code points (Korean Hangul in this case)
             _referenceRepository.CreateRepoFile("file2.txt", "Test");
