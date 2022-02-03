@@ -70,12 +70,14 @@ namespace GitExtensions.UITests.CommandsDialogs
             }
         }
 
+        [Ignore("Unstable UTF8EncodingSealed result")]
         [Test]
         public void Should_preserve_encoding_utf8()
         {
             Should_preserve_encoding(new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
         }
 
+        [Ignore("Unstable UTF8EncodingSealed result")]
         [Test]
         public void Should_preserve_encoding_utf8_bom()
         {
