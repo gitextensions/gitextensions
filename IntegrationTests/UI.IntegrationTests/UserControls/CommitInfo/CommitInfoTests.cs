@@ -25,15 +25,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         [SetUp]
         public void SetUp()
         {
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
-
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
             _commands = new GitUICommands(_referenceRepository.Module);
 
             // mock git executable

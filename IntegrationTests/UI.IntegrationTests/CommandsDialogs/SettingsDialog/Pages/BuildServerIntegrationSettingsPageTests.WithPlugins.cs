@@ -33,15 +33,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
         [SetUp]
         public void SetUp()
         {
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
-
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
             var composition = TestComposition.Empty
                 .AddParts(typeof(MockGenericBuildServerAdapter))
                 .AddParts(typeof(MockGenericBuildServerSettingsUserControl));

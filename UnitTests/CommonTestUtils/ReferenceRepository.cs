@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using GitCommands;
 using GitCommands.Config;
 using LibGit2Sharp;
@@ -17,6 +19,31 @@ namespace CommonTestUtils
             _moduleTestHelper = new GitModuleTestHelper();
 
             CreateCommit("A commit message", "A");
+        }
+
+        /// <summary>
+        /// Reset the repo if possible, if it is null or reset throws create a new.
+        /// </summary>
+        /// <param name="refRepo">The repo to reset, possibly null.</param>
+        public static void ResetRepo(ref ReferenceRepository refRepo)
+        {
+            if (refRepo is null)
+            {
+                refRepo = new ReferenceRepository();
+            }
+            else
+            {
+                try
+                {
+                    refRepo.Reset();
+                }
+                catch (LibGit2Sharp.LockedFileException)
+                {
+                    // the index is locked; this might be due to a concurrent or crashed process
+                    refRepo = new ReferenceRepository();
+                    Trace.WriteLine("Repo is locked, creating new");
+                }
+            }
         }
 
         public GitModule Module => _moduleTestHelper.Module;
@@ -113,7 +140,7 @@ namespace CommonTestUtils
             Commands.Fetch(repository, remoteName, Array.Empty<string>(), options, null);
         }
 
-        public void Reset()
+        private void Reset()
         {
             // Undo potential impact from earlier tests
             using (LibGit2Sharp.Repository repository = new(Module.WorkingDir))

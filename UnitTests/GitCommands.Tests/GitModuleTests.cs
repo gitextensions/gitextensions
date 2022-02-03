@@ -776,7 +776,7 @@ namespace GitCommandsTests
         public void GetTagMessage(string tagMessage, string expectedReturnedMessage)
         {
             // add initial tag message
-            ReferenceRepository repo = new();
+            using ReferenceRepository repo = new();
             repo.CreateAnnotatedTag("test_tag", repo.CommitHash, tagMessage);
 
             // execute test look-up

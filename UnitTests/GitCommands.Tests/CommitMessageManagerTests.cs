@@ -46,14 +46,7 @@ namespace GitCommandsTests
         [SetUp]
         public void Setup()
         {
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
 
             _file = Substitute.For<FileBase>();
             _file.ReadAllText(_commitMessagePath, _encoding).Returns(_commitMessage);
@@ -71,6 +64,12 @@ namespace GitCommandsTests
             _manager = new CommitMessageManager(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: null);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            AppSettings.RememberAmendCommitState = _rememberAmendCommitState;
+        }
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
@@ -80,12 +79,6 @@ namespace GitCommandsTests
         public void SetupExtra(string overriddenCommitMessage)
         {
             _manager = new CommitMessageManager(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            AppSettings.RememberAmendCommitState = _rememberAmendCommitState;
         }
 
         [TestCase(null)]

@@ -49,15 +49,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            if (_referenceRepository is null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
-
+            ReferenceRepository.ResetRepo(ref _referenceRepository);
             _commands = new GitUICommands(_referenceRepository.Module);
         }
 
