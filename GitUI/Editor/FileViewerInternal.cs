@@ -714,7 +714,7 @@ namespace GitUI.Editor
                 var viewPosition = _currentViewPosition;
                 if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum is not null)
                 {
-                    // prefer the RightLineNum that is for the currentl revision
+                    // prefer the RightLineNum that is for the current revision
                     return viewPosition.ActiveLineNum.RightLineNumber != DiffLineInfo.NotApplicableLineNum
                         ? viewPosition.ActiveLineNum.RightLineNumber
                         : viewPosition.ActiveLineNum.LeftLineNumber;
