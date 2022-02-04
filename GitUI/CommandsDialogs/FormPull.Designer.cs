@@ -517,6 +517,7 @@
             // 
             this.Mergetool.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Mergetool.Location = new System.Drawing.Point(3, 8);
+            this.Mergetool.MinimumSize = new System.Drawing.Size(120, 25);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(141, 25);
             this.Mergetool.TabIndex = 29;
@@ -528,6 +529,7 @@
             // 
             this.Stash.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Stash.Location = new System.Drawing.Point(150, 8);
+            this.Stash.MinimumSize = new System.Drawing.Size(120, 25);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(132, 25);
             this.Stash.TabIndex = 30;
