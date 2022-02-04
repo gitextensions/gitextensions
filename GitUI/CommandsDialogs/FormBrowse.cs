@@ -210,6 +210,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
+        private readonly CancellationTokenSequence _refreshRevsionsSequence = new();
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormBrowse"));
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FormBrowseMenus _formBrowseMenus;
@@ -556,7 +557,14 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await this.SwitchToMainThreadAsync();
-                RefreshRevisions(e.GetRefs);
+
+                repoObjectsTree.Reset();
+
+                // If we're refreshing the current repo, the commit info control must be reset until revisions are loaded
+                RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
+
+                // Reload the revisions
+                RefreshRevisions(e.GetRefs, _refreshRevsionsSequence.Next());
             }).FileAndForget();
 
             ToolStripFilters.UpdateBranchFilterItems(e.GetRefs);
@@ -566,7 +574,7 @@ namespace GitUI.CommandsDialogs
             revisionDiff.UICommands_PostRepositoryChanged(sender, e);
         }
 
-        private void RefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        private void RefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, CancellationToken cancellationToken)
         {
             if (RevisionGrid.IsDisposed || IsDisposed || Disposing)
             {
@@ -586,7 +594,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Debug.Assert(RevisionGrid.CanRefresh, "Already loading revisions when running RefreshRevisions(). This could cause the commits in the grid to be loaded several times.");
-            RevisionGrid.PerformRefreshRevisions(getRefs);
+            RevisionGrid.PerformRefreshRevisions(getRefs, cancellationToken);
 
             InternalInitialize();
 
@@ -722,7 +730,7 @@ namespace GitUI.CommandsDialogs
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
                         {
                             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
-                            RefreshRevisions(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs);
+                            RefreshRevisions(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs, cancellationToken: default);
                         }
                     };
 

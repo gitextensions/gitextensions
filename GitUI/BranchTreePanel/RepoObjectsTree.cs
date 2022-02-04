@@ -244,6 +244,20 @@ namespace GitUI.BranchTreePanel
             _ = UICommandsSource;
         }
 
+        public void Reset()
+        {
+            treeMain.BeginUpdate();
+            treeMain.SuspendLayout();
+
+            foreach (Tree rootNode in _rootNodes)
+            {
+                rootNode.TreeViewNode.Nodes.Clear();
+            }
+
+            treeMain.PerformLayout();
+            treeMain.EndUpdate();
+        }
+
         /// <summary>
         /// Toggles filtering mode on or off to the git refs present in the left panel depending on the app's global filtering rules .
         /// These rules include: show all branches / show current branch / show filtered branches, etc.

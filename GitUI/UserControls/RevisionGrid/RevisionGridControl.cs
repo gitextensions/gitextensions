@@ -108,7 +108,7 @@ namespace GitUI
         /// The set of ref names that are ambiguous.
         /// Any refs present in this collection should be displayed using their full name.
         /// </summary>
-        private IReadOnlyCollection<string>? _ambiguousRefs;
+        private Lazy<IReadOnlyCollection<string>>? _ambiguousRefs;
 
         private bool _initialLoad = true;
         private bool _isReadingRevisions = true;
@@ -296,7 +296,7 @@ namespace GitUI
 
         private void SetPage(Control content)
         {
-            ShowLoading(false);
+            ShowLoading(showSpinner: false);
             for (int i = Controls.Count - 1; i >= 0; i--)
             {
                 Control oldControl = Controls[i];
@@ -817,13 +817,13 @@ namespace GitUI
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        private void ShowLoading(bool sync = true)
+        private void ShowLoading(bool showSpinner = true)
         {
-            _loadingControlSync.Visible = sync;
+            _loadingControlSync.Visible = showSpinner;
             _loadingControlSync.Left = (ClientSize.Width - _loadingControlSync.Width) / 2;
             _loadingControlSync.Top = (ClientSize.Height - _loadingControlSync.Height) / 2;
 
-            _loadingControlAsync.Visible = !sync;
+            _loadingControlAsync.Visible = !showSpinner;
             _loadingControlAsync.Left = ClientSize.Width - _loadingControlSync.Width;
             _loadingControlSync.BringToFront();
             _loadingControlAsync.BringToFront();
@@ -840,7 +840,8 @@ namespace GitUI
         ///  Queries git for the new set of revisions and refreshes the grid.
         /// </summary>
         /// <exception cref="AggregateException"></exception>
-        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null)
+        // TODO: pass the cancellation token everywhere
+        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null, System.Threading.CancellationToken cancellationToken = default)
         {
             ThreadHelper.AssertOnUIThread();
 
@@ -850,7 +851,6 @@ namespace GitUI
             }
 
             _isRefreshingRevisions = true;
-            ShowLoading();
 
             bool firstRevisionReceived = false;
             bool headIsHandled = false;
@@ -899,11 +899,13 @@ namespace GitUI
                     .ObserveOn(ThreadPoolScheduler.Instance)
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
-                _revisionReader ??= new RevisionReader();
+                cancellationToken.Register(() =>
+                {
+                    _revisionSubscription?.Dispose();
+                    _isRefreshingRevisions = false;
+                });
 
-                // Find all ambiguous refs (including stash, notes etc)
-                IReadOnlyList<IGitRef> refs = (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
-                _ambiguousRefs = GitRef.GetAmbiguousRefNames(refs);
+                _revisionReader ??= new RevisionReader();
 
                 _gridView.SuspendLayout();
                 _gridView.SelectionChanged -= OnGridViewSelectionChanged;
@@ -914,40 +916,61 @@ namespace GitUI
                 _gridView.SelectionChanged += OnGridViewSelectionChanged;
                 _gridView.ResumeLayout();
 
-                string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
-                _revisionReader.Execute(
-                    Module,
-                    refs,
-                    revisions,
-                    _filterInfo.CommitsLimit,
-                    _filterInfo.RefFilterOptions,
-                    _filterInfo.IsShowFilteredBranchesChecked ? _filterInfo.BranchFilter : string.Empty,
-                    _filterInfo.GetRevisionFilter(),
-                    pathFilter);
+                // Add back and show the spinner control, which was removed by SetPage call
+                Controls.Add(_loadingControlSync);
+                ShowLoading();
 
-                if (_initialLoad)
-                {
-                    _selectionTimer.Enabled = false;
-                    _selectionTimer.Stop();
-                    _selectionTimer.Enabled = true;
-                    _selectionTimer.Start();
-
-                    _initialLoad = false;
-                }
-
-                _superprojectCurrentCheckout = null;
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    var scc = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
-                    await this.SwitchToMainThreadAsync();
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await TaskScheduler.Default;
 
-                    if (_superprojectCurrentCheckout != scc)
+                    // Find all ambiguous refs (including stash, notes etc)
+                    // NB: This can be EXTREMELY slow operation for large repos.
+                    IReadOnlyList<IGitRef> refs = (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
+                    _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs));
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
+                    _revisionReader.Execute(
+                        Module,
+                        refs,
+                        revisions,
+                        _filterInfo.CommitsLimit,
+                        _filterInfo.RefFilterOptions,
+                        _filterInfo.IsShowFilteredBranchesChecked ? _filterInfo.BranchFilter : string.Empty,
+                        _filterInfo.GetRevisionFilter(),
+                        pathFilter);
+
+                    await this.SwitchToMainThreadAsync(cancellationToken);
+
+                    if (_initialLoad)
                     {
-                        _superprojectCurrentCheckout = scc;
-                        Refresh();
+                        _selectionTimer.Enabled = false;
+                        _selectionTimer.Stop();
+                        _selectionTimer.Enabled = true;
+                        _selectionTimer.Start();
+
+                        _initialLoad = false;
                     }
+
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    _superprojectCurrentCheckout = null;
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        var scc = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
+                        await this.SwitchToMainThreadAsync(cancellationToken);
+
+                        if (_superprojectCurrentCheckout != scc)
+                        {
+                            _superprojectCurrentCheckout = scc;
+                            Refresh();
+                        }
+                    }).FileAndForget();
+
+                    ResetNavigationHistory();
                 });
-                ResetNavigationHistory();
             }
             catch
             {
@@ -1070,7 +1093,7 @@ namespace GitUI
                     firstRevisionReceived = true;
                     ParentsAreRewritten = _revisionReader.ParentsAreRewritten;
 
-                    this.InvokeAsync(() => { ShowLoading(false); }).FileAndForget();
+                    this.InvokeAsync(() => { ShowLoading(showSpinner: false); }).FileAndForget();
                 }
 
                 bool isCurrentCheckout = revision.ObjectId.Equals(CurrentCheckout);
@@ -1899,7 +1922,7 @@ namespace GitUI
 
         private string GetRefUnambiguousName(IGitRef gitRef)
         {
-            return _ambiguousRefs.Contains(gitRef.Name)
+            return _ambiguousRefs.Value.Contains(gitRef.Name)
                 ? gitRef.CompleteName
                 : gitRef.Name;
         }
