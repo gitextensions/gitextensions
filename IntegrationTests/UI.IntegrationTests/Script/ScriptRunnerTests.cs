@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -166,19 +167,49 @@ namespace GitExtensions.UITests.Script
             _exampleScript.Command = "cmd";
             _exampleScript.Arguments = "/c echo {sHash}";
 
-            _uiCommands = new GitUICommands("C:\\");
-
-            RunFormTest(formBrowse =>
+            string dirWithoutRepo = Path.GetTempFileName();
+            if (File.Exists(dirWithoutRepo))
             {
-                formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull(); // check for correct test setup
+                Console.WriteLine($"Deleting temp file {dirWithoutRepo}");
+                File.Delete(dirWithoutRepo);
+            }
+            else if (Directory.Exists(dirWithoutRepo))
+            {
+                Console.WriteLine($"Deleting temp dir {dirWithoutRepo}");
+                Directory.Delete(dirWithoutRepo, recursive: true);
+            }
 
-                var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl))).Should()
-                    .Throw<UserExternalOperationException>();
-                ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
-                ex.And.Command.Should().Be(_exampleScript.Command);
-                ex.And.Arguments.Should().Be(_exampleScript.Arguments);
-                ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
-            });
+            Directory.CreateDirectory(dirWithoutRepo);
+            try
+            {
+                _uiCommands = new GitUICommands(dirWithoutRepo);
+
+                RunFormTest(formBrowse =>
+                {
+                    Console.WriteLine("FormBrowse available");
+                    formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull(); // check for correct test setup
+                    Console.WriteLine("FormBrowse OK");
+
+                    var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl))).Should()
+                            .Throw<UserExternalOperationException>();
+                    ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
+                    ex.And.Command.Should().Be(_exampleScript.Command);
+                    ex.And.Arguments.Should().Be(_exampleScript.Arguments);
+                    ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
+                    Console.WriteLine("testcase passed");
+                });
+            }
+            finally
+            {
+                try
+                {
+                    Directory.Delete(dirWithoutRepo, recursive: true);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
         }
 
         [Test]
