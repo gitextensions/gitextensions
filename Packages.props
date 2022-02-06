@@ -4,18 +4,18 @@
     <!-- Solution dependencies -->
     <PackageReference Update="AdysTech.CredentialManager" Version="2.3.0" />
     <PackageReference Update="Atlassian.SDK" Version="12.4.0" />
-    <PackageReference Update="AppInsights.WindowsDesktop" Version="2.17.10" />
+    <PackageReference Update="AppInsights.WindowsDesktop" Version="2.18.1" />
     <PackageReference Update="Ben.Demystifier" Version="0.4.1" />
     <PackageReference Update="ConEmu.Core" Version="21.9.12" />
-    <PackageReference Update="DotnetRuntimeBootstrapper" Version="2.0.2" />
-    <PackageReference Update="EnvDTE" Version="16.10.31320.204" />
+    <PackageReference Update="DotnetRuntimeBootstrapper" Version="2.0.3" />
+    <PackageReference Update="EnvDTE" Version="17.0.32112.339" />
     <PackageReference Update="ExCSS" Version="4.1.3" />
-    <PackageReference Update="GitInfo" Version="2.1.2" />
+    <PackageReference Update="GitInfo" Version="2.2.0" />
     <PackageReference Update="JetBrains.Annotations" Version="2021.2.0" />
     <PackageReference Update="LibGit2Sharp" Version="0.26.2" />
-    <PackageReference Update="Microsoft.Toolkit.HighPerformance" Version="7.0.2" />
+    <PackageReference Update="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageReference Update="Microsoft.VisualStudio.Composition" Version="16.9.20" />
-    <PackageReference Update="Microsoft.VisualStudio.Threading" Version="16.10.56" />
+    <PackageReference Update="Microsoft.VisualStudio.Threading" Version="17.0.64" />
     <PackageReference Update="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
     <PackageReference Update="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageReference Update="Newtonsoft.Json" Version="13.0.1" />
@@ -23,13 +23,12 @@
     <PackageReference Update="RestSharp" Version="106.12.0" />
     <PackageReference Update="SmartFormat" Version="3.0.0" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.321" />
-    <PackageReference Update="System.Collections.Immutable" Version="5.0.0" /> <!-- Required? -->
-    <PackageReference Update="System.IO.Abstractions" Version="13.2.43" />
-    <PackageReference Update="System.IO.Abstractions.TestingHelpers" Version="13.2.43" />
+    <PackageReference Update="System.Collections.Immutable" Version="6.0.0" /> <!-- Required by GitExtensions.Plugins.AutoCompileSubmodules -->
+    <PackageReference Update="System.IO.Abstractions" Version="16.1.10" />
     <PackageReference Update="System.Reactive" Version="5.0.0" />
     <PackageReference Update="System.Reactive.Linq" Version="5.0.0" />
     <PackageReference Update="System.Reactive.Interfaces" Version="5.0.0" />
-    <PackageReference Update="System.ValueTuple" Version="4.5.0" /> <!-- Required? -->
+    <PackageReference Update="System.ValueTuple" Version="4.5.0" /> <!-- Required by GitExtensions.Plugins.AutoCompileSubmodules -->
 
     <!-- Setup infra -->
     <PackageReference Update="NETStandard.Library" Version="2.0.0" />
@@ -40,13 +39,14 @@
     <PackageReference Update="ApprovalTests" Version="4.4.0" />
     <PackageReference Update="Appveyor.TestLogger" Version="2.0.0" />
     <PackageReference Update="FluentAssertions" Version="5.10.3" />
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.6.1" /> <!-- Required? -->
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.0.0" /> <!-- Required? -->
+    <PackageReference Update="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.0.1" />
     <PackageReference Update="NSubstitute" Version="4.2.1" />
     <PackageReference Update="NUnit.ConsoleRunner" Version="3.12.0" />
     <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Update="NUnit" Version="3.13.2" />
+    <PackageReference Update="System.IO.Abstractions.TestingHelpers" Version="16.1.10" />
     <PackageReference Update="YamlDotNet" Version="11.2.1" />
-    <PackageReference Update="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.10.0" />
 
   </ItemGroup>
 </Project>
