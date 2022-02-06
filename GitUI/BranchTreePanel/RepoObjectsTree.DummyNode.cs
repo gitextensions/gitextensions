@@ -1,13 +1,10 @@
 ﻿namespace GitUI.BranchTreePanel
 {
-    partial class RepoObjectsTree
+    // Used temporarily to facilitate building a tree
+    internal class DummyNode : Node
     {
-        // Used temporarily to facilitate building a tree
-        private class DummyNode : Node
+        public DummyNode() : base(null)
         {
-            public DummyNode() : base(null)
-            {
-            }
         }
     }
 }

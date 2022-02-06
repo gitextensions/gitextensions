@@ -7,71 +7,68 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.BranchTreePanel
 {
-    partial class RepoObjectsTree
+    [DebuggerDisplay("(Tag) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
+    internal sealed class TagNode : BaseBranchNode, IGitRefActions, ICanDelete
     {
-        [DebuggerDisplay("(Tag) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
-        internal sealed class TagNode : BaseBranchNode, IGitRefActions, ICanDelete
+        public TagNode(Tree tree, in ObjectId? objectId, string fullPath, bool visible)
+            : base(tree, fullPath, visible)
         {
-            public TagNode(Tree tree, in ObjectId? objectId, string fullPath, bool visible)
-                : base(tree, fullPath, visible)
+            ObjectId = objectId;
+        }
+
+        public ObjectId? ObjectId { get; }
+
+        internal override void OnSelected()
+        {
+            if (Tree.IgnoreSelectionChangedEvent)
             {
-                ObjectId = objectId;
+                return;
             }
 
-            public ObjectId? ObjectId { get; }
+            base.OnSelected();
+            SelectRevision();
+        }
 
-            internal override void OnSelected()
-            {
-                if (Tree.IgnoreSelectionChangedEvent)
-                {
-                    return;
-                }
+        internal override void OnDoubleClick()
+        {
+            CreateBranch();
+        }
 
-                base.OnSelected();
-                SelectRevision();
-            }
+        internal override void OnDelete()
+        {
+            Delete();
+        }
 
-            internal override void OnDoubleClick()
-            {
-                CreateBranch();
-            }
+        public bool CreateBranch()
+        {
+            return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, ObjectId);
+        }
 
-            internal override void OnDelete()
-            {
-                Delete();
-            }
+        public bool Delete()
+        {
+            return UICommands.StartDeleteTagDialog(TreeViewNode.TreeView, FullPath);
+        }
 
-            public bool CreateBranch()
-            {
-                return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, ObjectId);
-            }
+        public bool Merge()
+        {
+            return UICommands.StartMergeBranchDialog(TreeViewNode.TreeView, FullPath);
+        }
 
-            public bool Delete()
-            {
-                return UICommands.StartDeleteTagDialog(TreeViewNode.TreeView, FullPath);
-            }
+        protected override void ApplyStyle()
+        {
+            base.ApplyStyle();
 
-            public bool Merge()
-            {
-                return UICommands.StartMergeBranchDialog(TreeViewNode.TreeView, FullPath);
-            }
+            TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey =
+                Visible
+                    ? nameof(Images.TagHorizontal)
+                    : nameof(Images.EyeClosed);
+        }
 
-            protected override void ApplyStyle()
-            {
-                base.ApplyStyle();
-
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey =
-                    Visible
-                        ? nameof(Images.TagHorizontal)
-                        : nameof(Images.EyeClosed);
-            }
-
-            public bool Checkout()
-            {
-                using FormCheckoutRevision form = new(UICommands);
-                form.SetRevision(FullPath);
-                return form.ShowDialog(TreeViewNode.TreeView) != DialogResult.Cancel;
-            }
+        public bool Checkout()
+        {
+            using FormCheckoutRevision form = new(UICommands);
+            form.SetRevision(FullPath);
+            return form.ShowDialog(TreeViewNode.TreeView) != DialogResult.Cancel;
         }
     }
 }

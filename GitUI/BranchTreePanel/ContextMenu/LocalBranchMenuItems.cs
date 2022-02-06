@@ -7,7 +7,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
         where TNode : class, INode
     {
         /// <summary>Keys of local branch menu items applying to the currently checked out branch.
-        /// See <see cref="RepoObjectsTree.LocalBranchNode.IsCurrent"/> and <see cref="MenuItemsGenerator{TNode}"/>.</summary>
+        /// See <see cref="LocalBranchNode.IsCurrent"/> and <see cref="MenuItemsGenerator{TNode}"/>.</summary>
         internal static MenuItemKey[] CurrentBranchItemKeys = new[] { MenuItemKey.GitRefCreateBranch, MenuItemKey.Rename };
 
         public LocalBranchMenuItems(IMenuItemFactory menuItemFactory) : base(menuItemFactory)

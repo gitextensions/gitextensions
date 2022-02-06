@@ -9,76 +9,73 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
 {
-    partial class RepoObjectsTree
+    internal sealed class TagTree : Tree
     {
-        private sealed class TagTree : Tree
+        private readonly ICheckRefs _refsSource;
+
+        // Retains the list of currently loaded tags.
+        // This is needed to apply filtering without reloading the data.
+        // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
+        private IReadOnlyList<IGitRef>? _loadedTags;
+
+        public TagTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
+            : base(treeNode, uiCommands)
         {
-            private readonly ICheckRefs _refsSource;
+            _refsSource = refsSource;
+        }
 
-            // Retains the list of currently loaded tags.
-            // This is needed to apply filtering without reloading the data.
-            // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
-            private IReadOnlyList<IGitRef>? _loadedTags;
+        protected override bool SupportsFiltering => true;
 
-            public TagTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
-                : base(treeNode, uiCommands)
+        /// <inheritdoc/>
+        protected internal override void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        {
+            // Break the local cache to ensure the data is requeried to reflect the required sort order.
+            _loadedTags = null;
+
+            base.Refresh(getRefs);
+        }
+
+        protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        {
+            await TaskScheduler.Default;
+            token.ThrowIfCancellationRequested();
+
+            if (!IsFiltering.Value || _loadedTags is null)
             {
-                _refsSource = refsSource;
+                _loadedTags = getRefs(RefsFilter.Tags);
+                token.ThrowIfCancellationRequested();
             }
 
-            protected override bool SupportsFiltering => true;
+            return FillTagTree(_loadedTags, token);
+        }
 
-            /// <inheritdoc/>
-            protected internal override void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        private Nodes FillTagTree(IReadOnlyList<IGitRef> tags, CancellationToken token)
+        {
+            Nodes nodes = new(this);
+            Dictionary<string, BaseBranchNode> pathToNodes = new();
+
+            foreach (IGitRef tag in tags)
             {
-                // Break the local cache to ensure the data is requeried to reflect the required sort order.
-                _loadedTags = null;
-
-                base.Refresh(getRefs);
-            }
-
-            protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-            {
-                await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
-                if (!IsFiltering.Value || _loadedTags is null)
-                {
-                    _loadedTags = getRefs(RefsFilter.Tags);
-                    token.ThrowIfCancellationRequested();
-                }
+                bool isVisible = !IsFiltering.Value || (tag.ObjectId is not null && _refsSource.Contains(tag.ObjectId));
+                TagNode tagNode = new(this, tag.ObjectId, tag.Name, isVisible);
+                var parent = tagNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BasePathNode(tree, parentPath));
 
-                return FillTagTree(_loadedTags, token);
+                if (parent is not null)
+                {
+                    nodes.AddNode(parent);
+                }
             }
 
-            private Nodes FillTagTree(IReadOnlyList<IGitRef> tags, CancellationToken token)
+            return nodes;
+        }
+
+        protected override void PostFillTreeViewNode(bool firstTime)
+        {
+            if (firstTime)
             {
-                Nodes nodes = new(this);
-                Dictionary<string, BaseBranchNode> pathToNodes = new();
-
-                foreach (IGitRef tag in tags)
-                {
-                    token.ThrowIfCancellationRequested();
-
-                    bool isVisible = !IsFiltering.Value || (tag.ObjectId is not null && _refsSource.Contains(tag.ObjectId));
-                    TagNode tagNode = new(this, tag.ObjectId, tag.Name, isVisible);
-                    var parent = tagNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BasePathNode(tree, parentPath));
-
-                    if (parent is not null)
-                    {
-                        nodes.AddNode(parent);
-                    }
-                }
-
-                return nodes;
-            }
-
-            protected override void PostFillTreeViewNode(bool firstTime)
-            {
-                if (firstTime)
-                {
-                    TreeViewNode.Collapse();
-                }
+                TreeViewNode.Collapse();
             }
         }
     }

@@ -13,171 +13,168 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
 {
-    public partial class RepoObjectsTree
+    internal sealed class RemoteBranchTree : Tree
     {
-        private sealed class RemoteBranchTree : Tree
+        private readonly ICheckRefs _refsSource;
+
+        // Retains the list of currently loaded branches.
+        // This is needed to apply filtering without reloading the data.
+        // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
+        private IReadOnlyList<IGitRef>? _loadedBranches;
+
+        public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
+            : base(treeNode, uiCommands)
         {
-            private readonly ICheckRefs _refsSource;
+            _refsSource = refsSource;
+        }
 
-            // Retains the list of currently loaded branches.
-            // This is needed to apply filtering without reloading the data.
-            // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
-            private IReadOnlyList<IGitRef>? _loadedBranches;
+        protected override bool SupportsFiltering => true;
 
-            public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
-                : base(treeNode, uiCommands)
+        protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        {
+            await TaskScheduler.Default;
+            token.ThrowIfCancellationRequested();
+
+            if (!IsFiltering.Value || _loadedBranches is null)
             {
-                _refsSource = refsSource;
+                _loadedBranches = getRefs(RefsFilter.Remotes);
+                token.ThrowIfCancellationRequested();
             }
 
-            protected override bool SupportsFiltering => true;
+            return await FillBranchTreeAsync(_loadedBranches, token);
+        }
 
-            protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        /// <inheritdoc/>
+        protected internal override void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        {
+            // Break the local cache to ensure the data is requeried to reflect the required sort order.
+            _loadedBranches = null;
+
+            base.Refresh(getRefs);
+        }
+
+        private async Task<Nodes> FillBranchTreeAsync(IReadOnlyList<IGitRef> branches, CancellationToken token)
+        {
+            Nodes nodes = new(this);
+            Dictionary<string, BaseBranchNode> pathToNodes = new();
+
+            List<RemoteRepoNode> enabledRemoteRepoNodes = new();
+            Dictionary<string, Remote> remoteByName = (await Module.GetRemotesAsync().ConfigureAwaitRunInline()).ToDictionary(r => r.Name);
+
+            ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
+
+            // Create nodes for enabled remotes with branches
+            foreach (IGitRef branch in branches)
             {
-                await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
-                if (!IsFiltering.Value || _loadedBranches is null)
+                Validates.NotNull(branch.ObjectId);
+
+                bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
+                var remoteName = branch.Name.SubstringUntil('/');
+                if (remoteByName.TryGetValue(remoteName, out Remote remote))
                 {
-                    _loadedBranches = getRefs(RefsFilter.Remotes);
-                    token.ThrowIfCancellationRequested();
-                }
+                    RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, isVisible);
 
-                return await FillBranchTreeAsync(_loadedBranches, token);
-            }
+                    var parent = remoteBranchNode.CreateRootNode(
+                        pathToNodes,
+                        (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
-            /// <inheritdoc/>
-            protected internal override void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-            {
-                // Break the local cache to ensure the data is requeried to reflect the required sort order.
-                _loadedBranches = null;
-
-                base.Refresh(getRefs);
-            }
-
-            private async Task<Nodes> FillBranchTreeAsync(IReadOnlyList<IGitRef> branches, CancellationToken token)
-            {
-                Nodes nodes = new(this);
-                Dictionary<string, BaseBranchNode> pathToNodes = new();
-
-                List<RemoteRepoNode> enabledRemoteRepoNodes = new();
-                Dictionary<string, Remote> remoteByName = (await Module.GetRemotesAsync().ConfigureAwaitRunInline()).ToDictionary(r => r.Name);
-
-                ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
-
-                // Create nodes for enabled remotes with branches
-                foreach (IGitRef branch in branches)
-                {
-                    token.ThrowIfCancellationRequested();
-
-                    Validates.NotNull(branch.ObjectId);
-
-                    bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
-                    var remoteName = branch.Name.SubstringUntil('/');
-                    if (remoteByName.TryGetValue(remoteName, out Remote remote))
+                    if (parent is not null)
                     {
-                        RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, isVisible);
-
-                        var parent = remoteBranchNode.CreateRootNode(
-                            pathToNodes,
-                            (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
-
-                        if (parent is not null)
-                        {
-                            enabledRemoteRepoNodes.Add((RemoteRepoNode)parent);
-                        }
+                        enabledRemoteRepoNodes.Add((RemoteRepoNode)parent);
                     }
                 }
+            }
 
-                // Create nodes for enabled remotes without branches
-                var enabledRemotesNoBranches = GetEnabledRemoteNamesWithoutBranches(branches, remoteByName);
-                foreach (var remoteName in enabledRemotesNoBranches)
+            // Create nodes for enabled remotes without branches
+            var enabledRemotesNoBranches = GetEnabledRemoteNamesWithoutBranches(branches, remoteByName);
+            foreach (var remoteName in enabledRemotesNoBranches)
+            {
+                if (remoteByName.TryGetValue(remoteName, out var remote))
                 {
-                    if (remoteByName.TryGetValue(remoteName, out var remote))
-                    {
-                        RemoteRepoNode node = new(this, remoteName, remotesManager, remote, true);
-                        enabledRemoteRepoNodes.Add(node);
-                    }
+                    RemoteRepoNode node = new(this, remoteName, remotesManager, remote, true);
+                    enabledRemoteRepoNodes.Add(node);
+                }
+            }
+
+            // Add enabled remote nodes in order
+            enabledRemoteRepoNodes
+                .OrderBy(node => node.FullPath)
+                .ForEach(node => nodes.AddNode(node));
+
+            // Add disabled remotes, if any
+            var disabledRemotes = remotesManager.GetDisabledRemotes();
+            if (disabledRemotes.Count > 0)
+            {
+                List<RemoteRepoNode> disabledRemoteRepoNodes = new();
+                foreach (var remote in disabledRemotes.OrderBy(remote => remote.Name))
+                {
+                    RemoteRepoNode node = new(this, remote.Name, remotesManager, remote, false);
+                    disabledRemoteRepoNodes.Add(node);
                 }
 
-                // Add enabled remote nodes in order
-                enabledRemoteRepoNodes
+                RemoteRepoFolderNode disabledFolderNode = new(this, TranslatedStrings.Inactive);
+                disabledRemoteRepoNodes
                     .OrderBy(node => node.FullPath)
-                    .ForEach(node => nodes.AddNode(node));
+                    .ForEach(node => disabledFolderNode.Nodes.AddNode(node));
 
-                // Add disabled remotes, if any
-                var disabledRemotes = remotesManager.GetDisabledRemotes();
-                if (disabledRemotes.Count > 0)
+                nodes.AddNode(disabledFolderNode);
+            }
+
+            return nodes;
+
+            BaseBranchNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
+            {
+                if (parentPath == remote.Name)
                 {
-                    List<RemoteRepoNode> disabledRemoteRepoNodes = new();
-                    foreach (var remote in disabledRemotes.OrderBy(remote => remote.Name))
-                    {
-                        RemoteRepoNode node = new(this, remote.Name, remotesManager, remote, false);
-                        disabledRemoteRepoNodes.Add(node);
-                    }
-
-                    RemoteRepoFolderNode disabledFolderNode = new(this, TranslatedStrings.Inactive);
-                    disabledRemoteRepoNodes
-                        .OrderBy(node => node.FullPath)
-                        .ForEach(node => disabledFolderNode.Nodes.AddNode(node));
-
-                    nodes.AddNode(disabledFolderNode);
+                    return new RemoteRepoNode(tree, parentPath, remotesManager, remote, true);
                 }
 
-                return nodes;
-
-                BaseBranchNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
-                {
-                    if (parentPath == remote.Name)
-                    {
-                        return new RemoteRepoNode(tree, parentPath, remotesManager, remote, true);
-                    }
-
-                    return new BasePathNode(tree, parentPath);
-                }
-
-                IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches(IReadOnlyList<IGitRef> branches, Dictionary<string, Remote> remoteByName)
-                {
-                    HashSet<string> remotesWithBranches = branches
-                        .Select(branch => branch.Name.SubstringUntil('/'))
-                        .ToHashSet();
-
-                    HashSet<string> allRemotes = remoteByName.Select(kv => kv.Value.Name).ToHashSet();
-
-                    return allRemotes.Except(remotesWithBranches).ToList();
-                }
+                return new BasePathNode(tree, parentPath);
             }
 
-            protected override void PostFillTreeViewNode(bool firstTime)
+            IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches(IReadOnlyList<IGitRef> branches, Dictionary<string, Remote> remoteByName)
             {
-                if (firstTime)
-                {
-                    TreeViewNode.Expand();
-                }
-            }
+                HashSet<string> remotesWithBranches = branches
+                    .Select(branch => branch.Name.SubstringUntil('/'))
+                    .ToHashSet();
 
-            internal void PopupManageRemotesForm(string? remoteName)
-            {
-                UICommands.StartRemotesDialog(TreeViewNode.TreeView, remoteName);
-            }
+                HashSet<string> allRemotes = remoteByName.Select(kv => kv.Value.Name).ToHashSet();
 
-            internal bool FetchAll()
-            {
-                UICommands.StartPullDialogAndPullImmediately(
-                    out bool pullCompleted,
-                    TreeViewNode.TreeView,
-                    pullAction: AppSettings.PullAction.FetchAll);
-                return pullCompleted;
+                return allRemotes.Except(remotesWithBranches).ToList();
             }
+        }
 
-            internal bool FetchPruneAll()
+        protected override void PostFillTreeViewNode(bool firstTime)
+        {
+            if (firstTime)
             {
-                UICommands.StartPullDialogAndPullImmediately(
-                    out bool pullCompleted,
-                    TreeViewNode.TreeView,
-                    pullAction: AppSettings.PullAction.FetchPruneAll);
-                return pullCompleted;
+                TreeViewNode.Expand();
             }
+        }
+
+        internal void PopupManageRemotesForm(string? remoteName)
+        {
+            UICommands.StartRemotesDialog(TreeViewNode.TreeView, remoteName);
+        }
+
+        internal bool FetchAll()
+        {
+            UICommands.StartPullDialogAndPullImmediately(
+                out bool pullCompleted,
+                TreeViewNode.TreeView,
+                pullAction: AppSettings.PullAction.FetchAll);
+            return pullCompleted;
+        }
+
+        internal bool FetchPruneAll()
+        {
+            UICommands.StartPullDialogAndPullImmediately(
+                out bool pullCompleted,
+                TreeViewNode.TreeView,
+                pullAction: AppSettings.PullAction.FetchPruneAll);
+            return pullCompleted;
         }
     }
 }
