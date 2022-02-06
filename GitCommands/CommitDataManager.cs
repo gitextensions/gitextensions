@@ -167,11 +167,6 @@ namespace GitCommands
                 throw new ArgumentException($"Cannot have a null {nameof(GitRevision.ObjectId)}.", nameof(revision));
             }
 
-            if (revision.ParentIds is null)
-            {
-                throw new ArgumentException($"Cannot have null {nameof(GitRevision.ParentIds)}.", nameof(revision));
-            }
-
             return new CommitData(revision.ObjectId, revision.TreeGuid, revision.ParentIds,
                 string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
                 string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,

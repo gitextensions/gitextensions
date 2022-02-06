@@ -4,10 +4,14 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitUI;
 using GitUI.Blame;
 using GitUIPluginInterfaces;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace GitUITests.UserControls
@@ -20,6 +24,11 @@ namespace GitUITests.UserControls
     {
         private BlameControl _blameControl;
         private GitBlameLine _gitBlameLine;
+        private ReferenceRepository _referenceRepository;
+        private string _commit2;
+        private string _commit3;
+        private const string _fileName1 = "A.txt";
+        private const string _fileName2 = "B.txt";
 
         [SetUp]
         public void SetUp()
@@ -62,6 +71,31 @@ namespace GitUITests.UserControls
                 new GitBlameLine(blameCommit2, 3, 3, "line3"),
                 new GitBlameLine(blameCommit2, 4, 4, "line4"),
             });
+
+            if (_referenceRepository is null)
+            {
+                _referenceRepository = new ReferenceRepository();
+            }
+            else
+            {
+                _referenceRepository.Reset();
+            }
+
+            // Creates/updates a file with name in DefaultRepoFileName
+            _referenceRepository.CreateCommit("1",
+                "1\n2\n3\n4\n5\n6\n7\n8\n", _fileName1,
+                "1\n2\n3\n4\n5\n6\n7\n8\n", _fileName2);
+            _commit2 = _referenceRepository.CreateCommit("2",
+                "1\nb\n3\nd\n5\n6\n7\n8\n", _fileName1,
+                "1\nb\n3\nd\n5\n6\n7\n8\n", _fileName2);
+            _commit3 = _referenceRepository.CreateCommit("3",
+                "1\nb\nc\nd\ne\n6\n7\n8\n", _fileName1,
+                "1\nb\nc\nd\ne\n6\n7\n8\n", _fileName2);
+
+            IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
+            GitUICommands uiCommands = new(_referenceRepository.Module);
+            uiCommandsSource.UICommands.Returns(x => uiCommands);
+            _blameControl.UICommandsSource = uiCommandsSource;
         }
 
         [TearDown]
@@ -252,6 +286,95 @@ namespace GitUITests.UserControls
             blameEntries[5].AgeBucketIndex.Should().Be(5);
             blameEntries[6].AgeBucketIndex.Should().Be(6);
             blameEntries[7].AgeBucketIndex.Should().Be(6);
+        }
+
+        [Test]
+        public async Task BlameControlShouldStayOnLineIfInputOtherThanFileIsChanged()
+        {
+            GitRevision rev3 = new(ObjectId.Parse(_commit3));
+            GitRevision rev2 = new(ObjectId.Parse(_commit2));
+
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
+
+            _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
+
+            _blameControl.GetTestAccessor().BlameFile.GoToLine(2);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(2);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, Encoding.UTF8);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(2);
+
+            _blameControl.GetTestAccessor().BlameFile.GoToLine(4);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(4);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(4);
+
+            _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
+            await _blameControl.LoadBlameAsync(rev2, null, _fileName1, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
+        }
+
+        [Test]
+        public async Task BlameControlShouldGoToFirstLineIfFileNameIsChanged()
+        {
+            GitRevision rev3 = new(ObjectId.Parse(_commit3));
+            GitRevision rev2 = new(ObjectId.Parse(_commit2));
+
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
+
+            _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName2, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
+
+            _blameControl.GetTestAccessor().BlameFile.GoToLine(2);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(2);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName2, null, null, Encoding.UTF8);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(2);
+
+            _blameControl.GetTestAccessor().BlameFile.GoToLine(4);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(4);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
+
+            _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
+            await _blameControl.LoadBlameAsync(rev2, null, _fileName1, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
+        }
+
+        [Test]
+        public async Task BlameControlShouldStayOnLineIfNullLineInput()
+        {
+            GitRevision rev1 = new(ObjectId.Parse(_referenceRepository.CommitHash));
+
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
+
+            _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
+        }
+
+        [Test]
+        public async Task BlameControlShouldGotoRequestedLineAtStartAndIfReloaded()
+        {
+            GitRevision rev1 = new(ObjectId.Parse(_referenceRepository.CommitHash));
+
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, initialLine: 4);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(4);
+
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, initialLine: 7);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(7);
+
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName2, null, null, null, initialLine: 5);
+            _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(5);
         }
     }
 }

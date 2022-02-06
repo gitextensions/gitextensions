@@ -97,7 +97,7 @@ namespace GitUI.Blame
             CommitInfo.CommandClicked -= commitInfo_CommandClicked;
         }
 
-        public async Task LoadBlameAsync(GitRevision revision, IReadOnlyList<ObjectId>? children, string? fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
+        public async Task LoadBlameAsync(GitRevision revision, IReadOnlyList<ObjectId>? children, string fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
         {
             ObjectId objectId = revision.ObjectId;
 
@@ -112,15 +112,14 @@ namespace GitUI.Blame
                 return;
             }
 
+            int line = _clickedBlameLine is not null && _clickedBlameLine.Commit.ObjectId == objectId
+                ? _clickedBlameLine.OriginLineNumber
+                : initialLine ?? (fileName == _fileName ? BlameFile.CurrentFileLine : 1);
             _revGrid = revGrid;
             _fileName = fileName;
             _encoding = encoding;
 
             controlToMask?.Mask();
-            int scrollPos = BlameFile.VScrollPosition;
-            int line = _clickedBlameLine is not null && _clickedBlameLine.Commit.ObjectId == objectId
-                ? _clickedBlameLine.OriginLineNumber
-                : initialLine ?? 0;
 
             // Clear the contents of the viewer while loading
             BlameAuthor.ClearBlameGutter();
@@ -128,7 +127,7 @@ namespace GitUI.Blame
             await BlameFile.ClearAsync();
 
             await _blameLoader.LoadAsync(cancellationToken => _blame = Module.Blame(fileName, objectId.ToString(), encoding, cancellationToken: cancellationToken),
-                () => ProcessBlame(fileName, revision, children, controlToMask, line, scrollPos, cancellationToken));
+                () => ProcessBlame(fileName, revision, children, controlToMask, line, cancellationToken));
         }
 
         private void commitInfo_CommandClicked(object sender, CommandEventArgs e)
@@ -300,7 +299,7 @@ namespace GitUI.Blame
             _changingScrollPosition = false;
         }
 
-        private void ProcessBlame(string? filename, GitRevision revision, IReadOnlyList<ObjectId>? children, Control? controlToMask, int lineNumber, int scrollpos, CancellationToken cancellationToken = default)
+        private void ProcessBlame(string? filename, GitRevision revision, IReadOnlyList<ObjectId>? children, Control? controlToMask, int lineNumber, CancellationToken cancellationToken = default)
         {
             var avatarSize = BlameAuthor.Font.Height + 1;
             var (gutter, body, avatars) = BuildBlameContents(filename, avatarSize);
@@ -317,15 +316,7 @@ namespace GitUI.Blame
                 () => BlameFile.ViewTextAsync(_fileName, body));
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (lineNumber > 0)
-            {
-                BlameFile.GoToLine(lineNumber - 1);
-            }
-            else
-            {
-                BlameFile.VScrollPosition = scrollpos;
-            }
-
+            BlameFile.GoToLine(lineNumber);
             _clickedBlameLine = null;
 
             _blameId = revision.ObjectId;
@@ -682,6 +673,8 @@ namespace GitUI.Blame
                 get => _control._blame;
                 set => _control._blame = value;
             }
+
+            public FileViewer BlameFile => _control.BlameFile;
 
             public DateTime ArtificialOldBoundary => _control.ArtificialOldBoundary;
 
