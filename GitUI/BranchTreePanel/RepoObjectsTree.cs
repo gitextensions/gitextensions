@@ -377,7 +377,7 @@ namespace GitUI.BranchTreePanel
         {
             var locals = _branchesTree.DepthEnumerator<BaseBranchLeafNode>();
             var remotes = _remotesTree.DepthEnumerator<BaseBranchLeafNode>();
-            return locals.Concat(remotes).Where(b => b.TreeViewNode.Checked);
+            return locals.Concat(remotes).Where(b => b.IsMultiSelected);
         }
 
         private void CreateTags()
@@ -570,17 +570,20 @@ namespace GitUI.BranchTreePanel
 
             if (node is null || e.Button == MouseButtons.Right)
             {
-                return; // don't change selection on opening context menu
+                return; // don't change multi-selection on opening context menu
             }
 
             if (ModifierKeys == Keys.Control)
             {
-                // toggle clicked node checked, including descendants
-                node.MultiSelect(!e.Node.Checked, includingDescendants: true);
+                // toggle clicked node IsMultiSelected, including descendants
+                node.MultiSelect(!node.IsMultiSelected, includingDescendants: true);
             }
             else
             {
-                treeMain.AllNodes().Where(n => n.Checked).ForEach(node => (node.Tag as Node)?.MultiSelect(false)); // uncheck all checked nodes
+                // deselect all selected nodes
+                _rootNodes.SelectMany(tree => tree.DepthEnumerator<Node>().Where(node => node.IsMultiSelected))
+                    .ForEach(node => node.MultiSelect(false));
+
                 node.MultiSelect(true); // and only check the clicked one
             }
 

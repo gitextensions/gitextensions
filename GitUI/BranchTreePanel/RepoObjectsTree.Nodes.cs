@@ -360,6 +360,11 @@ namespace GitUI.BranchTreePanel
 
             private TreeNode? _treeViewNode;
 
+            /// <summary>
+            /// The tree node representing this node.
+            /// Note that it may not always be set and which <see cref="Node"/> it represents may change
+            /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s.
+            /// </summary>
             public TreeNode TreeViewNode
             {
                 get
@@ -377,6 +382,14 @@ namespace GitUI.BranchTreePanel
                     ApplyStyle();
                 }
             }
+
+            /// <summary>
+            /// Marks this node to be included in multi-selection. See <see cref="MultiSelect(bool, bool)"/>.
+            /// This is remembered here instead of relying on the status of <see cref="TreeViewNode"/>
+            /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s
+            /// and may change the association between <see cref="Node"/> and <see cref="TreeNode"/>.
+            /// </summary>
+            internal bool IsMultiSelected { get; set; }
 
             private static readonly Dictionary<Type, ContextMenuStrip> DefaultContextMenus = new();
 
@@ -457,7 +470,7 @@ namespace GitUI.BranchTreePanel
                 TreeViewNode.ToolTipText = string.Empty;
             }
 
-            protected virtual FontStyle GetFontStyle() => TreeViewNode.Checked ? FontStyle.Underline : FontStyle.Regular;
+            protected virtual FontStyle GetFontStyle() => IsMultiSelected ? FontStyle.Underline : FontStyle.Regular;
 
             internal virtual void OnSelected()
             {
@@ -501,7 +514,7 @@ namespace GitUI.BranchTreePanel
 
             protected internal void MultiSelect(bool select, bool includingDescendants = false)
             {
-                TreeViewNode.Checked = select;
+                IsMultiSelected = select;
                 ApplyStyle(); // toggle multi-selected node style
 
                 // recursively process descendants if required
