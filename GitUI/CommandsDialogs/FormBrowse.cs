@@ -869,6 +869,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 stashChangesToolStripMenuItem.Enabled = !bareRepository;
+                stashStagedToolStripMenuItem.Visible = Module.GitVersion.SupportStashStaged;
                 gitGUIToolStripMenuItem.Enabled = !bareRepository;
 
                 SetShortcutKeyDisplayStringsFromHotkeySettings();
@@ -1589,6 +1590,12 @@ namespace GitUI.CommandsDialogs
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
+            UpdateStashCount();
+        }
+
+        private void StashStagedToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UICommands.StashStaged(this);
             UpdateStashCount();
         }
 

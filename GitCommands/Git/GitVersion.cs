@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
@@ -10,12 +11,13 @@ namespace GitCommands
     {
         private static readonly GitVersion v2_19_0 = new("2.19.0");
         private static readonly GitVersion v2_20_0 = new("2.20.0");
+        private static readonly GitVersion v2_35_0 = new("2.35.0");
 
         /// <summary>
         /// The recommonded Git version (normally latest official before a GE release).
         /// This and later versions are green in the settings check.
         /// </summary>
-        public static readonly GitVersion LastRecommendedVersion = new("2.33.0");
+        public static readonly GitVersion LastRecommendedVersion = new("2.35.0");
 
         /// <summary>
         /// The oldest version with reasonable reliable support in GE.
@@ -40,11 +42,12 @@ namespace GitCommands
         /// </summary>
         /// <param name="gitIdentifiable">The unique identification of the Git executable</param>
         /// <returns>The GitVersion</returns>
-        public static GitVersion CurrentVersion(string gitIdentifiable = "")
+        public static GitVersion CurrentVersion(IExecutable gitExec = null, string gitIdentifiable = "")
         {
             if (!_current.ContainsKey(gitIdentifiable) || _current[gitIdentifiable] is null || _current[gitIdentifiable].IsUnknown)
             {
-                string output = new Executable(AppSettings.GitCommand).GetOutput("--version");
+                gitExec ??= new Executable(AppSettings.GitCommand);
+                string output = gitExec.GetOutput("--version");
                 _current[gitIdentifiable] = new GitVersion(output);
                 if (_current[gitIdentifiable] < LastVersionWithoutKnownLimitations)
                 {
@@ -119,6 +122,7 @@ namespace GitCommands
         public bool SupportRebaseMerges => this >= v2_19_0;
         public bool SupportGuiMergeTool => this >= v2_20_0;
         public bool SupportRangeDiffTool => this >= v2_19_0;
+        public bool SupportStashStaged => this >= v2_35_0;
 
         public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
 

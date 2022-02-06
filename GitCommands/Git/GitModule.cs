@@ -158,7 +158,7 @@ namespace GitCommands
         /// <summary>
         /// GitVersion for the default GitExecutable.
         /// </summary>
-        public GitVersion GitVersion => GitVersion.CurrentVersion(_wslDistro);
+        public GitVersion GitVersion => GitVersion.CurrentVersion(GitExecutable, _wslDistro);
 
         /// <inherit/>
         public IExecutable GitExecutable => _gitExecutable;

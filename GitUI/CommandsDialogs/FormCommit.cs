@@ -307,6 +307,11 @@ namespace GitUI.CommandsDialogs
             selectionFilter.Size = DpiUtil.Scale(selectionFilter.Size);
             toolStripStatusBranchIcon.Width = DpiUtil.Scale(toolStripStatusBranchIcon.Width);
 
+            if (!Module.GitVersion.SupportStashStaged)
+            {
+                flowCommitButtons.Controls.Remove(StashStaged);
+            }
+
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
             Reset.Visible = AppSettings.ShowResetAllChanges;
             ResetUnStaged.Visible = AppSettings.ShowResetWorkTreeChanges;
@@ -2696,6 +2701,12 @@ namespace GitUI.CommandsDialogs
         private void HandleResetButton(bool onlyUnstaged)
         {
             BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.Select(i => i.Item).ToList(), onlyWorkTree: onlyUnstaged));
+            Initialize();
+        }
+
+        private void StashStagedClick(object sender, EventArgs e)
+        {
+            BypassFormActivatedEventHandler(() => UICommands.StashStaged(owner: this));
             Initialize();
         }
 
