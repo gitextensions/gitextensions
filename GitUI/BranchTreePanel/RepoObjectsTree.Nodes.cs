@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -254,8 +255,17 @@ namespace GitUI.BranchTreePanel
 
                 await treeView.SwitchToMainThreadAsync(token);
 
+                // remember multi-selected nodes
+                var multiSelected = DepthEnumerator<Node>().Where(node => node.IsMultiSelected).Select(node => node.GetHashCode()).ToArray();
+
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);
+
+                // re-apply multi-selection
+                if (multiSelected.Length > 0)
+                {
+                    DepthEnumerator<Node>().Where(node => multiSelected.Contains(node.GetHashCode())).ForEach(node => node.IsMultiSelected = true);
+                }
 
                 // Check again after switch to main thread
                 treeView = TreeViewNode.TreeView;

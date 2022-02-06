@@ -21,14 +21,8 @@ namespace GitUI.BranchTreePanel
             public bool IsCurrent { get; }
 
             protected override FontStyle GetFontStyle() => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
-
-            public override bool Equals(object obj)
-                => base.Equals(obj)
-                    && obj is LocalBranchNode localBranchNode
-                    && IsCurrent == localBranchNode.IsCurrent;
-
-            public override int GetHashCode()
-                => base.GetHashCode() ^ IsCurrent.GetHashCode();
+            public override bool Equals(object obj) => base.Equals(obj) && obj is LocalBranchNode;
+            public override int GetHashCode() => base.GetHashCode();
 
             internal override void OnDoubleClick()
             {

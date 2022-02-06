@@ -58,13 +58,12 @@ namespace GitUI.BranchTreePanel
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = Visible ? null : nameof(Images.EyeClosed);
             }
 
-            public override int GetHashCode() => FullPath.GetHashCode() ^ Visible.GetHashCode();
+            public override int GetHashCode() => FullPath.GetHashCode();
 
             public override bool Equals(object obj)
             {
                 return obj is BaseBranchNode other
-                    && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath))
-                    && Visible == other.Visible;
+                    && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
             }
 
             public void UpdateAheadBehind(string aheadBehindData)
