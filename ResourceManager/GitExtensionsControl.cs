@@ -138,9 +138,21 @@ namespace ResourceManager
                     or (>= Keys.D0 and <= Keys.D9)
                     or (>= Keys.Oem1 and <= Keys.Oem102):
                 case Keys.Space:
+                case Keys.Insert:
+                    return true;
+            }
+
+            keys &= ~Keys.Control; // ignore the CONTROL key as modifier
+            switch (keys)
+            {
+                case Keys.A:
+                case Keys.C:
+                case Keys.V:
+                case Keys.X:
+                case Keys.Y:
+                case Keys.Z:
                 case Keys.Back:
                 case Keys.Delete:
-                case Keys.Insert:
                 case Keys.Left:
                 case Keys.Right:
                 case Keys.Home:
