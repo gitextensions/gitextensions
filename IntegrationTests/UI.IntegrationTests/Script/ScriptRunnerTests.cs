@@ -277,7 +277,8 @@ namespace GitExtensions.UITests.Script
 
             UITest.RunForm(
                 showForm: () => _uiCommands.StartBrowseDialog(owner: null).Should().BeTrue(),
-                testDriverAsync);
+                testDriverAsync,
+                debug: true);
         }
     }
 }
