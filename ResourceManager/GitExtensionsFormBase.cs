@@ -41,6 +41,21 @@ namespace ResourceManager
 #endif
         }
 
+        /// <summary>
+        /// Checks if the form wants to handle the key and executes that hotkey
+        /// (without propagating an unhandled key to the base class function as in <cref>ProcessCmdKey</cref>).
+        /// </summary>
+        public virtual bool ProcessHotkey(Keys keyData)
+        {
+            if (IsDesignMode || !HotkeysEnabled)
+            {
+                return false;
+            }
+
+            HotkeyCommand? hotkey = Hotkeys?.FirstOrDefault(hotkey => hotkey?.KeyData == keyData);
+            return hotkey is not null && ExecuteCommand(hotkey.CommandCode).Executed;
+        }
+
         protected bool IsDesignMode => _initialiser.IsDesignMode;
 
         #region Hotkeys
@@ -54,16 +69,7 @@ namespace ResourceManager
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (!IsDesignMode && HotkeysEnabled)
-            {
-                HotkeyCommand? hotkey = Hotkeys?.FirstOrDefault(hotkey => hotkey?.KeyData == keyData);
-                if (hotkey is not null && ExecuteCommand(hotkey.CommandCode).Executed)
-                {
-                    return true;
-                }
-            }
-
-            return base.ProcessCmdKey(ref msg, keyData);
+            return ProcessHotkey(keyData) || base.ProcessCmdKey(ref msg, keyData);
         }
 
         protected Keys GetShortcutKeys(int commandCode)
