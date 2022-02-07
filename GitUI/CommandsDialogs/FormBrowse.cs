@@ -2142,14 +2142,31 @@ namespace GitUI.CommandsDialogs
             UICommands.RepoChangedNotifier.Notify();
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        public override bool ProcessHotkey(Keys keyData)
         {
-            return !IsDesignMode && HotkeysEnabled
-                && (base.ProcessCmdKey(ref msg, keyData) // generic handling of this form's hotkeys (upstream)
-                    || (!GitExtensionsControl.IsTextEditKey(keyData) // downstream (without keys for quick search)
-                        && (RevisionGridControl.ProcessHotkey(keyData)
-                            || (CommitInfoTabControl.SelectedTab == DiffTabPage && revisionDiff.ProcessHotkey(keyData))
-                            || (CommitInfoTabControl.SelectedTab == TreeTabPage && fileTree.ProcessHotkey(keyData)))));
+            if (IsDesignMode || !HotkeysEnabled)
+            {
+                return false;
+            }
+
+            // generic handling of this form's hotkeys (upstream)
+            if (base.ProcessHotkey(keyData))
+            {
+                return true;
+            }
+
+            // downstream (without keys for quick search and without keys for text selection and copy e.g. in CommitInfo)
+            // but allow routing Ctrl+A away from RevisionGridControl in order to not select all revisions
+            if (GitExtensionsControl.IsTextEditKey(keyData)
+                && !(keyData == (Keys.Control | Keys.A) && RevisionGridControl.ContainsFocus))
+            {
+                return false;
+            }
+
+            // route to visible controls which have their own hotkeys
+            return (keyData != (Keys.Control | Keys.A) && RevisionGridControl.ProcessHotkey(keyData))
+                || (CommitInfoTabControl.SelectedTab == DiffTabPage && revisionDiff.ProcessHotkey(keyData))
+                || (CommitInfoTabControl.SelectedTab == TreeTabPage && fileTree.ProcessHotkey(keyData));
         }
 
         protected override CommandStatus ExecuteCommand(int cmd)
