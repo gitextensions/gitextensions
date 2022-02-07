@@ -1746,7 +1746,7 @@ namespace GitUI
                                  () => new FormBrowse(commands: this, new BrowseArguments
                                  {
                                      RevFilter = filterByRevision ? revision?.ObjectId.ToString() : null,
-                                     PathFilter = fileHistoryFileName,
+                                     PathFilter = fileHistoryFileName.QuoteNE(),
                                      SelectedId = revision?.ObjectId,
                                      IsFileBlameHistory = true
                                  }));
@@ -1754,7 +1754,7 @@ namespace GitUI
             else
             {
                 ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
-                                 () => new FormFileHistory(commands: this, fileHistoryFileName, revision, filterByRevision, showBlame));
+                                 () => new FormFileHistory(commands: this, fileHistoryFileName.QuoteNE(), revision, filterByRevision, showBlame));
             }
 
             return true;
