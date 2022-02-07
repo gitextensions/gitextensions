@@ -258,7 +258,7 @@ namespace GitUI
                 //// _selectedObjectIds not disposable
                 //// _baseCommitToCompare not disposable
                 _revisionSubscription?.Dispose();
-                _revisionReader?.Dispose();
+                //// _revisionReader not disposable
                 //// _artificialStatus not disposable
                 //// _ambiguousRefs not disposable
                 //// _refFilterOptions not disposable
@@ -835,13 +835,14 @@ namespace GitUI
         ///  and <see cref="ResumeRefreshRevisions"/>.
         /// </summary>
         public bool CanRefresh => !_isRefreshingRevisions && _updatingFilters == 0;
+        private readonly CancellationTokenSequence _cancellationTokenSequence = new();
+        private Lazy<ILookup<ObjectId, IGitRef>> _refsByObjectId;
 
         /// <summary>
         ///  Queries git for the new set of revisions and refreshes the grid.
         /// </summary>
         /// <exception cref="AggregateException"></exception>
-        // TODO: pass the cancellation token everywhere
-        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null, System.Threading.CancellationToken cancellationToken = default)
+        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null)
         {
             ThreadHelper.AssertOnUIThread();
 
@@ -899,11 +900,7 @@ namespace GitUI
                     .ObserveOn(ThreadPoolScheduler.Instance)
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
-                cancellationToken.Register(() =>
-                {
-                    _revisionSubscription?.Dispose();
-                    _isRefreshingRevisions = false;
-                });
+                System.Threading.CancellationToken cancellationToken = _cancellationTokenSequence.Next();
 
                 _revisionReader ??= new RevisionReader();
 
@@ -927,20 +924,34 @@ namespace GitUI
 
                     // Find all ambiguous refs (including stash, notes etc)
                     // NB: This can be EXTREMELY slow operation for large repos.
-                    IReadOnlyList<IGitRef> refs = (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
-                    _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs));
+                    Func<IReadOnlyList<IGitRef>> refs = () => (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
+                    _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs()));
+                    _refsByObjectId = new(() => refs().ToLookup(head => head.ObjectId));
+
+                    // start calculation
+                    ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        _ = _refsByObjectId.Value;
+                        var branchName = Module.IsValidGitWorkingDir()
+                            ? Module.GetSelectedBranch()
+                            : "";
+                        UpdateSelectedRef(Module, refs, branchName);
+                        return Task.CompletedTask;
+                    }).FileAndForget();
+
                     cancellationToken.ThrowIfCancellationRequested();
 
                     string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
-                    _revisionReader.Execute(
+                    await _revisionReader.ExecuteAsync(
                         Module,
-                        refs,
                         revisions,
                         _filterInfo.CommitsLimit,
                         _filterInfo.RefFilterOptions,
                         _filterInfo.IsShowFilteredBranchesChecked ? _filterInfo.BranchFilter : string.Empty,
                         _filterInfo.GetRevisionFilter(),
-                        pathFilter);
+                        pathFilter,
+                        cancellationToken);
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
 
@@ -979,6 +990,27 @@ namespace GitUI
             }
 
             return;
+
+            static void UpdateSelectedRef(GitModule module, Func<IReadOnlyList<IGitRef>> refs, string branchName)
+            {
+                var selectedRef = refs().FirstOrDefault(head => head.Name == branchName);
+
+                if (selectedRef is not null)
+                {
+                    selectedRef.IsSelected = true;
+
+                    var localConfigFile = module.LocalConfigFile;
+                    var selectedHeadMergeSource = refs().FirstOrDefault(
+                        head => head.IsRemote
+                             && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
+                             && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
+
+                    if (selectedHeadMergeSource is not null)
+                    {
+                        selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
+                    }
+                }
+            }
 
             string BuildPathFilter(string? path)
             {
@@ -1088,6 +1120,9 @@ namespace GitUI
 
             void OnRevisionRead(GitRevision revision)
             {
+                // Look up any refs associated with this revision
+                revision.Refs = _refsByObjectId.Value[revision.ObjectId].AsReadOnlyList();
+
                 if (!firstRevisionReceived)
                 {
                     firstRevisionReceived = true;
@@ -1233,7 +1268,7 @@ namespace GitUI
             {
                 if (_revisionReader is not null)
                 {
-                    _revisionReader.Dispose();
+                    //// _revisionReader.Dispose();
                     _revisionReader = null;
                 }
             }

@@ -594,7 +594,7 @@ namespace GitUI.CommandsDialogs
             }
 
             Debug.Assert(RevisionGrid.CanRefresh, "Already loading revisions when running RefreshRevisions(). This could cause the commits in the grid to be loaded several times.");
-            RevisionGrid.PerformRefreshRevisions(getRefs, cancellationToken);
+            RevisionGrid.PerformRefreshRevisions(getRefs);
 
             InternalInitialize();
 
