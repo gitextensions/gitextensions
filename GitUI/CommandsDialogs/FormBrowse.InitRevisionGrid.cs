@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Linq;
+using GitCommands;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 
@@ -8,7 +9,7 @@ namespace GitUI.CommandsDialogs
     {
         // This file is dedicated to init logic for FormBrowse revisiong grid control
 
-        private void InitRevisionGrid(ObjectId? selectedId, ObjectId? firstId)
+        private void InitRevisionGrid(ObjectId? selectedId, ObjectId? firstId, bool isBlame)
         {
             RevisionGrid.IndexWatcher.Changed += (_, args) =>
             {
@@ -40,6 +41,13 @@ namespace GitUI.CommandsDialogs
             };
             RevisionGrid.RevisionGraphLoaded += (sender, e) =>
             {
+                // The FileTree tab should be shown at first start, in "filehistory" mode
+                if (isBlame)
+                {
+                    CommitInfoTabControl.SelectedTab = TreeTabPage;
+                    isBlame = false;
+                }
+
                 if (sender is null || MainSplitContainer.Panel1Collapsed)
                 {
                     // - the event is either not originated from the revision grid, or

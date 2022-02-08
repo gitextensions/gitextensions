@@ -225,6 +225,8 @@ namespace GitUI.CommandsDialogs
         private readonly ShellProvider _shellProvider = new();
         private ConEmuControl? _terminal;
         private Dashboard? _dashboard;
+        private bool _isFileBlameHistory;
+        private bool _fileBlameHistorySidePanelStartupState;
 
         private TabPage? _consoleTabPage;
 
@@ -252,6 +254,13 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
+
+            _isFileBlameHistory = args.IsFileBlameHistory;
+            if (_isFileBlameHistory)
+            {
+                // Blame was explicitly requested (otherwise start with last used)
+                AppSettings.RevisionFileTreeShowBlame = true;
+            }
 
             InitializeComponent();
             BackColor = OtherColors.BackgroundColor;
@@ -283,7 +292,7 @@ namespace GitUI.CommandsDialogs
             ToolStripFilters.Bind(() => Module, RevisionGrid);
             InitMenusAndToolbars(args.RevFilter, args.PathFilter);
 
-            InitRevisionGrid(args.SelectedId, args.FirstId);
+            InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileBlameHistory);
             InitCommitDetails();
 
             InitializeComplete();
@@ -487,6 +496,12 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            // Restore state at startup if file history mode, ignore the forced setting
+            if (_isFileBlameHistory)
+            {
+                MainSplitContainer.Panel1Collapsed = _fileBlameHistorySidePanelStartupState;
+            }
+
             _splitterManager.SaveSplitters();
             base.OnClosing(e);
         }
@@ -2349,6 +2364,11 @@ namespace GitUI.CommandsDialogs
 
             _splitterManager.RestoreSplitters();
             RefreshLayoutToggleButtonStates();
+            if (_isFileBlameHistory)
+            {
+                _fileBlameHistorySidePanelStartupState = MainSplitContainer.Panel1Collapsed;
+                MainSplitContainer.Panel1Collapsed = true;
+            }
 
             // Since #8849 and #8557 we have a geometry bug, which pushes the splitter up by 4px.
             // Account for this shift. This is a workaround at best in the same way as for FormCommit.
