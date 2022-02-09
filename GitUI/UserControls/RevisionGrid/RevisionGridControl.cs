@@ -836,7 +836,6 @@ namespace GitUI
         /// </summary>
         public bool CanRefresh => !_isRefreshingRevisions && _updatingFilters == 0;
         private readonly CancellationTokenSequence _cancellationTokenSequence = new();
-        private Lazy<ILookup<ObjectId, IGitRef>> _refsByObjectId;
 
         /// <summary>
         ///  Queries git for the new set of revisions and refreshes the grid.
@@ -855,6 +854,7 @@ namespace GitUI
 
             bool firstRevisionReceived = false;
             bool headIsHandled = false;
+            Lazy<ILookup<ObjectId, IGitRef>> refsByObjectId = null;
 
             try
             {
@@ -919,25 +919,25 @@ namespace GitUI
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
                     await TaskScheduler.Default;
+                    cancellationToken.ThrowIfCancellationRequested();
 
                     // Find all ambiguous refs (including stash, notes etc)
-                    // NB: This can be EXTREMELY slow operation for large repos.
+                    // Note: GetRefs can be very slow operation for large repos.
                     Func<IReadOnlyList<IGitRef>> refs = () => (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
                     _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs()));
-                    _refsByObjectId = new(() => refs().ToLookup(head => head.ObjectId));
+                    refsByObjectId = new(() => refs().ToLookup(head => head.ObjectId));
 
-                    // start calculation
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
+                        // yield to run in parallel to git-log, refs() can be slow
+                        await Task.Yield();
                         cancellationToken.ThrowIfCancellationRequested();
-                        _ = _refsByObjectId.Value;
-                        var branchName = Module.IsValidGitWorkingDir()
+                        string branchName = Module.IsValidGitWorkingDir()
                             ? Module.GetSelectedBranch()
                             : "";
                         UpdateSelectedRef(Module, refs, branchName);
-                        return Task.CompletedTask;
+                        _ = refsByObjectId.Value;
                     }).FileAndForget();
 
                     cancellationToken.ThrowIfCancellationRequested();
@@ -1121,7 +1121,7 @@ namespace GitUI
             void OnRevisionRead(GitRevision revision)
             {
                 // Look up any refs associated with this revision
-                revision.Refs = _refsByObjectId.Value[revision.ObjectId].AsReadOnlyList();
+                revision.Refs = refsByObjectId.Value[revision.ObjectId].AsReadOnlyList();
 
                 if (!firstRevisionReceived)
                 {
@@ -1268,7 +1268,6 @@ namespace GitUI
             {
                 if (_revisionReader is not null)
                 {
-                    //// _revisionReader.Dispose();
                     _revisionReader = null;
                 }
             }

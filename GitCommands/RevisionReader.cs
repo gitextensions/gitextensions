@@ -73,14 +73,10 @@ namespace GitCommands
             string pathFilter,
             CancellationToken token)
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var revisionCount = 0;
-
             await TaskScheduler.Default;
-
             token.ThrowIfCancellationRequested();
 
+            var revisionCount = 0;
             var arguments = BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
 #if DEBUG
