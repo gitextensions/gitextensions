@@ -917,32 +917,32 @@ namespace GitUI
                 Controls.Add(_loadingControlSync);
                 ShowLoading();
 
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // Find all ambiguous refs (including stash, notes etc)
+                // Note: GetRefs can be very slow operation for large repos, start in parallel to git-log.
+                // refsByObjectId is needed when first output from git-log is handled
+                Func<IReadOnlyList<IGitRef>> refs = () => (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
+                _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs()));
+                refsByObjectId = new(() => refs().ToLookup(head => head.ObjectId));
+
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await TaskScheduler.Default;
                     cancellationToken.ThrowIfCancellationRequested();
+                    string branchName = Module.IsValidGitWorkingDir()
+                        ? Module.GetSelectedBranch()
+                        : "";
+                    UpdateSelectedRef(Module, refs, branchName);
+                    _ = refsByObjectId.Value;
+                }).FileAndForget();
 
-                    // Find all ambiguous refs (including stash, notes etc)
-                    // Note: GetRefs can be very slow operation for large repos.
-                    Func<IReadOnlyList<IGitRef>> refs = () => (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
-                    _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs()));
-                    refsByObjectId = new(() => refs().ToLookup(head => head.ObjectId));
+                cancellationToken.ThrowIfCancellationRequested();
 
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        // yield to run in parallel to git-log, refs() can be slow
-                        await Task.Yield();
-                        cancellationToken.ThrowIfCancellationRequested();
-                        string branchName = Module.IsValidGitWorkingDir()
-                            ? Module.GetSelectedBranch()
-                            : "";
-                        UpdateSelectedRef(Module, refs, branchName);
-                        _ = refsByObjectId.Value;
-                    }).FileAndForget();
-
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
+                string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default;
                     await _revisionReader.ExecuteAsync(
                         Module,
                         revisions,
@@ -952,36 +952,34 @@ namespace GitUI
                         _filterInfo.GetRevisionFilter(),
                         pathFilter,
                         cancellationToken);
+                });
 
+                if (_initialLoad)
+                {
+                    _selectionTimer.Enabled = false;
+                    _selectionTimer.Stop();
+                    _selectionTimer.Enabled = true;
+                    _selectionTimer.Start();
+
+                    _initialLoad = false;
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                _superprojectCurrentCheckout = null;
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    var scc = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
                     await this.SwitchToMainThreadAsync(cancellationToken);
 
-                    if (_initialLoad)
+                    if (_superprojectCurrentCheckout != scc)
                     {
-                        _selectionTimer.Enabled = false;
-                        _selectionTimer.Stop();
-                        _selectionTimer.Enabled = true;
-                        _selectionTimer.Start();
-
-                        _initialLoad = false;
+                        _superprojectCurrentCheckout = scc;
+                        Refresh();
                     }
+                }).FileAndForget();
 
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    _superprojectCurrentCheckout = null;
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        var scc = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
-                        await this.SwitchToMainThreadAsync(cancellationToken);
-
-                        if (_superprojectCurrentCheckout != scc)
-                        {
-                            _superprojectCurrentCheckout = scc;
-                            Refresh();
-                        }
-                    }).FileAndForget();
-
-                    ResetNavigationHistory();
-                });
+                ResetNavigationHistory();
             }
             catch
             {
