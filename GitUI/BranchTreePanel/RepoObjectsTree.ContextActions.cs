@@ -45,68 +45,39 @@ namespace GitUI.BranchTreePanel
 
         private void ContextMenuAddExpandCollapseTree(ContextMenuStrip contextMenu)
         {
-            // Add the following to the every participating context menu:
-            //
-            //    ---------
-            //    Collapse All
-            //    Expand All
-
-            Tree? treeNode = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as Tree;
+            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag;
 
             if (contextMenu == menuMain)
             {
                 contextMenu.Items.Clear();
-                contextMenu.Items.Add(mnubtnCollapse);
-                contextMenu.Items.Add(mnubtnExpand);
-                if (treeNode is not null)
+            }
+            else if (contextMenu.Items.Count > 0)
+            {
+                Add(tsmiMainMenuSpacer1); // add a separator if any items exist already
+            }
+
+            // add Expand All / Collapse All menu entry
+            Add(mnubtnCollapse);
+            Add(mnubtnExpand);
+
+            // add Move Up / Move Down menu entries for re-arranging top level tree nodes
+            if (node is Tree tree)
+            {
+                Add(tsmiMainMenuSpacer2); // add another separator
+                Add(mnubtnMoveUp);
+                Add(mnubtnMoveDown);
+
+                var treeNode = tree.TreeViewNode;
+                mnubtnMoveUp.Enabled = treeNode.PrevNode is not null;
+                mnubtnMoveDown.Enabled = treeNode.NextNode is not null;
+            }
+
+            void Add(ToolStripItem item)
+            {
+                if (!contextMenu.Items.Contains(item))
                 {
-                    AddMoveUpDownMenuItems();
+                    contextMenu.Items.Add(item);
                 }
-
-                return;
-            }
-
-            if (!contextMenu.Items.Contains(tsmiMainMenuSpacer1))
-            {
-                contextMenu.Items.Add(tsmiMainMenuSpacer1);
-            }
-
-            if (!contextMenu.Items.Contains(mnubtnExpand))
-            {
-                contextMenu.Items.Add(mnubtnExpand);
-            }
-
-            if (!contextMenu.Items.Contains(mnubtnCollapse))
-            {
-                contextMenu.Items.Add(mnubtnCollapse);
-            }
-
-            if (treeNode is not null)
-            {
-                AddMoveUpDownMenuItems();
-            }
-
-            return;
-
-            void AddMoveUpDownMenuItems()
-            {
-                if (!contextMenu.Items.Contains(tsmiMainMenuSpacer2))
-                {
-                    contextMenu.Items.Add(tsmiMainMenuSpacer2);
-                }
-
-                if (!contextMenu.Items.Contains(mnubtnMoveUp))
-                {
-                    contextMenu.Items.Add(mnubtnMoveUp);
-                }
-
-                if (!contextMenu.Items.Contains(mnubtnMoveDown))
-                {
-                    contextMenu.Items.Add(mnubtnMoveDown);
-                }
-
-                mnubtnMoveUp.Enabled = treeNode.TreeViewNode.PrevNode is not null;
-                mnubtnMoveDown.Enabled = treeNode.TreeViewNode.NextNode is not null;
             }
         }
 
