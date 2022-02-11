@@ -145,7 +145,7 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(!node.Enabled, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
         }
 
-        private void ContextMenuSort(ContextMenuStrip contextMenu)
+        private void ContextMenuSort(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
             // We can only sort refs, i.e. branches and tags
             if (contextMenu != menuBranch && contextMenu != menuRemote && contextMenu != menuTag)
@@ -166,9 +166,12 @@ namespace GitUI.BranchTreePanel
                     insertBefore: tsmiMainMenuSpacer1);
             }
 
+            // sorting doesn't make a lot of sense if multiple branches are selected
+            ToggleMenuItems(!areMultipleBranchesSelected, _tsmiSortMenuSpacer, _sortByContextMenuItem);
+
             // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
             var showSortOrder = AppSettings.RefsSortBy != GitUIPluginInterfaces.GitRefsSortBy.Default;
-            ToggleMenuItems(showSortOrder, _sortOrderContextMenuItem);
+            ToggleMenuItems(!areMultipleBranchesSelected && showSortOrder, _sortOrderContextMenuItem);
         }
 
         private void ContextMenuSubmoduleSpecific(ContextMenuStrip contextMenu)
@@ -304,7 +307,7 @@ namespace GitUI.BranchTreePanel
             var areMultipleBranchesSelected = GetSelectedBranches().Count() > 1;
 
             ContextMenuAddExpandCollapseTree(contextMenu);
-            ContextMenuSort(contextMenu);
+            ContextMenuSort(contextMenu, areMultipleBranchesSelected);
             ContextMenuBranchSpecific(contextMenu, areMultipleBranchesSelected);
             ContextMenuRemoteSpecific(contextMenu, areMultipleBranchesSelected);
             ContextMenuRemoteRepoSpecific(contextMenu);
