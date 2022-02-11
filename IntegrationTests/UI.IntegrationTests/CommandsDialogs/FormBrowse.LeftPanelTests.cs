@@ -92,20 +92,17 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.Dispose();
         }
 
-        [Test]
-        public void RepoObjectTree_should_show_Sort_menu_before_Expand_menus()
+        [Test] // because neither branches (both local and remote) nor tags can be expanded or collapsed
+        public void Branch_and_tag_context_menu_should_show_Sort_entries_last_and_no_Expand_entries()
         {
             RunRepoObjectsTreeTest(
                 contextMenu =>
                 {
-                    contextMenu.Items.Count.Should().BeGreaterThan(6);
+                    contextMenu.Items.Count.Should().BeGreaterThan(3);
 
                     int count = contextMenu.Items.Count;
 
                     // Assert items from bottom to the top
-                    contextMenu.Items[--count].Text.Should().Be("Collapse");
-                    contextMenu.Items[--count].Text.Should().Be("Expand");
-                    contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();
                     contextMenu.Items[--count].Text.Should().Be(TranslatedStrings.SortOrder);
                     contextMenu.Items[--count].Text.Should().Be(TranslatedStrings.SortBy);
                     contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();

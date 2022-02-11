@@ -118,9 +118,18 @@ namespace GitUI.BranchTreePanel
             public Node? LastNode => _nodesList.Count > 0 ? _nodesList[_nodesList.Count - 1] : null;
         }
 
-        internal abstract class Tree : IDisposable
+        /// <summary>A common base class for both <see cref="Node"/> and <see cref="Tree"/>.</summary>
+        internal abstract class NodeBase
         {
-            protected readonly Nodes Nodes;
+            /// <summary>The child nodes.</summary>
+            protected internal Nodes Nodes { get; protected set; }
+
+            /// <summary>The corresponding tree node.</summary>
+            protected internal virtual TreeNode TreeViewNode { get; set; }
+        }
+
+        internal abstract class Tree : NodeBase, IDisposable
+        {
             private readonly IGitUICommandsSource _uiCommandsSource;
             private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new();
             private bool _firstReloadNodesSinceModuleChanged = true;
@@ -157,7 +166,6 @@ namespace GitUI.BranchTreePanel
                 _reloadCancellationTokenSequence.Dispose();
             }
 
-            public TreeNode TreeViewNode { get; }
             public GitUICommands UICommands => _uiCommandsSource.UICommands;
 
             /// <summary>
@@ -348,10 +356,8 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        internal abstract class Node : INode
+        internal abstract class Node : NodeBase, INode
         {
-            public readonly Nodes Nodes;
-
             protected Tree Tree
             {
                 get
@@ -375,14 +381,13 @@ namespace GitUI.BranchTreePanel
             /// Note that it may not always be set and which <see cref="Node"/> it represents may change
             /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s.
             /// </summary>
-            public TreeNode TreeViewNode
+            protected internal override TreeNode TreeViewNode
             {
                 get
                 {
                     Validates.NotNull(_treeViewNode);
                     return _treeViewNode;
                 }
-
                 set
                 {
                     _treeViewNode = value;
@@ -541,6 +546,6 @@ namespace GitUI.BranchTreePanel
 
     internal static class NodeExtensions
     {
-        internal static bool HasChildren(this RepoObjectsTree.Node node) => node.Nodes.Count > 0;
+        internal static bool HasChildren(this RepoObjectsTree.NodeBase node) => node.Nodes.Count > 0;
     }
 }

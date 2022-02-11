@@ -47,18 +47,26 @@ namespace GitUI.BranchTreePanel
         {
             var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag;
 
-            if (contextMenu == menuMain)
+            /* add Expand All / Collapse All menu entry
+             * depending on whether node is expanded or collapsed and has child nodes at all */
+            if (node is NodeBase nodeList && nodeList.HasChildren())
             {
-                contextMenu.Items.Clear();
-            }
-            else if (contextMenu.Items.Count > 0)
-            {
-                Add(tsmiMainMenuSpacer1); // add a separator if any items exist already
-            }
+                if (contextMenu == menuMain)
+                {
+                    contextMenu.Items.Clear();
+                }
+                else if (contextMenu.Items.Count > 0)
+                {
+                    Add(tsmiMainMenuSpacer1); // add a separator if any items exist already
+                }
 
-            // add Expand All / Collapse All menu entry
-            Add(mnubtnCollapse);
-            Add(mnubtnExpand);
+                Add(mnubtnCollapse);
+                Add(mnubtnExpand);
+
+                var isExpanded = nodeList.TreeViewNode.IsExpanded;
+                mnubtnExpand.Visible = !isExpanded;
+                mnubtnCollapse.Visible = isExpanded;
+            }
 
             // add Move Up / Move Down menu entries for re-arranging top level tree nodes
             if (node is Tree tree)
