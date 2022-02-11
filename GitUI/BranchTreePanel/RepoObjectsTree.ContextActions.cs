@@ -107,12 +107,7 @@ namespace GitUI.BranchTreePanel
 
         private void ContextMenuBranchSpecific(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
-            if (contextMenu != menuBranch)
-            {
-                return;
-            }
-
-            if ((contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not LocalBranchNode localBranch)
+            if (contextMenu != menuBranch || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not LocalBranchNode localBranch)
             {
                 return;
             }
@@ -135,12 +130,7 @@ namespace GitUI.BranchTreePanel
 
         private void ContextMenuRemoteSpecific(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
-            if (contextMenu != menuRemote)
-            {
-                return;
-            }
-
-            if ((contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteBranchNode node)
+            if (contextMenu != menuRemote || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteBranchNode node)
             {
                 return;
             }
@@ -160,12 +150,7 @@ namespace GitUI.BranchTreePanel
 
         private void ContextMenuRemoteRepoSpecific(ContextMenuStrip contextMenu)
         {
-            if (contextMenu != menuRemoteRepoNode)
-            {
-                return;
-            }
-
-            if ((contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteRepoNode node)
+            if (contextMenu != menuRemoteRepoNode || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteRepoNode node)
             {
                 return;
             }
