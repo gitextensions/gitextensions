@@ -38,7 +38,12 @@ namespace GitUI.BranchTreePanel
         /// </summary>
         private MenuItemsGenerator<TagNode> _tagNodeMenuItems;
 
-        private void ToggleMenuItems(bool enabled, params ToolStripItem[] items) => items.ForEach(item => item.Visible = enabled);
+        /// <summary>Toggles the <paramref name="items"/> <see cref="ToolStripItem.Visible"/>
+        /// as well as <see cref="ToolStripItem.Enabled"/> properties depending on <paramref name="enabled"/>.
+        /// Prefer this over only toggling the visibility of an item to enable determining whether the context menu will (once open)
+        /// contain any visible items via <see cref="ToolStripItem.Enabled"/> in <see cref="contextMenu_Opening(object, CancelEventArgs)"/>
+        /// even before the menu itself (as the visual parent) is visble and <see cref="ToolStripItem.Visible"/> of any item therefore false.</summary>
+        private void ToggleMenuItems(bool enabled, params ToolStripItem[] items) => items.ForEach(item => item.Visible = item.Enabled = enabled);
 
         private void ToggleMenuItems<TNode>(MenuItemsGenerator<TNode> generator, Func<ToolStripItemWithKey, bool> isEnabled) where TNode : class, INode
             => generator.ForEach(i => ToggleMenuItems(isEnabled(i), i.Item));
@@ -58,6 +63,9 @@ namespace GitUI.BranchTreePanel
                 else if (contextMenu.Items.Count > 0)
                 {
                     Add(tsmiMainMenuSpacer1); // add a separator if any items exist already
+
+                    // Display separator if any preceding items are enabled. This relies on menu items Enabled being toggled by ToggleMenuItems and before this method.
+                    tsmiMainMenuSpacer1.Visible = contextMenu.Items.Cast<ToolStripItem>().TakeWhile(item => item != tsmiMainMenuSpacer1).Any(item => item.Enabled);
                 }
 
                 Add(mnubtnCollapse);
@@ -113,6 +121,17 @@ namespace GitUI.BranchTreePanel
             }
         }
 
+        private void ContextMenuBranchPathSpecific(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
+        {
+            if (contextMenu != menuBranchPath || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not BranchPathNode)
+            {
+                return;
+            }
+
+            // don't display items in multi-selection context
+            ToggleMenuItems(!areMultipleBranchesSelected, mnubtnCreateBranch, mnubtnDeleteAllBranches);
+        }
+
         private void ContextMenuRemoteSpecific(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
             if (contextMenu != menuRemote || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteBranchNode node)
@@ -161,9 +180,7 @@ namespace GitUI.BranchTreePanel
 
             if (!contextMenu.Items.Contains(_sortOrderContextMenuItem))
             {
-                AddContextMenuItems(contextMenu,
-                    new ToolStripItem[] { _tsmiSortMenuSpacer, _sortByContextMenuItem, _sortOrderContextMenuItem },
-                    insertBefore: tsmiMainMenuSpacer1);
+                contextMenu.Items.AddRange(new ToolStripItem[] { _tsmiSortMenuSpacer, _sortByContextMenuItem, _sortOrderContextMenuItem });
             }
 
             // sorting doesn't make a lot of sense if multiple branches are selected
@@ -306,12 +323,13 @@ namespace GitUI.BranchTreePanel
 
             var areMultipleBranchesSelected = GetSelectedBranches().Count() > 1;
 
-            ContextMenuAddExpandCollapseTree(contextMenu);
-            ContextMenuSort(contextMenu, areMultipleBranchesSelected);
             ContextMenuBranchSpecific(contextMenu, areMultipleBranchesSelected);
+            ContextMenuBranchPathSpecific(contextMenu, areMultipleBranchesSelected);
             ContextMenuRemoteSpecific(contextMenu, areMultipleBranchesSelected);
             ContextMenuRemoteRepoSpecific(contextMenu);
             ContextMenuSubmoduleSpecific(contextMenu);
+            ContextMenuSort(contextMenu, areMultipleBranchesSelected);
+            ContextMenuAddExpandCollapseTree(contextMenu);
 
             // Set Cancel to false.  It is optimized to true based on empty entry.
             // See https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-handle-the-contextmenustrip-opening-event
