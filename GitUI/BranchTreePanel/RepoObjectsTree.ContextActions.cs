@@ -38,6 +38,11 @@ namespace GitUI.BranchTreePanel
         /// </summary>
         private MenuItemsGenerator<TagNode> _tagNodeMenuItems;
 
+        private void ToggleMenuItems(bool enabled, params ToolStripItem[] items) => items.ForEach(item => item.Visible = enabled);
+
+        private void ToggleMenuItems<TNode>(MenuItemsGenerator<TNode> generator, Func<ToolStripItemWithKey, bool> isEnabled) where TNode : class, INode
+            => generator.ForEach(i => ToggleMenuItems(isEnabled(i), i.Item));
+
         private void ContextMenuAddExpandCollapseTree(ContextMenuStrip contextMenu)
         {
             // Add the following to the every participating context menu:
@@ -112,11 +117,12 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            _localBranchMenuItems.ForEach(t => t.Item.Visible = !areMultipleBranchesSelected // hide items if multiple branches are selected
-                && (!localBranch.IsCurrent // otherwise display all items for non-current branches
-                    || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(t.Key))); // or only those applying to the current branch
+            ToggleMenuItems(_localBranchMenuItems,
+                t => !areMultipleBranchesSelected // hide items if multiple branches are selected
+                 && (!localBranch.IsCurrent // otherwise display all items for non-current branches
+                     || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(t.Key))); // or only those applying to the current branch
 
-            _menuBranchCopyContextMenuItems.ForEach(x => x.Visible = localBranch.Visible);
+            ToggleMenuItems(localBranch.Visible, _menuBranchCopyContextMenuItems);
 
             if (localBranch.Visible && !areMultipleBranchesSelected)
             {
@@ -135,17 +141,13 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            _remoteBranchMenuItems.ForEach(i => i.Item.Visible = !areMultipleBranchesSelected);
+            ToggleMenuItems(_remoteBranchMenuItems, _ => !areMultipleBranchesSelected);
 
             // toggle remote branch menu items operating on a single branch
-            mnubtnFetchOneBranch.Visible =
-            mnubtnPullFromRemoteBranch.Visible =
-            mnubtnRemoteBranchFetchAndCheckout.Visible =
-            mnubtnFetchCreateBranch.Visible =
-            mnubtnFetchRebase.Visible =
-            toolStripSeparator1.Visible = !areMultipleBranchesSelected;
+            ToggleMenuItems(!areMultipleBranchesSelected, mnubtnFetchOneBranch, mnubtnPullFromRemoteBranch,
+                mnubtnRemoteBranchFetchAndCheckout, mnubtnFetchCreateBranch, mnubtnFetchRebase, toolStripSeparator1);
 
-            _menuRemoteCopyContextMenuItems.ForEach(x => x.Visible = node.Visible);
+            ToggleMenuItems(node.Visible, _menuRemoteCopyContextMenuItems);
         }
 
         private void ContextMenuRemoteRepoSpecific(ContextMenuStrip contextMenu)
@@ -156,14 +158,12 @@ namespace GitUI.BranchTreePanel
             }
 
             // Actions on enabled remotes
-            mnubtnFetchAllBranchesFromARemote.Visible = node.Enabled;
-            mnubtnDisableRemote.Visible = node.Enabled;
-            mnuBtnPruneAllBranchesFromARemote.Visible = node.Enabled;
-            mnuBtnOpenRemoteUrlInBrowser.Visible = node.IsRemoteUrlUsingHttp;
+            ToggleMenuItems(node.Enabled, mnubtnFetchAllBranchesFromARemote, mnubtnDisableRemote, mnuBtnPruneAllBranchesFromARemote);
+
+            ToggleMenuItems(node.IsRemoteUrlUsingHttp, mnuBtnOpenRemoteUrlInBrowser);
 
             // Actions on disabled remotes
-            mnubtnEnableRemote.Visible = !node.Enabled;
-            mnubtnEnableRemoteAndFetch.Visible = !node.Enabled;
+            ToggleMenuItems(!node.Enabled, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
         }
 
         private void ContextMenuSort(ContextMenuStrip contextMenu)
@@ -188,8 +188,8 @@ namespace GitUI.BranchTreePanel
             }
 
             // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
-            contextMenu.Items[GitRefsSortOrderContextMenuItem.MenuItemName].Visible =
-                AppSettings.RefsSortBy != GitUIPluginInterfaces.GitRefsSortBy.Default;
+            var showSortOrder = AppSettings.RefsSortBy != GitUIPluginInterfaces.GitRefsSortBy.Default;
+            ToggleMenuItems(showSortOrder, _sortOrderContextMenuItem);
         }
 
         private void ContextMenuSubmoduleSpecific(ContextMenuStrip contextMenu)
@@ -214,15 +214,12 @@ namespace GitUI.BranchTreePanel
                     return;
                 }
 
-                bool bareRepository = Module.IsBareRepository();
-                mnubtnOpenSubmodule.Visible = submoduleNode.CanOpen;
-                mnubtnOpenGESubmodule.Visible = submoduleNode.CanOpen;
-                mnubtnUpdateSubmodule.Visible = true;
-                mnubtnManageSubmodules.Visible = !bareRepository && submoduleNode.IsCurrent;
-                mnubtnSynchronizeSubmodules.Visible = !bareRepository && submoduleNode.IsCurrent;
-                mnubtnResetSubmodule.Visible = !bareRepository;
-                mnubtnStashSubmodule.Visible = !bareRepository;
-                mnubtnCommitSubmodule.Visible = !bareRepository;
+                var bareRepository = Module.IsBareRepository();
+
+                ToggleMenuItems(submoduleNode.CanOpen, mnubtnOpenSubmodule, mnubtnOpenGESubmodule);
+                ToggleMenuItems(true, mnubtnUpdateSubmodule);
+                ToggleMenuItems(!bareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
+                ToggleMenuItems(!bareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
             }
         }
 
