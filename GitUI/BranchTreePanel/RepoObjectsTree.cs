@@ -568,9 +568,9 @@ namespace GitUI.BranchTreePanel
         {
             var node = Node.GetNodeSafe<Node>(e.Node);
 
-            if (node is null || e.Button == MouseButtons.Right)
+            if (node is null || (e.Button == MouseButtons.Right && node.IsMultiSelected))
             {
-                return; // don't change multi-selection on opening context menu
+                return; // don't undo multi-selection on opening context menu
             }
 
             if (ModifierKeys == Keys.Control)
