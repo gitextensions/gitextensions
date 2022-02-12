@@ -33,6 +33,9 @@ namespace GitCommands
         /// <summary>"refs/stash".</summary>
         public static string RefsStashPrefix { get; } = "refs/stash";
 
+        /// <summary>"refs/notes/commits".</summary>
+        public static string RefsNotesPrefix { get; } = "refs/notes/commits";
+
         /// <summary>"^{}".</summary>
         public static string TagDereferenceSuffix { get; } = "^{}";
 

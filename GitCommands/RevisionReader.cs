@@ -57,27 +57,16 @@ namespace GitCommands
         // Trace info for parse errors
         private static int _noOfParseError = 0;
 
-        /// <summary>
-        /// The parents for commits are replaced with the parent in the graph (as all commits may not be included)
-        /// See https://git-scm.com/docs/git-log#Documentation/git-log.txt---parents
-        /// </summary>
-        public bool ParentsAreRewritten { get; private set; } = false;
-
         public async Task ExecuteAsync(
             GitModule module,
             IObserver<GitRevision> subject,
-            int maxCount,
-            RefFilterOptions refFilterOptions,
-            string branchFilter,
-            string revisionFilter,
-            string pathFilter,
+            ArgumentBuilder arguments,
             CancellationToken token)
         {
             await TaskScheduler.Default;
             token.ThrowIfCancellationRequested();
 
             var revisionCount = 0;
-            var arguments = BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
 #if DEBUG
             var sw = Stopwatch.StartNew();
@@ -119,13 +108,14 @@ namespace GitCommands
             }
         }
 
-        private ArgumentBuilder BuildArguments(int maxCount,
+        public static ArgumentBuilder BuildArguments(int maxCount,
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
-            string pathFilter)
+            string pathFilter,
+            out bool parentsAreRewritten)
         {
-            ParentsAreRewritten = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
+            parentsAreRewritten = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
             return new GitArgumentBuilder("log")
             {
                 { maxCount > 0, $"--max-count={maxCount}" },
@@ -168,7 +158,7 @@ namespace GitCommands
                 },
                 revisionFilter,
                 {
-                    ParentsAreRewritten,
+                    parentsAreRewritten,
                     new ArgumentBuilder
                     {
                         { AppSettings.FullHistoryInFileHistory, $"--full-history" },
@@ -181,10 +171,10 @@ namespace GitCommands
                 },
                 { !string.IsNullOrWhiteSpace(pathFilter), $"-- {pathFilter}" }
             };
-        }
 
-        private static bool IsSimpleBranchFilter(string branchFilter) =>
-            branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
+            static bool IsSimpleBranchFilter(string branchFilter) =>
+                branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
+        }
 
         private static bool TryParseRevision(in ArraySegment<byte> chunk, in Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
@@ -432,10 +422,6 @@ namespace GitCommands
             {
                 _revisionReader = revisionReader;
             }
-
-            internal ArgumentBuilder BuildArgumentsBuildArguments(int maxCount, RefFilterOptions refFilterOptions,
-                string branchFilter, string revisionFilter, string pathFilter) =>
-                _revisionReader.BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
             internal static bool TryParseRevision(ArraySegment<byte> chunk, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
                 RevisionReader.TryParseRevision(chunk, logOutputEncoding, sixMonths, out revision);

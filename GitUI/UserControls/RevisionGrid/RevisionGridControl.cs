@@ -114,7 +114,6 @@ namespace GitUI
         private bool _isReadingRevisions = true;
         private int _updatingFilters;
 
-        private RevisionReader? _revisionReader;
         private IDisposable? _revisionSubscription;
         private GitRevision? _baseCommitToCompare;
         private string? _rebaseOnTopOf;
@@ -258,7 +257,6 @@ namespace GitUI
                 //// _selectedObjectIds not disposable
                 //// _baseCommitToCompare not disposable
                 _revisionSubscription?.Dispose();
-                //// _revisionReader not disposable
                 //// _artificialStatus not disposable
                 //// _ambiguousRefs not disposable
                 //// _refFilterOptions not disposable
@@ -851,10 +849,21 @@ namespace GitUI
             }
 
             _isRefreshingRevisions = true;
+            System.Threading.SemaphoreSlim semaphoreCurrentCommit = new(1, 1);
+            semaphoreCurrentCommit.Wait();
 
             bool firstRevisionReceived = false;
             bool headIsHandled = false;
-            Lazy<ILookup<ObjectId, IGitRef>> refsByObjectId = null;
+
+            // Find all ambiguous refs (including stash, notes etc)
+            // Note: GetRefs can be very slow operation for large repos, start in parallel to git-log.
+            // refsByObjectId is needed when first output from git-log is handled
+            Func<IReadOnlyList<IGitRef>> refs = () => (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
+            _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs()));
+            Lazy<ILookup<ObjectId, IGitRef>> refsByObjectId = new(() => refs().ToLookup(head => head.ObjectId));
+
+            // optimize for no notes at all
+            Lazy<bool> hasAnyNotes = new(() => AppSettings.ShowGitNotes && refs().Any(i => i.CompleteName == GitRefName.RefsNotesPrefix));
 
             try
             {
@@ -869,31 +878,14 @@ namespace GitUI
 
                 _buildServerWatcher.CancelBuildStatusFetchOperation();
 
-                DisposeRevisionReader();
-
-                var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
 
-                // If the current checkout changed, don't get the currently selected rows, select the
-                // new current checkout instead.
-                if (newCurrentCheckout == CurrentCheckout)
-                {
-                    _selectedObjectIds = _gridView.SelectedObjectIds;
-                }
-                else
-                {
-                    // This is a new checkout, so ensure the variable is cleared out.
-                    _selectedObjectIds = null;
-                }
-
-                CurrentCheckout = newCurrentCheckout;
                 base.Refresh();
 
                 IndexWatcher.Reset();
 
-                SelectInitialRevision(newCurrentCheckout);
-
                 _isReadingRevisions = true;
+                _superprojectCurrentCheckout = null;
                 Subject<GitRevision> revisions = new();
                 _revisionSubscription?.Dispose();
                 _revisionSubscription = revisions
@@ -901,8 +893,6 @@ namespace GitUI
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
                 System.Threading.CancellationToken cancellationToken = _cancellationTokenSequence.Next();
-
-                _revisionReader ??= new RevisionReader();
 
                 _gridView.SuspendLayout();
                 _gridView.SelectionChanged -= OnGridViewSelectionChanged;
@@ -919,40 +909,77 @@ namespace GitUI
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // Find all ambiguous refs (including stash, notes etc)
-                // Note: GetRefs can be very slow operation for large repos, start in parallel to git-log.
-                // refsByObjectId is needed when first output from git-log is handled
-                Func<IReadOnlyList<IGitRef>> refs = () => (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
-                _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs()));
-                refsByObjectId = new(() => refs().ToLookup(head => head.ObjectId));
-
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await TaskScheduler.Default;
                     cancellationToken.ThrowIfCancellationRequested();
+
                     string branchName = Module.IsValidGitWorkingDir()
                         ? Module.GetSelectedBranch()
                         : "";
                     UpdateSelectedRef(Module, refs, branchName);
                     _ = refsByObjectId.Value;
+                    ObjectId? newCurrentCheckout = string.IsNullOrEmpty(branchName)
+                        ? null
+                        : refs().FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{branchName}").ObjectId;
+
+                    if (newCurrentCheckout is null)
+                    {
+                        newCurrentCheckout = capturedModule.GetCurrentCheckout();
+                    }
+
+                    semaphoreCurrentCommit.Release();
+                    await this.SwitchToMainThreadAsync(cancellationToken);
+
+                    // If the current checkout changed, don't get the currently selected rows, select the
+                    // new current checkout instead.
+                    if (newCurrentCheckout == CurrentCheckout)
+                    {
+                        _selectedObjectIds = _gridView.SelectedObjectIds;
+                    }
+                    else
+                    {
+                        // This is a new checkout, so ensure the variable is cleared out.
+                        _selectedObjectIds = null;
+                        CurrentCheckout = newCurrentCheckout;
+                    }
+
+                    SelectInitialRevision(newCurrentCheckout);
+
+                    SuperProjectInfo scc = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
+
+                    if (_superprojectCurrentCheckout != scc)
+                    {
+                        _superprojectCurrentCheckout = scc;
+                        Refresh();
+                    }
                 }).FileAndForget();
 
                 cancellationToken.ThrowIfCancellationRequested();
 
                 string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
+                ArgumentBuilder args = RevisionReader.BuildArguments(_filterInfo.CommitsLimit,
+                    _filterInfo.RefFilterOptions,
+                    _filterInfo.IsShowFilteredBranchesChecked ? _filterInfo.BranchFilter : string.Empty,
+                    _filterInfo.GetRevisionFilter(),
+                    pathFilter,
+                    out bool parentsAreRewritten);
+                ParentsAreRewritten = parentsAreRewritten;
+
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await TaskScheduler.Default;
-                    await _revisionReader.ExecuteAsync(
+                    await new RevisionReader().ExecuteAsync(
                         Module,
                         revisions,
-                        _filterInfo.CommitsLimit,
-                        _filterInfo.RefFilterOptions,
-                        _filterInfo.IsShowFilteredBranchesChecked ? _filterInfo.BranchFilter : string.Empty,
-                        _filterInfo.GetRevisionFilter(),
-                        pathFilter,
+                        args,
                         cancellationToken);
-                });
+                }).FileAndForget(
+                    ex =>
+                    {
+                        revisions.OnError(ex);
+                        return false;
+                    });
 
                 if (_initialLoad)
                 {
@@ -965,19 +992,6 @@ namespace GitUI
                 }
 
                 cancellationToken.ThrowIfCancellationRequested();
-
-                _superprojectCurrentCheckout = null;
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    var scc = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
-                    await this.SwitchToMainThreadAsync(cancellationToken);
-
-                    if (_superprojectCurrentCheckout != scc)
-                    {
-                        _superprojectCurrentCheckout = scc;
-                        Refresh();
-                    }
-                }).FileAndForget();
 
                 ResetNavigationHistory();
             }
@@ -1124,24 +1138,23 @@ namespace GitUI
                 if (!firstRevisionReceived)
                 {
                     firstRevisionReceived = true;
-                    ParentsAreRewritten = _revisionReader.ParentsAreRewritten;
-
                     this.InvokeAsync(() => { ShowLoading(showSpinner: false); }).FileAndForget();
                 }
 
-                bool isCurrentCheckout = revision.ObjectId.Equals(CurrentCheckout);
+                RevisionNodeFlags flags = RevisionNodeFlags.None;
 
-                if (isCurrentCheckout)
+                if (!headIsHandled)
                 {
-                    headIsHandled = true;
-                    AddArtificialRevisions(insertAsFirst: false);
-                }
+                    semaphoreCurrentCommit.Wait();
+                    bool isCurrentCheckout = revision.ObjectId.Equals(CurrentCheckout);
+                    if (isCurrentCheckout)
+                    {
+                        headIsHandled = true;
+                        AddArtificialRevisions(insertAsFirst: false);
+                        flags = RevisionNodeFlags.CheckedOut;
+                    }
 
-                var flags = RevisionNodeFlags.None;
-
-                if (isCurrentCheckout)
-                {
-                    flags = RevisionNodeFlags.CheckedOut;
+                    semaphoreCurrentCommit.Release();
                 }
 
                 if (revision.Refs.Count != 0)
@@ -1152,6 +1165,12 @@ namespace GitUI
                 if (_filterInfo.RefFilterOptions.HasFlag(RefFilterOptions.FirstParent))
                 {
                     flags |= RevisionNodeFlags.OnlyFirstParent;
+                }
+
+                if (!hasAnyNotes.Value)
+                {
+                    // No notes at all in this repo
+                    revision.HasNotes = true;
                 }
 
                 _gridView.Add(revision, flags);
@@ -1209,7 +1228,7 @@ namespace GitUI
                 this.InvokeAsync(() => SetPage(new ErrorControl()))
                     .FileAndForget();
 
-                DisposeRevisionReader();
+                _cancellationTokenSequence.CancelCurrent();
 
                 // Rethrow the exception on the UI thread
                 this.InvokeAsync(() => throw new AggregateException(exception))
@@ -1257,16 +1276,6 @@ namespace GitUI
                             await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
                         }
                     }).FileAndForget();
-                }
-
-                DisposeRevisionReader();
-            }
-
-            void DisposeRevisionReader()
-            {
-                if (_revisionReader is not null)
-                {
-                    _revisionReader = null;
                 }
             }
         }
@@ -2414,7 +2423,7 @@ namespace GitUI
 
         private void ToggleHighlightSelectedBranch()
         {
-            if (_revisionReader is not null)
+            if (_isReadingRevisions)
             {
                 MessageBox.Show(_cannotHighlightSelectedBranch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;

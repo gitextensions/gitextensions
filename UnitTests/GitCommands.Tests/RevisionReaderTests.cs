@@ -32,7 +32,7 @@ namespace GitCommandsTests
         [TestCase(1, true)]
         public void BuildArguments_should_add_maxcount_if_requested(int maxCount, bool expected)
         {
-            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(maxCount, RefFilterOptions.All, "", "", "");
+            var args = RevisionReader.BuildArguments(maxCount, RefFilterOptions.All, "", "", "", out bool parentsAreRewritten);
 
             if (expected)
             {
@@ -42,14 +42,17 @@ namespace GitCommandsTests
             {
                 args.ToString().Should().NotContain(" --max-count=");
             }
+
+            parentsAreRewritten.Should().BeFalse();
         }
 
         [Test]
         public void BuildArguments_should_be_NUL_terminated()
         {
-            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(-1, RefFilterOptions.All, "", "", "");
+            var args = RevisionReader.BuildArguments(-1, RefFilterOptions.All, "", "", "", out bool parentsAreRewritten);
 
             args.ToString().Should().Contain(" log -z ");
+            parentsAreRewritten.Should().BeFalse();
         }
 
         [TestCase(RefFilterOptions.FirstParent, false)]
@@ -58,7 +61,7 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.All | RefFilterOptions.Reflogs, true)]
         public void BuildArguments_should_add_reflog_if_requested(RefFilterOptions refFilterOptions, bool expected)
         {
-            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(-1, refFilterOptions, "", "", "");
+            var args = RevisionReader.BuildArguments(-1, refFilterOptions, "", "", "", out bool parentsAreRewritten);
 
             if (expected)
             {
@@ -68,6 +71,8 @@ namespace GitCommandsTests
             {
                 args.ToString().Should().NotContain(" --reflog ");
             }
+
+            parentsAreRewritten.Should().BeFalse();
         }
 
         /* first 'parent first' */
@@ -92,7 +97,7 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.Tags, " --tags ", null)]
         public void BuildArguments_check_parameters(RefFilterOptions refFilterOptions, string expectedToContain, string notExpectedToContain)
         {
-            var args = _revisionReader.GetTestAccessor().BuildArgumentsBuildArguments(-1, refFilterOptions, "my_*", "my_revision", "my_path");
+            var args = RevisionReader.BuildArguments(-1, refFilterOptions, "my_*", "my_revision", "my_path", out bool parentsAreRewritten);
 
             if (expectedToContain is not null)
             {
@@ -103,6 +108,8 @@ namespace GitCommandsTests
             {
                 args.ToString().Should().NotContain(notExpectedToContain);
             }
+
+            parentsAreRewritten.Should().BeTrue();
         }
 
         [Test]
