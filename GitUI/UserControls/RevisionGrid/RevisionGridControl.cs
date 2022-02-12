@@ -88,8 +88,8 @@ namespace GitUI
 
         private readonly FilterInfo _filterInfo = new();
         private readonly NavigationHistory _navigationHistory = new();
-        private readonly Control _loadingControlAsync;
-        private readonly Control _loadingControlSync;
+        private readonly Control _loadingControlText;
+        private readonly Control _loadingControlSpinner;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
@@ -156,7 +156,7 @@ namespace GitUI
             renameBranchToolStripMenuItem.AdaptImageLightness();
             InitializeComplete();
 
-            _loadingControlAsync = new Label
+            _loadingControlText = new Label
             {
                 Padding = DpiUtil.Scale(new Padding(7, 5, 5, 5)),
                 BorderStyle = BorderStyle.None,
@@ -168,15 +168,15 @@ namespace GitUI
                 AutoSize = true,
                 Text = _strLoading.Text
             };
-            Controls.Add(_loadingControlAsync);
+            Controls.Add(_loadingControlText);
 
-            _loadingControlSync = new WaitSpinner
+            _loadingControlSpinner = new WaitSpinner
             {
                 BackColor = SystemColors.Window,
                 Visible = false,
                 Size = DpiUtil.Scale(new Size(50, 50))
             };
-            Controls.Add(_loadingControlSync);
+            Controls.Add(_loadingControlSpinner);
 
             // Delay raising the SelectionChanged event for a barely noticeable period to throttle
             // rapid changes, for example by holding the down arrow key in the revision grid.
@@ -817,14 +817,14 @@ namespace GitUI
 
         private void ShowLoading(bool showSpinner = true)
         {
-            _loadingControlSync.Visible = showSpinner;
-            _loadingControlSync.Left = (ClientSize.Width - _loadingControlSync.Width) / 2;
-            _loadingControlSync.Top = (ClientSize.Height - _loadingControlSync.Height) / 2;
+            _loadingControlSpinner.Visible = showSpinner;
+            _loadingControlSpinner.Left = (ClientSize.Width - _loadingControlSpinner.Width) / 2;
+            _loadingControlSpinner.Top = (ClientSize.Height - _loadingControlSpinner.Height) / 2;
 
-            _loadingControlAsync.Visible = !showSpinner;
-            _loadingControlAsync.Left = ClientSize.Width - _loadingControlSync.Width;
-            _loadingControlSync.BringToFront();
-            _loadingControlAsync.BringToFront();
+            _loadingControlText.Visible = !showSpinner;
+            _loadingControlText.Left = ClientSize.Width - _loadingControlSpinner.Width;
+            _loadingControlSpinner.BringToFront();
+            _loadingControlText.BringToFront();
         }
 
         /// <summary>
@@ -858,12 +858,12 @@ namespace GitUI
             // Find all ambiguous refs (including stash, notes etc)
             // Note: GetRefs can be very slow operation for large repos, start in parallel to git-log.
             // refsByObjectId is needed when first output from git-log is handled
-            Func<IReadOnlyList<IGitRef>> refs = () => (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
-            _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(refs()));
-            Lazy<ILookup<ObjectId, IGitRef>> refsByObjectId = new(() => refs().ToLookup(head => head.ObjectId));
+            Func<IReadOnlyList<IGitRef>> getUnfilteredRefs = () => (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
+            _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(getUnfilteredRefs()));
+            Lazy<ILookup<ObjectId, IGitRef>> refsByObjectId = new(() => getUnfilteredRefs().ToLookup(head => head.ObjectId), System.Threading.LazyThreadSafetyMode.ExecutionAndPublication);
 
             // optimize for no notes at all
-            Lazy<bool> hasAnyNotes = new(() => AppSettings.ShowGitNotes && refs().Any(i => i.CompleteName == GitRefName.RefsNotesPrefix));
+            Lazy<bool> hasAnyNotes = new(() => AppSettings.ShowGitNotes && getUnfilteredRefs().Any(i => i.CompleteName == GitRefName.RefsNotesPrefix));
 
             try
             {
@@ -904,7 +904,7 @@ namespace GitUI
                 _gridView.ResumeLayout();
 
                 // Add back and show the spinner control, which was removed by SetPage call
-                Controls.Add(_loadingControlSync);
+                Controls.Add(_loadingControlSpinner);
                 ShowLoading();
 
                 cancellationToken.ThrowIfCancellationRequested();
@@ -917,11 +917,11 @@ namespace GitUI
                     string branchName = Module.IsValidGitWorkingDir()
                         ? Module.GetSelectedBranch()
                         : "";
-                    UpdateSelectedRef(Module, refs, branchName);
+                    UpdateSelectedRef(Module, getUnfilteredRefs, branchName);
                     _ = refsByObjectId.Value;
                     ObjectId? newCurrentCheckout = string.IsNullOrEmpty(branchName)
                         ? null
-                        : refs().FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{branchName}").ObjectId;
+                        : getUnfilteredRefs().FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{branchName}").ObjectId;
 
                     if (newCurrentCheckout is null)
                     {
@@ -1003,16 +1003,16 @@ namespace GitUI
 
             return;
 
-            static void UpdateSelectedRef(GitModule module, Func<IReadOnlyList<IGitRef>> refs, string branchName)
+            static void UpdateSelectedRef(GitModule module, Func<IReadOnlyList<IGitRef>> getRefs, string branchName)
             {
-                var selectedRef = refs().FirstOrDefault(head => head.Name == branchName);
+                var selectedRef = getRefs().FirstOrDefault(head => head.Name == branchName);
 
                 if (selectedRef is not null)
                 {
                     selectedRef.IsSelected = true;
 
                     var localConfigFile = module.LocalConfigFile;
-                    var selectedHeadMergeSource = refs().FirstOrDefault(
+                    var selectedHeadMergeSource = getRefs().FirstOrDefault(
                         head => head.IsRemote
                              && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
                              && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
