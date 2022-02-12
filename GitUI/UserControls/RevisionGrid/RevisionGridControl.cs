@@ -110,7 +110,6 @@ namespace GitUI
         /// </summary>
         private Lazy<IReadOnlyCollection<string>>? _ambiguousRefs;
 
-        private bool _initialLoad = true;
         private bool _isReadingRevisions = true;
         private int _updatingFilters;
 
@@ -158,7 +157,7 @@ namespace GitUI
 
             _loadingControlText = new Label
             {
-                Padding = DpiUtil.Scale(new Padding(7, 5, 5, 5)),
+                Padding = DpiUtil.Scale(new Padding(7, 5, 7, 5)),
                 BorderStyle = BorderStyle.None,
                 ForeColor = SystemColors.InfoText,
                 BackColor = SystemColors.Info,
@@ -294,7 +293,6 @@ namespace GitUI
 
         private void SetPage(Control content)
         {
-            ShowLoading(showSpinner: false);
             for (int i = Controls.Count - 1; i >= 0; i--)
             {
                 Control oldControl = Controls[i];
@@ -429,7 +427,7 @@ namespace GitUI
         private void ResetNavigationHistory()
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Count == 1)
+            if (selectedRevisions.Count > 0)
             {
                 _navigationHistory.Push(selectedRevisions[0].ObjectId);
             }
@@ -815,6 +813,13 @@ namespace GitUI
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
+        /// <summary>
+        /// Show spinner (in the synchronous part of loading revisions
+        /// (and creating the control), or the "Loading..." text when first revision is
+        /// handled and the grid is being updated.
+        /// Note that these controls are removed by SetPage() when the fgrid is loaded.
+        /// </summary>
+        /// <param name="showSpinner">Show the spinner or the text controls.</param>
         private void ShowLoading(bool showSpinner = true)
         {
             _loadingControlSpinner.Visible = showSpinner;
@@ -822,7 +827,8 @@ namespace GitUI
             _loadingControlSpinner.Top = (ClientSize.Height - _loadingControlSpinner.Height) / 2;
 
             _loadingControlText.Visible = !showSpinner;
-            _loadingControlText.Left = ClientSize.Width - _loadingControlSpinner.Width;
+            _loadingControlText.Left = ClientSize.Width - _loadingControlSpinner.Width - SystemInformation.VerticalScrollBarWidth;
+
             _loadingControlSpinner.BringToFront();
             _loadingControlText.BringToFront();
         }
@@ -874,8 +880,6 @@ namespace GitUI
 
                 FilterChanged?.Invoke(this, new FilterChangedEventArgs(_filterInfo));
 
-                _initialLoad = true;
-
                 _buildServerWatcher.CancelBuildStatusFetchOperation();
 
                 GitModule capturedModule = Module;
@@ -903,8 +907,9 @@ namespace GitUI
                 _gridView.SelectionChanged += OnGridViewSelectionChanged;
                 _gridView.ResumeLayout();
 
-                // Add back and show the spinner control, which was removed by SetPage call
+                // Add back and show the spinner controls, which was removed by SetPage call
                 Controls.Add(_loadingControlSpinner);
+                Controls.Add(_loadingControlText);
                 ShowLoading();
 
                 cancellationToken.ThrowIfCancellationRequested();
@@ -942,6 +947,7 @@ namespace GitUI
                         // This is a new checkout, so ensure the variable is cleared out.
                         _selectedObjectIds = null;
                         CurrentCheckout = newCurrentCheckout;
+                        ResetNavigationHistory();
                     }
 
                     SelectInitialRevision(newCurrentCheckout);
@@ -953,6 +959,11 @@ namespace GitUI
                         _superprojectCurrentCheckout = scc;
                         Refresh();
                     }
+
+                    _selectionTimer.Enabled = false;
+                    _selectionTimer.Stop();
+                    _selectionTimer.Enabled = true;
+                    _selectionTimer.Start();
                 }).FileAndForget();
 
                 cancellationToken.ThrowIfCancellationRequested();
@@ -980,20 +991,6 @@ namespace GitUI
                         revisions.OnError(ex);
                         return false;
                     });
-
-                if (_initialLoad)
-                {
-                    _selectionTimer.Enabled = false;
-                    _selectionTimer.Stop();
-                    _selectionTimer.Enabled = true;
-                    _selectionTimer.Start();
-
-                    _initialLoad = false;
-                }
-
-                cancellationToken.ThrowIfCancellationRequested();
-
-                ResetNavigationHistory();
             }
             catch
             {
