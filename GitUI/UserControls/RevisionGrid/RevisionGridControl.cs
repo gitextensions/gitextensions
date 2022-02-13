@@ -921,19 +921,15 @@ namespace GitUI
                     await TaskScheduler.Default;
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    string branchName = Module.IsValidGitWorkingDir()
-                        ? Module.GetSelectedBranch()
-                        : "";
-                    UpdateSelectedRef(Module, getUnfilteredRefs, branchName);
                     _ = refsByObjectId.Value;
-                    ObjectId? newCurrentCheckout = string.IsNullOrEmpty(branchName)
-                        ? null
-                        : getUnfilteredRefs().FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{branchName}")?.ObjectId;
 
-                    if (newCurrentCheckout is null)
-                    {
-                        newCurrentCheckout = capturedModule.GetCurrentCheckout();
-                    }
+                    string branchName = capturedModule.IsValidGitWorkingDir()
+                        ? capturedModule.GetSelectedBranch()
+                        : "";
+                    IGitRef? headRef = string.IsNullOrEmpty(branchName)
+                        ? null
+                        : getUnfilteredRefs().FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{branchName}");
+                    ObjectId? newCurrentCheckout = headRef?.ObjectId ?? capturedModule.GetCurrentCheckout();
 
                     // If the current checkout changed, don't get the currently selected rows, select the
                     // new current checkout instead.
@@ -948,8 +944,8 @@ namespace GitUI
                         CurrentCheckout = newCurrentCheckout;
                     }
 
+                    UpdateSelectedRef(capturedModule, getUnfilteredRefs, headRef);
                     SelectInitialRevision(newCurrentCheckout);
-
                     semaphoreCurrentCommit.Release();
                     await this.SwitchToMainThreadAsync(cancellationToken);
 
@@ -958,7 +954,6 @@ namespace GitUI
                     if (_superprojectCurrentCheckout != scc)
                     {
                         _superprojectCurrentCheckout = scc;
-                        Refresh();
                     }
 
                     _selectionTimer.Enabled = true;
@@ -999,24 +994,24 @@ namespace GitUI
 
             return;
 
-            static void UpdateSelectedRef(GitModule module, Func<IReadOnlyList<IGitRef>> getRefs, string branchName)
+            static void UpdateSelectedRef(GitModule module, Func<IReadOnlyList<IGitRef>> getRefs, IGitRef? selectedRef)
             {
-                var selectedRef = getRefs().FirstOrDefault(head => head.Name == branchName);
-
-                if (selectedRef is not null)
+                if (selectedRef is null)
                 {
-                    selectedRef.IsSelected = true;
+                    return;
+                }
 
-                    var localConfigFile = module.LocalConfigFile;
-                    var selectedHeadMergeSource = getRefs().FirstOrDefault(
-                        head => head.IsRemote
-                             && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
-                             && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
+                selectedRef.IsSelected = true;
 
-                    if (selectedHeadMergeSource is not null)
-                    {
-                        selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
-                    }
+                var localConfigFile = module.LocalConfigFile;
+                var selectedHeadMergeSource = getRefs().FirstOrDefault(
+                    head => head.IsRemote
+                         && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
+                         && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
+
+                if (selectedHeadMergeSource is not null)
+                {
+                    selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
                 }
             }
 
