@@ -83,8 +83,9 @@ See the changes in the commit form.");
         /// Expand the tree for the path and show the contents
         /// </summary>
         /// <param name="filePath">The path to the file</param>
+        /// <param name="line">The optional line to open</param>
         /// <param name="requestBlame">Request that Blame is shown in the FileTree</param>
-        public void ExpandToFile(string filePath, bool requestBlame = false)
+        public void ExpandToFile(string filePath, int? line, bool requestBlame)
         {
             if (string.IsNullOrWhiteSpace(filePath))
             {
@@ -131,9 +132,14 @@ See the changes in the commit form.");
 
             if (foundNode is not null)
             {
-                if (isIncompleteMatch)
+                if (isIncompleteMatch || foundNode.Tag is not GitItem gitItem)
                 {
                     MessageBox.Show(_nodeNotFoundNextAvailableParentSelected.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    BlameControl.Visible = false;
+                    FileText.Visible = true;
+                    FileText.Clear();
+
+                    return;
                 }
 
                 if (requestBlame && !AppSettings.RevisionFileTreeShowBlame)
@@ -141,8 +147,13 @@ See the changes in the commit form.");
                     blameToolStripMenuItem1.Checked = AppSettings.RevisionFileTreeShowBlame = true;
                 }
 
+                // AfterSelect will not fire when selecting again, show manually
+                tvGitTree.AfterSelect -= new System.Windows.Forms.TreeViewEventHandler(tvGitTree_AfterSelect);
                 tvGitTree.SelectedNode = foundNode;
+                tvGitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(tvGitTree_AfterSelect);
                 tvGitTree.SelectedNode.EnsureVisible();
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem, line));
             }
             else
             {
@@ -395,13 +406,20 @@ See the changes in the commit form.");
 
             Task ViewItem()
             {
+                // new selection, start show at line 1
                 return e.Node?.Tag is GitItem gitItem
-                    ? ShowGitItemAsync(gitItem)
+                    ? ShowGitItemAsync(gitItem, 1)
                     : ClearOutputAsync();
             }
         }
 
-        private Task ShowGitItemAsync(GitItem gitItem)
+        /// <summary>
+        /// Show the selected item
+        /// </summary>
+        /// <param name="gitItem">The <see cref="GitItem"/> to show.</param>
+        /// <param name="line">The line to show if Blame is selected, null to not change selection for existing files.</param>
+        /// <returns>The Task from FileViewer or Blame.</returns>
+        private Task ShowGitItemAsync(GitItem gitItem, int? line)
         {
             switch (gitItem.ObjectType)
             {
@@ -412,9 +430,8 @@ See the changes in the commit form.");
                             return ViewGitItemAsync(gitItem);
                         }
 
-                        int? line = FileText.Visible ? FileText.CurrentFileLine : null;
-                        BlameControl.Visible = true;
                         FileText.Visible = false;
+                        BlameControl.Visible = true;
                         return BlameControl.LoadBlameAsync(_revision, children: null, gitItem.FileName, _revisionGrid, controlToMask: null, FileText.Encoding, line, cancellationToken: _viewBlameSequence.Next());
                     }
 
@@ -504,8 +521,9 @@ See the changes in the commit form.");
 
             blameToolStripMenuItem1.Checked = !blameToolStripMenuItem1.Checked;
             AppSettings.RevisionFileTreeShowBlame = blameToolStripMenuItem1.Checked;
+            int? line = FileText.Visible ? FileText.CurrentFileLine : null;
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem));
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem, line));
         }
 
         private void copyFilenameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
