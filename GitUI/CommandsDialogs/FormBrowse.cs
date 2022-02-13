@@ -210,7 +210,6 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private readonly CancellationTokenSequence _refreshRevsionsSequence = new();
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormBrowse"));
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FormBrowseMenus _formBrowseMenus;
@@ -564,7 +563,7 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
 
                 // Reload the revisions
-                RefreshRevisions(e.GetRefs, _refreshRevsionsSequence.Next());
+                RefreshRevisions(e.GetRefs);
             }).FileAndForget();
 
             ToolStripFilters.UpdateBranchFilterItems(e.GetRefs);
@@ -574,7 +573,7 @@ namespace GitUI.CommandsDialogs
             revisionDiff.UICommands_PostRepositoryChanged(sender, e);
         }
 
-        private void RefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, CancellationToken cancellationToken)
+        private void RefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
             if (RevisionGrid.IsDisposed || IsDisposed || Disposing)
             {
@@ -730,7 +729,7 @@ namespace GitUI.CommandsDialogs
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
                         {
                             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
-                            RefreshRevisions(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs, cancellationToken: default);
+                            RefreshRevisions(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs);
                         }
                     };
 
