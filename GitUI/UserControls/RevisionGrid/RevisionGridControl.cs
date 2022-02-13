@@ -898,6 +898,8 @@ namespace GitUI
 
                 System.Threading.CancellationToken cancellationToken = _cancellationTokenSequence.Next();
 
+                _selectionTimer.Enabled = false;
+                _selectionTimer.Stop();
                 _gridView.SuspendLayout();
                 _gridView.SelectionChanged -= OnGridViewSelectionChanged;
                 _gridView.ClearSelection();
@@ -926,15 +928,12 @@ namespace GitUI
                     _ = refsByObjectId.Value;
                     ObjectId? newCurrentCheckout = string.IsNullOrEmpty(branchName)
                         ? null
-                        : getUnfilteredRefs().FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{branchName}").ObjectId;
+                        : getUnfilteredRefs().FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{branchName}")?.ObjectId;
 
                     if (newCurrentCheckout is null)
                     {
                         newCurrentCheckout = capturedModule.GetCurrentCheckout();
                     }
-
-                    semaphoreCurrentCommit.Release();
-                    await this.SwitchToMainThreadAsync(cancellationToken);
 
                     // If the current checkout changed, don't get the currently selected rows, select the
                     // new current checkout instead.
@@ -947,10 +946,12 @@ namespace GitUI
                         // This is a new checkout, so ensure the variable is cleared out.
                         _selectedObjectIds = null;
                         CurrentCheckout = newCurrentCheckout;
-                        ResetNavigationHistory();
                     }
 
                     SelectInitialRevision(newCurrentCheckout);
+
+                    semaphoreCurrentCommit.Release();
+                    await this.SwitchToMainThreadAsync(cancellationToken);
 
                     SuperProjectInfo scc = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
 
@@ -960,8 +961,6 @@ namespace GitUI
                         Refresh();
                     }
 
-                    _selectionTimer.Enabled = false;
-                    _selectionTimer.Stop();
                     _selectionTimer.Enabled = true;
                     _selectionTimer.Start();
                 }).FileAndForget();
@@ -1266,6 +1265,7 @@ namespace GitUI
                         SetPage(_gridView);
                         _isRefreshingRevisions = false;
                         CheckAndRepairInitialRevision();
+                        ResetNavigationHistory();
                         HighlightRevisionsByAuthor(GetSelectedRevisions());
 
                         if (ShowBuildServerInfo)
