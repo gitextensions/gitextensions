@@ -2202,7 +2202,7 @@ namespace GitCommands
         public IReadOnlyList<string> GetRemoteNames()
         {
             return _gitExecutable
-                .Execute("remote", cache: GitCommandCache)
+                .Execute("remote", cache: null) //// GitCommandCache is not cleared when switching repos
                 .StandardOutput
                 .LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
