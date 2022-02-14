@@ -944,7 +944,7 @@ namespace GitUI
                     group = new ListViewGroup(name)
                     {
                         // Collapse some groups for diffs with common BASE
-                        CollapsedState = i.Statuses.Count <= 7 || GitItemStatusesWithDescription.Count < 3 || i == GitItemStatusesWithDescription[0]
+                        CollapsedState = i == GitItemStatusesWithDescription[0] || (i == GitItemStatusesWithDescription[1] && !i.Summary.Contains("BASE"))
                             ? ListViewGroupCollapsedState.Expanded
                             : ListViewGroupCollapsedState.Collapsed,
                         Tag = i.FirstRev

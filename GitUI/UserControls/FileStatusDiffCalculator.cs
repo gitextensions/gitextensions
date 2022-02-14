@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using Microsoft;
 
@@ -40,6 +41,8 @@ namespace GitUI
             {
                 return Array.Empty<FileStatusWithDescription>();
             }
+
+            const string baseText = "BASE";
 
             GitModule module = GetModule();
 
@@ -87,6 +90,34 @@ namespace GitUI
                             firstRev: new GitRevision(ObjectId.CombinedDiffId), secondRev: selectedRev, summary: TranslatedStrings.CombinedDiff, statuses: conflicts));
                     }
                 }
+
+                // Show diff with base regarding default branch of default remote
+                IReadOnlyList<string> remotes = module.GetRemoteNames();
+                if (remotes.Count == 0)
+                {
+                    return fileStatusDescs;
+                }
+
+                string defaultRemote = remotes.FirstOrDefault(r => r is "origin" or "upstream") ?? remotes[0];
+                GitArgumentBuilder args = new("symbolic-ref") { $"{GitRefName.RefsRemotesPrefix}{defaultRemote}/HEAD" };
+                ExecutionResult defaultBranchResult = module.GitExecutable.Execute(args);
+                string defaultBranch = defaultBranchResult.ExitedSuccessfully ? defaultBranchResult.StandardOutput.TrimEnd() : "master";
+                if (string.IsNullOrWhiteSpace(defaultBranch))
+                {
+                    throw new ExternalOperationException(arguments: args.ToString(), workingDirectory: module.WorkingDir, innerException: new Exception("Remote has no default branch."));
+                }
+
+                ObjectId? baseId = module.GetMergeBase(selectedRev.IsArtificial ? null : selectedRev.ObjectId, defaultBranch);
+                if (baseId is null)
+                {
+                    return fileStatusDescs;
+                }
+
+                fileStatusDescs.Add(new FileStatusWithDescription(
+                    firstRev: new GitRevision(baseId),
+                    secondRev: selectedRev,
+                    summary: $"Diff with {baseText} {GetDescriptionForRevision(baseId)}",
+                    statuses: module.GetDiffFilesWithSubmodulesStatus(baseId, selectedRev.ObjectId, selectedRev.FirstParentId)));
 
                 return fileStatusDescs;
             }
@@ -207,7 +238,7 @@ namespace GitUI
 
             // first and selected has a common merge base and count must be available
             // Only a printout, so no Validates
-            var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑ BASE {GetDescriptionForRevision(baseRevGuid)}";
+            var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑ {baseText} {GetDescriptionForRevision(baseRevGuid)}";
             allAToB = allAToB.Append(new GitItemStatus(name: desc) { IsRangeDiff = true }).ToList();
 
             // Replace the A->B group with new statuses

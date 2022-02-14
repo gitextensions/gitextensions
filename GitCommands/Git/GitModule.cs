@@ -2202,7 +2202,7 @@ namespace GitCommands
         public IReadOnlyList<string> GetRemoteNames()
         {
             return _gitExecutable
-                .Execute("remote")
+                .Execute("remote", cache: GitCommandCache)
                 .StandardOutput
                 .LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
                 .ToList();
@@ -3723,10 +3723,14 @@ namespace GitCommands
         }
 
         public ObjectId? GetMergeBase(ObjectId a, ObjectId b)
+            => GetMergeBase(a, b.ToString());
+
+        public ObjectId? GetMergeBase(ObjectId? objectIdA, string b)
         {
+            string a = objectIdA is null ? "HEAD" : objectIdA.ToString();
             if (a == b)
             {
-                return a;
+                return objectIdA;
             }
 
             GitArgumentBuilder args = new("merge-base")
