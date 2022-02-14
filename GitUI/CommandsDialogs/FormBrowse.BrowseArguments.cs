@@ -25,6 +25,11 @@ namespace GitUI.CommandsDialogs
             ///  Gets the first selected commit id (as in a diff).
             /// </summary>
             public ObjectId? FirstId { get; init; }
+
+            /// <summary>
+            /// If to start in "FileHistory mode" with blame view
+            /// </summary>
+            public bool IsFileBlameHistory { get; init; }
         }
     }
 }
