@@ -373,13 +373,6 @@ namespace GitUI.BranchTreePanel
             };
         }
 
-        private IEnumerable<BaseBranchLeafNode> GetSelectedBranches()
-        {
-            var locals = _branchesTree.DepthEnumerator<BaseBranchLeafNode>();
-            var remotes = _remotesTree.DepthEnumerator<BaseBranchLeafNode>();
-            return locals.Concat(remotes).Where(b => b.IsMultiSelected);
-        }
-
         private void CreateTags()
         {
             TreeNode rootNode = new(TranslatedStrings.Tags)
@@ -564,8 +557,26 @@ namespace GitUI.BranchTreePanel
             Node.OnNode<Node>(e.Node, node => node.OnSelected());
         }
 
+        private static IEnumerable<Node> GetMultiSelectedIn(params Tree[] trees) => trees.GetMultiSelection();
+        private IEnumerable<Node> GetMultiSelection() => _rootNodes.GetMultiSelection();
+        private IEnumerable<NodeBase> GetSelectedNodes() => GetMultiSelection().Append(treeMain.SelectedNode.Tag as NodeBase).Distinct();
+        private IEnumerable<BaseBranchLeafNode> GetSelectedBranches() => GetMultiSelectedIn(_branchesTree, _remotesTree).OfType<BaseBranchLeafNode>();
+        private void RevertMultiSelection() => GetMultiSelection().ForEach(node => node.MultiSelect(false));
+
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            var holdingCtrl = ModifierKeys == Keys.Control;
+
+            if (e.Node.Tag is Tree)
+            {
+                if (!holdingCtrl)
+                {
+                    RevertMultiSelection();
+                }
+
+                return;
+            }
+
             var node = Node.GetNodeSafe<Node>(e.Node);
 
             if (node is null || (e.Button == MouseButtons.Right && node.IsMultiSelected))
@@ -573,17 +584,14 @@ namespace GitUI.BranchTreePanel
                 return; // don't undo multi-selection on opening context menu
             }
 
-            if (ModifierKeys == Keys.Control)
+            if (holdingCtrl)
             {
                 // toggle clicked node IsMultiSelected, including descendants
                 node.MultiSelect(!node.IsMultiSelected, includingDescendants: true);
             }
             else
             {
-                // deselect all selected nodes
-                _rootNodes.SelectMany(tree => tree.DepthEnumerator<Node>().Where(node => node.IsMultiSelected))
-                    .ForEach(node => node.MultiSelect(false));
-
+                RevertMultiSelection(); // deselect all selected nodes
                 node.MultiSelect(true); // and only check the clicked one
             }
 

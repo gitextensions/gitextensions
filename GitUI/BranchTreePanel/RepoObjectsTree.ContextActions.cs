@@ -50,11 +50,11 @@ namespace GitUI.BranchTreePanel
 
         private void ContextMenuAddExpandCollapseTree(ContextMenuStrip contextMenu)
         {
-            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag;
-
             /* add Expand All / Collapse All menu entry
              * depending on whether node is expanded or collapsed and has child nodes at all */
-            if (node is NodeBase nodeList && nodeList.HasChildren())
+            var multiSelectedParents = GetSelectedNodes().HavingChildren().ToArray();
+
+            if (multiSelectedParents.Length > 0)
             {
                 if (contextMenu == menuMain)
                 {
@@ -70,13 +70,17 @@ namespace GitUI.BranchTreePanel
 
                 Add(mnubtnCollapse);
                 Add(mnubtnExpand);
-
-                var isExpanded = nodeList.TreeViewNode.IsExpanded;
-                mnubtnExpand.Visible = !isExpanded;
-                mnubtnCollapse.Visible = isExpanded;
+                mnubtnExpand.Visible = multiSelectedParents.Expandable().Any();
+                mnubtnCollapse.Visible = multiSelectedParents.Collapsible().Any();
+            }
+            else
+            {
+                tsmiMainMenuSpacer1.Visible = mnubtnExpand.Visible = mnubtnCollapse.Visible = false;
             }
 
             // add Move Up / Move Down menu entries for re-arranging top level tree nodes
+            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag;
+
             if (node is Tree tree)
             {
                 Add(tsmiMainMenuSpacer2); // add another separator
@@ -252,8 +256,8 @@ namespace GitUI.BranchTreePanel
             _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
             AddContextMenuItems(menuTag, _tagNodeMenuItems.Select(s => s.Item));
 
-            RegisterClick(mnubtnCollapse, () => treeMain.SelectedNode?.Collapse());
-            RegisterClick(mnubtnExpand, () => treeMain.SelectedNode?.ExpandAll());
+            RegisterClick(mnubtnCollapse, () => GetSelectedNodes().HavingChildren().Collapsible().ForEach(parent => parent.TreeViewNode.Collapse()));
+            RegisterClick(mnubtnExpand, () => GetSelectedNodes().HavingChildren().Expandable().ForEach(parent => parent.TreeViewNode.ExpandAll()));
             RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
             RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
 
