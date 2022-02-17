@@ -795,17 +795,6 @@ namespace GitUI
             return revision;
         }
 
-        /// <summary>
-        ///  Refreshes the revision grid, if there are any changes reported by <see cref="IndexWatcher.IndexChanged"/>.
-        /// </summary>
-        public void RefreshRevisions()
-        {
-            if (IndexWatcher.IndexChanged)
-            {
-                PerformRefreshRevisions();
-            }
-        }
-
         public void ReloadHotkeys()
         {
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -888,7 +877,7 @@ namespace GitUI
                 CurrentCheckout = newCurrentCheckout;
                 base.Refresh();
 
-                IndexWatcher.Reset();
+                IndexWatcher.Clear();
 
                 SelectInitialRevision(newCurrentCheckout);
 
@@ -1194,6 +1183,7 @@ namespace GitUI
                         SetPage(_gridView);
                         _isRefreshingRevisions = false;
                         CheckAndRepairInitialRevision();
+                        IndexWatcher.Reset();
                         HighlightRevisionsByAuthor(GetSelectedRevisions());
 
                         if (ShowBuildServerInfo)
@@ -2188,13 +2178,13 @@ namespace GitUI
 
             string? command = GitCommandHelpers.ContinueBisectCmd(bisectOption, LatestSelectedRevision.ObjectId);
             FormProcess.ShowDialog(ParentForm, arguments: command, Module.WorkingDir, input: null, useDialogSettings: false);
-            RefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         private void StopBisectToolStripMenuItemClick(object sender, EventArgs e)
         {
             FormProcess.ShowDialog(ParentForm, arguments: GitCommandHelpers.StopBisectCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
-            RefreshRevisions();
+            PerformRefreshRevisions();
         }
 
         #endregion
@@ -2685,9 +2675,11 @@ namespace GitUI
             {
                 formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));
                 formProcess.ShowDialog(ParentForm);
+                if (formProcess.ShowDialog(ParentForm) != DialogResult.Cancel)
+                {
+                    PerformRefreshRevisions();
+                }
             }
-
-            RefreshRevisions();
         }
 
         #region Drag/drop patch files on revision grid
@@ -2787,7 +2779,7 @@ namespace GitUI
                         var result = base.ExecuteCommand(cmd);
                         if (result.NeedsGridRefresh)
                         {
-                            RefreshRevisions();
+                            PerformRefreshRevisions();
                         }
 
                         return result;
@@ -2820,7 +2812,7 @@ namespace GitUI
         {
             if (ScriptRunner.RunScript(this, Module, name, UICommands, this).NeedsGridRefresh)
             {
-                RefreshRevisions();
+                PerformRefreshRevisions();
             }
         }
 

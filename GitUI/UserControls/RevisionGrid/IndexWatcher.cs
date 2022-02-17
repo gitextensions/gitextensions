@@ -30,9 +30,7 @@ namespace GitUI.UserControls.RevisionGrid
             _uICommandsSource.UICommandsChanged += OnUICommandsChanged;
             GitIndexWatcher = new FileSystemWatcher();
             RefsWatcher = new FileSystemWatcher();
-            SetFileSystemWatcher();
 
-            IndexChanged = true;
             GitIndexWatcher.Changed += fileSystemWatcher_Changed;
             RefsWatcher.Changed += fileSystemWatcher_Changed;
         }
@@ -59,6 +57,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     GitIndexWatcher.Path = _gitDirPath;
                     GitIndexWatcher.Filter = "index";
+                    GitIndexWatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.CreationTime;
                     GitIndexWatcher.IncludeSubdirectories = false;
                     GitIndexWatcher.EnableRaisingEvents = _enabled;
 
@@ -74,7 +73,7 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         private bool _indexChanged;
-        public bool IndexChanged
+        private bool IndexChanged
         {
             get
             {
@@ -110,16 +109,23 @@ namespace GitUI.UserControls.RevisionGrid
             IndexChanged = true;
         }
 
+        /// <summary>
+        /// Reenable indexwatcher (if disabled), reset icon.
+        /// </summary>
         public void Reset()
         {
-            IndexChanged = false;
             RefreshWatcher();
+            IndexChanged = false;
         }
 
-        private void Clear()
+        /// <summary>
+        /// Disable events, reset icon.
+        /// </summary>
+        public void Clear()
         {
-            IndexChanged = true;
-            RefreshWatcher();
+            GitIndexWatcher.EnableRaisingEvents = false;
+            RefsWatcher.EnableRaisingEvents = false;
+            IndexChanged = false;
         }
 
         private void RefreshWatcher()
