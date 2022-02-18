@@ -546,11 +546,8 @@ namespace GitUI.BranchTreePanel
 
     internal static class NodeExtensions
     {
-        internal static IEnumerable<RepoObjectsTree.Node> GetMultiSelection(this IEnumerable<RepoObjectsTree.Tree> trees)
-            => trees.SelectMany(tree => tree.DepthEnumerator<RepoObjectsTree.Node>().Where(node => node.IsMultiSelected));
 
         internal static bool HasChildren(this RepoObjectsTree.NodeBase node) => node.Nodes.Count > 0;
-
         internal static IEnumerable<RepoObjectsTree.NodeBase> HavingChildren(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
             => nodes.Where(nodeList => nodeList.Nodes.Count > 0);
 
@@ -559,5 +556,8 @@ namespace GitUI.BranchTreePanel
 
         internal static IEnumerable<RepoObjectsTree.NodeBase> Collapsible(this IEnumerable<RepoObjectsTree.NodeBase> parents)
             => parents.Where(parent => parent.TreeViewNode.IsExpanded);
+
+        internal static IEnumerable<RepoObjectsTree.BaseBranchNode> ReduceToRefs(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
+            => nodes.Where(node => node is RepoObjectsTree.BaseBranchLeafNode || node is RepoObjectsTree.TagNode).Cast<RepoObjectsTree.BaseBranchNode>();
     }
 }

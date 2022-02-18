@@ -12,7 +12,7 @@ namespace GitUI.BranchTreePanel
     public partial class RepoObjectsTree
     {
         [DebuggerDisplay("(Node) FullPath = {FullPath}")]
-        private abstract class BaseBranchNode : Node
+        internal abstract class BaseBranchNode : Node
         {
             protected const char PathSeparator = '/';
 

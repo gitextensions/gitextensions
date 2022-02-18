@@ -557,10 +557,8 @@ namespace GitUI.BranchTreePanel
             Node.OnNode<Node>(e.Node, node => node.OnSelected());
         }
 
-        private static IEnumerable<Node> GetMultiSelectedIn(params Tree[] trees) => trees.GetMultiSelection();
-        private IEnumerable<Node> GetMultiSelection() => _rootNodes.GetMultiSelection();
+        private IEnumerable<Node> GetMultiSelection() => _rootNodes.SelectMany(tree => tree.DepthEnumerator<Node>().Where(node => node.IsMultiSelected));
         private IEnumerable<NodeBase> GetSelectedNodes() => GetMultiSelection().Append(treeMain.SelectedNode.Tag as NodeBase).Distinct();
-        private IEnumerable<BaseBranchLeafNode> GetSelectedBranches() => GetMultiSelectedIn(_branchesTree, _remotesTree).OfType<BaseBranchLeafNode>();
         private void RevertMultiSelection() => GetMultiSelection().ForEach(node => node.MultiSelect(false));
 
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
