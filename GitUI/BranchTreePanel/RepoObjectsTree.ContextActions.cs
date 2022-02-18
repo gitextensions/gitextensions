@@ -85,7 +85,7 @@ namespace GitUI.BranchTreePanel
         private void ToggleMoveTreeUpDownContexMenu(ContextMenuStrip contextMenu)
         {
             // add Move Up / Move Down menu entries for re-arranging top level tree nodes
-            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag;
+            var node = contextMenu.GetSelectedNode();
 
             if (node is Tree tree)
             {
@@ -101,7 +101,7 @@ namespace GitUI.BranchTreePanel
 
         private void ToggleLocalBranchContextMenu(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
-            if (contextMenu != menuBranch || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not LocalBranchNode localBranch)
+            if (contextMenu != menuBranch || contextMenu.GetSelectedNode() is not LocalBranchNode localBranch)
             {
                 return;
             }
@@ -125,7 +125,7 @@ namespace GitUI.BranchTreePanel
 
         private void ToggleBranchPathContextMenu(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
-            if (contextMenu != menuBranchPath || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not BranchPathNode)
+            if (contextMenu != menuBranchPath || contextMenu.GetSelectedNode() is not BranchPathNode)
             {
                 return;
             }
@@ -136,7 +136,7 @@ namespace GitUI.BranchTreePanel
 
         private void ToggleRemoteBranchContextMenu(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
-            if (contextMenu != menuRemote || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteBranchNode node)
+            if (contextMenu != menuRemote || contextMenu.GetSelectedNode() is not RemoteBranchNode node)
             {
                 return;
             }
@@ -152,7 +152,7 @@ namespace GitUI.BranchTreePanel
 
         private void ToggleRemoteRepoContextMenu(ContextMenuStrip contextMenu)
         {
-            if (contextMenu != menuRemoteRepoNode || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteRepoNode node)
+            if (contextMenu != menuRemoteRepoNode || contextMenu.GetSelectedNode() is not RemoteRepoNode node)
             {
                 return;
             }
@@ -195,7 +195,8 @@ namespace GitUI.BranchTreePanel
 
         private void ToggleSubmoduleContextMenu(ContextMenuStrip contextMenu)
         {
-            TreeNode? selectedNode = (contextMenu.SourceControl as TreeView)?.SelectedNode;
+            var selectedNode = contextMenu.GetSelectedTreeNode();
+
             if (selectedNode is null)
             {
                 return;
@@ -371,6 +372,9 @@ namespace GitUI.BranchTreePanel
 
     internal static class ContextMenuExtensions
     {
+        internal static TreeNode GetSelectedTreeNode(this ContextMenuStrip menu) => (menu.SourceControl as TreeView)?.SelectedNode;
+        internal static RepoObjectsTree.NodeBase GetSelectedNode(this ContextMenuStrip menu) => menu.GetSelectedTreeNode()?.Tag as RepoObjectsTree.NodeBase;
+
         /// <summary>Inserts <paramref name="items"/> into the <paramref name="menu"/>; optionally <paramref name="before"/> or
         /// <paramref name="after"/> an existing item or at the start of the menu before other existing items if neither is specified.</summary>
         internal static void InsertItems(this ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem? before = null, ToolStripItem? after = null)
