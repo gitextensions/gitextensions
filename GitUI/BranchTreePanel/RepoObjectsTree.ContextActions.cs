@@ -48,7 +48,7 @@ namespace GitUI.BranchTreePanel
         private void ToggleMenuItems<TNode>(MenuItemsGenerator<TNode> generator, Func<ToolStripItemWithKey, bool> isEnabled) where TNode : class, INode
             => generator.ForEach(i => ToggleMenuItems(isEnabled(i), i.Item));
 
-        private void ContextMenuAddExpandCollapseTree(ContextMenuStrip contextMenu)
+        private void ToggleExpandCollapseContextMenu(ContextMenuStrip contextMenu)
         {
             /* add Expand All / Collapse All menu entry
              * depending on whether node is expanded or collapsed and has child nodes at all */
@@ -101,7 +101,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void ContextMenuBranchSpecific(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
+        private void ToggleLocalBranchContextMenu(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
             if (contextMenu != menuBranch || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not LocalBranchNode localBranch)
             {
@@ -125,7 +125,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void ContextMenuBranchPathSpecific(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
+        private void ToggleBranchPathContextMenu(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
             if (contextMenu != menuBranchPath || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not BranchPathNode)
             {
@@ -136,7 +136,7 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(!areMultipleBranchesSelected, mnubtnCreateBranch, mnubtnDeleteAllBranches);
         }
 
-        private void ContextMenuRemoteSpecific(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
+        private void ToggleRemoteBranchContextMenu(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
             if (contextMenu != menuRemote || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteBranchNode node)
             {
@@ -152,7 +152,7 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(node.Visible, _menuRemoteCopyContextMenuItems);
         }
 
-        private void ContextMenuRemoteRepoSpecific(ContextMenuStrip contextMenu)
+        private void ToggleRemoteRepoContextMenu(ContextMenuStrip contextMenu)
         {
             if (contextMenu != menuRemoteRepoNode || (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag is not RemoteRepoNode node)
             {
@@ -168,7 +168,7 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(!node.Enabled, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
         }
 
-        private void ContextMenuSort(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
+        private void ToggleSortContextMenu(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
         {
             // We can only sort refs, i.e. branches and tags
             if (contextMenu != menuBranch && contextMenu != menuRemote && contextMenu != menuTag)
@@ -195,7 +195,7 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(!areMultipleBranchesSelected && showSortOrder, _sortOrderContextMenuItem);
         }
 
-        private void ContextMenuSubmoduleSpecific(ContextMenuStrip contextMenu)
+        private void ToggleSubmoduleContextMenu(ContextMenuStrip contextMenu)
         {
             TreeNode? selectedNode = (contextMenu.SourceControl as TreeView)?.SelectedNode;
             if (selectedNode is null)
@@ -343,13 +343,13 @@ namespace GitUI.BranchTreePanel
 
             var areMultipleBranchesSelected = GetSelectedBranches().Count() > 1;
 
-            ContextMenuBranchSpecific(contextMenu, areMultipleBranchesSelected);
-            ContextMenuBranchPathSpecific(contextMenu, areMultipleBranchesSelected);
-            ContextMenuRemoteSpecific(contextMenu, areMultipleBranchesSelected);
-            ContextMenuRemoteRepoSpecific(contextMenu);
-            ContextMenuSubmoduleSpecific(contextMenu);
-            ContextMenuSort(contextMenu, areMultipleBranchesSelected);
-            ContextMenuAddExpandCollapseTree(contextMenu);
+            ToggleLocalBranchContextMenu(contextMenu, areMultipleBranchesSelected);
+            ToggleBranchPathContextMenu(contextMenu, areMultipleBranchesSelected);
+            ToggleRemoteBranchContextMenu(contextMenu, areMultipleBranchesSelected);
+            ToggleRemoteRepoContextMenu(contextMenu);
+            ToggleSubmoduleContextMenu(contextMenu);
+            ToggleSortContextMenu(contextMenu, areMultipleBranchesSelected);
+            ToggleExpandCollapseContextMenu(contextMenu);
 
             // Set Cancel to false.  It is optimized to true based on empty entry.
             // See https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-handle-the-contextmenustrip-opening-event
