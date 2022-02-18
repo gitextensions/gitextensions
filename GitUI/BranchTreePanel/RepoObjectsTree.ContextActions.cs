@@ -197,34 +197,17 @@ namespace GitUI.BranchTreePanel
 
         private void ToggleSubmoduleContextMenu(ContextMenuStrip contextMenu)
         {
-            var selectedNode = contextMenu.GetSelectedTreeNode();
-
-            if (selectedNode is null)
+            if (contextMenu != menuSubmodule || contextMenu.GetSelectedNode() is not SubmoduleNode submoduleNode)
             {
                 return;
             }
 
-            if (contextMenu == menuAllSubmodules)
-            {
-                if (!(selectedNode.Tag is SubmoduleTree submoduleTree))
-                {
-                    return;
-                }
-            }
-            else if (contextMenu == menuSubmodule)
-            {
-                if (!(selectedNode.Tag is SubmoduleNode submoduleNode))
-                {
-                    return;
-                }
+            var bareRepository = Module.IsBareRepository();
 
-                var bareRepository = Module.IsBareRepository();
-
-                ToggleMenuItems(submoduleNode.CanOpen, mnubtnOpenSubmodule, mnubtnOpenGESubmodule);
-                ToggleMenuItems(true, mnubtnUpdateSubmodule);
-                ToggleMenuItems(!bareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
-                ToggleMenuItems(!bareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
-            }
+            ToggleMenuItems(submoduleNode.CanOpen, mnubtnOpenSubmodule, mnubtnOpenGESubmodule);
+            ToggleMenuItems(true, mnubtnUpdateSubmodule);
+            ToggleMenuItems(!bareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
+            ToggleMenuItems(!bareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
         }
 
         private static void RegisterClick(ToolStripItem item, Action onClick)
@@ -376,8 +359,8 @@ namespace GitUI.BranchTreePanel
 
     internal static class ContextMenuExtensions
     {
-        internal static TreeNode GetSelectedTreeNode(this ContextMenuStrip menu) => (menu.SourceControl as TreeView)?.SelectedNode;
-        internal static RepoObjectsTree.NodeBase GetSelectedNode(this ContextMenuStrip menu) => menu.GetSelectedTreeNode()?.Tag as RepoObjectsTree.NodeBase;
+        internal static RepoObjectsTree.NodeBase GetSelectedNode(this ContextMenuStrip menu)
+            => (menu.SourceControl as TreeView)?.SelectedNode?.Tag as RepoObjectsTree.NodeBase;
 
         /// <summary>Inserts <paramref name="items"/> into the <paramref name="menu"/>; optionally <paramref name="before"/> or
         /// <paramref name="after"/> an existing item or at the start of the menu before other existing items if neither is specified.</summary>
