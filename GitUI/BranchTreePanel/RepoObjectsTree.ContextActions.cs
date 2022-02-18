@@ -50,9 +50,9 @@ namespace GitUI.BranchTreePanel
 
         /* add Expand All / Collapse All menu entry
          * depending on whether node is expanded or collapsed and has child nodes at all */
-        private void ToggleExpandCollapseContextMenu(ContextMenuStrip contextMenu)
+        private void ToggleExpandCollapseContextMenu(ContextMenuStrip contextMenu, NodeBase[] selectedNodes)
         {
-            var multiSelectedParents = GetSelectedNodes().HavingChildren().ToArray();
+            var multiSelectedParents = selectedNodes.HavingChildren().ToArray();
 
             // selection contains nodes with children
             if (multiSelectedParents.Length > 0)
@@ -150,20 +150,22 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(node.Visible, _menuRemoteCopyContextMenuItems);
         }
 
-        private void ToggleRemoteRepoContextMenu(ContextMenuStrip contextMenu)
+        private void ToggleRemoteRepoContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
         {
             if (contextMenu != menuRemoteRepoNode || contextMenu.GetSelectedNode() is not RemoteRepoNode node)
             {
                 return;
             }
 
-            // Actions on enabled remotes
-            ToggleMenuItems(node.Enabled, mnubtnFetchAllBranchesFromARemote, mnubtnDisableRemote, mnuBtnPruneAllBranchesFromARemote);
+            ToggleMenuItems(hasSingleSelection, mnubtnManageRemotes, tsmiSpacer3);
 
-            ToggleMenuItems(node.IsRemoteUrlUsingHttp, mnuBtnOpenRemoteUrlInBrowser);
+            // Actions on enabled remotes
+            ToggleMenuItems(hasSingleSelection && node.Enabled, mnubtnFetchAllBranchesFromARemote, mnubtnDisableRemote, mnuBtnPruneAllBranchesFromARemote);
+
+            ToggleMenuItems(hasSingleSelection && node.IsRemoteUrlUsingHttp, mnuBtnOpenRemoteUrlInBrowser);
 
             // Actions on disabled remotes
-            ToggleMenuItems(!node.Enabled, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
+            ToggleMenuItems(hasSingleSelection && !node.Enabled, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
         }
 
         private void ToggleSortContextMenu(ContextMenuStrip contextMenu, bool areMultipleBranchesSelected)
@@ -340,15 +342,17 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
+            var selectedNodes = GetSelectedNodes().ToArray();
+            var hasSingleSelection = selectedNodes.Length <= 1;
             var areMultipleBranchesSelected = GetSelectedBranches().Count() > 1;
 
             ToggleLocalBranchContextMenu(contextMenu, areMultipleBranchesSelected);
             ToggleBranchPathContextMenu(contextMenu, areMultipleBranchesSelected);
             ToggleRemoteBranchContextMenu(contextMenu, areMultipleBranchesSelected);
-            ToggleRemoteRepoContextMenu(contextMenu);
+            ToggleRemoteRepoContextMenu(contextMenu, hasSingleSelection);
             ToggleSubmoduleContextMenu(contextMenu);
             ToggleSortContextMenu(contextMenu, areMultipleBranchesSelected);
-            ToggleExpandCollapseContextMenu(contextMenu);
+            ToggleExpandCollapseContextMenu(contextMenu, selectedNodes);
             ToggleMoveTreeUpDownContexMenu(contextMenu);
 
             // Set Cancel to false.  It is optimized to true based on empty entry.
