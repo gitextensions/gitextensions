@@ -48,12 +48,13 @@ namespace GitUI.BranchTreePanel
         private void ToggleMenuItems<TNode>(MenuItemsGenerator<TNode> generator, Func<ToolStripItemWithKey, bool> isEnabled) where TNode : class, INode
             => generator.ForEach(i => ToggleMenuItems(isEnabled(i), i.Item));
 
+        /* add Expand All / Collapse All menu entry
+         * depending on whether node is expanded or collapsed and has child nodes at all */
         private void ToggleExpandCollapseContextMenu(ContextMenuStrip contextMenu)
         {
-            /* add Expand All / Collapse All menu entry
-             * depending on whether node is expanded or collapsed and has child nodes at all */
             var multiSelectedParents = GetSelectedNodes().HavingChildren().ToArray();
 
+            // selection contains nodes with children
             if (multiSelectedParents.Length > 0)
             {
                 if (contextMenu == menuMain)
@@ -62,42 +63,39 @@ namespace GitUI.BranchTreePanel
                 }
                 else if (contextMenu.Items.Count > 0)
                 {
-                    Add(tsmiMainMenuSpacer1); // add a separator if any items exist already
+                    contextMenu.AddOnce(tsmiMainMenuSpacer1); // add a separator if any items exist already
 
                     // Display separator if any preceding items are enabled. This relies on menu items Enabled being toggled by ToggleMenuItems and before this method.
                     tsmiMainMenuSpacer1.Visible = contextMenu.Items.Cast<ToolStripItem>().TakeWhile(item => item != tsmiMainMenuSpacer1).Any(item => item.Enabled);
                 }
 
-                Add(mnubtnCollapse);
-                Add(mnubtnExpand);
+                contextMenu.AddOnce(mnubtnCollapse);
+                contextMenu.AddOnce(mnubtnExpand);
                 mnubtnExpand.Visible = multiSelectedParents.Expandable().Any();
                 mnubtnCollapse.Visible = multiSelectedParents.Collapsible().Any();
             }
+
+            // no expandable or collapsible nodes selected
             else
             {
                 tsmiMainMenuSpacer1.Visible = mnubtnExpand.Visible = mnubtnCollapse.Visible = false;
             }
+        }
 
+        private void ToggleMoveTreeUpDownContexMenu(ContextMenuStrip contextMenu)
+        {
             // add Move Up / Move Down menu entries for re-arranging top level tree nodes
             var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag;
 
             if (node is Tree tree)
             {
-                Add(tsmiMainMenuSpacer2); // add another separator
-                Add(mnubtnMoveUp);
-                Add(mnubtnMoveDown);
+                contextMenu.AddOnce(tsmiMainMenuSpacer2); // add another separator
+                contextMenu.AddOnce(mnubtnMoveUp);
+                contextMenu.AddOnce(mnubtnMoveDown);
 
                 var treeNode = tree.TreeViewNode;
                 mnubtnMoveUp.Enabled = treeNode.PrevNode is not null;
                 mnubtnMoveDown.Enabled = treeNode.NextNode is not null;
-            }
-
-            void Add(ToolStripItem item)
-            {
-                if (!contextMenu.Items.Contains(item))
-                {
-                    contextMenu.Items.Add(item);
-                }
             }
         }
 
@@ -350,6 +348,7 @@ namespace GitUI.BranchTreePanel
             ToggleSubmoduleContextMenu(contextMenu);
             ToggleSortContextMenu(contextMenu, areMultipleBranchesSelected);
             ToggleExpandCollapseContextMenu(contextMenu);
+            ToggleMoveTreeUpDownContexMenu(contextMenu);
 
             // Set Cancel to false.  It is optimized to true based on empty entry.
             // See https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-handle-the-contextmenustrip-opening-event
@@ -393,6 +392,15 @@ namespace GitUI.BranchTreePanel
             }
 
             menu.ResumeLayout();
+        }
+
+        /// <summary>Adds the <paramref name="item"/> to the <paramref name="menu"/> if that doesn't contain it already.</summary>
+        internal static void AddOnce(this ContextMenuStrip menu, ToolStripItem item)
+        {
+            if (!menu.Items.Contains(item))
+            {
+                menu.Items.Add(item);
+            }
         }
     }
 }
