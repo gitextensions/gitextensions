@@ -195,7 +195,7 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(!areMultipleBranchesSelected && showSortOrder, _sortOrderContextMenuItem);
         }
 
-        private void ToggleSubmoduleContextMenu(ContextMenuStrip contextMenu)
+        private void ToggleSubmoduleContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
         {
             if (contextMenu != menuSubmodule || contextMenu.GetSelectedNode() is not SubmoduleNode submoduleNode)
             {
@@ -204,10 +204,10 @@ namespace GitUI.BranchTreePanel
 
             var bareRepository = Module.IsBareRepository();
 
-            ToggleMenuItems(submoduleNode.CanOpen, mnubtnOpenSubmodule, mnubtnOpenGESubmodule);
-            ToggleMenuItems(true, mnubtnUpdateSubmodule);
-            ToggleMenuItems(!bareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
-            ToggleMenuItems(!bareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
+            ToggleMenuItems(hasSingleSelection && submoduleNode.CanOpen, mnubtnOpenSubmodule, mnubtnOpenGESubmodule);
+            ToggleMenuItems(hasSingleSelection, mnubtnUpdateSubmodule);
+            ToggleMenuItems(hasSingleSelection && !bareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
+            ToggleMenuItems(hasSingleSelection && !bareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
         }
 
         private static void RegisterClick(ToolStripItem item, Action onClick)
@@ -333,7 +333,7 @@ namespace GitUI.BranchTreePanel
             ToggleBranchPathContextMenu(contextMenu, areMultipleBranchesSelected);
             ToggleRemoteBranchContextMenu(contextMenu, areMultipleBranchesSelected);
             ToggleRemoteRepoContextMenu(contextMenu, hasSingleSelection);
-            ToggleSubmoduleContextMenu(contextMenu);
+            ToggleSubmoduleContextMenu(contextMenu, hasSingleSelection);
             ToggleSortContextMenu(contextMenu, areMultipleBranchesSelected);
             ToggleExpandCollapseContextMenu(contextMenu, selectedNodes);
             ToggleMoveTreeUpDownContexMenu(contextMenu);
