@@ -255,9 +255,9 @@ namespace GitUI.BranchTreePanel
 
             #region LocalBranchNode
             _menuBranchCopyContextMenuItems = CreateCopyContextMenuItems();
-            AddContextMenuItems(menuBranch, _menuBranchCopyContextMenuItems);
+            menuBranch.InsertItems(_menuBranchCopyContextMenuItems);
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
-            AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item), insertAfter: _menuBranchCopyContextMenuItems[1]);
+            menuBranch.InsertItems(_localBranchMenuItems.Select(s => s.Item), after: _menuBranchCopyContextMenuItems.Last());
             RegisterClick(mnubtnFilterLocalBranchInRevisionGrid, FilterSelectedBranchesInRevisionGrid);
             Node.RegisterContextMenu(typeof(LocalBranchNode), menuBranch);
             #endregion
@@ -270,9 +270,9 @@ namespace GitUI.BranchTreePanel
 
             #region RemoteBranchNode
             _menuRemoteCopyContextMenuItems = CreateCopyContextMenuItems();
-            AddContextMenuItems(menuRemote, _menuRemoteCopyContextMenuItems);
+            menuRemote.InsertItems(_menuRemoteCopyContextMenuItems);
             _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
-            AddContextMenuItems(menuRemote, _remoteBranchMenuItems.Select(s => s.Item), insertAfter: toolStripSeparator1);
+            menuRemote.InsertItems(_remoteBranchMenuItems.Select(s => s.Item), after: toolStripSeparator1);
 
             RegisterClick<RemoteBranchNode>(mnubtnFetchOneBranch, remoteBranch => remoteBranch.Fetch());
             RegisterClick<RemoteBranchNode>(mnubtnPullFromRemoteBranch, remoteBranch => remoteBranch.FetchAndMerge());
@@ -296,7 +296,7 @@ namespace GitUI.BranchTreePanel
 
             #region TagNode
             _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
-            AddContextMenuItems(menuTag, _tagNodeMenuItems.Select(s => s.Item));
+            menuTag.InsertItems(_tagNodeMenuItems.Select(s => s.Item));
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
             #endregion
 
@@ -368,22 +368,27 @@ namespace GitUI.BranchTreePanel
             RegisterClick(result, onClick);
             return result;
         }
+    }
 
-        private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem? insertBefore = null, ToolStripItem? insertAfter = null)
+    internal static class ContextMenuExtensions
+    {
+        /// <summary>Inserts <paramref name="items"/> into the <paramref name="menu"/>; optionally <paramref name="before"/> or
+        /// <paramref name="after"/> an existing item or at the start of the menu before other existing items if neither is specified.</summary>
+        internal static void InsertItems(this ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem? before = null, ToolStripItem? after = null)
         {
-            Debug.Assert(!(insertAfter is not null && insertBefore is not null), $"Only {nameof(insertBefore)} or {nameof(insertAfter)} is allowed.");
+            Debug.Assert(!(after is not null && before is not null), $"Only {nameof(before)} or {nameof(after)} is allowed.");
 
             menu.SuspendLayout();
 
             int index;
-            if (insertBefore is not null)
+            if (before is not null)
             {
-                index = Math.Max(0, menu.Items.IndexOf(insertBefore) - 1);
+                index = Math.Max(0, menu.Items.IndexOf(before) - 1);
                 items.ForEach(item => menu.Items.Insert(++index, item));
             }
             else
             {
-                index = insertAfter is null ? 0 : Math.Max(0, menu.Items.IndexOf(insertAfter) + 1);
+                index = after is null ? 0 : Math.Max(0, menu.Items.IndexOf(after) + 1);
                 items.ForEach(item => menu.Items.Insert(index++, item));
             }
 
