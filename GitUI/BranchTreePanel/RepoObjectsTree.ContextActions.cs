@@ -238,36 +238,41 @@ namespace GitUI.BranchTreePanel
 
         private void RegisterContextActions()
         {
-            _menuBranchCopyContextMenuItems = CreateCopyContextMenuItems();
-            _menuRemoteCopyContextMenuItems = CreateCopyContextMenuItems();
-
-            AddContextMenuItems(menuBranch, _menuBranchCopyContextMenuItems);
-            AddContextMenuItems(menuRemote, _menuRemoteCopyContextMenuItems);
-
+            #region Sort by / order
             _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() => Refresh(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs));
             _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => Refresh(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs));
+            #endregion
 
-            _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
-            AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item), insertAfter: _menuBranchCopyContextMenuItems[1]);
-
-            _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
-            AddContextMenuItems(menuRemote, _remoteBranchMenuItems.Select(s => s.Item), insertAfter: toolStripSeparator1);
-
-            _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
-            AddContextMenuItems(menuTag, _tagNodeMenuItems.Select(s => s.Item));
-
+            #region Expand / Collapse
             RegisterClick(mnubtnCollapse, () => GetSelectedNodes().HavingChildren().Collapsible().ForEach(parent => parent.TreeViewNode.Collapse()));
             RegisterClick(mnubtnExpand, () => GetSelectedNodes().HavingChildren().Expandable().ForEach(parent => parent.TreeViewNode.ExpandAll()));
+            #endregion
+
+            #region Move up / down (for top level Trees)
             RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
             RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
+            #endregion
 
+            #region LocalBranchNode
+            _menuBranchCopyContextMenuItems = CreateCopyContextMenuItems();
+            AddContextMenuItems(menuBranch, _menuBranchCopyContextMenuItems);
+            _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
+            AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item), insertAfter: _menuBranchCopyContextMenuItems[1]);
             RegisterClick(mnubtnFilterLocalBranchInRevisionGrid, FilterSelectedBranchesInRevisionGrid);
             Node.RegisterContextMenu(typeof(LocalBranchNode), menuBranch);
+            #endregion
 
-            RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
+            #region BranchPathNode (folder)
             Node.RegisterContextMenu(typeof(BranchPathNode), menuBranchPath);
-
+            RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
             RegisterClick<BranchPathNode>(mnubtnCreateBranch, branchPath => branchPath.CreateBranch());
+            #endregion
+
+            #region RemoteBranchNode
+            _menuRemoteCopyContextMenuItems = CreateCopyContextMenuItems();
+            AddContextMenuItems(menuRemote, _menuRemoteCopyContextMenuItems);
+            _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
+            AddContextMenuItems(menuRemote, _remoteBranchMenuItems.Select(s => s.Item), insertAfter: toolStripSeparator1);
 
             RegisterClick<RemoteBranchNode>(mnubtnFetchOneBranch, remoteBranch => remoteBranch.Fetch());
             RegisterClick<RemoteBranchNode>(mnubtnPullFromRemoteBranch, remoteBranch => remoteBranch.FetchAndMerge());
@@ -276,7 +281,9 @@ namespace GitUI.BranchTreePanel
             RegisterClick<RemoteBranchNode>(mnubtnFetchCreateBranch, remoteBranch => remoteBranch.FetchAndCreateBranch());
             RegisterClick<RemoteBranchNode>(mnubtnFetchRebase, remoteBranch => remoteBranch.FetchAndRebase());
             Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
+            #endregion
 
+            #region RemoteRepoNode
             RegisterClick<RemoteRepoNode>(mnubtnManageRemotes, remoteBranch => remoteBranch.PopupManageRemotesForm());
             RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
             RegisterClick<RemoteRepoNode>(mnuBtnPruneAllBranchesFromARemote, remote => remote.Prune());
@@ -285,13 +292,21 @@ namespace GitUI.BranchTreePanel
             RegisterClick<RemoteRepoNode>(mnubtnEnableRemoteAndFetch, remote => remote.Enable(fetch: true));
             RegisterClick<RemoteRepoNode>(mnubtnDisableRemote, remote => remote.Disable());
             Node.RegisterContextMenu(typeof(RemoteRepoNode), menuRemoteRepoNode);
+            #endregion
 
+            #region TagNode
+            _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
+            AddContextMenuItems(menuTag, _tagNodeMenuItems.Select(s => s.Item));
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
+            #endregion
 
+            #region Remotes Tree
             RegisterClick(mnuBtnManageRemotesFromRootNode, () => _remotesTree.PopupManageRemotesForm(remoteName: null));
             RegisterClick(mnuBtnFetchAllRemotes, () => _remotesTree.FetchAll());
             RegisterClick(mnuBtnPruneAllRemotes, () => _remotesTree.FetchPruneAll());
+            #endregion
 
+            #region SubmoduleNode
             RegisterClick<SubmoduleNode>(mnubtnManageSubmodules, _ => _submoduleTree.ManageSubmodules(this));
             RegisterClick<SubmoduleNode>(mnubtnSynchronizeSubmodules, _ => _submoduleTree.SynchronizeSubmodules(this));
             RegisterClick<SubmoduleNode>(mnubtnOpenSubmodule, node => _submoduleTree.OpenSubmodule(this, node));
@@ -301,6 +316,7 @@ namespace GitUI.BranchTreePanel
             RegisterClick<SubmoduleNode>(mnubtnStashSubmodule, node => _submoduleTree.StashSubmodule(this, node));
             RegisterClick<SubmoduleNode>(mnubtnCommitSubmodule, node => _submoduleTree.CommitSubmodule(this, node));
             Node.RegisterContextMenu(typeof(SubmoduleNode), menuSubmodule);
+            #endregion
         }
 
         private ToolStripItem[] CreateCopyContextMenuItems()
