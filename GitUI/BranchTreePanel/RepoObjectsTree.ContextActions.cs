@@ -169,6 +169,16 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(hasSingleSelection && !node.Enabled, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
         }
 
+        private void ToggleRemotesTreeContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
+        {
+            if (contextMenu != menuRemotes || contextMenu.GetSelectedNode() is not Tree)
+            {
+                return;
+            }
+
+            ToggleMenuItems(hasSingleSelection, mnuBtnManageRemotesFromRootNode, mnuBtnFetchAllRemotes, mnuBtnPruneAllRemotes);
+        }
+
         private void ToggleTagContextMenu(ContextMenuStrip contextMenu, bool multipleRefsSelected)
         {
             if (contextMenu != menuTag || contextMenu.GetSelectedNode() is not TagNode node)
@@ -359,6 +369,7 @@ namespace GitUI.BranchTreePanel
             ToggleBranchPathContextMenu(contextMenu, multipleRefsSelected);
             ToggleRemoteBranchContextMenu(contextMenu, multipleRefsSelected);
             ToggleRemoteRepoContextMenu(contextMenu, hasSingleSelection);
+            ToggleRemotesTreeContextMenu(contextMenu, hasSingleSelection);
             ToggleTagContextMenu(contextMenu, multipleRefsSelected);
             ToggleSubmoduleContextMenu(contextMenu, hasSingleSelection);
             ToggleSortContextMenu(contextMenu, multipleRefsSelected);
