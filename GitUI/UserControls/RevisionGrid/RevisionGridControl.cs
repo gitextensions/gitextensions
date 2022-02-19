@@ -220,8 +220,6 @@ namespace GitUI
             _gridView.AuthorHighlighting = _authorHighlighting;
 
             _gridView.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
-            _gridView.KeyUp += OnGridViewKeyUp;
-            _gridView.KeyDown += OnGridViewKeyDown;
             _gridView.MouseDown += OnGridViewMouseDown;
             _gridView.CellMouseDown += OnGridViewCellMouseDown;
             _gridView.MouseDoubleClick += OnGridViewDoubleClick;
@@ -1474,77 +1472,46 @@ namespace GitUI
             }
         }
 
-        private void OnGridViewKeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.BrowserBack:
-                    {
-                        NavigateBackward();
-                        e.Handled = true;
-                        break;
-                    }
-
-                case Keys.BrowserForward:
-                    {
-                        NavigateForward();
-                        e.Handled = true;
-                        break;
-                    }
-            }
-        }
-
-        private void OnGridViewKeyUp(object sender, KeyEventArgs e)
+        private void RenameRef()
         {
             GitRevision? selectedRevision = LatestSelectedRevision;
-
             if (selectedRevision is null)
             {
                 return;
             }
 
-            // https://github.com/gitextensions/gitextensions/issues/5636
-            if (e.Modifiers != Keys.None)
+            InitiateRefAction(
+                new GitRefListsForRevision(selectedRevision).GetRenameableLocalBranches(),
+                gitRef => UICommands.StartRenameDialog(ParentForm, gitRef.Name),
+                FormQuickGitRefSelector.Action.Rename);
+        }
+
+        private void DeleteRef()
+        {
+            GitRevision? selectedRevision = LatestSelectedRevision;
+            if (selectedRevision is null)
             {
                 return;
             }
 
-            switch (e.KeyCode)
-            {
-                case Keys.F2:
+            InitiateRefAction(
+                new GitRefListsForRevision(selectedRevision).GetDeletableRefs(CurrentBranch.Value),
+                gitRef =>
+                {
+                    if (gitRef.IsTag)
                     {
-                        InitiateRefAction(
-                            new GitRefListsForRevision(selectedRevision).GetRenameableLocalBranches(),
-                            gitRef => UICommands.StartRenameDialog(ParentForm, gitRef.Name),
-                            FormQuickGitRefSelector.Action.Rename);
-                        e.Handled = true;
-                        break;
+                        UICommands.StartDeleteTagDialog(ParentForm, gitRef.Name);
                     }
-
-                case Keys.Delete:
+                    else if (gitRef.IsRemote)
                     {
-                        InitiateRefAction(
-                            new GitRefListsForRevision(selectedRevision).GetDeletableRefs(CurrentBranch.Value),
-                            gitRef =>
-                            {
-                                if (gitRef.IsTag)
-                                {
-                                    UICommands.StartDeleteTagDialog(ParentForm, gitRef.Name);
-                                }
-                                else if (gitRef.IsRemote)
-                                {
-                                    UICommands.StartDeleteRemoteBranchDialog(ParentForm, gitRef.Name);
-                                }
-                                else
-                                {
-                                    UICommands.StartDeleteBranchDialog(ParentForm, gitRef.Name);
-                                }
-                            },
-                            FormQuickGitRefSelector.Action.Delete);
-                        e.Handled = true;
-                        break;
+                        UICommands.StartDeleteRemoteBranchDialog(ParentForm, gitRef.Name);
                     }
-            }
+                    else
+                    {
+                        UICommands.StartDeleteBranchDialog(ParentForm, gitRef.Name);
+                    }
+                },
+                FormQuickGitRefSelector.Action.Delete);
         }
 
         private void OnGridViewMouseDown(object sender, MouseEventArgs e)
@@ -2882,8 +2849,10 @@ namespace GitUI
                 case Command.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
                 case Command.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;
                 case Command.PrevQuickSearch: _quickSearchProvider.NextResult(down: false); break;
-                case Command.NavigateBackward: NavigateBackward(); break;
-                case Command.NavigateForward: NavigateForward(); break;
+                case Command.NavigateBackward:
+                case Command.NavigateBackward_AlternativeHotkey: NavigateBackward(); break;
+                case Command.NavigateForward:
+                case Command.NavigateForward_AlternativeHotkey: NavigateForward(); break;
                 case Command.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CompareToBase: compareToBaseToolStripMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CreateFixupCommit: FixupCommitToolStripMenuItemClick(this, EventArgs.Empty); break;
@@ -2892,6 +2861,8 @@ namespace GitUI
                 case Command.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CompareToBranch: CompareToBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(this, EventArgs.Empty); break;
+                case Command.DeleteRef: DeleteRef(); break;
+                case Command.RenameRef: RenameRef(); break;
                 default:
                     {
                         var result = base.ExecuteCommand(cmd);
