@@ -43,6 +43,10 @@
             ResetRevisionFilter = 36,
             ResetRevisionPathFilter = 37,
             SelectNextForkPointAsDiffBase = 38,
+            NavigateBackward_AlternativeHotkey = 39,
+            NavigateForward_AlternativeHotkey = 40,
+            DeleteRef = 41,
+            RenameRef = 42,
         }
     }
 }
