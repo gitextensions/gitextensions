@@ -238,8 +238,8 @@ namespace GitUI.BranchTreePanel
             #endregion
 
             #region Expand / Collapse
-            RegisterClick(mnubtnCollapse, () => GetSelectedNodes().HavingChildren().Collapsible().ForEach(parent => parent.TreeViewNode.Collapse()));
-            RegisterClick(mnubtnExpand, () => GetSelectedNodes().HavingChildren().Expandable().ForEach(parent => parent.TreeViewNode.ExpandAll()));
+            RegisterClick(mnubtnCollapse, () => GetMultiSelection().HavingChildren().Collapsible().ForEach(parent => parent.TreeViewNode.Collapse()));
+            RegisterClick(mnubtnExpand, () => GetMultiSelection().HavingChildren().Expandable().ForEach(parent => parent.TreeViewNode.ExpandAll()));
             #endregion
 
             #region Move up / down (for top level Trees)
@@ -338,7 +338,7 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem CreateFilterSelectedRefsContextMenuItem()
         {
             ToolStripMenuItem menuItem = new(_filterForSelected.Text, Properties.Images.ShowThisBranchOnly) { ToolTipText = _filterForSelectedToolTip.Text };
-            RegisterClick(menuItem, () => _filterRevisionGridBySpaceSeparatedRefs(GetSelectedNodes().ReduceToRefs().Select(b => b.FullPath).Join(" ")));
+            RegisterClick(menuItem, () => _filterRevisionGridBySpaceSeparatedRefs(GetMultiSelection().ReduceToRefs().Select(b => b.FullPath).Join(" ")));
             return menuItem;
         }
         #endregion
@@ -350,7 +350,7 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            var selectedNodes = GetSelectedNodes().ToArray();
+            var selectedNodes = GetMultiSelection().ToArray();
             var hasSingleSelection = selectedNodes.Length <= 1;
             var multipleRefsSelected = selectedNodes.ReduceToRefs().Count() > 1;
 

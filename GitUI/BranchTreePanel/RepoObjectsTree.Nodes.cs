@@ -54,7 +54,7 @@ namespace GitUI.BranchTreePanel
             /// <summary>
             /// Returns all nodes of a given TNode type using depth-first, pre-order method.
             /// </summary>
-            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node
+            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase
             {
                 foreach (var node in this)
                 {
@@ -126,6 +126,68 @@ namespace GitUI.BranchTreePanel
 
             /// <summary>The corresponding tree node.</summary>
             protected internal virtual TreeNode TreeViewNode { get; set; }
+
+            /// <summary>
+            /// Marks this node to be included in multi-selection. See <see cref="MultiSelect(bool, bool)"/>.
+            /// This is remembered here instead of relying on the status of <see cref="TreeViewNode"/>
+            /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s
+            /// and may change the association between <see cref="Node"/> and <see cref="TreeNode"/>.
+            /// </summary>
+            protected internal bool IsMultiSelected { get; set; }
+
+            protected internal void MultiSelect(bool select, bool includingDescendants = false)
+            {
+                IsMultiSelected = select;
+                ApplyStyle(); // toggle multi-selected node style
+
+                // recursively process descendants if required
+                if (includingDescendants && this.HasChildren())
+                {
+                    foreach (var child in Nodes)
+                    {
+                        child.MultiSelect(select, includingDescendants);
+                    }
+                }
+            }
+
+            #region style / appearance
+            protected virtual void ApplyStyle()
+            {
+                SetFont(GetFontStyle());
+                TreeViewNode.ToolTipText = string.Empty;
+            }
+
+            protected virtual FontStyle GetFontStyle() => IsMultiSelected ? FontStyle.Underline : FontStyle.Regular;
+
+            private void SetFont(FontStyle style)
+            {
+                if (style == FontStyle.Regular)
+                {
+                    // For regular, set to null to use the NativeTreeView font
+                    if (TreeViewNode.NodeFont is not null)
+                    {
+                        ResetFont();
+                    }
+                }
+                else
+                {
+                    // If current font doesn't have the input style, get rid of it
+                    if (TreeViewNode.NodeFont is not null && TreeViewNode.NodeFont.Style != style)
+                    {
+                        ResetFont();
+                    }
+
+                    // If non-null, our font is already valid, otherwise create a new one
+                    TreeViewNode.NodeFont ??= new Font(AppSettings.Font, style);
+                }
+            }
+
+            private void ResetFont()
+            {
+                TreeViewNode.NodeFont.Dispose();
+                TreeViewNode.NodeFont = null;
+            }
+            #endregion
         }
 
         internal abstract class Tree : NodeBase, IDisposable
@@ -243,7 +305,7 @@ namespace GitUI.BranchTreePanel
 
             protected abstract Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs);
 
-            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node => Nodes.DepthEnumerator<TNode>();
+            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase => Nodes.DepthEnumerator<TNode>();
 
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
@@ -264,7 +326,7 @@ namespace GitUI.BranchTreePanel
                 await treeView.SwitchToMainThreadAsync(token);
 
                 // remember multi-selected nodes
-                var multiSelected = DepthEnumerator<Node>().Where(node => node.IsMultiSelected).Select(node => node.GetHashCode()).ToArray();
+                var multiSelected = this.GetMultiSelection().Select(node => node.GetHashCode()).ToArray();
 
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);
@@ -272,7 +334,7 @@ namespace GitUI.BranchTreePanel
                 // re-apply multi-selection
                 if (multiSelected.Length > 0)
                 {
-                    DepthEnumerator<Node>().Where(node => multiSelected.Contains(node.GetHashCode())).ForEach(node => node.IsMultiSelected = true);
+                    this.GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode())).ForEach(node => node.IsMultiSelected = true);
                 }
 
                 // Check again after switch to main thread
@@ -398,14 +460,6 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            /// <summary>
-            /// Marks this node to be included in multi-selection. See <see cref="MultiSelect(bool, bool)"/>.
-            /// This is remembered here instead of relying on the status of <see cref="TreeViewNode"/>
-            /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s
-            /// and may change the association between <see cref="Node"/> and <see cref="TreeNode"/>.
-            /// </summary>
-            internal bool IsMultiSelected { get; set; }
-
             private static readonly Dictionary<Type, ContextMenuStrip> DefaultContextMenus = new();
 
             public static void RegisterContextMenu(Type type, ContextMenuStrip menu)
@@ -442,35 +496,6 @@ namespace GitUI.BranchTreePanel
                 return DisplayText();
             }
 
-            private void SetFont(FontStyle style)
-            {
-                if (style == FontStyle.Regular)
-                {
-                    // For regular, set to null to use the NativeTreeView font
-                    if (TreeViewNode.NodeFont is not null)
-                    {
-                        ResetFont();
-                    }
-                }
-                else
-                {
-                    // If current font doesn't have the input style, get rid of it
-                    if (TreeViewNode.NodeFont is not null && !TreeViewNode.NodeFont.Style.HasFlag(style))
-                    {
-                        ResetFont();
-                    }
-
-                    // If non-null, our font is already valid, otherwise create a new one
-                    TreeViewNode.NodeFont ??= new Font(AppSettings.Font, style);
-                }
-            }
-
-            private void ResetFont()
-            {
-                TreeViewNode.NodeFont.Dispose();
-                TreeViewNode.NodeFont = null;
-            }
-
             protected void ApplyText()
             {
                 Validates.NotNull(_treeViewNode);
@@ -478,14 +503,6 @@ namespace GitUI.BranchTreePanel
                 _treeViewNode.Name = NodeName();
                 _treeViewNode.Text = DisplayText();
             }
-
-            protected virtual void ApplyStyle()
-            {
-                SetFont(GetFontStyle());
-                TreeViewNode.ToolTipText = string.Empty;
-            }
-
-            protected virtual FontStyle GetFontStyle() => IsMultiSelected ? FontStyle.Underline : FontStyle.Regular;
 
             internal virtual void OnSelected()
             {
@@ -526,30 +543,21 @@ namespace GitUI.BranchTreePanel
                     action(node);
                 }
             }
-
-            protected internal void MultiSelect(bool select, bool includingDescendants = false)
-            {
-                IsMultiSelected = select;
-                ApplyStyle(); // toggle multi-selected node style
-
-                // recursively process descendants if required
-                if (includingDescendants && this.HasChildren())
-                {
-                    foreach (Node child in Nodes)
-                    {
-                        child.MultiSelect(select, includingDescendants);
-                    }
-                }
-            }
         }
     }
 
     internal static class NodeExtensions
     {
+        internal static IEnumerable<RepoObjectsTree.NodeBase> GetNodesAndSelf(this RepoObjectsTree.Tree tree)
+            => tree.DepthEnumerator<RepoObjectsTree.NodeBase>().Prepend(tree);
+
+        internal static IEnumerable<RepoObjectsTree.NodeBase> GetMultiSelection(this RepoObjectsTree.Tree tree)
+            => tree.GetNodesAndSelf().Where(node => node.IsMultiSelected);
 
         internal static bool HasChildren(this RepoObjectsTree.NodeBase node) => node.Nodes.Count > 0;
+
         internal static IEnumerable<RepoObjectsTree.NodeBase> HavingChildren(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
-            => nodes.Where(nodeList => nodeList.Nodes.Count > 0);
+            => nodes.Where(node => node.HasChildren());
 
         internal static IEnumerable<RepoObjectsTree.NodeBase> Expandable(this IEnumerable<RepoObjectsTree.NodeBase> parents)
             => parents.Where(parent => !parent.TreeViewNode.IsExpanded);

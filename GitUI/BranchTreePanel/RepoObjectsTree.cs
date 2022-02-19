@@ -550,43 +550,32 @@ namespace GitUI.BranchTreePanel
             Node.OnNode<Node>(e.Node, node => node.OnSelected());
         }
 
-        private IEnumerable<Node> GetMultiSelection() => _rootNodes.SelectMany(tree => tree.DepthEnumerator<Node>().Where(node => node.IsMultiSelected));
-        private IEnumerable<NodeBase> GetSelectedNodes() => GetMultiSelection().Append(treeMain.SelectedNode.Tag as NodeBase).Distinct();
-        private void RevertMultiSelection() => GetMultiSelection().ForEach(node => node.MultiSelect(false));
+        private IEnumerable<NodeBase> GetMultiSelection() => _rootNodes.SelectMany(tree => tree.GetMultiSelection());
 
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            var holdingCtrl = ModifierKeys == Keys.Control;
+            var node = e.Node.Tag as NodeBase;
 
-            if (e.Node.Tag is Tree)
+            if (e.Button == MouseButtons.Right && node.IsMultiSelected)
             {
-                if (!holdingCtrl)
-                {
-                    RevertMultiSelection();
-                }
-
-                return;
+                return; // don't undo multi-selection on opening context menu, even without Ctrl
             }
 
-            var node = Node.GetNodeSafe<Node>(e.Node);
-
-            if (node is null || (e.Button == MouseButtons.Right && node.IsMultiSelected))
-            {
-                return; // don't undo multi-selection on opening context menu
-            }
-
-            if (holdingCtrl)
+            if (ModifierKeys == Keys.Control)
             {
                 // toggle clicked node IsMultiSelected, including descendants
                 node.MultiSelect(!node.IsMultiSelected, includingDescendants: true);
             }
             else
             {
-                RevertMultiSelection(); // deselect all selected nodes
-                node.MultiSelect(true); // and only check the clicked one
+                GetMultiSelection().ForEach(selected => selected.MultiSelect(false)); // deselect all selected nodes
+                node.MultiSelect(true); // and only select the clicked one
             }
 
-            node.OnClick();
+            if (node is Node clickable)
+            {
+                clickable.OnClick();
+            }
         }
 
         private void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
