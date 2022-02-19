@@ -82,21 +82,22 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void ToggleMoveTreeUpDownContexMenu(ContextMenuStrip contextMenu)
+        // adds Move Up / Move Down menu entries for re-arranging top level tree nodes
+        private void ToggleMoveTreeUpDownContexMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
         {
-            // add Move Up / Move Down menu entries for re-arranging top level tree nodes
-            var node = contextMenu.GetSelectedNode();
-
-            if (node is Tree tree)
+            if (contextMenu.GetSelectedNode() is not Tree tree)
             {
-                contextMenu.AddOnce(tsmiMainMenuSpacer2); // add another separator
-                contextMenu.AddOnce(mnubtnMoveUp);
-                contextMenu.AddOnce(mnubtnMoveDown);
-
-                var treeNode = tree.TreeViewNode;
-                mnubtnMoveUp.Enabled = treeNode.PrevNode is not null;
-                mnubtnMoveDown.Enabled = treeNode.NextNode is not null;
+                return;
             }
+
+            contextMenu.AddOnce(tsmiMainMenuSpacer2); // add another separator
+            contextMenu.AddOnce(mnubtnMoveUp);
+            contextMenu.AddOnce(mnubtnMoveDown);
+
+            var treeNode = tree.TreeViewNode;
+            ToggleMenuItems(hasSingleSelection, tsmiMainMenuSpacer2);
+            ToggleMenuItems(hasSingleSelection && treeNode.PrevNode is not null, mnubtnMoveUp);
+            ToggleMenuItems(hasSingleSelection && treeNode.NextNode is not null, mnubtnMoveDown);
         }
 
         private void ToggleLocalBranchContextMenu(ContextMenuStrip contextMenu, bool multipleRefsSelected)
@@ -362,7 +363,7 @@ namespace GitUI.BranchTreePanel
             ToggleSubmoduleContextMenu(contextMenu, hasSingleSelection);
             ToggleSortContextMenu(contextMenu, multipleRefsSelected);
             ToggleExpandCollapseContextMenu(contextMenu, selectedNodes);
-            ToggleMoveTreeUpDownContexMenu(contextMenu);
+            ToggleMoveTreeUpDownContexMenu(contextMenu, hasSingleSelection);
 
             // Set Cancel to false.  It is optimized to true based on empty entry.
             // See https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-handle-the-contextmenustrip-opening-event
