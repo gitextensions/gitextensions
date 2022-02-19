@@ -9031,14 +9031,18 @@ branch names, tag names)</source>
   </file>
   <file datatype="plaintext" original="RepoObjectsTree" source-language="en">
     <body>
-      <trans-unit id="_searchTooltip.Text">
-        <source>Search</source>
+      <trans-unit id="_filterForSelected.Text">
+        <source>&amp;Filter for selected</source>
         <target />
       </trans-unit>
-      <trans-unit id="_showSelectedBranchesOnly.Text">
-        <source>Filter the revision grid to show selected (underlined) branches only.
-Use Ctrl + left click in these branch trees to extend or narrow the selection.
+      <trans-unit id="_filterForSelectedToolTip.Text">
+        <source>Filter the revision grid to show selected (underlined) refs (branches and tags) only.
+Use Ctrl + left click to add refs to or remove them from the multi-selection.
 To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_searchTooltip.Text">
+        <source>Search</source>
         <target />
       </trans-unit>
       <trans-unit id="_sortByContextMenuItem.Text">
@@ -9155,26 +9159,6 @@ To reset the filter, right click the revision grid, select 'View' and then 'Show
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.ToolTipText">
         <source>Fetch &amp; Rebase current branch to this branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnFilterLocalBranchInRevisionGrid.Text">
-        <source>&amp;Filter for selected</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnFilterLocalBranchInRevisionGrid.ToolTipText">
-        <source>Filter the revision grid to show selected (underlined) branches only.
-Use Ctrl + left click in these branch trees to extend or narrow the selection.
-To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnFilterRemoteBranchInRevisionGrid.Text">
-        <source>&amp;Filter for selected</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText">
-        <source>Filter the revision grid to show selected (underlined) branches only.
-Use Ctrl + left click in these branch trees to extend or narrow the selection.
-To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">

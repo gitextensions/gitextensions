@@ -248,11 +248,11 @@ namespace GitUI.BranchTreePanel
             #endregion
 
             #region LocalBranchNode
+            menuBranch.Items.Insert(0, CreateFilterSelectedRefsContextMenuItem());
             _menuBranchCopyContextMenuItems = CreateCopyContextMenuItems();
             menuBranch.InsertItems(_menuBranchCopyContextMenuItems);
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
             menuBranch.InsertItems(_localBranchMenuItems.Select(s => s.Item), after: _menuBranchCopyContextMenuItems.Last());
-            RegisterClick(mnubtnFilterLocalBranchInRevisionGrid, FilterSelectedBranchesInRevisionGrid);
             Node.RegisterContextMenu(typeof(LocalBranchNode), menuBranch);
             #endregion
 
@@ -263,6 +263,7 @@ namespace GitUI.BranchTreePanel
             #endregion
 
             #region RemoteBranchNode
+            menuRemote.Items.Add(CreateFilterSelectedRefsContextMenuItem());
             _menuRemoteCopyContextMenuItems = CreateCopyContextMenuItems();
             menuRemote.InsertItems(_menuRemoteCopyContextMenuItems);
             _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
@@ -270,7 +271,6 @@ namespace GitUI.BranchTreePanel
 
             RegisterClick<RemoteBranchNode>(mnubtnFetchOneBranch, remoteBranch => remoteBranch.Fetch());
             RegisterClick<RemoteBranchNode>(mnubtnPullFromRemoteBranch, remoteBranch => remoteBranch.FetchAndMerge());
-            RegisterClick(mnubtnFilterRemoteBranchInRevisionGrid, FilterSelectedBranchesInRevisionGrid);
             RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchFetchAndCheckout, remoteBranch => remoteBranch.FetchAndCheckout());
             RegisterClick<RemoteBranchNode>(mnubtnFetchCreateBranch, remoteBranch => remoteBranch.FetchAndCreateBranch());
             RegisterClick<RemoteBranchNode>(mnubtnFetchRebase, remoteBranch => remoteBranch.FetchAndRebase());
@@ -291,6 +291,7 @@ namespace GitUI.BranchTreePanel
             #region TagNode
             _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
             menuTag.InsertItems(_tagNodeMenuItems.Select(s => s.Item));
+            menuTag.Items.Add(CreateFilterSelectedRefsContextMenuItem());
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
             #endregion
 
@@ -326,7 +327,21 @@ namespace GitUI.BranchTreePanel
             };
         }
 
-        private void FilterSelectedBranchesInRevisionGrid() => _branchFilterAction(GetSelectedNodes().ReduceToRefs().Select(b => b.FullPath).Join(" "));
+        #region Filter for selected refs
+        private readonly TranslationString _filterForSelected = new("&Filter for selected");
+
+        private readonly TranslationString _filterForSelectedToolTip = new(
+            "Filter the revision grid to show selected (underlined) refs (branches and tags) only." +
+            "\nUse Ctrl + left click to add refs to or remove them from the multi-selection." +
+            "\nTo reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.");
+
+        private ToolStripMenuItem CreateFilterSelectedRefsContextMenuItem()
+        {
+            ToolStripMenuItem menuItem = new(_filterForSelected.Text, Properties.Images.ShowThisBranchOnly) { ToolTipText = _filterForSelectedToolTip.Text };
+            RegisterClick(menuItem, () => _filterRevisionGridBySpaceSeparatedRefs(GetSelectedNodes().ReduceToRefs().Select(b => b.FullPath).Join(" ")));
+            return menuItem;
+        }
+        #endregion
 
         private void contextMenu_Opening(object sender, CancelEventArgs e)
         {

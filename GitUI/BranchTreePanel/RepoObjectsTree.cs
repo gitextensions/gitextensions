@@ -28,11 +28,6 @@ namespace GitUI.BranchTreePanel
         private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
         private readonly TranslationString _searchTooltip = new("Search");
 
-        private readonly TranslationString _showSelectedBranchesOnly = new(
-            "Filter the revision grid to show selected (underlined) branches only." +
-            "\nUse Ctrl + left click in these branch trees to extend or narrow the selection." +
-            "\nTo reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.");
-
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
         private readonly List<Tree> _rootNodes = new();
@@ -42,7 +37,7 @@ namespace GitUI.BranchTreePanel
         private TagTree _tagTree;
         private SubmoduleTree _submoduleTree;
         private List<TreeNode>? _searchResult;
-        private Action<string?> _branchFilterAction;
+        private Action<string?> _filterRevisionGridBySpaceSeparatedRefs;
         private IAheadBehindDataProvider? _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
@@ -92,9 +87,6 @@ namespace GitUI.BranchTreePanel
 
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
-
-            mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText =
-            mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = _showSelectedBranchesOnly.Text;
 
             return;
 
@@ -231,10 +223,11 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, Action<string?> branchFilterAction, ICheckRefs refsSource, IScriptHostControl scriptHost, IRunScript scriptRunner)
+        public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, Action<string?> filterRevisionGridBySpaceSeparatedRefs,
+            ICheckRefs refsSource, IScriptHostControl scriptHost, IRunScript scriptRunner)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
-            _branchFilterAction = branchFilterAction;
+            _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;
             _refsSource = refsSource;
             _scriptHost = scriptHost;
             _scriptRunner = scriptRunner;

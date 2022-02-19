@@ -63,9 +63,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnMoveUp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBranch = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnubtnFilterLocalBranchInRevisionGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnFilterRemoteBranchInRevisionGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTags = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuRemotes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuBtnManageRemotesFromRootNode = new System.Windows.Forms.ToolStripMenuItem();
@@ -194,18 +192,10 @@ namespace GitUI.BranchTreePanel
             // menuBranch
             // 
             this.menuBranch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnubtnFilterLocalBranchInRevisionGrid,
             this.runScriptToolStripMenuItem});
             this.menuBranch.Name = "contextmenuBranch";
             this.menuBranch.Size = new System.Drawing.Size(192, 48);
             this.menuBranch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
-            // 
-            // mnubtnFilterLocalBranchInRevisionGrid
-            // 
-            this.mnubtnFilterLocalBranchInRevisionGrid.Image = global::GitUI.Properties.Images.ShowThisBranchOnly;
-            this.mnubtnFilterLocalBranchInRevisionGrid.Name = "mnubtnFilterLocalBranchInRevisionGrid";
-            this.mnubtnFilterLocalBranchInRevisionGrid.Size = new System.Drawing.Size(214, 26);
-            this.mnubtnFilterLocalBranchInRevisionGrid.Text = "&Filter for selected";
             // 
             // runScriptToolStripMenuItem
             // 
@@ -213,13 +203,6 @@ namespace GitUI.BranchTreePanel
             this.runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
             this.runScriptToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.runScriptToolStripMenuItem.Text = "Run script";
-            // 
-            // mnubtnFilterRemoteBranchInRevisionGrid
-            // 
-            this.mnubtnFilterRemoteBranchInRevisionGrid.Image = global::GitUI.Properties.Images.ShowThisBranchOnly;
-            this.mnubtnFilterRemoteBranchInRevisionGrid.Name = "mnubtnFilterRemoteBranchInRevisionGrid";
-            this.mnubtnFilterRemoteBranchInRevisionGrid.Size = new System.Drawing.Size(229, 26);
-            this.mnubtnFilterRemoteBranchInRevisionGrid.Text = "&Filter for selected";
             // 
             // menuTags
             // 
@@ -266,8 +249,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnFetchRebase,
             this.mnubtnFetchCreateBranch,
             this.mnubtnFetchOneBranch,
-            this.toolStripSeparator1,
-            this.mnubtnFilterRemoteBranchInRevisionGrid});
+            this.toolStripSeparator1});
             this.menuRemote.Name = "contextmenuRemote";
             this.menuRemote.Size = new System.Drawing.Size(194, 142);
             this.menuRemote.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
@@ -664,8 +646,6 @@ namespace GitUI.BranchTreePanel
 
         private NativeTreeView treeMain;
         private ContextMenuStrip menuBranch;
-        private ToolStripMenuItem mnubtnFilterLocalBranchInRevisionGrid;
-        private ToolStripMenuItem mnubtnFilterRemoteBranchInRevisionGrid;
         private ContextMenuStrip menuTags;
         private ContextMenuStrip menuRemotes;
         private ContextMenuStrip menuRemote;
