@@ -115,7 +115,7 @@ namespace GitUI.BranchTreePanel
                  && (!localBranch.IsCurrent // otherwise display all items for non-current branches
                      || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(t.Key))); // or only those applying to the current branch
 
-            ToggleMenuItems(localBranch.Visible, _menuBranchCopyContextMenuItems);
+            ToggleMenuItems(localBranch.Visible && !multipleRefsSelected, _menuBranchCopyContextMenuItems);
 
             if (localBranch.Visible && !multipleRefsSelected)
             {
@@ -151,7 +151,7 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(!multipleRefsSelected, mnubtnFetchOneBranch, mnubtnPullFromRemoteBranch,
                 mnubtnRemoteBranchFetchAndCheckout, mnubtnFetchCreateBranch, mnubtnFetchRebase, toolStripSeparator1);
 
-            ToggleMenuItems(node.Visible, _menuRemoteCopyContextMenuItems);
+            ToggleMenuItems(node.Visible && !multipleRefsSelected, _menuRemoteCopyContextMenuItems);
         }
 
         private void ToggleRemoteRepoContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
