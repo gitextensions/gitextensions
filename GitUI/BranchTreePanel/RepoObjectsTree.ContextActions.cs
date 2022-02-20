@@ -103,7 +103,7 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(hasSingleSelection && treeNode.NextNode is not null, mnubtnMoveDown);
         }
 
-        private void ToggleLocalBranchContextMenu(ContextMenuStrip contextMenu, bool multipleRefsSelected)
+        private void ToggleLocalBranchContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
         {
             if (contextMenu != menuBranch || contextMenu.GetSelectedNode() is not LocalBranchNode localBranch)
             {
@@ -111,13 +111,13 @@ namespace GitUI.BranchTreePanel
             }
 
             ToggleMenuItems(_localBranchMenuItems,
-                t => !multipleRefsSelected // hide items if multiple branches are selected
-                 && (!localBranch.IsCurrent // otherwise display all items for non-current branches
+                t => hasSingleSelection // only display for single-selected branch
+                 && (!localBranch.IsCurrent // with all items for non-current branches
                      || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(t.Key))); // or only those applying to the current branch
 
-            ToggleMenuItems(localBranch.Visible && !multipleRefsSelected, _menuBranchCopyContextMenuItems);
+            ToggleMenuItems(localBranch.Visible && hasSingleSelection, _menuBranchCopyContextMenuItems);
 
-            if (localBranch.Visible && !multipleRefsSelected)
+            if (localBranch.Visible && hasSingleSelection)
             {
                 contextMenu.AddUserScripts(runScriptToolStripMenuItem, _scriptRunner.Execute);
             }
@@ -127,31 +127,31 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void ToggleBranchPathContextMenu(ContextMenuStrip contextMenu, bool multipleRefsSelected)
+        private void ToggleBranchPathContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
         {
             if (contextMenu != menuBranchPath || contextMenu.GetSelectedNode() is not BranchPathNode)
             {
                 return;
             }
 
-            // don't display items in multi-selection context
-            ToggleMenuItems(!multipleRefsSelected, mnubtnCreateBranch, mnubtnDeleteAllBranches);
+            // only display items in single-selection context
+            ToggleMenuItems(hasSingleSelection, mnubtnCreateBranch, mnubtnDeleteAllBranches);
         }
 
-        private void ToggleRemoteBranchContextMenu(ContextMenuStrip contextMenu, bool multipleRefsSelected)
+        private void ToggleRemoteBranchContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
         {
             if (contextMenu != menuRemote || contextMenu.GetSelectedNode() is not RemoteBranchNode node)
             {
                 return;
             }
 
-            ToggleMenuItems(_remoteBranchMenuItems, _ => !multipleRefsSelected);
+            ToggleMenuItems(_remoteBranchMenuItems, _ => hasSingleSelection);
 
             // toggle remote branch menu items operating on a single branch
-            ToggleMenuItems(!multipleRefsSelected, mnubtnFetchOneBranch, mnubtnPullFromRemoteBranch,
+            ToggleMenuItems(hasSingleSelection, mnubtnFetchOneBranch, mnubtnPullFromRemoteBranch,
                 mnubtnRemoteBranchFetchAndCheckout, mnubtnFetchCreateBranch, mnubtnFetchRebase, toolStripSeparator1);
 
-            ToggleMenuItems(node.Visible && !multipleRefsSelected, _menuRemoteCopyContextMenuItems);
+            ToggleMenuItems(node.Visible && hasSingleSelection, _menuRemoteCopyContextMenuItems);
         }
 
         private void ToggleRemoteRepoContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
@@ -182,17 +182,17 @@ namespace GitUI.BranchTreePanel
             ToggleMenuItems(hasSingleSelection, mnuBtnManageRemotesFromRootNode, mnuBtnFetchAllRemotes, mnuBtnPruneAllRemotes);
         }
 
-        private void ToggleTagContextMenu(ContextMenuStrip contextMenu, bool multipleRefsSelected)
+        private void ToggleTagContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
         {
             if (contextMenu != menuTag || contextMenu.GetSelectedNode() is not TagNode node)
             {
                 return;
             }
 
-            ToggleMenuItems(_tagNodeMenuItems, _ => !multipleRefsSelected);
+            ToggleMenuItems(_tagNodeMenuItems, _ => hasSingleSelection);
         }
 
-        private void ToggleSortContextMenu(ContextMenuStrip contextMenu, bool multipleRefsSelected)
+        private void ToggleSortContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
         {
             // We can only sort refs, i.e. branches and tags
             if (contextMenu != menuBranch && contextMenu != menuRemote && contextMenu != menuTag)
@@ -211,12 +211,12 @@ namespace GitUI.BranchTreePanel
                 contextMenu.Items.AddRange(new ToolStripItem[] { _tsmiSortMenuSpacer, _sortByContextMenuItem, _sortOrderContextMenuItem });
             }
 
-            // sorting doesn't make a lot of sense if multiple branches are selected
-            ToggleMenuItems(!multipleRefsSelected, _tsmiSortMenuSpacer, _sortByContextMenuItem);
+            // sorting doesn't make a lot of sense in a multi-selection context
+            ToggleMenuItems(hasSingleSelection, _tsmiSortMenuSpacer, _sortByContextMenuItem);
 
             // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
             var showSortOrder = AppSettings.RefsSortBy != GitUIPluginInterfaces.GitRefsSortBy.Default;
-            ToggleMenuItems(!multipleRefsSelected && showSortOrder, _sortOrderContextMenuItem);
+            ToggleMenuItems(hasSingleSelection && showSortOrder, _sortOrderContextMenuItem);
         }
 
         private void ToggleSubmoduleContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
@@ -366,16 +366,15 @@ namespace GitUI.BranchTreePanel
 
             var selectedNodes = GetMultiSelection().ToArray();
             var hasSingleSelection = selectedNodes.Length <= 1;
-            var multipleRefsSelected = selectedNodes.ReduceToRefs().Count() > 1;
 
-            ToggleLocalBranchContextMenu(contextMenu, multipleRefsSelected);
-            ToggleBranchPathContextMenu(contextMenu, multipleRefsSelected);
-            ToggleRemoteBranchContextMenu(contextMenu, multipleRefsSelected);
+            ToggleLocalBranchContextMenu(contextMenu, hasSingleSelection);
+            ToggleBranchPathContextMenu(contextMenu, hasSingleSelection);
+            ToggleRemoteBranchContextMenu(contextMenu, hasSingleSelection);
             ToggleRemoteRepoContextMenu(contextMenu, hasSingleSelection);
             ToggleRemotesTreeContextMenu(contextMenu, hasSingleSelection);
-            ToggleTagContextMenu(contextMenu, multipleRefsSelected);
+            ToggleTagContextMenu(contextMenu, hasSingleSelection);
             ToggleSubmoduleContextMenu(contextMenu, hasSingleSelection);
-            ToggleSortContextMenu(contextMenu, multipleRefsSelected);
+            ToggleSortContextMenu(contextMenu, hasSingleSelection);
             ToggleExpandCollapseContextMenu(contextMenu, selectedNodes);
             ToggleMoveTreeUpDownContexMenu(contextMenu, hasSingleSelection);
 
