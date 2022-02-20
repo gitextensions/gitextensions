@@ -38,12 +38,13 @@ namespace GitUI.BranchTreePanel
         /// </summary>
         private MenuItemsGenerator<TagNode> _tagNodeMenuItems;
 
-        /// <summary>Toggles the <paramref name="items"/> <see cref="ToolStripItem.Visible"/>
-        /// as well as <see cref="ToolStripItem.Enabled"/> properties depending on <paramref name="enabled"/>.
-        /// Prefer this over only toggling the visibility of an item to enable determining whether the context menu will (once open)
-        /// contain any visible items via <see cref="ToolStripItem.Enabled"/> in <see cref="contextMenu_Opening(object, CancelEventArgs)"/>
-        /// even before the menu itself (as the visual parent) is visble and <see cref="ToolStripItem.Visible"/> of any item therefore false.</summary>
-        private void ToggleMenuItems(bool enabled, params ToolStripItem[] items) => items.ForEach(item => item.Visible = item.Enabled = enabled);
+        private void ToggleMenuItems(bool enabled, params ToolStripItem[] items)
+        {
+            foreach (var item in items)
+            {
+                item.Toggle(enabled);
+            }
+        }
 
         private void ToggleMenuItems<TNode>(MenuItemsGenerator<TNode> generator, Func<ToolStripItemWithKey, bool> isEnabled) where TNode : class, INode
             => generator.ForEach(i => ToggleMenuItems(isEnabled(i), i.Item));
@@ -65,20 +66,22 @@ namespace GitUI.BranchTreePanel
                 {
                     contextMenu.AddOnce(tsmiMainMenuSpacer1); // add a separator if any items exist already
 
-                    // Display separator if any preceding items are enabled. This relies on menu items Enabled being toggled by ToggleMenuItems and before this method.
-                    tsmiMainMenuSpacer1.Visible = contextMenu.Items.Cast<ToolStripItem>().TakeWhile(item => item != tsmiMainMenuSpacer1).Any(item => item.Enabled);
+                    /* Display separator if any preceding items are enabled.
+                     * This relies on the items' Enabled flag being toggled (e.g. by ToggleMenuItems) and BEFORE this method. */
+                    var precedingItems = contextMenu.Items.Cast<ToolStripItem>().TakeWhile(item => item != tsmiMainMenuSpacer1);
+                    ToggleMenuItems(precedingItems.Any(item => item.Enabled), tsmiMainMenuSpacer1);
                 }
 
                 contextMenu.AddOnce(mnubtnCollapse);
                 contextMenu.AddOnce(mnubtnExpand);
-                mnubtnExpand.Visible = multiSelectedParents.Expandable().Any();
-                mnubtnCollapse.Visible = multiSelectedParents.Collapsible().Any();
+                ToggleMenuItems(multiSelectedParents.Expandable().Any(), mnubtnExpand);
+                ToggleMenuItems(multiSelectedParents.Collapsible().Any(), mnubtnCollapse);
             }
 
             // no expandable or collapsible nodes selected
             else
             {
-                tsmiMainMenuSpacer1.Visible = mnubtnExpand.Visible = mnubtnCollapse.Visible = false;
+                ToggleMenuItems(false, tsmiMainMenuSpacer1, mnubtnExpand, mnubtnCollapse);
             }
         }
 
@@ -376,9 +379,9 @@ namespace GitUI.BranchTreePanel
             ToggleExpandCollapseContextMenu(contextMenu, selectedNodes);
             ToggleMoveTreeUpDownContexMenu(contextMenu, hasSingleSelection);
 
-            // Set Cancel to false.  It is optimized to true based on empty entry.
-            // See https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-handle-the-contextmenustrip-opening-event
-            e.Cancel = false;
+            /* Cancel context menu if no items are enabled.
+             * This relies on the items' Enabled flag being toggled (e.g. by ToggleMenuItems) and BEFORE this line. */
+            e.Cancel = !contextMenu.Items.Cast<ToolStripItem>().Any(i => i.Enabled);
         }
 
         /// <inheritdoc />
@@ -431,5 +434,13 @@ namespace GitUI.BranchTreePanel
                 menu.Items.Add(item);
             }
         }
+
+        /// <summary>Toggles the <paramref name="item"/>'s <see cref="ToolStripItem.Visible"/>
+        /// as well as <see cref="ToolStripItem.Enabled"/> properties depending on <paramref name="enabled"/>.
+        /// Prefer this over only toggling the visibility of an item to enable determining whether the context menu will (once open)
+        /// contain any visible items via <see cref="ToolStripItem.Enabled"/> even before the menu itself (as the visual parent)
+        /// is visble and <see cref="ToolStripItem.Visible"/> of any item therefore false.</summary>
+        internal static void Toggle(this ToolStripItem item, bool enabled)
+            => item.Visible = item.Enabled = enabled;
     }
 }

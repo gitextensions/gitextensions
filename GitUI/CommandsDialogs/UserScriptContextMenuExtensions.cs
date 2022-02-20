@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using GitUI.BranchTreePanel;
 using GitUI.Hotkey;
 using GitUI.Script;
 using ResourceManager;
@@ -61,7 +62,7 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     hostMenuItem.DropDown.Items.Add(item);
-                    hostMenuItem.Visible = true;
+                    hostMenuItem.Toggle(true);
                 }
             }
 
@@ -88,7 +89,7 @@ namespace GitUI.CommandsDialogs
         private static void RemoveOwnScripts(ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem)
         {
             hostMenuItem.DropDown.Items.Clear();
-            hostMenuItem.Visible = false;
+            hostMenuItem.Toggle(false);
 
             var list = contextMenu.Items.Cast<ToolStripItem>()
                 .Where(x => x.Name.EndsWith(ScriptNameSuffix))
