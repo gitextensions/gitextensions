@@ -35,13 +35,14 @@
             CompareToCurrentBranch = 28,
             CompareToBranch = 29,
             CompareSelectedCommits = 30,
-            GoToMergeBaseCommit = 31,
+            GoToMergeBase = 31,
             OpenCommitsWithDifftool = 32,
             ToggleBetweenArtificialAndHeadCommits = 33,
             ShowReflogReferences = 34,
             ShowLatestStash = 35,
             ResetRevisionFilter = 36,
             ResetRevisionPathFilter = 37,
+            SelectNextForkPointAsDiffBase = 38,
         }
     }
 }

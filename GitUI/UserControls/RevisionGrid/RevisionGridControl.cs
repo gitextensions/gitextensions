@@ -672,7 +672,7 @@ namespace GitUI
         /// <param name="objectId">Id of the revision to select.</param>
         /// <param name="toggleSelection">Toggle if the selected state for the revision.</param>
         /// <returns><c>true</c> if the required revision was found and selected, otherwise <c>false</c>.</returns>
-        public bool SetSelectedRevision(ObjectId? objectId, bool toggleSelection = false)
+        public bool SetSelectedRevision(ObjectId? objectId, bool toggleSelection = false, bool updateNavigationHistory = true)
         {
             var index = FindRevisionIndex(objectId);
 
@@ -683,7 +683,11 @@ namespace GitUI
 
             Validates.NotNull(objectId);
             SetSelectedIndex(index, toggleSelection);
-            _navigationHistory.Push(objectId);
+            if (updateNavigationHistory)
+            {
+                _navigationHistory.Push(objectId);
+            }
+
             return true;
         }
 
@@ -2425,7 +2429,40 @@ namespace GitUI
             }
         }
 
-        private void goToMergeBaseCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SelectNextForkPointAsDiffBase()
+        {
+            IReadOnlyList<GitRevision> revisions = GetSelectedRevisions();
+            if (revisions.Count == 0)
+            {
+                return;
+            }
+
+            GitRevision revision = revisions[revisions.Count - 1];
+            while (revision.IsArtificial)
+            {
+                revision = GetRevision(revision.FirstParentId);
+            }
+
+            do
+            {
+                GitRevision prevRev = GetRevision(revision.FirstParentId);
+                if (prevRev == null)
+                {
+                    break;
+                }
+
+                revision = prevRev;
+            }
+            while (!revision.Refs.Any(r => r.IsHead || r.IsRemote) && GetRevisionChildren(revision.ObjectId).Count == 1);
+
+            SetSelectedRevision(revision.ObjectId, toggleSelection: false, updateNavigationHistory: false);
+            foreach (GitRevision selectedRevision in revisions.Take(Math.Max(1, revisions.Count - 1)))
+            {
+                SetSelectedRevision(selectedRevision.ObjectId, toggleSelection: true, updateNavigationHistory: false);
+            }
+        }
+
+        private void GoToMergeBase()
         {
             // Artificial commits are replaced with HEAD
             // If only one revision is selected, compare to HEAD
@@ -2791,7 +2828,8 @@ namespace GitUI
                     break;
                 case Command.GoToCommit: MenuCommands.GotoCommitExecute(); break;
                 case Command.GoToParent: goToParentToolStripMenuItem_Click(); break;
-                case Command.GoToMergeBaseCommit: goToMergeBaseCommitToolStripMenuItem_Click(this, EventArgs.Empty); break;
+                case Command.SelectNextForkPointAsDiffBase: SelectNextForkPointAsDiffBase(); break;
+                case Command.GoToMergeBase: GoToMergeBase(); break;
                 case Command.GoToChild: goToChildToolStripMenuItem_Click(); break;
                 case Command.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
                 case Command.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;
