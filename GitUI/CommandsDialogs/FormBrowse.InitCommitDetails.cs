@@ -36,7 +36,9 @@ namespace GitUI.CommandsDialogs
 
             if (!AppSettings.ShowGpgInformation.Value)
             {
+                CommitInfoTabControl.SelectedIndexChanged -= CommitInfoTabControl_SelectedIndexChanged;
                 CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
+                CommitInfoTabControl.SelectedIndexChanged += CommitInfoTabControl_SelectedIndexChanged;
             }
 
             FillBuildReport(revision: null); // Ensure correct page visibility

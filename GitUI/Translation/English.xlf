@@ -9820,10 +9820,6 @@ See the changes in the commit form.</source>
         <source>Base commit for compare is not selected.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_cannotHighlightSelectedBranch.Text">
-        <source>Cannot highlight selected branch when revision graph is loading.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
         <source>Don't show me this message again.</source>
         <target />
@@ -9836,7 +9832,7 @@ See the changes in the commit form.</source>
         <source>Filter text '{0}' not valid for "Diff contains" filter.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_loadingControlAsync.Text">
+      <trans-unit id="_loadingControlText.Text">
         <source>Loading</source>
         <target />
       </trans-unit>
