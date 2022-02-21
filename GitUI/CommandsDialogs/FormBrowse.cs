@@ -889,11 +889,6 @@ namespace GitUI.CommandsDialogs
 
                 SetShortcutKeyDisplayStringsFromHotkeySettings();
 
-                if (hasWorkingDir)
-                {
-                    ShowRevisions();
-                }
-
                 RefreshWorkingDirComboText();
 
                 OnActivate();
@@ -914,7 +909,6 @@ namespace GitUI.CommandsDialogs
                     toolStripButtonPush.DisplayAheadBehindInformation(branchSelect.Text);
 
                     ActiveControl = RevisionGrid;
-                    RevisionGrid.IndexWatcher.Reset();
                 }
                 else
                 {
@@ -967,23 +961,13 @@ namespace GitUI.CommandsDialogs
                     {
                         if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
                         {
-                            RevisionGrid.RefreshRevisions();
+                            RevisionGrid.PerformRefreshRevisions();
                         }
                     };
 
                     // add to toolstrip
                     ToolStripScripts.Items.Add(button);
                 }
-            }
-
-            void ShowRevisions()
-            {
-                if (RevisionGrid.IndexWatcher.IndexChanged)
-                {
-                    RefreshSelection();
-                }
-
-                RevisionGrid.IndexWatcher.Reset();
             }
         }
 
@@ -1848,7 +1832,6 @@ namespace GitUI.CommandsDialogs
             {
                 dashboardToolStripMenuItem.Visible = true;
 
-                RevisionGrid.IndexWatcher.Reset();
                 MainSplitContainer.Visible = false;
                 ShowDashboard();
             }
