@@ -111,7 +111,6 @@ namespace GitUI
         private IReadOnlyCollection<string>? _ambiguousRefs;
 
         private bool _initialLoad = true;
-        private bool _isReadingRevisions = true;
         private int _updatingFilters;
 
         private RevisionReader? _revisionReader;
@@ -195,7 +194,13 @@ namespace GitUI
             _quickSearchProvider = new QuickSearchProvider(_gridView, () => Module.WorkingDir);
 
             // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
-            _parentChildNavigationHistory = new ParentChildNavigationHistory(objectId => SetSelectedRevision(objectId));
+            _parentChildNavigationHistory = new ParentChildNavigationHistory(objectId =>
+            {
+                if (!SetSelectedRevision(objectId))
+                {
+                    MessageBoxes.RevisionFilteredInGrid(this, objectId);
+                }
+            });
             _authorHighlighting = new AuthorRevisionHighlighting();
             _indexWatcher = new Lazy<IndexWatcher>(() => new IndexWatcher(UICommandsSource));
 
@@ -445,7 +450,11 @@ namespace GitUI
         {
             if (_navigationHistory.CanNavigateBackward)
             {
-                SetSelectedRevision(_navigationHistory.NavigateBackward());
+                ObjectId objectId = _navigationHistory.NavigateBackward();
+                if (!SetSelectedRevision(objectId))
+                {
+                    MessageBoxes.RevisionFilteredInGrid(this, objectId);
+                }
             }
         }
 
@@ -453,7 +462,11 @@ namespace GitUI
         {
             if (_navigationHistory.CanNavigateForward)
             {
-                SetSelectedRevision(_navigationHistory.NavigateForward());
+                ObjectId objectId = _navigationHistory.NavigateForward();
+                if (!SetSelectedRevision(objectId))
+                {
+                    MessageBoxes.RevisionFilteredInGrid(this, objectId);
+                }
             }
         }
 
@@ -654,26 +667,24 @@ namespace GitUI
 
         /// <summary>
         /// Selects row containing revision matching <paramref name="objectId"/>.
-        /// If the revision is not found, the grid's selection is cleared.
         /// Returns whether the required revision was found and selected.
         /// </summary>
         /// <param name="objectId">Id of the revision to select.</param>
+        /// <param name="toggleSelection">Toggle if the selected state for the revision.</param>
         /// <returns><c>true</c> if the required revision was found and selected, otherwise <c>false</c>.</returns>
         public bool SetSelectedRevision(ObjectId? objectId, bool toggleSelection = false)
         {
             var index = FindRevisionIndex(objectId);
 
-            if (index >= 0 && index < _gridView.RowCount)
+            if (index < 0 || index >= _gridView.RowCount)
             {
-                Validates.NotNull(objectId);
-                SetSelectedIndex(index, toggleSelection);
-                _navigationHistory.Push(objectId);
-                return true;
+                return false;
             }
 
-            _gridView.ClearSelection();
-            _gridView.Select();
-            return false;
+            Validates.NotNull(objectId);
+            SetSelectedIndex(index, toggleSelection);
+            _navigationHistory.Push(objectId);
+            return true;
         }
 
         public GitRevision? GetRevision(ObjectId objectId)
@@ -892,7 +903,6 @@ namespace GitUI
 
                 SelectInitialRevision(newCurrentCheckout);
 
-                _isReadingRevisions = true;
                 Subject<GitRevision> revisions = new();
                 _revisionSubscription?.Dispose();
                 _revisionSubscription = revisions
@@ -1169,8 +1179,6 @@ namespace GitUI
                     // (finding the most relevant commit is tricky)
                     AddArtificialRevisions(insertAsFirst: true);
                 }
-
-                _isReadingRevisions = false;
 
                 if (!firstRevisionReceived && !FilterIsApplied(inclBranchFilter: true))
                 {
@@ -2439,7 +2447,11 @@ namespace GitUI
                 return;
             }
 
-            SetSelectedRevision(ObjectId.Parse(mergeBaseCommitId));
+            ObjectId objectId = ObjectId.Parse(mergeBaseCommitId);
+            if (!SetSelectedRevision(objectId))
+            {
+                MessageBoxes.RevisionFilteredInGrid(this, objectId);
+            }
         }
 
         private void goToChildToolStripMenuItem_Click()
@@ -2472,13 +2484,12 @@ namespace GitUI
                 refName = sha1;
             }
 
-            var revisionGuid = Module.RevParse(refName);
-            if (revisionGuid is not null)
+            ObjectId? revisionId = Module.RevParse(refName);
+            if (revisionId is not null)
             {
-                if (_isReadingRevisions || !SetSelectedRevision(revisionGuid, toggleSelection))
+                if (!SetSelectedRevision(revisionId, toggleSelection) && showNoRevisionMsg)
                 {
-                    SelectedId = revisionGuid;
-                    _selectedObjectIds = null;
+                    MessageBoxes.RevisionFilteredInGrid(this, revisionId);
                 }
             }
             else if (showNoRevisionMsg)
@@ -2764,7 +2775,13 @@ namespace GitUI
                 case Command.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
                 case Command.ShowFirstParent: ToggleShowFirstParent(); break;
                 case Command.ToggleBetweenArtificialAndHeadCommits: ToggleBetweenArtificialAndHeadCommits(); break;
-                case Command.SelectCurrentRevision: SetSelectedRevision(CurrentCheckout); break;
+                case Command.SelectCurrentRevision:
+                    if (!SetSelectedRevision(CurrentCheckout))
+                    {
+                        MessageBoxes.RevisionFilteredInGrid(this, CurrentCheckout);
+                    }
+
+                    break;
                 case Command.GoToCommit: MenuCommands.GotoCommitExecute(); break;
                 case Command.GoToParent: goToParentToolStripMenuItem_Click(); break;
                 case Command.GoToMergeBaseCommit: goToMergeBaseCommitToolStripMenuItem_Click(this, EventArgs.Empty); break;

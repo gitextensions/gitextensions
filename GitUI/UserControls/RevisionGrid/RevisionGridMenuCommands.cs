@@ -15,7 +15,6 @@ namespace GitUI.UserControls.RevisionGrid
         public event EventHandler? MenuChanged;
 
         private readonly TranslationString _quickSearchQuickHelp = new("Start typing in revision grid to start quick search.");
-        private readonly TranslationString _noRevisionFoundError = new("No revision found.");
 
         private readonly RevisionGridControl _revisionGrid;
 
@@ -501,11 +500,14 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (objectId is not null)
             {
-                _revisionGrid.SetSelectedRevision(objectId);
+                if (!_revisionGrid.SetSelectedRevision(objectId))
+                {
+                    MessageBoxes.RevisionFilteredInGrid(_revisionGrid, objectId);
+                }
             }
             else
             {
-                MessageBox.Show(_revisionGrid, _noRevisionFoundError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.CannotFindGitRevision(owner: _revisionGrid);
             }
         }
     }

@@ -79,9 +79,12 @@ namespace GitUI.HelperDialogs
         private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var linkLabel = (LinkLabel)sender;
-            var parentId = (ObjectId)linkLabel.Tag;
+            ObjectId parentId = (ObjectId)linkLabel.Tag;
 
-            revisionGrid.SetSelectedRevision(parentId);
+            if (!revisionGrid.SetSelectedRevision(parentId))
+            {
+                MessageBoxes.RevisionFilteredInGrid(this, parentId);
+            }
         }
 
         private void revisionGrid_SelectionChanged(object sender, EventArgs e)

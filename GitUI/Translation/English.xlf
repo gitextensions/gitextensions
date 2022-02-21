@@ -8677,6 +8677,14 @@ help</source>
         <source>Archive revision</source>
         <target />
       </trans-unit>
+      <trans-unit id="_cannotFindRevisionCaption.Text">
+        <source>Cannot find revision</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotFindRevisionFilter.Text">
+        <source>Revision "{0}" is not visible in the revision grid. Remove the revision filter.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_cannotOpenGitExtensionsCaption.Text">
         <source>Cannot open Git Extensions</source>
         <target />
@@ -8687,10 +8695,6 @@ help</source>
       </trans-unit>
       <trans-unit id="_directoryDoesNotExist.Text">
         <source>The directory "{0}" does not exist.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_failedToExecuteScript.Text">
-        <source>Failed to execute script</source>
         <target />
       </trans-unit>
       <trans-unit id="_failedToRunShell.Text">
@@ -8711,6 +8715,10 @@ help</source>
       </trans-unit>
       <trans-unit id="_middleOfRebaseCaption.Text">
         <source>Rebase</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_noRevisionFoundError.Text">
+        <source>No revision found.</source>
         <target />
       </trans-unit>
       <trans-unit id="_notValidGitDirectory.Text">
@@ -9722,10 +9730,6 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="ToggleHighlightSelectedBranch.Text">
         <source>Highlight selected branch (until refresh)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noRevisionFoundError.Text">
-        <source>No revision found.</source>
         <target />
       </trans-unit>
       <trans-unit id="_quickSearchQuickHelp.Text">

@@ -553,8 +553,11 @@ namespace GitUI.CommandsDialogs
                 Validates.NotNull(e.Data);
                 if (Module.TryResolvePartialCommitId(e.Data, out var objectId))
                 {
-                    RevisionGrid.SetSelectedRevision(objectId);
-                }
+                    if (!RevisionGrid.SetSelectedRevision(objectId))
+                    {
+                        MessageBoxes.RevisionFilteredInGrid(this, objectId);
+                    }
+               }
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
@@ -562,7 +565,10 @@ namespace GitUI.CommandsDialogs
                 CommitData? commit = _commitDataManager.GetCommitData(e.Data, out _);
                 if (commit is not null)
                 {
-                    RevisionGrid.SetSelectedRevision(commit.ObjectId);
+                    if (!RevisionGrid.SetSelectedRevision(commit.ObjectId))
+                    {
+                        MessageBoxes.RevisionFilteredInGrid(this, commit.ObjectId);
+                    }
                 }
             }
             else if (e.Command == "navigatebackward")
