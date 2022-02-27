@@ -346,7 +346,7 @@ namespace GitUI.BranchTreePanel
 
         private readonly TranslationString _filterForSelectedToolTip = new(
             "Filter the revision grid to show selected (underlined) refs (branches and tags) only." +
-            "\nUse Ctrl + left click to add refs to or remove them from the multi-selection." +
+            "\nHold Ctrl while clicking to de/select multiple and include descendant tree nodes by additionally holding Alt." +
             "\nTo reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.");
 
         private ToolStripMenuItem CreateFilterSelectedRefsContextMenuItem()

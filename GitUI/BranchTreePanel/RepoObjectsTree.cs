@@ -561,10 +561,10 @@ namespace GitUI.BranchTreePanel
                 return; // don't undo multi-selection on opening context menu, even without Ctrl
             }
 
-            if (ModifierKeys == Keys.Control)
+            if (ModifierKeys.HasFlag(Keys.Control))
             {
-                // toggle clicked node IsMultiSelected, including descendants
-                node.MultiSelect(!node.IsMultiSelected, includingDescendants: true);
+                // toggle clicked node IsMultiSelected, including descendants when holding Alt
+                node.MultiSelect(!node.IsMultiSelected, includingDescendants: ModifierKeys.HasFlag(Keys.Alt));
             }
             else
             {
