@@ -14,7 +14,7 @@ namespace GitUI.BranchTreePanel
 {
     partial class RepoObjectsTree
     {
-        private sealed class Nodes : IEnumerable<Node>
+        internal sealed class Nodes : IEnumerable<Node>
         {
             private readonly List<Node> _nodesList = new();
 
@@ -117,7 +117,7 @@ namespace GitUI.BranchTreePanel
             public Node? LastNode => _nodesList.Count > 0 ? _nodesList[_nodesList.Count - 1] : null;
         }
 
-        private abstract class Tree : IDisposable
+        internal abstract class Tree : IDisposable
         {
             protected readonly Nodes Nodes;
             private readonly IGitUICommandsSource _uiCommandsSource;
@@ -361,7 +361,7 @@ namespace GitUI.BranchTreePanel
             #endregion
         }
 
-        private abstract class Node : INode
+        internal abstract class Node : INode
         {
             public readonly Nodes Nodes;
 
@@ -516,5 +516,10 @@ namespace GitUI.BranchTreePanel
                 }
             }
         }
+    }
+
+    internal static class NodeExtensions
+    {
+        internal static bool HasChildren(this RepoObjectsTree.Node node) => node.Nodes.Count > 0;
     }
 }
