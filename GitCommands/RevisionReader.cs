@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GitExtUtils;
 using GitUI;
@@ -33,7 +34,7 @@ namespace GitCommands
     }
 #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
-    public sealed class RevisionReader : IDisposable
+    public sealed class RevisionReader
     {
         private const string FullFormat =
 
@@ -55,66 +56,17 @@ namespace GitCommands
 
         // Trace info for parse errors
         private static int _noOfParseError = 0;
-        private readonly CancellationTokenSequence _cancellationTokenSequence = new();
 
-        public void Execute(
+        public async Task ExecuteAsync(
             GitModule module,
-            IReadOnlyList<IGitRef> refs,
             IObserver<GitRevision> subject,
-            int maxCount,
-            RefFilterOptions refFilterOptions,
-            string branchFilter,
-            string revisionFilter,
-            string pathFilter)
+            ArgumentBuilder arguments,
+            CancellationToken token)
         {
-            ThreadHelper.JoinableTaskFactory
-                .RunAsync(() => ExecuteAsync(module, refs, subject, maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter))
-                .FileAndForget(
-                    ex =>
-                    {
-                        subject.OnError(ex);
-                        return false;
-                    });
-        }
-
-        /// <summary>
-        /// The parents for commits are replaced with the parent in the graph (as all commits may not be included)
-        /// See https://git-scm.com/docs/git-log#Documentation/git-log.txt---parents
-        /// </summary>
-        public bool ParentsAreRewritten { get; private set; } = false;
-
-        private async Task ExecuteAsync(
-            GitModule module,
-            IReadOnlyList<IGitRef> refs,
-            IObserver<GitRevision> subject,
-            int maxCount,
-            RefFilterOptions refFilterOptions,
-            string branchFilter,
-            string revisionFilter,
-            string pathFilter)
-        {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var token = _cancellationTokenSequence.Next();
+            await TaskScheduler.Default;
+            token.ThrowIfCancellationRequested();
 
             var revisionCount = 0;
-
-            await TaskScheduler.Default;
-
-            token.ThrowIfCancellationRequested();
-
-            var branchName = module.IsValidGitWorkingDir()
-                ? module.GetSelectedBranch()
-                : "";
-
-            token.ThrowIfCancellationRequested();
-
-            UpdateSelectedRef(module, refs, branchName);
-            var refsByObjectId = refs.ToLookup(head => head.ObjectId);
-
-            token.ThrowIfCancellationRequested();
-
-            var arguments = BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
 #if DEBUG
             var sw = Stopwatch.StartNew();
@@ -138,9 +90,6 @@ namespace GitCommands
 
                     if (TryParseRevision(chunk, logOutputEncoding, sixMonths, out GitRevision? revision))
                     {
-                        // Look up any refs associated with this revision
-                        revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
-
                         revisionCount++;
 
                         subject.OnNext(revision);
@@ -159,13 +108,14 @@ namespace GitCommands
             }
         }
 
-        private ArgumentBuilder BuildArguments(int maxCount,
+        public static ArgumentBuilder BuildArguments(int maxCount,
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
-            string pathFilter)
+            string pathFilter,
+            out bool parentsAreRewritten)
         {
-            ParentsAreRewritten = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
+            parentsAreRewritten = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
             return new GitArgumentBuilder("log")
             {
                 { maxCount > 0, $"--max-count={maxCount}" },
@@ -208,7 +158,7 @@ namespace GitCommands
                 },
                 revisionFilter,
                 {
-                    ParentsAreRewritten,
+                    parentsAreRewritten,
                     new ArgumentBuilder
                     {
                         { AppSettings.FullHistoryInFileHistory, $"--full-history" },
@@ -221,30 +171,9 @@ namespace GitCommands
                 },
                 { !string.IsNullOrWhiteSpace(pathFilter), $"-- {pathFilter}" }
             };
-        }
 
-        private static bool IsSimpleBranchFilter(string branchFilter) =>
-            branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
-
-        private static void UpdateSelectedRef(GitModule module, IReadOnlyList<IGitRef> refs, string branchName)
-        {
-            var selectedRef = refs.FirstOrDefault(head => head.Name == branchName);
-
-            if (selectedRef is not null)
-            {
-                selectedRef.IsSelected = true;
-
-                var localConfigFile = module.LocalConfigFile;
-                var selectedHeadMergeSource = refs.FirstOrDefault(
-                    head => head.IsRemote
-                         && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
-                         && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
-
-                if (selectedHeadMergeSource is not null)
-                {
-                    selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
-                }
-            }
+            static bool IsSimpleBranchFilter(string branchFilter) =>
+                branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
         }
 
         private static bool TryParseRevision(in ArraySegment<byte> chunk, in Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
@@ -417,11 +346,6 @@ namespace GitCommands
             }
         }
 
-        public void Dispose()
-        {
-            _cancellationTokenSequence.Dispose();
-        }
-
         #region Nested type: StringLineReader
 
         /// <summary>
@@ -498,10 +422,6 @@ namespace GitCommands
             {
                 _revisionReader = revisionReader;
             }
-
-            internal ArgumentBuilder BuildArgumentsBuildArguments(int maxCount, RefFilterOptions refFilterOptions,
-                string branchFilter, string revisionFilter, string pathFilter) =>
-                _revisionReader.BuildArguments(maxCount, refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
             internal static bool TryParseRevision(ArraySegment<byte> chunk, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
                 RevisionReader.TryParseRevision(chunk, logOutputEncoding, sixMonths, out revision);

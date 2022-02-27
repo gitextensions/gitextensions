@@ -74,7 +74,6 @@ namespace GitUI
         public static readonly string HotkeySettingsName = "RevisionGrid";
 
         private readonly TranslationString _droppingFilesBlocked = new("For you own protection dropping more than 10 patch files at once is blocked!");
-        private readonly TranslationString _cannotHighlightSelectedBranch = new("Cannot highlight selected branch when revision graph is loading.");
         private readonly TranslationString _noRevisionFoundError = new("No revision found.");
         private readonly TranslationString _baseForCompareNotSelectedError = new("Base commit for compare is not selected.");
         private readonly TranslationString _strLoading = new("Loading");
@@ -88,8 +87,8 @@ namespace GitUI
 
         private readonly FilterInfo _filterInfo = new();
         private readonly NavigationHistory _navigationHistory = new();
-        private readonly Control _loadingControlAsync;
-        private readonly Control _loadingControlSync;
+        private readonly Control _loadingControlText;
+        private readonly Control _loadingControlSpinner;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
@@ -103,17 +102,16 @@ namespace GitUI
         private readonly ArtificialCommitChangeCount _workTreeChangeCount = new();
         private readonly ArtificialCommitChangeCount _indexChangeCount = new();
         private readonly CancellationTokenSequence _customDiffToolsSequence = new();
+        private readonly CancellationTokenSequence _refreshRevisionsSequence = new();
 
         /// <summary>
         /// The set of ref names that are ambiguous.
         /// Any refs present in this collection should be displayed using their full name.
         /// </summary>
-        private IReadOnlyCollection<string>? _ambiguousRefs;
+        private Lazy<IReadOnlyCollection<string>>? _ambiguousRefs;
 
-        private bool _initialLoad = true;
         private int _updatingFilters;
 
-        private RevisionReader? _revisionReader;
         private IDisposable? _revisionSubscription;
         private GitRevision? _baseCommitToCompare;
         private string? _rebaseOnTopOf;
@@ -156,9 +154,9 @@ namespace GitUI
             renameBranchToolStripMenuItem.AdaptImageLightness();
             InitializeComplete();
 
-            _loadingControlAsync = new Label
+            _loadingControlText = new Label
             {
-                Padding = DpiUtil.Scale(new Padding(7, 5, 5, 5)),
+                Padding = DpiUtil.Scale(new Padding(7, 5, 7, 5)),
                 BorderStyle = BorderStyle.None,
                 ForeColor = SystemColors.InfoText,
                 BackColor = SystemColors.Info,
@@ -168,15 +166,15 @@ namespace GitUI
                 AutoSize = true,
                 Text = _strLoading.Text
             };
-            Controls.Add(_loadingControlAsync);
+            Controls.Add(_loadingControlText);
 
-            _loadingControlSync = new WaitSpinner
+            _loadingControlSpinner = new WaitSpinner
             {
                 BackColor = SystemColors.Window,
                 Visible = false,
                 Size = DpiUtil.Scale(new Size(50, 50))
             };
-            Controls.Add(_loadingControlSync);
+            Controls.Add(_loadingControlSpinner);
 
             // Delay raising the SelectionChanged event for a barely noticeable period to throttle
             // rapid changes, for example by holding the down arrow key in the revision grid.
@@ -184,7 +182,6 @@ namespace GitUI
             _selectionTimer = new Timer(components) { Interval = 75 };
             _selectionTimer.Tick += (_, e) =>
             {
-                _selectionTimer.Enabled = false;
                 _selectionTimer.Stop();
                 SelectionChanged?.Invoke(this, e);
             };
@@ -263,7 +260,6 @@ namespace GitUI
                 //// _selectedObjectIds not disposable
                 //// _baseCommitToCompare not disposable
                 _revisionSubscription?.Dispose();
-                _revisionReader?.Dispose();
                 //// _artificialStatus not disposable
                 //// _ambiguousRefs not disposable
                 //// _refFilterOptions not disposable
@@ -273,6 +269,7 @@ namespace GitUI
                 //// _selectionTimer handled by this.components
                 _buildServerWatcher?.Dispose();
                 _customDiffToolsSequence.Dispose();
+                _refreshRevisionsSequence.Dispose();
 
                 if (_indexWatcher.IsValueCreated)
                 {
@@ -299,9 +296,13 @@ namespace GitUI
             base.Dispose(disposing);
         }
 
+        /// <summary>
+        /// Reset the controls to the supplied content.
+        /// This is used to remove spinners added when loading and to replace the gridview at errors.
+        /// </summary>
+        /// <param name="content">The content to show.</param>
         private void SetPage(Control content)
         {
-            ShowLoading(false);
             for (int i = Controls.Count - 1; i >= 0; i--)
             {
                 Control oldControl = Controls[i];
@@ -435,15 +436,7 @@ namespace GitUI
 
         private void ResetNavigationHistory()
         {
-            var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Count == 1)
-            {
-                _navigationHistory.Push(selectedRevisions[0].ObjectId);
-            }
-            else
-            {
-                _navigationHistory.Clear();
-            }
+            _navigationHistory.Clear();
         }
 
         public void NavigateBackward()
@@ -832,16 +825,24 @@ namespace GitUI
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        private void ShowLoading(bool sync = true)
+        /// <summary>
+        /// Show spinner (in the synchronous part of loading revisions
+        /// and creating the control), or the "Loading..." text when first revision is
+        /// handled and the grid is being updated.
+        /// Note that these controls are removed by SetPage() when the grid is loaded.
+        /// </summary>
+        /// <param name="showSpinner">Show the spinner or the text controls.</param>
+        private void ShowLoading(bool showSpinner = true)
         {
-            _loadingControlSync.Visible = sync;
-            _loadingControlSync.Left = (ClientSize.Width - _loadingControlSync.Width) / 2;
-            _loadingControlSync.Top = (ClientSize.Height - _loadingControlSync.Height) / 2;
+            _loadingControlSpinner.Visible = showSpinner;
+            _loadingControlSpinner.Left = (ClientSize.Width - _loadingControlSpinner.Width) / 2;
+            _loadingControlSpinner.Top = (ClientSize.Height - _loadingControlSpinner.Height) / 2;
 
-            _loadingControlAsync.Visible = !sync;
-            _loadingControlAsync.Left = ClientSize.Width - _loadingControlSync.Width;
-            _loadingControlSync.BringToFront();
-            _loadingControlAsync.BringToFront();
+            _loadingControlText.Visible = !showSpinner;
+            _loadingControlText.Left = ClientSize.Width - _loadingControlSpinner.Width - SystemInformation.VerticalScrollBarWidth;
+
+            _loadingControlSpinner.BringToFront();
+            _loadingControlText.BringToFront();
         }
 
         /// <summary>
@@ -864,11 +865,30 @@ namespace GitUI
                 return;
             }
 
-            _isRefreshingRevisions = true;
-            ShowLoading();
+            GitModule capturedModule = Module;
 
-            bool firstRevisionReceived = false;
+            // Revision info is read in two parallel steps:
+            // 1. Read current commit, refs, prepare grid etc.
+            // 2. Read all revisions with git-log.
+            // Both these operations can take a long time and is done async in parallel.
+            // Step 2. requires that most of the information in 1. is prepared when updating the grid.
+            // Git will provide log information when available (so slower to first revision if sorting).
+            // The information from step 1. is therefore protected with a semaphore.
+            // This local semaphore instance is bound in closures below.
+            System.Threading.SemaphoreSlim semaphoreCurrentCommit = new(initialCount: 0, maxCount: 1);
+            _isRefreshingRevisions = true;
+
+            // Protected by semaphoreCurrentCommit
+            ILookup<ObjectId, IGitRef> refsByObjectId = null;
             bool headIsHandled = false;
+
+            // getRefs (refreshing from Browse) is Lazy already, but not from RevGrid (updating filters etc)
+            Lazy<IReadOnlyList<IGitRef>> getUnfilteredRefs = new(() => (getRefs ?? capturedModule.GetRefs)(RefsFilter.NoFilter));
+            _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(getUnfilteredRefs.Value));
+
+            // optimize for no notes at all
+            Lazy<bool> hasAnyNotes = new(() => AppSettings.ShowGitNotes && getUnfilteredRefs.Value.Any(i => i.CompleteName == GitRefName.RefsNotesPrefix));
+            bool firstRevisionReceived = false;
 
             try
             {
@@ -879,45 +899,18 @@ namespace GitUI
 
                 FilterChanged?.Invoke(this, new FilterChangedEventArgs(_filterInfo));
 
-                _initialLoad = true;
-
                 _buildServerWatcher.CancelBuildStatusFetchOperation();
 
-                DisposeRevisionReader();
-
-                var newCurrentCheckout = Module.GetCurrentCheckout();
-                GitModule capturedModule = Module;
-
-                // If the current checkout changed, don't get the currently selected rows, select the
-                // new current checkout instead.
-                if (newCurrentCheckout == CurrentCheckout)
-                {
-                    _selectedObjectIds = _gridView.SelectedObjectIds;
-                }
-                else
-                {
-                    // This is a new checkout, so ensure the variable is cleared out.
-                    _selectedObjectIds = null;
-                }
-
-                CurrentCheckout = newCurrentCheckout;
                 base.Refresh();
 
-                IndexWatcher.Clear();
-
-                SelectInitialRevision(newCurrentCheckout);
-
-                Subject<GitRevision> revisions = new();
+                _superprojectCurrentCheckout = null;
+                Subject<GitRevision> observeRevisions = new();
                 _revisionSubscription?.Dispose();
-                _revisionSubscription = revisions
+                _revisionSubscription = observeRevisions
                     .ObserveOn(ThreadPoolScheduler.Instance)
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
 
-                _revisionReader ??= new RevisionReader();
-
-                // Find all ambiguous refs (including stash, notes etc)
-                IReadOnlyList<IGitRef> refs = (getRefs ?? Module.GetRefs)(RefsFilter.NoFilter);
-                _ambiguousRefs = GitRef.GetAmbiguousRefNames(refs);
+                System.Threading.CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
 
                 _gridView.SuspendLayout();
                 _gridView.SelectionChanged -= OnGridViewSelectionChanged;
@@ -926,42 +919,90 @@ namespace GitUI
                 _gridView.Enabled = true;
                 _gridView.Focus();
                 _gridView.SelectionChanged += OnGridViewSelectionChanged;
+
+                // Add the spinner controls, removed by SetPage()
+                Controls.Add(_loadingControlSpinner);
+                Controls.Add(_loadingControlText);
+                ShowLoading();
                 _gridView.ResumeLayout();
 
+                IndexWatcher.Reset();
+
+                // Selected is null: Update to trigger reset the tabs etc.
+                _selectionTimer.Stop();
+                _selectionTimer.Start();
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // Evaluate GitRefs and current commit
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default;
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    string branchName = capturedModule.IsValidGitWorkingDir()
+                        ? capturedModule.GetSelectedBranch()
+                        : "";
+                    IGitRef? headRef = string.IsNullOrEmpty(branchName)
+                        ? null
+                        : getUnfilteredRefs.Value.FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{branchName}");
+                    ObjectId? newCurrentCheckout = headRef?.ObjectId ?? capturedModule.GetCurrentCheckout();
+
+                    // If the current checkout changed, don't get the currently selected rows, select the
+                    // new current checkout instead.
+                    if (newCurrentCheckout == CurrentCheckout)
+                    {
+                        _selectedObjectIds = _gridView.SelectedObjectIds;
+                    }
+                    else
+                    {
+                        // This is a new checkout
+                        _selectedObjectIds = null;
+                        CurrentCheckout = newCurrentCheckout;
+                    }
+
+                    refsByObjectId = getUnfilteredRefs.Value.ToLookup(gitRef => gitRef.ObjectId);
+                    ResetNavigationHistory();
+                    UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef);
+                    SelectInitialRevision(newCurrentCheckout);
+
+                    semaphoreCurrentCommit.Release();
+
+                    _superprojectCurrentCheckout = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
+                    if (firstRevisionReceived && _superprojectCurrentCheckout is not null)
+                    {
+                        // Revision may be displayed already, explicit refresh needed
+                        await this.SwitchToMainThreadAsync(cancellationToken);
+                        Refresh();
+                    }
+                }).FileAndForget();
+
+                cancellationToken.ThrowIfCancellationRequested();
+
                 string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
-                _revisionReader.Execute(
-                    Module,
-                    refs,
-                    revisions,
-                    _filterInfo.CommitsLimit,
+                ArgumentBuilder args = RevisionReader.BuildArguments(_filterInfo.CommitsLimit,
                     _filterInfo.RefFilterOptions,
                     _filterInfo.IsShowFilteredBranchesChecked ? _filterInfo.BranchFilter : string.Empty,
                     _filterInfo.GetRevisionFilter(),
-                    pathFilter);
+                    pathFilter,
+                    out bool parentsAreRewritten);
+                ParentsAreRewritten = parentsAreRewritten;
 
-                if (_initialLoad)
-                {
-                    _selectionTimer.Enabled = false;
-                    _selectionTimer.Stop();
-                    _selectionTimer.Enabled = true;
-                    _selectionTimer.Start();
-
-                    _initialLoad = false;
-                }
-
-                _superprojectCurrentCheckout = null;
+                // Get info about all Git commits, update the grid
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    var scc = await GetSuperprojectCheckoutAsync(capturedModule, noLocks: true);
-                    await this.SwitchToMainThreadAsync();
-
-                    if (_superprojectCurrentCheckout != scc)
+                    await TaskScheduler.Default;
+                    await new RevisionReader().ExecuteAsync(
+                        capturedModule,
+                        observeRevisions,
+                        args,
+                        cancellationToken);
+                }).FileAndForget(
+                    ex =>
                     {
-                        _superprojectCurrentCheckout = scc;
-                        Refresh();
-                    }
-                });
-                ResetNavigationHistory();
+                        observeRevisions.OnError(ex);
+                        return false;
+                    });
             }
             catch
             {
@@ -970,6 +1011,27 @@ namespace GitUI
             }
 
             return;
+
+            static void UpdateSelectedRef(GitModule module, IReadOnlyList<IGitRef> getRefs, IGitRef? selectedRef)
+            {
+                if (selectedRef is null)
+                {
+                    return;
+                }
+
+                selectedRef.IsSelected = true;
+
+                var localConfigFile = module.LocalConfigFile;
+                var selectedHeadMergeSource = getRefs.FirstOrDefault(
+                    head => head.IsRemote
+                         && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
+                         && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
+
+                if (selectedHeadMergeSource is not null)
+                {
+                    selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
+                }
+            }
 
             string BuildPathFilter(string? path)
             {
@@ -1082,26 +1144,29 @@ namespace GitUI
                 if (!firstRevisionReceived)
                 {
                     firstRevisionReceived = true;
-                    ParentsAreRewritten = _revisionReader.ParentsAreRewritten;
-
-                    this.InvokeAsync(() => { ShowLoading(false); }).FileAndForget();
+                    this.InvokeAsync(() => { ShowLoading(showSpinner: false); }).FileAndForget();
                 }
 
-                bool isCurrentCheckout = revision.ObjectId.Equals(CurrentCheckout);
+                RevisionNodeFlags flags = RevisionNodeFlags.None;
 
-                if (isCurrentCheckout)
+                // To proceed from here refs etc must be available (protected by semaphoreCurrentCommit).
+                if (!headIsHandled)
                 {
-                    headIsHandled = true;
-                    AddArtificialRevisions(insertAsFirst: false);
+                    semaphoreCurrentCommit.Wait();
+                    if (revision.ObjectId.Equals(CurrentCheckout))
+                    {
+                        // Insert worktree/index before HEAD (CurrentCheckout)
+                        // If grid is filtered and HEAD not visible, insert artificial as first after all are updated
+                        headIsHandled = true;
+                        AddArtificialRevisions(insertAsFirst: false);
+                        flags = RevisionNodeFlags.CheckedOut;
+                    }
+
+                    semaphoreCurrentCommit.Release();
                 }
 
-                var flags = RevisionNodeFlags.None;
-
-                if (isCurrentCheckout)
-                {
-                    flags = RevisionNodeFlags.CheckedOut;
-                }
-
+                // Look up any refs associated with this revision
+                revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
                 if (revision.Refs.Count != 0)
                 {
                     flags |= RevisionNodeFlags.HasRef;
@@ -1110,6 +1175,12 @@ namespace GitUI
                 if (_filterInfo.RefFilterOptions.HasFlag(RefFilterOptions.FirstParent))
                 {
                     flags |= RevisionNodeFlags.OnlyFirstParent;
+                }
+
+                if (!hasAnyNotes.Value)
+                {
+                    // No notes at all in this repo
+                    revision.HasNotes = true;
                 }
 
                 _gridView.Add(revision, flags);
@@ -1167,7 +1238,7 @@ namespace GitUI
                 this.InvokeAsync(() => SetPage(new ErrorControl()))
                     .FileAndForget();
 
-                DisposeRevisionReader();
+                _refreshRevisionsSequence.CancelCurrent();
 
                 // Rethrow the exception on the UI thread
                 this.InvokeAsync(() => throw new AggregateException(exception))
@@ -1194,38 +1265,61 @@ namespace GitUI
                                 _isRefreshingRevisions = false;
                             })
                         .FileAndForget();
+                    return;
+                }
+
+                // This has to happen on the UI thread
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await this.SwitchToMainThreadAsync();
+
+                    _gridView.LoadingCompleted();
+                    SetPage(_gridView);
+                    _isRefreshingRevisions = false;
+                    CheckAndRepairInitialRevision();
+                    HighlightRevisionsByAuthor(GetSelectedRevisions());
+
+                    if (ShowBuildServerInfo)
+                    {
+                        await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
+                    }
+                }).FileAndForget();
+            }
+
+            static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(GitModule gitModule, bool noLocks = false)
+            {
+                if (gitModule.SuperprojectModule is null)
+                {
+                    return null;
+                }
+
+                SuperProjectInfo spi = new();
+                var (code, commit) = await gitModule.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
+                if (code == 'U')
+                {
+                    // return local and remote hashes
+                    var array = await gitModule.SuperprojectModule.GetConflictAsync(gitModule.SubmodulePath)
+                        .ConfigureAwaitRunInline();
+                    spi.ConflictBase = array.Base.ObjectId;
+                    spi.ConflictLocal = array.Local.ObjectId;
+                    spi.ConflictRemote = array.Remote.ObjectId;
                 }
                 else
                 {
-                    // This has to happen on the UI thread
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        await this.SwitchToMainThreadAsync();
-
-                        _gridView.LoadingCompleted();
-                        SetPage(_gridView);
-                        _isRefreshingRevisions = false;
-                        CheckAndRepairInitialRevision();
-                        IndexWatcher.Reset();
-                        HighlightRevisionsByAuthor(GetSelectedRevisions());
-
-                        if (ShowBuildServerInfo)
-                        {
-                            await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
-                        }
-                    }).FileAndForget();
+                    spi.CurrentBranch = commit;
                 }
 
-                DisposeRevisionReader();
-            }
+                var refs = await gitModule.SuperprojectModule.GetSubmoduleItemsForEachRefAsync(gitModule.SubmodulePath, noLocks: noLocks);
 
-            void DisposeRevisionReader()
-            {
-                if (_revisionReader is not null)
+                if (refs is not null)
                 {
-                    _revisionReader.Dispose();
-                    _revisionReader = null;
+                    spi.Refs = refs
+                        .Where(a => a.Value is not null && a.Value.ObjectId is not null)
+                        .GroupBy(a => a.Value!.ObjectId!)
+                        .ToDictionary(gr => gr.Key, gr => gr.Select(a => a.Key).AsReadOnlyList());
                 }
+
+                return spi;
             }
         }
 
@@ -1234,42 +1328,6 @@ namespace GitUI
         /// See https://git-scm.com/docs/git-log#Documentation/git-log.txt---parents
         /// </summary>
         private bool ParentsAreRewritten { get; set; } = false;
-
-        private static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(GitModule gitModule, bool noLocks = false)
-        {
-            if (gitModule.SuperprojectModule is null)
-            {
-                return null;
-            }
-
-            SuperProjectInfo spi = new();
-            var (code, commit) = await gitModule.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
-            if (code == 'U')
-            {
-                // return local and remote hashes
-                var array = await gitModule.SuperprojectModule.GetConflictAsync(gitModule.SubmodulePath)
-                    .ConfigureAwaitRunInline();
-                spi.ConflictBase = array.Base.ObjectId;
-                spi.ConflictLocal = array.Local.ObjectId;
-                spi.ConflictRemote = array.Remote.ObjectId;
-            }
-            else
-            {
-                spi.CurrentBranch = commit;
-            }
-
-            var refs = await gitModule.SuperprojectModule.GetSubmoduleItemsForEachRefAsync(gitModule.SubmodulePath, noLocks: noLocks);
-
-            if (refs is not null)
-            {
-                spi.Refs = refs
-                    .Where(a => a.Value is not null && a.Value.ObjectId is not null)
-                    .GroupBy(a => a.Value!.ObjectId!)
-                    .ToDictionary(gr => gr.Key, gr => gr.Select(a => a.Key).AsReadOnlyList());
-            }
-
-            return spi;
-        }
 
         internal bool FilterIsApplied(bool inclBranchFilter)
         {
@@ -1389,9 +1447,7 @@ namespace GitUI
                 }
             }
 
-            _selectionTimer.Enabled = false;
             _selectionTimer.Stop();
-            _selectionTimer.Enabled = true;
             _selectionTimer.Start();
 
             var (first, selected) = getFirstAndSelected();
@@ -1517,6 +1573,8 @@ namespace GitUI
 
         internal bool TryGetSuperProjectInfo([NotNullWhen(returnValue: true)] out SuperProjectInfo? spi)
         {
+            // If _superprojectCurrentCheckout is not yet calculated when the grid is shown,
+            // a separate Refresh() will be invoked to update the row later.
             spi = _superprojectCurrentCheckout;
             return spi is not null;
         }
@@ -1914,7 +1972,7 @@ namespace GitUI
 
         private string GetRefUnambiguousName(IGitRef gitRef)
         {
-            return _ambiguousRefs.Contains(gitRef.Name)
+            return _ambiguousRefs.Value.Contains(gitRef.Name)
                 ? gitRef.CompleteName
                 : gitRef.Name;
         }
@@ -2374,19 +2432,15 @@ namespace GitUI
 
         private void ToggleHighlightSelectedBranch()
         {
-            if (_revisionReader is not null)
+            var revision = GetSelectedRevisions().FirstOrDefault();
+
+            if (revision is null)
             {
-                MessageBox.Show(_cannotHighlightSelectedBranch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            var revision = GetSelectedRevisions().FirstOrDefault();
-
-            if (revision is not null)
-            {
-                HighlightBranch(revision.ObjectId);
-                Refresh();
-            }
+            HighlightBranch(revision.ObjectId);
+            Refresh();
         }
 
         private void renameBranchToolStripMenuItem_Click(object sender, EventArgs e)
