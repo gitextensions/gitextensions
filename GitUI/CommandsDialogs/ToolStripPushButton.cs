@@ -30,6 +30,11 @@ namespace GitUI.CommandsDialogs
         {
             ResetToDefaultState();
 
+            if (string.IsNullOrWhiteSpace(branchName) || !AppSettings.ShowAheadBehindData)
+            {
+                return;
+            }
+
             var aheadBehindData = _aheadBehindDataProvider?.GetData(branchName);
             if (aheadBehindData is null || aheadBehindData.Count < 1 || !aheadBehindData.ContainsKey(branchName))
             {
@@ -37,13 +42,8 @@ namespace GitUI.CommandsDialogs
             }
 
             var data = aheadBehindData[branchName];
-
-            if (AppSettings.ShowAheadBehindData)
-            {
-                Text = data.ToDisplay();
-                DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-            }
-
+            Text = data.ToDisplay();
+            DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             ToolTipText = GetToolTipText(data);
 
             if (!string.IsNullOrEmpty(data.BehindCount))

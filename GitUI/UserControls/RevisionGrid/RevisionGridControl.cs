@@ -123,6 +123,7 @@ namespace GitUI
         // NOTE internal properties aren't serialised by the WinForms designer
 
         internal ObjectId? CurrentCheckout { get; private set; }
+        internal Lazy<string> CurrentBranch { get; private set; } = new(() => "");
         internal FilterInfo CurrentFilter => _filterInfo;
         internal bool ShowUncommittedChangesIfPossible { get; set; } = true;
         internal bool ShowBuildServerInfo { get; set; }
@@ -867,6 +868,11 @@ namespace GitUI
 
             GitModule capturedModule = Module;
 
+            // Reset the "cache" for current branch
+            CurrentBranch = new(() => Module.IsValidGitWorkingDir()
+                      ? Module.GetSelectedBranch(setDefaultIfEmpty: false)
+                      : "");
+
             // Revision info is read in two parallel steps:
             // 1. Read current commit, refs, prepare grid etc.
             // 2. Read all revisions with git-log.
@@ -940,12 +946,9 @@ namespace GitUI
                     await TaskScheduler.Default;
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    string branchName = capturedModule.IsValidGitWorkingDir()
-                        ? capturedModule.GetSelectedBranch()
-                        : "";
-                    IGitRef? headRef = string.IsNullOrEmpty(branchName)
-                        ? null
-                        : getUnfilteredRefs.Value.FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{branchName}");
+                    IGitRef? headRef = !string.IsNullOrEmpty(CurrentBranch.Value)
+                        ? getUnfilteredRefs.Value.FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{CurrentBranch.Value}")
+                        : null;
                     ObjectId? newCurrentCheckout = headRef?.ObjectId ?? capturedModule.GetCurrentCheckout();
 
                     // If the current checkout changed, don't get the currently selected rows, select the
@@ -1022,10 +1025,12 @@ namespace GitUI
                 selectedRef.IsSelected = true;
 
                 var localConfigFile = module.LocalConfigFile;
+                var selectedRemote = selectedRef.GetTrackingRemote(localConfigFile);
+                var selectedMerge = selectedRef.GetMergeWith(localConfigFile);
                 var selectedHeadMergeSource = getRefs.FirstOrDefault(
-                    head => head.IsRemote
-                         && selectedRef.GetTrackingRemote(localConfigFile) == head.Remote
-                         && selectedRef.GetMergeWith(localConfigFile) == head.LocalName);
+                    gitRef => gitRef.IsRemote
+                         && selectedRemote == gitRef.Remote
+                         && selectedMerge == gitRef.LocalName);
 
                 if (selectedHeadMergeSource is not null)
                 {
@@ -1453,7 +1458,7 @@ namespace GitUI
             var (first, selected) = getFirstAndSelected();
 
             compareToWorkingDirectoryMenuItem.Enabled = selected is not null && selected.ObjectId != ObjectId.WorkTreeId;
-            compareWithCurrentBranchToolStripMenuItem.Enabled = !string.IsNullOrWhiteSpace(Module.GetSelectedBranch(setDefaultIfEmpty: false));
+            compareWithCurrentBranchToolStripMenuItem.Enabled = !string.IsNullOrWhiteSpace(CurrentBranch.Value);
             compareSelectedCommitsMenuItem.Enabled = first is not null && selected is not null;
             openCommitsWithDiffToolMenuItem.Enabled = first is not null && selected is not null;
 
@@ -1526,7 +1531,7 @@ namespace GitUI
                 case Keys.Delete:
                     {
                         InitiateRefAction(
-                            new GitRefListsForRevision(selectedRevision).GetDeletableRefs(Module.GetSelectedBranch()),
+                            new GitRefListsForRevision(selectedRevision).GetDeletableRefs(CurrentBranch.Value),
                             gitRef =>
                             {
                                 if (gitRef.IsTag)
@@ -1785,7 +1790,7 @@ namespace GitUI
             }
 
             // For now there is no action that could be done on currentBranch
-            string currentBranchRef = GitRefName.RefsHeadsPrefix + Module.GetSelectedBranch();
+            string currentBranchRef = GitRefName.RefsHeadsPrefix + CurrentBranch.Value;
             var branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
             bool currentBranchPointsToRevision = false;
@@ -2603,8 +2608,7 @@ namespace GitUI
 
         private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var headBranch = Module.GetSelectedBranch(setDefaultIfEmpty: false);
-            if (string.IsNullOrWhiteSpace(headBranch))
+            if (string.IsNullOrWhiteSpace(CurrentBranch.Value) || CurrentCheckout is null)
             {
                 MessageBox.Show(this, "No branch is currently selected", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -2616,12 +2620,7 @@ namespace GitUI
                 return;
             }
 
-            var headBranchName = Module.RevParse(headBranch);
-
-            if (headBranchName is not null)
-            {
-                UICommands.ShowFormDiff(baseCommit.ObjectId, headBranchName, baseCommit.Subject, headBranch);
-            }
+            UICommands.ShowFormDiff(baseCommit.ObjectId, CurrentCheckout, baseCommit.Subject, CurrentBranch.Value);
         }
 
         private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
