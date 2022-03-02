@@ -232,22 +232,27 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Rectangle messageBounds,
             ref int offset)
         {
+            if (spi.CurrentCommit == revision.ObjectId)
+            {
+                DrawSuperProjectRef("", ref offset, isSelected: true);
+            }
+
             if (spi.ConflictBase == revision.ObjectId)
             {
-                DrawSuperProjectRef("Base", ref offset);
+                DrawSuperProjectRef("Base", ref offset, isSelected: false);
             }
 
             if (spi.ConflictLocal == revision.ObjectId)
             {
-                DrawSuperProjectRef("Local", ref offset);
+                DrawSuperProjectRef("Local", ref offset, isSelected: false);
             }
 
             if (spi.ConflictRemote == revision.ObjectId)
             {
-                DrawSuperProjectRef("Remote", ref offset);
+                DrawSuperProjectRef("Remote", ref offset, isSelected: false);
             }
 
-            void DrawSuperProjectRef(string label, ref int currentOffset)
+            void DrawSuperProjectRef(string label, ref int currentOffset, bool isSelected)
             {
                 RevisionGridRefRenderer.DrawRef(
                     e.State.HasFlag(DataGridViewElementStates.Selected),
@@ -255,9 +260,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     ref currentOffset,
                     label,
                     Color.OrangeRed,
-                    RefArrowType.NotFilled,
+                    isSelected ? RefArrowType.Filled : RefArrowType.NotFilled,
                     messageBounds,
-                    e.Graphics);
+                    e.Graphics,
+                    dashedLine: true);
             }
         }
 

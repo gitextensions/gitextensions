@@ -18,13 +18,15 @@ namespace GitUI
 
         public static void DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false)
         {
-            var paddingLeftRight = DpiUtil.Scale(4);
+            var paddingLeftRight = !string.IsNullOrEmpty(name) ? DpiUtil.Scale(4) : DpiUtil.Scale(1);
             var paddingTopBottom = DpiUtil.Scale(2);
             var marginRight = DpiUtil.Scale(7);
 
             var textColor = ColorHelper.Lerp(headColor, Color.Black, 0.25F);
 
-            var textSize = TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding);
+            Size textSize = !string.IsNullOrEmpty(name)
+                ? TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding)
+                : new(0, TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height);
 
             var arrowWidth = arrowType == RefArrowType.None ? 0 : bounds.Height / 2;
 

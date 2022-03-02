@@ -1306,7 +1306,7 @@ namespace GitUI
                 }
                 else
                 {
-                    spi.CurrentBranch = commit;
+                    spi.CurrentCommit = commit;
                 }
 
                 var refs = await gitModule.SuperprojectModule.GetSubmoduleItemsForEachRefAsync(gitModule.SubmodulePath, noLocks: noLocks);
