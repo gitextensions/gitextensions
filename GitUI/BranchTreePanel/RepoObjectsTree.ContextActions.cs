@@ -246,6 +246,8 @@ namespace GitUI.BranchTreePanel
 
         private void RegisterContextActions()
         {
+            _filterForSelectedRefsMenuItem = CreateFilterSelectedRefsContextMenuItem();
+
             #region Sort by / order
             _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() => Refresh(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs));
             _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => Refresh(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs));
@@ -262,7 +264,6 @@ namespace GitUI.BranchTreePanel
             #endregion
 
             #region LocalBranchNode
-            menuBranch.Items.Insert(0, CreateFilterSelectedRefsContextMenuItem());
             _menuBranchCopyContextMenuItems = CreateCopyContextMenuItems();
             menuBranch.InsertItems(_menuBranchCopyContextMenuItems);
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
@@ -277,7 +278,6 @@ namespace GitUI.BranchTreePanel
             #endregion
 
             #region RemoteBranchNode
-            menuRemote.Items.Add(CreateFilterSelectedRefsContextMenuItem());
             _menuRemoteCopyContextMenuItems = CreateCopyContextMenuItems();
             menuRemote.InsertItems(_menuRemoteCopyContextMenuItems);
             _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
@@ -305,7 +305,6 @@ namespace GitUI.BranchTreePanel
             #region TagNode
             _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
             menuTag.InsertItems(_tagNodeMenuItems.Select(s => s.Item));
-            menuTag.Items.Add(CreateFilterSelectedRefsContextMenuItem());
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
             #endregion
 
@@ -342,6 +341,7 @@ namespace GitUI.BranchTreePanel
         }
 
         #region Filter for selected refs
+        private ToolStripMenuItem _filterForSelectedRefsMenuItem;
         private readonly TranslationString _filterForSelected = new("&Filter for selected");
 
         private readonly TranslationString _filterForSelectedToolTip = new(
@@ -354,6 +354,13 @@ namespace GitUI.BranchTreePanel
             ToolStripMenuItem menuItem = new(_filterForSelected.Text, Properties.Images.ShowThisBranchOnly) { ToolTipText = _filterForSelectedToolTip.Text };
             RegisterClick(menuItem, () => _filterRevisionGridBySpaceSeparatedRefs(GetMultiSelection().ReduceToRefs().Select(b => b.FullPath).Join(" ")));
             return menuItem;
+        }
+
+        private void ToggleFilterSelectedRefsContextMenu(ContextMenuStrip contextMenu, NodeBase[] selectedNodes)
+        {
+            var selectionContainsRefs = selectedNodes.ReduceToRefs().Any();
+            contextMenu.AddOnce(_filterForSelectedRefsMenuItem);
+            ToggleMenuItems(selectionContainsRefs, _filterForSelectedRefsMenuItem);
         }
         #endregion
 
@@ -374,6 +381,7 @@ namespace GitUI.BranchTreePanel
             ToggleRemotesTreeContextMenu(contextMenu, hasSingleSelection);
             ToggleTagContextMenu(contextMenu, hasSingleSelection);
             ToggleSubmoduleContextMenu(contextMenu, hasSingleSelection);
+            ToggleFilterSelectedRefsContextMenu(contextMenu, selectedNodes);
             ToggleSortContextMenu(contextMenu, hasSingleSelection);
             ToggleExpandCollapseContextMenu(contextMenu, selectedNodes);
             ToggleMoveTreeUpDownContexMenu(contextMenu, hasSingleSelection);
