@@ -18,10 +18,10 @@ namespace GitUI.CommandsDialogs
 
         /// <summary>
         ///  Adds user scripts to the <paramref name="contextMenu"/>, or under <paramref name="hostMenuItem"/>,
-        ///  if scripts are marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
+        ///  if scripts are not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
         /// </summary>
-        /// <param name="contextMenu">The context menu to add user scripts too.</param>
-        /// <param name="hostMenuItem">The menu item to which to add user scripts marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.</param>
+        /// <param name="contextMenu">The context menu to add user scripts to.</param>
+        /// <param name="hostMenuItem">The menu item user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/> are added to.</param>
         /// <param name="scriptInvoker">The handler that handles user script invocation.</param>
         public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Action<string> scriptInvoker)
         {
@@ -74,11 +74,11 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        ///  Removes user scripts from the <paramref name="contextMenu"/>, or under <paramref name="hostMenuItem"/>,
-        ///  if scripts are marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
+        ///  Removes user scripts from the <paramref name="contextMenu"/>, or from <paramref name="hostMenuItem"/>,
+        ///  if scripts are not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
         /// </summary>
-        /// <param name="contextMenu">The context menu to add user scripts too.</param>
-        /// <param name="hostMenuItem">The menu item to which to add user scripts marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.</param>
+        /// <param name="contextMenu">The context menu to remove user scripts from.</param>
+        /// <param name="hostMenuItem">The menu item from which to remove user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.</param>
         public static void RemoveUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem)
         {
             contextMenu = contextMenu ?? throw new ArgumentNullException(nameof(contextMenu));
