@@ -116,7 +116,6 @@ namespace GitUI
         private GitRevision? _baseCommitToCompare;
         private string? _rebaseOnTopOf;
         private bool _isRefreshingRevisions;
-        private IReadOnlyList<ObjectId>? _selectedObjectIds;
         private SuperProjectInfo? _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
 
@@ -912,6 +911,7 @@ namespace GitUI
 
                 System.Threading.CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
 
+                IReadOnlyList<ObjectId>? selectedObjectIds = _gridView.SelectedObjectIds;
                 _gridView.SuspendLayout();
                 _gridView.SelectionChanged -= OnGridViewSelectionChanged;
                 _gridView.ClearSelection();
@@ -950,21 +950,16 @@ namespace GitUI
 
                     // If the current checkout changed, don't get the currently selected rows, select the
                     // new current checkout instead.
-                    if (newCurrentCheckout == CurrentCheckout)
+                    if (newCurrentCheckout != CurrentCheckout)
                     {
-                        _selectedObjectIds = _gridView.SelectedObjectIds;
-                    }
-                    else
-                    {
-                        // This is a new checkout
-                        _selectedObjectIds = null;
+                        selectedObjectIds = null;
                         CurrentCheckout = newCurrentCheckout;
                     }
 
                     refsByObjectId = getUnfilteredRefs.Value.ToLookup(gitRef => gitRef.ObjectId);
                     ResetNavigationHistory();
                     UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef);
-                    SelectInitialRevision(newCurrentCheckout);
+                    SelectInitialRevision(newCurrentCheckout, selectedObjectIds);
 
                     semaphoreCurrentCommit.Release();
 
@@ -1339,10 +1334,8 @@ namespace GitUI
         /// The SelectedId is the last selected commit in the grid (with related CommitInfo in Browse).
         /// The FirstId is first selected, the first commit in a diff.
         /// </summary>
-        private void SelectInitialRevision(ObjectId? currentCheckout)
+        private void SelectInitialRevision(ObjectId? currentCheckout, IReadOnlyList<ObjectId>? toBeSelectedObjectIds)
         {
-            var toBeSelectedObjectIds = _selectedObjectIds;
-
             if (toBeSelectedObjectIds is null || toBeSelectedObjectIds.Count == 0)
             {
                 if (SelectedId is not null)
@@ -1366,7 +1359,6 @@ namespace GitUI
             }
 
             _gridView.ToBeSelectedObjectIds = toBeSelectedObjectIds;
-            _selectedObjectIds = null;
         }
 
         private void CheckAndRepairInitialRevision()
@@ -1438,13 +1430,6 @@ namespace GitUI
             if (_gridView.SelectedRows.Count > 0)
             {
                 _latestSelectedRowIndex = _gridView.SelectedRows[0].Index;
-
-                // if there was selected a new revision while data is being loaded
-                // then don't change the new selection when restoring selected revisions after data is loaded
-                if (_isRefreshingRevisions && !_gridView.UpdatingVisibleRows)
-                {
-                    _selectedObjectIds = _gridView.SelectedObjectIds;
-                }
             }
 
             _selectionTimer.Stop();
