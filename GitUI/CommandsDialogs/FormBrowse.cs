@@ -827,7 +827,11 @@ namespace GitUI.CommandsDialogs
                 bool isDashboard = _dashboard?.Visible ?? false;
                 bool validBrowseDir = !isDashboard && Module.IsValidGitWorkingDir();
 
-                branchSelect.Text = validBrowseDir ? Module.GetSelectedBranch() : "";
+                branchSelect.Text = validBrowseDir
+                    ? !string.IsNullOrWhiteSpace(RevisionGrid.CurrentBranch.Value)
+                        ? RevisionGrid.CurrentBranch.Value
+                        : DetachedHeadParser.DetachedBranch
+                    : "";
                 toolStripButtonLevelUp.Enabled = hasWorkingDir && !bareRepository;
                 CommitInfoTabControl.Visible = validBrowseDir;
                 fileExplorerToolStripMenuItem.Enabled = validBrowseDir;
@@ -909,7 +913,7 @@ namespace GitUI.CommandsDialogs
 
                     _formBrowseMenus.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
 
-                    toolStripButtonPush.DisplayAheadBehindInformation(branchSelect.Text);
+                    toolStripButtonPush.DisplayAheadBehindInformation(RevisionGrid.CurrentBranch.Value);
 
                     ActiveControl = RevisionGrid;
                 }
@@ -1499,7 +1503,7 @@ namespace GitUI.CommandsDialogs
                 string? to = null;
                 string? from = null;
 
-                string currentBranch = Module.GetSelectedBranch();
+                string currentBranch = RevisionGrid.CurrentBranch.Value;
                 var currentCheckout = RevisionGrid.CurrentCheckout;
 
                 if (revisions[0].ObjectId == currentCheckout)

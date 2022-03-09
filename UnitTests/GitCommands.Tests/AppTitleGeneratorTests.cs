@@ -58,10 +58,10 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void Generate_should_include_supplied_branch_without_braces()
+        public void Generate_should_include_supplied_branch()
         {
             string branchName = "feature/my_(test)_branch";
-            string title = _appTitleGenerator.Generate("a", true, branchName: "(" + branchName + ")", defaultBranchName: _defaultBranchName);
+            string title = _appTitleGenerator.Generate("a", true, branchName: branchName, defaultBranchName: _defaultBranchName);
             title.Should().StartWith($"{MockRepositoryDescriptionProvider.ShortName} ({branchName}) - {AppSettings.ApplicationName}");
         }
 
@@ -70,7 +70,7 @@ namespace GitCommandsTests
         {
             string branchName = "feature/my_(test)_branch";
             string pathName = "folder/folder/file";
-            string title = _appTitleGenerator.Generate("a", true, branchName: "(" + branchName + ")", pathName: pathName);
+            string title = _appTitleGenerator.Generate("a", true, branchName: branchName, pathName: pathName);
             title.Should().StartWith($@"""file"" {MockRepositoryDescriptionProvider.ShortName} ({branchName}) - {AppSettings.ApplicationName}");
         }
 

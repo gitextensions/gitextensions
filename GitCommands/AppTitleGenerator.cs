@@ -47,7 +47,10 @@ namespace GitCommands
                 return AppSettings.ApplicationName;
             }
 
-            branchName = branchName?.Trim('(', ')') ?? defaultBranchName;
+            if (string.IsNullOrWhiteSpace(branchName))
+            {
+                branchName = defaultBranchName;
+            }
 
             // Pathname normally have quotes already
             pathName = GetFileName(pathName);

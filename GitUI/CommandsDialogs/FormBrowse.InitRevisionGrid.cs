@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
             RevisionGrid.FilterChanged += (sender, e) =>
             {
-                Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), Module.GetSelectedBranch(), TranslatedStrings.NoBranch, e.PathFilter);
+                Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), RevisionGrid.CurrentBranch.Value, TranslatedStrings.NoBranch, e.PathFilter);
 
                 // PathFilter is a free text field and may contain wildcards, quoting is optional.
                 // This is will adjust the string at least for paths added from context menus.
