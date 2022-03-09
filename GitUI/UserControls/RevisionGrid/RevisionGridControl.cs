@@ -116,7 +116,6 @@ namespace GitUI
         private GitRevision? _baseCommitToCompare;
         private string? _rebaseOnTopOf;
         private bool _isRefreshingRevisions;
-        private IReadOnlyList<ObjectId>? _selectedObjectIds;
         private SuperProjectInfo? _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
 
@@ -852,6 +851,8 @@ namespace GitUI
         /// </summary>
         public bool CanRefresh => !_isRefreshingRevisions && _updatingFilters == 0;
 
+        #region PerformRefreshRevisions
+
         /// <summary>
         ///  Queries git for the new set of revisions and refreshes the grid.
         /// </summary>
@@ -912,6 +913,7 @@ namespace GitUI
 
                 System.Threading.CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
 
+                IReadOnlyList<ObjectId>? selectedObjectIds = _gridView.SelectedObjectIds;
                 _gridView.SuspendLayout();
                 _gridView.SelectionChanged -= OnGridViewSelectionChanged;
                 _gridView.ClearSelection();
@@ -950,21 +952,16 @@ namespace GitUI
 
                     // If the current checkout changed, don't get the currently selected rows, select the
                     // new current checkout instead.
-                    if (newCurrentCheckout == CurrentCheckout)
+                    if (newCurrentCheckout != CurrentCheckout)
                     {
-                        _selectedObjectIds = _gridView.SelectedObjectIds;
-                    }
-                    else
-                    {
-                        // This is a new checkout
-                        _selectedObjectIds = null;
+                        selectedObjectIds = null;
                         CurrentCheckout = newCurrentCheckout;
                     }
 
                     refsByObjectId = getUnfilteredRefs.Value.ToLookup(gitRef => gitRef.ObjectId);
                     ResetNavigationHistory();
                     UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef);
-                    SelectInitialRevision(newCurrentCheckout);
+                    SelectInitialRevision(newCurrentCheckout, selectedObjectIds);
 
                     semaphoreCurrentCommit.Release();
 
@@ -1321,7 +1318,103 @@ namespace GitUI
 
                 return spi;
             }
+
+#pragma warning disable CS1587 // XML comment is not placed on a valid language element
+            /// <summary>
+            /// Select initial revision(s) in the grid.
+            /// The SelectedId is the last selected commit in the grid (with related CommitInfo in Browse).
+            /// The FirstId is first selected, the first commit in a diff.
+            /// </summary>
+            void SelectInitialRevision(ObjectId? currentCheckout, IReadOnlyList<ObjectId>? toBeSelectedObjectIds)
+#pragma warning restore CS1587 // XML comment is not placed on a valid language element
+            {
+                if (toBeSelectedObjectIds is null || toBeSelectedObjectIds.Count == 0)
+                {
+                    if (SelectedId is not null)
+                    {
+                        if (FirstId is not null)
+                        {
+                            toBeSelectedObjectIds = new ObjectId[] { FirstId, SelectedId };
+                            FirstId = null;
+                        }
+                        else
+                        {
+                            toBeSelectedObjectIds = new ObjectId[] { SelectedId };
+                        }
+
+                        SelectedId = null;
+                    }
+                    else
+                    {
+                        toBeSelectedObjectIds = currentCheckout is null ? Array.Empty<ObjectId>() : new ObjectId[] { currentCheckout };
+                    }
+                }
+
+                _gridView.ToBeSelectedObjectIds = toBeSelectedObjectIds;
+            }
+
+            void CheckAndRepairInitialRevision()
+            {
+                // Check if there is any commit that couldn't be selected.
+                if (!_gridView.ToBeSelectedObjectIds.Any())
+                {
+                    return;
+                }
+
+                // Search for the commitid that was not selected in the grid. If not found, select the first parent.
+                int index = SearchRevision(_gridView.ToBeSelectedObjectIds.First());
+                if (index >= 0)
+                {
+                    SetSelectedIndex(index);
+                }
+
+                return;
+
+                int SearchRevision(ObjectId objectId)
+                {
+                    // Attempt to look up an item by its ID
+                    if (_gridView.TryGetRevisionIndex(objectId) is int exactIndex)
+                    {
+                        return exactIndex;
+                    }
+
+                    if (objectId is not null && !objectId.IsArtificial)
+                    {
+                        // Not found, so search for its parents
+                        foreach (var parentId in TryGetParents(objectId))
+                        {
+                            if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
+                            {
+                                return parentIndex;
+                            }
+                        }
+                    }
+
+                    // Not found...
+                    return -1;
+                }
+            }
+
+            IEnumerable<ObjectId> TryGetParents(ObjectId objectId)
+            {
+                GitArgumentBuilder args = new("rev-list")
+                {
+                    { _filterInfo.HasCommitsLimit, $"--max-count={_filterInfo.CommitsLimit}" },
+                    objectId
+                };
+
+                ExecutionResult result = Module.GitExecutable.Execute(args, throwOnErrorExit: false);
+                foreach (var line in result.StandardOutput.LazySplit('\n'))
+                {
+                    if (ObjectId.TryParse(line, out var parentId))
+                    {
+                        yield return parentId;
+                    }
+                }
+            }
         }
+
+        #endregion
 
         /// <summary>
         /// The parents for commits are replaced with the parent in the graph (as all commits may not be included)
@@ -1334,101 +1427,6 @@ namespace GitUI
             return _filterInfo.HasFilter || (inclBranchFilter && _filterInfo.IsShowFilteredBranchesChecked && !string.IsNullOrEmpty(_filterInfo.BranchFilter));
         }
 
-        /// <summary>
-        /// Select initial revision(s) in the grid.
-        /// The SelectedId is the last selected commit in the grid (with related CommitInfo in Browse).
-        /// The FirstId is first selected, the first commit in a diff.
-        /// </summary>
-        private void SelectInitialRevision(ObjectId? currentCheckout)
-        {
-            var toBeSelectedObjectIds = _selectedObjectIds;
-
-            if (toBeSelectedObjectIds is null || toBeSelectedObjectIds.Count == 0)
-            {
-                if (SelectedId is not null)
-                {
-                    if (FirstId is not null)
-                    {
-                        toBeSelectedObjectIds = new ObjectId[] { FirstId, SelectedId };
-                        FirstId = null;
-                    }
-                    else
-                    {
-                        toBeSelectedObjectIds = new ObjectId[] { SelectedId };
-                    }
-
-                    SelectedId = null;
-                }
-                else
-                {
-                    toBeSelectedObjectIds = currentCheckout is null ? Array.Empty<ObjectId>() : new ObjectId[] { currentCheckout };
-                }
-            }
-
-            _gridView.ToBeSelectedObjectIds = toBeSelectedObjectIds;
-            _selectedObjectIds = null;
-        }
-
-        private void CheckAndRepairInitialRevision()
-        {
-            // Check if there is any commit that couldn't be selected.
-            if (!_gridView.ToBeSelectedObjectIds.Any())
-            {
-                return;
-            }
-
-            // Search for the commitid that was not selected in the grid. If not found, select the first parent.
-            int index = SearchRevision(_gridView.ToBeSelectedObjectIds.First());
-            if (index >= 0)
-            {
-                SetSelectedIndex(index);
-            }
-
-            return;
-
-            int SearchRevision(ObjectId objectId)
-            {
-                // Attempt to look up an item by its ID
-                if (_gridView.TryGetRevisionIndex(objectId) is int exactIndex)
-                {
-                    return exactIndex;
-                }
-
-                if (objectId is not null && !objectId.IsArtificial)
-                {
-                    // Not found, so search for its parents
-                    foreach (var parentId in TryGetParents(objectId))
-                    {
-                        if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
-                        {
-                            return parentIndex;
-                        }
-                    }
-                }
-
-                // Not found...
-                return -1;
-            }
-        }
-
-        private IEnumerable<ObjectId> TryGetParents(ObjectId objectId)
-        {
-            GitArgumentBuilder args = new("rev-list")
-            {
-                { _filterInfo.HasCommitsLimit, $"--max-count={_filterInfo.CommitsLimit}" },
-                objectId
-            };
-
-            ExecutionResult result = Module.GitExecutable.Execute(args, throwOnErrorExit: false);
-            foreach (var line in result.StandardOutput.LazySplit('\n'))
-            {
-                if (ObjectId.TryParse(line, out var parentId))
-                {
-                    yield return parentId;
-                }
-            }
-        }
-
         #region Graph event handlers
 
         private void OnGridViewSelectionChanged(object sender, EventArgs e)
@@ -1438,13 +1436,6 @@ namespace GitUI
             if (_gridView.SelectedRows.Count > 0)
             {
                 _latestSelectedRowIndex = _gridView.SelectedRows[0].Index;
-
-                // if there was selected a new revision while data is being loaded
-                // then don't change the new selection when restoring selected revisions after data is loaded
-                if (_isRefreshingRevisions && !_gridView.UpdatingVisibleRows)
-                {
-                    _selectedObjectIds = _gridView.SelectedObjectIds;
-                }
             }
 
             _selectionTimer.Stop();
