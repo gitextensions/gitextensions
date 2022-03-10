@@ -15,7 +15,7 @@ using ResourceManager;
 namespace GitUI.BranchTreePanel
 {
     // Node representing a submodule
-    internal class SubmoduleNode : Node
+    internal sealed class SubmoduleNode : Node
     {
         public SubmoduleInfo Info { get; set; }
         public bool IsCurrent { get; }

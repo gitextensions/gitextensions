@@ -21,7 +21,7 @@ using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
-    public partial class RepoObjectsTree : GitModuleControl
+    public sealed partial class RepoObjectsTree : GitModuleControl
     {
         public const string HotkeySettingsName = "LeftPanel";
 

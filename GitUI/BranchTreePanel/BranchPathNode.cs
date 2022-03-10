@@ -4,7 +4,7 @@ using System.Linq;
 namespace GitUI.BranchTreePanel
 {
     [DebuggerDisplay("(Branch path) FullPath = {FullPath}")]
-    internal class BranchPathNode : BasePathNode
+    internal sealed class BranchPathNode : BasePathNode
     {
         public BranchPathNode(Tree tree, string fullPath)
             : base(tree, fullPath)

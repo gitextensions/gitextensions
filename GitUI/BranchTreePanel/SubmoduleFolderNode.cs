@@ -4,7 +4,7 @@ using GitUI.Properties;
 namespace GitUI.BranchTreePanel
 {
     // Top-level nodes used to group SubmoduleNodes
-    internal class SubmoduleFolderNode : Node
+    internal sealed class SubmoduleFolderNode : Node
     {
         private string _name;
 
