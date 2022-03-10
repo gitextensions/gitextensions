@@ -209,7 +209,8 @@ namespace GitUI.BranchTreePanel
         private void BeforeDoubleClickExpandCollapse(object sender, CancelEventArgs e)
         {
             // If node is an inner node, and overrides OnDoubleClick, then disable expand/collapse
-            if (treeMain.SelectedNode?.Tag is Node node && node.HasChildren()
+            if (treeMain.SelectedNode?.Tag is Node node
+                && node.HasChildren()
                 && IsOverride(node.GetType().GetMethod(nameof(OnDoubleClick), BindingFlags.Instance | BindingFlags.NonPublic)))
             {
                 e.Cancel = true;
@@ -550,7 +551,8 @@ namespace GitUI.BranchTreePanel
             Node.OnNode<Node>(e.Node, node => node.OnSelected());
         }
 
-        private IEnumerable<NodeBase> GetMultiSelection() => _rootNodes.SelectMany(tree => tree.GetMultiSelection());
+        private IEnumerable<NodeBase> GetMultiSelection()
+            => _rootNodes.SelectMany(tree => tree.GetMultiSelection());
 
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -611,7 +613,8 @@ namespace GitUI.BranchTreePanel
             public ContextMenuStrip TagContextMenu => _repoObjectsTree.menuTag;
             public NativeTreeView TreeView => _repoObjectsTree.treeMain;
 
-            public void OnContextMenuOpening(object sender, CancelEventArgs e) => _repoObjectsTree.contextMenu_Opening(sender, e);
+            public void OnContextMenuOpening(object sender, CancelEventArgs e)
+                => _repoObjectsTree.contextMenu_Opening(sender, e);
 
             public void ReorderTreeNode(TreeNode node, bool up)
             {
@@ -621,6 +624,7 @@ namespace GitUI.BranchTreePanel
             public void SetTreeVisibleByIndex(int index, bool visible)
             {
                 var tree = _repoObjectsTree.GetTreeToPositionIndex().FirstOrDefault(kvp => kvp.Value == index).Key;
+
                 if (tree.TreeViewNode.IsVisible == visible)
                 {
                     return;

@@ -20,9 +20,14 @@ namespace GitUI.BranchTreePanel
             /// <summary>Indicates whether this is the currently checked-out branch.</summary>
             public bool IsCurrent { get; }
 
-            protected override FontStyle GetFontStyle() => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
-            public override bool Equals(object obj) => base.Equals(obj) && obj is LocalBranchNode;
-            public override int GetHashCode() => base.GetHashCode();
+            protected override FontStyle GetFontStyle()
+                => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
+
+            public override bool Equals(object obj)
+                => base.Equals(obj) && obj is LocalBranchNode;
+
+            public override int GetHashCode()
+                => base.GetHashCode();
 
             internal override void OnDoubleClick()
             {

@@ -412,13 +412,14 @@ namespace GitUI.BranchTreePanel
 
         /// <summary>Inserts <paramref name="items"/> into the <paramref name="menu"/>; optionally <paramref name="before"/> or
         /// <paramref name="after"/> an existing item or at the start of the menu before other existing items if neither is specified.</summary>
-        internal static void InsertItems(this ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem? before = null, ToolStripItem? after = null)
+        internal static void InsertItems(this ContextMenuStrip menu, IEnumerable<ToolStripItem> items,
+            ToolStripItem? before = null, ToolStripItem? after = null)
         {
             Debug.Assert(!(after is not null && before is not null), $"Only {nameof(before)} or {nameof(after)} is allowed.");
 
             menu.SuspendLayout();
-
             int index;
+
             if (before is not null)
             {
                 index = Math.Max(0, menu.Items.IndexOf(before) - 1);

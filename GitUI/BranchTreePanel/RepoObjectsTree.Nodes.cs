@@ -45,11 +45,14 @@ namespace GitUI.BranchTreePanel
                 _nodesList.Clear();
             }
 
-            public IEnumerator<Node> GetEnumerator() => _nodesList.GetEnumerator();
+            public IEnumerator<Node> GetEnumerator()
+                => _nodesList.GetEnumerator();
 
-            public void InsertNode(int index, Node node) => _nodesList.Insert(index, node);
+            public void InsertNode(int index, Node node)
+                => _nodesList.Insert(index, node);
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+                => GetEnumerator();
 
             /// <summary>
             /// Returns all nodes of a given TNode type using depth-first, pre-order method.
@@ -78,12 +81,14 @@ namespace GitUI.BranchTreePanel
             internal void FillTreeViewNode(TreeNode treeViewNode)
             {
                 HashSet<Node> prevNodes = new();
+
                 for (var i = 0; i < treeViewNode.Nodes.Count; i++)
                 {
                     prevNodes.Add(Node.GetNode(treeViewNode.Nodes[i]));
                 }
 
                 var oldNodeIdx = 0;
+
                 foreach (var node in this)
                 {
                     TreeNode treeNode;
@@ -92,6 +97,7 @@ namespace GitUI.BranchTreePanel
                     {
                         treeNode = treeViewNode.Nodes[oldNodeIdx];
                         var oldNode = Node.GetNode(treeNode);
+
                         if (!oldNode.Equals(node) && !prevNodes.Contains(node))
                         {
                             treeNode = treeViewNode.Nodes.Insert(oldNodeIdx, string.Empty);
@@ -157,7 +163,8 @@ namespace GitUI.BranchTreePanel
                 TreeViewNode.ToolTipText = string.Empty;
             }
 
-            protected virtual FontStyle GetFontStyle() => IsMultiSelected ? FontStyle.Underline : FontStyle.Regular;
+            protected virtual FontStyle GetFontStyle()
+                => IsMultiSelected ? FontStyle.Underline : FontStyle.Regular;
 
             private void SetFont(FontStyle style)
             {
@@ -305,16 +312,19 @@ namespace GitUI.BranchTreePanel
 
             protected abstract Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs);
 
-            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase => Nodes.DepthEnumerator<TNode>();
+            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase
+                => Nodes.DepthEnumerator<TNode>();
 
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
             // making sure to disable/enable the control.
-            protected async Task ReloadNodesAsync(Func<CancellationToken, Func<RefsFilter, IReadOnlyList<IGitRef>>, Task<Nodes>> loadNodesTask, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+            protected async Task ReloadNodesAsync(Func<CancellationToken, Func<RefsFilter, IReadOnlyList<IGitRef>>, Task<Nodes>> loadNodesTask,
+                Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 var token = _reloadCancellationTokenSequence.Next();
 
                 var treeView = TreeViewNode.TreeView;
+
                 if (treeView is null || !IsAttached)
                 {
                     return;
@@ -334,11 +344,13 @@ namespace GitUI.BranchTreePanel
                 // re-apply multi-selection
                 if (multiSelected.Length > 0)
                 {
-                    this.GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode())).ForEach(node => node.IsMultiSelected = true);
+                    this.GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode()))
+                        .ForEach(node => node.IsMultiSelected = true);
                 }
 
                 // Check again after switch to main thread
                 treeView = TreeViewNode.TreeView;
+
                 if (treeView is null || !IsAttached)
                 {
                     return;
@@ -369,9 +381,11 @@ namespace GitUI.BranchTreePanel
                 Nodes.FillTreeViewNode(TreeViewNode);
 
                 var selectedNode = TreeViewNode.TreeView.SelectedNode;
+
                 if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath())
                 {
                     var node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
+
                     if (node is not null)
                     {
                         TreeViewNode.TreeView.SelectedNode = !(node.Tag is BaseBranchNode branchNode) || branchNode.Visible
@@ -554,7 +568,8 @@ namespace GitUI.BranchTreePanel
         internal static IEnumerable<RepoObjectsTree.NodeBase> GetMultiSelection(this RepoObjectsTree.Tree tree)
             => tree.GetNodesAndSelf().Where(node => node.IsMultiSelected);
 
-        internal static bool HasChildren(this RepoObjectsTree.NodeBase node) => node.Nodes.Count > 0;
+        internal static bool HasChildren(this RepoObjectsTree.NodeBase node)
+            => node.Nodes.Count > 0;
 
         internal static IEnumerable<RepoObjectsTree.NodeBase> HavingChildren(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
             => nodes.Where(node => node.HasChildren());
