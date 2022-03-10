@@ -134,16 +134,16 @@ namespace GitUI.BranchTreePanel
             protected internal virtual TreeNode TreeViewNode { get; set; }
 
             /// <summary>
-            /// Marks this node to be included in multi-selection. See <see cref="MultiSelect(bool, bool)"/>.
+            /// Marks this node to be included in multi-selection. See <see cref="Select(bool, bool)"/>.
             /// This is remembered here instead of relying on the status of <see cref="TreeViewNode"/>
             /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s
             /// and may change the association between <see cref="Node"/> and <see cref="TreeNode"/>.
             /// </summary>
-            protected internal bool IsMultiSelected { get; set; }
+            protected internal bool IsSelected { get; set; }
 
-            protected internal void MultiSelect(bool select, bool includingDescendants = false)
+            protected internal void Select(bool select, bool includingDescendants = false)
             {
-                IsMultiSelected = select;
+                IsSelected = select;
                 ApplyStyle(); // toggle multi-selected node style
 
                 // recursively process descendants if required
@@ -151,7 +151,7 @@ namespace GitUI.BranchTreePanel
                 {
                     foreach (var child in Nodes)
                     {
-                        child.MultiSelect(select, includingDescendants);
+                        child.Select(select, includingDescendants);
                     }
                 }
             }
@@ -164,7 +164,7 @@ namespace GitUI.BranchTreePanel
             }
 
             protected virtual FontStyle GetFontStyle()
-                => IsMultiSelected ? FontStyle.Underline : FontStyle.Regular;
+                => IsSelected ? FontStyle.Underline : FontStyle.Regular;
 
             private void SetFont(FontStyle style)
             {
@@ -345,7 +345,7 @@ namespace GitUI.BranchTreePanel
                 if (multiSelected.Length > 0)
                 {
                     this.GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode()))
-                        .ForEach(node => node.IsMultiSelected = true);
+                        .ForEach(node => node.IsSelected = true);
                 }
 
                 // Check again after switch to main thread
@@ -566,7 +566,7 @@ namespace GitUI.BranchTreePanel
             => tree.DepthEnumerator<RepoObjectsTree.NodeBase>().Prepend(tree);
 
         internal static IEnumerable<RepoObjectsTree.NodeBase> GetMultiSelection(this RepoObjectsTree.Tree tree)
-            => tree.GetNodesAndSelf().Where(node => node.IsMultiSelected);
+            => tree.GetNodesAndSelf().Where(node => node.IsSelected);
 
         internal static bool HasChildren(this RepoObjectsTree.NodeBase node)
             => node.Nodes.Count > 0;
@@ -574,11 +574,11 @@ namespace GitUI.BranchTreePanel
         internal static IEnumerable<RepoObjectsTree.NodeBase> HavingChildren(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
             => nodes.Where(node => node.HasChildren());
 
-        internal static IEnumerable<RepoObjectsTree.NodeBase> Expandable(this IEnumerable<RepoObjectsTree.NodeBase> parents)
-            => parents.Where(parent => !parent.TreeViewNode.IsExpanded);
+        internal static IEnumerable<RepoObjectsTree.NodeBase> Expandable(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
+            => nodes.Where(node => !node.TreeViewNode.IsExpanded);
 
-        internal static IEnumerable<RepoObjectsTree.NodeBase> Collapsible(this IEnumerable<RepoObjectsTree.NodeBase> parents)
-            => parents.Where(parent => parent.TreeViewNode.IsExpanded);
+        internal static IEnumerable<RepoObjectsTree.NodeBase> Collapsible(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
+            => nodes.Where(node => node.TreeViewNode.IsExpanded);
 
         internal static IEnumerable<RepoObjectsTree.BaseBranchNode> ReduceToRefs(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
             => nodes.Where(node => node is RepoObjectsTree.BaseBranchLeafNode || node is RepoObjectsTree.TagNode).Cast<RepoObjectsTree.BaseBranchNode>();

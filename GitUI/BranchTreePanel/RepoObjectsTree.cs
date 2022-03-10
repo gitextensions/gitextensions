@@ -558,20 +558,20 @@ namespace GitUI.BranchTreePanel
         {
             var node = e.Node.Tag as NodeBase;
 
-            if (e.Button == MouseButtons.Right && node.IsMultiSelected)
+            if (e.Button == MouseButtons.Right && node.IsSelected)
             {
                 return; // don't undo multi-selection on opening context menu, even without Ctrl
             }
 
             if (ModifierKeys.HasFlag(Keys.Control))
             {
-                // toggle clicked node IsMultiSelected, including descendants when holding Alt
-                node.MultiSelect(!node.IsMultiSelected, includingDescendants: ModifierKeys.HasFlag(Keys.Alt));
+                // toggle clicked node IsSelected, including descendants when holding Alt
+                node.Select(!node.IsSelected, includingDescendants: ModifierKeys.HasFlag(Keys.Alt));
             }
             else
             {
-                GetMultiSelection().ForEach(selected => selected.MultiSelect(false)); // deselect all selected nodes
-                node.MultiSelect(true); // and only select the clicked one
+                GetMultiSelection().ForEach(selected => selected.Select(false)); // deselect all selected nodes
+                node.Select(true); // and only select the clicked one
             }
 
             if (node is Node clickable)
