@@ -579,8 +579,5 @@ namespace GitUI.BranchTreePanel
 
         internal static IEnumerable<RepoObjectsTree.NodeBase> Collapsible(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
             => nodes.Where(node => node.TreeViewNode.IsExpanded);
-
-        internal static IEnumerable<RepoObjectsTree.BaseBranchNode> ReduceToRefs(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
-            => nodes.Where(node => node is RepoObjectsTree.BaseBranchLeafNode || node is RepoObjectsTree.TagNode).Cast<RepoObjectsTree.BaseBranchNode>();
     }
 }

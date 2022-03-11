@@ -5,7 +5,7 @@ namespace GitUI.BranchTreePanel
 {
     public partial class RepoObjectsTree
     {
-        internal class BaseBranchLeafNode : BaseBranchNode
+        private class BaseBranchLeafNode : BaseBranchNode
         {
             private readonly string _imageKeyMerged;
             private readonly string _imageKeyUnmerged;

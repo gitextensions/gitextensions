@@ -352,13 +352,13 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem CreateFilterSelectedRefsContextMenuItem()
         {
             ToolStripMenuItem menuItem = new(_filterForSelected.Text, Properties.Images.ShowThisBranchOnly) { ToolTipText = _filterForSelectedToolTip.Text };
-            RegisterClick(menuItem, () => _filterRevisionGridBySpaceSeparatedRefs(GetMultiSelection().ReduceToRefs().Select(b => b.FullPath).Join(" ")));
+            RegisterClick(menuItem, () => _filterRevisionGridBySpaceSeparatedRefs(GetMultiSelection().OfType<IGitRefActions>().Select(b => b.FullPath).Join(" ")));
             return menuItem;
         }
 
         private void ToggleFilterSelectedRefsContextMenu(ContextMenuStrip contextMenu, NodeBase[] selectedNodes)
         {
-            var selectionContainsRefs = selectedNodes.ReduceToRefs().Any();
+            var selectionContainsRefs = selectedNodes.OfType<IGitRefActions>().Any();
             contextMenu.AddOnce(_filterForSelectedRefsMenuItem);
             ToggleMenuItems(selectionContainsRefs, _filterForSelectedRefsMenuItem);
         }

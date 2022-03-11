@@ -16,7 +16,7 @@ namespace GitUI.BranchTreePanel
     partial class RepoObjectsTree
     {
         [DebuggerDisplay("(Tag) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
-        internal class TagNode : BaseBranchNode, IGitRefActions, ICanDelete
+        private class TagNode : BaseBranchNode, IGitRefActions, ICanDelete
         {
             public TagNode(Tree tree, in ObjectId? objectId, string fullPath, bool visible)
                 : base(tree, fullPath, visible)

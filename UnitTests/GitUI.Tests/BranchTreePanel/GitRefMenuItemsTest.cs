@@ -120,6 +120,7 @@ namespace GitUITests.BranchTreePanel
         public class TestBranchNode : INode, IGitRefActions, ICanDelete, ICanRename
         {
             public Stack<string> CallStatck { get; } = new Stack<string>();
+            public string FullPath => throw new NotImplementedException();
 
             public bool Checkout()
             {
