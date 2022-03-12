@@ -1530,7 +1530,7 @@ namespace GitCommands
                 { fetchTags == true, "--tags" },
                 { fetchTags == false, "--no-tags" },
                 { isUnshallow, "--unshallow" },
-                { pruneRemoteBranches || pruneRemoteBranchesAndTags, "--prune" },
+                { pruneRemoteBranches || pruneRemoteBranchesAndTags, "--prune --force" },
                 { pruneRemoteBranchesAndTags, "--prune-tags" },
             };
         }
