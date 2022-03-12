@@ -28,6 +28,8 @@ namespace GitUI.UserControls.RevisionGrid
 
     public sealed partial class RevisionDataGridView : DataGridView
     {
+        private static readonly AccessibleDataGridViewTextBoxCell _accessibleDataGridViewTextBoxCell = new();
+
         private readonly SolidBrush _alternatingRowBackgroundBrush;
         private readonly SolidBrush _authoredHighlightBrush;
 
@@ -205,6 +207,7 @@ namespace GitUI.UserControls.RevisionGrid
             _columnProviders.Add(columnProvider);
 
             columnProvider.Column.Tag = columnProvider;
+            columnProvider.Column.CellTemplate = _accessibleDataGridViewTextBoxCell;
 
             Columns.Add(columnProvider.Column);
         }
