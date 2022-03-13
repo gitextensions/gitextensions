@@ -62,8 +62,17 @@ namespace GitUI
     {
         public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
         public event EventHandler<FilterChangedEventArgs>? FilterChanged;
-        public event EventHandler<GitUIEventArgs>? RevisionGraphLoaded;
         public event EventHandler? SelectionChanged;
+
+        /// <summary>
+        ///  Occurs whenever the revision graph has started loading the data.
+        /// </summary>
+        public event EventHandler<GridLoadEventArgs>? GridLoading;
+
+        /// <summary>
+        ///  Occurs whenever the revision graph has been populated with the data.
+        /// </summary>
+        public event EventHandler<GridLoadEventArgs>? GridLoaded;
 
         /// <summary>
         ///  Occurs whenever a user toggles between the artificial and the HEAD commits
@@ -297,7 +306,7 @@ namespace GitUI
         /// This is used to remove spinners added when loading and to replace the gridview at errors.
         /// </summary>
         /// <param name="content">The content to show.</param>
-        private void SetPage(Control content, Lazy<IReadOnlyList<IGitRef>> getRefs)
+        private void SetPage(Control content)
         {
             for (int i = Controls.Count - 1; i >= 0; i--)
             {
@@ -312,8 +321,6 @@ namespace GitUI
             {
                 Controls.Add(content);
             }
-
-            RevisionGraphLoaded?.Invoke(content == _gridView ? _gridView : null, new GitUIEventArgs(this, UICommands, getRefs));
         }
 
         internal int DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
@@ -858,7 +865,8 @@ namespace GitUI
         ///  Queries git for the new set of revisions and refreshes the grid.
         /// </summary>
         /// <exception cref="AggregateException"></exception>
-        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null)
+        /// <param name="forceRefresh">Refresh may be required as references may be changed.</param>
+        public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null, bool forceRefresh = false)
         {
             ThreadHelper.AssertOnUIThread();
 
@@ -1003,10 +1011,13 @@ namespace GitUI
                         observeRevisions.OnError(ex);
                         return false;
                     });
+
+                // Initiate update side panel
+                GridLoading?.Invoke(this, new GridLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
             }
             catch
             {
-                SetPage(new ErrorControl(), getUnfilteredRefs);
+                SetPage(new ErrorControl());
                 throw;
             }
 
@@ -1237,7 +1248,7 @@ namespace GitUI
             void OnRevisionReaderError(Exception exception)
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(() => SetPage(new ErrorControl(), getUnfilteredRefs))
+                this.InvokeAsync(() => SetPage(new ErrorControl()))
                     .FileAndForget();
 
                 _refreshRevisionsSequence.CancelCurrent();
@@ -1263,8 +1274,9 @@ namespace GitUI
                     this.InvokeAsync(
                             () =>
                             {
-                                SetPage(new EmptyRepoControl(Module.IsBareRepository()), getUnfilteredRefs);
+                                SetPage(new EmptyRepoControl(Module.IsBareRepository()));
                                 _isRefreshingRevisions = false;
+                                GridLoaded?.Invoke(this, new GridLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
                             })
                         .FileAndForget();
                     return;
@@ -1276,8 +1288,9 @@ namespace GitUI
                     await this.SwitchToMainThreadAsync();
 
                     _gridView.LoadingCompleted();
-                    SetPage(_gridView, getUnfilteredRefs);
+                    SetPage(_gridView);
                     _isRefreshingRevisions = false;
+                    GridLoaded?.Invoke(this, new GridLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
                     CheckAndRepairInitialRevision();
                     HighlightRevisionsByAuthor(GetSelectedRevisions());
 

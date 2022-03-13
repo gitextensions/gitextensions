@@ -34,17 +34,6 @@ namespace GitUI.BranchTreePanel
 
             protected override bool SupportsFiltering => true;
 
-            protected override void OnAttached()
-            {
-                IsFiltering.Value = false;
-            }
-
-            protected override Task PostRepositoryChangedAsync(GitUIEventArgs e)
-            {
-                IsFiltering.Value = false;
-                return ReloadNodesAsync(LoadNodesAsync, e.GetRefs);
-            }
-
             protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 await TaskScheduler.Default;
