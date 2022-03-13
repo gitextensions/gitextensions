@@ -251,11 +251,19 @@ namespace GitUI.BranchTreePanel
         /// <param name="isFiltering">
         ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
         /// </param>
-        public void ToggleFilterMode(bool isFiltering)
+        /// <param name="getRefs">Function to get refs.</param>
+        public void Refresh(bool isFiltering, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
-            _branchesTree.ToggleFilterMode(isFiltering);
-            _remotesTree.ToggleFilterMode(isFiltering);
-            _tagTree.ToggleFilterMode(isFiltering);
+            _branchesTree.Refresh(isFiltering, getRefs);
+            _remotesTree.Refresh(isFiltering, getRefs);
+            _tagTree.Refresh(isFiltering, getRefs);
+        }
+
+        public void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        {
+            _branchesTree.Refresh(getRefs);
+            _remotesTree.Refresh(getRefs);
+            _tagTree.Refresh(getRefs);
         }
 
         public void SelectionChanged(IReadOnlyList<GitRevision> selectedRevisions)

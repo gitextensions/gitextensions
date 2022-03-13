@@ -109,12 +109,12 @@ namespace GitUI.BranchTreePanel
             }
 
             /// <inheritdoc/>
-            protected internal override void Refresh()
+            protected internal override void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 // Break the local cache to ensure the data is requeried to reflect the required sort order.
                 _loadedTags = null;
 
-                base.Refresh();
+                base.Refresh(getRefs);
             }
 
             protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
