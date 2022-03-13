@@ -336,16 +336,18 @@ namespace GitUI.BranchTreePanel
                 await treeView.SwitchToMainThreadAsync(token);
 
                 // remember multi-selected nodes
-                var multiSelected = this.GetMultiSelection().Select(node => node.GetHashCode()).ToArray();
+                HashSet<int> multiSelected = this.GetMultiSelection().Select(node => node.GetHashCode()).ToHashSet();
 
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);
 
                 // re-apply multi-selection
-                if (multiSelected.Length > 0)
+                if (multiSelected.Count > 0)
                 {
-                    this.GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode()))
-                        .ForEach(node => node.IsSelected = true);
+                    foreach (NodeBase node in this.GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode())))
+                    {
+                        node.IsSelected = true;
+                    }
                 }
 
                 // Check again after switch to main thread

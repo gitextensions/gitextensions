@@ -569,7 +569,12 @@ namespace GitUI.BranchTreePanel
             }
             else
             {
-                GetMultiSelection().ForEach(selected => selected.Select(false)); // deselect all selected nodes
+                // deselect all selected nodes
+                foreach (NodeBase selected in GetMultiSelection())
+                {
+                    selected.Select(false);
+                }
+
                 node.Select(true); // and only select the clicked one
             }
 

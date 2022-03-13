@@ -47,7 +47,12 @@ namespace GitUI.BranchTreePanel
         }
 
         private void ToggleMenuItems<TNode>(MenuItemsGenerator<TNode> generator, Func<ToolStripItemWithKey, bool> isEnabled) where TNode : class, INode
-            => generator.ForEach(i => ToggleMenuItems(isEnabled(i), i.Item));
+        {
+            foreach (var item in generator)
+            {
+                item.Item.Toggle(isEnabled(item));
+            }
+        }
 
         /* add Expand All / Collapse All menu entry
          * depending on whether node is expanded or collapsed and has child nodes at all */
