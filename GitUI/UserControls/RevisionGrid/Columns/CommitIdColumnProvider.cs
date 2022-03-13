@@ -60,6 +60,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
         }
 
+        public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
+        {
+            // Set the grid cell's accessibility text
+            if (!revision.IsArtificial)
+            {
+                e.Value = revision.ObjectId.ToShortString();
+            }
+        }
+
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
         {
             if (revision.ObjectId.IsArtificial)
