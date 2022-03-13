@@ -124,12 +124,8 @@ namespace GitUI.BranchTreePanel
             private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new();
             private bool _firstReloadNodesSinceModuleChanged = true;
 
-            // A flag to indicate whether the data is currently being filtered or not.
-            // This helps to reduce unnecessary treeview rebinds.
-            private bool _isCurrentlyFiltering;
-
             // A flag to indicate whether the data is being filtered (e.g. Show Current Branch Only).
-            private protected static AsyncLocal<bool> IsFiltering = new();
+            private protected AsyncLocal<bool> IsFiltering = new();
 
             protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
             {
@@ -151,41 +147,13 @@ namespace GitUI.BranchTreePanel
                     // the same time, we don't want to remove them from the tree as this is visible to the user,
                     // as well as less efficient.
                     _firstReloadNodesSinceModuleChanged = true;
-
-                    // Rebind callbacks
-                    if (e.OldCommands is not null)
-                    {
-                        e.OldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
-                    }
-
-                    uiCommands.UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
                 };
-
-                uiCommands.UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
 
             public void Dispose()
             {
                 Detached();
                 _reloadCancellationTokenSequence.Dispose();
-            }
-
-            private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
-            {
-                if (!IsAttached)
-                {
-                    return;
-                }
-
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await PostRepositoryChangedAsync(e);
-                }).FileAndForget();
-            }
-
-            protected virtual Task PostRepositoryChangedAsync(GitUIEventArgs e)
-            {
-                return Task.CompletedTask;
             }
 
             public TreeNode TreeViewNode { get; }
@@ -208,6 +176,7 @@ namespace GitUI.BranchTreePanel
 
             protected virtual void OnAttached()
             {
+                IsFiltering.Value = false;
             }
 
             public void Detached()
@@ -230,8 +199,6 @@ namespace GitUI.BranchTreePanel
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    IsFiltering.Value = _isCurrentlyFiltering;
-
                     await ReloadNodesAsync(LoadNodesAsync, getRefs);
                 });
             }
@@ -242,28 +209,27 @@ namespace GitUI.BranchTreePanel
             /// <param name="isFiltering">
             ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
             /// </param>
-            internal void Refresh(bool isFiltering, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+            /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
+            internal void Refresh(bool isFiltering, bool forceRefresh, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
+                if (!IsAttached)
+                {
+                    return;
+                }
+
                 // If we're not currently filtering and no need to filter now -> exit.
                 // Else we need to iterate over the list and rebind the tree - whilst there
                 // could be a situation whether a user just refreshed the grid, there could
                 // also be a situation where the user applied a different filter, or checked
                 // out a different ref (e.g. a branch or commit), and we have a different
                 // set of branches to show/hide.
-
-                if (!SupportsFiltering || (!isFiltering && !_isCurrentlyFiltering))
+                if (!forceRefresh && (!SupportsFiltering || (!isFiltering && !IsFiltering.Value)))
                 {
                     return;
                 }
 
-                _isCurrentlyFiltering = isFiltering;
-
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    IsFiltering.Value = true;
-
-                    await ReloadNodesAsync(LoadNodesAsync, getRefs);
-                });
+                IsFiltering.Value = isFiltering && SupportsFiltering;
+                Refresh(getRefs);
             }
 
             protected abstract Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs);

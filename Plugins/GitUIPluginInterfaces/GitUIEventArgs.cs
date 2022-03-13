@@ -9,20 +9,19 @@ namespace GitUIPluginInterfaces
     {
         private readonly IFilteredGitRefsProvider _getRefs;
 
-        public GitUIEventArgs(IWin32Window? ownerForm, IGitUICommands gitUICommands, Lazy<IReadOnlyList<IGitRef>> getRefs)
+        public GitUIEventArgs(IWin32Window? ownerForm, IGitUICommands gitUICommands, Lazy<IReadOnlyList<IGitRef>> getRefs = null)
             : base(cancel: false)
         {
             OwnerForm = ownerForm;
             GitUICommands = gitUICommands;
-            _getRefs = new FilteredGitRefsProvider(getRefs);
-        }
-
-        public GitUIEventArgs(IWin32Window? ownerForm, IGitUICommands gitUICommands)
-            : base(cancel: false)
-        {
-            OwnerForm = ownerForm;
-            GitUICommands = gitUICommands;
-            _getRefs = new FilteredGitRefsProvider(GitModule);
+            if (getRefs is null)
+            {
+                _getRefs = new FilteredGitRefsProvider(GitModule);
+            }
+            else
+            {
+                _getRefs = new FilteredGitRefsProvider(getRefs);
+            }
         }
 
         public IGitUICommands GitUICommands { get; }

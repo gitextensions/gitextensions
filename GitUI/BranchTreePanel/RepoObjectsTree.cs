@@ -253,11 +253,12 @@ namespace GitUI.BranchTreePanel
         ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
         /// </param>
         /// <param name="getRefs">Function to get refs.</param>
-        public void Refresh(bool isFiltering, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
+        public void Refresh(bool isFiltering, bool forceRefresh, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
-            _branchesTree.Refresh(isFiltering, getRefs);
-            _remotesTree.Refresh(isFiltering, getRefs);
-            _tagTree.Refresh(isFiltering, getRefs);
+            _branchesTree.Refresh(isFiltering, forceRefresh, getRefs);
+            _remotesTree.Refresh(isFiltering, forceRefresh, getRefs);
+            _tagTree.Refresh(isFiltering, forceRefresh, getRefs);
         }
 
         public void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)

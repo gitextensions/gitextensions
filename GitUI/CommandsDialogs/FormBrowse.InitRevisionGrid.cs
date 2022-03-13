@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
                 revisionDiff.FallbackFollowedFile = path;
                 fileTree.FallbackFollowedFile = path;
             };
-            RevisionGrid.RevisionGraphLoaded += (sender, e) =>
+            RevisionGrid.GridLoading += (sender, e) =>
             {
                 // The FileTree tab should be shown at first start, in "filehistory" mode
                 if (isBlame)
@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs
                 //      b) filter on specific branch
                 bool isFiltering = !AppSettings.ShowReflogReferences
                                 && (AppSettings.ShowCurrentBranchOnly || AppSettings.BranchFilterEnabled);
-                repoObjectsTree.Refresh(isFiltering, e.GetRefs);
+                repoObjectsTree.Refresh(isFiltering, e.ForceRefresh, e.GetRefs);
             };
             RevisionGrid.SelectionChanged += (sender, e) =>
             {
