@@ -343,18 +343,14 @@ namespace GitUI.BranchTreePanel
         #region Filter for selected refs
         private Action<string?> _filterRevisionGridBySpaceSeparatedRefs;
         private ToolStripMenuItem _filterForSelectedRefsMenuItem;
-        private readonly TranslationString _filterForSelected = new("&Filter for selected");
-
-        private readonly TranslationString _filterForSelectedToolTip = new(
-            "Filter the revision grid to show selected (underlined) refs (branches and tags) only." +
-            "\nHold Ctrl while clicking to de/select multiple and include descendant tree nodes by additionally holding Alt." +
-            "\nTo reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.");
 
         private void CreateFilterSelectedRefsContextMenuItem()
         {
-            _filterForSelectedRefsMenuItem = new(_filterForSelected.Text, Properties.Images.ShowThisBranchOnly)
+            _filterForSelectedRefsMenuItem = new("&Filter for selected", Properties.Images.ShowThisBranchOnly)
             {
-                ToolTipText = _filterForSelectedToolTip.Text
+                ToolTipText = "Filter the revision grid to show selected (underlined) refs (branches and tags) only." +
+                    "\nHold CTRL while clicking to de/select multiple and include descendant tree nodes by additionally holding SHIFT." +
+                    "\nReset the filter via View > Show all branches."
             };
 
             RegisterClick(_filterForSelectedRefsMenuItem, () =>

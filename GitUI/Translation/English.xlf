@@ -9031,24 +9031,14 @@ branch names, tag names)</source>
   </file>
   <file datatype="plaintext" original="RepoObjectsTree" source-language="en">
     <body>
-      <trans-unit id="_filterForSelected.Text">
-        <source>&amp;Filter for selected</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_filterForSelectedRefsMenuItem.Text">
         <source>&amp;Filter for selected</source>
         <target />
       </trans-unit>
       <trans-unit id="_filterForSelectedRefsMenuItem.ToolTipText">
         <source>Filter the revision grid to show selected (underlined) refs (branches and tags) only.
-Hold Ctrl while clicking to de/select multiple and include descendant tree nodes by additionally holding Alt.
-To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_filterForSelectedToolTip.Text">
-        <source>Filter the revision grid to show selected (underlined) refs (branches and tags) only.
-Hold Ctrl while clicking to de/select multiple and include descendant tree nodes by additionally holding Alt.
-To reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.</source>
+Hold CTRL while clicking to de/select multiple and include descendant tree nodes by additionally holding SHIFT.
+Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="_searchTooltip.Text">

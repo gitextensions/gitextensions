@@ -564,8 +564,8 @@ namespace GitUI.BranchTreePanel
 
             if (ModifierKeys.HasFlag(Keys.Control))
             {
-                // toggle clicked node IsSelected, including descendants when holding Alt
-                node.Select(!node.IsSelected, includingDescendants: ModifierKeys.HasFlag(Keys.Alt));
+                // toggle clicked node IsSelected, including descendants when holding Shift
+                node.Select(!node.IsSelected, includingDescendants: ModifierKeys.HasFlag(Keys.Shift));
             }
             else
             {
