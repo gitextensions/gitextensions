@@ -246,7 +246,7 @@ namespace GitUI.BranchTreePanel
 
         private void RegisterContextActions()
         {
-            _filterForSelectedRefsMenuItem = CreateFilterSelectedRefsContextMenuItem();
+            CreateFilterSelectedRefsContextMenuItem();
 
             #region Sort by / order
             _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() => Refresh(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs));
@@ -341,6 +341,7 @@ namespace GitUI.BranchTreePanel
         }
 
         #region Filter for selected refs
+        private Action<string?> _filterRevisionGridBySpaceSeparatedRefs;
         private ToolStripMenuItem _filterForSelectedRefsMenuItem;
         private readonly TranslationString _filterForSelected = new("&Filter for selected");
 
@@ -349,11 +350,18 @@ namespace GitUI.BranchTreePanel
             "\nHold Ctrl while clicking to de/select multiple and include descendant tree nodes by additionally holding Alt." +
             "\nTo reset the filter, right click the revision grid, select 'View' and then 'Show all branches'.");
 
-        private ToolStripMenuItem CreateFilterSelectedRefsContextMenuItem()
+        private void CreateFilterSelectedRefsContextMenuItem()
         {
-            ToolStripMenuItem menuItem = new(_filterForSelected.Text, Properties.Images.ShowThisBranchOnly) { ToolTipText = _filterForSelectedToolTip.Text };
-            RegisterClick(menuItem, () => _filterRevisionGridBySpaceSeparatedRefs(GetMultiSelection().OfType<IGitRefActions>().Select(b => b.FullPath).Join(" ")));
-            return menuItem;
+            _filterForSelectedRefsMenuItem = new(_filterForSelected.Text, Properties.Images.ShowThisBranchOnly)
+            {
+                ToolTipText = _filterForSelectedToolTip.Text
+            };
+
+            RegisterClick(_filterForSelectedRefsMenuItem, () =>
+            {
+                var refPaths = GetMultiSelection().OfType<IGitRefActions>().Select(b => b.FullPath);
+                _filterRevisionGridBySpaceSeparatedRefs(refPaths.Join(" "));
+            });
         }
 
         private void ToggleFilterSelectedRefsContextMenu(ContextMenuStrip contextMenu, NodeBase[] selectedNodes)

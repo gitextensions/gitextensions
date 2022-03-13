@@ -37,7 +37,6 @@ namespace GitUI.BranchTreePanel
         private TagTree _tagTree;
         private SubmoduleTree _submoduleTree;
         private List<TreeNode>? _searchResult;
-        private Action<string?> _filterRevisionGridBySpaceSeparatedRefs;
         private IAheadBehindDataProvider? _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
