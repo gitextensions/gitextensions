@@ -98,7 +98,6 @@ namespace GitUI.BranchTreePanel.ContextMenu
             {
                 ToolStripMenuItem item = _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
                     node => ((ICanRename)node).Rename(), Strings.Rename, GetTooltip(MenuItemKey.Rename), Properties.Images.Renamed.AdaptLightness());
-                item.ShortcutKeys = Keys.F2;
                 yield return item.WithKey(MenuItemKey.Rename);
             }
         }
@@ -109,7 +108,6 @@ namespace GitUI.BranchTreePanel.ContextMenu
             {
                 ToolStripMenuItem item = _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
                     node => ((ICanDelete)node).Delete(), Strings.Delete, GetTooltip(MenuItemKey.Delete), Properties.Images.BranchDelete);
-                item.ShortcutKeys = Keys.Delete;
                 yield return item.WithKey(MenuItemKey.Delete);
             }
         }
