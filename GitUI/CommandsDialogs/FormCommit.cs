@@ -576,59 +576,34 @@ namespace GitUI.CommandsDialogs
                         e.Handled = true;
                         break;
                     }
-
-                case Keys.Control | Keys.P:
-                case Keys.Alt | Keys.Up:
-                case Keys.Alt | Keys.Left:
-                    {
-                        MoveSelection(-1);
-                        e.Handled = true;
-                        break;
-                    }
-
-                case Keys.Control | Keys.N:
-                case Keys.Alt | Keys.Down:
-                case Keys.Alt | Keys.Right:
-                    {
-                        MoveSelection(+1);
-                        e.Handled = true;
-                        break;
-                    }
             }
 
             base.OnKeyUp(e);
 
             return;
-
-            void MoveSelection(int direction)
-            {
-                var list = Message.Focused ? Staged : _currentFilesList;
-                if (list is null)
-                {
-                    // If a user is keyboard-happy, we may receive KeyUp event before we have selected a file list control.
-                    return;
-                }
-
-                _currentFilesList = list;
-                var itemsCount = list.AllItemsCount;
-                if (itemsCount != 0)
-                {
-                    list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
-                }
-            }
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        public override bool ProcessHotkey(Keys keyData)
         {
-            if (keyData == Keys.F5)
+            if (IsDesignMode || !HotkeysEnabled)
             {
-                RescanChanges();
+                return false;
+            }
+
+            // generic handling of this form's hotkeys (upstream)
+            if (base.ProcessHotkey(keyData))
+            {
                 return true;
             }
 
-            return base.ProcessCmdKey(ref msg, keyData) // generic handling of this form's hotkeys (upstream)
-                || (!IsDesignMode && HotkeysEnabled && !GitExtensionsControl.IsTextEditKey(keyData, multiLine: true) // downstream
-                    && SelectedDiff.ProcessHotkey(keyData));
+            // downstream (without keys for quick search and without keys for text selection and copy e.g. in commit message)
+            if (GitExtensionsControl.IsTextEditKey(keyData, multiLine: true))
+            {
+                return false;
+            }
+
+            // route to visible controls which have their own hotkeys
+            return SelectedDiff.ProcessHotkey(keyData);
         }
 
         public void LoadCustomDifftools()
@@ -656,6 +631,23 @@ namespace GitUI.CommandsDialogs
             SelectedDiff.ScrollToTop();
         }
 
+        private void MoveSelection(int direction)
+        {
+            FileStatusList list = Message.Focused ? Staged : _currentFilesList;
+            if (list is null)
+            {
+                // If a user is keyboard-happy, we may receive KeyUp event before we have selected a file list control.
+                return;
+            }
+
+            _currentFilesList = list;
+            int itemsCount = list.AllItemsCount;
+            if (itemsCount != 0)
+            {
+                list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
+            }
+        }
+
         #region Hotkey commands
 
         public static readonly string HotkeySettingsName = "Commit";
@@ -679,7 +671,14 @@ namespace GitUI.CommandsDialogs
             OpenFileWith = 14,
             EditFile = 15,
             AddSelectionToCommitMessage = 16,
-            CreateBranch = 17
+            CreateBranch = 17,
+            Refresh = 18,
+            SelectNext = 19, // Ctrl+N
+            SelectNext_AlternativeHotkey1 = 20, // Alt+Down
+            SelectNext_AlternativeHotkey2 = 21, // Alt+Right
+            SelectPrevious = 22, // Ctrl+P
+            SelectPrevious_AlternativeHotkey1 = 23, // Alt+Up
+            SelectPrevious_AlternativeHotkey2 = 24, // Alt+Left
         }
 
         private string GetShortcutKeyDisplayString(Command cmd)
@@ -867,6 +866,13 @@ namespace GitUI.CommandsDialogs
                 case Command.EditFile: editFileToolStripMenuItem.PerformClick(); return true;
                 case Command.AddSelectionToCommitMessage: return AddSelectionToCommitMessage();
                 case Command.CreateBranch: createBranchToolStripButton.PerformClick(); return true;
+                case Command.Refresh: RescanChanges(); return true;
+                case Command.SelectNext:
+                case Command.SelectNext_AlternativeHotkey1:
+                case Command.SelectNext_AlternativeHotkey2: MoveSelection(1);  return true;
+                case Command.SelectPrevious:
+                case Command.SelectPrevious_AlternativeHotkey1:
+                case Command.SelectPrevious_AlternativeHotkey2: MoveSelection(-1); return true;
                 default: return base.ExecuteCommand(cmd);
             }
         }
