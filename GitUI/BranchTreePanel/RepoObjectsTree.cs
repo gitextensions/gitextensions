@@ -11,6 +11,7 @@ using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
+using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
@@ -22,6 +23,8 @@ namespace GitUI.BranchTreePanel
 {
     public partial class RepoObjectsTree : GitModuleControl
     {
+        public const string HotkeySettingsName = "LeftPanel";
+
         private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
         private readonly TranslationString _showBranchOnly =
             new("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
@@ -55,10 +58,6 @@ namespace GitUI.BranchTreePanel
             _txtBranchCriterion = CreateSearchBox();
             branchSearchPanel.Controls.Add(_txtBranchCriterion, 1, 0);
 
-            treeMain.PreviewKeyDown += OnPreviewKeyDown;
-            btnSearch.PreviewKeyDown += OnPreviewKeyDown;
-            PreviewKeyDown += OnPreviewKeyDown;
-
             mnubtnCollapse.AdaptImageLightness();
             tsbCollapseAll.AdaptImageLightness();
             mnubtnExpand.AdaptImageLightness();
@@ -69,6 +68,9 @@ namespace GitUI.BranchTreePanel
             mnubtnFetchCreateBranch.AdaptImageLightness();
             mnubtnPullFromRemoteBranch.AdaptImageLightness();
             InitializeComplete();
+
+            ReloadHotkeys();
+            HotkeysEnabled = true;
 
             RegisterContextActions();
 
@@ -164,7 +166,6 @@ namespace GitUI.BranchTreePanel
                 };
                 search.TextChanged += OnBranchCriterionChanged;
                 search.KeyDown += TxtBranchCriterion_KeyDown;
-                search.PreviewKeyDown += OnPreviewKeyDown;
 
                 search.SearchBoxBorderStyle = BorderStyle.FixedSingle;
                 search.SearchBoxBorderDefaultColor = Color.LightGray.AdaptBackColor();
@@ -264,6 +265,11 @@ namespace GitUI.BranchTreePanel
             _branchesTree.Refresh(getRefs);
             _remotesTree.Refresh(getRefs);
             _tagTree.Refresh(getRefs);
+        }
+
+        public void ReloadHotkeys()
+        {
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
         }
 
         public void SelectionChanged(IReadOnlyList<GitRevision> selectedRevisions)
@@ -531,19 +537,18 @@ namespace GitUI.BranchTreePanel
             e.Handled = true;
         }
 
-        private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        protected override CommandStatus ExecuteCommand(int cmd)
         {
-            switch (e.KeyCode)
+            switch ((Command)cmd)
             {
-                case Keys.F2:
-                    Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnRename());
-                    break;
-                case Keys.F3:
-                    OnBtnSearchClicked(this, EventArgs.Empty);
-                    break;
-                case Keys.Delete:
-                    Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnDelete());
-                    break;
+                case Command.Delete: Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnDelete()); return true;
+                case Command.Rename: Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnRename()); return true;
+                case Command.Search: OnBtnSearchClicked(this, EventArgs.Empty); return true;
+                case Command.MultiSelect:
+                case Command.MultiSelectWithChildren:
+                    OnNodeClick(this, new TreeNodeMouseClickEventArgs(treeMain.SelectedNode, MouseButtons.Left, clicks: 1, x: 0, y: 0));
+                    return true;
+                default: return base.ExecuteCommand(cmd);
             }
         }
 

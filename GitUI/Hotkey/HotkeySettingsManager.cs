@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using GitCommands;
+using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Script;
@@ -289,6 +290,13 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.StashPop, Keys.Control | Keys.Alt | Keys.Down),
                     Hk(FormBrowse.Command.ToggleBetweenArtificialAndHeadCommits, Keys.Control | Keys.OemBackslash),
                     Hk(FormBrowse.Command.ToggleBranchTreePanel, Keys.Control | Keys.Alt | Keys.C)),
+                new HotkeySettings(
+                    RepoObjectsTree.HotkeySettingsName,
+                    Hk(RepoObjectsTree.Command.Delete, Keys.Delete),
+                    Hk(RepoObjectsTree.Command.Rename, Keys.F2),
+                    Hk(RepoObjectsTree.Command.Search, Keys.F3),
+                    Hk(RepoObjectsTree.Command.MultiSelect, Keys.Control | Keys.Space),
+                    Hk(RepoObjectsTree.Command.MultiSelectWithChildren, Keys.Control | Keys.Shift | Keys.Space)),
                 new HotkeySettings(
                     RevisionGridControl.HotkeySettingsName,
                     Hk(RevisionGridControl.Command.CompareSelectedCommits, Keys.None),
