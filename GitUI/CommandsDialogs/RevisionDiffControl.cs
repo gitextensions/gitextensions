@@ -78,7 +78,7 @@ namespace GitUI.CommandsDialogs
             DiffText.ScrollToTop();
         }
 
-        public void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
+        public void RepositoryChanged()
         {
             _rememberFileContextMenuController.RememberedDiffFileItem = null;
         }

@@ -570,20 +570,13 @@ namespace GitUI.CommandsDialogs
         {
             // Note that this called in most FormBrowse context to "be sure"
             // that the repo has not been updated externally.
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await this.SwitchToMainThreadAsync();
-
-                RefreshRevisions(e.GetRefs);
-            }).FileAndForget();
-
-            ToolStripFilters.UpdateBranchFilterItems(e.GetRefs);
-            UpdateSubmodulesStructure();
-            UpdateStashCount();
-
-            revisionDiff.UICommands_PostRepositoryChanged(sender, e);
+            RefreshRevisions(e.GetRefs);
         }
 
+        /// <summary>
+        /// Refresh revisions, also handling changes external to GE.
+        /// </summary>
+        /// <param name="getRefs">(Lazy) func to get refs.</param>
         private void RefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
             if (RevisionGrid.IsDisposed || IsDisposed || Disposing)
@@ -607,9 +600,12 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.PerformRefreshRevisions(getRefs);
 
             InternalInitialize();
+            ToolStripFilters.UpdateBranchFilterItems(getRefs);
+            UpdateSubmodulesStructure();
 
             RefreshGitStatusMonitor();
             revisionDiff.RefreshArtificial();
+            UpdateStashCount();
         }
 
         private void RefreshGitStatusMonitor() => _gitStatusMonitor?.RequestRefresh();
@@ -740,7 +736,7 @@ namespace GitUI.CommandsDialogs
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
                         {
                             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
-                            RefreshRevisions(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs);
+                            UICommands.RepoChangedNotifier.Notify();
                         }
                     };
 
@@ -968,7 +964,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
                         {
-                            RevisionGrid.PerformRefreshRevisions();
+                            UICommands.RepoChangedNotifier.Notify();
                         }
                     };
 
@@ -1827,6 +1823,7 @@ namespace GitUI.CommandsDialogs
                     RevisionGrid.ResetAllFilters();
                     ToolStripFilters.ClearQuickFilters();
                     AppSettings.BranchFilterEnabled = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
+                    revisionDiff.RepositoryChanged();
                 }
 
                 RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
