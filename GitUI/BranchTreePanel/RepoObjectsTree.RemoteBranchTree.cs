@@ -59,12 +59,12 @@ namespace GitUI.BranchTreePanel
             }
 
             /// <inheritdoc/>
-            protected internal override void Refresh()
+            protected internal override void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 // Break the local cache to ensure the data is requeried to reflect the required sort order.
                 _loadedBranches = null;
 
-                base.Refresh();
+                base.Refresh(getRefs);
             }
 
             private async Task<Nodes> FillBranchTreeAsync(IReadOnlyList<IGitRef> branches, CancellationToken token)

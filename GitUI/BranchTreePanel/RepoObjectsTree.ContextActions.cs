@@ -10,6 +10,7 @@ using GitUI.BranchTreePanel.ContextMenu;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -254,18 +255,8 @@ namespace GitUI.BranchTreePanel
             AddContextMenuItems(menuBranch, _menuBranchCopyContextMenuItems);
             AddContextMenuItems(menuRemote, _menuRemoteCopyContextMenuItems);
 
-            _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() =>
-            {
-                _branchesTree.Refresh();
-                _remotesTree.Refresh();
-                _tagTree.Refresh();
-            });
-            _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() =>
-            {
-                _branchesTree.Refresh();
-                _remotesTree.Refresh();
-                _tagTree.Refresh();
-            });
+            _sortOrderContextMenuItem = new GitRefsSortOrderContextMenuItem(() => Refresh(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs));
+            _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => Refresh(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs));
 
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
             AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item), insertAfter: _menuBranchCopyContextMenuItems[1]);

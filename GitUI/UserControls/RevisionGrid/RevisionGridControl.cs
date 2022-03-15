@@ -62,7 +62,7 @@ namespace GitUI
     {
         public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
         public event EventHandler<FilterChangedEventArgs>? FilterChanged;
-        public event EventHandler? RevisionGraphLoaded;
+        public event EventHandler<GitUIEventArgs>? RevisionGraphLoaded;
         public event EventHandler? SelectionChanged;
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace GitUI
         /// This is used to remove spinners added when loading and to replace the gridview at errors.
         /// </summary>
         /// <param name="content">The content to show.</param>
-        private void SetPage(Control content)
+        private void SetPage(Control content, Lazy<IReadOnlyList<IGitRef>> getRefs)
         {
             for (int i = Controls.Count - 1; i >= 0; i--)
             {
@@ -317,7 +317,7 @@ namespace GitUI
                 Controls.Add(content);
             }
 
-            RevisionGraphLoaded?.Invoke(content == _gridView ? _gridView : null, EventArgs.Empty);
+            RevisionGraphLoaded?.Invoke(content == _gridView ? _gridView : null, new GitUIEventArgs(this, UICommands, getRefs));
         }
 
         internal int DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
@@ -402,21 +402,21 @@ namespace GitUI
             PerformRefreshRevisions();
         }
 
-        private void InitiateRefAction(IReadOnlyList<IGitRef>? refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
+        private void InitiateRefAction(IReadOnlyList<IGitRef>? gitRefs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
-            if (refs is null || refs.Count < 1)
+            if (gitRefs is null || gitRefs.Count < 1)
             {
                 return;
             }
 
-            if (refs.Count == 1)
+            if (gitRefs.Count == 1)
             {
-                action(refs[0]);
+                action(gitRefs[0]);
                 return;
             }
 
             using FormQuickGitRefSelector dlg = new();
-            dlg.Init(actionLabel, refs);
+            dlg.Init(actionLabel, gitRefs);
             dlg.Location = GetQuickItemSelectorLocation();
             if (dlg.ShowDialog(ParentForm) != DialogResult.OK || dlg.SelectedRef is null)
             {
@@ -1010,7 +1010,7 @@ namespace GitUI
             }
             catch
             {
-                SetPage(new ErrorControl());
+                SetPage(new ErrorControl(), getUnfilteredRefs);
                 throw;
             }
 
@@ -1241,7 +1241,7 @@ namespace GitUI
             void OnRevisionReaderError(Exception exception)
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(() => SetPage(new ErrorControl()))
+                this.InvokeAsync(() => SetPage(new ErrorControl(), getUnfilteredRefs))
                     .FileAndForget();
 
                 _refreshRevisionsSequence.CancelCurrent();
@@ -1267,7 +1267,7 @@ namespace GitUI
                     this.InvokeAsync(
                             () =>
                             {
-                                SetPage(new EmptyRepoControl(Module.IsBareRepository()));
+                                SetPage(new EmptyRepoControl(Module.IsBareRepository()), getUnfilteredRefs);
                                 _isRefreshingRevisions = false;
                             })
                         .FileAndForget();
@@ -1280,7 +1280,7 @@ namespace GitUI
                     await this.SwitchToMainThreadAsync();
 
                     _gridView.LoadingCompleted();
-                    SetPage(_gridView);
+                    SetPage(_gridView, getUnfilteredRefs);
                     _isRefreshingRevisions = false;
                     CheckAndRepairInitialRevision();
                     HighlightRevisionsByAuthor(GetSelectedRevisions());

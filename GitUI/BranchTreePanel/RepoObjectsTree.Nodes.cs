@@ -224,7 +224,7 @@ namespace GitUI.BranchTreePanel
             /// <summary>
             /// Requests to refresh the data tree and to apply filtering, if necessary.
             /// </summary>
-            protected internal virtual void Refresh()
+            protected internal virtual void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 // NOTE: descendants may need to break their local caches to ensure the latest data is loaded.
 
@@ -232,7 +232,7 @@ namespace GitUI.BranchTreePanel
                 {
                     IsFiltering.Value = _isCurrentlyFiltering;
 
-                    await ReloadNodesAsync(LoadNodesAsync, new FilteredGitRefsProvider(Module).GetRefs);
+                    await ReloadNodesAsync(LoadNodesAsync, getRefs);
                 });
             }
 
@@ -242,7 +242,7 @@ namespace GitUI.BranchTreePanel
             /// <param name="isFiltering">
             ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
             /// </param>
-            internal void ToggleFilterMode(bool isFiltering)
+            internal void Refresh(bool isFiltering, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 // If we're not currently filtering and no need to filter now -> exit.
                 // Else we need to iterate over the list and rebind the tree - whilst there
@@ -262,7 +262,7 @@ namespace GitUI.BranchTreePanel
                 {
                     IsFiltering.Value = true;
 
-                    await ReloadNodesAsync(LoadNodesAsync, new FilteredGitRefsProvider(Module).GetRefs);
+                    await ReloadNodesAsync(LoadNodesAsync, getRefs);
                 });
             }
 
