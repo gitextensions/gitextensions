@@ -71,11 +71,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _openMergeToolItemText = new("Open in");
         private readonly TranslationString _button1Text = new("Open in");
 
-        private readonly TranslationString _resetItemRebaseText = new("Abort rebase");
         private readonly TranslationString _contextChooseLocalRebaseText = new("Choose local (theirs)");
         private readonly TranslationString _contextChooseRemoteRebaseText = new("Choose remote (ours)");
 
-        private readonly TranslationString _resetItemMergeText = new("Abort merge");
         private readonly TranslationString _contextChooseLocalMergeText = new("Choose local (ours)");
         private readonly TranslationString _contextChooseRemoteMergeText = new("Choose remote (theirs)");
 
@@ -91,11 +89,11 @@ namespace GitUI.CommandsDialogs
             new("All files (*.*)");
 
         private readonly TranslationString _abortCurrentOperation =
-            new("You can abort the current operation by resetting changes." + Environment.NewLine +
+            new("You can abort the current conflict resolution by resetting hard." + Environment.NewLine +
                 "All changes since the last commit will be deleted." + Environment.NewLine +
-                Environment.NewLine + "Do you want to reset changes?");
+                Environment.NewLine + "Do you want to reset the changes?");
 
-        private readonly TranslationString _abortCurrentOperationCaption = new("Abort");
+        private readonly TranslationString _resetCaption = new("Reset changes");
 
         private readonly TranslationString _areYouSureYouWantDeleteFiles =
             new("Are you sure you want to DELETE all changes?" + Environment.NewLine +
@@ -254,13 +252,11 @@ namespace GitUI.CommandsDialogs
 
                 if (Module.InTheMiddleOfRebase())
                 {
-                    Reset.Text = _resetItemRebaseText.Text;
                     ContextChooseLocal.Text = _contextChooseLocalRebaseText.Text;
                     ContextChooseRemote.Text = _contextChooseRemoteRebaseText.Text;
                 }
                 else
                 {
-                    Reset.Text = _resetItemMergeText.Text;
                     ContextChooseLocal.Text = _contextChooseLocalMergeText.Text;
                     ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
                 }
@@ -695,7 +691,7 @@ namespace GitUI.CommandsDialogs
 
         private bool ShowAbortMessage()
         {
-            if (MessageBox.Show(_abortCurrentOperation.Text, _abortCurrentOperationCaption.Text,
+            if (MessageBox.Show(_abortCurrentOperation.Text, _resetCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 if (AppSettings.DontConfirmSecondAbortConfirmation ||

@@ -7074,18 +7074,14 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <target />
       </trans-unit>
       <trans-unit id="Reset.Text">
-        <source>Abort</source>
+        <source>Reset to &amp;previous commit</source>
         <target />
       </trans-unit>
       <trans-unit id="_abortCurrentOperation.Text">
-        <source>You can abort the current operation by resetting changes.
+        <source>You can abort the current conflict resolution by resetting hard.
 All changes since the last commit will be deleted.
 
-Do you want to reset changes?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_abortCurrentOperationCaption.Text">
-        <source>Abort</source>
+Do you want to reset the changes?</source>
         <target />
       </trans-unit>
       <trans-unit id="_allConflictsResolved.Text">
@@ -7314,12 +7310,8 @@ Please go to settings and configure the mergetool!</source>
         <source>ours</source>
         <target />
       </trans-unit>
-      <trans-unit id="_resetItemMergeText.Text">
-        <source>Abort merge</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_resetItemRebaseText.Text">
-        <source>Abort rebase</source>
+      <trans-unit id="_resetCaption.Text">
+        <source>Reset changes</source>
         <target />
       </trans-unit>
       <trans-unit id="_solveMergeConflictApplyToAllCheckBoxText.Text">
