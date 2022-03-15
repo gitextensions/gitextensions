@@ -460,7 +460,7 @@ namespace GitUI.CommandsDialogs
 
             _formBrowseDiagnosticsReporter.Report();
 
-            // All app init is done, make all repo related similar to switching repos (like triggering RefreshRevisions())
+            // All app init is done, make all repo related similar to switching repos
             SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
         }
 
@@ -571,6 +571,14 @@ namespace GitUI.CommandsDialogs
             // Note that this called in most FormBrowse context to "be sure"
             // that the repo has not been updated externally.
             RefreshRevisions(e.GetRefs);
+        }
+
+        /// <summary>
+        /// Refresh revisions, also handling changes external to GE.
+        /// </summary>
+        private void RefreshRevisions()
+        {
+            RefreshRevisions(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs);
         }
 
         /// <summary>
@@ -736,7 +744,7 @@ namespace GitUI.CommandsDialogs
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
                         {
                             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
-                            UICommands.RepoChangedNotifier.Notify();
+                            RefreshRevisions();
                         }
                     };
 
@@ -964,7 +972,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
                         {
-                            UICommands.RepoChangedNotifier.Notify();
+                            RefreshRevisions();
                         }
                     };
 
@@ -1569,7 +1577,7 @@ namespace GitUI.CommandsDialogs
                 FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodule), Module.SuperprojectModule.WorkingDir, input: null, useDialogSettings: true);
             }
 
-            UICommands.RepoChangedNotifier.Notify();
+            RefreshRevisions();
         }
 
         private void UpdateAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
@@ -1830,8 +1838,7 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
                 RevisionGrid.ResumeRefreshRevisions();
 
-                // This will raise UICommands.PostRepositoryChanged -> RefreshRevisions()
-                UICommands.RepoChangedNotifier.Notify();
+                RefreshRevisions();
             }
             else
             {
@@ -1913,7 +1920,7 @@ namespace GitUI.CommandsDialogs
                 frm.ShowDialog(this);
             }
 
-            UICommands.RepoChangedNotifier.Notify();
+            RefreshRevisions();
         }
 
         private void CurrentBranchDropDownOpening(object sender, EventArgs e)
@@ -1968,7 +1975,7 @@ namespace GitUI.CommandsDialogs
             if (PluginRegistry.GitHosters.Count > 0)
             {
                 UICommands.StartCloneForkFromHoster(this, PluginRegistry.GitHosters[0], SetGitModule);
-                UICommands.RepoChangedNotifier.Notify();
+                RefreshRevisions();
             }
             else
             {
@@ -2144,7 +2151,7 @@ namespace GitUI.CommandsDialogs
             }
 
             ScriptManager.RunEventScripts(this, ScriptEvent.AfterFetch);
-            UICommands.RepoChangedNotifier.Notify();
+            RefreshRevisions();
         }
 
         public override bool ProcessHotkey(Keys keyData)
