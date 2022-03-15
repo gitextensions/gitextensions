@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitUI.HelperDialogs;
@@ -91,9 +92,9 @@ namespace GitUI.CommandsDialogs
             new("All files (*.*)");
 
         private readonly TranslationString _abortCurrentOperation =
-            new("You can abort the current operation by resetting changes." + Environment.NewLine +
-                "All changes since the last commit will be deleted." + Environment.NewLine +
-                Environment.NewLine + "Do you want to reset changes?");
+            new("You can abort the current operation." + Environment.NewLine +
+                "All changes - particularly conflict resolutions - will be deleted." + Environment.NewLine +
+                Environment.NewLine + "Do you want to reset the changes?");
 
         private readonly TranslationString _abortCurrentOperationCaption = new("Abort");
 
@@ -715,7 +716,10 @@ namespace GitUI.CommandsDialogs
             {
                 if (ShowAbortMessage())
                 {
-                    Module.Reset(ResetMode.Hard);
+                    ArgumentString arguments = Module.InTheMiddleOfRebase()
+                        ? GitCommandHelpers.AbortRebaseCmd()
+                        : GitCommandHelpers.AbortMergeCmd();
+                    FormProcess.ShowDialog(this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
                     Close();
                 }
             }

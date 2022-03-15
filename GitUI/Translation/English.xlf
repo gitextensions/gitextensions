@@ -7070,10 +7070,10 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <target />
       </trans-unit>
       <trans-unit id="_abortCurrentOperation.Text">
-        <source>You can abort the current operation by resetting changes.
-All changes since the last commit will be deleted.
+        <source>You can abort the current operation.
+All changes - particularly conflict resolutions - will be deleted.
 
-Do you want to reset changes?</source>
+Do you want to reset the changes?</source>
         <target />
       </trans-unit>
       <trans-unit id="_abortCurrentOperationCaption.Text">
