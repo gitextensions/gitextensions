@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -122,79 +121,6 @@ namespace GitUI.BranchTreePanel
             public int Count => _nodesList.Count;
 
             public Node? LastNode => _nodesList.Count > 0 ? _nodesList[_nodesList.Count - 1] : null;
-        }
-
-        /// <summary>A common base class for both <see cref="Node"/> and <see cref="Tree"/>.</summary>
-        internal abstract class NodeBase
-        {
-            /// <summary>The child nodes.</summary>
-            protected internal Nodes Nodes { get; protected set; }
-
-            /// <summary>The corresponding tree node.</summary>
-            protected internal virtual TreeNode TreeViewNode { get; set; }
-
-            /// <summary>
-            /// Marks this node to be included in multi-selection. See <see cref="Select(bool, bool)"/>.
-            /// This is remembered here instead of relying on the status of <see cref="TreeViewNode"/>
-            /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s
-            /// and may change the association between <see cref="Node"/> and <see cref="TreeNode"/>.
-            /// </summary>
-            protected internal bool IsSelected { get; set; }
-
-            protected internal void Select(bool select, bool includingDescendants = false)
-            {
-                IsSelected = select;
-                ApplyStyle(); // toggle multi-selected node style
-
-                // recursively process descendants if required
-                if (includingDescendants && this.HasChildren())
-                {
-                    foreach (var child in Nodes)
-                    {
-                        child.Select(select, includingDescendants);
-                    }
-                }
-            }
-
-            #region style / appearance
-            protected virtual void ApplyStyle()
-            {
-                SetFont(GetFontStyle());
-                TreeViewNode.ToolTipText = string.Empty;
-            }
-
-            protected virtual FontStyle GetFontStyle()
-                => IsSelected ? FontStyle.Underline : FontStyle.Regular;
-
-            private void SetFont(FontStyle style)
-            {
-                if (style == FontStyle.Regular)
-                {
-                    // For regular, set to null to use the NativeTreeView font
-                    if (TreeViewNode.NodeFont is not null)
-                    {
-                        ResetFont();
-                    }
-                }
-                else
-                {
-                    // If current font doesn't have the input style, get rid of it
-                    if (TreeViewNode.NodeFont is not null && TreeViewNode.NodeFont.Style != style)
-                    {
-                        ResetFont();
-                    }
-
-                    // If non-null, our font is already valid, otherwise create a new one
-                    TreeViewNode.NodeFont ??= new Font(AppSettings.Font, style);
-                }
-            }
-
-            private void ResetFont()
-            {
-                TreeViewNode.NodeFont.Dispose();
-                TreeViewNode.NodeFont = null;
-            }
-            #endregion
         }
 
         internal abstract class Tree : NodeBase, IDisposable
@@ -560,26 +486,5 @@ namespace GitUI.BranchTreePanel
                 }
             }
         }
-    }
-
-    internal static class NodeExtensions
-    {
-        internal static IEnumerable<RepoObjectsTree.NodeBase> GetNodesAndSelf(this RepoObjectsTree.Tree tree)
-            => tree.DepthEnumerator<RepoObjectsTree.NodeBase>().Prepend(tree);
-
-        internal static IEnumerable<RepoObjectsTree.NodeBase> GetMultiSelection(this RepoObjectsTree.Tree tree)
-            => tree.GetNodesAndSelf().Where(node => node.IsSelected);
-
-        internal static bool HasChildren(this RepoObjectsTree.NodeBase node)
-            => node.Nodes.Count > 0;
-
-        internal static IEnumerable<RepoObjectsTree.NodeBase> HavingChildren(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
-            => nodes.Where(node => node.HasChildren());
-
-        internal static IEnumerable<RepoObjectsTree.NodeBase> Expandable(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
-            => nodes.Where(node => !node.TreeViewNode.IsExpanded);
-
-        internal static IEnumerable<RepoObjectsTree.NodeBase> Collapsible(this IEnumerable<RepoObjectsTree.NodeBase> nodes)
-            => nodes.Where(node => node.TreeViewNode.IsExpanded);
     }
 }

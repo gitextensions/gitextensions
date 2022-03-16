@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -412,52 +410,5 @@ namespace GitUI.BranchTreePanel
             RegisterClick(result, onClick);
             return result;
         }
-    }
-
-    internal static class ContextMenuExtensions
-    {
-        internal static RepoObjectsTree.NodeBase GetSelectedNode(this ContextMenuStrip menu)
-            => (menu.SourceControl as TreeView)?.SelectedNode?.Tag as RepoObjectsTree.NodeBase;
-
-        /// <summary>Inserts <paramref name="items"/> into the <paramref name="menu"/>; optionally <paramref name="before"/> or
-        /// <paramref name="after"/> an existing item or at the start of the menu before other existing items if neither is specified.</summary>
-        internal static void InsertItems(this ContextMenuStrip menu, IEnumerable<ToolStripItem> items,
-            ToolStripItem? before = null, ToolStripItem? after = null)
-        {
-            Debug.Assert(!(after is not null && before is not null), $"Only {nameof(before)} or {nameof(after)} is allowed.");
-
-            menu.SuspendLayout();
-            int index;
-
-            if (before is not null)
-            {
-                index = Math.Max(0, menu.Items.IndexOf(before) - 1);
-                items.ForEach(item => menu.Items.Insert(++index, item));
-            }
-            else
-            {
-                index = after is null ? 0 : Math.Max(0, menu.Items.IndexOf(after) + 1);
-                items.ForEach(item => menu.Items.Insert(index++, item));
-            }
-
-            menu.ResumeLayout();
-        }
-
-        /// <summary>Adds the <paramref name="item"/> to the <paramref name="menu"/> if that doesn't contain it already.</summary>
-        internal static void AddOnce(this ContextMenuStrip menu, ToolStripItem item)
-        {
-            if (!menu.Items.Contains(item))
-            {
-                menu.Items.Add(item);
-            }
-        }
-
-        /// <summary>Toggles the <paramref name="item"/>'s <see cref="ToolStripItem.Visible"/>
-        /// as well as <see cref="ToolStripItem.Enabled"/> properties depending on <paramref name="enabled"/>.
-        /// Prefer this over only toggling the visibility of an item to enable determining whether the context menu will (once open)
-        /// contain any visible items via <see cref="ToolStripItem.Enabled"/> even before the menu itself (as the visual parent)
-        /// is visble and <see cref="ToolStripItem.Visible"/> of any item therefore false.</summary>
-        internal static void Toggle(this ToolStripItem item, bool enabled)
-            => item.Visible = item.Enabled = enabled;
     }
 }
