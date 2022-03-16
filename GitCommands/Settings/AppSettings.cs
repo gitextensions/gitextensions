@@ -19,48 +19,6 @@ using Microsoft.Win32;
 
 namespace GitCommands
 {
-    public enum CommitInfoPosition
-    {
-        // DO NOT RENAME THESE -- doing so will break user preferences
-        BelowList = 0,
-        LeftwardFromList = 1,
-        RightwardFromList = 2
-    }
-
-    public enum LocalChangesAction
-    {
-        // DO NOT RENAME THESE -- doing so will break user preferences
-        DontChange,
-        Merge,
-        Reset,
-        Stash
-    }
-
-    public enum RevisionSortOrder
-    {
-        // DO NOT RENAME THESE -- doing so will break user preferences
-        GitDefault,
-        AuthorDate,
-        Topology
-    }
-
-    public enum ShorteningRecentRepoPathStrategy
-    {
-        // DO NOT RENAME THESE -- doing so will break user preferences
-        None,
-        MostSignDir,
-        MiddleDots
-    }
-
-    public enum TruncatePathMethod
-    {
-        // DO NOT RENAME THESE -- doing so will break user preferences
-        None,
-        Compact,
-        TrimStart,
-        FileNameOnly
-    }
-
     public static class AppSettings
     {
         // semi-constants
