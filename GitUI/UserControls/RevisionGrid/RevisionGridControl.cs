@@ -204,7 +204,8 @@ namespace GitUI
             copyToClipboardToolStripMenuItem.SetRevisionFunc(() => GetSelectedRevisions());
 
             MenuCommands = new RevisionGridMenuCommands(this);
-            MenuCommands.CreateOrUpdateMenuCommands();
+            ReloadHotkeys();
+            HotkeysEnabled = true;
 
             // fill View context menu from MenuCommands
             FillMenuFromMenuCommands(MenuCommands.ViewMenuCommands, viewToolStripMenuItem);
@@ -214,9 +215,6 @@ namespace GitUI
 
             // Apply checkboxes changes also to FormBrowse main menu
             MenuCommands.TriggerMenuChanged();
-
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            HotkeysEnabled = true;
 
             _gridView.ShowCellToolTips = false;
             _gridView.AuthorHighlighting = _authorHighlighting;
