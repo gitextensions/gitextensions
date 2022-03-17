@@ -3260,7 +3260,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
-        <source>&amp;Favourite Repositories</source>
+        <source>&amp;Favorite repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiHash.Text">
@@ -3268,11 +3268,11 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiRecentRepositories.Text">
-        <source>&amp;Recent Repositories</source>
+        <source>&amp;Recent repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiRecentRepositoriesClear.Text">
-        <source>Clear List</source>
+        <source>Clear list</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiResetAllFilters.Text">
@@ -3336,7 +3336,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="userManualToolStripMenuItem.Text">
-        <source>User &amp;Manual</source>
+        <source>User &amp;manual</source>
         <target />
       </trans-unit>
       <trans-unit id="userShell.ToolTipText">
@@ -11083,7 +11083,7 @@ The action cannot be undone.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRecentRepositories.Text">
-        <source>Recent Repositories</source>
+        <source>Recent repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuConfigure.Text">

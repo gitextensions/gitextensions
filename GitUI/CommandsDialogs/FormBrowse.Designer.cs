@@ -844,7 +844,7 @@ namespace GitUI.CommandsDialogs
             this.tsmiFavouriteRepositories.Image = global::GitUI.Properties.Images.Star;
             this.tsmiFavouriteRepositories.Name = "tsmiFavouriteRepositories";
             this.tsmiFavouriteRepositories.Size = new System.Drawing.Size(198, 22);
-            this.tsmiFavouriteRepositories.Text = "&Favourite Repositories";
+            this.tsmiFavouriteRepositories.Text = "&Favorite repositories";
             this.tsmiFavouriteRepositories.DropDownOpening += new System.EventHandler(this.tsmiFavouriteRepositories_DropDownOpening);
             // 
             // tsmiRecentRepositories
@@ -856,7 +856,7 @@ namespace GitUI.CommandsDialogs
             this.tsmiRecentRepositories.Image = global::GitUI.Properties.Images.RecentRepositories;
             this.tsmiRecentRepositories.Name = "tsmiRecentRepositories";
             this.tsmiRecentRepositories.Size = new System.Drawing.Size(198, 22);
-            this.tsmiRecentRepositories.Text = "&Recent Repositories";
+            this.tsmiRecentRepositories.Text = "&Recent repositories";
             this.tsmiRecentRepositories.DropDownOpening += new System.EventHandler(this.tsmiRecentRepositories_DropDownOpening);
             // 
             // clearRecentRepositoriesListToolStripMenuItem
@@ -868,7 +868,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.tsmiRecentRepositoriesClear.Name = "tsmiRecentRepositoriesClear";
             this.tsmiRecentRepositoriesClear.Size = new System.Drawing.Size(122, 22);
-            this.tsmiRecentRepositoriesClear.Text = "Clear List";
+            this.tsmiRecentRepositoriesClear.Text = "Clear list";
             this.tsmiRecentRepositoriesClear.Click += new System.EventHandler(this.tsmiRecentRepositoriesClear_Click);
             // 
             // toolStripSeparator12
@@ -1543,7 +1543,7 @@ namespace GitUI.CommandsDialogs
             this.userManualToolStripMenuItem.Image = global::GitUI.Properties.Images.GotoManual;
             this.userManualToolStripMenuItem.Name = "userManualToolStripMenuItem";
             this.userManualToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.userManualToolStripMenuItem.Text = "User &Manual";
+            this.userManualToolStripMenuItem.Text = "User &manual";
             this.userManualToolStripMenuItem.Click += new System.EventHandler(this.UserManualToolStripMenuItemClick);
             // 
             // changelogToolStripMenuItem

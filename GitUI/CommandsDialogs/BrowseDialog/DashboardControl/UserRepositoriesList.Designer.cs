@@ -129,7 +129,7 @@
             this.lblRecentRepositories.Name = "lblRecentRepositories";
             this.lblRecentRepositories.Size = new System.Drawing.Size(411, 32);
             this.lblRecentRepositories.TabIndex = 2;
-            this.lblRecentRepositories.Text = "Recent Repositories";
+            this.lblRecentRepositories.Text = "Recent repositories";
             // 
             // pnlBody
             // 
