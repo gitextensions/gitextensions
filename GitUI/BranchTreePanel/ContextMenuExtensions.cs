@@ -35,11 +35,21 @@ namespace GitUI.BranchTreePanel
             menu.ResumeLayout();
         }
 
-        /// <summary>Adds the <paramref name="item"/> to the <paramref name="menu"/> if that doesn't contain it already.</summary>
-        internal static void AddOnce(this ContextMenuStrip menu, ToolStripItem item)
+        /// <summary>Adds the <paramref name="item"/> to the <paramref name="menu"/>
+        /// while making sure not to add it more than once and that it is the last item in the menu.
+        /// This is useful for maintaining the order of items that are shared among multiple context menus.</summary>
+        internal static void SetLastItem(this ContextMenuStrip menu, ToolStripItem item)
         {
             if (!menu.Items.Contains(item))
             {
+                menu.Items.Add(item);
+            }
+
+            /* Sort item last. This works around other shared items being implicitly removed from menu in front
+             * (by adding them to other context menus when they are opened) and re-added after the item. */
+            if (menu.Items.IndexOf(item) != menu.Items.Count - 1)
+            {
+                menu.Items.Remove(item);
                 menu.Items.Add(item);
             }
         }

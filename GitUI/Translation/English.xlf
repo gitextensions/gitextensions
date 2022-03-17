@@ -9041,6 +9041,10 @@ Hold CTRL while clicking to de/select multiple and include descendant tree nodes
 Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_runScriptToolStripMenuItem.Text">
+        <source>Run script</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_searchTooltip.Text">
         <source>Search</source>
         <target />
@@ -9251,10 +9255,6 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnUpdateSubmodule.ToolTipText">
         <source>Update selected submodule recursively</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">

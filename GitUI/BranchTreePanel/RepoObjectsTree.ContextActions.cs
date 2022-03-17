@@ -18,6 +18,7 @@ namespace GitUI.BranchTreePanel
         private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem;
         private GitRefsSortByContextMenuItem _sortByContextMenuItem;
         private ToolStripSeparator _tsmiSortMenuSpacer = new() { Name = "tsmiSortMenuSpacer" };
+        private ToolStripMenuItem _runScriptToolStripMenuItem = new("Run script", Properties.Images.Console);
         private ToolStripItem[] _menuBranchCopyContextMenuItems = Array.Empty<ToolStripItem>();
         private ToolStripItem[] _menuRemoteCopyContextMenuItems = Array.Empty<ToolStripItem>();
 
@@ -67,7 +68,7 @@ namespace GitUI.BranchTreePanel
                 }
                 else if (contextMenu.Items.Count > 0)
                 {
-                    contextMenu.AddOnce(tsmiMainMenuSpacer1); // add a separator if any items exist already
+                    contextMenu.SetLastItem(tsmiMainMenuSpacer1); // add a separator if any items exist already
 
                     /* Display separator if any preceding items are enabled.
                      * This relies on the items' Enabled flag being toggled (e.g. by ToggleMenuItems) and BEFORE this method. */
@@ -75,8 +76,8 @@ namespace GitUI.BranchTreePanel
                     ToggleMenuItems(precedingItems.Any(item => item.Enabled), tsmiMainMenuSpacer1);
                 }
 
-                contextMenu.AddOnce(mnubtnCollapse);
-                contextMenu.AddOnce(mnubtnExpand);
+                contextMenu.SetLastItem(mnubtnCollapse);
+                contextMenu.SetLastItem(mnubtnExpand);
                 ToggleMenuItems(multiSelectedParents.Expandable().Any(), mnubtnExpand);
                 ToggleMenuItems(multiSelectedParents.Collapsible().Any(), mnubtnCollapse);
             }
@@ -96,9 +97,9 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            contextMenu.AddOnce(tsmiMainMenuSpacer2); // add another separator
-            contextMenu.AddOnce(mnubtnMoveUp);
-            contextMenu.AddOnce(mnubtnMoveDown);
+            contextMenu.SetLastItem(tsmiMainMenuSpacer2); // add another separator
+            contextMenu.SetLastItem(mnubtnMoveUp);
+            contextMenu.SetLastItem(mnubtnMoveDown);
 
             var treeNode = tree.TreeViewNode;
             ToggleMenuItems(hasSingleSelection, tsmiMainMenuSpacer2);
@@ -119,14 +120,24 @@ namespace GitUI.BranchTreePanel
                      || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(t.Key))); // or only those applying to the current branch
 
             ToggleMenuItems(localBranch.Visible && hasSingleSelection, _menuBranchCopyContextMenuItems);
+        }
+
+        private void ToggleRunScriptContextMenu(ContextMenuStrip contextMenu, bool hasSingleSelection)
+        {
+            if (contextMenu != menuBranch || contextMenu.GetSelectedNode() is not LocalBranchNode localBranch)
+            {
+                return;
+            }
+
+            contextMenu.SetLastItem(_runScriptToolStripMenuItem);
 
             if (localBranch.Visible && hasSingleSelection)
             {
-                contextMenu.AddUserScripts(runScriptToolStripMenuItem, _scriptRunner.Execute);
+                contextMenu.AddUserScripts(_runScriptToolStripMenuItem, _scriptRunner.Execute);
             }
             else
             {
-                contextMenu.RemoveUserScripts(runScriptToolStripMenuItem);
+                contextMenu.RemoveUserScripts(_runScriptToolStripMenuItem);
             }
         }
 
@@ -209,10 +220,9 @@ namespace GitUI.BranchTreePanel
             //    Sort By...
             //    Sort Order...
 
-            if (!contextMenu.Items.Contains(_sortOrderContextMenuItem))
-            {
-                contextMenu.Items.AddRange(new ToolStripItem[] { _tsmiSortMenuSpacer, _sortByContextMenuItem, _sortOrderContextMenuItem });
-            }
+            contextMenu.SetLastItem(_tsmiSortMenuSpacer);
+            contextMenu.SetLastItem(_sortByContextMenuItem);
+            contextMenu.SetLastItem(_sortOrderContextMenuItem);
 
             // sorting doesn't make a lot of sense in a multi-selection context
             ToggleMenuItems(hasSingleSelection, _tsmiSortMenuSpacer, _sortByContextMenuItem);
@@ -268,9 +278,9 @@ namespace GitUI.BranchTreePanel
 
             #region LocalBranchNode
             _menuBranchCopyContextMenuItems = CreateCopyContextMenuItems();
-            menuBranch.InsertItems(_menuBranchCopyContextMenuItems);
+            menuBranch.Items.AddRange(_menuBranchCopyContextMenuItems);
             _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
-            menuBranch.InsertItems(_localBranchMenuItems.Select(s => s.Item), after: _menuBranchCopyContextMenuItems.Last());
+            menuBranch.Items.AddRange(_localBranchMenuItems.Select(s => s.Item).ToArray());
             Node.RegisterContextMenu(typeof(LocalBranchNode), menuBranch);
             #endregion
 
@@ -366,7 +376,7 @@ namespace GitUI.BranchTreePanel
         private void ToggleFilterSelectedRefsContextMenu(ContextMenuStrip contextMenu, NodeBase[] selectedNodes)
         {
             var selectionContainsRefs = selectedNodes.OfType<IGitRefActions>().Any();
-            contextMenu.AddOnce(_filterForSelectedRefsMenuItem);
+            contextMenu.SetLastItem(_filterForSelectedRefsMenuItem);
             ToggleMenuItems(selectionContainsRefs, _filterForSelectedRefsMenuItem);
         }
         #endregion
@@ -391,6 +401,7 @@ namespace GitUI.BranchTreePanel
             ToggleFilterSelectedRefsContextMenu(contextMenu, selectedNodes);
             ToggleSortContextMenu(contextMenu, hasSingleSelection);
             ToggleExpandCollapseContextMenu(contextMenu, selectedNodes);
+            ToggleRunScriptContextMenu(contextMenu, hasSingleSelection);
             ToggleMoveTreeUpDownContexMenu(contextMenu, hasSingleSelection);
 
             /* Cancel context menu if no items are enabled.

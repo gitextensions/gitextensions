@@ -63,7 +63,6 @@ namespace GitUI.BranchTreePanel
             this.mnubtnMoveUp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBranch = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuTags = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuRemotes = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuBtnManageRemotesFromRootNode = new System.Windows.Forms.ToolStripMenuItem();
@@ -111,7 +110,6 @@ namespace GitUI.BranchTreePanel
             this.mnubtnCommitSubmodule = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAllSubmodules = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuMain.SuspendLayout();
-            this.menuBranch.SuspendLayout();
             this.menuRemotes.SuspendLayout();
             this.menuRemote.SuspendLayout();
             this.menuBranchPath.SuspendLayout();
@@ -191,18 +189,9 @@ namespace GitUI.BranchTreePanel
             // 
             // menuBranch
             // 
-            this.menuBranch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.runScriptToolStripMenuItem});
             this.menuBranch.Name = "contextmenuBranch";
             this.menuBranch.Size = new System.Drawing.Size(192, 48);
             this.menuBranch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
-            // 
-            // runScriptToolStripMenuItem
-            // 
-            this.runScriptToolStripMenuItem.Image = global::GitUI.Properties.Images.Console;
-            this.runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
-            this.runScriptToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.runScriptToolStripMenuItem.Text = "Run script";
             // 
             // menuTags
             // 
@@ -624,7 +613,6 @@ namespace GitUI.BranchTreePanel
             this.Name = "RepoObjectsTree";
             this.Size = new System.Drawing.Size(300, 350);
             this.menuMain.ResumeLayout(false);
-            this.menuBranch.ResumeLayout(false);
             this.menuRemotes.ResumeLayout(false);
             this.menuRemote.ResumeLayout(false);
             this.menuBranchPath.ResumeLayout(false);
@@ -690,7 +678,6 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnResetSubmodule;
         private ToolStripMenuItem mnubtnStashSubmodule;
         private ToolStripMenuItem mnubtnCommitSubmodule;
-        private ToolStripMenuItem runScriptToolStripMenuItem;
         private ToolStripMenuItem mnubtnMoveUp;
         private ToolStripMenuItem mnubtnMoveDown;
         private ToolStripMenuItem mnuBtnOpenRemoteUrlInBrowser;
