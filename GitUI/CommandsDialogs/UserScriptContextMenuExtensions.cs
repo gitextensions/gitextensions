@@ -33,10 +33,7 @@ namespace GitUI.CommandsDialogs
 
             var lastIndex = contextMenu.Items.Count;
 
-            var scripts = ScriptManager.GetScripts()
-                .Where(x => x.Enabled);
-
-            foreach (var script in scripts)
+            foreach (ScriptInfo script in ScriptManager.GetScripts().Where(x => x.Enabled))
             {
                 ToolStripMenuItem item = new()
                 {
