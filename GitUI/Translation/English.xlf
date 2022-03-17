@@ -9733,7 +9733,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="TopoOrder.Text">
-        <source>Arrange commits by t&amp;opo order (ancestor order)</source>
+        <source>Arrange c&amp;ommits by topo order (ancestor order)</source>
         <target />
       </trans-unit>
       <trans-unit id="_quickSearchQuickHelp.Text">

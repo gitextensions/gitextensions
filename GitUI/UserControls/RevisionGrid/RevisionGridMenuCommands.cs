@@ -435,7 +435,7 @@ namespace GitUI.UserControls.RevisionGrid
                 new MenuCommand
                 {
                     Name = "TopoOrder",
-                    Text = "Arrange commits by t&opo order (ancestor order)",
+                    Text = "Arrange c&ommits by topo order (ancestor order)",
                     ExecuteAction = () => _revisionGrid.ToggleTopoOrder(),
                     IsCheckedFunc = () => AppSettings.RevisionSortOrder == RevisionSortOrder.Topology
                 },
