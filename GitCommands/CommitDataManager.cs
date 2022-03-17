@@ -134,8 +134,7 @@ namespace GitCommands
 
             var guid = ObjectId.Parse(lines[0]);
 
-            // TODO: we can use this to add more relationship info like gitk does if wanted
-            var treeGuid = ObjectId.Parse(lines[1]);
+            // lines[1] contains the optional treeGuid
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
             var parentIds = lines[2].LazySplit(' ').Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => ObjectId.Parse(id)).ToList();
@@ -151,7 +150,7 @@ namespace GitCommands
             Validates.NotNull(author);
             Validates.NotNull(committer);
 
-            return new CommitData(guid, treeGuid, parentIds, author, authorDate, committer, commitDate, body);
+            return new CommitData(guid, parentIds, author, authorDate, committer, commitDate, body);
         }
 
         /// <inheritdoc />
@@ -167,7 +166,7 @@ namespace GitCommands
                 throw new ArgumentException($"Cannot have a null {nameof(GitRevision.ObjectId)}.", nameof(revision));
             }
 
-            return new CommitData(revision.ObjectId, revision.TreeGuid, revision.ParentIds,
+            return new CommitData(revision.ObjectId, revision.ParentIds,
                 string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
                 string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
                 revision.Body ?? revision.Subject)
