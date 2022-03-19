@@ -30,8 +30,8 @@ namespace GitUI.CommandsDialogs
             scriptInvoker = scriptInvoker ?? throw new ArgumentNullException(nameof(scriptInvoker));
 
             RemoveOwnScripts(contextMenu, hostMenuItem);
-
-            var lastIndex = contextMenu.Items.Count;
+            var hostItemIndex = contextMenu.Items.IndexOf(hostMenuItem);
+            var lastScriptItemIndex = hostItemIndex;
 
             foreach (ScriptInfo script in ScriptManager.GetScripts().Where(x => x.Enabled))
             {
@@ -55,7 +55,8 @@ namespace GitUI.CommandsDialogs
 
                 if (script.AddToRevisionGridContextMenu)
                 {
-                    contextMenu.Items.Add(item);
+                    // insert items after hostMenuItem
+                    contextMenu.Items.Insert(++lastScriptItemIndex, item);
                 }
                 else
                 {
@@ -64,9 +65,14 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (lastIndex != contextMenu.Items.Count)
+            // insert separator in between hostMenuItem and scripts with AddToRevisionGridContextMenu added to contextMenu itself
+            if (hostItemIndex != lastScriptItemIndex)
             {
-                contextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
+                contextMenu.Items.Insert(hostItemIndex + 1, new ToolStripSeparator
+                {
+                    // include ScriptNameSuffix for clean easy cleanup in RemoveOwnScripts()
+                    Name = nameof(ScriptInfo.AddToRevisionGridContextMenu) + "Separator" + ScriptNameSuffix
+                });
             }
         }
 
@@ -95,12 +101,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in list)
             {
-                contextMenu.Items.RemoveByKey(item.Name);
-            }
-
-            if (contextMenu.Items[contextMenu.Items.Count - 1] is ToolStripSeparator)
-            {
-                contextMenu.Items.RemoveAt(contextMenu.Items.Count - 1);
+                contextMenu.Items.Remove(item);
             }
         }
     }
