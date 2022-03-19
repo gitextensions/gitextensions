@@ -52,7 +52,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             _loadingCompleted = false;
             _maxScore = 0;
-            _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
+            _nodeByObjectId.Clear();
             _nodes = ImmutableList<RevisionGraphRevision>.Empty;
             _orderedNodesCache = null;
             _orderedRowCache = null;

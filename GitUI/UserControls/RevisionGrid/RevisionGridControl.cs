@@ -1279,9 +1279,9 @@ namespace GitUI
                 {
                     await this.SwitchToMainThreadAsync();
 
+                    _isRefreshingRevisions = false;
                     _gridView.LoadingCompleted();
                     SetPage(_gridView, getUnfilteredRefs);
-                    _isRefreshingRevisions = false;
                     CheckAndRepairInitialRevision();
                     HighlightRevisionsByAuthor(GetSelectedRevisions());
 
