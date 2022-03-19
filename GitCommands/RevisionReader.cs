@@ -131,7 +131,8 @@ namespace GitCommands
                     new ArgumentBuilder
                     {
                         { refFilterOptions.HasFlag(RefFilterOptions.Reflogs), "--reflog" },
-                        { AppSettings.SortByAuthorDate, "--author-date-order" },
+                        { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
+                        { AppSettings.RevisionSortOrder == RevisionSortOrder.Topology, "--topo-order" },
                         {
                             refFilterOptions.HasFlag(RefFilterOptions.All),
                             "--all",

@@ -262,7 +262,7 @@ namespace GitUI.UserControls.RevisionGrid
                 new MenuCommand
                 {
                     Name = "ShowArtificialCommits",
-                    Text = "Show artificial c&ommits",
+                    Text = "Show artificial commits",
                     ExecuteAction = () => _revisionGrid.ToggleShowArtificialCommits(),
                     IsCheckedFunc = () => AppSettings.RevisionGraphShowArtificialCommits
                 },
@@ -363,20 +363,6 @@ namespace GitUI.UserControls.RevisionGrid
 
                 new MenuCommand
                 {
-                    Name = "drawNonrelativesGrayToolStripMenuItem",
-                    Text = "Draw non relatives gra&y",
-                    ExecuteAction = () => _revisionGrid.ToggleDrawNonRelativesGray(),
-                    IsCheckedFunc = () => AppSettings.RevisionGraphDrawNonRelativesGray
-                },
-                new MenuCommand
-                {
-                    Name = "AuthorDateSort",
-                    Text = "&Sort commits by author date",
-                    ExecuteAction = () => _revisionGrid.ToggleAuthorDateSort(),
-                    IsCheckedFunc = () => AppSettings.SortByAuthorDate
-                },
-                new MenuCommand
-                {
                     Name = "showAuthorDateToolStripMenuItem",
                     Text = "Sho&w author date",
                     ExecuteAction = () => _revisionGrid.ToggleShowAuthorDate(),
@@ -424,6 +410,13 @@ namespace GitUI.UserControls.RevisionGrid
 
                 new MenuCommand
                 {
+                    Name = "drawNonrelativesGrayToolStripMenuItem",
+                    Text = "Draw non relatives gra&y",
+                    ExecuteAction = () => _revisionGrid.ToggleDrawNonRelativesGray(),
+                    IsCheckedFunc = () => AppSettings.RevisionGraphDrawNonRelativesGray
+                },
+                new MenuCommand
+                {
                     Name = "ToggleHighlightSelectedBranch",
                     Text = "Highlight selected branch (until refresh)",
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ToggleHighlightSelectedBranch),
@@ -432,6 +425,20 @@ namespace GitUI.UserControls.RevisionGrid
 
                 MenuCommand.CreateSeparator(),
 
+                new MenuCommand
+                {
+                    Name = "AuthorDateSort",
+                    Text = "&Sort commits by author date",
+                    ExecuteAction = () => _revisionGrid.ToggleAuthorDateSort(),
+                    IsCheckedFunc = () => AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate
+                },
+                new MenuCommand
+                {
+                    Name = "TopoOrder",
+                    Text = "Arrange c&ommits by topo order (ancestor order)",
+                    ExecuteAction = () => _revisionGrid.ToggleTopoOrder(),
+                    IsCheckedFunc = () => AppSettings.RevisionSortOrder == RevisionSortOrder.Topology
+                },
                 new MenuCommand
                 {
                     Name = "showFirstParent",

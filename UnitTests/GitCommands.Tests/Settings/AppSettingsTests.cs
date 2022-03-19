@@ -187,7 +187,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.TruncatePathMethod)], TruncatePathMethod.None, false, false);
                 yield return (properties[nameof(AppSettings.ShowGitStatusInBrowseToolbar)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowGitStatusForArtificialCommits)], true, false, false);
-                yield return (properties[nameof(AppSettings.SortByAuthorDate)], false, false, false);
+                yield return (properties[nameof(AppSettings.RevisionSortOrder)], RevisionSortOrder.GitDefault, false, false);
                 yield return (properties[nameof(AppSettings.CommitInfoShowContainedInBranchesLocal)], true, false, false);
                 yield return (properties[nameof(AppSettings.CheckForUncommittedChangesInCheckoutBranch)], true, false, false);
                 yield return (properties[nameof(AppSettings.AlwaysShowCheckoutBranchDlg)], false, false, false);
