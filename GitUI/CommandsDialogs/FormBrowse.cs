@@ -568,9 +568,6 @@ namespace GitUI.CommandsDialogs
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
-            // Process events e.g. from closing FormProcess, particularly after rebase / conflict resolution actions
-            Application.DoEvents();
-
             // Note that this called in most FormBrowse context to "be sure"
             // that the repo has not been updated externally.
             RefreshRevisions(e.GetRefs);
@@ -599,15 +596,17 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            InternalInitialize();
-            RefreshGitStatusMonitor();
+            // Process events e.g. from closing FormProcess, particularly after rebase / conflict resolution actions
+            Application.DoEvents();
 
             Debug.Assert(RevisionGrid.CanRefresh, "Already loading revisions when running RefreshRevisions(). This could cause the commits in the grid to be loaded several times.");
             RevisionGrid.PerformRefreshRevisions(getRefs);
 
+            InternalInitialize();
             ToolStripFilters.UpdateBranchFilterItems(getRefs);
             UpdateSubmodulesStructure();
 
+            RefreshGitStatusMonitor();
             revisionDiff.RefreshArtificial();
             UpdateStashCount();
         }
