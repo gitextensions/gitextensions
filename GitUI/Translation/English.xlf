@@ -1034,6 +1034,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Draw alternate background</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkFillRefLabels.Text">
+        <source>Fill git ref labels</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkHighlightAuthored.Text">
         <source>Highlight authored revisions</source>
         <target />

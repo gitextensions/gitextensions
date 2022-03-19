@@ -112,12 +112,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
             MulticolorBranches.Checked = AppSettings.MulticolorBranches;
-
             chkDrawAlternateBackColor.Checked = AppSettings.RevisionGraphDrawAlternateBackColor;
             DrawNonRelativesGray.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
             DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray;
             chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions;
-
+            chkFillRefLabels.Checked = AppSettings.FillRefLabels;
             _controller.ShowThemeSettings();
         }
 
@@ -128,6 +127,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
             AppSettings.HighlightAuthoredRevisions = chkHighlightAuthored.Checked;
+            AppSettings.FillRefLabels = chkFillRefLabels.Checked;
             _controller.ApplyThemeSettings();
         }
 
