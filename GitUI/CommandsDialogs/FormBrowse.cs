@@ -69,10 +69,10 @@ namespace GitUI.CommandsDialogs
             ══════════
                     ABDEGHIJKMNPQSTUVWYZ
                 C   Create new repository...
-                F   Favourite Repositories
-                L   Clone Repository...
+                F   Favorite repositories
+                L   Clone repository...
                 O   Open...
-                R   Recent Repositories
+                R   Recent repositories
                 X   Exit
 
             DASHBOARD menu
@@ -166,7 +166,7 @@ namespace GitUI.CommandsDialogs
                 A   About
                 C   Changelog
                 D   Donate
-                M   User Manual
+                M   User manual
                 R   Report an issue
                 T   Translate
                 U   Check for updates
