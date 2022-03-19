@@ -7013,6 +7013,10 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <source>Resolve merge conflicts</source>
         <target />
       </trans-unit>
+      <trans-unit id="Abort.Text">
+        <source>Abort</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ContextChooseBase.Text">
         <source>Choose base</source>
         <target />
@@ -7063,10 +7067,6 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="Rescan.Text">
         <source>Rescan merge conflicts</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Reset.Text">
-        <source>Abort</source>
         <target />
       </trans-unit>
       <trans-unit id="_abortCurrentOperation.Text">

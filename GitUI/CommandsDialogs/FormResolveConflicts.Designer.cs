@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs
             this.startMergetool = new System.Windows.Forms.Button();
             this.openMergeToolBtn = new System.Windows.Forms.Button();
             this.Rescan = new System.Windows.Forms.Button();
-            this.Reset = new System.Windows.Forms.Button();
+            this.Abort = new System.Windows.Forms.Button();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
@@ -464,13 +464,13 @@ namespace GitUI.CommandsDialogs
             // 
             // Reset
             // 
-            this.Reset.Location = new System.Drawing.Point(3, 96);
-            this.Reset.Name = "Reset";
-            this.Reset.Size = new System.Drawing.Size(140, 25);
-            this.Reset.TabIndex = 6;
-            this.Reset.Text = "Abort";
-            this.Reset.UseVisualStyleBackColor = true;
-            this.Reset.Click += new System.EventHandler(this.Reset_Click);
+            this.Abort.Location = new System.Drawing.Point(3, 96);
+            this.Abort.Name = "Reset";
+            this.Abort.Size = new System.Drawing.Size(140, 25);
+            this.Abort.TabIndex = 6;
+            this.Abort.Text = "Abort";
+            this.Abort.UseVisualStyleBackColor = true;
+            this.Abort.Click += new System.EventHandler(this.Abort_Click);
             // 
             // tableLayoutPanel4
             // 
@@ -497,7 +497,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1.Controls.Add(this.openMergeToolBtn);
             this.flowLayoutPanel1.Controls.Add(this.startMergetool);
             this.flowLayoutPanel1.Controls.Add(this.Rescan);
-            this.flowLayoutPanel1.Controls.Add(this.Reset);
+            this.flowLayoutPanel1.Controls.Add(this.Abort);
             this.flowLayoutPanel1.Controls.Add(this.progressBar);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -610,7 +610,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.DataGridView ConflictedFiles;
         private System.Windows.Forms.Button openMergeToolBtn;
         private System.Windows.Forms.Button Rescan;
-        private System.Windows.Forms.Button Reset;
+        private System.Windows.Forms.Button Abort;
         private System.Windows.Forms.Button startMergetool;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Button merge;

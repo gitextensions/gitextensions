@@ -255,13 +255,13 @@ namespace GitUI.CommandsDialogs
 
                 if (Module.InTheMiddleOfRebase())
                 {
-                    Reset.Text = _resetItemRebaseText.Text;
+                    Abort.Text = _resetItemRebaseText.Text;
                     ContextChooseLocal.Text = _contextChooseLocalRebaseText.Text;
                     ContextChooseRemote.Text = _contextChooseRemoteRebaseText.Text;
                 }
                 else
                 {
-                    Reset.Text = _resetItemMergeText.Text;
+                    Abort.Text = _resetItemMergeText.Text;
                     ContextChooseLocal.Text = _contextChooseLocalMergeText.Text;
                     ContextChooseRemote.Text = _contextChooseRemoteMergeText.Text;
                 }
@@ -710,7 +710,7 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private void Reset_Click(object sender, EventArgs e)
+        private void Abort_Click(object sender, EventArgs e)
         {
             using (WaitCursorScope.Enter())
             {
