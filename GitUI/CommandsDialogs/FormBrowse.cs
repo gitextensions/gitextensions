@@ -612,7 +612,6 @@ namespace GitUI.CommandsDialogs
             UpdateSubmodulesStructure();
 
             RefreshGitStatusMonitor();
-            revisionDiff.RefreshArtificial();
             UpdateStashCount();
         }
 
