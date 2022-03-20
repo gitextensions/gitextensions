@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -45,6 +46,7 @@ namespace GitUI.CommandsDialogs
         private readonly IGitRevisionTester _gitRevisionTester;
         private readonly CancellationTokenSequence _customDiffToolsSequence = new();
         private readonly CancellationTokenSequence _viewChangesSequence = new();
+        private readonly CancellationTokenSequence _setDiffSequence = new();
         private readonly RememberFileContextMenuController _rememberFileContextMenuController
             = RememberFileContextMenuController.Default;
         private Action? _refreshGitStatus;
@@ -102,11 +104,14 @@ namespace GitUI.CommandsDialogs
             }
 
             DiffFiles.StoreNextIndexToSelect();
-            SetDiffs(revisions);
-            if (DiffFiles.SelectedItem is null)
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                DiffFiles.SelectStoredNextIndex();
-            }
+                await SetDiffsAsync(revisions);
+                if (DiffFiles.SelectedItem is null)
+                {
+                    DiffFiles.SelectStoredNextIndex();
+                }
+            });
         }
 
         #region Hotkey commands
@@ -231,13 +236,16 @@ namespace GitUI.CommandsDialogs
 
         public void DisplayDiffTab(IReadOnlyList<GitRevision> revisions)
         {
-            SetDiffs(revisions);
-
-            // Select something by default, except range diff
-            if (DiffFiles.SelectedItem is null && !(DiffFiles.FirstGroupItems.Count() == 1 && DiffFiles.FirstGroupItems.FirstOrDefault().Item.IsRangeDiff))
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                DiffFiles.SelectFirstVisibleItem();
-            }
+                await SetDiffsAsync(revisions);
+
+                // Select something by default, except range diff
+                if (DiffFiles.SelectedItem is null && !(DiffFiles.FirstGroupItems.Count() == 1 && DiffFiles.FirstGroupItems.FirstOrDefault().Item.IsRangeDiff))
+                {
+                    DiffFiles.SelectFirstVisibleItem();
+                }
+            });
         }
 
         /// <summary>
@@ -255,13 +263,19 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void SetDiffs(IReadOnlyList<GitRevision> revisions)
+        private async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions)
         {
             Validates.NotNull(_revisionGrid);
+            CancellationToken cancellationToken = _setDiffSequence.Next();
+
+            _viewChangesSequence.CancelCurrent();
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            await DiffText.ClearAsync();
 
             FileStatusItem prevSelectedItem = DiffFiles.SelectedItem;
             FileStatusItem prevDiffItem = DiffFiles.FirstGroupItems.Contains(prevSelectedItem) ? prevSelectedItem : null;
-            DiffFiles.SetDiffs(revisions, _revisionGrid.CurrentCheckout);
+            await DiffFiles.SetDiffsAsync(revisions, _revisionGrid.CurrentCheckout, cancellationToken);
+            await this.SwitchToMainThreadAsync(cancellationToken);
 
             _isImplicitListSelection = true;
 
@@ -322,6 +336,7 @@ namespace GitUI.CommandsDialogs
             {
                 _customDiffToolsSequence.Dispose();
                 _viewChangesSequence.Dispose();
+                _setDiffSequence.Dispose();
                 components?.Dispose();
             }
 
