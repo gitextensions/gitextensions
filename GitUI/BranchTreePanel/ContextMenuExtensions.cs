@@ -59,7 +59,7 @@ namespace GitUI.BranchTreePanel
         /// Prefer this over only toggling the visibility of an item to enable determining whether the context menu will (once open)
         /// contain any visible items via <see cref="ToolStripItem.Enabled"/> even before the menu itself (as the visual parent)
         /// is visble and <see cref="ToolStripItem.Visible"/> of any item therefore false.</summary>
-        internal static void Toggle(this ToolStripItem item, bool enabled)
+        internal static void Enable(this ToolStripItem item, bool enabled)
             => item.Visible = item.Enabled = enabled;
     }
 }

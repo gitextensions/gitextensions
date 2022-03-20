@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     hostMenuItem.DropDown.Items.Add(item);
-                    hostMenuItem.Toggle(true);
+                    hostMenuItem.Enable(true);
                 }
             }
 
@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
         private static void RemoveOwnScripts(ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem)
         {
             hostMenuItem.DropDown.Items.Clear();
-            hostMenuItem.Toggle(false);
+            hostMenuItem.Enable(false);
 
             var list = contextMenu.Items.Cast<ToolStripItem>()
                 .Where(x => x.Name.EndsWith(ScriptNameSuffix))
