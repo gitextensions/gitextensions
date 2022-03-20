@@ -1872,6 +1872,10 @@ the last selected commit.</source>
         <source>Filter files using a regular expression...</source>
         <target />
       </trans-unit>
+      <trans-unit id="LoadingFiles.Text">
+        <source>Loading data...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="NoFiles.Text">
         <source>No changes</source>
         <target />

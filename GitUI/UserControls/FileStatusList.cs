@@ -22,6 +22,7 @@ using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
 {
@@ -88,8 +89,11 @@ namespace GitUI
 
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             NoFiles.Text = TranslatedStrings.NoChanges;
+            LoadingFiles.Text = TranslatedStrings.LoadingData;
             Controls.SetChildIndex(NoFiles, 0);
+            Controls.SetChildIndex(LoadingFiles, 0);
             NoFiles.Font = new Font(NoFiles.Font, FontStyle.Italic);
+            LoadingFiles.Font = new Font(LoadingFiles.Font, FontStyle.Italic);
             FilterWatermarkLabel.Font = new Font(FilterWatermarkLabel.Font, FontStyle.Italic);
             FilterComboBox.Font = new Font(FilterComboBox.Font, FontStyle.Bold);
 
@@ -699,6 +703,21 @@ namespace GitUI
             GitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId);
         }
 
+        public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
+        {
+            _enableDisablingShowDiffForAllParents = true;
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            FileStatusListLoading();
+
+            await TaskScheduler.Default;
+            cancellationToken.ThrowIfCancellationRequested();
+            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId);
+
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            GitItemStatusesWithDescription = gitItemStatusesWithDescription;
+        }
+
         /// <summary>
         /// FormStash init for WorkTree and Index.
         /// </summary>
@@ -900,6 +919,17 @@ namespace GitUI
         private void SetFilterWatermarkLabelVisibility()
         {
             FilterWatermarkLabel.Visible = FilterVisibleInternal && !FilterComboBox.Focused && string.IsNullOrEmpty(FilterComboBox.Text);
+        }
+
+        private void FileStatusListLoading()
+        {
+            LoadingFiles.Visible = true;
+            NoFiles.Visible = false;
+
+            FileStatusListView.BeginUpdate();
+            FileStatusListView.Groups.Clear();
+            FileStatusListView.Items.Clear();
+            FileStatusListView.EndUpdate();
         }
 
         private void UpdateFileStatusListView(bool updateCausedByFilter = false)
@@ -1194,6 +1224,7 @@ namespace GitUI
 
         private void HandleVisibility_NoFilesLabel_FilterComboBox(bool filesPresent)
         {
+            LoadingFiles.Visible = false;
             NoFiles.Visible = !filesPresent;
             FilterVisibleInternal = FilterVisible && filesPresent;
         }
@@ -1354,7 +1385,15 @@ namespace GitUI
                 showAllDiferencesItem.CheckedChanged += (s, e) =>
                 {
                     AppSettings.ShowDiffForAllParents = showAllDiferencesItem.Checked;
-                    GitItemStatusesWithDescription = _diffCalculator.Reload();
+                    FileStatusListLoading();
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        await TaskScheduler.Default;
+                        IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Reload();
+
+                        await this.SwitchToMainThreadAsync();
+                        GitItemStatusesWithDescription = gitItemStatusesWithDescription;
+                    });
                 };
 
                 cm.Items.Add(showAllDiferencesItem);

@@ -32,6 +32,7 @@
             this.FileStatusListView = new GitUI.UserControls.NativeListView();
             this.columnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.NoFiles = new System.Windows.Forms.Label();
+            this.LoadingFiles = new System.Windows.Forms.Label();
             this.FilterComboBox = new System.Windows.Forms.ComboBox();
             this.FilterWatermarkLabel = new System.Windows.Forms.Label();
             this.FilterToolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -84,6 +85,17 @@
             this.NoFiles.Name = "NoFiles";
             this.NoFiles.Size = new System.Drawing.Size(65, 13);
             this.NoFiles.TabIndex = 5;
+            // 
+            // LoadingFiles
+            // 
+            this.LoadingFiles.AutoSize = true;
+            this.LoadingFiles.BackColor = System.Drawing.SystemColors.Window;
+            this.LoadingFiles.ForeColor = System.Drawing.SystemColors.GrayText;
+            this.LoadingFiles.Location = new System.Drawing.Point(4, 21);
+            this.LoadingFiles.Margin = new System.Windows.Forms.Padding(0);
+            this.LoadingFiles.Name = "LoadingFiles";
+            this.LoadingFiles.Size = new System.Drawing.Size(65, 13);
+            this.LoadingFiles.TabIndex = 5;
             // 
             // FilterComboBox
             // 
@@ -149,6 +161,7 @@
             this.Controls.Add(this.DeleteFilterButton);
             this.Controls.Add(this.FilterWatermarkLabel);
             this.Controls.Add(this.NoFiles);
+            this.Controls.Add(this.LoadingFiles);
             this.Controls.Add(this.FileStatusListView);
             this.Controls.Add(this.lblSplitter);
             this.Controls.Add(this.FilterComboBox);
@@ -164,6 +177,7 @@
 
         private GitUI.UserControls.NativeListView FileStatusListView;
         private System.Windows.Forms.Label NoFiles;
+        private System.Windows.Forms.Label LoadingFiles;
         private System.Windows.Forms.ColumnHeader columnHeader;
         private System.Windows.Forms.ComboBox FilterComboBox;
         private System.Windows.Forms.Label FilterWatermarkLabel;
