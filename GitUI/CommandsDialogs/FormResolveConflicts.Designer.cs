@@ -465,7 +465,7 @@ namespace GitUI.CommandsDialogs
             // Reset
             // 
             this.Abort.Location = new System.Drawing.Point(3, 96);
-            this.Abort.Name = "Reset";
+            this.Abort.Name = "Abort";
             this.Abort.Size = new System.Drawing.Size(140, 25);
             this.Abort.TabIndex = 6;
             this.Abort.Text = "Abort";
