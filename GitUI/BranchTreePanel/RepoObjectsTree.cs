@@ -37,6 +37,7 @@ namespace GitUI.BranchTreePanel
         private TagTree _tagTree;
         private SubmoduleTree _submoduleTree;
         private List<TreeNode>? _searchResult;
+        private Action<string?> _filterRevisionGridBySpaceSeparatedRefs;
         private IAheadBehindDataProvider? _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
@@ -344,8 +345,9 @@ namespace GitUI.BranchTreePanel
             {
                 Name = TranslatedStrings.Branches,
                 ImageKey = nameof(Images.BranchLocalRoot),
-                SelectedImageKey = nameof(Images.BranchLocalRoot),
+                SelectedImageKey = nameof(Images.BranchLocalRoot)
             };
+
             _branchesTree = new BranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource);
         }
 
@@ -355,15 +357,10 @@ namespace GitUI.BranchTreePanel
             {
                 Name = TranslatedStrings.Remotes,
                 ImageKey = nameof(Images.BranchRemoteRoot),
-                SelectedImageKey = nameof(Images.BranchRemoteRoot),
+                SelectedImageKey = nameof(Images.BranchRemoteRoot)
             };
-            _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource, _refsSource)
-            {
-                TreeViewNode =
-                {
-                    ContextMenuStrip = menuRemotes
-                }
-            };
+
+            _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource, _refsSource);
         }
 
         private void CreateTags()
@@ -372,8 +369,9 @@ namespace GitUI.BranchTreePanel
             {
                 Name = TranslatedStrings.Tags,
                 ImageKey = nameof(Images.TagHorizontal),
-                SelectedImageKey = nameof(Images.TagHorizontal),
+                SelectedImageKey = nameof(Images.TagHorizontal)
             };
+
             _tagTree = new TagTree(rootNode, UICommandsSource, _refsSource);
         }
 
@@ -383,8 +381,9 @@ namespace GitUI.BranchTreePanel
             {
                 Name = TranslatedStrings.Submodules,
                 ImageKey = nameof(Images.FolderSubmodule),
-                SelectedImageKey = nameof(Images.FolderSubmodule),
+                SelectedImageKey = nameof(Images.FolderSubmodule)
             };
+
             _submoduleTree = new SubmoduleTree(rootNode, UICommandsSource);
         }
 
@@ -562,10 +561,14 @@ namespace GitUI.BranchTreePanel
                 return; // don't undo multi-selection on opening context menu, even without Ctrl
             }
 
-            if (ModifierKeys.HasFlag(Keys.Control))
+            SelectNode(node, multiple: ModifierKeys.HasFlag(Keys.Control), includingDescendants: ModifierKeys.HasFlag(Keys.Shift));
+        }
+
+        private void SelectNode(NodeBase node, bool multiple, bool includingDescendants)
+        {
+            if (multiple)
             {
-                // toggle clicked node IsSelected, including descendants when holding Shift
-                node.Select(!node.IsSelected, includingDescendants: ModifierKeys.HasFlag(Keys.Shift));
+                node.Select(!node.IsSelected, includingDescendants: includingDescendants);
             }
             else
             {
@@ -612,13 +615,50 @@ namespace GitUI.BranchTreePanel
                 _repoObjectsTree = repoObjectsTree;
             }
 
-            public ContextMenuStrip BranchContextMenu => _repoObjectsTree.menuBranch;
-            public ContextMenuStrip RemoteContextMenu => _repoObjectsTree.menuRemote;
-            public ContextMenuStrip TagContextMenu => _repoObjectsTree.menuTag;
+            public ContextMenuStrip ContextMenu => _repoObjectsTree.menuMain;
             public NativeTreeView TreeView => _repoObjectsTree.treeMain;
 
             public void OnContextMenuOpening(object sender, CancelEventArgs e)
                 => _repoObjectsTree.contextMenu_Opening(sender, e);
+
+            /// <summary>Simulates a left click on the <see cref="TreeNode"/> in <see cref="TreeView"/>
+            /// identified by the path of <paramref name="nodeTexts"/> for UI tests.</summary>
+            /// <typeparam name="TExpected">The expected type of the selected node. This will be verified.</typeparam>
+            /// <param name="nodeTexts">The path of node texts used to select a single node starting from the first tree level.</param>
+            /// <param name="multiple">Whether to select multiple; simulates holding <see cref="Keys.Control"/> while clicking.</param>
+            /// <param name="includingDescendants">Whether to include descendants in the multi-selection;
+            /// simulates holding <see cref="Keys.Shift"/> while clicking.</param>
+            /// <exception cref="ArgumentException">Thrown if either <paramref name="nodeTexts"/> don't point to a node
+            /// or the selected node is not of type <typeparamref name="TExpected"/>.</exception>
+            public void SelectNode<TExpected>(string[] nodeTexts, bool multiple = false, bool includingDescendants = false) where TExpected : Node
+            {
+                var nodes = TreeView.Nodes.Cast<TreeNode>();
+                TreeNode node = null;
+
+                foreach (var text in nodeTexts)
+                {
+                    try
+                    {
+                        node = nodes.Single(node => node.Text == text);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ArgumentException(
+                            $"Node '{text}' not found. Available nodes on this level: " + nodes.Select(n => n.Text).Join(", "),
+                            nameof(nodeTexts), ex);
+                    }
+
+                    nodes = node.Nodes.Cast<TreeNode>();
+                }
+
+                if (node.Tag.GetType() != typeof(TExpected))
+                {
+                    throw new ArgumentException($"The selected node is of type {node.Tag.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
+                }
+
+                TreeView.SelectedNode = node; // simulates a node click well enough for UI tests
+                _repoObjectsTree.SelectNode(node.Tag as NodeBase, multiple, includingDescendants);
+            }
 
             public void ReorderTreeNode(TreeNode node, bool up)
             {

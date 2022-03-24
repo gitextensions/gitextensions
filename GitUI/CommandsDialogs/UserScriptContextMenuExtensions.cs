@@ -64,16 +64,6 @@ namespace GitUI.CommandsDialogs
                     hostMenuItem.Enable(true);
                 }
             }
-
-            // insert separator in between hostMenuItem and scripts with AddToRevisionGridContextMenu added to contextMenu itself
-            if (hostItemIndex != lastScriptItemIndex)
-            {
-                contextMenu.Items.Insert(hostItemIndex + 1, new ToolStripSeparator
-                {
-                    // include ScriptNameSuffix for clean easy cleanup in RemoveOwnScripts()
-                    Name = nameof(ScriptInfo.AddToRevisionGridContextMenu) + "Separator" + ScriptNameSuffix
-                });
-            }
         }
 
         /// <summary>

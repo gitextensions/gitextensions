@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -8,6 +9,7 @@ using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
+using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;
@@ -92,21 +94,33 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.Dispose();
         }
 
-        [Test] // because neither branches (both local and remote) nor tags can be expanded or collapsed
-        public void Branch_and_tag_context_menu_should_show_Sort_entries_last_and_no_Expand_entries()
+        [Test]
+        public void Branch_and_tag_context_menu_should_show_Sort_By_entry()
         {
-            RunRepoObjectsTreeTest(
-                contextMenu =>
-                {
-                    contextMenu.Items.Count.Should().BeGreaterThan(3);
+            RunRepoObjectsTreeTest(contextMenu =>
+            {
+                contextMenu.Items.Count.Should().BeGreaterThan(5);
 
-                    int count = contextMenu.Items.Count;
+                int count = contextMenu.Items.Count; // disregarding the Run script item and its preceding separator
 
-                    // Assert items from bottom to the top
-                    contextMenu.Items[--count].Text.Should().Be(TranslatedStrings.SortOrder);
-                    contextMenu.Items[--count].Text.Should().Be(TranslatedStrings.SortBy);
-                    contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();
-                });
+                // Assert items from bottom to the top
+                ToolStripItem item = contextMenu.Items[--count];
+                item.Text.Should().Be("Run script");
+                item.Enabled.Should().BeFalse("because this test includes no user scripts");
+
+                contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>()
+                    .Which.Enabled.Should().BeFalse("because this test includes no user scripts");
+
+                item = contextMenu.Items[--count];
+                item.Text.Should().Be(TranslatedStrings.SortOrder);
+                item.Enabled.Should().BeFalse("because sort order in this test is default");
+
+                item = contextMenu.Items[--count];
+                item.Text.Should().Be(TranslatedStrings.SortBy);
+                item.Enabled.Should().BeTrue("because tags and branches are sortable");
+
+                contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();
+            });
         }
 
         private void RunRepoObjectsTreeTest(Action<ContextMenuStrip> testDriver)
@@ -119,15 +133,17 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // We are running several tests one after another to speed up the test execution
                     // as we don't need to re-create the host form
 
-                    ContextMenuStrip contextMenu = ta.BranchContextMenu;
+                    ContextMenuStrip contextMenu = ta.ContextMenu;
+
+                    ta.SelectNode<RepoObjectsTree.LocalBranchNode>(new[] { TranslatedStrings.Branches, "master" });
                     ta.OnContextMenuOpening(contextMenu, new CancelEventArgs());
                     testDriver(contextMenu);
 
-                    contextMenu = ta.RemoteContextMenu;
+                    ta.SelectNode<RepoObjectsTree.RemoteBranchNode>(new[] { TranslatedStrings.Remotes, RemoteName, "master" });
                     ta.OnContextMenuOpening(contextMenu, new CancelEventArgs());
                     testDriver(contextMenu);
 
-                    contextMenu = ta.TagContextMenu;
+                    ta.SelectNode<RepoObjectsTree.TagNode>(new[] { TranslatedStrings.Tags, "Branch1" });
                     ta.OnContextMenuOpening(contextMenu, new CancelEventArgs());
                     testDriver(contextMenu);
 

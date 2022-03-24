@@ -9031,20 +9031,6 @@ branch names, tag names)</source>
   </file>
   <file datatype="plaintext" original="RepoObjectsTree" source-language="en">
     <body>
-      <trans-unit id="_filterForSelectedRefsMenuItem.Text">
-        <source>&amp;Filter for selected</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_filterForSelectedRefsMenuItem.ToolTipText">
-        <source>Filter the revision grid to show selected (underlined) refs (branches and tags) only.
-Hold CTRL while clicking to de/select multiple and include descendant tree nodes by additionally holding SHIFT.
-Reset the filter via View &gt; Show all branches.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_searchTooltip.Text">
         <source>Search</source>
         <target />
@@ -9055,6 +9041,20 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="_sortOrderContextMenuItem.Text">
         <source>&amp;Sort order...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="copyContextMenuItem.Text">
+        <source>&amp;Copy to clipboard</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="filterForSelectedRefsMenuItem.Text">
+        <source>&amp;Filter for selected</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="filterForSelectedRefsMenuItem.ToolTipText">
+        <source>Filter the revision grid to show selected (underlined) refs (branches and tags) only.
+Hold CTRL while clicking to de/select multiple and include descendant tree nodes by additionally holding SHIFT.
+Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuBtnFetchAllRemotes.Text">
@@ -9255,6 +9255,10 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnUpdateSubmodule.ToolTipText">
         <source>Update selected submodule recursively</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="runScriptToolStripMenuItem.Text">
+        <source>Run script</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbCollapseAll.ToolTipText">

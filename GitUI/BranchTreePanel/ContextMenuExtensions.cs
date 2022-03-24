@@ -8,9 +8,6 @@ namespace GitUI.BranchTreePanel
 {
     internal static class ContextMenuExtensions
     {
-        internal static RepoObjectsTree.NodeBase GetSelectedNode(this ContextMenuStrip menu)
-            => (menu.SourceControl as TreeView)?.SelectedNode?.Tag as RepoObjectsTree.NodeBase;
-
         /// <summary>Inserts <paramref name="items"/> into the <paramref name="menu"/>; optionally <paramref name="before"/> or
         /// <paramref name="after"/> an existing item or at the start of the menu before other existing items if neither is specified.</summary>
         internal static void InsertItems(this ContextMenuStrip menu, IEnumerable<ToolStripItem> items,
@@ -35,25 +32,6 @@ namespace GitUI.BranchTreePanel
             menu.ResumeLayout();
         }
 
-        /// <summary>Adds the <paramref name="item"/> to the <paramref name="menu"/>
-        /// while making sure not to add it more than once and that it is the last item in the menu.
-        /// This is useful for maintaining the order of items that are shared among multiple context menus.</summary>
-        internal static void SetLastItem(this ContextMenuStrip menu, ToolStripItem item)
-        {
-            if (!menu.Items.Contains(item))
-            {
-                menu.Items.Add(item);
-            }
-
-            /* Sort item last. This works around other shared items being implicitly removed from menu in front
-             * (by adding them to other context menus when they are opened) and re-added after the item. */
-            if (menu.Items.IndexOf(item) != menu.Items.Count - 1)
-            {
-                menu.Items.Remove(item);
-                menu.Items.Add(item);
-            }
-        }
-
         /// <summary>Toggles the <paramref name="item"/>'s <see cref="ToolStripItem.Visible"/>
         /// as well as <see cref="ToolStripItem.Enabled"/> properties depending on <paramref name="enabled"/>.
         /// Prefer this over only toggling the visibility of an item to enable determining whether the context menu will (once open)
@@ -61,5 +39,37 @@ namespace GitUI.BranchTreePanel
         /// is visble and <see cref="ToolStripItem.Visible"/> of any item therefore false.</summary>
         internal static void Enable(this ToolStripItem item, bool enabled)
             => item.Visible = item.Enabled = enabled;
+
+        /// <summary>Toggles <see cref="ToolStripSeparator"/>s in between <paramref name="contextMenu"/>'s items
+        /// preventing separators from preceding or trailing the list or being displayed without any items in between them.
+        /// Relies on the items' <see cref="ToolStripItem.Visible"/> and <see cref="ToolStripItem.Enabled"/>
+        /// being toggled using <see cref="Enable(ToolStripItem, bool)"/>.</summary>
+        internal static void ToggleSeparators(this ContextMenuStrip contextMenu)
+        {
+            var items = contextMenu.Items.Cast<ToolStripItem>().ToArray();
+            ToolStripItem precedingEnabledItem = null;
+
+            // toggle all separators looking behind for enabled items other than separators
+            foreach (ToolStripItem item in items)
+            {
+                if (item is ToolStripSeparator)
+                {
+                    item.Enable(precedingEnabledItem != null && precedingEnabledItem is not ToolStripSeparator);
+                }
+
+                if (item.Enabled)
+                {
+                    precedingEnabledItem = item;
+                }
+            }
+
+            // hide the last Enabled separator that may remain
+            var lastEnabled = items.LastOrDefault(i => i.Enabled);
+
+            if (lastEnabled != null && lastEnabled is ToolStripSeparator)
+            {
+                lastEnabled.Enable(false);
+            }
+        }
     }
 }

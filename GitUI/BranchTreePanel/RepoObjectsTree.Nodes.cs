@@ -396,30 +396,9 @@ namespace GitUI.BranchTreePanel
                 {
                     _treeViewNode = value;
                     _treeViewNode.Tag = this;
-                    _treeViewNode.ContextMenuStrip = GetContextMenuStrip();
                     ApplyText();
                     ApplyStyle();
                 }
-            }
-
-            private static readonly Dictionary<Type, ContextMenuStrip> DefaultContextMenus = new();
-
-            public static void RegisterContextMenu(Type type, ContextMenuStrip menu)
-            {
-                if (DefaultContextMenus.ContainsKey(type))
-                {
-                    // the translation unit test may create the RepoObjectTree multiple times,
-                    // which results in a duplicate key exception.
-                    return;
-                }
-
-                DefaultContextMenus.Add(type, menu);
-            }
-
-            protected virtual ContextMenuStrip? GetContextMenuStrip()
-            {
-                DefaultContextMenus.TryGetValue(GetType(), out var result);
-                return result;
             }
 
             protected IWin32Window? ParentWindow()
