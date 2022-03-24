@@ -48,6 +48,63 @@ namespace GitUI.BranchTreePanel
             }
         }
 
+        /* add Expand All / Collapse All menu entry
+         * depending on whether node is expanded or collapsed and has child nodes at all */
+        private void EnableExpandCollapseContextMenu(NodeBase[] selectedNodes)
+        {
+            var multiSelectedParents = selectedNodes.HavingChildren().ToArray();
+            EnableMenuItems(multiSelectedParents.Expandable().Any(), mnubtnExpand);
+            EnableMenuItems(multiSelectedParents.Collapsible().Any(), mnubtnCollapse);
+        }
+
+        private void EnableMoveTreeUpDownContexMenu(bool hasSingleSelection, NodeBase selectedNode)
+        {
+            var isSingleTreeSelected = hasSingleSelection && selectedNode is Tree;
+            var treeNode = (selectedNode as Tree)?.TreeViewNode;
+            EnableMenuItems(isSingleTreeSelected && treeNode.PrevNode is not null, mnubtnMoveUp);
+            EnableMenuItems(isSingleTreeSelected && treeNode.NextNode is not null, mnubtnMoveDown);
+        }
+
+        private void EnableRemoteBranchContextMenu(bool hasSingleSelection, NodeBase selectedNode)
+        {
+            var isSingleRemoteBranchSelected = hasSingleSelection && selectedNode is RemoteBranchNode;
+            EnableMenuItems(_remoteBranchMenuItems, _ => isSingleRemoteBranchSelected);
+
+            EnableMenuItems(isSingleRemoteBranchSelected, mnubtnFetchOneBranch, mnubtnPullFromRemoteBranch,
+                mnubtnRemoteBranchFetchAndCheckout, mnubtnFetchCreateBranch, mnubtnFetchRebase);
+        }
+
+        private void EnableRemoteRepoContextMenu(bool hasSingleSelection, NodeBase selectedNode)
+        {
+            var isSingleRemoteRepoSelected = hasSingleSelection && selectedNode is RemoteRepoNode;
+            var remoteRepo = selectedNode as RemoteRepoNode;
+            mnubtnManageRemotes.Enable(isSingleRemoteRepoSelected);
+            EnableMenuItems(isSingleRemoteRepoSelected && remoteRepo.Enabled, mnubtnFetchAllBranchesFromARemote, mnubtnDisableRemote, mnuBtnPruneAllBranchesFromARemote);
+            mnuBtnOpenRemoteUrlInBrowser.Enable(isSingleRemoteRepoSelected && remoteRepo.IsRemoteUrlUsingHttp);
+            EnableMenuItems(isSingleRemoteRepoSelected && !remoteRepo.Enabled, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
+        }
+
+        private void EnableSortContextMenu(bool hasSingleSelection, NodeBase selectedNode)
+        {
+            var isSingleRefSelected = hasSingleSelection && selectedNode is IGitRefActions;
+            _sortByContextMenuItem.Enable(isSingleRefSelected);
+
+            // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
+            var showSortOrder = AppSettings.RefsSortBy != GitRefsSortBy.Default;
+            _sortOrderContextMenuItem.Enable(isSingleRefSelected && showSortOrder);
+        }
+
+        private void EnableSubmoduleContextMenu(bool hasSingleSelection, NodeBase selectedNode)
+        {
+            var isSingleSubmoduleSelected = hasSingleSelection && selectedNode is SubmoduleNode;
+            var submoduleNode = selectedNode as SubmoduleNode;
+            var bareRepository = Module.IsBareRepository();
+            EnableMenuItems(isSingleSubmoduleSelected && submoduleNode.CanOpen, mnubtnOpenSubmodule, mnubtnOpenGESubmodule);
+            mnubtnUpdateSubmodule.Enable(isSingleSubmoduleSelected);
+            EnableMenuItems(isSingleSubmoduleSelected && !bareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
+            EnableMenuItems(isSingleSubmoduleSelected && !bareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
+        }
+
         private static void RegisterClick(ToolStripItem item, Action onClick)
         {
             item.Click += (o, e) => onClick();
@@ -140,59 +197,23 @@ namespace GitUI.BranchTreePanel
             var hasSingleSelection = selectedNodes.Length <= 1;
             var selectedNode = treeMain.SelectedNode.Tag as NodeBase;
 
-            EnableMenuItems(hasSingleSelection && selectedNode is BaseBranchLeafNode branch && branch.Visible, copyContextMenuItem);
-            EnableMenuItems(selectedNodes.OfType<IGitRefActions>().Any(), filterForSelectedRefsMenuItem);
+            copyContextMenuItem.Enable(hasSingleSelection && selectedNode is BaseBranchLeafNode branch && branch.Visible);
+            filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any());
 
             EnableMenuItems(_localBranchMenuItems, t => selectedNode is LocalBranchNode localBranch
                 && hasSingleSelection // only display for single-selected branch
                 && (!localBranch.IsCurrent // with all items for non-current branches
                     || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(t.Key))); // or only those applying to the current branch
 
-            // remote branch
-            var isSingleRemoteBranchSelected = hasSingleSelection && selectedNode is RemoteBranchNode;
-            EnableMenuItems(_remoteBranchMenuItems, _ => isSingleRemoteBranchSelected);
-            EnableMenuItems(isSingleRemoteBranchSelected, mnubtnFetchOneBranch, mnubtnPullFromRemoteBranch,
-                mnubtnRemoteBranchFetchAndCheckout, mnubtnFetchCreateBranch, mnubtnFetchRebase);
-
+            EnableRemoteBranchContextMenu(hasSingleSelection, selectedNode);
             EnableMenuItems(_tagNodeMenuItems, _ => hasSingleSelection && selectedNode is TagNode);
             EnableMenuItems(hasSingleSelection && selectedNode is RemoteBranchTree, mnuBtnManageRemotesFromRootNode, mnuBtnFetchAllRemotes, mnuBtnPruneAllRemotes);
-
-            // remote repo
-            var isSingleRemoteRepoSelected = hasSingleSelection && selectedNode is RemoteRepoNode;
-            var remoteRepo = selectedNode as RemoteRepoNode;
-            EnableMenuItems(isSingleRemoteRepoSelected, mnubtnManageRemotes);
-            EnableMenuItems(isSingleRemoteRepoSelected && remoteRepo.Enabled, mnubtnFetchAllBranchesFromARemote, mnubtnDisableRemote, mnuBtnPruneAllBranchesFromARemote);
-            EnableMenuItems(isSingleRemoteRepoSelected && remoteRepo.IsRemoteUrlUsingHttp, mnuBtnOpenRemoteUrlInBrowser);
-            EnableMenuItems(isSingleRemoteRepoSelected && !remoteRepo.Enabled, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
-
-            // submodule
-            var isSingleSubmoduleSelected = hasSingleSelection && selectedNode is SubmoduleNode;
-            var submoduleNode = selectedNode as SubmoduleNode;
-            var bareRepository = Module.IsBareRepository();
-            EnableMenuItems(isSingleSubmoduleSelected && submoduleNode.CanOpen, mnubtnOpenSubmodule, mnubtnOpenGESubmodule);
-            EnableMenuItems(isSingleSubmoduleSelected, mnubtnUpdateSubmodule);
-            EnableMenuItems(isSingleSubmoduleSelected && !bareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
-            EnableMenuItems(isSingleSubmoduleSelected && !bareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
-
+            EnableRemoteRepoContextMenu(hasSingleSelection, selectedNode);
+            EnableSubmoduleContextMenu(hasSingleSelection, selectedNode);
             EnableMenuItems(hasSingleSelection && selectedNode is BranchPathNode, mnubtnCreateBranch, mnubtnDeleteAllBranches);
-
-            // expand / collapse
-            var multiSelectedParents = selectedNodes.HavingChildren().ToArray();
-            EnableMenuItems(multiSelectedParents.Expandable().Any(), mnubtnExpand);
-            EnableMenuItems(multiSelectedParents.Collapsible().Any(), mnubtnCollapse);
-
-            // move up / down (for top-level trees)
-            var isSingleTreeSelected = hasSingleSelection && selectedNode is Tree;
-            var treeNode = (selectedNode as Tree)?.TreeViewNode;
-            EnableMenuItems(isSingleTreeSelected && treeNode.PrevNode is not null, mnubtnMoveUp);
-            EnableMenuItems(isSingleTreeSelected && treeNode.NextNode is not null, mnubtnMoveDown);
-
-            var isSingleRefSelected = hasSingleSelection && selectedNode is IGitRefActions;
-            EnableMenuItems(isSingleRefSelected, _sortByContextMenuItem);
-
-            // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
-            var showSortOrder = AppSettings.RefsSortBy != GitRefsSortBy.Default;
-            EnableMenuItems(isSingleRefSelected && showSortOrder, _sortOrderContextMenuItem);
+            EnableExpandCollapseContextMenu(selectedNodes);
+            EnableMoveTreeUpDownContexMenu(hasSingleSelection, selectedNode);
+            EnableSortContextMenu(hasSingleSelection, selectedNode);
 
             if (hasSingleSelection && selectedNode is LocalBranchNode localBranch && localBranch.Visible)
             {
