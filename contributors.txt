@@ -172,3 +172,4 @@ YYYY/MM/DD, github id, Full name, email
 2021/11/13, h0lg, Holger Schmidt, leroyz.mailaccount(at)gmx.net
 2021/12/06, Tyrrrz, Alexey Golub, tyrrrz(at)gmail.com
 2021/12/29, blazejszuca, Błażej Szuca, blazej.szuca+gitextensions(at)gmail.com
+2022/03/23, axunonb, Norbert Bietsch, nb[@)axuno.net
