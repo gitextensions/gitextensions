@@ -1385,9 +1385,6 @@ namespace GitUI.CommandsDialogs
                         return;
                     }
 
-                    Amend.Checked = false;
-                    noVerifyToolStripMenuItem.Checked = false;
-
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
                     // Message.Text has been used and stored
@@ -1405,6 +1402,8 @@ namespace GitUI.CommandsDialogs
                     finally
                     {
                         Message.Text = string.Empty;
+                        Amend.Checked = false;
+                        noVerifyToolStripMenuItem.Checked = false;
                     }
 
                     if (pushCompleted && Module.SuperprojectModule is not null &&
