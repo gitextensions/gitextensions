@@ -1092,7 +1092,7 @@ namespace GitCommands
 
         /// <summary>
         /// Gets the commit ID of the currently checked out commit.
-        /// If the repo is bare, has no commits or is corrupt, <c>null</c> is returned.
+        /// If the repo is bare, has no commits, detached head or is corrupt, <c>null</c> is returned.
         /// </summary>
         public ObjectId? GetCurrentCheckout()
         {
@@ -3618,16 +3618,16 @@ namespace GitCommands
                 { !string.IsNullOrEmpty(authorPattern), string.Concat("--author=\"", authorPattern, "\"") }
             };
 
-            var messages = _gitExecutable.GetOutput(
-                args,
-                outputEncoding: LosslessEncoding).Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
-
-            if (messages.Length == 0)
+            ExecutionResult result = _gitExecutable.Execute(args, outputEncoding: LosslessEncoding, throwOnErrorExit: false);
+            if (!result.ExitedSuccessfully)
             {
                 return new[] { string.Empty };
             }
 
-            return messages.Select(ReEncodeCommitMessage);
+            string[] messages = result.StandardOutput.Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
+            return messages.Length == 0
+                ? new[] { string.Empty }
+                : messages.Select(ReEncodeCommitMessage);
         }
 
         /// <summary>
