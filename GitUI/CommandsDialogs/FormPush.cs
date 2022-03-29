@@ -527,6 +527,8 @@ namespace GitUI.CommandsDialogs
             if (match.Success && !Module.IsBareRepository())
             {
                 IWin32Window owner = form.Owner;
+                Debug.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
+
                 (var onRejectedPullAction, var forcePush) = AskForAutoPullOnPushRejectedAction(owner, match.Groups["currBranch"].Success);
 
                 if (forcePush)
@@ -643,7 +645,8 @@ namespace GitUI.CommandsDialogs
 
                 page.Buttons.Add(btnPushForce);
 
-                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+                Debug.Assert(owner is not null, "The dialog must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
+                TaskDialogButton result = TaskDialog.ShowDialog(owner, page);
                 if (result == TaskDialogButton.Cancel)
                 {
                     onRejectedPullAction = AppSettings.PullAction.None;
