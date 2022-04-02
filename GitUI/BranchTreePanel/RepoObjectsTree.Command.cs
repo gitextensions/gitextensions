@@ -4,11 +4,11 @@ namespace GitUI.BranchTreePanel
     {
         public enum Command
         {
-            Delete,
-            Rename,
-            Search,
-            MultiSelect,
-            MultiSelectWithChildren
+            Delete = 0,
+            Rename = 1,
+            Search = 2,
+            MultiSelect = 3,
+            MultiSelectWithChildren = 4,
         }
     }
 }
