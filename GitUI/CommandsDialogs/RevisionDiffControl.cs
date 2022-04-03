@@ -130,7 +130,7 @@ namespace GitUI.CommandsDialogs
             ShowFileTree = 12,
             FilterFileInGrid = 13,
             SelectFirstGroupChanges = 14,
-            Find = 15,
+            FindFile = 15,
         }
 
         public CommandStatus ExecuteCommand(Command cmd)
@@ -164,7 +164,7 @@ namespace GitUI.CommandsDialogs
                 case Command.ShowFileTree: diffShowInFileTreeToolStripMenuItem.PerformClick(); break;
                 case Command.FilterFileInGrid: diffFilterFileInGridToolStripMenuItem.PerformClick(); break;
                 case Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFileNotFocused();
-                case Command.Find: findInDiffToolStripMenuItem.PerformClick(); break;
+                case Command.FindFile: findInDiffToolStripMenuItem.PerformClick(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -200,7 +200,7 @@ namespace GitUI.CommandsDialogs
             unstageFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.UnStageSelectedFile);
             diffShowInFileTreeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowFileTree);
             diffFilterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
-            findInDiffToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
+            findInDiffToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindFile);
 
             DiffText.ReloadHotkeys();
         }

@@ -258,7 +258,7 @@ See the changes in the commit form.");
             OpenAsTempFileWith = 4,
             EditFile = 5,
             FilterFileInGrid = 6,
-            Find = 7,
+            FindFile = 7,
         }
 
         public CommandStatus ExecuteCommand(Command cmd)
@@ -277,7 +277,7 @@ See the changes in the commit form.");
                 case Command.OpenAsTempFileWith: openFileWithToolStripMenuItem.PerformClick(); break;
                 case Command.EditFile: editCheckedOutFileToolStripMenuItem.PerformClick(); break;
                 case Command.FilterFileInGrid: filterFileInGridToolStripMenuItem.PerformClick(); break;
-                case Command.Find: findToolStripMenuItem.PerformClick(); break;
+                case Command.FindFile: findToolStripMenuItem.PerformClick(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -302,7 +302,7 @@ See the changes in the commit form.");
             openFileWithToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFileWith);
             editCheckedOutFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
             filterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
-            findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Find);
+            findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindFile);
             FileText.ReloadHotkeys();
         }
 
