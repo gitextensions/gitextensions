@@ -66,7 +66,7 @@ namespace GitUI
                 else
                 {
                     // Get the parents for the selected revision
-                    var multipleParents = AppSettings.ShowDiffForAllParents ? actualRev.ParentIds.Count : 1;
+                    var multipleParents = actualRev.ParentIds is null ? 0 : AppSettings.ShowDiffForAllParents ? actualRev.ParentIds.Count : 1;
                     fileStatusDescs.AddRange(actualRev
                         .ParentIds
                         .Take(multipleParents)
