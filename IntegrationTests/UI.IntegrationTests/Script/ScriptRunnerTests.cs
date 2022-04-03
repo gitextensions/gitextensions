@@ -162,6 +162,31 @@ namespace GitExtensions.UITests.Script
         }
 
         [Test]
+        public void RunScript_with_arguments_with_s_option_with_RevisionGrid_without_selection_shall_display_error_and_return_false()
+        {
+            _exampleScript.Command = "cmd";
+            _exampleScript.Arguments = "/c echo {sHash}";
+
+            RunFormTest(async formBrowse =>
+            {
+                // wait until the revisions are loaded
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+                // check for correct test setup
+                formBrowse.RevisionGridControl.GetTestAccessor().ClearSelection();
+                Assert.AreEqual(0, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
+                formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull();
+
+                var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl))).Should()
+                        .Throw<UserExternalOperationException>();
+                ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
+                ex.And.Command.Should().Be(_exampleScript.Command);
+                ex.And.Arguments.Should().Be(_exampleScript.Arguments);
+                ex.And.WorkingDirectory.Should().Be(_module.WorkingDir);
+            });
+        }
+
+        [Test]
         public void RunScript_with_arguments_with_s_option_with_RevisionGrid_with_selection_shall_succeed()
         {
             _exampleScript.Command = "cmd";
