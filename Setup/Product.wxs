@@ -163,9 +163,6 @@
       <Component Id="Microsoft.VisualStudio.Composition.NetFxAttributes.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Composition.NetFxAttributes.dll" />
       </Component>
-      <Component Id="Microsoft.VisualStudio.Interop.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Interop.dll" />
-      </Component>
       <Component Id="Microsoft.VisualStudio.Threading.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Threading.dll" />
       </Component>
@@ -654,7 +651,6 @@
       <ComponentRef Id="Microsoft.Toolkit.HighPerformance.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Composition.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Composition.NetFxAttributes.dll" />
-      <ComponentRef Id="Microsoft.VisualStudio.Interop.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Threading.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Validation.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
