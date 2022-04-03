@@ -96,9 +96,6 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 });
         }
 
-#if !DEBUG
-        [Ignore("This test is unstable in AppVeyor")]
-#endif
         [Test]
         public void View_reflects_applied_branch_filter()
         {
@@ -109,6 +106,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 "",
                 revisionGridControl =>
                 {
+                    WaitForRevisionsToBeLoaded(revisionGridControl);
+
                     var ta = revisionGridControl.GetTestAccessor();
                     Assert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
                     ta.VisibleRevisionCount.Should().Be(4);
