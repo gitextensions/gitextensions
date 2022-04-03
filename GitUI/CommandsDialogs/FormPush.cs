@@ -526,8 +526,9 @@ namespace GitUI.CommandsDialogs
             Match match = isRejected.Match(form.GetOutputString());
             if (match.Success && !Module.IsBareRepository())
             {
-                IWin32Window owner = form.Owner;
-                (var onRejectedPullAction, var forcePush) = AskForAutoPullOnPushRejectedAction(owner, match.Groups["currBranch"].Success);
+                Debug.Assert(form.Visible, "The progress dialog must be visible.");
+
+                (AppSettings.PullAction onRejectedPullAction, bool forcePush) = AskForAutoPullOnPushRejectedAction(form, match.Groups["currBranch"].Success);
 
                 if (forcePush)
                 {
@@ -573,9 +574,10 @@ namespace GitUI.CommandsDialogs
 
                 Validates.NotNull(_selectedRemote);
 
+                Debug.Assert(form.Visible, "The progress dialog must be visible.");
                 UICommands.StartPullDialogAndPullImmediately(
-                    out var pullCompleted,
-                    owner,
+                    out bool pullCompleted,
+                    form,
                     _selectedRemoteBranchName,
                     _selectedRemote.Name,
                     onRejectedPullAction);
@@ -643,7 +645,8 @@ namespace GitUI.CommandsDialogs
 
                 page.Buttons.Add(btnPushForce);
 
-                TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+                Debug.Assert(owner is not null, "The dialog must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
+                TaskDialogButton result = TaskDialog.ShowDialog(owner, page);
                 if (result == TaskDialogButton.Cancel)
                 {
                     onRejectedPullAction = AppSettings.PullAction.None;
