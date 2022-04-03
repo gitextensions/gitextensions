@@ -528,11 +528,7 @@ namespace GitUI.CommandsDialogs
             {
                 Debug.Assert(form.Visible, "The progress dialog must be visible.");
 
-                // form is ProgressDialog, and form.Owner is FormPush that spawned the ProgressDialog, so essentially owner == this.
-                IWin32Window owner = form.Owner;
-                Debug.Assert(owner == this, "The progress window must belong to this dialog! This is a bug, please correct and send a pull request with a fix.");
-
-                (AppSettings.PullAction onRejectedPullAction, var forcePush) = AskForAutoPullOnPushRejectedAction(match.Groups["currBranch"].Success);
+                (AppSettings.PullAction onRejectedPullAction, bool forcePush) = AskForAutoPullOnPushRejectedAction(form, match.Groups["currBranch"].Success);
 
                 if (forcePush)
                 {
@@ -578,9 +574,10 @@ namespace GitUI.CommandsDialogs
 
                 Validates.NotNull(_selectedRemote);
 
+                Debug.Assert(form.Visible, "The progress dialog must be visible.");
                 UICommands.StartPullDialogAndPullImmediately(
-                    out var pullCompleted,
-                    owner,
+                    out bool pullCompleted,
+                    form,
                     _selectedRemoteBranchName,
                     _selectedRemote.Name,
                     onRejectedPullAction);
@@ -595,7 +592,7 @@ namespace GitUI.CommandsDialogs
             return false;
         }
 
-        private (AppSettings.PullAction pullAction, bool forcePush) AskForAutoPullOnPushRejectedAction(bool allOptions)
+        private (AppSettings.PullAction pullAction, bool forcePush) AskForAutoPullOnPushRejectedAction(IWin32Window owner, bool allOptions)
         {
             bool forcePush = false;
             AppSettings.PullAction? onRejectedPullAction = AppSettings.AutoPullOnPushRejectedAction;
@@ -648,7 +645,8 @@ namespace GitUI.CommandsDialogs
 
                 page.Buttons.Add(btnPushForce);
 
-                TaskDialogButton result = TaskDialog.ShowDialog(this, page);
+                Debug.Assert(owner is not null, "The dialog must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
+                TaskDialogButton result = TaskDialog.ShowDialog(owner, page);
                 if (result == TaskDialogButton.Cancel)
                 {
                     onRejectedPullAction = AppSettings.PullAction.None;
