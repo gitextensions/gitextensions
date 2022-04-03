@@ -187,6 +187,9 @@
       <Component Id="SmartFormat.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\SmartFormat.dll" />
       </Component>
+      <Component Id="SmartFormat.ZString.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\SmartFormat.ZString.dll" />
+      </Component>
       <Component Id="SpellChecker.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\SpellChecker.dll" />
       </Component>
@@ -656,6 +659,7 @@
       <ComponentRef Id="ResourceManager.dll" />
       <ComponentRef Id="RestSharp.dll" />
       <ComponentRef Id="SmartFormat.dll" />
+      <ComponentRef Id="SmartFormat.ZString.dll" />
       <ComponentRef Id="SpellChecker.dll" />
       <ComponentRef Id="stdole.dll" />
       <ComponentRef Id="System.ComponentModel.Composition.dll" />
