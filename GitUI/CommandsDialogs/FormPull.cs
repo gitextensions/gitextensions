@@ -22,7 +22,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormPull : GitModuleForm
+    public sealed partial class FormPull : GitExtensionsDialog
     {
         #region Mnemonics
         // Available: BIJKQVXYZ
@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormPull(GitUICommands commands, string? defaultRemoteBranch, string? defaultRemote, AppSettings.PullAction pullAction)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
             InitializeComplete();
@@ -1003,6 +1003,7 @@ namespace GitUI.CommandsDialogs
 
             comboBoxPullSource.Enabled = true;
             folderBrowserButton1.Enabled = true;
+            _NO_TRANSLATE_Remotes.SelectionLength = 0;
             _NO_TRANSLATE_Remotes.Enabled = false;
             AddRemote.Enabled = false;
 

@@ -29,15 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormPull));
             this.Tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.PullFromUrl = new System.Windows.Forms.RadioButton();
             this.PullFromRemote = new System.Windows.Forms.RadioButton();
             this.lblLocalBranch = new System.Windows.Forms.Label();
             this.lblRemoteBranch = new System.Windows.Forms.Label();
-            this.Unshallow = new System.Windows.Forms.CheckBox();
             this.Prune = new System.Windows.Forms.CheckBox();
             this.PruneTags = new System.Windows.Forms.CheckBox();
+            this.Unshallow = new System.Windows.Forms.CheckBox();
             this.Pull = new System.Windows.Forms.Button();
             this.MainLayout = new System.Windows.Forms.TableLayoutPanel();
             this.PanelLeftImage = new GitUI.Help.HelpImageDisplayUserControl();
@@ -61,10 +60,12 @@
             this.ReachableTags = new System.Windows.Forms.RadioButton();
             this.NoTags = new System.Windows.Forms.RadioButton();
             this.AllTags = new System.Windows.Forms.RadioButton();
-            this.PanelRightBottom = new System.Windows.Forms.TableLayoutPanel();
             this.Mergetool = new System.Windows.Forms.Button();
             this.Stash = new System.Windows.Forms.Button();
             this.AutoStash = new System.Windows.Forms.CheckBox();
+            this.lblSpacer = new System.Windows.Forms.Label();
+            this.MainPanel.SuspendLayout();
+            this.ControlsPanel.SuspendLayout();
             this.MainLayout.SuspendLayout();
             this.PanelRight.SuspendLayout();
             this.PanelRightInner.SuspendLayout();
@@ -74,8 +75,23 @@
             this.GroupBranch.SuspendLayout();
             this.GroupTagOptions.SuspendLayout();
             this.PanelTagOptions.SuspendLayout();
-            this.PanelRightBottom.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // MainPanel
+            // 
+            this.MainPanel.Controls.Add(this.MainLayout);
+            this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
+            this.MainPanel.Size = new System.Drawing.Size(674, 484);
+            // 
+            // ControlsPanel
+            // 
+            this.ControlsPanel.Controls.Add(this.Pull);
+            this.ControlsPanel.Controls.Add(this.lblSpacer);
+            this.ControlsPanel.Controls.Add(this.AutoStash);
+            this.ControlsPanel.Controls.Add(this.Stash);
+            this.ControlsPanel.Controls.Add(this.Mergetool);
+            this.ControlsPanel.Location = new System.Drawing.Point(0, 484);
+            this.ControlsPanel.Size = new System.Drawing.Size(674, 41);
             // 
             // PullFromUrl
             // 
@@ -123,18 +139,6 @@
             this.lblRemoteBranch.Text = "Rem&ote branch";
             this.Tooltip.SetToolTip(this.lblRemoteBranch, "Remote branch to pull. Leave empty to pull all branches.");
             // 
-            // Unshallow
-            // 
-            this.Unshallow.AutoSize = true;
-            this.Unshallow.Location = new System.Drawing.Point(7, 414);
-            this.Unshallow.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
-            this.Unshallow.Name = "Unshallow";
-            this.Unshallow.Size = new System.Drawing.Size(139, 19);
-            this.Unshallow.TabIndex = 25;
-            this.Unshallow.Text = "Do&wnload full history";
-            this.Tooltip.SetToolTip(this.Unshallow, resources.GetString("Unshallow.ToolTip"));
-            this.Unshallow.Visible = false;
-            // 
             // Prune
             // 
             this.Prune.AutoSize = true;
@@ -162,13 +166,24 @@
         "une is enabled.");
             this.PruneTags.CheckedChanged += new System.EventHandler(this.PruneTags_CheckedChanged);
             // 
+            // Unshallow
+            // 
+            this.Unshallow.AutoSize = true;
+            this.Unshallow.Location = new System.Drawing.Point(7, 414);
+            this.Unshallow.Margin = new System.Windows.Forms.Padding(7, 2, 2, 2);
+            this.Unshallow.Name = "Unshallow";
+            this.Unshallow.Size = new System.Drawing.Size(139, 19);
+            this.Unshallow.TabIndex = 25;
+            this.Unshallow.Text = "Do&wnload full history";
+            this.Unshallow.Visible = false;
+            // 
             // Pull
             // 
             this.Pull.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.Pull.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Pull.Image = global::GitUI.Properties.Images.ArrowDown;
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Pull.Location = new System.Drawing.Point(489, 8);
+            this.Pull.Location = new System.Drawing.Point(537, 8);
             this.Pull.MinimumSize = new System.Drawing.Size(120, 25);
             this.Pull.Name = "Pull";
             this.Pull.Size = new System.Drawing.Size(124, 25);
@@ -185,12 +200,12 @@
             this.MainLayout.Controls.Add(this.PanelLeftImage, 0, 0);
             this.MainLayout.Controls.Add(this.PanelRight, 1, 0);
             this.MainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainLayout.Location = new System.Drawing.Point(0, 0);
+            this.MainLayout.Location = new System.Drawing.Point(9, 9);
             this.MainLayout.Margin = new System.Windows.Forms.Padding(0);
             this.MainLayout.Name = "MainLayout";
             this.MainLayout.RowCount = 1;
             this.MainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.MainLayout.Size = new System.Drawing.Size(674, 565);
+            this.MainLayout.Size = new System.Drawing.Size(656, 466);
             this.MainLayout.TabIndex = 0;
             // 
             // PanelLeftImage
@@ -208,7 +223,7 @@
             this.PanelLeftImage.Location = new System.Drawing.Point(3, 3);
             this.PanelLeftImage.MinimumSize = new System.Drawing.Size(40, 85);
             this.PanelLeftImage.Name = "PanelLeftImage";
-            this.PanelLeftImage.Size = new System.Drawing.Size(40, 559);
+            this.PanelLeftImage.Size = new System.Drawing.Size(40, 460);
             this.PanelLeftImage.TabIndex = 1;
             this.PanelLeftImage.UniqueIsExpandedSettingsId = "Pull";
             // 
@@ -218,7 +233,7 @@
             this.PanelRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelRight.Location = new System.Drawing.Point(49, 3);
             this.PanelRight.Name = "PanelRight";
-            this.PanelRight.Size = new System.Drawing.Size(622, 559);
+            this.PanelRight.Size = new System.Drawing.Size(604, 460);
             this.PanelRight.TabIndex = 2;
             // 
             // PanelRightInner
@@ -230,7 +245,6 @@
             this.PanelRightInner.Controls.Add(this.GroupBranch, 0, 1);
             this.PanelRightInner.Controls.Add(this.GroupTagOptions, 0, 3);
             this.PanelRightInner.Controls.Add(this.Unshallow, 0, 4);
-            this.PanelRightInner.Controls.Add(this.PanelRightBottom, 0, 6);
             this.PanelRightInner.Controls.Add(this.Prune, 0, 5);
             this.PanelRightInner.Controls.Add(this.PruneTags, 0, 6);
             this.PanelRightInner.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -246,7 +260,7 @@
             this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelRightInner.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.PanelRightInner.Size = new System.Drawing.Size(622, 559);
+            this.PanelRightInner.Size = new System.Drawing.Size(604, 460);
             this.PanelRightInner.TabIndex = 3;
             // 
             // GroupPullFrom
@@ -263,7 +277,7 @@
             this.GroupPullFrom.Controls.Add(this.folderBrowserButton1);
             this.GroupPullFrom.Location = new System.Drawing.Point(3, 3);
             this.GroupPullFrom.Name = "GroupPullFrom";
-            this.GroupPullFrom.Size = new System.Drawing.Size(616, 91);
+            this.GroupPullFrom.Size = new System.Drawing.Size(598, 91);
             this.GroupPullFrom.TabIndex = 4;
             this.GroupPullFrom.TabStop = false;
             this.GroupPullFrom.Text = "Pull from";
@@ -277,7 +291,7 @@
             this._NO_TRANSLATE_Remotes.FormattingEnabled = true;
             this._NO_TRANSLATE_Remotes.Location = new System.Drawing.Point(148, 16);
             this._NO_TRANSLATE_Remotes.Name = "_NO_TRANSLATE_Remotes";
-            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(306, 23);
+            this._NO_TRANSLATE_Remotes.Size = new System.Drawing.Size(288, 23);
             this._NO_TRANSLATE_Remotes.TabIndex = 6;
             this._NO_TRANSLATE_Remotes.TextChanged += new System.EventHandler(this.Remotes_TextChanged);
             this._NO_TRANSLATE_Remotes.Validating += new System.ComponentModel.CancelEventHandler(this.RemotesValidating);
@@ -287,7 +301,7 @@
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddRemote.Image = global::GitUI.Properties.Images.Remotes;
             this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddRemote.Location = new System.Drawing.Point(460, 14);
+            this.AddRemote.Location = new System.Drawing.Point(442, 14);
             this.AddRemote.Name = "AddRemote";
             this.AddRemote.Size = new System.Drawing.Size(150, 25);
             this.AddRemote.TabIndex = 7;
@@ -303,7 +317,7 @@
             this.comboBoxPullSource.FormattingEnabled = true;
             this.comboBoxPullSource.Location = new System.Drawing.Point(148, 46);
             this.comboBoxPullSource.Name = "comboBoxPullSource";
-            this.comboBoxPullSource.Size = new System.Drawing.Size(306, 23);
+            this.comboBoxPullSource.Size = new System.Drawing.Size(288, 23);
             this.comboBoxPullSource.TabIndex = 9;
             this.comboBoxPullSource.Validating += new System.ComponentModel.CancelEventHandler(this.PullSourceValidating);
             // 
@@ -313,7 +327,7 @@
             this.folderBrowserButton1.AutoSize = true;
             this.folderBrowserButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.folderBrowserButton1.Enabled = false;
-            this.folderBrowserButton1.Location = new System.Drawing.Point(560, 45);
+            this.folderBrowserButton1.Location = new System.Drawing.Point(542, 45);
             this.folderBrowserButton1.Name = "folderBrowserButton1";
             this.folderBrowserButton1.PathShowingControl = this.comboBoxPullSource;
             this.folderBrowserButton1.Size = new System.Drawing.Size(0, 0);
@@ -328,7 +342,7 @@
             this.GroupMergeOptions.Controls.Add(this.PanelMergeOptions);
             this.GroupMergeOptions.Location = new System.Drawing.Point(3, 197);
             this.GroupMergeOptions.Name = "GroupMergeOptions";
-            this.GroupMergeOptions.Size = new System.Drawing.Size(616, 103);
+            this.GroupMergeOptions.Size = new System.Drawing.Size(598, 103);
             this.GroupMergeOptions.TabIndex = 15;
             this.GroupMergeOptions.TabStop = false;
             this.GroupMergeOptions.Text = "Merge options";
@@ -343,7 +357,7 @@
             this.PanelMergeOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.PanelMergeOptions.Location = new System.Drawing.Point(3, 19);
             this.PanelMergeOptions.Name = "PanelMergeOptions";
-            this.PanelMergeOptions.Size = new System.Drawing.Size(610, 81);
+            this.PanelMergeOptions.Size = new System.Drawing.Size(592, 81);
             this.PanelMergeOptions.TabIndex = 16;
             this.PanelMergeOptions.WrapContents = false;
             // 
@@ -402,7 +416,7 @@
             this.GroupBranch.Controls.Add(this.lblRemoteBranch);
             this.GroupBranch.Location = new System.Drawing.Point(3, 100);
             this.GroupBranch.Name = "GroupBranch";
-            this.GroupBranch.Size = new System.Drawing.Size(616, 91);
+            this.GroupBranch.Size = new System.Drawing.Size(598, 91);
             this.GroupBranch.TabIndex = 10;
             this.GroupBranch.TabStop = false;
             this.GroupBranch.Text = "Branch";
@@ -413,7 +427,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.localBranch.Location = new System.Drawing.Point(150, 14);
             this.localBranch.Name = "localBranch";
-            this.localBranch.Size = new System.Drawing.Size(306, 23);
+            this.localBranch.Size = new System.Drawing.Size(288, 23);
             this.localBranch.TabIndex = 12;
             this.localBranch.Leave += new System.EventHandler(this.localBranch_Leave);
             // 
@@ -424,7 +438,7 @@
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(150, 46);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(306, 23);
+            this.Branches.Size = new System.Drawing.Size(288, 23);
             this.Branches.TabIndex = 14;
             this.Branches.DropDown += new System.EventHandler(this.BranchesDropDown);
             // 
@@ -437,7 +451,7 @@
             this.GroupTagOptions.Controls.Add(this.PanelTagOptions);
             this.GroupTagOptions.Location = new System.Drawing.Point(3, 306);
             this.GroupTagOptions.Name = "GroupTagOptions";
-            this.GroupTagOptions.Size = new System.Drawing.Size(616, 103);
+            this.GroupTagOptions.Size = new System.Drawing.Size(598, 103);
             this.GroupTagOptions.TabIndex = 20;
             this.GroupTagOptions.TabStop = false;
             this.GroupTagOptions.Text = "Tag options";
@@ -452,7 +466,7 @@
             this.PanelTagOptions.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.PanelTagOptions.Location = new System.Drawing.Point(3, 19);
             this.PanelTagOptions.Name = "PanelTagOptions";
-            this.PanelTagOptions.Size = new System.Drawing.Size(610, 81);
+            this.PanelTagOptions.Size = new System.Drawing.Size(592, 81);
             this.PanelTagOptions.TabIndex = 21;
             this.PanelTagOptions.WrapContents = false;
             // 
@@ -491,33 +505,10 @@
             this.AllTags.Text = "Fetch &all tags";
             this.AllTags.UseVisualStyleBackColor = true;
             // 
-            // PanelRightBottom
-            // 
-            this.PanelRightBottom.AutoSize = true;
-            this.PanelRightBottom.ColumnCount = 5;
-            this.PanelRightBottom.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.PanelRightBottom.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.PanelRightBottom.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.PanelRightBottom.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.PanelRightBottom.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.PanelRightBottom.Controls.Add(this.Pull, 4, 0);
-            this.PanelRightBottom.Controls.Add(this.Mergetool, 0, 0);
-            this.PanelRightBottom.Controls.Add(this.Stash, 1, 0);
-            this.PanelRightBottom.Controls.Add(this.AutoStash, 2, 0);
-            this.PanelRightBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.PanelRightBottom.Location = new System.Drawing.Point(3, 515);
-            this.PanelRightBottom.Name = "PanelRightBottom";
-            this.PanelRightBottom.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.PanelRightBottom.RowCount = 1;
-            this.PanelRightBottom.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.PanelRightBottom.Size = new System.Drawing.Size(616, 41);
-            this.PanelRightBottom.TabIndex = 28;
-            // 
             // Mergetool
             // 
             this.Mergetool.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Mergetool.Location = new System.Drawing.Point(3, 8);
-            this.Mergetool.MinimumSize = new System.Drawing.Size(120, 25);
+            this.Mergetool.Location = new System.Drawing.Point(58, 8);
             this.Mergetool.Name = "Mergetool";
             this.Mergetool.Size = new System.Drawing.Size(141, 25);
             this.Mergetool.TabIndex = 29;
@@ -528,8 +519,7 @@
             // Stash
             // 
             this.Stash.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Stash.Location = new System.Drawing.Point(150, 8);
-            this.Stash.MinimumSize = new System.Drawing.Size(120, 25);
+            this.Stash.Location = new System.Drawing.Point(205, 8);
             this.Stash.Name = "Stash";
             this.Stash.Size = new System.Drawing.Size(132, 25);
             this.Stash.TabIndex = 30;
@@ -541,27 +531,36 @@
             // 
             this.AutoStash.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.AutoStash.AutoSize = true;
-            this.AutoStash.Location = new System.Drawing.Point(288, 11);
+            this.AutoStash.Location = new System.Drawing.Point(343, 11);
             this.AutoStash.Name = "AutoStash";
             this.AutoStash.Size = new System.Drawing.Size(82, 19);
             this.AutoStash.TabIndex = 31;
             this.AutoStash.Text = "Auto stas&h";
             this.AutoStash.UseVisualStyleBackColor = true;
             // 
+            // lblSpacer
+            // 
+            this.lblSpacer.Location = new System.Drawing.Point(431, 5);
+            this.lblSpacer.Name = "lblSpacer";
+            this.lblSpacer.Size = new System.Drawing.Size(100, 23);
+            this.lblSpacer.TabIndex = 33;
+            // 
             // FormPull
             // 
             this.AcceptButton = this.Pull;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(674, 565);
-            this.Controls.Add(this.MainLayout);
+            this.ClientSize = new System.Drawing.Size(674, 525);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(690, 508);
+            this.MinimumSize = new System.Drawing.Size(690, 564);
             this.Name = "FormPull";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Pull";
             this.Load += new System.EventHandler(this.FormPullLoad);
+            this.MainPanel.ResumeLayout(false);
+            this.ControlsPanel.ResumeLayout(false);
+            this.ControlsPanel.PerformLayout();
             this.MainLayout.ResumeLayout(false);
             this.MainLayout.PerformLayout();
             this.PanelRight.ResumeLayout(false);
@@ -579,9 +578,8 @@
             this.GroupTagOptions.PerformLayout();
             this.PanelTagOptions.ResumeLayout(false);
             this.PanelTagOptions.PerformLayout();
-            this.PanelRightBottom.ResumeLayout(false);
-            this.PanelRightBottom.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -609,7 +607,6 @@
         private System.Windows.Forms.TableLayoutPanel MainLayout;
         private System.Windows.Forms.Panel PanelRight;
         private System.Windows.Forms.TableLayoutPanel PanelRightInner;
-        private System.Windows.Forms.TableLayoutPanel PanelRightBottom;
         private System.Windows.Forms.FlowLayoutPanel PanelMergeOptions;
         private Help.HelpImageDisplayUserControl PanelLeftImage;
         private System.Windows.Forms.FlowLayoutPanel PanelTagOptions;
@@ -622,5 +619,6 @@
         private System.Windows.Forms.CheckBox Unshallow;
         private System.Windows.Forms.CheckBox Prune;
         private System.Windows.Forms.CheckBox PruneTags;
+        private System.Windows.Forms.Label lblSpacer;
     }
 }
