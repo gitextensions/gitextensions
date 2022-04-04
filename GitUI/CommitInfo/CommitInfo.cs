@@ -313,6 +313,10 @@ namespace GitUI.CommitInfo
             {
                 StartAsyncDataLoad(Module.EffectiveSettings);
             }
+            else
+            {
+                RevisionInfo.Clear();
+            }
 
             return;
 
