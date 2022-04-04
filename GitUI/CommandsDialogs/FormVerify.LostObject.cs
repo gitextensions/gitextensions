@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
             private static readonly string LogCommandArgumentsFormat = (ArgumentString)new GitArgumentBuilder("log")
             {
                 "-n1",
-                "--pretty=format:\"%aN, %s, %ct, %P\" {0}"
+                "--pretty=format:\"%aN\u001F%s\u001F%ct\u001F%P\" {0}"
             };
 
             private static readonly string TagCommandArgumentsFormat = (ArgumentString)new GitArgumentBuilder("cat-file")
@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
             };
 
             private static readonly Regex RawDataRegex = new(@"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$", RegexOptions.Compiled);
-            private static readonly Regex LogRegex = new(@"^([^,]+), (.*), (.+), (\d+), (.+)?$", RegexOptions.Compiled | RegexOptions.Singleline);
+            private static readonly Regex LogRegex = new("^(?<author>[^\u001F]+)\u001F(?<subject>.*)\u001F(?<date>\\d+)\u001F(?<first_parent>[^ ]+)?( .+)?$", RegexOptions.Compiled | RegexOptions.Singleline);
             private static readonly Regex TagRegex = new(@"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n", RegexOptions.Compiled | RegexOptions.Multiline);
 
             public LostObjectType ObjectType { get; }
@@ -110,16 +110,13 @@ namespace GitUI.CommandsDialogs
                     var logPatternMatch = LogRegex.Match(commitLog);
                     if (logPatternMatch.Success)
                     {
-                        result.Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups[1].Value);
-                        result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups[2].Value) ?? "";
-                        result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[3].Value);
-                        if (logPatternMatch.Groups.Count >= 4)
+                        result.Author = module.ReEncodeStringFromLossless(logPatternMatch.Groups["author"].Value);
+                        result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups["subject"].Value) ?? "";
+                        result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups["date"].Value);
+                        var firstParent = logPatternMatch.Groups["first_parent"].Value;
+                        if (!string.IsNullOrEmpty(firstParent))
                         {
-                            var parentId = logPatternMatch.Groups[4].Value.LazySplit(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-                            if (parentId is not null)
-                            {
-                                result.Parent = ObjectId.Parse(parentId);
-                            }
+                            result.Parent = ObjectId.Parse(firstParent);
                         }
                     }
                 }
