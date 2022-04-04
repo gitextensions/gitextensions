@@ -23,7 +23,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Runtime environment
     </td>
     <td>
-      MS Windows 7SP1+ // MS .NET 5.0
+      MS Windows 7SP1+ // MS .NET 6.0
     </td>
   </tr>
   <tr>
@@ -31,7 +31,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Development
     </td>
     <td>
-      MS VS 2019 (v16.9+), C# 9 // VC++ (inc. ATL for x86/x64 for installer)
+      MS VS 2022 (v17.2+), C# 9 // VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
   <tr>
