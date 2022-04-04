@@ -1238,7 +1238,7 @@ namespace GitUI
                     CommitUnixTime = 0,
                     CommitterEmail = userEmail,
                     Subject = ResourceManager.TranslatedStrings.Index,
-                    ParentIds = new[] { CurrentCheckout },
+                    ParentIds = CurrentCheckout is null ? null : new[] { CurrentCheckout },
                     HasNotes = true
                 };
 
@@ -2503,7 +2503,8 @@ namespace GitUI
             // => Fill with HEAD to if less than two normal revisions (it is OK to compare HEAD HEAD)
             var revisions = GetSelectedRevisions().Select(i => i.ObjectId).Where(i => !i.IsArtificial).ToList();
             bool hasArtificial = GetSelectedRevisions().Any(i => i.IsArtificial);
-            if (revisions.Count == 0 && !hasArtificial)
+            ObjectId? headId = Module.RevParse("HEAD");
+            if (headId is null || (revisions.Count == 0 && !hasArtificial))
             {
                 return;
             }
@@ -2511,8 +2512,8 @@ namespace GitUI
             GitArgumentBuilder args = new("merge-base")
             {
                 { revisions.Count > 2 || (revisions.Count == 2 && hasArtificial), "--octopus" },
-                { revisions.Count < 1, "HEAD" },
-                { revisions.Count < 2, "HEAD" },
+                { revisions.Count < 1, headId.ToString() },
+                { revisions.Count < 2, headId.ToString() },
                 revisions
             };
 

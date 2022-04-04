@@ -253,20 +253,27 @@ namespace GitUI.CommandsDialogs
             {
                 // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
                 // Must be handled when displaying
-                var headId = Module.RevParse("HEAD");
-                Validates.NotNull(headId);
-                GitRevision headRev = new(headId);
-                GitRevision indexRev = new(ObjectId.IndexId)
-                {
-                    ParentIds = new[] { headId }
-                };
+                ObjectId? headId = Module.RevParse("HEAD");
                 GitRevision workTreeRev = new(ObjectId.WorkTreeId)
                 {
                     ParentIds = new[] { ObjectId.IndexId }
                 };
-                var indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
-                var workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
-                Stashed.SetStashDiffs(headRev, indexRev, ResourceManager.TranslatedStrings.Index, indexItems, workTreeRev, ResourceManager.TranslatedStrings.Workspace, workTreeItems);
+                if (headId is null)
+                {
+                    // Likely a detached head
+                    Stashed.SetDiffs(null, workTreeRev, gitItemStatuses);
+                }
+                else
+                {
+                    GitRevision headRev = new(headId);
+                    GitRevision indexRev = new(ObjectId.IndexId)
+                    {
+                        ParentIds = new[] { headId }
+                    };
+                    var indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
+                    var workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
+                    Stashed.SetStashDiffs(headRev, indexRev, ResourceManager.TranslatedStrings.Index, indexItems, workTreeRev, ResourceManager.TranslatedStrings.Workspace, workTreeItems);
+                }
             }
             else
             {

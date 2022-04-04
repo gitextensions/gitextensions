@@ -51,19 +51,22 @@ namespace GitUI
 
                 if (actualRev.ParentIds is null || actualRev.ParentIds.Count == 0)
                 {
-                    Validates.NotNull(selectedRev.TreeGuid);
-
-                    // No parent for the initial commit
                     fileStatusDescs.Add(new FileStatusWithDescription(
                         firstRev: null,
                         secondRev: selectedRev,
                         summary: GetDescriptionForRevision(selectedRev.ObjectId),
-                        statuses: module.GetTreeFiles(selectedRev.TreeGuid, full: true)));
+                        statuses: selectedRev.TreeGuid is null
+
+                            // likely index commit without HEAD
+                            ? module.GetDiffFilesWithSubmodulesStatus(null, selectedRev.ObjectId, null)
+
+                            // No parent for the initial commit
+                            : module.GetTreeFiles(selectedRev.TreeGuid, full: true)));
                 }
                 else
                 {
                     // Get the parents for the selected revision
-                    var multipleParents = AppSettings.ShowDiffForAllParents ? actualRev.ParentIds.Count : 1;
+                    var multipleParents = actualRev.ParentIds is null ? 0 : AppSettings.ShowDiffForAllParents ? actualRev.ParentIds.Count : 1;
                     fileStatusDescs.AddRange(actualRev
                         .ParentIds
                         .Take(multipleParents)
