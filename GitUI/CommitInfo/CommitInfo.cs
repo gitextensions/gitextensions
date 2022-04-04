@@ -214,13 +214,13 @@ namespace GitUI.CommitInfo
 
         private void ShowAll(string? what)
         {
+            // ignore argument 'what' because links cannot be distinguished if having same label (since .NET core)
             switch (what)
             {
                 case "branches":
+                case "tags":
                     _showAllBranches = true;
                     _branchInfo = null; // forces update
-                    break;
-                case "tags":
                     _showAllTags = true;
                     _tagInfo = null; // forces update
                     break;
