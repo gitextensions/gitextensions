@@ -53,16 +53,18 @@ namespace GitUI.BranchTreePanel
         private void EnableExpandCollapseContextMenu(NodeBase[] selectedNodes)
         {
             var multiSelectedParents = selectedNodes.HavingChildren().ToArray();
-            EnableMenuItems(multiSelectedParents.Expandable().Any(), mnubtnExpand);
-            EnableMenuItems(multiSelectedParents.Collapsible().Any(), mnubtnCollapse);
+            mnubtnExpand.Visible = mnubtnCollapse.Visible = multiSelectedParents.Length > 0;
+            mnubtnExpand.Enabled = multiSelectedParents.Expandable().Any();
+            mnubtnCollapse.Enabled = multiSelectedParents.Collapsible().Any();
         }
 
         private void EnableMoveTreeUpDownContexMenu(bool hasSingleSelection, NodeBase selectedNode)
         {
             var isSingleTreeSelected = hasSingleSelection && selectedNode is Tree;
             var treeNode = (selectedNode as Tree)?.TreeViewNode;
-            EnableMenuItems(isSingleTreeSelected && treeNode.PrevNode is not null, mnubtnMoveUp);
-            EnableMenuItems(isSingleTreeSelected && treeNode.NextNode is not null, mnubtnMoveDown);
+            mnubtnMoveUp.Visible = mnubtnMoveDown.Visible = isSingleTreeSelected;
+            mnubtnMoveUp.Enabled = isSingleTreeSelected && treeNode.PrevNode is not null;
+            mnubtnMoveDown.Enabled = isSingleTreeSelected && treeNode.NextNode is not null;
         }
 
         private void EnableRemoteBranchContextMenu(bool hasSingleSelection, NodeBase selectedNode)
@@ -200,10 +202,21 @@ namespace GitUI.BranchTreePanel
             copyContextMenuItem.Enable(hasSingleSelection && selectedNode is BaseBranchLeafNode branch && branch.Visible);
             filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any());
 
-            EnableMenuItems(_localBranchMenuItems, t => selectedNode is LocalBranchNode localBranch
-                && hasSingleSelection // only display for single-selected branch
-                && (!localBranch.IsCurrent // with all items for non-current branches
-                    || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(t.Key))); // or only those applying to the current branch
+            var selectedLocalBranch = selectedNode as LocalBranchNode;
+
+            foreach (ToolStripItemWithKey item in _localBranchMenuItems)
+            {
+                bool visible = hasSingleSelection && selectedLocalBranch != null;
+                item.Item.Visible = visible; // only display for single-selected branch
+
+                /* Enabled items must also be visible; cancellation of menu opening below relies on it.
+                 * Read from local variable because ToolStripItem.Visible will always returns false
+                 * because the ContextMenuStrip as the visual parent is not Visible on Opening. */
+                item.Item.Enabled = visible
+
+                    // enable all items for non-current branches or only those applying to the current branch
+                    && (selectedLocalBranch?.IsCurrent == false || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(item.Key));
+            }
 
             EnableRemoteBranchContextMenu(hasSingleSelection, selectedNode);
             EnableMenuItems(_tagNodeMenuItems, _ => hasSingleSelection && selectedNode is TagNode);
@@ -215,7 +228,7 @@ namespace GitUI.BranchTreePanel
             EnableMoveTreeUpDownContexMenu(hasSingleSelection, selectedNode);
             EnableSortContextMenu(hasSingleSelection, selectedNode);
 
-            if (hasSingleSelection && selectedNode is LocalBranchNode localBranch && localBranch.Visible)
+            if (hasSingleSelection && selectedLocalBranch?.Visible == true)
             {
                 contextMenu.AddUserScripts(runScriptToolStripMenuItem, _scriptRunner.Execute);
             }
@@ -224,12 +237,15 @@ namespace GitUI.BranchTreePanel
                 contextMenu.RemoveUserScripts(runScriptToolStripMenuItem);
             }
 
-            contextMenu.ToggleSeparators();
-
-            /* Cancel context menu if no items are enabled.
-             * This relies on the items' Enabled flag being toggled (e.g. by EnableMenuItems) and BEFORE this line. */
-            e.Cancel = !contextMenu.Items.Cast<ToolStripItem>().Any(i => i.Enabled);
+            /* Cancel context menu opening if no items are Enabled.
+             * This relies on that flag being set correctly on all menu items above. */
+            e.Cancel = !contextMenu.Items.OfType<ToolStripMenuItem>().Any(i => i.Enabled);
         }
+
+        private void contextMenu_Opened(object sender, EventArgs e)
+            /* Waiting for ContextMenuStrip (as the visual parent of its menu items) to be visible to
+             * toggle existing separators in between item groups as required depending on ToolStripItem.Visible .*/
+            => (sender as ContextMenuStrip)?.ToggleSeparators();
 
         /// <inheritdoc />
         public TMenuItem CreateMenuItem<TMenuItem, TNode>(Action<TNode> onClick, TranslationString text, TranslationString toolTip, Bitmap? icon = null)

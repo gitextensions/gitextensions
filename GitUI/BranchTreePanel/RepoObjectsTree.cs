@@ -618,8 +618,11 @@ namespace GitUI.BranchTreePanel
             public ContextMenuStrip ContextMenu => _repoObjectsTree.menuMain;
             public NativeTreeView TreeView => _repoObjectsTree.treeMain;
 
-            public void OnContextMenuOpening(object sender, CancelEventArgs e)
-                => _repoObjectsTree.contextMenu_Opening(sender, e);
+            public void OpenContextMenu(ContextMenuStrip sender)
+            {
+                _repoObjectsTree.contextMenu_Opening(sender, new CancelEventArgs());
+                _repoObjectsTree.contextMenu_Opened(sender, new EventArgs());
+            }
 
             /// <summary>Simulates a left click on the <see cref="TreeNode"/> in <see cref="TreeView"/>
             /// identified by the path of <paramref name="nodeTexts"/> for UI tests.</summary>

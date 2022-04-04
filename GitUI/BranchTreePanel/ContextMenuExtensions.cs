@@ -34,42 +34,50 @@ namespace GitUI.BranchTreePanel
 
         /// <summary>Toggles the <paramref name="item"/>'s <see cref="ToolStripItem.Visible"/>
         /// as well as <see cref="ToolStripItem.Enabled"/> properties depending on <paramref name="enabled"/>.
-        /// Prefer this over only toggling the visibility of an item to enable determining whether the context menu will (once open)
-        /// contain any visible items via <see cref="ToolStripItem.Enabled"/> even before the menu itself (as the visual parent)
-        /// is visble and <see cref="ToolStripItem.Visible"/> of any item therefore false.</summary>
+        /// This may be a useful shorthand for scenarios in which you want to make sure that items are only enabled if they're also visible;
+        /// e.g. to enable determining whether the context menu will (once open) contain any visible items via <see cref="ToolStripItem.Enabled"/>
+        /// even before the menu itself (as the visual parent) is visble and <see cref="ToolStripItem.Visible"/> of any item therefore returns false.</summary>
         internal static void Enable(this ToolStripItem item, bool enabled)
             => item.Visible = item.Enabled = enabled;
 
         /// <summary>Toggles <see cref="ToolStripSeparator"/>s in between <paramref name="contextMenu"/>'s items
         /// preventing separators from preceding or trailing the list or being displayed without any items in between them.
-        /// Relies on the items' <see cref="ToolStripItem.Visible"/> and <see cref="ToolStripItem.Enabled"/>
-        /// being toggled using <see cref="Enable(ToolStripItem, bool)"/>.</summary>
+        /// Relies on the items' <see cref="ToolStripItem.Visible"/> property and therefore only works
+        /// if the <paramref name="contextMenu"/> as the visual parent is visible itself.
+        /// So you'll probably want to use this on its <see cref="ToolStripDropDown.Opened"/> event
+        /// or after toggling the visibility of any of its items while it is open.</summary>
         internal static void ToggleSeparators(this ContextMenuStrip contextMenu)
         {
+            contextMenu.SuspendLayout();
             var items = contextMenu.Items.Cast<ToolStripItem>().ToArray();
-            ToolStripItem precedingEnabledItem = null;
 
-            // toggle all separators looking behind for enabled items other than separators
+            // toggle all separators (but the last) looking behind for enabled items other than separators
+            ToolStripItem lastPrecedingVisibleItem = null;
+
             foreach (ToolStripItem item in items)
             {
                 if (item is ToolStripSeparator)
                 {
-                    item.Enable(precedingEnabledItem != null && precedingEnabledItem is not ToolStripSeparator);
+                    // show separator if last preceding visible item is not also a separator to avoid stacking them
+                    item.Enable(lastPrecedingVisibleItem != null && lastPrecedingVisibleItem is not ToolStripSeparator);
                 }
 
-                if (item.Enabled)
+                if (item.Visible)
                 {
-                    precedingEnabledItem = item;
+                    // remember this as the last visible item before continuing
+                    lastPrecedingVisibleItem = item;
                 }
             }
 
-            // hide the last Enabled separator that may remain
-            var lastEnabled = items.LastOrDefault(i => i.Enabled);
+            // hide the last Visible separator that above look-behind loop may have left over
+            var lastVisible = items.LastOrDefault(i => i.Visible);
 
-            if (lastEnabled != null && lastEnabled is ToolStripSeparator)
+            if (lastVisible != null && lastVisible is ToolStripSeparator)
             {
-                lastEnabled.Enable(false);
+                lastVisible.Enable(false);
             }
+
+            contextMenu.ResumeLayout();
         }
     }
 }

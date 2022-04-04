@@ -43,7 +43,7 @@ namespace GitUITests.BranchTreePanel
             // Arrange
             var group = CreateGenerator(_factory);
             new LocalBranchMenuItemsStrings().ApplyTo(group.Strings);
-            WithNonCurrentBranch_HasAllMenuItems(group);
+            WithRefMenu_HasAllItems(group);
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace GitUITests.BranchTreePanel
             // Arrange
             var group = CreateGenerator(_factory);
             new RemoteBranchMenuItemsStrings().ApplyTo(group.Strings);
-            WithNonCurrentBranch_HasAllMenuItems(group);
+            WithRefMenu_HasAllItems(group);
         }
 
         [Test]
@@ -64,10 +64,10 @@ namespace GitUITests.BranchTreePanel
 
             // mock rename to keep the test simple
             group.Strings.Tooltips[MenuItemKey.Rename] = new TranslationString("Rename");
-            WithNonCurrentBranch_HasAllMenuItems(group);
+            WithRefMenu_HasAllItems(group);
         }
 
-        private void WithNonCurrentBranch_HasAllMenuItems(MenuItemsGenerator<TestBranchNode> group)
+        private void WithRefMenu_HasAllItems(MenuItemsGenerator<TestBranchNode> group)
         {
             // Act
             var menuItems = group.ToArray();
@@ -85,23 +85,23 @@ namespace GitUITests.BranchTreePanel
         }
 
         [Test]
-        public void WithCurrentBranch_HasFilteredItems()
+        public void WithCurrentLocalBranch_HavingDisabledItems()
         {
             // Arrange
             LocalBranchMenuItems<TestBranchNode> generator = new(_factory);
 
             // Act
-            const int notFiltered = 2; // create branch, rename
-            int expectedFiltered = expectedTotal - notFiltered;
-            var menuItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
-            Assert.AreEqual(menuItems.Count(), expectedFiltered);
+            const int expectedEnabled = 2; // create branch, rename
+            int expectedDisabled = expectedTotal - expectedEnabled;
+            var disabledItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
+            Assert.AreEqual(disabledItems.Count(), expectedDisabled);
             int testIndex = 0;
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Checkout));
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Merge));
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Rebase));
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Reset));
-            Assert.IsInstanceOf<ToolStripSeparator>(menuItems[testIndex++].Item);
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Delete));
+            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Checkout));
+            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Merge));
+            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Rebase));
+            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Reset));
+            Assert.IsInstanceOf<ToolStripSeparator>(disabledItems[testIndex++].Item);
+            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Delete));
         }
 
         private void AssertItem(ToolStripItemWithKey menuItem, string caption)

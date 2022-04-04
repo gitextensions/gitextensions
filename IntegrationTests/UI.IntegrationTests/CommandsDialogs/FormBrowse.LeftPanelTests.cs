@@ -136,15 +136,15 @@ namespace GitExtensions.UITests.CommandsDialogs
                     ContextMenuStrip contextMenu = ta.ContextMenu;
 
                     ta.SelectNode<RepoObjectsTree.LocalBranchNode>(new[] { TranslatedStrings.Branches, "master" });
-                    ta.OnContextMenuOpening(contextMenu, new CancelEventArgs());
+                    ta.OpenContextMenu(contextMenu);
                     testDriver(contextMenu);
 
                     ta.SelectNode<RepoObjectsTree.RemoteBranchNode>(new[] { TranslatedStrings.Remotes, RemoteName, "master" });
-                    ta.OnContextMenuOpening(contextMenu, new CancelEventArgs());
+                    ta.OpenContextMenu(contextMenu);
                     testDriver(contextMenu);
 
                     ta.SelectNode<RepoObjectsTree.TagNode>(new[] { TranslatedStrings.Tags, "Branch1" });
-                    ta.OnContextMenuOpening(contextMenu, new CancelEventArgs());
+                    ta.OpenContextMenu(contextMenu);
                     testDriver(contextMenu);
 
                     return Task.CompletedTask;

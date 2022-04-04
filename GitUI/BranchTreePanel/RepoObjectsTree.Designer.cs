@@ -175,6 +175,7 @@ namespace GitUI.BranchTreePanel
             this.menuMain.Name = "menuMain";
             this.menuMain.Size = new System.Drawing.Size(267, 912);
             this.menuMain.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
+            this.menuMain.Opened += new System.EventHandler(this.contextMenu_Opened);
             // 
             // copyContextMenuItem
             // 
