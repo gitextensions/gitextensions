@@ -378,7 +378,7 @@ namespace GitUI.Hotkey
                     Hk(RevisionDiffControl.Command.DeleteSelectedFiles, Keys.Delete),
                     Hk(RevisionDiffControl.Command.EditFile, EditFileHotkey),
                     Hk(RevisionDiffControl.Command.FilterFileInGrid, Keys.F),
-                    Hk(RevisionDiffControl.Command.FindFile, Keys.Control | Keys.F),
+                    Hk(RevisionDiffControl.Command.FindFile, Keys.None),
                     Hk(RevisionDiffControl.Command.OpenAsTempFile, OpenAsTempFileHotkey),
                     Hk(RevisionDiffControl.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
                     Hk(RevisionDiffControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
