@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
@@ -41,6 +42,8 @@ namespace GitExtensions
             // the call to GetInformation() from BugReporter.ShowNBug() will fail.
             // There's no perf hit calling Initialise() multiple times.
             UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             AppSettings.SetDocumentationBaseUrl(ThisAssembly.Git.Branch);
 
