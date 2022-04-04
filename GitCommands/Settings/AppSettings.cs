@@ -1804,19 +1804,22 @@ namespace GitCommands
         public static string GetGitExtensionsFullPath()
         {
 #if DEBUG
-            bool isExpectedExe =
+            if (!IsDesignMode)
+            {
+                bool isExpectedExe =
 
-                // The app's entry point is GitExtensions.exe
-                _applicationExecutablePath.EndsWith("GitExtensions.exe", StringComparison.InvariantCultureIgnoreCase) ||
+                    // The app's entry point is GitExtensions.exe
+                    _applicationExecutablePath.EndsWith("GitExtensions.exe", StringComparison.InvariantCultureIgnoreCase) ||
 
-                // Tests are run by testhost.exe
-                _applicationExecutablePath.EndsWith("testhost.exe", StringComparison.InvariantCultureIgnoreCase) ||
-                _applicationExecutablePath.EndsWith("testhost.x86.exe", StringComparison.InvariantCultureIgnoreCase) ||
+                    // Tests are run by testhost.exe
+                    _applicationExecutablePath.EndsWith("testhost.exe", StringComparison.InvariantCultureIgnoreCase) ||
+                    _applicationExecutablePath.EndsWith("testhost.x86.exe", StringComparison.InvariantCultureIgnoreCase) ||
 
-                // Translations
-                _applicationExecutablePath.EndsWith("TranslationApp.exe", StringComparison.InvariantCultureIgnoreCase);
+                    // Translations
+                    _applicationExecutablePath.EndsWith("TranslationApp.exe", StringComparison.InvariantCultureIgnoreCase);
 
-            Debug.Assert(isExpectedExe, $"{_applicationExecutablePath} must point to GitExtensions.exe");
+                Debug.Assert(isExpectedExe, $"{_applicationExecutablePath} must point to GitExtensions.exe");
+            }
 #endif
 
             return _applicationExecutablePath;
