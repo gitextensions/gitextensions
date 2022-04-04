@@ -22,6 +22,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private readonly RevisionDataGridView _gridView;
         private readonly Func<GitModule> _module;
 
+        // Increase contrast to selected rows
+        private readonly Color _lightBlue = Color.FromArgb(130, 180, 240);
+
         public BuildStatusColumnProvider(RevisionGridControl grid, RevisionDataGridView gridView, Func<GitModule> module)
             : base("Build Status")
         {
@@ -128,7 +131,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         customColor = isSelected ? Color.Red : Color.DarkRed;
                         break;
                     case BuildInfo.BuildStatus.InProgress:
-                        customColor = isSelected ? Color.LightBlue : Color.Blue;
+                        customColor = isSelected ? _lightBlue : Color.Blue;
                         break;
                     case BuildInfo.BuildStatus.Unstable:
                         customColor = Color.OrangeRed;
@@ -156,7 +159,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         color = Color.Red;
                         break;
                     case BuildInfo.BuildStatus.InProgress:
-                        color = Color.DodgerBlue;
+                        color = _lightBlue;
                         break;
                     case BuildInfo.BuildStatus.Unstable:
                         color = Color.DarkOrange;
