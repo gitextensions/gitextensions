@@ -31,7 +31,7 @@ namespace GitUI
                     dte.ExecuteCommand("File.OpenFile", filePath);
 
                     // Bring the Visual Studio window to the front of the desktop
-                    NativeMethods.SetForegroundWindow(new IntPtr(dte.MainWindow.HWnd));
+                    NativeMethods.SetForegroundWindow(dte.MainWindow.HWnd);
 
                     return true;
                 }

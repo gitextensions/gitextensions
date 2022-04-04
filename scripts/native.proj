@@ -2,7 +2,8 @@
   <PropertyGroup>
     <!-- Keep Sdk.targets happy -->
     <TargetFrameworkIdentifier>net</TargetFrameworkIdentifier>
-    <TargetFrameworkVersion>5.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>6.0</TargetFrameworkVersion>
+    <UseCompatibilityPackage>true</UseCompatibilityPackage>
   </PropertyGroup>
 
   <ItemGroup>

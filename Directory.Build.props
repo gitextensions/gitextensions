@@ -3,13 +3,13 @@
   <Import Project="scripts\Tests.props" />
 
   <PropertyGroup>
-    <LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
 
     <UseWindowsForms>true</UseWindowsForms>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>$(SolutionTargetFramework)</TargetFramework>
     <Prefer32Bit>false</Prefer32Bit>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)GitExtensions.ruleset</CodeAnalysisRuleSet>

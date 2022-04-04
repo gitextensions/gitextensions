@@ -20,9 +20,9 @@ namespace GitUI.Avatars
 
                 NormalizedEmail = Email.Trim().ToLowerInvariant();
 
-                EmailMd5 = new Lazy<string>(() => ComputeHash(new MD5CryptoServiceProvider(), NormalizedEmail));
-                EmailSha1 = new Lazy<string>(() => ComputeHash(new SHA1CryptoServiceProvider(), NormalizedEmail));
-                EmailSha256 = new Lazy<string>(() => ComputeHash(new SHA256CryptoServiceProvider(), NormalizedEmail));
+                EmailMd5 = new Lazy<string>(() => ComputeHash(MD5.Create(), NormalizedEmail));
+                EmailSha1 = new Lazy<string>(() => ComputeHash(SHA1.Create(), NormalizedEmail));
+                EmailSha256 = new Lazy<string>(() => ComputeHash(SHA256.Create(), NormalizedEmail));
             }
 
             public string Email { get; }

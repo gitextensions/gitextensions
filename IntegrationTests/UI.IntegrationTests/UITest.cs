@@ -33,7 +33,8 @@ namespace GitExtensions.UITests
 
         public static void RunForm<T>(
             Action showForm,
-            Func<T, Task> runTestAsync)
+            Func<T, Task> runTestAsync,
+            bool debug = false)
             where T : Form
         {
             Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
@@ -57,8 +58,11 @@ namespace GitExtensions.UITests
                 // complete.
                 var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
                 {
+                    Log("switching to UI thread");
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    Log("waiting for idle");
                     await WaitForIdleAsync();
+                    Log("idle");
                     form = Application.OpenForms.OfType<T>().Single();
 
                     try
@@ -77,15 +81,28 @@ namespace GitExtensions.UITests
                     }
                 });
 
+                Log("showing form");
                 showForm();
+                Log("form shown");
 
                 // Join the asynchronous test operation so any exceptions are rethrown on this thread.
                 test.Join();
+                Log("test task joined");
             }
             finally
             {
                 form?.Dispose();
                 Assert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) after test");
+            }
+
+            return;
+
+            void Log(string message)
+            {
+                if (debug)
+                {
+                    Console.WriteLine($"{DateTime.Now.TimeOfDay} {message}");
+                }
             }
         }
 

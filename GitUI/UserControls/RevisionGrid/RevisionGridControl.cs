@@ -2935,6 +2935,12 @@ namespace GitUI
             public bool IsUiStable =>
                 !_revisionGridControl._isRefreshingRevisions &&
                 !_revisionGridControl._gridView.IsBackgroundUpdaterActive;
+
+            public void ClearSelection()
+            {
+                _revisionGridControl._gridView.ClearSelection();
+                _revisionGridControl._latestSelectedRowIndex = -1;
+            }
         }
     }
 }

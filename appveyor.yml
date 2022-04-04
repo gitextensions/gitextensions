@@ -10,7 +10,13 @@ matrix:
   fast_finish: true
 
 # https://www.appveyor.com/docs/build-environment/#build-worker-images
-image: Visual Studio 2019
+image: Visual Studio 2022
+
+environment:
+  # Disable the .NET logo in the console output.
+  DOTNET_NOLOGO: true
+  # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -28,6 +34,9 @@ build:
   verbosity: minimal
 
 install:
+- ps: |
+      Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile "./dotnet-install.ps1"
+      ./dotnet-install.ps1 -JsonFile global.json -InstallDir 'C:\Program Files\dotnet'
 - cmd: git submodule update --init --recursive
 - cmd: |-
     cd scripts
@@ -60,7 +69,7 @@ build_script:
     if ($isBuildingPR) {
         git config user.email "gitextensions@github.com"
         git config user.name "Git Extensions"
-        git -c core.autocrlf=false commit -a -m "restore merge commit"
+        git -c core.autocrlf=false commit -a -m "restore merge commit" | Out-Null
         # ignore warning about line-endings conversion
         $global:LASTEXITCODE = 0
     }

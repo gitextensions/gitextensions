@@ -62,8 +62,10 @@ namespace GitUI.Avatars
 
         private static string ComputeHash(string email)
         {
+#pragma warning disable SYSLIB0021 // 'MD5CryptoServiceProvider' is obsolete
             // Hash specified at http://en.gravatar.com/site/implement/hash/
             using MD5CryptoServiceProvider md5 = new();
+#pragma warning restore SYSLIB0021 // 'MD5CryptoServiceProvider' is obsolete
 
             // Gravatar doesn't specify an encoding
             var emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());

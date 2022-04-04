@@ -9,9 +9,13 @@ namespace ResourceManager.Xliff
     {
         public static void Serialize(TranslationFile translation, string path)
         {
-            using TextWriter tw = new StreamWriter(path, false);
+            XmlWriterSettings xmlWriterSettings = new()
+            {
+                Indent = true
+            };
             XmlSerializer serializer = new(typeof(TranslationFile));
-            serializer.Serialize(tw, translation);
+            using XmlWriter xmlWriter = XmlWriter.Create(path, xmlWriterSettings);
+            serializer.Serialize(xmlWriter, translation);
         }
 
         public static TranslationFile? Deserialize(string path)

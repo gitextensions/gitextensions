@@ -82,7 +82,9 @@ namespace TeamCityIntegration
 
             string url = serverUrl + "ntlmLogin.html";
             CookieContainer cookieContainer = new();
+#pragma warning disable SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
             var request = (HttpWebRequest)WebRequest.Create(url);
+#pragma warning restore SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
             request.CookieContainer = cookieContainer;
 
             if (buildServerCredentials is not null

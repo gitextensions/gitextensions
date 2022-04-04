@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -166,14 +167,18 @@ namespace GitExtensions.UITests.Script
             _exampleScript.Command = "cmd";
             _exampleScript.Arguments = "/c echo {sHash}";
 
-            _uiCommands = new GitUICommands("C:\\");
-
-            RunFormTest(formBrowse =>
+            RunFormTest(async formBrowse =>
             {
-                formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull(); // check for correct test setup
+                // wait until the revisions are loaded
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
+                // check for correct test setup
+                formBrowse.RevisionGridControl.GetTestAccessor().ClearSelection();
+                Assert.AreEqual(0, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
+                formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull();
 
                 var ex = ((Action)(() => ExecuteRunScript(null, _module, _keyOfExampleScript, _uiCommands, formBrowse.RevisionGridControl))).Should()
-                    .Throw<UserExternalOperationException>();
+                        .Throw<UserExternalOperationException>();
                 ex.And.Context.Should().Be($"Script: '{_keyOfExampleScript}'\r\nA valid revision is required to substitute the argument options");
                 ex.And.Command.Should().Be(_exampleScript.Command);
                 ex.And.Arguments.Should().Be(_exampleScript.Arguments);
@@ -224,15 +229,6 @@ namespace GitExtensions.UITests.Script
             {
                 throw ex.InnerException;
             }
-        }
-
-        private void RunFormTest(Action<FormBrowse> testDriver)
-        {
-            RunFormTest(form =>
-            {
-                testDriver(form);
-                return Task.CompletedTask;
-            });
         }
 
         private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)

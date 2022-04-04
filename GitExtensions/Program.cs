@@ -35,6 +35,7 @@ namespace GitExtensions
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetHighDpiMode(HighDpiMode.SystemAware);
 
             // If an error happens before we had a chance to init the environment information
             // the call to GetInformation() from BugReporter.ShowNBug() will fail.

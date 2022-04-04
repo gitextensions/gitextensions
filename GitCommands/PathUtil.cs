@@ -153,7 +153,9 @@ namespace GitCommands
             Uri tempPath = new(path);
             if (!string.IsNullOrEmpty(relativePath))
             {
+#pragma warning disable SYSLIB0013 // 'Uri.EscapeUriString(string)' is obsolete
                 tempPath = new Uri(tempPath, Uri.EscapeUriString(relativePath));
+#pragma warning restore SYSLIB0013 // 'Uri.EscapeUriString(string)' is obsolete
                 return Uri.UnescapeDataString(tempPath.LocalPath);
             }
 
