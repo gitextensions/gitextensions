@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace GitUI.BranchTreePanel
+namespace GitUI.BranchTreePanel.ContextMenu
 {
     internal static class ContextMenuExtensions
     {
