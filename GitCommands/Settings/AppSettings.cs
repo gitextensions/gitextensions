@@ -47,6 +47,7 @@ namespace GitCommands
 
         static AppSettings()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             ApplicationDataPath = new Lazy<string?>(() =>
             {
                 if (IsPortable())
