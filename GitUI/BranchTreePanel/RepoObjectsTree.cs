@@ -549,8 +549,8 @@ namespace GitUI.BranchTreePanel
             Node.OnNode<Node>(e.Node, node => node.OnSelected());
         }
 
-        private IEnumerable<NodeBase> GetMultiSelection()
-            => _rootNodes.SelectMany(tree => tree.GetMultiSelection());
+        private IEnumerable<NodeBase> GetSelectedNodes()
+            => _rootNodes.SelectMany(tree => tree.GetSelectedNodes());
 
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -573,7 +573,7 @@ namespace GitUI.BranchTreePanel
             else
             {
                 // deselect all selected nodes
-                foreach (NodeBase selected in GetMultiSelection())
+                foreach (NodeBase selected in GetSelectedNodes())
                 {
                     selected.Select(false);
                 }

@@ -127,7 +127,7 @@ namespace GitUI.BranchTreePanel
 
             RegisterClick(filterForSelectedRefsMenuItem, () =>
             {
-                var refPaths = GetMultiSelection().OfType<IGitRefActions>().Select(b => b.FullPath);
+                var refPaths = GetSelectedNodes().OfType<IGitRefActions>().Select(b => b.FullPath);
                 _filterRevisionGridBySpaceSeparatedRefs(refPaths.Join(" "));
             });
 
@@ -175,8 +175,8 @@ namespace GitUI.BranchTreePanel
             RegisterClick<BranchPathNode>(mnubtnCreateBranch, branchPath => branchPath.CreateBranch());
 
             // Expand / Collapse
-            RegisterClick(mnubtnCollapse, () => GetMultiSelection().HavingChildren().Collapsible().ForEach(parent => parent.TreeViewNode.Collapse()));
-            RegisterClick(mnubtnExpand, () => GetMultiSelection().HavingChildren().Expandable().ForEach(parent => parent.TreeViewNode.ExpandAll()));
+            RegisterClick(mnubtnCollapse, () => GetSelectedNodes().HavingChildren().Collapsible().ForEach(node => node.TreeViewNode.Collapse()));
+            RegisterClick(mnubtnExpand, () => GetSelectedNodes().HavingChildren().Expandable().ForEach(node => node.TreeViewNode.ExpandAll()));
 
             // Move up / down (for top level Trees)
             RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
@@ -195,7 +195,7 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            var selectedNodes = GetMultiSelection().ToArray();
+            var selectedNodes = GetSelectedNodes().ToArray();
             var hasSingleSelection = selectedNodes.Length <= 1;
             var selectedNode = treeMain.SelectedNode.Tag as NodeBase;
 

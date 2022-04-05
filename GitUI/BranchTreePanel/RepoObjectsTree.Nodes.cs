@@ -262,7 +262,7 @@ namespace GitUI.BranchTreePanel
                 await treeView.SwitchToMainThreadAsync(token);
 
                 // remember multi-selected nodes
-                HashSet<int> multiSelected = this.GetMultiSelection().Select(node => node.GetHashCode()).ToHashSet();
+                HashSet<int> multiSelected = this.GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
 
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);

@@ -9,7 +9,7 @@ namespace GitUI.BranchTreePanel
         internal static IEnumerable<RepoObjectsTree.NodeBase> GetNodesAndSelf(this RepoObjectsTree.Tree tree)
             => tree.DepthEnumerator<RepoObjectsTree.NodeBase>().Prepend(tree);
 
-        internal static IEnumerable<RepoObjectsTree.NodeBase> GetMultiSelection(this RepoObjectsTree.Tree tree)
+        internal static IEnumerable<RepoObjectsTree.NodeBase> GetSelectedNodes(this RepoObjectsTree.Tree tree)
             => tree.GetNodesAndSelf().Where(node => node.IsSelected);
 
         internal static bool HasChildren(this RepoObjectsTree.NodeBase node)
