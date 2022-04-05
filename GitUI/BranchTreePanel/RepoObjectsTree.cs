@@ -189,7 +189,7 @@ namespace GitUI.BranchTreePanel
                         {
                             if (node.Tag is BaseBranchNode branch)
                             {
-                                if (!branch.HasChildren())
+                                if (!branch.HasChildren)
                                 {
                                     list.Add(branch.FullPath);
                                 }
@@ -210,7 +210,7 @@ namespace GitUI.BranchTreePanel
         {
             // If node is an inner node, and overrides OnDoubleClick, then disable expand/collapse
             if (treeMain.SelectedNode?.Tag is Node node
-                && node.HasChildren()
+                && node.HasChildren
                 && IsOverride(node.GetType().GetMethod(nameof(OnDoubleClick), BindingFlags.Instance | BindingFlags.NonPublic)))
             {
                 e.Cancel = true;

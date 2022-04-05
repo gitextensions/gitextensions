@@ -12,6 +12,8 @@ namespace GitUI.BranchTreePanel
             /// <summary>The child nodes.</summary>
             protected internal Nodes Nodes { get; protected set; }
 
+            internal bool HasChildren => Nodes.Count > 0;
+
             /// <summary>The corresponding tree node.</summary>
             protected internal virtual TreeNode TreeViewNode { get; set; }
 
@@ -29,7 +31,7 @@ namespace GitUI.BranchTreePanel
                 ApplyStyle(); // toggle multi-selected node style
 
                 // recursively process descendants if required
-                if (includingDescendants && this.HasChildren())
+                if (includingDescendants && HasChildren)
                 {
                     foreach (var child in Nodes)
                     {

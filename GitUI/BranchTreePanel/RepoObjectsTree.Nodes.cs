@@ -241,6 +241,12 @@ namespace GitUI.BranchTreePanel
             public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase
                 => Nodes.DepthEnumerator<TNode>();
 
+            internal IEnumerable<NodeBase> GetNodesAndSelf()
+                => DepthEnumerator<NodeBase>().Prepend(this);
+
+            internal IEnumerable<NodeBase> GetSelectedNodes()
+                => GetNodesAndSelf().Where(node => node.IsSelected);
+
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
             // making sure to disable/enable the control.
@@ -262,7 +268,7 @@ namespace GitUI.BranchTreePanel
                 await treeView.SwitchToMainThreadAsync(token);
 
                 // remember multi-selected nodes
-                HashSet<int> multiSelected = this.GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
+                HashSet<int> multiSelected = GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
 
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);
@@ -270,7 +276,7 @@ namespace GitUI.BranchTreePanel
                 // re-apply multi-selection
                 if (multiSelected.Count > 0)
                 {
-                    foreach (NodeBase node in this.GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode())))
+                    foreach (NodeBase node in GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode())))
                     {
                         node.IsSelected = true;
                     }
