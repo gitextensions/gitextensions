@@ -101,7 +101,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             {
                 contextMenu.Items.Count.Should().BeGreaterThan(5);
 
-                int count = contextMenu.Items.Count; // disregarding the Run script item and its preceding separator
+                int count = contextMenu.Items.Count;
 
                 // Assert items from bottom to the top
                 ToolStripItem item = contextMenu.Items[--count];
@@ -136,15 +136,15 @@ namespace GitExtensions.UITests.CommandsDialogs
                     ContextMenuStrip contextMenu = ta.ContextMenu;
 
                     ta.SelectNode<RepoObjectsTree.LocalBranchNode>(new[] { TranslatedStrings.Branches, "master" });
-                    ta.OpenContextMenu(contextMenu);
+                    ta.OpenContextMenu();
                     testDriver(contextMenu);
 
                     ta.SelectNode<RepoObjectsTree.RemoteBranchNode>(new[] { TranslatedStrings.Remotes, RemoteName, "master" });
-                    ta.OpenContextMenu(contextMenu);
+                    ta.OpenContextMenu();
                     testDriver(contextMenu);
 
                     ta.SelectNode<RepoObjectsTree.TagNode>(new[] { TranslatedStrings.Tags, "Branch1" });
-                    ta.OpenContextMenu(contextMenu);
+                    ta.OpenContextMenu();
                     testDriver(contextMenu);
 
                     return Task.CompletedTask;

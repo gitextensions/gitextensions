@@ -13,7 +13,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
         internal static void InsertItems(this ContextMenuStrip menu, IEnumerable<ToolStripItem> items,
             ToolStripItem? before = null, ToolStripItem? after = null)
         {
-            Debug.Assert(!(after is not null && before is not null), $"Only {nameof(before)} or {nameof(after)} is allowed.");
+            Debug.Assert(after is null || before is null, $"Only {nameof(before)} or {nameof(after)} is allowed, not both.");
 
             menu.SuspendLayout();
             int index;
@@ -21,12 +21,20 @@ namespace GitUI.BranchTreePanel.ContextMenu
             if (before is not null)
             {
                 index = Math.Max(0, menu.Items.IndexOf(before) - 1);
-                items.ForEach(item => menu.Items.Insert(++index, item));
+
+                foreach (ToolStripItem item in items)
+                {
+                    menu.Items.Insert(++index, item);
+                }
             }
             else
             {
                 index = after is null ? 0 : Math.Max(0, menu.Items.IndexOf(after) + 1);
-                items.ForEach(item => menu.Items.Insert(index++, item));
+
+                foreach (ToolStripItem item in items)
+                {
+                    menu.Items.Insert(index++, item);
+                }
             }
 
             menu.ResumeLayout();
@@ -51,7 +59,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
             contextMenu.SuspendLayout();
             var items = contextMenu.Items.Cast<ToolStripItem>().ToArray();
 
-            // toggle all separators (but the last) looking behind for enabled items other than separators
+            // toggle all separators (but the last) looking behind for visible items other than separators
             ToolStripItem lastPrecedingVisibleItem = null;
 
             foreach (ToolStripItem item in items)
@@ -69,7 +77,7 @@ namespace GitUI.BranchTreePanel.ContextMenu
                 }
             }
 
-            // hide the last Visible separator that above look-behind loop may have left over
+            // hide the last visible separator that above look-behind loop may have left over
             var lastVisible = items.LastOrDefault(i => i.Visible);
 
             if (lastVisible != null && lastVisible is ToolStripSeparator)

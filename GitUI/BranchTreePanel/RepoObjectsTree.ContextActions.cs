@@ -34,7 +34,7 @@ namespace GitUI.BranchTreePanel
 
         private void EnableMenuItems(bool enabled, params ToolStripItem[] items)
         {
-            foreach (var item in items)
+            foreach (ToolStripItem item in items)
             {
                 item.Enable(enabled);
             }
@@ -42,7 +42,7 @@ namespace GitUI.BranchTreePanel
 
         private void EnableMenuItems<TNode>(MenuItemsGenerator<TNode> generator, Func<ToolStripItemWithKey, bool> isEnabled) where TNode : class, INode
         {
-            foreach (var item in generator)
+            foreach (ToolStripItemWithKey item in generator)
             {
                 item.Item.Enable(isEnabled(item));
             }
@@ -52,7 +52,7 @@ namespace GitUI.BranchTreePanel
          * depending on whether node is expanded or collapsed and has child nodes at all */
         private void EnableExpandCollapseContextMenu(NodeBase[] selectedNodes)
         {
-            var multiSelectedParents = selectedNodes.HavingChildren().ToArray();
+            NodeBase[] multiSelectedParents = selectedNodes.HavingChildren().ToArray();
             mnubtnExpand.Visible = mnubtnCollapse.Visible = multiSelectedParents.Length > 0;
             mnubtnExpand.Enabled = multiSelectedParents.Expandable().Any();
             mnubtnCollapse.Enabled = multiSelectedParents.Collapsible().Any();
@@ -60,8 +60,8 @@ namespace GitUI.BranchTreePanel
 
         private void EnableMoveTreeUpDownContexMenu(bool hasSingleSelection, NodeBase selectedNode)
         {
-            var isSingleTreeSelected = hasSingleSelection && selectedNode is Tree;
-            var treeNode = (selectedNode as Tree)?.TreeViewNode;
+            bool isSingleTreeSelected = hasSingleSelection && selectedNode is Tree;
+            TreeNode treeNode = (selectedNode as Tree)?.TreeViewNode;
             mnubtnMoveUp.Visible = mnubtnMoveDown.Visible = isSingleTreeSelected;
             mnubtnMoveUp.Enabled = isSingleTreeSelected && treeNode.PrevNode is not null;
             mnubtnMoveDown.Enabled = isSingleTreeSelected && treeNode.NextNode is not null;
@@ -69,7 +69,7 @@ namespace GitUI.BranchTreePanel
 
         private void EnableRemoteBranchContextMenu(bool hasSingleSelection, NodeBase selectedNode)
         {
-            var isSingleRemoteBranchSelected = hasSingleSelection && selectedNode is RemoteBranchNode;
+            bool isSingleRemoteBranchSelected = hasSingleSelection && selectedNode is RemoteBranchNode;
             EnableMenuItems(_remoteBranchMenuItems, _ => isSingleRemoteBranchSelected);
 
             EnableMenuItems(isSingleRemoteBranchSelected, mnubtnFetchOneBranch, mnubtnPullFromRemoteBranch,
@@ -78,7 +78,7 @@ namespace GitUI.BranchTreePanel
 
         private void EnableRemoteRepoContextMenu(bool hasSingleSelection, NodeBase selectedNode)
         {
-            var isSingleRemoteRepoSelected = hasSingleSelection && selectedNode is RemoteRepoNode;
+            bool isSingleRemoteRepoSelected = hasSingleSelection && selectedNode is RemoteRepoNode;
             var remoteRepo = selectedNode as RemoteRepoNode;
             mnubtnManageRemotes.Enable(isSingleRemoteRepoSelected);
             EnableMenuItems(isSingleRemoteRepoSelected && remoteRepo.Enabled, mnubtnFetchAllBranchesFromARemote, mnubtnDisableRemote, mnuBtnPruneAllBranchesFromARemote);
@@ -88,23 +88,23 @@ namespace GitUI.BranchTreePanel
 
         private void EnableSortContextMenu(bool hasSingleSelection, NodeBase selectedNode)
         {
-            var isSingleRefSelected = hasSingleSelection && selectedNode is IGitRefActions;
+            bool isSingleRefSelected = hasSingleSelection && selectedNode is IGitRefActions;
             _sortByContextMenuItem.Enable(isSingleRefSelected);
 
             // If refs are sorted by git (GitRefsSortBy = Default) don't show sort order options
-            var showSortOrder = AppSettings.RefsSortBy != GitRefsSortBy.Default;
+            bool showSortOrder = AppSettings.RefsSortBy != GitRefsSortBy.Default;
             _sortOrderContextMenuItem.Enable(isSingleRefSelected && showSortOrder);
         }
 
         private void EnableSubmoduleContextMenu(bool hasSingleSelection, NodeBase selectedNode)
         {
-            var isSingleSubmoduleSelected = hasSingleSelection && selectedNode is SubmoduleNode;
+            bool isSingleSubmoduleSelected = hasSingleSelection && selectedNode is SubmoduleNode;
             var submoduleNode = selectedNode as SubmoduleNode;
-            var bareRepository = Module.IsBareRepository();
+            bool isBareRepository = Module.IsBareRepository();
             EnableMenuItems(isSingleSubmoduleSelected && submoduleNode.CanOpen, mnubtnOpenSubmodule, mnubtnOpenGESubmodule);
             mnubtnUpdateSubmodule.Enable(isSingleSubmoduleSelected);
-            EnableMenuItems(isSingleSubmoduleSelected && !bareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
-            EnableMenuItems(isSingleSubmoduleSelected && !bareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
+            EnableMenuItems(isSingleSubmoduleSelected && !isBareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
+            EnableMenuItems(isSingleSubmoduleSelected && !isBareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
         }
 
         private static void RegisterClick(ToolStripItem item, Action onClick)
@@ -121,6 +121,7 @@ namespace GitUI.BranchTreePanel
         {
             copyContextMenuItem.SetRevisionFunc(() => _scriptHost.GetSelectedRevisions());
 
+            // Filter for selected
             filterForSelectedRefsMenuItem.ToolTipText = "Filter the revision grid to show selected (underlined) refs (branches and tags) only." +
                 "\nHold CTRL while clicking to de/select multiple and include descendant tree nodes by additionally holding SHIFT." +
                 "\nReset the filter via View > Show all branches.";
@@ -195,12 +196,12 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            var selectedNodes = GetSelectedNodes().ToArray();
-            var hasSingleSelection = selectedNodes.Length <= 1;
+            NodeBase[] selectedNodes = GetSelectedNodes().ToArray();
+            bool hasSingleSelection = selectedNodes.Length <= 1;
             var selectedNode = treeMain.SelectedNode.Tag as NodeBase;
 
             copyContextMenuItem.Enable(hasSingleSelection && selectedNode is BaseBranchLeafNode branch && branch.Visible);
-            filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any());
+            filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any()); // enable if selection contains refs
 
             var selectedLocalBranch = selectedNode as LocalBranchNode;
 
@@ -244,7 +245,7 @@ namespace GitUI.BranchTreePanel
 
         private void contextMenu_Opened(object sender, EventArgs e)
             /* Waiting for ContextMenuStrip (as the visual parent of its menu items) to be visible to
-             * toggle existing separators in between item groups as required depending on ToolStripItem.Visible .*/
+             * toggle (depending on ToolStripItem.Visible) existing separators in between item groups as required.*/
             => (sender as ContextMenuStrip)?.ToggleSeparators();
 
         /// <inheritdoc />

@@ -618,20 +618,20 @@ namespace GitUI.BranchTreePanel
             public ContextMenuStrip ContextMenu => _repoObjectsTree.menuMain;
             public NativeTreeView TreeView => _repoObjectsTree.treeMain;
 
-            public void OpenContextMenu(ContextMenuStrip sender)
+            public void OpenContextMenu()
             {
-                _repoObjectsTree.contextMenu_Opening(sender, new CancelEventArgs());
-                _repoObjectsTree.contextMenu_Opened(sender, new EventArgs());
+                _repoObjectsTree.contextMenu_Opening(ContextMenu, new CancelEventArgs());
+                _repoObjectsTree.contextMenu_Opened(ContextMenu, new EventArgs());
             }
 
             /// <summary>Simulates a left click on the <see cref="TreeNode"/> in <see cref="TreeView"/>
             /// identified by the path of <paramref name="nodeTexts"/> for UI tests.</summary>
-            /// <typeparam name="TExpected">The expected type of the selected node. This will be verified.</typeparam>
+            /// <typeparam name="TExpected">The expected type of the selected node. The type of the returned node will be validated against this.</typeparam>
             /// <param name="nodeTexts">The path of node texts used to select a single node starting from the first tree level.</param>
             /// <param name="multiple">Whether to select multiple; simulates holding <see cref="Keys.Control"/> while clicking.</param>
             /// <param name="includingDescendants">Whether to include descendants in the multi-selection;
             /// simulates holding <see cref="Keys.Shift"/> while clicking.</param>
-            /// <exception cref="ArgumentException">Thrown if either <paramref name="nodeTexts"/> don't point to a node
+            /// <exception cref="ArgumentException">Thrown if either <paramref name="nodeTexts"/> don't point to an existing node
             /// or the selected node is not of type <typeparamref name="TExpected"/>.</exception>
             public void SelectNode<TExpected>(string[] nodeTexts, bool multiple = false, bool includingDescendants = false) where TExpected : Node
             {
@@ -640,15 +640,13 @@ namespace GitUI.BranchTreePanel
 
                 foreach (var text in nodeTexts)
                 {
-                    try
-                    {
-                        node = nodes.Single(node => node.Text == text);
-                    }
-                    catch (Exception ex)
+                    node = nodes.SingleOrDefault(node => node.Text == text);
+
+                    if (node == null)
                     {
                         throw new ArgumentException(
                             $"Node '{text}' not found. Available nodes on this level: " + nodes.Select(n => n.Text).Join(", "),
-                            nameof(nodeTexts), ex);
+                            nameof(nodeTexts));
                     }
 
                     nodes = node.Nodes.Cast<TreeNode>();
