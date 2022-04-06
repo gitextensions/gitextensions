@@ -124,6 +124,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         // ------------------------------------------------------------------------------------------------
 
                         Console.WriteLine("Scenario 1: set 'Show all branches'");
+                        WaitForRevisionsToBeLoaded(form);
                         // Assert
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
                         AppSettings.BranchFilterEnabled.Should().BeFalse();
@@ -211,6 +212,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     {
                         // 1. Check with ShowLatestStash disabled
                         Console.WriteLine("Scenario 1: set 'Show latest stash' to false");
+                        WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.ShowLatestStash.Should().BeFalse();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
@@ -256,6 +258,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     {
                         // 2. Check with ShowLatestStash enabled
                         Console.WriteLine("Scenario 2: set 'Show latest stash' to true");
+                        WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.ShowLatestStash.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(6);
@@ -307,7 +310,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private static void WaitForRevisionsToBeLoaded(FormBrowse form)
         {
-            UITest.ProcessUntil("Loading Revisions", () => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsUiStable);
+            UITest.ProcessUntil("Loading Revisions", () => form.GetTestAccessor().RevisionGrid.GetTestAccessor().IsDataLoadComplete);
         }
     }
 }

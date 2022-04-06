@@ -24,8 +24,6 @@ namespace GitUI.UserControls.RevisionGrid
                 _cooldownMilliseconds = cooldownMilliseconds;
             }
 
-            public bool IsExecuting => _executing;
-
             public void ScheduleExcecution()
             {
                 lock (_sync)

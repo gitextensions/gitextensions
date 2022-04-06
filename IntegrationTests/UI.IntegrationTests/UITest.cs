@@ -123,7 +123,7 @@ namespace GitExtensions.UITests
                 runTestAsync: form => runTestAsync(control));
         }
 
-        public static void ProcessUntil(string processName, Func<bool> condition, int maxIterations = 100)
+        public static void ProcessUntil(string processName, Func<bool> condition, int maxIterations = 25)
         {
             for (int iteration = 0; iteration < maxIterations; ++iteration)
             {
@@ -134,7 +134,7 @@ namespace GitExtensions.UITests
                 }
 
                 Application.DoEvents();
-                Thread.Sleep(5);
+                Thread.Sleep(25);
             }
 
             Assert.Fail($"'{processName}' didn't finish in {maxIterations} iterations");

@@ -391,7 +391,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
         private static void WaitForRevisionsToBeLoaded(RevisionGridControl revisionGridControl)
         {
-            UITest.ProcessUntil("Loading Revisions", () => revisionGridControl.GetTestAccessor().IsUiStable);
+            UITest.ProcessUntil("Loading Revisions", () => revisionGridControl.GetTestAccessor().IsDataLoadComplete);
         }
     }
 }
