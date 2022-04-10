@@ -700,7 +700,7 @@ namespace GitUI
         public void SetDiffs(IReadOnlyList<GitRevision> revisions, ObjectId? headId)
         {
             _enableDisablingShowDiffForAllParents = true;
-            GitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId);
+            GitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId, cancellationToken: default);
         }
 
         public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
@@ -711,7 +711,7 @@ namespace GitUI
 
             await TaskScheduler.Default;
             cancellationToken.ThrowIfCancellationRequested();
-            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId);
+            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId, cancellationToken);
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
