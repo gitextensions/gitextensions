@@ -535,7 +535,11 @@ namespace GitUI.Editor
 
             file.TreeGuid ??= Module.GetFileBlobHash(file.Name, objectId);
 
-            Validates.NotNull(file.TreeGuid);
+            if (file.TreeGuid is null)
+            {
+                return ViewTextAsync(file.Name, $"Cannot get treeId from Git for {file.Name} for commit {objectId}.");
+            }
+
             var sha = file.TreeGuid.ToString();
             var isSubmodule = file.IsSubmodule;
 
