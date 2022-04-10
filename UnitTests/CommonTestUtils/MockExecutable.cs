@@ -65,7 +65,15 @@ namespace CommonTestUtils
             }
         }
 
-        public IProcess Start(ArgumentString arguments, bool createWindow, bool redirectInput, bool redirectOutput, Encoding outputEncoding, bool useShellExecute = false, bool throwOnErrorExit = true)
+        public IProcess Start(
+            ArgumentString arguments,
+            bool createWindow,
+            bool redirectInput,
+            bool redirectOutput,
+            Encoding outputEncoding,
+            bool useShellExecute = false,
+            bool throwOnErrorExit = true,
+            CancellationToken? cancellationToken = null)
         {
             System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
 
@@ -115,6 +123,10 @@ namespace CommonTestUtils
             public StreamWriter StandardInput { get; }
             public StreamReader StandardOutput { get; }
             public StreamReader StandardError { get; }
+
+            public void Kill(bool entireProcessTree)
+            {
+            }
 
             public int WaitForExit()
             {

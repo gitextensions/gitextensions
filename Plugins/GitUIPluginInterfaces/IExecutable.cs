@@ -32,6 +32,7 @@ namespace GitUIPluginInterfaces
                        bool redirectOutput = false,
                        Encoding? outputEncoding = null,
                        bool useShellExecute = false,
-                       bool throwOnErrorExit = true);
+                       bool throwOnErrorExit = true,
+                       CancellationToken? cancellationToken = null);
     }
 }

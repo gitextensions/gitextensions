@@ -296,11 +296,13 @@ namespace GitCommands
                     exitCode: 0);
             }
 
-            using IProcess process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding, throwOnErrorExit: throwOnErrorExit);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using IProcess process = executable.Start(arguments, createWindow: false, redirectInput: writeInput is not null, redirectOutput: true, outputEncoding, throwOnErrorExit: throwOnErrorExit, cancellationToken: cancellationToken);
             MemoryStream outputBuffer = new();
             MemoryStream errorBuffer = new();
-            var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
-            var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
+            Task outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer, cancellationToken);
+            Task errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer, cancellationToken);
 
             if (writeInput is not null)
             {
@@ -324,10 +326,12 @@ namespace GitCommands
 #endif
 
             // Wait for the process to exit (or be cancelled) and for the output
-            Task<int> exitTask = process.WaitForExitAsync(cancellationToken);
+            int exitCode;
             try
             {
-                await Task.WhenAll(outputTask, errorTask, exitTask);
+                exitCode = await process.WaitForExitAsync(cancellationToken);
+                await Task.WhenAll(outputTask, errorTask);
+                cancellationToken.ThrowIfCancellationRequested();
             }
             catch (ExternalOperationException ex)
             {
@@ -349,9 +353,8 @@ namespace GitCommands
                 throw;
             }
 
-            var output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
-            var error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
-            int exitCode = await exitTask;
+            string output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
+            string error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
 
             if (cache is not null && exitCode == 0)
             {
