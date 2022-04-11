@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 
@@ -69,10 +68,12 @@ namespace GitExtUtils
         /// <param name="args">The arguments to add to this builder.</param>
         public void AddRange(IEnumerable<string> args)
         {
-            args = args.Where(a => !string.IsNullOrEmpty(a));
             foreach (string s in args)
             {
-                Add(s);
+                if (!string.IsNullOrEmpty(s))
+                {
+                    Add(s);
+                }
             }
         }
 
