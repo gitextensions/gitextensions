@@ -1522,14 +1522,13 @@ namespace GitCommands
                 }
             }
 
-            bool remoteJobs = string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("fetch.parallel"));
-            bool submoduleJobs = string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchJobs"));
+            bool jobsConfig = string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("fetch.parallel"))
+                && string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchJobs"));
 
             // TODO return ArgumentBuilder and add special case ArgumentBuilder.Add(ArgumentBuilder childBuilder)
             return new ArgumentBuilder
             {
-                { remoteJobs && string.IsNullOrWhiteSpace(branchArguments), "--multiple" },
-                { remoteJobs && submoduleJobs, "--jobs=0" },
+                { jobsConfig, "--jobs=0" },
                 remote.ToPosixPath()?.Trim().Quote(),
                 branchArguments,
                 { fetchTags == true, "--tags" },

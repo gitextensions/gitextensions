@@ -118,42 +118,42 @@ namespace GitCommandsTests
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags",
+                    "fetch --progress --jobs=0 \"remote\" +remotebranch:refs/heads/localbranch --no-tags",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch").Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --tags",
+                    "fetch --progress --jobs=0 \"remote\" +remotebranch:refs/heads/localbranch --tags",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", true).Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch",
+                    "fetch --progress --jobs=0 \"remote\" +remotebranch:refs/heads/localbranch",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", null).Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --unshallow",
+                    "fetch --progress --jobs=0 \"remote\" +remotebranch:refs/heads/localbranch --no-tags --unshallow",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", isUnshallow: true).Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force",
+                    "fetch --progress --jobs=0 \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true).Arguments);
             }
 
             using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
             {
                 Assert.AreEqual(
-                    "fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force --prune-tags",
+                    "fetch --progress --jobs=0 \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force --prune-tags",
                     _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true, pruneRemoteBranchesAndTags: true).Arguments);
             }
         }
