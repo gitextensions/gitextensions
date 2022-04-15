@@ -144,15 +144,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return true;
             }
 
-            if (revision.IsArtificial)
+            ArtificialCommitChangeCount changeCount = _grid.GetChangeCount(revision.ObjectId);
+            if (changeCount is not null && AppSettings.ShowGitStatusForArtificialCommits)
             {
-                var stats = _grid.GetChangeCount(revision.ObjectId);
-
-                if (stats is not null)
-                {
-                    toolTip = _toolTipBuilder.Append(stats.GetSummary()).ToString();
-                    return true;
-                }
+                toolTip = _toolTipBuilder.Append(changeCount.GetSummary()).ToString();
+                return true;
             }
 
             return base.TryGetToolTip(e, revision, out toolTip);
@@ -187,14 +183,68 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             offset = baseOffset + max + DpiUtil.Scale(6);
 
             // Summary of changes
-            var changes = _grid.GetChangeCount(revision.ObjectId);
-            if (changes is not null)
+            ArtificialCommitChangeCount changeCount = _grid.GetChangeCount(revision.ObjectId);
+            if (changeCount is null || !AppSettings.ShowGitStatusForArtificialCommits)
             {
-                DrawArtificialCount(e, changes.Changed, Images.FileStatusModified, style, messageBounds, ref offset);
-                DrawArtificialCount(e, changes.New, Images.FileStatusAdded, style, messageBounds, ref offset);
-                DrawArtificialCount(e, changes.Deleted, Images.FileStatusRemoved, style, messageBounds, ref offset);
-                DrawArtificialCount(e, changes.SubmodulesChanged, Images.SubmoduleRevisionDown, style, messageBounds, ref offset);
-                DrawArtificialCount(e, changes.SubmodulesDirty, Images.SubmoduleDirty, style, messageBounds, ref offset);
+                return;
+            }
+
+            if (changeCount.DataValid)
+            {
+                if (changeCount.HasChanges)
+                {
+                    DrawArtificialCount(_grid, e, changeCount.Changed, Images.FileStatusModified, style, messageBounds, ref offset);
+                    DrawArtificialCount(_grid, e, changeCount.New, Images.FileStatusAdded, style, messageBounds, ref offset);
+                    DrawArtificialCount(_grid, e, changeCount.Deleted, Images.FileStatusRemoved, style, messageBounds, ref offset);
+                    DrawArtificialCount(_grid, e, changeCount.SubmodulesChanged, Images.SubmoduleRevisionDown, style, messageBounds, ref offset);
+                    DrawArtificialCount(_grid, e, changeCount.SubmodulesDirty, Images.SubmoduleDirty, style, messageBounds, ref offset);
+                }
+                else
+                {
+                    DrawArtificialCount(_grid, e, items: null, Images.RepoStateClean, style, messageBounds, ref offset);
+                }
+            }
+            else
+            {
+                DrawArtificialCount(_grid, e, items: null, Images.RepoStateUnknown, style, messageBounds, ref offset);
+            }
+
+            return;
+
+            static void DrawArtificialCount(
+                RevisionGridControl grid,
+                DataGridViewCellPaintingEventArgs e,
+                IReadOnlyList<GitItemStatus>? items,
+                Image icon,
+                in CellStyle style,
+                Rectangle messageBounds,
+                ref int offset)
+            {
+                if (items is not null && items.Count == 0)
+                {
+                    return;
+                }
+
+                var imageVerticalPadding = DpiUtil.Scale(6);
+                var textHorizontalPadding = DpiUtil.Scale(4);
+                var imageSize = e.CellBounds.Height - imageVerticalPadding - imageVerticalPadding;
+                Rectangle imageRect = new(
+                    messageBounds.Left + offset,
+                    e.CellBounds.Top + imageVerticalPadding,
+                    imageSize,
+                    imageSize);
+
+                var container = e.Graphics.BeginContainer();
+                e.Graphics.DrawImage(icon, imageRect);
+                e.Graphics.EndContainer(container);
+                offset += imageSize + textHorizontalPadding;
+
+                var text = items?.Count.ToString() ?? "";
+                var bounds = messageBounds.ReduceLeft(offset);
+                var textWidth = Math.Max(
+                    grid.DrawColumnText(e, text, style.NormalFont, style.ForeColor, bounds),
+                    TextRenderer.MeasureText("88", style.NormalFont).Width);
+                offset += textWidth + textHorizontalPadding;
             }
         }
 
@@ -344,41 +394,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 e.Graphics.DrawImage(image, x, y);
                 offset += image.Width + DpiUtil.Scale(4);
             }
-        }
-
-        private void DrawArtificialCount(
-            DataGridViewCellPaintingEventArgs e,
-            IReadOnlyList<GitItemStatus>? items,
-            Image icon,
-            in CellStyle style,
-            Rectangle messageBounds,
-            ref int offset)
-        {
-            if (items is null || items.Count == 0)
-            {
-                return;
-            }
-
-            var imageVerticalPadding = DpiUtil.Scale(6);
-            var textHorizontalPadding = DpiUtil.Scale(4);
-            var imageSize = e.CellBounds.Height - imageVerticalPadding - imageVerticalPadding;
-            Rectangle imageRect = new(
-                messageBounds.Left + offset,
-                e.CellBounds.Top + imageVerticalPadding,
-                imageSize,
-                imageSize);
-
-            var container = e.Graphics.BeginContainer();
-            e.Graphics.DrawImage(icon, imageRect);
-            e.Graphics.EndContainer(container);
-            offset += imageSize + textHorizontalPadding;
-
-            var text = items.Count.ToString();
-            var bounds = messageBounds.ReduceLeft(offset);
-            var textWidth = Math.Max(
-                _grid.DrawColumnText(e, text, style.NormalFont, style.ForeColor, bounds),
-                TextRenderer.MeasureText("88", style.NormalFont).Width);
-            offset += textWidth + textHorizontalPadding;
         }
 
         private void DrawCommitMessage(

@@ -2176,6 +2176,11 @@ namespace GitUI
 
         #region Artificial commit change counters
 
+        /// <summary>
+        /// Gets the counter for artificial changes.
+        /// </summary>
+        /// <param name="objectId">The commit for which to get the count.</param>
+        /// <returns>The count object if the commit is official and count is enabled.</returns>
         public ArtificialCommitChangeCount? GetChangeCount(ObjectId objectId)
         {
             return objectId == ObjectId.WorkTreeId
@@ -2187,23 +2192,21 @@ namespace GitUI
 
         public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus>? status)
         {
-            status ??= new List<GitItemStatus>();
-
+            // Note that the count is updated also if AppSettings.ShowGitStatusForArtificialCommits is not set
             UpdateChangeCount(ObjectId.WorkTreeId, status);
             UpdateChangeCount(ObjectId.IndexId, status);
 
             _gridView.Invalidate();
             return;
 
-            void UpdateChangeCount(ObjectId objectId, IReadOnlyList<GitItemStatus> status)
+            void UpdateChangeCount(ObjectId objectId, IReadOnlyList<GitItemStatus>? status)
             {
                 Debug.Assert(objectId == ObjectId.WorkTreeId || objectId == ObjectId.IndexId,
                     $"Unexpected Git object id {objectId}");
-                var staged = objectId == ObjectId.WorkTreeId ? StagedStatus.WorkTree : StagedStatus.Index;
-                var items = status.Where(item => item.Staged == staged).ToList();
-
                 var changeCount = GetChangeCount(objectId);
                 Validates.NotNull(changeCount);
+                StagedStatus staged = objectId == ObjectId.WorkTreeId ? StagedStatus.WorkTree : StagedStatus.Index;
+                var items = status?.Where(item => item.Staged == staged).ToList();
                 changeCount.Update(items);
             }
         }
@@ -2308,23 +2311,26 @@ namespace GitUI
 
             ObjectId? GetIdToSelect()
             {
-                // Try the up to 3 next possibilities in the circle: WorkTree -> Index -> Head -> WorkTree.
-                // WorkTree and Index are skipped if and only if we do retrieve the ChangeCount info and HasChanges returns false.
+                // Try up to 3 possibilities in the circle: WorkTree -> Index -> Head -> (WorkTree).
                 ObjectId? idToSelect = LatestSelectedRevision?.ObjectId;
                 for (int i = 0; i < 3; ++i)
                 {
                     idToSelect = GetNextIdToSelect(idToSelect);
-                    if (idToSelect is not null
-                        && (!idToSelect.IsArtificial || !AppSettings.ShowGitStatusForArtificialCommits || GetChangeCount(idToSelect)?.HasChanges == true))
-                    {
-                        if (idToSelect == CurrentCheckout && AppSettings.ShowGitStatusForArtificialCommits && _gridView.GetRevision(idToSelect) is null)
-                        {
-                            // HEAD is not in revision grid (filtered)
-                            return ObjectId.WorkTreeId;
-                        }
+                    if (idToSelect is null
 
-                        return idToSelect;
+                        // WorkTree and Index are skipped if and only if we do retrieve the ChangeCount info (only for artificial) and HasChanges returns false.
+                        || (AppSettings.ShowGitStatusForArtificialCommits && (GetChangeCount(idToSelect)?.HasChanges is false)))
+                    {
+                        continue;
                     }
+
+                    if (idToSelect == CurrentCheckout && AppSettings.RevisionGraphShowArtificialCommits && _gridView.GetRevision(idToSelect) is null)
+                    {
+                        // HEAD is not in revision grid (filtered)
+                        return ObjectId.WorkTreeId;
+                    }
+
+                    return idToSelect;
                 }
 
                 return CurrentCheckout;
