@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Git;
-using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -137,8 +136,8 @@ namespace GitUI.BranchTreePanel
                     return;
                 }
 
-                var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);
-                TreeViewNode.TreeView.SelectedNode = activeBranch?.TreeViewNode;
+                var currentBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsCurrent);
+                TreeViewNode.TreeView.SelectedNode = currentBranch?.TreeViewNode;
             }
         }
     }

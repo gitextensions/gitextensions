@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using GitUI.BranchTreePanel.Interfaces;
+﻿using GitUI.BranchTreePanel.Interfaces;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel.ContextMenu
@@ -8,29 +6,13 @@ namespace GitUI.BranchTreePanel.ContextMenu
     internal class LocalBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
         where TNode : class, INode
     {
-        private static MenuItemKey[] _inactiveBranchFilterKeys =
-                new[]
-                {
-                    MenuItemKey.GitRefCheckout,
-                    MenuItemKey.GitRefMerge,
-                    MenuItemKey.GitRefMerge,
-                    MenuItemKey.GitRefRebase,
-                    MenuItemKey.GitRefReset,
-                    MenuItemKey.GitRefActionsSeparator,
-                    MenuItemKey.Delete
-                };
+        /// <summary>Keys of local branch menu items applying to the currently checked out branch.
+        /// See <see cref="RepoObjectsTree.LocalBranchNode.IsCurrent"/> and <see cref="MenuItemsGenerator{TNode}"/>.</summary>
+        internal static MenuItemKey[] CurrentBranchItemKeys = new[] { MenuItemKey.GitRefCreateBranch, MenuItemKey.Rename };
 
         public LocalBranchMenuItems(IMenuItemFactory menuItemFactory) : base(menuItemFactory)
         {
             new LocalBranchMenuItemsStrings().ApplyTo(Strings);
-        }
-
-        /// <summary>
-        /// Filter menu entries that depend on the branch being active or not.
-        /// </summary>
-        public IEnumerable<ToolStripItemWithKey> GetInactiveBranchItems()
-        {
-            return this.Where(t => _inactiveBranchFilterKeys.Contains(t.Key));
         }
     }
 

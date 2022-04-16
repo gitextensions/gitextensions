@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,7 +14,7 @@ namespace GitUI.BranchTreePanel
 {
     partial class RepoObjectsTree
     {
-        private sealed class Nodes : IEnumerable<Node>
+        internal sealed class Nodes : IEnumerable<Node>
         {
             private readonly List<Node> _nodesList = new();
 
@@ -44,16 +44,19 @@ namespace GitUI.BranchTreePanel
                 _nodesList.Clear();
             }
 
-            public IEnumerator<Node> GetEnumerator() => _nodesList.GetEnumerator();
+            public IEnumerator<Node> GetEnumerator()
+                => _nodesList.GetEnumerator();
 
-            public void InsertNode(int index, Node node) => _nodesList.Insert(index, node);
+            public void InsertNode(int index, Node node)
+                => _nodesList.Insert(index, node);
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+                => GetEnumerator();
 
             /// <summary>
             /// Returns all nodes of a given TNode type using depth-first, pre-order method.
             /// </summary>
-            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node
+            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase
             {
                 foreach (var node in this)
                 {
@@ -77,12 +80,14 @@ namespace GitUI.BranchTreePanel
             internal void FillTreeViewNode(TreeNode treeViewNode)
             {
                 HashSet<Node> prevNodes = new();
+
                 for (var i = 0; i < treeViewNode.Nodes.Count; i++)
                 {
                     prevNodes.Add(Node.GetNode(treeViewNode.Nodes[i]));
                 }
 
                 var oldNodeIdx = 0;
+
                 foreach (var node in this)
                 {
                     TreeNode treeNode;
@@ -91,6 +96,7 @@ namespace GitUI.BranchTreePanel
                     {
                         treeNode = treeViewNode.Nodes[oldNodeIdx];
                         var oldNode = Node.GetNode(treeNode);
+
                         if (!oldNode.Equals(node) && !prevNodes.Contains(node))
                         {
                             treeNode = treeViewNode.Nodes.Insert(oldNodeIdx, string.Empty);
@@ -117,9 +123,8 @@ namespace GitUI.BranchTreePanel
             public Node? LastNode => _nodesList.Count > 0 ? _nodesList[_nodesList.Count - 1] : null;
         }
 
-        private abstract class Tree : IDisposable
+        internal abstract class Tree : NodeBase, IDisposable
         {
-            protected readonly Nodes Nodes;
             private readonly IGitUICommandsSource _uiCommandsSource;
             private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new();
             private bool _firstReloadNodesSinceModuleChanged = true;
@@ -156,7 +161,6 @@ namespace GitUI.BranchTreePanel
                 _reloadCancellationTokenSequence.Dispose();
             }
 
-            public TreeNode TreeViewNode { get; }
             public GitUICommands UICommands => _uiCommandsSource.UICommands;
 
             /// <summary>
@@ -234,17 +238,25 @@ namespace GitUI.BranchTreePanel
 
             protected abstract Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs);
 
-            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : Node
+            public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase
                 => Nodes.DepthEnumerator<TNode>();
+
+            internal IEnumerable<NodeBase> GetNodesAndSelf()
+                => DepthEnumerator<NodeBase>().Prepend(this);
+
+            internal IEnumerable<NodeBase> GetSelectedNodes()
+                => GetNodesAndSelf().Where(node => node.IsSelected);
 
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
             // making sure to disable/enable the control.
-            protected async Task ReloadNodesAsync(Func<CancellationToken, Func<RefsFilter, IReadOnlyList<IGitRef>>, Task<Nodes>> loadNodesTask, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+            protected async Task ReloadNodesAsync(Func<CancellationToken, Func<RefsFilter, IReadOnlyList<IGitRef>>, Task<Nodes>> loadNodesTask,
+                Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
             {
                 var token = _reloadCancellationTokenSequence.Next();
 
                 var treeView = TreeViewNode.TreeView;
+
                 if (treeView is null || !IsAttached)
                 {
                     return;
@@ -255,11 +267,24 @@ namespace GitUI.BranchTreePanel
 
                 await treeView.SwitchToMainThreadAsync(token);
 
+                // remember multi-selected nodes
+                HashSet<int> multiSelected = GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
+
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);
 
+                // re-apply multi-selection
+                if (multiSelected.Count > 0)
+                {
+                    foreach (NodeBase node in GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode())))
+                    {
+                        node.IsSelected = true;
+                    }
+                }
+
                 // Check again after switch to main thread
                 treeView = TreeViewNode.TreeView;
+
                 if (treeView is null || !IsAttached)
                 {
                     return;
@@ -290,9 +315,11 @@ namespace GitUI.BranchTreePanel
                 Nodes.FillTreeViewNode(TreeViewNode);
 
                 var selectedNode = TreeViewNode.TreeView.SelectedNode;
+
                 if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath())
                 {
                     var node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
+
                     if (node is not null)
                     {
                         TreeViewNode.TreeView.SelectedNode = !(node.Tag is BaseBranchNode branchNode) || branchNode.Visible
@@ -339,10 +366,8 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private abstract class Node : INode
+        internal abstract class Node : NodeBase, INode
         {
-            public readonly Nodes Nodes;
-
             protected Tree Tree
             {
                 get
@@ -354,8 +379,6 @@ namespace GitUI.BranchTreePanel
 
             protected GitUICommands UICommands => Tree.UICommands;
 
-            protected GitModule Module => UICommands.Module;
-
             protected Node(Tree? tree)
             {
                 Nodes = new Nodes(tree);
@@ -363,43 +386,25 @@ namespace GitUI.BranchTreePanel
 
             private TreeNode? _treeViewNode;
 
-            public TreeNode TreeViewNode
+            /// <summary>
+            /// The tree node representing this node.
+            /// Note that it may not always be set and which <see cref="Node"/> it represents may change
+            /// because <see cref="Nodes.FillTreeViewNode(TreeNode)"/> recycles <see cref="TreeNode"/>s.
+            /// </summary>
+            protected internal override TreeNode TreeViewNode
             {
                 get
                 {
                     Validates.NotNull(_treeViewNode);
                     return _treeViewNode;
                 }
-
                 set
                 {
                     _treeViewNode = value;
                     _treeViewNode.Tag = this;
-                    _treeViewNode.ContextMenuStrip = GetContextMenuStrip();
                     ApplyText();
                     ApplyStyle();
                 }
-            }
-
-            private static readonly Dictionary<Type, ContextMenuStrip> DefaultContextMenus
-                = new();
-
-            public static void RegisterContextMenu(Type type, ContextMenuStrip menu)
-            {
-                if (DefaultContextMenus.ContainsKey(type))
-                {
-                    // the translation unit test may create the RepoObjectTree multiple times,
-                    // which results in a duplicate key exception.
-                    return;
-                }
-
-                DefaultContextMenus.Add(type, menu);
-            }
-
-            protected virtual ContextMenuStrip? GetContextMenuStrip()
-            {
-                DefaultContextMenus.TryGetValue(GetType(), out var result);
-                return result;
             }
 
             protected IWin32Window? ParentWindow()
@@ -418,43 +423,12 @@ namespace GitUI.BranchTreePanel
                 return DisplayText();
             }
 
-            protected void SetNodeFont(FontStyle style)
-            {
-                if (style == FontStyle.Regular)
-                {
-                    // For regular, set to null to use the NativeTreeView font
-                    if (TreeViewNode.NodeFont is not null)
-                    {
-                        TreeViewNode.NodeFont.Dispose();
-                        TreeViewNode.NodeFont = null;
-                    }
-                }
-                else
-                {
-                    // If current font doesn't have the input style, get rid of it
-                    if (TreeViewNode.NodeFont is not null && !TreeViewNode.NodeFont.Style.HasFlag(style))
-                    {
-                        TreeViewNode.NodeFont.Dispose();
-                        TreeViewNode.NodeFont = null;
-                    }
-
-                    // If non-null, our font is already valid, otherwise create a new one
-                    TreeViewNode.NodeFont ??= new Font(AppSettings.Font, style);
-                }
-            }
-
             protected void ApplyText()
             {
                 Validates.NotNull(_treeViewNode);
 
                 _treeViewNode.Name = NodeName();
                 _treeViewNode.Text = DisplayText();
-            }
-
-            protected virtual void ApplyStyle()
-            {
-                SetNodeFont(FontStyle.Regular);
-                TreeViewNode.ToolTipText = string.Empty;
             }
 
             internal virtual void OnSelected()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -8,6 +9,7 @@ using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
+using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;
@@ -93,23 +95,32 @@ namespace GitExtensions.UITests.CommandsDialogs
         }
 
         [Test]
-        public void RepoObjectTree_should_show_Sort_menu_before_Expand_menus()
+        public void Branch_and_tag_context_menu_should_show_Sort_By_entry()
         {
-            RunRepoObjectsTreeTest(
-                contextMenu =>
-                {
-                    contextMenu.Items.Count.Should().BeGreaterThan(6);
+            RunRepoObjectsTreeTest(contextMenu =>
+            {
+                contextMenu.Items.Count.Should().BeGreaterThan(5);
 
-                    int count = contextMenu.Items.Count;
+                int count = contextMenu.Items.Count;
 
-                    // Assert items from bottom to the top
-                    contextMenu.Items[--count].Text.Should().Be("Collapse");
-                    contextMenu.Items[--count].Text.Should().Be("Expand");
-                    contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();
-                    contextMenu.Items[--count].Text.Should().Be(TranslatedStrings.SortOrder);
-                    contextMenu.Items[--count].Text.Should().Be(TranslatedStrings.SortBy);
-                    contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();
-                });
+                // Assert items from bottom to the top
+                ToolStripItem item = contextMenu.Items[--count];
+                item.Text.Should().Be("Run script");
+                item.Enabled.Should().BeFalse("because this test includes no user scripts");
+
+                contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>()
+                    .Which.Enabled.Should().BeFalse("because this test includes no user scripts");
+
+                item = contextMenu.Items[--count];
+                item.Text.Should().Be(TranslatedStrings.SortOrder);
+                item.Enabled.Should().BeFalse("because sort order in this test is default");
+
+                item = contextMenu.Items[--count];
+                item.Text.Should().Be(TranslatedStrings.SortBy);
+                item.Enabled.Should().BeTrue("because tags and branches are sortable");
+
+                contextMenu.Items[--count].Should().BeOfType<ToolStripSeparator>();
+            });
         }
 
         private void RunRepoObjectsTreeTest(Action<ContextMenuStrip> testDriver)
@@ -122,16 +133,18 @@ namespace GitExtensions.UITests.CommandsDialogs
                     // We are running several tests one after another to speed up the test execution
                     // as we don't need to re-create the host form
 
-                    ContextMenuStrip contextMenu = ta.BranchContextMenu;
-                    ta.OnContextMenuOpening(contextMenu, new CancelEventArgs());
+                    ContextMenuStrip contextMenu = ta.ContextMenu;
+
+                    ta.SelectNode<RepoObjectsTree.LocalBranchNode>(new[] { TranslatedStrings.Branches, "master" });
+                    ta.OpenContextMenu();
                     testDriver(contextMenu);
 
-                    contextMenu = ta.RemoteContextMenu;
-                    ta.OnContextMenuOpening(contextMenu, new CancelEventArgs());
+                    ta.SelectNode<RepoObjectsTree.RemoteBranchNode>(new[] { TranslatedStrings.Remotes, RemoteName, "master" });
+                    ta.OpenContextMenu();
                     testDriver(contextMenu);
 
-                    contextMenu = ta.TagContextMenu;
-                    ta.OnContextMenuOpening(contextMenu, new CancelEventArgs());
+                    ta.SelectNode<RepoObjectsTree.TagNode>(new[] { TranslatedStrings.Tags, "Branch1" });
+                    ta.OpenContextMenu();
                     testDriver(contextMenu);
 
                     return Task.CompletedTask;

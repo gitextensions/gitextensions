@@ -9,30 +9,25 @@ namespace GitUI.BranchTreePanel
     public partial class RepoObjectsTree
     {
         [DebuggerDisplay("(Local) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
-        private sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
+        internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
         {
             public LocalBranchNode(Tree tree, in ObjectId? objectId, string fullPath, bool isCurrent, bool visible)
                 : base(tree, objectId, fullPath, visible, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
             {
-                IsActive = isCurrent;
+                IsCurrent = isCurrent;
             }
 
-            public bool IsActive { get; }
+            /// <summary>Indicates whether this is the currently checked-out branch.</summary>
+            public bool IsCurrent { get; }
 
-            protected override void ApplyStyle()
-            {
-                base.ApplyStyle();
-
-                SetNodeFont(IsActive ? FontStyle.Bold : FontStyle.Regular);
-            }
+            protected override FontStyle GetFontStyle()
+                => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
 
             public override bool Equals(object obj)
-                => base.Equals(obj)
-                    && obj is LocalBranchNode localBranchNode
-                    && IsActive == localBranchNode.IsActive;
+                => base.Equals(obj) && obj is LocalBranchNode;
 
             public override int GetHashCode()
-                => base.GetHashCode() ^ IsActive.GetHashCode();
+                => base.GetHashCode();
 
             internal override void OnDoubleClick()
             {

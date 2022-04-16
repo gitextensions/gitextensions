@@ -16,7 +16,7 @@ namespace GitUI.BranchTreePanel
     partial class RepoObjectsTree
     {
         [DebuggerDisplay("(Tag) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
-        private class TagNode : BaseBranchNode, IGitRefActions, ICanDelete
+        internal sealed class TagNode : BaseBranchNode, IGitRefActions, ICanDelete
         {
             public TagNode(Tree tree, in ObjectId? objectId, string fullPath, bool visible)
                 : base(tree, fullPath, visible)
@@ -124,6 +124,7 @@ namespace GitUI.BranchTreePanel
             {
                 Nodes nodes = new(this);
                 Dictionary<string, BaseBranchNode> pathToNodes = new();
+
                 foreach (IGitRef tag in tags)
                 {
                     token.ThrowIfCancellationRequested();
@@ -131,6 +132,7 @@ namespace GitUI.BranchTreePanel
                     bool isVisible = !IsFiltering.Value || (tag.ObjectId is not null && _refsSource.Contains(tag.ObjectId));
                     TagNode tagNode = new(this, tag.ObjectId, tag.Name, isVisible);
                     var parent = tagNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BasePathNode(tree, parentPath));
+
                     if (parent is not null)
                     {
                         nodes.AddNode(parent);

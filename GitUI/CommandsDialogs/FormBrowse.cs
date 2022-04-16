@@ -319,7 +319,7 @@ namespace GitUI.CommandsDialogs
 
             _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
             toolStripButtonPush.Initialize(_aheadBehindDataProvider);
-            repoObjectsTree.Initialize(_aheadBehindDataProvider, branchFilterAction: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
             revisionDiff.Bind(RevisionGrid, fileTree, RefreshGitStatusMonitor);
             fileTree.Bind(RevisionGrid, RefreshGitStatusMonitor);
             RevisionGrid.ResumeRefreshRevisions();

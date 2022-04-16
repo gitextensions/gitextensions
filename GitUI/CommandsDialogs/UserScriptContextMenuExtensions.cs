@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using GitUI.BranchTreePanel.ContextMenu;
 using GitUI.Hotkey;
 using GitUI.Script;
 using ResourceManager;
@@ -17,10 +18,10 @@ namespace GitUI.CommandsDialogs
 
         /// <summary>
         ///  Adds user scripts to the <paramref name="contextMenu"/>, or under <paramref name="hostMenuItem"/>,
-        ///  if scripts are marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
+        ///  if scripts are not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
         /// </summary>
-        /// <param name="contextMenu">The context menu to add user scripts too.</param>
-        /// <param name="hostMenuItem">The menu item to which to add user scripts marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.</param>
+        /// <param name="contextMenu">The context menu to add user scripts to.</param>
+        /// <param name="hostMenuItem">The menu item user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/> are added to.</param>
         /// <param name="scriptInvoker">The handler that handles user script invocation.</param>
         public static void AddUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem, Action<string> scriptInvoker)
         {
@@ -29,18 +30,15 @@ namespace GitUI.CommandsDialogs
             scriptInvoker = scriptInvoker ?? throw new ArgumentNullException(nameof(scriptInvoker));
 
             RemoveOwnScripts(contextMenu, hostMenuItem);
+            var hostItemIndex = contextMenu.Items.IndexOf(hostMenuItem);
+            var lastScriptItemIndex = hostItemIndex;
 
-            var lastIndex = contextMenu.Items.Count;
-
-            var scripts = ScriptManager.GetScripts()
-                .Where(x => x.Enabled);
-
-            foreach (var script in scripts)
+            foreach (ScriptInfo script in ScriptManager.GetScripts().Where(x => x.Enabled))
             {
                 ToolStripMenuItem item = new()
                 {
                     Text = script.Name,
-                    Name = $"{script.Name}{ScriptNameSuffix}",
+                    Name = script.Name + ScriptNameSuffix,
                     Image = script.GetIcon(),
                     ShortcutKeyDisplayString = Hotkeys.Value?.FirstOrDefault(h => h.Name == script.Name)?.KeyData.ToShortcutKeyDisplayString()
                 };
@@ -48,6 +46,7 @@ namespace GitUI.CommandsDialogs
                 item.Click += (s, e) =>
                 {
                     string? scriptKey = script.Name;
+
                     if (scriptKey is not null)
                     {
                         scriptInvoker(scriptKey);
@@ -56,27 +55,23 @@ namespace GitUI.CommandsDialogs
 
                 if (script.AddToRevisionGridContextMenu)
                 {
-                    contextMenu.Items.Add(item);
+                    // insert items after hostMenuItem
+                    contextMenu.Items.Insert(++lastScriptItemIndex, item);
                 }
                 else
                 {
                     hostMenuItem.DropDown.Items.Add(item);
-                    hostMenuItem.Visible = true;
+                    hostMenuItem.Enable(true);
                 }
-            }
-
-            if (lastIndex != contextMenu.Items.Count)
-            {
-                contextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
             }
         }
 
         /// <summary>
-        ///  Removes user scripts from the <paramref name="contextMenu"/>, or under <paramref name="hostMenuItem"/>,
-        ///  if scripts are marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
+        ///  Removes user scripts from the <paramref name="contextMenu"/>, or from <paramref name="hostMenuItem"/>,
+        ///  if scripts are not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.
         /// </summary>
-        /// <param name="contextMenu">The context menu to add user scripts too.</param>
-        /// <param name="hostMenuItem">The menu item to which to add user scripts marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.</param>
+        /// <param name="contextMenu">The context menu to remove user scripts from.</param>
+        /// <param name="hostMenuItem">The menu item from which to remove user scripts not marked as <see cref="ScriptInfo.AddToRevisionGridContextMenu"/>.</param>
         public static void RemoveUserScripts(this ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem)
         {
             contextMenu = contextMenu ?? throw new ArgumentNullException(nameof(contextMenu));
@@ -88,7 +83,7 @@ namespace GitUI.CommandsDialogs
         private static void RemoveOwnScripts(ContextMenuStrip contextMenu, ToolStripMenuItem hostMenuItem)
         {
             hostMenuItem.DropDown.Items.Clear();
-            hostMenuItem.Visible = false;
+            hostMenuItem.Enable(false);
 
             var list = contextMenu.Items.Cast<ToolStripItem>()
                 .Where(x => x.Name.EndsWith(ScriptNameSuffix))
@@ -96,12 +91,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in list)
             {
-                contextMenu.Items.RemoveByKey(item.Name);
-            }
-
-            if (contextMenu.Items[contextMenu.Items.Count - 1] is ToolStripSeparator)
-            {
-                contextMenu.Items.RemoveAt(contextMenu.Items.Count - 1);
+                contextMenu.Items.Remove(item);
             }
         }
     }

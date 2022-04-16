@@ -12,7 +12,7 @@ namespace GitUI.BranchTreePanel
     public partial class RepoObjectsTree
     {
         [DebuggerDisplay("(Node) FullPath = {FullPath}")]
-        private abstract class BaseBranchNode : Node
+        internal abstract class BaseBranchNode : Node
         {
             protected const char PathSeparator = '/';
 
@@ -55,17 +55,15 @@ namespace GitUI.BranchTreePanel
                 base.ApplyStyle();
 
                 TreeViewNode.ForeColor = Visible && TreeViewNode.TreeView is not null ? TreeViewNode.TreeView.ForeColor : Color.Silver.AdaptTextColor();
-                TreeViewNode.ImageKey =
-                    TreeViewNode.SelectedImageKey = Visible ? null : nameof(Images.EyeClosed);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = Visible ? null : nameof(Images.EyeClosed);
             }
 
-            public override int GetHashCode() => FullPath.GetHashCode() ^ Visible.GetHashCode();
+            public override int GetHashCode() => FullPath.GetHashCode();
 
             public override bool Equals(object obj)
             {
                 return obj is BaseBranchNode other
-                    && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath))
-                    && Visible == other.Visible;
+                    && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
             }
 
             public void UpdateAheadBehind(string aheadBehindData)

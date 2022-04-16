@@ -41,8 +41,10 @@ namespace GitUI.BranchTreePanel
             {
                 base.ApplyStyle();
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.FolderClosed);
-                SetNodeFont(FontStyle.Italic);
             }
+
+            protected override FontStyle GetFontStyle()
+                => base.GetFontStyle() | FontStyle.Italic;
         }
 
         // Node representing a submodule
@@ -56,7 +58,8 @@ namespace GitUI.BranchTreePanel
             public string SubmoduleName { get; }
             public string BranchText { get; }
 
-            public SubmoduleNode(Tree tree, SubmoduleInfo submoduleInfo, bool isCurrent, IReadOnlyList<GitItemStatus>? gitStatus, string localPath, string superPath)
+            public SubmoduleNode(Tree tree, SubmoduleInfo submoduleInfo, bool isCurrent,
+                IReadOnlyList<GitItemStatus>? gitStatus, string localPath, string superPath)
                 : base(tree)
             {
                 Info = submoduleInfo;
@@ -137,15 +140,11 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-
-                if (IsCurrent)
-                {
-                    TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
-                }
-
-                // Note that status is applied also after the tree is created, when status is applied
-                ApplyStatus();
+                ApplyStatus(); // Note that status is applied also after the tree is created, when status is applied
             }
+
+            protected override FontStyle GetFontStyle()
+                => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
 
             private void ApplyStatus()
             {
@@ -250,6 +249,7 @@ namespace GitUI.BranchTreePanel
                 {
                     CancellationTokenSource? cts = null;
                     Task<Nodes>? loadNodesTask = null;
+
                     if (e.StructureUpdated)
                     {
                         _currentNodes = null;
@@ -262,6 +262,7 @@ namespace GitUI.BranchTreePanel
                         Validates.NotNull(e.Info.TopProject);
                         infos[e.Info.TopProject.Path] = e.Info.TopProject;
                         var nodes = _currentNodes.DepthEnumerator<SubmoduleNode>().ToList();
+
                         foreach (var node in nodes)
                         {
                             if (infos.ContainsKey(node.Info.Path))
@@ -311,8 +312,8 @@ namespace GitUI.BranchTreePanel
                     }
 
                     Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
-            }).FileAndForget();
-        }
+                }).FileAndForget();
+            }
 
             private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)
             {
@@ -329,6 +330,7 @@ namespace GitUI.BranchTreePanel
                 if (TreeViewNode.TreeView is not null)
                 {
                     TreeViewNode.TreeView.BeginUpdate();
+
                     try
                     {
                         loadedNodes.DepthEnumerator<SubmoduleNode>().ForEach(node => node.RefreshDetails());
@@ -400,6 +402,7 @@ namespace GitUI.BranchTreePanel
 
                 // Add current and parent module paths
                 var parentModule = threadModule;
+
                 while (parentModule is not null)
                 {
                     modulePaths.Add(parentModule.WorkingDir);
@@ -412,6 +415,7 @@ namespace GitUI.BranchTreePanel
                 foreach (var submoduleInfo in result.AllSubmodules)
                 {
                     string? superPath = GetSubmoduleSuperPath(submoduleInfo.Path);
+
                     if (!Directory.Exists(superPath))
                     {
                         MessageBoxes.SubmoduleDirectoryDoesNotExist(owner: null, superPath ?? submoduleInfo.Path, submoduleInfo.Text);
@@ -421,6 +425,7 @@ namespace GitUI.BranchTreePanel
                     string localPath = Path.GetDirectoryName(submoduleInfo.Path.Substring(superPath.Length)).ToPosixPath();
 
                     var isCurrent = submoduleInfo.Bold;
+
                     nodes.Add(new SubmoduleNode(this,
                         submoduleInfo,
                         isCurrent,
@@ -488,9 +493,11 @@ namespace GitUI.BranchTreePanel
                 foreach (var node in submoduleNodes)
                 {
                     var parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
+
                     for (int i = 0; i < parts.Length - 1; ++i)
                     {
                         var path = string.Join("/", parts.Take(i + 1));
+
                         if (!pathToNodes.ContainsKey(path))
                         {
                             pathToNodes[path] = new SubmoduleFolderNode(this, parts[i]);
@@ -505,6 +512,7 @@ namespace GitUI.BranchTreePanel
                 {
                     Node parentNode = rootNode;
                     var parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
+
                     for (int i = 0; i < parts.Length; ++i)
                     {
                         var path = string.Join("/", parts.Take(i + 1));
@@ -563,6 +571,7 @@ namespace GitUI.BranchTreePanel
             public void ResetSubmodule(IWin32Window owner, SubmoduleNode node)
             {
                 FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(owner, true, true);
+
                 if (resetType == FormResetChanges.ActionEnum.Cancel)
                 {
                     return;

@@ -11,7 +11,7 @@ namespace GitUI.BranchTreePanel
     public partial class RepoObjectsTree
     {
         [DebuggerDisplay("(Remote) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
-        private sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICanDelete
+        internal sealed class RemoteBranchNode : BaseBranchLeafNode, IGitRefActions, ICanDelete
         {
             public RemoteBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool visible)
                 : base(tree, objectId, fullPath, visible, nameof(Images.BranchRemote), nameof(Images.BranchRemoteMerged))

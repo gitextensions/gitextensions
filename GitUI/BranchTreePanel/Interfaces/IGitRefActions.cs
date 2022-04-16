@@ -2,6 +2,8 @@
 {
     internal interface IGitRefActions
     {
+        string FullPath { get; }
+
         bool Checkout();
 
         bool CreateBranch();
