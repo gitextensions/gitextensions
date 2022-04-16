@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -33,6 +34,10 @@ namespace GitUI.CommandsDialogs
             : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
+
+            var w = Width;
+            var h = MainPanel.PreferredSize.Height + ControlsPanel.PreferredSize.Height + (Size.Height - ClientSize.Height);
+            MinimumSize = new Size(w, h);
 
             InitializeComplete();
 
