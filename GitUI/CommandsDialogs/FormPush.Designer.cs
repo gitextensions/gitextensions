@@ -213,7 +213,6 @@
             // labelTo
             // 
             this.labelTo.AutoSize = true;
-            this.labelTo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelTo.Location = new System.Drawing.Point(200, 0);
             this.labelTo.Name = "labelTo";
             this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
