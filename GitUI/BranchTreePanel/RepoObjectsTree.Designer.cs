@@ -130,7 +130,6 @@ namespace GitUI.BranchTreePanel
             // 
             // menuMain
             // 
-            this.menuMain.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyContextMenuItem,
             this.filterForSelectedRefsMenuItem,
@@ -173,7 +172,7 @@ namespace GitUI.BranchTreePanel
             this.toolStripSeparator1,
             this.runScriptToolStripMenuItem});
             this.menuMain.Name = "menuMain";
-            this.menuMain.Size = new System.Drawing.Size(267, 912);
+            this.menuMain.Size = new System.Drawing.Size(263, 848);
             this.menuMain.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             this.menuMain.Opened += new System.EventHandler(this.contextMenu_Opened);
             // 
@@ -498,7 +497,6 @@ namespace GitUI.BranchTreePanel
             this.leftPanelToolStrip.ClickThrough = true;
             this.leftPanelToolStrip.DrawBorder = false;
             this.leftPanelToolStrip.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.leftPanelToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.leftPanelToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbCollapseAll,
             this.tsbShowBranches,
