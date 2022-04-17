@@ -140,9 +140,11 @@ namespace GitUI.CommitInfo
 
             commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
 
-            // at this point rtbxCommitMessage.Bounds = {X = 8 Y = 8 Width = 440 Height = 0}
-            // and with Height=0 we won't be receiving any ContentsResizedEvents
-            rtbxCommitMessage.Height = 1;
+            // This issue surfaces at 150% scale factor.
+            // At this point rtbxCommitMessage.Bounds = {X = 8 Y = 8 Width = 440 Height = 0}
+            // and with Height=0 we won't be receiving any ContentsResizedEvents.
+            // To workaround the zero-height - force the min size.
+            rtbxCommitMessage.MinimumSize = new(1, 1);
         }
 
         /// <summary>
