@@ -52,13 +52,6 @@ namespace GitUI.HelperDialogs
                 KeepDialogOpen.Hide();
             }
 
-            // work-around the designer bug that can't add controls to FlowLayoutPanel
-            ControlsPanel.Controls.Add(Abort);
-            ControlsPanel.Controls.Add(Ok);
-            ControlsPanel.Controls.Add(KeepDialogOpen);
-            AcceptButton = Ok;
-            CancelButton = Abort;
-
             Controls.SetChildIndex(ProgressBar, 1);
             ProgressBar.Dock = DockStyle.Bottom;
 

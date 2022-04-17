@@ -33,6 +33,7 @@
             this.Branches = new GitUI.BranchComboBox();
             this.tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
             this.MainPanel.SuspendLayout();
+            this.ControlsPanel.SuspendLayout();
             this.tlpnlMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -40,7 +41,13 @@
             // 
             this.MainPanel.Controls.Add(this.tlpnlMain);
             this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
-            this.MainPanel.Size = new System.Drawing.Size(394, 58);
+            this.MainPanel.Size = new System.Drawing.Size(394, 49);
+            // 
+            // ControlsPanel
+            // 
+            this.ControlsPanel.Controls.Add(this.Delete);
+            this.ControlsPanel.Location = new System.Drawing.Point(0, 49);
+            this.ControlsPanel.Size = new System.Drawing.Size(394, 41);
             // 
             // Delete
             // 
@@ -48,10 +55,10 @@
             this.Delete.AutoSize = true;
             this.Delete.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Delete.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Delete.Location = new System.Drawing.Point(310, 65);
+            this.Delete.Location = new System.Drawing.Point(306, 8);
             this.Delete.MinimumSize = new System.Drawing.Size(75, 23);
             this.Delete.Name = "Delete";
-            this.Delete.Size = new System.Drawing.Size(75, 23);
+            this.Delete.Size = new System.Drawing.Size(75, 25);
             this.Delete.TabIndex = 2;
             this.Delete.Text = "&Delete";
             this.Delete.UseVisualStyleBackColor = true;
@@ -64,7 +71,7 @@
             this.labelSelectBranches.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelSelectBranches.Location = new System.Drawing.Point(3, 0);
             this.labelSelectBranches.Name = "labelSelectBranches";
-            this.labelSelectBranches.Size = new System.Drawing.Size(84, 28);
+            this.labelSelectBranches.Size = new System.Drawing.Size(89, 28);
             this.labelSelectBranches.TabIndex = 0;
             this.labelSelectBranches.Text = "Select &branches";
             this.labelSelectBranches.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -73,7 +80,7 @@
             // 
             this.Branches.BranchesToSelect = null;
             this.Branches.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Branches.Location = new System.Drawing.Point(90, 0);
+            this.Branches.Location = new System.Drawing.Point(95, 0);
             this.Branches.Margin = new System.Windows.Forms.Padding(0);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(286, 28);
@@ -93,7 +100,7 @@
             this.tlpnlMain.RowCount = 2;
             this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlMain.Size = new System.Drawing.Size(376, 40);
+            this.tlpnlMain.Size = new System.Drawing.Size(376, 31);
             this.tlpnlMain.TabIndex = 0;
             // 
             // FormDeleteBranch
@@ -102,7 +109,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(394, 90);
-            this.Controls.Add(this.Delete);
             this.HelpButton = true;
             this.ManualSectionAnchorName = "delete-branch";
             this.ManualSectionSubfolder = "branches";
@@ -112,9 +118,9 @@
             this.Name = "FormDeleteBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete branch";
-            this.Controls.SetChildIndex(this.Delete, 0);
-            this.Controls.SetChildIndex(this.MainPanel, 0);
             this.MainPanel.ResumeLayout(false);
+            this.ControlsPanel.ResumeLayout(false);
+            this.ControlsPanel.PerformLayout();
             this.tlpnlMain.ResumeLayout(false);
             this.tlpnlMain.PerformLayout();
             this.ResumeLayout(false);

@@ -38,10 +38,6 @@ namespace GitUI.CommandsDialogs
             _defaultRemoteBranch = defaultRemoteBranch;
             InitializeComponent();
 
-            // work-around the designer bug that can't add controls to FlowLayoutPanel
-            ControlsPanel.Controls.Add(Delete);
-            AcceptButton = Delete;
-
             InitializeComplete();
         }
 

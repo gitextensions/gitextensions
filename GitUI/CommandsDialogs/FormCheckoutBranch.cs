@@ -57,9 +57,6 @@ namespace GitUI.CommandsDialogs
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitializeComponent();
-
-            // work-around the designer bug that can't add controls to FlowLayoutPanel
-            ControlsPanel.Controls.Add(Ok);
         }
 
         public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId>? containRevisions = null)
@@ -69,10 +66,6 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
             _rbResetBranchDefaultText = rbResetBranch.Text;
-
-            // work-around the designer bug that can't add controls to FlowLayoutPanel
-            ControlsPanel.Controls.Add(Ok);
-            AcceptButton = Ok;
 
             ApplyLayout();
             Shown += FormCheckoutBranch_Shown;

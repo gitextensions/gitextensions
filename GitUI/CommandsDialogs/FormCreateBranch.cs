@@ -34,10 +34,6 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
 
-            // work-around the designer bug that can't add controls to FlowLayoutPanel
-            ControlsPanel.Controls.Add(Ok);
-            AcceptButton = Ok;
-
             InitializeComplete();
 
             groupBox1.AutoSize = true;
