@@ -30,10 +30,6 @@ namespace GitUI.CommandsDialogs
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
 
-            // work-around the designer bug that can't add controls to FlowLayoutPanel
-            ControlsPanel.Controls.Add(Init);
-            AcceptButton = Init;
-
             InitializeComplete();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>

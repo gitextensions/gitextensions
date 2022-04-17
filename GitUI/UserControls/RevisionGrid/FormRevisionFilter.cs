@@ -31,10 +31,6 @@ namespace GitUI.UserControls.RevisionGrid
             _NO_TRANSLATE_lblSimplifyByDecoration.Text = TranslatedStrings.SimplifyByDecoration;
 
             _filterInfo = filterInfo;
-
-            // work-around the designer bug that can't add controls to FlowLayoutPanel
-            ControlsPanel.Controls.Add(Ok);
-            AcceptButton = Ok;
         }
 
         protected override void OnLoad(EventArgs e)

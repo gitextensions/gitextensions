@@ -51,11 +51,6 @@ namespace GitUI.CommandsDialogs
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
 
-            // work-around the designer bug that can't add controls to FlowLayoutPanel
-            ControlsPanel.Controls.Add(Ok);
-            ControlsPanel.Controls.Add(LoadSSHKey);
-            AcceptButton = Ok;
-
             InitializeComplete();
             _openedFromProtocolHandler = openedFromProtocolHandler;
             _url = url;

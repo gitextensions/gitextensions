@@ -60,20 +60,26 @@
             this.SimplifyByDecorationCheck = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_lblSimplifyByDecoration = new System.Windows.Forms.Label();
             this.MainPanel.SuspendLayout();
+            this.ControlsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitsLimit)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(this.Ok);
             this.MainPanel.Controls.Add(this.tableLayoutPanel1);
-            this.MainPanel.Size = new System.Drawing.Size(408, 343);
+            this.MainPanel.Size = new System.Drawing.Size(408, 336);
+            // 
+            // ControlsPanel
+            // 
+            this.ControlsPanel.Controls.Add(this.Ok);
+            this.ControlsPanel.Location = new System.Drawing.Point(0, 336);
+            this.ControlsPanel.Size = new System.Drawing.Size(408, 39);
             // 
             // Ok
             // 
             this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(3, 3);
+            this.Ok.Location = new System.Drawing.Point(320, 8);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.Text = "OK";
@@ -254,7 +260,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(384, 319);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(384, 312);
             // 
             // SinceCheck
             // 
@@ -398,7 +404,7 @@
             this.SimplifyByDecorationCheck.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SimplifyByDecorationCheck.Location = new System.Drawing.Point(76, 280);
             this.SimplifyByDecorationCheck.Name = "SimplifyByDecorationCheck";
-            this.SimplifyByDecorationCheck.Size = new System.Drawing.Size(285, 19);
+            this.SimplifyByDecorationCheck.Size = new System.Drawing.Size(14, 14);
             this.SimplifyByDecorationCheck.UseVisualStyleBackColor = true;
             this.SimplifyByDecorationCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
@@ -406,9 +412,10 @@
             // 
             this._NO_TRANSLATE_lblSimplifyByDecoration.AutoSize = true;
             this._NO_TRANSLATE_lblSimplifyByDecoration.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._NO_TRANSLATE_lblSimplifyByDecoration.Location = new System.Drawing.Point(96, 280);
+            this._NO_TRANSLATE_lblSimplifyByDecoration.Location = new System.Drawing.Point(96, 277);
             this._NO_TRANSLATE_lblSimplifyByDecoration.Name = "_NO_TRANSLATE_lblSimplifyByDecoration";
-            this._NO_TRANSLATE_lblSimplifyByDecoration.Size = new System.Drawing.Size(67, 29);
+            this._NO_TRANSLATE_lblSimplifyByDecoration.Size = new System.Drawing.Size(285, 20);
+            this._NO_TRANSLATE_lblSimplifyByDecoration.TabIndex = 28;
             this._NO_TRANSLATE_lblSimplifyByDecoration.Text = "Simplify by decoration";
             this._NO_TRANSLATE_lblSimplifyByDecoration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -424,6 +431,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Filter";
             this.MainPanel.ResumeLayout(false);
+            this.ControlsPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_CommitsLimit)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

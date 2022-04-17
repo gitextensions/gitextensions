@@ -21,25 +21,31 @@
             this.Abort = new System.Windows.Forms.Button();
             this.pnlOutput = new System.Windows.Forms.Panel();
             this.MainPanel.SuspendLayout();
+            this.ControlsPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainPanel
             // 
-            this.MainPanel.Controls.Add(this.KeepDialogOpen);
-            this.MainPanel.Controls.Add(this.Abort);
-            this.MainPanel.Controls.Add(this.Ok);
             this.MainPanel.Controls.Add(this.pnlOutput);
             this.MainPanel.Padding = new System.Windows.Forms.Padding(0);
-            this.MainPanel.Size = new System.Drawing.Size(549, 253);
+            this.MainPanel.Size = new System.Drawing.Size(549, 246);
+            // 
+            // ControlsPanel
+            // 
+            this.ControlsPanel.Controls.Add(this.Abort);
+            this.ControlsPanel.Controls.Add(this.Ok);
+            this.ControlsPanel.Controls.Add(this.KeepDialogOpen);
+            this.ControlsPanel.Location = new System.Drawing.Point(0, 249);
+            this.ControlsPanel.Size = new System.Drawing.Size(549, 39);
             // 
             // Ok
             // 
             this.Ok.AutoSize = true;
             this.Ok.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Ok.Location = new System.Drawing.Point(314, 234);
+            this.Ok.Location = new System.Drawing.Point(380, 8);
             this.Ok.MinimumSize = new System.Drawing.Size(75, 23);
             this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 24);
+            this.Ok.Size = new System.Drawing.Size(75, 23);
             this.Ok.TabIndex = 0;
             this.Ok.Text = "OK";
             this.Ok.UseCompatibleTextRendering = true;
@@ -49,7 +55,7 @@
             // ProgressBar
             // 
             this.ProgressBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.ProgressBar.Location = new System.Drawing.Point(0, 253);
+            this.ProgressBar.Location = new System.Drawing.Point(0, 246);
             this.ProgressBar.Margin = new System.Windows.Forms.Padding(0);
             this.ProgressBar.MarqueeAnimationSpeed = 1;
             this.ProgressBar.Name = "ProgressBar";
@@ -61,9 +67,9 @@
             // KeepDialogOpen
             // 
             this.KeepDialogOpen.AutoSize = true;
-            this.KeepDialogOpen.Location = new System.Drawing.Point(178, 228);
+            this.KeepDialogOpen.Location = new System.Drawing.Point(254, 8);
             this.KeepDialogOpen.Name = "KeepDialogOpen";
-            this.KeepDialogOpen.Size = new System.Drawing.Size(111, 22);
+            this.KeepDialogOpen.Size = new System.Drawing.Size(120, 22);
             this.KeepDialogOpen.TabIndex = 2;
             this.KeepDialogOpen.Text = "Keep dialog open";
             this.KeepDialogOpen.UseCompatibleTextRendering = true;
@@ -75,10 +81,10 @@
             this.Abort.AutoSize = true;
             this.Abort.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Abort.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Abort.Location = new System.Drawing.Point(444, 234);
+            this.Abort.Location = new System.Drawing.Point(461, 8);
             this.Abort.MinimumSize = new System.Drawing.Size(75, 23);
             this.Abort.Name = "Abort";
-            this.Abort.Size = new System.Drawing.Size(75, 24);
+            this.Abort.Size = new System.Drawing.Size(75, 23);
             this.Abort.TabIndex = 1;
             this.Abort.Text = "Abort";
             this.Abort.UseCompatibleTextRendering = true;
@@ -91,7 +97,7 @@
             this.pnlOutput.Location = new System.Drawing.Point(0, 0);
             this.pnlOutput.Name = "pnlOutput";
             this.pnlOutput.Padding = new System.Windows.Forms.Padding(12);
-            this.pnlOutput.Size = new System.Drawing.Size(549, 253);
+            this.pnlOutput.Size = new System.Drawing.Size(549, 246);
             this.pnlOutput.TabIndex = 0;
             // 
             // FormStatus
@@ -108,10 +114,12 @@
             this.Name = "FormStatus";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Process";
+            this.Controls.SetChildIndex(this.ControlsPanel, 0);
             this.Controls.SetChildIndex(this.ProgressBar, 0);
             this.Controls.SetChildIndex(this.MainPanel, 0);
             this.MainPanel.ResumeLayout(false);
-            this.MainPanel.PerformLayout();
+            this.ControlsPanel.ResumeLayout(false);
+            this.ControlsPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
