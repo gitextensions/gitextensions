@@ -1,0 +1,882 @@
+[
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "PullRequestReviewResponder",
+    "version": "1.0",
+    "config": {
+      "taskName": "Add needs author feedback label to pull requests when changes are requested",
+      "conditions": {
+        "operator": "and",
+        "operands": [
+          {
+            "name": "isAction",
+            "parameters": {
+              "action": "submitted"
+            }
+          },
+          {
+            "name": "isReviewState",
+            "parameters": {
+              "state": "changes_requested"
+            }
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "addLabel",
+          "parameters": {
+            "label": ":mailbox_with_no_mail: needs: author feedback"
+          }
+        }
+      ],
+      "eventType": "pull_request",
+      "eventNames": [
+        "pull_request_review"
+      ]
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "PullRequestResponder",
+    "version": "1.0",
+    "config": {
+      "taskName": "Remove needs author feedback label when the author responds to a pull request",
+      "conditions": {
+        "operator": "and",
+        "operands": [
+          {
+            "name": "isActivitySender",
+            "parameters": {
+              "user": {
+                "type": "author"
+              }
+            }
+          },
+          {
+            "operator": "not",
+            "operands": [
+              {
+                "name": "isAction",
+                "parameters": {
+                  "action": "closed"
+                }
+              }
+            ]
+          },
+          {
+            "name": "hasLabel",
+            "parameters": {
+              "label": ":mailbox_with_no_mail: needs: author feedback"
+            }
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "removeLabel",
+          "parameters": {
+            "label": ":mailbox_with_no_mail: needs: author feedback"
+          }
+        }
+      ],
+      "eventType": "pull_request",
+      "eventNames": [
+        "pull_request",
+        "issues",
+        "project_card"
+      ]
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "PullRequestCommentResponder",
+    "version": "1.0",
+    "config": {
+      "taskName": "Remove needs author feedback label when the author comments on a pull request",
+      "conditions": {
+        "operator": "and",
+        "operands": [
+          {
+            "name": "isActivitySender",
+            "parameters": {
+              "user": {
+                "type": "author"
+              }
+            }
+          },
+          {
+            "name": "hasLabel",
+            "parameters": {
+              "label": ":mailbox_with_no_mail: needs: author feedback"
+            }
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "removeLabel",
+          "parameters": {
+            "label": ":mailbox_with_no_mail: needs: author feedback"
+          }
+        }
+      ],
+      "eventType": "pull_request",
+      "eventNames": [
+        "issue_comment"
+      ]
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "PullRequestReviewResponder",
+    "version": "1.0",
+    "config": {
+      "taskName": "Remove needs author feedback label when the author responds to a pull request review comment",
+      "conditions": {
+        "operator": "and",
+        "operands": [
+          {
+            "name": "isActivitySender",
+            "parameters": {
+              "user": {
+                "type": "author"
+              }
+            }
+          },
+          {
+            "name": "hasLabel",
+            "parameters": {
+              "label": ":mailbox_with_no_mail: needs: author feedback"
+            }
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "removeLabel",
+          "parameters": {
+            "label": ":mailbox_with_no_mail: needs: author feedback"
+          }
+        }
+      ],
+      "eventType": "pull_request",
+      "eventNames": [
+        "pull_request_review"
+      ]
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "PullRequestResponder",
+    "version": "1.0",
+    "config": {
+      "taskName": "Remove no recent activity label from pull requests",
+      "conditions": {
+        "operator": "and",
+        "operands": [
+          {
+            "operator": "not",
+            "operands": [
+              {
+                "name": "isAction",
+                "parameters": {
+                  "action": "closed"
+                }
+              }
+            ]
+          },
+          {
+            "name": "hasLabel",
+            "parameters": {
+              "label": ":zzz: status: no recent activity"
+            }
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "removeLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        }
+      ],
+      "eventType": "pull_request",
+      "eventNames": [
+        "pull_request",
+        "issues",
+        "project_card"
+      ]
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "PullRequestCommentResponder",
+    "version": "1.0",
+    "config": {
+      "taskName": "Remove no recent activity label when a pull request is commented on",
+      "conditions": {
+        "operator": "and",
+        "operands": [
+          {
+            "name": "hasLabel",
+            "parameters": {
+              "label": ":zzz: status: no recent activity"
+            }
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "removeLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        }
+      ],
+      "eventType": "pull_request",
+      "eventNames": [
+        "issue_comment"
+      ]
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "PullRequestReviewResponder",
+    "version": "1.0",
+    "config": {
+      "taskName": "Remove no recent activity label when a pull request is reviewed",
+      "conditions": {
+        "operator": "and",
+        "operands": [
+          {
+            "name": "hasLabel",
+            "parameters": {
+              "label": ":zzz: status: no recent activity"
+            }
+          }
+        ]
+      },
+      "actions": [
+        {
+          "name": "removeLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        }
+      ],
+      "eventType": "pull_request",
+      "eventNames": [
+        "pull_request_review"
+      ]
+    }
+  },
+  {
+    "taskType": "scheduled",
+    "capabilityId": "ScheduledSearch",
+    "subCapability": "ScheduledSearch",
+    "version": "1.1",
+    "config": {
+      "taskName": "Close stale pull requests",
+      "frequency": [
+        {
+          "weekDay": 0,
+          "hours": [
+            7,
+            19
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 1,
+          "hours": [
+            7,
+            19
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 2,
+          "hours": [
+            7,
+            19
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 3,
+          "hours": [
+            7,
+            19
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 4,
+          "hours": [
+            7,
+            19
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 5,
+          "hours": [
+            7,
+            19
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 6,
+          "hours": [
+            7,
+            19
+          ],
+          "timezoneOffset": 10
+        }
+      ],
+      "searchTerms": [
+        {
+          "name": "isPr",
+          "parameters": {}
+        },
+        {
+          "name": "isOpen",
+          "parameters": {}
+        },
+        {
+          "name": "hasLabel",
+          "parameters": {
+            "label": ":mailbox_with_no_mail: needs: author feedback"
+          }
+        },
+        {
+          "name": "hasLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        },
+        {
+          "name": "noActivitySince",
+          "parameters": {
+            "days": 21
+          }
+        }
+      ],
+      "actions": [
+        {
+          "name": "closeIssue",
+          "parameters": {}
+        },
+        {
+          "name": "addLabel",
+          "parameters": {
+            "label": "status: abandoned"
+          }
+        }
+      ]
+    },
+    "disabled": false
+  },
+  {
+    "taskType": "scheduled",
+    "capabilityId": "ScheduledSearch",
+    "subCapability": "ScheduledSearch",
+    "version": "1.1",
+    "config": {
+      "taskName": "Add no recent activity label to pull requests",
+      "frequency": [
+        {
+          "weekDay": 0,
+          "hours": [
+            0,
+            12
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 1,
+          "hours": [
+            0,
+            12
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 2,
+          "hours": [
+            0,
+            12
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 3,
+          "hours": [
+            0,
+            12
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 4,
+          "hours": [
+            0,
+            12
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 5,
+          "hours": [
+            0,
+            12
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 6,
+          "hours": [
+            0,
+            12
+          ],
+          "timezoneOffset": 10
+        }
+      ],
+      "searchTerms": [
+        {
+          "name": "isPr",
+          "parameters": {}
+        },
+        {
+          "name": "isOpen",
+          "parameters": {}
+        },
+        {
+          "name": "hasLabel",
+          "parameters": {
+            "label": ":mailbox_with_no_mail: needs: author feedback"
+          }
+        },
+        {
+          "name": "noActivitySince",
+          "parameters": {
+            "days": 30
+          }
+        },
+        {
+          "name": "noLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        }
+      ],
+      "actions": [
+        {
+          "name": "addLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        },
+        {
+          "name": "addReply",
+          "parameters": {
+            "comment": "This pull request has been automatically marked as stale because it has been marked as requiring author feedback but has not had any activity for **30 days**. It will be closed if no further activity occurs."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "AutoMerge",
+    "subCapability": "AutoMerge",
+    "version": "1.0",
+    "config": {
+      "taskName": "Automatically merge pull requests",
+      "label": "status: auto merge",
+      "silentMode": false,
+      "minMinutesOpen": 480,
+      "mergeType": "squash",
+      "allowAutoMergeInstructionsWithoutLabel": true,
+      "deleteBranches": true,
+      "removeLabelOnPush": true,
+      "requireAllStatuses": true
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "PullRequestResponder",
+    "version": "1.0",
+    "config": {
+      "conditions": {
+        "operator": "and",
+        "operands": [
+          {
+            "name": "prTargetsBranch",
+            "parameters": {
+              "branchName": "master"
+            }
+          },
+          {
+            "operator": "and",
+            "operands": [
+              {
+                "name": "isAction",
+                "parameters": {
+                  "action": "merged"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "eventType": "pull_request",
+      "eventNames": [
+        "pull_request",
+        "issues",
+        "project_card"
+      ],
+      "taskName": "Apply milestone 'vNext' to merged PRs on master branch",
+      "actions": [
+        {
+          "name": "addMilestone",
+          "parameters": {
+            "milestoneName": "vNext"
+          }
+        }
+      ],
+      "dangerZone": {
+        "respondToBotActions": true,
+        "acceptRespondToBotActions": true
+      }
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "InPrLabel",
+    "subCapability": "InPrLabel",
+    "version": "1.0",
+    "config": {
+      "taskName": "In-PR label",
+      "label_inPr": ":construction: status: in progress",
+      "fixedLabelEnabled": false
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "ReleaseAnnouncement",
+    "subCapability": "ReleaseAnnouncement",
+    "version": "1.0",
+    "config": {
+      "taskName": "Release announcement",
+      "prReply": "The fix is included in ${pkgName} ${version}.",
+      "issueReply": "Fixed in ${pkgName} ${version}."
+    }
+  },
+  {
+    "taskType": "scheduled",
+    "capabilityId": "ScheduledSearch",
+    "subCapability": "ScheduledSearch",
+    "version": "1.1",
+    "config": {
+      "frequency": [
+        {
+          "weekDay": 0,
+          "hours": [
+            10,
+            22
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 1,
+          "hours": [
+            10,
+            22
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 2,
+          "hours": [
+            10,
+            22
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 3,
+          "hours": [
+            10,
+            22
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 4,
+          "hours": [
+            10,
+            22
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 5,
+          "hours": [
+            10,
+            22
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 6,
+          "hours": [
+            10,
+            22
+          ],
+          "timezoneOffset": 10
+        }
+      ],
+      "searchTerms": [
+        {
+          "name": "isIssue",
+          "parameters": {}
+        },
+        {
+          "name": "isOpen",
+          "parameters": {}
+        },
+        {
+          "name": "hasLabel",
+          "parameters": {
+            "label": ":mailbox_with_no_mail: needs: author feedback"
+          }
+        },
+        {
+          "name": "hasLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        },
+        {
+          "name": "noActivitySince",
+          "parameters": {
+            "days": 30
+          }
+        }
+      ],
+      "taskName": "Close stale issues",
+      "actions": [
+        {
+          "name": "closeIssue",
+          "parameters": {}
+        }
+      ]
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "IssueCommentResponder",
+    "version": "1.0",
+    "config": {
+      "conditions": {
+        "operator": "and",
+        "operands": [
+          {
+            "name": "isActivitySender",
+            "parameters": {
+              "user": {
+                "type": "author"
+              }
+            }
+          },
+          {
+            "name": "hasLabel",
+            "parameters": {
+              "label": ":mailbox_with_no_mail: needs: author feedback"
+            }
+          }
+        ]
+      },
+      "eventType": "issue",
+      "eventNames": [
+        "issue_comment"
+      ],
+      "taskName": "Remove needs author feedback label when the author comments on an issue",
+      "actions": [
+        {
+          "name": "removeLabel",
+          "parameters": {
+            "label": ":mailbox_with_no_mail: needs: author feedback"
+          }
+        },
+        {
+          "name": "removeLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "taskType": "scheduled",
+    "capabilityId": "ScheduledSearch",
+    "subCapability": "ScheduledSearch",
+    "version": "1.1",
+    "config": {
+      "frequency": [
+        {
+          "weekDay": 0,
+          "hours": [
+            8,
+            20
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 1,
+          "hours": [
+            8,
+            20
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 2,
+          "hours": [
+            8,
+            20
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 3,
+          "hours": [
+            8,
+            20
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 4,
+          "hours": [
+            8,
+            20
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 5,
+          "hours": [
+            8,
+            20
+          ],
+          "timezoneOffset": 10
+        },
+        {
+          "weekDay": 6,
+          "hours": [
+            8,
+            20
+          ],
+          "timezoneOffset": 10
+        }
+      ],
+      "searchTerms": [
+        {
+          "name": "isIssue",
+          "parameters": {}
+        },
+        {
+          "name": "isOpen",
+          "parameters": {}
+        },
+        {
+          "name": "hasLabel",
+          "parameters": {
+            "label": ":mailbox_with_no_mail: needs: author feedback"
+          }
+        },
+        {
+          "name": "noActivitySince",
+          "parameters": {
+            "days": 14
+          }
+        },
+        {
+          "name": "noLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        }
+      ],
+      "taskName": "Add no recent activity label to issues",
+      "actions": [
+        {
+          "name": "addLabel",
+          "parameters": {
+            "label": ":zzz: status: no recent activity"
+          }
+        },
+        {
+          "name": "addReply",
+          "parameters": {
+            "comment": "This issue has been automatically marked as stale because it has been marked as requiring author feedback but has not had any activity for **14 days**. It will be closed if no further activity occurs."
+          }
+        }
+      ]
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "EmailCleanser",
+    "subCapability": "EmailCleanser",
+    "version": "1.0",
+    "config": {
+      "taskName": "Cleanse emails"
+    }
+  },
+  {
+    "taskType": "trigger",
+    "capabilityId": "IssueResponder",
+    "subCapability": "PullRequestResponder",
+    "version": "1.0",
+    "config": {
+      "conditions": {
+        "operator": "and",
+        "operands": []
+      },
+      "eventType": "pull_request",
+      "eventNames": [
+        "pull_request",
+        "issues",
+        "project_card"
+      ],
+      "actions": [
+        {
+          "name": "assignToUser",
+          "parameters": {
+            "groupId": "",
+            "user": {
+              "type": "prAuthor"
+            }
+          }
+        }
+      ],
+      "taskName": "Assign the PR to author"
+    }
+  }
+]
