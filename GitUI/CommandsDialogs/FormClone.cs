@@ -10,7 +10,6 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
-using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -51,6 +50,8 @@ namespace GitUI.CommandsDialogs
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
 
+            MinimumSize = new Size(Width, PreferredMinimumHeight);
+
             InitializeComplete();
             _openedFromProtocolHandler = openedFromProtocolHandler;
             _url = url;
@@ -70,12 +71,6 @@ namespace GitUI.CommandsDialogs
         protected override void OnRuntimeLoad(EventArgs e)
         {
             base.OnRuntimeLoad(e);
-
-            // scale up for hi DPI
-            MaximumSize = DpiUtil.Scale(new Size(950, 398));
-            MinimumSize = DpiUtil.Scale(new Size(450, 398));
-            Size = new Size((tpnlMain.Left * 2) + tpnlMain.Width + /* right margin */DpiUtil.Scale(16), Height);
-            tpnlMain.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {

@@ -41,13 +41,13 @@
             // 
             this.MainPanel.Controls.Add(this.tlpnlMain);
             this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
-            this.MainPanel.Size = new System.Drawing.Size(394, 49);
+            this.MainPanel.Size = new System.Drawing.Size(412, 50);
             // 
             // ControlsPanel
             // 
             this.ControlsPanel.Controls.Add(this.Delete);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 49);
-            this.ControlsPanel.Size = new System.Drawing.Size(394, 41);
+            this.ControlsPanel.Location = new System.Drawing.Point(0, 50);
+            this.ControlsPanel.Size = new System.Drawing.Size(412, 41);
             // 
             // Delete
             // 
@@ -55,7 +55,7 @@
             this.Delete.AutoSize = true;
             this.Delete.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Delete.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Delete.Location = new System.Drawing.Point(306, 8);
+            this.Delete.Location = new System.Drawing.Point(324, 8);
             this.Delete.MinimumSize = new System.Drawing.Size(75, 23);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(75, 25);
@@ -83,11 +83,13 @@
             this.Branches.Location = new System.Drawing.Point(95, 0);
             this.Branches.Margin = new System.Windows.Forms.Padding(0);
             this.Branches.Name = "Branches";
-            this.Branches.Size = new System.Drawing.Size(286, 28);
+            this.Branches.Size = new System.Drawing.Size(299, 28);
             this.Branches.TabIndex = 1;
             // 
             // tlpnlMain
             // 
+            this.tlpnlMain.AutoSize = true;
+            this.tlpnlMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpnlMain.ColumnCount = 2;
             this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -100,7 +102,7 @@
             this.tlpnlMain.RowCount = 2;
             this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlMain.Size = new System.Drawing.Size(376, 31);
+            this.tlpnlMain.Size = new System.Drawing.Size(394, 32);
             this.tlpnlMain.TabIndex = 0;
             // 
             // FormDeleteBranch
@@ -108,17 +110,19 @@
             this.AcceptButton = this.Delete;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(394, 90);
+            this.ClientSize = new System.Drawing.Size(412, 91);
             this.HelpButton = true;
             this.ManualSectionAnchorName = "delete-branch";
             this.ManualSectionSubfolder = "branches";
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(950, 130);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(410, 129);
+            this.MinimumSize = new System.Drawing.Size(420, 130);
             this.Name = "FormDeleteBranch";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Delete branch";
             this.MainPanel.ResumeLayout(false);
+            this.MainPanel.PerformLayout();
             this.ControlsPanel.ResumeLayout(false);
             this.ControlsPanel.PerformLayout();
             this.tlpnlMain.ResumeLayout(false);

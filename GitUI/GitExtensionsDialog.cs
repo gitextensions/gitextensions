@@ -56,6 +56,18 @@ namespace GitUI
         /// </remarks>
         public string? ManualSectionSubfolder { get; set; }
 
+        /// <summary>
+        ///  <para>Gets the minimum height preferred by the form.</para>
+        ///  <para>
+        ///   <b>NOTE:</b> This requires that the <see cref="MainPanel"/> content is configured as follows:<br />
+        ///   - <c>AutoSize = true</c><br />
+        ///   - <c>AutoSizeMode = AutoSizeMode.GrowAndShrink</c><br />
+        ///   - <c>Dock = DockStyle.Fil</c>
+        ///  </para>
+        /// </summary>
+        public int PreferredMinimumHeight
+            => MainPanel.PreferredSize.Height + ControlsPanel.PreferredSize.Height + (Size.Height - ClientSize.Height);
+
         protected override void OnHelpButtonClicked(CancelEventArgs e)
         {
             // If we show the Help button but we have failed to specify where the docs are -> hide the button, and exit

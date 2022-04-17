@@ -35,9 +35,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
 
-            var w = Width;
-            var h = MainPanel.PreferredSize.Height + ControlsPanel.PreferredSize.Height + (Size.Height - ClientSize.Height);
-            MinimumSize = new Size(w, h);
+            MinimumSize = new Size(Width, PreferredMinimumHeight);
 
             InitializeComplete();
 
