@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<ArrayOfHotkeySettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <HotkeySettings Name="settings1">
+    <Commands>
+      <HotkeyCommand CommandCode="1" Name="C1" KeyData="A" />
+      <HotkeyCommand CommandCode="2" Name="C2" KeyData="B" />
+    </Commands>
+  </HotkeySettings>
+  <HotkeySettings Name="settings2">
+    <Commands>
+      <HotkeyCommand CommandCode="1" Name="C1" KeyData="A" />
+      <HotkeyCommand CommandCode="2" Name="C2" KeyData="B" />
+    </Commands>
+  </HotkeySettings>
+</ArrayOfHotkeySettings>

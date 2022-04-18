@@ -54,11 +54,18 @@ namespace GitCommands.ExternalLinks
                         definition.RemoveEmptyFormats();
                     }
 
-                    StringWriter sw = new();
                     XmlSerializer serializer = new(typeof(List<ExternalLinkDefinition>));
                     XmlSerializerNamespaces ns = new();
                     ns.Add(string.Empty, string.Empty);
-                    serializer.Serialize(sw, definitions.OrderBy(x => x.Name).ToList(), ns);
+
+                    XmlWriterSettings xmlWriterSettings = new()
+                    {
+                        Indent = true
+                    };
+                    using StringWriter sw = new();
+                    using XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
+
+                    serializer.Serialize(xmlWriter, definitions.OrderBy(x => x.Name).ToList(), ns);
                     xml = sw.ToString();
                 }
 

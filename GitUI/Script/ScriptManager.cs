@@ -71,8 +71,14 @@ namespace GitUI.Script
         {
             try
             {
-                StringWriter sw = new();
-                _serializer.Serialize(sw, _scripts);
+                XmlWriterSettings xmlWriterSettings = new()
+                {
+                    Indent = true
+                };
+                using StringWriter sw = new();
+                using XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
+
+                _serializer.Serialize(xmlWriter, _scripts);
                 return sw.ToString();
             }
             catch

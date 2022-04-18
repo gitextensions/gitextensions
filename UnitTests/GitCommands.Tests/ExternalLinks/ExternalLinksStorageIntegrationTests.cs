@@ -1,4 +1,6 @@
+﻿using System.IO;
 using System.Reflection;
+using ApprovalTests;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.ExternalLinks;
@@ -33,6 +35,31 @@ namespace GitCommandsTests.ExternalLinks
 
             var definitions = _externalLinksStorage.Load(settings);
             definitions.Count.Should().Be(expected);
+        }
+
+        [Test]
+        public void Can_save_settings()
+        {
+            using GitModuleTestHelper testHelper = new();
+            string settingsFile = testHelper.CreateRepoFile(".git", "GitExtensions.settings", "﻿<dictionary />");
+            using GitExtSettingsCache settingsCache = new(settingsFile);
+            RepoDistSettings settings = new(null, settingsCache, SettingLevel.Unknown);
+
+            ExternalLinkDefinition definition = new()
+            {
+                Name = "<new>",
+                Enabled = true,
+                UseRemotesPattern = "upstream|origin",
+                UseOnlyFirstRemote = true,
+                SearchInParts = { ExternalLinkDefinition.RevisionPart.Message },
+                RemoteSearchInParts = { ExternalLinkDefinition.RemotePart.URL }
+            };
+
+            _externalLinksStorage.Save(settings, new[] { definition });
+
+            settings.Save();
+
+            Approvals.VerifyXml(File.ReadAllText(settingsFile));
         }
     }
 }

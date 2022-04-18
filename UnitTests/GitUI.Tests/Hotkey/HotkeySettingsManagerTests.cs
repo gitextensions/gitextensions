@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Windows.Forms;
+using ApprovalTests;
 using FluentAssertions;
+using GitCommands;
 using GitUI.Hotkey;
 using NUnit.Framework;
 using ResourceManager;
@@ -8,7 +10,7 @@ using ResourceManager;
 namespace GitUITests.Hotkey
 {
     [TestFixture]
-    public class HotkeySettingsManagerFixture
+    public class HotkeySettingsManagerTests
     {
         [Test]
         public void MergeEqualSettings()
@@ -33,6 +35,7 @@ namespace GitUITests.Hotkey
             defaultHotkeySettingsArray.SequenceEqual(loadedHotkeySettingsArray).Should().BeFalse();
         }
 
+        [Test]
         public void SequenceEqualOnEqualSettings()
         {
             var defaultHotkeySettingsArray = CreateHotkeySettings(2);
@@ -41,6 +44,7 @@ namespace GitUITests.Hotkey
             defaultHotkeySettingsArray.SequenceEqual(loadedHotkeySettingsArray).Should().BeTrue();
         }
 
+        [Test]
         public void MergeLoadedSettings()
         {
             // arrange
@@ -54,6 +58,7 @@ namespace GitUITests.Hotkey
             defaultHotkeySettingsArray.SequenceEqual(loadedHotkeySettingsArray).Should().BeTrue();
         }
 
+        [Test]
         public void MergeLoadedDiffSizeSettings()
         {
             // arrange
@@ -67,6 +72,24 @@ namespace GitUITests.Hotkey
             expected[1].Commands[1].KeyData = loadedHotkeySettingsArray[1].Commands[1].KeyData;
 
             defaultHotkeySettingsArray.SequenceEqual(expected).Should().BeTrue();
+        }
+
+        [Test]
+        public void Can_save_settings()
+        {
+            string originalHotkeys = AppSettings.SerializedHotkeys;
+
+            try
+            {
+                HotkeySettingsManager.SaveSettings(CreateHotkeySettings(2));
+
+                // Verify as a string, as the xml verifier ignores line breaks.
+                Approvals.Verify(AppSettings.SerializedHotkeys);
+            }
+            finally
+            {
+                AppSettings.SerializedHotkeys = originalHotkeys;
+            }
         }
 
         private static HotkeySettings[] CreateHotkeySettings(int count)
