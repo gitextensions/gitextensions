@@ -34,6 +34,7 @@ namespace GitExtensions.UITests.Script
             finally
             {
                 AppSettings.OwnScripts = originalScripts;
+                ScriptManager.TestAccessor.Reset();
             }
         }
     }

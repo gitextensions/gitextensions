@@ -204,5 +204,10 @@ namespace GitUI.Script
         {
             return GetScripts().Select(s => s.HotkeyCommandIdentifier).Max() + 1;
         }
+
+        internal struct TestAccessor
+        {
+            public static void Reset() => _scripts = null;
+        }
     }
 }
