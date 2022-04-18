@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
 using GitUI.BranchTreePanel;
@@ -99,10 +99,15 @@ namespace GitUI.Hotkey
             {
                 UpdateUsedKeys(settings);
 
-                StringBuilder str = new();
-                using StringWriter writer = new(str);
-                Serializer.Serialize(writer, settings);
-                AppSettings.SerializedHotkeys = str.ToString();
+                XmlWriterSettings xmlWriterSettings = new()
+                {
+                    Indent = true
+                };
+                using StringWriter sw = new();
+                using XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
+
+                Serializer.Serialize(xmlWriter, settings);
+                AppSettings.SerializedHotkeys = sw.ToString();
             }
             catch
             {

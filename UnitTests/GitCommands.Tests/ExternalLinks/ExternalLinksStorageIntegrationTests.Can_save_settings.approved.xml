@@ -1,0 +1,25 @@
+﻿<dictionary>
+  <item>
+    <key>
+      <string>RevisionLinkDefs</string>
+    </key>
+    <value>
+      <string>&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfGitExtLinkDef&gt;
+  &lt;GitExtLinkDef&gt;
+    &lt;Enabled&gt;true&lt;/Enabled&gt;
+    &lt;LinkFormats /&gt;
+    &lt;Name&gt;&amp;lt;new&amp;gt;&lt;/Name&gt;
+    &lt;RemoteSearchInParts&gt;
+      &lt;RemotePart&gt;URL&lt;/RemotePart&gt;
+    &lt;/RemoteSearchInParts&gt;
+    &lt;SearchInParts&gt;
+      &lt;RevisionPart&gt;Message&lt;/RevisionPart&gt;
+    &lt;/SearchInParts&gt;
+    &lt;UseRemotesPattern&gt;upstream|origin&lt;/UseRemotesPattern&gt;
+    &lt;UseOnlyFirstRemote&gt;true&lt;/UseOnlyFirstRemote&gt;
+  &lt;/GitExtLinkDef&gt;
+&lt;/ArrayOfGitExtLinkDef&gt;</string>
+    </value>
+  </item>
+</dictionary>

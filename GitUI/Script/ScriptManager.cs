@@ -71,8 +71,14 @@ namespace GitUI.Script
         {
             try
             {
-                StringWriter sw = new();
-                _serializer.Serialize(sw, _scripts);
+                XmlWriterSettings xmlWriterSettings = new()
+                {
+                    Indent = true
+                };
+                using StringWriter sw = new();
+                using XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
+
+                _serializer.Serialize(xmlWriter, _scripts);
                 return sw.ToString();
             }
             catch
@@ -197,6 +203,11 @@ namespace GitUI.Script
         internal static int NextHotkeyCommandIdentifier()
         {
             return GetScripts().Select(s => s.HotkeyCommandIdentifier).Max() + 1;
+        }
+
+        internal struct TestAccessor
+        {
+            public static void Reset() => _scripts = null;
         }
     }
 }
