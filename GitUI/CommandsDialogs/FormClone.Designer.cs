@@ -122,7 +122,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(625, 125);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(623, 125);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // repositoryLabel
@@ -144,7 +144,7 @@
             this._NO_TRANSLATE_From.FormattingEnabled = true;
             this._NO_TRANSLATE_From.Location = new System.Drawing.Point(135, 3);
             this._NO_TRANSLATE_From.Name = "_NO_TRANSLATE_From";
-            this._NO_TRANSLATE_From.Size = new System.Drawing.Size(387, 23);
+            this._NO_TRANSLATE_From.Size = new System.Drawing.Size(385, 23);
             this._NO_TRANSLATE_From.TabIndex = 1;
             this._NO_TRANSLATE_From.SelectedIndexChanged += new System.EventHandler(this.FromSelectedIndexChanged);
             this._NO_TRANSLATE_From.TextUpdate += new System.EventHandler(this.FromTextUpdate);
@@ -152,7 +152,7 @@
             // FromBrowse
             // 
             this.FromBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.FromBrowse.Location = new System.Drawing.Point(528, 3);
+            this.FromBrowse.Location = new System.Drawing.Point(526, 3);
             this.FromBrowse.Name = "FromBrowse";
             this.FromBrowse.Size = new System.Drawing.Size(94, 24);
             this.FromBrowse.TabIndex = 2;
@@ -180,7 +180,7 @@
             this._NO_TRANSLATE_To.FormattingEnabled = true;
             this._NO_TRANSLATE_To.Location = new System.Drawing.Point(135, 34);
             this._NO_TRANSLATE_To.Name = "_NO_TRANSLATE_To";
-            this._NO_TRANSLATE_To.Size = new System.Drawing.Size(387, 23);
+            this._NO_TRANSLATE_To.Size = new System.Drawing.Size(385, 23);
             this._NO_TRANSLATE_To.TabIndex = 4;
             this._NO_TRANSLATE_To.SelectedIndexChanged += new System.EventHandler(this.ToSelectedIndexChanged);
             this._NO_TRANSLATE_To.TextUpdate += new System.EventHandler(this.ToTextUpdate);
@@ -188,7 +188,7 @@
             // ToBrowse
             // 
             this.ToBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ToBrowse.Location = new System.Drawing.Point(528, 34);
+            this.ToBrowse.Location = new System.Drawing.Point(526, 34);
             this.ToBrowse.Name = "ToBrowse";
             this.ToBrowse.Size = new System.Drawing.Size(94, 24);
             this.ToBrowse.TabIndex = 5;
@@ -213,7 +213,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this._NO_TRANSLATE_NewDirectory.Location = new System.Drawing.Point(135, 65);
             this._NO_TRANSLATE_NewDirectory.Name = "_NO_TRANSLATE_NewDirectory";
-            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(387, 23);
+            this._NO_TRANSLATE_NewDirectory.Size = new System.Drawing.Size(385, 23);
             this._NO_TRANSLATE_NewDirectory.TabIndex = 7;
             this._NO_TRANSLATE_NewDirectory.TextChanged += new System.EventHandler(this.NewDirectoryTextChanged);
             // 
@@ -235,7 +235,7 @@
             this._NO_TRANSLATE_Branches.FormattingEnabled = true;
             this._NO_TRANSLATE_Branches.Location = new System.Drawing.Point(135, 96);
             this._NO_TRANSLATE_Branches.Name = "_NO_TRANSLATE_Branches";
-            this._NO_TRANSLATE_Branches.Size = new System.Drawing.Size(387, 23);
+            this._NO_TRANSLATE_Branches.Size = new System.Drawing.Size(385, 23);
             this._NO_TRANSLATE_Branches.TabIndex = 9;
             this._NO_TRANSLATE_Branches.DropDown += new System.EventHandler(this.Branches_DropDown);
             // 
@@ -274,7 +274,7 @@
             this.Info.Location = new System.Drawing.Point(3, 138);
             this.Info.Margin = new System.Windows.Forms.Padding(3, 13, 3, 0);
             this.Info.Name = "Info";
-            this.Info.Size = new System.Drawing.Size(619, 42);
+            this.Info.Size = new System.Drawing.Size(617, 42);
             this.Info.TabIndex = 1;
             this.Info.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -287,7 +287,7 @@
             this.groupBox1.Location = new System.Drawing.Point(3, 184);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(619, 78);
+            this.groupBox1.Size = new System.Drawing.Size(617, 78);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Repository type";
@@ -341,6 +341,7 @@
             this.tpnlMain.Controls.Add(this.Info);
             this.tpnlMain.Controls.Add(this.groupBox1);
             this.tpnlMain.Controls.Add(this.optionsPanel);
+            this.tpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tpnlMain.Location = new System.Drawing.Point(12, 12);
             this.tpnlMain.Margin = new System.Windows.Forms.Padding(0);
             this.tpnlMain.Name = "tpnlMain";
@@ -350,7 +351,7 @@
             this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpnlMain.Size = new System.Drawing.Size(625, 297);
+            this.tpnlMain.Size = new System.Drawing.Size(623, 286);
             this.tpnlMain.TabIndex = 0;
             // 
             // optionsPanel
@@ -362,7 +363,7 @@
             this.optionsPanel.Location = new System.Drawing.Point(0, 272);
             this.optionsPanel.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.optionsPanel.Name = "optionsPanel";
-            this.optionsPanel.Size = new System.Drawing.Size(625, 25);
+            this.optionsPanel.Size = new System.Drawing.Size(623, 25);
             this.optionsPanel.TabIndex = 2;
             // 
             // FormClone
@@ -376,6 +377,8 @@
             this.ManualSectionSubfolder = "getting_started";
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(950, 398);
+            this.MinimumSize = new System.Drawing.Size(450, 398);
             this.Name = "FormClone";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Clone";

@@ -6,7 +6,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
-using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -39,6 +38,8 @@ namespace GitUI.CommandsDialogs
 
             InitializeComponent();
 
+            MinimumSize = new Size(Width, PreferredMinimumHeight);
+
             InitializeComplete();
         }
 
@@ -63,27 +64,8 @@ namespace GitUI.CommandsDialogs
             {
                 Branches.SetSelectedText(_defaultBranches.Join(" "));
             }
-        }
 
-        protected override void OnShown(EventArgs e)
-        {
-            RecalculateSizeConstraints();
-            base.OnShown(e);
             Branches.Focus();
-        }
-
-        private void RecalculateSizeConstraints()
-        {
-            SuspendLayout();
-            MinimumSize = MaximumSize = Size.Empty;
-
-            int height = ControlsPanel.Height + MainPanel.Padding.Top + MainPanel.Padding.Bottom
-                       + tlpnlMain.Height + tlpnlMain.Margin.Top + tlpnlMain.Margin.Bottom + DpiUtil.Scale(42);
-
-            MinimumSize = new Size(tlpnlMain.PreferredSize.Width + DpiUtil.Scale(70), height);
-            MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, height);
-            Size = new Size(Width, height);
-            ResumeLayout();
         }
 
         private void Delete_Click(object sender, EventArgs e)
