@@ -1191,7 +1191,7 @@ namespace GitUI.Editor
 
         private void ToggleNonPrintingChars(bool show)
         {
-            internalFileViewer.ShowEOLMarkers = show;
+            internalFileViewer.EolMarkerStyle = show ? ICSharpCode.TextEditor.Document.EolMarkerStyle.Glyph : ICSharpCode.TextEditor.Document.EolMarkerStyle.None;
             internalFileViewer.ShowSpaces = show;
             internalFileViewer.ShowTabs = show;
         }
