@@ -64,12 +64,12 @@
             this.TabControlTagBranch.SuspendLayout();
             this.BranchTab.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.PushOptionsPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.TagTab.SuspendLayout();
             this.MultipleBranchTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.BranchGrid)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.PushOptionsPanel.SuspendLayout();
             this.menuPushSelection.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -182,6 +182,7 @@
             this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -213,7 +214,6 @@
             // labelTo
             // 
             this.labelTo.AutoSize = true;
-            this.labelTo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelTo.Location = new System.Drawing.Point(200, 0);
             this.labelTo.Name = "labelTo";
             this.labelTo.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -600,6 +600,8 @@
             this.BranchTab.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.PushOptionsPanel.ResumeLayout(false);
+            this.PushOptionsPanel.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.TagTab.ResumeLayout(false);
@@ -608,8 +610,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.BranchGrid)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.PushOptionsPanel.ResumeLayout(false);
-            this.PushOptionsPanel.PerformLayout();
             this.menuPushSelection.ResumeLayout(false);
             this.ResumeLayout(false);
 
