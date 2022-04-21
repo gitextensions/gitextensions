@@ -81,6 +81,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.CreateCommit("head commit");
 
             var composition = TestComposition.Empty
+                .AddParts(typeof(MockLinkFactory))
                 .AddParts(typeof(MockWindowsJumpListManager))
                 .AddParts(typeof(MockRepositoryDescriptionProvider))
                 .AddParts(typeof(MockAppTitleGenerator));

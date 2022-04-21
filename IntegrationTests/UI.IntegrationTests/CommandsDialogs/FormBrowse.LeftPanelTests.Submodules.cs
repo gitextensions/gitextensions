@@ -82,6 +82,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _commands = new GitUICommands(_repo1Module);
 
             var composition = TestComposition.Empty
+                .AddParts(typeof(MockLinkFactory))
                 .AddParts(typeof(MockWindowsJumpListManager))
                 .AddParts(typeof(MockRepositoryDescriptionProvider))
                 .AddParts(typeof(MockAppTitleGenerator));

@@ -1539,7 +1539,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             {
                                 string head = rtfText.Substring(0, idx);
                                 string tail = rtfText.Substring(idx);
-                                RtbSetSelectedRtf(rtb, head + @"\v " + LinkSeparator + cs.hyperlink + @"\v0" + tail);
+                                RtbSetSelectedRtf(rtb, $@"{head}\v {LinkSeparator}{cs.hyperlink}\v0{tail}");
                                 length = rtb.TextLength - cs.hyperlinkStart;
                             }
                         }

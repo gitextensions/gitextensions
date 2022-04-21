@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using BugReporter;
 using GitUI;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -28,6 +29,13 @@ namespace TranslationApp
             using (BugReportForm dummy = new())
             {
             }
+
+            ManagedExtensibility.Initialise(new[]
+            {
+                typeof(GitUI.GitExtensionsForm).Assembly,
+                typeof(GitCommands.GitModule).Assembly,
+                typeof(ResourceManager.GitPluginBase).Assembly
+            });
 
             // Required for translation
             PluginRegistry.Initialize();

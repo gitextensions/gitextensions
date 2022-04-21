@@ -4,12 +4,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommonTestUtils;
+using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.UITests;
+using GitExtensions.UITests.CommandsDialogs;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 using NUnit.Framework;
 
 namespace GitUITests.GitUICommandsTests
@@ -44,6 +47,14 @@ namespace GitUITests.GitUICommandsTests
             }
 
             _commands = new GitUICommands(_referenceRepository.Module);
+
+            var composition = TestComposition.Empty
+                .AddParts(typeof(MockLinkFactory))
+                .AddParts(typeof(MockWindowsJumpListManager))
+                .AddParts(typeof(MockRepositoryDescriptionProvider))
+                .AddParts(typeof(MockAppTitleGenerator));
+            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
+            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
         [OneTimeSetUp]

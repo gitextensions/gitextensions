@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using CommonTestUtils.MEF;
 using GitUI;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 using NUnit.Framework;
 using ResourceManager;
 using ResourceManager.Xliff;
@@ -15,6 +18,11 @@ namespace GitUITests
         [SetUp]
         public void SetUp()
         {
+            var composition = TestComposition.Empty
+               .AddParts(typeof(LinkFactory));
+            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
+            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
+
             GitModuleForm.IsUnitTestActive = true;
         }
 

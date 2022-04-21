@@ -109,7 +109,8 @@ namespace GitExtensions
             ManagedExtensibility.Initialise(new[]
                 {
                     typeof(GitUI.GitExtensionsForm).Assembly,
-                    typeof(GitCommands.GitModule).Assembly
+                    typeof(GitCommands.GitModule).Assembly,
+                    typeof(ResourceManager.GitPluginBase).Assembly
                 },
                 AppSettings.UserPluginsPath);
 

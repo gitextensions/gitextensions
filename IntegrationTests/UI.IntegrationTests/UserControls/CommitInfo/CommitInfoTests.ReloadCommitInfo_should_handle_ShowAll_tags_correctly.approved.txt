@@ -1,0 +1,31 @@
+﻿Contained in branches:
+branch01|||gitext://gotobranch/branch01
+branch02|||gitext://gotobranch/branch02
+branch03|||gitext://gotobranch/branch03
+branch04|||gitext://gotobranch/branch04
+branch05|||gitext://gotobranch/branch05
+branch06|||gitext://gotobranch/branch06
+branch07|||gitext://gotobranch/branch07
+branch08|||gitext://gotobranch/branch08
+branch09|||gitext://gotobranch/branch09
+branch10|||gitext://gotobranch/branch10
+[ Show all ]|||gitext://showall/branches
+
+Contained in tags:
+v1.0|||gitext://gototag/v1.0
+v1.1|||gitext://gototag/v1.1
+v1.2|||gitext://gototag/v1.2
+v1.3|||gitext://gototag/v1.3
+v1.4|||gitext://gototag/v1.4
+v1.5|||gitext://gototag/v1.5
+v1.6|||gitext://gototag/v1.6
+v1.7|||gitext://gototag/v1.7
+v1.8|||gitext://gototag/v1.8
+v1.9|||gitext://gototag/v1.9
+v1.10|||gitext://gototag/v1.10
+v1.11|||gitext://gototag/v1.11
+v1.12|||gitext://gototag/v1.12
+v1.13|||gitext://gototag/v1.13
+v1.14|||gitext://gototag/v1.14
+
+Derives from no tag

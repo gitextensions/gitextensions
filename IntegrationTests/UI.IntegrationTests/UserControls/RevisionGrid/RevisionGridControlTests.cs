@@ -4,11 +4,14 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using CommonTestUtils;
+using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.UITests.CommandsDialogs;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests.UserControls.RevisionGrid
@@ -53,6 +56,14 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _commands = new GitUICommands(_referenceRepository.Module);
 
             AppSettings.RevisionGraphShowArtificialCommits = true;
+
+            var composition = TestComposition.Empty
+                .AddParts(typeof(MockLinkFactory))
+                .AddParts(typeof(MockWindowsJumpListManager))
+                .AddParts(typeof(MockRepositoryDescriptionProvider))
+                .AddParts(typeof(MockAppTitleGenerator));
+            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
+            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
         [TearDown]
