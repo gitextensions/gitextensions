@@ -217,7 +217,6 @@ namespace GitUI.CommitInfo
 
         private void ShowAll(string? what)
         {
-            // ignore argument 'what' because links cannot be distinguished if having same label (since .NET core)
             switch (what)
             {
                 case "branches":
