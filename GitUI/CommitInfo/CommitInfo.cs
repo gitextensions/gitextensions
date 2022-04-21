@@ -55,7 +55,7 @@ namespace GitUI.CommitInfo
         private static readonly TranslationString _plusCommits = new("commits");
         private static readonly TranslationString _repoFailure = new("Repository failure");
 
-        private readonly ILinkFactory _linkFactory = new LinkFactory();
+        private readonly ILinkFactory _linkFactory;
         private readonly ICommitDataManager _commitDataManager;
         private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
         private readonly IExternalLinksStorage _externalLinksStorage;
@@ -106,6 +106,8 @@ namespace GitUI.CommitInfo
             };
 
             _commitDataManager = new CommitDataManager(() => Module);
+
+            _linkFactory = ManagedExtensibility.GetExport<ILinkFactory>().Value;
 
             _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
             _externalLinksStorage = new ExternalLinksStorage();
@@ -184,7 +186,7 @@ namespace GitUI.CommitInfo
             set => SetRevisionWithChildren(value, null);
         }
 
-        private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
+        private void RevisionInfo_LinkClicked(object sender, LinkClickedEventArgs e)
         {
             try
             {
@@ -884,7 +886,11 @@ namespace GitUI.CommitInfo
                 _commitInfo = commitInfo;
             }
 
+            public RichTextBox RevisionInfo => _commitInfo.RevisionInfo;
+
             public IDictionary<string, int> GetSortedTags() => _commitInfo.GetSortedTags();
+
+            public void RevisionInfo_LinkClicked(object sender, LinkClickedEventArgs e) => _commitInfo.RevisionInfo_LinkClicked(sender, e);
         }
     }
 }

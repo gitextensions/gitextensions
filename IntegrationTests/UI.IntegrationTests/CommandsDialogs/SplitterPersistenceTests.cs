@@ -35,6 +35,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.ShowAuthorAvatarColumn = false;
 
             _composition = TestComposition.Empty
+                .AddParts(typeof(MockLinkFactory))
                 .AddParts(typeof(MockWindowsJumpListManager))
                 .AddParts(typeof(MockRepositoryDescriptionProvider))
                 .AddParts(typeof(MockAppTitleGenerator));

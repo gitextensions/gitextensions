@@ -1,0 +1,33 @@
+﻿{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049{\fonttbl{\f0\fnil\fcharset204 Segoe UI;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 10.0.22000}\viewkind4\uc1 
+\pard\f0\fs18 Contained in branches:\par
+
+\pard branch01\v |||gitext://gotobranch/branch01\v0\par
+branch02\v |||gitext://gotobranch/branch02\v0\par
+branch03\v |||gitext://gotobranch/branch03\v0\par
+branch04\v |||gitext://gotobranch/branch04\v0\par
+branch05\v |||gitext://gotobranch/branch05\v0\par
+branch06\v |||gitext://gotobranch/branch06\v0\par
+branch07\v |||gitext://gotobranch/branch07\v0\par
+branch08\v |||gitext://gotobranch/branch08\v0\par
+branch09\v |||gitext://gotobranch/branch09\v0\par
+branch10\v |||gitext://gotobranch/branch10\v0\par
+[ Show all ]\v |||gitext://showall/branches\v0\par
+\par
+Contained in tags:\par
+v1.0\v |||gitext://gototag/v1.0\v0\par
+v1.1\v |||gitext://gototag/v1.1\v0\par
+v1.2\v |||gitext://gototag/v1.2\v0\par
+v1.3\v |||gitext://gototag/v1.3\v0\par
+v1.4\v |||gitext://gototag/v1.4\v0\par
+v1.5\v |||gitext://gototag/v1.5\v0\par
+v1.6\v |||gitext://gototag/v1.6\v0\par
+v1.7\v |||gitext://gototag/v1.7\v0\par
+v1.8\v |||gitext://gototag/v1.8\v0\par
+v1.9\v |||gitext://gototag/v1.9\v0\par
+[ Show all ]\v |||gitext://showall/tags\v0\par
+\par
+\par
+Derives from no tag\par
+}

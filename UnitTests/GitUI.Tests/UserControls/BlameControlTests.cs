@@ -6,13 +6,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonTestUtils;
+using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.Blame;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 using NSubstitute;
 using NUnit.Framework;
+using ResourceManager;
 
 namespace GitUITests.UserControls
 {
@@ -33,6 +36,11 @@ namespace GitUITests.UserControls
         [SetUp]
         public void SetUp()
         {
+            var composition = TestComposition.Empty
+                .AddParts(typeof(LinkFactory));
+            ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
+            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
+
             GitBlameCommit blameCommit1 = new(
                 ObjectId.Random(),
                 "author1",
