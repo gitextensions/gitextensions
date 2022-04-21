@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
@@ -26,11 +27,12 @@ namespace GitUI
 
         public IReadOnlyList<FileStatusWithDescription> Reload()
             => SetDiffs(_fileStatusDiffCalculatorInfo.Revisions,
-                _fileStatusDiffCalculatorInfo.HeadId);
+                _fileStatusDiffCalculatorInfo.HeadId, cancellationToken: default);
 
         public IReadOnlyList<FileStatusWithDescription> SetDiffs(
             IReadOnlyList<GitRevision> revisions,
-            ObjectId? headId)
+            ObjectId? headId,
+            CancellationToken cancellationToken)
         {
             _fileStatusDiffCalculatorInfo.Revisions = revisions;
             _fileStatusDiffCalculatorInfo.HeadId = headId;
@@ -58,7 +60,7 @@ namespace GitUI
                         statuses: selectedRev.TreeGuid is null
 
                             // likely index commit without HEAD
-                            ? module.GetDiffFilesWithSubmodulesStatus(null, selectedRev.ObjectId, null)
+                            ? module.GetDiffFilesWithSubmodulesStatus(firstId: null, selectedRev.ObjectId, parentToSecond: null, cancellationToken)
 
                             // No parent for the initial commit
                             : module.GetTreeFiles(selectedRev.TreeGuid, full: true)));
@@ -75,7 +77,7 @@ namespace GitUI
                                 firstRev: new GitRevision(parentId),
                                 secondRev: selectedRev,
                                 summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(parentId),
-                                statuses: module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, actualRev.ParentIds[0]))));
+                                statuses: module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, actualRev.ParentIds[0], cancellationToken))));
                 }
 
                 // Show combined (merge conflicts) when a single merge commit is selected
@@ -108,7 +110,7 @@ namespace GitUI
                 firstRev: firstRev,
                 secondRev: selectedRev,
                 summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev.ObjectId),
-                statuses: module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId)));
+                statuses: module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken)));
 
             if (!AppSettings.ShowDiffForAllParents || revisions.Count > maxMultiCompare || headId is null)
             {
@@ -153,14 +155,14 @@ namespace GitUI
                             firstRev: rev,
                             secondRev: selectedRev,
                             summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(rev.ObjectId),
-                            statuses: module.GetDiffFilesWithSubmodulesStatus(rev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId))));
+                            statuses: module.GetDiffFilesWithSubmodulesStatus(rev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken))));
 
                 return fileStatusDescs;
             }
 
             var allAToB = fileStatusDescs[0].Statuses;
-            var allBaseToB = module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, selectedRev.ObjectId, selectedRev.FirstParentId);
-            var allBaseToA = module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, firstRev.ObjectId, firstRev.FirstParentId);
+            var allBaseToB = module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken);
+            var allBaseToA = module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, firstRev.ObjectId, firstRev.FirstParentId, cancellationToken);
 
             GitItemStatusNameEqualityComparer comparer = new();
             var sameBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();

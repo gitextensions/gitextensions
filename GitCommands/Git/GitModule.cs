@@ -2450,7 +2450,7 @@ namespace GitCommands
             });
         }
 
-        public ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache = false, bool nullSeparated = false)
+        public ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache = false, bool nullSeparated = false, CancellationToken cancellationToken = default)
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
 
@@ -2471,13 +2471,14 @@ namespace GitCommands
                     _revisionDiffProvider.Get(firstRevision, secondRevision)
                 },
                 cache: noCache ? null : GitCommandCache,
-                throwOnErrorExit: false);
+                throwOnErrorExit: false,
+                cancellationToken: cancellationToken);
         }
 
-        public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond)
+        public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond, CancellationToken cancellationToken)
         {
             var stagedStatus = GetStagedStatus(firstId, secondId, parentToSecond);
-            var status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus);
+            var status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus, cancellationToken: cancellationToken);
             GetSubmoduleStatus(status, firstId, secondId);
             return status;
         }
@@ -2514,15 +2515,16 @@ namespace GitCommands
             return staged;
         }
 
-        public IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache = false)
+        public IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache = false,
+            CancellationToken cancellationToken = default)
         {
             if (stagedStatus is StagedStatus.WorkTree or StagedStatus.Index)
             {
-                var status = GetAllChangedFilesWithSubmodulesStatus();
+                var status = GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken);
                 return status.Where(x => x.Staged == stagedStatus).ToList();
             }
 
-            ExecutionResult exec = GetDiffFiles(firstRevision, secondRevision, noCache: noCache, nullSeparated: true);
+            ExecutionResult exec = GetDiffFiles(firstRevision, secondRevision, noCache: noCache, nullSeparated: true, cancellationToken);
             var result = GetDiffChangedFilesFromString(exec.StandardOutput, stagedStatus);
             if (!exec.ExitedSuccessfully)
             {
@@ -2533,7 +2535,7 @@ namespace GitCommands
             {
                 // For worktree the untracked must be added too
                 // Note that this may add a second GitError, this is a separate Git command
-                var files = GetAllChangedFilesWithSubmodulesStatus().Where(x =>
+                var files = GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken).Where(x =>
                     ((x.Staged == StagedStatus.WorkTree && x.IsNew) || x.IsStatusOnly)).ToArray();
                 if (firstRevision == GitRevision.WorkTreeGuid)
                 {
@@ -2606,9 +2608,9 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true,
             bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
-            UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+            UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default, CancellationToken cancellationToken = default)
         {
-            ExecutionResult exec = _gitExecutable.Execute(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles), throwOnErrorExit: false);
+            ExecutionResult exec = _gitExecutable.Execute(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles), throwOnErrorExit: false, cancellationToken: cancellationToken);
             List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
             if (!exec.ExitedSuccessfully)
             {
@@ -2677,9 +2679,9 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles = true,
             bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
-            UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
+            UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default, CancellationToken cancellationToken = default)
         {
-            var status = GetAllChangedFiles(excludeIgnoredFiles, excludeAssumeUnchangedFiles, excludeSkipWorktreeFiles, untrackedFiles);
+            var status = GetAllChangedFiles(excludeIgnoredFiles, excludeAssumeUnchangedFiles, excludeSkipWorktreeFiles, untrackedFiles, cancellationToken);
             GetCurrentSubmoduleStatus(status);
             return status;
         }
