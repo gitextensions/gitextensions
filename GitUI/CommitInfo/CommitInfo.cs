@@ -188,7 +188,8 @@ namespace GitUI.CommitInfo
         {
             try
             {
-                _linkFactory.ExecuteLink(e.LinkText, commandEventArgs => CommandClickedEvent?.Invoke(sender, commandEventArgs), ShowAll);
+                string? linkUri = RevisionInfo.GetLink(e.LinkStart);
+                _linkFactory.ExecuteLink(linkUri, commandEventArgs => CommandClickedEvent?.Invoke(sender, commandEventArgs), ShowAll);
             }
             catch (Exception ex)
             {
@@ -218,9 +219,10 @@ namespace GitUI.CommitInfo
             switch (what)
             {
                 case "branches":
-                case "tags":
                     _showAllBranches = true;
                     _branchInfo = null; // forces update
+                    break;
+                case "tags":
                     _showAllTags = true;
                     _tagInfo = null; // forces update
                     break;
