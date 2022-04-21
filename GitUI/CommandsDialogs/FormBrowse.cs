@@ -1548,6 +1548,10 @@ namespace GitUI.CommandsDialogs
                 // workaround to avoid focusing the "filter files" combobox
                 revisionDiff.SwitchFocus(alreadyContainedFocus: false);
             }
+            else if (CommitInfoTabControl.SelectedTab == TreeTabPage)
+            {
+                fileTree.SwitchFocus(alreadyContainedFocus: false);
+            }
         }
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
