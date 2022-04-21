@@ -301,7 +301,6 @@ namespace GitUI.CommitInfo
             _branches = null;
             _tags = null;
             _annotatedTagsMessages = null;
-            _linkFactory.Clear();
 
             UpdateCommitMessage();
 
