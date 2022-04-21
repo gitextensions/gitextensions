@@ -201,7 +201,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 // Wait for pending operations so the Control is loaded completely before testing it
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Rtf);
+                Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
             });
         }
 
@@ -289,7 +289,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 commitInfo.GetTestAccessor().RevisionInfo_LinkClicked(commitInfo, new("not important", linkStart: 423, linkLength: 0));
                 mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/branches");
 
-                Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Rtf);
+                Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
             });
         }
 
@@ -333,7 +333,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 commitInfo.GetTestAccessor().RevisionInfo_LinkClicked(commitInfo, new("not important", linkStart: 774, linkLength: 0));
                 mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/tags");
 
-                Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Rtf);
+                Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
             });
         }
 

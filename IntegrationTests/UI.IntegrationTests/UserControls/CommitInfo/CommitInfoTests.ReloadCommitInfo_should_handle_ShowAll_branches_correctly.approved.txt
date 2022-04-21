@@ -1,36 +1,31 @@
-﻿{\rtf1\ansi\ansicpg1251\deff0\nouicompat\deflang1049{\fonttbl{\f0\fnil\fcharset204 Segoe UI;}}
-{\colortbl ;\red0\green0\blue255;}
-{\*\generator Riched20 10.0.22000}\viewkind4\uc1 
-\pard\f0\fs18 Contained in branches:\par
+﻿Contained in branches:
+branch01|||gitext://gotobranch/branch01
+branch02|||gitext://gotobranch/branch02
+branch03|||gitext://gotobranch/branch03
+branch04|||gitext://gotobranch/branch04
+branch05|||gitext://gotobranch/branch05
+branch06|||gitext://gotobranch/branch06
+branch07|||gitext://gotobranch/branch07
+branch08|||gitext://gotobranch/branch08
+branch09|||gitext://gotobranch/branch09
+branch10|||gitext://gotobranch/branch10
+branch11|||gitext://gotobranch/branch11
+branch12|||gitext://gotobranch/branch12
+branch13|||gitext://gotobranch/branch13
+branch14|||gitext://gotobranch/branch14
+branch15|||gitext://gotobranch/branch15
+Contained in tags:
+v1.0|||gitext://gototag/v1.0
+v1.1|||gitext://gototag/v1.1
+v1.2|||gitext://gototag/v1.2
+v1.3|||gitext://gototag/v1.3
+v1.4|||gitext://gototag/v1.4
+v1.5|||gitext://gototag/v1.5
+v1.6|||gitext://gototag/v1.6
+v1.7|||gitext://gototag/v1.7
+v1.8|||gitext://gototag/v1.8
+v1.9|||gitext://gototag/v1.9
+[ Show all ]|||gitext://showall/tags
 
-\pard branch01\v |||gitext://gotobranch/branch01\v0\par
-branch02\v |||gitext://gotobranch/branch02\v0\par
-branch03\v |||gitext://gotobranch/branch03\v0\par
-branch04\v |||gitext://gotobranch/branch04\v0\par
-branch05\v |||gitext://gotobranch/branch05\v0\par
-branch06\v |||gitext://gotobranch/branch06\v0\par
-branch07\v |||gitext://gotobranch/branch07\v0\par
-branch08\v |||gitext://gotobranch/branch08\v0\par
-branch09\v |||gitext://gotobranch/branch09\v0\par
-branch10\v |||gitext://gotobranch/branch10\v0\par
-branch11\v |||gitext://gotobranch/branch11\v0\par
-branch12\v |||gitext://gotobranch/branch12\v0\par
-branch13\v |||gitext://gotobranch/branch13\v0\par
-branch14\v |||gitext://gotobranch/branch14\v0\par
-branch15\v |||gitext://gotobranch/branch15\v0\par
-Contained in tags:\par
-v1.0\v |||gitext://gototag/v1.0\v0\par
-v1.1\v |||gitext://gototag/v1.1\v0\par
-v1.2\v |||gitext://gototag/v1.2\v0\par
-v1.3\v |||gitext://gototag/v1.3\v0\par
-v1.4\v |||gitext://gototag/v1.4\v0\par
-v1.5\v |||gitext://gototag/v1.5\v0\par
-v1.6\v |||gitext://gototag/v1.6\v0\par
-v1.7\v |||gitext://gototag/v1.7\v0\par
-v1.8\v |||gitext://gototag/v1.8\v0\par
-v1.9\v |||gitext://gototag/v1.9\v0\par
-[ Show all ]\v |||gitext://showall/tags\v0\par
-\par
-\par
-Derives from no tag\par
-}
+
+Derives from no tag
