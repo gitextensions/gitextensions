@@ -21,7 +21,7 @@ using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
-    public partial class RepoObjectsTree : GitModuleControl
+    public sealed partial class RepoObjectsTree : GitModuleControl
     {
         public const string HotkeySettingsName = "LeftPanel";
 
@@ -562,6 +562,11 @@ namespace GitUI.BranchTreePanel
             }
 
             SelectNode(node, multiple: ModifierKeys.HasFlag(Keys.Control), includingDescendants: ModifierKeys.HasFlag(Keys.Shift));
+
+            if (node is Node clickable)
+            {
+                clickable.OnClick();
+            }
         }
 
         private void SelectNode(NodeBase node, bool multiple, bool includingDescendants)
@@ -579,11 +584,6 @@ namespace GitUI.BranchTreePanel
                 }
 
                 node.Select(true); // and only select the clicked one
-            }
-
-            if (node is Node clickable)
-            {
-                clickable.OnClick();
             }
         }
 

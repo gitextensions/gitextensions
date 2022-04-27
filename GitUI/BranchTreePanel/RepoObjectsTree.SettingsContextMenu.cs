@@ -6,7 +6,7 @@ using GitCommands;
 
 namespace GitUI.BranchTreePanel
 {
-    public partial class RepoObjectsTree
+    partial class RepoObjectsTree
     {
         /// <summary>
         /// We assume tree to position indices are 0-based and sequential. In case this
