@@ -112,21 +112,21 @@ namespace GitUI
                 summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev.ObjectId),
                 statuses: module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken)));
 
-            if (!AppSettings.ShowDiffForAllParents || revisions.Count > maxMultiCompare || headId is null)
+            if (!AppSettings.ShowDiffForAllParents || revisions.Count > maxMultiCompare)
             {
                 return fileStatusDescs;
             }
 
             // Get base commit, add as parent if unique
-            var firstRevHead = GetRevisionOrHead(firstRev, headId);
-            var selectedRevHead = GetRevisionOrHead(selectedRev, headId);
-            var baseRevGuid = module.GetMergeBase(firstRevHead, selectedRevHead);
+            var firstRevHead = headId is null ? null : GetRevisionOrHead(firstRev, headId);
+            var selectedRevHead = headId is null ? null : GetRevisionOrHead(selectedRev, headId);
+            var baseRevGuid = (firstRevHead is null || selectedRevHead is null) ? null : module.GetMergeBase(firstRevHead, selectedRevHead);
 
             // Four selected, to check if two ranges are selected
-            var baseA = (revisions.Count != 4 || baseRevGuid is null)
+            var baseA = revisions.Count != 4 || baseRevGuid is null || headId is null
                 ? null
                 : module.GetMergeBase(GetRevisionOrHead(revisions[3], headId), firstRevHead);
-            var baseB = baseA is null || baseA != revisions[3].ObjectId
+            var baseB = baseA is null || baseA != revisions[3].ObjectId || headId is null
                 ? null
                 : module.GetMergeBase(GetRevisionOrHead(revisions[1], headId), selectedRevHead);
             if (baseB != revisions[1].ObjectId)
@@ -135,7 +135,7 @@ namespace GitUI
             }
 
             // Check for separate branches (note that artificial commits both have HEAD as BASE)
-            if (baseRevGuid is null
+            if (baseRevGuid is null || headId is null
 
                 // For two check that the selections are in separate branches
                 || (revisions.Count == 2 && (baseRevGuid == firstRevHead
