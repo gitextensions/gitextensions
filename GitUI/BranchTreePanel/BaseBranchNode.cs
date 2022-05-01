@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 
@@ -30,6 +31,8 @@ namespace GitUI.BranchTreePanel
         }
 
         protected string? AheadBehind { get; set; }
+
+        protected string? RelatedBranch { get; set; }
 
         /// <summary>
         /// Short name of the branch/branch path. <example>"issue1344"</example>.
@@ -64,9 +67,10 @@ namespace GitUI.BranchTreePanel
                 && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
         }
 
-        public void UpdateAheadBehind(string aheadBehindData)
+        public void UpdateAheadBehind(string aheadBehindData, string relatedBranch)
         {
             AheadBehind = aheadBehindData;
+            RelatedBranch = relatedBranch;
         }
 
         public bool Rebase()
@@ -114,7 +118,9 @@ namespace GitUI.BranchTreePanel
         {
             TreeViewNode.TreeView?.BeginInvoke(new Action(() =>
             {
-                UICommands.BrowseGoToRef(FullPath, showNoRevisionMsg: true, toggleSelection: RepoObjectsTree.ModifierKeys.HasFlag(Keys.Control));
+                string branch = RelatedBranch is null || !RepoObjectsTree.ModifierKeys.HasFlag(Keys.Alt)
+                    ? FullPath : RelatedBranch.Substring(startIndex: GitRefName.RefsRemotesPrefix.Length);
+                UICommands.BrowseGoToRef(branch, showNoRevisionMsg: true, toggleSelection: RepoObjectsTree.ModifierKeys.HasFlag(Keys.Control));
                 TreeViewNode.TreeView?.Focus();
             }));
         }
