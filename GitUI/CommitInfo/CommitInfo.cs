@@ -537,7 +537,7 @@ namespace GitUI.CommitInfo
                         if (!string.IsNullOrEmpty(precedingTag))
                         {
                             string tagString = ShowBranchesAsLinks ? _linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);
-                            gitDescribeInfo.Append(Environment.NewLine + WebUtility.HtmlEncode(_derivesFromTag.Text) + " " + tagString);
+                            gitDescribeInfo.Append(WebUtility.HtmlEncode(_derivesFromTag.Text) + " " + tagString);
                             if (!string.IsNullOrEmpty(commitCount))
                             {
                                 gitDescribeInfo.Append(" + " + commitCount + " " + WebUtility.HtmlEncode(_plusCommits.Text));
@@ -545,7 +545,7 @@ namespace GitUI.CommitInfo
                         }
                         else
                         {
-                            gitDescribeInfo.Append(Environment.NewLine + WebUtility.HtmlEncode(_derivesFromNoTag.Text));
+                            gitDescribeInfo.Append(WebUtility.HtmlEncode(_derivesFromNoTag.Text));
                         }
 
                         return gitDescribeInfo.ToString();
@@ -589,7 +589,7 @@ namespace GitUI.CommitInfo
                 _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
             }
 
-            string body = string.Join(Environment.NewLine,
+            string body = string.Join(Environment.NewLine + Environment.NewLine,
                 new[] { _annotatedTagsInfo, _linksInfo, _branchInfo, _tagInfo, _gitDescribeInfo }
                     .Where(_ => !string.IsNullOrEmpty(_)));
 
@@ -610,7 +610,7 @@ namespace GitUI.CommitInfo
                     }
                 }
 
-                return result.ToString();
+                return result.ToString().TrimEnd();
             }
         }
 

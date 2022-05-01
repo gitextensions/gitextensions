@@ -136,7 +136,7 @@ namespace GitUI.CommitInfo
             if (truncated)
             {
                 sb.AppendLine()
-                  .AppendLine(_linkFactory.CreateShowAllLink(refsType));
+                  .Append(_linkFactory.CreateShowAllLink(refsType));
             }
 
             return sb.ToString();

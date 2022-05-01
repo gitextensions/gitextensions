@@ -24,5 +24,4 @@ v1.8|||gitext://gototag/v1.8
 v1.9|||gitext://gototag/v1.9
 [ Show all ]|||gitext://showall/tags
 
-
 Derives from no tag
