@@ -360,8 +360,6 @@ namespace GitUI.CommandsDialogs
 
             var originalId = Module.GetCurrentCheckout();
 
-            Debug.Assert(originalId is not null, "originalId is not null");
-
             bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
             if (!success)
             {
