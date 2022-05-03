@@ -86,10 +86,8 @@ namespace GitCommands.UserRepositoryHistory
                 {
                     mostRecentRepos.Add(ri);
                 }
-                else
-                {
-                    lessRecentRepos.Add(ri);
-                }
+
+                lessRecentRepos.Add(ri);
 
                 if (middleDot)
                 {
@@ -128,7 +126,7 @@ namespace GitCommands.UserRepositoryHistory
                 addToList.AddRange(
                     from caption in orderedRepos.Keys
                     from repo in orderedRepos[caption]
-                    where repo.MostRecent == mostRecent
+                    where !mostRecent || repo.MostRecent == mostRecent
                     select repo);
             }
 
