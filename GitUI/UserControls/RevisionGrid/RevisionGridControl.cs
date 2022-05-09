@@ -400,7 +400,10 @@ namespace GitUI
         public void SetAndApplyPathFilter(string filter)
         {
             _filterInfo.ByPathFilter = !string.IsNullOrWhiteSpace(filter);
-            _filterInfo.PathFilter = filter;
+            if (_filterInfo.ByPathFilter)
+            {
+                _filterInfo.PathFilter = filter;
+            }
 
             PerformRefreshRevisions();
         }
