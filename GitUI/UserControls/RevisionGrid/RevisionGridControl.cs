@@ -1204,13 +1204,13 @@ namespace GitUI
                 return;
             }
 
-            void AddArtificialRevisions(bool insertAsFirst)
+            bool AddArtificialRevisions(bool insertAsFirst)
             {
                 if (!ShowUncommittedChangesIfPossible
                     || !AppSettings.RevisionGraphShowArtificialCommits
                     || Module.IsBareRepository())
                 {
-                    return;
+                    return false;
                 }
 
                 var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
@@ -1246,6 +1246,7 @@ namespace GitUI
                 };
 
                 _gridView.Add(indexRev, insertAsFirst: insertAsFirst);
+                return true;
             }
 
             void OnRevisionReaderError(Exception exception)
@@ -1273,11 +1274,24 @@ namespace GitUI
 
                 if (!firstRevisionReceived && !FilterIsApplied(inclBranchFilter: true))
                 {
+                    semaphoreCurrentCommit.Wait();
+
                     // This has to happen on the UI thread
                     this.InvokeAsync(
                             () =>
                             {
-                                SetPage(new EmptyRepoControl(Module.IsBareRepository()));
+                                bool showArtificial = AddArtificialRevisions(insertAsFirst: false);
+                                _gridView.LoadingCompleted();
+                                if (showArtificial)
+                                {
+                                    // There is a context to show something
+                                    SetPage(_gridView);
+                                }
+                                else
+                                {
+                                    SetPage(new EmptyRepoControl(Module.IsBareRepository()));
+                                }
+
                                 _isRefreshingRevisions = false;
                                 GridLoaded?.Invoke(this, new GridLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
                             })
