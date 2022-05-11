@@ -10,7 +10,7 @@
     <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <StartupObject />
 
-    <Prefer32bit>true</Prefer32bit>
+    <Prefer32Bit>true</Prefer32Bit>
 
     <IsPublishable>true</IsPublishable>
     <PublishDir Condition="'$(IsPublishable)' == 'true'">$(AppPublishDir)</PublishDir>
@@ -18,13 +18,14 @@
 
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotnetRuntimeBootstrapper">
+    <!-- <PackageReference Include="DotnetRuntimeBootstrapper">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    </PackageReference> -->
     <PackageReference Include="GitInfo">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
