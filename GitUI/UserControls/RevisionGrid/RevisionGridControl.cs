@@ -2788,10 +2788,8 @@ namespace GitUI
 
             using FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
             formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));
-            if (formProcess.ShowDialog(ParentForm) != DialogResult.Cancel)
-            {
-                PerformRefreshRevisions();
-            }
+            formProcess.ShowDialog(ParentForm);
+            PerformRefreshRevisions();
         }
 
         #region Drag/drop patch files on revision grid
