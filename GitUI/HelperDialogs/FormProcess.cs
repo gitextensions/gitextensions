@@ -68,6 +68,9 @@ namespace GitUI.HelperDialogs
         {
         }
 
+        // Note that "DialogResult FormProcess.ShowDialog(owner)" may exit when the process (command) finishes,
+        // so that result is other than OK or Cancel.
+
         public static bool ShowDialog(IWin32Window? owner, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process = null)
         {
             Debug.Assert(owner is not null, "Progress window must be owned by another window! This is a bug, please correct and send a pull request with a fix.");
