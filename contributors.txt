@@ -174,4 +174,5 @@ YYYY/MM/DD, github id, Full name, email
 2021/12/29, blazejszuca, Błażej Szuca, blazej.szuca+gitextensions(at)gmail.com
 2022/03/23, axunonb, Norbert Bietsch, nb[@)axuno.net
 2022/04/05, lanzhiquan, Zhiquan Lan, lanzhiquan@foxmail.com
-2022/12/05, TheShadoWCo, Maximov Valery, maximovvaelry@gmail.com
+2022/05/12, TheShadoWCo, Maximov Valery, maximovvaelry@gmail.com
+2022/05/19, zvirja, Oleksandr Povar, zvirja1[.@)gmail.com
