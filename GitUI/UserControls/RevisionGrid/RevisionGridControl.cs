@@ -946,11 +946,7 @@ namespace GitUI
 
                     // If the current checkout (HEAD) is changed, don't get the currently selected rows,
                     // select the new current checkout instead.
-                    if (newCurrentCheckout != CurrentCheckout
-                        && newCurrentCheckout is not null
-                        && currentlySelectedObjectIds is not null
-                        && currentlySelectedObjectIds.Count == 1
-                        && currentlySelectedObjectIds[0] == CurrentCheckout)
+                    if (newCurrentCheckout != CurrentCheckout && newCurrentCheckout is not null)
                     {
                         currentlySelectedObjectIds = new List<ObjectId> { newCurrentCheckout };
                     }
