@@ -793,6 +793,7 @@ namespace GitUI.CommandsDialogs
             ContextSaveBaseAs.Enabled = enabled;
             openToolStripMenuItem.Enabled = enabled;
             openWithToolStripMenuItem.Enabled = enabled;
+            openFolderToolStripMenuItem.Enabled = enabled;
             fileHistoryToolStripMenuItem.Enabled = enabled;
         }
 
@@ -1466,6 +1467,16 @@ namespace GitUI.CommandsDialogs
             if (filePath is not null)
             {
                 OsShellUtil.OpenAs(filePath);
+            }
+        }
+
+        private void openFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string fileName = GetFileName();
+            string? filePath = _fullPathResolver.Resolve(fileName);
+            if (filePath is not null)
+            {
+                OsShellUtil.SelectPathInFileExplorer(filePath.ToNativePath());
             }
         }
 
