@@ -277,9 +277,10 @@ namespace GitUI.CommandsDialogs
             // 
             // openFolderToolStripMenuItem
             // 
+            this.openFolderToolStripMenuItem.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
             this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
-            this.openFolderToolStripMenuItem.Text = "Open Containing Folder";
+            this.openFolderToolStripMenuItem.Text = "Show in folder";
             this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.openFolderToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
