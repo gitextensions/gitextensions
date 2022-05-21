@@ -176,3 +176,4 @@ YYYY/MM/DD, github id, Full name, email
 2022/04/05, lanzhiquan, Zhiquan Lan, lanzhiquan@foxmail.com
 2022/05/12, TheShadoWCo, Maximov Valery, maximovvaelry@gmail.com
 2022/05/19, zvirja, Oleksandr Povar, zvirja1[.@)gmail.com
+2022/05/20, Rhumborl, Philip Cole, pccole[at)gmail.com

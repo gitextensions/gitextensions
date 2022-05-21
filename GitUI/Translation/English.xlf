@@ -7380,6 +7380,10 @@ Do you want to use this custom merge script?</source>
         <source>Merge</source>
         <target />
       </trans-unit>
+      <trans-unit id="openFolderToolStripMenuItem.Text">
+        <source>Show in folder</source>
+        <target />
+      </trans-unit>
       <trans-unit id="openMergeToolBtn.Text">
         <source>Open in mergetool</source>
         <target />

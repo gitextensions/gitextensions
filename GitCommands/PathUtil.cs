@@ -19,14 +19,14 @@ namespace GitCommands
         public static readonly char PosixDirectorySeparatorChar = '/';
         public static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
 
-        /// <summary>Replaces native path separator with posix path separator.</summary>
+        /// <summary>Replaces native path separator with posix path separator (/).</summary>
         [return: NotNullIfNotNull("path")]
         public static string? ToPosixPath(this string? path)
         {
             return path?.Replace(NativeDirectorySeparatorChar, PosixDirectorySeparatorChar);
         }
 
-        /// <summary>Replaces '\' with '/'.</summary>
+        /// <summary>Replaces '/' with native path separator.</summary>
         [return: NotNullIfNotNull("path")]
         public static string? ToNativePath(this string? path)
         {
