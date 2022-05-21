@@ -232,7 +232,7 @@ namespace GitUI
             // 
             // resetAnotherBranchToHereToolStripMenuItem
             // 
-            this.resetAnotherBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
+            this.resetAnotherBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetAnotherBranchToHere;
             this.resetAnotherBranchToHereToolStripMenuItem.Name = "resetAnotherBranchToHereToolStripMenuItem";
             this.resetAnotherBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.resetAnotherBranchToHereToolStripMenuItem.Text = "Reset an&other branch to here...";
