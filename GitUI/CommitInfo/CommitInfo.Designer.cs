@@ -91,7 +91,7 @@ namespace GitUI.CommitInfo
             this.rtbxCommitMessage.Size = new System.Drawing.Size(440, 20);
             this.rtbxCommitMessage.TabIndex = 1;
             this.rtbxCommitMessage.Text = "";
-            this.rtbxCommitMessage.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfo_LinkClicked);
+            this.rtbxCommitMessage.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             this.rtbxCommitMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichTextBox_KeyDown);
             this.rtbxCommitMessage.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
             // 
@@ -213,7 +213,7 @@ namespace GitUI.CommitInfo
             this.RevisionInfo.Size = new System.Drawing.Size(448, 98);
             this.RevisionInfo.TabIndex = 2;
             this.RevisionInfo.Text = "";
-            this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfo_LinkClicked);
+            this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.LinkClicked);
             this.RevisionInfo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichTextBox_KeyDown);
             this.RevisionInfo.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
             // 

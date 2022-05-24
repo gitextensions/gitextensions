@@ -211,6 +211,8 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         public void ReloadCommitInfo_should_extract_links_correctly(string refText, int linkStart, string expectedUri)
         {
             string hash = "a48da1aba59a65b2a7f0df7e3512817caf16819f";
+            string hashInBody = "a48da1aba59a65b2a7f0df7e3512817caf16819a";
+            string hashLink = $"gitext://gotocommit/{hashInBody}";
 
             // Generate branches: branch01...branch15
             _gitExecutable.StageOutput($"branch --contains {hash}", string.Join('\n', Enumerable.Range(1, 15).Select(i => $"branch{i:00}")));
@@ -227,7 +229,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 AuthorUnixTime = DateTimeUtils.ToUnixTime(DateTime.Parse("2010-03-24 13:37:12")),
                 AuthorEmail = "j.doe@some.email.dotcom",
                 Subject = "fix: bugs",
-                Body = "fix: bugs\r\n\r\nall bugs fixed"
+                Body = $"fix: bugs\r\n\r\nall bugs from {hashInBody} fixed"
             };
 
             RunCommitInfoTest(async (commitInfo) =>
@@ -238,14 +240,23 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                     return;
                 }
 
+                object commandClickedSender = null;
+                commitInfo.CommandClicked += (s, e) => commandClickedSender = s;
                 commitInfo.SetRevisionWithChildren(revision, children: null);
 
                 // Wait for pending operations so the Control is loaded completely before testing it
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
+                var ta = commitInfo.GetTestAccessor();
+
                 // simulate a click on refText link
-                commitInfo.GetTestAccessor().RevisionInfo_LinkClicked(commitInfo, new(refText, linkStart, linkLength: refText.Length));
+                ta.LinkClicked(ta.RevisionInfo, new(refText, linkStart, linkLength: refText.Length));
                 mockLinkFactory.LastExecutedLinkUri.Should().Be(expectedUri);
+
+                // simulate a click on hash link
+                ta.LinkClicked(ta.CommitMessage, new(hashInBody, linkStart: 25, linkLength: hashInBody.Length));
+                mockLinkFactory.LastExecutedLinkUri.Should().Be(hashLink);
+                commandClickedSender.Should().Be(ta.CommitMessage);
             });
         }
 
@@ -286,7 +297,8 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 // simulate a click on refText link
-                commitInfo.GetTestAccessor().RevisionInfo_LinkClicked(commitInfo, new("not important", linkStart: 423, linkLength: 0));
+                var ta = commitInfo.GetTestAccessor();
+                ta.LinkClicked(ta.RevisionInfo, new("not important", linkStart: 423, linkLength: 0));
                 mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/branches");
 
                 Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
@@ -330,7 +342,8 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 // simulate a click on refText link
-                commitInfo.GetTestAccessor().RevisionInfo_LinkClicked(commitInfo, new("not important", linkStart: 774, linkLength: 0));
+                var ta = commitInfo.GetTestAccessor();
+                ta.LinkClicked(ta.RevisionInfo, new("not important", linkStart: 774, linkLength: 0));
                 mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/tags");
 
                 Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);

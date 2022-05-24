@@ -186,11 +186,11 @@ namespace GitUI.CommitInfo
             set => SetRevisionWithChildren(value, null);
         }
 
-        private void RevisionInfo_LinkClicked(object sender, LinkClickedEventArgs e)
+        private void LinkClicked(object sender, LinkClickedEventArgs e)
         {
             try
             {
-                string? linkUri = RevisionInfo.GetLink(e.LinkStart);
+                string? linkUri = ((RichTextBox)sender).GetLink(e.LinkStart);
                 _linkFactory.ExecuteLink(linkUri, commandEventArgs => CommandClickedEvent?.Invoke(sender, commandEventArgs), ShowAll);
             }
             catch (Exception ex)
@@ -885,11 +885,13 @@ namespace GitUI.CommitInfo
                 _commitInfo = commitInfo;
             }
 
+            public RichTextBox CommitMessage => _commitInfo.rtbxCommitMessage;
+
             public RichTextBox RevisionInfo => _commitInfo.RevisionInfo;
 
             public IDictionary<string, int> GetSortedTags() => _commitInfo.GetSortedTags();
 
-            public void RevisionInfo_LinkClicked(object sender, LinkClickedEventArgs e) => _commitInfo.RevisionInfo_LinkClicked(sender, e);
+            public void LinkClicked(object sender, LinkClickedEventArgs e) => _commitInfo.LinkClicked(sender, e);
         }
     }
 }
