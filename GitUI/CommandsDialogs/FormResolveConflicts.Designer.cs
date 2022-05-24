@@ -468,7 +468,7 @@ namespace GitUI.CommandsDialogs
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(140, 25);
             this.Reset.TabIndex = 6;
-            this.Reset.Text = "Reset to &previous commit";
+            this.Reset.Text = "&Reset";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.Reset_Click);
             // 

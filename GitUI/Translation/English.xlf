@@ -7074,7 +7074,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <target />
       </trans-unit>
       <trans-unit id="Reset.Text">
-        <source>Reset to &amp;previous commit</source>
+        <source>&amp;Reset</source>
         <target />
       </trans-unit>
       <trans-unit id="_abortCurrentOperation.Text">
@@ -7311,7 +7311,7 @@ Please go to settings and configure the mergetool!</source>
         <target />
       </trans-unit>
       <trans-unit id="_resetCaption.Text">
-        <source>Reset changes</source>
+        <source>Reset</source>
         <target />
       </trans-unit>
       <trans-unit id="_solveMergeConflictApplyToAllCheckBoxText.Text">

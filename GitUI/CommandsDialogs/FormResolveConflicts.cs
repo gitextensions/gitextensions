@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
                 "All changes since the last commit will be deleted." + Environment.NewLine +
                 Environment.NewLine + "Do you want to reset the changes?");
 
-        private readonly TranslationString _resetCaption = new("Reset changes");
+        private readonly TranslationString _resetCaption = new("Reset");
 
         private readonly TranslationString _areYouSureYouWantDeleteFiles =
             new("Are you sure you want to DELETE all changes?" + Environment.NewLine +
