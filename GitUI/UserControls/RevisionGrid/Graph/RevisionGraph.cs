@@ -182,8 +182,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </summary>
         /// <param name="revision">The revision to add.</param>
         /// <param name="types">The graph node flags.</param>
-        /// <param name="insertAsFirst">Insert the (artificial) revision first in the graph.</param>
-        public void Add(GitRevision revision, RevisionNodeFlags types, bool insertAsFirst = false)
+        /// <param name="insertScore">Insert the (artificial) revision before the node with this score.</param>
+        /// <param name="insertRange">Number of scores "reserved" in the list when inserting.</param>
+        public void Add(GitRevision revision, RevisionNodeFlags types, int? insertScore = null, int insertRange = 0)
         {
             // The commits are sorted by the score (not contiuous numbering there may be gaps)
             // This commit will be ordered after existing, _maxScore is a preliminary score
@@ -192,29 +193,40 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             bool updateParents = true;
             if (!_nodeByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))
             {
-                int score = insertAsFirst
+                // This revision is added from the log, but not seen before. This is probably a root node (new branch)
+                // OR the revisions are not in topo order. If this the case, we deal with it later.
+                int score = _maxScore;
 
-                    // Insert first artificial (WorkTree) before first existing
-                    ? -1
+                if (insertScore is not null && _nodeByObjectId is not null)
+                {
+                    // This revision is to be inserted before a certain node
+                    foreach (var (_, graphRevision) in _nodeByObjectId)
+                    {
+                        if (graphRevision.Score < insertScore)
+                        {
+                            // Lower existing scores to reserve the inserted range
+                            graphRevision.OffsetScore(-insertRange);
+                        }
+                    }
 
-                    // This revision is added from the log, but not seen before. This is probably a root node (new branch)
-                    // OR the revisions are not in topo order. If this the case, we deal with it later.
-                    : _maxScore;
+                    score = insertScore.Value - insertRange;
+                }
+
                 revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, score);
                 _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
             }
             else
             {
                 // This revision was added earlier, but is now found in the log.
-                if (!insertAsFirst)
+                if (insertScore is null)
                 {
                     // Increase the score to the current maxScore to keep the order intact.
                     revisionGraphRevision.EnsureScoreIsAbove(_maxScore);
                 }
                 else
                 {
-                    // Second artificial (Index), score already set, no parent (HEAD not in grid)
-                    // No parent segment to be added
+                    // Second artificial (Index), score already set
+                    // No parent segment to be added (HEAD not in grid)
                     updateParents = false;
                 }
             }
@@ -231,10 +243,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     if (!_nodeByObjectId.TryGetValue(parentObjectId, out RevisionGraphRevision parentRevisionGraphRevision))
                     {
-                        int score = insertAsFirst
+                        int score = insertScore is not null
 
-                            // After first inserted (as 0)
-                            ? revisionGraphRevision.Score + 1
+                            // Inserted after current revision
+                            ? revisionGraphRevision.Score + 1 + revision.ParentIds.IndexOf(parentId => parentId == parentObjectId)
 
                             // This parent is not loaded before. Create a new (partial) revision. We will complete the info in the revision
                             // when this revision is loaded from the log.
@@ -265,9 +277,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             if (!updateParents)
             {
-                // The rows may already be cached, invalidate
+                // The rows may already be cached, invalidate and request reload of "some" rows
                 _reorder = true;
-                CacheTo(0, 0);
+                CacheTo(0, 99);
             }
         }
 

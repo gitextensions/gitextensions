@@ -5,9 +5,9 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    public class GridLoadEventArgs : GitUIEventArgs
+    public class RevisionLoadEventArgs : GitUIEventArgs
     {
-        public GridLoadEventArgs(IWin32Window? ownerForm, IGitUICommands gitUICommands, Lazy<IReadOnlyList<IGitRef>> getRefs, bool forceRefresh)
+        public RevisionLoadEventArgs(IWin32Window? ownerForm, IGitUICommands gitUICommands, Lazy<IReadOnlyList<IGitRef>> getRefs, bool forceRefresh)
             : base(ownerForm, gitUICommands, getRefs)
         {
             ForceRefresh = forceRefresh;

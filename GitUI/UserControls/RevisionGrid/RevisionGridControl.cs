@@ -67,12 +67,12 @@ namespace GitUI
         /// <summary>
         ///  Occurs whenever the revision graph has started loading the data.
         /// </summary>
-        public event EventHandler<GridLoadEventArgs>? GridLoading;
+        public event EventHandler<RevisionLoadEventArgs>? RevisionsLoading;
 
         /// <summary>
         ///  Occurs whenever the revision graph has been populated with the data.
         /// </summary>
-        public event EventHandler<GridLoadEventArgs>? GridLoaded;
+        public event EventHandler<RevisionLoadEventArgs>? RevisionsLoaded;
 
         /// <summary>
         ///  Occurs whenever a user toggles between the artificial and the HEAD commits
@@ -586,84 +586,6 @@ namespace GitUI
             _customDiffToolsSequence.CancelCurrent();
         }
 
-        private void SetSelectedIndex(int index, bool toggleSelection = false)
-        {
-            try
-            {
-                _gridView.Select();
-
-                // Prevent exception when changing of reporsitory because the grid still contains no rows.
-                if (index >= _gridView.Rows.Count)
-                {
-                    return;
-                }
-
-                bool shallSelect;
-                bool wasSelected = _gridView.Rows[index].Selected;
-                if (toggleSelection)
-                {
-                    // Toggle the selection, but do not deselect if it is the last one.
-                    shallSelect = !wasSelected || _gridView.SelectedRows.Count == 1;
-                }
-                else
-                {
-                    // Single select this line.
-                    shallSelect = true;
-                    if (!wasSelected || _gridView.SelectedRows.Count > 1)
-                    {
-                        _gridView.ClearSelection();
-                        wasSelected = false;
-                    }
-                }
-
-                if (wasSelected && shallSelect)
-                {
-                    EnsureRowVisible(_gridView, index);
-                    return;
-                }
-
-                _gridView.Rows[index].Selected = shallSelect;
-
-                // Set the first selected row as current.
-                // Assigning _gridView.CurrentCell results in a single selection of that row.
-                // So do not set row as current but make it visible at least.
-                var selectedRows = _gridView.SelectedRows;
-                var firstSelectedRow = selectedRows[0];
-                if (selectedRows.Count == 1)
-                {
-                    _gridView.CurrentCell = firstSelectedRow.Cells[1];
-                }
-
-                EnsureRowVisible(_gridView, firstSelectedRow.Index);
-            }
-            catch (ArgumentException)
-            {
-                // Ignore if selection failed. Datagridview is not threadsafe
-            }
-
-            return;
-
-            static void EnsureRowVisible(DataGridView gridView, int row)
-            {
-                int countVisible = gridView.DisplayedRowCount(includePartialRow: false);
-                int firstVisible = gridView.FirstDisplayedScrollingRowIndex;
-                if (row < firstVisible || firstVisible + countVisible <= row)
-                {
-                    gridView.FirstDisplayedScrollingRowIndex = row;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the index of the revision identified by <paramref name="objectId"/>.
-        /// </summary>
-        /// <param name="objectId">Id of the revision to find.</param>
-        /// <returns>Index of the found revision, or <c>-1</c> if not found.</returns>
-        private int FindRevisionIndex(ObjectId? objectId)
-        {
-            return _gridView.TryGetRevisionIndex(objectId) ?? -1;
-        }
-
         /// <summary>
         /// Selects row containing revision matching <paramref name="objectId"/>.
         /// Returns whether the required revision was found and selected.
@@ -673,21 +595,78 @@ namespace GitUI
         /// <returns><c>true</c> if the required revision was found and selected, otherwise <c>false</c>.</returns>
         public bool SetSelectedRevision(ObjectId? objectId, bool toggleSelection = false, bool updateNavigationHistory = true)
         {
-            var index = FindRevisionIndex(objectId);
-
-            if (index < 0 || index >= _gridView.RowCount)
+            _gridView.ClearToBeSelected();
+            if (_gridView.TryGetRevisionIndex(objectId) is not int index || index < 0 || index >= _gridView.RowCount)
             {
                 return false;
             }
 
             Validates.NotNull(objectId);
-            SetSelectedIndex(index, toggleSelection);
+            SetSelectedIndex(_gridView, index, toggleSelection);
             if (updateNavigationHistory)
             {
                 _navigationHistory.Push(objectId);
             }
 
             return true;
+
+            static void SetSelectedIndex(RevisionDataGridView gridView, int index, bool toggleSelection = false)
+            {
+                try
+                {
+                    gridView.Select();
+
+                    // Prevent exception when changing of reporsitory because the grid still contains no rows.
+                    if (index >= gridView.Rows.Count)
+                    {
+                        return;
+                    }
+
+                    bool shallSelect;
+                    bool wasSelected = gridView.Rows[index].Selected;
+                    if (toggleSelection)
+                    {
+                        // Toggle the selection, but do not deselect if it is the last one.
+                        shallSelect = !wasSelected || gridView.SelectedRows.Count == 1;
+                    }
+                    else
+                    {
+                        // Single select this line.
+                        shallSelect = true;
+                        if (!wasSelected || gridView.SelectedRows.Count > 1)
+                        {
+                            gridView.ClearSelection();
+                            wasSelected = false;
+                        }
+                    }
+
+                    if (wasSelected && shallSelect)
+                    {
+                        gridView.EnsureRowVisible(index);
+                        return;
+                    }
+
+                    gridView.Rows[index].Selected = shallSelect;
+
+                    // Set the first selected row as current.
+                    // Assigning _gridView.CurrentCell results in a single selection of that row.
+                    // So do not set row as current but make it visible at least.
+                    var selectedRows = gridView.SelectedRows;
+                    var firstSelectedRow = selectedRows[0];
+                    if (selectedRows.Count == 1)
+                    {
+                        gridView.CurrentCell = firstSelectedRow.Cells[1];
+                    }
+
+                    gridView.EnsureRowVisible(firstSelectedRow.Index);
+                }
+                catch (ArgumentException)
+                {
+                    // Ignore if selection failed. Datagridview is not threadsafe
+                }
+
+                return;
+            }
         }
 
         public GitRevision? GetRevision(ObjectId objectId)
@@ -930,7 +909,7 @@ namespace GitUI
 
                 System.Threading.CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
 
-                IReadOnlyList<ObjectId>? selectedObjectIds = _gridView.SelectedObjectIds;
+                IReadOnlyList<ObjectId>? currentlySelectedObjectIds = _gridView.SelectedObjectIds;
                 _gridView.SuspendLayout();
                 _gridView.SelectionChanged -= OnGridViewSelectionChanged;
                 _gridView.ClearSelection();
@@ -938,6 +917,7 @@ namespace GitUI
                 _gridView.Enabled = true;
                 _gridView.Focus();
                 _gridView.SelectionChanged += OnGridViewSelectionChanged;
+                _gridView.MarkAsDataLoading();
 
                 // Add the spinner controls, removed by SetPage()
                 Controls.Add(_loadingControlSpinner);
@@ -964,18 +944,18 @@ namespace GitUI
                         : null;
                     ObjectId? newCurrentCheckout = headRef?.ObjectId ?? capturedModule.GetCurrentCheckout();
 
-                    // If the current checkout changed, don't get the currently selected rows, select the
-                    // new current checkout instead.
-                    if (newCurrentCheckout != CurrentCheckout)
+                    // If the current checkout (HEAD) is changed, don't get the currently selected rows,
+                    // select the new current checkout instead.
+                    if (newCurrentCheckout != CurrentCheckout && newCurrentCheckout is not null)
                     {
-                        selectedObjectIds = null;
-                        CurrentCheckout = newCurrentCheckout;
+                        currentlySelectedObjectIds = new List<ObjectId> { newCurrentCheckout };
                     }
 
+                    CurrentCheckout = newCurrentCheckout;
                     refsByObjectId = getUnfilteredRefs.Value.ToLookup(gitRef => gitRef.ObjectId);
                     ResetNavigationHistory();
                     UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef);
-                    SelectInitialRevision(newCurrentCheckout, selectedObjectIds);
+                    _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(newCurrentCheckout, currentlySelectedObjectIds);
 
                     semaphoreCurrentCommit.Release();
 
@@ -1016,7 +996,7 @@ namespace GitUI
                     });
 
                 // Initiate update side panel
-                GridLoading?.Invoke(this, new GridLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
+                RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
             }
             catch
             {
@@ -1169,13 +1149,16 @@ namespace GitUI
                 if (!headIsHandled)
                 {
                     semaphoreCurrentCommit.Wait();
-                    if (revision.ObjectId.Equals(CurrentCheckout))
+                    if (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null)
                     {
                         // Insert worktree/index before HEAD (CurrentCheckout)
-                        // If grid is filtered and HEAD not visible, insert artificial as first after all are updated
+                        // If grid is filtered and HEAD not visible, insert artificial in OnRevisionReadCompleted()
                         headIsHandled = true;
-                        AddArtificialRevisions(insertAsFirst: false);
-                        flags = RevisionNodeFlags.CheckedOut;
+                        AddArtificialRevisions();
+                        if (CurrentCheckout is not null)
+                        {
+                            flags = RevisionNodeFlags.CheckedOut;
+                        }
                     }
 
                     semaphoreCurrentCommit.Release();
@@ -1204,7 +1187,7 @@ namespace GitUI
                 return;
             }
 
-            bool AddArtificialRevisions(bool insertAsFirst)
+            bool AddArtificialRevisions(bool insertWithMatch = false, IEnumerable<ObjectId> headParents = null)
             {
                 if (!ShowUncommittedChangesIfPossible
                     || !AppSettings.RevisionGraphShowArtificialCommits
@@ -1229,7 +1212,7 @@ namespace GitUI
                     ParentIds = new[] { ObjectId.IndexId },
                     HasNotes = true
                 };
-                _gridView.Add(workTreeRev, insertAsFirst: insertAsFirst);
+                _gridView.Add(workTreeRev, insertWithMatch: insertWithMatch, insertRange: 2, parents: headParents);
 
                 // Add index as an artificial commit
                 GitRevision indexRev = new(ObjectId.IndexId)
@@ -1245,7 +1228,8 @@ namespace GitUI
                     HasNotes = true
                 };
 
-                _gridView.Add(indexRev, insertAsFirst: insertAsFirst);
+                // headParents is not needed for Index, already handled by WorkTree insertion
+                _gridView.Add(indexRev, insertWithMatch: insertWithMatch, insertRange: 0, parents: null);
                 return true;
             }
 
@@ -1264,14 +1248,6 @@ namespace GitUI
 
             void OnRevisionReadCompleted()
             {
-                if (firstRevisionReceived && !headIsHandled)
-                {
-                    // If parents are rewritten HEAD may not be included
-                    // Insert the artificial commits first as unrelated commits so they always appear
-                    // (finding the most relevant commit is tricky)
-                    AddArtificialRevisions(insertAsFirst: true);
-                }
-
                 if (!firstRevisionReceived && !FilterIsApplied(inclBranchFilter: true))
                 {
                     semaphoreCurrentCommit.Wait();
@@ -1280,7 +1256,8 @@ namespace GitUI
                     this.InvokeAsync(
                             () =>
                             {
-                                bool showArtificial = AddArtificialRevisions(insertAsFirst: false);
+                                _gridView.LoadingCompleted();
+                                bool showArtificial = AddArtificialRevisions();
                                 _gridView.LoadingCompleted();
                                 if (showArtificial)
                                 {
@@ -1293,22 +1270,62 @@ namespace GitUI
                                 }
 
                                 _isRefreshingRevisions = false;
-                                GridLoaded?.Invoke(this, new GridLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
+                                RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
                             })
                         .FileAndForget();
                     return;
                 }
 
-                // This has to happen on the UI thread
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
+                    IEnumerable<ObjectId> headParents = null;
+                    if (firstRevisionReceived && !headIsHandled)
+                    {
+                        if (CurrentCheckout is not null)
+                        {
+                            // Not found, so search for its parents
+                            headParents = TryGetParents(Module, _filterInfo, CurrentCheckout);
+                        }
+
+                        // If parents are rewritten HEAD may not be included
+                        // Insert the artificial commits where relevant if possible, otherwise first
+                        AddArtificialRevisions(insertWithMatch: true, headParents);
+                        await this.SwitchToMainThreadAsync();
+                        _gridView.Refresh();
+                        await TaskScheduler.Default;
+                    }
+
+                    // All revisions are loaded (but maybe not yet the grid)
+                    if (!_gridView.PendingToBeSelected &&
+
+                        // objectIds that were not selected after revisions were loaded
+                        _gridView.ToBeSelectedObjectIds.Count > 0)
+                    {
+                        ObjectId notSelectedId = _gridView.ToBeSelectedObjectIds[0];
+                        IEnumerable<ObjectId> parents = null;
+                        if (headParents is not null && notSelectedId == CurrentCheckout)
+                        {
+                            parents = headParents;
+                        }
+                        else if (headParents is not null && headParents.ToList().IndexOf(notSelectedId) is int index && index >= 0)
+                        {
+                            parents = headParents.Skip(index + 1).ToList();
+                        }
+                        else
+                        {
+                            parents = TryGetParents(Module, _filterInfo, notSelectedId);
+                        }
+
+                        // Try to select the first of the parents
+                        _gridView.SetToBeSelectedFromParents(parents);
+                    }
+
                     await this.SwitchToMainThreadAsync();
 
                     _gridView.LoadingCompleted();
                     SetPage(_gridView);
                     _isRefreshingRevisions = false;
-                    GridLoaded?.Invoke(this, new GridLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
-                    CheckAndRepairInitialRevision();
+                    RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
                     HighlightRevisionsByAuthor(GetSelectedRevisions());
 
                     if (ShowBuildServerInfo)
@@ -1357,88 +1374,48 @@ namespace GitUI
 #pragma warning disable CS1587 // XML comment is not placed on a valid language element
             /// <summary>
             /// Select initial revision(s) in the grid.
+            /// Get the revision(s) currently selected in the grid, to be selected at next refresh.
+            /// If SelectedId is set, select that revision instead.
             /// The SelectedId is the last selected commit in the grid (with related CommitInfo in Browse).
             /// The FirstId is first selected, the first commit in a diff.
             /// </summary>
-            void SelectInitialRevision(ObjectId? currentCheckout, IReadOnlyList<ObjectId>? toBeSelectedObjectIds)
+            IReadOnlyList<ObjectId>? GetToBeSelectedRevisions(ObjectId? currentCheckout, IReadOnlyList<ObjectId>? currentlySelectedObjectIds)
 #pragma warning restore CS1587 // XML comment is not placed on a valid language element
             {
-                if (toBeSelectedObjectIds is null || toBeSelectedObjectIds.Count == 0)
+                if (SelectedId is not null)
                 {
-                    if (SelectedId is not null)
+                    IReadOnlyList<ObjectId>? toBeSelectedObjectIds;
+                    if (FirstId is not null)
                     {
-                        if (FirstId is not null)
-                        {
-                            toBeSelectedObjectIds = new ObjectId[] { FirstId, SelectedId };
-                            FirstId = null;
-                        }
-                        else
-                        {
-                            toBeSelectedObjectIds = new ObjectId[] { SelectedId };
-                        }
-
-                        SelectedId = null;
+                        toBeSelectedObjectIds = new ObjectId[] { FirstId, SelectedId };
+                        FirstId = null;
                     }
                     else
                     {
-                        toBeSelectedObjectIds = currentCheckout is null ? Array.Empty<ObjectId>() : new ObjectId[] { currentCheckout };
+                        toBeSelectedObjectIds = new ObjectId[] { SelectedId };
                     }
+
+                    SelectedId = null;
+                    return toBeSelectedObjectIds;
                 }
 
-                _gridView.ToBeSelectedObjectIds = toBeSelectedObjectIds;
+                if (currentlySelectedObjectIds is null || currentlySelectedObjectIds.Count == 0)
+                {
+                    return currentCheckout is null ? Array.Empty<ObjectId>() : new ObjectId[] { currentCheckout };
+                }
+
+                return currentlySelectedObjectIds;
             }
 
-            void CheckAndRepairInitialRevision()
-            {
-                // Check if there is any commit that couldn't be selected.
-                if (!_gridView.ToBeSelectedObjectIds.Any())
-                {
-                    return;
-                }
-
-                // Search for the commitid that was not selected in the grid. If not found, select the first parent.
-                int index = SearchRevision(_gridView.ToBeSelectedObjectIds.First());
-                if (index >= 0)
-                {
-                    SetSelectedIndex(index);
-                }
-
-                return;
-
-                int SearchRevision(ObjectId objectId)
-                {
-                    // Attempt to look up an item by its ID
-                    if (_gridView.TryGetRevisionIndex(objectId) is int exactIndex)
-                    {
-                        return exactIndex;
-                    }
-
-                    if (objectId is not null && !objectId.IsArtificial)
-                    {
-                        // Not found, so search for its parents
-                        foreach (var parentId in TryGetParents(objectId))
-                        {
-                            if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
-                            {
-                                return parentIndex;
-                            }
-                        }
-                    }
-
-                    // Not found...
-                    return -1;
-                }
-            }
-
-            IEnumerable<ObjectId> TryGetParents(ObjectId objectId)
+            static IEnumerable<ObjectId> TryGetParents(GitModule module, FilterInfo filterInfo, ObjectId objectId)
             {
                 GitArgumentBuilder args = new("rev-list")
                 {
-                    { _filterInfo.HasCommitsLimit, $"--max-count={_filterInfo.CommitsLimit}" },
+                    { filterInfo.HasCommitsLimit, $"--max-count={filterInfo.CommitsLimit}" },
                     objectId
                 };
 
-                ExecutionResult result = Module.GitExecutable.Execute(args, throwOnErrorExit: false);
+                ExecutionResult result = module.GitExecutable.Execute(args, throwOnErrorExit: false);
                 foreach (var line in result.StandardOutput.LazySplit('\n'))
                 {
                     if (ObjectId.TryParse(line, out var parentId))
@@ -2951,9 +2928,8 @@ namespace GitUI
 
             public int VisibleRevisionCount => _revisionGridControl._gridView.RowCount;
 
-            public bool IsUiStable =>
-                !_revisionGridControl._isRefreshingRevisions &&
-                !_revisionGridControl._gridView.IsBackgroundUpdaterActive;
+            public bool IsDataLoadComplete =>
+                _revisionGridControl._gridView.IsDataLoadComplete;
 
             public void ClearSelection()
             {

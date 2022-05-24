@@ -1,7 +1,10 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +31,7 @@ namespace GitUI.UserControls.RevisionGrid
 
     public sealed partial class RevisionDataGridView : DataGridView
     {
+        private const int BackgroundThreadUpdatePeriod = 25;
         private static readonly AccessibleDataGridViewTextBoxCell _accessibleDataGridViewTextBoxCell = new();
 
         private readonly SolidBrush _alternatingRowBackgroundBrush;
@@ -35,10 +39,13 @@ namespace GitUI.UserControls.RevisionGrid
 
         private readonly BackgroundUpdater _backgroundUpdater;
         private readonly Stopwatch _lastRepaint = Stopwatch.StartNew();
+        private readonly List<ColumnProvider> _columnProviders = new();
 
         internal RevisionGraph _revisionGraph = new();
 
-        private readonly List<ColumnProvider> _columnProviders = new();
+        // Set while loading the revisions and data grid, see also ToBeSelectedObjectIds.
+        private Lazy<IList<int>> _toBeSelectedGraphIndexesCache;
+        private int _loadedToBeSelectedRevisionsCount = 0;
 
         private int _backgroundScrollTo;
         private int _consecutiveScrollMessageCnt = 0; // Is used to detect if a forced repaint is needed.
@@ -50,14 +57,37 @@ namespace GitUI.UserControls.RevisionGrid
         private Font _boldFont;
         private Font _monospaceFont;
 
-        public bool UpdatingVisibleRows { get; private set; }
-        public bool IsBackgroundUpdaterActive => _backgroundUpdater.IsExecuting;
+        /// <summary>
+        /// Indicates whether 'interesting' rows in the data grid is currently being loaded.
+        ///
+        /// The property is set to true when all revisions have been read (including
+        /// artificial commits that are inserted before HEAD) and the data grid rows for
+        /// selected revisions have been loaded.
+        ///
+        /// Revisions are handled directly when git-log delivers them.
+        /// All revisions are always saved.
+        ///
+        /// GridRows are loaded when needed, starting when revisions are loaded.
+        /// If the top revision is selected then only the first rows need to be loaded.
+        /// If one of the bottom rows are selected, all rows must be loaded.
+        /// (https://github.com/gitextensions/gitextensions/wiki/Revision-Graph#revisiongraphrow describes this some.)
+        /// So all grid rows are not forced to be loaded.
+        /// The code now forces loading more rows to be able to select them.
+        ///
+        /// This property is intended to be used by tests.
+        /// </summary>
+        public bool IsDataLoadComplete { get; private set; } = true;
 
+        public bool UpdatingVisibleRows { get; private set; }
+
+        // _toBeSelectedGraphIndexesCache is init in Clear()
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public RevisionDataGridView()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
             InitFonts();
 
-            _backgroundUpdater = new BackgroundUpdater(UpdateVisibleRowRangeInternalAsync, 25);
+            _backgroundUpdater = new BackgroundUpdater(UpdateVisibleRowRangeInternalAsync, BackgroundThreadUpdatePeriod);
 
             InitializeComponent();
             DoubleBuffered = true;
@@ -166,14 +196,6 @@ namespace GitUI.UserControls.RevisionGrid
         // Contains the object Id's that will be selected as soon as all of them have been loaded.
         // The object Id's are in the order in which they were originally selected.
         public IReadOnlyList<ObjectId> ToBeSelectedObjectIds { get; set; } = Array.Empty<ObjectId>();
-
-        private int _loadedToBeSelectedRevisionsCount = 0;
-
-        public bool HasSelection()
-        {
-            return ToBeSelectedObjectIds.Any() || SelectedRows.Count > 0;
-        }
-
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IReadOnlyList<ObjectId>? SelectedObjectIds
@@ -263,7 +285,7 @@ namespace GitUI.UserControls.RevisionGrid
             return SystemBrushes.Window;
         }
 
-        private void OnCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        private void OnCellPainting(object? sender, DataGridViewCellPaintingEventArgs e)
         {
             _lastRepaint.Restart();
 
@@ -300,11 +322,43 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         /// <param name="revision">The revision to add.</param>
         /// <param name="types">The graph node flags.</param>
-        /// <param name="insertAsFirst">Insert the (artificial) revision first in the graph.</param>
-        public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None, bool insertAsFirst = false)
+        /// <param name="insertWithMatch">Insert the (artificial) revision with the first match in headParents or first if no match found (or headParents is null).</param>
+        /// <param name="insertRange">Number of scores "reserved" in the list when inserting.</param>
+        /// <param name="parents">Parent ids for the revision to find (and insert before).</param>
+        public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None, bool insertWithMatch = false, int insertRange = 0, IEnumerable<ObjectId>? parents = null)
         {
-            _revisionGraph.Add(revision, types, insertAsFirst);
+            // Where to insert the revision, null is last
+            int? insertScore = null;
+            if (insertWithMatch)
+            {
+                if (_loadedToBeSelectedRevisionsCount == 0
+                    && ToBeSelectedObjectIds.Count == 0
+                    && SelectedRows?.Count is > 0)
+                {
+                    // (GraphIndex) selection in grid was 'premature'
+                    ToBeSelectedObjectIds = SelectedObjectIds ?? Array.Empty<ObjectId>();
+                    _loadedToBeSelectedRevisionsCount = ToBeSelectedObjectIds.Count;
+                    ResetGraphIndices();
+                }
 
+                // Insert first by default (if HEAD not found)
+                // Actual value is ignored if insertRange is 0
+                // (Used when child (like WorkTree) is already inserted when adding parent (like Index))
+                insertScore = -1;
+                if (insertRange > 0 && parents is not null)
+                {
+                    foreach (var parentId in parents)
+                    {
+                        if (_revisionGraph.TryGetNode(parentId, out RevisionGraphRevision parentRev))
+                        {
+                            insertScore = parentRev.Score;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            _revisionGraph.Add(revision, types, insertScore, insertRange);
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
                 ++_loadedToBeSelectedRevisionsCount;
@@ -317,10 +371,10 @@ namespace GitUI.UserControls.RevisionGrid
         {
             _backgroundScrollTo = 0;
 
-            // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
+            // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about to delete the data
             SetRowCount(0);
             _revisionGraph.Clear();
-            _loadedToBeSelectedRevisionsCount = 0;
+            ClearToBeSelected();
 
             // The graphdata is stored in one of the columnproviders, clear this last
             foreach (var columnProvider in _columnProviders)
@@ -333,12 +387,133 @@ namespace GitUI.UserControls.RevisionGrid
             Invalidate(invalidateChildren: true);
         }
 
+        public void ClearToBeSelected()
+        {
+            _loadedToBeSelectedRevisionsCount = 0;
+            ToBeSelectedObjectIds = Array.Empty<ObjectId>();
+            ResetGraphIndices();
+        }
+
+        public void EnsureRowVisible(int row)
+        {
+            int countVisible = DisplayedRowCount(includePartialRow: false);
+            int firstVisible = FirstDisplayedScrollingRowIndex;
+            if (row >= 0 && (row < firstVisible || firstVisible + countVisible <= row))
+            {
+                FirstDisplayedScrollingRowIndex = row;
+            }
+        }
+
+        /// <summary>
+        /// Returns if any of the to-be-selected was found in the loaded revisions but are not yet selected.
+        /// </summary>
+        public bool PendingToBeSelected => _loadedToBeSelectedRevisionsCount > 0;
+
+        /// <summary>
+        /// Set the first objectid in the parent list that is found in loaded revisions
+        /// as the to-be-selected objectid in the grid.
+        /// </summary>
+        /// <param name="parents">List with parents to the objectid initially intended to be selected.</param>
+        public void SetToBeSelectedFromParents(IEnumerable<ObjectId>? parents)
+        {
+            if (parents is null)
+            {
+                return;
+            }
+
+            foreach (ObjectId parentId in parents)
+            {
+                if (_revisionGraph.TryGetRowIndex(parentId, out int _))
+                {
+                    ToBeSelectedObjectIds = new ObjectId[] { parentId };
+                    _loadedToBeSelectedRevisionsCount = ToBeSelectedObjectIds.Count;
+                    break;
+                }
+            }
+        }
+
         public void LoadingCompleted()
         {
+            if (_loadedToBeSelectedRevisionsCount < ToBeSelectedObjectIds.Count)
+            {
+                // All expected revisions not found, settle with partial (empty) match
+                _loadedToBeSelectedRevisionsCount = ToBeSelectedObjectIds.Count;
+            }
+
+            if (_loadedToBeSelectedRevisionsCount > 0 && _revisionGraph.Count > 0)
+            {
+                // Rows have not been selected yet
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await this.SwitchToMainThreadAsync();
+
+                    if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
+                    {
+                        // Nothing to select or interrupted
+                        MarkAsDataLoadingComplete();
+                        return;
+                    }
+
+                    int scrollTo = _toBeSelectedGraphIndexesCache.Value.Max();
+                    int firstGraphIndex = _toBeSelectedGraphIndexesCache.Value[0];
+                    if (RowCount - 1 < scrollTo)
+                    {
+                        // Wait for the periodic background thread to load all rows in the grid
+                        while (RowCount - 1 < scrollTo && firstGraphIndex >= Rows.Count)
+                        {
+                            // Force loading of rows
+                            int maxScroll = Math.Min(RowCount - 1, scrollTo);
+                            EnsureRowVisible(maxScroll);
+
+                            // Wait for background thread to update grid rows
+                            UpdateVisibleRowRange();
+                            await Task.Delay(BackgroundThreadUpdatePeriod);
+                            if (_loadedToBeSelectedRevisionsCount == 0)
+                            {
+                                // Selection done or aborted
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Rows already selected once, reselect and refresh
+                        SelectRowsIfReady(RowCount);
+                    }
+
+                    // Scroll to first selected only if selection is not changed
+                    if (firstGraphIndex >= 0 && firstGraphIndex < Rows.Count && Rows[firstGraphIndex].Selected)
+                    {
+                        EnsureRowVisible(firstGraphIndex);
+                    }
+
+                    MarkAsDataLoadingComplete();
+                })
+                .FileAndForget();
+            }
+            else
+            {
+                MarkAsDataLoadingComplete();
+            }
+
             foreach (ColumnProvider columnProvider in _columnProviders)
             {
                 columnProvider.LoadingCompleted();
             }
+
+            return;
+
+            void MarkAsDataLoadingComplete()
+            {
+                Debug.Assert(!IsDataLoadComplete, "The grid is already marked as 'data load complete'.");
+                IsDataLoadComplete = true;
+            }
+        }
+
+        public void MarkAsDataLoading()
+        {
+            Debug.Assert(IsDataLoadComplete, "The grid is already marked as 'data load in process'.");
+            IsDataLoadComplete = false;
         }
 
         /// <summary>
@@ -395,36 +570,66 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
+        /// <summary>
+        /// Reset the calculated indices.
+        /// </summary>
+        private void ResetGraphIndices()
+        {
+            _toBeSelectedGraphIndexesCache = new(() => CalculateGraphIndices());
+        }
+
+        /// <summary>
+        /// Get the revision graph row indexes for the ToBeSelectedObjectIds.
+        /// (In filtering situations, all may no longer be in the grid).
+        /// </summary>
+        private IList<int> CalculateGraphIndices()
+        {
+            Debug.Assert(_loadedToBeSelectedRevisionsCount == ToBeSelectedObjectIds.Count,
+                $"{nameof(CalculateGraphIndices)}() was called before all expected revisions were loaded.");
+
+            List<int> toBeSelectedGraphIndexes = new();
+            foreach (ObjectId objectId in ToBeSelectedObjectIds)
+            {
+                if (_revisionGraph.TryGetRowIndex(objectId, out int rowIndexToBeSelected))
+                {
+                    toBeSelectedGraphIndexes.Add(rowIndexToBeSelected);
+                }
+            }
+
+            return toBeSelectedGraphIndexes;
+        }
+
         private void SelectRowsIfReady(int rowCount)
         {
-            // Wait till we have all the row indexes to be selected.
-            if (_loadedToBeSelectedRevisionsCount == 0 || _loadedToBeSelectedRevisionsCount < ToBeSelectedObjectIds.Count)
+            // Wait till we have all the row indexes to be selected
+            if (_loadedToBeSelectedRevisionsCount == 0
+                || _loadedToBeSelectedRevisionsCount < ToBeSelectedObjectIds.Count)
             {
                 return;
             }
 
-            foreach (var objectId in ToBeSelectedObjectIds)
+            // All grid rows must be loaded before they are shown
+            if (_toBeSelectedGraphIndexesCache.Value.Any(i => i > rowCount - 1))
             {
-                try
-                {
-                    if (!_revisionGraph.TryGetRowIndex(objectId, out int rowIndexToBeSelected) || rowIndexToBeSelected >= rowCount)
-                    {
-                        return;
-                    }
+                return;
+            }
 
-                    Rows[rowIndexToBeSelected].Selected = true;
+            // If updating selection, clear is required first
+            ClearSelection();
+            bool first = true;
+            foreach (int index in _toBeSelectedGraphIndexesCache.Value)
+            {
+                Rows[index].Selected = true;
 
-                    CurrentCell ??= Rows[rowIndexToBeSelected].Cells[1];
-                }
-                catch (ArgumentOutOfRangeException)
+                if (first)
                 {
-                    // Not worth crashing for. Ignore exception.
+                    first = false;
+                    CurrentCell = Rows[index].Cells[Math.Min(1, Rows[index].Cells.Count - 1)];
                 }
             }
 
-            // The rows to be selected have just been selected. Prevent from selecting them again.
-            _loadedToBeSelectedRevisionsCount = 0;
-            ToBeSelectedObjectIds = Array.Empty<ObjectId>();
+            // The to-be-selected are handled. Prevent from selecting them again.
+            ClearToBeSelected();
         }
 
         private void SetRowCountAndSelectRowsIfReady(int rowCount)
@@ -660,6 +865,9 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             base.OnMouseDown(e);
+
+            // If clicking while loading, cancel load-select
+            ClearToBeSelected();
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
@@ -682,6 +890,9 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
+        [MemberNotNull(nameof(_normalFont))]
+        [MemberNotNull(nameof(_boldFont))]
+        [MemberNotNull(nameof(_monospaceFont))]
         private void InitFonts()
         {
             _normalFont = AppSettings.Font;

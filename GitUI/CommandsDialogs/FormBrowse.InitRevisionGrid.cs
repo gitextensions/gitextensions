@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs
                 revisionDiff.FallbackFollowedFile = path;
                 fileTree.FallbackFollowedFile = path;
             };
-            RevisionGrid.GridLoading += (sender, e) =>
+            RevisionGrid.RevisionsLoading += (sender, e) =>
             {
                 // The FileTree tab should be shown at first start, in "filehistory" mode
                 if (isBlame)
