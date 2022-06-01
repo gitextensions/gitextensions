@@ -3378,7 +3378,10 @@ namespace GitCommands
             // is a blank line, and third is an introductory paragraph about the project.
 
             Dictionary<ObjectId, GitBlameCommit> commitByObjectId = new();
-            List<GitBlameLine> lines = new(capacity: 256);
+
+            // Pre-allocate the list with a capacity estimated from the approximate git blame length to describe a file line
+            const int GitBlameLengthPerLineHeuristicValue = 120;
+            List<GitBlameLine> lines = new(capacity: Math.Min(Math.Max(256, output.Length / GitBlameLengthPerLineHeuristicValue), 5000));
 
             bool hasCommitHeader;
             ObjectId? objectId;
@@ -3417,7 +3420,7 @@ namespace GitCommands
                     {
                         // TODO quite a few nullable suppressions here (via ! character) which should be addressed as they hint at a design flaw
 
-                        if (!commitByObjectId.ContainsKey(objectId!))
+                        if (!commitByObjectId.TryGetValue(objectId!, out GitBlameCommit? commitData))
                         {
                             commit = new GitBlameCommit(
                                 objectId!,
@@ -3435,7 +3438,6 @@ namespace GitCommands
                         }
                         else
                         {
-                            var commitData = commitByObjectId[objectId!];
                             if (filename == commitData.FileName)
                             {
                                 commit = commitData;
