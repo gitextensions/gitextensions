@@ -512,7 +512,6 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void MarkAsDataLoading()
         {
-            Debug.Assert(IsDataLoadComplete, "The grid is already marked as 'data load in process'.");
             IsDataLoadComplete = false;
         }
 

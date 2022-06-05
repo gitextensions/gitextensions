@@ -835,11 +835,9 @@ namespace GitUI
         }
 
         /// <summary>
-        ///  Indicates whether the revision grid can be refreshed, i.e. it is not currently being refreshed
-        ///  or it is not in a middle of reconfiguration process guarded by <see cref="SuspendRefreshRevisions"/>
-        ///  and <see cref="ResumeRefreshRevisions"/>.
+        ///  Indicates whether the revision grid is being refreshed, in order to detect unnecessary refresh requests.
         /// </summary>
-        public bool CanRefresh => !_isRefreshingRevisions && _updatingFilters == 0;
+        public bool IsRefreshingRevisions => _isRefreshingRevisions;
 
         #region PerformRefreshRevisions
 
@@ -852,10 +850,13 @@ namespace GitUI
         {
             ThreadHelper.AssertOnUIThread();
 
-            if (!CanRefresh)
+            if (_updatingFilters > 0)
             {
                 return;
             }
+
+            _revisionSubscription?.Dispose();
+            System.Threading.CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
 
             GitModule capturedModule = Module;
 
@@ -902,12 +903,9 @@ namespace GitUI
 
                 _superprojectCurrentCheckout = null;
                 Subject<GitRevision> observeRevisions = new();
-                _revisionSubscription?.Dispose();
                 _revisionSubscription = observeRevisions
                     .ObserveOn(ThreadPoolScheduler.Instance)
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
-
-                System.Threading.CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
 
                 IReadOnlyList<ObjectId>? currentlySelectedObjectIds = _gridView.SelectedObjectIds;
                 _gridView.SuspendLayout();
@@ -988,15 +986,16 @@ namespace GitUI
                         observeRevisions,
                         args,
                         cancellationToken);
+
+                    // Initiate update side panel
+                    cancellationToken.ThrowIfCancellationRequested();
+                    RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
                 }).FileAndForget(
                     ex =>
                     {
                         observeRevisions.OnError(ex);
                         return false;
                     });
-
-                // Initiate update side panel
-                RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
             }
             catch
             {
@@ -1148,7 +1147,7 @@ namespace GitUI
                 // To proceed from here refs etc must be available (protected by semaphoreCurrentCommit).
                 if (!headIsHandled)
                 {
-                    semaphoreCurrentCommit.Wait();
+                    semaphoreCurrentCommit.Wait(cancellationToken);
                     if (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null)
                     {
                         // Insert worktree/index before HEAD (CurrentCheckout)
@@ -1250,7 +1249,7 @@ namespace GitUI
             {
                 if (!firstRevisionReceived && !FilterIsApplied(inclBranchFilter: true))
                 {
-                    semaphoreCurrentCommit.Wait();
+                    semaphoreCurrentCommit.Wait(cancellationToken);
 
                     // This has to happen on the UI thread
                     this.InvokeAsync(
