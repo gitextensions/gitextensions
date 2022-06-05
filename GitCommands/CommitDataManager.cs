@@ -40,8 +40,8 @@ namespace GitCommands
 
     public sealed class CommitDataManager : ICommitDataManager
     {
-        private const string CommitDataFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B";
-        private const string CommitDataWithNotesFormat = "%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
+        private const string CommitDataFormat = "%H%n%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B";
+        private const string CommitDataWithNotesFormat = "%H%n%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N";
         private const string BodyAndNotesFormat = "%B%nNotes:%n%-N";
         private const string NotesFormat = "%-N";
 
@@ -107,9 +107,9 @@ namespace GitCommands
 
             var module = GetModule();
 
-            // $ git log --pretty="format:%H%n%T%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N" -1
+            // $ git log --pretty="format:%H%n%n%P%n%aN <%aE>%n%at%n%cN <%cE>%n%ct%n%e%n%B%nNotes:%n%-N" -1
             // 4bc1049fc3b9191dbd390e1ae6885aedd1a4e34b
-            // a59c21f0b2e6f43ae89b76a216f9f6124fc359f8
+            // (comment: used to contain %T, kept newline)
             // 8e3873685d89f8cb543657d1b9e66e516cae7e1d dfd353d3b02d24a0d98855f6a1848c51d9ba4d6b
             // RussKie <RussKie@users.noreply.github.com>
             // 1521115435
@@ -134,7 +134,7 @@ namespace GitCommands
 
             var guid = ObjectId.Parse(lines[0]);
 
-            // lines[1] contains the optional treeGuid
+            // lines[1] is empty (contained the optional treeGuid)
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
             var parentIds = lines[2].LazySplit(' ').Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => ObjectId.Parse(id)).ToList();
