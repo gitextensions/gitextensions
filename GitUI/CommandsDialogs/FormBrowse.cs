@@ -984,6 +984,7 @@ namespace GitUI.CommandsDialogs
         private void SetShortcutKeyDisplayStringsFromHotkeySettings()
         {
             // Add shortcuts to the menu items
+            openToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.OpenRepo).ToShortcutKeyDisplayString();
             gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitBash).ToShortcutKeyDisplayString();
             commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Commit).ToShortcutKeyDisplayString();
             stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Stash).ToShortcutKeyDisplayString();
@@ -2056,6 +2057,7 @@ namespace GitUI.CommandsDialogs
             FocusPrevTab = 32,
 
             // START menu
+            OpenRepo = 45,
 
             // DASHBOARD menu
 
@@ -2202,6 +2204,7 @@ namespace GitUI.CommandsDialogs
                 case Command.FocusNextTab: FocusNextTab(); break;
                 case Command.FocusPrevTab: FocusNextTab(forward: false); break;
                 case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
+                case Command.OpenRepo: openToolStripMenuItem.PerformClick(); break;
                 case Command.Commit: UICommands.StartCommitDialog(this); break;
                 case Command.AddNotes: AddNotes(); break;
                 case Command.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;

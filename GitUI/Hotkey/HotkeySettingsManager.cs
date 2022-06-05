@@ -288,6 +288,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.OpenAsTempFile, OpenAsTempFileHotkey),
                     Hk(FormBrowse.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
                     Hk(FormBrowse.Command.OpenCommitsWithDifftool, Keys.None),
+                    Hk(FormBrowse.Command.OpenRepo, Keys.Control | Keys.O),
                     Hk(FormBrowse.Command.OpenSettings, Keys.Control | Keys.Oemcomma),
                     Hk(FormBrowse.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
                     Hk(FormBrowse.Command.OpenWithDifftoolFirstToLocal, OpenWithDifftoolFirstToLocalHotkey),
@@ -389,6 +390,7 @@ namespace GitUI.Hotkey
                     Hk(RevisionDiffControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
                     Hk(RevisionDiffControl.Command.OpenWithDifftoolFirstToLocal, OpenWithDifftoolFirstToLocalHotkey),
                     Hk(RevisionDiffControl.Command.OpenWithDifftoolSelectedToLocal, OpenWithDifftoolSelectedToLocalHotkey),
+                    Hk(RevisionDiffControl.Command.OpenWorkingDirectoryFileWith, Keys.Control | Keys.O),
                     Hk(RevisionDiffControl.Command.ResetSelectedFiles, Keys.R),
                     Hk(RevisionDiffControl.Command.SelectFirstGroupChanges, Keys.Control | Keys.A),
                     Hk(RevisionDiffControl.Command.ShowFileTree, Keys.T),
@@ -404,6 +406,7 @@ namespace GitUI.Hotkey
                     Hk(RevisionFileTreeControl.Command.OpenAsTempFile, OpenAsTempFileHotkey),
                     Hk(RevisionFileTreeControl.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
                     Hk(RevisionFileTreeControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
+                    Hk(RevisionFileTreeControl.Command.OpenWorkingDirectoryFileWith, Keys.Control | Keys.O),
                     Hk(RevisionFileTreeControl.Command.ShowHistory, ShowHistoryHotkey)),
                 new HotkeySettings(
                     FormStash.HotkeySettingsName,

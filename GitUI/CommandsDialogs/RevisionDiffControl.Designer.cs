@@ -305,7 +305,6 @@ namespace GitUI.CommandsDialogs
             // 
             this.diffOpenWorkingDirectoryFileWithToolStripMenuItem.Image = global::GitUI.Properties.Images.EditFile;
             this.diffOpenWorkingDirectoryFileWithToolStripMenuItem.Name = "diffOpenWorkingDirectoryFileWithToolStripMenuItem";
-            this.diffOpenWorkingDirectoryFileWithToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.diffOpenWorkingDirectoryFileWithToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
             this.diffOpenWorkingDirectoryFileWithToolStripMenuItem.Text = "&Open working directory file with...";
             this.diffOpenWorkingDirectoryFileWithToolStripMenuItem.Click += new System.EventHandler(this.diffOpenWorkingDirectoryFileWithToolStripMenuItem_Click);
