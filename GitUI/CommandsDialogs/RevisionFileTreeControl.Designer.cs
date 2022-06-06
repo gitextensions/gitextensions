@@ -256,7 +256,6 @@
             // 
             this.openWithToolStripMenuItem.Image = global::GitUI.Properties.Images.EditFile;
             this.openWithToolStripMenuItem.Name = "openWithToolStripMenuItem";
-            this.openWithToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
             this.openWithToolStripMenuItem.Text = "Open working directory file with...";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
