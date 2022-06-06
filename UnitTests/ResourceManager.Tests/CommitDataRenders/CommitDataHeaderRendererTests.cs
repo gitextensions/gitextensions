@@ -91,7 +91,6 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                ObjectId.Random(),
                 Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -119,7 +118,6 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                ObjectId.Random(),
                 Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -148,7 +146,6 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                ObjectId.Random(),
                 Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -177,7 +174,6 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                ObjectId.Random(),
                 Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -209,7 +205,6 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                ObjectId.Random(),
                 _parentHashes,
                 author, authorDate,
                 committer, commitDate, "");
@@ -239,7 +234,6 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse(artificialGuid),
-                ObjectId.Random(),
                 _parentHashes,
                 author, authorDate,
                 committer, commitDate, "");
@@ -273,7 +267,6 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                ObjectId.Random(),
                 Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -301,7 +294,6 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = authorDate;
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                ObjectId.Random(),
                 Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -330,7 +322,6 @@ namespace ResourceManagerTests.CommitDataRenders
             var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
             CommitData data = new(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-                ObjectId.Random(),
                 Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");

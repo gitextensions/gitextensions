@@ -21,14 +21,13 @@ namespace ResourceManagerTests.CommitDataRenders
         public void Setup()
         {
             var commitGuid = ObjectId.Random();
-            var treeGuid = ObjectId.Random();
             var parentId1 = ObjectId.Random();
             var parentId2 = ObjectId.Random();
             var authorTime = DateTime.UtcNow.AddDays(-3);
             var commitTime = DateTime.UtcNow.AddDays(-2);
 
             _data = new CommitData(
-                commitGuid, treeGuid,
+                commitGuid,
                 new[] { parentId1, parentId2 },
                 "John Doe (Acme Inc) <John.Doe@test.com>", authorTime,
                 "Jane Doe <Jane.Doe@test.com>", commitTime,
