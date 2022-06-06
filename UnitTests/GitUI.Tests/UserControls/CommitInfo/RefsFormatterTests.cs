@@ -97,7 +97,7 @@ namespace GitUITests.UserControls.CommitInfo
 
         private string GetShowAllLink(string type)
         {
-            return $"{Environment.NewLine}<a href='gitext://showall/{type}'>[ {TranslatedStrings.ShowAll} ]</a>{Environment.NewLine}";
+            return $"{Environment.NewLine}<a href='gitext://showall/{type}'>[ {TranslatedStrings.ShowAll} ]</a>";
         }
     }
 }
