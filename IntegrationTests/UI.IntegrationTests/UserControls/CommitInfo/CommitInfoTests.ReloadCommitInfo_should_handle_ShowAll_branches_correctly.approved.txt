@@ -14,6 +14,7 @@ branch12|||gitext://gotobranch/branch12
 branch13|||gitext://gotobranch/branch13
 branch14|||gitext://gotobranch/branch14
 branch15|||gitext://gotobranch/branch15
+
 Contained in tags:
 v1.0|||gitext://gototag/v1.0
 v1.1|||gitext://gototag/v1.1
@@ -26,6 +27,5 @@ v1.7|||gitext://gototag/v1.7
 v1.8|||gitext://gototag/v1.8
 v1.9|||gitext://gototag/v1.9
 [ Show all ]|||gitext://showall/tags
-
 
 Derives from no tag
