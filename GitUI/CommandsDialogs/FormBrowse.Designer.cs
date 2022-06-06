@@ -832,7 +832,6 @@ namespace GitUI.CommandsDialogs
             // 
             this.openToolStripMenuItem.Image = global::GitUI.Properties.Images.RepoOpen;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.openToolStripMenuItem.Text = "&Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);

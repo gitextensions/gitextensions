@@ -258,6 +258,7 @@ See the changes in the commit form.");
             EditFile = 5,
             FilterFileInGrid = 6,
             FindFile = 7,
+            OpenWorkingDirectoryFileWith = 8,
         }
 
         public CommandStatus ExecuteCommand(Command cmd)
@@ -274,6 +275,7 @@ See the changes in the commit form.");
                 case Command.OpenWithDifftool: openWithDifftoolToolStripMenuItem.PerformClick(); break;
                 case Command.OpenAsTempFile: openFileToolStripMenuItem.PerformClick(); break;
                 case Command.OpenAsTempFileWith: openFileWithToolStripMenuItem.PerformClick(); break;
+                case Command.OpenWorkingDirectoryFileWith: openWithToolStripMenuItem.PerformClick(); break;
                 case Command.EditFile: editCheckedOutFileToolStripMenuItem.PerformClick(); break;
                 case Command.FilterFileInGrid: filterFileInGridToolStripMenuItem.PerformClick(); break;
                 case Command.FindFile: findToolStripMenuItem.PerformClick(); break;
@@ -299,6 +301,7 @@ See the changes in the commit form.");
             openWithDifftoolToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftool);
             openFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFile);
             openFileWithToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFileWith);
+            openWithToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWorkingDirectoryFileWith);
             editCheckedOutFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
             filterFileInGridToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FilterFileInGrid);
             findToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.FindFile);
