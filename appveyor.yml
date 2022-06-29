@@ -5,6 +5,7 @@ branches:
     - configdata
     - gh-pages
     - /experimental\/*/
+    - /translations_*/
 
 matrix:
   fast_finish: true
