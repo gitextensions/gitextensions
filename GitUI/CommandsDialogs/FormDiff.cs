@@ -68,17 +68,18 @@ namespace GitUI.CommandsDialogs
             _baseRevision = new GitRevision(baseId);
             _headRevision = new GitRevision(headId);
 
-            ObjectId? mergeBase;
-            if (_baseRevision.ObjectId.IsArtificial || _headRevision.ObjectId.IsArtificial)
+            ObjectId? baseMergeId = baseId.IsArtificial ? Module.GetCurrentCheckout() : baseId;
+            ObjectId? headMergeId = headId.IsArtificial ? Module.GetCurrentCheckout() : headId;
+            if (baseMergeId is null || headMergeId is null)
             {
-                mergeBase = null;
+                _mergeBase = null;
             }
             else
             {
-                mergeBase = Module.GetMergeBase(_baseRevision.ObjectId, _headRevision.ObjectId);
+                ObjectId mergeBase = Module.GetMergeBase(baseMergeId, headMergeId);
+                _mergeBase = mergeBase is not null ? new GitRevision(mergeBase) : null;
             }
 
-            _mergeBase = mergeBase is not null ? new GitRevision(mergeBase) : null;
             ckCompareToMergeBase.Text = $"{_ckCompareToMergeBase} ({_mergeBase?.ObjectId.ToShortString()})";
             ckCompareToMergeBase.Enabled = _mergeBase is not null;
 
@@ -143,7 +144,7 @@ namespace GitUI.CommandsDialogs
                 revisions = new[] { _headRevision, _baseRevision };
             }
 
-            DiffFiles.SetDiffs(revisions, _headRevision.ObjectId);
+            DiffFiles.SetDiffs(revisions, Module.GetCurrentCheckout());
 
             // Bug in git-for-windows: Comparing working directory to any branch, fails, due to -R
             // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
