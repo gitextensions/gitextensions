@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ru">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -10,7 +10,7 @@
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Auto compile SubModules</source>
         <target>Автоматическая сборка субмодулей</target>
         
@@ -26,7 +26,7 @@
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Пожалуйста введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
+        <target>Пожалуйста, введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
@@ -48,7 +48,7 @@
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
         <target>Периодически забирать в фоне</target>
         
@@ -97,7 +97,7 @@
         <target>Bitbucket имя пользователя</target>
         
       </trans-unit>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Bitbucket Server</source>
         <target>Сервер Bitbucket</target>
         
@@ -296,7 +296,7 @@
   </file>
   <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
         <target>Создать локальные отслеживающие ветки</target>
         
@@ -416,7 +416,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Включить не слитые ветки</target>
+        <target>Включить неслитые ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -458,7 +458,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
         <target>Удалить устаревшие ветки</target>
         
@@ -581,7 +581,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Find large files</source>
         <target>Найти большие файлы</target>
         
@@ -1030,7 +1030,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Gerrit Code Review</source>
         <target>Рецензирование кода в Gerrit</target>
         
@@ -1052,7 +1052,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
         <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>Невозможно скачать файл  commit-msg. Пожалуйста, установите хук commit-msg вручную.</target>
+        <target>Не удалось скачать файл commit-msg. Пожалуйста, установите хук commit-msg вручную.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
@@ -1223,7 +1223,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixDescription.Text">
+      <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
         <target>[префикс]/</target>
         
@@ -1242,7 +1242,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>GitFlow</source>
         <target>GitFlow</target>
         
@@ -1251,7 +1251,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>GitHub</source>
         <target>GitHub</target>
         
@@ -1280,7 +1280,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Impact Graph</source>
         <target>Граф воздействия</target>
         
@@ -1289,7 +1289,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Statistics</source>
         <target>Статистика</target>
         
@@ -1313,7 +1313,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
   </file>
   <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Gource</source>
         <target>Gource</target>
         
@@ -1326,8 +1326,8 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Не могу найти Gource.
-Пожалуйста загрузите Gource и установите путь в окне настроек плагинов.</target>
+        <target>Не удаётся найти Gource.
+Пожалуйста, загрузите Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1357,7 +1357,7 @@ Do you want to automatically download Gource?</source>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Скачивание не удалось.
-Пожалуйста скачайте Gource и установите путь в окне настроек плагинов.</target>
+Пожалуйста, скачайте Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1461,7 +1461,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Jira Commit Hint</source>
         <target>Подсказка коммита Jira</target>
         
@@ -1570,7 +1570,7 @@ Do you want to reset the configured path?</source>
         <target>Прокси не настроен. Пожалуйста, установите сервер прокси в настройках плагина.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginName.Text">
+      <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
         <target>Переключение прокси</target>
         
@@ -1579,7 +1579,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
         <target>Переключение прокси</target>
         
@@ -1735,7 +1735,7 @@ branch names, tag names)</source>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
         <target>Генератор примечаний к выпуску</target>
         
@@ -1829,10 +1829,10 @@ l.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>Буфер не содержит валидного адреса сборки.
+        <target>Буфер обмена не содержит допустимого адреса сборки.
 
-Пожалуйста скопируйте адрес сборки перед очередной попыткой.
-(Должен содержать &quot;buildTypeId&quot; параметр)</target>
+Пожалуйста, скопируйте адрес сборки перед очередной попыткой.
+(Как минимум должен содержаться параметр &quot;buildTypeId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1843,8 +1843,8 @@ Please copy in the clipboard the url of the build before retrying.
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>Неудачная загрузка проектов и списка сборки.
-Пожалуйста проверьте url сервера.</target>
+        <target>Не удалось загрузить проекты и список сборки.
+Пожалуйста, проверьте адрес сервера.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
