@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -10,7 +10,7 @@
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Auto compile SubModules</source>
         <target>Autocompilar submódulos</target>
         
@@ -48,7 +48,7 @@
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
         <target>Ejecuta fetch periódicamente en segundo plano</target>
         
@@ -97,7 +97,7 @@
         <target>Nombre de usuario de Bitbucket</target>
         
       </trans-unit>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Bitbucket Server</source>
         <target>Servidor Bitbucket</target>
         
@@ -296,7 +296,7 @@
   </file>
   <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
         <target>Crear ramas locales de tracking</target>
         
@@ -322,7 +322,7 @@
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -365,12 +365,13 @@
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
         <target>¡ACCIÓN PELIGROSA!
-Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. ¿Está seguro de que desea continuar?</target>
+Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. 
+¿Está seguro de que desea continuar?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
@@ -457,7 +458,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
         <target>Eliminar ramas obsoletas</target>
         
@@ -528,7 +529,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -538,7 +539,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
@@ -548,7 +549,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -580,7 +581,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
   </file>
   <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Find large files</source>
         <target>Encontrar archivos grandes</target>
         
@@ -1029,7 +1030,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Gerrit Code Review</source>
         <target>Revisión de código Gerrit</target>
         
@@ -1222,7 +1223,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixDescription.Text">
+      <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
         <target>[prefijo]/</target>
         
@@ -1241,7 +1242,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>GitFlow</source>
         <target>GitFlow</target>
         
@@ -1250,7 +1251,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>GitHub</source>
         <target>GitHub</target>
         
@@ -1279,7 +1280,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Impact Graph</source>
         <target>Gráfico de Impacto</target>
         
@@ -1288,7 +1289,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Statistics</source>
         <target>Estadísticas</target>
         
@@ -1312,7 +1313,7 @@ Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo
   </file>
   <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Gource</source>
         <target>Gource</target>
         
@@ -1459,7 +1460,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Jira Commit Hint</source>
         <target>Pista del commit de Jira</target>
         
@@ -1568,7 +1569,7 @@ Do you want to reset the configured path?</source>
         <target>No hay ningún proxy configurado. Por favor configure el host del proxy en los ajustes del plugin.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginName.Text">
+      <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
         <target>Cambiador de proxy</target>
         
@@ -1577,7 +1578,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
         <target>Cambiador de proxy</target>
         
@@ -1618,7 +1619,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Log de commit desde '{0}' a '{1}' ({2}):</target>
+        <target>Log de commit desde '{0}' hasta '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
@@ -1733,7 +1734,7 @@ nombres de ramas, ó nombres de tags)</target>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="es">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
         <target>Generador de Notas de Versión.</target>
         
@@ -1846,7 +1847,7 @@ Por favor, verifique la url del servidor.</target>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>¡La expresión regular &quot;Build Id Filter no es valido y no será guardada!</target>
+        <target>¡La expresión regular &quot;Build Id Filter&quot; no es válida y no será guardada!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
