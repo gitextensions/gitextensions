@@ -1,9 +1,9 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="ja">
     <body>
       <trans-unit id="$this.Text">
         <source>Advanced</source>
-        <target>高度な設定</target>
+        <target>高度な操作</target>
         
       </trans-unit>
       <trans-unit id="CheckoutGB.Text">
@@ -13,7 +13,7 @@
       </trans-unit>
       <trans-unit id="GeneralGB.Text">
         <source>General</source>
-        <target>全般</target>
+        <target>一般</target>
         
       </trans-unit>
       <trans-unit id="chkAlwaysShowAdvOpt.Text">
@@ -40,7 +40,7 @@ If enabled, any illegal symbols will be replaced with the replacement symbol of 
       </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
         <source>Check for release candidate versions</source>
-        <target>リリース候補版を確認する</target>
+        <target>リリース候補版を確認</target>
         
       </trans-unit>
       <trans-unit id="chkCheckForUpdates.Text">
@@ -50,7 +50,7 @@ If enabled, any illegal symbols will be replaced with the replacement symbol of 
       </trans-unit>
       <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
         <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
-        <target>「コミットのやり直し」にチェックして「コミットしてプッシュ」実行時に&quot;--force-with-lease&quot;オプションを有効にする</target>
+        <target>「コミットを修正」にチェックして「コミットしてプッシュ」実行時に&quot;--force-with-lease&quot;オプションを有効にする</target>
         
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
@@ -170,7 +170,7 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
-        <target>キャッシュのクリア</target>
+        <target>画像キャッシュのクリア</target>
         
       </trans-unit>
       <trans-unit id="ShowAuthorAvatarInCommitGraph.Text">
@@ -339,53 +339,6 @@ Click this info icon for more details.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="cbLoadTestResults.Text">
-        <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>それぞれのビルド結果に対してビルド状態サマリ内にテスト結果を表示する（ネットワークが集中します！）</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Auto compile SubModules</source>
-        <target>サブモジュールの自動コンパイル</target>
-        
-      </trans-unit>
-      <trans-unit id="_doYouWantBuild.Text">
-        <source>Do you want to build {0}?
-
-{1}</source>
-        <target>{0} をビルドしますか？
-
-{1}</target>
-        
-      </trans-unit>
-      <trans-unit id="_enterCorrectMsBuildPath.Text">
-        <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>プラグイン設定ダイアログで正しい MSBuild のパスを入力し、やり直してください。</target>
-        
-      </trans-unit>
-      <trans-unit id="_msBuildArguments.Caption">
-        <source>msbuild.exe arguments</source>
-        <target>msbuild.exe の引数</target>
-        
-      </trans-unit>
-      <trans-unit id="_msBuildEnabled.Caption">
-        <source>Enabled</source>
-        <target>有効</target>
-        
-      </trans-unit>
-      <trans-unit id="_msBuildPath.Caption">
-        <source>Path to msbuild.exe</source>
-        <target>msbuild.exe のパス</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="AvatarControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="avatarProviderToolStripMenuItem.Text">
@@ -410,234 +363,6 @@ Click this info icon for more details.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Periodic background fetch</source>
-        <target>バックグラウンドで定期的にフェッチ</target>
-        
-      </trans-unit>
-      <trans-unit id="_autoRefresh.Caption">
-        <source>Refresh view after fetch</source>
-        <target>fetch 後に表示を更新</target>
-        
-      </trans-unit>
-      <trans-unit id="_fetchAllSubmodules.Caption">
-        <source>Fetch all submodules</source>
-        <target>サブモジュールをすべて取得</target>
-        
-      </trans-unit>
-      <trans-unit id="_fetchInterval.Caption">
-        <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>設定された秒ごとに fetch (0 で無効)</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitCommand.Caption">
-        <source>Arguments of git command to run</source>
-        <target>実行するGitコマンドの引数</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="BitbucketBaseUrl.Caption">
-        <source>Specify the base URL to Bitbucket</source>
-        <target>BitbucketのベースURLを指定してください</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketDisableSsl.Caption">
-        <source>Disable SSL verification</source>
-        <target>SSL認証を無効化</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketPassword.Caption">
-        <source>Bitbucket Password</source>
-        <target>Bitbucketパスワード</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketUsername.Caption">
-        <source>Bitbucket Username</source>
-        <target>Bitbucketユーザ名</target>
-        
-      </trans-unit>
-      <trans-unit id="Description.Text">
-        <source>Bitbucket Server</source>
-        <target>Bitbucketサーバ</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
-        <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>あなたのリポジトリはBitbucketのサーバーにホストされていません。</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Bitbucket Server</source>
-        <target>Bitbucketサーバ</target>
-        
-      </trans-unit>
-      <trans-unit id="_committed.Text">
-        <source>{0} committed
-{1}</source>
-        <target>{0}は{1}をコミットした</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>エラー</target>
-        
-      </trans-unit>
-      <trans-unit id="_linkLabelToolTip.Text">
-        <source>Right-click to copy link</source>
-        <target>右クリックしてURLをコピー</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>成功</target>
-        
-      </trans-unit>
-      <trans-unit id="btnApprove.Text">
-        <source>Approve</source>
-        <target>承認</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreate.Text">
-        <source>Create</source>
-        <target>作成</target>
-        
-      </trans-unit>
-      <trans-unit id="btnMerge.Text">
-        <source>Merge</source>
-        <target>マージ</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCreatePullRequest.Text">
-        <source>Pull Request Info</source>
-        <target>プルリクエストの情報</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxInformation.Text">
-        <source>Information</source>
-        <target>情報</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxPullRequestInfo.Text">
-        <source>Pull Request Info</source>
-        <target>プルリクエストの情報</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSource.Text">
-        <source>Source</source>
-        <target>ソース</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSourceRepoView.Text">
-        <source>Source</source>
-        <target>ソース</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTarget.Text">
-        <source>Target</source>
-        <target>対象</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTargetRepoView.Text">
-        <source>Target</source>
-        <target>対象</target>
-        
-      </trans-unit>
-      <trans-unit id="lblAuthor.Text">
-        <source>Author</source>
-        <target>作者</target>
-        
-      </trans-unit>
-      <trans-unit id="lblBranchView.Text">
-        <source>Branch</source>
-        <target>ブランチ</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescription.Text">
-        <source>Description</source>
-        <target>注釈</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescriptionView.Text">
-        <source>Description</source>
-        <target>注釈</target>
-        
-      </trans-unit>
-      <trans-unit id="lblRepositoryView.Text">
-        <source>Repository</source>
-        <target>リポジトリ</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewerView.Text">
-        <source>Reviewer (approved)</source>
-        <target>レビュアー(承認済み)</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceBranch.Text">
-        <source>Branch</source>
-        <target>ブランチ</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepoView.Text">
-        <source>Repository</source>
-        <target>リポジトリ</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepository.Text">
-        <source>Repository</source>
-        <target>リポジトリ</target>
-        
-      </trans-unit>
-      <trans-unit id="lblState.Text">
-        <source>State</source>
-        <target>状態</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetBranch.Text">
-        <source>Branch</source>
-        <target>ブランチ</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepoView.Text">
-        <source>Branch</source>
-        <target>ブランチ</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepository.Text">
-        <source>Repository</source>
-        <target>リポジトリ</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitle.Text">
-        <source>Title</source>
-        <target>タイトル</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitleView.Text">
-        <source>Title</source>
-        <target>タイトル</target>
-        
-      </trans-unit>
-      <trans-unit id="tabCreate.Text">
-        <source>Create Pull Request</source>
-        <target>プルリクエストを作成</target>
-        
-      </trans-unit>
-      <trans-unit id="tabView.Text">
-        <source>View Pull Requests</source>
-        <target>プルリクエストを表示</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="BlameControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="allCommitInfoToolStripMenuItem.Text">
@@ -647,12 +372,12 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
         <source>Blame previous revision</source>
-        <target>直前のリビジョンを追及 (Blame)</target>
+        <target>直前のリビジョンを追及(blame)</target>
         
       </trans-unit>
       <trans-unit id="blameRevisionToolStripMenuItem.Text">
         <source>Blame this revision</source>
-        <target>このリビジョンを追及</target>
+        <target>このリビジョンを追及(blame)</target>
         
       </trans-unit>
       <trans-unit id="commitHashToolStripMenuItem.Text">
@@ -741,11 +466,6 @@ Click this info icon for more details.</source>
   </file>
   <file datatype="plaintext" original="BugReportForm" source-language="en" target-language="ja">
     <body>
-      <trans-unit id="IgnoreButton.Text">
-        <source>&amp;Ignore</source>
-        <target>無視(&amp;I)</target>
-        
-      </trans-unit>
       <trans-unit id="_noReproStepsSuppliedErrorMessage.Text">
         <source>Please provide as much as information as possible to help the developers solve this issue.</source>
         <target>開発者が問題点を解決できるよう、できる限り詳細に記入してください。</target>
@@ -1006,7 +726,7 @@ GitHubアカウントが必要です。</target>
       </trans-unit>
       <trans-unit id="_gitCanBeRun.Text">
         <source>Git can be run using: {0}</source>
-        <target>左記のGitを使用します: {0}</target>
+        <target>以下のGitを使用します: {0}</target>
         
       </trans-unit>
       <trans-unit id="_gitCanBeRunCaption.Text">
@@ -1086,11 +806,6 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
         <target>デフォルトのSSHクライアント OpenSSHが使われます。(Pull，Push，Cloneを行なう際に、コマンドラインウィンドウが現れます)</target>
         
       </trans-unit>
-      <trans-unit id="_otherSshClient.Text">
-        <source>Other SSH client configured: {0}.</source>
-        <target>その他のSSHクライアントが設定されています: {0}</target>
-        
-      </trans-unit>
       <trans-unit id="_plinkputtyGenpageantNotFound.Text">
         <source>PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.</source>
         <target>SSHクライアントとしてPuTTYが設定されていますが、plink.exe, puttygen.exe または pageant.exeが見つかりません。</target>
@@ -1103,7 +818,7 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
       </trans-unit>
       <trans-unit id="_puttyFoundAuto.Text">
         <source>All paths needed for PuTTY could be automatically found and are set.</source>
-        <target>PuTTYのインストール先は自動的に認識しました。</target>
+        <target>PuTTYのインストール先がすべて自動的に検出され設定されました。</target>
         
       </trans-unit>
       <trans-unit id="_registryKeyGitExtensionsCorrect.Text">
@@ -1128,7 +843,7 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
       </trans-unit>
       <trans-unit id="_shCanBeRunCaption.Text">
         <source>Locate linux tools</source>
-        <target>Linuxツールの場所</target>
+        <target>使用するLinux tools</target>
         
       </trans-unit>
       <trans-unit id="_shellExtNeedsToBeRegistered.Text">
@@ -1158,9 +873,9 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
         <target>使用するGit</target>
         
       </trans-unit>
-      <trans-unit id="_sshClientNotFound.Text">
-        <source>SSH client not found: {0}.</source>
-        <target>SSHクライアントが見つかりません: {0}。</target>
+      <trans-unit id="_unknownSshClient.Text">
+        <source>Unknown SSH client configured: {0}.</source>
+        <target>未知のSSHクライアントが設定されています: {0}</target>
         
       </trans-unit>
       <trans-unit id="_wrongGitVersion.Text">
@@ -1244,7 +959,7 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       </trans-unit>
       <trans-unit id="lblRestartNeeded.Text">
         <source>Restart required to apply changes</source>
-        <target>変更を反映するため再起動する必要があります</target>
+        <target>変更を適用するには再起動が必要です</target>
         
       </trans-unit>
       <trans-unit id="sbOpenThemeFolder.Text">
@@ -1273,12 +988,12 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       </trans-unit>
       <trans-unit id="cbRememberAmendCommitState.Text">
         <source>Remember 'Amend commit' checkbox on commit form close</source>
-        <target>コミット フォームを閉じたとき「コミットのやり直し」のチェックを記憶</target>
+        <target>コミット フォームを閉じたとき「コミットを修正」のチェックを記憶</target>
         
       </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
         <source>Provide auto-completion in commit dialog</source>
-        <target>コミットダイアログでオートコンプリートを使用</target>
+        <target>コミット ダイアログでオートコンプリートを使用</target>
         
       </trans-unit>
       <trans-unit id="chkEnsureCommitMessageSecondLineEmpty.Text">
@@ -1476,22 +1191,17 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       </trans-unit>
       <trans-unit id="chkAmend.Text">
         <source>Amend last commit</source>
-        <target>コミットやり直し</target>
+        <target>最終コミットを修正(amend)</target>
         
       </trans-unit>
       <trans-unit id="chkAutoPopStashAfterCheckout.Text">
-        <source>Apply stashed changes after successful checkout (else stash will be popped automatically)</source>
-        <target>退避した変更を適用 (そうしないと、チェックアウト成功後に自動で適用されます)</target>
+        <source>Apply stashed changes after successful checkout (stash will be popped automatically)</source>
+        <target>退避した変更を適用 (チェックアウト成功後に自動で適用されます)</target>
         
       </trans-unit>
       <trans-unit id="chkAutoPopStashAfterPull.Text">
-        <source>Apply stashed changes after successful pull (else stash will be popped automatically)</source>
-        <target>退避した変更を適用 (そうしないと、プル成功後に自動で適用されます)</target>
-        
-      </trans-unit>
-      <trans-unit id="chkBranchDeleteUnmerged.Text">
-        <source>Delete unmerged branches</source>
-        <target>未マージのブランチを削除</target>
+        <source>Apply stashed changes after successful pull (stash will be popped automatically)</source>
+        <target>退避した変更を適用 (プル成功後に自動で適用されます)</target>
         
       </trans-unit>
       <trans-unit id="chkCommitAfterConflictsResolved.Text">
@@ -1535,7 +1245,7 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
         
       </trans-unit>
       <trans-unit id="chkSwitchWorktree.Text">
-        <source>Switch worktree</source>
+        <source>Switch Worktree</source>
         <target>ワークツリーを切り替え</target>
         
       </trans-unit>
@@ -1550,38 +1260,8 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
         
       </trans-unit>
       <trans-unit id="gbConfirmations.Text">
-        <source>Confirm actions</source>
-        <target>操作の確認</target>
-        
-      </trans-unit>
-      <trans-unit id="lblGroupBranches.Text">
-        <source>Branches:</source>
-        <target>ブランチ:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblGroupCommits.Text">
-        <source>Commits:</source>
-        <target>コミット:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblGroupConflictResolution.Text">
-        <source>Rebase / conflict resolution:</source>
-        <target>リベース / 競合の解決:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblGroupStashes.Text">
-        <source>Stash:</source>
-        <target>スタッシュ:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblGroupSubmodules.Text">
-        <source>Submodules:</source>
-        <target>サブモジュール:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblGroupWorktrees.Text">
-        <source>Worktrees:</source>
-        <target>作業ツリー:</target>
+        <source>Don't ask to confirm to (use with caution)</source>
+        <target>(警告を含む) 以下の確認をしない</target>
         
       </trans-unit>
     </body>
@@ -1591,11 +1271,6 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       <trans-unit id="$this.Text">
         <source>Console style</source>
         <target>スタイル</target>
-        
-      </trans-unit>
-      <trans-unit id="consoleFontChangeButton.Text">
-        <source>font name</source>
-        <target>フォント名</target>
         
       </trans-unit>
       <trans-unit id="groupBoxConsoleSettings.Text">
@@ -1608,9 +1283,9 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
         <target>スタイル</target>
         
       </trans-unit>
-      <trans-unit id="lblFontName.Text">
-        <source>Font</source>
-        <target>フォント</target>
+      <trans-unit id="label3.Text">
+        <source>Font size</source>
+        <target>フォント サイズ</target>
         
       </trans-unit>
     </body>
@@ -1659,34 +1334,6 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
-        
-      </trans-unit>
-      <trans-unit id="button1.Text">
-        <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Remote to create tracking branches for</source>
-        <target>作成する追跡ブランチ用のリモート</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Create local tracking branches</source>
-        <target>ローカルの追跡ブランチを作成</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="CreatePullRequestForm" source-language="en" target-language="ja">
     <body>
       <trans-unit id="$this.Text">
@@ -1722,11 +1369,6 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       <trans-unit id="_strPullRequest.Text">
         <source>Pull request</source>
         <target>プルリクエスト</target>
-        
-      </trans-unit>
-      <trans-unit id="_strRemoteFailToLoadBranches.Text">
-        <source>Fail to load target branches</source>
-        <target>対象ブランチの読み込みに失敗しました</target>
         
       </trans-unit>
       <trans-unit id="_strYouMustSpecifyATitle.Text">
@@ -1780,7 +1422,7 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       </trans-unit>
       <trans-unit id="_createRepository.Text">
         <source>Create new repository</source>
-        <target>リポジトリを作成</target>
+        <target>リポジトリを新規作成</target>
         
       </trans-unit>
       <trans-unit id="_develop.Text">
@@ -1811,213 +1453,6 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       <trans-unit id="lblContribute.Text">
         <source>Contribute</source>
         <target>貢献</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Delete obsolete branches</source>
-        <target>不要なブランチを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="Author.HeaderText">
-        <source>Last author</source>
-        <target>最後の作者</target>
-        
-      </trans-unit>
-      <trans-unit id="Cancel.Text">
-        <source>Close</source>
-        <target>閉じる</target>
-        
-      </trans-unit>
-      <trans-unit id="Delete.Text">
-        <source>Delete</source>
-        <target>削除</target>
-        
-      </trans-unit>
-      <trans-unit id="IncludeRemoteBranches.Text">
-        <source>Delete remote branches from</source>
-        <target>対象のリモートブランチを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="Message.HeaderText">
-        <source>Last message</source>
-        <target>最後のメッセージ</target>
-        
-      </trans-unit>
-      <trans-unit id="RefreshBtn.Text">
-        <source>Search branches</source>
-        <target>ブランチを検索</target>
-        
-      </trans-unit>
-      <trans-unit id="_areYouSureToDelete.Text">
-        <source>Are you sure to delete {0} selected branches?</source>
-        <target>選択した{0}のブランチを削除してよろしいですか？</target>
-        
-      </trans-unit>
-      <trans-unit id="_branchesSelected.Text">
-        <source>{0}/{1} branches selected.</source>
-        <target>{0}/{1} ブランチ選択済み</target>
-        
-      </trans-unit>
-      <trans-unit id="_cancel.Text">
-        <source>Cancel</source>
-        <target>キャンセル</target>
-        
-      </trans-unit>
-      <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>削除するブランチを選択してください。完全に'{0}'にマージされているブランチのみ削除されます。</target>
-        
-      </trans-unit>
-      <trans-unit id="_dangerousAction.Text">
-        <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
-Are you sure you want to continue?</source>
-        <target>危険な操作です！
-リモート '{0}' のブランチを削除しようとしています。
-これはやり直せませんが、続行してよろしいですか？</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteCaption.Text">
-        <source>Delete</source>
-        <target>削除</target>
-        
-      </trans-unit>
-      <trans-unit id="_deletingBranches.Text">
-        <source>Deleting branches...</source>
-        <target>ブランチを削除中...</target>
-        
-      </trans-unit>
-      <trans-unit id="_deletingUnmergedBranches.Text">
-        <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>マージされていないブランチの削除は結果的にdangling コミットになります。注意してください。</target>
-        
-      </trans-unit>
-      <trans-unit id="_loading.Text">
-        <source>Loading...</source>
-        <target>読込中...</target>
-        
-      </trans-unit>
-      <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>'{0}' で削除したいブランチを検索</target>
-        
-      </trans-unit>
-      <trans-unit id="_searchBranches.Text">
-        <source>Search branches</source>
-        <target>ブランチを検索</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' 列のチェックボックスで削除するブランチを選択</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonSettings.Text">
-        <source>Settings</source>
-        <target>設定</target>
-        
-      </trans-unit>
-      <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
-        <source>Last activity</source>
-        <target>最新のアクティビティ</target>
-        
-      </trans-unit>
-      <trans-unit id="includeUnmergedBranches.Text">
-        <source>Include unmerged branches</source>
-        <target>未マージのブランチを含む</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Delete branches older than x days</source>
-        <target>x日以上前のブランチを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Delete branches fully merged into branch</source>
-        <target>別のブランチに完全にマージされたブランチを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
-        <source>Name</source>
-        <target>名前</target>
-        
-      </trans-unit>
-      <trans-unit id="regexDoesNotMatch.Text">
-        <source>Does not match</source>
-        <target>マッチしません</target>
-        
-      </trans-unit>
-      <trans-unit id="regexFilter.Text">
-        <source>/(feature|develop)/</source>
-        <target>/(feature|develop)/</target>
-        
-      </trans-unit>
-      <trans-unit id="useRegexCaseInsensitive.Text">
-        <source>Case insensitive</source>
-        <target>大文字小文字を区別しない</target>
-        
-      </trans-unit>
-      <trans-unit id="useRegexFilter.Text">
-        <source>Use regex to filter branches</source>
-        <target>ブランチのフィルタに正規表現を使用</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Delete obsolete branches</source>
-        <target>不要なブランチを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="_daysOlderThan.Caption">
-        <source>Delete obsolete branches older than (days)</source>
-        <target>(days)日以上前の不要なブランチを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
-        <source>Delete obsolete branches from remote</source>
-        <target>リモートから不要なブランチを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="_includeUnmergedBranchesFlag.Caption">
-        <source>Delete unmerged branches</source>
-        <target>未マージのブランチを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="_mergedInBranch.Caption">
-        <source>Branch where all branches should be merged in</source>
-        <target>すべてのブランチがマージされるべきブランチ</target>
-        
-      </trans-unit>
-      <trans-unit id="_regexCaseInsensitiveFlag.Caption">
-        <source>Is regex filter case insensitive?</source>
-        <target>正規表現フィルタの大文字小文字は区別されていませんか？</target>
-        
-      </trans-unit>
-      <trans-unit id="_regexFilter.Caption">
-        <source>Regex to filter branches to delete</source>
-        <target>正規表現で削除するブランチをフィルタ</target>
-        
-      </trans-unit>
-      <trans-unit id="_regexInvertedFlag.Caption">
-        <source>Search branches that does not match regex</source>
-        <target>正規表現に統一していないブランチを検索</target>
-        
-      </trans-unit>
-      <trans-unit id="_remoteName.Caption">
-        <source>Remote name obsoleted branches should be deleted from</source>
-        <target>不要なブランチを削除するリモート名</target>
-        
-      </trans-unit>
-      <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
-        <source>Use regex to filter branches to delete</source>
-        <target>正規表現を利用して削除するブランチをフィルタ</target>
         
       </trans-unit>
     </body>
@@ -2085,7 +1520,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
         <source>Omit uninteresting changes from combined diff</source>
-        <target>結合された差分の無意味な変更を省略する</target>
+        <target>結合された差分の無意味な変更を省略</target>
         
       </trans-unit>
       <trans-unit id="chkOpenSubmoduleDiffInSeparateWindow.Text">
@@ -2252,12 +1687,17 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
     <body>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files using a regular expression...</source>
-        <target>正規表現を使用してファイルをフィルタする...</target>
+        <target>正規表現を使用してファイルを絞り込む...</target>
         
       </trans-unit>
       <trans-unit id="NoFiles.Text">
         <source>No changes</source>
         <target>変更なし</target>
+        
+      </trans-unit>
+      <trans-unit id="_openSubmoduleMenuItem.Text">
+        <source>Open with Git Extensions</source>
+        <target>Git Extensionsで開く</target>
         
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
@@ -2544,20 +1984,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Find large files</source>
-        <target>巨大なファイルを発見する</target>
-        
-      </trans-unit>
-      <trans-unit id="_sizeLargeFile.Caption">
-        <source>Find large files bigger than (Mb)</source>
-        <target>(Mb)より巨大なファイルを発見する</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FolderBrowserButton" source-language="en" target-language="ja">
     <body>
       <trans-unit id="buttonBrowse.Text">
@@ -2666,6 +2092,11 @@ You will have push access. {2}</source>
       <trans-unit id="cloneSetupGB.Text">
         <source>Clone</source>
         <target>クローン</target>
+        
+      </trans-unit>
+      <trans-unit id="closeBtn.Text">
+        <source>Close</source>
+        <target>閉じる</target>
         
       </trans-unit>
       <trans-unit id="columnHeaderMyReposForks.Text">
@@ -2808,7 +2239,7 @@ You will have push access. {2}</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Add files</source>
-        <target>ファイルの追加</target>
+        <target>ファイル追加</target>
         
       </trans-unit>
       <trans-unit id="AddFiles.Text">
@@ -2940,7 +2371,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="AddFiles.Text">
         <source>Add files</source>
-        <target>ファイルの追加</target>
+        <target>ファイル追加</target>
         
       </trans-unit>
       <trans-unit id="Apply.Text">
@@ -3022,7 +2453,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="_selectPatchFileCaption.Text">
         <source>Select patch file</source>
-        <target>パッチ ファイルの選択</target>
+        <target>パッチ ファイルを選択</target>
         
       </trans-unit>
       <trans-unit id="_selectPatchFileFilter.Text">
@@ -3171,7 +2602,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="Stop.Text">
         <source>Stop bisect</source>
-        <target>探索終了</target>
+        <target>Bisectを終了</target>
         
       </trans-unit>
       <trans-unit id="_bisectStart.Text">
@@ -3230,6 +2661,11 @@ compare with first:</source>
       <trans-unit id="RefreshButton.ToolTipText">
         <source>Refresh</source>
         <target>更新</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowFirstParent.ToolTipText">
+        <source>Show first parents</source>
+        <target>最初の親を表示</target>
         
       </trans-unit>
       <trans-unit id="ToolStripFilters.Text">
@@ -3841,6 +3277,11 @@ Do you want to continue?</source>
         <target>ウィンドウ分割を切り替え</target>
         
       </trans-unit>
+      <trans-unit id="toolStripBranchFilterDropDownButton.Text">
+        <source>Branch type</source>
+        <target>ブランチの種類</target>
+        
+      </trans-unit>
       <trans-unit id="toolStripButtonCommit.Text">
         <source>Commit</source>
         <target>コミット</target>
@@ -3853,12 +3294,12 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="toolStripButtonPull.Text">
         <source>Pull</source>
-        <target>プル (リモートから取得)</target>
+        <target>プル</target>
         
       </trans-unit>
       <trans-unit id="toolStripButtonPush.Text">
         <source>Push</source>
-        <target>プッシュ (リモートへ反映)</target>
+        <target>プッシュ</target>
         
       </trans-unit>
       <trans-unit id="toolStripFileExplorer.ToolTipText">
@@ -3886,6 +3327,21 @@ Do you want to continue?</source>
         <target>ワークツリー</target>
         
       </trans-unit>
+      <trans-unit id="toolStripRevisionFilterDropDownButton.Text">
+        <source>Filter type</source>
+        <target>フィルタの種類</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripRevisionFilterLabel.Text">
+        <source>Filter:</source>
+        <target>フィルタ:</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripRevisionFilterLabel.ToolTipText">
+        <source>Text filter</source>
+        <target>テキストで絞り込み</target>
+        
+      </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
         <source>Manage stashes</source>
         <target>スタッシュの管理</target>
@@ -3906,74 +3362,9 @@ Do you want to continue?</source>
         <target>翻訳</target>
         
       </trans-unit>
-      <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
-        <source>Advanced filter</source>
-        <target>詳細なフィルタ</target>
-        
-      </trans-unit>
-      <trans-unit id="tsddbtnBranchFilter.Text">
-        <source>Branch type</source>
-        <target>ブランチの種類</target>
-        
-      </trans-unit>
-      <trans-unit id="tsddbtnRevisionFilter.Text">
-        <source>Filter type</source>
-        <target>フィルタの種類</target>
-        
-      </trans-unit>
-      <trans-unit id="tslblRevisionFilter.Text">
-        <source>Filter:</source>
-        <target>フィルタ:</target>
-        
-      </trans-unit>
-      <trans-unit id="tslblRevisionFilter.ToolTipText">
-        <source>Text filter</source>
-        <target>テキストで絞り込み</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiAuthorFilter.Text">
-        <source>Author</source>
-        <target>作者</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiBranchLocal.Text">
-        <source>Local</source>
-        <target>ローカル</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiBranchRemote.Text">
-        <source>Remote</source>
-        <target>リモート</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiBranchTag.Text">
-        <source>Tag</source>
-        <target>タグ</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiCommitFilter.Text">
-        <source>Commit message and hash</source>
-        <target>コミットメッセージとハッシュ</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiCommitterFilter.Text">
-        <source>Committer</source>
-        <target>コミッタ</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiDiffContainsFilter.Text">
-        <source>Diff contains (SLOW)</source>
-        <target>Diffを含める (遅い)</target>
-        
-      </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
         <source>Favourite Repositories</source>
         <target>お気に入りのリポジトリ</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiHash.Text">
-        <source>Hash</source>
-        <target>ハッシュ</target>
         
       </trans-unit>
       <trans-unit id="tsmiRecentRepositories.Text">
@@ -3984,11 +3375,6 @@ Do you want to continue?</source>
       <trans-unit id="tsmiRecentRepositoriesClear.Text">
         <source>Clear List</source>
         <target>リストをクリア</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiShowFirstParent.ToolTipText">
-        <source>Show first parents</source>
-        <target>最初の親を表示</target>
         
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
@@ -4074,18 +3460,18 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="LocalBranch.Text">
-        <source>Local &amp;branch</source>
-        <target>ローカルブランチ(&amp;B)</target>
+        <source>Local branch</source>
+        <target>ローカルブランチ</target>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
-        <source>&amp;Checkout</source>
-        <target>チェックアウト(&amp;C)</target>
+        <source>Checkout</source>
+        <target>チェックアウト</target>
         
       </trans-unit>
       <trans-unit id="Remotebranch.Text">
-        <source>Remote &amp;branch</source>
-        <target>リモートブランチ(&amp;B)</target>
+        <source>Remote branch</source>
+        <target>リモートブランチ</target>
         
       </trans-unit>
       <trans-unit id="_applyStashedItemsAgain.Text">
@@ -4099,8 +3485,8 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_createBranch.Text">
-        <source>Cr&amp;eate local branch with the name:</source>
-        <target>同じ名前のローカルブランチを作成(&amp;E):</target>
+        <source>Create local branch with the name:</source>
+        <target>同じ名前のローカルブランチを作成:</target>
         
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
@@ -4115,6 +3501,11 @@ Enter valid branch name or select predefined value.</source>
 Enter valid branch name or select predefined value.</source>
         <target>“{0}”は有効なブランチ名ではありません。
 有効なブランチ名を入力するか、既存のものを選択してください。</target>
+        
+      </trans-unit>
+      <trans-unit id="_dontShowAgain.Text">
+        <source>Don't show me this message again.</source>
+        <target>これ以降、このメッセージを表示しない</target>
         
       </trans-unit>
       <trans-unit id="_invalidBranchName.Text">
@@ -4137,13 +3528,13 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
-        <source>Set as &amp;default</source>
-        <target>デフォルトに設定(&amp;D)</target>
+        <source>Set as default</source>
+        <target>デフォルトに設定</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>&amp;Select branch</source>
-        <target>ブランチを選択(&amp;S)</target>
+        <source>Select branch</source>
+        <target>ブランチの選択</target>
         
       </trans-unit>
       <trans-unit id="localChangesGB.Text">
@@ -4152,38 +3543,38 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="rbCreateBranchWithCustomName.Text">
-        <source>Cr&amp;eate local branch with custom name:</source>
-        <target>別の名前でローカルブランチを作成(&amp;E):</target>
+        <source>Create local branch with custom name:</source>
+        <target>別の名前でローカルブランチを作成:</target>
         
       </trans-unit>
       <trans-unit id="rbDontChange.Text">
-        <source>Do&amp;n't change</source>
-        <target>変更しない(&amp;N)</target>
+        <source>Don't change</source>
+        <target>変更しない</target>
         
       </trans-unit>
       <trans-unit id="rbDontCreate.Text">
-        <source>Ch&amp;eckout remote branch</source>
-        <target>リモートブランチのチェックアウトのみ(&amp;E)</target>
+        <source>Checkout remote branch</source>
+        <target>リモートブランチのチェックアウトのみ</target>
         
       </trans-unit>
       <trans-unit id="rbMerge.Text">
-        <source>&amp;Merge</source>
-        <target>マージ(&amp;M)</target>
+        <source>Merge</source>
+        <target>マージ</target>
         
       </trans-unit>
       <trans-unit id="rbReset.Text">
-        <source>&amp;Reset</source>
-        <target>リセット(&amp;R)</target>
+        <source>Reset</source>
+        <target>リセット</target>
         
       </trans-unit>
       <trans-unit id="rbResetBranch.Text">
-        <source>R&amp;eset local branch with the name:</source>
-        <target>別の名前でローカルブランチをリセット(&amp;E):</target>
+        <source>Reset local branch with the name:</source>
+        <target>別の名前でローカルブランチをリセット:</target>
         
       </trans-unit>
       <trans-unit id="rbStash.Text">
-        <source>S&amp;tash</source>
-        <target>スタッシュ(変更の一時退避)(&amp;T)</target>
+        <source>Stash</source>
+        <target>スタッシュ (変更の一時退避)</target>
         
       </trans-unit>
     </body>
@@ -4196,13 +3587,13 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="Force.Text">
-        <source>&amp;Force (reset local changes)</source>
-        <target>強制(ローカルの変更を破棄)(&amp;F)</target>
+        <source>Force (reset local changes)</source>
+        <target>強制 (ローカルの変更を破棄)</target>
         
       </trans-unit>
       <trans-unit id="OkCheckout.Text">
-        <source>&amp;Checkout</source>
-        <target>チェックアウト(&amp;C)</target>
+        <source>Checkout</source>
+        <target>チェックアウト</target>
         
       </trans-unit>
       <trans-unit id="_noRevisionSelectedMsgBox.Text">
@@ -4216,8 +3607,8 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Checkout this &amp;revision</source>
-        <target>このリビジョンをチェックアウト(&amp;R)</target>
+        <source>Checkout this revision</source>
+        <target>チェックアウトするリビジョン:</target>
         
       </trans-unit>
     </body>
@@ -4230,8 +3621,8 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
-        <source>&amp;Automatically create a commit</source>
-        <target>自動的にコミットを作成(&amp;A)</target>
+        <source>Automatically create a commit</source>
+        <target>自動的にコミットを作成</target>
         
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
@@ -4240,13 +3631,13 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="ParentsLabel.Text">
-        <source>This commit is a merge, select &amp;parent:</source>
-        <target>このコミットはマージです。親を選択してください(&amp;P):</target>
+        <source>This commit is a merge, select parent:</source>
+        <target>これはマージコミットです。メインラインの親を選択してください:</target>
         
       </trans-unit>
       <trans-unit id="Pick.Text">
-        <source>&amp;Cherry pick</source>
-        <target>チェリーピック(&amp;C)</target>
+        <source>Cherry pick</source>
+        <target>チェリーピック</target>
         
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
@@ -4255,8 +3646,8 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="checkAddReference.Text">
-        <source>A&amp;dd commit reference to commit message</source>
-        <target>コミットメッセージにコミットへの参照を追加する(&amp;D)</target>
+        <source>Add commit reference to commit message</source>
+        <target>コミットメッセージにコミットへの参照を追加する</target>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -4280,9 +3671,9 @@ Are you sure?</source>
         
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>C&amp;hoose another
+        <source>Choose another
 revision:</source>
-        <target>別のリビジョンを選択(&amp;H):</target>
+        <target>違うリビジョンを選択:</target>
         
       </trans-unit>
     </body>
@@ -4355,6 +3746,11 @@ revision:</source>
       <trans-unit id="AddPath.Text">
         <source>Add a path...</source>
         <target>パスを追加...</target>
+        
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Cancel</source>
+        <target>キャンセル</target>
         
       </trans-unit>
       <trans-unit id="Cleanup.Text">
@@ -4586,7 +3982,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="Amend.Text">
         <source>&amp;Amend Commit</source>
-        <target>コミットのやり直し(&amp;A)</target>
+        <target>コミットを修正(&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -4649,7 +4045,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_amendCommitCaption.Text">
         <source>Amend commit</source>
-        <target>コミットやり直し</target>
+        <target>コミットを修正(amend)</target>
         
       </trans-unit>
       <trans-unit id="_assumeUnchangedToolTip.Text">
@@ -4777,7 +4173,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_mergeConflicts.Text">
         <source>There are unresolved merge conflicts, solve merge conflicts before committing.</source>
-        <target>未解決のマージ競合があります。コミットする前に競合を解決してください。</target>
+        <target>未解決のマージ競合が存在します。コミットする前に競合を解決してください。</target>
         
       </trans-unit>
       <trans-unit id="_mergeConflictsCaption.Text">
@@ -4799,31 +4195,19 @@ Are you sure you want to commit?</source>
 コミットしてよろしいですか？</target>
         
       </trans-unit>
-      <trans-unit id="_noFilesStagedCommitAllFilteredUnstagedOption.Text">
-        <source>Stage and commit the unstaged files that match your filter</source>
-        <target>フィルタに一致する未ステージのファイルを追加してコミット</target>
+      <trans-unit id="_noFilesStagedAndNothingToCommit.Text">
+        <source>There are no files staged for this commit.</source>
+        <target>ステージされたファイルがありません。</target>
         
       </trans-unit>
-      <trans-unit id="_noFilesStagedCommitAllUnstagedOption.Text">
-        <source>Stage and commit all unstaged files</source>
-        <target>未ステージのファイルをすべて追加してコミット</target>
+      <trans-unit id="_noFilesStagedButSuggestToCommitAllFilteredUnstaged.Text">
+        <source>There are no files staged for this commit. Stage and commit the unstaged files that match your filter?</source>
+        <target>ステージされたファイルがありません。フィルタに一致する未ステージのファイルを追加してコミットしますか？</target>
         
       </trans-unit>
-      <trans-unit id="_noFilesStagedCommitCaption.Text">
-        <source>Confirm commit</source>
-        <target>コミットの確認</target>
-        
-      </trans-unit>
-      <trans-unit id="_noFilesStagedCommitInstructions.Text">
-        <source>There aren't any changes in the staging area.
-How do you want to proceed?</source>
-        <target>ステージング領域に変更が何もありません。
-どのように続行しますか？</target>
-        
-      </trans-unit>
-      <trans-unit id="_noFilesStagedMakeEmptyCommitOption.Text">
-        <source>Make an empty commit</source>
-        <target>空のコミットを作成</target>
+      <trans-unit id="_noFilesStagedButSuggestToCommitAllUnstaged.Text">
+        <source>There are no files staged for this commit. Stage and commit all unstaged files?</source>
+        <target>未ステージのファイルはありません。未ステージのファイルをすべて追加してコミットしますか？</target>
         
       </trans-unit>
       <trans-unit id="_noStagedChanges.Text">
@@ -5000,7 +4384,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="commitMessageToolStripMenuItem.Text">
         <source>Commit &amp;message</source>
-        <target>過去のメッセージ(&amp;M)</target>
+        <target>コミットメッセージ(&amp;M)</target>
         
       </trans-unit>
       <trans-unit id="commitStagedCountLabel.Text">
@@ -5010,7 +4394,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="commitSubmoduleChanges.Text">
         <source>Commit submodule changes</source>
-        <target>サブモジュールの変更をコミットする</target>
+        <target>サブモジュールの変更をコミット</target>
         
       </trans-unit>
       <trans-unit id="commitTemplatesToolStripMenuItem.Text">
@@ -5245,7 +4629,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
         <source>Stash submodule changes</source>
-        <target>サブモジュールの変更を一時退避する</target>
+        <target>サブモジュールの変更をスタッシュ</target>
         
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
@@ -5290,12 +4674,12 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="viewFileHistoryToolStripItem.Text">
         <source>View file history</source>
-        <target>ファイルの履歴を見る</target>
+        <target>ファイル履歴を見る</target>
         
       </trans-unit>
       <trans-unit id="viewHistoryMenuItem.Text">
         <source>View history</source>
-        <target>履歴を見る</target>
+        <target>ファイル履歴</target>
         
       </trans-unit>
       <trans-unit id="workingToolStripMenuItem.Text">
@@ -5627,8 +5011,13 @@ You can unset the template:
         
       </trans-unit>
       <trans-unit id="Delete.Text">
-        <source>&amp;Delete</source>
-        <target>削除(&amp;D)</target>
+        <source>Delete</source>
+        <target>削除</target>
+        
+      </trans-unit>
+      <trans-unit id="ForceDelete.Text">
+        <source>Force delete</source>
+        <target>強制削除</target>
         
       </trans-unit>
       <trans-unit id="_cannotDeleteCurrentBranchMessage.Text">
@@ -5637,30 +5026,36 @@ You can unset the template:
         
       </trans-unit>
       <trans-unit id="_deleteBranchCaption.Text">
-        <source>Delete Branches</source>
+        <source>Delete branches</source>
         <target>ブランチの削除</target>
         
       </trans-unit>
-      <trans-unit id="_deleteBranchConfirmTitle.Text">
-        <source>Delete Confirmation</source>
-        <target>削除の確認</target>
-        
-      </trans-unit>
       <trans-unit id="_deleteBranchQuestion.Text">
-        <source>The selected branch(es) have not been merged into HEAD.
-Proceed?</source>
-        <target>選択したブランチはHEADにマージされていません。
-続行しますか?</target>
+        <source>Are you sure you want to delete selected branches?
+Deleting a branch can cause commits to be deleted too!</source>
+        <target>選択したブランチを削除してよろしいですか？
+ブランチの削除はコミットの削除ということでもありますよ！</target>
         
       </trans-unit>
-      <trans-unit id="_useReflogHint.Text">
-        <source>Did you know you can use reflog to restore deleted branches?</source>
-        <target>削除したブランチはreflogで復元できることをご存知でしたか？</target>
+      <trans-unit id="_deleteUnmergedBranchForcingSuggestion.Text">
+        <source>You cannot delete unmerged branch until you set “force delete” mode.</source>
+        <target>マージされていないブランチは「強制削除」でなければ削除できません。</target>
+        
+      </trans-unit>
+      <trans-unit id="labelDeleteBranchWarning.Text">
+        <source>You can only delete branches when they are fully merged in HEAD. 
+When you delete a branch the commits can get lost because nothing points to them.
+When you want to delete a not-fully merged branch, you can override this using the 'Force delete' option.
+</source>
+        <target>HEADに完全にマージされたブランチのみ削除できます。
+ブランチの削除でコミットへの参照も削除されるため、コミットが失われることがあります。
+マージの不完全なブランチを削除したいときは、「強制削除」オプションを使用してください。
+</target>
         
       </trans-unit>
       <trans-unit id="labelSelectBranches.Text">
-        <source>Select &amp;branches</source>
-        <target>ブランチを選択(&amp;B)</target>
+        <source>Select branches</source>
+        <target>ブランチを選択</target>
         
       </trans-unit>
     </body>
@@ -5779,7 +5174,7 @@ in order to recover the lost commits.</source>
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
         <source>Blame</source>
-        <target>追及 (Blame)</target>
+        <target>追及(blame)</target>
         
       </trans-unit>
       <trans-unit id="btnCompareDirectoriesWithDiffTool.Text">
@@ -5927,7 +5322,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="BlameTab.Text">
         <source>Blame</source>
-        <target>追及 (Blame)</target>
+        <target>追及(blame)</target>
         
       </trans-unit>
       <trans-unit id="CommitInfoTabPage.Text">
@@ -5940,14 +5335,14 @@ If you are not sure just close this window.</source>
         <target>Diff</target>
         
       </trans-unit>
+      <trans-unit id="ShowFirstParent.ToolTipText">
+        <source>Show first parents</source>
+        <target>最初の親を表示</target>
+        
+      </trans-unit>
       <trans-unit id="ShowFullHistory.ToolTipText">
         <source>Show Full History</source>
         <target>全履歴を表示</target>
-        
-      </trans-unit>
-      <trans-unit id="ToolStripFilters.Text">
-        <source>Filters</source>
-        <target>フィルタ</target>
         
       </trans-unit>
       <trans-unit id="ViewTab.Text">
@@ -5962,7 +5357,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="blameSettingsToolStripMenuItem.Text">
         <source>Blame settings:</source>
-        <target>Blame設定:</target>
+        <target>追及の設定:</target>
         
       </trans-unit>
       <trans-unit id="cherryPickThisCommitToolStripMenuItem.Text">
@@ -6027,7 +5422,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="loadBlameOnShowToolStripMenuItem.Text">
         <source>Load blame on show</source>
-        <target>表示時に blame を読み込む</target>
+        <target>表示時に追及(blame)を読み込む</target>
         
       </trans-unit>
       <trans-unit id="loadHistoryOnShowToolStripMenuItem.Text">
@@ -6103,6 +5498,16 @@ If you are not sure just close this window.</source>
       <trans-unit id="toolStripBlameOptions.Text">
         <source>Blame options</source>
         <target>追及のオプション</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripLabel1.Text">
+        <source>Branches:</source>
+        <target>ブランチ:</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripRevisionFilterLabel.Text">
+        <source>Filter:</source>
+        <target>フィルタ:</target>
         
       </trans-unit>
       <trans-unit id="toolStripSplitLoad.ToolTipText">
@@ -6197,7 +5602,7 @@ Git Extensionsによって、正しいフォルダに配置しますか？</targ
       </trans-unit>
       <trans-unit id="groupBox8.Text">
         <source>Environment</source>
-        <target>環境</target>
+        <target>環境変数</target>
         
       </trans-unit>
       <trans-unit id="label51.Text">
@@ -6314,7 +5719,7 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Subject</source>
-        <target>件名</target>
+        <target>題名</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -6324,7 +5729,7 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>To</source>
-        <target>宛先</target>
+        <target>ここまで</target>
         
       </trans-unit>
       <trans-unit id="radioButton1.Text">
@@ -6557,135 +5962,6 @@ _ReSharper*/</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Statistics</source>
-        <target>統計情報</target>
-        
-      </trans-unit>
-      <trans-unit id="CommitStatistics.Text">
-        <source>Loading..</source>
-        <target>読込中...</target>
-        
-      </trans-unit>
-      <trans-unit id="LinesOfCodePerLanguageText.Text">
-        <source>Loading...</source>
-        <target>読込中...</target>
-        
-      </trans-unit>
-      <trans-unit id="LinesOfCodePerTypeText.Text">
-        <source>Loading...</source>
-        <target>読込中...</target>
-        
-      </trans-unit>
-      <trans-unit id="LoadingLabel.Text">
-        <source>Loading...</source>
-        <target>読込中...</target>
-        
-      </trans-unit>
-      <trans-unit id="TestCodeText.Text">
-        <source>Loading...</source>
-        <target>読込中...</target>
-        
-      </trans-unit>
-      <trans-unit id="TotalCommits.Text">
-        <source>Total commits</source>
-        <target>総コミット数</target>
-        
-      </trans-unit>
-      <trans-unit id="TotalLinesOfCode.Text">
-        <source>Total lines of code</source>
-        <target>総コード行数</target>
-        
-      </trans-unit>
-      <trans-unit id="TotalLinesOfCode2.Text">
-        <source>Total lines of code</source>
-        <target>総コード行数</target>
-        
-      </trans-unit>
-      <trans-unit id="TotalLinesOfTestCode.Text">
-        <source>Total lines of code</source>
-        <target>総コード行数</target>
-        
-      </trans-unit>
-      <trans-unit id="_blankLinesP.Text">
-        <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>{0:N0} 行の空行 ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_commentLinesP.Text">
-        <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0:N0} 行のコメント ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_commits.Text">
-        <source>{0:N0} Commits</source>
-        <target>{0:N0} コミット</target>
-        
-      </trans-unit>
-      <trans-unit id="_commitsBy.Text">
-        <source>{0:N0} Commits by {1}</source>
-        <target>{1} によるコミット数 {0:N0}</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfCode.Text">
-        <source>{0:N0} Lines of code</source>
-        <target>{0:N0} 行のコード</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfCodeInFiles.Text">
-        <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{0:N0} 行の {1}ファイルのコード ({2:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfCodeP.Text">
-        <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>{0:N0} 行のコード ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfDesignerFilesP.Text">
-        <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>{0:N0} 行はdesignerファイル ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfProductionCodeP.Text">
-        <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>{0:N0} 行のプロダクションコード ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfTestCode.Text">
-        <source>{0:N0} Lines of test code</source>
-        <target>{0:N0} 行のテストコード</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfTestCodeP.Text">
-        <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>{0:N0} 行のテストコード ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="tabPage1.Text">
-        <source>Lines of code per language</source>
-        <target>言語ごとのコード行数</target>
-        
-      </trans-unit>
-      <trans-unit id="tabPage2.Text">
-        <source>Commits per contributor</source>
-        <target>コントリビューター毎のコミット数</target>
-        
-      </trans-unit>
-      <trans-unit id="tabPage3.Text">
-        <source>Lines of code per type</source>
-        <target>タイプ毎のコード行数</target>
-        
-      </trans-unit>
-      <trans-unit id="tabPage4.Text">
-        <source>Lines of test code</source>
-        <target>テストコードの行数</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormGoToCommit" source-language="en" target-language="ja">
     <body>
       <trans-unit id="$this.Text">
@@ -6759,30 +6035,6 @@ _ReSharper*/</target>
       <trans-unit id="okBtn.Text">
         <source>OK</source>
         <target>OK</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Impact</source>
-        <target>インパクト</target>
-        
-      </trans-unit>
-      <trans-unit id="_authorCommits.Text">
-        <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} ({1}コミット、 {2} 変更行)</target>
-        
-      </trans-unit>
-      <trans-unit id="cbIncludingSubmodules.Text">
-        <source>Including submodules</source>
-        <target>サブモジュールを含む</target>
-        
-      </trans-unit>
-      <trans-unit id="lblAuthor.Text">
-        <source>Author</source>
-        <target>作者</target>
         
       </trans-unit>
     </body>
@@ -6975,6 +6227,11 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       <trans-unit id="_switchWorktreeTitle.Text">
         <source>Open a worktree</source>
         <target>ワークツリーを開く</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonClose.Text">
+        <source>Close</source>
+        <target>閉じる</target>
         
       </trans-unit>
       <trans-unit id="buttonPruneWorktrees.Text">
@@ -7338,6 +6595,11 @@ Are you sure you want to rebase this merge?</source>
         <target>プル(&amp;P)</target>
         
       </trans-unit>
+      <trans-unit id="_dontShowAgain.Text">
+        <source>Don't show me this message again.</source>
+        <target>これ以降、このメッセージを表示しない</target>
+        
+      </trans-unit>
       <trans-unit id="_fetchAllBranchesCanOnlyWithFetch.Text">
         <source>You can only fetch all remote branches (*) without merge or rebase.
 If you want to fetch all remote branches, choose fetch.
@@ -7500,8 +6762,8 @@ submoduleを使えるようにしますか？
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
-        <source>&amp;Manage remotes</source>
-        <target>リモートの管理(&amp;M)</target>
+        <source>Manage remotes</source>
+        <target>リモートの管理</target>
         
       </trans-unit>
       <trans-unit id="BranchTab.Text">
@@ -7525,12 +6787,12 @@ submoduleを使えるようにしますか？
         
       </trans-unit>
       <trans-unit id="ForcePushBranches.Text">
-        <source>F&amp;orce push</source>
-        <target>強制プッシュ(&amp;O)</target>
+        <source>&amp;Force Push</source>
+        <target>強制プッシュ(&amp;F)</target>
         
       </trans-unit>
       <trans-unit id="ForcePushTags.Text">
-        <source>&amp;Force push</source>
+        <source>&amp;Force Push</source>
         <target>強制プッシュ(&amp;F)</target>
         
       </trans-unit>
@@ -7555,23 +6817,23 @@ submoduleを使えるようにしますか？
         
       </trans-unit>
       <trans-unit id="Pull.Text">
-        <source>P&amp;ull</source>
-        <target>プル(&amp;U)</target>
+        <source>Pull</source>
+        <target>プル</target>
         
       </trans-unit>
       <trans-unit id="PushColumn.HeaderText">
         <source>Push</source>
-        <target>プッシュ (リモートへ反映)</target>
+        <target>プッシュ</target>
         
       </trans-unit>
       <trans-unit id="PushToRemote.Text">
-        <source>&amp;Remote</source>
-        <target>リモート(&amp;R)</target>
+        <source>Remote</source>
+        <target>リモート</target>
         
       </trans-unit>
       <trans-unit id="PushToUrl.Text">
-        <source>U&amp;rl</source>
-        <target>U&amp;RL</target>
+        <source>Url</source>
+        <target>URL</target>
         
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
@@ -7595,8 +6857,8 @@ submoduleを使えるようにしますか？
         
       </trans-unit>
       <trans-unit id="ReplaceTrackingReference.Text">
-        <source>R&amp;eplace tracking reference</source>
-        <target>追跡ブランチ情報を上書き(&amp;E)</target>
+        <source>Replace tracking reference</source>
+        <target>追跡ブランチ情報を上書き</target>
         
       </trans-unit>
       <trans-unit id="ShowOptions.Text">
@@ -7628,8 +6890,13 @@ Would you like to do it now?</source>
         
       </trans-unit>
       <trans-unit id="_createPullRequestCB.Text">
-        <source>&amp;Create pull request after push</source>
-        <target>プッシュ後にプルリクエストを作成(&amp;C)</target>
+        <source>Create pull request after push</source>
+        <target>プッシュ後にプルリクエストを作成</target>
+        
+      </trans-unit>
+      <trans-unit id="_dontShowAgain.Text">
+        <source>Remember my decision.</source>
+        <target>選択を覚えておく。</target>
         
       </trans-unit>
       <trans-unit id="_errorPushToRemoteCaption.Text">
@@ -7738,8 +7005,8 @@ Would you like to do it now?</source>
         
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
-        <source>&amp;Force with lease</source>
-        <target>強制プッシュ(with lease)(&amp;F)</target>
+        <source>Force With &amp;Lease</source>
+        <target>Force With &amp;Lease</target>
         
       </trans-unit>
       <trans-unit id="groupBox2.Text">
@@ -7748,23 +7015,23 @@ Would you like to do it now?</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>&amp;Tag to push</source>
-        <target>プッシュするタグ(&amp;T)</target>
+        <source>Tag to push</source>
+        <target>プッシュするタグ</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Recursive &amp;submodules</source>
-        <target>再帰的なサブモジュール(&amp;S)</target>
+        <source>Recursive submodules</source>
+        <target>再帰的なサブモジュール</target>
         
       </trans-unit>
       <trans-unit id="labelFrom.Text">
-        <source>&amp;Branch to push</source>
-        <target>プッシュするブランチ(&amp;B)</target>
+        <source>Branch to push</source>
+        <target>プッシュするブランチ</target>
         
       </trans-unit>
       <trans-unit id="labelTo.Text">
-        <source>&amp;to</source>
-        <target>から(&amp;T)</target>
+        <source>to</source>
+        <target>から</target>
         
       </trans-unit>
       <trans-unit id="selectAllToolStripMenuItem.Text">
@@ -7881,7 +7148,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="AddFiles.Text">
         <source>Add files</source>
-        <target>ファイルを追加</target>
+        <target>ファイル追加</target>
         
       </trans-unit>
       <trans-unit id="Commit.Text">
@@ -8294,7 +7561,7 @@ GitとGitExtensionsから切り離されてコネクションが開いている�
       </trans-unit>
       <trans-unit id="Save.Text">
         <source>Save changes</source>
-        <target>保存</target>
+        <target>変更を保存する</target>
         
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
@@ -8371,7 +7638,7 @@ Inactive remote is completely invisible to git.</source>
       </trans-unit>
       <trans-unit id="_labelUrlAsFetchPush.Text">
         <source>Url</source>
-        <target>URLを</target>
+        <target>URL</target>
         
       </trans-unit>
       <trans-unit id="_lvgDisabledHeader.Text">
@@ -8564,7 +7831,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
     <body>
       <trans-unit id="$this.Text">
         <source>Reset changes</source>
-        <target>変更のリセット</target>
+        <target>変更をリセット</target>
         
       </trans-unit>
       <trans-unit id="btnCancel.Text">
@@ -9174,8 +8441,8 @@ Do you want to use this custom merge script?</source>
         
       </trans-unit>
       <trans-unit id="AutoCommit.Text">
-        <source>&amp;Automatically create a commit</source>
-        <target>自動的にコミットを作成(&amp;A)</target>
+        <source>Automatically create a commit</source>
+        <target>自動的にコミットを作成</target>
         
       </trans-unit>
       <trans-unit id="BranchInfo.Text">
@@ -9184,13 +8451,13 @@ Do you want to use this custom merge script?</source>
         
       </trans-unit>
       <trans-unit id="ParentsLabel.Text">
-        <source>This commit is a merge, select &amp;parent:</source>
-        <target>このコミットはマージです。親を選択してください(&amp;P):</target>
+        <source>This commit is a merge, select parent:</source>
+        <target>これはマージコミットです。メインラインの親を選択してください:</target>
         
       </trans-unit>
       <trans-unit id="Revert.Text">
-        <source>&amp;Revert this commit</source>
-        <target>コミットを打ち消す(&amp;Revert)</target>
+        <source>Revert this commit</source>
+        <target>コミットを打ち消す (revert)</target>
         
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
@@ -9303,7 +8570,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="selectBranchesLabel.Text">
         <source>Select branches</source>
-        <target>ブランチの選択</target>
+        <target>ブランチを選択</target>
         
       </trans-unit>
     </body>
@@ -9366,28 +8633,28 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="Apply.Text">
-        <source>&amp;Apply Selected Stash</source>
-        <target>選択したスタッシュを適用(&amp;A)</target>
+        <source>Apply Selected Stash</source>
+        <target>選択したスタッシュを適用</target>
         
       </trans-unit>
       <trans-unit id="Clear.Text">
-        <source>&amp;Drop Selected Stash</source>
-        <target>選択したスタッシュを削除(&amp;D)</target>
+        <source>Drop Selected Stash</source>
+        <target>選択したスタッシュを削除</target>
         
       </trans-unit>
       <trans-unit id="Stash.Text">
-        <source>S&amp;tash all changes</source>
-        <target>変更をすべてスタッシュ(&amp;T)</target>
+        <source>Stash all changes</source>
+        <target>変更をすべてスタッシュ</target>
         
       </trans-unit>
       <trans-unit id="StashKeepIndex.Text">
-        <source>&amp;Keep index</source>
-        <target>インデックスを維持(&amp;K)</target>
+        <source>Keep index</source>
+        <target>インデックスの維持</target>
         
       </trans-unit>
       <trans-unit id="StashSelectedFiles.Text">
-        <source>Stash &amp;selected changes</source>
-        <target>選択した変更をスタッシュ(&amp;S)</target>
+        <source>Stash selected changes</source>
+        <target>選択した変更をスタッシュ</target>
         
       </trans-unit>
       <trans-unit id="Stashes.ToolTipText">
@@ -9408,6 +8675,11 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       <trans-unit id="_currentWorkingDirChanges.Text">
         <source>Current working directory changes</source>
         <target>現在の作業ディレクトリの変更点</target>
+        
+      </trans-unit>
+      <trans-unit id="_dontShowAgain.Text">
+        <source>Don't show me this message again.</source>
+        <target>これ以降、このメッセージを表示しない</target>
         
       </trans-unit>
       <trans-unit id="_noStashes.Text">
@@ -9431,18 +8703,13 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="cherryPickFileChangesToolStripMenuItem.Text">
-        <source>&amp;Cherry pick file changes</source>
-        <target>ファイルの変更をチェリーピック(&amp;C)</target>
+        <source>Cherry pick file changes</source>
+        <target>ファイルの変更をチェリーピック</target>
         
       </trans-unit>
       <trans-unit id="chkIncludeUntrackedFiles.Text">
-        <source>&amp;Include untracked files</source>
-        <target>管理外ファイルも含める(&amp;I)</target>
-        
-      </trans-unit>
-      <trans-unit id="messageLabel.Text">
-        <source>&amp;Message:</source>
-        <target>メッセージ(&amp;M):</target>
+        <source>Include untracked files</source>
+        <target>管理外ファイルも含める</target>
         
       </trans-unit>
       <trans-unit id="refreshToolStripButton.Text">
@@ -9451,8 +8718,18 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="showToolStripLabel.Text">
-        <source>S&amp;how:</source>
-        <target>表示(&amp;H):</target>
+        <source>Show:</source>
+        <target>表示:</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripButton_customMessage.Text">
+        <source>Custom stash message</source>
+        <target>カスタム スタッシュ メッセージ</target>
+        
+      </trans-unit>
+      <trans-unit id="toolStripButton_customMessage.ToolTipText">
+        <source>Write custom stash message</source>
+        <target>カスタム スタッシュ メッセージを入力してください</target>
         
       </trans-unit>
     </body>
@@ -9774,7 +9051,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="mnuLostObjectView.Text">
         <source>View</source>
-        <target>選択したオブジェクトを表示</target>
+        <target>表示</target>
         
       </trans-unit>
       <trans-unit id="mnuLostObjectsCreateBranch.Text">
@@ -10006,7 +9283,7 @@ Context menu for additional operations</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Advanced</source>
-        <target>高度な設定</target>
+        <target>高度な操作</target>
         
       </trans-unit>
       <trans-unit id="checkBoxFetchPrune.Text">
@@ -10193,59 +9470,6 @@ Git の 正しいパスを入力してください。</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitFlow</source>
-        <target>GitFlow</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitHub</source>
-        <target>GitHub</target>
-        
-      </trans-unit>
-      <trans-unit id="GitHubHost.Caption">
-        <source>GitHub (Enterprise) hostname</source>
-        <target>GitHub (Enterprise) ホスト名</target>
-        
-      </trans-unit>
-      <trans-unit id="PersonalAccessToken.Caption">
-        <source>Personal Access Token</source>
-        <target>個人アクセストークン</target>
-        
-      </trans-unit>
-      <trans-unit id="_generateToken.Text">
-        <source>Generate a GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを生成</target>
-        
-      </trans-unit>
-      <trans-unit id="_manageToken.Text">
-        <source>Manage GitHub personal access token</source>
-        <target>GitHub個人アクセストークンを管理</target>
-        
-      </trans-unit>
-      <trans-unit id="_openLinkFailed.Text">
-        <source>Fail to open the link. Reason: </source>
-        <target>リンクを開くことができませんでした。理由:</target>
-        
-      </trans-unit>
-      <trans-unit id="_tokenAlreadyExist.Text">
-        <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>個人アクセストークンを取得済みです。新たに取得する場合は、まず古いトークンをプラグイン &gt; プラグイン設定 で削除してください。</target>
-        
-      </trans-unit>
-      <trans-unit id="_viewInWebSite.Text">
-        <source>View in {0}</source>
-        <target>{0} で閲覧</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="GitIgnoreModel" source-language="en" target-language="ja">
     <body>
       <trans-unit id="_cannotAccessGitignore.Text">
@@ -10273,15 +9497,6 @@ Check if file is accessible.</source>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .gitignore?</source>
         <target>.gitignoreへの変更を保存しますか？</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Impact Graph</source>
-        <target>インパクトグラフ</target>
         
       </trans-unit>
     </body>
@@ -10411,30 +9626,6 @@ to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you expe
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Statistics</source>
-        <target>統計情報</target>
-        
-      </trans-unit>
-      <trans-unit id="_codeFiles.Caption">
-        <source>Code files</source>
-        <target>コードファイル</target>
-        
-      </trans-unit>
-      <trans-unit id="_ignoreDirectories.Caption">
-        <source>Directories to ignore (EndsWith)</source>
-        <target>無視するディレクトリ (後方一致)</target>
-        
-      </trans-unit>
-      <trans-unit id="_ignoreSubmodules.Caption">
-        <source>Ignore submodules</source>
-        <target>サブモジュールを無視</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="Globalized" source-language="en" target-language="ja">
     <body>
       <trans-unit id="Cancel.Text">
@@ -10538,7 +9729,7 @@ nActual command line: {0}</source>
       </trans-unit>
       <trans-unit id="SparseWorkingCopySupportHasNotBeenEnabledForThisRepository.Text">
         <source>Git Sparse feature has not been enabled for this repository.</source>
-        <target>Git Sparse 機能はこのリポジトリで無効です</target>
+        <target>Git Sparse 機能はこのリポジトリで無効です。</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopySupportIsEnabled.Text">
@@ -10586,86 +9777,6 @@ Would you like to save them?</source>
       <trans-unit id="linkLabelHelp.Text">
         <source>Help</source>
         <target>ヘルプ</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Gource</source>
-        <target>Gource</target>
-        
-      </trans-unit>
-      <trans-unit id="_bytesDownloaded.Text">
-        <source>{0} bytes downloaded.</source>
-        <target>{0}バイトダウンロード済み</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotFindGource.Text">
-        <source>Cannot find Gource.
-Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Gourceを発見できません。Gourceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
-        
-      </trans-unit>
-      <trans-unit id="_currentDirectoryIsNotValidGit.Text">
-        <source>The current directory is not a valid git repository.
-
-Gource can be only be started from a valid git repository.</source>
-        <target>現在のディレクトリは有効なGitリポジトリではありません。
-
-Gourceは有効なGitリポジトリからしか開始できません。</target>
-        
-      </trans-unit>
-      <trans-unit id="_doYouWantDownloadGource.Text">
-        <source>There is no path to Gource configured.
-
-Do you want to automatically download Gource?</source>
-        <target>Gourceへのパスが設定されていません。
-
-自動的にGourceをダウンロードしますか？</target>
-        
-      </trans-unit>
-      <trans-unit id="_download.Text">
-        <source>Download</source>
-        <target>ダウンロード</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadingFailed.Text">
-        <source>Downloading failed.
-Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>ダウンロードに失敗しました。
-Gourceをダウンロードし、プラグイン設定ダイアログからパスを設定してください。</target>
-        
-      </trans-unit>
-      <trans-unit id="_gource.Text">
-        <source>Gource</source>
-        <target>Gource</target>
-        
-      </trans-unit>
-      <trans-unit id="_gourceArguments.Caption">
-        <source>Arguments</source>
-        <target>引数</target>
-        
-      </trans-unit>
-      <trans-unit id="_gourceDownloadedAndUnzipped.Text">
-        <source>Gource has been downloaded and unzipped.</source>
-        <target>Gourceがダウンロードされ、解凍されました。</target>
-        
-      </trans-unit>
-      <trans-unit id="_gourcePath.Caption">
-        <source>Path to Gource</source>
-        <target>Gourceのパス</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetConfigPath.Text">
-        <source>Cannot find Gource in the configured path: {0}.
-
-Do you want to reset the configured path?</source>
-        <target>設定されたパスにGourceが見つかりませんでした:
-{0}
-
-パスをリセットしますか？</target>
         
       </trans-unit>
     </body>
@@ -10750,25 +9861,6 @@ help</source>
       <trans-unit id="_rebase.Text">
         <source>Rebase</source>
         <target>リベース</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="lblIgnoreBuildBranch.Text">
-        <source>Ignore build for branch</source>
-        <target>このブランチでビルドを無視</target>
-        
-      </trans-unit>
-      <trans-unit id="lblJenkinsServerUrl.Text">
-        <source>Jenkins server URL</source>
-        <target>Jenkins サーバの URL</target>
-        
-      </trans-unit>
-      <trans-unit id="lblProjectName.Text">
-        <source>Project name</source>
-        <target>プロジェクト名</target>
         
       </trans-unit>
     </body>
@@ -11003,211 +10095,114 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="RecentRepositoriesList" source-language="en" target-language="ja">
     <body>
-      <trans-unit id="$this.Text">
-        <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+      <trans-unit id="_cannotOpenTheFolder.Text">
+        <source>Cannot open the folder</source>
+        <target>フォルダを開くことができません</target>
         
       </trans-unit>
-      <trans-unit id="ApplyGlobally_CheckBox.Text">
-        <source>Apply globally</source>
-        <target>すべてに適用する</target>
+      <trans-unit id="_clearRecentCategoryCaption.Text">
+        <source>Clear recent repositories</source>
+        <target>最近開いたリポジトリをクリア</target>
         
       </trans-unit>
-      <trans-unit id="GlobalHttpProxy_Label.Text">
-        <source>Global http.proxy:</source>
-        <target>グローバルのhttp.proxy:</target>
+      <trans-unit id="_clearRecentCategoryQuestion.Text">
+        <source>Do you want to clear the list of recent repositories?
+
+The action cannot be undone.</source>
+        <target>最近開いたリポジトリの一覧をクリアしますか？
+
+この操作は取り返しがつきません。</target>
         
       </trans-unit>
-      <trans-unit id="LocalHttpProxy_Label.Text">
-        <source>Local http.proxy:</source>
-        <target>ローカルのhttp.proxy:</target>
+      <trans-unit id="_deleteCategoryCaption.Text">
+        <source>Delete Category</source>
+        <target>カテゴリを削除</target>
         
       </trans-unit>
-      <trans-unit id="SetProxy_Button.Text">
-        <source>Set proxy</source>
-        <target>プロキシを設定</target>
+      <trans-unit id="_deleteCategoryQuestion.Text">
+        <source>Do you want to delete category &quot;{0}&quot; with {1} repositories?
+
+The action cannot be undone.</source>
+        <target>{1}リポジトリが入っているカテゴリ&quot;{0}&quot;を削除しますか？
+
+この操作は取り返しがつきません。</target>
         
       </trans-unit>
-      <trans-unit id="UnsetProxy_Button.Text">
-        <source>Unset proxy</source>
-        <target>プロキシを解除</target>
+      <trans-unit id="_groupRecentRepositories.Text">
+        <source>Recent repositories</source>
+        <target>最近開いたリポジトリ</target>
         
       </trans-unit>
-      <trans-unit id="_pleaseSetProxy.Text">
-        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>プロキシが設定されていません。プラグインの設定で、プロキシのホスト名を設定してください。</target>
+      <trans-unit id="clmhdrBranch.Text">
+        <source>Branch</source>
+        <target>ブランチ</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+      <trans-unit id="clmhdrCategory.Text">
+        <source>Category</source>
+        <target>カテゴリ</target>
         
       </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Proxy Switcher</source>
-        <target>プロキシスイッチャ</target>
+      <trans-unit id="clmhdrPath.Text">
+        <source>Path</source>
+        <target>パス</target>
         
       </trans-unit>
-      <trans-unit id="HttpProxy.Caption">
-        <source>HTTP proxy</source>
-        <target>HTTPプロキシ</target>
+      <trans-unit id="lblRecentRepositories.Text">
+        <source>Recent Repositories</source>
+        <target>最近開いたリポジトリ</target>
         
       </trans-unit>
-      <trans-unit id="HttpProxyPort.Caption">
-        <source>HTTP proxy port</source>
-        <target>HTTPプロキシポート</target>
+      <trans-unit id="mnuConfigure.Text">
+        <source>&amp;Recent repositories settings</source>
+        <target>最近のリポジトリの設定(&amp;R)</target>
         
       </trans-unit>
-      <trans-unit id="Password.Caption">
-        <source>Password</source>
-        <target>パスワード</target>
+      <trans-unit id="tsmiCategories.Text">
+        <source>Categories</source>
+        <target>カテゴリ</target>
         
       </trans-unit>
-      <trans-unit id="Username.Caption">
-        <source>Username</source>
-        <target>ユーザ名</target>
+      <trans-unit id="tsmiCategoryAdd.Text">
+        <source>Add new...</source>
+        <target>新規追加...</target>
         
       </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Release Notes Generator</source>
-        <target>リリースノートジェネレータ</target>
+      <trans-unit id="tsmiCategoryClear.Text">
+        <source>Clear all recent repositories</source>
+        <target>最近開いたリポジトリをすべてクリア</target>
         
       </trans-unit>
-      <trans-unit id="_caption.Text">
-        <source>Invalid input</source>
-        <target>無効な入力</target>
+      <trans-unit id="tsmiCategoryDelete.Text">
+        <source>Delete category</source>
+        <target>カテゴリを削除</target>
         
       </trans-unit>
-      <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>'{0}'から'{1}'へのコミットログ ({2}):</target>
+      <trans-unit id="tsmiCategoryNone.Text">
+        <source>(none)</source>
+        <target>(なし)</target>
         
       </trans-unit>
-      <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
-        <target>'From'コミットは必ず指定する必要があります</target>
+      <trans-unit id="tsmiCategoryRename.Text">
+        <source>Rename category</source>
+        <target>カテゴリ名を変更</target>
         
       </trans-unit>
-      <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>'To'コミットは必ず指定する必要があります</target>
+      <trans-unit id="tsmiOpenFolder.Text">
+        <source>Show in folder</source>
+        <target>フォルダで見る</target>
         
       </trans-unit>
-      <trans-unit id="buttonCopyAsHtml.Text">
-        <source>as HTML table</source>
-        <target>HTMLテーブルとして</target>
+      <trans-unit id="tsmiRemoveFromList.Text">
+        <source>Remove project from the list</source>
+        <target>プロジェクトをリストから消去</target>
         
       </trans-unit>
-      <trans-unit id="buttonCopyAsTextTableSpace.Text">
-        <source>as text table (spaces)</source>
-        <target>テキストテーブル(空白区切り)として</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonCopyAsTextTableTab.Text">
-        <source>as text table (tabs)</source>
-        <target>テキストテーブル(タブ区切り)として</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonCopyOrigOutput.Text">
-        <source>original output</source>
-        <target>オリジナルの出力</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonGenerate.Text">
-        <source>Generate</source>
-        <target>生成</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Result</source>
-        <target>結果</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCopy.Text">
-        <source>Copy to clipboard</source>
-        <target>クリップボードにコピー</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Commit expression &quot;To&quot; (including):</source>
-        <target>コミット参照 &quot;To&quot; (含む):</target>
-        
-      </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>separate columns with spaces</source>
-        <target>列を空白で分割</target>
-        
-      </trans-unit>
-      <trans-unit id="label11.Text">
-        <source>Clipboard will contain HTML code (plain text) and HTML format
-which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>クリップボードはHTMLコード(プレーンテキスト)やHTMLフォーマットを含んでおり、MS WordやLibreOffice Writerに貼り付けることが可能です。</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>コミット参照&quot;From&quot; (除外):</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>git log arguments:</source>
-        <target>gitログ引数:</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>{0} = from; {1} = to</source>
-        <target>{0} = 元; {1} = 先</target>
-        
-      </trans-unit>
-      <trans-unit id="label5.Text">
-        <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>整列：最新のリビジョンを上に表示。</target>
-        
-      </trans-unit>
-      <trans-unit id="label6.Text">
-        <source>Revisions count = </source>
-        <target>リビジョン数 = </target>
-        
-      </trans-unit>
-      <trans-unit id="label7.Text">
-        <source>(Commit expressions can be commit hashes,
-branch names, tag names)</source>
-        <target>(コミットの参照式はコミットハッシュ、
-ブランチ名、タグ名があり得ます)</target>
-        
-      </trans-unit>
-      <trans-unit id="label8.Text">
-        <source>as is</source>
-        <target>として</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>separate columns with tabs</source>
-        <target>列をタブで分割</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRevCount.Text">
-        <source>n/a</source>
-        <target>n/a</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Release Notes Generator</source>
-        <target>リリースノートジェネレータ</target>
+      <trans-unit id="tsmiRemoveMissingReposFromList.Text">
+        <source>Remove missing projects from the list</source>
+        <target>リストから見つからないプロジェクトを削除</target>
         
       </trans-unit>
     </body>
@@ -11624,123 +10619,123 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
-        <source>&amp;Blame</source>
-        <target>追及(&amp;Blame)</target>
+        <source>Blame</source>
+        <target>追及(blame)</target>
         
       </trans-unit>
       <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
-        <source>Cherr&amp;y pick changes</source>
-        <target>変更をチェリーピック(&amp;Y)</target>
+        <source>Cherry pick changes</source>
+        <target>変更をチェリーピック</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
-        <source>Copy full &amp;path(s)</source>
-        <target>フルパスをコピー(&amp;P)</target>
+        <source>Copy full path(s)</source>
+        <target>フルパスをコピー</target>
         
       </trans-unit>
       <trans-unit id="diffCommitSubmoduleChanges.Text">
-        <source>&amp;Commit submodule changes</source>
-        <target>サブモジュールの変更をコミット(&amp;C)</target>
+        <source>Commit submodule changes</source>
+        <target>サブモジュールの変更をコミット</target>
         
       </trans-unit>
       <trans-unit id="diffDeleteFileToolStripMenuItem.Text">
-        <source>De&amp;lete file</source>
-        <target>ファイルの削除(&amp;L)</target>
+        <source>Delete file</source>
+        <target>ファイルを削除</target>
         
       </trans-unit>
       <trans-unit id="diffEditWorkingDirectoryFileToolStripMenuItem.Text">
-        <source>&amp;Edit working directory file</source>
-        <target>作業ディレクトリのファイルを編集(&amp;E)</target>
+        <source>Edit working directory file</source>
+        <target>作業ディレクトリのファイルを編集</target>
         
       </trans-unit>
       <trans-unit id="diffOpenRevisionFileToolStripMenuItem.Text">
-        <source>Ope&amp;n this revision (temp file)</source>
-        <target>このリビジョンを開く(一時ファイル)(&amp;N)</target>
+        <source>Open this revision (temp file)</source>
+        <target>このリビジョンを開く(一時ファイル)</target>
         
       </trans-unit>
       <trans-unit id="diffOpenRevisionFileWithToolStripMenuItem.Text">
-        <source>Open this revision &amp;with... (temp file)</source>
-        <target>このリビジョンをプログラムを指定して開く(&amp;W)...(一時ファイル)</target>
+        <source>Open this revision with... (temp file)</source>
+        <target>このリビジョンをプログラムを指定して開く...(一時ファイル)</target>
         
       </trans-unit>
       <trans-unit id="diffOpenWorkingDirectoryFileWithToolStripMenuItem.Text">
-        <source>&amp;Open working directory file with...</source>
-        <target>作業ディレクトリのファイルをプログラムを指定して開く(&amp;O)...</target>
+        <source>Open working directory file with...</source>
+        <target>作業ディレクトリのファイルをプログラムを指定して開く...</target>
         
       </trans-unit>
       <trans-unit id="diffResetSubmoduleChanges.Text">
-        <source>R&amp;eset submodule changes</source>
-        <target>サブモジュールの変更を元に戻す(&amp;E)</target>
+        <source>Reset submodule changes</source>
+        <target>サブモジュールの変更をリセット</target>
         
       </trans-unit>
       <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
-        <source>Show in File &amp;tree</source>
-        <target>ファイルツリーで見る(&amp;T)</target>
+        <source>Show in File tree</source>
+        <target>ファイルツリーで見る</target>
         
       </trans-unit>
       <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
-        <source>S&amp;tash submodule changes</source>
-        <target>サブモジュールの変更をスタッシュする(&amp;T)</target>
+        <source>Stash submodule changes</source>
+        <target>サブモジュールの変更をスタッシュ</target>
         
       </trans-unit>
       <trans-unit id="diffTwoSelectedDifftoolToolStripMenuItem.Text">
-        <source>&amp;Diff the selected files</source>
-        <target>選択したファイルを比較(&amp;D)</target>
+        <source>Diff the selected files</source>
+        <target>選択したファイルを比較</target>
         
       </trans-unit>
       <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
-        <source>&amp;Update submodule</source>
-        <target>サブモジュールを更新(&amp;U)</target>
+        <source>Update submodule</source>
+        <target>サブモジュールを更新</target>
         
       </trans-unit>
       <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File &amp;history</source>
-        <target>ファイルの履歴(&amp;H)</target>
+        <source>File history</source>
+        <target>ファイルの履歴</target>
         
       </trans-unit>
       <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>&amp;Find</source>
-        <target>検索(&amp;F)</target>
+        <source>Find</source>
+        <target>検索</target>
         
       </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
-        <source>First -&gt; &amp;Working directory</source>
-        <target>前者 -&gt; 作業ディレクトリ(&amp;W)</target>
+        <source>First -&gt; Working directory</source>
+        <target>前者 -&gt; 作業ディレクトリ</target>
         
       </trans-unit>
       <trans-unit id="firstToSelectedToolStripMenuItem.Text">
-        <source>&amp;First -&gt; Second</source>
-        <target>前者 -&gt; 後者(&amp;F)</target>
+        <source>First -&gt; Second</source>
+        <target>前者 -&gt; 後者</target>
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show &amp;in folder</source>
-        <target>フォルダで見る(&amp;I)</target>
+        <source>Show in folder</source>
+        <target>フォルダで見る</target>
         
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with &amp;difftool</source>
-        <target>&amp;Diffツールで開く</target>
+        <source>Open with difftool</source>
+        <target>Diffツールで開く</target>
         
       </trans-unit>
       <trans-unit id="rememberFirstRevDiffToolStripMenuItem.Text">
-        <source>R&amp;emember First for diff</source>
-        <target>前者を比較対象として記憶(&amp;E)</target>
+        <source>Remember First for diff</source>
+        <target>前者を比較対象として記憶</target>
         
       </trans-unit>
       <trans-unit id="rememberSecondRevDiffToolStripMenuItem.Text">
-        <source>&amp;Remember Second for diff</source>
-        <target>後者を比較対象として記憶(&amp;R)</target>
+        <source>Remember Second for diff</source>
+        <target>後者を比較対象として記憶</target>
         
       </trans-unit>
       <trans-unit id="resetFileToToolStripMenuItem.Text">
-        <source>&amp;Reset file(s) to</source>
-        <target>ファイルのリセット(&amp;R)</target>
+        <source>Reset file(s) to</source>
+        <target>ファイルのリセット</target>
         
       </trans-unit>
       <trans-unit id="saveAsToolStripMenuItem1.Text">
-        <source>S&amp;ave selected as...</source>
-        <target>選択した項目に名前を付けて保存(&amp;A)...</target>
+        <source>Save selected as...</source>
+        <target>選択した項目に名前を付けて保存...</target>
         
       </trans-unit>
       <trans-unit id="saveToolStripMenuItem.Text">
@@ -11749,18 +10744,18 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">
-        <source>&amp;Second -&gt; Working directory</source>
-        <target>後者 -&gt; 作業ディレクトリ(&amp;S)</target>
+        <source>Second -&gt; Working directory</source>
+        <target>後者 -&gt; 作業ディレクトリ</target>
         
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
-        <source>&amp;Stage file(s)</source>
-        <target>ファイルをステージに追加(&amp;S)</target>
+        <source>Stage file(s)</source>
+        <target>ファイルをステージに追加</target>
         
       </trans-unit>
       <trans-unit id="unstageFileToolStripMenuItem.Text">
-        <source>&amp;Unstage file(s)</source>
-        <target>ファイルをステージ取り消し(&amp;U)</target>
+        <source>Unstage file(s)</source>
+        <target>ファイルをステージ取り消し</target>
         
       </trans-unit>
     </body>
@@ -11860,7 +10855,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem1.Text">
         <source>Blame</source>
-        <target>追及 (Blame)</target>
+        <target>追及(blame)</target>
         
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
@@ -11910,17 +10905,17 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="openFileToolStripMenuItem.Text">
         <source>Open this revision (temp file)</source>
-        <target>開く</target>
+        <target>このリビジョンを開く(一時ファイル)</target>
         
       </trans-unit>
       <trans-unit id="openFileWithToolStripMenuItem.Text">
         <source>Open this revision with... (temp file)</source>
-        <target>このリビジョンをプログラムを指定して開く (一時ファイル)</target>
+        <target>このリビジョンをプログラムを指定して開く...(一時ファイル)</target>
         
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>&amp;Open with Git Extensions</source>
-        <target>Git Extensionsで開く(&amp;O)</target>
+        <source>Open with Git Extensions</source>
+        <target>Git Extensionsで開く</target>
         
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
@@ -12141,11 +11136,6 @@ See the changes in the commit form.</source>
         <target>ビルドステータスのテキストを表示</target>
         
       </trans-unit>
-      <trans-unit id="showCommitMessageBodyToolStripMenuItem.Text">
-        <source>Show commit message body</source>
-        <target>コミットメッセージの本文を表示</target>
-        
-      </trans-unit>
       <trans-unit id="showDateColumnToolStripMenuItem.Text">
         <source>Show date column</source>
         <target>日時の列を表示</target>
@@ -12215,16 +11205,6 @@ See the changes in the commit form.</source>
         <target>安全のため、一度に10個以上のパッチ ファイルを削除できないようブロックされています!</target>
         
       </trans-unit>
-      <trans-unit id="_formRevisionFilter.Text">
-        <source>Filter</source>
-        <target>フィルタ</target>
-        
-      </trans-unit>
-      <trans-unit id="_invalidDiffContainsFilter.Text">
-        <source>Filter text '{0}' not valid for &quot;Diff contains&quot; filter.</source>
-        <target>テキスト「{0}」は「Diffを含める」では無効です。</target>
-        
-      </trans-unit>
       <trans-unit id="_loadingControlAsync.Text">
         <source>Loading</source>
         <target>読込中</target>
@@ -12258,6 +11238,11 @@ See the changes in the commit form.</source>
       <trans-unit id="_rebaseConfirmTitle.Text">
         <source>Rebase Confirmation</source>
         <target>リベースの確認</target>
+        
+      </trans-unit>
+      <trans-unit id="_revisionFilter.Text">
+        <source>Filter</source>
+        <target>フィルタ</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -12738,7 +11723,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="GlobalRB.Text">
         <source>Global for all repositories</source>
-        <target>すべてのリポジトリ全体</target>
+        <target>すべてのリポジトリ</target>
         
       </trans-unit>
       <trans-unit id="LocalRB.Text">
@@ -12749,75 +11734,6 @@ Current Branch:
       <trans-unit id="label1.Text">
         <source>Settings source:</source>
         <target>設定の対象</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="ExtractLink.Text">
-        <source>Extract data from a build result url copied in the clipboard</source>
-        <target>クリップボードにコピーされたビルド結果のURLからデータを抽出</target>
-        
-      </trans-unit>
-      <trans-unit id="TokenManagementLink.Text">
-        <source>Go to token management page</source>
-        <target>トークン管理ページに移動</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
-        <source>Could not extract data</source>
-        <target>データを抽出できませんでした</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
-
-Please copy the url of the build into the clipboard before retrying.
-(Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>クリップボードには有効なビルドURLが含まれていません。
-
-リトライする前に、ビルドのURLをクリップボードにコピーしてください。
-(&quot;buildTypeId&quot;パラメータは必須です)</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
-        <source>Error while trying to retrieve build definition information from url.
-
-Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>URLからビルド定義情報を取得しようとしたときにエラーが発生しました。
-
-URLが有効であり、APIトークンがビルドおよびプロジェクト情報にアクセスできることを確認してください。</target>
-        
-      </trans-unit>
-      <trans-unit id="_infoNoApiTokenMessage.Text">
-        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
-        <target>APIトークンがないためビルド定義情報を取得できません。フィールドは空白のままになります。</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Examples:
- - https://dev.azure.com/yourorganization/projectname/
- - https://yourhost:8080/tfs/collectionname/projectname/
- - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>例:
- - https://dev.azure.com/yourorganization/projectname/
- - https://yourhost:8080/tfs/collectionname/projectname/
- - https://yourorganization.visualstudio.com/projectname/</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        <target>以下のスコープでトークンを作成する必要があります。
-  - 'ビルド（読み取り）'
-  - 'プロジェクトとチーム（読み取り）'</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'ビルド定義名'の正規表現は無効なため保存されません！</target>
         
       </trans-unit>
     </body>
@@ -13028,88 +11944,7 @@ OpenSSHを使う場合、コマンドラインダイアログが表示されま�
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TagMenuItemsStrings" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="CheckoutTooltip.Text">
-        <source>Checkout this tag</source>
-        <target>このタグをチェックアウト</target>
-        
-      </trans-unit>
-      <trans-unit id="CreateTooltip.Text">
-        <source>Create a local branch from this tag</source>
-        <target>このタグでローカルブランチを作成</target>
-        
-      </trans-unit>
-      <trans-unit id="DeleteTooltip.Text">
-        <source>Delete this tag</source>
-        <target>このタグを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="MergeTooltip.Text">
-        <source>Merge this tag into current branch</source>
-        <target>このタグを現在のブランチにマージ</target>
-        
-      </trans-unit>
-      <trans-unit id="RebaseTooltip.Text">
-        <source>Rebase current branch to this tag</source>
-        <target>現在のブランチをこのタグにリベース</target>
-        
-      </trans-unit>
-      <trans-unit id="ResetTooltip.Text">
-        <source>Reset current branch to here</source>
-        <target>現在のブランチをここにリセット</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="CheckBoxLogAsGuest.Text">
-        <source>Log as guest to display the build report</source>
-        <target>ビルドのリポートを表示するためにゲストとして記録</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
-        <source>Build url not valid</source>
-        <target>ビルドURLが正しくありません</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
-
-Please copy in the clipboard the url of the build before retrying.
-(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>クリップボードには有効なビルドURLが含まれていません。
-
-リトライする前に、ビルドのURLをクリップボードにコピーしてください。
-(&quot;buildTypeId&quot;パラメータは必須です)</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToLoadProjectCaption.Text">
-        <source>Error when loading the projects and build list</source>
-        <target>プロジェクトとビルド一覧を読み込む時にエラーが発生しました</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToLoadProjectMessage.Text">
-        <source>Failed to load the projects and build list.
-Please verify the server url.</source>
-        <target>プロジェクト及びビルドリストの読み込みに失敗しました。
-サーバURLを確認してください。</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>&quot;ビルドIDフィルタ&quot;の正規表現は無効なため保存されません！</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
-        <source>Extract the data from the build url copied in the clipboard</source>
-        <target>クリップボードにコピーされたビルドURLからデータを抽出</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="TranslatedStrings" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="Strings" source-language="en" target-language="ja">
     <body>
       <trans-unit id="_argumentsText.Text">
         <source>Arguments</source>
@@ -13205,11 +12040,6 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_childrenText.Text">
         <source>{0:Child|Children}</source>
         <target>{0:子|子}</target>
-        
-      </trans-unit>
-      <trans-unit id="_closeText.Text">
-        <source>Close</source>
-        <target>閉じる</target>
         
       </trans-unit>
       <trans-unit id="_combinedDiff.Text">
@@ -13308,8 +12138,8 @@ Select this commit to populate the full message.</source>
         
       </trans-unit>
       <trans-unit id="_diffSelectedWithRememberedFile.Text">
-        <source>&amp;Diff with &quot;{0}&quot;</source>
-        <target>&quot;{0}&quot;と比較(&amp;D)</target>
+        <source>Diff with &quot;{0}&quot;</source>
+        <target>&quot;{0}&quot;と比較</target>
         
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
@@ -13325,11 +12155,6 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_disableMenuItem.Text">
         <source>Disable this dropdown</source>
         <target>このドロップダウンを無効にする</target>
-        
-      </trans-unit>
-      <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again</source>
-        <target>これ以降、このメッセージを表示しない</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -13350,11 +12175,6 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_errorCaptionNotOnBranch.Text">
         <source>Not on a branch</source>
         <target>ブランチ上にいません</target>
-        
-      </trans-unit>
-      <trans-unit id="_exitCodeText.Text">
-        <source>Exit code</source>
-        <target>終了コード</target>
         
       </trans-unit>
       <trans-unit id="_findGitExecutable.Text">
@@ -13404,7 +12224,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_loadingDataText.Text">
         <source>Loading data...</source>
-        <target>データを読み込んでいます...</target>
+        <target>データを読込中...</target>
         
       </trans-unit>
       <trans-unit id="_local.Text">
@@ -13452,11 +12272,6 @@ Select this commit to populate the full message.</source>
         <target>ブランチなし</target>
         
       </trans-unit>
-      <trans-unit id="_noChanges.Text">
-        <source>No changes</source>
-        <target>変更なし</target>
-        
-      </trans-unit>
       <trans-unit id="_noResultsFound.Text">
         <source>&lt;No results found&gt;</source>
         <target>&lt;No results found&gt;</target>
@@ -13477,29 +12292,14 @@ Select this commit to populate the full message.</source>
         <target>開く</target>
         
       </trans-unit>
-      <trans-unit id="_openInVisualStudio.Text">
-        <source>Open in &amp;Visual Studio</source>
-        <target>Visual Studio で開く(&amp;V)</target>
-        
-      </trans-unit>
-      <trans-unit id="_openInVisualStudioFailureCaption.Text">
-        <source>Unable to open file</source>
-        <target>ファイルを開けません</target>
-        
-      </trans-unit>
-      <trans-unit id="_openInVisualStudioFailureText.Text">
-        <source>Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.</source>
-        <target>開かれているソリューションでこのファイルが見つかりませんでした。このファイルを含むプロジェクトが開かれていることを確認してから、もう一度お試しください。</target>
-        
-      </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
         <target>報告を開く</target>
         
       </trans-unit>
       <trans-unit id="_openWithGitExtensions.Text">
-        <source>&amp;Open with Git Extensions</source>
-        <target>Git Extensionsで開く(&amp;O)</target>
+        <source>Open with Git Extensions</source>
+        <target>Git Extensionsで開く</target>
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
@@ -13512,15 +12312,6 @@ Select this commit to populate the full message.</source>
         <target>リモート</target>
         
       </trans-unit>
-      <trans-unit id="_remoteInError.Text">
-        <source>{0}
-
-Remote: {1}</source>
-        <target>{0}
-
-リモート: {1}</target>
-        
-      </trans-unit>
       <trans-unit id="_remotesText.Text">
         <source>Remotes</source>
         <target>リモート</target>
@@ -13528,7 +12319,7 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_removeAllInvalidRepositories.Text">
         <source>Remove all {0} invalid repositories</source>
-        <target>無効なリポジトリ{0}をすべて削除</target>
+        <target>無効なリポジトリ{0}件をすべて削除</target>
         
       </trans-unit>
       <trans-unit id="_removeSelectedInvalidRepository.Text">
@@ -13731,124 +12522,36 @@ Yes, I allow telemetry!</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="UserRepositoriesList" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="TagMenuItemsStrings" source-language="en" target-language="ja">
     <body>
-      <trans-unit id="_cannotOpenTheFolder.Text">
-        <source>Cannot open the folder</source>
-        <target>フォルダを開くことができません</target>
+      <trans-unit id="CheckoutTooltip.Text">
+        <source>Checkout this tag</source>
+        <target>このタグをチェックアウト</target>
         
       </trans-unit>
-      <trans-unit id="_clearRecentCategoryCaption.Text">
-        <source>Clear recent repositories</source>
-        <target>最近開いたリポジトリをクリア</target>
+      <trans-unit id="CreateTooltip.Text">
+        <source>Create a local branch from this tag</source>
+        <target>このタグでローカルブランチを作成</target>
         
       </trans-unit>
-      <trans-unit id="_clearRecentCategoryQuestion.Text">
-        <source>Do you want to clear the list of recent repositories?
-
-The action cannot be undone.</source>
-        <target>最近開いたリポジトリの一覧をクリアしますか？
-
-この操作は取り返しがつきません。</target>
+      <trans-unit id="DeleteTooltip.Text">
+        <source>Delete this tag</source>
+        <target>このタグを削除</target>
         
       </trans-unit>
-      <trans-unit id="_deleteCategoryCaption.Text">
-        <source>Delete Category</source>
-        <target>カテゴリを削除</target>
+      <trans-unit id="MergeTooltip.Text">
+        <source>Merge this tag into current branch</source>
+        <target>このタグを現在のブランチにマージ</target>
         
       </trans-unit>
-      <trans-unit id="_deleteCategoryQuestion.Text">
-        <source>Do you want to delete category &quot;{0}&quot; with {1} repositories?
-
-The action cannot be undone.</source>
-        <target>{1}リポジトリが入っているカテゴリ名&quot;{0}&quot;を削除しますか？
-
-この操作は取り返しがつきません。</target>
+      <trans-unit id="RebaseTooltip.Text">
+        <source>Rebase current branch to this tag</source>
+        <target>現在のブランチをこのタグにリベース</target>
         
       </trans-unit>
-      <trans-unit id="_groupActions.Text">
-        <source>Actions</source>
-        <target>操作</target>
-        
-      </trans-unit>
-      <trans-unit id="_groupRecentRepositories.Text">
-        <source>Recent repositories</source>
-        <target>最近開いたリポジトリ</target>
-        
-      </trans-unit>
-      <trans-unit id="_repositorySearchPlaceholder.Text">
-        <source>Search repositories</source>
-        <target>リポジトリの検索</target>
-        
-      </trans-unit>
-      <trans-unit id="clmhdrBranch.Text">
-        <source>Branch</source>
-        <target>ブランチ</target>
-        
-      </trans-unit>
-      <trans-unit id="clmhdrCategory.Text">
-        <source>Category</source>
-        <target>カテゴリ</target>
-        
-      </trans-unit>
-      <trans-unit id="clmhdrPath.Text">
-        <source>Path</source>
-        <target>パス</target>
-        
-      </trans-unit>
-      <trans-unit id="lblRecentRepositories.Text">
-        <source>Recent Repositories</source>
-        <target>最近開いたリポジトリ</target>
-        
-      </trans-unit>
-      <trans-unit id="mnuConfigure.Text">
-        <source>&amp;Recent repositories settings</source>
-        <target>最近のリポジトリの設定(&amp;R)</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiCategories.Text">
-        <source>Categories</source>
-        <target>カテゴリ</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiCategoryAdd.Text">
-        <source>Add new...</source>
-        <target>新規追加...</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiCategoryClear.Text">
-        <source>Clear all recent repositories</source>
-        <target>最近開いたリポジトリをすべてクリア</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiCategoryDelete.Text">
-        <source>Delete category</source>
-        <target>カテゴリを削除</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiCategoryNone.Text">
-        <source>(none)</source>
-        <target>(なし)</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiCategoryRename.Text">
-        <source>Rename category</source>
-        <target>カテゴリ名を変更</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiOpenFolder.Text">
-        <source>Show in folder</source>
-        <target>フォルダで見る</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiRemoveFromList.Text">
-        <source>Remove project from the list</source>
-        <target>プロジェクトをリストから消去</target>
-        
-      </trans-unit>
-      <trans-unit id="tsmiRemoveMissingReposFromList.Text">
-        <source>Remove missing projects from the list</source>
-        <target>リストから見つからないプロジェクトを削除</target>
+      <trans-unit id="ResetTooltip.Text">
+        <source>Reset current branch to here</source>
+        <target>現在のブランチをここにリセット</target>
         
       </trans-unit>
     </body>
@@ -13930,11 +12633,6 @@ The action cannot be undone.</source>
 Details: Is {1} expected {2}</source>
         <target>エラー: リモート {0} は既に存在しますが、別のリポジトリを指しています！
 詳細: Is {1} expected {2}</target>
-        
-      </trans-unit>
-      <trans-unit id="_strRemoteIgnore.Text">
-        <source>Remote ignored</source>
-        <target>リモートで無視中</target>
         
       </trans-unit>
       <trans-unit id="_strUnableUnderstandPatch.Text">
