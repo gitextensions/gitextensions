@@ -102,7 +102,14 @@ namespace GitUI
             // Calling Next() will cancel the current operation. Ignoring the return value means
             // an unnecessary CancellationTokenSource is allocated, but it will not be leaked or
             // otherwise interfere with the sequence.
-            Next();
+            try
+            {
+                Next();
+            }
+            catch (OperationCanceledException)
+            {
+                // No action
+            }
         }
 
         /// <summary>
