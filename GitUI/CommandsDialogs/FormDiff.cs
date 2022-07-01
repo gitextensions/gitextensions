@@ -68,9 +68,10 @@ namespace GitUI.CommandsDialogs
             _baseRevision = new GitRevision(baseId);
             _headRevision = new GitRevision(headId);
 
-            ObjectId? baseMergeId = baseId.IsArtificial ? Module.GetCurrentCheckout() : baseId;
-            ObjectId? headMergeId = headId.IsArtificial ? Module.GetCurrentCheckout() : headId;
-            if (baseMergeId is null || headMergeId is null)
+            Lazy<ObjectId?> head = new(() => Module.GetCurrentCheckout());
+            ObjectId? baseMergeId = baseId.IsArtificial ? head.Value : baseId;
+            ObjectId? headMergeId = headId.IsArtificial ? head.Value : headId;
+            if (baseMergeId is null || headMergeId is null || baseMergeId == headMergeId)
             {
                 _mergeBase = null;
             }
@@ -144,7 +145,7 @@ namespace GitUI.CommandsDialogs
                 revisions = new[] { _headRevision, _baseRevision };
             }
 
-            DiffFiles.SetDiffs(revisions, Module.GetCurrentCheckout());
+            DiffFiles.SetDiffs(revisions);
 
             // Bug in git-for-windows: Comparing working directory to any branch, fails, due to -R
             // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
