@@ -127,33 +127,42 @@ namespace GitUI
             // If four selected: check if two ranges are selected
             ObjectId? baseA = null;
             ObjectId? baseB = null;
-            if (revisions.Count == 4)
+
+            // Check for separate branches (note that artificial commits both have HEAD as BASE)
+            if (baseRevId is not null)
             {
-                baseA = baseRevId is null ? null : GetMergeBase(GetRevisionOrHead(revisions[3], headId), firstRevHead);
-                if (baseA != revisions[3].ObjectId)
+                // Two: Check that the selections are in separate branches
+                if (revisions.Count == 2 && (baseRevId == firstRevHead || baseRevId == selectedRevHead))
                 {
-                    baseA = null;
+                    baseRevId = null;
                 }
 
-                baseB = baseA is null ? null : GetMergeBase(GetRevisionOrHead(revisions[1], headId), selectedRevHead);
-                if (baseB != revisions[1].ObjectId)
+                // Three: Show multi-diff if not base is selected
+                else if (revisions.Count == 3 && baseRevId != revisions[1].ObjectId)
                 {
-                    baseB = null;
+                    baseRevId = null;
+                }
+
+                // Four: Two ranges must be selectedif (revisions.Count == 4)
+                else if (revisions.Count == 4)
+                {
+                    baseA = GetMergeBase(GetRevisionOrHead(revisions[3], headId), firstRevHead);
+                    if (baseA != revisions[3].ObjectId)
+                    {
+                        baseA = null;
+                    }
+
+                    baseB = baseA is null ? null : GetMergeBase(GetRevisionOrHead(revisions[1], headId), selectedRevHead);
+                    if (baseB != revisions[1].ObjectId)
+                    {
+                        baseRevId = null;
+                        baseA = null;
+                        baseB = null;
+                    }
                 }
             }
 
-            // Check for separate branches (note that artificial commits both have HEAD as BASE)
-            if (baseRevId is null
-
-                // For two, check that the selections are in separate branches
-                || (revisions.Count == 2 && (baseRevId == firstRevHead
-                    || baseRevId == selectedRevHead))
-
-                // For three, show multi-diff if not base is selected
-                || (revisions.Count == 3 && baseRevId != revisions[1].ObjectId)
-
-                // For four, two ranges must be selected
-                || (revisions.Count == 4 && (baseA is null || baseB is null)))
+            if (baseRevId is null)
             {
                 // No variant of range diff, show multi diff
                 fileStatusDescs.AddRange(
