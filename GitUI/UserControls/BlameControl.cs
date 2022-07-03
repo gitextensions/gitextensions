@@ -69,7 +69,6 @@ namespace GitUI.Blame
             BlameFile.IsReadOnly = true;
             BlameFile.VScrollPositionChanged += BlameFile_VScrollPositionChanged;
             BlameFile.SelectedLineChanged += SelectedLineChanged;
-            BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
             BlameFile.MouseMove += BlameFile_MouseMove;
             BlameFile.EscapePressed += () => EscapePressed?.Invoke();
             BlameFile.EnableAutomaticContinuousScroll = false;
