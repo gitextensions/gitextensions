@@ -697,10 +697,10 @@ namespace GitUI
             _nextIndexToSelect = -1;
         }
 
-        public void SetDiffs(IReadOnlyList<GitRevision> revisions, ObjectId? headId)
+        public void SetDiffs(IReadOnlyList<GitRevision> revisions)
         {
             _enableDisablingShowDiffForAllParents = true;
-            GitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId, cancellationToken: default);
+            GitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId: null, allowMultiDiff: false, cancellationToken: default);
         }
 
         public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
@@ -711,7 +711,7 @@ namespace GitUI
 
             await TaskScheduler.Default;
             cancellationToken.ThrowIfCancellationRequested();
-            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId, cancellationToken);
+            IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.SetDiffs(revisions, headId, allowMultiDiff: true, cancellationToken);
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();

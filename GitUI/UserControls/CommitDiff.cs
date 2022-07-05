@@ -52,7 +52,7 @@ namespace GitUI.UserControls
 
             if (revision is not null)
             {
-                DiffFiles.SetDiffs(new[] { revision }, headId: null);
+                DiffFiles.SetDiffs(new[] { revision });
                 if (fileToSelect is not null)
                 {
                     var itemToSelect = DiffFiles.AllItems.FirstOrDefault(i => i.Item.Name == fileToSelect);
