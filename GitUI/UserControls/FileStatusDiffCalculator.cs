@@ -27,15 +27,17 @@ namespace GitUI
 
         public IReadOnlyList<FileStatusWithDescription> Reload()
             => SetDiffs(_fileStatusDiffCalculatorInfo.Revisions,
-                _fileStatusDiffCalculatorInfo.HeadId, cancellationToken: default);
+                _fileStatusDiffCalculatorInfo.HeadId, _fileStatusDiffCalculatorInfo.AllowMultiDiff, cancellationToken: default);
 
         public IReadOnlyList<FileStatusWithDescription> SetDiffs(
             IReadOnlyList<GitRevision> revisions,
             ObjectId? headId,
+            bool allowMultiDiff,
             CancellationToken cancellationToken)
         {
             _fileStatusDiffCalculatorInfo.Revisions = revisions;
             _fileStatusDiffCalculatorInfo.HeadId = headId;
+            _fileStatusDiffCalculatorInfo.AllowMultiDiff = allowMultiDiff;
 
             var selectedRev = revisions.FirstOrDefault();
             if (selectedRev is null)
@@ -112,40 +114,55 @@ namespace GitUI
                 summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev.ObjectId),
                 statuses: module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken)));
 
-            if (!AppSettings.ShowDiffForAllParents || revisions.Count > maxMultiCompare)
+            if (!AppSettings.ShowDiffForAllParents || revisions.Count > maxMultiCompare || !allowMultiDiff)
             {
                 return fileStatusDescs;
             }
 
-            // Get base commit, add as parent if unique
-            var firstRevHead = headId is null ? null : GetRevisionOrHead(firstRev, headId);
-            var selectedRevHead = headId is null ? null : GetRevisionOrHead(selectedRev, headId);
-            var baseRevGuid = (firstRevHead is null || selectedRevHead is null) ? null : module.GetMergeBase(firstRevHead, selectedRevHead);
+            // Get merge base commit, use HEAD for artificial
+            ObjectId? firstRevHead = GetRevisionOrHead(firstRev, headId);
+            ObjectId? selectedRevHead = GetRevisionOrHead(selectedRev, headId);
+            ObjectId? baseRevId = GetMergeBase(firstRevHead, selectedRevHead);
 
-            // Four selected, to check if two ranges are selected
-            var baseA = revisions.Count != 4 || baseRevGuid is null || headId is null
-                ? null
-                : module.GetMergeBase(GetRevisionOrHead(revisions[3], headId), firstRevHead);
-            var baseB = baseA is null || baseA != revisions[3].ObjectId || headId is null
-                ? null
-                : module.GetMergeBase(GetRevisionOrHead(revisions[1], headId), selectedRevHead);
-            if (baseB != revisions[1].ObjectId)
-            {
-                baseB = null;
-            }
+            // If four selected: check if two ranges are selected
+            ObjectId? baseA = null;
+            ObjectId? baseB = null;
 
             // Check for separate branches (note that artificial commits both have HEAD as BASE)
-            if (baseRevGuid is null || headId is null
+            if (baseRevId is not null)
+            {
+                // Two: Check that the selections are in separate branches
+                if (revisions.Count == 2 && (baseRevId == firstRevHead || baseRevId == selectedRevHead))
+                {
+                    baseRevId = null;
+                }
 
-                // For two check that the selections are in separate branches
-                || (revisions.Count == 2 && (baseRevGuid == firstRevHead
-                    || baseRevGuid == selectedRevHead))
+                // Three: Show multi-diff if not base is selected
+                else if (revisions.Count == 3 && baseRevId != revisions[1].ObjectId)
+                {
+                    baseRevId = null;
+                }
 
-                // For three, show multi-diff if not base is selected
-                || (revisions.Count == 3 && baseRevGuid != revisions[1].ObjectId)
+                // Four: Two ranges must be selectedif (revisions.Count == 4)
+                else if (revisions.Count == 4)
+                {
+                    baseA = GetMergeBase(GetRevisionOrHead(revisions[3], headId), firstRevHead);
+                    if (baseA != revisions[3].ObjectId)
+                    {
+                        baseA = null;
+                    }
 
-                // For four, two ranges must be selected
-                || (revisions.Count == 4 && (baseA is null || baseB is null)))
+                    baseB = baseA is null ? null : GetMergeBase(GetRevisionOrHead(revisions[1], headId), selectedRevHead);
+                    if (baseB != revisions[1].ObjectId)
+                    {
+                        baseRevId = null;
+                        baseA = null;
+                        baseB = null;
+                    }
+                }
+            }
+
+            if (baseRevId is null)
             {
                 // No variant of range diff, show multi diff
                 fileStatusDescs.AddRange(
@@ -161,8 +178,8 @@ namespace GitUI
             }
 
             var allAToB = fileStatusDescs[0].Statuses;
-            var allBaseToB = module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken);
-            var allBaseToA = module.GetDiffFilesWithSubmodulesStatus(baseRevGuid, firstRev.ObjectId, firstRev.FirstParentId, cancellationToken);
+            var allBaseToB = module.GetDiffFilesWithSubmodulesStatus(baseRevId, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken);
+            var allBaseToA = module.GetDiffFilesWithSubmodulesStatus(baseRevId, firstRev.ObjectId, firstRev.FirstParentId, cancellationToken);
 
             GitItemStatusNameEqualityComparer comparer = new();
             var sameBaseToAandB = allBaseToB.Intersect(allBaseToA, comparer).Except(allAToB, comparer).ToList();
@@ -188,7 +205,7 @@ namespace GitUI
                     : DiffBranchStatus.UnequalChange;
             }
 
-            GitRevision revBase = new(baseRevGuid);
+            GitRevision revBase = new(baseRevId);
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: revBase,
                 secondRev: selectedRev,
@@ -212,7 +229,7 @@ namespace GitUI
 
             // first and selected has a common merge base and count must be available
             // Only a printout, so no Validates
-            var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑ BASE {GetDescriptionForRevision(baseRevGuid)}";
+            var desc = $"{TranslatedStrings.DiffRange} {baseToFirstCount ?? -1}↓ {baseToSecondCount ?? -1}↑ BASE {GetDescriptionForRevision(baseRevId)}";
             allAToB = allAToB.Append(new GitItemStatus(name: desc) { IsRangeDiff = true }).ToList();
 
             // Replace the A->B group with new statuses
@@ -225,6 +242,16 @@ namespace GitUI
                 baseB: baseB);
 
             return fileStatusDescs;
+
+            ObjectId? GetMergeBase(ObjectId? a, ObjectId? b)
+            {
+                if (a is null || b is null || a == b)
+                {
+                    return null;
+                }
+
+                return module.GetMergeBase(a, b);
+            }
 
             static ObjectId GetRevisionOrHead(GitRevision rev, ObjectId headId)
                 => rev.IsArtificial ? headId : rev.ObjectId;
