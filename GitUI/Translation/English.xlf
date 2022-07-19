@@ -3256,7 +3256,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCommitFilter.Text">
-        <source>Commit &amp;message and hash</source>
+        <source>Commit &amp;message</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCommitterFilter.Text">
