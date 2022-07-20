@@ -502,12 +502,12 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             return;
+        }
 
-            void MarkAsDataLoadingComplete()
-            {
-                Debug.Assert(!IsDataLoadComplete, "The grid is already marked as 'data load complete'.");
-                IsDataLoadComplete = true;
-            }
+        public void MarkAsDataLoadingComplete()
+        {
+            Debug.Assert(!IsDataLoadComplete, "The grid is already marked as 'data load complete'.");
+            IsDataLoadComplete = true;
         }
 
         public void MarkAsDataLoading()
