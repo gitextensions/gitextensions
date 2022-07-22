@@ -285,7 +285,7 @@ namespace GitUI.CommandsDialogs
             this.chkIgnoreDate.Size = new System.Drawing.Size(86, 19);
             this.chkIgnoreDate.TabIndex = 16;
             this.chkIgnoreDate.Text = "Ignore &date";
-            this.toolTip1.SetToolTip(this.chkIgnoreDate, "Changes the author dates of the commits in this branch\r\ninto the commit dates.");
+            this.toolTip1.SetToolTip(this.chkIgnoreDate, "Sets the author date to the current date (same as\r\ncommit date), ignoring the original author date.");
             this.chkIgnoreDate.UseVisualStyleBackColor = true;
             this.chkIgnoreDate.CheckedChanged += new System.EventHandler(this.chkIgnoreDate_CheckedChanged);
             // 
@@ -298,8 +298,7 @@ namespace GitUI.CommandsDialogs
             this.chkCommitterDateIsAuthorDate.Size = new System.Drawing.Size(185, 19);
             this.chkCommitterDateIsAuthorDate.TabIndex = 17;
             this.chkCommitterDateIsAuthorDate.Text = "Co&mmitter date is author date";
-            this.toolTip1.SetToolTip(this.chkCommitterDateIsAuthorDate, "Changes the committer dates of the commits in this branch\r\ninto the author dates." +
-        "");
+            this.toolTip1.SetToolTip(this.chkCommitterDateIsAuthorDate, "Sets the commit date to the original author date\r\n(instead of the current date).");
             this.chkCommitterDateIsAuthorDate.UseVisualStyleBackColor = true;
             this.chkCommitterDateIsAuthorDate.CheckedChanged += new System.EventHandler(this.chkCommitterDateIsAuthorDate_CheckedChanged);
             // 
