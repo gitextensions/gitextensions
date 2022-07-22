@@ -881,6 +881,7 @@ namespace GitUI
             bool firstRevisionReceived = false;
             bool headIsHandled = false;
             bool hasAnyNotes = false;
+            bool onlyFirstParent = false;
 
             // getRefs (refreshing from Browse) is Lazy already, but not from RevGrid (updating filters etc)
             Lazy<IReadOnlyList<IGitRef>> getUnfilteredRefs = new(() => (getRefs ?? capturedModule.GetRefs)(RefsFilter.NoFilter));
@@ -956,6 +957,7 @@ namespace GitUI
 
                     // optimize for no notes at all
                     hasAnyNotes = AppSettings.ShowGitNotes && getUnfilteredRefs.Value.Any(i => i.CompleteName == GitRefName.RefsNotesPrefix);
+                    onlyFirstParent = _filterInfo.RefFilterOptions.HasFlag(RefFilterOptions.FirstParent);
 
                     // Allow add revisions to the grid
                     semaphoreUpdateGrid.Release();
@@ -1167,7 +1169,7 @@ namespace GitUI
                     flags |= RevisionNodeFlags.HasRef;
                 }
 
-                if (_filterInfo.RefFilterOptions.HasFlag(RefFilterOptions.FirstParent))
+                if (onlyFirstParent)
                 {
                     flags |= RevisionNodeFlags.OnlyFirstParent;
                 }
