@@ -9,7 +9,7 @@
       <Path>C:\Development\gitextensions\Externals\NBug\</Path>
     </Repository>
     <Repository>
-      <Anchor>LessRecent</Anchor>
+      <Anchor>AllRecent</Anchor>
       <Path>C:\Development\gitextensions\GitExtensionsDoc\</Path>
     </Repository>
   </Repositories>

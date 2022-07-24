@@ -36,9 +36,9 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserRepositoriesList));
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Most Recent", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Less Recent", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Other", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup lvgMostRecent = new System.Windows.Forms.ListViewGroup("Most Recent", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup lvgAllRecent = new System.Windows.Forms.ListViewGroup("Recent", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup lvgOther = new System.Windows.Forms.ListViewGroup("Other", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "C:\\Users\\russkie\\AppData\\Roaming\\GitExtensions\\GitExtensions",
             "refs/heads/master",
@@ -303,16 +303,16 @@
             this.listView1.ContextMenuStrip = this.contextMenuStripRepository;
             this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
-            listViewGroup1.Header = "Most Recent";
-            listViewGroup1.Name = "lvgMostRecent";
-            listViewGroup2.Header = "Less Recent";
-            listViewGroup2.Name = "lvgLessRecent";
-            listViewGroup3.Header = "Other";
-            listViewGroup3.Name = "lvgOther";
+            lvgMostRecent.Header = "Most Recent";
+            lvgMostRecent.Name = "lvgMostRecent";
+            lvgAllRecent.Header = "Recent";
+            lvgAllRecent.Name = "lvgAllRecent";
+            lvgOther.Header = "Other";
+            lvgOther.Name = "lvgOther";
             this.listView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3});
+            lvgMostRecent,
+            lvgAllRecent,
+            lvgOther});
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.listView1.HideSelection = false;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {

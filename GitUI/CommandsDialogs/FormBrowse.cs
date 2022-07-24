@@ -1708,7 +1708,7 @@ namespace GitUI.CommandsDialogs
         private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
         {
             List<RecentRepoInfo> mostRecentRepos = new();
-            List<RecentRepoInfo> lessRecentRepos = new();
+            List<RecentRepoInfo> allRecentRepos = new();
 
             using (var graphics = CreateGraphics())
             {
@@ -1718,10 +1718,10 @@ namespace GitUI.CommandsDialogs
                     Graphics = graphics
                 };
 
-                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, allRecentRepos);
             }
 
-            foreach (var repo in mostRecentRepos.Union(lessRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
+            foreach (var repo in mostRecentRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
             {
                 AddFavouriteRepositories(repo.Key, repo.ToList());
             }
@@ -1749,7 +1749,7 @@ namespace GitUI.CommandsDialogs
         private void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container)
         {
             List<RecentRepoInfo> mostRecentRepos = new();
-            List<RecentRepoInfo> lessRecentRepos = new();
+            List<RecentRepoInfo> allRecentRepos = new();
 
             var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
             if (repositoryHistory.Count < 1)
@@ -1765,7 +1765,7 @@ namespace GitUI.CommandsDialogs
                     Graphics = graphics
                 };
 
-                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos);
+                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, allRecentRepos);
             }
 
             foreach (var repo in mostRecentRepos)
@@ -1773,14 +1773,14 @@ namespace GitUI.CommandsDialogs
                 _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, SetGitModule);
             }
 
-            if (lessRecentRepos.Count > 0)
+            if (allRecentRepos.Count > 0)
             {
-                if (mostRecentRepos.Count > 0 && (AppSettings.SortMostRecentRepos || AppSettings.SortLessRecentRepos))
+                if (mostRecentRepos.Count > 0 && (AppSettings.SortMostRecentRepos || AppSettings.SortAllRecentRepos))
                 {
                     container.DropDownItems.Add(new ToolStripSeparator());
                 }
 
-                foreach (var repo in lessRecentRepos)
+                foreach (var repo in allRecentRepos)
                 {
                     _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, SetGitModule);
                 }

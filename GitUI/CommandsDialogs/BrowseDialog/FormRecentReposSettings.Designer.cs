@@ -39,13 +39,13 @@
             this.comboMinWidthEdit = new System.Windows.Forms.NumericUpDown();
             this.sortMostRecentRepos = new System.Windows.Forms.CheckBox();
             this.comboMinWidthLabel = new System.Windows.Forms.Label();
-            this.sortLessRecentRepos = new System.Windows.Forms.CheckBox();
+            this.sortAllRecentRepos = new System.Windows.Forms.CheckBox();
             this.shorteningGB = new System.Windows.Forms.GroupBox();
             this.dontShortenRB = new System.Windows.Forms.RadioButton();
             this.middleDotRB = new System.Windows.Forms.RadioButton();
             this.mostSigDirRB = new System.Windows.Forms.RadioButton();
             this.comboPanel = new System.Windows.Forms.Panel();
-            this.LessRecentLB = new System.Windows.Forms.ListView();
+            this.AllRecentLB = new System.Windows.Forms.ListView();
             this.chdrRepository1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.anchorToMostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -129,7 +129,7 @@
             tableLayoutPanel1.Controls.Add(this.comboMinWidthEdit, 1, 5);
             tableLayoutPanel1.Controls.Add(this.sortMostRecentRepos, 0, 2);
             tableLayoutPanel1.Controls.Add(this.comboMinWidthLabel, 0, 5);
-            tableLayoutPanel1.Controls.Add(this.sortLessRecentRepos, 0, 3);
+            tableLayoutPanel1.Controls.Add(this.sortAllRecentRepos, 0, 3);
             tableLayoutPanel1.Controls.Add(this.shorteningGB, 0, 4);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -217,18 +217,18 @@
             this.comboMinWidthLabel.TabIndex = 7;
             this.comboMinWidthLabel.Text = "Combobox minimum width (0 = Autosize)";
             // 
-            // sortLessRecentRepos
+            // sortAllRecentRepos
             // 
-            this.sortLessRecentRepos.AutoSize = true;
-            this.sortLessRecentRepos.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.sortLessRecentRepos.Location = new System.Drawing.Point(11, 88);
-            this.sortLessRecentRepos.Name = "sortLessRecentRepos";
-            this.sortLessRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.sortLessRecentRepos.Size = new System.Drawing.Size(228, 17);
-            this.sortLessRecentRepos.TabIndex = 5;
-            this.sortLessRecentRepos.Text = "Sort less recent repositories alphabetically";
-            this.sortLessRecentRepos.UseVisualStyleBackColor = true;
-            this.sortLessRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            this.sortAllRecentRepos.AutoSize = true;
+            this.sortAllRecentRepos.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.sortAllRecentRepos.Location = new System.Drawing.Point(11, 88);
+            this.sortAllRecentRepos.Name = "sortAllRecentRepos";
+            this.sortAllRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.sortAllRecentRepos.Size = new System.Drawing.Size(228, 17);
+            this.sortAllRecentRepos.TabIndex = 5;
+            this.sortAllRecentRepos.Text = "Sort recent repositories alphabetically";
+            this.sortAllRecentRepos.UseVisualStyleBackColor = true;
+            this.sortAllRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
             // 
             // shorteningGB
             // 
@@ -283,7 +283,7 @@
             // 
             // comboPanel
             // 
-            this.comboPanel.Controls.Add(this.LessRecentLB);
+            this.comboPanel.Controls.Add(this.AllRecentLB);
             this.comboPanel.Controls.Add(this.panel3);
             this.comboPanel.Controls.Add(this.MostRecentLB);
             this.comboPanel.Controls.Add(this.panel2);
@@ -293,25 +293,25 @@
             this.comboPanel.Size = new System.Drawing.Size(354, 327);
             this.comboPanel.TabIndex = 1;
             // 
-            // LessRecentLB
+            // AllRecentLB
             // 
-            this.LessRecentLB.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.AllRecentLB.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chdrRepository1});
-            this.LessRecentLB.ContextMenuStrip = this.contextMenuStrip1;
-            this.LessRecentLB.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LessRecentLB.GridLines = true;
-            this.LessRecentLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.LessRecentLB.HideSelection = false;
-            this.LessRecentLB.LabelWrap = false;
-            this.LessRecentLB.Location = new System.Drawing.Point(0, 162);
-            this.LessRecentLB.MultiSelect = false;
-            this.LessRecentLB.Name = "LessRecentLB";
-            this.LessRecentLB.OwnerDraw = true;
-            this.LessRecentLB.Size = new System.Drawing.Size(354, 165);
-            this.LessRecentLB.TabIndex = 2;
-            this.LessRecentLB.UseCompatibleStateImageBehavior = false;
-            this.LessRecentLB.View = System.Windows.Forms.View.Details;
-            this.LessRecentLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
+            this.AllRecentLB.ContextMenuStrip = this.contextMenuStrip1;
+            this.AllRecentLB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AllRecentLB.GridLines = true;
+            this.AllRecentLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.AllRecentLB.HideSelection = false;
+            this.AllRecentLB.LabelWrap = false;
+            this.AllRecentLB.Location = new System.Drawing.Point(0, 162);
+            this.AllRecentLB.MultiSelect = false;
+            this.AllRecentLB.Name = "AllRecentLB";
+            this.AllRecentLB.OwnerDraw = true;
+            this.AllRecentLB.Size = new System.Drawing.Size(354, 165);
+            this.AllRecentLB.TabIndex = 2;
+            this.AllRecentLB.UseCompatibleStateImageBehavior = false;
+            this.AllRecentLB.View = System.Windows.Forms.View.Details;
+            this.AllRecentLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
             // 
             // chdrRepository1
             // 
@@ -339,7 +339,7 @@
             // 
             this.anchorToLessToolStripMenuItem.Name = "anchorToLessToolStripMenuItem";
             this.anchorToLessToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
-            this.anchorToLessToolStripMenuItem.Text = "Anchor to less recent repositories";
+            this.anchorToLessToolStripMenuItem.Text = "Anchor to recent repositories";
             this.anchorToLessToolStripMenuItem.Click += new System.EventHandler(this.anchorToLessToolStripMenuItem_Click);
             // 
             // removeAnchorToolStripMenuItem
@@ -373,7 +373,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(121, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Less recent repositories";
+            this.label1.Text = "Recent repositories";
             // 
             // MostRecentLB
             // 
@@ -493,10 +493,10 @@
 
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_maxRecentRepositories;
         private System.Windows.Forms.Label maxRecentRepositories;
-        private System.Windows.Forms.CheckBox sortLessRecentRepos;
+        private System.Windows.Forms.CheckBox sortAllRecentRepos;
         private System.Windows.Forms.CheckBox sortMostRecentRepos;
         private System.Windows.Forms.Panel comboPanel;
-        private System.Windows.Forms.ListView LessRecentLB;
+        private System.Windows.Forms.ListView AllRecentLB;
         private System.Windows.Forms.ListView MostRecentLB;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label MostRecentLabel;

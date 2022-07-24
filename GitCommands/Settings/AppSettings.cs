@@ -1676,7 +1676,7 @@ namespace GitCommands
             set => SetBool("SortMostRecentRepos", value);
         }
 
-        public static bool SortLessRecentRepos
+        public static bool SortAllRecentRepos
         {
             get => GetBool("SortLessRecentRepos", false);
             set => SetBool("SortLessRecentRepos", value);

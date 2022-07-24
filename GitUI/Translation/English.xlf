@@ -6534,7 +6534,7 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="anchorToLessToolStripMenuItem.Text">
-        <source>Anchor to less recent repositories</source>
+        <source>Anchor to recent repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="anchorToMostToolStripMenuItem.Text">
@@ -6562,7 +6562,7 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Less recent repositories</source>
+        <source>Recent repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRecentRepositoriesHistorySize.Text">
@@ -6593,8 +6593,8 @@ Nothing to rebase.</source>
         <source>Shortening strategy</source>
         <target />
       </trans-unit>
-      <trans-unit id="sortLessRecentRepos.Text">
-        <source>Sort less recent repositories alphabetically</source>
+      <trans-unit id="sortAllRecentRepos.Text">
+        <source>Sort recent repositories alphabetically</source>
         <target />
       </trans-unit>
       <trans-unit id="sortMostRecentRepos.Text">

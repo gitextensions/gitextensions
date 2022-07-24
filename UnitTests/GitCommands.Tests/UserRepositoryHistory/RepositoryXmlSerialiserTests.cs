@@ -118,7 +118,7 @@ namespace GitCommandsTests.UserRepositoryHistory
                 },
                 new Repository(@"C:\Development\gitextensions\GitExtensionsDoc\")
                 {
-                    Anchor = Repository.RepositoryAnchor.LessRecent,
+                    Anchor = Repository.RepositoryAnchor.AllRecent,
                 }
             };
 

@@ -48,7 +48,7 @@ namespace GitCommands.UserRepositoryHistory
         public int MaxRecentRepositories { get; set; }
         public ShorteningRecentRepoPathStrategy ShorteningStrategy { get; set; }
         public bool SortMostRecentRepos { get; set; }
-        public bool SortLessRecentRepos { get; set; }
+        public bool SortAllRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
 
         // need to be set before shortening using middleDots strategy
@@ -60,15 +60,15 @@ namespace GitCommands.UserRepositoryHistory
             MaxRecentRepositories = AppSettings.MaxMostRecentRepositories;
             ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy;
             SortMostRecentRepos = AppSettings.SortMostRecentRepos;
-            SortLessRecentRepos = AppSettings.SortLessRecentRepos;
+            SortAllRecentRepos = AppSettings.SortAllRecentRepos;
             RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth;
         }
 
-        public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> lessRecentRepoList)
+        public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> allRecentRepoList)
         {
             SortedList<string, List<RecentRepoInfo>> orderedRepos = new();
             List<RecentRepoInfo> mostRecentRepos = new();
-            List<RecentRepoInfo> lessRecentRepos = new();
+            List<RecentRepoInfo> allRecentRepos = new();
 
             var middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
             var signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
@@ -87,7 +87,7 @@ namespace GitCommands.UserRepositoryHistory
                     mostRecentRepos.Add(ri);
                 }
 
-                lessRecentRepos.Add(ri);
+                allRecentRepos.Add(ri);
 
                 if (middleDot)
                 {
@@ -144,13 +144,13 @@ namespace GitCommands.UserRepositoryHistory
                 AddNotSortedRepos(mostRecentRepos, mostRecentRepoList);
             }
 
-            if (SortLessRecentRepos)
+            if (SortAllRecentRepos)
             {
-                AddSortedRepos(false, lessRecentRepoList);
+                AddSortedRepos(false, allRecentRepoList);
             }
             else
             {
-                AddNotSortedRepos(lessRecentRepos, lessRecentRepoList);
+                AddNotSortedRepos(allRecentRepos, allRecentRepoList);
             }
         }
 
