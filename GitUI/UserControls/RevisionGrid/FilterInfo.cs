@@ -80,7 +80,6 @@ namespace GitUI.UserControls.RevisionGrid
 
         public int CommitsLimitDefault => AppSettings.MaxRevisionGraphCommits;
 
-        [System.Diagnostics.DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public int CommitsLimit
         {
             get => ByCommitsLimit && _commitsLimit >= 0 ? _commitsLimit : CommitsLimitDefault;
