@@ -80,6 +80,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
             RunSetAndApplyBranchFilterTest(
                 initialFilter: "",
+                grepMessage: "",
                 revisionGridControl =>
                 {
                     Assert.False(AppSettings.BranchFilterEnabled);
@@ -94,6 +95,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
             RunSetAndApplyBranchFilterTest(
                 initialFilter: "Branch1",
+                grepMessage: "",
                 revisionGridControl =>
                 {
                     Assert.True(AppSettings.BranchFilterEnabled);
@@ -105,6 +107,21 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
                     revisionGridControl.CurrentFilter.RefFilterOptions.Should().Be(RefFilterOptions.Branches);
                 });
+
+            RunSetAndApplyBranchFilterTest(
+                initialFilter: "",
+                grepMessage: "Commit1",
+                revisionGridControl =>
+                {
+                    Assert.False(AppSettings.BranchFilterEnabled);
+                    Assert.False(AppSettings.ShowCurrentBranchOnly);
+
+                    Assert.True(revisionGridControl.CurrentFilter.IsShowAllBranchesChecked);
+                    Assert.False(revisionGridControl.CurrentFilter.IsShowCurrentBranchOnlyChecked);
+                    Assert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
+
+                    revisionGridControl.CurrentFilter.RefFilterOptions.Should().Be(RefFilterOptions.None);
+                });
         }
 
         [Test]
@@ -114,7 +131,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             AppSettings.ShowCurrentBranchOnly = false;
 
             RunSetAndApplyBranchFilterTest(
-                "",
+                initialFilter: "",
+                grepMessage: "",
                 revisionGridControl =>
                 {
                     WaitForRevisionsToBeLoaded(revisionGridControl);
@@ -144,7 +162,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             AppSettings.ShowCurrentBranchOnly = false;
 
             RunSetAndApplyBranchFilterTest(
-                "Branch1",
+                initialFilter: "Branch1",
+                grepMessage: "",
                 revisionGridControl =>
                 {
                     WaitForRevisionsToBeLoaded(revisionGridControl);
@@ -307,7 +326,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                 });
         }
 
-        private void RunSetAndApplyBranchFilterTest(string initialFilter, Action<RevisionGridControl> runTest)
+        private void RunSetAndApplyBranchFilterTest(string initialFilter, string grepMessage, Action<RevisionGridControl> runTest)
         {
             // Disable artificial commits as they appear to destabilise these tests
             AppSettings.RevisionGraphShowArtificialCommits = false;
@@ -323,6 +342,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
 
                     formBrowse.RevisionGridControl.SetSelectedRevision(ObjectId.Parse(_headCommit)).Should().BeTrue();
 
+                    formBrowse.RevisionGridControl.CurrentFilter.ByMessage = !string.IsNullOrWhiteSpace(grepMessage);
+                    formBrowse.RevisionGridControl.CurrentFilter.Message = grepMessage;
                     formBrowse.RevisionGridControl.SetAndApplyBranchFilter(initialFilter);
 
                     // wait for the revisions to be loaded

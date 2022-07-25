@@ -114,19 +114,26 @@ namespace GitUI.UserControls.RevisionGrid
             get
             {
                 RefFilterOptions refFilterOptions;
-                if (!ByBranchFilter)
+                if (!string.IsNullOrWhiteSpace(Message))
                 {
+                    refFilterOptions = RefFilterOptions.None;
+                }
+                else if (!ByBranchFilter)
+                {
+                    // Include parents to matches
                     refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
                 }
                 else if (ShowCurrentBranchOnly)
                 {
                     refFilterOptions = RefFilterOptions.None;
                 }
+                else if (BranchFilter.Length > 0)
+                {
+                    refFilterOptions = RefFilterOptions.Branches;
+                }
                 else
                 {
-                    refFilterOptions = BranchFilter.Length > 0
-                        ? RefFilterOptions.Branches
-                        : RefFilterOptions.All | RefFilterOptions.Boundary;
+                    refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
                 }
 
                 const RefFilterOptions gitNotesOptions = RefFilterOptions.All | RefFilterOptions.Boundary;

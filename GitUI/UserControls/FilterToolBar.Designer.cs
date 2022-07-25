@@ -45,7 +45,7 @@ namespace GitUI.UserControls
             this.tsmiCommitFilter.Checked = true;
             this.tsmiCommitFilter.CheckOnClick = true;
             this.tsmiCommitFilter.Name = "tsmiCommitFilter";
-            this.tsmiCommitFilter.Text = "Commit &message and hash";
+            this.tsmiCommitFilter.Text = "Commit &message";
             // 
             // tsmiCommitter
             // 
