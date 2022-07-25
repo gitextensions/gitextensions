@@ -1057,7 +1057,7 @@ namespace GitUI.CommandsDialogs
             var recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
                 () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
 
-            List<RecentRepoInfo> mostRecentRepos = new();
+            List<RecentRepoInfo> pinnedRepos = new();
             using var graphics = CreateGraphics();
             RecentRepoSplitter splitter = new()
             {
@@ -1065,9 +1065,9 @@ namespace GitUI.CommandsDialogs
                 Graphics = graphics
             };
 
-            splitter.SplitRecentRepos(recentRepositoryHistory, mostRecentRepos, mostRecentRepos);
+            splitter.SplitRecentRepos(recentRepositoryHistory, pinnedRepos, pinnedRepos);
 
-            var ri = mostRecentRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
+            var ri = pinnedRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
 
             _NO_TRANSLATE_WorkingDir.Text = PathUtil.GetDisplayPath(ri?.Caption ?? path);
 
@@ -1707,7 +1707,7 @@ namespace GitUI.CommandsDialogs
 
         private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
         {
-            List<RecentRepoInfo> mostRecentRepos = new();
+            List<RecentRepoInfo> pinnedRepos = new();
             List<RecentRepoInfo> allRecentRepos = new();
 
             using (var graphics = CreateGraphics())
@@ -1718,10 +1718,10 @@ namespace GitUI.CommandsDialogs
                     Graphics = graphics
                 };
 
-                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, allRecentRepos);
+                splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
             }
 
-            foreach (var repo in mostRecentRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
+            foreach (var repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
             {
                 AddFavouriteRepositories(repo.Key, repo.ToList());
             }
@@ -1748,7 +1748,7 @@ namespace GitUI.CommandsDialogs
 
         private void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container)
         {
-            List<RecentRepoInfo> mostRecentRepos = new();
+            List<RecentRepoInfo> pinnedRepos = new();
             List<RecentRepoInfo> allRecentRepos = new();
 
             var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
@@ -1765,17 +1765,17 @@ namespace GitUI.CommandsDialogs
                     Graphics = graphics
                 };
 
-                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, allRecentRepos);
+                splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
             }
 
-            foreach (var repo in mostRecentRepos)
+            foreach (var repo in pinnedRepos)
             {
                 _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, SetGitModule);
             }
 
             if (allRecentRepos.Count > 0)
             {
-                if (mostRecentRepos.Count > 0 && (AppSettings.SortMostRecentRepos || AppSettings.SortAllRecentRepos))
+                if (pinnedRepos.Count > 0 && (AppSettings.SortPinnedRepos || AppSettings.SortAllRecentRepos))
                 {
                     container.DropDownItems.Add(new ToolStripSeparator());
                 }

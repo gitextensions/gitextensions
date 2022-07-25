@@ -1645,7 +1645,7 @@ namespace GitCommands
             set => SetEnum("ShorteningRecentRepoPathStrategy", value);
         }
 
-        public static int MaxMostRecentRepositories
+        public static int MaxPinnedRepositories
         {
             get => GetInt("MaxMostRecentRepositories", 0);
             set => SetInt("MaxMostRecentRepositories", value);
@@ -1670,7 +1670,7 @@ namespace GitCommands
             set => SetString("SerializedHotkeys", value);
         }
 
-        public static bool SortMostRecentRepos
+        public static bool SortPinnedRepos
         {
             get => GetBool("SortMostRecentRepos", false);
             set => SetBool("SortMostRecentRepos", value);

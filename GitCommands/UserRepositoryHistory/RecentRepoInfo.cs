@@ -45,9 +45,9 @@ namespace GitCommands.UserRepositoryHistory
 
     public class RecentRepoSplitter
     {
-        public int MaxRecentRepositories { get; set; }
+        public int MaxPinnedRepositories { get; set; }
         public ShorteningRecentRepoPathStrategy ShorteningStrategy { get; set; }
-        public bool SortMostRecentRepos { get; set; }
+        public bool SortPinnedRepos { get; set; }
         public bool SortAllRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
 
@@ -57,34 +57,34 @@ namespace GitCommands.UserRepositoryHistory
 
         public RecentRepoSplitter()
         {
-            MaxRecentRepositories = AppSettings.MaxMostRecentRepositories;
+            MaxPinnedRepositories = AppSettings.MaxPinnedRepositories;
             ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy;
-            SortMostRecentRepos = AppSettings.SortMostRecentRepos;
+            SortPinnedRepos = AppSettings.SortPinnedRepos;
             SortAllRecentRepos = AppSettings.SortAllRecentRepos;
             RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth;
         }
 
-        public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> mostRecentRepoList, List<RecentRepoInfo> allRecentRepoList)
+        public void SplitRecentRepos(IList<Repository> recentRepositories, List<RecentRepoInfo> pinnedRepoList, List<RecentRepoInfo> allRecentRepoList)
         {
             SortedList<string, List<RecentRepoInfo>> orderedRepos = new();
-            List<RecentRepoInfo> mostRecentRepos = new();
+            List<RecentRepoInfo> pinnedRepos = new();
             List<RecentRepoInfo> allRecentRepos = new();
 
             var middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
             var signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
 
-            int n = Math.Min(MaxRecentRepositories, recentRepositories.Count);
+            int n = Math.Min(MaxPinnedRepositories, recentRepositories.Count);
 
             // the maxRecentRepositories repositories will be added at beginning
             // rest will be added in alphabetical order
             foreach (Repository repository in recentRepositories)
             {
-                bool mostRecent = (mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
-                    repository.Anchor == Repository.RepositoryAnchor.MostRecent;
+                bool mostRecent = (pinnedRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
+                    repository.Anchor == Repository.RepositoryAnchor.Pinned;
                 RecentRepoInfo ri = new(repository, mostRecent);
                 if (ri.MostRecent)
                 {
-                    mostRecentRepos.Add(ri);
+                    pinnedRepos.Add(ri);
                 }
 
                 allRecentRepos.Add(ri);
@@ -104,20 +104,20 @@ namespace GitCommands.UserRepositoryHistory
                 }
             }
 
-            int r = mostRecentRepos.Count - 1;
+            int r = pinnedRepos.Count - 1;
 
             // remove not anchored repos if there is more than maxRecentRepositories repos
-            while (mostRecentRepos.Count > n && r >= 0)
+            while (pinnedRepos.Count > n && r >= 0)
             {
-                var repo = mostRecentRepos[r];
-                if (repo.Repo.Anchor == Repository.RepositoryAnchor.MostRecent)
+                var repo = pinnedRepos[r];
+                if (repo.Repo.Anchor == Repository.RepositoryAnchor.Pinned)
                 {
                     r--;
                 }
                 else
                 {
                     repo.MostRecent = false;
-                    mostRecentRepos.RemoveAt(r);
+                    pinnedRepos.RemoveAt(r);
                 }
             }
 
@@ -135,13 +135,13 @@ namespace GitCommands.UserRepositoryHistory
                 addToList.AddRange(list);
             }
 
-            if (SortMostRecentRepos)
+            if (SortPinnedRepos)
             {
-                AddSortedRepos(true, mostRecentRepoList);
+                AddSortedRepos(true, pinnedRepoList);
             }
             else
             {
-                AddNotSortedRepos(mostRecentRepos, mostRecentRepoList);
+                AddNotSortedRepos(pinnedRepos, pinnedRepoList);
             }
 
             if (SortAllRecentRepos)

@@ -9,7 +9,7 @@ namespace GitCommands.UserRepositoryHistory
 
         public enum RepositoryAnchor
         {
-            MostRecent,
+            Pinned,
             AllRecent,
             None
         }

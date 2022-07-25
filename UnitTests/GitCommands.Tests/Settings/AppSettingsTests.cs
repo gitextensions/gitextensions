@@ -301,11 +301,11 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.OwnScripts)], string.Empty, true, false);
                 yield return (properties[nameof(AppSettings.RecursiveSubmodules)], 1, false, false);
                 yield return (properties[nameof(AppSettings.ShorteningRecentRepoPathStrategy)], ShorteningRecentRepoPathStrategy.None, false, false);
-                yield return (properties[nameof(AppSettings.MaxMostRecentRepositories)], 0, false, false);
+                yield return (properties[nameof(AppSettings.MaxPinnedRepositories)], 0, false, false);
                 yield return (properties[nameof(AppSettings.RecentRepositoriesHistorySize)], 30, false, false);
                 yield return (properties[nameof(AppSettings.RecentReposComboMinWidth)], 0, false, false);
                 yield return (properties[nameof(AppSettings.SerializedHotkeys)], null, true, false);
-                yield return (properties[nameof(AppSettings.SortMostRecentRepos)], false, false, false);
+                yield return (properties[nameof(AppSettings.SortPinnedRepos)], false, false, false);
                 yield return (properties[nameof(AppSettings.SortAllRecentRepos)], false, false, false);
                 yield return (properties[nameof(AppSettings.DontCommitMerge)], false, false, false);
                 yield return (properties[nameof(AppSettings.CommitValidationMaxCntCharsFirstLine)], 0, false, false);

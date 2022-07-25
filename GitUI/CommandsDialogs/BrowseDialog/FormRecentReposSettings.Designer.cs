@@ -37,7 +37,7 @@
             this.maxRecentRepositories = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_maxRecentRepositories = new System.Windows.Forms.NumericUpDown();
             this.comboMinWidthEdit = new System.Windows.Forms.NumericUpDown();
-            this.sortMostRecentRepos = new System.Windows.Forms.CheckBox();
+            this.sortPinnedRepos = new System.Windows.Forms.CheckBox();
             this.comboMinWidthLabel = new System.Windows.Forms.Label();
             this.sortAllRecentRepos = new System.Windows.Forms.CheckBox();
             this.shorteningGB = new System.Windows.Forms.GroupBox();
@@ -48,16 +48,16 @@
             this.AllRecentLB = new System.Windows.Forms.ListView();
             this.chdrRepository1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.anchorToMostToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.anchorToLessToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.anchorToPinnedReposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.anchorToAllRecentReposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeAnchorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeRecentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.MostRecentLB = new System.Windows.Forms.ListView();
+            this.PinnedLB = new System.Windows.Forms.ListView();
             this.chdrRepository = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
-            this.MostRecentLabel = new System.Windows.Forms.Label();
+            this.PinnedLabel = new System.Windows.Forms.Label();
             this.lblRecentRepositoriesHistorySize = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_RecentRepositoriesHistorySize = new System.Windows.Forms.NumericUpDown();
             flpnlControls = new System.Windows.Forms.FlowLayoutPanel();
@@ -127,7 +127,7 @@
             tableLayoutPanel1.Controls.Add(this.maxRecentRepositories, 0, 1);
             tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_maxRecentRepositories, 1, 1);
             tableLayoutPanel1.Controls.Add(this.comboMinWidthEdit, 1, 5);
-            tableLayoutPanel1.Controls.Add(this.sortMostRecentRepos, 0, 2);
+            tableLayoutPanel1.Controls.Add(this.sortPinnedRepos, 0, 2);
             tableLayoutPanel1.Controls.Add(this.comboMinWidthLabel, 0, 5);
             tableLayoutPanel1.Controls.Add(this.sortAllRecentRepos, 0, 3);
             tableLayoutPanel1.Controls.Add(this.shorteningGB, 0, 4);
@@ -166,7 +166,7 @@
             this.maxRecentRepositories.Name = "maxRecentRepositories";
             this.maxRecentRepositories.Size = new System.Drawing.Size(222, 13);
             this.maxRecentRepositories.TabIndex = 2;
-            this.maxRecentRepositories.Text = "Maximum number of most recent repositories";
+            this.maxRecentRepositories.Text = "Maximum number of pinned recent repositories";
             // 
             // _NO_TRANSLATE_maxRecentRepositories
             // 
@@ -179,7 +179,7 @@
             this._NO_TRANSLATE_maxRecentRepositories.Name = "_NO_TRANSLATE_maxRecentRepositories";
             this._NO_TRANSLATE_maxRecentRepositories.Size = new System.Drawing.Size(61, 21);
             this._NO_TRANSLATE_maxRecentRepositories.TabIndex = 3;
-            this._NO_TRANSLATE_maxRecentRepositories.ValueChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            this._NO_TRANSLATE_maxRecentRepositories.ValueChanged += new System.EventHandler(this.sortPinnedRepos_CheckedChanged);
             // 
             // comboMinWidthEdit
             // 
@@ -194,18 +194,18 @@
             this.comboMinWidthEdit.TabIndex = 8;
             this.comboMinWidthEdit.ValueChanged += new System.EventHandler(this.comboMinWidthEdit_ValueChanged);
             // 
-            // sortMostRecentRepos
+            // sortPinnedRepos
             // 
-            this.sortMostRecentRepos.AutoSize = true;
-            this.sortMostRecentRepos.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.sortMostRecentRepos.Location = new System.Drawing.Point(11, 65);
-            this.sortMostRecentRepos.Name = "sortMostRecentRepos";
-            this.sortMostRecentRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.sortMostRecentRepos.Size = new System.Drawing.Size(233, 17);
-            this.sortMostRecentRepos.TabIndex = 4;
-            this.sortMostRecentRepos.Text = "Sort most recent repositories alphabetically";
-            this.sortMostRecentRepos.UseVisualStyleBackColor = true;
-            this.sortMostRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            this.sortPinnedRepos.AutoSize = true;
+            this.sortPinnedRepos.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.sortPinnedRepos.Location = new System.Drawing.Point(11, 65);
+            this.sortPinnedRepos.Name = "sortPinnedRepos";
+            this.sortPinnedRepos.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.sortPinnedRepos.Size = new System.Drawing.Size(233, 17);
+            this.sortPinnedRepos.TabIndex = 4;
+            this.sortPinnedRepos.Text = "Sort pinned repositories alphabetically";
+            this.sortPinnedRepos.UseVisualStyleBackColor = true;
+            this.sortPinnedRepos.CheckedChanged += new System.EventHandler(this.sortPinnedRepos_CheckedChanged);
             // 
             // comboMinWidthLabel
             // 
@@ -228,7 +228,7 @@
             this.sortAllRecentRepos.TabIndex = 5;
             this.sortAllRecentRepos.Text = "Sort recent repositories alphabetically";
             this.sortAllRecentRepos.UseVisualStyleBackColor = true;
-            this.sortAllRecentRepos.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            this.sortAllRecentRepos.CheckedChanged += new System.EventHandler(this.sortPinnedRepos_CheckedChanged);
             // 
             // shorteningGB
             // 
@@ -255,7 +255,7 @@
             this.dontShortenRB.TabStop = true;
             this.dontShortenRB.Text = "Do not shorten  ";
             this.dontShortenRB.UseVisualStyleBackColor = true;
-            this.dontShortenRB.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            this.dontShortenRB.CheckedChanged += new System.EventHandler(this.sortPinnedRepos_CheckedChanged);
             // 
             // middleDotRB
             // 
@@ -267,7 +267,7 @@
             this.middleDotRB.TabStop = true;
             this.middleDotRB.Text = "Replace middle part with dots ";
             this.middleDotRB.UseVisualStyleBackColor = true;
-            this.middleDotRB.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            this.middleDotRB.CheckedChanged += new System.EventHandler(this.sortPinnedRepos_CheckedChanged);
             // 
             // mostSigDirRB
             // 
@@ -279,13 +279,13 @@
             this.mostSigDirRB.TabStop = true;
             this.mostSigDirRB.Text = "The most significant directory ";
             this.mostSigDirRB.UseVisualStyleBackColor = true;
-            this.mostSigDirRB.CheckedChanged += new System.EventHandler(this.sortMostRecentRepos_CheckedChanged);
+            this.mostSigDirRB.CheckedChanged += new System.EventHandler(this.sortPinnedRepos_CheckedChanged);
             // 
             // comboPanel
             // 
             this.comboPanel.Controls.Add(this.AllRecentLB);
             this.comboPanel.Controls.Add(this.panel3);
-            this.comboPanel.Controls.Add(this.MostRecentLB);
+            this.comboPanel.Controls.Add(this.PinnedLB);
             this.comboPanel.Controls.Add(this.panel2);
             this.comboPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboPanel.Location = new System.Drawing.Point(322, 0);
@@ -320,27 +320,27 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.anchorToMostToolStripMenuItem,
-            this.anchorToLessToolStripMenuItem,
+            this.anchorToPinnedReposToolStripMenuItem,
+            this.anchorToAllRecentReposToolStripMenuItem,
             this.removeAnchorToolStripMenuItem,
             this.removeRecentToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(258, 92);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
-            // anchorToMostToolStripMenuItem
+            // anchorToPinnedReposToolStripMenuItem
             // 
-            this.anchorToMostToolStripMenuItem.Name = "anchorToMostToolStripMenuItem";
-            this.anchorToMostToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
-            this.anchorToMostToolStripMenuItem.Text = "Anchor to most recent repositories";
-            this.anchorToMostToolStripMenuItem.Click += new System.EventHandler(this.anchorToMostToolStripMenuItem_Click);
+            this.anchorToPinnedReposToolStripMenuItem.Name = "anchorToPinnedReposToolStripMenuItem";
+            this.anchorToPinnedReposToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.anchorToPinnedReposToolStripMenuItem.Text = "Anchor to pinned repositories";
+            this.anchorToPinnedReposToolStripMenuItem.Click += new System.EventHandler(this.anchorToMostToolStripMenuItem_Click);
             // 
-            // anchorToLessToolStripMenuItem
+            // anchorToAllRecentReposToolStripMenuItem
             // 
-            this.anchorToLessToolStripMenuItem.Name = "anchorToLessToolStripMenuItem";
-            this.anchorToLessToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
-            this.anchorToLessToolStripMenuItem.Text = "Anchor to recent repositories";
-            this.anchorToLessToolStripMenuItem.Click += new System.EventHandler(this.anchorToLessToolStripMenuItem_Click);
+            this.anchorToAllRecentReposToolStripMenuItem.Name = "anchorToAllRecentReposToolStripMenuItem";
+            this.anchorToAllRecentReposToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+            this.anchorToAllRecentReposToolStripMenuItem.Text = "Anchor to recent repositories";
+            this.anchorToAllRecentReposToolStripMenuItem.Click += new System.EventHandler(this.anchorToLessToolStripMenuItem_Click);
             // 
             // removeAnchorToolStripMenuItem
             // 
@@ -375,25 +375,25 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Recent repositories";
             // 
-            // MostRecentLB
+            // PinnedLB
             // 
-            this.MostRecentLB.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.PinnedLB.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chdrRepository});
-            this.MostRecentLB.ContextMenuStrip = this.contextMenuStrip1;
-            this.MostRecentLB.Dock = System.Windows.Forms.DockStyle.Top;
-            this.MostRecentLB.GridLines = true;
-            this.MostRecentLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.MostRecentLB.HideSelection = false;
-            this.MostRecentLB.LabelWrap = false;
-            this.MostRecentLB.Location = new System.Drawing.Point(0, 19);
-            this.MostRecentLB.MultiSelect = false;
-            this.MostRecentLB.Name = "MostRecentLB";
-            this.MostRecentLB.OwnerDraw = true;
-            this.MostRecentLB.Size = new System.Drawing.Size(354, 121);
-            this.MostRecentLB.TabIndex = 0;
-            this.MostRecentLB.UseCompatibleStateImageBehavior = false;
-            this.MostRecentLB.View = System.Windows.Forms.View.Details;
-            this.MostRecentLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
+            this.PinnedLB.ContextMenuStrip = this.contextMenuStrip1;
+            this.PinnedLB.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PinnedLB.GridLines = true;
+            this.PinnedLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.PinnedLB.HideSelection = false;
+            this.PinnedLB.LabelWrap = false;
+            this.PinnedLB.Location = new System.Drawing.Point(0, 19);
+            this.PinnedLB.MultiSelect = false;
+            this.PinnedLB.Name = "PinnedLB";
+            this.PinnedLB.OwnerDraw = true;
+            this.PinnedLB.Size = new System.Drawing.Size(354, 121);
+            this.PinnedLB.TabIndex = 0;
+            this.PinnedLB.UseCompatibleStateImageBehavior = false;
+            this.PinnedLB.View = System.Windows.Forms.View.Details;
+            this.PinnedLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
             // 
             // chdrRepository
             // 
@@ -403,21 +403,21 @@
             // 
             this.panel2.AutoSize = true;
             this.panel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panel2.Controls.Add(this.MostRecentLabel);
+            this.panel2.Controls.Add(this.PinnedLabel);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(354, 19);
             this.panel2.TabIndex = 0;
             // 
-            // MostRecentLabel
+            // PinnedLabel
             // 
-            this.MostRecentLabel.AutoSize = true;
-            this.MostRecentLabel.Location = new System.Drawing.Point(3, 6);
-            this.MostRecentLabel.Name = "MostRecentLabel";
-            this.MostRecentLabel.Size = new System.Drawing.Size(123, 13);
-            this.MostRecentLabel.TabIndex = 0;
-            this.MostRecentLabel.Text = "Most recent repositories";
+            this.PinnedLabel.AutoSize = true;
+            this.PinnedLabel.Location = new System.Drawing.Point(3, 6);
+            this.PinnedLabel.Name = "PinnedLabel";
+            this.PinnedLabel.Size = new System.Drawing.Size(123, 13);
+            this.PinnedLabel.TabIndex = 0;
+            this.PinnedLabel.Text = "Pinned repositories";
             // 
             // lblRecentRepositoriesHistorySize
             // 
@@ -494,12 +494,12 @@
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_maxRecentRepositories;
         private System.Windows.Forms.Label maxRecentRepositories;
         private System.Windows.Forms.CheckBox sortAllRecentRepos;
-        private System.Windows.Forms.CheckBox sortMostRecentRepos;
+        private System.Windows.Forms.CheckBox sortPinnedRepos;
         private System.Windows.Forms.Panel comboPanel;
         private System.Windows.Forms.ListView AllRecentLB;
-        private System.Windows.Forms.ListView MostRecentLB;
+        private System.Windows.Forms.ListView PinnedLB;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Label MostRecentLabel;
+        private System.Windows.Forms.Label PinnedLabel;
         protected System.Windows.Forms.Button Abort;
         private System.Windows.Forms.GroupBox shorteningGB;
         private System.Windows.Forms.RadioButton mostSigDirRB;
@@ -510,10 +510,10 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem anchorToMostToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem anchorToPinnedReposToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeAnchorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeRecentToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem anchorToLessToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem anchorToAllRecentReposToolStripMenuItem;
         private System.Windows.Forms.Button Ok;
         private System.Windows.Forms.ColumnHeader chdrRepository;
         private System.Windows.Forms.ColumnHeader chdrRepository1;

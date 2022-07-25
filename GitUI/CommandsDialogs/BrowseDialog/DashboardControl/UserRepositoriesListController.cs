@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public (IReadOnlyList<RecentRepoInfo> recentRepositories, IReadOnlyList<RecentRepoInfo> favouriteRepositories) PreRenderRepositories(Graphics g, string pattern)
         {
-            List<RecentRepoInfo> mostRecentRepos = new();
+            List<RecentRepoInfo> pinnedRepos = new();
             List<RecentRepoInfo> allRecentRepos = new();
 
             RecentRepoSplitter splitter = new()
@@ -78,24 +78,24 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 Graphics = g,
                 MeasureFont = AppSettings.Font,
 
-                MaxRecentRepositories = AppSettings.MaxMostRecentRepositories,
+                MaxPinnedRepositories = AppSettings.MaxPinnedRepositories,
                 RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth,
                 ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy,
                 SortAllRecentRepos = AppSettings.SortAllRecentRepos,
-                SortMostRecentRepos = AppSettings.SortMostRecentRepos
+                SortPinnedRepos = AppSettings.SortPinnedRepos
             };
 
             _allRecentRepositories ??= ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
             var repositories = Filter(_allRecentRepositories, pattern);
-            splitter.SplitRecentRepos(repositories, mostRecentRepos, allRecentRepos);
-            var recentRepositories = mostRecentRepos.Union(allRecentRepos).ToList();
+            splitter.SplitRecentRepos(repositories, pinnedRepos, allRecentRepos);
+            var recentRepositories = pinnedRepos.Union(allRecentRepos).ToList();
 
             _allFavoriteRepositories ??= ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync());
             repositories = Filter(_allFavoriteRepositories, pattern);
-            mostRecentRepos.Clear();
+            pinnedRepos.Clear();
             allRecentRepos.Clear();
-            splitter.SplitRecentRepos(repositories, mostRecentRepos, allRecentRepos);
-            var favouriteRepositories = mostRecentRepos.Union(allRecentRepos).ToList();
+            splitter.SplitRecentRepos(repositories, pinnedRepos, allRecentRepos);
+            var favouriteRepositories = pinnedRepos.Union(allRecentRepos).ToList();
 
             return (recentRepositories, favouriteRepositories);
         }
