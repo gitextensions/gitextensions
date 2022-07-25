@@ -331,7 +331,7 @@ namespace GitUI.CommandsDialogs
             {
                 Brush? lastBrush = null;
 
-                gitStatusMonitor = new GitStatusMonitor(this);
+                gitStatusMonitor = new GitStatusMonitor(this, () => IsMinimized());
                 if (!NeedsGitStatusMonitor())
                 {
                     gitStatusMonitor.Active = false;
@@ -416,6 +416,8 @@ namespace GitUI.CommandsDialogs
                     }
                 };
             }
+
+            bool IsMinimized() => WindowState == FormWindowState.Minimized;
 
             void WorkaroundPaddingIncreaseBug()
             {
