@@ -51,6 +51,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private string? _submodulesPath;
         private readonly CancellationTokenSequence _statusSequence = new();
         private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
+        private readonly Func<bool> _isMinimized;
 
         // Timestamps to schedule status updates, limit the update interval dynamically
         // Note that TickCount wraps after 25 days uptime, always compare diff
@@ -79,8 +80,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         public event EventHandler<GitWorkingDirectoryStatusEventArgs?>? GitWorkingDirectoryStatusChanged;
 
-        public GitStatusMonitor(IGitUICommandsSource commandsSource)
+        public GitStatusMonitor(IGitUICommandsSource commandsSource, Func<bool> isMinimized)
         {
+            _isMinimized = isMinimized;
             _timerRefresh = new System.Windows.Forms.Timer
             {
                 Enabled = true,
@@ -354,22 +356,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        private static bool IsMinimized()
-        {
-            if (!EnvUtils.RunningOnWindows())
-            {
-                return false;
-            }
-
-            var currentProcess = Process.GetCurrentProcess();
-            if (currentProcess is null)
-            {
-                return false;
-            }
-
-            return NativeMethods.IsIconic(currentProcess.MainWindowHandle).IsTrue();
-        }
-
         private void Update()
         {
             ThreadHelper.AssertOnUIThread();
@@ -383,7 +369,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Validates.NotNull(UICommandsSource);
             Validates.NotNull(Module);
 
-            if (IsMinimized() || UICommandsSource.UICommands.RepoChangedNotifier.IsLocked)
+            if (_isMinimized() || UICommandsSource.UICommands.RepoChangedNotifier.IsLocked)
             {
                 // No run for minimized,
                 // don't update status while repository is being modified by GitExt,
