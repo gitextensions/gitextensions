@@ -1539,24 +1539,43 @@ namespace GitUI.Editor
             }
 
             byte[]? patch;
-            if (reverse)
+
+            Validates.NotNull(_viewItem);
+            if (_viewItem.Item.IsNew)
             {
-                patch = PatchManager.GetResetWorkTreeLinesAsPatch(
+                var treeGuid = reverse ? _viewItem.Item.TreeGuid?.ToString() : null;
+                patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
+                    _viewItem.Item.Name,
                     GetText(),
                     selectionStart,
                     selectionLength,
-                    Encoding);
+                    Encoding,
+                    reset: reverse,
+                    FilePreamble,
+                    treeGuid);
             }
             else
             {
-                patch = PatchManager.GetSelectedLinesAsPatch(
-                    GetText(),
-                    selectionStart,
-                    selectionLength,
-                    false,
-                    Encoding,
-                    false);
+                if (reverse)
+                {
+                    patch = PatchManager.GetResetWorkTreeLinesAsPatch(
+                        Module,
+                        GetText(),
+                        selectionStart,
+                        selectionLength,
+                        Encoding);
+                }
+                else
+                {
+                    patch = PatchManager.GetSelectedLinesAsPatch(
+                        GetText(),
+                        selectionStart,
+                        selectionLength,
+                        false,
+                        Encoding,
+                        false);
+                }
             }
 
             if (patch is null || patch.Length == 0)
