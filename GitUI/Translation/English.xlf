@@ -9651,6 +9651,10 @@ See the changes in the commit form.</source>
         <source>Go to &amp;parent commit</source>
         <target />
       </trans-unit>
+      <trans-unit id="HighlightSelectedBranch.Text">
+        <source>Highlight selected branch (until refresh)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="NavigateBackward.Text">
         <source>Navigate &amp;backward</source>
         <target />
@@ -9717,10 +9721,6 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
         <source>&amp;Toggle between artificial and HEAD commits</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="ToggleHighlightSelectedBranch.Text">
-        <source>Highlight selected branch (until refresh)</source>
         <target />
       </trans-unit>
       <trans-unit id="TopoOrder.Text">
