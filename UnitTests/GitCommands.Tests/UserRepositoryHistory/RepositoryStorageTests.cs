@@ -56,11 +56,11 @@ namespace GitCommandsTests.UserRepositoryHistory
                 new Repository(@"C:\Development\gitextensions\"),
                 new Repository(@"C:\Development\gitextensions\Externals\NBug\")
                 {
-                    Anchor = Repository.RepositoryAnchor.MostRecent,
+                    Anchor = Repository.RepositoryAnchor.Pinned,
                 },
                 new Repository(@"C:\Development\gitextensions\GitExtensionsDoc\")
                 {
-                    Anchor = Repository.RepositoryAnchor.LessRecent,
+                    Anchor = Repository.RepositoryAnchor.AllRecent,
                 }
             };
             _repositorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => history);

@@ -6525,20 +6525,20 @@ Nothing to rebase.</source>
         <source>Cancel</source>
         <target />
       </trans-unit>
-      <trans-unit id="MostRecentLabel.Text">
-        <source>Most recent repositories</source>
-        <target />
-      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
         <target />
       </trans-unit>
-      <trans-unit id="anchorToLessToolStripMenuItem.Text">
-        <source>Anchor to less recent repositories</source>
+      <trans-unit id="PinnedLabel.Text">
+        <source>Pinned repositories</source>
         <target />
       </trans-unit>
-      <trans-unit id="anchorToMostToolStripMenuItem.Text">
-        <source>Anchor to most recent repositories</source>
+      <trans-unit id="anchorToAllRecentReposToolStripMenuItem.Text">
+        <source>Anchor to recent repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="anchorToPinnedReposToolStripMenuItem.Text">
+        <source>Anchor to pinned repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="chdrRepository.Text">
@@ -6562,7 +6562,7 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Less recent repositories</source>
+        <source>Recent repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRecentRepositoriesHistorySize.Text">
@@ -6570,7 +6570,7 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="maxRecentRepositories.Text">
-        <source>Maximum number of most recent repositories</source>
+        <source>Maximum number of pinned recent repositories</source>
         <target />
       </trans-unit>
       <trans-unit id="middleDotRB.Text">
@@ -6593,12 +6593,12 @@ Nothing to rebase.</source>
         <source>Shortening strategy</source>
         <target />
       </trans-unit>
-      <trans-unit id="sortLessRecentRepos.Text">
-        <source>Sort less recent repositories alphabetically</source>
+      <trans-unit id="sortAllRecentRepos.Text">
+        <source>Sort recent repositories alphabetically</source>
         <target />
       </trans-unit>
-      <trans-unit id="sortMostRecentRepos.Text">
-        <source>Sort most recent repositories alphabetically</source>
+      <trans-unit id="sortPinnedRepos.Text">
+        <source>Sort pinned repositories alphabetically</source>
         <target />
       </trans-unit>
     </body>
