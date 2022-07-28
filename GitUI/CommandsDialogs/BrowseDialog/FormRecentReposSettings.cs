@@ -23,7 +23,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 await this.SwitchToMainThreadAsync();
                 LoadSettings();
                 RefreshRepos();
-                SetComboWidth();
             });
         }
 
@@ -133,6 +132,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 AllRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
             }
+
+            SetComboWidth();
         }
 
         private void SetComboWidth()
@@ -163,7 +164,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 AllRecentLB.BeginUpdate();
 
                 SetComboWidth();
-                RefreshRepos();
             }
             finally
             {
@@ -250,6 +250,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 {
                     repo.Repo.Anchor = Repository.RepositoryAnchor.Pinned;
                 }
+
                 RefreshRepos();
             }
         }
@@ -262,6 +263,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 {
                     repo.Repo.Anchor = Repository.RepositoryAnchor.AllRecent;
                 }
+
                 RefreshRepos();
             }
         }
@@ -274,6 +276,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 {
                     repo.Repo.Anchor = Repository.RepositoryAnchor.None;
                 }
+
                 RefreshRepos();
             }
         }
