@@ -239,7 +239,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="chkShowRepoCurrentBranch.Text">
         <source>Show current branch names in the dashboard and the recent repositories dropdown menu</source>
-        <target>ダッシュボードと最近のリポジトリのドロップダウンメニューに現在のブランチ名を表示</target>
+        <target>ダッシュボードと「最近開いたリポジトリ」のドロップダウンメニューに現在のブランチ名を表示</target>
         
       </trans-unit>
       <trans-unit id="downloadDictionary.Text">
@@ -4048,8 +4048,8 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="tsmiCommitFilter.Text">
-        <source>Commit &amp;message and hash</source>
-        <target>コミットメッセージとハッシュ(&amp;M)</target>
+        <source>Commit &amp;message</source>
+        <target>コミットメッセージ(&amp;M)</target>
         
       </trans-unit>
       <trans-unit id="tsmiCommitterFilter.Text">
@@ -8175,7 +8175,7 @@ Nothing to rebase.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Recent repositories settings</source>
-        <target>最近のリポジトリの設定</target>
+        <target>最近開いたリポジトリの設定</target>
         
       </trans-unit>
       <trans-unit id="Abort.Text">
@@ -8183,24 +8183,24 @@ Nothing to rebase.</source>
         <target>キャンセル</target>
         
       </trans-unit>
-      <trans-unit id="MostRecentLabel.Text">
-        <source>Most recent repositories</source>
-        <target>最近のリポジトリ</target>
-        
-      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
         <target>OK</target>
         
       </trans-unit>
-      <trans-unit id="anchorToLessToolStripMenuItem.Text">
-        <source>Anchor to less recent repositories</source>
-        <target>「やや新しいリポジトリ」に固定</target>
+      <trans-unit id="PinnedLabel.Text">
+        <source>Pinned repositories</source>
+        <target>ピン留めされたリポジトリ</target>
         
       </trans-unit>
-      <trans-unit id="anchorToMostToolStripMenuItem.Text">
-        <source>Anchor to most recent repositories</source>
-        <target>「最近のリポジトリ」に固定</target>
+      <trans-unit id="anchorToAllRecentReposToolStripMenuItem.Text">
+        <source>Anchor to recent repositories</source>
+        <target>「最近使用したリポジトリ」に固定</target>
+        
+      </trans-unit>
+      <trans-unit id="anchorToPinnedReposToolStripMenuItem.Text">
+        <source>Anchor to pinned repositories</source>
+        <target>「ピン留めされたリポジトリ」に固定</target>
         
       </trans-unit>
       <trans-unit id="chdrRepository.Text">
@@ -8229,8 +8229,8 @@ Nothing to rebase.</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Less recent repositories</source>
-        <target>やや新しいリポジトリ</target>
+        <source>Recent repositories</source>
+        <target>最近開いたリポジトリ</target>
         
       </trans-unit>
       <trans-unit id="lblRecentRepositoriesHistorySize.Text">
@@ -8239,8 +8239,8 @@ Nothing to rebase.</source>
         
       </trans-unit>
       <trans-unit id="maxRecentRepositories.Text">
-        <source>Maximum number of most recent repositories</source>
-        <target>「最近のリポジトリ」の最大数</target>
+        <source>Maximum number of pinned recent repositories</source>
+        <target>「ピン留めされたリポジトリ」の最大数</target>
         
       </trans-unit>
       <trans-unit id="middleDotRB.Text">
@@ -8260,7 +8260,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="removeRecentToolStripMenuItem.Text">
         <source>Remove from recent repositories</source>
-        <target>「最近のリポジトリ」から 消去</target>
+        <target>「最近開いたリポジトリ」から除去</target>
         
       </trans-unit>
       <trans-unit id="shorteningGB.Text">
@@ -8268,14 +8268,14 @@ Nothing to rebase.</source>
         <target>短縮の方法</target>
         
       </trans-unit>
-      <trans-unit id="sortLessRecentRepos.Text">
-        <source>Sort less recent repositories alphabetically</source>
-        <target>「やや新しいリポジトリ」を 名前順にする</target>
+      <trans-unit id="sortAllRecentRepos.Text">
+        <source>Sort recent repositories alphabetically</source>
+        <target>「最近開いたリポジトリ」を名前順にする</target>
         
       </trans-unit>
-      <trans-unit id="sortMostRecentRepos.Text">
-        <source>Sort most recent repositories alphabetically</source>
-        <target>「最近のリポジトリ」を 名前順にする</target>
+      <trans-unit id="sortPinnedRepos.Text">
+        <source>Sort pinned repositories alphabetically</source>
+        <target>「ピン留めされたリポジトリ」を名前順にする</target>
         
       </trans-unit>
     </body>
@@ -12105,6 +12105,11 @@ See the changes in the commit form.</source>
         <target>親コミットに移動(&amp;P)</target>
         
       </trans-unit>
+      <trans-unit id="HighlightSelectedBranch.Text">
+        <source>Highlight selected branch (until refresh)</source>
+        <target>選択したブランチをハイライト (更新するまで)</target>
+        
+      </trans-unit>
       <trans-unit id="NavigateBackward.Text">
         <source>Navigate &amp;backward</source>
         <target>前にナビゲート(&amp;B)</target>
@@ -12188,11 +12193,6 @@ See the changes in the commit form.</source>
       <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
         <source>&amp;Toggle between artificial and HEAD commits</source>
         <target>人為的なコミットとHEADコミットを切り替える(&amp;T)</target>
-        
-      </trans-unit>
-      <trans-unit id="ToggleHighlightSelectedBranch.Text">
-        <source>Highlight selected branch (until refresh)</source>
-        <target>選択したブランチをハイライト (更新するまで)</target>
         
       </trans-unit>
       <trans-unit id="TopoOrder.Text">
@@ -13949,7 +13949,7 @@ The action cannot be undone.</source>
       </trans-unit>
       <trans-unit id="mnuConfigure.Text">
         <source>Recent repositories &amp;settings</source>
-        <target>最近のリポジトリの設定(&amp;S)</target>
+        <target>最近開いたリポジトリの設定(&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="tsmiCategories.Text">
