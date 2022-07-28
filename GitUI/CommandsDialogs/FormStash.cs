@@ -465,7 +465,7 @@ namespace GitUI.CommandsDialogs
 
         private void ContextMenuStripStashedFiles_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            cherryPickFileChangesToolStripMenuItem.Enabled = Stashed.SelectedItems.Count() == 1;
+            cherryPickFileChangesToolStripMenuItem.Enabled = Stashed.SelectedItems.Count() == 1 && View.SupportLinePatching;
         }
     }
 }
