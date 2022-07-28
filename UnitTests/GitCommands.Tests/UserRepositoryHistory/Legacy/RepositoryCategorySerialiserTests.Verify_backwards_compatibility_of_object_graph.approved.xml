@@ -20,7 +20,7 @@
         <Title>Git Extensions</Title>
         <Path>C:\Development\gitextensions\</Path>
         <Description>Mega project!</Description>
-        <Anchor>MostRecent</Anchor>
+        <Anchor>Pinned</Anchor>
       </Repository>
     </Repositories>
     <Description>Test</Description>
