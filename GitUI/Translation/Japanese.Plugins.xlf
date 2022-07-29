@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>それぞれのビルド結果に対してビルド状態サマリ内にテスト結果を表示する（ネットワークが集中します！）</target>
+        <target>それぞれのビルド結果に対してビルド状態サマリ内にテスト結果を表示(ネットワークが集中します!)</target>
         
       </trans-unit>
     </body>
@@ -1700,7 +1700,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>整列：最新のリビジョンを上に表示。</target>
+        <target>並べ替え: 最新のリビジョンを上に表示。</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
