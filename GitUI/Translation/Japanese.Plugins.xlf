@@ -1700,7 +1700,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>整列：最新のリビジョンを上に表示。</target>
+        <target>並べ替え: 最新のリビジョンを上に表示。</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
