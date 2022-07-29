@@ -17,10 +17,10 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormDiff : GitModuleForm
     {
-        private string? _baseCommitDisplayStr;
-        private string? _headCommitDisplayStr;
-        private GitRevision? _baseRevision;
-        private GitRevision? _headRevision;
+        private string? _firstCommitDisplayStr;
+        private string? _secondCommitDisplayStr;
+        private GitRevision? _firstRevision;
+        private GitRevision? _secondRevision;
         private readonly GitRevision? _mergeBase;
         private readonly IGitRevisionTester _revisionTester;
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
@@ -45,13 +45,13 @@ namespace GitUI.CommandsDialogs
 
         public FormDiff(
             GitUICommands commands,
-            ObjectId baseId,
-            ObjectId headId,
-            string baseCommitDisplayStr, string headCommitDisplayStr)
+            ObjectId firstId,
+            ObjectId secondId,
+            string firstCommitDisplayStr, string secondCommitDisplayStr)
             : base(commands)
         {
-            _baseCommitDisplayStr = baseCommitDisplayStr;
-            _headCommitDisplayStr = headCommitDisplayStr;
+            _firstCommitDisplayStr = firstCommitDisplayStr;
+            _secondCommitDisplayStr = secondCommitDisplayStr;
 
             InitializeComponent();
 
@@ -59,25 +59,25 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
 
-            _toolTipControl.SetToolTip(btnAnotherBaseBranch, _anotherBranchTooltip.Text);
-            _toolTipControl.SetToolTip(btnAnotherHeadBranch, _anotherBranchTooltip.Text);
-            _toolTipControl.SetToolTip(btnAnotherBaseCommit, _anotherCommitTooltip.Text);
-            _toolTipControl.SetToolTip(btnAnotherHeadCommit, _anotherCommitTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherFirstBranch, _anotherBranchTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherSecondBranch, _anotherBranchTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherFirstCommit, _anotherCommitTooltip.Text);
+            _toolTipControl.SetToolTip(btnAnotherSecondCommit, _anotherCommitTooltip.Text);
             _toolTipControl.SetToolTip(btnSwap, _btnSwapTooltip.Text);
 
-            _baseRevision = new GitRevision(baseId);
-            _headRevision = new GitRevision(headId);
+            _firstRevision = new GitRevision(firstId);
+            _secondRevision = new GitRevision(secondId);
 
             Lazy<ObjectId?> head = new(() => Module.GetCurrentCheckout());
-            ObjectId? baseMergeId = baseId.IsArtificial ? head.Value : baseId;
-            ObjectId? headMergeId = headId.IsArtificial ? head.Value : headId;
-            if (baseMergeId is null || headMergeId is null || baseMergeId == headMergeId)
+            ObjectId? firstMergeId = firstId.IsArtificial ? head.Value : firstId;
+            ObjectId? secondMergeId = secondId.IsArtificial ? head.Value : secondId;
+            if (firstMergeId is null || secondMergeId is null || firstMergeId == secondMergeId)
             {
                 _mergeBase = null;
             }
             else
             {
-                ObjectId mergeBase = Module.GetMergeBase(baseMergeId, headMergeId);
+                ObjectId mergeBase = Module.GetMergeBase(firstMergeId, secondMergeId);
                 _mergeBase = mergeBase is not null ? new GitRevision(mergeBase) : null;
             }
 
@@ -89,8 +89,8 @@ namespace GitUI.CommandsDialogs
             _revisionTester = new GitRevisionTester(_fullPathResolver);
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
 
-            lblBaseCommit.BackColor = AppColor.DiffRemoved.GetThemeColor();
-            lblHeadCommit.BackColor = AppColor.DiffAdded.GetThemeColor();
+            lblFirstCommit.BackColor = AppColor.DiffRemoved.GetThemeColor();
+            lblSecondCommit.BackColor = AppColor.DiffAdded.GetThemeColor();
 
             DiffFiles.ContextMenuStrip = DiffContextMenu;
             DiffFiles.SelectedIndexChanged += delegate { ShowSelectedFileDiff(); };
@@ -129,20 +129,20 @@ namespace GitUI.CommandsDialogs
 
         private void PopulateDiffFiles()
         {
-            lblBaseCommit.Text = _baseCommitDisplayStr;
-            lblHeadCommit.Text = _headCommitDisplayStr;
+            lblFirstCommit.Text = _firstCommitDisplayStr;
+            lblSecondCommit.Text = _secondCommitDisplayStr;
 
-            Validates.NotNull(_headRevision);
+            Validates.NotNull(_secondRevision);
             GitRevision[] revisions;
             if (ckCompareToMergeBase.Checked)
             {
                 Validates.NotNull(_mergeBase);
-                revisions = new[] { _headRevision, _mergeBase };
+                revisions = new[] { _secondRevision, _mergeBase };
             }
             else
             {
-                Validates.NotNull(_baseRevision);
-                revisions = new[] { _headRevision, _baseRevision };
+                Validates.NotNull(_firstRevision);
+                revisions = new[] { _secondRevision, _firstRevision };
             }
 
             DiffFiles.SetDiffs(revisions);
@@ -151,7 +151,7 @@ namespace GitUI.CommandsDialogs
             // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
             // git difftool --gui --no-prompt --dir-diff HEAD succeeds
             // Thus, we disable comparing "from" working directory.
-            var enableDifftoolDirDiff = _baseRevision?.ObjectId != ObjectId.WorkTreeId;
+            var enableDifftoolDirDiff = _firstRevision?.ObjectId != ObjectId.WorkTreeId;
             btnCompareDirectoriesWithDiffTool.Enabled = enableDifftoolDirDiff;
         }
 
@@ -163,13 +163,13 @@ namespace GitUI.CommandsDialogs
 
         private void btnSwap_Click(object sender, EventArgs e)
         {
-            var orgBaseRev = _baseRevision;
-            _baseRevision = _headRevision;
-            _headRevision = orgBaseRev;
+            var orgFirstRev = _firstRevision;
+            _firstRevision = _secondRevision;
+            _secondRevision = orgFirstRev;
 
-            var orgBaseStr = _baseCommitDisplayStr;
-            _baseCommitDisplayStr = _headCommitDisplayStr;
-            _headCommitDisplayStr = orgBaseStr;
+            var orgFirstStr = _firstCommitDisplayStr;
+            _firstCommitDisplayStr = _secondCommitDisplayStr;
+            _secondCommitDisplayStr = orgFirstStr;
             PopulateDiffFiles();
         }
 
@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision);
+                UICommands.StartFileHistoryDialog(this, item.Name, _firstRevision);
             }
         }
 
@@ -239,7 +239,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision, true, true);
+                UICommands.StartFileHistoryDialog(this, item.Name, _firstRevision, true, true);
             }
         }
 
@@ -276,34 +276,34 @@ namespace GitUI.CommandsDialogs
 
         private void btnCompareDirectoriesWithDiffTool_Clicked(object sender, EventArgs e)
         {
-            GitRevision? firstRevision = ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision;
+            GitRevision? firstRevision = ckCompareToMergeBase.Checked ? _mergeBase : _firstRevision;
             Validates.NotNull(firstRevision);
-            Validates.NotNull(_headRevision);
-            Module.OpenWithDifftoolDirDiff(firstRevision.Guid, _headRevision.Guid);
+            Validates.NotNull(_secondRevision);
+            Module.OpenWithDifftoolDirDiff(firstRevision.Guid, _secondRevision.Guid);
         }
 
-        private void btnPickAnotherBranch_Click(object sender, EventArgs e)
+        private void btnPickAnotherFirstBranch_Click(object sender, EventArgs e)
         {
-            Validates.NotNull(_baseRevision);
-            PickAnotherBranch(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);
+            Validates.NotNull(_firstRevision);
+            PickAnotherBranch(_firstRevision, ref _firstCommitDisplayStr, ref _firstRevision);
         }
 
-        private void btnAnotherCommit_Click(object sender, EventArgs e)
+        private void btnAnotherFirstCommit_Click(object sender, EventArgs e)
         {
-            Validates.NotNull(_baseRevision);
-            PickAnotherCommit(_baseRevision, ref _baseCommitDisplayStr, ref _baseRevision);
+            Validates.NotNull(_firstRevision);
+            PickAnotherCommit(_firstRevision, ref _firstCommitDisplayStr, ref _firstRevision);
         }
 
-        private void btnAnotherHeadBranch_Click(object sender, EventArgs e)
+        private void btnAnotherSecondBranch_Click(object sender, EventArgs e)
         {
-            Validates.NotNull(_headRevision);
-            PickAnotherBranch(_headRevision, ref _headCommitDisplayStr, ref _headRevision);
+            Validates.NotNull(_secondRevision);
+            PickAnotherBranch(_secondRevision, ref _secondCommitDisplayStr, ref _secondRevision);
         }
 
-        private void btnAnotherHeadCommit_Click(object sender, EventArgs e)
+        private void btnAnotherSecondCommit_Click(object sender, EventArgs e)
         {
-            Validates.NotNull(_headRevision);
-            PickAnotherCommit(_headRevision, ref _headCommitDisplayStr, ref _headRevision);
+            Validates.NotNull(_secondRevision);
+            PickAnotherCommit(_secondRevision, ref _secondCommitDisplayStr, ref _secondRevision);
         }
 
         private void diffContextToolStripMenuItem_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -320,14 +320,14 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
-            bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(parentIds, _headRevision);
+            bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(parentIds, _secondRevision);
             bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItems.Select(i => i.Item));
 
             bool allAreNew = DiffFiles.SelectedItems.All(i => i.Item.IsNew);
             bool allAreDeleted = DiffFiles.SelectedItems.All(i => i.Item.IsDeleted);
 
             return new ContextMenuDiffToolInfo(
-                _headRevision,
+                _secondRevision,
                 parentIds,
                 allAreNew: allAreNew,
                 allAreDeleted: allAreDeleted,
