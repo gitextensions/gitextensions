@@ -4754,10 +4754,6 @@ Deleting a branch can cause commits to be deleted too!</source>
         <source>Compare to merge &amp;base</source>
         <target />
       </trans-unit>
-      <trans-unit id="baseCommitGroup.Text">
-        <source>BASE</source>
-        <target />
-      </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
         <source>Blame</source>
         <target />
@@ -4782,16 +4778,16 @@ Deleting a branch can cause commits to be deleted too!</source>
         <source>Find</source>
         <target />
       </trans-unit>
+      <trans-unit id="firstCommitGroup.Text">
+        <source>BASE</source>
+        <target />
+      </trans-unit>
       <trans-unit id="firstToLocalToolStripMenuItem.Text">
-        <source>BASE -&gt; Working directory</source>
+        <source>First -&gt; Working directory</source>
         <target />
       </trans-unit>
       <trans-unit id="firstToSelectedToolStripMenuItem.Text">
-        <source>BASE -&gt; Compare</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="headCommitGroup.Text">
-        <source>Compare</source>
+        <source>First -&gt; Compare</source>
         <target />
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
@@ -4800,6 +4796,10 @@ Deleting a branch can cause commits to be deleted too!</source>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="secondCommitGroup.Text">
+        <source>Compare</source>
         <target />
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">
