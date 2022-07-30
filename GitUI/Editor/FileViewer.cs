@@ -985,14 +985,22 @@ namespace GitUI.Editor
                 && (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                     || fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase)))
             {
+                // Override the set view mode
                 _viewMode = ViewMode.FixedDiff;
             }
 
-            SupportLinePatching = ((IsDiffView(_viewMode) && (text?.Contains("@@") ?? false)
+            SupportLinePatching =
+
+                // Diffs, currently requires that the file to update exists
+                ((IsDiffView(_viewMode) && (text?.Contains("@@") ?? false)
                         && File.Exists(_fullPathResolver.Resolve(fileName)))
+
+                // New files, patches only applies for artificial or if the file does not exist
                     || ((item?.Item.IsNew ?? false)
                         && ((item.Item.Staged is StagedStatus.WorkTree or StagedStatus.Index)
                             || !File.Exists(_fullPathResolver.Resolve(fileName)))))
+
+                // No patching allowed if no worktree
                 && !Module.IsBareRepository();
 
             SetVisibilityDiffContextMenu(_viewMode);
