@@ -22,6 +22,8 @@ namespace GitUI.CommandsDialogs
         private GitRevision? _firstRevision;
         private GitRevision? _secondRevision;
         private readonly GitRevision? _mergeBase;
+        private Lazy<ObjectId?> _currentHead = null;
+
         private readonly IGitRevisionTester _revisionTester;
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
@@ -68,9 +70,11 @@ namespace GitUI.CommandsDialogs
             _firstRevision = new GitRevision(firstId);
             _secondRevision = new GitRevision(secondId);
 
-            Lazy<ObjectId?> head = new(() => Module.GetCurrentCheckout());
-            ObjectId? firstMergeId = firstId.IsArtificial ? head.Value : firstId;
-            ObjectId? secondMergeId = secondId.IsArtificial ? head.Value : secondId;
+            // _mergeBase is not changed if first/second is changed
+            // similar, _currentHead is not updated if changed in Browse
+            _currentHead = new(() => Module.GetCurrentCheckout());
+            ObjectId? firstMergeId = firstId.IsArtificial ? _currentHead.Value : firstId;
+            ObjectId? secondMergeId = secondId.IsArtificial ? _currentHead.Value : secondId;
             if (firstMergeId is null || secondMergeId is null || firstMergeId == secondMergeId)
             {
                 _mergeBase = null;
@@ -132,6 +136,13 @@ namespace GitUI.CommandsDialogs
             lblFirstCommit.Text = _firstCommitDisplayStr;
             lblSecondCommit.Text = _secondCommitDisplayStr;
 
+            // Bug in git-for-windows: Comparing working directory to any branch, fails, due to -R
+            // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
+            // git difftool --gui --no-prompt --dir-diff HEAD succeeds
+            // Thus, we disable comparing "from" working directory.
+            var enableDifftoolDirDiff = _firstRevision?.ObjectId != ObjectId.WorkTreeId;
+            btnCompareDirectoriesWithDiffTool.Enabled = enableDifftoolDirDiff;
+
             Validates.NotNull(_secondRevision);
             GitRevision[] revisions;
             if (ckCompareToMergeBase.Checked)
@@ -142,17 +153,20 @@ namespace GitUI.CommandsDialogs
             else
             {
                 Validates.NotNull(_firstRevision);
-                revisions = new[] { _secondRevision, _firstRevision };
+                if (_mergeBase is null)
+                {
+                    revisions = new[] { _secondRevision, _firstRevision };
+                }
+                else
+                {
+                    revisions = new[] { _secondRevision, _mergeBase, _firstRevision };
+                }
             }
 
-            DiffFiles.SetDiffs(revisions);
-
-            // Bug in git-for-windows: Comparing working directory to any branch, fails, due to -R
-            // I.e., git difftool --gui --no-prompt --dir-diff -R HEAD fails, but
-            // git difftool --gui --no-prompt --dir-diff HEAD succeeds
-            // Thus, we disable comparing "from" working directory.
-            var enableDifftoolDirDiff = _firstRevision?.ObjectId != ObjectId.WorkTreeId;
-            btnCompareDirectoriesWithDiffTool.Enabled = enableDifftoolDirDiff;
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await DiffFiles.SetDiffsAsync(revisions, _currentHead.Value, _viewChangesSequence.Next());
+            }).FileAndForget();
         }
 
         private void ShowSelectedFileDiff()
