@@ -329,7 +329,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.DiffListSorting)], DiffListSortType.FilePath, false, false);
                 yield return (properties[nameof(AppSettings.RepoObjectsTreeShowBranches)], true, false, false);
                 yield return (properties[nameof(AppSettings.RepoObjectsTreeShowRemotes)], true, false, false);
-                yield return (properties[nameof(AppSettings.RepoObjectsTreeShowTags)], false, false, false);
+                yield return (properties[nameof(AppSettings.RepoObjectsTreeShowTags)], true, false, false);
                 yield return (properties[nameof(AppSettings.RepoObjectsTreeShowSubmodules)], true, false, false);
                 yield return (properties[nameof(AppSettings.RepoObjectsTreeBranchesIndex)], 0, false, false);
                 yield return (properties[nameof(AppSettings.RepoObjectsTreeRemotesIndex)], 1, false, false);
