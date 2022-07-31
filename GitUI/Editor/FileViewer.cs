@@ -691,6 +691,12 @@ namespace GitUI.Editor
 
         public void CherryPickAllChanges()
         {
+            if (!SupportLinePatching)
+            {
+                // Hotkey executed when menu is disabled
+                return;
+            }
+
             ApplySelectedLines(allFile: true, reverse: false);
         }
 
@@ -979,13 +985,23 @@ namespace GitUI.Editor
                 && (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                     || fileName.EndsWith(".patch", StringComparison.OrdinalIgnoreCase)))
             {
+                // Override the set view mode
                 _viewMode = ViewMode.FixedDiff;
             }
 
-            SupportLinePatching = ((IsDiffView(_viewMode) && (text?.Contains("@@") ?? false))
-                        || (item is not null && item.Item.IsNew && (item.Item.Staged is StagedStatus.WorkTree or StagedStatus.Index)))
-                    && !Module.IsBareRepository()
-                    && File.Exists(_fullPathResolver.Resolve(fileName));
+            SupportLinePatching =
+
+                // Diffs, currently requires that the file to update exists
+                ((IsDiffView(_viewMode) && (text?.Contains("@@") ?? false)
+                        && File.Exists(_fullPathResolver.Resolve(fileName)))
+
+                // New files, patches only applies for artificial or if the file does not exist
+                    || ((item?.Item.IsNew ?? false)
+                        && ((item.Item.Staged is StagedStatus.WorkTree or StagedStatus.Index)
+                            || !File.Exists(_fullPathResolver.Resolve(fileName)))))
+
+                // No patching allowed if no worktree
+                && !Module.IsBareRepository();
 
             SetVisibilityDiffContextMenu(_viewMode);
             ClearImage();
@@ -1425,7 +1441,7 @@ namespace GitUI.Editor
                     GetSelectionPosition(),
                     GetSelectionLength(),
                     Encoding,
-                    false,
+                    reset: false,
                     FilePreamble,
                     treeGuid);
             }
@@ -1435,7 +1451,7 @@ namespace GitUI.Editor
                     GetText(),
                     GetSelectionPosition(),
                     GetSelectionLength(),
-                    !stage,
+                    isIndex: !stage,
                     Encoding,
                     _viewItem.Item.IsNew);
             }
@@ -1487,7 +1503,7 @@ namespace GitUI.Editor
                     GetSelectionPosition(),
                     GetSelectionLength(),
                     Encoding,
-                    true,
+                    reset: true,
                     FilePreamble,
                     treeGuid);
             }
@@ -1497,7 +1513,7 @@ namespace GitUI.Editor
                     GetText(),
                     GetSelectionPosition(),
                     GetSelectionLength(),
-                    currentItemStaged,
+                    isIndex: true,
                     Encoding,
                     _viewItem.Item.IsNew);
             }
@@ -1531,6 +1547,12 @@ namespace GitUI.Editor
         /// <param name="reverse"><see langword="true"/> if patches is to be reversed; otherwise <see langword="false"/>.</param>.
         private void ApplySelectedLines(bool allFile, bool reverse)
         {
+            if (!AllowLinePatching || _viewItem is null)
+            {
+                // reload not completed
+                return;
+            }
+
             int selectionStart = allFile ? 0 : GetSelectionPosition();
             int selectionLength = allFile ? GetText().Length : GetSelectionLength();
             if (allFile && selectionLength == 0)
@@ -1539,7 +1561,34 @@ namespace GitUI.Editor
             }
 
             byte[]? patch;
-            if (reverse)
+
+            if (_viewItem.Item.IsNew)
+            {
+                Validates.NotNull(FilePreamble);
+
+                var treeGuid = reverse ? _viewItem.Item.TreeGuid?.ToString() : null;
+                patch = PatchManager.GetSelectedLinesAsNewPatch(
+                    Module,
+                    _viewItem.Item.Name,
+                    GetText(),
+                    selectionStart,
+                    selectionLength,
+                    Encoding,
+                    reset: reverse,
+                    FilePreamble,
+                    treeGuid);
+            }
+            else if (!reverse)
+            {
+                patch = PatchManager.GetSelectedLinesAsPatch(
+                    GetText(),
+                    selectionStart,
+                    selectionLength,
+                    isIndex: false,
+                    Encoding,
+                    _viewItem.Item.IsNew);
+            }
+            else
             {
                 patch = PatchManager.GetResetWorkTreeLinesAsPatch(
                     Module,
@@ -1547,16 +1596,6 @@ namespace GitUI.Editor
                     selectionStart,
                     selectionLength,
                     Encoding);
-            }
-            else
-            {
-                patch = PatchManager.GetSelectedLinesAsPatch(
-                    GetText(),
-                    selectionStart,
-                    selectionLength,
-                    false,
-                    Encoding,
-                    false);
             }
 
             if (patch is null || patch.Length == 0)

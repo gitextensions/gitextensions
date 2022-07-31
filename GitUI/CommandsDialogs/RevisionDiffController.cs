@@ -99,14 +99,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount == 1
-                && !selectionInfo.IsAnySubmodule
-                && !selectionInfo.IsDisplayOnlyDiff
-                && !selectionInfo.IsBareRepository
-                && selectionInfo.AllFilesExist
-                && selectionInfo.SupportPatches
-                && !(selectionInfo.IsAnyItemWorkTree || selectionInfo.IsAnyItemIndex)
-                && !(selectionInfo.SelectedRevision?.IsArtificial ?? false);
+            return selectionInfo.SupportPatches;
         }
 
         // Stage/unstage must limit the selected items, IsStaged is not reflecting Staged status
