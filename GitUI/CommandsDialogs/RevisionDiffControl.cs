@@ -677,21 +677,26 @@ namespace GitUI.CommandsDialogs
                 ? new Font(fileHistoryDiffToolstripMenuItem.Font, FontStyle.Regular)
                 : new Font(fileHistoryDiffToolstripMenuItem.Font, FontStyle.Bold);
 
-            diffUpdateSubmoduleMenuItem.Visible =
-                diffResetSubmoduleChanges.Visible =
-                    diffStashSubmoduleChangesToolStripMenuItem.Visible =
-                        diffCommitSubmoduleChanges.Visible =
-                            submoduleStripSeparator.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
+            diffUpdateSubmoduleMenuItem.Visible
+                = diffResetSubmoduleChanges.Visible
+                = diffStashSubmoduleChangesToolStripMenuItem.Visible
+                = diffCommitSubmoduleChanges.Visible
+                = submoduleStripSeparator.Visible
+                = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
-            stageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuStage(selectionInfo);
-            unstageFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuUnstage(selectionInfo);
+            stageFileToolStripMenuItem.Enabled
+                = stageFileToolStripMenuItem.Visible
+                = _revisionDiffController.ShouldShowMenuStage(selectionInfo);
+            unstageFileToolStripMenuItem.Enabled
+                = unstageFileToolStripMenuItem.Visible
+                = _revisionDiffController.ShouldShowMenuUnstage(selectionInfo);
             resetFileToToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowResetFileMenus(selectionInfo);
             cherryPickSelectedDiffFileToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuCherryPick(selectionInfo);
 
-            diffToolStripSeparator13.Visible = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo) ||
-                                               _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo) ||
-                                               _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) ||
-                                               _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
+            diffToolStripSeparator13.Visible = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo)
+                || _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo)
+                || _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo)
+                || _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
 
             openWithDifftoolToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowDifftoolMenus(selectionInfo);
             diffOpenWorkingDirectoryFileWithToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
@@ -1123,6 +1128,11 @@ namespace GitUI.CommandsDialogs
             ResetSelectedItemsTo(sender == resetFileToSelectedToolStripMenuItem);
         }
 
+        private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            InitResetFileToToolStripMenuItem();
+        }
+
         /// <summary>
         /// Checks if it is possible to reset to the revision.
         /// For artificial is Index is possible but not WorkTree or Combined.
@@ -1135,35 +1145,33 @@ namespace GitUI.CommandsDialogs
                    && guid != ObjectId.CombinedDiffId;
         }
 
-        private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        private void InitResetFileToToolStripMenuItem()
         {
             var items = DiffFiles.SelectedItems;
-            var selectedIds = items.SecondIds().ToList();
-            if (selectedIds.Count == 0)
-            {
-                resetFileToSelectedToolStripMenuItem.Visible = false;
-                resetFileToParentToolStripMenuItem.Visible = false;
-                return;
-            }
 
-            if (selectedIds.Count != 1 || !CanResetToRevision(selectedIds.FirstOrDefault()))
+            var selectedIds = items.SecondIds().ToList();
+            if (selectedIds.Count == 0 || selectedIds.Any(id => !CanResetToRevision(id)))
             {
+                resetFileToSelectedToolStripMenuItem.Enabled = false;
                 resetFileToSelectedToolStripMenuItem.Visible = false;
             }
             else
             {
+                resetFileToSelectedToolStripMenuItem.Enabled = true;
                 resetFileToSelectedToolStripMenuItem.Visible = true;
                 resetFileToSelectedToolStripMenuItem.Text =
                     _selectedRevision + DescribeRevision(selectedIds.FirstOrDefault(), 50);
             }
 
             var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
-            if (parentIds.Count != 1 || !CanResetToRevision(parentIds.FirstOrDefault()))
+            if (parentIds.Count == 0 || parentIds.Any(id => !CanResetToRevision(id)))
             {
+                resetFileToParentToolStripMenuItem.Enabled = false;
                 resetFileToParentToolStripMenuItem.Visible = false;
             }
             else
             {
+                resetFileToParentToolStripMenuItem.Enabled = true;
                 resetFileToParentToolStripMenuItem.Visible = true;
                 resetFileToParentToolStripMenuItem.Text =
                     _firstRevision + DescribeRevision(parentIds.FirstOrDefault(), 50);
@@ -1347,9 +1355,9 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            var selectedIds = DiffFiles.SelectedItems.SecondIds().ToList();
-            if (selectedIds.Count != 1 || selectedIds.FirstOrDefault() != ObjectId.WorkTreeId)
+            if (!stageFileToolStripMenuItem.Enabled)
             {
+                // Hotkey executed when menu is disabled
                 return true;
             }
 
@@ -1368,9 +1376,9 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            var selectedIds = DiffFiles.SelectedItems.SecondIds().ToList();
-            if (selectedIds.Count != 1 || selectedIds.FirstOrDefault() != ObjectId.IndexId)
+            if (!unstageFileToolStripMenuItem.Enabled)
             {
+                // Hotkey executed when menu is disabled
                 return true;
             }
 
@@ -1389,9 +1397,10 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
-            if (parentIds.Count != 1 || !CanResetToRevision(parentIds.FirstOrDefault()))
+            InitResetFileToToolStripMenuItem();
+            if (!resetFileToParentToolStripMenuItem.Enabled)
             {
+                // Hotkey executed when menu is disabled
                 return true;
             }
 
