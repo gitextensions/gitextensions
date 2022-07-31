@@ -131,7 +131,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void BrowseDiff_MainMenus_NoSelection()
         {
-            var selectionInfo = CreateContextMenuSelectionInfo(selectedGitItemCount: 0, allFilesExist: false, isAnyTracked: false);
+            var selectionInfo = CreateContextMenuSelectionInfo(selectedGitItemCount: 0, allFilesExist: false, isAnyTracked: false, supportPatches: false);
             _controller.ShouldShowMenuSaveAs(selectionInfo).Should().BeFalse();
             _controller.ShouldShowMenuCherryPick(selectionInfo).Should().BeFalse();
             _controller.ShouldShowMenuStage(selectionInfo).Should().BeFalse();
@@ -174,7 +174,6 @@ namespace GitUITests.CommandsDialogs
             GitRevision rev = new(ObjectId.Random());
             var selectionInfo = CreateContextMenuSelectionInfo(selectedRevision: rev, selectedGitItemCount: t);
             _controller.ShouldShowMenuSaveAs(selectionInfo).Should().Be(t != 0);
-            _controller.ShouldShowMenuCherryPick(selectionInfo).Should().Be(t != 0);
             _controller.ShouldShowMenuStage(selectionInfo).Should().BeFalse();
             _controller.ShouldShowMenuUnstage(selectionInfo).Should().BeFalse();
             _controller.ShouldShowSubmoduleMenus(selectionInfo).Should().BeFalse();
@@ -267,7 +266,6 @@ namespace GitUITests.CommandsDialogs
             GitRevision rev = new(ObjectId.Random());
             var selectionInfo = CreateContextMenuSelectionInfo(rev, isDisplayOnlyDiff: t);
             _controller.ShouldShowMenuSaveAs(selectionInfo).Should().Be(!t);
-            _controller.ShouldShowMenuCherryPick(selectionInfo).Should().Be(!t);
             _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().Be(!t);
         }
 
