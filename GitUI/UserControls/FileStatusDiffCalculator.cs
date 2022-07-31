@@ -122,7 +122,25 @@ namespace GitUI
             // Get merge base commit, use HEAD for artificial
             ObjectId? firstRevHead = GetRevisionOrHead(firstRev, headId);
             ObjectId? selectedRevHead = GetRevisionOrHead(selectedRev, headId);
-            ObjectId? baseRevId = GetMergeBase(firstRevHead, selectedRevHead);
+            ObjectId? baseRevId = null;
+            if (revisions.Count != 3)
+            {
+                baseRevId = GetMergeBase(firstRevHead, selectedRevHead);
+            }
+            else
+            {
+                // check that the middle commit is base to the first/second
+                // Allow commits earlier to the actual base commit
+                ObjectId? testBaseRevId = GetMergeBase(firstRevHead, revisions[1].ObjectId);
+                if (testBaseRevId == revisions[1].ObjectId)
+                {
+                    testBaseRevId = GetMergeBase(selectedRevHead, revisions[1].ObjectId);
+                    if (testBaseRevId == revisions[1].ObjectId)
+                    {
+                        baseRevId = testBaseRevId;
+                    }
+                }
+            }
 
             // If four selected: check if two ranges are selected
             ObjectId? baseA = null;
@@ -131,33 +149,33 @@ namespace GitUI
             // Check for separate branches (note that artificial commits both have HEAD as BASE)
             if (baseRevId is not null)
             {
-                // Two: Check that the selections are in separate branches
-                if (revisions.Count == 2 && (baseRevId == firstRevHead || baseRevId == selectedRevHead))
+                // Two/Three: Check that the selections are in separate branches
+                if (revisions.Count < 4)
                 {
-                    baseRevId = null;
-                }
-
-                // Three: Show multi-diff if not base is selected
-                else if (revisions.Count == 3 && baseRevId != revisions[1].ObjectId)
-                {
-                    baseRevId = null;
-                }
-
-                // Four: Two ranges must be selectedif (revisions.Count == 4)
-                else if (revisions.Count == 4)
-                {
-                    baseA = GetMergeBase(GetRevisionOrHead(revisions[3], headId), firstRevHead);
-                    if (baseA != revisions[3].ObjectId)
-                    {
-                        baseA = null;
-                    }
-
-                    baseB = baseA is null ? null : GetMergeBase(GetRevisionOrHead(revisions[1], headId), selectedRevHead);
-                    if (baseB != revisions[1].ObjectId)
+                    if (baseRevId == firstRevHead || baseRevId == selectedRevHead)
                     {
                         baseRevId = null;
+                    }
+                }
+
+                // Four: Two ranges must be selected
+                else
+                {
+                    baseA = GetMergeBase(GetRevisionOrHead(revisions[3], headId), firstRevHead);
+                    if (baseA == revisions[3].ObjectId)
+                    {
+                        baseB = GetMergeBase(GetRevisionOrHead(revisions[1], headId), selectedRevHead);
+                        if (baseB != revisions[1].ObjectId)
+                        {
+                            baseB = null;
+                        }
+                    }
+
+                    if (baseB is null)
+                    {
+                        // baseA/baseB were not ranges, this is no merge base
+                        baseRevId = null;
                         baseA = null;
-                        baseB = null;
                     }
                 }
             }
