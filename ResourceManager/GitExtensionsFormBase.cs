@@ -163,6 +163,13 @@ namespace ResourceManager
         /// </summary>
         protected virtual void OnApplicationActivated()
         {
+            if (WindowState == FormWindowState.Minimized && Owner is null)
+            {
+                // Changed behavior from .NET4 to .NET5, application requires explicit "restore" in Taskbar.
+                // See https://github.com/gitextensions/gitextensions/pull/10119.
+                Trace.WriteLine("WindowState is unexpectedly Minimized in OnApplicationActivated(), restoring.");
+                WindowState = FormWindowState.Normal;
+            }
         }
     }
 }
