@@ -1,30 +1,54 @@
-﻿using Microsoft;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class GitConfigAdvancedSettingsPage : ConfigFileSettingsPage
     {
+        private record GitSettingUiMapping(string GitSettingKey, CheckBox MappedCheckbox);
+        private readonly List<GitSettingUiMapping> _gitSettings;
+
         public GitConfigAdvancedSettingsPage()
         {
             InitializeComponent();
             Text = "Advanced";
             InitializeComplete();
+
+            _gitSettings = new List<GitSettingUiMapping>
+            {
+                new("pull.rebase", checkBoxPullRebase),
+                new("fetch.prune", checkBoxFetchPrune),
+                new("rebase.autoStash", checkBoxRebaseAutostash),
+                new("rebase.autosquash", checkBoxRebaseAutosquash)
+            };
+            Load += GitConfigAdvancedSettingsPage_Load;
+        }
+
+        private void GitConfigAdvancedSettingsPage_Load(object? sender, System.EventArgs e)
+        {
+            foreach (GitSettingUiMapping gitSetting in _gitSettings)
+            {
+                gitSetting.MappedCheckbox.Text += $" [{gitSetting.GitSettingKey}]";
+            }
         }
 
         protected override void SettingsToPage()
         {
             Validates.NotNull(CurrentSettings);
-            checkBoxPullRebase.Checked = CurrentSettings.GetValue("pull.rebase") == "true";
-            checkBoxFetchPrune.Checked = CurrentSettings.GetValue("fetch.prune") == "true";
-            checkBoxRebaseAutostash.Checked = CurrentSettings.GetValue("rebase.autoStash") == "true";
+            foreach (GitSettingUiMapping gitSetting in _gitSettings)
+            {
+                gitSetting.MappedCheckbox.Checked = CurrentSettings.GetValue(gitSetting.GitSettingKey) == "true";
+            }
         }
 
         protected override void PageToSettings()
         {
             Validates.NotNull(CurrentSettings);
-            CurrentSettings.SetValue("pull.rebase", checkBoxPullRebase.Checked ? "true" : "false");
-            CurrentSettings.SetValue("fetch.prune", checkBoxFetchPrune.Checked ? "true" : "false");
-            CurrentSettings.SetValue("rebase.autoStash", checkBoxRebaseAutostash.Checked ? "true" : "false");
+            foreach (GitSettingUiMapping gitSetting in _gitSettings)
+            {
+                CurrentSettings.SetValue(gitSetting.GitSettingKey, gitSetting.MappedCheckbox.Checked ? "true" : "false");
+            }
         }
     }
 }
