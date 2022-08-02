@@ -77,6 +77,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         {
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.ShowGitNotes = true;
+            AppSettings.ShowLatestStash = true;
 
             RunSetAndApplyBranchFilterTest(
                 initialFilter: "",
@@ -90,7 +92,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     Assert.False(revisionGridControl.CurrentFilter.IsShowCurrentBranchOnlyChecked);
                     Assert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
 
-                    revisionGridControl.CurrentFilter.RefFilterOptions.Should().Be(RefFilterOptions.All | RefFilterOptions.Boundary | RefFilterOptions.ShowGitNotes);
+                    revisionGridControl.CurrentFilter.RefFilterOptions.Should().Be(RefFilterOptions.All | RefFilterOptions.Boundary);
                 });
 
             RunSetAndApplyBranchFilterTest(
@@ -120,7 +122,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     Assert.False(revisionGridControl.CurrentFilter.IsShowCurrentBranchOnlyChecked);
                     Assert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
 
-                    revisionGridControl.CurrentFilter.RefFilterOptions.Should().Be(RefFilterOptions.None);
+                    revisionGridControl.CurrentFilter.RefFilterOptions.Should().Be(RefFilterOptions.All);
                 });
         }
 
@@ -129,6 +131,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         {
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.ShowGitNotes = true;
+            AppSettings.ShowLatestStash = true;
 
             RunSetAndApplyBranchFilterTest(
                 initialFilter: "",
@@ -165,6 +169,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         {
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.ShowGitNotes = true;
+            AppSettings.ShowLatestStash = true;
 
             RunSetAndApplyBranchFilterTest(
                 initialFilter: "Branch1",

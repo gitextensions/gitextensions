@@ -10926,6 +10926,10 @@ Remote: {1}</source>
         <source>Show all</source>
         <target />
       </trans-unit>
+      <trans-unit id="_showCurrentBranchOnly.Text">
+        <source>Show current branch only</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_showDiffForAllParentsText.Text">
         <source>Show file differences for all parents in browse dialog</source>
         <target />
@@ -10942,6 +10946,14 @@ See documentation for more details about icons and range diffs.
 all the first selected with the last selected commit.
 - For more than four selected commits, show the difference from the first to
 the last selected commit.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showFirstParents.Text">
+        <source>Show first parents</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showReflog.Text">
+        <source>Show reflog</source>
         <target />
       </trans-unit>
       <trans-unit id="_simplifyByDecoration.Text">

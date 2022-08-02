@@ -320,8 +320,8 @@ namespace GitUI.UserControls
             tsmiShowFirstParent.Checked = e.ShowFirstParent;
             tsmiShowReflogs.Checked = e.ShowReflogReferences;
             InitBranchSelectionFilter(e);
-            tsbtnAdvancedFilter.AutoToolTip = e.HasFilter;
             tsbtnAdvancedFilter.ToolTipText = e.FilterSummary;
+            tsbtnAdvancedFilter.AutoToolTip = !string.IsNullOrEmpty(tsbtnAdvancedFilter.ToolTipText);
             tsbtnAdvancedFilter.Image = e.HasFilter ? Properties.Images.FunnelExclamation : Properties.Images.FunnelPencil;
             tsmiResetPathFilters.Enabled = !string.IsNullOrEmpty(e.PathFilter);
             tsmiResetAllFilters.Enabled = e.HasFilter;
