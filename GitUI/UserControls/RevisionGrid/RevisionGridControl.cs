@@ -1457,6 +1457,7 @@ namespace GitUI
 
         internal bool FilterIsApplied(bool inclBranchFilter)
         {
+            // TBD ByBranchFilter should always be set when there is a filter
             return _filterInfo.HasFilter || (inclBranchFilter && _filterInfo.IsShowFilteredBranchesChecked && !string.IsNullOrEmpty(_filterInfo.BranchFilter));
         }
 
@@ -1732,6 +1733,7 @@ namespace GitUI
                 return;
             }
 
+            // TBD ByBranchFilter should only be set if !string.IsNullOrWhiteSpace(_filterInfo.BranchFilter)
             _filterInfo.ByBranchFilter = true;
             _filterInfo.ShowCurrentBranchOnly = false;
             _filterInfo.ShowReflogReferences = false;

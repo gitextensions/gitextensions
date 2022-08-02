@@ -84,17 +84,16 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.All, null, " --all ")]
         [TestCase(RefFilterOptions.All, " --all ", null)]
         /* if not 'first parent' and not 'all' - selected branches, if requested */
-        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Remotes, " --first-parent ", " --branches=")]
-        [TestCase(RefFilterOptions.All | RefFilterOptions.Remotes, " --all ", " --branches=")]
+        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Branches, " --first-parent ", " --branches=")]
+        [TestCase(RefFilterOptions.All | RefFilterOptions.Branches, " --all ", " --branches=")]
         [TestCase(RefFilterOptions.Branches, " --branches=", null)]
-        /* if not 'first parent' and not 'all' - *ALL* remotes, if requested */
-        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Remotes, " --first-parent ", " --remotes ")]
-        [TestCase(RefFilterOptions.All | RefFilterOptions.Remotes, " --all ", " --remotes ")]
-        [TestCase(RefFilterOptions.Remotes, " --remotes ", null)]
-        /* if not 'first parent' and not 'all' - *ALL* tags, if requested */
-        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Tags, " --first-parent ", " --tags ")]
-        [TestCase(RefFilterOptions.All | RefFilterOptions.Tags, " --all ", " --tags ")]
-        [TestCase(RefFilterOptions.Tags, " --tags ", null)]
+        /* Disable special refs with --all */
+        [TestCase(RefFilterOptions.All | RefFilterOptions.NoStash, " --all ", null)]
+        [TestCase(RefFilterOptions.All | RefFilterOptions.NoStash, " --exclude=refs/stash ", null)]
+        [TestCase(RefFilterOptions.NoStash, null, " --exclude=refs/stash")]
+        [TestCase(RefFilterOptions.All | RefFilterOptions.NoGitNotes, " --all ", null)]
+        [TestCase(RefFilterOptions.All | RefFilterOptions.NoGitNotes, " --not --glob=notes --not ", null)]
+        [TestCase(RefFilterOptions.NoGitNotes, null, " --not --glob=notes --not ")]
         public void BuildArguments_check_parameters(RefFilterOptions refFilterOptions, string expectedToContain, string notExpectedToContain)
         {
             var args = RevisionReader.BuildArguments(-1, refFilterOptions, "my_*", "my_revision", "my_path", out bool parentsAreRewritten);

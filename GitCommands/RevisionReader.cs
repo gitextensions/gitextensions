@@ -116,24 +116,21 @@ namespace GitCommands
                         { AppSettings.RevisionSortOrder == RevisionSortOrder.Topology, "--topo-order" },
                         {
                             refFilterOptions.HasFlag(RefFilterOptions.All),
-                            "--all",
+                            new ArgumentBuilder
+                            {
+                                { refFilterOptions.HasFlag(RefFilterOptions.NoGitNotes), "--not --glob=notes --not" },
+                                { refFilterOptions.HasFlag(RefFilterOptions.NoStash), "--exclude=refs/stash" },
+                                "--all",
+                            }.ToString(),
                             new ArgumentBuilder
                             {
                                 {
-                                    refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
-                                    !string.IsNullOrWhiteSpace(branchFilter) && !IsSimpleBranchFilter(branchFilter),
+                                    refFilterOptions.HasFlag(RefFilterOptions.Branches) && !string.IsNullOrWhiteSpace(branchFilter) && !IsSimpleBranchFilter(branchFilter),
                                     "--branches=" + branchFilter
                                 },
-                                {
-                                    refFilterOptions.HasFlag(RefFilterOptions.Branches) && string.IsNullOrWhiteSpace(branchFilter),
-                                    "--branches"
-                                },
-                                { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
-                                { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
                             }.ToString()
                         },
                         { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                        { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
                         { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
                         { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" }
                     }.ToString()
