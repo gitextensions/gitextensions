@@ -6,6 +6,7 @@ using GitCommands.Git;
 using GitCommands.Gpg;
 using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.CommandsDialogs
 {
@@ -39,11 +40,9 @@ namespace GitUI.CommandsDialogs
                                           string? caption,
                                           Action<object, GitModuleEventArgs> setGitModule)
         {
-            string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
             ToolStripMenuItem item = new(caption)
             {
-                DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-                ShortcutKeyDisplayString = branchName
+                DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
             };
 
             menuItemContainer.DropDownItems.Add(item);
@@ -57,6 +56,14 @@ namespace GitUI.CommandsDialogs
             {
                 item.ToolTipText = repo.Path;
             }
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default;
+                string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                item.ShortcutKeyDisplayString = branchName;
+            }).FileAndForget();
         }
 
         public async Task<GpgInfo?> LoadGpgInfoAsync(GitRevision? revision)
