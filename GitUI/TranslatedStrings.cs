@@ -125,6 +125,9 @@ the last selected commit.");
         private readonly TranslationString _limit = new("Limit");
         private readonly TranslationString _ignoreCase = new("Ignore case");
         private readonly TranslationString _pathFilter = new("Path filter");
+        private readonly TranslationString _showFirstParents = new("Show first parents");
+        private readonly TranslationString _showReflog = new("Show reflog");
+        private readonly TranslationString _showCurrentBranchOnly = new("Show current branch only");
         private readonly TranslationString _simplifyByDecoration = new("Simplify by decoration");
 
         // public only because of FormTranslate
@@ -254,6 +257,9 @@ the last selected commit.");
         public static string Limit = _instance.Value._limit.Text;
         public static string IgnoreCase = _instance.Value._ignoreCase.Text;
         public static string PathFilter = _instance.Value._pathFilter.Text;
+        public static string ShowFirstParents = _instance.Value._showFirstParents.Text;
+        public static string ShowReflog = _instance.Value._showReflog.Text;
+        public static string ShowCurrentBranchOnly = _instance.Value._showCurrentBranchOnly.Text;
         public static string SimplifyByDecoration = _instance.Value._simplifyByDecoration.Text;
 
         #region Scripts

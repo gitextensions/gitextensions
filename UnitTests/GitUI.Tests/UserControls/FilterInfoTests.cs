@@ -15,6 +15,13 @@ namespace GitUITests.UserControls
     [TestFixture]
     public class FilterInfoTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            AppSettings.ShowGitNotes = false;
+            AppSettings.ShowLatestStash = true;
+        }
+
         [Test]
         public void FilterInfo_ctor_expected()
         {
@@ -714,7 +721,7 @@ namespace GitUITests.UserControls
         }
 
         [TestCase("committer1", "author2", "message3", "pathFilter4", "branchFilter5",
-            "Path filter: pathFilter4\r\nBranches: branchFilter5\r\nAuthor: committer1\r\nCommitter: author2\r\nMessage: message3\r\nSince: 10/1/2021 1:30:34 AM\r\nUntil: 11/1/2021 1:30:34 AM\r\n",
+            "Path filter: pathFilter4\r\nAuthor: committer1\r\nCommitter: author2\r\nMessage: message3\r\nSince: 10/1/2021 1:30:34 AM\r\nUntil: 11/1/2021 1:30:34 AM\r\nBranches: branchFilter5\r\n",
             @"--author=""committer1"" --committer=""author2"" --grep=""message3"" --regexp-ignore-case --since=""2021-10-01 01:30:34"" --until=""2021-11-01 01:30:34""")]
         public void FilterInfo_GetRevisionFilter(string author, string committer, string message, string pathFilter, string branchFilter, string expectedSummary, string expectedArgs)
         {
