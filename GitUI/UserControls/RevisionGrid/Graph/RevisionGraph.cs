@@ -65,6 +65,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public int Count => _nodes.Count;
 
+        public bool OnlyFirstParent { get; set; }
+        public ObjectId HeadId { get; set; }
+
         /// <summary>
         /// Checks whether the given hash is present in the graph.
         /// </summary>
@@ -178,13 +181,24 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
         /// <summary>
+        /// Set HasNotes for all GitRevisions (marking Notes as fetched).
+        /// This is used when no Git Notes at all exist and notes never need to be retrieved.
+        /// </summary>
+        public void SetHasNotesForRevisions()
+        {
+            foreach (RevisionGraphRevision revision in _nodes)
+            {
+                revision.GitRevision.HasNotes = true;
+            }
+        }
+
+        /// <summary>
         /// Add a single revision from the git log to the graph, including segments to parents.
         /// </summary>
         /// <param name="revision">The revision to add.</param>
-        /// <param name="types">The graph node flags.</param>
         /// <param name="insertScore">Insert the (artificial) revision before the node with this score.</param>
         /// <param name="insertRange">Number of scores "reserved" in the list when inserting.</param>
-        public void Add(GitRevision revision, RevisionNodeFlags types, int? insertScore = null, int insertRange = 0)
+        public void Add(GitRevision revision, int? insertScore = null, int insertRange = 0)
         {
             // The commits are sorted by the score (not contiuous numbering there may be gaps)
             // This commit will be ordered after existing, _maxScore is a preliminary score
@@ -233,7 +247,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // This revision may have been added as a parent before. Probably only the ObjectId is known. Set all the other properties.
             revisionGraphRevision.GitRevision = revision;
-            revisionGraphRevision.ApplyFlags(types);
+            revisionGraphRevision.ApplyFlags(isCheckedOut: HeadId == revision.ObjectId);
 
             // Build the revisions parent/child structure. The parents need to added here. The child structure is kept in synch in
             // the RevisionGraphRevision class.
@@ -265,7 +279,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore);
                     _maxScore = Math.Max(_maxScore, newMaxScore);
 
-                    if (types.HasFlag(RevisionNodeFlags.OnlyFirstParent))
+                    if (OnlyFirstParent)
                     {
                         break;
                     }

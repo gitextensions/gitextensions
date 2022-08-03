@@ -315,8 +315,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             int centerX = g.RenderingOrigin.X + (int)((currentRow.GetCurrentRevisionLane() + 0.5) * LaneWidth);
                             Rectangle nodeRect = new(centerX - (NodeDimension / 2), centerY - (NodeDimension / 2), NodeDimension, NodeDimension);
 
-                            bool square = currentRow.Revision.HasRef;
-                            bool hasOutline = currentRow.Revision.IsCheckedOut;
+                            bool square = currentRow.Revision.GitRevision.Refs.Count > 0;
+                            bool hasOutline = currentRow.Revision.GitRevision.ObjectId == _revisionGraph.HeadId;
 
                             Brush brush = GetBrushForLaneInfo(currentRowRevisionLaneInfo, currentRow.Revision.IsRelative);
                             if (square)

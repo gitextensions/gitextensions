@@ -34,9 +34,10 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph = new RevisionGraph();
 
             GitRevision revision = new(ObjectId.Random());
+            _revisionGraph.HeadId = revision.ObjectId;
 
             // Mark the first revision as the current checkout
-            _revisionGraph.Add(revision, RevisionNodeFlags.CheckedOut);
+            _revisionGraph.Add(revision);
         }
 
         [Test, Timeout(10 /*min*/ * 60 /*s*/ * 1000 /*ms*/)]
@@ -84,7 +85,7 @@ namespace GitUITests.UserControls.RevisionGrid
                     revision.ParentIds = new ObjectId[] { randomRevision1.ObjectId, randomRevision2.ObjectId };
                 }
 
-                _revisionGraph.Add(revision, RevisionNodeFlags.None);
+                _revisionGraph.Add(revision);
 
                 randomRevisions.Add(revision);
             }

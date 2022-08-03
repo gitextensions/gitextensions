@@ -19,7 +19,12 @@ namespace GitUITests.UserControls.RevisionGrid
             foreach (var revision in Revisions)
             {
                 // Mark the first revision as the current checkout
-                _revisionGraph.Add(revision, _revisionGraph.Count == 0 ? RevisionNodeFlags.CheckedOut : RevisionNodeFlags.None);
+                if (_revisionGraph.Count == 0)
+                {
+                    _revisionGraph.HeadId = revision.ObjectId;
+                }
+
+                _revisionGraph.Add(revision);
             }
         }
 
@@ -82,12 +87,12 @@ namespace GitUITests.UserControls.RevisionGrid
             commit1.ParentIds = new ObjectId[] { commit2.ObjectId };
             commit2.ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(4).Objectid };
 
-            _revisionGraph.Add(commit2, RevisionNodeFlags.None); // This commit is now dangling
+            _revisionGraph.Add(commit2); // This commit is now dangling
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
             Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
-            _revisionGraph.Add(commit1, RevisionNodeFlags.None); // Add the connecting commit
+            _revisionGraph.Add(commit1); // Add the connecting commit
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
             Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
@@ -95,7 +100,7 @@ namespace GitUITests.UserControls.RevisionGrid
             // Add a new head
             GitRevision newHead = new(ObjectId.Random());
             newHead.ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(0).Objectid };
-            _revisionGraph.Add(newHead, RevisionNodeFlags.None); // Add commit that has the current top node as parent.
+            _revisionGraph.Add(newHead); // Add commit that has the current top node as parent.
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count); // Call to cache fix the order
             Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
@@ -129,9 +134,9 @@ namespace GitUITests.UserControls.RevisionGrid
             GitRevision commit3 = new(ObjectId.Random());
             commit1.ParentIds = new ObjectId[] { commit3.ObjectId };
 
-            _revisionGraph.Add(commit1, RevisionNodeFlags.None);
-            _revisionGraph.Add(commit2, RevisionNodeFlags.None);
-            _revisionGraph.Add(commit3, RevisionNodeFlags.None);
+            _revisionGraph.Add(commit1);
+            _revisionGraph.Add(commit2);
+            _revisionGraph.Add(commit3);
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
 
