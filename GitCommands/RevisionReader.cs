@@ -36,10 +36,25 @@ namespace GitCommands
             /* Commit raw body */ "%B";
 
         // Trace info for parse errors
-        private static int _noOfParseError = 0;
+        private int _noOfParseError = 0;
 
-        public async Task ExecuteAsync(
-            GitModule module,
+        private readonly GitModule _module;
+        private readonly Encoding _logOutputEncoding;
+        private readonly long _sixMonths;
+
+        public RevisionReader(GitModule module)
+            : this(module, module.LogOutputEncoding, new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(30 * 6)).ToUnixTimeSeconds())
+        {
+        }
+
+        internal RevisionReader(GitModule module, Encoding logOutputEncoding, long sixMonths)
+        {
+            _module = module;
+            _logOutputEncoding = logOutputEncoding;
+            _sixMonths = sixMonths;
+        }
+
+        public async Task GetLogAsync(
             IObserver<GitRevision> subject,
             ArgumentBuilder arguments,
             CancellationToken token)
@@ -47,16 +62,12 @@ namespace GitCommands
             await TaskScheduler.Default;
             token.ThrowIfCancellationRequested();
 
-            var revisionCount = 0;
-
 #if DEBUG
+            int revisionCount = 0;
             var sw = Stopwatch.StartNew();
 #endif
 
-            var logOutputEncoding = module.LogOutputEncoding;
-            long sixMonths = new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(30 * 6)).ToUnixTimeSeconds();
-
-            using (var process = module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
+            using (var process = _module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
 #if DEBUG
                 Debug.WriteLine($"git {arguments}");
@@ -69,10 +80,11 @@ namespace GitCommands
                 {
                     token.ThrowIfCancellationRequested();
 
-                    if (TryParseRevision(chunk, logOutputEncoding, sixMonths, out GitRevision? revision))
+                    if (TryParseRevision(chunk, out GitRevision? revision))
                     {
+#if DEBUG
                         revisionCount++;
-
+#endif
                         subject.OnNext(revision);
                     }
                 }
@@ -89,7 +101,7 @@ namespace GitCommands
             }
         }
 
-        public static ArgumentBuilder BuildArguments(int maxCount,
+        public ArgumentBuilder BuildArguments(int maxCount,
             RefFilterOptions refFilterOptions,
             string branchFilter,
             string revisionFilter,
@@ -155,7 +167,7 @@ namespace GitCommands
                 branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
         }
 
-        private static bool TryParseRevision(in ArraySegment<byte> chunk, in Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision)
+        private bool TryParseRevision(in ArraySegment<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -275,7 +287,7 @@ namespace GitCommands
             #region Encoded string values (names, emails, subject, body)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
-            ReadOnlySpan<char> s = logOutputEncoding.GetString(array[offset..]).AsSpan();
+            ReadOnlySpan<char> s = _logOutputEncoding.GetString(array[offset..]).AsSpan();
             StringLineReader reader = new(in s);
 
             var author = reader.ReadLine();
@@ -283,7 +295,7 @@ namespace GitCommands
             var committer = reader.ReadLine();
             var committerEmail = reader.ReadLine();
 
-            bool skipBody = sixMonths > authorUnixTime;
+            bool skipBody = _sixMonths > authorUnixTime;
             (string? subject, string? body, bool hasMultiLineMessage) = reader.PeekSubjectBody(skipBody);
 
             // We keep a full multiline message body within the last six months.
@@ -317,7 +329,7 @@ namespace GitCommands
 
             return true;
 
-            static void ParseAssert(string? message)
+            void ParseAssert(string? message)
             {
                 _noOfParseError++;
                 Debug.Assert(_noOfParseError > 1, message);
@@ -402,13 +414,13 @@ namespace GitCommands
                 _revisionReader = revisionReader;
             }
 
-            internal static bool TryParseRevision(ArraySegment<byte> chunk, Encoding logOutputEncoding, long sixMonths, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
-                RevisionReader.TryParseRevision(chunk, logOutputEncoding, sixMonths, out revision);
+            internal bool TryParseRevision(ArraySegment<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
+                _revisionReader.TryParseRevision(chunk, out revision);
 
-            internal static int NoOfParseError
+            internal int NoOfParseError
             {
-                get { return _noOfParseError; }
-                set { _noOfParseError = value; }
+                get { return _revisionReader._noOfParseError; }
+                set { _revisionReader._noOfParseError = value; }
             }
         }
     }
