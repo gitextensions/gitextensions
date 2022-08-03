@@ -78,7 +78,6 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
             AppSettings.ShowGitNotes = true;
-            AppSettings.ShowLatestStash = true;
 
             RunSetAndApplyBranchFilterTest(
                 initialFilter: "",
@@ -132,7 +131,6 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
             AppSettings.ShowGitNotes = true;
-            AppSettings.ShowLatestStash = true;
 
             RunSetAndApplyBranchFilterTest(
                 initialFilter: "",
@@ -174,7 +172,6 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
             AppSettings.ShowGitNotes = true;
-            AppSettings.ShowLatestStash = true;
 
             RunSetAndApplyBranchFilterTest(
                 initialFilter: "Branch1",

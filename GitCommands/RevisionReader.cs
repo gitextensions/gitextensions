@@ -42,26 +42,107 @@ namespace GitCommands
         private readonly Encoding _logOutputEncoding;
         private readonly long _sixMonths;
 
-        public RevisionReader(GitModule module)
-            : this(module, module.LogOutputEncoding, new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(30 * 6)).ToUnixTimeSeconds())
+        // reflog selector to identify stashes
+        private readonly bool _hasReflogSelector;
+
+        private string LogFormat => _hasReflogSelector ? FullFormat.Replace("%B", "%gD%n%B") : FullFormat;
+
+        public RevisionReader(GitModule module, bool hasReflogSelector)
+            : this(module, hasReflogSelector, module.LogOutputEncoding, new DateTimeOffset(DateTime.Now.ToUniversalTime() - TimeSpan.FromDays(30 * 6)).ToUnixTimeSeconds())
         {
         }
 
-        internal RevisionReader(GitModule module, Encoding logOutputEncoding, long sixMonths)
+        private RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long sixMonths)
         {
             _module = module;
+            _hasReflogSelector = hasReflogSelector;
             _logOutputEncoding = logOutputEncoding;
             _sixMonths = sixMonths;
         }
 
-        public async Task GetLogAsync(
+        /// <summary>
+        /// Get the git-stash GitRevisions.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation cancellationToken.</param>
+        /// <returns>List with GitRevisions.</returns>
+        public IReadOnlyCollection<GitRevision> GetStashes(CancellationToken cancellationToken)
+        {
+            Debug.Assert(_hasReflogSelector, "_hasReflogSelector must be set to get the reflog selectors (to identify stashes)");
+
+            GitArgumentBuilder arguments = new("stash")
+            {
+                "list",
+                "-z",
+                $"--pretty=format:\"{LogFormat}\""
+            };
+
+            return GetRevisionsFromArguments(arguments, cancellationToken);
+        }
+
+        /// <summary>
+        /// Get the GitRevisions for the listed files, excluding commits without changes.
+        /// </summary>
+        /// <param name="untracked">commit list.</param>
+        /// <param name="cancellationToken">Cancellation cancellationToken.</param>
+        /// <returns>List with GitRevisions.</returns>
+        public IReadOnlyCollection<GitRevision> GetRevisionsFromList(IList<ObjectId> untracked, CancellationToken cancellationToken)
+        {
+            if (untracked.Count == 0)
+            {
+                return Array.Empty<GitRevision>();
+            }
+
+            GitArgumentBuilder arguments = new("log")
+            {
+                "-z",
+                $"--pretty=format:\"{LogFormat}\"",
+                "--dirstat=files",
+                string.Join(" ", untracked),
+                ".",
+            };
+
+            return GetRevisionsFromArguments(arguments, cancellationToken);
+        }
+
+        /// <summary>
+        /// Get the GitRevisions for Git argument.
+        /// </summary>
+        /// <param name="arguments">Git command arguments.</param>
+        /// <param name="cancellationToken">Cancellation cancellationToken.</param>
+        /// <returns>List with GitRevisions.</returns>
+        private IReadOnlyCollection<GitRevision> GetRevisionsFromArguments(GitArgumentBuilder arguments, CancellationToken cancellationToken)
+        {
+            List<GitRevision> stashes = new();
+
+            using (IProcess process = _module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
+            {
+                byte[] buffer = new byte[4096];
+
+                foreach (ArraySegment<byte> chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    if (TryParseRevision(chunk, out GitRevision? revision))
+                    {
+                        stashes.Add(revision);
+                    }
+                }
+            }
+
+            return stashes;
+        }
+
+        /// <summary>
+        /// Get the git-log revisions for the revision grid.
+        /// </summary>
+        /// <param name="subject">Observer to update the revision grid when the revisions are available.</param>
+        /// <param name="arguments">git-log arguments.</param>
+        /// <param name="cancellationToken">Cancellation cancellationToken.</param>
+        public void GetLog(
             IObserver<GitRevision> subject,
             ArgumentBuilder arguments,
-            CancellationToken token)
+            CancellationToken cancellationToken)
         {
-            await TaskScheduler.Default;
-            token.ThrowIfCancellationRequested();
-
 #if DEBUG
             int revisionCount = 0;
             var sw = Stopwatch.StartNew();
@@ -72,13 +153,13 @@ namespace GitCommands
 #if DEBUG
                 Debug.WriteLine($"git {arguments}");
 #endif
-                token.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
 
                 var buffer = new byte[4096];
 
                 foreach (var chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
                 {
-                    token.ThrowIfCancellationRequested();
+                    cancellationToken.ThrowIfCancellationRequested();
 
                     if (TryParseRevision(chunk, out GitRevision? revision))
                     {
@@ -95,7 +176,7 @@ namespace GitCommands
 #endif
             }
 
-            if (!token.IsCancellationRequested)
+            if (!cancellationToken.IsCancellationRequested)
             {
                 subject.OnCompleted();
             }
@@ -114,7 +195,7 @@ namespace GitCommands
             {
                 { maxCount > 0, $"--max-count={maxCount}" },
                 "-z",
-                $"--pretty=format:\"{FullFormat}\"",
+                $"--pretty=format:\"{LogFormat}\"",
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.Topology, "--topo-order" },
                 { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
@@ -298,6 +379,7 @@ namespace GitCommands
             var authorEmail = reader.ReadLine();
             var committer = reader.ReadLine();
             var committerEmail = reader.ReadLine();
+            var reflogSelector = _hasReflogSelector ? reader.ReadLine() : null;
 
             bool skipBody = _sixMonths > authorUnixTime;
             (string? subject, string? body, bool hasMultiLineMessage) = reader.PeekSubjectBody(skipBody);
@@ -328,7 +410,8 @@ namespace GitCommands
                 Subject = subject,
                 Body = body,
                 HasMultiLineMessage = hasMultiLineMessage,
-                HasNotes = false
+                HasNotes = false,
+                ReflogSelector = reflogSelector,
             };
 
             return true;
@@ -416,6 +499,11 @@ namespace GitCommands
             internal TestAccessor(RevisionReader revisionReader)
             {
                 _revisionReader = revisionReader;
+            }
+
+            internal static RevisionReader RevisionReader(GitModule module, bool hasReflogSelector, Encoding logOutputEncoding, long sixMonths)
+            {
+                return new RevisionReader(module, hasReflogSelector, logOutputEncoding, sixMonths);
             }
 
             internal bool TryParseRevision(ArraySegment<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>

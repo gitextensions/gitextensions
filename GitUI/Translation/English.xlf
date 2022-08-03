@@ -7532,24 +7532,12 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <source>Select a stash</source>
         <target />
       </trans-unit>
-      <trans-unit id="_areYouSure.Text">
-        <source>Are you sure you want to drop the stash? This action cannot be undone.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_cannotBeUndone.Text">
-        <source>This action cannot be undone.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_currentWorkingDirChanges.Text">
         <source>Current working directory changes</source>
         <target />
       </trans-unit>
       <trans-unit id="_noStashes.Text">
         <source>There are no stashes.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_stashDropConfirmTitle.Text">
-        <source>Drop Stash Confirmation</source>
         <target />
       </trans-unit>
       <trans-unit id="cherryPickFileChangesToolStripMenuItem.Text">
@@ -9691,16 +9679,16 @@ See the changes in the commit form.</source>
         <source>Show &amp;filtered branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="ShowLatestStash.Text">
-        <source>Show &amp;latest stash</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ShowReflogReferences.Text">
         <source>Show &amp;reflog references</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowRemoteBranches.Text">
         <source>Show remote &amp;branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowStashes.Text">
+        <source>Show stashes</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowSuperprojectBranches.Text">
@@ -9855,6 +9843,10 @@ See the changes in the commit form.</source>
         <source>Loading</source>
         <target />
       </trans-unit>
+      <trans-unit id="applyStashToolStripMenuItem.Text">
+        <source>Appl&amp;y stash</source>
+        <target />
+      </trans-unit>
       <trans-unit id="archiveRevisionToolStripMenuItem.Text">
         <source>Arch&amp;ive this commit...</source>
         <target />
@@ -9919,6 +9911,10 @@ See the changes in the commit form.</source>
         <source>De&amp;lete tag...</source>
         <target />
       </trans-unit>
+      <trans-unit id="dropStashToolStripMenuItem.Text">
+        <source>&amp;Drop stash...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="editCommitToolStripMenuItem.Text">
         <source>&amp;Edit commit</source>
         <target />
@@ -9961,6 +9957,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
         <source>Vie&amp;w pull request in a browser</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="popStashToolStripMenuItem.Text">
+        <source>Pop &amp;stash</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseInteractivelyToolStripMenuItem.Text">
@@ -10501,6 +10501,10 @@ Please verify the server url.</source>
   </file>
   <file datatype="plaintext" original="TranslatedStrings" source-language="en">
     <body>
+      <trans-unit id="_areYouSure.Text">
+        <source>Are you sure you want to drop the stash? This action cannot be undone.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_argumentsText.Text">
         <source>Arguments</source>
         <target />
@@ -10574,6 +10578,10 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_cancelText.Text">
         <source>Cancel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_cannotBeUndone.Text">
+        <source>This action cannot be undone.</source>
         <target />
       </trans-unit>
       <trans-unit id="_childrenText.Text">
@@ -10970,6 +10978,10 @@ the last selected commit.</source>
       </trans-unit>
       <trans-unit id="_stageSelectedLines.Text">
         <source>Stage selected line(s)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stashDropConfirmTitle.Text">
+        <source>Drop Stash Confirmation</source>
         <target />
       </trans-unit>
       <trans-unit id="_submodulesText.Text">

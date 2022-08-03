@@ -7,6 +7,12 @@
     "ParentIds": [
         {
             "IsArtificial": false
+        },
+        {
+            "IsArtificial": false
+        },
+        {
+            "IsArtificial": false
         }
     ],
     "TreeGuid": {
@@ -22,12 +28,12 @@
     "CommitDate": "2021-06-23T20:19:46Z",
     "BuildStatus": null,
     "Subject": "wip tests",
-    "Body": "wip tests",
-    "HasMultiLineMessage": false,
+    "Body": "wip tests\n\nsecond line\nthird line before multiple whitespace",
+    "HasMultiLineMessage": true,
     "HasNotes": false,
     "IsArtificial": false,
-    "IsStash": false,
-    "ReflogSelector": null,
+    "IsStash": true,
+    "ReflogSelector": "stash{0}",
     "HasParent": true,
     "FirstParentId": {
         "IsArtificial": false

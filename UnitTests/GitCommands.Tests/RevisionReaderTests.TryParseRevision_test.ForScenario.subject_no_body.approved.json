@@ -26,6 +26,8 @@
     "HasMultiLineMessage": true,
     "HasNotes": false,
     "IsArtificial": false,
+    "IsStash": false,
+    "ReflogSelector": null,
     "HasParent": true,
     "FirstParentId": {
         "IsArtificial": false

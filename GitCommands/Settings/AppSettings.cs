@@ -1085,10 +1085,16 @@ namespace GitCommands
             set => SetBool("showReflogReferences", value);
         }
 
-        public static bool ShowLatestStash
+        public static bool ShowStashes
         {
-            get => GetBool("showLatestStash", true);
-            set => SetBool("showLatestStash", value);
+            get => GetBool("showStashes", true);
+            set => SetBool("showStashes", value);
+        }
+
+        // Set manually in settings file
+        public static int MaxStashesWithUntrackedFiles
+        {
+            get => GetInt("maxStashesWithUntrackedFiles", 10);
         }
 
         public static bool ShowSuperprojectTags

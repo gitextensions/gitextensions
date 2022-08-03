@@ -17,9 +17,6 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _currentWorkingDirChanges = new("Current working directory changes");
         private readonly TranslationString _noStashes = new("There are no stashes.");
-        private readonly TranslationString _stashDropConfirmTitle = new("Drop Stash Confirmation");
-        private readonly TranslationString _cannotBeUndone = new("This action cannot be undone.");
-        private readonly TranslationString _areYouSure = new("Are you sure you want to drop the stash? This action cannot be undone.");
 
         private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly AsyncLoader _asyncLoader = new();
@@ -338,9 +335,9 @@ namespace GitUI.CommandsDialogs
                 {
                     TaskDialogPage page = new()
                     {
-                        Text = _areYouSure.Text,
-                        Caption = _stashDropConfirmTitle.Text,
-                        Heading = _cannotBeUndone.Text,
+                        Text = TranslatedStrings.AreYouSure,
+                        Caption = TranslatedStrings.StashDropConfirmTitle,
+                        Heading = TranslatedStrings.CannotBeUndone,
                         Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
                         Icon = TaskDialogIcon.Information,
                         Verification = new TaskDialogVerificationCheckBox
