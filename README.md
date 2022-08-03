@@ -257,7 +257,7 @@ For more information see our [code of conduct](CODE_OF_CONDUCT.md).
 * We thank JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses<br />
   <a href="https://www.jetbrains.com/?from=gitextensions" target="_blank"><img src="./GitUI/Resources/Icons/originals/jetbrains-variant-4.png"></a>
 * We thank [Transifex](https://www.transifex.com/) for helping us with translations<br />
-  <a href="https://www.transifex.com/" target="_blank"><img src="./GitUI/Resources/Icons/originals/transifex.png"></a>
+  <a href="https://www.transifex.com/" target="_blank"><img src="./GitUI/Resources/Icons/originals/transifex.svg"></a>
 * We thank [SemanticMerge](https://www.semanticmerge.com) for licenses<br />
   <a href="https://www.semanticmerge.com" target="_blank"><img src="./GitUI/Resources/Icons/originals/semanticmerge-logo.svg"></a>
 * We thank [SignPath.io](https://signpath.io/) for the free code signing<br />
