@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System.Threading;
+using System.Windows.Forms;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.Gpg;
 using GitCommands.UserRepositoryHistory;
@@ -9,6 +11,7 @@ using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs
 {
+    [Apartment(ApartmentState.STA)]
     [TestFixture]
     public sealed class FormBrowseControllerTests
     {
@@ -73,6 +76,9 @@ namespace GitUITests.CommandsDialogs
             Repository repository = new(path);
 
             _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
+
+            // await adding branch name in ShortcutKeyDisplayString, done async
+            ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(default));
 
             ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.ShortcutKeyDisplayString.Should().Be(branch);
