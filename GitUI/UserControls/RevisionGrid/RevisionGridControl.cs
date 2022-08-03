@@ -981,8 +981,9 @@ namespace GitUI
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await TaskScheduler.Default;
+                    RevisionReader reader = new(capturedModule);
                     string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
-                    ArgumentBuilder args = RevisionReader.BuildArguments(_filterInfo.CommitsLimit,
+                    ArgumentBuilder args = reader.BuildArguments(_filterInfo.CommitsLimit,
                         _filterInfo.RefFilterOptions,
                         _filterInfo.IsShowFilteredBranchesChecked ? _filterInfo.BranchFilter : string.Empty,
                         _filterInfo.GetRevisionFilter(),
@@ -990,8 +991,7 @@ namespace GitUI
                         out bool parentsAreRewritten);
                     ParentsAreRewritten = parentsAreRewritten;
 
-                    await new RevisionReader().ExecuteAsync(
-                        capturedModule,
+                    await reader.GetLogAsync(
                         observeRevisions,
                         args,
                         cancellationToken);
