@@ -24,16 +24,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Score = guessScore;
         }
 
-        public void ApplyFlags(RevisionNodeFlags types)
+        public void ApplyFlags(bool isCheckedOut)
         {
-            IsRelative |= (types & RevisionNodeFlags.CheckedOut) != 0;
-            HasRef = (types & RevisionNodeFlags.HasRef) != 0;
-            IsCheckedOut = (types & RevisionNodeFlags.CheckedOut) != 0;
+            IsRelative |= isCheckedOut;
         }
 
         public bool IsRelative { get; set; }
-        public bool HasRef { get; set; }
-        public bool IsCheckedOut { get; set; }
 
         /// <summary>
         /// The score is used to order the revisions in topo-order. The initial score will be assigned when a revision is loaded
