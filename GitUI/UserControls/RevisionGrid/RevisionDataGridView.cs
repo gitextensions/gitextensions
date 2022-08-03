@@ -20,15 +20,6 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    [Flags]
-    public enum RevisionNodeFlags
-    {
-        None = 0,
-        CheckedOut = 1,
-        HasRef = 2,
-        OnlyFirstParent = 4
-    }
-
     public sealed partial class RevisionDataGridView : DataGridView
     {
         private const int BackgroundThreadUpdatePeriod = 25;
@@ -321,11 +312,10 @@ namespace GitUI.UserControls.RevisionGrid
         /// Update visible rows if needed.
         /// </summary>
         /// <param name="revision">The revision to add.</param>
-        /// <param name="types">The graph node flags.</param>
         /// <param name="insertWithMatch">Insert the (artificial) revision with the first match in headParents or first if no match found (or headParents is null).</param>
         /// <param name="insertRange">Number of scores "reserved" in the list when inserting.</param>
         /// <param name="parents">Parent ids for the revision to find (and insert before).</param>
-        public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None, bool insertWithMatch = false, int insertRange = 0, IEnumerable<ObjectId>? parents = null)
+        public void Add(GitRevision revision, bool insertWithMatch = false, int insertRange = 0, IEnumerable<ObjectId>? parents = null)
         {
             // Where to insert the revision, null is last
             int? insertScore = null;
@@ -358,7 +348,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             }
 
-            _revisionGraph.Add(revision, types, insertScore, insertRange);
+            _revisionGraph.Add(revision, insertScore, insertRange);
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
                 ++_loadedToBeSelectedRevisionsCount;

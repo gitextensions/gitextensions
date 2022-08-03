@@ -884,8 +884,6 @@ namespace GitUI
             ILookup<ObjectId, IGitRef> refsByObjectId = null;
             bool firstRevisionReceived = false;
             bool headIsHandled = false;
-            bool hasAnyNotes = false;
-            bool onlyFirstParent = false;
 
             // getRefs (refreshing from Browse) is Lazy already, but not from RevGrid (updating filters etc)
             Lazy<IReadOnlyList<IGitRef>> getUnfilteredRefs = new(() => (getRefs ?? capturedModule.GetRefs)(RefsFilter.NoFilter));
@@ -959,9 +957,8 @@ namespace GitUI
                     UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef);
                     _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(newCurrentCheckout, currentlySelectedObjectIds);
 
-                    // optimize for no notes at all
-                    hasAnyNotes = AppSettings.ShowGitNotes && getUnfilteredRefs.Value.Any(i => i.CompleteName == GitRefName.RefsNotesPrefix);
-                    onlyFirstParent = _filterInfo.RefFilterOptions.HasFlag(RefFilterOptions.FirstParent);
+                    _gridView._revisionGraph.OnlyFirstParent = _filterInfo.RefFilterOptions.HasFlag(RefFilterOptions.FirstParent);
+                    _gridView._revisionGraph.HeadId = CurrentCheckout;
 
                     // Allow add revisions to the grid
                     semaphoreUpdateGrid.Release();
@@ -1147,12 +1144,10 @@ namespace GitUI
                 if (!firstRevisionReceived)
                 {
                     // Wait for refs,CurrentCheckout to be available
+                    this.InvokeAsync(() => { ShowLoading(showSpinner: false); }).FileAndForget();
                     semaphoreUpdateGrid.Wait(cancellationToken);
                     firstRevisionReceived = true;
-                    this.InvokeAsync(() => { ShowLoading(showSpinner: false); }).FileAndForget();
                 }
-
-                RevisionNodeFlags flags = RevisionNodeFlags.None;
 
                 if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
                 {
@@ -1160,31 +1155,12 @@ namespace GitUI
                     // If grid is filtered and HEAD not visible, insert artificial in OnRevisionReadCompleted()
                     headIsHandled = true;
                     AddArtificialRevisions();
-                    if (CurrentCheckout is not null)
-                    {
-                        flags = RevisionNodeFlags.CheckedOut;
-                    }
                 }
 
                 // Look up any refs associated with this revision
                 revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
-                if (revision.Refs.Count != 0)
-                {
-                    flags |= RevisionNodeFlags.HasRef;
-                }
 
-                if (onlyFirstParent)
-                {
-                    flags |= RevisionNodeFlags.OnlyFirstParent;
-                }
-
-                if (!hasAnyNotes)
-                {
-                    // No notes at all in this repo
-                    revision.HasNotes = true;
-                }
-
-                _gridView.Add(revision, flags);
+                _gridView.Add(revision);
 
                 return;
             }
@@ -1348,6 +1324,17 @@ namespace GitUI
                     _isRefreshingRevisions = false;
                     RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
                     HighlightRevisionsByAuthor(GetSelectedRevisions());
+
+                    await TaskScheduler.Default;
+
+                    // optimize for no notes at all in repo
+                    // Improvement: set .HasNotes for commits not included in git-notes
+                    bool hasAnyNotes = AppSettings.ShowGitNotes && getUnfilteredRefs.Value.Any(i => i.CompleteName == GitRefName.RefsNotesPrefix);
+                    if (!hasAnyNotes)
+                    {
+                        // No notes at all in this repo
+                        _gridView._revisionGraph.SetHasNotesForRevisions();
+                    }
 
                     if (ShowBuildServerInfo)
                     {
