@@ -14,7 +14,9 @@ using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUI.UserControls;
 using Microsoft;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using static System.Windows.Forms.ListViewItem;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
@@ -327,7 +329,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 for (var index = 0; index < repos.Count; index++)
                 {
-                    listView1.Items.Add(new ListViewItem(repos[index].Caption)
+                    ListViewItem item = new(repos[index].Caption)
                     {
                         ForeColor = ForeColor,
                         Font = AppSettings.Font,
@@ -335,15 +337,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         ImageIndex = repoValidityArray[index] ? 1 : 0,
                         UseItemStyleForSubItems = false,
                         Tag = repos[index].Repo,
-                        ToolTipText = repos[index].Repo.Path,
-                        SubItems =
-                        {
-                            {
-                                _controller.GetCurrentBranchName(repos[index].Repo.Path), BranchNameColor, BackColor, _secondaryFont
-                            },
-                            //// NB: we can add a 3rd row as well: { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
-                        }
-                    });
+                        ToolTipText = repos[index].Repo.Path
+                    };
+                    listView1.Items.Add(item);
+
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        await TaskScheduler.Default;
+                        string branchName = _controller.GetCurrentBranchName(repos[index].Repo.Path);
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        item.SubItems.Add(new ListViewSubItem(item, branchName, BranchNameColor, BackColor, _secondaryFont));
+                        //// NB: we can add a 3rd row as well: { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
+                    }).FileAndForget();
                 }
             }
         }
