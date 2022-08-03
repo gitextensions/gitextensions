@@ -741,5 +741,104 @@ namespace GitUITests.UserControls
             filterInfo.GetSummary().Should().Be(expectedSummary);
             filterInfo.GetRevisionFilter().ToString().Should().Be(expectedArgs);
         }
+
+        [Test]
+        public void FilterInfo_Apply_ByCommitMessage()
+        {
+            FilterInfo filterInfo = new();
+            var filterLaunched = filterInfo.Apply(new RevisionFilter("message", byCommit: true, byCommitter: false, byAuthor: false, byDiffContent: false));
+
+            filterLaunched.Should().BeTrue();
+            filterInfo.ByMessage.Should().BeTrue();
+            filterInfo.Message.Should().Be("message");
+
+            filterInfo.ByAuthor.Should().BeFalse();
+            filterInfo.ByCommitter.Should().BeFalse();
+            filterInfo.ByDiffContent.Should().BeFalse();
+        }
+
+        [Test]
+        public void FilterInfo_Apply_ByCommitter()
+        {
+            FilterInfo filterInfo = new();
+            var filterLaunched = filterInfo.Apply(new RevisionFilter("committer", byCommit: false, byCommitter: true, byAuthor: false, byDiffContent: false));
+
+            filterLaunched.Should().BeTrue();
+            filterInfo.ByCommitter.Should().BeTrue();
+            filterInfo.Committer.Should().Be("committer");
+
+            filterInfo.ByMessage.Should().BeFalse();
+            filterInfo.ByAuthor.Should().BeFalse();
+            filterInfo.ByDiffContent.Should().BeFalse();
+        }
+
+        [Test]
+        public void FilterInfo_Apply_ByAuthor()
+        {
+            FilterInfo filterInfo = new();
+            var filterLaunched = filterInfo.Apply(new RevisionFilter("author", byCommit: false, byCommitter: false, byAuthor: true, byDiffContent: false));
+
+            filterLaunched.Should().BeTrue();
+            filterInfo.ByAuthor.Should().BeTrue();
+            filterInfo.Author.Should().Be("author");
+
+            filterInfo.ByMessage.Should().BeFalse();
+            filterInfo.ByCommitter.Should().BeFalse();
+            filterInfo.ByDiffContent.Should().BeFalse();
+        }
+
+        [Test]
+        public void FilterInfo_Apply_ByDiffContent()
+        {
+            FilterInfo filterInfo = new();
+            var filterLaunched = filterInfo.Apply(new RevisionFilter("diff", byCommit: false, byCommitter: false, byAuthor: false, byDiffContent: true));
+
+            filterLaunched.Should().BeTrue();
+            filterInfo.ByDiffContent.Should().BeTrue();
+            filterInfo.DiffContent.Should().Be("diff");
+
+            filterInfo.ByMessage.Should().BeFalse();
+            filterInfo.ByAuthor.Should().BeFalse();
+            filterInfo.ByCommitter.Should().BeFalse();
+        }
+
+        [Test]
+        public void FilterInfo_Apply_ByMessage_Then_By_DiffContent()
+        {
+            // FilterInfo keep a state, so simulating actions of user where filter is changed 2 times
+            // to ensure that the filtering will be triggered i.e. returned value is always `true`
+
+            FilterInfo filterInfo = new();
+            var filterLaunched = filterInfo.Apply(new RevisionFilter("a_content", byCommit: true, byCommitter: false, byAuthor: false, byDiffContent: false));
+
+            filterLaunched.Should().BeTrue();
+            filterInfo.ByMessage.Should().BeTrue();
+            filterInfo.Message.Should().Be("a_content");
+
+            filterInfo.ByAuthor.Should().BeFalse();
+            filterInfo.ByCommitter.Should().BeFalse();
+            filterInfo.ByDiffContent.Should().BeFalse();
+
+            filterLaunched = filterInfo.Apply(new RevisionFilter("a_content", byCommit: true, byCommitter: false, byAuthor: false, byDiffContent: true));
+
+            filterLaunched.Should().BeTrue();
+            filterInfo.ByMessage.Should().BeTrue();
+            filterInfo.Message.Should().Be("a_content");
+            filterInfo.ByDiffContent.Should().BeTrue();
+            filterInfo.DiffContent.Should().Be("a_content");
+
+            filterInfo.ByAuthor.Should().BeFalse();
+            filterInfo.ByCommitter.Should().BeFalse();
+
+            filterLaunched = filterInfo.Apply(new RevisionFilter("a_content", byCommit: false, byCommitter: false, byAuthor: false, byDiffContent: true));
+
+            filterLaunched.Should().BeTrue();
+            filterInfo.ByDiffContent.Should().BeTrue();
+            filterInfo.DiffContent.Should().Be("a_content");
+
+            filterInfo.ByMessage.Should().BeFalse();
+            filterInfo.ByAuthor.Should().BeFalse();
+            filterInfo.ByCommitter.Should().BeFalse();
+        }
     }
 }
