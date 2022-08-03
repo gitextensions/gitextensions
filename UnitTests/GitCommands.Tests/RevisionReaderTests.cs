@@ -8,6 +8,7 @@ using ApprovalTests.Reporters;
 using ApprovalTests.Reporters.ContinuousIntegration;
 using FluentAssertions;
 using GitCommands;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -17,22 +18,20 @@ namespace GitCommandsTests
     [TestFixture]
     public sealed class RevisionReaderTests
     {
-        private RevisionReader _revisionReader;
-
         private Encoding _logOutputEncoding = Encoding.UTF8;
         private long _sixMonths = new DateTimeOffset(new DateTime(2021, 01, 01)).ToUnixTimeSeconds();
 
         [SetUp]
         public void Setup()
         {
-            _revisionReader = new RevisionReader();
         }
 
         [TestCase(0, false)]
         [TestCase(1, true)]
         public void BuildArguments_should_add_maxcount_if_requested(int maxCount, bool expected)
         {
-            var args = RevisionReader.BuildArguments(maxCount, RefFilterOptions.All, "", "", "", out bool parentsAreRewritten);
+            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+            ArgumentBuilder args = reader.BuildArguments(maxCount, RefFilterOptions.All, "", "", "", out bool parentsAreRewritten);
 
             if (expected)
             {
@@ -49,7 +48,8 @@ namespace GitCommandsTests
         [Test]
         public void BuildArguments_should_be_NUL_terminated()
         {
-            var args = RevisionReader.BuildArguments(-1, RefFilterOptions.All, "", "", "", out bool parentsAreRewritten);
+            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+            ArgumentBuilder args = reader.BuildArguments(-1, RefFilterOptions.All, "", "", "", out bool parentsAreRewritten);
 
             args.ToString().Should().Contain(" log -z ");
             parentsAreRewritten.Should().BeFalse();
@@ -61,7 +61,8 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.All | RefFilterOptions.Reflogs, true)]
         public void BuildArguments_should_add_reflog_if_requested(RefFilterOptions refFilterOptions, bool expected)
         {
-            var args = RevisionReader.BuildArguments(-1, refFilterOptions, "", "", "", out bool parentsAreRewritten);
+            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+            ArgumentBuilder args = reader.BuildArguments(-1, refFilterOptions, "", "", "", out bool parentsAreRewritten);
 
             if (expected)
             {
@@ -96,7 +97,8 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.NoGitNotes, null, " --not --glob=notes --not ")]
         public void BuildArguments_check_parameters(RefFilterOptions refFilterOptions, string expectedToContain, string notExpectedToContain)
         {
-            var args = RevisionReader.BuildArguments(-1, refFilterOptions, "my_*", "my_revision", "my_path", out bool parentsAreRewritten);
+            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+            ArgumentBuilder args = reader.BuildArguments(-1, refFilterOptions, "my_*", "my_revision", "my_path", out bool parentsAreRewritten);
 
             if (expectedToContain is not null)
             {
@@ -115,8 +117,11 @@ namespace GitCommandsTests
         public void TryParseRevisionshould_return_false_if_argument_is_invalid()
         {
             ArraySegment<byte> chunk = null;
+            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
 
-            bool res = RevisionReader.TestAccessor.TryParseRevision(chunk, _logOutputEncoding, _sixMonths, out _);
+            // Set to a high value so Debug.Assert do not raise exceptions
+            reader.GetTestAccessor().NoOfParseError = 100;
+            bool res = reader.GetTestAccessor().TryParseRevision(chunk, out _);
             res.Should().BeFalse();
         }
 
@@ -145,10 +150,11 @@ namespace GitCommandsTests
             {
                 string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
                 ArraySegment<byte> chunk = File.ReadAllBytes(path);
+                RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
 
                 // Set to a high value so Debug.Assert do not raise exceptions
-                RevisionReader.TestAccessor.NoOfParseError = 100;
-                RevisionReader.TestAccessor.TryParseRevision(chunk, _logOutputEncoding, _sixMonths, out GitRevision rev)
+                reader.GetTestAccessor().NoOfParseError = 100;
+                reader.GetTestAccessor().TryParseRevision(chunk, out GitRevision rev)
                     .Should().Be(expectedReturn);
 
                 // No LocalTime for the time stamps
