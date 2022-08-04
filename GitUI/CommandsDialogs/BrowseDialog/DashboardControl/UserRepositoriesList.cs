@@ -329,22 +329,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 for (var index = 0; index < repos.Count; index++)
                 {
-                    ListViewItem item = new(repos[index].Caption)
+                    RecentRepoInfo recent = repos[index];
+                    ListViewItem item = new(recent.Caption)
                     {
                         ForeColor = ForeColor,
                         Font = AppSettings.Font,
-                        Group = isFavourite ? GetTileGroup(repos[index].Repo) : _lvgRecentRepositories,
+                        Group = isFavourite ? GetTileGroup(recent.Repo) : _lvgRecentRepositories,
                         ImageIndex = repoValidityArray[index] ? 1 : 0,
                         UseItemStyleForSubItems = false,
-                        Tag = repos[index].Repo,
-                        ToolTipText = repos[index].Repo.Path
+                        Tag = recent.Repo,
+                        ToolTipText = recent.Repo.Path
                     };
                     listView1.Items.Add(item);
 
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await TaskScheduler.Default;
-                        string branchName = _controller.GetCurrentBranchName(repos[index].Repo.Path);
+                        string branchName = _controller.GetCurrentBranchName(recent.Repo.Path);
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                         item.SubItems.Add(new ListViewSubItem(item, branchName, BranchNameColor, BackColor, _secondaryFont));
                         //// NB: we can add a 3rd row as well: { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
