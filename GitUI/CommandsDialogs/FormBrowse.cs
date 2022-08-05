@@ -1088,6 +1088,7 @@ namespace GitUI.CommandsDialogs
 
         private void WorkingDirDropDownOpening(object sender, EventArgs e)
         {
+            _NO_TRANSLATE_WorkingDir.DropDown.SuspendLayout();
             _NO_TRANSLATE_WorkingDir.DropDownItems.Clear();
 
             ToolStripMenuItem tsmiCategorisedRepos = new(tsmiFavouriteRepositories.Text, tsmiFavouriteRepositories.Image);
@@ -1119,6 +1120,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_WorkingDir.DropDownItems.Add(mnuRecentReposSettings);
 
             ToolStripFilters.PreventToolStripSplitButtonClosing((ToolStripSplitButton)sender);
+            _NO_TRANSLATE_WorkingDir.DropDown.ResumeLayout();
         }
 
         private void WorkingDirClick(object sender, EventArgs e)
@@ -1640,12 +1642,15 @@ namespace GitUI.CommandsDialogs
 
         private void tsmiFavouriteRepositories_DropDownOpening(object sender, EventArgs e)
         {
+            tsmiFavouriteRepositories.DropDown.SuspendLayout();
             tsmiFavouriteRepositories.DropDownItems.Clear();
             PopulateFavouriteRepositoriesMenu(tsmiFavouriteRepositories);
+            tsmiFavouriteRepositories.DropDown.ResumeLayout();
         }
 
         private void tsmiRecentRepositories_DropDownOpening(object sender, EventArgs e)
         {
+            tsmiRecentRepositories.DropDown.SuspendLayout();
             tsmiRecentRepositories.DropDownItems.Clear();
             PopulateRecentRepositoriesMenu(tsmiRecentRepositories);
             if (tsmiRecentRepositories.DropDownItems.Count < 1)
@@ -1656,6 +1661,7 @@ namespace GitUI.CommandsDialogs
             tsmiRecentRepositories.DropDownItems.Add(clearRecentRepositoriesListToolStripMenuItem);
             TranslateItem(tsmiRecentRepositoriesClear.Name, tsmiRecentRepositoriesClear);
             tsmiRecentRepositories.DropDownItems.Add(tsmiRecentRepositoriesClear);
+            tsmiRecentRepositories.DropDown.ResumeLayout();
         }
 
         private void tsmiRecentRepositoriesClear_Click(object sender, EventArgs e)
@@ -1741,10 +1747,13 @@ namespace GitUI.CommandsDialogs
                     menuItemCategory = (ToolStripMenuItem)container.DropDownItems[category];
                 }
 
+                menuItemCategory.DropDown.SuspendLayout();
                 foreach (var r in repos)
                 {
                     _controller.AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, SetGitModule);
                 }
+
+                menuItemCategory.DropDown.ResumeLayout();
             }
         }
 
@@ -1930,6 +1939,7 @@ namespace GitUI.CommandsDialogs
 
         private void CurrentBranchDropDownOpening(object sender, EventArgs e)
         {
+            branchSelect.DropDown.SuspendLayout();
             branchSelect.DropDownItems.Clear();
 
             AddCheckoutBranchMenuItem();
@@ -1937,6 +1947,7 @@ namespace GitUI.CommandsDialogs
             AddBranchesMenuItems();
 
             ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+            branchSelect.DropDown.ResumeLayout();
 
             void AddCheckoutBranchMenuItem()
             {
@@ -2670,6 +2681,8 @@ namespace GitUI.CommandsDialogs
             // Second task: Populate submodule toolbar menu on UI thread.
             await this.SwitchToMainThreadAsync(cancelToken);
 
+            // Suspend before clearing dropdowns to show loading text until updated
+            toolStripButtonLevelUp.DropDown.SuspendLayout();
             RemoveSubmoduleButtons();
 
             var newItems = result.OurSubmodules
@@ -2717,6 +2730,7 @@ namespace GitUI.CommandsDialogs
             // Using AddRange is critical: if you used Add to add menu items one at a
             // time, performance would be extremely slow with many submodules (> 100).
             toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
+            toolStripButtonLevelUp.DropDown.ResumeLayout();
 
             return newItems;
         }

@@ -716,6 +716,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 return;
             }
 
+            tsmiCategories.DropDown.SuspendLayout();
             tsmiCategories.DropDownItems.Clear();
 
             var categories = GetCategories();
@@ -732,6 +733,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
 
             tsmiCategories.DropDownItems.Add(tsmiCategoryAdd);
+            tsmiCategories.DropDown.ResumeLayout();
 
             RepositoryContextAction(tsmiCategories, selectedRepositoryItem =>
             {
