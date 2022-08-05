@@ -357,7 +357,6 @@ namespace GitUI
 
         private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetItem)
         {
-            List<ToolStripItem> menuItems = new();
             foreach (var menuCommand in menuCommands)
             {
                 var item = MenuCommand.CreateToolStripItem(menuCommand);
@@ -367,10 +366,8 @@ namespace GitUI
                     menuCommand.RegisterMenuItem(menuItem);
                 }
 
-                menuItems.Add(item);
+                targetItem.DropDownItems.Add(item);
             }
-
-            targetItem.DropDownItems.AddRange(menuItems.ToArray());
         }
 
         // returns " --find-renames=..." according to app settings

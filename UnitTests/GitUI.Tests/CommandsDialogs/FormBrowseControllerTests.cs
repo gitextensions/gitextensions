@@ -31,14 +31,31 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void AddRecentRepositories_should_set_properties_correctly()
+        public void AddRecentRepositories_should_add_new_item()
         {
+            ToolStripMenuItem containerMenu = new();
+
             const string path = "";
             const string caption = "CAPTION";
             Repository repository = new(path);
 
-            ToolStripMenuItem item = _controller.AddRecentRepositories(repository, caption, (s, e) => { });
+            _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
 
+            containerMenu.DropDownItems.Count.Should().Be(1);
+        }
+
+        [Test]
+        public void AddRecentRepositories_should_set_properties_correctly()
+        {
+            ToolStripMenuItem containerMenu = new();
+
+            const string path = "";
+            const string caption = "CAPTION";
+            Repository repository = new(path);
+
+            _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
+
+            ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.Text.Should().Be(caption);
             item.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
             item.ToolTipText.Should().BeEmpty();
@@ -52,29 +69,33 @@ namespace GitUITests.CommandsDialogs
         {
             _repositoryCurrentBranchNameProvider.GetCurrentBranchName(Arg.Any<string>()).Returns(x => branch);
 
+            ToolStripMenuItem containerMenu = new();
+
             const string path = "somepath";
             const string caption = "CAPTION";
             Repository repository = new(path);
 
-            ToolStripMenuItem item = _controller.AddRecentRepositories(repository, caption, (s, e) => { });
+            _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
 
             // await adding branch name in ShortcutKeyDisplayString, done async
-#pragma warning disable VSTHRD104 // Offer async methods
             ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(default));
-#pragma warning restore VSTHRD104 // Offer async methods
 
+            ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.ShortcutKeyDisplayString.Should().Be(branch);
         }
 
         [Test]
         public void ChangeWorkingDir_should_promt_user_to_delete_invalid_repo()
         {
+            ToolStripMenuItem containerMenu = new();
+
             const string path = "";
             const string caption = "CAPTION";
             Repository repository = new(path);
 
-            ToolStripMenuItem item = _controller.AddRecentRepositories(repository, caption, (s, e) => { });
+            _controller.AddRecentRepositories(containerMenu, repository, caption, (s, e) => { });
 
+            ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.PerformClick();
 
             _invalidRepositoryRemover.Received(1).ShowDeleteInvalidRepositoryDialog(path);

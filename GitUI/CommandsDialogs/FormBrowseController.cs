@@ -12,7 +12,8 @@ namespace GitUI.CommandsDialogs
 {
     public interface IFormBrowseController
     {
-        ToolStripMenuItem AddRecentRepositories(Repository repo,
+        void AddRecentRepositories(ToolStripDropDownItem menuItemContainer,
+                                   Repository repo,
                                    string? caption,
                                    Action<object, GitModuleEventArgs> setGitModule);
 
@@ -34,7 +35,8 @@ namespace GitUI.CommandsDialogs
             _invalidRepositoryRemover = invalidRepositoryRemover;
         }
 
-        public ToolStripMenuItem AddRecentRepositories(Repository repo,
+        public void AddRecentRepositories(ToolStripDropDownItem menuItemContainer,
+                                          Repository repo,
                                           string? caption,
                                           Action<object, GitModuleEventArgs> setGitModule)
         {
@@ -42,6 +44,8 @@ namespace GitUI.CommandsDialogs
             {
                 DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
             };
+
+            menuItemContainer.DropDownItems.Add(item);
 
             item.Click += (obj, args) =>
             {
@@ -60,8 +64,6 @@ namespace GitUI.CommandsDialogs
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 item.ShortcutKeyDisplayString = branchName;
             }).FileAndForget();
-
-            return item;
         }
 
         public async Task<GpgInfo?> LoadGpgInfoAsync(GitRevision? revision)

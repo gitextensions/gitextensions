@@ -1741,13 +1741,10 @@ namespace GitUI.CommandsDialogs
                     menuItemCategory = (ToolStripMenuItem)container.DropDownItems[category];
                 }
 
-                List<ToolStripMenuItem> menuItemRepos = new();
                 foreach (var r in repos)
                 {
-                    menuItemRepos.Add(_controller.AddRecentRepositories(r.Repo, r.Caption, SetGitModule));
+                    _controller.AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, SetGitModule);
                 }
-
-                menuItemCategory.DropDownItems.AddRange(menuItemRepos.ToArray());
             }
         }
 
@@ -1773,13 +1770,10 @@ namespace GitUI.CommandsDialogs
                 splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
             }
 
-            List<ToolStripMenuItem> menuItemRepos = new();
             foreach (var repo in pinnedRepos)
             {
-                menuItemRepos.Add(_controller.AddRecentRepositories(repo.Repo, repo.Caption, SetGitModule));
+                _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, SetGitModule);
             }
-
-            container.DropDownItems.AddRange(menuItemRepos.ToArray());
 
             if (allRecentRepos.Count > 0)
             {
@@ -1788,13 +1782,10 @@ namespace GitUI.CommandsDialogs
                     container.DropDownItems.Add(new ToolStripSeparator());
                 }
 
-                menuItemRepos.Clear();
                 foreach (var repo in allRecentRepos)
                 {
-                    menuItemRepos.Add(_controller.AddRecentRepositories(repo.Repo, repo.Caption, SetGitModule));
+                    _controller.AddRecentRepositories(container, repo.Repo, repo.Caption, SetGitModule);
                 }
-
-                container.DropDownItems.AddRange(menuItemRepos.ToArray());
             }
         }
 
@@ -1961,24 +1952,17 @@ namespace GitUI.CommandsDialogs
 
             void AddBranchesMenuItems()
             {
-                List<ToolStripItem> branchItems = new();
                 foreach (IGitRef branch in GetBranches())
                 {
                     Validates.NotNull(branch.ObjectId);
                     bool isBranchVisible = ((ICheckRefs)RevisionGridControl).Contains(branch.ObjectId);
 
-                    ToolStripMenuItem toolStripItem = new(branch.Name)
-                    {
-                        ForeColor = isBranchVisible ? branchSelect.ForeColor : Color.Silver.AdaptTextColor(),
-                        Image = isBranchVisible ? Images.Branch : Images.EyeClosed
-                    };
+                    ToolStripItem toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
+                    toolStripItem.ForeColor = isBranchVisible ? branchSelect.ForeColor : Color.Silver.AdaptTextColor();
+                    toolStripItem.Image = isBranchVisible ? Images.Branch : Images.EyeClosed;
                     toolStripItem.Click += (s, e) => UICommands.StartCheckoutBranch(this, toolStripItem.Text);
                     toolStripItem.AdaptImageLightness();
-                    branchItems.Add(toolStripItem);
                 }
-
-                // Add range to improve responsiveness
-                branchSelect.DropDownItems.AddRange(branchItems.ToArray());
 
                 IEnumerable<IGitRef> GetBranches()
                 {
