@@ -1779,6 +1779,8 @@ namespace GitUI.CommandsDialogs
                 menuItemRepos.Add(_controller.AddRecentRepositories(repo.Repo, repo.Caption, SetGitModule));
             }
 
+            container.DropDownItems.AddRange(menuItemRepos.ToArray());
+
             if (allRecentRepos.Count > 0)
             {
                 if (pinnedRepos.Count > 0 && (AppSettings.SortPinnedRepos || AppSettings.SortAllRecentRepos))
@@ -1786,13 +1788,14 @@ namespace GitUI.CommandsDialogs
                     container.DropDownItems.Add(new ToolStripSeparator());
                 }
 
+                menuItemRepos.Clear();
                 foreach (var repo in allRecentRepos)
                 {
                     menuItemRepos.Add(_controller.AddRecentRepositories(repo.Repo, repo.Caption, SetGitModule));
                 }
-            }
 
-            container.DropDownItems.AddRange(menuItemRepos.ToArray());
+                container.DropDownItems.AddRange(menuItemRepos.ToArray());
+            }
         }
 
         public void SetWorkingDir(string? path, ObjectId? selectedId = null, ObjectId? firstId = null)

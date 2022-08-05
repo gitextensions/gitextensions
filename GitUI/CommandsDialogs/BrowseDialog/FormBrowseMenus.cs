@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (toolbarItem is ToolStripSeparator)
                 {
-                    menuItems.Add(new ToolStripSeparator());
+                    toolStripItem.DropDownItems.Add(new ToolStripSeparator());
                     continue;
                 }
 
