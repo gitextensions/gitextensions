@@ -15,7 +15,7 @@ namespace GitCommands.DiffMergeTools
         public override string ExeFileName => "Code.exe";
 
         /// <inheritdoc />
-        public override string MergeCommand => "--wait \"$MERGED\"";
+        public override string MergeCommand => "--wait --merge \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
 
         /// <inheritdoc />
         public override string Name => "vscode";
