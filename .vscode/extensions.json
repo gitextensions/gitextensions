@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+            "ms-vscode.cpptools",
+            "ms-dotnettools.csharp",
+            "pmiossec.vscode-gitextensions",
+            "VisualStudioExptTeam.vscodeintellicode"
+    ]
+}
