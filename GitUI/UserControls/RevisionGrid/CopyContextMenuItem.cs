@@ -100,6 +100,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
+            DropDown.SuspendLayout();
             DropDownItems.Clear();
 
             List<string> branchNames = new();
@@ -158,6 +159,8 @@ namespace GitUI.UserControls.RevisionGrid
                 AddItem(ResourceManager.TranslatedStrings.GetAuthorDate(count), r => r.AuthorDate.ToString(), Images.Date, 'T');
                 AddItem(ResourceManager.TranslatedStrings.GetCommitDate(count), r => r.CommitDate.ToString(), Images.Date, 'D');
             }
+
+            DropDown.ResumeLayout();
         }
 
         private string PrependItemNumber(string name)

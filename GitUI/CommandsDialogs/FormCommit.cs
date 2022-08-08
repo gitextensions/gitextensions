@@ -2342,6 +2342,7 @@ namespace GitUI.CommandsDialogs
                 prevMessages.Insert(0, msg);
             }
 
+            commitMessageToolStripMenuItem.DropDown.SuspendLayout();
             commitMessageToolStripMenuItem.DropDownItems.Clear();
 
             foreach (var prevMsg in prevMessages)
@@ -2355,6 +2356,7 @@ namespace GitUI.CommandsDialogs
                 generateListOfChangesInSubmodulesChangesToolStripMenuItem,
                 ShowOnlyMyMessagesToolStripMenuItem
             });
+            commitMessageToolStripMenuItem.DropDown.ResumeLayout();
 
             void AddCommitMessageToMenu(string commitMessage)
             {
@@ -3160,6 +3162,7 @@ namespace GitUI.CommandsDialogs
 
             void LoadCommitTemplates()
             {
+                commitTemplatesToolStripMenuItem.DropDown.SuspendLayout();
                 commitTemplatesToolStripMenuItem.DropDownItems.Clear();
 
                 // Add registered templates
@@ -3180,6 +3183,7 @@ namespace GitUI.CommandsDialogs
 
                 // Add a settings item
                 AddSettingsItem();
+                commitTemplatesToolStripMenuItem.DropDown.ResumeLayout();
 
                 return;
 
