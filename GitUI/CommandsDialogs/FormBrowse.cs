@@ -609,7 +609,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.PerformRefreshRevisions(getRefs, forceRefresh: true);
 
             InternalInitialize();
-            ToolStripFilters.UpdateBranchFilterItems(getRefs);
+            ToolStripFilters.RefreshRevisionFunction(getRefs);
             UpdateSubmodulesStructure();
 
             RefreshGitStatusMonitor();
