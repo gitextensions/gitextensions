@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs
 
             void InitFilters()
             {
-                // ToolStripFilters.UpdateBranchFilterItems() is init in UICommands_PostRepositoryChanged
+                // ToolStripFilters.RefreshRevisionFunction() is init in UICommands_PostRepositoryChanged
 
                 if (!string.IsNullOrWhiteSpace(revFilter))
                 {

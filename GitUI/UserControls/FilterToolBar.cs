@@ -19,6 +19,7 @@ namespace GitUI.UserControls
         private IRevisionGridFilter? _revisionGridFilter;
         private bool _isApplyingFilter;
         private bool _filterBeingChanged;
+        private Func<RefsFilter, IReadOnlyList<IGitRef>> _getRefs;
 
         public FilterToolBar()
         {
@@ -267,10 +268,18 @@ namespace GitUI.UserControls
             ApplyRevisionFilter();
         }
 
-        public void UpdateBranchFilterItems(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null)
+        /// <summary>
+        /// Update the function to get refs for branch dropdown filter
+        /// </summary>
+        /// <param name="getRefs">Function to get refs, expected to be cahed</param>
+        public void RefreshRevisionFunction(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
+            _getRefs = getRefs;
             tscboBranchFilter.Items.Clear();
+        }
 
+        private void UpdateBranchFilterItems()
+        {
             IGitModule module = GetModule();
             if (!module.IsValidGitWorkingDir())
             {
@@ -283,8 +292,14 @@ namespace GitUI.UserControls
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
-                IReadOnlyList<IGitRef> refs = (getRefs ?? module.GetRefs)(branchesFilter);
 
+                if (_getRefs is null)
+                {
+                    Debug.Assert(false, "getRefs is unexpectedly null");
+                    return;
+                }
+
+                IReadOnlyList<IGitRef> refs = _getRefs(branchesFilter);
                 string[] branches = refs.Select(branch => branch.Name).ToArray();
 
                 await this.SwitchToMainThreadAsync();
@@ -350,6 +365,14 @@ namespace GitUI.UserControls
         private void tscboBranchFilter_DropDown(object sender, EventArgs e)
         {
             UpdateBranchFilterItems();
+        }
+
+        private void tscboBranchFilter_GotFocus(object sender, System.EventArgs e)
+        {
+            if (!tscboBranchFilter.DroppedDown && string.IsNullOrEmpty(tscboBranchFilter.Text))
+            {
+                tscboBranchFilter.DroppedDown = true;
+            }
         }
 
         private void tscboBranchFilter_KeyUp(object sender, KeyEventArgs e)
