@@ -8029,6 +8029,10 @@ Context menu for additional operations</source>
         <source>Rebase local branch when pulling (instead of merge)</source>
         <target />
       </trans-unit>
+      <trans-unit id="checkBoxRebaseAutosquash.Text">
+        <source>Automatically squash commits when doing an interactive rebase</source>
+        <target />
+      </trans-unit>
       <trans-unit id="checkBoxRebaseAutostash.Text">
         <source>Automatically stash before doing a rebase</source>
         <target />
