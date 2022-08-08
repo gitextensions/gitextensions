@@ -923,7 +923,7 @@ namespace GitCommands
                 fileName.ToPosixPath().QuoteNE()
             };
 
-            using IProcess process = (isWindowsGit ? _gitWindowsExecutable : _gitExecutable).Start(args, createWindow: true);
+            using IProcess process = (isWindowsGit ? _gitWindowsExecutable : _gitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
             process.WaitForExit();
         }
 
