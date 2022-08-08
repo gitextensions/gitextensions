@@ -131,6 +131,7 @@ namespace GitUI.CommandsDialogs
         {
             const string toolbarSettingsPrefix = "formbrowse_toolbar_visibility_";
             string? currentGroup = null;
+            toolStripItem.DropDown.SuspendLayout();
             foreach (ToolStripItem toolbarItem in senderToolStrip.Items)
             {
                 if (toolbarItem is ToolStripSeparator)
@@ -195,6 +196,7 @@ namespace GitUI.CommandsDialogs
             }
 
             AdaptSeparatorsVisibility(senderToolStrip);
+            toolStripItem.DropDown.ResumeLayout();
 
             return;
 
