@@ -1,0 +1,83 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "build-vc",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                ".\\scripts\\native.proj"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+            }
+        },
+        {
+            "label": "test",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "test"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build"
+            },
+            "dependsOn": ["build", "build-vc"]
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/GitExtensions.sln"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "translate",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "/p:RunTranslationApp=true"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

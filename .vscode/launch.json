@@ -5,10 +5,26 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "PowerShell: Interactive Session",
-            "type": "PowerShell",
+            "name": "Debug",
+            "type": "coreclr",
             "request": "launch",
-            "cwd": ""
-        }
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/artifacts/Debug/bin/GitExtensions/net6.0-windows/GitExtensions.exe",
+            "args": ["browse", "${workspaceFolder}"],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Debug - Dashboard",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/artifacts/Debug/bin/GitExtensions/net6.0-windows/GitExtensions.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
     ]
 }
