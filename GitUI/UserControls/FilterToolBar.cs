@@ -209,16 +209,13 @@ namespace GitUI.UserControls
         public void PreventToolStripSplitButtonClosing(ToolStripSplitButton? control)
         {
             if (control is null
-                || Parent is not ContainerControl parentContainer
-                || tscboBranchFilter.Focused
-                || tstxtRevisionFilter.Focused)
+                || Parent is not ContainerControl parentContainer)
             {
                 return;
             }
 
             control.Tag = parentContainer.FindFocusedControl();
             control.DropDownClosed += ToolStripSplitButtonDropDownClosed;
-            tscboBranchFilter.Focus();
         }
 
         private void SelectShowBranchesFilterOption(byte selectedIndex)
@@ -295,7 +292,7 @@ namespace GitUI.UserControls
 
                 if (_getRefs is null)
                 {
-                    Debug.Assert(false, "getRefs is unexpectedly null");
+                    Debug.Fail("getRefs is unexpectedly null");
                     return;
                 }
 
