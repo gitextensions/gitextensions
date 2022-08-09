@@ -354,25 +354,15 @@ namespace GitUI.UserControls
 
         private void tscboBranchFilter_Click(object sender, EventArgs e)
         {
-            if (tscboBranchFilter.Items.Count == 0)
+            if (!tscboBranchFilter.DroppedDown)
             {
-                return;
+                tscboBranchFilter.DroppedDown = true;
             }
-
-            tscboBranchFilter.DroppedDown = true;
         }
 
         private void tscboBranchFilter_DropDown(object sender, EventArgs e)
         {
             UpdateBranchFilterItems();
-        }
-
-        private void tscboBranchFilter_GotFocus(object sender, System.EventArgs e)
-        {
-            if (!tscboBranchFilter.DroppedDown && string.IsNullOrEmpty(tscboBranchFilter.Text))
-            {
-                tscboBranchFilter.DroppedDown = true;
-            }
         }
 
         private void tscboBranchFilter_KeyUp(object sender, KeyEventArgs e)
