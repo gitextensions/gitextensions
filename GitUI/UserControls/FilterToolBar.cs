@@ -391,6 +391,14 @@ namespace GitUI.UserControls
             UpdateBranchFilterItems();
         }
 
+        private void RevisionFilterItem_Click(object sender, System.EventArgs e)
+        {
+            foreach (ToolStripMenuItem item in tsddbtnRevisionFilter.DropDownItems)
+            {
+                item.Checked = sender == item;
+            }
+        }
+
         private void tsmiDisablePathFilters_Click(object sender, EventArgs e) => RevisionGridFilter.SetAndApplyPathFilter("");
 
         private void tsmiDisableAllFilters_Click(object sender, EventArgs e) => RevisionGridFilter.ResetAllFiltersAndRefresh();
@@ -428,7 +436,6 @@ namespace GitUI.UserControls
             public ToolStripMenuItem tsmiCommitterFilter => _control.tsmiCommitterFilter;
             public ToolStripMenuItem tsmiAuthorFilter => _control.tsmiAuthorFilter;
             public ToolStripMenuItem tsmiDiffContainsFilter => _control.tsmiDiffContainsFilter;
-            public ToolStripMenuItem tsmiHash => _control.tsmiHash;
             public ToolStripButton tsmiShowFirstParent => _control.tsmiShowFirstParent;
             public ToolStripButton tsmiShowReflogs => _control.tsmiShowReflogs;
             public ToolStripTextBox tstxtRevisionFilter => _control.tstxtRevisionFilter;

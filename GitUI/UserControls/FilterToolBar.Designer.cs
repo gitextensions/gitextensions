@@ -18,7 +18,6 @@ namespace GitUI.UserControls
             this.tsmiCommitFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiCommitterFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiAuthorFilter = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiHash = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiDiffContainsFilter = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.tsbtnAdvancedFilter = new System.Windows.Forms.ToolStripSplitButton();
@@ -43,33 +42,27 @@ namespace GitUI.UserControls
             // tsmiCommitFilter
             // 
             this.tsmiCommitFilter.Checked = true;
-            this.tsmiCommitFilter.CheckOnClick = true;
             this.tsmiCommitFilter.Name = "tsmiCommitFilter";
             this.tsmiCommitFilter.Text = "Commit &message";
+            this.tsmiCommitFilter.Click += RevisionFilterItem_Click;
             // 
             // tsmiCommitter
             // 
-            this.tsmiCommitterFilter.CheckOnClick = true;
             this.tsmiCommitterFilter.Name = "tsmiCommitter";
             this.tsmiCommitterFilter.Text = "&Committer";
+            this.tsmiCommitterFilter.Click += RevisionFilterItem_Click;
             // 
             // tsmiAuthor
             // 
-            this.tsmiAuthorFilter.CheckOnClick = true;
             this.tsmiAuthorFilter.Name = "tsmiAuthor";
             this.tsmiAuthorFilter.Text = "&Author";
-            // 
-            // tsmiHash
-            // 
-            this.tsmiHash.CheckOnClick = true;
-            this.tsmiHash.Name = "tsmiHash";
-            this.tsmiHash.Text = "&Hash";
+            this.tsmiAuthorFilter.Click += RevisionFilterItem_Click;
             // 
             // tsmiDiffContains
             // 
-            this.tsmiDiffContainsFilter.CheckOnClick = true;
             this.tsmiDiffContainsFilter.Name = "tsmiDiffContains";
             this.tsmiDiffContainsFilter.Text = "&Diff contains (SLOW)";
+            this.tsmiDiffContainsFilter.Click += RevisionFilterItem_Click;
             // 
             // toolStripLabel1
             // 
@@ -298,7 +291,6 @@ namespace GitUI.UserControls
         private ToolStripMenuItem tsmiCommitterFilter;
         private ToolStripMenuItem tsmiAuthorFilter;
         private ToolStripMenuItem tsmiDiffContainsFilter;
-        private ToolStripMenuItem tsmiHash;
         private ToolStripButton tsmiShowReflogs;
         private ToolStripButton tsmiShowFirstParent;
         private ToolStripTextBox tstxtRevisionFilter;

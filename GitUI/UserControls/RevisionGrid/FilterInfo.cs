@@ -223,6 +223,7 @@ namespace GitUI.UserControls.RevisionGrid
                    ByAuthor ||
                    ByCommitter ||
                    ByMessage ||
+                   ByDiffContent ||
                    ByPathFilter ||
                    ByBranchFilter ||
                    ShowSimplifyByDecoration;
@@ -311,6 +312,7 @@ namespace GitUI.UserControls.RevisionGrid
             ByAuthor = false;
             ByCommitter = false;
             ByMessage = false;
+            ByDiffContent = false;
             ByPathFilter = false;
             ByBranchFilter = false;
             ShowSimplifyByDecoration = false;
