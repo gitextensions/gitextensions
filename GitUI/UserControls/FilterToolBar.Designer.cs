@@ -92,7 +92,7 @@ namespace GitUI.UserControls
             this.tsbtnAdvancedFilter.Size = new System.Drawing.Size(32, 22);
             this.tsbtnAdvancedFilter.ToolTipText = "Advanced filter";
             this.tsbtnAdvancedFilter.ButtonClick += new System.EventHandler(this.tsbtnAdvancedFilter_ButtonClick);
-            this.tsbtnAdvancedFilter.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
+            this.tsbtnAdvancedFilter.DropDownOpening += new System.EventHandler(this.tsbtnAdvancedFilter_DropDownOpening);
             // 
             // tsmiResetPathFilters
             // 

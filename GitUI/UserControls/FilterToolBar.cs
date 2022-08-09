@@ -121,29 +121,6 @@ namespace GitUI.UserControls
             _revisionGridFilter.FilterChanged += revisionGridFilter_FilterChanged;
         }
 
-        private void BindBranches(string[] branches)
-        {
-            var autoCompleteList = tscboBranchFilter.AutoCompleteCustomSource.Cast<string>();
-            if (!autoCompleteList.SequenceEqual(branches))
-            {
-                tscboBranchFilter.AutoCompleteCustomSource.Clear();
-                tscboBranchFilter.AutoCompleteCustomSource.AddRange(branches);
-            }
-
-            string filter = tscboBranchFilter.Items.Count > 0 ? tscboBranchFilter.Text : string.Empty;
-            string[] matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
-
-            if (matches.Length == 0)
-            {
-                matches = _noResultsFound;
-            }
-
-            int index = tscboBranchFilter.SelectionStart;
-            tscboBranchFilter.Items.Clear();
-            tscboBranchFilter.Items.AddRange(matches);
-            tscboBranchFilter.SelectionStart = index;
-        }
-
         public void ClearQuickFilters()
         {
             tscboBranchFilter.Text =
@@ -241,6 +218,9 @@ namespace GitUI.UserControls
             ApplyCustomBranchFilter();
         }
 
+        /// <summary>
+        /// If focus on branch filter, focus revision filter otherwise branch filter.
+        /// </summary>
         public void SetFocus()
         {
             ToolStripControlHost filterToFocus = tstxtRevisionFilter.Focused
@@ -268,7 +248,7 @@ namespace GitUI.UserControls
         /// <summary>
         /// Update the function to get refs for branch dropdown filter
         /// </summary>
-        /// <param name="getRefs">Function to get refs, expected to be cahed</param>
+        /// <param name="getRefs">Function to get refs, expected to be cached</param>
         public void RefreshRevisionFunction(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
             _getRefs = getRefs;
@@ -302,6 +282,31 @@ namespace GitUI.UserControls
                 await this.SwitchToMainThreadAsync();
                 BindBranches(branches);
             }).FileAndForget();
+
+            return;
+
+            void BindBranches(string[] branches)
+            {
+                var autoCompleteList = tscboBranchFilter.AutoCompleteCustomSource.Cast<string>();
+                if (!autoCompleteList.SequenceEqual(branches))
+                {
+                    tscboBranchFilter.AutoCompleteCustomSource.Clear();
+                    tscboBranchFilter.AutoCompleteCustomSource.AddRange(branches);
+                }
+
+                string filter = tscboBranchFilter.Items.Count > 0 ? tscboBranchFilter.Text : string.Empty;
+                string[] matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
+
+                if (matches.Length == 0)
+                {
+                    matches = _noResultsFound;
+                }
+
+                int index = tscboBranchFilter.SelectionStart;
+                tscboBranchFilter.Items.Clear();
+                tscboBranchFilter.Items.AddRange(matches);
+                tscboBranchFilter.SelectionStart = index;
+            }
         }
 
         public void SetShortcutKeys(Action<ToolStripMenuItem, RevisionGridControl.Command> setShortcutString)
@@ -349,6 +354,11 @@ namespace GitUI.UserControls
             }
         }
 
+        private void tsbtnAdvancedFilter_DropDownOpening(object sender, EventArgs e)
+        {
+            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+        }
+
         private void tscboBranchFilter_Click(object sender, EventArgs e)
         {
             if (!tscboBranchFilter.DroppedDown)
@@ -379,11 +389,6 @@ namespace GitUI.UserControls
         {
             _filterBeingChanged = true;
             UpdateBranchFilterItems();
-        }
-
-        private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
-        {
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         private void tsmiDisablePathFilters_Click(object sender, EventArgs e) => RevisionGridFilter.SetAndApplyPathFilter("");
