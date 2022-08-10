@@ -1905,6 +1905,11 @@ namespace GitUI
             BrowseRepo?.SetWorkingDir(path, selectedId, firstId);
         }
 
+        public IReadOnlyList<GitRevision> GetSelectedRevisions()
+        {
+            return BrowseRepo?.GetSelectedRevisions();
+        }
+
         public IGitRemoteCommand CreateRemoteCommand()
         {
             return new GitRemoteCommand(this);

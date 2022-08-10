@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Submodules;
@@ -86,7 +87,21 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            GitUICommands.LaunchBrowse(workingDir: Info.Path.EnsureTrailingPathSeparator(), ObjectId.WorkTreeId, Info?.Detailed?.RawStatus?.OldCommit);
+            ObjectId? first;
+            ObjectId? second;
+            if (!IsCurrent)
+            {
+                first = ObjectId.WorkTreeId;
+                second = Info?.Detailed?.RawStatus?.OldCommit;
+            }
+            else
+            {
+                IReadOnlyList<GitRevision> revs = UICommands.GetSelectedRevisions();
+                first = revs.Count > 0 ? revs[0].ObjectId : null;
+                second = revs.Count > 1 ? revs[revs.Count - 1].ObjectId : null;
+            }
+
+            GitUICommands.LaunchBrowse(workingDir: Info.Path.EnsureTrailingPathSeparator(), first, second);
         }
 
         internal override void OnSelected()
