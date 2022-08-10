@@ -49,8 +49,6 @@ namespace GitUI.BranchTreePanel
             ApplyStatus();
         }
 
-        public bool CanOpen => !IsCurrent;
-
         protected override string DisplayText()
         {
             return SubmoduleName + BranchText + Info.Detailed?.AddedAndRemovedText;
@@ -101,7 +99,14 @@ namespace GitUI.BranchTreePanel
 
         internal override void OnDoubleClick()
         {
-            Open();
+            if (!IsCurrent)
+            {
+                Open();
+            }
+            else
+            {
+                LaunchGitExtensions();
+            }
         }
 
         protected override void ApplyStyle()
