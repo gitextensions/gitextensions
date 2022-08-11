@@ -538,15 +538,25 @@ namespace GitUI.Blame
 
             contextMenu.Tag = new GitBlameContext(_fileName, _lineIndex, GetBlameLine(), _blameId);
 
-            if (_revGrid is null || !TryGetSelectedRevision(out var selectedRevision))
+            if (!TryGetSelectedRevision(out var selectedRevision))
             {
                 blameRevisionToolStripMenuItem.Enabled = false;
+
+                // Ignore if current revision is not visible in grid but parent is.
                 blamePreviousRevisionToolStripMenuItem.Enabled = false;
                 return;
             }
 
             blameRevisionToolStripMenuItem.Enabled = true;
-            blamePreviousRevisionToolStripMenuItem.Enabled = selectedRevision.HasParent;
+            blamePreviousRevisionToolStripMenuItem.Enabled = RevisionHasParent(selectedRevision);
+
+            // Get parent for the actual revision, the selected revision may have rewritten parents.
+            // The menu will be slightly slower in this situation.
+            bool RevisionHasParent(GitRevision? selectedRevision)
+            {
+                GitRevision actualRevision = _revGrid?.GetActualRevision(selectedRevision);
+                return (actualRevision?.HasParent ?? false) && (_revGrid?.GetRevision(actualRevision?.FirstParentId) is not null);
+            }
         }
 
         private GitBlameCommit? GetBlameCommit()
@@ -614,12 +624,15 @@ namespace GitUI.Blame
 
         private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetSelectedRevision(out var selectedRevision) || !selectedRevision.HasParent)
+            if (!TryGetSelectedRevision(out var selectedRevision))
             {
                 return;
             }
 
-            BlameRevision(selectedRevision.FirstParentId);
+            // Try get actual parent revision, get popup if it does not exist.
+            // (The menu should be disabled if previous is not in grid).
+            GitRevision? revision = _revGrid?.GetActualRevision(selectedRevision);
+            BlameRevision(revision?.FirstParentId);
         }
 
         private void BlameRevision(ObjectId? revisionId)
