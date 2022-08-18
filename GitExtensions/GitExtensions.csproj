@@ -18,9 +18,6 @@
 
     <!-- To be removed when NRT annotations are complete -->
     <Nullable>annotations</Nullable>
-
-    <!-- Set version for runtimeconfig.json, used by DotnetRuntimeBootstrapper -->
-    <RuntimeFrameworkVersion>6.0.8</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
