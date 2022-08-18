@@ -1562,7 +1562,7 @@ namespace GitUI
 
         private void FileStatusListView_MouseUp(object sender, MouseEventArgs e)
         {
-            // Stop DRAG when mouse up
+            // Release the drag capture
             if (e.Button == MouseButtons.Left)
             {
                 _dragBoxFromMouseDown = Rectangle.Empty;
