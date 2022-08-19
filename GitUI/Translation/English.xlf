@@ -10918,6 +10918,10 @@ Remote: {1}</source>
         <source>{0} {1:second|seconds} ago</source>
         <target />
       </trans-unit>
+      <trans-unit id="_settingsTypeToFind.Text">
+        <source>Type to find</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_showAllText.Text">
         <source>Show all</source>
         <target />
