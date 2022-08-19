@@ -16,7 +16,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private readonly Font _origTextBoxFont;
         private bool _isSelectionChangeTriggeredByGoto;
         private List<TreeNode>? _nodesFoundByTextBox;
-        private const string FindPrompt = "Type to find";
         private readonly Dictionary<SettingsPageReference, TreeNode> _pages2NodeMap = new();
         private readonly List<ISettingsPage> _settingsPages = new();
 
@@ -124,7 +123,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             _nodesFoundByTextBox = new List<TreeNode>();
 
-            if (string.IsNullOrEmpty(textBoxFind.Text) || textBoxFind.Text == FindPrompt)
+            if (string.IsNullOrEmpty(textBoxFind.Text) || textBoxFind.Text == TranslatedStrings.SettingsTypeToFind)
             {
                 ResetAllNodeHighlighting();
                 return;
@@ -200,7 +199,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 ////textBoxFind.Font = new Font("Calibri", textBoxFind.Font.Size, FontStyle.Italic);
                 textBoxFind.Font = new Font(textBoxFind.Font, FontStyle.Italic);
-                textBoxFind.Text = FindPrompt;
+                textBoxFind.Text = TranslatedStrings.SettingsTypeToFind;
                 textBoxFind.ForeColor = SystemColors.GrayText;
             }
             else
@@ -214,7 +213,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             SetFindPrompt(false);
 
-            if (textBoxFind.Text == FindPrompt)
+            if (textBoxFind.Text == TranslatedStrings.SettingsTypeToFind)
             {
                 textBoxFind.Text = string.Empty;
             }
