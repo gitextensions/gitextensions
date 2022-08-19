@@ -92,7 +92,7 @@ namespace GitUI.UserControls
             this.tsbtnAdvancedFilter.Size = new System.Drawing.Size(32, 22);
             this.tsbtnAdvancedFilter.ToolTipText = "Advanced filter";
             this.tsbtnAdvancedFilter.ButtonClick += new System.EventHandler(this.tsbtnAdvancedFilter_ButtonClick);
-            this.tsbtnAdvancedFilter.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
+            this.tsbtnAdvancedFilter.DropDownOpening += new System.EventHandler(this.tsbtnAdvancedFilter_DropDownOpening);
             // 
             // tsmiResetPathFilters
             // 
@@ -179,7 +179,6 @@ namespace GitUI.UserControls
             this.tscboBranchFilter.Tag = "ToolBar_group:Branch filter";
             this.tscboBranchFilter.Click += new System.EventHandler(this.tscboBranchFilter_Click);
             this.tscboBranchFilter.DropDown += new System.EventHandler(this.tscboBranchFilter_DropDown);
-            this.tscboBranchFilter.GotFocus += tscboBranchFilter_GotFocus;
             this.tscboBranchFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tscboBranchFilter_KeyUp);
             this.tscboBranchFilter.TextChanged += new System.EventHandler(this.tscboBranchFilter_TextChanged);
             this.tscboBranchFilter.TextUpdate += new System.EventHandler(this.tscboBranchFilter_TextUpdate);
