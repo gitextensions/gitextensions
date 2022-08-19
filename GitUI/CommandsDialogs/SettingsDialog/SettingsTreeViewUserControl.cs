@@ -216,13 +216,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             if (textBoxFind.Text == FindPrompt)
             {
-                textBoxFind.Text = "";
+                textBoxFind.Text = string.Empty;
             }
         }
 
         private void textBoxFind_Leave(object sender, EventArgs e)
         {
-            SetFindPrompt(true);
+            if (textBoxFind.Text == string.Empty)
+            {
+                SetFindPrompt(true);
+            }
         }
         #endregion
 
