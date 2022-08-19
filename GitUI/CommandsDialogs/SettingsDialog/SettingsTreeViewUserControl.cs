@@ -13,10 +13,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public sealed partial class SettingsTreeViewUserControl : UserControl
     {
-        private readonly Font _origTextBoxFont;
         private bool _isSelectionChangeTriggeredByGoto;
         private List<TreeNode>? _nodesFoundByTextBox;
-        private const string FindPrompt = "Type to find";
         private readonly Dictionary<SettingsPageReference, TreeNode> _pages2NodeMap = new();
         private readonly List<ISettingsPage> _settingsPages = new();
 
@@ -29,8 +27,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             Font = AppSettings.Font;
 
-            _origTextBoxFont = textBoxFind.Font;
-            SetFindPrompt(true);
+            textBoxFind.PlaceholderText = TranslatedStrings.SettingsTypeToFind;
 
             treeView1.ImageList = new ImageList
             {
@@ -124,7 +121,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             _nodesFoundByTextBox = new List<TreeNode>();
 
-            if (string.IsNullOrEmpty(textBoxFind.Text) || textBoxFind.Text == FindPrompt)
+            if (string.IsNullOrWhiteSpace(textBoxFind.Text))
             {
                 ResetAllNodeHighlighting();
                 return;
@@ -192,39 +189,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 }
             }
         }
-
-        #region FindPrompt
-        private void SetFindPrompt(bool show)
-        {
-            if (show)
-            {
-                ////textBoxFind.Font = new Font("Calibri", textBoxFind.Font.Size, FontStyle.Italic);
-                textBoxFind.Font = new Font(textBoxFind.Font, FontStyle.Italic);
-                textBoxFind.Text = FindPrompt;
-                textBoxFind.ForeColor = SystemColors.GrayText;
-            }
-            else
-            {
-                textBoxFind.Font = _origTextBoxFont;
-                textBoxFind.ForeColor = SystemColors.ControlText;
-            }
-        }
-
-        private void textBoxFind_Enter(object sender, EventArgs e)
-        {
-            SetFindPrompt(false);
-
-            if (textBoxFind.Text == FindPrompt)
-            {
-                textBoxFind.Text = "";
-            }
-        }
-
-        private void textBoxFind_Leave(object sender, EventArgs e)
-        {
-            SetFindPrompt(true);
-        }
-        #endregion
 
         public void GotoPage(SettingsPageReference? settingsPageReference)
         {

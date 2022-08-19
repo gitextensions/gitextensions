@@ -114,6 +114,8 @@ the last selected commit.");
 
         private readonly TranslationString _noChanges = new("No changes");
 
+        private readonly TranslationString _settingsTypeToFind = new("Type to find");
+
         // FormRevisionFilter
         private readonly TranslationString _since = new("Since");
         private readonly TranslationString _until = new("Until");
@@ -241,6 +243,8 @@ the last selected commit.");
         public static string OpenInVisualStudioFailureCaption => _instance.Value._openInVisualStudioFailureCaption.Text;
         public static string RemoteInError => _instance.Value._remoteInError.Text;
         public static string NoChanges => _instance.Value._noChanges.Text;
+
+        public static string SettingsTypeToFind => _instance.Value._settingsTypeToFind.Text;
 
         public static string Since = _instance.Value._since.Text;
         public static string Until = _instance.Value._until.Text;
