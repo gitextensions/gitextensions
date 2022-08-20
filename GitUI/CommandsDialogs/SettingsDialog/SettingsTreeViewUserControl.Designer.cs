@@ -60,9 +60,7 @@
             this.textBoxFind.Size = new System.Drawing.Size(200, 31);
             this.textBoxFind.TabIndex = 1;
             this.textBoxFind.TextChanged += new System.EventHandler(this.textBoxFind_TextChanged);
-            this.textBoxFind.Enter += new System.EventHandler(this.textBoxFind_Enter);
             this.textBoxFind.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxFind_KeyUp);
-            this.textBoxFind.Leave += new System.EventHandler(this.textBoxFind_Leave);
             // 
             // treeView1
             // 
