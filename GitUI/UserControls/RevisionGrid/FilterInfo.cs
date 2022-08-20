@@ -223,6 +223,7 @@ namespace GitUI.UserControls.RevisionGrid
                    ByAuthor ||
                    ByCommitter ||
                    ByMessage ||
+                   ByDiffContent ||
                    ByPathFilter ||
                    ByBranchFilter ||
                    ShowSimplifyByDecoration;
@@ -240,55 +241,68 @@ namespace GitUI.UserControls.RevisionGrid
                 Debug.Fail("Not supported");
             }
 
+            bool searchParametersChanged = filter.FilterByAuthor != ByAuthor
+                                          || filter.FilterByCommitter != ByCommitter
+                                          || filter.FilterByCommit != ByMessage
+                                          || filter.FilterByDiffContent != ByDiffContent;
+
             if (filter.FilterByAuthor)
             {
-                if (ByAuthor && string.Equals(Author, filter.Text, StringComparison.CurrentCulture))
+                if (!string.Equals(Author, filter.Text, StringComparison.CurrentCulture))
                 {
-                    return false;
+                    ByAuthor = !string.IsNullOrWhiteSpace(filter.Text);
+                    Author = filter.Text;
+                    searchParametersChanged = true;
                 }
-
-                ByAuthor = !string.IsNullOrWhiteSpace(filter.Text);
-                Author = filter.Text;
-                return true;
+            }
+            else
+            {
+                ByAuthor = false;
             }
 
             if (filter.FilterByCommitter)
             {
-                if (ByCommitter && string.Equals(Committer, filter.Text, StringComparison.CurrentCulture))
+                if (!string.Equals(Committer, filter.Text, StringComparison.CurrentCulture))
                 {
-                    return false;
+                    ByCommitter = !string.IsNullOrWhiteSpace(filter.Text);
+                    Committer = filter.Text;
+                    searchParametersChanged = true;
                 }
-
-                ByCommitter = !string.IsNullOrWhiteSpace(filter.Text);
-                Committer = filter.Text;
-                return true;
+            }
+            else
+            {
+                ByCommitter = false;
             }
 
             if (filter.FilterByCommit)
             {
-                if (ByMessage && string.Equals(Message, filter.Text, StringComparison.CurrentCulture))
+                if (!string.Equals(Message, filter.Text, StringComparison.CurrentCulture))
                 {
-                    return false;
+                    ByMessage = !string.IsNullOrWhiteSpace(filter.Text);
+                    Message = filter.Text;
+                    searchParametersChanged = true;
                 }
-
-                ByMessage = !string.IsNullOrWhiteSpace(filter.Text);
-                Message = filter.Text;
-                return true;
+            }
+            else
+            {
+                ByMessage = false;
             }
 
             if (filter.FilterByDiffContent)
             {
-                if (ByDiffContent && string.Equals(DiffContent, filter.Text, StringComparison.CurrentCulture))
+                if (!string.Equals(DiffContent, filter.Text, StringComparison.CurrentCulture))
                 {
-                    return false;
+                    ByDiffContent = !string.IsNullOrWhiteSpace(filter.Text);
+                    DiffContent = filter.Text;
+                    searchParametersChanged = true;
                 }
-
-                ByDiffContent = !string.IsNullOrWhiteSpace(filter.Text);
-                DiffContent = filter.Text;
-                return true;
+            }
+            else
+            {
+                ByDiffContent = false;
             }
 
-            return false;
+            return searchParametersChanged;
         }
 
         public void ResetAllFilters()
@@ -298,6 +312,7 @@ namespace GitUI.UserControls.RevisionGrid
             ByAuthor = false;
             ByCommitter = false;
             ByMessage = false;
+            ByDiffContent = false;
             ByPathFilter = false;
             ByBranchFilter = false;
             ShowSimplifyByDecoration = false;
