@@ -193,7 +193,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     // also searches text boxes and comboboxes
                     // TODO(optional): search through the drop down list of comboboxes
                     // TODO(optional): convert numeric dropdown values to text
-                    texts.Add(next.Text.Trim().ToLowerInvariant());
+                    texts.Add(next.Text.Trim());
                 }
 
                 foreach (Control child in next.Controls)
