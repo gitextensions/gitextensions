@@ -128,19 +128,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
 
             string searchFor = textBoxFind.Text.ToLowerInvariant();
+            var andKeywords = searchFor.LazySplit(' ');
             foreach (var node in treeView1.AllNodes())
             {
                 var settingsPage = (ISettingsPage)node.Tag;
 
                 // search for title
-                if (settingsPage.GetTitle().ToLowerInvariant().Contains(searchFor))
+                if (settingsPage.GetTitle().Contains(searchFor, StringComparison.InvariantCultureIgnoreCase))
                 {
                     _nodesFoundByTextBox.Add(node);
+                    continue;
                 }
 
                 // search for keywords (space combines as 'and')
-                var andKeywords = searchFor.LazySplit(' ');
-                if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Any(k => k.Contains(keyword))))
+                if (andKeywords.All(keyword => settingsPage.GetSearchKeywords().Any(k => k.Contains(keyword, StringComparison.InvariantCultureIgnoreCase))))
                 {
                     // only part of a keyword must match to have a match
                     if (!_nodesFoundByTextBox.Contains(node))
