@@ -560,6 +560,12 @@ namespace GitUI
             ShowLoading();
         }
 
+        protected override void OnRuntimeLoad()
+        {
+            base.OnRuntimeLoad();
+            LoadCustomDifftools();
+        }
+
         public new void Load()
         {
             if (!DesignMode)
@@ -568,8 +574,6 @@ namespace GitUI
             }
 
             PerformRefreshRevisions();
-
-            LoadCustomDifftools();
         }
 
         public void LoadCustomDifftools()
