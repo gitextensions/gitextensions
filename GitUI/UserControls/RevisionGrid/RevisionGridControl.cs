@@ -1192,13 +1192,14 @@ namespace GitUI
                     && !Module.IsBareRepository();
             }
 
-            bool AddArtificialRevisions(bool insertWithMatch = false, IEnumerable<ObjectId> headParents = null)
+            bool AddArtificialRevisions(IEnumerable<ObjectId> headParents = null)
             {
                 if (!ShowArtificialRevisions())
                 {
                     return false;
                 }
 
+                bool insertWithMatch = headParents is not null;
                 var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
                 var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
@@ -1258,7 +1259,7 @@ namespace GitUI
                     {
                         await TaskScheduler.Default;
 
-                        // No revisions at all received
+                        // No revisions at all received without any filter
                         await semaphoreUpdateGrid.WaitAsync(cancellationToken);
 
                         bool showArtificial = AddArtificialRevisions();
@@ -1291,7 +1292,7 @@ namespace GitUI
 
                     IEnumerable<ObjectId> headParents = null;
                     bool refresh = false;
-                    if (firstRevisionReceived && !headIsHandled && ShowArtificialRevisions())
+                    if (!headIsHandled && ShowArtificialRevisions())
                     {
                         if (CurrentCheckout is not null)
                         {
@@ -1301,7 +1302,7 @@ namespace GitUI
 
                         // If parents are rewritten HEAD may not be included
                         // Insert the artificial commits where relevant if possible, otherwise first
-                        refresh = AddArtificialRevisions(insertWithMatch: true, headParents);
+                        refresh = AddArtificialRevisions(headParents);
                     }
 
                     // All revisions are loaded (but maybe not yet the grid)
@@ -1324,7 +1325,17 @@ namespace GitUI
                         }
                         else
                         {
-                            parents = TryGetParents(Module, _filterInfo, notSelectedId);
+                            if (notSelectedId.IsArtificial)
+                            {
+                                notSelectedId = CurrentCheckout is not null
+                                    ? CurrentCheckout
+                                    : _gridView.ToBeSelectedObjectIds.Where(id => !id.IsArtificial).FirstOrDefault();
+                            }
+
+                            if (notSelectedId is not null)
+                            {
+                                parents = TryGetParents(Module, _filterInfo, notSelectedId);
+                            }
                         }
 
                         // Try to select the first of the parents
