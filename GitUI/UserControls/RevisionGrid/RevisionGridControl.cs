@@ -1323,19 +1323,10 @@ namespace GitUI
                         {
                             parents = headParents.Skip(index + 1).ToList();
                         }
-                        else
+                        else if (!notSelectedId.IsArtificial)
                         {
-                            if (notSelectedId.IsArtificial)
-                            {
-                                notSelectedId = CurrentCheckout is not null
-                                    ? CurrentCheckout
-                                    : _gridView.ToBeSelectedObjectIds.Where(id => !id.IsArtificial).FirstOrDefault();
-                            }
-
-                            if (notSelectedId is not null)
-                            {
-                                parents = TryGetParents(Module, _filterInfo, notSelectedId);
-                            }
+                            // Ignore if the not selected is artificial, it is likely that the settings was changed
+                            parents = TryGetParents(Module, _filterInfo, notSelectedId);
                         }
 
                         // Try to select the first of the parents
