@@ -1560,6 +1560,15 @@ namespace GitUI
             }
         }
 
+        private void FileStatusListView_MouseUp(object sender, MouseEventArgs e)
+        {
+            // Release the drag capture
+            if (e.Button == MouseButtons.Left)
+            {
+                _dragBoxFromMouseDown = Rectangle.Empty;
+            }
+        }
+
         private void FileStatusListView_MouseMove(object sender, MouseEventArgs e)
         {
             ListView? listView = sender as ListView;
