@@ -1861,7 +1861,7 @@ namespace GitCommands
 
         public static bool RepoObjectsTreeShowTags
         {
-            get => GetBool("RepoObjectsTree.ShowTags", false);
+            get => GetBool("RepoObjectsTree.ShowTags", true);
             set => SetBool("RepoObjectsTree.ShowTags", value);
         }
 
