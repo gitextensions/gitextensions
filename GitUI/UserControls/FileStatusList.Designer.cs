@@ -67,6 +67,7 @@
             this.FileStatusListView.DoubleClick += new System.EventHandler(this.FileStatusListView_DoubleClick);
             this.FileStatusListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListView_KeyDown);
             this.FileStatusListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseDown);
+            this.FileStatusListView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseUp);
             this.FileStatusListView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseMove);
             this.FileStatusListView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.FileStatusListView_Scroll);
             // 
