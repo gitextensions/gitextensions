@@ -136,7 +136,7 @@ namespace GitUI.CommandsDialogs
             Stashes.Text = "";
             StashMessage.Text = "";
             Stashes.SelectedItem = null;
-            Stashes.ComboBox.DisplayMember = nameof(GitStash.Message);
+            Stashes.ComboBox.DisplayMember = nameof(GitStash.Summary);
             Stashes.Items.Clear();
             foreach (GitStash stashedItem in stashedItems)
             {
