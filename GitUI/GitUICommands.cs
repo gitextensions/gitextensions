@@ -1905,7 +1905,7 @@ namespace GitUI
             BrowseRepo?.SetWorkingDir(path, selectedId, firstId);
         }
 
-        public IReadOnlyList<GitRevision> GetSelectedRevisions()
+        public IReadOnlyList<GitRevision>? GetSelectedRevisions()
         {
             return BrowseRepo?.GetSelectedRevisions();
         }
