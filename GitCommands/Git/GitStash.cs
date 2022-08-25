@@ -45,9 +45,8 @@ namespace GitCommands.Git
         /// <remarks>"stash@{n}"</remarks>
         public string Name => $"stash@{{{Index}}}";
 
-        public override string ToString()
-        {
-            return Message;
-        }
+        public string Summary => Index == -1 ? Message : $"@{{{Index}}}: {Message}";
+
+        public override string ToString() => Message;
     }
 }
