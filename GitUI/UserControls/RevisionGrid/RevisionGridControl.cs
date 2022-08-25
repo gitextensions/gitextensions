@@ -775,7 +775,7 @@ namespace GitUI
         /// Get the GitRevision with the actual parents as they may be rewritten in filtered grids.
         /// </summary>
         /// <param name="revision">The revision, likely from the grid.</param>
-        /// <returns>The input GitRevision if no changes and a clone with actual parents if parents are rewritte.</returns>
+        /// <returns>The input GitRevision if no changes and a clone with actual parents if parents are rewritten.</returns>
         public GitRevision GetActualRevision(GitRevision revision)
         {
             // Index commits must have HEAD as parent already
@@ -2779,7 +2779,7 @@ namespace GitUI
             }
 
             string rebaseCmd = GitCommandHelpers.RebaseCmd(
-                LatestSelectedRevision.FirstParentId?.ToString(), interactive: true, preserveMerges: false,
+                GetActualRevision(LatestSelectedRevision)?.FirstParentId?.ToString(), interactive: true, preserveMerges: false,
                 autosquash: false, autoStash: true, ignoreDate: false, committerDateIsAuthorDate: false, supportRebaseMerges: Module.GitVersion.SupportRebaseMerges);
 
             using FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
