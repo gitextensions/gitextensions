@@ -109,23 +109,23 @@ namespace GitCommands
             out bool parentsAreRewritten)
         {
             parentsAreRewritten = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
+
             return new GitArgumentBuilder("log")
             {
                 { maxCount > 0, $"--max-count={maxCount}" },
                 "-z",
-                {
-                    !string.IsNullOrWhiteSpace(branchFilter) && IsSimpleBranchFilter(branchFilter),
-                    branchFilter
-                },
                 $"--pretty=format:\"{FullFormat}\"",
+                { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
+                { AppSettings.RevisionSortOrder == RevisionSortOrder.Topology, "--topo-order" },
+                { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
+                { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
+                { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
+                { refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
                 {
-                    refFilterOptions.HasFlag(RefFilterOptions.FirstParent),
-                    "--first-parent",
+                    refFilterOptions.HasFlag(RefFilterOptions.Reflogs),
+                    "--reflog",
                     new ArgumentBuilder
                     {
-                        { refFilterOptions.HasFlag(RefFilterOptions.Reflogs), "--reflog" },
-                        { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
-                        { AppSettings.RevisionSortOrder == RevisionSortOrder.Topology, "--topo-order" },
                         {
                             refFilterOptions.HasFlag(RefFilterOptions.All),
                             new ArgumentBuilder
@@ -137,14 +137,18 @@ namespace GitCommands
                             new ArgumentBuilder
                             {
                                 {
-                                    refFilterOptions.HasFlag(RefFilterOptions.Branches) && !string.IsNullOrWhiteSpace(branchFilter) && !IsSimpleBranchFilter(branchFilter),
-                                    "--branches=" + branchFilter
+                                    (refFilterOptions.HasFlag(RefFilterOptions.Branches) && !string.IsNullOrWhiteSpace(branchFilter)),
+                                    new ArgumentBuilder
+                                    {
+                                        {
+                                            IsSimpleBranchFilter(branchFilter),
+                                            branchFilter,
+                                            "--branches=" + branchFilter
+                                        }
+                                    }.ToString()
                                 },
                             }.ToString()
-                        },
-                        { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                        { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
-                        { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" }
+                        }
                     }.ToString()
                 },
                 revisionFilter,

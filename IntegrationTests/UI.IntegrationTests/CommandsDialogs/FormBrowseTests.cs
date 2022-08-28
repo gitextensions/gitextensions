@@ -134,7 +134,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesCurrent.PerformClick();
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.BranchFilterEnabled.Should().BeTrue();
+                        AppSettings.BranchFilterEnabled.Should().BeFalse();
                         AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(2);
 
@@ -161,7 +161,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tsmiShowBranchesCurrent.PerformClick();
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.BranchFilterEnabled.Should().BeTrue();
+                        AppSettings.BranchFilterEnabled.Should().BeFalse();
                         AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(2);
                         // The filter text is still present
@@ -176,7 +176,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.BranchFilterEnabled.Should().BeFalse();
-                        AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
+                        AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tscboBranchFilter.Text.Should().BeEmpty();
                     }
                     finally

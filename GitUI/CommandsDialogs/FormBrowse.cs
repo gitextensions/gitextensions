@@ -546,20 +546,10 @@ namespace GitUI.CommandsDialogs
         public override void CancelButtonClick(object sender, EventArgs e)
         {
             // If a filter is applied, clear it
-            if (RevisionGrid.FilterIsApplied(false))
+            if (RevisionGrid.FilterIsApplied())
             {
                 // Clear filter
                 ToolStripFilters.SetRevisionFilter(string.Empty);
-            }
-
-            // If a branch filter is applied by text or using the menus "Show current branch only"
-            else if (RevisionGrid.FilterIsApplied(true) || AppSettings.BranchFilterEnabled)
-            {
-                // Clear branch filter
-                ToolStripFilters.SetBranchFilter(string.Empty);
-
-                // Execute the "Show all branches" menu option
-                RevisionGrid.ShowAllBranches();
             }
         }
 
@@ -1850,7 +1840,7 @@ namespace GitUI.CommandsDialogs
                     // If we're applying custom branch or revision filters - reset them
                     RevisionGrid.ResetAllFilters();
                     ToolStripFilters.ClearQuickFilters();
-                    AppSettings.BranchFilterEnabled = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
+                    AppSettings.BranchFilterEnabled = AppSettings.BranchFilterEnabled;
                     revisionDiff.RepositoryChanged();
                 }
 

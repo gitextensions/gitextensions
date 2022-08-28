@@ -4,6 +4,7 @@ using ApprovalTests;
 using FluentAssertions;
 using GitCommands;
 using GitUI.UserControls.RevisionGrid;
+using GitUI.UserControls.RevisionGrid.Graph;
 using LibGit2Sharp;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -422,17 +423,21 @@ namespace GitUITests.UserControls
 
         // TODO: RefFilterOptions
 
-        [TestCase(false, true)]
-        [TestCase(true, false)]
-        public void FilterInfo_IsShowAllBranchesChecked_expected(bool byBranchFilter, bool expected)
+        [TestCase(false, false, true)]
+        [TestCase(false, true, false)]
+        [TestCase(true, false, false)]
+        [TestCase(true, true, false)]
+        public void FilterInfo_IsShowAllBranchesChecked_expected(bool byBranchFilter, bool showCurrentBranchOnly, bool expected)
         {
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
+            bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
 
             try
             {
                 FilterInfo filterInfo = new()
                 {
                     ByBranchFilter = byBranchFilter,
+                    ShowCurrentBranchOnly = showCurrentBranchOnly,
                 };
 
                 filterInfo.IsShowAllBranchesChecked.Should().Be(expected);
@@ -440,12 +445,13 @@ namespace GitUITests.UserControls
             finally
             {
                 AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
             }
         }
 
         [TestCase(false, false, false)]
         [TestCase(true, false, false)]
-        [TestCase(false, true, false)]
+        [TestCase(false, true, true)]
         [TestCase(true, true, true)]
         public void FilterInfo_IsShowCurrentBranchOnlyChecked_expected(bool byBranchFilter, bool showCurrentBranchOnly, bool expected)
         {
@@ -663,9 +669,15 @@ namespace GitUITests.UserControls
                                 {
                                     foreach (bool byPathFilter in new[] { false, true })
                                     {
-                                        foreach (bool byBranchFilter in new[] { false, true })
+                                        foreach (string branchFilter in new[] { "branch1", "", null })
                                         {
-                                            yield return new TestCaseData(byDateFrom, byDateTo, byAuthor, byCommitter, byMessage, byPathFilter, byBranchFilter);
+                                            foreach (bool showCurrentBranchOnly in new[] { false, true })
+                                            {
+                                                foreach (bool showSimplifyByDecoration in new[] { false, true })
+                                                {
+                                                    yield return new TestCaseData(byDateFrom, byDateTo, byAuthor, byCommitter, byMessage, byPathFilter, branchFilter, showCurrentBranchOnly, showSimplifyByDecoration);
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -677,7 +689,7 @@ namespace GitUITests.UserControls
         }
 
         [TestCaseSource(nameof(FilterInfo_HasFilterTestCases))]
-        public void FilterInfo_HasFilter_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byPathFilter, bool byBranchFilter)
+        public void FilterInfo_HasFilter_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byPathFilter, string branchFilter, bool showCurrentBranchOnly, bool showSimplifyByDecoration)
         {
             FilterInfo filterInfo = new()
             {
@@ -687,16 +699,19 @@ namespace GitUITests.UserControls
                 ByCommitter = byCommitter,
                 ByMessage = byMessage,
                 ByPathFilter = byPathFilter,
-                ByBranchFilter = byBranchFilter
+                ByBranchFilter = true,
+                BranchFilter = branchFilter,
+                ShowCurrentBranchOnly = showCurrentBranchOnly,
+                ShowSimplifyByDecoration = showSimplifyByDecoration
             };
 
-            filterInfo.HasFilter.Should().Be(byDateFrom || byDateTo || byAuthor || byCommitter || byMessage || byPathFilter || byBranchFilter);
+            filterInfo.HasFilter.Should().Be(byDateFrom || byDateTo || byAuthor || byCommitter || byMessage || byPathFilter || !string.IsNullOrWhiteSpace(branchFilter) || showCurrentBranchOnly || showSimplifyByDecoration);
         }
 
         // TODO: Apply
 
         [TestCaseSource(nameof(FilterInfo_HasFilterTestCases))]
-        public void FilterInfo_ResetAllFilters_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byPathFilter, bool byBranchFilter)
+        public void FilterInfo_ResetAllFilters_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byPathFilter, string branchFilter, bool showCurrentBranchOnly, bool showSimplifyByDecoration)
         {
             FilterInfo filterInfo = new()
             {
@@ -706,7 +721,10 @@ namespace GitUITests.UserControls
                 ByCommitter = byCommitter,
                 ByMessage = byMessage,
                 ByPathFilter = byPathFilter,
-                ByBranchFilter = byBranchFilter
+                ByBranchFilter = true,
+                BranchFilter = branchFilter,
+                ShowCurrentBranchOnly = showCurrentBranchOnly,
+                ShowSimplifyByDecoration = showSimplifyByDecoration
             };
 
             filterInfo.ResetAllFilters();
@@ -718,6 +736,8 @@ namespace GitUITests.UserControls
             filterInfo.ByMessage.Should().BeFalse();
             filterInfo.ByPathFilter.Should().BeFalse();
             filterInfo.ByBranchFilter.Should().BeFalse();
+            filterInfo.ShowCurrentBranchOnly.Should().BeFalse();
+            filterInfo.ShowSimplifyByDecoration.Should().BeFalse();
         }
 
         [TestCase("committer1", "author2", "message3", "pathFilter4", "branchFilter5",
