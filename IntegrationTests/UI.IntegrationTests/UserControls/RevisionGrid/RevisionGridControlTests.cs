@@ -149,7 +149,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     Assert.True(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
 
 #if DEBUG
-                    // TBD 'Loading Revisions' didn't finish in 25 iterations
+                    // https://github.com/gitextensions/gitextensions/issues/10170
+                    // This step occasionaly fails with 'Loading Revisions' didn't finish in 25 iterations
                     WaitForRevisionsToBeLoaded(revisionGridControl);
 
                     // Confirm the filter has been applied
@@ -184,7 +185,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
                     Assert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
 
 #if DEBUG
-                    // TBD 'Loading Revisions' didn't finish in 25 iterations
+                    // https://github.com/gitextensions/gitextensions/issues/10170
+                    // This step occasionaly fails with 'Loading Revisions' didn't finish in 25 iterations
                     WaitForRevisionsToBeLoaded(revisionGridControl);
 
                     // Confirm the filter has been reset, all commits are shown
