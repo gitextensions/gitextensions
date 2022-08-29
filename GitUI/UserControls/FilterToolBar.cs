@@ -39,19 +39,6 @@ namespace GitUI.UserControls
             tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
-        public RefsFilter BranchesFilter
-        {
-            get
-            {
-                // Options are interpreted as the refs the search should be limited too
-                // If neither option is selected all refs will be queried also including stash and notes
-                RefsFilter refs = (tsmiBranchLocal.Checked ? RefsFilter.Heads : RefsFilter.NoFilter)
-                    | (tsmiBranchTag.Checked ? RefsFilter.Tags : RefsFilter.NoFilter)
-                    | (tsmiBranchRemote.Checked ? RefsFilter.Remotes : RefsFilter.NoFilter);
-                return refs;
-            }
-        }
-
         private IRevisionGridFilter RevisionGridFilter
         {
             get => _revisionGridFilter ?? throw new InvalidOperationException($"{nameof(Bind)} is not called.");
@@ -85,12 +72,8 @@ namespace GitUI.UserControls
             // The user has accepted the filter
             _filterBeingChanged = false;
 
-            string filter = tscboBranchFilter.Items.Count > 0 ? tscboBranchFilter.Text : string.Empty;
-            if (filter == TranslatedStrings.NoResultsFound)
-            {
-                filter = string.Empty;
-            }
-
+            // Apply the textbox contents, no check if the (multiple) options is in tscboBranchFilter.Items (or that the list is generated)
+            string filter = tscboBranchFilter.Text == TranslatedStrings.NoResultsFound ? string.Empty : tscboBranchFilter.Text;
             RevisionGridFilter.SetAndApplyBranchFilter(filter);
 
             _isApplyingFilter = false;
@@ -255,6 +238,12 @@ namespace GitUI.UserControls
             tscboBranchFilter.Items.Clear();
         }
 
+        /// <summary>
+        /// Update the tscboBranchFilter dropdown items matching the current filter.
+        /// This is called when dropdown clicked or text is manually changed
+        /// (so tscboBranchFilter.Items is not necessarily available when set externally
+        /// from the sidepanel or FormBrowse).
+        /// </summary>
         private void UpdateBranchFilterItems()
         {
             IGitModule module = GetModule();
@@ -265,7 +254,6 @@ namespace GitUI.UserControls
             }
 
             Enabled = true;
-            RefsFilter branchesFilter = BranchesFilter;
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
@@ -276,6 +264,7 @@ namespace GitUI.UserControls
                     return;
                 }
 
+                RefsFilter branchesFilter = BranchesFilter();
                 IReadOnlyList<IGitRef> refs = _getRefs(branchesFilter);
                 string[] branches = refs.Select(branch => branch.Name).ToArray();
 
@@ -284,6 +273,16 @@ namespace GitUI.UserControls
             }).FileAndForget();
 
             return;
+
+            RefsFilter BranchesFilter()
+            {
+                // Options are interpreted as the refs the search should be limited too
+                // If neither option is selected all refs will be queried also including stash and notes
+                RefsFilter refs = (tsmiBranchLocal.Checked ? RefsFilter.Heads : RefsFilter.NoFilter)
+                    | (tsmiBranchTag.Checked ? RefsFilter.Tags : RefsFilter.NoFilter)
+                    | (tsmiBranchRemote.Checked ? RefsFilter.Remotes : RefsFilter.NoFilter);
+                return refs;
+            }
 
             void BindBranches(string[] branches)
             {
