@@ -99,13 +99,14 @@ namespace GitUI.BranchTreePanel
 
         internal override void OnDoubleClick()
         {
-            if (!IsCurrent)
+            if (IsCurrent)
             {
-                Open();
+                // For the current module the module is already open, so launch a new instance
+                LaunchGitExtensions();
             }
             else
             {
-                LaunchGitExtensions();
+                Open();
             }
         }
 
