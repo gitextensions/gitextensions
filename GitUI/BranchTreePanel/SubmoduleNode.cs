@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Submodules;
@@ -84,7 +85,23 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            GitUICommands.LaunchBrowse(workingDir: Info.Path.EnsureTrailingPathSeparator(), ObjectId.WorkTreeId, Info?.Detailed?.RawStatus?.OldCommit);
+            ObjectId? selected;
+            ObjectId? first;
+            if (IsCurrent)
+            {
+                // Get the current (most likely) selections from the grid
+                IReadOnlyList<GitRevision>? revs = UICommands.GetSelectedRevisions() ?? new List<GitRevision>();
+                selected = revs.Count > 0 ? revs[0].ObjectId : null;
+                first = revs.Count > 1 ? revs[revs.Count - 1].ObjectId : null;
+            }
+            else
+            {
+                // Try select a "diff" from the expected commit to worktree for a submodule
+                selected = ObjectId.WorkTreeId;
+                first = Info?.Detailed?.RawStatus?.OldCommit;
+            }
+
+            GitUICommands.LaunchBrowse(workingDir: Info.Path.EnsureTrailingPathSeparator(), selected, first);
         }
 
         internal override void OnSelected()

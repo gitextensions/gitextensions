@@ -650,6 +650,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        public IReadOnlyList<GitRevision> GetSelectedRevisions()
+        {
+            return RevisionGrid.GetSelectedRevisions();
+        }
+
         #endregion
 
         public void SetPathFilter(string pathFilter)
