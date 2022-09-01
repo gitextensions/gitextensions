@@ -71,9 +71,9 @@ namespace GitUI.BranchTreePanel
             this.mnuBtnPruneAllBranchesFromARemote = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBtnOpenRemoteUrlInBrowser = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnubtnManageSubmodules = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnOpenSubmodule = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnOpenGESubmodule = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnManageSubmodules = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnUpdateSubmodule = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnSynchronizeSubmodules = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnResetSubmodule = new System.Windows.Forms.ToolStripMenuItem();
@@ -146,9 +146,9 @@ namespace GitUI.BranchTreePanel
             this.mnuBtnPruneAllBranchesFromARemote,
             this.mnuBtnOpenRemoteUrlInBrowser,
             this.toolStripSeparator5,
-            this.mnubtnManageSubmodules,
             this.mnubtnOpenSubmodule,
             this.mnubtnOpenGESubmodule,
+            this.mnubtnManageSubmodules,
             this.mnubtnUpdateSubmodule,
             this.mnubtnSynchronizeSubmodules,
             this.mnubtnResetSubmodule,
@@ -278,14 +278,6 @@ namespace GitUI.BranchTreePanel
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(263, 6);
             // 
-            // mnubtnManageSubmodules
-            // 
-            this.mnubtnManageSubmodules.Image = global::GitUI.Properties.Images.SubmodulesManage;
-            this.mnubtnManageSubmodules.Name = "mnubtnManageSubmodules";
-            this.mnubtnManageSubmodules.Size = new System.Drawing.Size(266, 26);
-            this.mnubtnManageSubmodules.Text = "&Manage...";
-            this.mnubtnManageSubmodules.ToolTipText = "Manage submodules";
-            // 
             // mnubtnOpenSubmodule
             // 
             this.mnubtnOpenSubmodule.Image = global::GitUI.Properties.Images.FolderOpen;
@@ -301,6 +293,14 @@ namespace GitUI.BranchTreePanel
             this.mnubtnOpenGESubmodule.Size = new System.Drawing.Size(266, 26);
             this.mnubtnOpenGESubmodule.Text = "O&pen";
             this.mnubtnOpenGESubmodule.ToolTipText = "Open selected submodule in a new instance";
+            // 
+            // mnubtnManageSubmodules
+            // 
+            this.mnubtnManageSubmodules.Image = global::GitUI.Properties.Images.SubmodulesManage;
+            this.mnubtnManageSubmodules.Name = "mnubtnManageSubmodules";
+            this.mnubtnManageSubmodules.Size = new System.Drawing.Size(266, 26);
+            this.mnubtnManageSubmodules.Text = "&Manage...";
+            this.mnubtnManageSubmodules.ToolTipText = "Manage submodules";
             // 
             // mnubtnUpdateSubmodule
             // 
