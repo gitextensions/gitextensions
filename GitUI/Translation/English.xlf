@@ -3581,7 +3581,7 @@ Git will never check if the file has changed that will improve status check perf
         <target />
       </trans-unit>
       <trans-unit id="_commitMessageSettings.Text">
-        <source>Edit commit message templates and settings...</source>
+        <source>&amp;Edit commit message templates and settings...</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitMsgFirstLineInvalid.Text">
@@ -3609,6 +3609,14 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_commitValidationCaption.Text">
         <source>Commit validation</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_conventionalCommit.Text">
+        <source>Conven&amp;tional Commits</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_conventionalCommitDocumentation.Text">
+        <source>Documentation...</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteFailed.Text">
