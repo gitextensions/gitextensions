@@ -101,8 +101,8 @@ namespace GitUI.BranchTreePanel
             bool isSingleSubmoduleSelected = hasSingleSelection && selectedNode is SubmoduleNode;
             var submoduleNode = selectedNode as SubmoduleNode;
             bool isBareRepository = Module.IsBareRepository();
-            EnableMenuItems(isSingleSubmoduleSelected && submoduleNode.CanOpen, mnubtnOpenSubmodule, mnubtnOpenGESubmodule);
-            mnubtnUpdateSubmodule.Enable(isSingleSubmoduleSelected);
+            mnubtnOpenSubmodule.Enable(isSingleSubmoduleSelected && !submoduleNode.IsCurrent);
+            EnableMenuItems(isSingleSubmoduleSelected, mnubtnOpenGESubmodule, mnubtnUpdateSubmodule);
             EnableMenuItems(isSingleSubmoduleSelected && !isBareRepository && submoduleNode.IsCurrent, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
             EnableMenuItems(isSingleSubmoduleSelected && !isBareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
         }
@@ -155,10 +155,10 @@ namespace GitUI.BranchTreePanel
             RegisterClick<RemoteRepoNode>(mnubtnDisableRemote, remote => remote.Disable());
 
             // SubmoduleNode
-            RegisterClick<SubmoduleNode>(mnubtnManageSubmodules, _ => _submoduleTree.ManageSubmodules(this));
-            RegisterClick<SubmoduleNode>(mnubtnSynchronizeSubmodules, _ => _submoduleTree.SynchronizeSubmodules(this));
             RegisterClick<SubmoduleNode>(mnubtnOpenSubmodule, node => _submoduleTree.OpenSubmodule(this, node));
             RegisterClick<SubmoduleNode>(mnubtnOpenGESubmodule, node => _submoduleTree.OpenSubmoduleInGitExtensions(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnManageSubmodules, _ => _submoduleTree.ManageSubmodules(this));
+            RegisterClick<SubmoduleNode>(mnubtnSynchronizeSubmodules, _ => _submoduleTree.SynchronizeSubmodules(this));
             RegisterClick<SubmoduleNode>(mnubtnUpdateSubmodule, node => _submoduleTree.UpdateSubmodule(this, node));
             RegisterClick<SubmoduleNode>(mnubtnResetSubmodule, node => _submoduleTree.ResetSubmodule(this, node));
             RegisterClick<SubmoduleNode>(mnubtnStashSubmodule, node => _submoduleTree.StashSubmodule(this, node));
