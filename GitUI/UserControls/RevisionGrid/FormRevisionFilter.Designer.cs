@@ -57,6 +57,7 @@
             this.BranchFilterCheck = new System.Windows.Forms.CheckBox();
             this.BranchFilter = new System.Windows.Forms.TextBox();
             this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
+            this._NO_TRANSLATE_lblCurrentBranchOnlyCheck = new System.Windows.Forms.Label();
             this.SimplifyByDecorationCheck = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_lblSimplifyByDecoration = new System.Windows.Forms.Label();
             this.MainPanel.SuspendLayout();
@@ -237,10 +238,11 @@
             this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblPathFilter, 0, 7);
             this.tableLayoutPanel1.Controls.Add(this.PathFilterCheck, 1, 7);
             this.tableLayoutPanel1.Controls.Add(this.PathFilter, 2, 7);
-            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblBranches, 0, 8);
-            this.tableLayoutPanel1.Controls.Add(this.BranchFilterCheck, 1, 8);
-            this.tableLayoutPanel1.Controls.Add(this.BranchFilter, 2, 8);
-            this.tableLayoutPanel1.Controls.Add(this.CurrentBranchOnlyCheck, 2, 9);
+            this.tableLayoutPanel1.Controls.Add(this.CurrentBranchOnlyCheck, 1, 8);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblCurrentBranchOnlyCheck, 2, 8);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblBranches, 0, 9);
+            this.tableLayoutPanel1.Controls.Add(this.BranchFilterCheck, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this.BranchFilter, 2, 9);
             this.tableLayoutPanel1.Controls.Add(this.SimplifyByDecorationCheck, 1, 10);
             this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblSimplifyByDecoration, 2, 10);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -391,12 +393,22 @@
             // 
             this.CurrentBranchOnlyCheck.AutoSize = true;
             this.CurrentBranchOnlyCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CurrentBranchOnlyCheck.Location = new System.Drawing.Point(96, 255);
+            this.CurrentBranchOnlyCheck.Location = new System.Drawing.Point(76, 255);
             this.CurrentBranchOnlyCheck.Name = "CurrentBranchOnlyCheck";
             this.CurrentBranchOnlyCheck.Size = new System.Drawing.Size(285, 19);
-            this.CurrentBranchOnlyCheck.Text = "Show current branch only";
             this.CurrentBranchOnlyCheck.UseVisualStyleBackColor = true;
             this.CurrentBranchOnlyCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
+            // 
+            // _NO_TRANSLATE_lblCurrentBranchOnlyCheck
+            // 
+            this._NO_TRANSLATE_lblCurrentBranchOnlyCheck.AutoSize = true;
+            this._NO_TRANSLATE_lblCurrentBranchOnlyCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_lblCurrentBranchOnlyCheck.Location = new System.Drawing.Point(96, 277);
+            this._NO_TRANSLATE_lblCurrentBranchOnlyCheck.Name = "_NO_TRANSLATE_lblCurrentBranchOnlyCheck";
+            this._NO_TRANSLATE_lblCurrentBranchOnlyCheck.Size = new System.Drawing.Size(285, 20);
+            this._NO_TRANSLATE_lblCurrentBranchOnlyCheck.TabIndex = 28;
+            this._NO_TRANSLATE_lblCurrentBranchOnlyCheck.Text = "Show current branch only";
+            this._NO_TRANSLATE_lblCurrentBranchOnlyCheck.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SimplifyByDecorationCheck
             // 
@@ -415,7 +427,7 @@
             this._NO_TRANSLATE_lblSimplifyByDecoration.Location = new System.Drawing.Point(96, 277);
             this._NO_TRANSLATE_lblSimplifyByDecoration.Name = "_NO_TRANSLATE_lblSimplifyByDecoration";
             this._NO_TRANSLATE_lblSimplifyByDecoration.Size = new System.Drawing.Size(285, 20);
-            this._NO_TRANSLATE_lblSimplifyByDecoration.TabIndex = 28;
+            this._NO_TRANSLATE_lblSimplifyByDecoration.TabIndex = 29;
             this._NO_TRANSLATE_lblSimplifyByDecoration.Text = "Simplify by decoration";
             this._NO_TRANSLATE_lblSimplifyByDecoration.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -470,6 +482,7 @@
         private System.Windows.Forms.Label _NO_TRANSLATE_lblBranches;
         private System.Windows.Forms.TextBox BranchFilter;
         private System.Windows.Forms.CheckBox CurrentBranchOnlyCheck;
+        private System.Windows.Forms.Label _NO_TRANSLATE_lblCurrentBranchOnlyCheck;
         private System.Windows.Forms.CheckBox BranchFilterCheck;
         private System.Windows.Forms.CheckBox SimplifyByDecorationCheck;
         private System.Windows.Forms.Label _NO_TRANSLATE_lblSimplifyByDecoration;

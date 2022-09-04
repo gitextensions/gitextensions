@@ -28,6 +28,7 @@ namespace GitUI.UserControls.RevisionGrid
             _NO_TRANSLATE_lblLimit.Text = TranslatedStrings.Limit;
             _NO_TRANSLATE_lblPathFilter.Text = TranslatedStrings.PathFilter;
             _NO_TRANSLATE_lblBranches.Text = TranslatedStrings.Branches;
+            _NO_TRANSLATE_lblCurrentBranchOnlyCheck.Text = TranslatedStrings.ShowCurrentBranchOnly;
             _NO_TRANSLATE_lblSimplifyByDecoration.Text = TranslatedStrings.SimplifyByDecoration;
 
             _filterInfo = filterInfo;
@@ -55,7 +56,7 @@ namespace GitUI.UserControls.RevisionGrid
             _NO_TRANSLATE_CommitsLimit.Value = rawFilterInfo.CommitsLimit;
             PathFilterCheck.Checked = rawFilterInfo.ByPathFilter;
             PathFilter.Text = rawFilterInfo.PathFilter;
-            BranchFilterCheck.Checked = rawFilterInfo.IsShowFilteredBranchesChecked || rawFilterInfo.IsShowCurrentBranchOnlyChecked;
+            BranchFilterCheck.Checked = rawFilterInfo.IsShowFilteredBranchesChecked;
             BranchFilter.Text = rawFilterInfo.BranchFilter;
             CurrentBranchOnlyCheck.Checked = rawFilterInfo.ShowCurrentBranchOnly;
             SimplifyByDecorationCheck.Checked = rawFilterInfo.ShowSimplifyByDecoration;
@@ -85,8 +86,8 @@ namespace GitUI.UserControls.RevisionGrid
             _NO_TRANSLATE_CommitsLimit.Enabled = CommitsLimitCheck.Checked;
             PathFilter.Enabled = PathFilterCheck.Checked;
 
-            CurrentBranchOnlyCheck.Enabled = BranchFilterCheck.Checked;
-            BranchFilter.Enabled = BranchFilterCheck.Checked && !CurrentBranchOnlyCheck.Checked;
+            BranchFilterCheck.Enabled = !CurrentBranchOnlyCheck.Checked;
+            BranchFilter.Enabled = BranchFilterCheck.Checked;
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -108,7 +109,7 @@ namespace GitUI.UserControls.RevisionGrid
             _filterInfo.PathFilter = PathFilter.Text;
             _filterInfo.ByBranchFilter = BranchFilterCheck.Checked;
             _filterInfo.BranchFilter = BranchFilter.Text;
-            _filterInfo.ShowCurrentBranchOnly = BranchFilterCheck.Checked && CurrentBranchOnlyCheck.Checked;
+            _filterInfo.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
             _filterInfo.ShowSimplifyByDecoration = SimplifyByDecorationCheck.Checked;
         }
     }
