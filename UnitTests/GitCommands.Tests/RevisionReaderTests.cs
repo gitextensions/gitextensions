@@ -56,7 +56,7 @@ namespace GitCommandsTests
         }
 
         [TestCase(RefFilterOptions.FirstParent, false)]
-        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Reflogs, false)]
+        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Reflogs, true)]
         [TestCase(RefFilterOptions.All, false)]
         [TestCase(RefFilterOptions.All | RefFilterOptions.Reflogs, true)]
         public void BuildArguments_should_add_reflog_if_requested(RefFilterOptions refFilterOptions, bool expected)
@@ -66,11 +66,11 @@ namespace GitCommandsTests
 
             if (expected)
             {
-                args.ToString().Should().Contain(" --reflog ");
+                args.ToString().Should().Contain(" --reflog");
             }
             else
             {
-                args.ToString().Should().NotContain(" --reflog ");
+                args.ToString().Should().NotContain(" --reflog");
             }
 
             parentsAreRewritten.Should().BeFalse();
@@ -82,10 +82,10 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.All, null, " --first-parent ")]
         /* if not 'first parent', then 'all' */
         [TestCase(RefFilterOptions.FirstParent, null, " --all ")]
-        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.All, null, " --all ")]
+        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.All, " --first-parent ", null)]
         [TestCase(RefFilterOptions.All, " --all ", null)]
         /* if not 'first parent' and not 'all' - selected branches, if requested */
-        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Branches, " --first-parent ", " --branches=")]
+        [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Branches, " --first-parent ", null)]
         [TestCase(RefFilterOptions.All | RefFilterOptions.Branches, " --all ", " --branches=")]
         [TestCase(RefFilterOptions.Branches, " --branches=", null)]
         /* Disable special refs with --all */

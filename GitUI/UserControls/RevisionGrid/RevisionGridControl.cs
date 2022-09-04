@@ -496,9 +496,6 @@ namespace GitUI
         {
             // TODO: clean up and move all internals to FilterInfo
 
-            // ShowCurrentBranchOnly depends on BranchFilterEnabled, and to show the current branch
-            // both flags must be set simultaneously (check SetShowBranches implementation).
-            // And since we set a filter - we can't be showing the current branch.
             _filterInfo.ShowCurrentBranchOnly = false;
 
             string newFilter = filter?.Trim() ?? string.Empty;
@@ -982,7 +979,7 @@ namespace GitUI
                     string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
                     ArgumentBuilder args = reader.BuildArguments(_filterInfo.CommitsLimit,
                         _filterInfo.RefFilterOptions,
-                        _filterInfo.IsShowFilteredBranchesChecked ? _filterInfo.BranchFilter : string.Empty,
+                        _filterInfo.BranchFilter,
                         _filterInfo.GetRevisionFilter(),
                         pathFilter,
                         out bool parentsAreRewritten);
@@ -1233,7 +1230,7 @@ namespace GitUI
 
             void OnRevisionReadCompleted()
             {
-                if (!firstRevisionReceived && !FilterIsApplied(inclBranchFilter: true))
+                if (!firstRevisionReceived && !FilterIsApplied())
                 {
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
@@ -1442,10 +1439,9 @@ namespace GitUI
         /// </summary>
         private bool ParentsAreRewritten { get; set; } = false;
 
-        internal bool FilterIsApplied(bool inclBranchFilter)
+        internal bool FilterIsApplied()
         {
-            // TBD ByBranchFilter should always be set when there is a filter
-            return _filterInfo.HasFilter || (inclBranchFilter && _filterInfo.IsShowFilteredBranchesChecked && !string.IsNullOrEmpty(_filterInfo.BranchFilter));
+            return _filterInfo.HasFilter;
         }
 
         #region Graph event handlers
@@ -1693,7 +1689,7 @@ namespace GitUI
                 return;
             }
 
-            _filterInfo.ByBranchFilter = true;
+            _filterInfo.ByBranchFilter = false;
             _filterInfo.ShowCurrentBranchOnly = true;
             _filterInfo.ShowReflogReferences = false;
 
@@ -1720,7 +1716,7 @@ namespace GitUI
                 return;
             }
 
-            // TBD ByBranchFilter should only be set if !string.IsNullOrWhiteSpace(_filterInfo.BranchFilter)
+            // Must be able to set ByBranchFilter without a filter to edit it
             _filterInfo.ByBranchFilter = true;
             _filterInfo.ShowCurrentBranchOnly = false;
             _filterInfo.ShowReflogReferences = false;

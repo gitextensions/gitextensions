@@ -7440,10 +7440,6 @@ Do you want to use this custom merge script?</source>
         <source>Filter</source>
         <target />
       </trans-unit>
-      <trans-unit id="CurrentBranchOnlyCheck.Text">
-        <source>Show current branch only</source>
-        <target />
-      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
         <target />

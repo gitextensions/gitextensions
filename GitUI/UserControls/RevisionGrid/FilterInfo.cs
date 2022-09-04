@@ -94,7 +94,8 @@ namespace GitUI.UserControls.RevisionGrid
             set => _pathFilter = value ?? string.Empty;
         }
 
-        // TBD Remove dependency to both BranchFilter and ShowCurrentBranchOnly
+        // Controls if BranchFilter is valid or not
+        // An empty filter must still be handled as all branches
         public bool ByBranchFilter
         {
             get => AppSettings.BranchFilterEnabled;
@@ -117,15 +118,16 @@ namespace GitUI.UserControls.RevisionGrid
                 RefFilterOptions refFilterOptions;
 
                 // Branch filters
-                if (ShowCurrentBranchOnly)
+                if (ShowReflogReferences)
+                {
+                    refFilterOptions = RefFilterOptions.Reflogs;
+                }
+                else if (ShowCurrentBranchOnly)
                 {
                     // Default git-log, only current branch
                     refFilterOptions = RefFilterOptions.None;
                 }
-
-                // This check should be ByBranchFilter, but BranchFilter is occasionally empty
-                // also for !ShowCurrentBranchOnly
-                else if (BranchFilter.Length > 0)
+                else if (!string.IsNullOrWhiteSpace(BranchFilter))
                 {
                     // Show filtered branches only
                     refFilterOptions = RefFilterOptions.Branches;
@@ -172,19 +174,15 @@ namespace GitUI.UserControls.RevisionGrid
                     refFilterOptions |= RefFilterOptions.SimplifyByDecoration;
                 }
 
-                if (ShowReflogReferences)
-                {
-                    refFilterOptions |= RefFilterOptions.Reflogs;
-                }
-
                 return refFilterOptions;
             }
         }
 
-        public bool IsShowAllBranchesChecked => !ByBranchFilter;
+        public bool IsShowAllBranchesChecked => !ByBranchFilter && !ShowCurrentBranchOnly;
 
-        public bool IsShowCurrentBranchOnlyChecked => ByBranchFilter && ShowCurrentBranchOnly;
+        public bool IsShowCurrentBranchOnlyChecked => ShowCurrentBranchOnly;
 
+        // IsChecked is not the same as a filter is active, see ByBranchFilter
         public bool IsShowFilteredBranchesChecked => ByBranchFilter && !ShowCurrentBranchOnly;
 
         public bool ShowCurrentBranchOnly
@@ -230,7 +228,8 @@ namespace GitUI.UserControls.RevisionGrid
                    ByMessage ||
                    ByDiffContent ||
                    ByPathFilter ||
-                   ByBranchFilter ||
+                   !string.IsNullOrWhiteSpace(BranchFilter) ||
+                   ShowCurrentBranchOnly ||
                    ShowSimplifyByDecoration;
         }
 
@@ -320,6 +319,7 @@ namespace GitUI.UserControls.RevisionGrid
             ByDiffContent = false;
             ByPathFilter = false;
             ByBranchFilter = false;
+            ShowCurrentBranchOnly = false;
             ShowSimplifyByDecoration = false;
         }
 
@@ -416,9 +416,12 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (ShowFirstParent)
             {
-                // first parents has prio over branch filters
                 filter.AppendLine(TranslatedStrings.ShowFirstParents);
-                return filter.ToString();
+            }
+
+            if (ShowSimplifyByDecoration)
+            {
+                filter.AppendLine($"{TranslatedStrings.SimplifyByDecoration}");
             }
 
             if (ShowReflogReferences)
@@ -433,11 +436,6 @@ namespace GitUI.UserControls.RevisionGrid
             else if (!string.IsNullOrWhiteSpace(BranchFilter))
             {
                 filter.AppendLine($"{TranslatedStrings.Branches}: {BranchFilter}");
-            }
-
-            if (ShowSimplifyByDecoration)
-            {
-                filter.AppendLine($"{TranslatedStrings.SimplifyByDecoration}");
             }
 
             return filter.ToString();
