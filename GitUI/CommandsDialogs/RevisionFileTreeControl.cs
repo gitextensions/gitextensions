@@ -190,7 +190,14 @@ See the changes in the commit form.");
 
                 // Save state only when there is selected node
                 List<string> tryNodes = new();
-                if (tvGitTree.SelectedNode is not null)
+
+                // When blame control is visible, taking the filename from the revision selected to blame
+                // because the file could have been renamed in between
+                if (BlameControl.Visible && !string.IsNullOrWhiteSpace(BlameControl.PathToBlame))
+                {
+                    tryNodes.Add(BlameControl.PathToBlame);
+                }
+                else if (tvGitTree.SelectedNode is not null)
                 {
                     TreeNode node = tvGitTree.SelectedNode;
                     string path = "";
