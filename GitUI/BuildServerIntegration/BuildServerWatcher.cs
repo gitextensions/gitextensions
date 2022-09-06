@@ -22,7 +22,6 @@ using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using GitUIPluginInterfaces.Settings;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BuildServerIntegration
@@ -39,6 +38,7 @@ namespace GitUI.BuildServerIntegration
         private readonly IRepoNameExtractor _repoNameExtractor;
         private IDisposable? _buildStatusCancellationToken;
         private IBuildServerAdapter? _buildServerAdapter;
+        private readonly object _observerLock = new();
 
         internal BuildStatusColumnProvider ColumnProvider { get; }
 
@@ -95,7 +95,10 @@ namespace GitUI.BuildServerIntegration
                 buildServerAdapter.GetFinishedBuildsSince(scheduler, nowFrozen)
                             .Finally(() => shouldLookForNewlyFinishedBuilds = false));
 
-            CompositeDisposable cancellationToken = new()
+            CancelBuildStatusFetchOperation();
+            lock (_observerLock)
+            {
+                _buildStatusCancellationToken = new CompositeDisposable
                     {
                         fullDayObservable.OnErrorResumeNext(fullObservable)
                                          .OnErrorResumeNext(Observable.Empty<BuildInfo>()
@@ -118,11 +121,9 @@ namespace GitUI.BuildServerIntegration
                                                .ObserveOn(MainThreadScheduler.Instance)
                                                .Subscribe(OnBuildInfoUpdate)
                     };
+            }
 
             await _revisionGridView.SwitchToMainThreadAsync(launchToken);
-
-            CancelBuildStatusFetchOperation();
-            _buildStatusCancellationToken = cancellationToken;
         }
 
         public void CancelBuildStatusFetchOperation()
@@ -256,9 +257,12 @@ namespace GitUI.BuildServerIntegration
 
         private void OnBuildInfoUpdate(BuildInfo buildInfo)
         {
-            if (_buildStatusCancellationToken is null)
+            lock (_observerLock)
             {
-                return;
+                if (_buildStatusCancellationToken is null)
+                {
+                    return;
+                }
             }
 
             foreach (var commitHash in buildInfo.CommitHashList)
@@ -358,6 +362,11 @@ namespace GitUI.BuildServerIntegration
         {
             var fileName = string.Format("BuildServer-{0}.options", Convert.ToBase64String(Encoding.UTF8.GetBytes(buildServerAdapter.UniqueKey)));
             return new IsolatedStorageFileStream(fileName, FileMode.OpenOrCreate, fileAccess, fileShare);
+        }
+
+        public void OnRepositoryChanged()
+        {
+            _buildServerAdapter?.OnRepositoryChanged();
         }
     }
 }
