@@ -122,6 +122,7 @@
             this._NO_TRANSLATE_chlMenuEntries.Name = "_NO_TRANSLATE_chlMenuEntries";
             this._NO_TRANSLATE_chlMenuEntries.Size = new System.Drawing.Size(315, 94);
             this._NO_TRANSLATE_chlMenuEntries.TabIndex = 5;
+            this._NO_TRANSLATE_chlMenuEntries.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.chlMenuEntries_ItemCheck);
             this._NO_TRANSLATE_chlMenuEntries.SelectedValueChanged += new System.EventHandler(this.chlMenuEntries_SelectedValueChanged);
             // 
             // cbAlwaysShowAllCommands
