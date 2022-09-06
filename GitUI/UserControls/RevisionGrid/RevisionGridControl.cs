@@ -618,7 +618,7 @@ namespace GitUI
                 {
                     gridView.Select();
 
-                    // Prevent exception when changing of reporsitory because the grid still contains no rows.
+                    // Prevent exception when changing of repository because the grid still contains no rows.
                     if (index >= gridView.Rows.Count)
                     {
                         return;
