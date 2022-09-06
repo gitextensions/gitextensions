@@ -15,5 +15,14 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null);
 
         IObservable<BuildInfo> GetRunningBuilds(IScheduler scheduler);
+
+        /// <summary>
+        ///  Provides an extension point for handling the switch of repositories.
+        ///  For example, it could be used to clear build changes.
+        /// </summary>
+        void OnRepositoryChanged()
+        {
+            // Default implementation: we do nothing
+        }
     }
 }
