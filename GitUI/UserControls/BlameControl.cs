@@ -50,6 +50,9 @@ namespace GitUI.Blame
         private static readonly IList<Color> AgeBucketGradientColors = GetAgeBucketGradientColors();
         private IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
 
+        // Relative path of the file to blame when blaming a new revision
+        public string? PathToBlame { get; private set; }
+
         public BlameControl()
         {
             InitializeComponent();
@@ -538,7 +541,7 @@ namespace GitUI.Blame
 
             contextMenu.Tag = new GitBlameContext(_fileName, _lineIndex, GetBlameLine(), _blameId);
 
-            if (!TryGetSelectedRevision(out var selectedRevision))
+            if (!TryGetSelectedRevision(out var blameinfo))
             {
                 blameRevisionToolStripMenuItem.Enabled = false;
 
@@ -548,7 +551,7 @@ namespace GitUI.Blame
             }
 
             blameRevisionToolStripMenuItem.Enabled = true;
-            blamePreviousRevisionToolStripMenuItem.Enabled = RevisionHasParent(selectedRevision);
+            blamePreviousRevisionToolStripMenuItem.Enabled = RevisionHasParent(blameinfo.selectedRevision);
 
             // Get parent for the actual revision, the selected revision may have rewritten parents.
             // The menu will be slightly slower in this situation.
@@ -599,46 +602,52 @@ namespace GitUI.Blame
             CopyToClipboard(c => c.ObjectId.ToString());
         }
 
-        private bool TryGetSelectedRevision([NotNullWhen(returnValue: true)] out GitRevision? selectedRevision)
+        private bool TryGetSelectedRevision([NotNullWhen(returnValue: true)] out (GitRevision? selectedRevision, string? filename) blameInfo)
         {
             var blameCommit = GetBlameCommit();
             if (blameCommit is null)
             {
-                selectedRevision = null;
+                blameInfo = (null, null);
                 return false;
             }
 
-            selectedRevision = _revGrid?.GetRevision(blameCommit.ObjectId);
-            return selectedRevision is not null;
+            blameInfo = (_revGrid?.GetRevision(blameCommit.ObjectId), blameCommit.FileName);
+            return blameInfo.selectedRevision is not null;
         }
 
         private void blameRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetSelectedRevision(out var selectedRevision))
+            if (!TryGetSelectedRevision(out var blameInfo))
             {
                 return;
             }
 
-            BlameRevision(selectedRevision.ObjectId);
+            BlameRevision(blameInfo.selectedRevision.ObjectId, blameInfo.filename);
         }
 
         private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetSelectedRevision(out var selectedRevision))
+            if (!TryGetSelectedRevision(out var blameInfo))
             {
                 return;
             }
 
             // Try get actual parent revision, get popup if it does not exist.
             // (The menu should be disabled if previous is not in grid).
-            GitRevision? revision = _revGrid?.GetActualRevision(selectedRevision);
-            BlameRevision(revision?.FirstParentId);
+            GitRevision? revision = _revGrid?.GetActualRevision(blameInfo.selectedRevision);
+            BlameRevision(revision?.FirstParentId, blameInfo.filename);
         }
 
-        private void BlameRevision(ObjectId? revisionId)
+        /// <summary>
+        /// Blame a specific revision
+        /// </summary>
+        /// <param name="revisionId">the commit id to blame</param>
+        /// <param name="filename">the relative path of the file to blame in this commit (because it could have been renamed)</param>
+        private void BlameRevision(ObjectId? revisionId, string filename)
         {
             if (_revGrid is not null)
             {
+                PathToBlame = filename;
                 if (!_revGrid.SetSelectedRevision(revisionId))
                 {
                     MessageBoxes.RevisionFilteredInGrid(this, revisionId);
