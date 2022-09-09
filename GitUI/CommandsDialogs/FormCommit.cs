@@ -435,6 +435,36 @@ namespace GitUI.CommandsDialogs
             base.OnHandleCreated(e);
         }
 
+        public void FixForOwnerScreenLocation(IWin32Window? owner)
+        {
+            if (owner != null)
+            {
+                Screen screenOwner = Screen.FromHandle(owner.Handle);
+                if (!screenOwner.Bounds.IntersectsWith(Bounds))
+                {
+                    // This form appear to be not in the same monitor as owner window
+                    // thus may become invisible when owner is in secondary screen
+                    // with negative left coordinates and last saved position of the
+                    // form was with positive coordinates in case dpi are different.
+                    // Attempting to correct the saved position may be unsuccessful
+                    // because it depends on the screen layout of extended desktop.
+                    if (screenOwner.Bounds.Width - screenOwner.Bounds.X < 0 && Left > 0)
+                    {
+                        // Move to the owner screen
+                        Left = screenOwner.Bounds.X + Left;
+
+                        // Show in taskbar so user can potentially recover the window
+                        // if the title bar is no more reachable by user.
+                        ShowInTaskbar = true;
+                    }
+                }
+
+                // This should be always applied, but maybe it is better that each form
+                // may declare on the constructor if ShowInTaskbar is true or false
+                ShowInTaskbar = true;
+            }
+        }
+
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hwnd, int msg, IntPtr wp, IntPtr lp);
 
