@@ -18,6 +18,8 @@ environment:
   DOTNET_NOLOGO: true
   # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  # Use latest version of current used .NET version.  6.0 could use the latest of 6.0.  See .\Scripts\Update-DotnetVersion.ps1
+  GE_USE_LATEST_DOTNET: false
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -35,6 +37,11 @@ build:
   verbosity: minimal
 
 install:
+- ps: |
+      if($env:GE_USE_LATEST_DOTNET -eq $true)
+      {
+        .\scripts\Update-DotnetVersion.ps1
+      }
 - ps: |
       Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile "./dotnet-install.ps1"
       ./dotnet-install.ps1 -JsonFile global.json -InstallDir 'C:\Program Files\dotnet'
