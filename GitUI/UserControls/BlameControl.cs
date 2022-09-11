@@ -353,6 +353,8 @@ namespace GitUI.Blame
             // If it could be done with a solid rectangle around the text,
             // the extra spaces added here could be omitted.
 
+            filename = filename?.ToPosixPath();
+
             var filePathLengthEstimate = _blame.Lines.Where(l => filename != l.Commit.FileName)
                                                      .Select(l => l.Commit.FileName.Length)
                                                      .DefaultIfEmpty(0)
