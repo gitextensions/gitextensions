@@ -2,6 +2,10 @@
 
 pushd $PSScriptRoot\..
 
+# If the .NET SDK/runtime version was updated - make build clean
+& git update-index --skip-worktree global.json
+& git update-index --skip-worktree scripts/RepoLayout.props
+
 # iterate through each submodule and mark each AssemblyInfo.cs in a submodule as clean
 $submodules = git submodule --quiet foreach --recursive 'echo $name'
 $submodules | ForEach-Object {
