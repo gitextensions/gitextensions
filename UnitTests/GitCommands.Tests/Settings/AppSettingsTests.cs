@@ -276,7 +276,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.ShowCurrentBranchOnly)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowSimplifyByDecoration)], false, false, false);
                 yield return (properties[nameof(AppSettings.BranchFilterEnabled)], false, false, false);
-                yield return (properties[nameof(AppSettings.ShowFirstParent)], false, false, false);
+                yield return (properties[nameof(AppSettings.ShowOnlyFirstParent)], false, false, false);
                 yield return (properties[nameof(AppSettings.CommitDialogSelectionFilter)], false, false, false);
                 yield return (properties[nameof(AppSettings.DefaultCloneDestinationPath)], string.Empty, true, false);
                 yield return (properties[nameof(AppSettings.RevisionGridQuickSearchTimeout)], 4000, false, false);

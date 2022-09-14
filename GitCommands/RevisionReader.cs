@@ -136,18 +136,20 @@ namespace GitCommands
         /// Get the git-log revisions for the revision grid.
         /// </summary>
         /// <param name="subject">Observer to update the revision grid when the revisions are available.</param>
-        /// <param name="arguments">git-log arguments.</param>
+        /// <param name="revisionFilter">Revision filter, including branch filter.</param>
+        /// <param name="pathFilter">Pathfilter.</param>
         /// <param name="cancellationToken">Cancellation cancellationToken.</param>
         public void GetLog(
             IObserver<GitRevision> subject,
-            ArgumentBuilder arguments,
+            string revisionFilter,
+            string pathFilter,
             CancellationToken cancellationToken)
         {
 #if DEBUG
             int revisionCount = 0;
             var sw = Stopwatch.StartNew();
 #endif
-
+            ArgumentBuilder arguments = BuildArguments(revisionFilter, pathFilter);
             using (var process = _module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
 #if DEBUG
@@ -182,20 +184,10 @@ namespace GitCommands
             }
         }
 
-        public ArgumentBuilder BuildArguments(int maxCount,
-            RefFilterOptions refFilterOptions,
-            string branchFilter,
-            string revisionFilter,
-            string pathFilter,
-            out bool parentsAreRewritten)
+        private ArgumentBuilder BuildArguments(string revisionFilter, string pathFilter)
         {
-            parentsAreRewritten = !string.IsNullOrWhiteSpace(pathFilter)
-                || !string.IsNullOrWhiteSpace(revisionFilter)
-                || refFilterOptions.HasFlag(RefFilterOptions.NoMerges);
-
             return new GitArgumentBuilder("log")
             {
-                { maxCount > 0, $"--max-count={maxCount}" },
                 "-z",
                 $"--pretty=format:\"{LogFormat}\"",
 
@@ -203,62 +195,9 @@ namespace GitCommands
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.Topology, "--topo-order" },
 
-                // revision branch filter
-                {
-                    refFilterOptions.HasFlag(RefFilterOptions.Reflog),
-                    "--reflog",
-                    new ArgumentBuilder
-                    {
-                        // refs to exclude
-                        { refFilterOptions.HasFlag(RefFilterOptions.NoGitNotes), "--not --glob=notes --not" },
-                        { refFilterOptions.HasFlag(RefFilterOptions.NoStash), "--exclude=refs/stash" },
-
-                        // all, filtered or current (none)
-                        {
-                            refFilterOptions.HasFlag(RefFilterOptions.All),
-                            "--all",
-                            new ArgumentBuilder
-                            {
-                                {
-                                    (refFilterOptions.HasFlag(RefFilterOptions.Branches) && !string.IsNullOrWhiteSpace(branchFilter)),
-                                    new ArgumentBuilder
-                                    {
-                                        {
-                                            IsSimpleBranchFilter(branchFilter),
-                                            branchFilter,
-                                            "--branches=" + branchFilter
-                                        }
-                                    }.ToString()
-                                },
-                            }.ToString()
-                        }
-                    }.ToString()
-                },
-
-                // revision filters
-                { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
-                { refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
-                { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
                 revisionFilter,
-                {
-                    parentsAreRewritten,
-                    new ArgumentBuilder
-                    {
-                        // History simplification
-                        { AppSettings.FullHistoryInFileHistory, $"--full-history" },
-                        {
-                            AppSettings.FullHistoryInFileHistory && AppSettings.SimplifyMergesInFileHistory,
-                            $"--simplify-merges"
-                        },
-                        $"--parents"
-                    }.ToString()
-                },
                 { !string.IsNullOrWhiteSpace(pathFilter), $"-- {pathFilter}" }
             };
-
-            static bool IsSimpleBranchFilter(string branchFilter) =>
-                branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
         }
 
         private bool TryParseRevision(in ArraySegment<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision)
@@ -514,6 +453,9 @@ namespace GitCommands
             {
                 return new RevisionReader(module, hasReflogSelector, logOutputEncoding, sixMonths);
             }
+
+            internal ArgumentBuilder BuildArguments(string revisionFilter, string pathFilter) =>
+                _revisionReader.BuildArguments(revisionFilter, pathFilter);
 
             internal bool TryParseRevision(ArraySegment<byte> chunk, [NotNullWhen(returnValue: true)] out GitRevision? revision) =>
                 _revisionReader.TryParseRevision(chunk, out revision);

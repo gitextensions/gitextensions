@@ -1263,7 +1263,7 @@ namespace GitCommands
             set => SetBool("branchfilterenabled", value);
         }
 
-        public static bool ShowFirstParent
+        public static bool ShowOnlyFirstParent
         {
             get => GetBool("showfirstparent", false);
             set => SetBool("showfirstparent", value);
