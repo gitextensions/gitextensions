@@ -85,6 +85,21 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             DrawSuperprojectRefs(e, superprojectRefs, style, messageBounds, ref offset);
 
+            if (revision.IsStash)
+            {
+                RevisionGridRefRenderer.DrawRef(
+                    e.State.HasFlag(DataGridViewElementStates.Selected),
+                    style.NormalFont,
+                    ref offset,
+                    revision.ReflogSelector.Substring(5),
+                    AppColor.OtherTag.GetThemeColor(),
+                    RefArrowType.None,
+                    messageBounds,
+                    e.Graphics,
+                    dashedLine: false,
+                    fill: AppSettings.FillRefLabels);
+            }
+
             if (revision.IsArtificial)
             {
                 DrawArtificialRevision(e, revision, style, messageBounds, ref offset);

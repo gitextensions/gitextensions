@@ -108,6 +108,16 @@ namespace GitUIPluginInterfaces
         /// </summary>
         public bool IsArtificial => ObjectId.IsArtificial;
 
+        /// <summary>
+        /// Indicates whether the commit is a main stash commit.
+        /// </summary>
+        public bool IsStash => ReflogSelector is not null;
+
+        /// <summary>
+        /// The reflog selector, contains the stash name like "stash{0}"
+        /// </summary>
+        public string? ReflogSelector { get; set; }
+
         public bool HasParent => ParentIds?.Count > 0;
 
         public ObjectId? FirstParentId => ParentIds?.FirstOrDefault();

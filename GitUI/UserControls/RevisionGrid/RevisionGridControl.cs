@@ -874,13 +874,16 @@ namespace GitUI
             // Both these operations can take a long time and is done async in parallel.
             // Step 2. requires that the information in 1. is available when adding revisions,
             // and is therefore protected with a semaphore.
-            SemaphoreSlim semaphoreUpdateGrid = new(initialCount: 0, maxCount: 1);
+            SemaphoreSlim semaphoreUpdateGrid = new(initialCount: 0, maxCount: 2);
             CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
             _isRefreshingRevisions = true;
 
             ILookup<ObjectId, IGitRef> refsByObjectId = null;
             bool firstRevisionReceived = false;
             bool headIsHandled = false;
+            Dictionary<ObjectId, GitRevision> stashesById = null;
+            Dictionary<ObjectId, GitRevision> untrackedByStashId = null;
+            ILookup<ObjectId, GitRevision> stashesByParentId = null;
 
             // getRefs (refreshing from Browse) is Lazy already, but not from RevGrid (updating filters etc)
             Lazy<IReadOnlyList<IGitRef>> getUnfilteredRefs = new(() => (getRefs ?? capturedModule.GetRefs)(RefsFilter.NoFilter));
@@ -949,7 +952,12 @@ namespace GitUI
                     }
 
                     CurrentCheckout = newCurrentCheckout;
-                    refsByObjectId = getUnfilteredRefs.Value.ToLookup(gitRef => gitRef.ObjectId);
+
+                    // Exclude the 'stash' ref, it is specially handled when stashes are shown
+                    refsByObjectId = (AppSettings.ShowStashes
+                        ? getUnfilteredRefs.Value.Where(r => r.CompleteName != GitRefName.RefsStashPrefix)
+                        : getUnfilteredRefs.Value)
+                        .ToLookup(gitRef => gitRef.ObjectId);
                     ResetNavigationHistory();
                     UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef);
                     _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(newCurrentCheckout, currentlySelectedObjectIds);
@@ -969,13 +977,67 @@ namespace GitUI
                     }
                 }).FileAndForget();
 
-                cancellationToken.ThrowIfCancellationRequested();
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    if (!AppSettings.ShowStashes)
+                    {
+                        semaphoreUpdateGrid.Release();
+                        return;
+                    }
+
+                    await TaskScheduler.Default;
+
+                    // Get the "main" stash commit, including the reflog selector
+                    IReadOnlyCollection<GitRevision> stashRevs = new RevisionReader(capturedModule, hasReflogSelector: true).GetStashes(cancellationToken);
+                    stashesById = stashRevs.ToDictionary(r => r.ObjectId);
+
+                    // Git stores stashes in 2 or 3 commits. The (first) "stash" commit is listed by git-stash-list,
+                    // does not include untracked files, may be stored in the third "untracked" commit.
+                    // The second "index" commit are ignored (can be seen with reflog).
+                    // Git creates the "untracked" commit also if there are no changes, these are filtered (adds marginal time to getting revisions).
+                    // This command to list "untracked" commits is quite slow, why max number of "stash" commits
+                    // to evaluate for untracked files is limited.
+                    if (AppSettings.ShowReflogReferences)
+                    {
+                        // the "untracked" commits are already shown in the grid
+                        semaphoreUpdateGrid.Release();
+                        return;
+                    }
+
+                    // "stash" commits to insert (before regular commit)
+                    stashesByParentId = stashRevs.ToLookup(r => r.FirstParentId);
+
+                    // "untracked" commits to insert (parent to "stash" commits)
+                    Dictionary<ObjectId, ObjectId> untrackedChildIds = stashRevs.Where(stash => stash.ParentIds.Count >= 3)
+                        .Take(AppSettings.MaxStashesWithUntrackedFiles)
+                        .ToDictionary(stash => stash.ParentIds[2], stash => stash.ObjectId);
+                    IReadOnlyCollection<GitRevision> untrackedRevs = new RevisionReader(capturedModule, hasReflogSelector: false)
+                        .GetRevisionsFromList(untrackedChildIds.Keys.ToList(), cancellationToken);
+                    untrackedByStashId = untrackedRevs.ToDictionary(r => untrackedChildIds[r.ObjectId]);
+
+                    // Remove parents not included ("index" and empty "untracked" commits).
+                    foreach (GitRevision stash in stashRevs)
+                    {
+                        if (!untrackedByStashId.ContainsKey(stash.ObjectId))
+                        {
+                            stash.ParentIds = new List<ObjectId>() { stash.FirstParentId };
+                        }
+                        else
+                        {
+                            stash.ParentIds = new List<ObjectId>() { stash.FirstParentId, stash.ParentIds[2] };
+                        }
+                    }
+
+                    // Allow add revisions to the grid
+                    semaphoreUpdateGrid.Release();
+                }).FileAndForget();
 
                 // Get info about all Git commits, update the grid
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await TaskScheduler.Default;
-                    RevisionReader reader = new(capturedModule);
+
+                    RevisionReader reader = new(capturedModule, hasReflogSelector: false);
                     string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
                     ArgumentBuilder args = reader.BuildArguments(_filterInfo.CommitsLimit,
                         _filterInfo.RefFilterOptions,
@@ -985,7 +1047,8 @@ namespace GitUI
                         out bool parentsAreRewritten);
                     ParentsAreRewritten = parentsAreRewritten;
 
-                    await reader.GetLogAsync(
+                    cancellationToken.ThrowIfCancellationRequested();
+                    reader.GetLog(
                         observeRevisions,
                         args,
                         cancellationToken);
@@ -1140,22 +1203,49 @@ namespace GitUI
             {
                 if (!firstRevisionReceived)
                 {
-                    // Wait for refs,CurrentCheckout to be available
+                    // Wait for refs,CurrentCheckout and stashes as second step
                     this.InvokeAsync(() => { ShowLoading(showSpinner: false); }).FileAndForget();
+                    semaphoreUpdateGrid.Wait(cancellationToken);
                     semaphoreUpdateGrid.Wait(cancellationToken);
                     firstRevisionReceived = true;
                 }
 
-                if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
+                if (stashesById is not null)
                 {
-                    // Insert worktree/index before HEAD (CurrentCheckout)
-                    // If grid is filtered and HEAD not visible, insert artificial in OnRevisionReadCompleted()
-                    headIsHandled = true;
-                    AddArtificialRevisions();
+                    if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
+                    {
+                        revision.ReflogSelector = gridStash.ReflogSelector;
+
+                        // Do not add this again (when the main commit is handled)
+                        stashesById.Remove(revision.ObjectId);
+                    }
+                    else if (stashesByParentId?.Contains(revision.ObjectId) is true)
+                    {
+                        foreach (GitRevision stash in stashesByParentId[revision.ObjectId])
+                        {
+                            // Add if not already added (reflogs etc list before parent commit)
+                            if (stashesById.ContainsKey(stash.ObjectId))
+                            {
+                                _gridView.Add(stash);
+                                if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                {
+                                    _gridView.Add(untracked);
+                                }
+                            }
+                        }
+                    }
                 }
 
                 // Look up any refs associated with this revision
                 revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
+
+                if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
+                {
+                    // Insert artificial worktree/index just before HEAD (CurrentCheckout)
+                    // If grid is filtered and HEAD not visible, insert in OnRevisionReadCompleted()
+                    headIsHandled = true;
+                    AddArtificialRevisions();
+                }
 
                 _gridView.Add(revision);
 
@@ -1900,6 +1990,11 @@ namespace GitUI
             SetEnabled(archiveRevisionToolStripMenuItem, !revision.IsArtificial);
             SetEnabled(createTagToolStripMenuItem, !revision.IsArtificial);
 
+            bool showStash = !bareRepositoryOrArtificial && revision.IsStash;
+            SetEnabled(applyStashToolStripMenuItem, showStash);
+            SetEnabled(popStashToolStripMenuItem, showStash);
+            SetEnabled(dropStashToolStripMenuItem, showStash);
+
             SetEnabled(openBuildReportToolStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url));
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
@@ -2113,9 +2208,9 @@ namespace GitUI
             PerformRefreshRevisions();
         }
 
-        internal void ToggleShowLatestStash()
+        internal void ToggleShowStashes()
         {
-            AppSettings.ShowLatestStash = !AppSettings.ShowLatestStash;
+            AppSettings.ShowStashes = !AppSettings.ShowStashes;
             PerformRefreshRevisions();
         }
 
@@ -2150,6 +2245,71 @@ namespace GitUI
         {
             var revisions = GetSelectedRevisions(SortDirection.Descending);
             UICommands.StartCherryPickDialog(ParentForm, revisions);
+        }
+
+        private void ApplyStashToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            UICommands.StashApply(this, LatestSelectedRevision.ObjectId.ToString());
+            PerformRefreshRevisions();
+        }
+
+        private void PopStashToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            string stashName = LatestSelectedRevision.ReflogSelector;
+            if (string.IsNullOrEmpty(stashName))
+            {
+                return;
+            }
+
+            UICommands.StashPop(this, stashName);
+            PerformRefreshRevisions();
+        }
+
+        private void DropStashToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var stashName = LatestSelectedRevision.ReflogSelector;
+            if (string.IsNullOrEmpty(stashName))
+            {
+                return;
+            }
+
+            using (new WaitCursorScope())
+            {
+                TaskDialogButton result;
+                if (AppSettings.DontConfirmStashDrop)
+                {
+                    result = TaskDialogButton.Yes;
+                }
+                else
+                {
+                    TaskDialogPage page = new()
+                    {
+                        Text = TranslatedStrings.AreYouSure,
+                        Caption = TranslatedStrings.StashDropConfirmTitle,
+                        Heading = TranslatedStrings.CannotBeUndone,
+                        Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                        Icon = TaskDialogIcon.Information,
+                        Verification = new TaskDialogVerificationCheckBox
+                        {
+                            Text = TranslatedStrings.DontShowAgain
+                        },
+                        SizeToContent = true
+                    };
+
+                    result = TaskDialog.ShowDialog(Handle, page);
+
+                    if (page.Verification.Checked)
+                    {
+                        AppSettings.DontConfirmStashDrop = true;
+                    }
+                }
+
+                if (result == TaskDialogButton.Yes)
+                {
+                    UICommands.StashDrop(this, stashName);
+                    PerformRefreshRevisions();
+                }
+            }
         }
 
         private void FixupCommitToolStripMenuItemClick(object sender, EventArgs e)

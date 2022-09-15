@@ -130,6 +130,10 @@ the last selected commit.");
         private readonly TranslationString _showCurrentBranchOnly = new("Show current branch only");
         private readonly TranslationString _simplifyByDecoration = new("Simplify by decoration");
 
+        private readonly TranslationString _stashDropConfirmTitle = new("Drop Stash Confirmation");
+        private readonly TranslationString _cannotBeUndone = new("This action cannot be undone.");
+        private readonly TranslationString _areYouSure = new("Are you sure you want to drop the stash? This action cannot be undone.");
+
         // public only because of FormTranslate
         public TranslatedStrings()
         {
@@ -279,5 +283,9 @@ the last selected commit.");
         public static string ScriptText => _instance.Value._scriptText.Text;
 
         #endregion
+
+        public static string StashDropConfirmTitle => _instance.Value._stashDropConfirmTitle.Text;
+        public static string CannotBeUndone => _instance.Value._cannotBeUndone.Text;
+        public static string AreYouSure => _instance.Value._areYouSure.Text;
     }
 }

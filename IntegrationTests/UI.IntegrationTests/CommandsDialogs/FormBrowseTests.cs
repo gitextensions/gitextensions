@@ -189,7 +189,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         }
 
         [Test]
-        public void ShowLatestStash_starting_disabled_should_filter_as_expected()
+        public void ShowStashes_starting_disabled_should_filter_as_expected()
         {
             using ReferenceRepository referenceRepository = new();
             GitUICommands commands = new(referenceRepository.Module);
@@ -200,34 +200,34 @@ namespace GitExtensions.UITests.CommandsDialogs
             referenceRepository.Stash("Stash2");
             referenceRepository.CreateCommit("Commit3");
 
-            bool showLatestStash = AppSettings.ShowLatestStash;
+            bool showStashes = AppSettings.ShowStashes;
             bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
 
-            AppSettings.ShowLatestStash = false;
+            AppSettings.ShowStashes = false;
             AppSettings.RevisionGraphShowArtificialCommits = false;
             RunFormTest(
                 form =>
                 {
                     try
                     {
-                        // 1. Check with ShowLatestStash disabled
-                        Console.WriteLine("Scenario 1: set 'Show latest stash' to false");
+                        // 1. Check with ShowStashes disabled
+                        Console.WriteLine("Scenario 1: set 'Show stashes' to false");
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.ShowLatestStash.Should().BeFalse();
+                        AppSettings.ShowStashes.Should().BeFalse();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
 
-                        // 2. Change ShowLatestStash to enabled
-                        Console.WriteLine("Scenario 1: change 'Show latest stash' to enabled");
-                        form.GetTestAccessor().RevisionGrid.ToggleShowLatestStash();
+                        // 2. Change ShowStashes to enabled
+                        Console.WriteLine("Scenario 1: change 'Show stashes' to enabled");
+                        form.GetTestAccessor().RevisionGrid.ToggleShowStashes();
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.ShowLatestStash.Should().BeTrue();
-                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(6);
+                        AppSettings.ShowStashes.Should().BeTrue();
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(7);
                     }
                     finally
                     {
-                        AppSettings.ShowLatestStash = showLatestStash;
+                        AppSettings.ShowStashes = showStashes;
                         AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
                     }
                 },
@@ -235,7 +235,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         }
 
         [Test]
-        public void ShowLatestStash_starting_enabled_should_filter_as_expected()
+        public void ShowStashes_starting_enabled_should_filter_as_expected()
         {
             using ReferenceRepository referenceRepository = new();
             GitUICommands commands = new(referenceRepository.Module);
@@ -246,29 +246,29 @@ namespace GitExtensions.UITests.CommandsDialogs
             referenceRepository.Stash("Stash2");
             referenceRepository.CreateCommit("Commit3");
 
-            bool showLatestStash = AppSettings.ShowLatestStash;
+            bool showStashes = AppSettings.ShowStashes;
             bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
 
-            AppSettings.ShowLatestStash = true;
+            AppSettings.ShowStashes = true;
             AppSettings.RevisionGraphShowArtificialCommits = false;
             RunFormTest(
                 form =>
                 {
                     try
                     {
-                        // 2. Check with ShowLatestStash enabled
-                        Console.WriteLine("Scenario 2: set 'Show latest stash' to true");
+                        // 1. Check with ShowStashes enabled
+                        Console.WriteLine("Scenario 2: set 'Show stash' to true");
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.ShowLatestStash.Should().BeTrue();
-                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(6);
+                        AppSettings.ShowStashes.Should().BeTrue();
+                        form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(7);
 
-                        // 2. Change ShowLatestStash to disabled
-                        Console.WriteLine("Scenario 2: change 'Show latest stash' to disabled");
-                        form.GetTestAccessor().RevisionGrid.ToggleShowLatestStash();
+                        // 2. Change ShowStashes to disabled
+                        Console.WriteLine("Scenario 2: change 'Show stash' to disabled");
+                        form.GetTestAccessor().RevisionGrid.ToggleShowStashes();
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
-                        AppSettings.ShowLatestStash.Should().BeFalse();
+                        AppSettings.ShowStashes.Should().BeFalse();
 #if DEBUG
                         // https://github.com/gitextensions/gitextensions/issues/10170
                         // This test occasionaly fails with 3 visible revisions
@@ -277,7 +277,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     }
                     finally
                     {
-                        AppSettings.ShowLatestStash = showLatestStash;
+                        AppSettings.ShowStashes = showStashes;
                         AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
                     }
                 },
