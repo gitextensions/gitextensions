@@ -11,18 +11,25 @@ namespace GitUI.UserControls.RevisionGrid
         private static Font? _disabledFont;
 
         /// <summary>
-        /// set the menu item disabled and remove mouse hover effect.
+        /// set the menu item disabled.
         /// </summary>
-        public static void SetAsCaptionMenuItem(ToolStripMenuItem menuItem, ToolStrip menu)
+        public static void SetAsCaptionMenuItem(ToolStripMenuItem menuItem)
         {
-            menu.AttachMenuItemBackgroundFilter(_menuItemBackgroundFilter);
-
             menuItem.Tag = _captionTag;
             menuItem.Enabled = false;
 
             _disabledFont ??= new Font(menuItem.Font, FontStyle.Italic);
 
             menuItem.Font = _disabledFont;
+        }
+
+        /// <summary>
+        /// set the menu item disabled and remove mouse hover effect.
+        /// </summary>
+        public static void SetAsCaptionMenuItem(ToolStripMenuItem menuItem, ToolStrip menu)
+        {
+            menu.AttachMenuItemBackgroundFilter(_menuItemBackgroundFilter);
+            SetAsCaptionMenuItem(menuItem);
         }
 
         /// <summary>

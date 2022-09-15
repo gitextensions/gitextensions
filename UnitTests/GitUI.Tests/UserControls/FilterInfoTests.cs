@@ -591,11 +591,15 @@ namespace GitUITests.UserControls
             }
         }
 
-        [TestCase(false, false)]
-        [TestCase(true, false)]
-        [TestCase(false, true)]
-        [TestCase(true, true)]
-        public void FilterInfo_ShowReflogReferences_resets_filters(bool byBranchFilter, bool showCurrentBranchOnly)
+        [TestCase(false, false, false)]
+        [TestCase(true, false, false)]
+        [TestCase(false, true, false)]
+        [TestCase(true, true, false)]
+        [TestCase(false, false, true)]
+        [TestCase(true, false, true)]
+        [TestCase(false, true, true)]
+        [TestCase(true, true, true)]
+        public void FilterInfo_ShowReflogReferences_dominates_other_filters(bool byBranchFilter, bool showCurrentBranchOnly, bool showReflog)
         {
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
@@ -607,13 +611,21 @@ namespace GitUITests.UserControls
                 FilterInfo filterInfo = new()
                 {
                     ByBranchFilter = byBranchFilter,
-                    ShowCurrentBranchOnly = showCurrentBranchOnly
+                    ShowCurrentBranchOnly = showCurrentBranchOnly,
+                    ShowReflogReferences = showReflog
                 };
 
-                filterInfo.ShowReflogReferences = true;
+                filterInfo.ShowReflogReferences.Should().Be(showReflog);
 
-                filterInfo.ByBranchFilter.Should().BeFalse();
-                filterInfo.ShowCurrentBranchOnly.Should().BeFalse();
+                // showCurrentBranchOnly dominates byBranchFilter
+                filterInfo.IsShowAllBranchesChecked.Should().Be(!byBranchFilter && !showCurrentBranchOnly && !showReflog);
+                filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly && !showReflog);
+                filterInfo.IsShowFilteredBranchesChecked.Should().Be(byBranchFilter && !showCurrentBranchOnly && !showReflog);
+
+                filterInfo.ByBranchFilter.Should().Be(byBranchFilter);
+                AppSettings.BranchFilterEnabled.Should().Be(byBranchFilter);
+                filterInfo.ShowCurrentBranchOnly.Should().Be(showCurrentBranchOnly);
+                AppSettings.ShowCurrentBranchOnly.Should().Be(showCurrentBranchOnly);
             }
             finally
             {

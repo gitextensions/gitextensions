@@ -198,7 +198,7 @@ namespace GitUITests.UserControls
 
         [TestCase(false)]
         [TestCase(true)]
-        public void ShowReflogs_should_be_bound_via_FilterChanged(bool settingValue)
+        public void ShowReflog_should_be_bound_via_FilterChanged(bool settingValue)
         {
             bool original = AppSettings.ShowReflogReferences;
             try
@@ -206,7 +206,7 @@ namespace GitUITests.UserControls
                 AppSettings.ShowReflogReferences = settingValue;
 
                 _revisionGridFilter.FilterChanged += Raise.EventWith(_revisionGridFilter, new FilterChangedEventArgs(new()));
-                _filterToolBar.GetTestAccessor().tsmiShowReflogs.Checked.Should().Be(settingValue);
+                _filterToolBar.GetTestAccessor().tsbShowReflog.Checked.Should().Be(settingValue);
             }
             finally
             {
@@ -215,10 +215,17 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void ShowReflogs_should_invoke_ToggleShowReflogReferences()
+        public void ShowReflogButton_should_invoke_ToggleShowReflogReferences()
         {
-            _filterToolBar.GetTestAccessor().tsmiShowReflogs.PerformClick();
+            _filterToolBar.GetTestAccessor().tsbShowReflog.PerformClick();
             _revisionGridFilter.Received(1).ToggleShowReflogReferences();
+        }
+
+        [Test]
+        public void ShowBranches_Reflog_should_invoke_ToggleShowReflogReferences()
+        {
+            _filterToolBar.GetTestAccessor().tsmiShowReflog.PerformClick();
+            _revisionGridFilter.Received(1).ShowReflog();
         }
 
         [Test]

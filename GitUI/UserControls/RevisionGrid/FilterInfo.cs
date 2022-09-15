@@ -120,7 +120,7 @@ namespace GitUI.UserControls.RevisionGrid
                 // Branch filters
                 if (ShowReflogReferences)
                 {
-                    refFilterOptions = RefFilterOptions.Reflogs;
+                    refFilterOptions = RefFilterOptions.Reflog;
                 }
                 else if (ShowCurrentBranchOnly)
                 {
@@ -159,6 +159,7 @@ namespace GitUI.UserControls.RevisionGrid
                     }
                 }
 
+                // other revision filters (see also GetRevisionFilter())
                 if (!AppSettings.ShowMergeCommits)
                 {
                     refFilterOptions |= RefFilterOptions.NoMerges;
@@ -169,6 +170,7 @@ namespace GitUI.UserControls.RevisionGrid
                     refFilterOptions |= RefFilterOptions.FirstParent;
                 }
 
+                // Listed in Git help as history simplification, but is a revision filter
                 if (ShowSimplifyByDecoration)
                 {
                     refFilterOptions |= RefFilterOptions.SimplifyByDecoration;
@@ -178,12 +180,12 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        public bool IsShowAllBranchesChecked => !ByBranchFilter && !ShowCurrentBranchOnly;
+        public bool IsShowAllBranchesChecked => !ByBranchFilter && !ShowCurrentBranchOnly && !ShowReflogReferences;
 
-        public bool IsShowCurrentBranchOnlyChecked => ShowCurrentBranchOnly;
+        public bool IsShowCurrentBranchOnlyChecked => ShowCurrentBranchOnly && !ShowReflogReferences;
 
         // IsChecked is not the same as a filter is active, see ByBranchFilter
-        public bool IsShowFilteredBranchesChecked => ByBranchFilter && !ShowCurrentBranchOnly;
+        public bool IsShowFilteredBranchesChecked => ByBranchFilter && !ShowCurrentBranchOnly && !ShowReflogReferences;
 
         public bool ShowCurrentBranchOnly
         {
@@ -202,14 +204,10 @@ namespace GitUI.UserControls.RevisionGrid
             get => AppSettings.ShowReflogReferences;
             set
             {
+                // Do not unset ByBranchFilter or ShowCurrentBranchOnly.
+                // ShowReflogReferences dominates those settings and if the user
+                // toggles the Reflog button, the curremt branch fílter should appear.
                 AppSettings.ShowReflogReferences = value;
-                if (value)
-                {
-                    // If reflogs are shown, then we can't apply any filters
-                    ByBranchFilter = false;
-                    ShowCurrentBranchOnly = false;
-                    ShowSimplifyByDecoration = false;
-                }
             }
         }
 

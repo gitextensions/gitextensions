@@ -3215,6 +3215,10 @@ Do you want to continue?</source>
         <source>&amp;Translate</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsbShowReflog.ToolTipText">
+        <source>Show reflog</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
         <source>Advanced filter</source>
         <target />
@@ -3315,8 +3319,12 @@ Do you want to continue?</source>
         <source>Show first parents</source>
         <target />
       </trans-unit>
-      <trans-unit id="tsmiShowReflogs.ToolTipText">
-        <source>Show reflogs</source>
+      <trans-unit id="tsmiShowReflog.Text">
+        <source>&amp;Reflog</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowReflog.ToolTipText">
+        <source>Show reflog</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
@@ -9611,6 +9619,18 @@ See the changes in the commit form.</source>
         <source>&amp;Sort commits by author date</source>
         <target />
       </trans-unit>
+      <trans-unit id="BranchesToolStripMenuItem.Text">
+        <source>Branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ColumnsToolStripMenuItem.Text">
+        <source>Columns</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="CommitsToolStripMenuItem.Text">
+        <source>Commits</source>
+        <target />
+      </trans-unit>
       <trans-unit id="GotoChildCommit.Text">
         <source>Go to c&amp;hild commit</source>
         <target />
@@ -9633,6 +9653,14 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
         <source>Go to &amp;parent commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Grid_infoToolStripMenuItem.Text">
+        <source>Grid info</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Grid_labelsToolStripMenuItem.Text">
+        <source>Grid labels</source>
         <target />
       </trans-unit>
       <trans-unit id="HighlightSelectedBranch.Text">
@@ -9701,6 +9729,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="ShowSuperprojectTags.Text">
         <source>Show su&amp;perproject tags</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SortingToolStripMenuItem.Text">
+        <source>Sorting</source>
         <target />
       </trans-unit>
       <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">

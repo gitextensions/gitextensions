@@ -189,32 +189,34 @@ namespace GitCommands
             string pathFilter,
             out bool parentsAreRewritten)
         {
-            parentsAreRewritten = !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(revisionFilter);
+            parentsAreRewritten = !string.IsNullOrWhiteSpace(pathFilter)
+                || !string.IsNullOrWhiteSpace(revisionFilter)
+                || refFilterOptions.HasFlag(RefFilterOptions.NoMerges);
 
             return new GitArgumentBuilder("log")
             {
                 { maxCount > 0, $"--max-count={maxCount}" },
                 "-z",
                 $"--pretty=format:\"{LogFormat}\"",
+
+                // sorting
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.AuthorDate, "--author-date-order" },
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.Topology, "--topo-order" },
-                { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
-                { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
-                { refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
+
+                // revision branch filter
                 {
-                    refFilterOptions.HasFlag(RefFilterOptions.Reflogs),
+                    refFilterOptions.HasFlag(RefFilterOptions.Reflog),
                     "--reflog",
                     new ArgumentBuilder
                     {
+                        // refs to exclude
+                        { refFilterOptions.HasFlag(RefFilterOptions.NoGitNotes), "--not --glob=notes --not" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.NoStash), "--exclude=refs/stash" },
+
+                        // all, filtered or current (none)
                         {
                             refFilterOptions.HasFlag(RefFilterOptions.All),
-                            new ArgumentBuilder
-                            {
-                                { refFilterOptions.HasFlag(RefFilterOptions.NoGitNotes), "--not --glob=notes --not" },
-                                { refFilterOptions.HasFlag(RefFilterOptions.NoStash), "--exclude=refs/stash" },
-                                "--all",
-                            }.ToString(),
+                            "--all",
                             new ArgumentBuilder
                             {
                                 {
@@ -232,11 +234,18 @@ namespace GitCommands
                         }
                     }.ToString()
                 },
+
+                // revision filters
+                { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
+                { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
+                { refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
+                { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
                 revisionFilter,
                 {
                     parentsAreRewritten,
                     new ArgumentBuilder
                     {
+                        // History simplification
                         { AppSettings.FullHistoryInFileHistory, $"--full-history" },
                         {
                             AppSettings.FullHistoryInFileHistory && AppSettings.SimplifyMergesInFileHistory,
