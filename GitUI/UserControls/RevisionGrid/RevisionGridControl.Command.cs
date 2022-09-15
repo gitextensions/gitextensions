@@ -39,7 +39,7 @@
             OpenCommitsWithDifftool = 32,
             ToggleBetweenArtificialAndHeadCommits = 33,
             ShowReflogReferences = 34,
-            ShowLatestStash = 35,
+            ShowStashes = 35,
             ResetRevisionFilter = 36,
             ResetRevisionPathFilter = 37,
             SelectNextForkPointAsDiffBase = 38,

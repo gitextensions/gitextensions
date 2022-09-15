@@ -148,7 +148,7 @@ namespace GitUI.UserControls.RevisionGrid
                 // "other refs" include Gerrit refs like refs/for/ and refs/changes/
                 if (refFilterOptions.HasFlag(RefFilterOptions.All))
                 {
-                    if (!AppSettings.ShowLatestStash)
+                    if (!AppSettings.ShowStashes)
                     {
                         refFilterOptions |= RefFilterOptions.NoStash;
                     }

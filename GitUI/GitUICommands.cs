@@ -215,11 +215,11 @@ namespace GitUI
             return DoActionOnRepo(owner, Action);
         }
 
-        public bool StashPop(IWin32Window? owner)
+        public bool StashPop(IWin32Window? owner, string stashName = "")
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, arguments: "stash pop", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, arguments: $"stash pop {stashName.QuoteNE()}", Module.WorkingDir, input: null, useDialogSettings: true);
                 MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed

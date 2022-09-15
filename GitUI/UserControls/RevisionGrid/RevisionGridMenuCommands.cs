@@ -186,11 +186,12 @@ namespace GitUI.UserControls.RevisionGrid
             /*
                 VIEW menu
                 ═════════════
-                        KQZ
+                        KLQZ
                     !   Highlight selected branch (until refresh)
                     !   Set advanced filter
                     !   Show commit message body
                     !   Show first parents
+                    !   Show stashes
                     -   Show SHA-1 column
                     A   Show all branches
                     B   Show remote branches
@@ -202,7 +203,6 @@ namespace GitUI.UserControls.RevisionGrid
                     H   Show author avatar column
                     I   Show build status icon
                     J   Show superproject remote branches
-                    L   Show latest stash
                     M   Show merge commits
                     N   Show git notes
                     O   Show artificial commits
@@ -276,11 +276,11 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
-                    Name = "ShowLatestStash",
-                    Text = "Show &latest stash",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ShowLatestStash),
-                    ExecuteAction = () => _revisionGrid.ToggleShowLatestStash(),
-                    IsCheckedFunc = () => AppSettings.ShowLatestStash
+                    Name = "ShowStashes",
+                    Text = "Show stashes",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ShowStashes),
+                    ExecuteAction = () => _revisionGrid.ToggleShowStashes(),
+                    IsCheckedFunc = () => AppSettings.ShowStashes
                 },
 
                 MenuCommand.CreateSeparator(),

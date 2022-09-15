@@ -20,7 +20,6 @@ namespace GitUITests.UserControls
         public void SetUp()
         {
             AppSettings.ShowGitNotes = false;
-            AppSettings.ShowLatestStash = true;
         }
 
         [Test]

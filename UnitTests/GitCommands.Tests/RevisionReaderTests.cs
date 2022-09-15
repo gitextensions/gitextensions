@@ -30,7 +30,7 @@ namespace GitCommandsTests
         [TestCase(1, true)]
         public void BuildArguments_should_add_maxcount_if_requested(int maxCount, bool expected)
         {
-            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), hasReflogSelector: false, _logOutputEncoding, _sixMonths);
             ArgumentBuilder args = reader.BuildArguments(maxCount, RefFilterOptions.All, "", "", "", out bool parentsAreRewritten);
 
             if (expected)
@@ -48,7 +48,7 @@ namespace GitCommandsTests
         [Test]
         public void BuildArguments_should_be_NUL_terminated()
         {
-            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), hasReflogSelector: false, _logOutputEncoding, _sixMonths);
             ArgumentBuilder args = reader.BuildArguments(-1, RefFilterOptions.All, "", "", "", out bool parentsAreRewritten);
 
             args.ToString().Should().Contain(" log -z ");
@@ -57,11 +57,13 @@ namespace GitCommandsTests
 
         [TestCase(RefFilterOptions.FirstParent, false)]
         [TestCase(RefFilterOptions.FirstParent | RefFilterOptions.Reflogs, true)]
+        [TestCase(RefFilterOptions.Branches, false)]
+        [TestCase(RefFilterOptions.Branches | RefFilterOptions.Reflogs, true)]
         [TestCase(RefFilterOptions.All, false)]
         [TestCase(RefFilterOptions.All | RefFilterOptions.Reflogs, true)]
         public void BuildArguments_should_add_reflog_if_requested(RefFilterOptions refFilterOptions, bool expected)
         {
-            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), hasReflogSelector: false, _logOutputEncoding, _sixMonths);
             ArgumentBuilder args = reader.BuildArguments(-1, refFilterOptions, "", "", "", out bool parentsAreRewritten);
 
             if (expected)
@@ -97,7 +99,7 @@ namespace GitCommandsTests
         [TestCase(RefFilterOptions.NoGitNotes, null, " --not --glob=notes --not ")]
         public void BuildArguments_check_parameters(RefFilterOptions refFilterOptions, string expectedToContain, string notExpectedToContain)
         {
-            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), hasReflogSelector: false, _logOutputEncoding, _sixMonths);
             ArgumentBuilder args = reader.BuildArguments(-1, refFilterOptions, "my_*", "my_revision", "my_path", out bool parentsAreRewritten);
 
             if (expectedToContain is not null)
@@ -117,7 +119,7 @@ namespace GitCommandsTests
         public void TryParseRevisionshould_return_false_if_argument_is_invalid()
         {
             ArraySegment<byte> chunk = null;
-            RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new(""), hasReflogSelector: false, _logOutputEncoding, _sixMonths);
 
             // Set to a high value so Debug.Assert do not raise exceptions
             reader.GetTestAccessor().NoOfParseError = 100;
@@ -136,7 +138,7 @@ namespace GitCommandsTests
         [TestCase("bad_parentid_length", false)]
         [TestCase("bad_sha", false)]
         [TestCase("empty", false)]
-        [TestCase("illegal_timestamp", true, true)]
+        [TestCase("illegal_timestamp", true, false, true)]
         [TestCase("multi_pathfilter", true)]
         [TestCase("no_subject", true)]
         [TestCase("normal", true)]
@@ -144,18 +146,23 @@ namespace GitCommandsTests
         [TestCase("simple_pathfilter", true)]
         [TestCase("subject_no_body", true)]
         [TestCase("empty_commit", true)]
-        public void TryParseRevision_test(string testName, bool expectedReturn, bool serialThrows = false)
+        [TestCase("reflogselector", true, true)]
+        public void TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false, bool serialThrows = false)
         {
             using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
             {
                 string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
                 ArraySegment<byte> chunk = File.ReadAllBytes(path);
-                RevisionReader reader = new(new GitModule(""), _logOutputEncoding, _sixMonths);
+                RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), hasReflogSelector, _logOutputEncoding, _sixMonths);
 
                 // Set to a high value so Debug.Assert do not raise exceptions
                 reader.GetTestAccessor().NoOfParseError = 100;
                 reader.GetTestAccessor().TryParseRevision(chunk, out GitRevision rev)
                     .Should().Be(expectedReturn);
+                if (hasReflogSelector)
+                {
+                    rev.ReflogSelector.Should().NotBeNull();
+                }
 
                 // No LocalTime for the time stamps
                 JsonSerializerSettings timeZoneSettings = new()
