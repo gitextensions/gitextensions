@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands.Settings;
 using GitExtUtils;
@@ -39,6 +40,8 @@ namespace GitCommands
         public static RepoDistSettings SettingsContainer { get; private set; }
 
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
+
+        private static Mutex _globalMutex;
 
         public static readonly int BranchDropDownMinWidth = 300;
         public static readonly int BranchDropDownMaxWidth = 600;
@@ -1603,7 +1606,16 @@ namespace GitCommands
             {
                 SettingsContainer.LockedAction(() =>
                 {
-                    SettingsContainer.Save();
+                    _globalMutex ??= new Mutex(initiallyOwned: false, name: SettingsFilePath.ToPosixPath());
+                    try
+                    {
+                        _globalMutex.WaitOne();
+                        SettingsContainer.Save();
+                    }
+                    finally
+                    {
+                        _globalMutex.ReleaseMutex();
+                    }
                 });
 
                 Saved?.Invoke();
