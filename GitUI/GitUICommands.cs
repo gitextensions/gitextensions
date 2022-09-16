@@ -124,14 +124,14 @@ namespace GitUI
             return success;
         }
 
-        public void StartCommandLineProcessDialog(IWin32Window? owner, string? command, ArgumentString arguments)
+        public bool StartCommandLineProcessDialog(IWin32Window? owner, string? command, ArgumentString arguments)
         {
-            FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true, process: command);
+            return FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true, process: command);
         }
 
-        public void StartGitCommandProcessDialog(IWin32Window? owner, ArgumentString arguments)
+        public bool StartGitCommandProcessDialog(IWin32Window? owner, ArgumentString arguments)
         {
-            FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+            return FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
         public bool StartDeleteBranchDialog(IWin32Window? owner, string branch)
