@@ -111,8 +111,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 }
             };
 
-            UICommands.StartGitCommandProcessDialog(this, args);
-            DialogResult = DialogResult.OK;
+            DialogResult = UICommands.StartGitCommandProcessDialog(this, args) ? DialogResult.OK : DialogResult.None;
         }
 
         private void ValidateWorktreeOptions()
