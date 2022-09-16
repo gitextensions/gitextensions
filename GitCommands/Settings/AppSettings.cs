@@ -1606,7 +1606,9 @@ namespace GitCommands
             {
                 SettingsContainer.LockedAction(() =>
                 {
-                    _globalMutex ??= new Mutex(initiallyOwned: false, name: SettingsFilePath.ToPosixPath());
+                    // prepend "Global\" in order to be safe in preparation for non-Windows OS, too
+                    _globalMutex ??= new Mutex(initiallyOwned: false, name: @$"Global\Mutex{SettingsFilePath.ToPosixPath()}");
+
                     try
                     {
                         _globalMutex.WaitOne();
