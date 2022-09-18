@@ -48,15 +48,22 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
 
             Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Heads).ToList();
-            foreach (string branch in Module.GetMergedBranches())
+            if (AppSettings.DontConfirmDeleteUnmergedBranch)
             {
-                if (!branch.StartsWith("* "))
+                _currentBranch = Module.GetSelectedBranch();
+            }
+            else
+            {
+                foreach (string branch in Module.GetMergedBranches())
                 {
-                    _mergedBranches.Add(branch.Trim());
-                }
-                else if (!branch.StartsWith("* ") || !DetachedHeadParser.IsDetachedHead(branch[2..]))
-                {
-                    _currentBranch = branch.Trim('*', ' ');
+                    if (!branch.StartsWith("* "))
+                    {
+                        _mergedBranches.Add(branch.Trim());
+                    }
+                    else if (!branch.StartsWith("* ") || !DetachedHeadParser.IsDetachedHead(branch[2..]))
+                    {
+                        _currentBranch = branch.Trim('*', ' ');
+                    }
                 }
             }
 
@@ -104,7 +111,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            GitDeleteBranchCmd cmd = new(selectedBranches, force: hasUnmergedBranches);
+            GitDeleteBranchCmd cmd = new(selectedBranches, force: true);
             bool success = UICommands.StartCommandLineProcessDialog(Owner, cmd);
             if (success)
             {
