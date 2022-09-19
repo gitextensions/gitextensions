@@ -535,8 +535,7 @@ namespace GitUI
 
                     using FormCommit form = new(this, commitMessage: commitMessage);
 
-                    // WORKAROUND: Marani Paolo 8/9/22
-                    // Ensure the form can be always displayed when owner is in a different screen
+                    // WORKAROUND: Ensure the form can be always displayed when owner is in a different screen
                     form.FixForOwnerScreenLocation(owner);
 
                     if (showOnlyWhenChanges)
