@@ -437,33 +437,35 @@ namespace GitUI.CommandsDialogs
 
         public void FixForOwnerScreenLocation(IWin32Window? owner)
         {
-            if (owner != null)
+            if (owner == null)
             {
-                Screen ownerScreen = Screen.FromHandle(owner.Handle);
-                if (!ownerScreen.Bounds.IntersectsWith(Bounds))
-                {
-                	// Fix #10121 - Commit form appear out of screen in dual monitor setup
-                    // The form appears to be not in the same monitor as owner window
-                    // thus may become invisible when owner win is in a secondary screen
-                    // with negative left coordinates and last saved position of the
-                    // form was with positive coordinates, in case dpi are different.
-                    // Attempting to correct the saved position may be unsuccessful
-                    // because it depends on the screen layout of extended desktop.
-                    if (ownerScreen.Bounds.Width - ownerScreen.Bounds.X < 0 && Left > 0)
-                    {
-                        // Reinterpret saved left position as an offset from the owner's form screen
-                        Left = ownerScreen.Bounds.X + Left;
-
-                        // Show in taskbar so user can potentially recover the window
-                        // if the draggable title bar is no more reachable by mouse.
-                        ShowInTaskbar = true;
-                    }
-                }
-
-                // This could always be applied, but maybe it is better that each form
-                // may declare in the constructor if ShowInTaskbar needs to be true or false
-                // ShowInTaskbar = true;
+                return;
             }
+
+            Screen ownerScreen = Screen.FromHandle(owner.Handle);
+            if (!ownerScreen.Bounds.IntersectsWith(Bounds))
+            {
+                // Fix #10121 - Commit form appear out of screen in dual monitor setup
+                // The form appears to be not in the same monitor as owner window
+                // thus may become invisible when owner win is in a secondary screen
+                // with negative left coordinates and last saved position of the
+                // form was with positive coordinates, in case dpi are different.
+                // Attempting to correct the saved position may be unsuccessful
+                // because it depends on the screen layout of extended desktop.
+                if (ownerScreen.Bounds.Width - ownerScreen.Bounds.X < 0 && Left > 0)
+                {
+                    // Reinterpret saved left position as an offset from the owner's form screen
+                    Left = ownerScreen.Bounds.X + Left;
+
+                    // Show in taskbar so user can potentially recover the window
+                    // if the draggable title bar is no more reachable by mouse.
+                    ShowInTaskbar = true;
+                }
+            }
+
+            // This could always be applied, but maybe it is better that each form
+            // may declare in the constructor if ShowInTaskbar needs to be true or false
+            // ShowInTaskbar = true;
         }
 
         [DllImport("user32.dll")]
