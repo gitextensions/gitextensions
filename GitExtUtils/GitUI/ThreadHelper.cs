@@ -6,7 +6,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
@@ -14,40 +13,19 @@ namespace GitUI
     public static class ThreadHelper
     {
         private const int RPC_E_WRONG_THREAD = unchecked((int)0x8001010E);
-        private static JoinableTaskContext _joinableTaskContext = null!;
-        private static JoinableTaskCollection _joinableTaskCollection = null!;
-        private static JoinableTaskFactory _joinableTaskFactory = null!;
+
+        private static TaskManager _taskManager;
 
         public static JoinableTaskContext JoinableTaskContext
         {
-            get
-            {
-                return _joinableTaskContext;
-            }
-
-            internal set
-            {
-                if (value == _joinableTaskContext)
-                {
-                    return;
-                }
-
-                if (value is null)
-                {
-                    _joinableTaskContext = null!;
-                    _joinableTaskCollection = null!;
-                    _joinableTaskFactory = null!;
-                }
-                else
-                {
-                    _joinableTaskContext = value;
-                    _joinableTaskCollection = value.CreateCollection();
-                    _joinableTaskFactory = value.CreateFactory(_joinableTaskCollection);
-                }
-            }
+            get => _taskManager.JoinableTaskContext;
+            internal set => _taskManager = value is null ? null : new(value);
         }
 
-        public static JoinableTaskFactory JoinableTaskFactory => _joinableTaskFactory;
+        public static JoinableTaskFactory JoinableTaskFactory => _taskManager.JoinableTaskFactory;
+
+        public static TaskManager CreateSeparate()
+            => new(_taskManager.JoinableTaskContext);
 
         public static void ThrowIfNotOnUIThread([CallerMemberName] string callerMemberName = "")
         {
@@ -90,39 +68,13 @@ namespace GitUI
         }
 
         public static void FileAndForget(this Task task, Func<Exception, bool>? fileOnlyIf = null)
-        {
-            JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    try
-                    {
-#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
-                        await task.ConfigureAwait(false);
-#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        // Do not rethrow these
-                    }
-                    catch (Exception ex) when (fileOnlyIf?.Invoke(ex) ?? true)
-                    {
-                        await JoinableTaskFactory.SwitchToMainThreadAsync();
-                        Application.OnThreadException(ex.Demystify());
-                    }
-                });
-        }
+            => _taskManager.FileAndForget(task, fileOnlyIf);
 
         public static async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
-        {
-            await _joinableTaskCollection.JoinTillEmptyAsync(cancellationToken);
-        }
+            => await _taskManager.JoinPendingOperationsAsync(cancellationToken);
 
         public static void JoinPendingOperations()
-        {
-            // Note that JoinableTaskContext.Factory must be used to bypass the default behavior of JoinableTaskFactory
-            // since the latter adds new tasks to the collection and would therefore never complete.
-            JoinableTaskContext.Factory.Run(_joinableTaskCollection.JoinTillEmptyAsync);
-        }
+            => _taskManager.JoinPendingOperations();
 
         public static T CompletedResult<T>(this Task<T> task)
         {
