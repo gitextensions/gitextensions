@@ -498,9 +498,14 @@ namespace GitUI
 
             _filterInfo.ShowCurrentBranchOnly = false;
 
+            // Set filtered branches if there is a filter, handled as all branches otherwise
             string newFilter = filter?.Trim() ?? string.Empty;
             _filterInfo.ByBranchFilter = !string.IsNullOrWhiteSpace(newFilter);
             _filterInfo.BranchFilter = newFilter;
+            if (_filterInfo.ByBranchFilter)
+            {
+                _filterInfo.ShowReflogReferences = false;
+            }
 
             PerformRefreshRevisions();
         }
@@ -1772,16 +1777,16 @@ namespace GitUI
             });
         }
 
-        public void ShowCurrentBranchOnly()
+        public void ShowReflog()
         {
-            if (_filterInfo.IsShowCurrentBranchOnlyChecked)
+            if (_filterInfo.ShowReflogReferences)
             {
                 return;
             }
 
-            _filterInfo.ByBranchFilter = false;
-            _filterInfo.ShowCurrentBranchOnly = true;
-            _filterInfo.ShowReflogReferences = false;
+            // Do not unset ByBranchFilter or ShowCurrentBranchOnly,
+            // see FilterInfo.ShowReflogReferences.
+            _filterInfo.ShowReflogReferences = true;
 
             PerformRefreshRevisions();
         }
@@ -1795,6 +1800,7 @@ namespace GitUI
 
             _filterInfo.ByBranchFilter = false;
             _filterInfo.ShowCurrentBranchOnly = false;
+            _filterInfo.ShowReflogReferences = false;
 
             PerformRefreshRevisions();
         }
@@ -1809,6 +1815,20 @@ namespace GitUI
             // Must be able to set ByBranchFilter without a filter to edit it
             _filterInfo.ByBranchFilter = true;
             _filterInfo.ShowCurrentBranchOnly = false;
+            _filterInfo.ShowReflogReferences = false;
+
+            PerformRefreshRevisions();
+        }
+
+        public void ShowCurrentBranchOnly()
+        {
+            if (_filterInfo.IsShowCurrentBranchOnlyChecked)
+            {
+                return;
+            }
+
+            _filterInfo.ByBranchFilter = false;
+            _filterInfo.ShowCurrentBranchOnly = true;
             _filterInfo.ShowReflogReferences = false;
 
             PerformRefreshRevisions();
@@ -2431,15 +2451,6 @@ namespace GitUI
         internal void ToggleShowMergeCommits()
         {
             AppSettings.ShowMergeCommits = !AppSettings.ShowMergeCommits;
-
-            // hide revision graph when hiding merge commits, reasons:
-            // 1, revision graph is no longer relevant, as we are not showing all commits
-            // 2, performance hit when both revision graph and no merge commits are enabled
-            if (AppSettings.ShowRevisionGridGraphColumn && !AppSettings.ShowMergeCommits)
-            {
-                AppSettings.ShowRevisionGridGraphColumn = !AppSettings.ShowRevisionGridGraphColumn;
-            }
-
             PerformRefreshRevisions();
         }
 
@@ -2512,19 +2523,8 @@ namespace GitUI
         internal void ToggleRevisionGraphColumn()
         {
             AppSettings.ShowRevisionGridGraphColumn = !AppSettings.ShowRevisionGridGraphColumn;
-
-            // must show MergeCommits when showing revision graph
-            if (!AppSettings.ShowMergeCommits && AppSettings.ShowRevisionGridGraphColumn)
-            {
-                AppSettings.ShowMergeCommits = true;
-                PerformRefreshRevisions();
-            }
-            else
-            {
-                Refresh();
-            }
-
             MenuCommands.TriggerMenuChanged();
+            Refresh();
         }
 
         internal void ToggleAuthorAvatarColumn()
