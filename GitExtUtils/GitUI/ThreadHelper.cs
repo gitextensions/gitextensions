@@ -18,7 +18,7 @@ namespace GitUI
 
         public static JoinableTaskContext JoinableTaskContext
         {
-            get => _taskManager.JoinableTaskContext;
+            get => _taskManager?.JoinableTaskContext;
             internal set => _taskManager = value is null ? null : new(value);
         }
 
