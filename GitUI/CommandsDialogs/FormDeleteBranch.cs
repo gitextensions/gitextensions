@@ -56,13 +56,13 @@ namespace GitUI.CommandsDialogs
             {
                 foreach (string branch in Module.GetMergedBranches())
                 {
-                    if (!branch.StartsWith("* "))
-                    {
-                        _mergedBranches.Add(branch.Trim());
-                    }
-                    else if (!branch.StartsWith("* ") || !DetachedHeadParser.IsDetachedHead(branch[2..]))
+                    if (branch.StartsWith("* "))
                     {
                         _currentBranch = branch.Trim('*', ' ');
+                    }
+                    else
+                    {
+                        _mergedBranches.Add(branch.Trim());
                     }
                 }
             }
@@ -90,7 +90,8 @@ namespace GitUI.CommandsDialogs
             }
 
             // always treat branches as unmerged if there is no current branch (HEAD is detached)
-            bool hasUnmergedBranches = _currentBranch is null || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
+            bool hasUnmergedBranches = _currentBranch is null || DetachedHeadParser.IsDetachedHead(_currentBranch)
+                || selectedBranches.Any(branch => !_mergedBranches.Contains(branch.Name));
             if (hasUnmergedBranches && !AppSettings.DontConfirmDeleteUnmergedBranch)
             {
                 TaskDialogPage page = new()
