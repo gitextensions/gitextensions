@@ -24,7 +24,7 @@ namespace GitUI
 
         public static JoinableTaskFactory JoinableTaskFactory => _taskManager.JoinableTaskFactory;
 
-        public static TaskManager CreateSeparate()
+        public static TaskManager CreateTaskManager()
             => new(_taskManager.JoinableTaskContext);
 
         public static void ThrowIfNotOnUIThread([CallerMemberName] string callerMemberName = "")

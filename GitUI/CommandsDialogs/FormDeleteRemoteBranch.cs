@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
             new("At least one remote branch is unmerged. Are you sure you want to delete it?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
 
         private readonly string _defaultRemoteBranch;
-        private readonly TaskManager _taskManager = ThreadHelper.CreateSeparate();
+        private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
         private HashSet<string> _mergedBranches;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
