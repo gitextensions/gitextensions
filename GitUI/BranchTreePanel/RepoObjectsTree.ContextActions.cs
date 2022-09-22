@@ -245,8 +245,8 @@ namespace GitUI.BranchTreePanel
 
         private void contextMenu_Opened(object sender, EventArgs e)
         {
-            /* Waiting for ContextMenuStrip (as the visual parent of its menu items) to be visible to
-             * toggle (depending on ToolStripItem.Visible) existing separators in between item groups as required.*/
+            // Waiting for ContextMenuStrip (as the visual parent of its menu items) to be visible to
+            // toggle (depending on ToolStripItem.Visible) existing separators in between item groups as required.
             (sender as ContextMenuStrip)?.ToggleSeparators();
 
             // Working around the context menu strip being positioned incorrectly on first open - which may be a Windows Forms bug,
