@@ -249,8 +249,8 @@ namespace GitUI.BranchTreePanel
              * toggle (depending on ToolStripItem.Visible) existing separators in between item groups as required.*/
             (sender as ContextMenuStrip)?.ToggleSeparators();
 
-            /* working around context menu strip being positioned incorrectly on first open - which may be a Windows Forms bug, see
-             * https://stackoverflow.com/questions/15841863/why-does-my-menustrip-appear-in-the-incorrect-location-on-first-click */
+            // Working around the context menu strip being positioned incorrectly on first open - which may be a Windows Forms bug,
+            // see https://stackoverflow.com/q/15841863/2338036.
             if (menuMain.Top != Cursor.Position.Y)
             {
                 menuMain.Top = Cursor.Position.Y;
