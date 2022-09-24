@@ -9470,6 +9470,16 @@ Current Branch:
         <source>&amp;Disable shell extension</source>
         <target />
       </trans-unit>
+      <trans-unit id="_menuHelp.Text">
+        <source>* Checked: at top level for direct access
+* Intermediate: in a cascaded context menu
+* Unchecked: not added to the menu</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_noItems.Text">
+        <source>no items</source>
+        <target />
+      </trans-unit>
       <trans-unit id="cbAlwaysShowAllCommands.Text">
         <source>Always show all commands</source>
         <target />
@@ -9487,8 +9497,7 @@ Current Branch:
         <target />
       </trans-unit>
       <trans-unit id="lblMenuEntries.Text">
-        <source>Select items to be shown in the cascaded context menu.
-(Unchecked items will be shown top level for direct access.)</source>
+        <source>Configuration of items in the context menu</source>
         <target />
       </trans-unit>
     </body>
