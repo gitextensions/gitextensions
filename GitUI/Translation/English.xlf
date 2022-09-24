@@ -10410,7 +10410,7 @@ Please ensure that the url is valid and that the API token has access to build a
         <target />
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item2">
-        <source>Browse</source>
+        <source>Open repository</source>
         <target />
       </trans-unit>
       <trans-unit id="chlMenuEntries.Item3">

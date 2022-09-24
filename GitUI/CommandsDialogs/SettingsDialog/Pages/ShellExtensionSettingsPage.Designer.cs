@@ -96,7 +96,7 @@
             this.chlMenuEntries.Items.AddRange(new object[] {
             "Add files...",
             "Apply patch...",
-            "Browse",
+            "Open repository",
             "Create branch...",
             "Checkout branch...",
             "Checkout revision...",
