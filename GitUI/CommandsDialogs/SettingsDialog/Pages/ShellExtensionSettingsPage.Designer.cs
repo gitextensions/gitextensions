@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Panel panel1;
             this.labelPreview = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.lblMenuEntries = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_chlMenuEntries = new System.Windows.Forms.CheckedListBox();
             this.cbAlwaysShowAllCommands = new System.Windows.Forms.CheckBox();
@@ -41,6 +41,9 @@
             this.UnregisterButton = new System.Windows.Forms.Button();
             this.gbCascadingMenu = new System.Windows.Forms.GroupBox();
             this.tlpnlCascadingMenu = new System.Windows.Forms.TableLayoutPanel();
+            this.menuHelp = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             panel1 = new System.Windows.Forms.Panel();
             panel1.SuspendLayout();
             this.tlpnlMain.SuspendLayout();
@@ -48,6 +51,7 @@
             this.flpnlExplorerIntegration.SuspendLayout();
             this.gbCascadingMenu.SuspendLayout();
             this.tlpnlCascadingMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.menuHelp)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -55,49 +59,40 @@
             panel1.AutoSize = true;
             panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             panel1.Controls.Add(this.labelPreview);
-            panel1.Controls.Add(this.label1);
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            panel1.Location = new System.Drawing.Point(746, 77);
+            panel1.Location = new System.Drawing.Point(323, 71);
             panel1.Margin = new System.Windows.Forms.Padding(2);
             panel1.Name = "panel1";
             panel1.Padding = new System.Windows.Forms.Padding(3);
-            panel1.Size = new System.Drawing.Size(741, 484);
+            panel1.Size = new System.Drawing.Size(1139, 397);
             panel1.TabIndex = 0;
             // 
             // labelPreview
             // 
             this.labelPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelPreview.Location = new System.Drawing.Point(3, 18);
+            this.labelPreview.Location = new System.Drawing.Point(3, 3);
             this.labelPreview.Name = "labelPreview";
-            this.labelPreview.Size = new System.Drawing.Size(735, 463);
+            this.labelPreview.Size = new System.Drawing.Size(1133, 391);
             this.labelPreview.TabIndex = 1;
             this.labelPreview.Text = "...";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Location = new System.Drawing.Point(3, 3);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Context menu preview:";
             // 
             // lblMenuEntries
             // 
             this.lblMenuEntries.AutoSize = true;
-            this.tlpnlCascadingMenu.SetColumnSpan(this.lblMenuEntries, 2);
             this.lblMenuEntries.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblMenuEntries.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblMenuEntries.Location = new System.Drawing.Point(3, 45);
+            this.lblMenuEntries.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
             this.lblMenuEntries.Name = "lblMenuEntries";
-            this.lblMenuEntries.Size = new System.Drawing.Size(1483, 30);
+            this.lblMenuEntries.Size = new System.Drawing.Size(237, 24);
             this.lblMenuEntries.TabIndex = 4;
-            this.lblMenuEntries.Text = "Select items to be shown in the cascaded context menu.\r\n(Unchecked items will be " +
-    "shown top level for direct access.)";
+            this.lblMenuEntries.Text = "Configuration of items in the context menu";
+            this.lblMenuEntries.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_chlMenuEntries
             // 
             this._NO_TRANSLATE_chlMenuEntries.CheckOnClick = true;
+            this.tlpnlCascadingMenu.SetColumnSpan(this._NO_TRANSLATE_chlMenuEntries, 2);
             this._NO_TRANSLATE_chlMenuEntries.FormattingEnabled = true;
             this._NO_TRANSLATE_chlMenuEntries.Items.AddRange(new object[] {
             "Add files...",
@@ -118,7 +113,7 @@
             "Settings",
             "View stash",
             "View changes"});
-            this._NO_TRANSLATE_chlMenuEntries.Location = new System.Drawing.Point(3, 78);
+            this._NO_TRANSLATE_chlMenuEntries.Location = new System.Drawing.Point(3, 72);
             this._NO_TRANSLATE_chlMenuEntries.Name = "_NO_TRANSLATE_chlMenuEntries";
             this._NO_TRANSLATE_chlMenuEntries.Size = new System.Drawing.Size(315, 94);
             this._NO_TRANSLATE_chlMenuEntries.TabIndex = 5;
@@ -128,11 +123,11 @@
             // cbAlwaysShowAllCommands
             // 
             this.cbAlwaysShowAllCommands.AutoSize = true;
-            this.tlpnlCascadingMenu.SetColumnSpan(this.cbAlwaysShowAllCommands, 2);
+            this.tlpnlCascadingMenu.SetColumnSpan(this.cbAlwaysShowAllCommands, 3);
             this.cbAlwaysShowAllCommands.Dock = System.Windows.Forms.DockStyle.Fill;
             this.cbAlwaysShowAllCommands.Location = new System.Drawing.Point(3, 3);
             this.cbAlwaysShowAllCommands.Name = "cbAlwaysShowAllCommands";
-            this.cbAlwaysShowAllCommands.Size = new System.Drawing.Size(1483, 19);
+            this.cbAlwaysShowAllCommands.Size = new System.Drawing.Size(1458, 19);
             this.cbAlwaysShowAllCommands.TabIndex = 3;
             this.cbAlwaysShowAllCommands.Text = "Always show all commands";
             this.cbAlwaysShowAllCommands.UseVisualStyleBackColor = true;
@@ -151,7 +146,7 @@
             this.tlpnlMain.RowCount = 1;
             this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 508F));
-            this.tlpnlMain.Size = new System.Drawing.Size(1511, 670);
+            this.tlpnlMain.Size = new System.Drawing.Size(1486, 315);
             this.tlpnlMain.TabIndex = 0;
             // 
             // gbExplorerIntegration
@@ -162,7 +157,7 @@
             this.gbExplorerIntegration.Location = new System.Drawing.Point(3, 3);
             this.gbExplorerIntegration.Name = "gbExplorerIntegration";
             this.gbExplorerIntegration.Padding = new System.Windows.Forms.Padding(8);
-            this.gbExplorerIntegration.Size = new System.Drawing.Size(1505, 63);
+            this.gbExplorerIntegration.Size = new System.Drawing.Size(1480, 63);
             this.gbExplorerIntegration.TabIndex = 0;
             this.gbExplorerIntegration.TabStop = false;
             this.gbExplorerIntegration.Text = "Windows Explorer integration";
@@ -175,7 +170,7 @@
             this.flpnlExplorerIntegration.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpnlExplorerIntegration.Location = new System.Drawing.Point(8, 24);
             this.flpnlExplorerIntegration.Name = "flpnlExplorerIntegration";
-            this.flpnlExplorerIntegration.Size = new System.Drawing.Size(1489, 31);
+            this.flpnlExplorerIntegration.Size = new System.Drawing.Size(1464, 31);
             this.flpnlExplorerIntegration.TabIndex = 0;
             // 
             // RegisterButton
@@ -211,7 +206,7 @@
             this.gbCascadingMenu.Location = new System.Drawing.Point(3, 72);
             this.gbCascadingMenu.Name = "gbCascadingMenu";
             this.gbCascadingMenu.Padding = new System.Windows.Forms.Padding(8);
-            this.gbCascadingMenu.Size = new System.Drawing.Size(1505, 595);
+            this.gbCascadingMenu.Size = new System.Drawing.Size(1480, 502);
             this.gbCascadingMenu.TabIndex = 0;
             this.gbCascadingMenu.TabStop = false;
             this.gbCascadingMenu.Text = "Cascaded Context Menu";
@@ -220,13 +215,16 @@
             // 
             this.tlpnlCascadingMenu.AutoSize = true;
             this.tlpnlCascadingMenu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tlpnlCascadingMenu.ColumnCount = 2;
-            this.tlpnlCascadingMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpnlCascadingMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpnlCascadingMenu.ColumnCount = 3;
+            this.tlpnlCascadingMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpnlCascadingMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpnlCascadingMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlCascadingMenu.Controls.Add(this.menuHelp, 1, 2);
+            this.tlpnlCascadingMenu.Controls.Add(this.label1, 2, 2);
             this.tlpnlCascadingMenu.Controls.Add(this.cbAlwaysShowAllCommands, 0, 0);
             this.tlpnlCascadingMenu.Controls.Add(this.lblMenuEntries, 0, 2);
             this.tlpnlCascadingMenu.Controls.Add(this._NO_TRANSLATE_chlMenuEntries, 0, 3);
-            this.tlpnlCascadingMenu.Controls.Add(panel1, 1, 3);
+            this.tlpnlCascadingMenu.Controls.Add(panel1, 2, 3);
             this.tlpnlCascadingMenu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlCascadingMenu.Location = new System.Drawing.Point(8, 24);
             this.tlpnlCascadingMenu.Name = "tlpnlCascadingMenu";
@@ -235,8 +233,31 @@
             this.tlpnlCascadingMenu.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlpnlCascadingMenu.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlCascadingMenu.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlCascadingMenu.Size = new System.Drawing.Size(1489, 563);
+            this.tlpnlCascadingMenu.Size = new System.Drawing.Size(1464, 470);
             this.tlpnlCascadingMenu.TabIndex = 0;
+            // 
+            // menuHelp
+            // 
+            this.menuHelp.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.menuHelp.Image = global::GitUI.Properties.Resources.information;
+            this.menuHelp.Location = new System.Drawing.Point(240, 50);
+            this.menuHelp.Margin = new System.Windows.Forms.Padding(0, 5, 3, 3);
+            this.menuHelp.Name = "menuHelp";
+            this.menuHelp.Size = new System.Drawing.Size(16, 16);
+            this.menuHelp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.menuHelp.TabIndex = 13;
+            this.menuHelp.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(324, 45);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(1137, 24);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Context menu preview:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ShellExtensionSettingsPage
             // 
@@ -245,9 +266,8 @@
             this.Controls.Add(this.tlpnlMain);
             this.Name = "ShellExtensionSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1527, 686);
+            this.Size = new System.Drawing.Size(1502, 331);
             panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             this.tlpnlMain.ResumeLayout(false);
             this.tlpnlMain.PerformLayout();
             this.gbExplorerIntegration.ResumeLayout(false);
@@ -258,6 +278,7 @@
             this.gbCascadingMenu.PerformLayout();
             this.tlpnlCascadingMenu.ResumeLayout(false);
             this.tlpnlCascadingMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.menuHelp)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -267,7 +288,6 @@
 
         private System.Windows.Forms.Label lblMenuEntries;
         private System.Windows.Forms.CheckedListBox _NO_TRANSLATE_chlMenuEntries;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelPreview;
         private System.Windows.Forms.CheckBox cbAlwaysShowAllCommands;
         private System.Windows.Forms.FlowLayoutPanel flpnlExplorerIntegration;
@@ -277,5 +297,8 @@
         private System.Windows.Forms.GroupBox gbExplorerIntegration;
         private Button RegisterButton;
         private Button UnregisterButton;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox menuHelp;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
