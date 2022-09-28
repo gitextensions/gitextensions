@@ -5,6 +5,7 @@
             "pmiossec.vscode-gitextensions",
             "VisualStudioExptTeam.vscodeintellicode",
             "shd101wyy.markdown-preview-enhanced",
+            "ms-vscode.Theme-MarkdownKit",
             "DavidAnson.vscode-markdownlint"
     ]
 }
