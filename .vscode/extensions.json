@@ -3,6 +3,7 @@
             "ms-vscode.cpptools",
             "ms-dotnettools.csharp",
             "pmiossec.vscode-gitextensions",
-            "VisualStudioExptTeam.vscodeintellicode"
+            "VisualStudioExptTeam.vscodeintellicode",
+            "shd101wyy.markdown-preview-enhanced"
     ]
 }
