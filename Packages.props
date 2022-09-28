@@ -6,7 +6,7 @@
     <PackageReference Update="Atlassian.SDK" Version="12.4.0" />
     <PackageReference Update="AppInsights.WindowsDesktop" Version="2.18.1" />
     <PackageReference Update="Ben.Demystifier" Version="0.4.1" />
-    <PackageReference Update="ConEmu.Core" Version="22.4.18" />
+    <PackageReference Update="ConEmu.Core" Version="22.8.7" />
     <PackageReference Update="DotnetRuntimeBootstrapper" Version="2.3.1" />
     <PackageReference Update="EnvDTE" Version="17.0.32112.339" />
     <PackageReference Update="ExCSS" Version="4.1.3" />
