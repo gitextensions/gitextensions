@@ -4,6 +4,7 @@
             "ms-dotnettools.csharp",
             "pmiossec.vscode-gitextensions",
             "VisualStudioExptTeam.vscodeintellicode",
-            "shd101wyy.markdown-preview-enhanced"
+            "shd101wyy.markdown-preview-enhanced",
+            "DavidAnson.vscode-markdownlint"
     ]
 }
