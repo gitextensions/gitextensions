@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Commands;
@@ -21,8 +21,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _confirmDeleteUnmergedRemoteBranchMessage =
             new("At least one remote branch is unmerged. Are you sure you want to delete it?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
 
-        private readonly HashSet<string> _mergedBranches = new();
         private readonly string _defaultRemoteBranch;
+        private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
+        private HashSet<string> _mergedBranches;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -35,7 +36,10 @@ namespace GitUI.CommandsDialogs
         public FormDeleteRemoteBranch(GitUICommands commands, string defaultRemoteBranch)
             : base(commands, enablePositionRestore: false)
         {
+            _taskManager.RunAsyncAndForget(() => _mergedBranches = Module.GetMergedRemoteBranches().ToHashSet());
+
             _defaultRemoteBranch = defaultRemoteBranch;
+
             InitializeComponent();
 
             InitializeComplete();
@@ -46,10 +50,6 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad(e);
 
             Branches.BranchesToSelect = Module.GetRefs(RefsFilter.Remotes).ToList();
-            foreach (var branch in Module.GetMergedRemoteBranches())
-            {
-                _mergedBranches.Add(branch);
-            }
 
             if (_defaultRemoteBranch is not null)
             {
@@ -86,6 +86,9 @@ namespace GitUI.CommandsDialogs
             }
 
             List<IGitRef> selectedBranches = Branches.GetSelectedBranches().ToList();
+
+            // wait for _mergedBranches to be filled
+            _taskManager.JoinPendingOperations();
 
             bool hasUnmergedBranches = selectedBranches.Any(branch => !_mergedBranches.Contains(branch.CompleteName));
             if (hasUnmergedBranches)
