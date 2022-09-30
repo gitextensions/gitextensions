@@ -190,7 +190,6 @@ namespace GitUI.UserControls.RevisionGrid
                     !   Highlight selected branch (until refresh)
                     !   Set advanced filter
                     !   Show commit message body
-                    !   Show first parents
                     !   Show stashes
                     -   Show SHA-1 column
                     A   Show all branches
@@ -203,7 +202,6 @@ namespace GitUI.UserControls.RevisionGrid
                     H   Show author avatar column
                     I   Show build status icon
                     J   Show superproject remote branches
-                    M   Show merge commits
                     N   Show git notes
                     O   Show artificial commits
                     P   Show superproject tags
@@ -266,38 +264,11 @@ namespace GitUI.UserControls.RevisionGrid
 
                 new MenuCommand
                 {
-                    Name = "showFirstParent",
-                    Text = "Show first parents",
-                    Image = Images.ShowFirstParent,
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ShowFirstParent),
-                    ExecuteAction = () => _revisionGrid.ToggleShowFirstParent(),
-                    IsCheckedFunc = () => _revisionGrid.CurrentFilter.ShowFirstParent
-                },
-                new MenuCommand
-                {
-                    Name = "showMergeCommitsToolStripMenuItem",
-                    Text = "Show &merge commits",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ToggleShowMergeCommits),
-                    ExecuteAction = () => _revisionGrid.ToggleShowMergeCommits(),
-                    IsCheckedFunc = () => AppSettings.ShowMergeCommits
-                },
-
-                MenuCommand.CreateSeparator(),
-
-                new MenuCommand
-                {
-                    Name = "fullHistory",
-                    Text = "Full history",
-                    ExecuteAction = () => _revisionGrid.ToggleFullHistory(),
-                    IsCheckedFunc = () => AppSettings.FullHistoryInFileHistory
-                },
-                new MenuCommand
-                {
-                    Name = "simplifyMerges",
-                    Text = "Simplify merges",
-                    ExecuteAction = () => _revisionGrid.ToggleSimplifyMerges(),
-                    IsCheckedFunc = () => AppSettings.SimplifyMergesInFileHistory,
-                    IsEnabledFunc = () => AppSettings.FullHistoryInFileHistory
+                    Name = "filterToolStripMenuItem",
+                    Text = "Advanced filter...",
+                    Image = Images.EditFilter,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.RevisionFilter),
+                    ExecuteAction = () => _revisionGrid.ShowRevisionFilterDialog()
                 },
 
                 MenuCommand.CreateSeparator(),
@@ -479,17 +450,6 @@ namespace GitUI.UserControls.RevisionGrid
                     Text = "Arrange c&ommits by topo order (ancestor order)",
                     ExecuteAction = () => _revisionGrid.ToggleTopoOrder(),
                     IsCheckedFunc = () => AppSettings.RevisionSortOrder == RevisionSortOrder.Topology
-                },
-
-                MenuCommand.CreateSeparator(),
-
-                new MenuCommand
-                {
-                    Name = "filterToolStripMenuItem",
-                    Text = "Set advanced filter",
-                    Image = Images.EditFilter,
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.RevisionFilter),
-                    ExecuteAction = () => _revisionGrid.ShowRevisionFilterDialog()
                 }
             };
         }

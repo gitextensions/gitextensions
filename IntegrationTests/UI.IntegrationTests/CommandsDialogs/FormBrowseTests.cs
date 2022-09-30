@@ -108,9 +108,11 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             _referenceRepository.CheckoutBranch("Branch1");
 
+            bool reflogEnabled = AppSettings.ShowReflogReferences;
             bool branchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool showCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
+            AppSettings.ShowReflogReferences = false;
             AppSettings.BranchFilterEnabled = false;
             AppSettings.ShowCurrentBranchOnly = false;
             AppSettings.RevisionGraphShowArtificialCommits = false;
@@ -181,6 +183,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                     }
                     finally
                     {
+                        AppSettings.ShowReflogReferences = reflogEnabled;
                         AppSettings.BranchFilterEnabled = branchFilterEnabled;
                         AppSettings.ShowCurrentBranchOnly = showCurrentBranchOnly;
                         AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;

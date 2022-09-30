@@ -10,7 +10,7 @@ namespace GitUI
             ShowAllBranches = filter.IsShowAllBranchesChecked;
             ShowCurrentBranchOnly = filter.IsShowCurrentBranchOnlyChecked;
             ShowFilteredBranches = filter.IsShowFilteredBranchesChecked;
-            ShowFirstParent = filter.ShowFirstParent;
+            ShowOnlyFirstParent = filter.ShowOnlyFirstParent;
             ShowReflogReferences = filter.ShowReflogReferences;
             HasFilter = filter.HasFilter;
             PathFilter = filter.PathFilter;
@@ -20,7 +20,7 @@ namespace GitUI
         public bool ShowAllBranches { get; }
         public bool ShowCurrentBranchOnly { get; }
         public bool ShowFilteredBranches { get; }
-        public bool ShowFirstParent { get; }
+        public bool ShowOnlyFirstParent { get; }
         public bool ShowReflogReferences { get; }
         public bool HasFilter { get; }
 

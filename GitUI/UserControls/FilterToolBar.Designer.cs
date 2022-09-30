@@ -37,7 +37,7 @@ namespace GitUI.UserControls
             this.tstxtRevisionFilter = new System.Windows.Forms.ToolStripTextBox();
             this.tsddbtnRevisionFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsbShowReflog = new System.Windows.Forms.ToolStripButton();
-            this.tsmiShowFirstParent = new System.Windows.Forms.ToolStripButton();
+            this.tsmiShowOnlyFirstParent = new System.Windows.Forms.ToolStripButton();
             this.SuspendLayout();
             // 
             // tsmiCommitFilter
@@ -254,15 +254,14 @@ namespace GitUI.UserControls
             this.tsddbtnRevisionFilter.Tag = "ToolBar_group:Text filter";
             this.tsddbtnRevisionFilter.Text = "Filter type";
             // 
-            // tsmiShowFirstParent
+            // tsmiShowOnlyFirstParent
             // 
-            this.tsmiShowFirstParent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsmiShowFirstParent.Image = global::GitUI.Properties.Images.ShowFirstParent;
-            this.tsmiShowFirstParent.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsmiShowFirstParent.Name = "tsmiShowFirstParent";
-            this.tsmiShowFirstParent.Size = new System.Drawing.Size(23, 20);
-            this.tsmiShowFirstParent.ToolTipText = "Show first parents";
-            this.tsmiShowFirstParent.Click += new System.EventHandler(this.tsmiShowFirstParent_Click);
+            this.tsmiShowOnlyFirstParent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsmiShowOnlyFirstParent.Image = global::GitUI.Properties.Images.ShowOnlyFirstParent;
+            this.tsmiShowOnlyFirstParent.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsmiShowOnlyFirstParent.Name = "tsmiShowOnlyFirstParent";
+            this.tsmiShowOnlyFirstParent.Size = new System.Drawing.Size(23, 20);
+            this.tsmiShowOnlyFirstParent.Click += new System.EventHandler(this.tsmiShowOnlyFirstParent_Click);
             // 
             // FilterToolBar
             // 
@@ -277,7 +276,7 @@ namespace GitUI.UserControls
             this.tscboBranchFilter,
             this.tsddbtnBranchFilter,
             this.tsbShowReflog,
-            this.tsmiShowFirstParent,
+            this.tsmiShowOnlyFirstParent,
             this.toolStripSeparator19,
             this.tslblRevisionFilter,
             this.tstxtRevisionFilter,
@@ -301,7 +300,7 @@ namespace GitUI.UserControls
         private ToolStripMenuItem tsmiAuthorFilter;
         private ToolStripMenuItem tsmiDiffContainsFilter;
         private ToolStripButton tsbShowReflog;
-        private ToolStripButton tsmiShowFirstParent;
+        private ToolStripButton tsmiShowOnlyFirstParent;
         private ToolStripTextBox tstxtRevisionFilter;
         private ToolStripLabel tslblRevisionFilter;
         private ToolStripSeparator toolStripSeparator19;

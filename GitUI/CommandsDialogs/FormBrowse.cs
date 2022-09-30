@@ -2523,7 +2523,7 @@ namespace GitUI.CommandsDialogs
                             return;
                         }
 
-                        // This may occur at various filters, like AppSettings.ShowFirstParent
+                        // This may occur at various filters, like AppSettings.ShowOnlyFirstParent
                         // will hide other than the first parent.
                         MessageBoxes.RevisionFilteredInGrid(this, commitId);
                     }

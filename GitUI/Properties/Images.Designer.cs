@@ -2153,9 +2153,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap ShowFirstParent {
+        public static System.Drawing.Bitmap ShowOnlyFirstParent {
             get {
-                object obj = ResourceManager.GetObject("ShowFirstParent", resourceCulture);
+                object obj = ResourceManager.GetObject("ShowOnlyFirstParent", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
