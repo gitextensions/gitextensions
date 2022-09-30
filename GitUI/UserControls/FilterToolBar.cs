@@ -26,6 +26,7 @@ namespace GitUI.UserControls
             InitializeComponent();
             tsmiShowReflog.ToolTipText = TranslatedStrings.ShowReflog;
             tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflog;
+            tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent;
 
             // Select an option until we get a filter bound.
             SelectShowBranchesFilterOption(selectedIndex: 1);
@@ -325,7 +326,7 @@ namespace GitUI.UserControls
 
         private void revisionGridFilter_FilterChanged(object? sender, FilterChangedEventArgs e)
         {
-            tsmiShowFirstParent.Checked = e.ShowFirstParent;
+            tsmiShowOnlyFirstParent.Checked = e.ShowOnlyFirstParent;
             tsbShowReflog.Checked = e.ShowReflogReferences;
             InitBranchSelectionFilter(e);
             tsbtnAdvancedFilter.ToolTipText = e.FilterSummary;
@@ -412,7 +413,7 @@ namespace GitUI.UserControls
 
         private void tsmiShowBranchesFiltered_Click(object sender, EventArgs e) => ApplyPresetBranchesFilter(RevisionGridFilter.ShowFilteredBranches);
 
-        private void tsmiShowFirstParent_Click(object sender, EventArgs e) => RevisionGridFilter.ToggleShowFirstParent();
+        private void tsmiShowOnlyFirstParent_Click(object sender, EventArgs e) => RevisionGridFilter.ToggleShowOnlyFirstParent();
 
         private void tsmiShowReflog_Click(object sender, EventArgs e) => RevisionGridFilter.ToggleShowReflogReferences();
 
@@ -437,7 +438,7 @@ namespace GitUI.UserControls
             public ToolStripMenuItem tsmiCommitterFilter => _control.tsmiCommitterFilter;
             public ToolStripMenuItem tsmiAuthorFilter => _control.tsmiAuthorFilter;
             public ToolStripMenuItem tsmiDiffContainsFilter => _control.tsmiDiffContainsFilter;
-            public ToolStripButton tsmiShowFirstParent => _control.tsmiShowFirstParent;
+            public ToolStripButton tsmiShowOnlyFirstParent => _control.tsmiShowOnlyFirstParent;
             public ToolStripButton tsbShowReflog => _control.tsbShowReflog;
             public ToolStripTextBox tstxtRevisionFilter => _control.tstxtRevisionFilter;
             public ToolStripLabel tslblRevisionFilter => _control.tslblRevisionFilter;

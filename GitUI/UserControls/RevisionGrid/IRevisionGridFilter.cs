@@ -47,7 +47,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         void ShowRevisionFilterDialog();
 
-        void ToggleShowFirstParent();
+        void ToggleShowOnlyFirstParent();
 
         void ToggleShowReflogReferences();
     }

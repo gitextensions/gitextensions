@@ -18,7 +18,7 @@ namespace GitUITests.UserControls
     [Apartment(ApartmentState.STA)]
     public class FilterToolBarTests
     {
-        private bool _originalShowFirstParent;
+        private bool _originalShowOnlyFirstParent;
         private bool _originalShowReflogReferences;
         private FilterToolBar _filterToolBar;
         private IGitModule _gitModule;
@@ -27,9 +27,9 @@ namespace GitUITests.UserControls
         [SetUp]
         public void Setup()
         {
-            _originalShowFirstParent = AppSettings.ShowFirstParent;
+            _originalShowOnlyFirstParent = AppSettings.ShowOnlyFirstParent;
             _originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowFirstParent = false;
+            AppSettings.ShowOnlyFirstParent = false;
             AppSettings.ShowReflogReferences = false;
 
             _gitModule = Substitute.For<IGitModule>();
@@ -42,7 +42,7 @@ namespace GitUITests.UserControls
         [TearDown]
         public void TearDown()
         {
-            AppSettings.ShowFirstParent = _originalShowFirstParent;
+            AppSettings.ShowOnlyFirstParent = _originalShowOnlyFirstParent;
             AppSettings.ShowReflogReferences = _originalShowReflogReferences;
         }
 
@@ -173,27 +173,27 @@ namespace GitUITests.UserControls
 
         [TestCase(false)]
         [TestCase(true)]
-        public void ShowFirstParent_should_be_bound_via_FilterChanged(bool settingValue)
+        public void ShowOnlyFirstParent_should_be_bound_via_FilterChanged(bool settingValue)
         {
-            bool original = AppSettings.ShowFirstParent;
+            bool original = AppSettings.ShowOnlyFirstParent;
             try
             {
-                AppSettings.ShowFirstParent = settingValue;
+                AppSettings.ShowOnlyFirstParent = settingValue;
 
                 _revisionGridFilter.FilterChanged += Raise.EventWith(_revisionGridFilter, new FilterChangedEventArgs(new()));
-                _filterToolBar.GetTestAccessor().tsmiShowFirstParent.Checked.Should().Be(settingValue);
+                _filterToolBar.GetTestAccessor().tsmiShowOnlyFirstParent.Checked.Should().Be(settingValue);
             }
             finally
             {
-                AppSettings.ShowFirstParent = original;
+                AppSettings.ShowOnlyFirstParent = original;
             }
         }
 
         [Test]
-        public void ShowFirstParent_should_invoke_ToggleShowFirstParent()
+        public void ShowOnlyFirstParent_should_invoke_ToggleShowOnlyFirstParent()
         {
-            _filterToolBar.GetTestAccessor().tsmiShowFirstParent.PerformClick();
-            _revisionGridFilter.Received(1).ToggleShowFirstParent();
+            _filterToolBar.GetTestAccessor().tsmiShowOnlyFirstParent.PerformClick();
+            _revisionGridFilter.Received(1).ToggleShowOnlyFirstParent();
         }
 
         [TestCase(false)]

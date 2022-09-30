@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
+using System.Windows.Forms.VisualStyles;
 using GitCommands;
 using GitExtUtils;
+using GitUI.UserControls.RevisionGrid.Graph;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -108,78 +110,6 @@ namespace GitUI.UserControls.RevisionGrid
             set => _branchFilter = value ?? string.Empty;
         }
 
-        /// <summary>
-        /// Gets or sets the current git reference filter options.
-        /// </summary>
-        public RefFilterOptions RefFilterOptions
-        {
-            get
-            {
-                RefFilterOptions refFilterOptions;
-
-                // Branch filters
-                if (ShowReflogReferences)
-                {
-                    refFilterOptions = RefFilterOptions.Reflog;
-                }
-                else if (ShowCurrentBranchOnly)
-                {
-                    // Default git-log, only current branch
-                    refFilterOptions = RefFilterOptions.None;
-                }
-                else if (!string.IsNullOrWhiteSpace(BranchFilter))
-                {
-                    // Show filtered branches only
-                    refFilterOptions = RefFilterOptions.Branches;
-                }
-                else
-                {
-                    // All branches
-                    // The inclusion of boundary parents to matches is historical
-                    // (why Message etc is handled as a special case)
-                    refFilterOptions = string.IsNullOrWhiteSpace(Message) && string.IsNullOrWhiteSpace(DiffContent)
-                        ? RefFilterOptions.All | RefFilterOptions.Boundary
-                        : RefFilterOptions.All;
-                }
-
-                // Note that some refs (like notes) requires --all or explicit inclusion (--glob)
-                // (None is evaluated as HEAD)
-                // These options are explicitly excluded when not desired
-                // "other refs" include Gerrit refs like refs/for/ and refs/changes/
-                if (refFilterOptions.HasFlag(RefFilterOptions.All))
-                {
-                    if (!AppSettings.ShowStashes)
-                    {
-                        refFilterOptions |= RefFilterOptions.NoStash;
-                    }
-
-                    if (!AppSettings.ShowGitNotes)
-                    {
-                        refFilterOptions |= RefFilterOptions.NoGitNotes;
-                    }
-                }
-
-                // other revision filters (see also GetRevisionFilter())
-                if (!AppSettings.ShowMergeCommits)
-                {
-                    refFilterOptions |= RefFilterOptions.NoMerges;
-                }
-
-                if (ShowFirstParent)
-                {
-                    refFilterOptions |= RefFilterOptions.FirstParent;
-                }
-
-                // Listed in Git help as history simplification, but is a revision filter
-                if (ShowSimplifyByDecoration)
-                {
-                    refFilterOptions |= RefFilterOptions.SimplifyByDecoration;
-                }
-
-                return refFilterOptions;
-            }
-        }
-
         public bool IsShowAllBranchesChecked => !ByBranchFilter && !ShowCurrentBranchOnly && !ShowReflogReferences;
 
         public bool IsShowCurrentBranchOnlyChecked => ShowCurrentBranchOnly && !ShowReflogReferences;
@@ -193,10 +123,10 @@ namespace GitUI.UserControls.RevisionGrid
             set => AppSettings.ShowCurrentBranchOnly = value;
         }
 
-        public bool ShowFirstParent
+        public bool ShowOnlyFirstParent
         {
-            get => AppSettings.ShowFirstParent;
-            set => AppSettings.ShowFirstParent = value;
+            get => AppSettings.ShowOnlyFirstParent;
+            set => AppSettings.ShowOnlyFirstParent = value;
         }
 
         public bool ShowReflogReferences
@@ -217,18 +147,72 @@ namespace GitUI.UserControls.RevisionGrid
             set => AppSettings.ShowSimplifyByDecoration = value;
         }
 
+        public bool ShowMergeCommits
+        {
+            get => AppSettings.ShowMergeCommits;
+            set => AppSettings.ShowMergeCommits = value;
+        }
+
+        public bool ShowFullHistory
+        {
+            get => AppSettings.FullHistoryInFileHistory;
+            set => AppSettings.FullHistoryInFileHistory = value;
+        }
+
+        public bool ShowSimplifyMerges
+        {
+            get => AppSettings.SimplifyMergesInFileHistory;
+            set => AppSettings.SimplifyMergesInFileHistory = value;
+        }
+
+        /// <summary>
+        /// Has any filters in addition to revision filters that sets the history.
+        /// Currently, this is only branch filters.
+        /// Note that All/Reflog are not considered as filters.
+        /// </summary>
         public bool HasFilter
         {
-            get => ByDateFrom ||
-                   ByDateTo ||
-                   ByAuthor ||
-                   ByCommitter ||
-                   ByMessage ||
-                   ByDiffContent ||
-                   ByPathFilter ||
-                   !string.IsNullOrWhiteSpace(BranchFilter) ||
-                   ShowCurrentBranchOnly ||
-                   ShowSimplifyByDecoration;
+            get => HasRevisionFilter
+                || ShowCurrentBranchOnly
+                || ShowOnlyFirstParent
+                || !string.IsNullOrWhiteSpace(BranchFilter);
+        }
+
+        /// <summary>
+        /// Has revision filters that hides parents, not just branches.
+        /// </summary>
+        public bool HasRevisionFilter
+        {
+            get => ByDateFrom
+                || ByDateTo
+                || ByAuthor
+                || ByCommitter
+                || ByMessage
+                || ByDiffContent
+                || !string.IsNullOrWhiteSpace(PathFilter)
+                || !ShowMergeCommits
+                || ShowSimplifyByDecoration;
+        }
+
+        /// <summary>
+        /// Disables all active filters.
+        /// Reflog is not disabled.
+        /// FullHistory and SimplifyMerges are considered settings and not reset.
+        /// </summary>
+        public void ResetAllFilters()
+        {
+            ByDateFrom = false;
+            ByDateTo = false;
+            ByAuthor = false;
+            ByCommitter = false;
+            ByMessage = false;
+            ByDiffContent = false;
+            ByPathFilter = false;
+            ByBranchFilter = false;
+            ShowCurrentBranchOnly = false;
+            ShowOnlyFirstParent = false;
+            ShowMergeCommits = true;
+            ShowSimplifyByDecoration = false;
         }
 
         /// <summary>
@@ -307,20 +291,6 @@ namespace GitUI.UserControls.RevisionGrid
             return searchParametersChanged;
         }
 
-        public void ResetAllFilters()
-        {
-            ByDateFrom = false;
-            ByDateTo = false;
-            ByAuthor = false;
-            ByCommitter = false;
-            ByMessage = false;
-            ByDiffContent = false;
-            ByPathFilter = false;
-            ByBranchFilter = false;
-            ShowCurrentBranchOnly = false;
-            ShowSimplifyByDecoration = false;
-        }
-
         public ArgumentString GetRevisionFilter()
         {
             if (IsRaw)
@@ -329,6 +299,84 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             ArgumentBuilder filter = new();
+
+            if (CommitsLimit > 0)
+            {
+                filter.Add($"--max-count={CommitsLimit}");
+            }
+
+            // Branch filters
+            if (ShowReflogReferences)
+            {
+                filter.Add("--reflog");
+            }
+            else
+            {
+                // Note that some refs (like notes) requires --all or explicit inclusion (--glob)
+                // (None is evaluated as HEAD)
+                // These options are explicitly excluded when not desired
+                // "other refs" include Gerrit refs like refs/for/ and refs/changes/
+                if (!AppSettings.ShowGitNotes)
+                {
+                    filter.Add("--not --glob=notes --not");
+                }
+
+                if (!AppSettings.ShowStashes)
+                {
+                    filter.Add("--exclude=refs/stash");
+                }
+
+                if (ShowCurrentBranchOnly)
+                {
+                    // Default git-log, only current branch, no option
+                }
+                else if (!string.IsNullOrWhiteSpace(BranchFilter))
+                {
+                    // Show filtered branches only
+                    filter.Add(IsSimpleBranchFilter(BranchFilter) ? BranchFilter : "--branches=" + BranchFilter);
+                }
+                else
+                {
+                    // All branches
+                    filter.Add("--all");
+
+                    // The inclusion of boundary parents to matches is historical
+                    // (why Message etc is handled as a special case)
+                    if (!string.IsNullOrWhiteSpace(Message) && !string.IsNullOrWhiteSpace(DiffContent))
+                    {
+                        filter.Add("--boundary");
+                    }
+                }
+            }
+
+            if (HasRevisionFilter)
+            {
+                filter.Add("--parents");
+                if (ShowFullHistory)
+                {
+                    filter.Add("--full-history");
+                    if (ShowSimplifyMerges)
+                    {
+                        filter.Add("--simplify-merges");
+                    }
+                }
+            }
+
+            if (!ShowMergeCommits)
+            {
+                filter.Add("--no-merges");
+            }
+
+            if (ShowOnlyFirstParent)
+            {
+                filter.Add("--first-parent");
+            }
+
+            // Listed in Git help as history simplification, but is a revision filter
+            if (ShowSimplifyByDecoration)
+            {
+                filter.Add("--simplify-by-decoration");
+            }
 
             if (ByAuthor && !string.IsNullOrWhiteSpace(Author))
             {
@@ -350,7 +398,7 @@ namespace GitUI.UserControls.RevisionGrid
                 filter.Add($"-G\"{DiffContent}\"");
             }
 
-            if (!filter.IsEmpty && IgnoreCase)
+            if (IgnoreCase && (ByAuthor || ByCommitter || ByMessage || ByDiffContent))
             {
                 filter.Add("--regexp-ignore-case");
             }
@@ -366,20 +414,34 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             return filter;
+
+            static bool IsSimpleBranchFilter(string branchFilter) =>
+               branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
         }
 
         public string GetSummary()
         {
             StringBuilder filter = new();
 
-            // Presentation is basically a pretty print of RevisionReader.BuildArguments()
-            // and some RevisionGridControl and FilterInfo setup
             // Ignore IgnoreCase, ShowMergeCommits, FullHistoryInFileHistory/SimplifyMergesInFileHistory (when history filtered)
 
             // path and revision filters always applies
             if (ByPathFilter)
             {
                 filter.AppendLine($"{TranslatedStrings.PathFilter}: {PathFilter}");
+            }
+
+            if (ShowReflogReferences)
+            {
+                filter.AppendLine(TranslatedStrings.ShowReflog);
+            }
+            else if (ShowCurrentBranchOnly)
+            {
+                filter.AppendLine(TranslatedStrings.ShowCurrentBranchOnly);
+            }
+            else if (!string.IsNullOrWhiteSpace(BranchFilter))
+            {
+                filter.AppendLine($"{TranslatedStrings.Branches}: {BranchFilter}");
             }
 
             if (ByAuthor && !string.IsNullOrWhiteSpace(Author))
@@ -399,7 +461,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (ByDiffContent && !string.IsNullOrEmpty(DiffContent))
             {
-                filter.AppendLine($"{TranslatedStrings.Message}: {DiffContent}");
+                filter.AppendLine($"{TranslatedStrings.DiffContent}: {DiffContent}");
             }
 
             if (ByDateFrom)
@@ -412,28 +474,14 @@ namespace GitUI.UserControls.RevisionGrid
                 filter.AppendLine($"{TranslatedStrings.Until}: {DateTo}");
             }
 
-            if (ShowFirstParent)
+            if (ShowOnlyFirstParent)
             {
-                filter.AppendLine(TranslatedStrings.ShowFirstParents);
+                filter.AppendLine(TranslatedStrings.ShowOnlyFirstParent);
             }
 
             if (ShowSimplifyByDecoration)
             {
                 filter.AppendLine($"{TranslatedStrings.SimplifyByDecoration}");
-            }
-
-            if (ShowReflogReferences)
-            {
-                // Resets branch filters
-                filter.AppendLine(TranslatedStrings.ShowReflog);
-            }
-            else if (ShowCurrentBranchOnly)
-            {
-                filter.AppendLine(TranslatedStrings.ShowCurrentBranchOnly);
-            }
-            else if (!string.IsNullOrWhiteSpace(BranchFilter))
-            {
-                filter.AppendLine($"{TranslatedStrings.Branches}: {BranchFilter}");
             }
 
             return filter.ToString();

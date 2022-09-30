@@ -967,7 +967,7 @@ namespace GitUI
                     UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef);
                     _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(newCurrentCheckout, currentlySelectedObjectIds);
 
-                    _gridView._revisionGraph.OnlyFirstParent = _filterInfo.RefFilterOptions.HasFlag(RefFilterOptions.FirstParent);
+                    _gridView._revisionGraph.OnlyFirstParent = _filterInfo.ShowOnlyFirstParent;
                     _gridView._revisionGraph.HeadId = CurrentCheckout;
 
                     // Allow add revisions to the grid
@@ -1044,18 +1044,13 @@ namespace GitUI
 
                     RevisionReader reader = new(capturedModule, hasReflogSelector: false);
                     string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
-                    ArgumentBuilder args = reader.BuildArguments(_filterInfo.CommitsLimit,
-                        _filterInfo.RefFilterOptions,
-                        _filterInfo.BranchFilter,
-                        _filterInfo.GetRevisionFilter(),
-                        pathFilter,
-                        out bool parentsAreRewritten);
-                    ParentsAreRewritten = parentsAreRewritten;
+                    ParentsAreRewritten = _filterInfo.HasRevisionFilter;
 
                     cancellationToken.ThrowIfCancellationRequested();
                     reader.GetLog(
                         observeRevisions,
-                        args,
+                        _filterInfo.GetRevisionFilter(),
+                        pathFilter,
                         cancellationToken);
                 }).FileAndForget(
                     ex =>
@@ -2461,9 +2456,9 @@ namespace GitUI
             Refresh();
         }
 
-        public void ToggleShowFirstParent()
+        public void ToggleShowOnlyFirstParent()
         {
-            _filterInfo.ShowFirstParent = !_filterInfo.ShowFirstParent;
+            _filterInfo.ShowOnlyFirstParent = !_filterInfo.ShowOnlyFirstParent;
             PerformRefreshRevisions();
         }
 
@@ -3011,7 +3006,7 @@ namespace GitUI
                 case Command.ShowFilteredBranches: ShowFilteredBranches(); break;
                 case Command.ShowReflogReferences: ToggleShowReflogReferences(); break;
                 case Command.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
-                case Command.ShowFirstParent: ToggleShowFirstParent(); break;
+                case Command.ShowFirstParent: ToggleShowOnlyFirstParent(); break;
                 case Command.ToggleBetweenArtificialAndHeadCommits: ToggleBetweenArtificialAndHeadCommits(); break;
                 case Command.SelectCurrentRevision:
                     if (!SetSelectedRevision(CurrentCheckout))

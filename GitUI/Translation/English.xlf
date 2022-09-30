@@ -3315,8 +3315,8 @@ Do you want to continue?</source>
         <source>Show filtered branches</source>
         <target />
       </trans-unit>
-      <trans-unit id="tsmiShowFirstParent.ToolTipText">
-        <source>Show first parents</source>
+      <trans-unit id="tsmiShowOnlyFirstParent.ToolTipText">
+        <source>Show only first parent</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowReflog.Text">
@@ -7448,8 +7448,80 @@ Do you want to use this custom merge script?</source>
         <source>Filter</source>
         <target />
       </trans-unit>
+      <trans-unit id="CurrentBranchOnlyCheck.Text">
+        <source>Show current branch &amp;only</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="FullHistoryCheck.Text">
+        <source>Full &amp;history</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IgnoreCase.Text">
+        <source>&amp;Ignore case</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MergeCommitsCheck.Text">
+        <source>Merge commi&amp;ts</source>
+        <target />
+      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="OnlyFirstParentCheck.Text">
+        <source>Only &amp;first parent</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ReflogCheck.Text">
+        <source>Show &amp;reflog</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SimplifyByDecorationCheck.Text">
+        <source>Simplify b&amp;y decoration</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="SimplifyMergesCheck.Text">
+        <source>Simplify mer&amp;ges</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_author.Text">
+        <source>&amp;Author</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_branches.Text">
+        <source>&amp;Branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_committer.Text">
+        <source>&amp;Committer</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffContent.Text">
+        <source>&amp;Diff contains</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_diffContentToolTip.Text">
+        <source>SLOW</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_limit.Text">
+        <source>&amp;Limit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_message.Text">
+        <source>&amp;Message</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pathFilter.Text">
+        <source>&amp;Path filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_since.Text">
+        <source>&amp;Since</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_until.Text">
+        <source>&amp;Until</source>
         <target />
       </trans-unit>
     </body>
@@ -9752,11 +9824,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="filterToolStripMenuItem.Text">
-        <source>Set advanced filter</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="fullHistory.Text">
-        <source>Full history</source>
+        <source>Advanced filter...</source>
         <target />
       </trans-unit>
       <trans-unit id="showAuthorAvatarColumnToolStripMenuItem.Text">
@@ -9787,20 +9855,12 @@ See the changes in the commit form.</source>
         <source>Show &amp;date column</source>
         <target />
       </trans-unit>
-      <trans-unit id="showFirstParent.Text">
-        <source>Show first parents</source>
-        <target />
-      </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
         <source>Show git &amp;notes</source>
         <target />
       </trans-unit>
       <trans-unit id="showIdColumnToolStripMenuItem.Text">
         <source>Show SHA&amp;-1 column</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="showMergeCommitsToolStripMenuItem.Text">
-        <source>Show &amp;merge commits</source>
         <target />
       </trans-unit>
       <trans-unit id="showRelativeDateToolStripMenuItem.Text">
@@ -9813,10 +9873,6 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="showTagsToolStripMenuItem.Text">
         <source>Show &amp;tags</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="simplifyMerges.Text">
-        <source>Simplify merges</source>
         <target />
       </trans-unit>
     </body>
@@ -10696,6 +10752,10 @@ Select this commit to populate the full message.</source>
         <source>Diff BASE with</source>
         <target />
       </trans-unit>
+      <trans-unit id="_diffContent.Text">
+        <source>Diff contains</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_diffRange.Text">
         <source>Range diff</source>
         <target />
@@ -10768,10 +10828,6 @@ Select this commit to populate the full message.</source>
         <source>{0} {1:hour|hours} ago</source>
         <target />
       </trans-unit>
-      <trans-unit id="_ignoreCase.Text">
-        <source>Ignore case</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_indexText.Text">
         <source>Commit index</source>
         <target />
@@ -10782,10 +10838,6 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
         <source>'{0}' is not currently visible</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_limit.Text">
-        <source>Limit</source>
         <target />
       </trans-unit>
       <trans-unit id="_loadingDataText.Text">
@@ -10984,8 +11036,8 @@ all the first selected with the last selected commit.
 the last selected commit.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_showFirstParents.Text">
-        <source>Show first parents</source>
+      <trans-unit id="_showOnlyFirstParent.Text">
+        <source>Show only first parent</source>
         <target />
       </trans-unit>
       <trans-unit id="_showReflog.Text">
