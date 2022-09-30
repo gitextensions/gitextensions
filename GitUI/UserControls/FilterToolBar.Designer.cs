@@ -46,24 +46,28 @@ namespace GitUI.UserControls
             this.tsmiCommitFilter.CheckOnClick = true;
             this.tsmiCommitFilter.Name = "tsmiCommitFilter";
             this.tsmiCommitFilter.Text = "Commit &message";
+            this.tsmiCommitFilter.CheckedChanged += new System.EventHandler(this.revisionFilterBox_CheckedChanged); 
             // 
             // tsmiCommitter
             // 
             this.tsmiCommitterFilter.CheckOnClick = true;
             this.tsmiCommitterFilter.Name = "tsmiCommitter";
             this.tsmiCommitterFilter.Text = "&Committer";
+            this.tsmiCommitterFilter.CheckedChanged += new System.EventHandler(this.revisionFilterBox_CheckedChanged);
             // 
             // tsmiAuthor
             // 
             this.tsmiAuthorFilter.CheckOnClick = true;
             this.tsmiAuthorFilter.Name = "tsmiAuthor";
             this.tsmiAuthorFilter.Text = "&Author";
+            this.tsmiAuthorFilter.CheckedChanged += new System.EventHandler(this.revisionFilterBox_CheckedChanged);
             // 
             // tsmiDiffContains
             // 
             this.tsmiDiffContainsFilter.CheckOnClick = true;
             this.tsmiDiffContainsFilter.Name = "tsmiDiffContains";
             this.tsmiDiffContainsFilter.Text = "&Diff contains (SLOW)";
+            this.tsmiDiffContainsFilter.CheckedChanged += new System.EventHandler(this.revisionFilterBox_CheckedChanged);
             // 
             // toolStripLabel1
             // 
