@@ -34,7 +34,7 @@ namespace GitUI.UserControls
             this.tsddbtnBranchFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.tslblRevisionFilter = new System.Windows.Forms.ToolStripLabel();
-            this.tstxtRevisionFilter = new System.Windows.Forms.ToolStripTextBox();
+            this.tstxtRevisionFilter = new System.Windows.Forms.ToolStripComboBox();
             this.tsddbtnRevisionFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsbShowReflog = new System.Windows.Forms.ToolStripButton();
             this.tsmiShowOnlyFirstParent = new System.Windows.Forms.ToolStripButton();
@@ -236,12 +236,14 @@ namespace GitUI.UserControls
             // 
             // tstxtRevisionFilter
             // 
+            this.tstxtRevisionFilter.AutoSize = false;
             this.tstxtRevisionFilter.BackColor = System.Drawing.SystemColors.Control;
-            this.tstxtRevisionFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tstxtRevisionFilter.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.tstxtRevisionFilter.DropDownWidth = 300;
+            this.tstxtRevisionFilter.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.tstxtRevisionFilter.Name = "tstxtRevisionFilter";
             this.tstxtRevisionFilter.Size = new System.Drawing.Size(100, 25);
             this.tstxtRevisionFilter.Tag = "ToolBar_group:Text filter";
+            this.tstxtRevisionFilter.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tstxtRevisionFilter_KeyUp);
             // 
             // tsddbtnRevisionFilter
             // 
@@ -305,7 +307,7 @@ namespace GitUI.UserControls
         private ToolStripMenuItem tsmiDiffContainsFilter;
         private ToolStripButton tsbShowReflog;
         private ToolStripButton tsmiShowOnlyFirstParent;
-        private ToolStripTextBox tstxtRevisionFilter;
+        private ToolStripComboBox tstxtRevisionFilter;
         private ToolStripLabel tslblRevisionFilter;
         private ToolStripSeparator toolStripSeparator19;
         private ToolStripSplitButton tsbtnAdvancedFilter;
