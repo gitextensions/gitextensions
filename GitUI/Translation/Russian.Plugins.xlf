@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ru">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -26,7 +26,7 @@
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Пожалуйста введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
+        <target>Пожалуйста, введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
@@ -1052,7 +1052,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
         <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>Невозможно скачать файл  commit-msg. Пожалуйста, установите хук commit-msg вручную.</target>
+        <target>Не удалось скачать файл commit-msg. Пожалуйста, установите хук commit-msg вручную.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
@@ -1326,8 +1326,8 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Не могу найти Gource.
-Пожалуйста загрузите Gource и установите путь в окне настроек плагинов.</target>
+        <target>Не удаётся найти Gource.
+Пожалуйста, загрузите Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1357,7 +1357,7 @@ Do you want to automatically download Gource?</source>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Скачивание не удалось.
-Пожалуйста скачайте Gource и установите путь в окне настроек плагинов.</target>
+Пожалуйста, скачайте Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1829,10 +1829,10 @@ l.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>Буфер не содержит валидного адреса сборки.
+        <target>Буфер обмена не содержит допустимого адреса сборки.
 
-Пожалуйста скопируйте адрес сборки перед очередной попыткой.
-(Должен содержать &quot;buildTypeId&quot; параметр)</target>
+Пожалуйста, скопируйте адрес сборки перед очередной попыткой.
+(Как минимум должен содержаться параметр &quot;buildTypeId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1844,7 +1844,7 @@ Please copy in the clipboard the url of the build before retrying.
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
         <target>Неудачная загрузка проектов и списка сборки.
-Пожалуйста проверьте url сервера.</target>
+Пожалуйста, проверьте адрес сервера.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">

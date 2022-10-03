@@ -1,7 +1,111 @@
 Changelog
 =========
 
-### Version 4.0.0 (11 Jun 2022)
+### Version 4.0.0-beta (3 Oct 2022)
+
+#### Changes:
+* [#10205] Move revision filters to advanced filter form
+* [#10191] Add Update-DotnetVersion script
+* [#10190] Tests: Disable some commonly failed tests
+* [#10189] Reorder items in View menu
+* [#10188] Blame: fix path displayed in the gutter
+* [#10183] Blame: fix blame revision older revision when the file has been renamed
+* [#10180] Update .NET references
+* [#10172] Decouple filter options
+* [#10169] Tests: Disable some commonly failed tests
+* [#10164] RevGrid: Custom tools were only loaded at settings changes
+* [#10163] Insert artificial commits if filter without any matches is applied
+* [#10161] FormStash: Display index of stashes
+* [#10159] Settings: Don't clear setting search when leaving the search box
+* [#10154] Set RuntimeFrameworkVersion for DotnetRuntimeBootstrapper
+* [#10153] Do not call DoDragDrop when mouse is up
+* [#10149] Reword/Edit: Rebase on actual parent
+* [#10146] Sidepanel: Keep revisions opening a new instance
+* [#10145] Open new instance if double click on current submodule
+* [#10139] VS Code build support
+* [#10138] Show Stash in rev grid
+* [#10137] Do not start NBug if mergetool exits with other than 0
+* [#10136] BranchFilter text was added backwards
+* [#10135] Support User local paths for VsCode merge tools
+* [#10130] Eliminate static methods in RevisionReader
+* [#10129] Cleanup git-log filter option handling
+* [#10127] Fix search not launching/working when changing filter selection
+* [#10125] Improve menu responsiveness with SuspendLayout
+* [#10124] Set branch name in repo menu async
+* [#10123] Add `rebase.autosquash` setting in Git Advanced settings panel
+* [#10119] Restore WindowState when activating
+* [#10118] FormDiff:  Show range diff with merge base
+* [#10117] Show tags by default in side panel
+* [#10116] Allow merge base to parent with three selected
+* [#10101] RevDiff: Align rules for hotkey execution to menu items
+* [#10090] fix: Cannot cherry-pick new file from stash
+* [#10088] Use WinForms API to check for minimized
+* [#10086] ConEmu 220418
+* [#10085] Git 2.37.1
+* [#10084] Add most recent repos to all recent list
+* [#10083] Select remote branch on Alt+Click in side panel
+* [#10082] RevGrid: Optimize onlyFirstParent handling
+* [#10079] Improve the clarity of tooltips for Rebase UI date options
+* [#10076] Exclude boundary commits with --grep
+* [#10073] Blame: No change of control at double click
+* [#10072] FormDiff: Set HEAD for diff calculator
+* [#10030] RevisionGrid: Cleanup PerformRefreshRevisions
+* [#10027] Replace hard-coded `Ctrl+O` shortcuts with `Hotkey`s
+* [#10026] `CommitInfo`: Ensure empty line between sections
+* [#10021] Do not throw when cancelling current token
+
+[10205]:https://github.com/gitextensions/gitextensions/pull/10205
+[10191]:https://github.com/gitextensions/gitextensions/pull/10191
+[10190]:https://github.com/gitextensions/gitextensions/pull/10190
+[10189]:https://github.com/gitextensions/gitextensions/pull/10189
+[10188]:https://github.com/gitextensions/gitextensions/pull/10188
+[10183]:https://github.com/gitextensions/gitextensions/pull/10183
+[10180]:https://github.com/gitextensions/gitextensions/pull/10180
+[10172]:https://github.com/gitextensions/gitextensions/pull/10172
+[10169]:https://github.com/gitextensions/gitextensions/pull/10169
+[10164]:https://github.com/gitextensions/gitextensions/pull/10164
+[10163]:https://github.com/gitextensions/gitextensions/pull/10163
+[10161]:https://github.com/gitextensions/gitextensions/pull/10161
+[10159]:https://github.com/gitextensions/gitextensions/pull/10159
+[10154]:https://github.com/gitextensions/gitextensions/pull/10154
+[10153]:https://github.com/gitextensions/gitextensions/pull/10153
+[10149]:https://github.com/gitextensions/gitextensions/pull/10149
+[10146]:https://github.com/gitextensions/gitextensions/pull/10146
+[10145]:https://github.com/gitextensions/gitextensions/pull/10145
+[10139]:https://github.com/gitextensions/gitextensions/pull/10139
+[10138]:https://github.com/gitextensions/gitextensions/pull/10138
+[10137]:https://github.com/gitextensions/gitextensions/pull/10137
+[10136]:https://github.com/gitextensions/gitextensions/pull/10136
+[10135]:https://github.com/gitextensions/gitextensions/pull/10135
+[10130]:https://github.com/gitextensions/gitextensions/pull/10130
+[10129]:https://github.com/gitextensions/gitextensions/pull/10129
+[10127]:https://github.com/gitextensions/gitextensions/pull/10127
+[10125]:https://github.com/gitextensions/gitextensions/pull/10125
+[10124]:https://github.com/gitextensions/gitextensions/pull/10124
+[10123]:https://github.com/gitextensions/gitextensions/pull/10123
+[10119]:https://github.com/gitextensions/gitextensions/pull/10119
+[10118]:https://github.com/gitextensions/gitextensions/pull/10118
+[10117]:https://github.com/gitextensions/gitextensions/pull/10117
+[10116]:https://github.com/gitextensions/gitextensions/pull/10116
+[10101]:https://github.com/gitextensions/gitextensions/pull/10101
+[10090]:https://github.com/gitextensions/gitextensions/pull/10090
+[10088]:https://github.com/gitextensions/gitextensions/pull/10088
+[10086]:https://github.com/gitextensions/gitextensions/pull/10086
+[10085]:https://github.com/gitextensions/gitextensions/pull/10085
+[10084]:https://github.com/gitextensions/gitextensions/pull/10084
+[10083]:https://github.com/gitextensions/gitextensions/pull/10083
+[10082]:https://github.com/gitextensions/gitextensions/pull/10082
+[10079]:https://github.com/gitextensions/gitextensions/pull/10079
+[10076]:https://github.com/gitextensions/gitextensions/pull/10076
+[10073]:https://github.com/gitextensions/gitextensions/pull/10073
+[10072]:https://github.com/gitextensions/gitextensions/pull/10072
+[10030]:https://github.com/gitextensions/gitextensions/pull/10030
+[10027]:https://github.com/gitextensions/gitextensions/pull/10027
+[10026]:https://github.com/gitextensions/gitextensions/pull/10026
+[10021]:https://github.com/gitextensions/gitextensions/pull/10021
+
+
+### Version 4.0.0-alpha (11 Jun 2022)
 
 #### Changes:
 * [#10011] CommitInfo: Fixup revision links in commit message
