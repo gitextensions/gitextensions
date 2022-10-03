@@ -110,7 +110,7 @@ namespace GitExtensions
                 {
                     typeof(GitUI.GitExtensionsForm).Assembly,
                     typeof(GitCommands.GitModule).Assembly,
-                    typeof(ResourceManager.GitPluginBase).Assembly
+                    typeof(ResourceManager.LinkFactory).Assembly
                 },
                 AppSettings.UserPluginsPath);
 
