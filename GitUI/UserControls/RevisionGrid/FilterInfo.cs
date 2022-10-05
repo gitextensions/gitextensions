@@ -308,44 +308,42 @@ namespace GitUI.UserControls.RevisionGrid
             // Branch filters
             if (ShowReflogReferences)
             {
+                // All commits
                 filter.Add("--reflog");
+            }
+            else if (IsShowCurrentBranchOnlyChecked)
+            {
+                // Default git-log (no option), only current branch (HEAD)
+            }
+            else if (IsShowFilteredBranchesChecked && !string.IsNullOrWhiteSpace(BranchFilter))
+            {
+                // Show filtered branches only
+                filter.Add(IsSimpleBranchFilter(BranchFilter) ? BranchFilter : "--branches=" + BranchFilter);
             }
             else
             {
-                // Note that some refs (like notes) requires --all or explicit inclusion (--glob)
-                // (None is evaluated as HEAD)
-                // These options are explicitly excluded when not desired
-                // "other refs" include Gerrit refs like refs/for/ and refs/changes/
+                // refs (like notes) requires --reflog/--all or explicit inclusion (--glob)
+                // (so included for --reflog/--all, not explicitly added for other)
+                // --exclude is ignored for --reflog, only used with --all
+                // Similar but unhandled refs include Gerrit refs like refs/for/ and refs/changes/
                 if (!AppSettings.ShowGitNotes)
                 {
-                    filter.Add("--not --glob=notes --not");
+                    filter.Add($"--exclude={GitRefName.RefsNotesPrefix}");
                 }
 
                 if (!AppSettings.ShowStashes)
                 {
-                    filter.Add("--exclude=refs/stash");
+                    filter.Add($"--exclude={GitRefName.RefsStashPrefix}");
                 }
 
-                if (ShowCurrentBranchOnly)
-                {
-                    // Default git-log, only current branch, no option
-                }
-                else if (!string.IsNullOrWhiteSpace(BranchFilter))
-                {
-                    // Show filtered branches only
-                    filter.Add(IsSimpleBranchFilter(BranchFilter) ? BranchFilter : "--branches=" + BranchFilter);
-                }
-                else
-                {
-                    // All branches
-                    filter.Add("--all");
+                // All refs/
+                filter.Add("--all");
 
-                    // The inclusion of boundary parents to matches is historical
-                    // (why Message etc is handled as a special case)
-                    if (!string.IsNullOrWhiteSpace(Message) && !string.IsNullOrWhiteSpace(DiffContent))
-                    {
-                        filter.Add("--boundary");
-                    }
+                // The inclusion of boundary parents to matches is historical
+                // (why Message etc is handled as a special case)
+                if (!string.IsNullOrWhiteSpace(Message) && !string.IsNullOrWhiteSpace(DiffContent))
+                {
+                    filter.Add("--boundary");
                 }
             }
 

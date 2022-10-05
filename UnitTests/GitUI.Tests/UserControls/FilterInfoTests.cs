@@ -30,15 +30,47 @@ namespace GitUITests.UserControls
         [Test]
         public void FilterInfo_ctor_expected()
         {
-            FilterInfo filterInfo = new();
-            Approvals.Verify(filterInfo);
+            bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
+            bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+            bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
+            AppSettings.ShowReflogReferences = false;
+            AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.BranchFilterEnabled = false;
+
+            try
+            {
+                FilterInfo filterInfo = new();
+                Approvals.Verify(filterInfo);
+            }
+            finally
+            {
+                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+            }
         }
 
         [Test]
         public void FilterInfo_ctor_with_Raw_expected()
         {
-            FilterInfo filterInfo = new() { IsRaw = true };
-            Approvals.Verify(filterInfo);
+            bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
+            bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+            bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
+            AppSettings.ShowReflogReferences = false;
+            AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.BranchFilterEnabled = false;
+
+            try
+            {
+                FilterInfo filterInfo = new() { IsRaw = true };
+                Approvals.Verify(filterInfo);
+            }
+            finally
+            {
+                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+            }
         }
 
         [Test]
@@ -810,7 +842,7 @@ namespace GitUITests.UserControls
 
         [TestCase("author1", "committer2", "message3", "diffContent4", true, false, "pathFilter7", false, false, "branchFilter8",
             "Path filter: pathFilter7\r\nBranches: branchFilter8\r\nAuthor: author1\r\nCommitter: committer2\r\nMessage: message3\r\nDiff contains: diffContent4\r\nSince: 10/1/2021 1:30:34 AM\r\nUntil: 11/1/2021 1:30:34 AM\r\nSimplify by decoration\r\n",
-            @"--max-count=100000 --not --glob=notes --not branchFilter8 --parents --no-merges --simplify-by-decoration --author=""author1"" --committer=""committer2"" --grep=""message3"" -G""diffContent4"" --regexp-ignore-case --since=""2021-10-01 01:30:34"" --until=""2021-11-01 01:30:34""")]
+            @"--max-count=100000 branchFilter8 --parents --no-merges --simplify-by-decoration --author=""author1"" --committer=""committer2"" --grep=""message3"" -G""diffContent4"" --regexp-ignore-case --since=""2021-10-01 01:30:34"" --until=""2021-11-01 01:30:34""")]
         public void FilterInfo_GetRevisionFilter(string author, string committer, string message, string diffContent, bool showSimplifyByDecoration, bool showMergeCommits, string pathFilter, bool showReflog, bool showCurrentBranchOnly, string branchFilter, string expectedSummary, string expectedArgs)
         {
             DateTime dateFrom = new(2021, 10, 1, 1, 30, 34, DateTimeKind.Local);
@@ -974,55 +1006,70 @@ namespace GitUITests.UserControls
             }
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public void FilterInfo_Stashes(bool expected)
+        public static IEnumerable<TestCaseData> FilterInfo_NotesStash
         {
-            bool originalShowStashes = AppSettings.ShowStashes;
-            AppSettings.ShowStashes = expected;
-            FilterInfo filterInfo = new();
-            string args = filterInfo.GetRevisionFilter();
-
-            try
+            get
             {
-                if (expected)
+                foreach (bool showNotes in new[] { false, true })
                 {
-                    args.ToString().Should().NotMatchRegex(@"[^\s]?--exclude=refs/stash");
+                    foreach (bool showStash in new[] { false, true })
+                    {
+                        foreach (bool showReflog in new[] { false, true })
+                        {
+                            foreach (bool showCurrentBranchOnly in new[] { false, true })
+                            {
+                                foreach (string branchFilter in new[] { "branch1", "", null })
+                                {
+                                    yield return new TestCaseData(showNotes, showStash, showReflog, showCurrentBranchOnly, branchFilter);
+                                }
+                            }
+                        }
+                    }
                 }
-                else
-                {
-                    args.ToString().Should().MatchRegex(@"[^\s]?--exclude=refs/stash");
-                }
-            }
-            finally
-            {
-                AppSettings.ShowStashes = originalShowStashes;
             }
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public void FilterInfo_GitNotes(bool expected)
+        [TestCaseSource(nameof(FilterInfo_NotesStash))]
+        public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showReflog, bool showCurrentBranchOnly, string branchFilter)
         {
             bool originalShowGitNotes = AppSettings.ShowGitNotes;
-            AppSettings.ShowGitNotes = expected;
-            FilterInfo filterInfo = new();
+            AppSettings.ShowGitNotes = showGitNotes;
+            bool originalShowStash = AppSettings.ShowStashes;
+            AppSettings.ShowStashes = showStash;
+            FilterInfo filterInfo = new()
+            {
+                ShowReflogReferences = showReflog,
+                ShowCurrentBranchOnly = showCurrentBranchOnly,
+                ByBranchFilter = true,
+                BranchFilter = branchFilter
+            };
             string args = filterInfo.GetRevisionFilter();
+            bool showAll = !showReflog && !showCurrentBranchOnly && string.IsNullOrWhiteSpace(branchFilter);
 
             try
             {
-                if (expected)
+                if (showAll && !showGitNotes)
                 {
-                    args.ToString().Should().NotMatchRegex(@"[^\s]?--not --glob=notes --not");
+                    args.ToString().Should().MatchRegex(@"(^|\s)--exclude=refs/notes/commits($|\s)");
                 }
                 else
                 {
-                    args.ToString().Should().MatchRegex(@"[^\s]?--not --glob=notes --not");
+                    args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/notes/commits($|\s)");
+                }
+
+                if (showAll && !showStash)
+                {
+                    args.ToString().Should().MatchRegex(@"(^|\s)--exclude=refs/stash($|\s)");
+                }
+                else
+                {
+                    args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/stash($|\s)");
                 }
             }
             finally
             {
                 AppSettings.ShowGitNotes = originalShowGitNotes;
+                AppSettings.ShowStashes = originalShowStash;
             }
         }
 
