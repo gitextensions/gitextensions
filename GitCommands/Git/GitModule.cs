@@ -970,7 +970,7 @@ namespace GitCommands
                 objectId
             };
 
-            var revInfo = _gitExecutable.GetOutput(args, cache: GitCommandCache, outputEncoding: LosslessEncoding);
+            var revInfo = _gitExecutable.GetOutput(args, cache: objectId is null ? null : GitCommandCache, outputEncoding: LosslessEncoding);
 
             // TODO improve parsing to reduce temporary string (see similar code in RevisionReader)
             string[] lines = revInfo.Split(Delimiters.LineFeed);
