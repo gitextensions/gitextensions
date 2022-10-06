@@ -1,4 +1,5 @@
-﻿using Microsoft;
+﻿using GitCommands;
+using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -18,8 +19,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 new("pull.rebase", checkBoxPullRebase),
                 new("fetch.prune", checkBoxFetchPrune),
                 new("rebase.autoStash", checkBoxRebaseAutostash),
-                new("rebase.autosquash", checkBoxRebaseAutosquash)
+                new("rebase.autosquash", checkBoxRebaseAutosquash),
+                new("rebase.updateRefs", checkBoxUpdateRefs)
             };
+
+            checkBoxUpdateRefs.Visible = GitVersion.Current.SupportUpdateRefs;
+
             Load += GitConfigAdvancedSettingsPage_Load;
         }
 
