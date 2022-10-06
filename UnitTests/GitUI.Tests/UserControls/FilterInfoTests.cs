@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 using ApprovalTests;
 using FluentAssertions;
 using GitCommands;
-using GitExtUtils;
 using GitUI.UserControls.RevisionGrid;
-using GitUI.UserControls.RevisionGrid.Graph;
-using LibGit2Sharp;
-using Newtonsoft.Json.Linq;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace GitUITests.UserControls
@@ -842,7 +835,7 @@ namespace GitUITests.UserControls
 
         [TestCase("author1", "committer2", "message3", "diffContent4", true, false, "pathFilter7", false, false, "branchFilter8",
             "Path filter: pathFilter7\r\nBranches: branchFilter8\r\nAuthor: author1\r\nCommitter: committer2\r\nMessage: message3\r\nDiff contains: diffContent4\r\nSince: 10/1/2021 1:30:34 AM\r\nUntil: 11/1/2021 1:30:34 AM\r\nSimplify by decoration\r\n",
-            @"--max-count=100000 branchFilter8 --parents --no-merges --simplify-by-decoration --author=""author1"" --committer=""committer2"" --grep=""message3"" -G""diffContent4"" --regexp-ignore-case --since=""2021-10-01 01:30:34"" --until=""2021-11-01 01:30:34""")]
+            @"--max-count=100000 --glob=refs/stas[h] branchFilter8 --parents --no-merges --simplify-by-decoration --author=""author1"" --committer=""committer2"" --grep=""message3"" -G""diffContent4"" --regexp-ignore-case --since=""2021-10-01 01:30:34"" --until=""2021-11-01 01:30:34""")]
         public void FilterInfo_GetRevisionFilter(string author, string committer, string message, string diffContent, bool showSimplifyByDecoration, bool showMergeCommits, string pathFilter, bool showReflog, bool showCurrentBranchOnly, string branchFilter, string expectedSummary, string expectedArgs)
         {
             DateTime dateFrom = new(2021, 10, 1, 1, 30, 34, DateTimeKind.Local);
@@ -897,22 +890,22 @@ namespace GitUITests.UserControls
 
             if (showRefLog)
             {
-                args.ToString().Should().MatchRegex(@"[^\s]?--reflog");
+                args.ToString().Should().MatchRegex(@"(^|\s)--reflog($|\s)");
             }
             else
             {
-                args.ToString().Should().NotMatchRegex(@"[^\s]?--reflog");
+                args.ToString().Should().NotMatchRegex(@"(^|\s)--reflog($|\s)");
             }
 
             if (!showRefLog && showCurrentBranchOnly)
             {
-                args.ToString().Should().NotMatchRegex(@"[^\s]?--all");
-                args.ToString().Should().NotMatchRegex(@"branchFilter");
+                args.ToString().Should().NotMatchRegex(@"(^|\s)--all($|\s)");
+                args.ToString().Should().NotMatchRegex(@"(^|\s)branchFilter($|\s)");
             }
 
             if (!showRefLog && !showCurrentBranchOnly && !string.IsNullOrWhiteSpace(branchFilter))
             {
-                args.ToString().Should().MatchRegex(@"[^\s]?branchFilter");
+                args.ToString().Should().MatchRegex(@"(^|\s)branchFilter($|\s)");
             }
         }
 
@@ -934,12 +927,12 @@ namespace GitUITests.UserControls
 
             if (expectBranches)
             {
-                args.ToString().Should().Contain(@$"--branches={branchFilter}");
+                args.ToString().Should().MatchRegex(@$"(^|\s)--branches={Regex.Escape(branchFilter)}($|\s)");
             }
             else
             {
-                args.ToString().Should().Contain(@$"{branchFilter}");
-                args.ToString().Should().NotContain(@$"--branches={branchFilter}");
+                args.ToString().Should().MatchRegex(@$"(^|\s){Regex.Escape(branchFilter)}($|\s)");
+                args.ToString().Should().NotMatchRegex(@$"(^|\s)--branches={Regex.Escape(branchFilter)}($|\s)");
             }
         }
 
@@ -956,11 +949,11 @@ namespace GitUITests.UserControls
 
             if (expected)
             {
-                args.ToString().Should().Contain(@$"--max-count={maxCount} ");
+                args.ToString().Should().MatchRegex(@$"(^|\s)--max-count={maxCount}($|\s)");
             }
             else
             {
-                args.ToString().Should().NotContain(@"--max-count=");
+                args.ToString().Should().NotMatchRegex(@"(^|\s)--max-count=\d+($|\s)");
             }
         }
 
@@ -977,11 +970,11 @@ namespace GitUITests.UserControls
 
             if (expected)
             {
-                args.ToString().Should().MatchRegex(@"[^\s]?--first-parent");
+                args.ToString().Should().MatchRegex(@"(^|\s)--first-parent($|\s)");
             }
             else
             {
-                args.ToString().Should().NotMatchRegex(@"[^\s]?--first-parent");
+                args.ToString().Should().NotMatchRegex(@"(^|\s)--first-parent($|\s)");
             }
         }
 
@@ -998,11 +991,11 @@ namespace GitUITests.UserControls
 
             if (!expected)
             {
-                args.ToString().Should().MatchRegex(@"[^\s]?--no-merges");
+                args.ToString().Should().MatchRegex(@"(^|\s)--no-merges($|\s)");
             }
             else
             {
-                args.ToString().Should().NotMatchRegex(@"[^\s]?--no-merges");
+                args.ToString().Should().NotMatchRegex(@"(^|\s)--no-merges($|\s)");
             }
         }
 
@@ -1045,6 +1038,8 @@ namespace GitUITests.UserControls
             };
             string args = filterInfo.GetRevisionFilter();
             bool showAll = !showReflog && !showCurrentBranchOnly && string.IsNullOrWhiteSpace(branchFilter);
+            bool showCurrent = !showReflog && showCurrentBranchOnly;
+            bool showFiltredOrCurrent = !showReflog && (showCurrentBranchOnly || !string.IsNullOrWhiteSpace(branchFilter));
 
             try
             {
@@ -1064,6 +1059,25 @@ namespace GitUITests.UserControls
                 else
                 {
                     args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/stash($|\s)");
+                }
+
+                if (showCurrent && showStash)
+                {
+                    args.ToString().Should().MatchRegex(@"(^|\s)HEAD($|\s)");
+                }
+                else
+                {
+                    args.ToString().Should().NotMatchRegex(@"(^|\s)HEAD($|\s)");
+                }
+
+                string stash = Regex.Escape("--glob=refs/stas[h]");
+                if (showFiltredOrCurrent && showStash)
+                {
+                    args.ToString().Should().MatchRegex(@$"(^|\s){stash}($|\s)");
+                }
+                else
+                {
+                    args.ToString().Should().NotMatchRegex(@$"(^|\s){stash}($|\s)");
                 }
             }
             finally
