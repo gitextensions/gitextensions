@@ -961,7 +961,7 @@ namespace GitCommands
                 /* Committer EMail*/ "%cE%n" +
                 /* Committer Date */ "%ct%n";
 
-            var format = formatString + (shortFormat ? "%s" : "%B%nNotes:%n%-N");
+            string format = formatString + (shortFormat ? "%s" : "%B%nNotes:%n%-N");
 
             GitArgumentBuilder args = new("log")
             {
@@ -970,7 +970,10 @@ namespace GitCommands
                 objectId
             };
 
-            var revInfo = _gitExecutable.GetOutput(args, cache: GitCommandCache, outputEncoding: LosslessEncoding);
+            // cache output only if revision is specified
+            CommandCache? cache = objectId is null ? null : GitCommandCache;
+
+            string revInfo = _gitExecutable.GetOutput(args, cache: cache, outputEncoding: LosslessEncoding);
 
             // TODO improve parsing to reduce temporary string (see similar code in RevisionReader)
             string[] lines = revInfo.Split(Delimiters.LineFeed);
