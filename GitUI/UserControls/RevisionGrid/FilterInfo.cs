@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
-using System.Windows.Forms.VisualStyles;
 using GitCommands;
 using GitExtUtils;
-using GitUI.UserControls.RevisionGrid.Graph;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -311,20 +309,37 @@ namespace GitUI.UserControls.RevisionGrid
                 // All commits
                 filter.Add("--reflog");
             }
-            else if (IsShowCurrentBranchOnlyChecked)
+            else if (IsShowCurrentBranchOnlyChecked || (IsShowFilteredBranchesChecked && !string.IsNullOrWhiteSpace(BranchFilter)))
             {
-                // Default git-log (no option), only current branch (HEAD)
-            }
-            else if (IsShowFilteredBranchesChecked && !string.IsNullOrWhiteSpace(BranchFilter))
-            {
-                // Show filtered branches only
-                filter.Add(IsSimpleBranchFilter(BranchFilter) ? BranchFilter : "--branches=" + BranchFilter);
+                // See handling for --all below, explicitly add most recent stash
+                if (AppSettings.ShowStashes)
+                {
+                    // stash@{0} requires that the repo has commits and --glob=refs/stash is handled as refs/stash/*,
+                    // so this weird pattern must be used: "--glob=refs/stas[h]"
+                    filter.Add($"--glob={GitRefName.RefsStashPrefix.Remove(GitRefName.RefsStashPrefix.Length - 1, 1)}[h]");
+                }
+
+                if (IsShowCurrentBranchOnlyChecked)
+                {
+                    // Default git-log (no option), only current branch (HEAD)
+                    if (AppSettings.ShowStashes)
+                    {
+                        filter.Add("HEAD");
+                    }
+                }
+                else
+                {
+                    // Show filtered branches only
+                    // Do not add suffix /* to the filter
+                    bool isSimpleBranchFilter = BranchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
+                    filter.Add(isSimpleBranchFilter ? BranchFilter : $"--branches={BranchFilter}");
+                }
             }
             else
             {
                 // refs (like notes) requires --reflog/--all or explicit inclusion (--glob)
                 // (so included for --reflog/--all, not explicitly added for other)
-                // --exclude is ignored for --reflog, only used with --all
+                // --exclude is ignored for --reflog, notes/stash below only applicable with --all
                 // Similar but unhandled refs include Gerrit refs like refs/for/ and refs/changes/
                 if (!AppSettings.ShowGitNotes)
                 {
@@ -412,9 +427,6 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             return filter;
-
-            static bool IsSimpleBranchFilter(string branchFilter) =>
-               branchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
         }
 
         public string GetSummary()
