@@ -32,7 +32,7 @@
             this.labelPreview = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblMenuEntries = new System.Windows.Forms.Label();
-            this.chlMenuEntries = new System.Windows.Forms.CheckedListBox();
+            this._NO_TRANSLATE_chlMenuEntries = new System.Windows.Forms.CheckedListBox();
             this.cbAlwaysShowAllCommands = new System.Windows.Forms.CheckBox();
             this.tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
             this.gbShellExtensions = new System.Windows.Forms.GroupBox();
@@ -91,9 +91,9 @@
             // 
             // chlMenuEntries
             // 
-            this.chlMenuEntries.CheckOnClick = true;
-            this.chlMenuEntries.FormattingEnabled = true;
-            this.chlMenuEntries.Items.AddRange(new object[] {
+            this._NO_TRANSLATE_chlMenuEntries.CheckOnClick = true;
+            this._NO_TRANSLATE_chlMenuEntries.FormattingEnabled = true;
+            this._NO_TRANSLATE_chlMenuEntries.Items.AddRange(new object[] {
             "Add files...",
             "Apply patch...",
             "Open repository",
@@ -112,11 +112,11 @@
             "Settings",
             "View stash",
             "View changes"});
-            this.chlMenuEntries.Location = new System.Drawing.Point(3, 78);
-            this.chlMenuEntries.Name = "chlMenuEntries";
-            this.chlMenuEntries.Size = new System.Drawing.Size(315, 110);
-            this.chlMenuEntries.TabIndex = 3;
-            this.chlMenuEntries.SelectedValueChanged += new System.EventHandler(this.chlMenuEntries_SelectedValueChanged);
+            this._NO_TRANSLATE_chlMenuEntries.Location = new System.Drawing.Point(3, 78);
+            this._NO_TRANSLATE_chlMenuEntries.Name = "_NO_TRANSLATE_chlMenuEntries";
+            this._NO_TRANSLATE_chlMenuEntries.Size = new System.Drawing.Size(315, 110);
+            this._NO_TRANSLATE_chlMenuEntries.TabIndex = 3;
+            this._NO_TRANSLATE_chlMenuEntries.SelectedValueChanged += new System.EventHandler(this.chlMenuEntries_SelectedValueChanged);
             // 
             // cbAlwaysShowAllCommands
             // 
@@ -169,7 +169,7 @@
             this.tlpnlCascadingMenu.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpnlCascadingMenu.Controls.Add(this.cbAlwaysShowAllCommands, 0, 0);
             this.tlpnlCascadingMenu.Controls.Add(this.lblMenuEntries, 0, 2);
-            this.tlpnlCascadingMenu.Controls.Add(this.chlMenuEntries, 0, 3);
+            this.tlpnlCascadingMenu.Controls.Add(this._NO_TRANSLATE_chlMenuEntries, 0, 3);
             this.tlpnlCascadingMenu.Controls.Add(panel1, 1, 3);
             this.tlpnlCascadingMenu.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlCascadingMenu.Location = new System.Drawing.Point(8, 24);
@@ -206,7 +206,7 @@
         #endregion
 
         private System.Windows.Forms.Label lblMenuEntries;
-        private System.Windows.Forms.CheckedListBox chlMenuEntries;
+        private System.Windows.Forms.CheckedListBox _NO_TRANSLATE_chlMenuEntries;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label labelPreview;
         private System.Windows.Forms.CheckBox cbAlwaysShowAllCommands;
