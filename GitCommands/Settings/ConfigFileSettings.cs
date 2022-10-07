@@ -70,15 +70,28 @@ namespace GitCommands.Settings
                 SettingLevel.SystemWide);
         }
 
-        public new string GetValue(string setting)
-        {
-            return GetString(setting, string.Empty);
-        }
+        public new string GetValue(string setting) => GetString(setting, string.Empty);
 
-        public IReadOnlyList<string> GetValues(string setting)
-        {
-            return SettingsCache.GetValues(setting);
-        }
+        /// <summary>
+        /// Get the config setting from git converted in an expected C# value type (bool, int, ...)
+        /// </summary>
+        /// <typeparam name="T">the expected type to convert the value to.</typeparam>
+        /// <param name="setting">the git setting key</param>
+        /// <returns>
+        /// null if the settings is not set
+        /// the value converted in the <typeparamref name="T" /> type otherwise.
+        /// </returns>
+        public T? GetValue<T>(string setting) where T : struct => ConvertValue<T>(GetValue(setting));
+
+        private T? ConvertValue<T>(string value) where T : struct
+            => string.IsNullOrWhiteSpace(value) ? null : (T)Convert.ChangeType(value, typeof(T));
+
+        /// <summary>
+        /// Gets all configured values for a git setting that accepts multiple values for the same key.
+        /// </summary>
+        /// <param name="setting">The git setting key</param>
+        /// <returns>The collection of all the <see cref="string"/> values.</returns>
+        public IReadOnlyList<string> GetValues(string setting) => SettingsCache.GetValues(setting);
 
         public new void SetValue(string setting, string? value)
         {
