@@ -75,6 +75,8 @@ namespace GitUI.CommandsDialogs
                 ShowOptions_LinkClicked(this, null!);
             }
 
+            Currentbranch.Font = new Font(Currentbranch.Font.FontFamily, Currentbranch.Font.Size, FontStyle.Bold);
+
             Shown += FormRebase_Shown;
         }
 
