@@ -123,8 +123,7 @@ namespace GitUI.CommandsDialogs
             EnableButtons();
 
             // Honor the rebase.autosquash configuration.
-            string autosquashSetting = Module.GetEffectiveSetting("rebase.autosquash");
-            chkAutosquash.Checked = autosquashSetting.Trim().ToLower() == "true";
+            chkAutosquash.Checked = Module.GetEffectiveSetting<bool>("rebase.autosquash") is true;
 
             chkStash.Checked = AppSettings.RebaseAutoStash;
             if (_startRebaseImmediately)
