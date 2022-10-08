@@ -65,5 +65,31 @@
         /// protocol.file.allow
         /// </summary>
         public static string AllowFileProtocol = "protocol.file.allow";
+
+        /// <summary>
+        /// commit.gpgSign  Determines if commits are signed by default
+        /// </summary>
+        /// <remarks>
+        /// Min version 2.0
+        /// </remarks>
+        public static string CommitGPGSign = "commit.gpgSign";
+
+        /// <summary>
+        /// tag.gpgSign  Determines if tags are signed by default
+        /// </summary>
+        /// <remarks>
+        /// Min version 2.23
+        /// </remarks>
+        public static string TagGPGSign = "tag.gpgSign";
+
+        /// <summary>
+        /// user.signingKey  Stores the key ID to use when signing a commit with GPG
+        /// </summary>
+        public static string UserSigningKey = "user.signingKey";
+
+        /// <summary>
+        /// gpg.program  Stores the path to the gpg executable that will run when running gpg commands
+        /// </summary>
+        public static string GPGProgram = "gpg.program";
     }
 }
