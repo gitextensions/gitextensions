@@ -9844,6 +9844,10 @@ When OpenSSH is used, command line dialogs are shown!
   </file>
   <file datatype="plaintext" original="TranslatedStrings" source-language="en">
     <body>
+      <trans-unit id="__noKeySelected.Text">
+        <source>No key selected</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_addUpstreamRemote.Text">
         <source>Add upstream remote</source>
         <target />
@@ -10512,6 +10516,14 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_yes.Text">
         <source>Yes</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="Translations" source-language="en">
+    <body>
+      <trans-unit id="_noKeySelected.Text">
+        <source>No key selected</source>
         <target />
       </trans-unit>
     </body>
