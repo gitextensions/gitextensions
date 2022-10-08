@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using GitCommands.Config;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
@@ -25,10 +26,28 @@ namespace GitCommands.Gpg
     public interface IGitGpgController
     {
         /// <summary>
+        /// Gets the user's default signing key from git config
+        /// </summary>
+        /// <returns>The key id of the gpg key to sign with.</returns>
+        Task<string> GetDefaultKeyAsync();
+
+        /// <summary>
         /// Obtain the commit signature status on current revision.
         /// </summary>
         /// <returns>Enum value that indicate the gpg status for current git revision.</returns>
         Task<CommitStatus> GetRevisionCommitSignatureStatusAsync(GitRevision revision);
+
+        /// <summary>
+        /// Gets whether tags are signed by default
+        /// </summary>
+        /// <returns> true for default to signed tags</returns>
+        Task<bool> GetTagGPGSignAsync();
+
+        /// <summary>
+        /// Gets whether commits are signed by default
+        /// </summary>
+        /// <returns> true for default to signed commits</returns>
+        Task<bool> GetCommitGPGSignAsync();
 
         /// <summary>
         /// Obtain the commit verification message, coming from --pretty="format:%GG"
@@ -43,10 +62,12 @@ namespace GitCommands.Gpg
         Task<TagStatus> GetRevisionTagSignatureStatusAsync(GitRevision revision);
 
         /// <summary>
-        /// Obtain the tag verification message for all the tag in current git revision
+        /// Obtain the tag verification message for all the tags in current git revision
         /// </summary>
         /// <returns>Full concatenated string coming from GPG analysis on all tags on current git revision.</returns>
         string? GetTagVerifyMessage(GitRevision revision);
+
+        Task<IEnumerable<GpgKeyInfo>> GetGpgSecretKeysAsync();
     }
 
     public class GitGpgController : IGitGpgController
@@ -73,14 +94,16 @@ namespace GitCommands.Gpg
         private static readonly Regex GoodSignatureTagRegex = new(GoodSignature, RegexOptions.Compiled);
         private static readonly Regex NoPubKeyTagRegex = new(NoTagPubKey, RegexOptions.Compiled);
         private static readonly Regex NoSignatureFoundTagRegex = new(NoSignatureFound, RegexOptions.Compiled);
+        private readonly IGPGSecretKeysParser _parser;
 
         /// <summary>
         /// Obtain the tag verification message for all the tag in current git revision
         /// </summary>
         /// <returns>Full concatenated string coming from GPG analysis on all tags on current git revision.</returns>
-        public GitGpgController(Func<IGitModule> getModule)
+        public GitGpgController(Func<IGitModule> getModule, IGPGSecretKeysParser parser)
         {
             _getModule = getModule;
+            _parser = parser;
         }
 
         /// <summary>
@@ -199,14 +222,13 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            var module = GetModule();
             GitArgumentBuilder args = new("log")
             {
                 "--pretty=\"format:%GG\"",
                 "-1",
                 revision.Guid
             };
-            return module.GitExecutable.GetOutput(args);
+            return GetModule().GitExecutable.GetOutput(args);
         }
 
         /// <summary>
@@ -276,6 +298,70 @@ namespace GitCommands.Gpg
             }
 
             return module;
+        }
+
+        /// <inheritdoc/>
+        public async Task<string?> GetDefaultKeyAsync()
+        {
+            ArgumentString args = new GitArgumentBuilder("config")
+            {
+                SettingKeyString.UserSigningKey
+            };
+
+            string? output = await GetModule().GitExecutable.GetOutputAsync(args); // Make sure it gets current value and avoids any caching issues.
+            return output;
+        }
+
+        public async Task<IEnumerable<GpgKeyInfo>> GetGpgSecretKeysAsync()
+        {
+            var args = new ArgumentBuilder()
+            {
+                "-K", // Secret Keys
+                "--with-colons",
+                "--keyid-format LONG"
+            };
+
+            string txt = await GetModule().GpgExecutable.GetOutputAsync(args);
+            string? defaultKey = await GetDefaultKeyAsync();
+            IEnumerable<GpgKeyInfo> output = _parser.ParseKeysOutput(txt, defaultKey);
+
+            return output.DistinctBy(k => k.KeyID).ToArray();
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> GetTagGPGSignAsync()
+        {
+            ArgumentString args = new GitArgumentBuilder("config")
+            {
+                SettingKeyString.TagGPGSign
+            };
+
+            string? output = (await GetModule().GitExecutable.GetOutputAsync(args))?.Trim('\n');
+            bool result = false;
+            if (bool.TryParse(output, out result))
+            {
+                return result;
+            }
+
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public async Task<bool> GetCommitGPGSignAsync()
+        {
+            ArgumentString args = new GitArgumentBuilder("config")
+            {
+                SettingKeyString.CommitGPGSign
+            };
+
+            string? output = (await GetModule().GitExecutable.GetOutputAsync(args))?.Trim('\n');
+            bool result = false;
+            if (bool.TryParse(output, out result))
+            {
+                return result;
+            }
+
+            return false;
         }
     }
 }

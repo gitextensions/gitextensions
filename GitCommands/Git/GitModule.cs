@@ -65,12 +65,19 @@ namespace GitCommands
         /// </summary>
         private readonly string _wslDistro;
 
+        /// <inherit/>
+        private readonly IExecutable _gpgExecutable;
+
         public GitModule(string? workingDir)
         {
             WorkingDir = (workingDir ?? "").NormalizePath().EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
+
+            // TODO use setting for path to gpg
+            _gpgExecutable = new Executable(() => @"C:\Program Files (x86)\GnuPG\bin\gpg.exe", WorkingDir);
+
             _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
             _gitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
             _gitWindowsCommandRunner = new GitCommandRunner(_gitWindowsExecutable, () => SystemEncoding);
@@ -167,6 +174,11 @@ namespace GitCommands
 
         /// <inherit/>
         public IExecutable GitExecutable => _gitExecutable;
+
+        /// <summary>
+        /// Gets the access to the current GPG executable associated with this module.
+        /// </summary>
+        public IExecutable GpgExecutable => _gpgExecutable;
 
         /// <inherit/>
         public IGitCommandRunner GitCommandRunner => _gitCommandRunner;
