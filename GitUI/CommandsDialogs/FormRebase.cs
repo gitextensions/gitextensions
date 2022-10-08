@@ -8,7 +8,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormRebase : GitModuleForm
+    public partial class FormRebase : GitExtensionsDialog
     {
         #region Mnemonics
         // Available: GHJLNVWXYZ
@@ -59,14 +59,16 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormRebase(GitUICommands commands, string? defaultBranch)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             _defaultBranch = defaultBranch;
+
             InitializeComponent();
+
             SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeconflicts.SetForeColorForBackColor();
             PanelLeftImage.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
-            InitializeComplete();
+
             PanelLeftImage.Visible = !AppSettings.DontShowHelpImages;
             PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
             PatchGrid.SetSkipped(Skipped);
@@ -75,14 +77,7 @@ namespace GitUI.CommandsDialogs
                 ShowOptions_LinkClicked(this, null!);
             }
 
-            Currentbranch.Font = new Font(Currentbranch.Font.FontFamily, Currentbranch.Font.Size, FontStyle.Bold);
-
-            Shown += FormRebase_Shown;
-        }
-
-        private void FormRebase_Shown(object sender, EventArgs e)
-        {
-            PatchGrid.SelectCurrentlyApplyingPatch();
+            InitializeComplete();
         }
 
         public FormRebase(GitUICommands commands, string? from, string? to, string? defaultBranch, bool interactive = false, bool startRebaseImmediately = true)
@@ -98,6 +93,13 @@ namespace GitUI.CommandsDialogs
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+
+            if (IsDesignMode)
+            {
+                return;
+            }
+
+            PatchGrid.SelectCurrentlyApplyingPatch();
 
             var selectedHead = Module.GetSelectedBranch();
             Currentbranch.Text = selectedHead;
