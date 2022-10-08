@@ -5816,43 +5816,6 @@ Would you like to do it now?</source>
         <source>Rebase</source>
         <target />
       </trans-unit>
-      <trans-unit id="Abort.Text">
-        <source>A&amp;bort</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="AddFiles.Text">
-        <source>&amp;Add files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Commit.Text">
-        <source>C&amp;ommit...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Mergetool.Text">
-        <source>&amp;Solve conflicts</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Ok.Text">
-        <source>Rebase</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Resolved.Text">
-        <source>&amp;Continue rebase</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="ShowOptions.Text">
-        <source>Show options</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Skip.Text">
-        <source>S&amp;kip currently applying commit</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved merge conflicts
-</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_branchUpToDateCaption.Text">
         <source>Rebase</source>
         <target />
@@ -5884,6 +5847,39 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="_solveConflictsText2.Text">
         <source>&gt;&amp;Solve conflicts&lt;</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnAbort.Text">
+        <source>A&amp;bort</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnAddFiles.Text">
+        <source>&amp;Add files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnCommit.Text">
+        <source>C&amp;ommit...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnContinueRebase.Text">
+        <source>&amp;Continue rebase</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnRebase.Text">
+        <source>Rebase</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnSkip.Text">
+        <source>S&amp;kip currently applying commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnSolveConflicts.Text">
+        <source>&amp;Solve conflicts</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnSolveMergeconflicts.Text">
+        <source>There are unresolved merge conflicts
+</source>
         <target />
       </trans-unit>
       <trans-unit id="chkAutosquash.Text">
@@ -5936,6 +5932,10 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="lblRebase.Text">
         <source>Rebase current branch on top of another branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="llblShowOptions.Text">
+        <source>Show options</source>
         <target />
       </trans-unit>
     </body>
