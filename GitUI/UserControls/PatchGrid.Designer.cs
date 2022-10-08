@@ -48,6 +48,8 @@
             this.Patches.AllowUserToDeleteRows = false;
             this.Patches.AutoGenerateColumns = false;
             this.Patches.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.Patches.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.Patches.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Patches.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Patches.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Status,
