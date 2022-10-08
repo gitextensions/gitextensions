@@ -152,6 +152,9 @@ namespace GitUI.UserControls
             {
                 // Show filtered branches
                 selectedIndex = 2;
+
+                // Keep value if other filter
+                tscboBranchFilter.Text = e.BranchFilter;
             }
 
             if (e.ShowCurrentBranchOnly)
@@ -329,11 +332,49 @@ namespace GitUI.UserControls
             tsmiShowOnlyFirstParent.Checked = e.ShowOnlyFirstParent;
             tsbShowReflog.Checked = e.ShowReflogReferences;
             InitBranchSelectionFilter(e);
+
+            List<(string filter, ToolStripMenuItem menuItem)> revFilters = new()
+            {
+                (e.MessageFilter, tsmiCommitFilter),
+                (e.CommitterFilter, tsmiCommitterFilter),
+                (e.AuthorFilter, tsmiAuthorFilter),
+                (e.DiffContentFilter, tsmiDiffContainsFilter),
+            };
+
+            // If there are no changes in the filter keep also "uncommitted" changes
+            if (revFilters.Any(item => !string.IsNullOrWhiteSpace(item.filter)))
+            {
+                tstxtRevisionFilter.Text = "";
+                foreach ((string filter, ToolStripMenuItem menuItem) item in revFilters)
+                {
+                    // Check the first menuitem that matches and following identical filters
+                    if (!string.IsNullOrWhiteSpace(item.filter)
+                        && (string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text)
+                            || item.filter == tstxtRevisionFilter.Text))
+                    {
+                        tstxtRevisionFilter.Text = item.filter;
+                        item.menuItem.Checked = true;
+                    }
+                    else
+                    {
+                        item.menuItem.Checked = false;
+                    }
+                }
+            }
+
             tsbtnAdvancedFilter.ToolTipText = e.FilterSummary;
             tsbtnAdvancedFilter.AutoToolTip = !string.IsNullOrEmpty(tsbtnAdvancedFilter.ToolTipText);
             tsbtnAdvancedFilter.Image = e.HasFilter ? Properties.Images.FunnelExclamation : Properties.Images.FunnelPencil;
             tsmiResetPathFilters.Enabled = !string.IsNullOrEmpty(e.PathFilter);
             tsmiResetAllFilters.Enabled = e.HasFilter;
+        }
+
+        private void revisionFilterBox_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(tstxtRevisionFilter.Text))
+            {
+                ApplyRevisionFilter();
+            }
         }
 
         private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
