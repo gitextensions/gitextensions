@@ -181,7 +181,6 @@ namespace GitUI.CommandsDialogs
             btnSolveConflicts.Text = _solveConflictsText.Text;
             btnContinueRebase.ForeColor = SystemColors.ControlText;
             btnSolveConflicts.ForeColor = SystemColors.ControlText;
-            ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
 
             var highlightColor = Color.Yellow.AdaptBackColor();
@@ -198,7 +197,6 @@ namespace GitUI.CommandsDialogs
                 AcceptButton = btnContinueRebase;
                 btnContinueRebase.Focus();
                 btnContinueRebase.Text = _continueRebaseText2.Text;
-                ContinuePanel.BackColor = highlightColor;
             }
         }
 
@@ -347,7 +345,8 @@ namespace GitUI.CommandsDialogs
         private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             llblShowOptions.Visible = false;
-            OptionsPanel.Visible = true;
+            flpnlOptionsPanelTop.Visible = true;
+            flpnlOptionsPanelBottom.Visible = true;
         }
 
         private void chkUseFromOnto_CheckedChanged(object sender, EventArgs e)

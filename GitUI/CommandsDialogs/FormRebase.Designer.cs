@@ -29,26 +29,28 @@ namespace GitUI.CommandsDialogs
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.lblRebase = new System.Windows.Forms.Label();
+            System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+            System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+            System.Windows.Forms.FlowLayoutPanel PanelCurrentBranch;
+            this.btnAddFiles = new System.Windows.Forms.Button();
+            this.btnCommit = new System.Windows.Forms.Button();
+            this.btnSkip = new System.Windows.Forms.Button();
             this.lblCurrent = new System.Windows.Forms.Label();
+            this.Currentbranch = new System.Windows.Forms.Label();
+            this.lblRebase = new System.Windows.Forms.Label();
             this.cboBranches = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.btnAddFiles = new System.Windows.Forms.Button();
             this.btnContinueRebase = new System.Windows.Forms.Button();
             this.btnAbort = new System.Windows.Forms.Button();
-            this.btnSkip = new System.Windows.Forms.Button();
             this.btnSolveConflicts = new System.Windows.Forms.Button();
-            this.PanelCurrentBranch = new System.Windows.Forms.FlowLayoutPanel();
-            this.Currentbranch = new System.Windows.Forms.Label();
-            this.OptionsPanel = new System.Windows.Forms.TableLayoutPanel();
-            this.OptionsPanelTop = new System.Windows.Forms.FlowLayoutPanel();
+            this.flpnlOptionsPanelTop = new System.Windows.Forms.FlowLayoutPanel();
             this.chkInteractive = new System.Windows.Forms.CheckBox();
             this.chkPreserveMerges = new System.Windows.Forms.CheckBox();
             this.chkAutosquash = new System.Windows.Forms.CheckBox();
             this.chkStash = new System.Windows.Forms.CheckBox();
             this.chkIgnoreDate = new System.Windows.Forms.CheckBox();
             this.chkCommitterDateIsAuthorDate = new System.Windows.Forms.CheckBox();
-            this.OptionsPanelBottom = new System.Windows.Forms.FlowLayoutPanel();
+            this.flpnlOptionsPanelBottom = new System.Windows.Forms.FlowLayoutPanel();
             this.chkSpecificRange = new System.Windows.Forms.CheckBox();
             this.lblRangeFrom = new System.Windows.Forms.Label();
             this.txtFrom = new System.Windows.Forms.TextBox();
@@ -59,68 +61,151 @@ namespace GitUI.CommandsDialogs
             this.PatchGrid = new GitUI.PatchGrid();
             this.lblCommitsToReapply = new System.Windows.Forms.Label();
             this.btnSolveMergeconflicts = new System.Windows.Forms.Button();
-            this.ContinuePanel = new System.Windows.Forms.Panel();
             this.MergeToolPanel = new System.Windows.Forms.Panel();
             this.MainLayout = new System.Windows.Forms.TableLayoutPanel();
             this.PanelLeftImage = new GitUI.Help.HelpImageDisplayUserControl();
-            this.PanelRight = new System.Windows.Forms.FlowLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.btnCommit = new System.Windows.Forms.Button();
-            this.panel4 = new System.Windows.Forms.Panel();
             this.PanelMiddle = new System.Windows.Forms.TableLayoutPanel();
             this.rebasePanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.tlpnlSecondaryControls = new System.Windows.Forms.TableLayoutPanel();
             this.btnRebase = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            PanelCurrentBranch = new System.Windows.Forms.FlowLayoutPanel();
             this.MainPanel.SuspendLayout();
             this.ControlsPanel.SuspendLayout();
-            this.PanelCurrentBranch.SuspendLayout();
-            this.OptionsPanel.SuspendLayout();
-            this.OptionsPanelTop.SuspendLayout();
-            this.OptionsPanelBottom.SuspendLayout();
-            this.ContinuePanel.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            flowLayoutPanel2.SuspendLayout();
+            PanelCurrentBranch.SuspendLayout();
+            this.flpnlOptionsPanelTop.SuspendLayout();
+            this.flpnlOptionsPanelBottom.SuspendLayout();
             this.MergeToolPanel.SuspendLayout();
             this.MainLayout.SuspendLayout();
-            this.PanelRight.SuspendLayout();
             this.PanelMiddle.SuspendLayout();
             this.rebasePanel.SuspendLayout();
+            this.tlpnlSecondaryControls.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainPanel
             // 
             this.MainPanel.Controls.Add(this.MainLayout);
             this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
-            this.MainPanel.Size = new System.Drawing.Size(1159, 430);
+            this.MainPanel.Size = new System.Drawing.Size(1034, 420);
             // 
             // ControlsPanel
             // 
             this.ControlsPanel.Controls.Add(this.btnAbort);
-            this.ControlsPanel.Controls.Add(this.btnSkip);
-            this.ControlsPanel.Controls.Add(this.ContinuePanel);
+            this.ControlsPanel.Controls.Add(this.btnContinueRebase);
             this.ControlsPanel.Controls.Add(this.MergeToolPanel);
             this.ControlsPanel.Controls.Add(this.btnRebase);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 430);
-            this.ControlsPanel.Size = new System.Drawing.Size(1159, 42);
+            this.ControlsPanel.Location = new System.Drawing.Point(0, 420);
+            this.ControlsPanel.Size = new System.Drawing.Size(1034, 41);
             // 
-            // lblRebase
+            // flowLayoutPanel1
             // 
-            this.lblRebase.AutoSize = true;
-            this.lblRebase.Location = new System.Drawing.Point(3, 0);
-            this.lblRebase.Name = "lblRebase";
-            this.lblRebase.Size = new System.Drawing.Size(261, 15);
-            this.lblRebase.TabIndex = 3;
-            this.lblRebase.Text = "Rebase current branch on top of another branch";
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(this.btnAddFiles);
+            flowLayoutPanel1.Controls.Add(this.btnCommit);
+            flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new System.Drawing.Size(348, 31);
+            flowLayoutPanel1.TabIndex = 27;
+            flowLayoutPanel1.WrapContents = false;
+            // 
+            // btnAddFiles
+            // 
+            this.btnAddFiles.AutoSize = true;
+            this.btnAddFiles.Image = global::GitUI.Properties.Images.BulletAdd;
+            this.btnAddFiles.Location = new System.Drawing.Point(3, 3);
+            this.btnAddFiles.Name = "btnAddFiles";
+            this.btnAddFiles.Size = new System.Drawing.Size(79, 25);
+            this.btnAddFiles.TabIndex = 34;
+            this.btnAddFiles.Text = "&Add files";
+            this.btnAddFiles.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnAddFiles.UseVisualStyleBackColor = true;
+            this.btnAddFiles.Click += new System.EventHandler(this.AddFilesClick);
+            // 
+            // btnCommit
+            // 
+            this.btnCommit.AutoSize = true;
+            this.btnCommit.Image = global::GitUI.Properties.Images.RepoStateStaged;
+            this.btnCommit.Location = new System.Drawing.Point(88, 3);
+            this.btnCommit.Name = "btnCommit";
+            this.btnCommit.Size = new System.Drawing.Size(86, 25);
+            this.btnCommit.TabIndex = 35;
+            this.btnCommit.Text = "C&ommit...";
+            this.btnCommit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCommit.UseVisualStyleBackColor = true;
+            this.btnCommit.Click += new System.EventHandler(this.Commit_Click);
+            // 
+            // flowLayoutPanel2
+            // 
+            flowLayoutPanel2.AutoSize = true;
+            flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel2.Controls.Add(this.btnSkip);
+            flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            flowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            flowLayoutPanel2.Location = new System.Drawing.Point(357, 3);
+            flowLayoutPanel2.Name = "flowLayoutPanel2";
+            flowLayoutPanel2.Size = new System.Drawing.Size(349, 31);
+            flowLayoutPanel2.TabIndex = 28;
+            flowLayoutPanel2.WrapContents = false;
+            // 
+            // btnSkip
+            // 
+            this.btnSkip.AutoSize = true;
+            this.btnSkip.Location = new System.Drawing.Point(163, 3);
+            this.btnSkip.Name = "btnSkip";
+            this.btnSkip.Size = new System.Drawing.Size(183, 25);
+            this.btnSkip.TabIndex = 39;
+            this.btnSkip.Text = "S&kip currently applying commit";
+            this.btnSkip.UseVisualStyleBackColor = true;
+            this.btnSkip.Click += new System.EventHandler(this.SkipClick);
+            // 
+            // PanelCurrentBranch
+            // 
+            PanelCurrentBranch.AutoSize = true;
+            PanelCurrentBranch.Controls.Add(this.lblCurrent);
+            PanelCurrentBranch.Controls.Add(this.Currentbranch);
+            PanelCurrentBranch.Dock = System.Windows.Forms.DockStyle.Fill;
+            PanelCurrentBranch.Location = new System.Drawing.Point(0, 15);
+            PanelCurrentBranch.Margin = new System.Windows.Forms.Padding(0);
+            PanelCurrentBranch.Name = "PanelCurrentBranch";
+            PanelCurrentBranch.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
+            PanelCurrentBranch.Size = new System.Drawing.Size(715, 25);
+            PanelCurrentBranch.TabIndex = 4;
+            PanelCurrentBranch.WrapContents = false;
             // 
             // lblCurrent
             // 
-            this.lblCurrent.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblCurrent.AutoSize = true;
+            this.lblCurrent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblCurrent.Location = new System.Drawing.Point(3, 5);
             this.lblCurrent.Name = "lblCurrent";
             this.lblCurrent.Size = new System.Drawing.Size(90, 15);
             this.lblCurrent.TabIndex = 5;
             this.lblCurrent.Text = "Current branch:";
+            // 
+            // Currentbranch
+            // 
+            this.Currentbranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.Currentbranch.AutoSize = true;
+            this.Currentbranch.Location = new System.Drawing.Point(99, 5);
+            this.Currentbranch.Name = "Currentbranch";
+            this.Currentbranch.Size = new System.Drawing.Size(0, 15);
+            this.Currentbranch.TabIndex = 3;
+            // 
+            // lblRebase
+            // 
+            this.lblRebase.AutoSize = true;
+            this.lblRebase.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblRebase.Location = new System.Drawing.Point(3, 0);
+            this.lblRebase.Name = "lblRebase";
+            this.lblRebase.Size = new System.Drawing.Size(709, 15);
+            this.lblRebase.TabIndex = 3;
+            this.lblRebase.Text = "Rebase current branch on top of another branch";
             // 
             // cboBranches
             // 
@@ -143,21 +228,10 @@ namespace GitUI.CommandsDialogs
             this.label2.TabIndex = 7;
             this.label2.Text = "&Rebase on";
             // 
-            // btnAddFiles
-            // 
-            this.btnAddFiles.Location = new System.Drawing.Point(3, 96);
-            this.btnAddFiles.Name = "btnAddFiles";
-            this.btnAddFiles.Size = new System.Drawing.Size(162, 25);
-            this.btnAddFiles.TabIndex = 34;
-            this.btnAddFiles.Text = "&Add files";
-            this.btnAddFiles.UseVisualStyleBackColor = true;
-            this.btnAddFiles.Click += new System.EventHandler(this.AddFilesClick);
-            // 
             // btnContinueRebase
             // 
             this.btnContinueRebase.AutoSize = true;
-            this.btnContinueRebase.Location = new System.Drawing.Point(0, 4);
-            this.btnContinueRebase.Margin = new System.Windows.Forms.Padding(1);
+            this.btnContinueRebase.Location = new System.Drawing.Point(837, 8);
             this.btnContinueRebase.Name = "btnContinueRebase";
             this.btnContinueRebase.Size = new System.Drawing.Size(103, 25);
             this.btnContinueRebase.TabIndex = 38;
@@ -168,7 +242,7 @@ namespace GitUI.CommandsDialogs
             // btnAbort
             // 
             this.btnAbort.AutoSize = true;
-            this.btnAbort.Location = new System.Drawing.Point(1071, 8);
+            this.btnAbort.Location = new System.Drawing.Point(946, 8);
             this.btnAbort.Name = "btnAbort";
             this.btnAbort.Size = new System.Drawing.Size(75, 25);
             this.btnAbort.TabIndex = 40;
@@ -176,81 +250,34 @@ namespace GitUI.CommandsDialogs
             this.btnAbort.UseVisualStyleBackColor = true;
             this.btnAbort.Click += new System.EventHandler(this.AbortClick);
             // 
-            // btnSkip
-            // 
-            this.btnSkip.Location = new System.Drawing.Point(903, 8);
-            this.btnSkip.Name = "btnSkip";
-            this.btnSkip.Size = new System.Drawing.Size(162, 25);
-            this.btnSkip.TabIndex = 39;
-            this.btnSkip.Text = "S&kip currently applying commit";
-            this.btnSkip.UseVisualStyleBackColor = true;
-            this.btnSkip.Click += new System.EventHandler(this.SkipClick);
-            // 
             // btnSolveConflicts
             // 
             this.btnSolveConflicts.AutoSize = true;
-            this.btnSolveConflicts.Location = new System.Drawing.Point(0, 4);
+            this.btnSolveConflicts.Location = new System.Drawing.Point(0, 2);
             this.btnSolveConflicts.Margin = new System.Windows.Forms.Padding(1);
+            this.btnSolveConflicts.MinimumSize = new System.Drawing.Size(100, 0);
             this.btnSolveConflicts.Name = "btnSolveConflicts";
-            this.btnSolveConflicts.Size = new System.Drawing.Size(93, 25);
+            this.btnSolveConflicts.Size = new System.Drawing.Size(100, 25);
             this.btnSolveConflicts.TabIndex = 32;
             this.btnSolveConflicts.Text = "&Solve conflicts";
             this.btnSolveConflicts.UseVisualStyleBackColor = true;
             this.btnSolveConflicts.Click += new System.EventHandler(this.MergetoolClick);
             // 
-            // PanelCurrentBranch
+            // flpnlOptionsPanelTop
             // 
-            this.PanelCurrentBranch.AutoSize = true;
-            this.PanelCurrentBranch.Controls.Add(this.lblCurrent);
-            this.PanelCurrentBranch.Controls.Add(this.Currentbranch);
-            this.PanelCurrentBranch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PanelCurrentBranch.Location = new System.Drawing.Point(0, 15);
-            this.PanelCurrentBranch.Margin = new System.Windows.Forms.Padding(0);
-            this.PanelCurrentBranch.Name = "PanelCurrentBranch";
-            this.PanelCurrentBranch.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.PanelCurrentBranch.Size = new System.Drawing.Size(666, 25);
-            this.PanelCurrentBranch.TabIndex = 4;
-            this.PanelCurrentBranch.WrapContents = false;
-            // 
-            // Currentbranch
-            // 
-            this.Currentbranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.Currentbranch.AutoSize = true;
-            this.Currentbranch.Location = new System.Drawing.Point(99, 5);
-            this.Currentbranch.Name = "Currentbranch";
-            this.Currentbranch.Size = new System.Drawing.Size(0, 15);
-            this.Currentbranch.TabIndex = 3;
-            // 
-            // OptionsPanel
-            // 
-            this.OptionsPanel.ColumnCount = 1;
-            this.OptionsPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.OptionsPanel.Controls.Add(this.OptionsPanelTop, 0, 0);
-            this.OptionsPanel.Controls.Add(this.OptionsPanelBottom, 0, 1);
-            this.OptionsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OptionsPanel.Location = new System.Drawing.Point(3, 78);
-            this.OptionsPanel.Name = "OptionsPanel";
-            this.OptionsPanel.RowCount = 2;
-            this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.OptionsPanel.Size = new System.Drawing.Size(660, 72);
-            this.OptionsPanel.TabIndex = 10;
-            this.OptionsPanel.Visible = false;
-            // 
-            // OptionsPanelTop
-            // 
-            this.OptionsPanelTop.Controls.Add(this.chkInteractive);
-            this.OptionsPanelTop.Controls.Add(this.chkPreserveMerges);
-            this.OptionsPanelTop.Controls.Add(this.chkAutosquash);
-            this.OptionsPanelTop.Controls.Add(this.chkStash);
-            this.OptionsPanelTop.Controls.Add(this.chkIgnoreDate);
-            this.OptionsPanelTop.Controls.Add(this.chkCommitterDateIsAuthorDate);
-            this.OptionsPanelTop.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OptionsPanelTop.Location = new System.Drawing.Point(3, 3);
-            this.OptionsPanelTop.Name = "OptionsPanelTop";
-            this.OptionsPanelTop.Size = new System.Drawing.Size(654, 25);
-            this.OptionsPanelTop.TabIndex = 11;
-            this.OptionsPanelTop.WrapContents = false;
+            this.flpnlOptionsPanelTop.AutoSize = true;
+            this.flpnlOptionsPanelTop.Controls.Add(this.chkInteractive);
+            this.flpnlOptionsPanelTop.Controls.Add(this.chkPreserveMerges);
+            this.flpnlOptionsPanelTop.Controls.Add(this.chkAutosquash);
+            this.flpnlOptionsPanelTop.Controls.Add(this.chkStash);
+            this.flpnlOptionsPanelTop.Controls.Add(this.chkIgnoreDate);
+            this.flpnlOptionsPanelTop.Controls.Add(this.chkCommitterDateIsAuthorDate);
+            this.flpnlOptionsPanelTop.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpnlOptionsPanelTop.Location = new System.Drawing.Point(3, 78);
+            this.flpnlOptionsPanelTop.Name = "flpnlOptionsPanelTop";
+            this.flpnlOptionsPanelTop.Size = new System.Drawing.Size(709, 25);
+            this.flpnlOptionsPanelTop.TabIndex = 11;
+            this.flpnlOptionsPanelTop.WrapContents = false;
             // 
             // chkInteractive
             // 
@@ -326,21 +353,21 @@ namespace GitUI.CommandsDialogs
             this.chkCommitterDateIsAuthorDate.UseVisualStyleBackColor = true;
             this.chkCommitterDateIsAuthorDate.CheckedChanged += new System.EventHandler(this.chkCommitterDateIsAuthorDate_CheckedChanged);
             // 
-            // OptionsPanelBottom
+            // flpnlOptionsPanelBottom
             // 
-            this.OptionsPanelBottom.AutoSize = true;
-            this.OptionsPanelBottom.Controls.Add(this.chkSpecificRange);
-            this.OptionsPanelBottom.Controls.Add(this.lblRangeFrom);
-            this.OptionsPanelBottom.Controls.Add(this.txtFrom);
-            this.OptionsPanelBottom.Controls.Add(this.btnChooseFromRevision);
-            this.OptionsPanelBottom.Controls.Add(this.lblRangeTo);
-            this.OptionsPanelBottom.Controls.Add(this.cboTo);
-            this.OptionsPanelBottom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.OptionsPanelBottom.Location = new System.Drawing.Point(3, 34);
-            this.OptionsPanelBottom.Name = "OptionsPanelBottom";
-            this.OptionsPanelBottom.Size = new System.Drawing.Size(654, 35);
-            this.OptionsPanelBottom.TabIndex = 18;
-            this.OptionsPanelBottom.WrapContents = false;
+            this.flpnlOptionsPanelBottom.AutoSize = true;
+            this.flpnlOptionsPanelBottom.Controls.Add(this.chkSpecificRange);
+            this.flpnlOptionsPanelBottom.Controls.Add(this.lblRangeFrom);
+            this.flpnlOptionsPanelBottom.Controls.Add(this.txtFrom);
+            this.flpnlOptionsPanelBottom.Controls.Add(this.btnChooseFromRevision);
+            this.flpnlOptionsPanelBottom.Controls.Add(this.lblRangeTo);
+            this.flpnlOptionsPanelBottom.Controls.Add(this.cboTo);
+            this.flpnlOptionsPanelBottom.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpnlOptionsPanelBottom.Location = new System.Drawing.Point(3, 109);
+            this.flpnlOptionsPanelBottom.Name = "flpnlOptionsPanelBottom";
+            this.flpnlOptionsPanelBottom.Size = new System.Drawing.Size(709, 30);
+            this.flpnlOptionsPanelBottom.TabIndex = 18;
+            this.flpnlOptionsPanelBottom.WrapContents = false;
             // 
             // chkSpecificRange
             // 
@@ -421,18 +448,20 @@ namespace GitUI.CommandsDialogs
             // 
             // PatchGrid
             // 
+            this.PatchGrid.AutoSize = true;
             this.PatchGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PatchGrid.IsManagingRebase = true;
-            this.PatchGrid.Location = new System.Drawing.Point(3, 180);
+            this.PatchGrid.Location = new System.Drawing.Point(3, 177);
             this.PatchGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.PatchGrid.MinimumSize = new System.Drawing.Size(0, 100);
             this.PatchGrid.Name = "PatchGrid";
-            this.PatchGrid.Size = new System.Drawing.Size(660, 224);
+            this.PatchGrid.Size = new System.Drawing.Size(709, 174);
             this.PatchGrid.TabIndex = 26;
             // 
             // lblCommitsToReapply
             // 
             this.lblCommitsToReapply.AutoSize = true;
-            this.lblCommitsToReapply.Location = new System.Drawing.Point(3, 153);
+            this.lblCommitsToReapply.Location = new System.Drawing.Point(3, 150);
             this.lblCommitsToReapply.Name = "lblCommitsToReapply";
             this.lblCommitsToReapply.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.lblCommitsToReapply.Size = new System.Drawing.Size(120, 25);
@@ -446,7 +475,7 @@ namespace GitUI.CommandsDialogs
             this.btnSolveMergeconflicts.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
             this.btnSolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSolveMergeconflicts.Location = new System.Drawing.Point(12, 437);
+            this.btnSolveMergeconflicts.Location = new System.Drawing.Point(12, 426);
             this.btnSolveMergeconflicts.Name = "btnSolveMergeconflicts";
             this.btnSolveMergeconflicts.Size = new System.Drawing.Size(213, 27);
             this.btnSolveMergeconflicts.TabIndex = 41;
@@ -455,46 +484,32 @@ namespace GitUI.CommandsDialogs
             this.btnSolveMergeconflicts.Visible = false;
             this.btnSolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeConflictsClick);
             // 
-            // ContinuePanel
-            // 
-            this.ContinuePanel.AutoSize = true;
-            this.ContinuePanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ContinuePanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ContinuePanel.Controls.Add(this.btnContinueRebase);
-            this.ContinuePanel.Location = new System.Drawing.Point(795, 6);
-            this.ContinuePanel.Margin = new System.Windows.Forms.Padding(1);
-            this.ContinuePanel.Name = "ContinuePanel";
-            this.ContinuePanel.Size = new System.Drawing.Size(104, 30);
-            this.ContinuePanel.TabIndex = 37;
-            // 
             // MergeToolPanel
             // 
             this.MergeToolPanel.AutoSize = true;
             this.MergeToolPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.MergeToolPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.MergeToolPanel.Controls.Add(this.btnSolveConflicts);
-            this.MergeToolPanel.Location = new System.Drawing.Point(699, 6);
+            this.MergeToolPanel.Location = new System.Drawing.Point(732, 6);
             this.MergeToolPanel.Margin = new System.Windows.Forms.Padding(1);
             this.MergeToolPanel.Name = "MergeToolPanel";
-            this.MergeToolPanel.Size = new System.Drawing.Size(94, 30);
+            this.MergeToolPanel.Size = new System.Drawing.Size(101, 28);
             this.MergeToolPanel.TabIndex = 31;
             // 
             // MainLayout
             // 
-            this.MainLayout.ColumnCount = 3;
+            this.MainLayout.ColumnCount = 2;
             this.MainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.MainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.MainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.MainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.MainLayout.Controls.Add(this.PanelLeftImage, 0, 0);
-            this.MainLayout.Controls.Add(this.PanelRight, 2, 0);
             this.MainLayout.Controls.Add(this.PanelMiddle, 1, 0);
             this.MainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainLayout.Location = new System.Drawing.Point(9, 9);
             this.MainLayout.Name = "MainLayout";
             this.MainLayout.RowCount = 1;
             this.MainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.MainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 472F));
-            this.MainLayout.Size = new System.Drawing.Size(1141, 412);
+            this.MainLayout.Size = new System.Drawing.Size(1016, 402);
             this.MainLayout.TabIndex = 0;
             // 
             // PanelLeftImage
@@ -516,82 +531,33 @@ namespace GitUI.CommandsDialogs
             this.PanelLeftImage.TabIndex = 1;
             this.PanelLeftImage.UniqueIsExpandedSettingsId = "Rebase";
             // 
-            // PanelRight
-            // 
-            this.PanelRight.AutoSize = true;
-            this.PanelRight.Controls.Add(this.panel1);
-            this.PanelRight.Controls.Add(this.panel2);
-            this.PanelRight.Controls.Add(this.panel3);
-            this.PanelRight.Controls.Add(this.btnAddFiles);
-            this.PanelRight.Controls.Add(this.btnCommit);
-            this.PanelRight.Controls.Add(this.panel4);
-            this.PanelRight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PanelRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.PanelRight.Location = new System.Drawing.Point(970, 3);
-            this.PanelRight.Name = "PanelRight";
-            this.PanelRight.Size = new System.Drawing.Size(168, 406);
-            this.PanelRight.TabIndex = 27;
-            this.PanelRight.WrapContents = false;
-            // 
-            // panel1
-            // 
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(10, 45);
-            this.panel1.TabIndex = 28;
-            // 
-            // panel2
-            // 
-            this.panel2.Location = new System.Drawing.Point(3, 54);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(10, 15);
-            this.panel2.TabIndex = 30;
-            // 
-            // panel3
-            // 
-            this.panel3.Location = new System.Drawing.Point(3, 75);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(10, 15);
-            this.panel3.TabIndex = 33;
-            // 
-            // btnCommit
-            // 
-            this.btnCommit.Location = new System.Drawing.Point(3, 127);
-            this.btnCommit.Name = "btnCommit";
-            this.btnCommit.Size = new System.Drawing.Size(162, 25);
-            this.btnCommit.TabIndex = 35;
-            this.btnCommit.Text = "C&ommit...";
-            this.btnCommit.UseVisualStyleBackColor = true;
-            this.btnCommit.Click += new System.EventHandler(this.Commit_Click);
-            // 
-            // panel4
-            // 
-            this.panel4.Location = new System.Drawing.Point(3, 158);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(10, 15);
-            this.panel4.TabIndex = 36;
-            // 
             // PanelMiddle
             // 
             this.PanelMiddle.ColumnCount = 1;
             this.PanelMiddle.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.PanelMiddle.Controls.Add(this.lblRebase, 0, 0);
-            this.PanelMiddle.Controls.Add(this.OptionsPanel, 0, 3);
-            this.PanelMiddle.Controls.Add(this.PanelCurrentBranch, 0, 1);
+            this.PanelMiddle.Controls.Add(PanelCurrentBranch, 0, 1);
             this.PanelMiddle.Controls.Add(this.rebasePanel, 0, 2);
-            this.PanelMiddle.Controls.Add(this.PatchGrid, 0, 5);
-            this.PanelMiddle.Controls.Add(this.lblCommitsToReapply, 0, 4);
+            this.PanelMiddle.Controls.Add(this.flpnlOptionsPanelTop, 0, 3);
+            this.PanelMiddle.Controls.Add(this.flpnlOptionsPanelBottom, 0, 4);
+            this.PanelMiddle.Controls.Add(this.lblCommitsToReapply, 0, 6);
+            this.PanelMiddle.Controls.Add(this.PatchGrid, 0, 7);
+            this.PanelMiddle.Controls.Add(this.tlpnlSecondaryControls, 0, 8);
             this.PanelMiddle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelMiddle.Location = new System.Drawing.Point(298, 3);
             this.PanelMiddle.Name = "PanelMiddle";
-            this.PanelMiddle.RowCount = 6;
+            this.PanelMiddle.RowCount = 9;
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.PanelMiddle.Size = new System.Drawing.Size(666, 406);
+            this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.PanelMiddle.Size = new System.Drawing.Size(715, 396);
             this.PanelMiddle.TabIndex = 2;
             // 
             // rebasePanel
@@ -603,17 +569,38 @@ namespace GitUI.CommandsDialogs
             this.rebasePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rebasePanel.Location = new System.Drawing.Point(3, 43);
             this.rebasePanel.Name = "rebasePanel";
-            this.rebasePanel.Size = new System.Drawing.Size(660, 29);
+            this.rebasePanel.Size = new System.Drawing.Size(709, 29);
             this.rebasePanel.TabIndex = 6;
+            // 
+            // tlpnlSecondaryControls
+            // 
+            this.tlpnlSecondaryControls.AutoSize = true;
+            this.tlpnlSecondaryControls.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpnlSecondaryControls.ColumnCount = 2;
+            this.tlpnlSecondaryControls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpnlSecondaryControls.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpnlSecondaryControls.Controls.Add(flowLayoutPanel1, 0, 0);
+            this.tlpnlSecondaryControls.Controls.Add(flowLayoutPanel2, 1, 0);
+            this.tlpnlSecondaryControls.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpnlSecondaryControls.Location = new System.Drawing.Point(3, 356);
+            this.tlpnlSecondaryControls.Name = "tlpnlSecondaryControls";
+            this.tlpnlSecondaryControls.RowCount = 1;
+            this.tlpnlSecondaryControls.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpnlSecondaryControls.Size = new System.Drawing.Size(709, 37);
+            this.tlpnlSecondaryControls.TabIndex = 28;
             // 
             // btnRebase
             // 
             this.btnRebase.AutoSize = true;
-            this.btnRebase.Location = new System.Drawing.Point(620, 8);
+            this.btnRebase.Image = global::GitUI.Properties.Images.Rebase;
+            this.btnRebase.Location = new System.Drawing.Point(628, 8);
+            this.btnRebase.MinimumSize = new System.Drawing.Size(100, 0);
             this.btnRebase.Name = "btnRebase";
-            this.btnRebase.Size = new System.Drawing.Size(75, 25);
+            this.btnRebase.Size = new System.Drawing.Size(100, 25);
             this.btnRebase.TabIndex = 29;
             this.btnRebase.Text = "Rebase";
+            this.btnRebase.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnRebase.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnRebase.UseVisualStyleBackColor = true;
             this.btnRebase.Click += new System.EventHandler(this.OkClick);
             // 
@@ -623,9 +610,9 @@ namespace GitUI.CommandsDialogs
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(1159, 472);
+            this.ClientSize = new System.Drawing.Size(1034, 461);
             this.Controls.Add(this.btnSolveMergeconflicts);
-            this.MinimumSize = new System.Drawing.Size(1175, 510);
+            this.MinimumSize = new System.Drawing.Size(1050, 500);
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rebase";
@@ -635,25 +622,26 @@ namespace GitUI.CommandsDialogs
             this.MainPanel.ResumeLayout(false);
             this.ControlsPanel.ResumeLayout(false);
             this.ControlsPanel.PerformLayout();
-            this.PanelCurrentBranch.ResumeLayout(false);
-            this.PanelCurrentBranch.PerformLayout();
-            this.OptionsPanel.ResumeLayout(false);
-            this.OptionsPanel.PerformLayout();
-            this.OptionsPanelTop.ResumeLayout(false);
-            this.OptionsPanelTop.PerformLayout();
-            this.OptionsPanelBottom.ResumeLayout(false);
-            this.OptionsPanelBottom.PerformLayout();
-            this.ContinuePanel.ResumeLayout(false);
-            this.ContinuePanel.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            flowLayoutPanel2.ResumeLayout(false);
+            flowLayoutPanel2.PerformLayout();
+            PanelCurrentBranch.ResumeLayout(false);
+            PanelCurrentBranch.PerformLayout();
+            this.flpnlOptionsPanelTop.ResumeLayout(false);
+            this.flpnlOptionsPanelTop.PerformLayout();
+            this.flpnlOptionsPanelBottom.ResumeLayout(false);
+            this.flpnlOptionsPanelBottom.PerformLayout();
             this.MergeToolPanel.ResumeLayout(false);
             this.MergeToolPanel.PerformLayout();
             this.MainLayout.ResumeLayout(false);
             this.MainLayout.PerformLayout();
-            this.PanelRight.ResumeLayout(false);
             this.PanelMiddle.ResumeLayout(false);
             this.PanelMiddle.PerformLayout();
             this.rebasePanel.ResumeLayout(false);
             this.rebasePanel.PerformLayout();
+            this.tlpnlSecondaryControls.ResumeLayout(false);
+            this.tlpnlSecondaryControls.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -673,7 +661,6 @@ namespace GitUI.CommandsDialogs
         private PatchGrid PatchGrid;
         private System.Windows.Forms.Label lblCommitsToReapply;
         private System.Windows.Forms.Button btnSolveMergeconflicts;
-        private System.Windows.Forms.Panel ContinuePanel;
         private System.Windows.Forms.Panel MergeToolPanel;
         private System.Windows.Forms.CheckBox chkSpecificRange;
         private System.Windows.Forms.Label lblRangeTo;
@@ -686,16 +673,9 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ComboBox cboTo;
         private System.Windows.Forms.Button btnChooseFromRevision;
         private System.Windows.Forms.TableLayoutPanel MainLayout;
-        private System.Windows.Forms.FlowLayoutPanel PanelRight;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnRebase;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.TableLayoutPanel OptionsPanel;
-        private System.Windows.Forms.FlowLayoutPanel OptionsPanelTop;
-        private System.Windows.Forms.FlowLayoutPanel OptionsPanelBottom;
-        private System.Windows.Forms.FlowLayoutPanel PanelCurrentBranch;
+        private System.Windows.Forms.FlowLayoutPanel flpnlOptionsPanelTop;
+        private System.Windows.Forms.FlowLayoutPanel flpnlOptionsPanelBottom;
         private System.Windows.Forms.Label Currentbranch;
         private System.Windows.Forms.TableLayoutPanel PanelMiddle;
         private System.Windows.Forms.FlowLayoutPanel rebasePanel;
@@ -705,5 +685,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.CheckBox chkIgnoreDate;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox chkCommitterDateIsAuthorDate;
+        private System.Windows.Forms.TableLayoutPanel tlpnlSecondaryControls;
     }
 }
