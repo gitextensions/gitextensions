@@ -23,7 +23,7 @@ namespace GitUI.UserControls
             tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent;
 
             // Select an option until we get a filter bound.
-            SelectShowBranchesFilterOption(selectedIndex: 1);
+            SelectShowBranchesFilterOption(selectedIndex: 0);
 
             tstxtRevisionFilter.KeyUp += (s, e) =>
             {
@@ -133,13 +133,13 @@ namespace GitUI.UserControls
             if (e.ShowReflogReferences)
             {
                 // Show reflog
-                selectedIndex = 0;
+                selectedIndex = 3;
             }
 
             if (e.ShowAllBranches)
             {
                 // Show all branches
-                selectedIndex = 1;
+                selectedIndex = 0;
             }
 
             if (e.ShowFilteredBranches)
@@ -154,7 +154,7 @@ namespace GitUI.UserControls
             if (e.ShowCurrentBranchOnly)
             {
                 // Show current branch only
-                selectedIndex = 3;
+                selectedIndex = 1;
             }
 
             SelectShowBranchesFilterOption(selectedIndex);

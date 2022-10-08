@@ -122,10 +122,10 @@ namespace GitUI.UserControls
             // 
             this.tssbtnShowBranches.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
             this.tssbtnShowBranches.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiShowReflog,
             this.tsmiShowBranchesAll,
+            this.tsmiShowBranchesCurrent,
             this.tsmiShowBranchesFiltered,
-            this.tsmiShowBranchesCurrent});
+            this.tsmiShowReflog});
             this.tssbtnShowBranches.Image = global::GitUI.Properties.Images.BranchLocal;
             this.tssbtnShowBranches.Name = "tssbtnShowBranches";
             this.tssbtnShowBranches.Size = new System.Drawing.Size(32, 22);
