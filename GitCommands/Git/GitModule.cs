@@ -472,7 +472,7 @@ namespace GitCommands
                 ConfigFile configFile = module.GetSubmoduleConfigFile();
 
                 return configFile.ConfigSections
-                    .Select(section => section.GetValue("path").Trim());
+                    .Select(section => section.GetValue("path").Trim()).Where(path => !string.IsNullOrWhiteSpace(path));
             }
         }
 
