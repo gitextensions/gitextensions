@@ -11158,6 +11158,14 @@ Yes, I allow telemetry!</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="Translations" source-language="en">
+    <body>
+      <trans-unit id="_noKeySelected.Text">
+        <source>No key selected</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="UserRepositoriesList" source-language="en">
     <body>
       <trans-unit id="_cannotOpenTheFolder.Text">
