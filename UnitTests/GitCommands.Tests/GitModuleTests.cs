@@ -731,6 +731,18 @@ namespace GitCommandsTests
             }
         }
 
+        [Test]
+        public void Ignore_empty_gitmodules_path()
+        {
+            using GitModuleTestHelper helper = new();
+            helper.CreateFile(helper.Module.WorkingDir, ".gitmodules", @"[submodule ""Externals/NBug""]
+    path = Externals/NBug
+    url = https://github.com/gitextensions/NBug.git
+[submodule ""Externals/Git.hub""]
+    url = https://github.com/gitextensions/Git.hub.gitk");
+            helper.Module.GetSubmodulesLocalPaths().Should().Equal(new string[] { "Externals/NBug" });
+        }
+
         [Ignore("Flaky test - issue #7681")]
         [Test]
         public void GetSuperprojectCurrentCheckout()
