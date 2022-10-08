@@ -140,6 +140,8 @@ namespace CommonTestUtils
             module.LocalConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
             module.LocalConfigFile.FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
             module.LocalConfigFile.SetString(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
+            module.LocalConfigFile.SetBool(SettingKeyString.CommitGPGSign, false); // Prevent signing dialog from showing if global config is set to sign.
+            module.LocalConfigFile.SetString(SettingKeyString.GPGProgram, "gpg");
             module.LocalConfigFile.Save();
         }
 
