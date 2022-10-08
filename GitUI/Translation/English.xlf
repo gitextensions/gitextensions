@@ -1792,6 +1792,10 @@ all the first selected with the last selected commit.
 the last selected commit.</source>
         <target />
       </trans-unit>
+      <trans-unit id="gbGeneral.Text">
+        <source>General</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Vertical ruler position [chars]</source>
         <target />
