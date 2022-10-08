@@ -152,26 +152,26 @@ namespace GitUI.CommandsDialogs
                 }
 
                 cboBranches.Enabled = false;
-                btnRebase.Enabled = false;
+                btnRebase.Visible = false;
                 chkStash.Enabled = false;
 
-                btnAddFiles.Enabled = true;
-                btnCommit.Enabled = true;
-                btnContinueRebase.Enabled = !Module.InTheMiddleOfConflictedMerge();
-                btnSolveConflicts.Enabled = Module.InTheMiddleOfConflictedMerge();
-                btnSkip.Enabled = true;
-                btnAbort.Enabled = true;
+                btnAddFiles.Visible = true;
+                btnCommit.Visible = true;
+                btnContinueRebase.Visible = !Module.InTheMiddleOfConflictedMerge();
+                btnSolveConflicts.Visible = Module.InTheMiddleOfConflictedMerge();
+                btnSkip.Visible = true;
+                btnAbort.Visible = true;
             }
             else
             {
                 cboBranches.Enabled = true;
-                btnRebase.Enabled = true;
-                btnAddFiles.Enabled = false;
-                btnCommit.Enabled = false;
-                btnContinueRebase.Enabled = false;
-                btnSolveConflicts.Enabled = false;
-                btnSkip.Enabled = false;
-                btnAbort.Enabled = false;
+                btnRebase.Visible = true;
+                btnAddFiles.Visible = false;
+                btnCommit.Visible = false;
+                btnContinueRebase.Visible = false;
+                btnSolveConflicts.Visible = false;
+                btnSkip.Visible = false;
+                btnAbort.Visible = false;
                 chkStash.Enabled = Module.IsDirtyDir();
             }
 
