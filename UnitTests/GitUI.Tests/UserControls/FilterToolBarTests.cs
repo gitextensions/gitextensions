@@ -196,31 +196,6 @@ namespace GitUITests.UserControls
             _revisionGridFilter.Received(1).ToggleShowOnlyFirstParent();
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public void ShowReflog_should_be_bound_via_FilterChanged(bool settingValue)
-        {
-            bool original = AppSettings.ShowReflogReferences;
-            try
-            {
-                AppSettings.ShowReflogReferences = settingValue;
-
-                _revisionGridFilter.FilterChanged += Raise.EventWith(_revisionGridFilter, new FilterChangedEventArgs(new()));
-                _filterToolBar.GetTestAccessor().tsbShowReflog.Checked.Should().Be(settingValue);
-            }
-            finally
-            {
-                AppSettings.ShowReflogReferences = original;
-            }
-        }
-
-        [Test]
-        public void ShowReflogButton_should_invoke_ToggleShowReflogReferences()
-        {
-            _filterToolBar.GetTestAccessor().tsbShowReflog.PerformClick();
-            _revisionGridFilter.Received(1).ToggleShowReflogReferences();
-        }
-
         [Test]
         public void ShowBranches_Reflog_should_invoke_ToggleShowReflogReferences()
         {

@@ -3215,10 +3215,6 @@ Do you want to continue?</source>
         <source>&amp;Translate</source>
         <target />
       </trans-unit>
-      <trans-unit id="tsbShowReflog.ToolTipText">
-        <source>Show reflog</source>
-        <target />
-      </trans-unit>
       <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
         <source>Advanced filter</source>
         <target />

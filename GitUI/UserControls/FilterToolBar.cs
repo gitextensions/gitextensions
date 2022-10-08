@@ -25,7 +25,6 @@ namespace GitUI.UserControls
         {
             InitializeComponent();
             tsmiShowReflog.ToolTipText = TranslatedStrings.ShowReflog;
-            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflog;
             tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent;
 
             // Select an option until we get a filter bound.
@@ -327,7 +326,6 @@ namespace GitUI.UserControls
         private void revisionGridFilter_FilterChanged(object? sender, FilterChangedEventArgs e)
         {
             tsmiShowOnlyFirstParent.Checked = e.ShowOnlyFirstParent;
-            tsbShowReflog.Checked = e.ShowReflogReferences;
             InitBranchSelectionFilter(e);
             tsbtnAdvancedFilter.ToolTipText = e.FilterSummary;
             tsbtnAdvancedFilter.AutoToolTip = !string.IsNullOrEmpty(tsbtnAdvancedFilter.ToolTipText);
@@ -415,8 +413,6 @@ namespace GitUI.UserControls
 
         private void tsmiShowOnlyFirstParent_Click(object sender, EventArgs e) => RevisionGridFilter.ToggleShowOnlyFirstParent();
 
-        private void tsmiShowReflog_Click(object sender, EventArgs e) => RevisionGridFilter.ToggleShowReflogReferences();
-
         private void tssbtnShowBranches_Click(object sender, EventArgs e) => tssbtnShowBranches.ShowDropDown();
 
         internal TestAccessor GetTestAccessor()
@@ -439,7 +435,6 @@ namespace GitUI.UserControls
             public ToolStripMenuItem tsmiAuthorFilter => _control.tsmiAuthorFilter;
             public ToolStripMenuItem tsmiDiffContainsFilter => _control.tsmiDiffContainsFilter;
             public ToolStripButton tsmiShowOnlyFirstParent => _control.tsmiShowOnlyFirstParent;
-            public ToolStripButton tsbShowReflog => _control.tsbShowReflog;
             public ToolStripTextBox tstxtRevisionFilter => _control.tstxtRevisionFilter;
             public ToolStripLabel tslblRevisionFilter => _control.tslblRevisionFilter;
             public ToolStripSplitButton tsbtnAdvancedFilter => _control.tsbtnAdvancedFilter;

@@ -36,7 +36,6 @@ namespace GitUI.UserControls
             this.tslblRevisionFilter = new System.Windows.Forms.ToolStripLabel();
             this.tstxtRevisionFilter = new System.Windows.Forms.ToolStripTextBox();
             this.tsddbtnRevisionFilter = new System.Windows.Forms.ToolStripDropDownButton();
-            this.tsbShowReflog = new System.Windows.Forms.ToolStripButton();
             this.tsmiShowOnlyFirstParent = new System.Windows.Forms.ToolStripButton();
             this.SuspendLayout();
             // 
@@ -162,14 +161,6 @@ namespace GitUI.UserControls
             this.tsmiShowBranchesFiltered.ToolTipText = "Show filtered branches";
             this.tsmiShowBranchesFiltered.Click += new System.EventHandler(this.tsmiShowBranchesFiltered_Click);
             // 
-            // tsbShowReflog
-            // 
-            this.tsbShowReflog.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.ImageAndText;
-            this.tsbShowReflog.Image = global::GitUI.Properties.Images.Book;
-            this.tsbShowReflog.Name = "tsbShowReflog";
-            this.tsbShowReflog.Size = new System.Drawing.Size(23, 22);
-            this.tsbShowReflog.Click += new System.EventHandler(this.tsmiShowReflog_Click);
-            // 
             // tscboBranchFilter
             // 
             this.tscboBranchFilter.AutoSize = false;
@@ -275,7 +266,6 @@ namespace GitUI.UserControls
             this.toolStripLabel1,
             this.tscboBranchFilter,
             this.tsddbtnBranchFilter,
-            this.tsbShowReflog,
             this.tsmiShowOnlyFirstParent,
             this.toolStripSeparator19,
             this.tslblRevisionFilter,
@@ -299,7 +289,6 @@ namespace GitUI.UserControls
         private ToolStripMenuItem tsmiCommitterFilter;
         private ToolStripMenuItem tsmiAuthorFilter;
         private ToolStripMenuItem tsmiDiffContainsFilter;
-        private ToolStripButton tsbShowReflog;
         private ToolStripButton tsmiShowOnlyFirstParent;
         private ToolStripTextBox tstxtRevisionFilter;
         private ToolStripLabel tslblRevisionFilter;
