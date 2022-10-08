@@ -1,55 +1,11 @@
 ﻿using System.Text.RegularExpressions;
+using GitCommands.Gpg;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
-namespace GitCommands.Gpg
+namespace GitCommands.Git.Gpg
 {
-    public enum CommitStatus
-    {
-        NoSignature = 0,
-        GoodSignature = 1,
-        SignatureError = 2,
-        MissingPublicKey = 3,
-    }
-
-    public enum TagStatus
-    {
-        NoTag = 0,
-        OneGood = 1,
-        OneBad = 2,
-        Many = 3,
-        NoPubKey = 4,
-        TagNotSigned = 5
-    }
-
-    public interface IGitGpgController
-    {
-        /// <summary>
-        /// Obtain the commit signature status on current revision.
-        /// </summary>
-        /// <returns>Enum value that indicate the gpg status for current git revision.</returns>
-        Task<CommitStatus> GetRevisionCommitSignatureStatusAsync(GitRevision revision);
-
-        /// <summary>
-        /// Obtain the commit verification message, coming from --pretty="format:%GG"
-        /// </summary>
-        /// <returns>Full string coming from GPG analysis on current revision.</returns>
-        string GetCommitVerificationMessage(GitRevision revision);
-
-        /// <summary>
-        /// Obtain the tag status on current revision.
-        /// </summary>
-        /// <returns>Enum value that indicate if current git revision has one tag with good signature, one tag with bad signature or more than one tag.</returns>
-        Task<TagStatus> GetRevisionTagSignatureStatusAsync(GitRevision revision);
-
-        /// <summary>
-        /// Obtain the tag verification message for all the tag in current git revision
-        /// </summary>
-        /// <returns>Full concatenated string coming from GPG analysis on all tags on current git revision.</returns>
-        string? GetTagVerifyMessage(GitRevision revision);
-    }
-
-    public class GitGpgController : IGitGpgController
+    public partial class GitGpgController
     {
         private readonly Func<IGitModule> _getModule;
 
@@ -73,14 +29,16 @@ namespace GitCommands.Gpg
         private static readonly Regex GoodSignatureTagRegex = new(GoodSignature, RegexOptions.Compiled);
         private static readonly Regex NoPubKeyTagRegex = new(NoTagPubKey, RegexOptions.Compiled);
         private static readonly Regex NoSignatureFoundTagRegex = new(NoSignatureFound, RegexOptions.Compiled);
+        private readonly IGPGSecretKeysParser _parser;
 
         /// <summary>
         /// Obtain the tag verification message for all the tag in current git revision
         /// </summary>
         /// <returns>Full concatenated string coming from GPG analysis on all tags on current git revision.</returns>
-        public GitGpgController(Func<IGitModule> getModule)
+        public GitGpgController(Func<IGitModule> getModule, IGPGSecretKeysParser parser)
         {
             _getModule = getModule;
+            _parser = parser;
         }
 
         /// <summary>
@@ -199,14 +157,13 @@ namespace GitCommands.Gpg
                 throw new ArgumentNullException(nameof(revision));
             }
 
-            var module = GetModule();
             GitArgumentBuilder args = new("log")
             {
                 "--pretty=\"format:%GG\"",
                 "-1",
                 revision.Guid
             };
-            return module.GitExecutable.GetOutput(args);
+            return GetModule().GitExecutable.GetOutput(args);
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Text;
 using GitExtUtils;
 using GitUI;
@@ -13,6 +13,7 @@ namespace CommonTestUtils
         private readonly ConcurrentDictionary<string, int> _commandArgumentsSet = new();
         private readonly List<MockProcess> _processes = new();
         private int _nextCommandId;
+        internal string? _executableFileName { get; set; }
 
         public IDisposable StageOutput(string arguments, string output, int? exitCode = 0, string? error = null)
         {
@@ -49,6 +50,10 @@ namespace CommonTestUtils
                 });
         }
 
+#if DEBUG
+        string? IExecutable.ExecutableFileName => _executableFileName;
+
+#endif
         public bool Exists()
         {
             return true;
@@ -75,7 +80,10 @@ namespace CommonTestUtils
             bool throwOnErrorExit = true,
             CancellationToken cancellationToken = default)
         {
-            System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine($"{_executableFileName} {arguments}");
+
+#endif
 
             if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)> queue) &&
                 queue.TryPop(out (string output, int? exitCode, string? error) item))

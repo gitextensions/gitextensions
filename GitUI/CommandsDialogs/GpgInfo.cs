@@ -1,4 +1,4 @@
-using GitCommands.Gpg;
+using GitCommands.Git.Gpg;
 
 namespace GitUI.CommandsDialogs
 {

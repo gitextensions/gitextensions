@@ -48,6 +48,11 @@ namespace GitUIPluginInterfaces
         IExecutable GitExecutable { get; }
 
         /// <summary>
+        /// Gets the access to the current GPG executable associated with this module.
+        /// </summary>
+        IExecutable GpgExecutable { get; }
+
+        /// <summary>
         /// Gets the access to the current git executable associated with this module.
         /// This commandrunner can be non-native (i.e. WSL).
         /// </summary>

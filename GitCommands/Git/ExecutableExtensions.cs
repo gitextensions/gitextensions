@@ -110,7 +110,7 @@ namespace GitCommands
             if (input is not null)
             {
 #if DEBUG
-                System.Diagnostics.Debug.WriteLine($"git {arguments} {Encoding.UTF8.GetString(input)}");
+                System.Diagnostics.Debug.WriteLine($"{executable.ExecutableFileName} {arguments} {Encoding.UTF8.GetString(input)}");
 #endif
                 await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
                 process.StandardInput.Close();
@@ -118,7 +118,7 @@ namespace GitCommands
 #if DEBUG
             else
             {
-                System.Diagnostics.Debug.WriteLine($"git {arguments}");
+                System.Diagnostics.Debug.WriteLine($"{executable.ExecutableFileName} {arguments}");
             }
 #endif
 
@@ -311,7 +311,7 @@ namespace GitCommands
                 using StreamWriter sw = new(mem);
                 writeInput(sw);
 
-                System.Diagnostics.Debug.WriteLine($"git {arguments} {Encoding.UTF8.GetString(mem.ToArray(), 0, (int)mem.Length)}");
+                System.Diagnostics.Debug.WriteLine($"{executable.ExecutableFileName} {arguments} {Encoding.UTF8.GetString(mem.ToArray(), 0, (int)mem.Length)}");
 #endif
 
                 // TODO do we want to make this async?
@@ -321,7 +321,7 @@ namespace GitCommands
 #if DEBUG
             else
             {
-                System.Diagnostics.Debug.WriteLine($"git {arguments}");
+                System.Diagnostics.Debug.WriteLine($"{executable.ExecutableFileName} {arguments}");
             }
 #endif
 
