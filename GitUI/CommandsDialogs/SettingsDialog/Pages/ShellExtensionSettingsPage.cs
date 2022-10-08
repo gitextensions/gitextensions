@@ -13,14 +13,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComplete();
 
             // when the dock is set in the designer it causes weird visual artifacts in scaled Windows environments
-            chlMenuEntries.Dock = DockStyle.Fill;
+            _NO_TRANSLATE_chlMenuEntries.Dock = DockStyle.Fill;
         }
 
         protected override void SettingsToPage()
         {
             for (int i = 0; i < AppSettings.CascadeShellMenuItems.Length; i++)
             {
-                chlMenuEntries.SetItemChecked(i, AppSettings.CascadeShellMenuItems[i] == '1');
+                _NO_TRANSLATE_chlMenuEntries.SetItemChecked(i, AppSettings.CascadeShellMenuItems[i] == '1');
             }
 
             cbAlwaysShowAllCommands.Checked = AppSettings.AlwaysShowAllCommands;
@@ -32,9 +32,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             string l_CascadeShellMenuItems = "";
 
-            for (int i = 0; i < chlMenuEntries.Items.Count; i++)
+            for (int i = 0; i < _NO_TRANSLATE_chlMenuEntries.Items.Count; i++)
             {
-                if (chlMenuEntries.GetItemChecked(i))
+                if (_NO_TRANSLATE_chlMenuEntries.GetItemChecked(i))
                 {
                     l_CascadeShellMenuItems += "1";
                 }
@@ -58,15 +58,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             string topLevel = "";
             string cascaded = "";
 
-            for (int i = 0; i < chlMenuEntries.Items.Count; i++)
+            for (int i = 0; i < _NO_TRANSLATE_chlMenuEntries.Items.Count; i++)
             {
-                if (chlMenuEntries.GetItemChecked(i))
+                if (_NO_TRANSLATE_chlMenuEntries.GetItemChecked(i))
                 {
-                    cascaded += "       " + chlMenuEntries.Items[i] + "\r\n";
+                    cascaded += "       " + _NO_TRANSLATE_chlMenuEntries.Items[i] + "\r\n";
                 }
                 else
                 {
-                    topLevel += "GitExt " + chlMenuEntries.Items[i] + "\r\n";
+                    topLevel += "GitExt " + _NO_TRANSLATE_chlMenuEntries.Items[i] + "\r\n";
                 }
             }
 
