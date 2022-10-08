@@ -65,8 +65,8 @@ namespace GitUI.CommandsDialogs
 
             InitializeComponent();
 
-            SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
-            SolveMergeconflicts.SetForeColorForBackColor();
+            btnSolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
+            btnSolveMergeconflicts.SetForeColorForBackColor();
             PanelLeftImage.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
 
             PanelLeftImage.Visible = !AppSettings.DontShowHelpImages;
@@ -108,15 +108,15 @@ namespace GitUI.CommandsDialogs
             List<GitRef> refs = _startRebaseImmediately
                 ? new()
                 : Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags).OfType<GitRef>().ToList();
-            Branches.DataSource = refs;
-            Branches.DisplayMember = nameof(GitRef.Name);
+            cboBranches.DataSource = refs;
+            cboBranches.DisplayMember = nameof(GitRef.Name);
 
             if (_defaultBranch is not null)
             {
-                Branches.Text = _defaultBranch;
+                cboBranches.Text = _defaultBranch;
             }
 
-            Branches.Select();
+            cboBranches.Select();
 
             refs = refs.Where(h => h.IsHead).ToList();
             cboTo.DataSource = refs;
@@ -151,36 +151,36 @@ namespace GitUI.CommandsDialogs
                     Height = 500;
                 }
 
-                Branches.Enabled = false;
-                Ok.Enabled = false;
+                cboBranches.Enabled = false;
+                btnRebase.Enabled = false;
                 chkStash.Enabled = false;
 
-                AddFiles.Enabled = true;
-                Commit.Enabled = true;
-                Resolved.Enabled = !Module.InTheMiddleOfConflictedMerge();
-                Mergetool.Enabled = Module.InTheMiddleOfConflictedMerge();
-                Skip.Enabled = true;
-                Abort.Enabled = true;
+                btnAddFiles.Enabled = true;
+                btnCommit.Enabled = true;
+                btnContinueRebase.Enabled = !Module.InTheMiddleOfConflictedMerge();
+                btnSolveConflicts.Enabled = Module.InTheMiddleOfConflictedMerge();
+                btnSkip.Enabled = true;
+                btnAbort.Enabled = true;
             }
             else
             {
-                Branches.Enabled = true;
-                Ok.Enabled = true;
-                AddFiles.Enabled = false;
-                Commit.Enabled = false;
-                Resolved.Enabled = false;
-                Mergetool.Enabled = false;
-                Skip.Enabled = false;
-                Abort.Enabled = false;
+                cboBranches.Enabled = true;
+                btnRebase.Enabled = true;
+                btnAddFiles.Enabled = false;
+                btnCommit.Enabled = false;
+                btnContinueRebase.Enabled = false;
+                btnSolveConflicts.Enabled = false;
+                btnSkip.Enabled = false;
+                btnAbort.Enabled = false;
                 chkStash.Enabled = Module.IsDirtyDir();
             }
 
-            SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
+            btnSolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
 
-            Resolved.Text = _continueRebaseText.Text;
-            Mergetool.Text = _solveConflictsText.Text;
-            Resolved.ForeColor = SystemColors.ControlText;
-            Mergetool.ForeColor = SystemColors.ControlText;
+            btnContinueRebase.Text = _continueRebaseText.Text;
+            btnSolveConflicts.Text = _solveConflictsText.Text;
+            btnContinueRebase.ForeColor = SystemColors.ControlText;
+            btnSolveConflicts.ForeColor = SystemColors.ControlText;
             ContinuePanel.BackColor = Color.Transparent;
             MergeToolPanel.BackColor = Color.Transparent;
 
@@ -188,16 +188,16 @@ namespace GitUI.CommandsDialogs
 
             if (Module.InTheMiddleOfConflictedMerge())
             {
-                AcceptButton = Mergetool;
-                Mergetool.Focus();
-                Mergetool.Text = _solveConflictsText2.Text;
+                AcceptButton = btnSolveConflicts;
+                btnSolveConflicts.Focus();
+                btnSolveConflicts.Text = _solveConflictsText2.Text;
                 MergeToolPanel.BackColor = highlightColor;
             }
             else if (Module.InTheMiddleOfRebase())
             {
-                AcceptButton = Resolved;
-                Resolved.Focus();
-                Resolved.Text = _continueRebaseText2.Text;
+                AcceptButton = btnContinueRebase;
+                btnContinueRebase.Focus();
+                btnContinueRebase.Text = _continueRebaseText2.Text;
                 ContinuePanel.BackColor = highlightColor;
             }
         }
@@ -298,7 +298,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                if (string.IsNullOrEmpty(Branches.Text))
+                if (string.IsNullOrEmpty(cboBranches.Text))
                 {
                     MessageBox.Show(this, _noBranchSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -313,12 +313,12 @@ namespace GitUI.CommandsDialogs
                 {
                     rebaseCmd = GitCommandHelpers.RebaseCmd(
                         cboTo.Text, chkInteractive.Checked, chkPreserveMerges.Checked,
-                        chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked, txtFrom.Text, Branches.Text);
+                        chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked, txtFrom.Text, cboBranches.Text);
                 }
                 else
                 {
                     rebaseCmd = GitCommandHelpers.RebaseCmd(
-                        Branches.Text, chkInteractive.Checked,
+                        cboBranches.Text, chkInteractive.Checked,
                         chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked);
                 }
 
@@ -346,7 +346,7 @@ namespace GitUI.CommandsDialogs
 
         private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ShowOptions.Visible = false;
+            llblShowOptions.Visible = false;
             OptionsPanel.Visible = true;
         }
 
