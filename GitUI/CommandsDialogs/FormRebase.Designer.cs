@@ -73,6 +73,7 @@ namespace GitUI.CommandsDialogs
             this.PanelMiddle = new System.Windows.Forms.TableLayoutPanel();
             this.rebasePanel = new System.Windows.Forms.FlowLayoutPanel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.MainPanel.SuspendLayout();
             this.PanelCurrentBranch.SuspendLayout();
             this.OptionsPanel.SuspendLayout();
             this.OptionsPanelTop.SuspendLayout();
@@ -84,6 +85,17 @@ namespace GitUI.CommandsDialogs
             this.PanelMiddle.SuspendLayout();
             this.rebasePanel.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // MainPanel
+            // 
+            this.MainPanel.Controls.Add(this.MainLayout);
+            this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
+            this.MainPanel.Size = new System.Drawing.Size(1159, 440);
+            // 
+            // ControlsPanel
+            // 
+            this.ControlsPanel.Location = new System.Drawing.Point(0, 440);
+            this.ControlsPanel.Size = new System.Drawing.Size(1159, 32);
             // 
             // lblRebase
             // 
@@ -185,7 +197,7 @@ namespace GitUI.CommandsDialogs
             this.PanelCurrentBranch.Margin = new System.Windows.Forms.Padding(0);
             this.PanelCurrentBranch.Name = "PanelCurrentBranch";
             this.PanelCurrentBranch.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.PanelCurrentBranch.Size = new System.Drawing.Size(684, 25);
+            this.PanelCurrentBranch.Size = new System.Drawing.Size(666, 25);
             this.PanelCurrentBranch.TabIndex = 4;
             this.PanelCurrentBranch.WrapContents = false;
             // 
@@ -210,7 +222,7 @@ namespace GitUI.CommandsDialogs
             this.OptionsPanel.RowCount = 2;
             this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.OptionsPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.OptionsPanel.Size = new System.Drawing.Size(678, 72);
+            this.OptionsPanel.Size = new System.Drawing.Size(660, 72);
             this.OptionsPanel.TabIndex = 10;
             this.OptionsPanel.Visible = false;
             // 
@@ -225,7 +237,7 @@ namespace GitUI.CommandsDialogs
             this.OptionsPanelTop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OptionsPanelTop.Location = new System.Drawing.Point(3, 3);
             this.OptionsPanelTop.Name = "OptionsPanelTop";
-            this.OptionsPanelTop.Size = new System.Drawing.Size(672, 25);
+            this.OptionsPanelTop.Size = new System.Drawing.Size(654, 25);
             this.OptionsPanelTop.TabIndex = 11;
             this.OptionsPanelTop.WrapContents = false;
             // 
@@ -285,7 +297,8 @@ namespace GitUI.CommandsDialogs
             this.chkIgnoreDate.Size = new System.Drawing.Size(86, 19);
             this.chkIgnoreDate.TabIndex = 16;
             this.chkIgnoreDate.Text = "Ignore &date";
-            this.toolTip1.SetToolTip(this.chkIgnoreDate, "Sets the author date to the current date (same as\r\ncommit date), ignoring the original author date.");
+            this.toolTip1.SetToolTip(this.chkIgnoreDate, "Sets the author date to the current date (same as\r\ncommit date), ignoring the ori" +
+        "ginal author date.");
             this.chkIgnoreDate.UseVisualStyleBackColor = true;
             this.chkIgnoreDate.CheckedChanged += new System.EventHandler(this.chkIgnoreDate_CheckedChanged);
             // 
@@ -314,7 +327,7 @@ namespace GitUI.CommandsDialogs
             this.OptionsPanelBottom.Dock = System.Windows.Forms.DockStyle.Fill;
             this.OptionsPanelBottom.Location = new System.Drawing.Point(3, 34);
             this.OptionsPanelBottom.Name = "OptionsPanelBottom";
-            this.OptionsPanelBottom.Size = new System.Drawing.Size(672, 35);
+            this.OptionsPanelBottom.Size = new System.Drawing.Size(654, 35);
             this.OptionsPanelBottom.TabIndex = 18;
             this.OptionsPanelBottom.WrapContents = false;
             // 
@@ -402,7 +415,7 @@ namespace GitUI.CommandsDialogs
             this.PatchGrid.Location = new System.Drawing.Point(3, 180);
             this.PatchGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.PatchGrid.Name = "PatchGrid";
-            this.PatchGrid.Size = new System.Drawing.Size(678, 284);
+            this.PatchGrid.Size = new System.Drawing.Size(660, 234);
             this.PatchGrid.TabIndex = 26;
             // 
             // lblCommitsToReapply
@@ -456,12 +469,12 @@ namespace GitUI.CommandsDialogs
             this.MainLayout.Controls.Add(this.PanelRight, 2, 0);
             this.MainLayout.Controls.Add(this.PanelMiddle, 1, 0);
             this.MainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainLayout.Location = new System.Drawing.Point(0, 0);
+            this.MainLayout.Location = new System.Drawing.Point(9, 9);
             this.MainLayout.Name = "MainLayout";
             this.MainLayout.RowCount = 1;
             this.MainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.MainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 472F));
-            this.MainLayout.Size = new System.Drawing.Size(1159, 472);
+            this.MainLayout.Size = new System.Drawing.Size(1141, 422);
             this.MainLayout.TabIndex = 0;
             // 
             // PanelLeftImage
@@ -479,7 +492,7 @@ namespace GitUI.CommandsDialogs
             this.PanelLeftImage.Location = new System.Drawing.Point(3, 3);
             this.PanelLeftImage.MinimumSize = new System.Drawing.Size(289, 418);
             this.PanelLeftImage.Name = "PanelLeftImage";
-            this.PanelLeftImage.Size = new System.Drawing.Size(289, 466);
+            this.PanelLeftImage.Size = new System.Drawing.Size(289, 418);
             this.PanelLeftImage.TabIndex = 1;
             this.PanelLeftImage.UniqueIsExpandedSettingsId = "Rebase";
             // 
@@ -500,9 +513,9 @@ namespace GitUI.CommandsDialogs
             this.PanelRight.Controls.Add(this.SolveMergeconflicts);
             this.PanelRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.PanelRight.Location = new System.Drawing.Point(988, 3);
+            this.PanelRight.Location = new System.Drawing.Point(970, 3);
             this.PanelRight.Name = "PanelRight";
-            this.PanelRight.Size = new System.Drawing.Size(168, 466);
+            this.PanelRight.Size = new System.Drawing.Size(168, 416);
             this.PanelRight.TabIndex = 27;
             this.PanelRight.WrapContents = false;
             // 
@@ -574,7 +587,7 @@ namespace GitUI.CommandsDialogs
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.PanelMiddle.Size = new System.Drawing.Size(684, 466);
+            this.PanelMiddle.Size = new System.Drawing.Size(666, 416);
             this.PanelMiddle.TabIndex = 2;
             // 
             // rebasePanel
@@ -586,7 +599,7 @@ namespace GitUI.CommandsDialogs
             this.rebasePanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rebasePanel.Location = new System.Drawing.Point(3, 43);
             this.rebasePanel.Name = "rebasePanel";
-            this.rebasePanel.Size = new System.Drawing.Size(678, 29);
+            this.rebasePanel.Size = new System.Drawing.Size(660, 29);
             this.rebasePanel.TabIndex = 6;
             // 
             // FormRebase
@@ -596,11 +609,11 @@ namespace GitUI.CommandsDialogs
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(1159, 472);
-            this.Controls.Add(this.MainLayout);
             this.MinimumSize = new System.Drawing.Size(1175, 510);
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rebase";
+            this.MainPanel.ResumeLayout(false);
             this.PanelCurrentBranch.ResumeLayout(false);
             this.PanelCurrentBranch.PerformLayout();
             this.OptionsPanel.ResumeLayout(false);
@@ -619,6 +632,7 @@ namespace GitUI.CommandsDialogs
             this.rebasePanel.ResumeLayout(false);
             this.rebasePanel.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
