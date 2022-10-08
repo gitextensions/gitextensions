@@ -65,13 +65,13 @@ namespace GitUI.CommandsDialogs
             this.PanelLeftImage = new GitUI.Help.HelpImageDisplayUserControl();
             this.PanelRight = new System.Windows.Forms.FlowLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnRebase = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.btnCommit = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.PanelMiddle = new System.Windows.Forms.TableLayoutPanel();
             this.rebasePanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnRebase = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.MainPanel.SuspendLayout();
             this.ControlsPanel.SuspendLayout();
@@ -91,14 +91,17 @@ namespace GitUI.CommandsDialogs
             // 
             this.MainPanel.Controls.Add(this.MainLayout);
             this.MainPanel.Padding = new System.Windows.Forms.Padding(9);
-            this.MainPanel.Size = new System.Drawing.Size(1159, 431);
+            this.MainPanel.Size = new System.Drawing.Size(1159, 430);
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.Controls.Add(this.btnRebase);
             this.ControlsPanel.Controls.Add(this.btnAbort);
-            this.ControlsPanel.Location = new System.Drawing.Point(0, 431);
-            this.ControlsPanel.Size = new System.Drawing.Size(1159, 41);
+            this.ControlsPanel.Controls.Add(this.btnSkip);
+            this.ControlsPanel.Controls.Add(this.ContinuePanel);
+            this.ControlsPanel.Controls.Add(this.MergeToolPanel);
+            this.ControlsPanel.Controls.Add(this.btnRebase);
+            this.ControlsPanel.Location = new System.Drawing.Point(0, 430);
+            this.ControlsPanel.Size = new System.Drawing.Size(1159, 42);
             // 
             // lblRebase
             // 
@@ -142,7 +145,7 @@ namespace GitUI.CommandsDialogs
             // 
             // btnAddFiles
             // 
-            this.btnAddFiles.Location = new System.Drawing.Point(3, 136);
+            this.btnAddFiles.Location = new System.Drawing.Point(3, 96);
             this.btnAddFiles.Name = "btnAddFiles";
             this.btnAddFiles.Size = new System.Drawing.Size(162, 25);
             this.btnAddFiles.TabIndex = 34;
@@ -152,9 +155,11 @@ namespace GitUI.CommandsDialogs
             // 
             // btnContinueRebase
             // 
+            this.btnContinueRebase.AutoSize = true;
             this.btnContinueRebase.Location = new System.Drawing.Point(0, 4);
+            this.btnContinueRebase.Margin = new System.Windows.Forms.Padding(1);
             this.btnContinueRebase.Name = "btnContinueRebase";
-            this.btnContinueRebase.Size = new System.Drawing.Size(161, 25);
+            this.btnContinueRebase.Size = new System.Drawing.Size(103, 25);
             this.btnContinueRebase.TabIndex = 38;
             this.btnContinueRebase.Text = "&Continue rebase";
             this.btnContinueRebase.UseVisualStyleBackColor = true;
@@ -162,9 +167,10 @@ namespace GitUI.CommandsDialogs
             // 
             // btnAbort
             // 
-            this.btnAbort.Location = new System.Drawing.Point(816, 8);
+            this.btnAbort.AutoSize = true;
+            this.btnAbort.Location = new System.Drawing.Point(1071, 8);
             this.btnAbort.Name = "btnAbort";
-            this.btnAbort.Size = new System.Drawing.Size(162, 25);
+            this.btnAbort.Size = new System.Drawing.Size(75, 25);
             this.btnAbort.TabIndex = 40;
             this.btnAbort.Text = "A&bort";
             this.btnAbort.UseVisualStyleBackColor = true;
@@ -172,7 +178,7 @@ namespace GitUI.CommandsDialogs
             // 
             // btnSkip
             // 
-            this.btnSkip.Location = new System.Drawing.Point(3, 259);
+            this.btnSkip.Location = new System.Drawing.Point(903, 8);
             this.btnSkip.Name = "btnSkip";
             this.btnSkip.Size = new System.Drawing.Size(162, 25);
             this.btnSkip.TabIndex = 39;
@@ -182,9 +188,11 @@ namespace GitUI.CommandsDialogs
             // 
             // btnSolveConflicts
             // 
+            this.btnSolveConflicts.AutoSize = true;
             this.btnSolveConflicts.Location = new System.Drawing.Point(0, 4);
+            this.btnSolveConflicts.Margin = new System.Windows.Forms.Padding(1);
             this.btnSolveConflicts.Name = "btnSolveConflicts";
-            this.btnSolveConflicts.Size = new System.Drawing.Size(161, 25);
+            this.btnSolveConflicts.Size = new System.Drawing.Size(93, 25);
             this.btnSolveConflicts.TabIndex = 32;
             this.btnSolveConflicts.Text = "&Solve conflicts";
             this.btnSolveConflicts.UseVisualStyleBackColor = true;
@@ -418,7 +426,7 @@ namespace GitUI.CommandsDialogs
             this.PatchGrid.Location = new System.Drawing.Point(3, 180);
             this.PatchGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.PatchGrid.Name = "PatchGrid";
-            this.PatchGrid.Size = new System.Drawing.Size(660, 225);
+            this.PatchGrid.Size = new System.Drawing.Size(660, 224);
             this.PatchGrid.TabIndex = 26;
             // 
             // lblCommitsToReapply
@@ -433,11 +441,14 @@ namespace GitUI.CommandsDialogs
             // 
             // btnSolveMergeconflicts
             // 
+            this.btnSolveMergeconflicts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnSolveMergeconflicts.AutoSize = true;
+            this.btnSolveMergeconflicts.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
             this.btnSolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSolveMergeconflicts.Location = new System.Drawing.Point(3, 290);
+            this.btnSolveMergeconflicts.Location = new System.Drawing.Point(12, 437);
             this.btnSolveMergeconflicts.Name = "btnSolveMergeconflicts";
-            this.btnSolveMergeconflicts.Size = new System.Drawing.Size(161, 49);
+            this.btnSolveMergeconflicts.Size = new System.Drawing.Size(213, 27);
             this.btnSolveMergeconflicts.TabIndex = 41;
             this.btnSolveMergeconflicts.Text = "There are unresolved merge conflicts\r\n";
             this.btnSolveMergeconflicts.UseVisualStyleBackColor = false;
@@ -446,20 +457,26 @@ namespace GitUI.CommandsDialogs
             // 
             // ContinuePanel
             // 
+            this.ContinuePanel.AutoSize = true;
+            this.ContinuePanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ContinuePanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.ContinuePanel.Controls.Add(this.btnContinueRebase);
-            this.ContinuePanel.Location = new System.Drawing.Point(3, 219);
+            this.ContinuePanel.Location = new System.Drawing.Point(795, 6);
+            this.ContinuePanel.Margin = new System.Windows.Forms.Padding(1);
             this.ContinuePanel.Name = "ContinuePanel";
-            this.ContinuePanel.Size = new System.Drawing.Size(160, 34);
+            this.ContinuePanel.Size = new System.Drawing.Size(104, 30);
             this.ContinuePanel.TabIndex = 37;
             // 
             // MergeToolPanel
             // 
+            this.MergeToolPanel.AutoSize = true;
+            this.MergeToolPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.MergeToolPanel.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.MergeToolPanel.Controls.Add(this.btnSolveConflicts);
-            this.MergeToolPanel.Location = new System.Drawing.Point(3, 75);
+            this.MergeToolPanel.Location = new System.Drawing.Point(699, 6);
+            this.MergeToolPanel.Margin = new System.Windows.Forms.Padding(1);
             this.MergeToolPanel.Name = "MergeToolPanel";
-            this.MergeToolPanel.Size = new System.Drawing.Size(161, 34);
+            this.MergeToolPanel.Size = new System.Drawing.Size(94, 30);
             this.MergeToolPanel.TabIndex = 31;
             // 
             // MainLayout
@@ -477,7 +494,7 @@ namespace GitUI.CommandsDialogs
             this.MainLayout.RowCount = 1;
             this.MainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.MainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 472F));
-            this.MainLayout.Size = new System.Drawing.Size(1141, 413);
+            this.MainLayout.Size = new System.Drawing.Size(1141, 412);
             this.MainLayout.TabIndex = 0;
             // 
             // PanelLeftImage
@@ -504,19 +521,15 @@ namespace GitUI.CommandsDialogs
             this.PanelRight.AutoSize = true;
             this.PanelRight.Controls.Add(this.panel1);
             this.PanelRight.Controls.Add(this.panel2);
-            this.PanelRight.Controls.Add(this.MergeToolPanel);
             this.PanelRight.Controls.Add(this.panel3);
             this.PanelRight.Controls.Add(this.btnAddFiles);
             this.PanelRight.Controls.Add(this.btnCommit);
             this.PanelRight.Controls.Add(this.panel4);
-            this.PanelRight.Controls.Add(this.ContinuePanel);
-            this.PanelRight.Controls.Add(this.btnSkip);
-            this.PanelRight.Controls.Add(this.btnSolveMergeconflicts);
             this.PanelRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.PanelRight.Location = new System.Drawing.Point(970, 3);
             this.PanelRight.Name = "PanelRight";
-            this.PanelRight.Size = new System.Drawing.Size(168, 407);
+            this.PanelRight.Size = new System.Drawing.Size(168, 406);
             this.PanelRight.TabIndex = 27;
             this.PanelRight.WrapContents = false;
             // 
@@ -527,16 +540,6 @@ namespace GitUI.CommandsDialogs
             this.panel1.Size = new System.Drawing.Size(10, 45);
             this.panel1.TabIndex = 28;
             // 
-            // btnRebase
-            // 
-            this.btnRebase.Location = new System.Drawing.Point(984, 8);
-            this.btnRebase.Name = "btnRebase";
-            this.btnRebase.Size = new System.Drawing.Size(162, 25);
-            this.btnRebase.TabIndex = 29;
-            this.btnRebase.Text = "Rebase";
-            this.btnRebase.UseVisualStyleBackColor = true;
-            this.btnRebase.Click += new System.EventHandler(this.OkClick);
-            // 
             // panel2
             // 
             this.panel2.Location = new System.Drawing.Point(3, 54);
@@ -546,14 +549,14 @@ namespace GitUI.CommandsDialogs
             // 
             // panel3
             // 
-            this.panel3.Location = new System.Drawing.Point(3, 115);
+            this.panel3.Location = new System.Drawing.Point(3, 75);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(10, 15);
             this.panel3.TabIndex = 33;
             // 
             // btnCommit
             // 
-            this.btnCommit.Location = new System.Drawing.Point(3, 167);
+            this.btnCommit.Location = new System.Drawing.Point(3, 127);
             this.btnCommit.Name = "btnCommit";
             this.btnCommit.Size = new System.Drawing.Size(162, 25);
             this.btnCommit.TabIndex = 35;
@@ -563,7 +566,7 @@ namespace GitUI.CommandsDialogs
             // 
             // panel4
             // 
-            this.panel4.Location = new System.Drawing.Point(3, 198);
+            this.panel4.Location = new System.Drawing.Point(3, 158);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(10, 15);
             this.panel4.TabIndex = 36;
@@ -588,7 +591,7 @@ namespace GitUI.CommandsDialogs
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.PanelMiddle.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.PanelMiddle.Size = new System.Drawing.Size(666, 407);
+            this.PanelMiddle.Size = new System.Drawing.Size(666, 406);
             this.PanelMiddle.TabIndex = 2;
             // 
             // rebasePanel
@@ -603,6 +606,17 @@ namespace GitUI.CommandsDialogs
             this.rebasePanel.Size = new System.Drawing.Size(660, 29);
             this.rebasePanel.TabIndex = 6;
             // 
+            // btnRebase
+            // 
+            this.btnRebase.AutoSize = true;
+            this.btnRebase.Location = new System.Drawing.Point(620, 8);
+            this.btnRebase.Name = "btnRebase";
+            this.btnRebase.Size = new System.Drawing.Size(75, 25);
+            this.btnRebase.TabIndex = 29;
+            this.btnRebase.Text = "Rebase";
+            this.btnRebase.UseVisualStyleBackColor = true;
+            this.btnRebase.Click += new System.EventHandler(this.OkClick);
+            // 
             // FormRebase
             // 
             this.AcceptButton = this.btnRebase;
@@ -610,12 +624,17 @@ namespace GitUI.CommandsDialogs
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(1159, 472);
+            this.Controls.Add(this.btnSolveMergeconflicts);
             this.MinimumSize = new System.Drawing.Size(1175, 510);
             this.Name = "FormRebase";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Rebase";
+            this.Controls.SetChildIndex(this.ControlsPanel, 0);
+            this.Controls.SetChildIndex(this.MainPanel, 0);
+            this.Controls.SetChildIndex(this.btnSolveMergeconflicts, 0);
             this.MainPanel.ResumeLayout(false);
             this.ControlsPanel.ResumeLayout(false);
+            this.ControlsPanel.PerformLayout();
             this.PanelCurrentBranch.ResumeLayout(false);
             this.PanelCurrentBranch.PerformLayout();
             this.OptionsPanel.ResumeLayout(false);
@@ -625,7 +644,9 @@ namespace GitUI.CommandsDialogs
             this.OptionsPanelBottom.ResumeLayout(false);
             this.OptionsPanelBottom.PerformLayout();
             this.ContinuePanel.ResumeLayout(false);
+            this.ContinuePanel.PerformLayout();
             this.MergeToolPanel.ResumeLayout(false);
+            this.MergeToolPanel.PerformLayout();
             this.MainLayout.ResumeLayout(false);
             this.MainLayout.PerformLayout();
             this.PanelRight.ResumeLayout(false);
