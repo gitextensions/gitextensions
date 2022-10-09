@@ -2,6 +2,7 @@
 using ApprovalTests;
 using FluentAssertions;
 using GitCommands;
+using GitUI;
 using GitUI.UserControls.RevisionGrid;
 using NUnit.Framework;
 
@@ -832,8 +833,8 @@ namespace GitUITests.UserControls
         }
 
         [TestCase("author1", "committer2", "message3", "diffContent4", true, false, "pathFilter7", false, false, "branchFilter8",
-            "Path filter: pathFilter7\r\nBranches: branchFilter8\r\nAuthor: author1\r\nCommitter: committer2\r\nMessage: message3\r\nDiff contains: diffContent4\r\nSince: 10/1/2021 1:30:34 AM\r\nUntil: 11/1/2021 1:30:34 AM\r\nSimplify by decoration\r\n",
-            @"--max-count=100000 --glob=refs/stas[h] branchFilter8 --parents --no-merges --simplify-by-decoration --author=""author1"" --committer=""committer2"" --grep=""message3"" -G""diffContent4"" --regexp-ignore-case --since=""2021-10-01 01:30:34"" --until=""2021-11-01 01:30:34""")]
+            "Since: 10/1/2021 1:30:34 AM\r\nUntil: 11/1/2021 1:30:34 AM\r\nPath filter: pathFilter7\r\nAuthor: author1\r\nCommitter: committer2\r\nSimplify by decoration\r\nMessage: message3\r\nDiff contains: diffContent4\r\nBranches: branchFilter8\r\n",
+            @"--max-count=100000 --since=""2021-10-01 01:30:34"" --until=""2021-11-01 01:30:34"" --no-merges --simplify-by-decoration --author=""author1"" --committer=""committer2"" --regexp-ignore-case -G""diffContent4"" --grep=""message3"" --parents --glob=refs/stas[h] branchFilter8")]
         public void FilterInfo_GetRevisionFilter(string author, string committer, string message, string diffContent, bool showSimplifyByDecoration, bool showMergeCommits, string pathFilter, bool showReflog, bool showCurrentBranchOnly, string branchFilter, string expectedSummary, string expectedArgs)
         {
             DateTime dateFrom = new(2021, 10, 1, 1, 30, 34, DateTimeKind.Local);
@@ -1082,6 +1083,39 @@ namespace GitUITests.UserControls
             {
                 AppSettings.ShowGitNotes = originalShowGitNotes;
                 AppSettings.ShowStashes = originalShowStash;
+            }
+        }
+
+        [TestCase("message1", true)]
+        [TestCase("message1 --not", true)]
+        [TestCase("--not=message1", true)]
+        [TestCase("--not message1", false)]
+        [TestCase(" --not message1", true)]
+        [TestCase("--exclude message1", true)]
+        [TestCase("--exclude= message1", false)]
+        [TestCase("--exclude= message1 ", false)]
+        [TestCase("\t--exclude= message1", true)]
+        public void FilterInfo_Message(string message, bool expectGrep)
+        {
+            FilterInfo filterInfo = new()
+            {
+                Message = message,
+                ByMessage = true
+            };
+            string args = filterInfo.GetRevisionFilter();
+            string summary = filterInfo.GetSummary();
+
+            if (expectGrep)
+            {
+                args.ToString().Should().MatchRegex(@$"[^\s]?--grep=""{message}""");
+                summary.ToString().Should().MatchRegex(@$"[^\s]?{TranslatedStrings.Message}: {message}");
+            }
+            else
+            {
+                args.ToString().Should().NotMatchRegex(@"[^\s]?--grep");
+                args.ToString().Should().MatchRegex(@$"[^\s]?{message}");
+                summary.ToString().Should().NotMatchRegex(@$"[^\s]?{TranslatedStrings.Message}: {message}");
+                summary.ToString().Should().MatchRegex(@$"[^\s]?{message}");
             }
         }
 

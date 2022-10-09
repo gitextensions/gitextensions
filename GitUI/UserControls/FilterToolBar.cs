@@ -78,7 +78,7 @@ namespace GitUI.UserControls
             }
 
             _isApplyingFilter = true;
-            RevisionGridFilter.SetAndApplyRevisionFilter(new RevisionFilter(tstxtRevisionFilter.Text,
+            RevisionGridFilter.SetAndApplyRevisionFilter(new RevisionFilter(tstxtRevisionFilter.Text.Trim(),
                                                                             tsmiCommitFilter.Checked,
                                                                             tsmiCommitterFilter.Checked,
                                                                             tsmiAuthorFilter.Checked,
