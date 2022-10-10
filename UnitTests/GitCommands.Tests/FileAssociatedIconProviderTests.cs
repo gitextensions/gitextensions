@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using FluentAssertions;
 using GitCommands;
 using NSubstitute;

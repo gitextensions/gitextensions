@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.Settings;
 using GitUI.Editor;
 using NUnit.Framework;

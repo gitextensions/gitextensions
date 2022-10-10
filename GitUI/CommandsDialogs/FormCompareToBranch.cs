@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {

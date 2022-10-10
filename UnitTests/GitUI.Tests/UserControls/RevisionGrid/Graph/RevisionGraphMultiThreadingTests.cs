@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using GitUI.UserControls.RevisionGrid;
-using GitUI.UserControls.RevisionGrid.Graph;
+﻿using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 

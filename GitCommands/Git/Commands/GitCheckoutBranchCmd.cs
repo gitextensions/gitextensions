@@ -1,5 +1,4 @@
-﻿using System;
-using GitExtUtils;
+﻿using GitExtUtils;
 
 namespace GitCommands.Git.Commands
 {

@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace GitUI.UserControls
+﻿namespace GitUI.UserControls
 {
     /// <summary>
     /// A <cref>DataGridViewTextBoxCell</cref> with <cref>CreateAccessibilityInstance</cref> overridden

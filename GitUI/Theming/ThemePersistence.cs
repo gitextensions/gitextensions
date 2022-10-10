@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Theming
 {

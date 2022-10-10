@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Drawing;
 using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.Avatars

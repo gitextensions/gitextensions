@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Threading;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
 using GitUI.CommandsDialogs.BrowseDialog;

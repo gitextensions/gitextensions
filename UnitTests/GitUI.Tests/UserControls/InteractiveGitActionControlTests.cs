@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using GitUI.UserControls;
+﻿using GitUI.UserControls;
 using NUnit.Framework;
 
 namespace GitUITests.UserControls

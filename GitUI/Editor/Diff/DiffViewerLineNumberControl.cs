@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ICSharpCode.TextEditor;

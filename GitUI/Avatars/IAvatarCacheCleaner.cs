@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace GitUI.Avatars
+﻿namespace GitUI.Avatars
 {
     /// <summary>
     /// Allows the consumer to clear a cache.

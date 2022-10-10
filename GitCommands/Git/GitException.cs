@@ -1,5 +1,3 @@
-using System;
-
 namespace GitCommands.Git
 {
     public class GitException : Exception

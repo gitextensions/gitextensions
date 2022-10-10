@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;

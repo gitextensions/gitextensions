@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace GitUI.UserControls.RevisionGrid
+﻿namespace GitUI.UserControls.RevisionGrid
 {
     public sealed partial class RevisionDataGridView
     {

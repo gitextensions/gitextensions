@@ -1,6 +1,3 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 

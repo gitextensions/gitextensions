@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using GitCommands;
+﻿using GitCommands;
 using ResourceManager;
 
 namespace GitUI.Help

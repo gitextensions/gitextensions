@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI.CommandsDialogs
+﻿namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormBrowse
     {

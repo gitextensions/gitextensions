@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using GitCommands.Gpg;
+﻿using GitCommands.Gpg;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;

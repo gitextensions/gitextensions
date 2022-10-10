@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace GitUI.Theming
+﻿namespace GitUI.Theming
 {
     internal class SystemDialogDetector
     {

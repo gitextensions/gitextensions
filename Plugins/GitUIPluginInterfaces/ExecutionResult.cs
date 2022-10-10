@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces
 {
     public readonly struct ExecutionResult
     {

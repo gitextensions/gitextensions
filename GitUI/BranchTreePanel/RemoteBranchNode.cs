@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using GitCommands;
 using GitExtUtils;
 using GitUI.BranchTreePanel.Interfaces;

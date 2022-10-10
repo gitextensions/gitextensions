@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using GitUI;
+﻿using GitUI;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using NUnit.Framework;

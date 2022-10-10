@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using CommonTestUtils.MEF;
 using GitCommands;
 using GitExtensions.UITests;

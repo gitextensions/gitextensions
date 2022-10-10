@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Windows.Forms;
-using CommonTestUtils;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.Gpg;
 using GitCommands.UserRepositoryHistory;
 using GitUI;

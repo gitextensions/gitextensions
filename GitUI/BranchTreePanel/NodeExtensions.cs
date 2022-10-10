@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace GitUI.BranchTreePanel
+﻿namespace GitUI.BranchTreePanel
 {
     internal static class NodeExtensions
     {

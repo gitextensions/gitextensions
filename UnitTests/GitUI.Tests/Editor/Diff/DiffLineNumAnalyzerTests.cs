@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitUI.Editor.Diff;
 using NUnit.Framework;
 

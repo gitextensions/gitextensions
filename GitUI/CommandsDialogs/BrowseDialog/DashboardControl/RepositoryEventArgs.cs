@@ -1,4 +1,3 @@
-using System;
 using GitCommands.UserRepositoryHistory;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl

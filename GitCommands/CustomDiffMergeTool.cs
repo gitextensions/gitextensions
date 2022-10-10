@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace GitCommands
+﻿namespace GitCommands
 {
     public class CustomDiffMergeTool
     {

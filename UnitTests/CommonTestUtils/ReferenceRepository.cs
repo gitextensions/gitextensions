@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
+﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Config;
 using LibGit2Sharp;

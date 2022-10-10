@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using System.Collections;
 using GitExtUtils.GitUI.Theming;
 using GitUI.BranchTreePanel.Interfaces;
 using ResourceManager;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using GitCommands.ExternalLinks;
+﻿using GitCommands.ExternalLinks;
 using GitCommands.Remotes;
 using GitUI.Properties;
 

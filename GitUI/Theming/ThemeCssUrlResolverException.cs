@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI.Theming
+﻿namespace GitUI.Theming
 {
     public class ThemeCssUrlResolverException : ThemeException
     {

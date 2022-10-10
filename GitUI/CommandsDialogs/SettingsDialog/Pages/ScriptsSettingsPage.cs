@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.ComponentModel;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;

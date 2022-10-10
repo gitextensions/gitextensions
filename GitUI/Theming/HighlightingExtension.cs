@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Theming

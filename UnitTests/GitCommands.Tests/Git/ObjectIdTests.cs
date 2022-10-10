@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;

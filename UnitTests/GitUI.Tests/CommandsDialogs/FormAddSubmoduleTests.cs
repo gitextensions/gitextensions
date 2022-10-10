@@ -1,5 +1,4 @@
-﻿using System;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using GitExtUtils;
 using GitUI.CommandsDialogs.SubmodulesDialog;

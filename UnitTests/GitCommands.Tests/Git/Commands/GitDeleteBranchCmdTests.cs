@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using GitCommands;
 using GitCommands.Git.Commands;
 using GitUIPluginInterfaces;

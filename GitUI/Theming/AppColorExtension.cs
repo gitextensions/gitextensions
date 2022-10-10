@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Theming
 {

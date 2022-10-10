@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace GitUI.CommandsDialogs.BrowseDialog
+﻿namespace GitUI.CommandsDialogs.BrowseDialog
 {
     internal static class FormBrowseUtil
     {

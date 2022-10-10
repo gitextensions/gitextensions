@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ICSharpCode.TextEditor.Document;
+﻿using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Theming
 {

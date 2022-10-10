@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GitCommands.Settings;
+﻿using GitCommands.Settings;
 
 namespace GitCommands.ExternalLinks
 {

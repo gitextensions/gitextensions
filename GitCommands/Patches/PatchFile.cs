@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Patches

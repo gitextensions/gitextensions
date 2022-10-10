@@ -1,9 +1,5 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
-using Control = System.Windows.Forms.Control;
 
 namespace GitUI.Theming
 {

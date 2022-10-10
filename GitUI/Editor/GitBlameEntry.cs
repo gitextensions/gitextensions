@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace GitUI.Editor
+﻿namespace GitUI.Editor
 {
     public class GitBlameEntry
     {

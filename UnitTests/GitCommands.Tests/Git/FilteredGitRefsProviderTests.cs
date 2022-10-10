@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using NSubstitute;

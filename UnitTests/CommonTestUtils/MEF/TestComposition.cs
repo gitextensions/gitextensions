@@ -3,10 +3,7 @@
 // See the LICENSE file in the project root for more information.
 // Copied from https://github.com/dotnet/roslyn/blob/315c2e149b/src/Workspaces/CoreTestUtilities/MEF/TestComposition.cs with some tweaks
 
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using Microsoft.VisualStudio.Composition;

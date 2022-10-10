@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.Text;
-using System.Windows.Forms;
 using GitExtUtils;
 
 namespace GitCommands

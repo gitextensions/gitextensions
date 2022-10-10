@@ -1,5 +1,4 @@
-﻿using System.IO;
-using ApprovalTests;
+﻿using ApprovalTests;
 using ApprovalTests.Namers;
 using GitCommands;
 using GitCommands.Git;

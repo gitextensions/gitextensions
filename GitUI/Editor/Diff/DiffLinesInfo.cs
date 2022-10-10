@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GitUI.Editor.Diff
+﻿namespace GitUI.Editor.Diff
 {
     public sealed class DiffLinesInfo
     {

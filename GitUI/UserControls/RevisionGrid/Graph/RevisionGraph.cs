@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.Linq;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Graph

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitCommands.Config
+﻿namespace GitCommands.Config
 {
     public class GitConfigurationException : Exception
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using BugReporter;
+﻿using BugReporter;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;

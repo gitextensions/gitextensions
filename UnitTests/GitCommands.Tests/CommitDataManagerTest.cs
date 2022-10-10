@@ -1,4 +1,3 @@
-using System;
 using System.Globalization;
 using FluentAssertions;
 using GitCommands;

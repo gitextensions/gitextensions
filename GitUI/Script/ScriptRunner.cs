@@ -1,12 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUI.NBugReports;
 using GitUIPluginInterfaces;
-using Microsoft;
 
 namespace GitUI.Script
 {

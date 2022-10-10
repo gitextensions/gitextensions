@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
-using Microsoft;
 
 namespace GitUI
 {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitExtUtils;
 using NUnit.Framework;
 

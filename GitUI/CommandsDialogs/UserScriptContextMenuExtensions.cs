@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using GitUI.BranchTreePanel.ContextMenu;
+﻿using GitUI.BranchTreePanel.ContextMenu;
 using GitUI.Hotkey;
 using GitUI.Script;
 using ResourceManager;

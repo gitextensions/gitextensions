@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Windows.Forms;
+﻿using System.Reactive.Linq;
 using GitCommands;
 using GitExtUtils;
 using GitUI.Editor.RichTextBoxExtension;

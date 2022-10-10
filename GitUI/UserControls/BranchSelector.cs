@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;

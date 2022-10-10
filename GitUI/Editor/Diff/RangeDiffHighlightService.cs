@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;

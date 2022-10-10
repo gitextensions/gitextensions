@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GitCommands;
+﻿using GitCommands;
 using GitUI.CommandsDialogs;
 
 namespace GitUI.Infrastructure.Telemetry

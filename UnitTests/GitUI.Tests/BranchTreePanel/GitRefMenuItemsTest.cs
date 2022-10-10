@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Windows.Forms;
+﻿using System.Runtime.CompilerServices;
 using GitUI.BranchTreePanel.ContextMenu;
 using GitUI.BranchTreePanel.Interfaces;
 using NSubstitute;

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using GitUI.Avatars;
+﻿using GitUI.Avatars;
 using NUnit.Framework;
 
 namespace GitUITests.Avatars

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Windows.Forms;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace GitUI
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI
+﻿namespace GitUI
 {
     public sealed class GitUICommandsChangedEventArgs : EventArgs
     {

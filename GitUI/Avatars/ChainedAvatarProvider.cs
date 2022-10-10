@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GitUI.Avatars
+﻿namespace GitUI.Avatars
 {
     /// <summary>
     /// An avatar provider that combines multiple avatar providers.

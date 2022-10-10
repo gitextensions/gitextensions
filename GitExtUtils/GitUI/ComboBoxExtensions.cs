@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace GitUI
+﻿namespace GitUI
 {
     public static class ComboBoxExtensions
     {

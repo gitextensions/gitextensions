@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GitUI.BranchTreePanel.Interfaces;
+﻿using GitUI.BranchTreePanel.Interfaces;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel.ContextMenu

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using Microsoft;
+﻿using Microsoft;
 
 namespace GitUIPluginInterfaces
 {

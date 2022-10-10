@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI.Design
+﻿namespace GitUI.Design
 {
     [AttributeUsage(AttributeTargets.Property)]
     internal class PropertyOrderAttribute : Attribute

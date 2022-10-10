@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Gpg;

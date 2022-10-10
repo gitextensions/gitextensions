@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace GitExtUtils.GitUI.Theming
+﻿namespace GitExtUtils.GitUI.Theming
 {
     internal class TabControlPaintContext
     {

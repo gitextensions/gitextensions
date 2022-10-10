@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Windows.Forms;
 using GitExtUtils.GitUI;
 
 namespace GitUI

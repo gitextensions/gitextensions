@@ -1,4 +1,3 @@
-using System;
 using GitCommands;
 using SmartFormat;
 using SmartFormat.Core.Settings;

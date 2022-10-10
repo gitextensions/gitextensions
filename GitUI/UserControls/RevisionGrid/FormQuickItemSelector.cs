@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-
-namespace GitUI.UserControls.RevisionGrid
+﻿namespace GitUI.UserControls.RevisionGrid
 {
     public partial class FormQuickItemSelector : GitExtensionsForm
     {

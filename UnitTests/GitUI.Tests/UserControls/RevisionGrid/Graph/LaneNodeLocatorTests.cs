@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitUI.UserControls.RevisionGrid.Graph;
 using NSubstitute;
 using NUnit.Framework;

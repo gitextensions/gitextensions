@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using GitCommands;
 using GitUIPluginInterfaces;

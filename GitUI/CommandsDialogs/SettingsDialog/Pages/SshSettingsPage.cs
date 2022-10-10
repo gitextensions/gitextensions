@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI.Theming;
 using Microsoft.Win32;

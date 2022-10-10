@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace GitUIPluginInterfaces.Tests

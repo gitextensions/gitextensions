@@ -1,8 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Windows.Forms;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI

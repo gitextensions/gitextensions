@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using GitUI.BranchTreePanel.Interfaces;
+﻿using GitUI.BranchTreePanel.Interfaces;
 using Microsoft;
 
 namespace GitUI.BranchTreePanel

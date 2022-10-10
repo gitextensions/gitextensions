@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using GitUI.Properties;
+﻿using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {

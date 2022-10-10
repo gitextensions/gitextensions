@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GitExtensions.Plugins.ReleaseNotesGenerator
+﻿namespace GitExtensions.Plugins.ReleaseNotesGenerator
 {
     public class LogLine
     {

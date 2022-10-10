@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-
-namespace GitUI.UserControls
+﻿namespace GitUI.UserControls
 {
     internal sealed class TextBoxEx : TextBox
     {

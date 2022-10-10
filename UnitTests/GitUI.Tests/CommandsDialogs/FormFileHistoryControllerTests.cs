@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
 

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff

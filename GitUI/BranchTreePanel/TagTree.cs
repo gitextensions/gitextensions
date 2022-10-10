@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using GitUI.UserControls.RevisionGrid;
+﻿using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 

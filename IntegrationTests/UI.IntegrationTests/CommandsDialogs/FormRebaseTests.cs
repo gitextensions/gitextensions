@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using GitUI;
 using GitUI.CommandsDialogs;

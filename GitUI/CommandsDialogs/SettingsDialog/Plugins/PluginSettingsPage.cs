@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Plugins

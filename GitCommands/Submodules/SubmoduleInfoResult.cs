@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 
 namespace GitCommands.Submodules
 {

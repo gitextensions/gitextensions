@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: System.Runtime.Versioning.SupportedOSPlatform("windows7.0")]

@@ -1,8 +1,4 @@
-﻿using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUI;

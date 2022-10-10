@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUIPluginInterfaces;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace GitUI.Avatars
+﻿namespace GitUI.Avatars
 {
     /// <summary>
     /// Wraps multiple caches and clears all of them with a single call.

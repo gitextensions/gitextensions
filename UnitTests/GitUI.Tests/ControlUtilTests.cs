@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Forms;
-using GitUI;
+﻿using GitUI;
 using NUnit.Framework;
 
 namespace GitUITests

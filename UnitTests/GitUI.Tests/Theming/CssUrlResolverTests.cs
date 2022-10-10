@@ -1,5 +1,4 @@
-﻿using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using NSubstitute;

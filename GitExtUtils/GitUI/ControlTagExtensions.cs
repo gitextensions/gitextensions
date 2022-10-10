@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-
-namespace GitExtUtils.GitUI
+﻿namespace GitExtUtils.GitUI
 {
     public static class ControlTagExtensions
     {

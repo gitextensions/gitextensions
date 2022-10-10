@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ConEmu.WinForms;
+﻿using ConEmu.WinForms;
 using GitCommands;
 using GitUI.UserControls;
 using NUnit.Framework;

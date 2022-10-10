@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using GitCommands.Patches;
+﻿using GitCommands.Patches;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;

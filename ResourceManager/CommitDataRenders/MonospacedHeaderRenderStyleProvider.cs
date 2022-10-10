@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using GitCommands;
 using GitUI;
 

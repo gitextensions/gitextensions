@@ -1,8 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;

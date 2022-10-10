@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-
-namespace GitUI.CommandsDialogs.SettingsDialog
+﻿namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public interface ISettingsPage
     {

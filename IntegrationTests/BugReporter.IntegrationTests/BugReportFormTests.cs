@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using BugReporter;
+﻿using BugReporter;
 using BugReporter.Serialization;
 using NUnit.Framework;
 

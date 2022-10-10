@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Atlassian.Jira;
 using GitExtensions.Plugins.JiraCommitHintPlugin.Properties;
 using GitExtUtils.GitUI;
