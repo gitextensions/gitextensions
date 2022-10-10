@@ -1,5 +1,4 @@
-﻿using System.IO;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {

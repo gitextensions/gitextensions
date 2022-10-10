@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Windows.Forms;
+﻿using System.Collections.Immutable;
 using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;

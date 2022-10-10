@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
+﻿using System.Windows.Forms.VisualStyles;
 
 namespace GitExtensions.Plugins.DeleteUnusedBranches
 {

@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart
 {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.NBugReports;

@@ -1,8 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Timers;
+﻿using System.Diagnostics;
 using GitCommands.Utils;
+using Timer = System.Timers.Timer;
 
 namespace GitCommands.Settings
 {

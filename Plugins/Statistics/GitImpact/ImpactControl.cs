@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
+﻿using System.ComponentModel;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 

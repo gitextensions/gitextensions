@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using GitExtUtils.GitUI;
+﻿using GitExtUtils.GitUI;
 using ICSharpCode.TextEditor;
 
 namespace GitUI.Editor

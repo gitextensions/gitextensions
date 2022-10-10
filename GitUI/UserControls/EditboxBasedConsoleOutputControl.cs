@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
+﻿using System.Diagnostics;
 using System.Text;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
+using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.UserControls
 {

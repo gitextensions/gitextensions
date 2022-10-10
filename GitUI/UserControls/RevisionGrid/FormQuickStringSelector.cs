@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using ResourceManager;
+﻿using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
 {

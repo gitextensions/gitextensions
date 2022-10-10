@@ -1,8 +1,6 @@
 #pragma warning disable VSTHRD108 // Assert thread affinity unconditionally
 
-using System;
 using System.Diagnostics;
-using System.Windows.Forms;
 using GitCommands;
 using GitUI;
 

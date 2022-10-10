@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.Config;
 using GitUI.CommandsDialogs.BrowseDialog;
 using NUnit.Framework;

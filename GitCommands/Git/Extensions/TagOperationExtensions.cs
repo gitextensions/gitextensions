@@ -1,4 +1,3 @@
-using System;
 using GitCommands.Git.Tag;
 
 namespace GitCommands.Git.Extensions

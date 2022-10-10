@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-
-namespace GitExtUtils.GitUI.Theming
+﻿namespace GitExtUtils.GitUI.Theming
 {
     public static class AppColorDefaults
     {

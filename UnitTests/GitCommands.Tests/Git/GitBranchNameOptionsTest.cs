@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.Git;
 using NUnit.Framework;
 

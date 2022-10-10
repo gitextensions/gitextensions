@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace GitCommands
+﻿namespace GitCommands
 {
     public static class FileInfoExtensions
     {

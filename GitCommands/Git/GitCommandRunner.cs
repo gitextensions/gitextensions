@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using GitExtUtils;
 using GitUIPluginInterfaces;

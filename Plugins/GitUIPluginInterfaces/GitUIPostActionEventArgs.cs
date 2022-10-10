@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces
 {
     public class GitUIPostActionEventArgs : GitUIEventArgs
     {

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
 using GitUIPluginInterfaces;

@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;

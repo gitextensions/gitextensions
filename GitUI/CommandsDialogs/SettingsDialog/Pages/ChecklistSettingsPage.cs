@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;

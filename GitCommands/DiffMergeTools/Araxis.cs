@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GitCommands.DiffMergeTools
+﻿namespace GitCommands.DiffMergeTools
 {
     internal class Araxis : DiffMergeTool
     {

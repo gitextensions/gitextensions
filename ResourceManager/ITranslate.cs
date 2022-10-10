@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ResourceManager
+﻿namespace ResourceManager
 {
     /// <summary>Provides translation capabilities.</summary>
     public interface ITranslate : IDisposable

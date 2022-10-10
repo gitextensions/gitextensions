@@ -1,5 +1,4 @@
-﻿using System;
-using BugReporter;
+﻿using BugReporter;
 using BugReporter.Serialization;
 using FluentAssertions;
 using NUnit.Framework;

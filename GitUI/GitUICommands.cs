@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Text;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;

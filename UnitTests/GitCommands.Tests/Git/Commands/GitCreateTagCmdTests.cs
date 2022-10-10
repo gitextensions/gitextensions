@@ -1,4 +1,3 @@
-using System;
 using GitCommands.Git.Commands;
 using GitCommands.Git.Tag;
 using GitUIPluginInterfaces;

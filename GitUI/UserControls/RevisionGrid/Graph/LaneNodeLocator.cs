@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace GitUI.UserControls.RevisionGrid.Graph
+﻿namespace GitUI.UserControls.RevisionGrid.Graph
 {
     internal interface ILaneNodeLocator
     {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace GitUI.Theming
+﻿namespace GitUI.Theming
 {
     public interface IThemeFileReader
     {

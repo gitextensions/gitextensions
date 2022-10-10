@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;

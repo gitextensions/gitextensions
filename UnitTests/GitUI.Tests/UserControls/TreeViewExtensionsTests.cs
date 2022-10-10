@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitUI.UserControls;
 using NUnit.Framework;
 

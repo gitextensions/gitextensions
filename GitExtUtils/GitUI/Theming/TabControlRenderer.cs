@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using GitUI;
+﻿using GitUI;
 
 namespace GitExtUtils.GitUI.Theming
 {

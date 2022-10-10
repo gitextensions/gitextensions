@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-
-namespace GitUI.BranchTreePanel
+﻿namespace GitUI.BranchTreePanel
 {
     internal sealed class Nodes : IEnumerable<Node>
     {

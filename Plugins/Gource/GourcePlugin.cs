@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.IO;
+﻿using System.ComponentModel.Composition;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using GitExtensions.Plugins.Gource.Properties;
 using GitUIPluginInterfaces;
 using ICSharpCode.SharpZipLib.Zip;

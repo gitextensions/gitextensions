@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;

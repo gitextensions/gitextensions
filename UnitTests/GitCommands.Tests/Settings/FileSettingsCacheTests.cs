@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.Settings;
 using NUnit.Framework;
 

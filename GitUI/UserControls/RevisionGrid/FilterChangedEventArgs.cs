@@ -1,5 +1,4 @@
-﻿using System;
-using GitUI.UserControls.RevisionGrid;
+﻿using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI
 {

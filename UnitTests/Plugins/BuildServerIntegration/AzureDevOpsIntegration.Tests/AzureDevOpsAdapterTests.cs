@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using AzureDevOpsIntegration;
+﻿using AzureDevOpsIntegration;
 using FluentAssertions;
 using NUnit.Framework;
 

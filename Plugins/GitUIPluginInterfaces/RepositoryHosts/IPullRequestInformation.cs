@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace GitUIPluginInterfaces.RepositoryHosts
+﻿namespace GitUIPluginInterfaces.RepositoryHosts
 {
     public interface IPullRequestInformation
     {

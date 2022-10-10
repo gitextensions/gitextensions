@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
-using System.IO;
 using System.IO.Abstractions;
-using System.Linq;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;

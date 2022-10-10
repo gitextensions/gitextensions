@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace GitUI.UserControls.RevisionGrid
+﻿namespace GitUI.UserControls.RevisionGrid
 {
     internal readonly struct CellStyle
     {

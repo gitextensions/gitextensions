@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Forms;
+﻿using System.ComponentModel;
 using GitCommands.Git.Commands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;

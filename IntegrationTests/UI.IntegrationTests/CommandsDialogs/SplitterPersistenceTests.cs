@@ -1,16 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Diagnostics;
 using CommonTestUtils;
 using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
 using NUnit.Framework;
 
 namespace GitExtensions.UITests.CommandsDialogs

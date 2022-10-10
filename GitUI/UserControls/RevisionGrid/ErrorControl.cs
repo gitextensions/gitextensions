@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace GitUI.UserControls.RevisionGrid
+﻿namespace GitUI.UserControls.RevisionGrid
 {
     public sealed class ErrorControl : UserControl
     {

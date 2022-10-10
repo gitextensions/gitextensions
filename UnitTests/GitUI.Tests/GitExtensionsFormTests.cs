@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Threading;
-using System.Windows.Forms;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitExtUtils.GitUI;
 using GitUI;
 using NSubstitute;

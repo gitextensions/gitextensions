@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.UserControls.RevisionGrid;

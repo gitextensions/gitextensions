@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.IO;
+﻿using System.ComponentModel.Composition;
 using System.Text;
-using System.Windows.Forms;
 using GitExtensions.Plugins.AutoCompileSubmodules.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;

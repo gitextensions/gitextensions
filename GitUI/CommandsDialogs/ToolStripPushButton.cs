@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;

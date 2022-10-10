@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitUI;
 using NUnit.Framework;
 

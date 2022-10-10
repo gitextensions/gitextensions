@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace GitExtUtils.GitUI
+﻿namespace GitExtUtils.GitUI
 {
     public interface IMenuItemBackgroundFilter
     {

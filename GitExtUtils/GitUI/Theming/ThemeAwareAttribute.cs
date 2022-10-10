@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitExtUtils.GitUI.Theming
+﻿namespace GitExtUtils.GitUI.Theming
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class ThemeAwareAttribute : Attribute

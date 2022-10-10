@@ -1,4 +1,3 @@
-using System.Linq;
 using FluentAssertions;
 using GitCommands.Git;
 using NUnit.Framework;

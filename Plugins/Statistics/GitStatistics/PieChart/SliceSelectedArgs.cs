@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitExtensions.Plugins.GitStatistics.PieChart
+﻿namespace GitExtensions.Plugins.GitStatistics.PieChart
 {
     public class SliceSelectedArgs : EventArgs
     {

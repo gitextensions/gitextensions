@@ -3,9 +3,7 @@
 // Mike Stall. http://blogs.msdn.com/jmstall
 //
 
-using System;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace GitExtensions.Plugins.ReleaseNotesGenerator
 {

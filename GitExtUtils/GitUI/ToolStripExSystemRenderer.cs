@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace GitUI
+﻿namespace GitUI
 {
     public sealed class ToolStripExSystemRenderer : ToolStripSystemRenderer
     {

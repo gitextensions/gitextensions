@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.UserControls;

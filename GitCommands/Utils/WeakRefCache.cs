@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Timers;
+using Timer = System.Timers.Timer;
 
 namespace GitCommands.Utils
 {

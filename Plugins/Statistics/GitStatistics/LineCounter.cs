@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using GitCommands;
-
-namespace GitExtensions.Plugins.GitStatistics
+﻿namespace GitExtensions.Plugins.GitStatistics
 {
     public sealed class LineCounter
     {

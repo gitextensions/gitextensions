@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Forms;
-using ApprovalTests;
+﻿using ApprovalTests;
 using FluentAssertions;
 using GitCommands;
 using GitUI.Hotkey;

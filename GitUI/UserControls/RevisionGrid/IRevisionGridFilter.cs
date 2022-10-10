@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-
-namespace GitUI.UserControls.RevisionGrid
+﻿namespace GitUI.UserControls.RevisionGrid
 {
     /// <summary>
     ///  Defines filtering functionality that affects presentation of information in the revision grid control.

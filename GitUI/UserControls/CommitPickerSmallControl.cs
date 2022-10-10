@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.ComponentModel;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft;

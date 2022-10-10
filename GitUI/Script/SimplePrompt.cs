@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace GitUI.Script
+﻿namespace GitUI.Script
 {
     public partial class SimplePrompt : Form
     {

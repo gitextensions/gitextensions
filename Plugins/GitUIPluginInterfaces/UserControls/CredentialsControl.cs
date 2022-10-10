@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace GitUIPluginInterfaces.UserControls
+﻿namespace GitUIPluginInterfaces.UserControls
 {
     public partial class CredentialsControl : UserControl
     {

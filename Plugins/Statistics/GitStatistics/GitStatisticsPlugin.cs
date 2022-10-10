@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using GitExtensions.Plugins.GitStatistics.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;

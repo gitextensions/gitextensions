@@ -1,5 +1,4 @@
-﻿using System;
-using GitUI.HelperDialogs;
+﻿using GitUI.HelperDialogs;
 
 namespace GitUI.CommandsDialogs
 {

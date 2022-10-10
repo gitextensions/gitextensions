@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Threading.Tasks;
-
-namespace GitUI.Avatars
+﻿namespace GitUI.Avatars
 {
     public interface IAvatarDownloader
     {

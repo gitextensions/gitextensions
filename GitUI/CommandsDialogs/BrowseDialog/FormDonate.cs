@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using ResourceManager;
+﻿using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using GitUI.Theming;
+﻿using GitUI.Theming;
 using NUnit.Framework;
 
 namespace GitUITests.Theming

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using GitCommands;
+﻿using GitCommands;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 

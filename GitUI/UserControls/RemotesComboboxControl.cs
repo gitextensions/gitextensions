@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using GitCommands.Remotes;
+﻿using GitCommands.Remotes;
 
 namespace GitUI.UserControls
 {

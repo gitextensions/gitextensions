@@ -1,16 +1,10 @@
-using System;
 using System.Diagnostics;
-using System.IO;
 using System.IO.IsolatedStorage;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;

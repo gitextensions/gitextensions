@@ -1,5 +1,3 @@
-using System;
-
 namespace ResourceManager.CommitDataRenders
 {
     public interface IDateFormatter

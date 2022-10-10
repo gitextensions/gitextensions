@@ -1,15 +1,11 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using GitUIPluginInterfaces.Settings;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {

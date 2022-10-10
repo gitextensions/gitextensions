@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace GitUI.UserControls
+﻿namespace GitUI.UserControls
 {
     internal class WebBrowserControl : WebBrowser
     {

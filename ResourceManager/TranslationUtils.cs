@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ResourceManager
+﻿namespace ResourceManager
 {
     public static class TranslationUtils
     {

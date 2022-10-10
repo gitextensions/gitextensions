@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.IO;
+﻿using System.ComponentModel.Composition;
 using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
 

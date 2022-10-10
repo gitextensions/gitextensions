@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using GitExtUtils;
+﻿using GitExtUtils;
 
 namespace GitUIPluginInterfaces
 {

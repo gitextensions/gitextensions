@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUIPluginInterfaces.BuildServerIntegration
+﻿namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildDurationFormatter
     {

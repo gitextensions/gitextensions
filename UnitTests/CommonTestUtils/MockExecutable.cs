@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Concurrent;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;

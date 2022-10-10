@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-
-namespace GitUI.CommandsDialogs.BrowseDialog
+﻿namespace GitUI.CommandsDialogs.BrowseDialog
 {
     /// <summary>
     /// Represents a menu command with Text, ShortcutKey or ShortcutDisplayString, Action,

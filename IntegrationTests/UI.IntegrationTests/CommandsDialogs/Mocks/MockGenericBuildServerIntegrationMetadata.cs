@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitExtensions.UITests.CommandsDialogs

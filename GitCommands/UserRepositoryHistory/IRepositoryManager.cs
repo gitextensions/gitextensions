@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace GitCommands.UserRepositoryHistory
+﻿namespace GitCommands.UserRepositoryHistory
 {
     /// <summary>
     /// Provides the ability to manage the history of git repositories used by the user.

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Diagnostics;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUI.Script;

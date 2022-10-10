@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using System.Linq;
-using System.Threading.Tasks;
 using FluentAssertions;
 using GitCommands;
 using GitUI.Avatars;

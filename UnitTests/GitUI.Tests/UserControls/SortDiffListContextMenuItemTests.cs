@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Forms;
-using GitCommands;
+﻿using GitCommands;
 using GitUI.UserControls;
 using NSubstitute;
 using NUnit.Framework;

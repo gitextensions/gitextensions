@@ -1,9 +1,5 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.IO;
+﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
 using ResourceManager;

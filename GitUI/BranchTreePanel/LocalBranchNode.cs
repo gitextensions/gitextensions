@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Drawing;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
