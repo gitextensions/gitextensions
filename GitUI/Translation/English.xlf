@@ -2883,10 +2883,6 @@ Do you want to continue?</source>
         <source>&amp;Create a stash...</source>
         <target />
       </trans-unit>
-      <trans-unit id="createWorktreeToolStripMenuItem.Text">
-        <source>&amp;Create a worktree...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="dashboardToolStripMenuItem.Text">
         <source>&amp;Dashboard</source>
         <target />
@@ -3016,7 +3012,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="manageWorktreeToolStripMenuItem.Text">
-        <source>&amp;Manage worktrees...</source>
+        <source>Manage &amp;worktrees...</source>
         <target />
       </trans-unit>
       <trans-unit id="menuCommitInfoPosition.ToolTipText">
@@ -3193,10 +3189,6 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="toolStripMenuItemReflog.Text">
         <source>Show reflo&amp;g...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="toolStripMenuItemWorktrees.Text">
-        <source>&amp;Worktrees</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
@@ -5647,18 +5639,6 @@ command "git help shortlog"</source>
         <source>Branch</source>
         <target />
       </trans-unit>
-      <trans-unit id="Delete.HeaderText">
-        <source>Delete</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="IsDeleted.HeaderText">
-        <source>Deleted</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Open.HeaderText">
-        <source>Open</source>
-        <target />
-      </trans-unit>
       <trans-unit id="Path.HeaderText">
         <source>Path</source>
         <target />
@@ -5691,8 +5671,20 @@ command "git help shortlog"</source>
         <source>Open a worktree</source>
         <target />
       </trans-unit>
+      <trans-unit id="buttonCreateNewWorktree.Text">
+        <source>&amp;Create...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonDeleteSelectedWorktree.Text">
+        <source>&amp;Delete selected</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonOpenSelectedWorktree.Text">
+        <source>&amp;Open selected</source>
+        <target />
+      </trans-unit>
       <trans-unit id="buttonPruneWorktrees.Text">
-        <source>Prune the deleted worktrees</source>
+        <source>&amp;Prune deleted worktrees</source>
         <target />
       </trans-unit>
     </body>

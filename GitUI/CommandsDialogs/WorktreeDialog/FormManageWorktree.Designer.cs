@@ -29,18 +29,16 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.Worktrees = new System.Windows.Forms.DataGridView();
             this.Path = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Branch = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Sha1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.IsDeleted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Open = new System.Windows.Forms.DataGridViewImageColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewImageColumn();
-            this._NO_TRANSLATE_Close = new System.Windows.Forms.Button();
             this.buttonPruneWorktrees = new System.Windows.Forms.Button();
+            this.buttonDeleteSelectedWorktree = new System.Windows.Forms.Button();
+            this.buttonOpenSelectedWorktree = new System.Windows.Forms.Button();
+            this.buttonCreateNewWorktree = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Worktrees)).BeginInit();
             this.SuspendLayout();
@@ -53,7 +51,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.panel1.Controls.Add(this.Worktrees);
             this.panel1.Location = new System.Drawing.Point(-2, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(834, 250);
+            this.panel1.Size = new System.Drawing.Size(696, 214);
             this.panel1.TabIndex = 0;
             // 
             // Worktrees
@@ -61,26 +59,26 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Worktrees.AllowUserToAddRows = false;
             this.Worktrees.AllowUserToDeleteRows = false;
             this.Worktrees.AllowUserToResizeRows = false;
+            this.Worktrees.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Worktrees.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.Worktrees.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Worktrees.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Path,
             this.Type,
             this.Branch,
-            this.Sha1,
-            this.IsDeleted,
-            this.Open,
-            this.Delete});
-            this.Worktrees.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Worktrees.Location = new System.Drawing.Point(0, 0);
+            this.Sha1});
+            this.Worktrees.Location = new System.Drawing.Point(10, 10);
+            this.Worktrees.Margin = new System.Windows.Forms.Padding(10);
             this.Worktrees.MultiSelect = false;
             this.Worktrees.Name = "Worktrees";
             this.Worktrees.ReadOnly = true;
             this.Worktrees.RowHeadersVisible = false;
             this.Worktrees.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Worktrees.Size = new System.Drawing.Size(834, 250);
+            this.Worktrees.Size = new System.Drawing.Size(674, 204);
             this.Worktrees.TabIndex = 2;
-            this.Worktrees.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Worktrees_CellClick);
+            this.Worktrees.SelectionChanged += new System.EventHandler(this.Worktrees_SelectionChanged);
             // 
             // Path
             // 
@@ -89,6 +87,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Path.Name = "Path";
             this.Path.ReadOnly = true;
             this.Path.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Path.Width = 37;
             // 
             // Type
             // 
@@ -97,6 +96,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Type.Name = "Type";
             this.Type.ReadOnly = true;
             this.Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Type.Width = 37;
             // 
             // Branch
             // 
@@ -105,62 +105,64 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             this.Branch.Name = "Branch";
             this.Branch.ReadOnly = true;
             this.Branch.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Branch.Width = 50;
             // 
             // Sha1
             // 
-            this.Sha1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Sha1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Sha1.HeaderText = "SHA-1";
+            this.Sha1.MinimumWidth = 90;
             this.Sha1.Name = "Sha1";
             this.Sha1.ReadOnly = true;
             this.Sha1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // IsDeleted
+            // buttonOpenSelectedWorktree
             // 
-            this.IsDeleted.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.IsDeleted.HeaderText = "Deleted";
-            this.IsDeleted.Name = "IsDeleted";
-            this.IsDeleted.ReadOnly = true;
-            this.IsDeleted.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.buttonOpenSelectedWorktree.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonOpenSelectedWorktree.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
+            this.buttonOpenSelectedWorktree.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonOpenSelectedWorktree.Location = new System.Drawing.Point(8, 226);
+            this.buttonOpenSelectedWorktree.Name = "buttonOpenSelectedWorktree";
+            this.buttonOpenSelectedWorktree.Size = new System.Drawing.Size(151, 23);
+            this.buttonOpenSelectedWorktree.TabIndex = 1;
+            this.buttonOpenSelectedWorktree.Text = "&Open selected";
+            this.buttonOpenSelectedWorktree.UseVisualStyleBackColor = true;
+            this.buttonOpenSelectedWorktree.Click += new System.EventHandler(this.buttonOpenSelectedWorktree_Click);
             // 
-            // Open
+            // buttonDeleteSelectedWorktree
             // 
-            this.Open.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            this.Open.HeaderText = "Open";
-            this.Open.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
-            this.Open.Name = "Open";
-            this.Open.ReadOnly = true;
-            this.Open.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.buttonDeleteSelectedWorktree.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonDeleteSelectedWorktree.Image = global::GitUI.Properties.Images.DeleteFile;
+            this.buttonDeleteSelectedWorktree.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonDeleteSelectedWorktree.Location = new System.Drawing.Point(165, 226);
+            this.buttonDeleteSelectedWorktree.Name = "buttonDeleteSelectedWorktree";
+            this.buttonDeleteSelectedWorktree.Size = new System.Drawing.Size(151, 23);
+            this.buttonDeleteSelectedWorktree.TabIndex = 1;
+            this.buttonDeleteSelectedWorktree.Text = "&Delete selected";
+            this.buttonDeleteSelectedWorktree.UseVisualStyleBackColor = true;
+            this.buttonDeleteSelectedWorktree.Click += new System.EventHandler(this.buttonDeleteSelectedWorktree_Click);
             // 
-            // Delete
+            // buttonCreateNewWorktree
             // 
-            this.Delete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.Delete.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Image = global::GitUI.Properties.Images.Delete;
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
-            this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            // 
-            // _NO_TRANSLATE_Close
-            // 
-            this._NO_TRANSLATE_Close.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this._NO_TRANSLATE_Close.Location = new System.Drawing.Point(450, 262);
-            this._NO_TRANSLATE_Close.Name = "Close";
-            this._NO_TRANSLATE_Close.Size = new System.Drawing.Size(178, 23);
-            this._NO_TRANSLATE_Close.TabIndex = 1;
-            this._NO_TRANSLATE_Close.Text = TranslatedStrings.Close;
-            this._NO_TRANSLATE_Close.UseVisualStyleBackColor = true;
-            this._NO_TRANSLATE_Close.Click += new System.EventHandler(this.buttonClose_Click);
+            this.buttonCreateNewWorktree.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCreateNewWorktree.Image = global::GitUI.Properties.Images.FileStatusAdded;
+            this.buttonCreateNewWorktree.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonCreateNewWorktree.Location = new System.Drawing.Point(322, 226);
+            this.buttonCreateNewWorktree.Name = "buttonCreateNewWorktree";
+            this.buttonCreateNewWorktree.Size = new System.Drawing.Size(151, 23);
+            this.buttonCreateNewWorktree.TabIndex = 1;
+            this.buttonCreateNewWorktree.Text = "&Create...";
+            this.buttonCreateNewWorktree.UseVisualStyleBackColor = true;
+            this.buttonCreateNewWorktree.Click += new System.EventHandler(this.buttonCreateNewWorktree_Click);
             // 
             // buttonPruneWorktrees
             // 
-            this.buttonPruneWorktrees.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.buttonPruneWorktrees.Location = new System.Drawing.Point(213, 262);
+            this.buttonPruneWorktrees.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPruneWorktrees.Location = new System.Drawing.Point(493, 226);
             this.buttonPruneWorktrees.Name = "buttonPruneWorktrees";
-            this.buttonPruneWorktrees.Size = new System.Drawing.Size(178, 23);
+            this.buttonPruneWorktrees.Size = new System.Drawing.Size(189, 23);
             this.buttonPruneWorktrees.TabIndex = 1;
-            this.buttonPruneWorktrees.Text = "Prune the deleted worktrees";
+            this.buttonPruneWorktrees.Text = "&Prune deleted worktrees";
             this.buttonPruneWorktrees.UseVisualStyleBackColor = true;
             this.buttonPruneWorktrees.Click += new System.EventHandler(this.buttonPruneWorktrees_Click);
             // 
@@ -168,13 +170,15 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(832, 297);
+            this.ClientSize = new System.Drawing.Size(694, 261);
+            this.Controls.Add(this.buttonOpenSelectedWorktree);
+            this.Controls.Add(this.buttonDeleteSelectedWorktree);
+            this.Controls.Add(this.buttonCreateNewWorktree);
             this.Controls.Add(this.buttonPruneWorktrees);
-            this.Controls.Add(this._NO_TRANSLATE_Close);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(670, 333);
+            this.MinimumSize = new System.Drawing.Size(710, 200);
             this.Name = "FormManageWorktree";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Existing worktrees";
@@ -187,15 +191,14 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         #endregion
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button _NO_TRANSLATE_Close;
         private System.Windows.Forms.DataGridView Worktrees;
         private System.Windows.Forms.Button buttonPruneWorktrees;
+        private System.Windows.Forms.Button buttonDeleteSelectedWorktree;
+        private System.Windows.Forms.Button buttonOpenSelectedWorktree;
         private System.Windows.Forms.DataGridViewTextBoxColumn Path;
         private System.Windows.Forms.DataGridViewTextBoxColumn Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn Branch;
         private System.Windows.Forms.DataGridViewTextBoxColumn Sha1;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn IsDeleted;
-        private System.Windows.Forms.DataGridViewImageColumn Open;
-        private System.Windows.Forms.DataGridViewImageColumn Delete;
+        private System.Windows.Forms.Button buttonCreateNewWorktree;
     }
 }
