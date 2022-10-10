@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using GitCommands.Utils;
+﻿using GitCommands.Utils;
 
 namespace GitCommands
 {

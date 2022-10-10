@@ -1,5 +1,4 @@
-﻿using System.IO;
-using GitCommands;
+﻿using GitCommands;
 using NUnit.Framework;
 
 namespace GitCommandsTests

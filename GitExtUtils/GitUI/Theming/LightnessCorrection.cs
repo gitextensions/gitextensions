@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace GitExtUtils.GitUI.Theming
+﻿namespace GitExtUtils.GitUI.Theming
 {
     public class LightnessCorrection : BmpTransformation
     {

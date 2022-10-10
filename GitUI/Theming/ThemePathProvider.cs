@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Theming

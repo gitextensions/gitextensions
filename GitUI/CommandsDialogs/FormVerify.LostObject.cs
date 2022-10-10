@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtUtils;

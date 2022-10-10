@@ -1,9 +1,6 @@
 // The original idea and the implementation are borrowed from  https://github.com/NuGetPackageExplorer/NuGetPackageExplorer
 // Credits to https://github.com/clairernovotny
 
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
 using GitCommands;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;

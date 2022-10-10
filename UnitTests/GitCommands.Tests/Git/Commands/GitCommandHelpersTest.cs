@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;

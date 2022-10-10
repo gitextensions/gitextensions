@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitUI.CommandsDialogs.FormatPatchDialog;

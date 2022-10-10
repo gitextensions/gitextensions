@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GitCommands.Config;
+﻿using GitCommands.Config;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 

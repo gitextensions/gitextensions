@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using System.Xml;
 
 #pragma warning disable SA1305 // Field names should not use Hungarian notation

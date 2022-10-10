@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Logging;

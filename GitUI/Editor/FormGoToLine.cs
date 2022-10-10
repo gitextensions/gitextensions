@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI.Editor
+﻿namespace GitUI.Editor
 {
     public partial class FormGoToLine : GitExtensionsForm
     {

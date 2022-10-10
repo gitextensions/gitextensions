@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.IO.Abstractions;
-using System.Windows.Forms;
+﻿using System.IO.Abstractions;
 using GitCommands.Git.Commands;
 using GitCommands.Git.Tag;
 using GitUIPluginInterfaces;

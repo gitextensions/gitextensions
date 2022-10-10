@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Text;
-using System.Windows.Forms;
 using FluentAssertions;
 using GitUI.Editor.RichTextBoxExtension;
 using NUnit.Framework;

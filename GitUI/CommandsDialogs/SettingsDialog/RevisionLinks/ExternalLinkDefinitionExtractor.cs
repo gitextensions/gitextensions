@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using GitCommands.ExternalLinks;
+﻿using GitCommands.ExternalLinks;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks

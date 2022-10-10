@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Windows.Forms;
+﻿using System.ComponentModel.Composition;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;

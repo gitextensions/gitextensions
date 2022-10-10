@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GitUI.CommandsDialogs
+﻿namespace GitUI.CommandsDialogs
 {
     partial class FormVerify
     {

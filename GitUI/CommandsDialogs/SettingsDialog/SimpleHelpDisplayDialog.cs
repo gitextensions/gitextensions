@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace GitUI.CommandsDialogs.SettingsDialog
+﻿namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public partial class SimpleHelpDisplayDialog : Form
     {

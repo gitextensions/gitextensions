@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace GitUI.Theming
+﻿namespace GitUI.Theming
 {
     internal static class RectangleExtension
     {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitExtensions.Plugins.DeleteUnusedBranches
+﻿namespace GitExtensions.Plugins.DeleteUnusedBranches
 {
     public class CheckBoxHeaderCellEventArgs : EventArgs
     {

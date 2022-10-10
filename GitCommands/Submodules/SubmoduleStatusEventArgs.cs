@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-namespace GitCommands.Submodules
+﻿namespace GitCommands.Submodules
 {
     public class SubmoduleStatusEventArgs : EventArgs
     {

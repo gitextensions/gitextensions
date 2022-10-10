@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using Microsoft;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart

@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 namespace GitCommands
 {
     public static class GitSshHelpers

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Threading.Tasks;
-using GitUI.Avatars;
+﻿using GitUI.Avatars;
 using NSubstitute;
 using NUnit.Framework;
 

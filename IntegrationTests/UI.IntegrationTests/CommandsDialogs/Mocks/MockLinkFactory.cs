@@ -1,7 +1,5 @@
-﻿using System;
-using System.Composition;
+﻿using System.Composition;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Composition;
 using ResourceManager;
 
 namespace GitExtensions.UITests.CommandsDialogs

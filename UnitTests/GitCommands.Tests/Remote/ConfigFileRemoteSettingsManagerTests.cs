@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.Config;
 using GitCommands.Remotes;

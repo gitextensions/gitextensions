@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using System.Windows.Forms.Design;
+﻿using System.Windows.Forms.Design;
 
 namespace GitUI.Design
 {

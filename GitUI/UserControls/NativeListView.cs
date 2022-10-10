@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using static System.NativeMethods;
+﻿using static System.NativeMethods;
 
 namespace GitUI.UserControls
 {

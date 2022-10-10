@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GitCommands.Git
+﻿namespace GitCommands.Git
 {
     /// <summary>
     /// Compares the file names/>.

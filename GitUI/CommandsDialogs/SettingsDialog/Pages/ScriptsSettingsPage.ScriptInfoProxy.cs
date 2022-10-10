@@ -2,7 +2,6 @@
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Design;
-using System.Windows.Forms;
 using GitUI.Design;
 using GitUI.Script;
 

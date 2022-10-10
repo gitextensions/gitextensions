@@ -1,4 +1,3 @@
-using System;
 using GitCommands.Utils;
 using Microsoft.WindowsAPICodePack.Taskbar;
 

@@ -4,8 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Windows.Forms;
-
 namespace BugReporter
 {
     internal partial class ExceptionDetailView : Form

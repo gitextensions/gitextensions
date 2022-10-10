@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using GitCommands;
+﻿using GitCommands;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

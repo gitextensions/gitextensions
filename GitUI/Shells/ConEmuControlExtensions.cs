@@ -1,5 +1,4 @@
-﻿using System;
-using ConEmu.WinForms;
+﻿using ConEmu.WinForms;
 
 namespace GitUI.Shells
 {

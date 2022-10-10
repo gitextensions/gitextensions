@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GitUIPluginInterfaces.RepositoryHosts
+﻿namespace GitUIPluginInterfaces.RepositoryHosts
 {
     public interface IHostedRepository
     {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using GitExtensions.Plugins.ProxySwitcher.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;

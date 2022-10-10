@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Windows.Forms;
-using Microsoft;
+﻿using Microsoft;
 using ResourceManager;
 
 namespace GitUI.UserControls

@@ -1,6 +1,3 @@
-using System;
-using System.Drawing;
-
 namespace GitUI.Theming
 {
     internal class EditRenderer : ThemeRenderer

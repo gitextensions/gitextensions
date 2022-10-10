@@ -1,11 +1,7 @@
-﻿using System;
-using System.Buffers.Binary;
+﻿using System.Buffers.Binary;
 using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
-using System.IO;
 using System.Resources;
 using System.Text;
 using FluentAssertions;

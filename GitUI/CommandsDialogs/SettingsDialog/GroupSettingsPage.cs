@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using ResourceManager;
+﻿using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Drawing;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.ComponentModel;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;

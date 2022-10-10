@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using GitCommands.Utils;
 
 namespace GitCommands

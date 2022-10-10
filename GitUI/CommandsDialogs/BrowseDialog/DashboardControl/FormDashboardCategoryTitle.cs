@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using ResourceManager;
+﻿using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {

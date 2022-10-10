@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ResourceManager
+﻿namespace ResourceManager
 {
     public interface ITranslation
     {

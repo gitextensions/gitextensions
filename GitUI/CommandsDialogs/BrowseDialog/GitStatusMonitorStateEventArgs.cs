@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI.CommandsDialogs.BrowseDialog
+﻿namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public class GitStatusMonitorStateEventArgs : EventArgs
     {

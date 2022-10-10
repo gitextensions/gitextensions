@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces
 {
     /// <summary>
     /// A lazy provider for GitRefs() that can be shared for instance when a repository is changed.

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;

@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace GitUI.Shells
+﻿namespace GitUI.Shells
 {
     public abstract class ShellDescriptor : IShellDescriptor
     {

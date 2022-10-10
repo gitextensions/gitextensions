@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using GitUI;
+﻿using GitUI;
 
 namespace GitUIPluginInterfaces
 {

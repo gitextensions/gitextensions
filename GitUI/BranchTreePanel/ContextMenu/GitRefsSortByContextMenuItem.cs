@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Utils;
 using GitUI.Properties;
 using GitUIPluginInterfaces;

@@ -1,4 +1,3 @@
-using System;
 using FluentAssertions;
 using GitCommands.Git;
 using GitUIPluginInterfaces;

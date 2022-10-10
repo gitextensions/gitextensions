@@ -1,5 +1,4 @@
-﻿using System;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitUIPluginInterfaces;
 
 namespace GitCommands

@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Runtime.CompilerServices;
-using System.Windows.Forms;
+﻿using System.Runtime.CompilerServices;
 using GitExtUtils.GitUI.Theming;
 
 namespace GitUI

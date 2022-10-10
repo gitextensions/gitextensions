@@ -1,7 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Forms;
 using GitCommands;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.Script;

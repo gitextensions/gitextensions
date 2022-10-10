@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
-using Microsoft;
+﻿using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

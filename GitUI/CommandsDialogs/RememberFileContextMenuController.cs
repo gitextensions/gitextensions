@@ -1,6 +1,5 @@
 ﻿#define CONTRACTS_FULL
 
-using System;
 using System.Diagnostics.Contracts;
 using GitCommands;
 using GitUI.UserControls;

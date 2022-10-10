@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using NUnit.Framework;
 

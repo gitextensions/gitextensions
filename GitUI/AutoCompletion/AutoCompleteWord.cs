@@ -1,6 +1,3 @@
-using System;
-using System.Linq;
-
 namespace GitUI.AutoCompletion
 {
     public class AutoCompleteWord : IEquatable<AutoCompleteWord?>

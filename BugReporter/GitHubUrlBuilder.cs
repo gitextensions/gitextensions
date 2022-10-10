@@ -4,7 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
 using BugReporter.Serialization;
 
 namespace BugReporter

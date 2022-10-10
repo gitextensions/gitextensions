@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GitExtUtils;
-
-namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces
 {
     /// <inherit/>
     public sealed class FilteredGitRefsProvider : IFilteredGitRefsProvider

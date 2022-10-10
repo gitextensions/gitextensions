@@ -8,6 +8,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
 
+    <ImplicitUsings>enable</ImplicitUsings>
     <UseWindowsForms>true</UseWindowsForms>
     <TargetFramework>$(SolutionTargetFramework)</TargetFramework>
     <Prefer32Bit>false</Prefer32Bit>

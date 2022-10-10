@@ -3,9 +3,7 @@
 // See the LICENSE file in the project root for more information.
 // Copied from https://github.com/dotnet/roslyn/blob/315c2e149b/src/Workspaces/CoreTestUtilities/MEF/ExportProviderCache.cs with some tweaks
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using Microsoft.VisualStudio.Composition;
 
 namespace CommonTestUtils.MEF

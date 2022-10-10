@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitExtensions.Plugins.ReleaseNotesGenerator;
 using NUnit.Framework;
 

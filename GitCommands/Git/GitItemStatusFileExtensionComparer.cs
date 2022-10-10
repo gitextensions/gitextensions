@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-
-namespace GitCommands.Git
+﻿namespace GitCommands.Git
 {
     /// <summary>
     /// Compares the file extension of <see cref="GitItemStatus.Name"/> and then by path/>.

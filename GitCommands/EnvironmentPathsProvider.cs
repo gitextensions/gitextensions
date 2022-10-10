@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using GitCommands.Utils;
+﻿using GitCommands.Utils;
 using GitExtUtils;
 
 namespace GitCommands

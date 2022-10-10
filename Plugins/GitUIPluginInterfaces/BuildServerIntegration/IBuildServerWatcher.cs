@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public interface IBuildServerWatcher

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using GitUI;
+﻿using GitUI;
 using NUnit.Framework;
 
 namespace GitUITests

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace GitUI
+﻿namespace GitUI
 {
     public static class TableLayoutPanelExtensions
     {

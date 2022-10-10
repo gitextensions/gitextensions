@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;

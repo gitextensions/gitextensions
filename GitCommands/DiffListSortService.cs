@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitCommands
+﻿namespace GitCommands
 {
     public class DiffListSortService : IDiffListSortService
     {

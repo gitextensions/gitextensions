@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using GitExtUtils.GitUI;
+﻿using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls

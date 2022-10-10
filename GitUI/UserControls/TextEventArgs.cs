@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI.UserControls
+﻿namespace GitUI.UserControls
 {
     public sealed class TextEventArgs : EventArgs
     {

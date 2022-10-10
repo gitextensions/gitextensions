@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using Microsoft.WindowsAPICodePack.Taskbar;
+﻿using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace GitUI
 {

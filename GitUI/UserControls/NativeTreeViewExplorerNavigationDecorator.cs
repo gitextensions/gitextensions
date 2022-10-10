@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace GitUI.UserControls
+﻿namespace GitUI.UserControls
 {
     // Add explorer-like navigation to NativeTreeView:
     // * Arrow key navigation to highlight without selecting node

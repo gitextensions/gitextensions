@@ -1,5 +1,4 @@
-﻿using System;
-using GitCommands;
+﻿using GitCommands;
 using Microsoft;
 using ResourceManager;
 

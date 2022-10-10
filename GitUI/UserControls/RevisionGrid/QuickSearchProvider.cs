@@ -1,9 +1,7 @@
-using System;
-using System.Drawing;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.UserControls.RevisionGrid;
+using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI
 {

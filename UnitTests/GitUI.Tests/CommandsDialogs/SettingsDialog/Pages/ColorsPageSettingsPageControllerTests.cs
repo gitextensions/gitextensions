@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;

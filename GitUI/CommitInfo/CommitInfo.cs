@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;

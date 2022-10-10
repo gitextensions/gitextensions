@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitCommands.Settings
+﻿namespace GitCommands.Settings
 {
     public class SaveSettingsException : Exception
     {

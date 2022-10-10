@@ -1,4 +1,3 @@
-using System;
 using GitUI;
 using NUnit.Framework;
 

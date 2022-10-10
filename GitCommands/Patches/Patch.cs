@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitCommands.Patches
+﻿namespace GitCommands.Patches
 {
     public sealed class Patch
     {

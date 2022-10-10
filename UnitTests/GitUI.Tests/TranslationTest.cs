@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using CommonTestUtils.MEF;
+﻿using CommonTestUtils.MEF;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-
-namespace GitUI.CommandsDialogs
+﻿namespace GitUI.CommandsDialogs
 {
     public partial class SearchWindow<T> : Form where T : class
     {

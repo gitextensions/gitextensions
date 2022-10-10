@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using GitUIPluginInterfaces.BuildServerIntegration;
+﻿using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitUI.HelperDialogs
 {

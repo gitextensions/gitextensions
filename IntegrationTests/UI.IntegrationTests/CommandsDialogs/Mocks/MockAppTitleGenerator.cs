@@ -1,6 +1,5 @@
 ﻿using System.Composition;
 using GitCommands;
-using Microsoft.VisualStudio.Composition;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {

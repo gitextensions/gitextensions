@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-using GitUI.Hotkey;
+﻿using GitUI.Hotkey;
 using Microsoft;
 using ResourceManager;
 

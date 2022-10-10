@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Drawing;
-
 namespace ResourceManager.CommitDataRenders
 {
     public interface IHeaderRenderStyleProvider

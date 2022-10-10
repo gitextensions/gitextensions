@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using ResourceManager;
+﻿using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
 {

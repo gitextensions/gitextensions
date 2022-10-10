@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {

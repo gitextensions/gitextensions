@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace GitCommands.DiffMergeTools
 {
     internal class BeyondCompare4 : DiffMergeTool

@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Threading.Tasks;
-
-namespace GitUI.Avatars
+﻿namespace GitUI.Avatars
 {
     public sealed class StaticImageAvatarProvider : IAvatarProvider
     {

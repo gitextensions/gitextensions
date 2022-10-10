@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI.CommandsDialogs
+﻿namespace GitUI.CommandsDialogs
 {
     public partial class FormLog : GitModuleForm
     {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitCommands
+﻿namespace GitCommands
 {
     /// <summary>
     /// Event arguments for batch progress updating

@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 

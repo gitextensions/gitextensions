@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace GitUI
+﻿namespace GitUI
 {
     /// <summary>
     /// Sets the mouse cursor to <see cref="Cursors.WaitCursor"/> to indicate UI activity over some lexical scope.

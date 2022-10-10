@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using GitUI;
 using GitUI.Editor;

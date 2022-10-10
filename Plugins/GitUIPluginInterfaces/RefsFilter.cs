@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces
 {
     /// <summary>
     /// Enums requestable in GetRefs() (multiple names can be appended)

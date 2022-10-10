@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-using GitExtUtils.GitUI;
+﻿using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns

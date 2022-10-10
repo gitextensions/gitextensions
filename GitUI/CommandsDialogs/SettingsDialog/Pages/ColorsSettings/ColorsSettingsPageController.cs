@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 

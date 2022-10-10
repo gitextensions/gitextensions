@@ -1,5 +1,4 @@
-﻿using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitUI.Theming;
 using NUnit.Framework;
 

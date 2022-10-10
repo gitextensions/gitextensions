@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using GitUI;
+﻿using GitUI;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands

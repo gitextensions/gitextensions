@@ -4,7 +4,6 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
 using System.Runtime.InteropServices;
 using BugReporter.Serialization;
 using GitCommands;

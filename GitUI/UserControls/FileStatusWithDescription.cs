@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using GitCommands;
+﻿using GitCommands;
 using GitUIPluginInterfaces;
 
 namespace GitUI

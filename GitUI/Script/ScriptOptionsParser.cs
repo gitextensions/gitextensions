@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
+﻿using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;
 using GitUI.UserControls.RevisionGrid;

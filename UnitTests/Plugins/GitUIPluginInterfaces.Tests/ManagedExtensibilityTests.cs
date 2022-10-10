@@ -1,5 +1,4 @@
-﻿using System;
-using GitUIPluginInterfaces;
+﻿using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitUIPluginInterfacesTests

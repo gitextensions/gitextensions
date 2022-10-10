@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.Windows.Forms;
+﻿using System.ComponentModel.Composition;
 using GitExtensions.Plugins.ReleaseNotesGenerator.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;

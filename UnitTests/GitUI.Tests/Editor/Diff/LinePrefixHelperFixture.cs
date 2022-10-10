@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor.Document;
 using NSubstitute;

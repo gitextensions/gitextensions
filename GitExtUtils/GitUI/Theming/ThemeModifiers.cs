@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitExtUtils.GitUI.Theming
+﻿namespace GitExtUtils.GitUI.Theming
 {
     public static class ThemeVariations
     {

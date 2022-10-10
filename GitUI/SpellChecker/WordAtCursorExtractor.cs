@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GitUI.SpellChecker
+﻿namespace GitUI.SpellChecker
 {
     internal class WordAtCursorExtractor : IWordAtCursorExtractor
     {

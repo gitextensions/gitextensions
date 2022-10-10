@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GitExtensions.Plugins.FindLargeFiles
+﻿namespace GitExtensions.Plugins.FindLargeFiles
 {
     public class GitObject
     {

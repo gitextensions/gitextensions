@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Linq;
 using GitCommands;
 using GitCommands.Git;
 using NUnit.Framework;

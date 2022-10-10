@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace GitUI.UserControls
+﻿namespace GitUI.UserControls
 {
     /// <inheritdoc />
     internal class ListViewGroupMouseEventArgs : MouseEventArgs

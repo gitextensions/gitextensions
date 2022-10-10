@@ -1,4 +1,3 @@
-using System;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 

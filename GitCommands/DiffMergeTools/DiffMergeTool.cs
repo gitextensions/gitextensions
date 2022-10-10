@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GitCommands.DiffMergeTools
+﻿namespace GitCommands.DiffMergeTools
 {
     /// <summary>
     /// A base class for diff/merge tool configurations.

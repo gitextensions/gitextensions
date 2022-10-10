@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-
-namespace GitUI.UserControls.RevisionGrid.Graph
+﻿namespace GitUI.UserControls.RevisionGrid.Graph
 {
     public static class RevisionGraphLaneColor
     {

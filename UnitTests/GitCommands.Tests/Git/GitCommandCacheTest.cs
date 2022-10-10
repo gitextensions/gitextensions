@@ -1,4 +1,3 @@
-using System.Linq;
 using GitCommands;
 using NUnit.Framework;
 

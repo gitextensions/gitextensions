@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace GitCommands.UserRepositoryHistory
+﻿namespace GitCommands.UserRepositoryHistory
 {
     /// <summary>
     /// Provides the ability to serialise and deserialise collections of user's git repositories.

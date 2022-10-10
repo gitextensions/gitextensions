@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
+﻿namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
 {
     public sealed class CloudProviderExternalLinkDefinitionExtractorFactory : ICloudProviderExternalLinkDefinitionExtractorFactory
     {

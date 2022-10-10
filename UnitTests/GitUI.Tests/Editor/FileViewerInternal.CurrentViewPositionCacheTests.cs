@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitUI.Editor;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
