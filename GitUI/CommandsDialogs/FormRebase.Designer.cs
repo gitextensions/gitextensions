@@ -514,7 +514,6 @@ namespace GitUI.CommandsDialogs
             // 
             // Ok
             // 
-            this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Ok.Location = new System.Drawing.Point(3, 54);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(162, 25);
