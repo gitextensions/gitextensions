@@ -3053,6 +3053,10 @@ namespace GitUI.CommandsDialogs
         {
             using FormManageWorktree formManageWorktree = new(UICommands);
             formManageWorktree.ShowDialog(this);
+            if (formManageWorktree.ShouldRefreshRevisionGrid)
+            {
+                RefreshRevisions();
+            }
         }
 
         private void toolStripSplitStash_DropDownOpened(object sender, EventArgs e)
