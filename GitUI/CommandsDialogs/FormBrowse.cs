@@ -3052,22 +3052,6 @@ namespace GitUI.CommandsDialogs
             formManageWorktree.ShowDialog(this);
         }
 
-        private void createWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            using FormCreateWorktree formCreateWorktree = new(UICommands);
-            DialogResult dialogResult = formCreateWorktree.ShowDialog(this);
-            if (dialogResult != DialogResult.OK || !formCreateWorktree.OpenWorktree)
-            {
-                return;
-            }
-
-            GitModule newModule = new(formCreateWorktree.WorktreeDirectory);
-            if (newModule.IsValidGitWorkingDir())
-            {
-                SetGitModule(this, new GitModuleEventArgs(newModule));
-            }
-        }
-
         private void toolStripSplitStash_DropDownOpened(object sender, EventArgs e)
         {
             ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);

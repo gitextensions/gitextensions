@@ -99,8 +99,6 @@ namespace GitUI.CommandsDialogs
             this.updateAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.synchronizeAllSubmodulesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemWorktrees = new System.Windows.Forms.ToolStripMenuItem();
-            this.createWorktreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageWorktreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator44 = new System.Windows.Forms.ToolStripSeparator();
             this.editgitignoreToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -944,7 +942,7 @@ namespace GitUI.CommandsDialogs
             this.updateAllSubmodulesToolStripMenuItem,
             this.synchronizeAllSubmodulesToolStripMenuItem,
             this.toolStripSeparator10,
-            this.toolStripMenuItemWorktrees,
+            this.manageWorktreeToolStripMenuItem,
             this.toolStripSeparator44,
             this.editgitignoreToolStripMenuItem1,
             this.editgitinfoexcludeToolStripMenuItem,
@@ -1007,28 +1005,12 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator10.Name = "toolStripSeparator10";
             this.toolStripSeparator10.Size = new System.Drawing.Size(218, 6);
             // 
-            // toolStripMenuItemWorktrees
-            // 
-            this.toolStripMenuItemWorktrees.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.createWorktreeToolStripMenuItem,
-            this.manageWorktreeToolStripMenuItem});
-            this.toolStripMenuItemWorktrees.Image = global::GitUI.Properties.Images.WorkTree;
-            this.toolStripMenuItemWorktrees.Name = "toolStripMenuItemWorktrees";
-            this.toolStripMenuItemWorktrees.Size = new System.Drawing.Size(221, 22);
-            this.toolStripMenuItemWorktrees.Text = "&Worktrees";
-            // 
-            // createWorktreeToolStripMenuItem
-            // 
-            this.createWorktreeToolStripMenuItem.Name = "createWorktreeToolStripMenuItem";
-            this.createWorktreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.createWorktreeToolStripMenuItem.Text = "&Create a worktree...";
-            this.createWorktreeToolStripMenuItem.Click += new System.EventHandler(this.createWorktreeToolStripMenuItem_Click);
-            // 
             // manageWorktreeToolStripMenuItem
             // 
+            this.manageWorktreeToolStripMenuItem.Image = global::GitUI.Properties.Images.WorkTree;
             this.manageWorktreeToolStripMenuItem.Name = "manageWorktreeToolStripMenuItem";
             this.manageWorktreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.manageWorktreeToolStripMenuItem.Text = "&Manage worktrees...";
+            this.manageWorktreeToolStripMenuItem.Text = "Manage &worktrees...";
             this.manageWorktreeToolStripMenuItem.Click += new System.EventHandler(this.manageWorktreeToolStripMenuItem_Click);
             // 
             // toolStripSeparator44
@@ -1914,8 +1896,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem editgitinfoexcludeToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItemReflog;
         private ToolStripMenuItem manageWorktreeToolStripMenuItem;
-        private ToolStripMenuItem createWorktreeToolStripMenuItem;
-        private ToolStripMenuItem toolStripMenuItemWorktrees;
         private ToolStripMenuItem tsmiRecentRepositoriesClear;
         private ToolStripSeparator clearRecentRepositoriesListToolStripMenuItem;
         private ToolStripButton toolStripFileExplorer;

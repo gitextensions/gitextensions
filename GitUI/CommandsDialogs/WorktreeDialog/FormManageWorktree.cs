@@ -1,8 +1,6 @@
 ﻿using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
-using GitExtUtils.GitUI.Theming;
-using GitUI.Properties;
 using Microsoft;
 using ResourceManager;
 
@@ -28,22 +26,17 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             : base(commands)
         {
             InitializeComponent();
-            Path.Width = DpiUtil.Scale(35);
-            Type.Width = DpiUtil.Scale(37);
-            Branch.Width = DpiUtil.Scale(46);
-            Sha1.Width = DpiUtil.Scale(37);
-            IsDeleted.Width = DpiUtil.Scale(50);
-            Open.Width = DpiUtil.Scale(39);
-            Delete.Width = DpiUtil.Scale(44);
+            Sha1.Width = DpiUtil.Scale(53);
             Worktrees.AutoGenerateColumns = false;
-            Delete.Image = Images.Delete.AdaptLightness();
             InitializeComplete();
 
             Path.DataPropertyName = nameof(WorkTree.Path);
             Type.DataPropertyName = nameof(WorkTree.Type);
             Branch.DataPropertyName = nameof(WorkTree.Branch);
             Sha1.DataPropertyName = nameof(WorkTree.Sha1);
-            IsDeleted.DataPropertyName = nameof(WorkTree.IsDeleted);
+
+            Worktrees.Columns[3].DefaultCellStyle.Font = AppSettings.MonospaceFont;
+            Worktrees.Columns[3].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
         }
 
         private void FormManageWorktree_Load(object sender, EventArgs e)
@@ -97,7 +90,11 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                             break;
                         case "branch":
                             currentWorktree.Type = HeadType.Branch;
-                            currentWorktree.Branch = strings[1];
+                            currentWorktree.Branch = CleanBranchName(strings[1]);
+
+                            string? CleanBranchName(string? branch)
+                                => branch != null && branch.StartsWith(GitRefName.RefsHeadsPrefix) ? branch.Substring(GitRefName.RefsHeadsPrefix.Length) : branch;
+
                             break;
                         case "detached":
                             currentWorktree.Type = HeadType.Detached;
@@ -107,51 +104,19 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             }
 
             Worktrees.DataSource = _worktrees;
+
+            Font font = Worktrees.DefaultCellStyle.Font;
+            Font deletedFont = new(font.FontFamily, font.Size, font.Style | FontStyle.Strikeout);
+
             for (var i = 0; i < Worktrees.Rows.Count; i++)
             {
-                if (i == 0)
+                if (_worktrees[i].IsDeleted)
                 {
-                    Worktrees.Rows[i].Cells["Delete"].Value = Images.Blank;
-                    if (IsCurrentlyOpenedWorktree(_worktrees[0]))
-                    {
-                        Worktrees.Rows[i].Cells["Open"].Value = Images.Blank;
-                    }
-                }
-                else if (!CanDeleteWorkspace(_worktrees[i]))
-                {
-                    Worktrees.Rows[i].Cells["Open"].Value = Images.Blank;
-                    Worktrees.Rows[i].Cells["Delete"].Value = Images.Blank;
+                    Worktrees.Rows[i].DefaultCellStyle.Font = deletedFont;
                 }
             }
 
             buttonPruneWorktrees.Enabled = _worktrees.Skip(1).Any(w => w.IsDeleted);
-        }
-
-        private bool CanDeleteWorkspace(WorkTree workTree)
-        {
-            if (workTree.IsDeleted)
-            {
-                return false;
-            }
-
-            Validates.NotNull(_worktrees);
-
-            if (_worktrees.Count == 1)
-            {
-                return false;
-            }
-
-            if (IsCurrentlyOpenedWorktree(workTree))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool IsCurrentlyOpenedWorktree(WorkTree workTree)
-        {
-            return new DirectoryInfo(UICommands.GitModule.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path).FullName.TrimEnd('\\');
         }
 
         /// <summary>
@@ -187,15 +152,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Detached
         }
 
-        private void buttonClose_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void buttonPruneWorktrees_Click(object sender, EventArgs e)
-        {
-            PruneWorktrees();
-        }
+        private void buttonPruneWorktrees_Click(object sender, EventArgs e) => PruneWorktrees();
 
         private void PruneWorktrees()
         {
@@ -203,58 +160,104 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Initialize();
         }
 
-        private void Worktrees_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void buttonDeleteSelectedWorktree_Click(object sender, EventArgs e)
         {
-            if (e.ColumnIndex < 5)
+            if (!CanActOnSelectedWorkspace(out var workTree))
             {
                 return;
             }
 
-            Validates.NotNull(_worktrees);
+            if (MessageBox.Show(this, _deleteWorktreeText.Text, _deleteWorktreeTitle.Text,
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                Validates.NotNull(workTree.Path);
 
-            var workTree = _worktrees[e.RowIndex];
-            if (!CanDeleteWorkspace(workTree))
+                if (workTree.Path.TryDeleteDirectory(out string? errorMessage))
+                {
+                    PruneWorktrees();
+                }
+                else
+                {
+                    MessageBox.Show(this, $@"{_deleteWorktreeFailedText.Text}: {workTree.Path}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void buttonOpenSelectedWorktree_Click(object sender, EventArgs e)
+        {
+            if (!CanActOnSelectedWorkspace(out var workTree))
             {
                 return;
             }
 
-            if (e.ColumnIndex == 5)
+            if (AppSettings.DontConfirmSwitchWorktree || MessageBox.Show(this,
+                    _switchWorktreeText.Text, _switchWorktreeTitle.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (AppSettings.DontConfirmSwitchWorktree || MessageBox.Show(this,
-                        _switchWorktreeText.Text, _switchWorktreeTitle.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (Directory.Exists(workTree.Path))
                 {
-                    if (Directory.Exists(workTree.Path))
-                    {
-                        ((FormBrowse)Owner).SetWorkingDir(System.IO.Path.GetFullPath(workTree.Path));
-                        Close();
-                    }
+                    OpenWorktree(workTree.Path);
                 }
+            }
+        }
 
+        private void OpenWorktree(string workTreePath)
+        {
+            ((FormBrowse)Owner).SetWorkingDir(System.IO.Path.GetFullPath(workTreePath));
+            Close();
+        }
+
+        private void Worktrees_SelectionChanged(object sender, EventArgs e)
+        {
+            buttonDeleteSelectedWorktree.Enabled = CanDeleteSelectedWorkspace();
+            buttonOpenSelectedWorktree.Enabled = CanActOnSelectedWorkspace(out _);
+        }
+
+        private bool CanDeleteSelectedWorkspace()
+            => CanActOnSelectedWorkspace(out _) && Worktrees.SelectedRows[0].Index != 0;
+
+        private bool CanActOnSelectedWorkspace(out WorkTree workTree)
+        {
+            workTree = null;
+
+            if (_worktrees == null || _worktrees.Count == 1 || Worktrees.SelectedRows.Count == 0)
+            {
+                return false;
+            }
+
+            workTree = _worktrees[Worktrees.SelectedRows[0].Index];
+
+            if (workTree.IsDeleted)
+            {
+                return false;
+            }
+
+            return !IsCurrentlyOpenedWorktree(workTree);
+        }
+
+        private bool IsCurrentlyOpenedWorktree(WorkTree workTree)
+            => new DirectoryInfo(UICommands.GitModule.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path).FullName.TrimEnd('\\');
+
+        private void buttonCreateNewWorktree_Click(object sender, EventArgs e)
+        {
+            using FormCreateWorktree formCreateWorktree = new(UICommands);
+            DialogResult dialogResult = formCreateWorktree.ShowDialog(this);
+            if (dialogResult != DialogResult.OK)
+            {
                 return;
             }
 
-            if (e.ColumnIndex == 6)
+            if (formCreateWorktree.OpenWorktree)
             {
-                if (e.RowIndex == 0)
+                GitModule newModule = new(formCreateWorktree.WorktreeDirectory);
+                if (newModule.IsValidGitWorkingDir())
                 {
-                    return;
+                    OpenWorktree(formCreateWorktree.WorktreeDirectory);
                 }
-
-                if (MessageBox.Show(this, _deleteWorktreeText.Text, _deleteWorktreeTitle.Text,
-                                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                {
-                    Validates.NotNull(workTree.Path);
-
-                    if (workTree.Path.TryDeleteDirectory(out string? errorMessage))
-                    {
-                        PruneWorktrees();
-                    }
-                    else
-                    {
-                        MessageBox.Show(this, $@"{_deleteWorktreeFailedText.Text}: {workTree.Path}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error,
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
+            }
+            else
+            {
+                Initialize();
             }
         }
     }
