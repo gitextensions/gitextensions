@@ -6,7 +6,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog
 {
-    public partial class FormManageWorktree : GitModuleForm
+    public partial class FormManageWorktree : GitExtensionsDialog
     {
         private readonly TranslationString _switchWorktreeText = new("Are you sure you want to switch to this worktree?");
         private readonly TranslationString _switchWorktreeTitle = new("Open a worktree");
@@ -23,12 +23,12 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         }
 
         public FormManageWorktree(GitUICommands commands)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             InitializeComponent();
+
             Sha1.Width = DpiUtil.Scale(53);
             Worktrees.AutoGenerateColumns = false;
-            InitializeComplete();
 
             Path.DataPropertyName = nameof(WorkTree.Path);
             Type.DataPropertyName = nameof(WorkTree.Type);
@@ -37,11 +37,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
             Worktrees.Columns[3].DefaultCellStyle.Font = AppSettings.MonospaceFont;
             Worktrees.Columns[3].DefaultCellStyle.WrapMode = DataGridViewTriState.True;
-        }
 
-        private void FormManageWorktree_Load(object sender, EventArgs e)
-        {
-            Initialize();
+            InitializeComplete();
         }
 
         /// <summary>
@@ -49,6 +46,13 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         /// remote name will be preselected in the listbox.
         /// </summary>
         public string? PreselectRemoteOnLoad { get; set; }
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
+
+            Initialize();
+        }
 
         private void Initialize()
         {
