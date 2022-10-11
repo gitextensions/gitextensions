@@ -398,6 +398,7 @@ namespace GitUI.CommandsDialogs
             // PatchGrid
             // 
             this.PatchGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PatchGrid.IsManagingRebase = true;
             this.PatchGrid.Location = new System.Drawing.Point(3, 180);
             this.PatchGrid.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.PatchGrid.Name = "PatchGrid";
@@ -514,7 +515,6 @@ namespace GitUI.CommandsDialogs
             // 
             // Ok
             // 
-            this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Ok.Location = new System.Drawing.Point(3, 54);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(162, 25);
