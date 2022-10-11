@@ -1446,7 +1446,9 @@ namespace GitUI.Editor
                     GetSelectionLength(),
                     isIndex: !stage,
                     Encoding,
-                    _viewItem.Item.IsNew);
+                    reset: false,
+                    _viewItem.Item.IsNew,
+                    _viewItem.Item.IsRenamed);
             }
 
             if (patch is null || patch.Length == 0)
@@ -1508,7 +1510,9 @@ namespace GitUI.Editor
                     GetSelectionLength(),
                     isIndex: true,
                     Encoding,
-                    _viewItem.Item.IsNew);
+                    reset: true,
+                    _viewItem.Item.IsNew,
+                    _viewItem.Item.IsRenamed);
             }
             else
             {
@@ -1579,7 +1583,9 @@ namespace GitUI.Editor
                     selectionLength,
                     isIndex: false,
                     Encoding,
-                    _viewItem.Item.IsNew);
+                    reset: false,
+                    _viewItem.Item.IsNew,
+                    _viewItem.Item.IsRenamed);
             }
             else
             {

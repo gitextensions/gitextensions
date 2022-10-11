@@ -28,9 +28,9 @@ namespace GitCommands.Patches
             }
         }
 
-        public static byte[]? GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool isIndex, Encoding fileContentEncoding, bool isNewFile)
+        public static byte[]? GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool isIndex, Encoding fileContentEncoding, bool reset, bool isNewFile, bool isRenamed)
         {
-            var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
+            IReadOnlyList<Chunk>? selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out string header);
 
             if (selectedChunks is null || header is null)
             {
@@ -43,9 +43,15 @@ namespace GitCommands.Patches
                 header = CorrectHeaderForNewFile(header);
             }
 
+            // if file is renamed and selected lines are being reset from index then the patch undoes the rename too
+            if (isIndex && isRenamed && reset)
+            {
+                header = CorrectHeaderForRenamedFile(header);
+            }
+
             string? body = ToIndexPatch(selectedChunks, isIndex, isWholeFile: false);
 
-            if (header is null || body is null)
+            if (body is null)
             {
                 return null;
             }
@@ -77,6 +83,52 @@ namespace GitCommands.Patches
                 {
                     sb.Append(line).Append('\n');
                 }
+            }
+
+            return sb.ToString();
+        }
+
+        private static string CorrectHeaderForRenamedFile(string header)
+        {
+            string[] headerLines = header.Split(new[] { '\n' });
+            string? oldNameFull = null;
+            string? newName = null;
+            foreach (string line in headerLines)
+            {
+                if (line.StartsWith("+++"))
+                {
+                    newName = line[6..];
+                }
+                else if (line.StartsWith("---"))
+                {
+                    oldNameFull = line[4..];
+                }
+            }
+
+            StringBuilder sb = new();
+
+            for (int i = 0; i < headerLines.Length; i++)
+            {
+                string line = headerLines[i];
+                if (line.StartsWith("--- "))
+                {
+                    line = $"--- a/{newName}";
+                }
+                else if (line.Contains($" {oldNameFull} "))
+                {
+                    line = line.Replace($" {oldNameFull} ", $" a/{newName} ");
+                }
+                else if (line.StartsWith("rename from ") || line.StartsWith("rename to ") || line.StartsWith("similarity index "))
+                {
+                    continue;
+                }
+
+                if (i != 0)
+                {
+                    sb.Append('\n');
+                }
+
+                sb.Append(line);
             }
 
             return sb.ToString();
