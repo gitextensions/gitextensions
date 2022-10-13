@@ -18,6 +18,12 @@ namespace GitUI.UserControls.RevisionGrid
         private int _commitsLimit = -1;
 
         /// <summary>
+        /// Prefix to "Message" filters that forces the text to be interpreted as Git options.
+        /// This enables use of options not available in the GUI.
+        /// </summary>
+        private readonly string[] _messageAsGitOptions = new[] { "--not ", "--exclude=" };
+
+        /// <summary>
         ///  Gets whether all properties will unconditionally return the underlying data.
         ///  Otherwise return values will depend on the respective filter, e.g. "get => ByXyz ? Xyz : default".
         /// </summary>
@@ -164,25 +170,25 @@ namespace GitUI.UserControls.RevisionGrid
 
         /// <summary>
         /// Has any filters in addition to revision filters that sets the history.
-        /// Currently, this is only branch filters.
+        /// Currently, this is only branch and date filters.
         /// Note that All/Reflog are not considered as filters.
         /// </summary>
         public bool HasFilter
         {
             get => HasRevisionFilter
+                || ByDateFrom
+                || ByDateTo
                 || ShowCurrentBranchOnly
                 || ShowOnlyFirstParent
                 || !string.IsNullOrWhiteSpace(BranchFilter);
         }
 
         /// <summary>
-        /// Has revision filters that hides parents, not just branches.
+        /// Has revision filters that potentially hides parents, not just branches.
         /// </summary>
         public bool HasRevisionFilter
         {
-            get => ByDateFrom
-                || ByDateTo
-                || ByAuthor
+            get => ByAuthor
                 || ByCommitter
                 || ByMessage
                 || ByDiffContent
@@ -297,12 +303,124 @@ namespace GitUI.UserControls.RevisionGrid
 
             ArgumentBuilder filter = new();
 
+            // Separate the filters in groups
+            GetCommitRevisionFilter(filter);
+            GetLimitingRevisionFilter(filter);
+            GetBranchRevisionFilter(filter);
+
+            return filter;
+        }
+
+        public string GetSummary()
+        {
+            StringBuilder filter = new();
+
+            GetCommitFilterSummary(filter);
+            GetLimitingFilterSummary(filter);
+            GetBranchFilterSummary(filter);
+
+            return filter.ToString();
+        }
+
+        /// <summary>
+        /// Internal grouping of filter arguments.
+        /// Commit limiting filters, normally not affecting parents.
+        /// </summary>
+        /// <param name="filter">ArgumentBuilder arg</param>
+        private void GetCommitRevisionFilter(ArgumentBuilder filter)
+        {
             if (CommitsLimit > 0)
             {
                 filter.Add($"--max-count={CommitsLimit}");
             }
 
-            // Branch filters
+            if (ByDateFrom)
+            {
+                filter.Add($"--since=\"{DateFrom:yyyy-MM-dd hh:mm:ss}\"");
+            }
+
+            if (ByDateTo)
+            {
+                filter.Add($"--until=\"{DateTo:yyyy-MM-dd hh:mm:ss}\"");
+            }
+        }
+
+        /// <summary>
+        /// Internal grouping of filter arguments.
+        /// Commit limiting filters (affecting parents).
+        /// </summary>
+        /// <param name="filter">ArgumentBuilder arg</param>
+        private void GetLimitingRevisionFilter(ArgumentBuilder filter)
+        {
+            if (!ShowMergeCommits)
+            {
+                filter.Add("--no-merges");
+            }
+
+            // Listed in Git help as history simplification, but is a revision filter
+            if (ShowSimplifyByDecoration)
+            {
+                filter.Add("--simplify-by-decoration");
+            }
+
+            if (ByAuthor && !string.IsNullOrWhiteSpace(Author))
+            {
+                filter.Add($"--author=\"{Author}\"");
+            }
+
+            if (ByCommitter && !string.IsNullOrWhiteSpace(Committer))
+            {
+                filter.Add($"--committer=\"{Committer}\"");
+            }
+
+            if (IgnoreCase && (ByAuthor || ByCommitter || ByMessage || ByDiffContent))
+            {
+                filter.Add("--regexp-ignore-case");
+            }
+
+            if (ByDiffContent && !string.IsNullOrWhiteSpace(DiffContent))
+            {
+                filter.Add($"-G\"{DiffContent}\"");
+            }
+
+            if (ByMessage && !string.IsNullOrWhiteSpace(Message))
+            {
+                if (Message.StartsWithAny(_messageAsGitOptions))
+                {
+                    filter.Add(Message);
+                }
+                else
+                {
+                    filter.Add($"--grep=\"{Message}\"");
+                }
+            }
+
+            if (HasRevisionFilter)
+            {
+                filter.Add("--parents");
+                if (ShowFullHistory)
+                {
+                    filter.Add("--full-history");
+                    if (ShowSimplifyMerges)
+                    {
+                        filter.Add("--simplify-merges");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Internal grouping of filter arguments.
+        /// Branch revision filters, not affecting parent rewriting.
+        /// </summary>
+        /// <param name="filter">ArgumentBuilder arg</param>
+        private void GetBranchRevisionFilter(ArgumentBuilder filter)
+        {
+            if (ShowOnlyFirstParent)
+            {
+                filter.Add("--first-parent");
+            }
+
             if (ShowReflogReferences)
             {
                 // All commits
@@ -360,84 +478,83 @@ namespace GitUI.UserControls.RevisionGrid
                     filter.Add("--boundary");
                 }
             }
+        }
 
-            if (HasRevisionFilter)
-            {
-                filter.Add("--parents");
-                if (ShowFullHistory)
-                {
-                    filter.Add("--full-history");
-                    if (ShowSimplifyMerges)
-                    {
-                        filter.Add("--simplify-merges");
-                    }
-                }
-            }
-
-            if (!ShowMergeCommits)
-            {
-                filter.Add("--no-merges");
-            }
-
-            if (ShowOnlyFirstParent)
-            {
-                filter.Add("--first-parent");
-            }
-
-            // Listed in Git help as history simplification, but is a revision filter
-            if (ShowSimplifyByDecoration)
-            {
-                filter.Add("--simplify-by-decoration");
-            }
-
-            if (ByAuthor && !string.IsNullOrWhiteSpace(Author))
-            {
-                filter.Add($"--author=\"{Author}\"");
-            }
-
-            if (ByCommitter && !string.IsNullOrWhiteSpace(Committer))
-            {
-                filter.Add($"--committer=\"{Committer}\"");
-            }
-
-            if (ByMessage && !string.IsNullOrEmpty(Message))
-            {
-                filter.Add($"--grep=\"{Message}\"");
-            }
-
-            if (ByDiffContent && !string.IsNullOrEmpty(DiffContent))
-            {
-                filter.Add($"-G\"{DiffContent}\"");
-            }
-
-            if (IgnoreCase && (ByAuthor || ByCommitter || ByMessage || ByDiffContent))
-            {
-                filter.Add("--regexp-ignore-case");
-            }
-
+        /// <summary>
+        /// Internal grouping of filter arguments.
+        /// Commit limiting filters normally not affecting parents.
+        /// </summary>
+        /// <param name="filter">StringBuilder arg</param>
+        private void GetCommitFilterSummary(StringBuilder filter)
+        {
             if (ByDateFrom)
             {
-                filter.Add($"--since=\"{DateFrom:yyyy-MM-dd hh:mm:ss}\"");
+                filter.AppendLine($"{TranslatedStrings.Since}: {DateFrom}");
             }
 
             if (ByDateTo)
             {
-                filter.Add($"--until=\"{DateTo:yyyy-MM-dd hh:mm:ss}\"");
+                filter.AppendLine($"{TranslatedStrings.Until}: {DateTo}");
             }
-
-            return filter;
         }
 
-        public string GetSummary()
+        /// <summary>
+        /// Internal grouping of filter arguments.
+        /// Commit limiting filters (affecting parents).
+        /// </summary>
+        /// <param name="filter">StringBuilder arg</param>
+        private void GetLimitingFilterSummary(StringBuilder filter)
         {
-            StringBuilder filter = new();
-
             // Ignore IgnoreCase, ShowMergeCommits, FullHistoryInFileHistory/SimplifyMergesInFileHistory (when history filtered)
 
-            // path and revision filters always applies
             if (ByPathFilter)
             {
                 filter.AppendLine($"{TranslatedStrings.PathFilter}: {PathFilter}");
+            }
+
+            if (ByAuthor && !string.IsNullOrWhiteSpace(Author))
+            {
+                filter.AppendLine($"{TranslatedStrings.Author}: {Author}");
+            }
+
+            if (ByCommitter && !string.IsNullOrWhiteSpace(Committer))
+            {
+                filter.AppendLine($"{TranslatedStrings.Committer}: {Committer}");
+            }
+
+            if (ShowSimplifyByDecoration)
+            {
+                filter.AppendLine($"{TranslatedStrings.SimplifyByDecoration}");
+            }
+
+            if (ByMessage && !string.IsNullOrEmpty(Message))
+            {
+                if (Message.StartsWithAny(_messageAsGitOptions))
+                {
+                    filter.AppendLine(Message);
+                }
+                else
+                {
+                    filter.AppendLine($"{TranslatedStrings.Message}: {Message}");
+                }
+            }
+
+            if (ByDiffContent && !string.IsNullOrEmpty(DiffContent))
+            {
+                filter.AppendLine($"{TranslatedStrings.DiffContent}: {DiffContent}");
+            }
+        }
+
+        /// <summary>
+        /// Internal grouping of filter arguments.
+        /// Branch revision filters, not affecting parent rewriting.
+        /// </summary>
+        /// <param name="filter">StringBuilder arg</param>
+        private void GetBranchFilterSummary(StringBuilder filter)
+        {
+            if (ShowOnlyFirstParent)
+            {
+                filter.AppendLine(TranslatedStrings.ShowOnlyFirstParent);
             }
 
             if (ShowReflogReferences)
@@ -452,48 +569,6 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 filter.AppendLine($"{TranslatedStrings.Branches}: {BranchFilter}");
             }
-
-            if (ByAuthor && !string.IsNullOrWhiteSpace(Author))
-            {
-                filter.AppendLine($"{TranslatedStrings.Author}: {Author}");
-            }
-
-            if (ByCommitter && !string.IsNullOrWhiteSpace(Committer))
-            {
-                filter.AppendLine($"{TranslatedStrings.Committer}: {Committer}");
-            }
-
-            if (ByMessage && !string.IsNullOrEmpty(Message))
-            {
-                filter.AppendLine($"{TranslatedStrings.Message}: {Message}");
-            }
-
-            if (ByDiffContent && !string.IsNullOrEmpty(DiffContent))
-            {
-                filter.AppendLine($"{TranslatedStrings.DiffContent}: {DiffContent}");
-            }
-
-            if (ByDateFrom)
-            {
-                filter.AppendLine($"{TranslatedStrings.Since}: {DateFrom}");
-            }
-
-            if (ByDateTo)
-            {
-                filter.AppendLine($"{TranslatedStrings.Until}: {DateTo}");
-            }
-
-            if (ShowOnlyFirstParent)
-            {
-                filter.AppendLine(TranslatedStrings.ShowOnlyFirstParent);
-            }
-
-            if (ShowSimplifyByDecoration)
-            {
-                filter.AppendLine($"{TranslatedStrings.SimplifyByDecoration}");
-            }
-
-            return filter.ToString();
         }
 
         private T GetValue<T>(bool condition, T valueTrue, T valueFalse)
