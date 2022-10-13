@@ -91,6 +91,8 @@ namespace CommonTestUtils
 
         public string CreateRepoFile(string fileName, string fileContent) => _moduleTestHelper.CreateRepoFile(fileName, fileContent);
 
+        public string DeleteRepoFile(string fileName) => _moduleTestHelper.DeleteRepoFile(fileName);
+
         public void CreateAnnotatedTag(string tagName, string commitHash, string message)
         {
             LibGit2Sharp.Signature author = new("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);

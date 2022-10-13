@@ -110,6 +110,23 @@ namespace CommonTestUtils
             return CreateRepoFile("", fileName, fileContent);
         }
 
+        public string DeleteRepoFile(string fileName)
+        {
+            string parentDir = Module.WorkingDir;
+            string filePath = Path.Combine(parentDir, fileName);
+            if (!Directory.Exists(parentDir))
+            {
+                return filePath;
+            }
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            return filePath;
+        }
+
         /// <summary>
         /// Set dummy user and email locally for the module, no global setting in AppVeyor
         /// Must also be set on the submodule, local settings are not included when adding it
