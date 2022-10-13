@@ -1265,6 +1265,12 @@ namespace GitCommands
             set => SetBool("showfirstparent", value);
         }
 
+        public static string[] RevisionFilterDropdowns
+        {
+            get => GetString("RevisionFilterDropdowns", string.Empty).Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            set => SetString("RevisionFilterDropdowns", string.Join("\n", value ?? Array.Empty<string>()));
+        }
+
         public static bool CommitDialogSelectionFilter
         {
             get => GetBool("commitdialogselectionfilter", false);
