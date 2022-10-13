@@ -117,13 +117,13 @@ namespace GitUI.UserControls.RevisionGrid
             _filterInfo.ByDateTo = CheckUntil.Checked;
             _filterInfo.DateTo = Until.Value;
             _filterInfo.ByAuthor = AuthorCheck.Checked;
-            _filterInfo.Author = Author.Text;
+            _filterInfo.Author = Author.Text.Trim();
             _filterInfo.ByCommitter = CommitterCheck.Checked;
-            _filterInfo.Committer = Committer.Text;
+            _filterInfo.Committer = Committer.Text.Trim();
             _filterInfo.ByMessage = MessageCheck.Checked;
-            _filterInfo.Message = Message.Text;
+            _filterInfo.Message = Message.Text.Trim();
             _filterInfo.ByDiffContent = DiffContentCheck.Checked;
-            _filterInfo.DiffContent = DiffContent.Text;
+            _filterInfo.DiffContent = DiffContent.Text.Trim();
             _filterInfo.IgnoreCase = IgnoreCase.Checked;
             _filterInfo.ByCommitsLimit = CommitsLimitCheck.Checked;
             _filterInfo.CommitsLimit = (int)_NO_TRANSLATE_CommitsLimit.Value;
