@@ -25,15 +25,9 @@ namespace GitUI.UserControls
             // Select an option until we get a filter bound.
             SelectShowBranchesFilterOption(selectedIndex: 1);
 
-            tstxtRevisionFilter.KeyUp += (s, e) =>
-            {
-                if (e.KeyValue == (char)Keys.Enter)
-                {
-                    ApplyRevisionFilter();
-                }
-            };
-
             tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            tstxtRevisionFilter.Items.AddRange(AppSettings.RevisionFilterDropdowns);
         }
 
         private IRevisionGridFilter RevisionGridFilter
@@ -335,10 +329,10 @@ namespace GitUI.UserControls
                 (e.DiffContentFilter, tsmiDiffContainsFilter),
             };
 
-            // If there are no changes in the filter keep also "uncommitted" changes
+            // If there is no filter in filterInfo, clear text but retain checks
+            tstxtRevisionFilter.Text = "";
             if (revFilters.Any(item => !string.IsNullOrWhiteSpace(item.filter)))
             {
-                tstxtRevisionFilter.Text = "";
                 foreach ((string filter, ToolStripMenuItem menuItem) item in revFilters)
                 {
                     // Check the first menuitem that matches and following identical filters
@@ -354,6 +348,22 @@ namespace GitUI.UserControls
                         item.menuItem.Checked = false;
                     }
                 }
+            }
+
+            // Add to dropdown and settings, unless already included
+            string filter = tstxtRevisionFilter.Text.Trim();
+            if (!string.IsNullOrWhiteSpace(filter) && (tstxtRevisionFilter.Items.Count == 0 || filter != (string)tstxtRevisionFilter.Items[0]))
+            {
+                if (tstxtRevisionFilter.Items.Contains(filter))
+                {
+                    tstxtRevisionFilter.Items.Remove(filter);
+                }
+
+                tstxtRevisionFilter.Items.Insert(0, filter);
+                tstxtRevisionFilter.Text = filter;
+                const int maxFilterItems = 30;
+                AppSettings.RevisionFilterDropdowns = tstxtRevisionFilter.Items.Cast<object>()
+                    .Select(item => item.ToString()).Take(maxFilterItems).ToArray();
             }
 
             tsbtnAdvancedFilter.ToolTipText = e.FilterSummary;
@@ -400,6 +410,14 @@ namespace GitUI.UserControls
         private void tsbtnAdvancedFilter_DropDownOpening(object sender, EventArgs e)
         {
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
+        }
+
+        private void tstxtRevisionFilter_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (char)Keys.Enter)
+            {
+                ApplyRevisionFilter();
+            }
         }
 
         private void tscboBranchFilter_Click(object sender, EventArgs e)
@@ -475,7 +493,7 @@ namespace GitUI.UserControls
             public ToolStripMenuItem tsmiDiffContainsFilter => _control.tsmiDiffContainsFilter;
             public ToolStripButton tsmiShowOnlyFirstParent => _control.tsmiShowOnlyFirstParent;
             public ToolStripButton tsbShowReflog => _control.tsbShowReflog;
-            public ToolStripTextBox tstxtRevisionFilter => _control.tstxtRevisionFilter;
+            public ToolStripComboBox tstxtRevisionFilter => _control.tstxtRevisionFilter;
             public ToolStripLabel tslblRevisionFilter => _control.tslblRevisionFilter;
             public ToolStripSplitButton tsbtnAdvancedFilter => _control.tsbtnAdvancedFilter;
             public ToolStripSplitButton tssbtnShowBranches => _control.tssbtnShowBranches;
