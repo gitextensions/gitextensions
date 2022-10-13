@@ -8,8 +8,8 @@ namespace CommonTestUtils
 {
     public class ReferenceRepository : IDisposable
     {
-        private GitModuleTestHelper _moduleTestHelper;
-        private string _commitHash;
+        private readonly GitModuleTestHelper _moduleTestHelper;
+        private string? _commitHash;
 
         public ReferenceRepository()
         {
@@ -45,7 +45,7 @@ namespace CommonTestUtils
 
         public GitModule Module => _moduleTestHelper.Module;
 
-        public string CommitHash => _commitHash;
+        public string? CommitHash => _commitHash;
 
         private const string _fileName = "A.txt";
 
@@ -76,13 +76,16 @@ namespace CommonTestUtils
             return _commitHash;
         }
 
-        public string CreateCommit(string commitMessage, string content1, string fileName1, string content2, string fileName2)
+        public string CreateCommit(string commitMessage, string content1, string fileName1, string? content2 = null, string? fileName2 = null)
         {
             using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
             _moduleTestHelper.CreateRepoFile(fileName1, content1);
             repository.Index.Add(fileName1);
-            _moduleTestHelper.CreateRepoFile(fileName2, content2);
-            repository.Index.Add(fileName2);
+            if (content2 != null && fileName2 != null)
+            {
+                _moduleTestHelper.CreateRepoFile(fileName2, content2);
+                repository.Index.Add(fileName2);
+            }
 
             _commitHash = Commit(repository, commitMessage);
             Console.WriteLine($"Created commit: {_commitHash}, message: {commitMessage}");
