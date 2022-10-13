@@ -73,6 +73,7 @@ namespace GitUI.Editor
         private Func<Task>? _deferShowFunc;
         private readonly ContinuousScrollEventManager _continuousScrollEventManager;
         private FileStatusItem? _viewItem;
+        private bool _confirmResetLines = true;
 
         private static string[] _rangeDiffFullPrefixes = { "      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    " };
         private static string[] _combinedDiffFullPrefixes = { "  ", "++", "+ ", " +", "--", "- ", " -" };
@@ -1478,7 +1479,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            if (MessageBox.Show(this, TranslatedStrings.ResetSelectedLinesConfirmation, TranslatedStrings.ResetChangesCaption,
+            if (_confirmResetLines && MessageBox.Show(this, TranslatedStrings.ResetSelectedLinesConfirmation, TranslatedStrings.ResetChangesCaption,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
             {
                 return;
@@ -1987,6 +1988,12 @@ namespace GitUI.Editor
             {
                 get => _fileViewer.ShowSyntaxHighlightingInDiff;
                 set => _fileViewer.ShowSyntaxHighlightingInDiff = value;
+            }
+
+            public bool ConfirmResetLines
+            {
+                get => _fileViewer._confirmResetLines;
+                set => _fileViewer._confirmResetLines = value;
             }
 
             public ToolStripButton IgnoreWhitespaceAtEolButton => _fileViewer.ignoreWhitespaceAtEol;
