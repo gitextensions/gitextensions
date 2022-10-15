@@ -64,9 +64,6 @@ namespace GitCommands
             private readonly bool _redirectOutput;
             private readonly bool _throwOnErrorExit;
 
-            private MemoryStream? _emptyStream;
-            private StreamReader? _emptyReader;
-
             private bool _disposed;
 
             public ProcessWrapper(string fileName,
@@ -207,19 +204,12 @@ namespace GitCommands
             {
                 get
                 {
-                    if (!_redirectOutput && !_throwOnErrorExit)
+                    if (!_redirectOutput)
                     {
                         throw new InvalidOperationException("Process was not created with redirected output.");
                     }
 
-                    if (!_throwOnErrorExit)
-                    {
-                        return _process.StandardError;
-                    }
-
-                    _emptyStream ??= new();
-                    _emptyReader ??= new(_emptyStream);
-                    return _emptyReader;
+                    return _process.StandardError;
                 }
             }
 
@@ -261,9 +251,6 @@ namespace GitCommands
                 _process.Dispose();
 
                 _logOperation.NotifyDisposed();
-
-                _emptyReader?.Dispose();
-                _emptyStream?.Dispose();
             }
         }
 
