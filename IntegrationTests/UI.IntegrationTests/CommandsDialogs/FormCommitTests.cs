@@ -492,7 +492,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 contents = contents.Replace("?", "!");
                 _referenceRepository.CreateRepoFile("original2.txt", contents);
 
-                await ta.RescanChangesAsync();
+                ta.RescanChanges();
+                ThreadHelper.JoinPendingOperations();
 
                 ta.UnstagedList.SelectedItems = ta.UnstagedList.AllItems;
                 ta.UnstagedList.Focus();
@@ -513,7 +514,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 selectedDiff.ConfirmResetLines = false;
                 selectedDiff.ExecuteCommand(FileViewer.Command.ResetLines);
 
-                await ta.RescanChangesAsync();
+                ta.RescanChanges();
+                ThreadHelper.JoinPendingOperations();
 
                 FileStatusItem? stagedAndRenamed = ta.StagedList.AllItems.FirstOrDefault(i => i.Item.Name.Contains("original2.txt"));
                 stagedAndRenamed.Should().NotBeNull();

@@ -434,7 +434,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!_bypassActivatedEventHandler && AppSettings.RefreshArtificialCommitOnApplicationActivated)
             {
-                RescanChangesAsync();
+                RescanChanges();
             }
 
             base.OnApplicationActivated();
@@ -494,7 +494,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!_initialized)
             {
-                InitializeAsync();
+                Initialize();
             }
 
             UpdateAuthorInfo();
@@ -858,7 +858,7 @@ namespace GitUI.CommandsDialogs
                 case Command.EditFile: editFileToolStripMenuItem.PerformClick(); return true;
                 case Command.AddSelectionToCommitMessage: return AddSelectionToCommitMessage();
                 case Command.CreateBranch: createBranchToolStripButton.PerformClick(); return true;
-                case Command.Refresh: RescanChangesAsync(); return true;
+                case Command.Refresh: RescanChanges(); return true;
                 case Command.SelectNext:
                 case Command.SelectNext_AlternativeHotkey1:
                 case Command.SelectNext_AlternativeHotkey2: MoveSelection(1);  return true;
@@ -871,7 +871,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private Task ComputeUnstagedFilesAsync(Action<IReadOnlyList<GitItemStatus>> onComputed, bool doAsync)
+        private void ComputeUnstagedFiles(Action<IReadOnlyList<GitItemStatus>> onComputed, bool doAsync)
         {
             IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus()
             {
@@ -884,27 +884,26 @@ namespace GitUI.CommandsDialogs
 
             if (doAsync)
             {
-                return ThreadHelper.JoinableTaskFactory.RunAsync(() =>
+                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
                 {
                     return _unstagedLoader.LoadAsync(GetAllChangedFilesWithSubmodulesStatus, onComputed);
-                }).Task;
+                });
             }
             else
             {
                 _unstagedLoader.Cancel();
                 onComputed(GetAllChangedFilesWithSubmodulesStatus());
-                return Task.CompletedTask;
             }
         }
 
         public void ShowDialogWhenChanges(IWin32Window? owner = null)
         {
-            ComputeUnstagedFilesAsync(allChangedFiles =>
+            ComputeUnstagedFiles(allChangedFiles =>
                 {
                     if (allChangedFiles.Count > 0)
                     {
                         LoadUnstagedOutput(allChangedFiles);
-                        InitializeAsync(loadUnstaged: false);
+                        Initialize(loadUnstaged: false);
                         ShowDialog(owner);
                     }
                     else
@@ -972,12 +971,11 @@ namespace GitUI.CommandsDialogs
             Text = string.Format(_formTitle.Text, currentBranchName, PathUtil.GetDisplayPath(Module.WorkingDir));
         }
 
-        private Task InitializeAsync(bool loadUnstaged = true)
+        private void Initialize(bool loadUnstaged = true)
         {
             _initialized = true;
 
-            Task updateBranchNamesTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync()).Task;
-            Task computeUnstagedTask = Task.CompletedTask;
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync());
 
             using (WaitCursorScope.Enter())
             {
@@ -994,14 +992,12 @@ namespace GitUI.CommandsDialogs
                     ResetUnStaged.Enabled = false;
                     EnableStageButtons(false);
 
-                    computeUnstagedTask = ComputeUnstagedFilesAsync(LoadUnstagedOutput, true);
+                    ComputeUnstagedFiles(LoadUnstagedOutput, true);
                 }
 
                 UpdateMergeHead();
 
                 Message.TextBoxFont = AppSettings.CommitFont;
-
-                return Task.WhenAll(updateBranchNamesTask, computeUnstagedTask);
             }
 
             void UpdateMergeHead()
@@ -1508,18 +1504,15 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private Task RescanChangesAsync()
+        private void RescanChanges()
         {
-            Task initializeTask = Task.CompletedTask;
             if (_shouldRescanChanges)
             {
                 toolRefreshItem.Enabled = false;
-                initializeTask = InitializeAsync();
+                Initialize();
                 Message.RefreshAutoCompleteWords();
                 toolRefreshItem.Enabled = true;
             }
-
-            return initializeTask;
         }
 
         private void UnstageFilesClick(object sender, EventArgs e)
@@ -1574,7 +1567,7 @@ namespace GitUI.CommandsDialogs
                 Module.Reset(ResetMode.Mixed);
             }
 
-            InitializeAsync();
+            Initialize();
             return;
 
             void StageAreaLoaded()
@@ -1823,7 +1816,7 @@ namespace GitUI.CommandsDialogs
 
                     if (shouldRescanChanges)
                     {
-                        RescanChangesAsync();
+                        RescanChanges();
                     }
                 }
                 catch (Exception ex)
@@ -1973,7 +1966,7 @@ namespace GitUI.CommandsDialogs
 
                     if (wereErrors)
                     {
-                        RescanChangesAsync();
+                        RescanChanges();
                     }
                     else
                     {
@@ -2159,7 +2152,7 @@ namespace GitUI.CommandsDialogs
                 _shouldRescanChanges = true;
             }
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void DeleteFileToolStripMenuItemClick(object sender, EventArgs e)
@@ -2190,7 +2183,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                InitializeAsync();
+                Initialize();
             }
             catch (Exception ex)
             {
@@ -2202,7 +2195,7 @@ namespace GitUI.CommandsDialogs
         {
             if (UICommands.StartResolveConflictsDialog(this, false))
             {
-                InitializeAsync();
+                Initialize();
             }
         }
 
@@ -2226,7 +2219,7 @@ namespace GitUI.CommandsDialogs
                 MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void ResetSelectedFilesToolStripMenuItemClick(object sender, EventArgs e)
@@ -2242,7 +2235,7 @@ namespace GitUI.CommandsDialogs
                 Module.ResetFile(gitItemStatus.Item.Name);
             }
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void ResetAllTrackedChangesToolStripMenuItemClick(object sender, EventArgs e)
@@ -2258,13 +2251,13 @@ namespace GitUI.CommandsDialogs
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartEditGitIgnoreDialog(this, localExcludes: false);
-            InitializeAsync();
+            Initialize();
         }
 
         private void EditGitInfoExcludeToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartEditGitIgnoreDialog(this, localExcludes: true);
-            InitializeAsync();
+            Initialize();
         }
 
         private void DeleteAllUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
@@ -2280,25 +2273,25 @@ namespace GitUI.CommandsDialogs
             }
 
             FormProcess.ShowDialog(this, arguments: "clean -f", Module.WorkingDir, input: null, useDialogSettings: true);
-            InitializeAsync();
+            Initialize();
         }
 
         private void ShowIgnoredFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showIgnoredFilesToolStripMenuItem.Checked = !showIgnoredFilesToolStripMenuItem.Checked;
-            RescanChangesAsync();
+            RescanChanges();
         }
 
         private void ShowAssumeUnchangedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showAssumeUnchangedFilesToolStripMenuItem.Checked = !showAssumeUnchangedFilesToolStripMenuItem.Checked;
-            RescanChangesAsync();
+            RescanChanges();
         }
 
         private void ShowSkipWorktreeFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showSkipWorktreeFilesToolStripMenuItem.Checked = !showSkipWorktreeFilesToolStripMenuItem.Checked;
-            RescanChangesAsync();
+            RescanChanges();
         }
 
         private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
@@ -2483,7 +2476,7 @@ namespace GitUI.CommandsDialogs
             var fileNames = Unstaged.SelectedItems.Select(item => "/" + item.Item.Name).ToArray();
             if (UICommands.StartAddToGitIgnoreDialog(this, localExclude, fileNames))
             {
-                InitializeAsync();
+                Initialize();
             }
         }
 
@@ -2498,7 +2491,7 @@ namespace GitUI.CommandsDialogs
 
             Module.AssumeUnchangedFiles(Unstaged.SelectedItems.Items().ToList(), true, out _);
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void DoNotAssumeUnchangedToolStripMenuItemClick(object sender, EventArgs e)
@@ -2512,7 +2505,7 @@ namespace GitUI.CommandsDialogs
 
             Module.AssumeUnchangedFiles(Unstaged.SelectedItems.Items().ToList(), false, out _);
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void SkipWorktreeToolStripMenuItemClick(object sender, EventArgs e)
@@ -2526,7 +2519,7 @@ namespace GitUI.CommandsDialogs
 
             Module.SkipWorktreeFiles(Unstaged.SelectedItems.Items().ToList(), true, out _);
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void DoNotSkipWorktreeToolStripMenuItemClick(object sender, EventArgs e)
@@ -2540,7 +2533,7 @@ namespace GitUI.CommandsDialogs
 
             Module.SkipWorktreeFiles(Unstaged.SelectedItems.Items().ToList(), false, out _);
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void SelectedDiffExtraDiffArgumentsChanged(object sender, EventArgs e)
@@ -2559,12 +2552,12 @@ namespace GitUI.CommandsDialogs
                 Unstaged.StoreNextIndexToSelect();
             }
 
-            RescanChangesAsync();
+            RescanChanges();
         }
 
         private void RescanChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            RescanChangesAsync();
+            RescanChanges();
         }
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
@@ -2681,7 +2674,7 @@ namespace GitUI.CommandsDialogs
                         await TaskScheduler.Default;
                         await Module.ResetInteractiveAsync(item);
                         await this.SwitchToMainThreadAsync();
-                        await InitializeAsync();
+                        Initialize();
                     })
                 .FileAndForget();
         }
@@ -2699,13 +2692,13 @@ namespace GitUI.CommandsDialogs
         private void HandleResetButton(bool onlyUnstaged)
         {
             BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.Select(i => i.Item).ToList(), onlyWorkTree: onlyUnstaged));
-            InitializeAsync();
+            Initialize();
         }
 
         private void StashStagedClick(object sender, EventArgs e)
         {
             BypassFormActivatedEventHandler(() => UICommands.StashStaged(owner: this));
-            InitializeAsync();
+            Initialize();
         }
 
         private void BypassFormActivatedEventHandler(Action action)
@@ -2725,7 +2718,7 @@ namespace GitUI.CommandsDialogs
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
         {
             showUntrackedFilesToolStripMenuItem.Checked = !showUntrackedFilesToolStripMenuItem.Checked;
-            RescanChangesAsync();
+            RescanChanges();
         }
 
         private void editFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3071,7 +3064,7 @@ namespace GitUI.CommandsDialogs
             Validates.NotNull(_currentItem);
             GitUICommands submoduleCommands = new(_fullPathResolver.Resolve(_currentItem.Item.Name.EnsureTrailingPathSeparator()));
             submoduleCommands.StartCommitDialog(this);
-            InitializeAsync();
+            Initialize();
         }
 
         private void resetSubmoduleChanges_Click(object sender, EventArgs e)
@@ -3103,7 +3096,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void updateSubmoduleMenuItem_Click(object sender, EventArgs e)
@@ -3119,7 +3112,7 @@ namespace GitUI.CommandsDialogs
                 FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(item.Name), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void stashSubmoduleChangesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3136,7 +3129,7 @@ namespace GitUI.CommandsDialogs
                 commands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
 
-            InitializeAsync();
+            Initialize();
         }
 
         private void commitTemplatesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -3270,7 +3263,7 @@ namespace GitUI.CommandsDialogs
                     await TaskScheduler.Default;
                     await Module.AddInteractiveAsync(item);
                     await this.SwitchToMainThreadAsync(token);
-                    await RescanChangesAsync();
+                    RescanChanges();
                 })
                 .FileAndForget();
         }
@@ -3357,7 +3350,7 @@ namespace GitUI.CommandsDialogs
 
             if (Module.StopTrackingFile(filename))
             {
-                RescanChangesAsync();
+                RescanChanges();
             }
             else
             {
@@ -3412,7 +3405,7 @@ namespace GitUI.CommandsDialogs
 
             internal CheckBox Amend => _formCommit.Amend;
 
-            internal Task RescanChangesAsync() => _formCommit.RescanChangesAsync();
+            internal void RescanChanges() => _formCommit.RescanChanges();
         }
     }
 
