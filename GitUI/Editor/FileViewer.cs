@@ -73,7 +73,9 @@ namespace GitUI.Editor
         private Func<Task>? _deferShowFunc;
         private readonly ContinuousScrollEventManager _continuousScrollEventManager;
         private FileStatusItem? _viewItem;
-        private bool _confirmResetLines = true;
+
+        // This variable is used by tests to avoid popups
+        private bool _unitTestConfirmResetLines = true;
 
         private static string[] _rangeDiffFullPrefixes = { "      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    " };
         private static string[] _combinedDiffFullPrefixes = { "  ", "++", "+ ", " +", "--", "- ", " -" };
@@ -1479,7 +1481,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            if (_confirmResetLines && MessageBox.Show(this, TranslatedStrings.ResetSelectedLinesConfirmation, TranslatedStrings.ResetChangesCaption,
+            if (_unitTestConfirmResetLines && MessageBox.Show(this, TranslatedStrings.ResetSelectedLinesConfirmation, TranslatedStrings.ResetChangesCaption,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
             {
                 return;
@@ -1992,8 +1994,8 @@ namespace GitUI.Editor
 
             public bool ConfirmResetLines
             {
-                get => _fileViewer._confirmResetLines;
-                set => _fileViewer._confirmResetLines = value;
+                get => _fileViewer._unitTestConfirmResetLines;
+                set => _fileViewer._unitTestConfirmResetLines = value;
             }
 
             public ToolStripButton IgnoreWhitespaceAtEolButton => _fileViewer.ignoreWhitespaceAtEol;
