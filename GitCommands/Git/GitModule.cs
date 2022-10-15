@@ -1642,14 +1642,21 @@ namespace GitCommands
 
         #region Stage/Unstage
 
-        public string AssumeUnchangedFiles(IReadOnlyList<GitItemStatus> files, bool assumeUnchanged, out bool wereErrors)
+        /// <summary>
+        /// Set/unset whether given items are assumed unchanged by git-status.
+        /// </summary>
+        /// <param name="files">The files to set the status for.</param>
+        /// <param name="assumeUnchanged">The status value.</param>
+        /// <param name="allOutput">stdout and stderr output.</param>
+        /// <returns><see langword="true"/> if no errors occurred; otherwise, <see langword="false"/>.</returns>
+        public bool AssumeUnchangedFiles(IReadOnlyList<GitItemStatus> files, bool assumeUnchanged, out string allOutput)
         {
             files = files.Where(file => file.IsAssumeUnchanged != assumeUnchanged).ToList();
 
             if (files.Count == 0)
             {
-                wereErrors = false;
-                return "";
+                allOutput = "";
+                return true;
             }
 
             ExecutionResult execution = _gitExecutable.Execute(
@@ -1668,17 +1675,25 @@ namespace GitCommands
                 SystemEncoding,
                 throwOnErrorExit: false);
 
-            wereErrors = !execution.ExitedSuccessfully;
-            return execution.AllOutput;
+            allOutput = execution.AllOutput;
+            return execution.ExitedSuccessfully;
         }
 
-        public string SkipWorktreeFiles(IReadOnlyList<GitItemStatus> files, bool skipWorktree)
+        /// <summary>
+        /// Set/unset whether given items are not flagged as changed by git-status.
+        /// </summary>
+        /// <param name="files">The files to set the status for.</param>
+        /// <param name="skipWorktree">The status value.</param>
+        /// <param name="allOutput">stdout and stderr output.</param>
+        /// <returns><see langword="true"/> if no errors occurred; otherwise, <see langword="false"/>.</returns>
+        public bool SkipWorktreeFiles(IReadOnlyList<GitItemStatus> files, bool skipWorktree, out string allOutput)
         {
             files = files.Where(file => file.IsSkipWorktree != skipWorktree).ToList();
 
             if (files.Count == 0)
             {
-                return "";
+                allOutput = "";
+                return true;
             }
 
             var execution = _gitExecutable.Execute(
@@ -1696,16 +1711,24 @@ namespace GitCommands
                 },
                 SystemEncoding);
 
-            return execution.AllOutput;
+            allOutput = execution.AllOutput;
+            return execution.ExitedSuccessfully;
         }
 
-        public string StageFiles(IReadOnlyList<GitItemStatus> files, out bool wereErrors)
+        /// <summary>
+        /// Stage files from worktree to index.
+        /// </summary>
+        /// <param name="files">The files to set the status for.</param>
+        /// <param name="allOutput">stdout and stderr output.</param>
+        /// <returns><see langword="true"/> if no errors occurred; otherwise, <see langword="false"/>.</returns>
+        public bool StageFiles(IReadOnlyList<GitItemStatus> files, out string allOutput)
         {
-            wereErrors = false;
+            bool wereErrors = false;
 
             if (files.Count == 0)
             {
-                return "";
+                allOutput = "";
+                return !wereErrors;
             }
 
             StringBuilder output = new();
@@ -1752,7 +1775,8 @@ namespace GitCommands
                 output.Append(execution.AllOutput);
             }
 
-            return output.ToString();
+            allOutput = output.ToString();
+            return !wereErrors;
         }
 
         public bool StageFile(string file)
@@ -1765,11 +1789,20 @@ namespace GitCommands
                 });
         }
 
-        public string UnstageFiles(IReadOnlyList<GitItemStatus> files)
+        /// <summary>
+        /// Unstage files from index to worktree.
+        /// </summary>
+        /// <param name="files">The files to set the status for.</param>
+        /// <param name="allOutput">stdout and stderr output.</param>
+        /// <returns><see langword="true"/> if no errors occurred; otherwise, <see langword="false"/>.</returns>
+        public bool UnstageFiles(IReadOnlyList<GitItemStatus> files, out string allOutput)
         {
+            bool wereErrors = false;
+
             if (files.Count == 0)
             {
-                return "";
+                allOutput = "";
+                return !wereErrors;
             }
 
             StringBuilder output = new();
@@ -1778,13 +1811,13 @@ namespace GitCommands
 
             if (nonNewFiles.Count != 0)
             {
-                StringBuilder sb = new("reset --");
+                GitArgumentBuilder sb = new("reset") { "--" };
                 foreach (var file in nonNewFiles)
                 {
-                    sb.Append($" \"{file.Name.ToPosixPath()}\"");
+                    sb.Add(file.Name.ToPosixPath().QuoteNE());
                 }
 
-                var execution = _gitExecutable.Execute(sb.ToString());
+                var execution = _gitExecutable.Execute(sb);
 
                 output.AppendLine(execution.AllOutput);
             }
@@ -1809,7 +1842,8 @@ namespace GitCommands
                 output.Append(execution.AllOutput);
             }
 
-            return output.ToString();
+            allOutput = output.ToString();
+            return !wereErrors;
         }
 
         /// <summary>
@@ -1856,7 +1890,7 @@ namespace GitCommands
                     action);
             }
 
-            UnstageFiles(files);
+            UnstageFiles(files, out _);
 
             return shouldRescanChanges;
         }
@@ -2981,20 +3015,21 @@ namespace GitCommands
                     },
                     throwOnErrorExit: false);
 
+            // TODO AllOutput is parsed at errors, can this be detected better?
             string output = executionResult.AllOutput;
 
-            // If the authentication failed because of a missing key, ask the user to supply one.
-            if (output.Contains("FATAL ERROR") && output.Contains("authentication"))
+            if (executionResult.ExitedSuccessfully)
             {
+                result.Result = ParseRefs(executionResult.StandardOutput);
+            }
+            else if (output.Contains("FATAL ERROR") && output.Contains("authentication"))
+            {
+                // If the authentication failed because of a missing key, ask the user to supply one.
                 result.AuthenticationFail = true;
             }
             else if (output.Contains("the server's host key is not cached in the registry", StringComparison.InvariantCultureIgnoreCase))
             {
                 result.HostKeyFail = true;
-            }
-            else if (executionResult.ExitedSuccessfully)
-            {
-                result.Result = ParseRefs(output);
             }
 
             return result;

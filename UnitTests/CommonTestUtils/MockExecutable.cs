@@ -10,28 +10,28 @@ namespace CommonTestUtils
 {
     public sealed class MockExecutable : IExecutable
     {
-        private readonly ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode)>> _outputStackByArguments = new();
+        private readonly ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode, string? error)>> _outputStackByArguments = new();
         private readonly ConcurrentDictionary<string, int> _commandArgumentsSet = new();
         private readonly List<MockProcess> _processes = new();
         private int _nextCommandId;
 
         [MustUseReturnValue]
-        public IDisposable StageOutput(string arguments, string output, int? exitCode = 0)
+        public IDisposable StageOutput(string arguments, string output, int? exitCode = 0, string? error = null)
         {
             var stack = _outputStackByArguments.GetOrAdd(
                 arguments,
-                args => new ConcurrentStack<(string output, int? exitCode)>());
+                args => new ConcurrentStack<(string output, int? exitCode, string? error)>());
 
-            stack.Push((output, exitCode));
+            stack.Push((output, exitCode, error));
 
             return new DelegateDisposable(
                 () =>
                 {
-                    if (_outputStackByArguments.TryGetValue(arguments, out ConcurrentStack<(string output, int? exitCode)> queue) &&
-                        queue.TryPeek(out (string output, int? exitCode) item) &&
-                        output == item.output)
+                    if (_outputStackByArguments.TryGetValue(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)> queue) &&
+                        queue.TryPeek(out (string output, int? exitCode, string? error) item) &&
+                        output == item.output && error == item.error)
                     {
-                        throw new AssertionException($"Staged output should have been consumed.\nArguments: {arguments}\nOutput: {output}");
+                        throw new AssertionException($"Staged output should have been consumed.\nArguments: {arguments}\nOutput: {output}\nError: {error}");
                     }
                 });
         }
@@ -72,15 +72,15 @@ namespace CommonTestUtils
         {
             System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
 
-            if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode)> queue) &&
-                queue.TryPop(out (string output, int? exitCode) item))
+            if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)> queue) &&
+                queue.TryPop(out (string output, int? exitCode, string? error) item))
             {
                 if (queue.Count == 0)
                 {
                     _outputStackByArguments.TryRemove(arguments, out _);
                 }
 
-                MockProcess process = new(item.output, item.exitCode);
+                MockProcess process = new(item.output, item.exitCode, item.error);
 
                 _processes.Add(process);
                 return process;
@@ -98,10 +98,10 @@ namespace CommonTestUtils
 
         private sealed class MockProcess : IProcess
         {
-            public MockProcess([CanBeNull] string output, int? exitCode = 0)
+            public MockProcess([CanBeNull] string output, int? exitCode = 0, [CanBeNull] string error = null)
             {
                 StandardOutput = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(output ?? "")));
-                StandardError = new StreamReader(new MemoryStream());
+                StandardError = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(error ?? "")));
                 StandardInput = new StreamWriter(new MemoryStream());
                 _exitCode = exitCode;
             }
