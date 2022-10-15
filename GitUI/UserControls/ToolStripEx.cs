@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace GitUI
 {
@@ -16,6 +17,64 @@ namespace GitUI
 
             PropertyInfo propGrip = GetType().GetProperty("Grip", BindingFlags.Instance | BindingFlags.NonPublic);
             _gripButton = propGrip.GetValue(this) as ToolStripButton;
+        }
+
+        protected override void OnItemAdded(ToolStripItemEventArgs e)
+        {
+            base.OnItemAdded(e);
+
+            if (e.Item is ToolStripDropDownItem item)
+            {
+                item.DropDownOpening += SplitButton_DropDownOpening;
+                item.DropDownClosed += SplitButton_DropDownClosed;
+            }
+        }
+
+        protected override void OnItemRemoved(ToolStripItemEventArgs e)
+        {
+            if (e.Item is ToolStripDropDownItem item)
+            {
+                item.DropDownOpening -= SplitButton_DropDownOpening;
+                item.DropDownClosed -= SplitButton_DropDownClosed;
+            }
+        }
+
+        [DllImport("user32.dll")]
+        private static extern int SendMessage(IntPtr hwnd, int wmsg, bool wparam, int lparam);
+
+        private const int WM_SETREDRAW = 11;
+
+        private static void SuspendDrawing(Control control)
+        {
+            if (control != null)
+            {
+                SendMessage(control.Handle, WM_SETREDRAW, false, 0);
+            }
+        }
+
+        private static void ResumeDrawing(Control control)
+        {
+            if (control != null)
+            {
+                SendMessage(control.Handle, WM_SETREDRAW, true, 0);
+                control.Refresh();
+            }
+        }
+
+        private void SplitButton_DropDownOpening(object? sender, EventArgs e)
+        {
+            if (sender is ToolStripDropDownItem item)
+            {
+                SuspendDrawing(item.Owner);
+            }
+        }
+
+        private void SplitButton_DropDownClosed(object? sender, EventArgs e)
+        {
+            if (sender is ToolStripDropDownItem item)
+            {
+                ResumeDrawing(item.Owner);
+            }
         }
 
         /// <summary>

@@ -167,19 +167,7 @@ namespace GitUI.UserControls
             tstxtRevisionFilter.ForeColor = toolForeColor;
         }
 
-        public void PreventToolStripSplitButtonClosing(ToolStripSplitButton? control)
-        {
-            if (control is null
-                || Parent is not ContainerControl parentContainer)
-            {
-                return;
-            }
-
-            control.Tag = parentContainer.FindFocusedControl();
-            control.DropDownClosed += ToolStripSplitButtonDropDownClosed;
-        }
-
-        private void SelectShowBranchesFilterOption(int selectedIndex)
+        private void SelectShowBranchesFilterOption(byte selectedIndex)
         {
             if (selectedIndex >= tssbtnShowBranches.DropDownItems.Count)
             {
@@ -382,20 +370,6 @@ namespace GitUI.UserControls
             }
         }
 
-        private static void ToolStripSplitButtonDropDownClosed(object sender, EventArgs e)
-        {
-            if (sender is ToolStripSplitButton control)
-            {
-                control.DropDownClosed -= ToolStripSplitButtonDropDownClosed;
-
-                if (control.Tag is Control controlToFocus)
-                {
-                    controlToFocus.Focus();
-                    control.Tag = null;
-                }
-            }
-        }
-
         private void tsbtnAdvancedFilter_ButtonClick(object sender, EventArgs e)
         {
             if (!tsmiResetAllFilters.Enabled)
@@ -406,11 +380,6 @@ namespace GitUI.UserControls
             {
                 tsbtnAdvancedFilter.ShowDropDown();
             }
-        }
-
-        private void tsbtnAdvancedFilter_DropDownOpening(object sender, EventArgs e)
-        {
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         private void tstxtRevisionFilter_KeyUp(object sender, KeyEventArgs e)

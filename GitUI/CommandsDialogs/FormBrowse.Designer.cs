@@ -351,7 +351,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripButtonLevelUp.Size = new System.Drawing.Size(32, 22);
             this.toolStripButtonLevelUp.ToolTipText = "Submodules";
             this.toolStripButtonLevelUp.ButtonClick += new System.EventHandler(this.toolStripButtonLevelUp_ButtonClick);
-            this.toolStripButtonLevelUp.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
             // 
             // _NO_TRANSLATE_WorkingDir
             // 
@@ -399,7 +398,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripSplitStash.Size = new System.Drawing.Size(32, 22);
             this.toolStripSplitStash.ToolTipText = "Manage stashes";
             this.toolStripSplitStash.ButtonClick += new System.EventHandler(this.ToolStripSplitStashButtonClick);
-            this.toolStripSplitStash.DropDownOpened += new System.EventHandler(this.toolStripSplitStash_DropDownOpened);
             // 
             // stashChangesToolStripMenuItem
             // 
@@ -475,7 +473,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripButtonPull.Size = new System.Drawing.Size(32, 22);
             this.toolStripButtonPull.Text = "Pull";
             this.toolStripButtonPull.ButtonClick += new System.EventHandler(this.ToolStripButtonPullClick);
-            this.toolStripButtonPull.DropDownOpened += new System.EventHandler(this.toolStripButtonPull_DropDownOpened);
             // 
             // toolStripSeparator11
             // 
