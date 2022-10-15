@@ -478,7 +478,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void ShouldNotUndoRenameFileWhenResettingStagedLines()
         {
-            RunFormTest(async form =>
+            RunFormTest(form =>
             {
                 FormCommit.TestAccessor ta = form.GetTestAccessor();
 
@@ -502,11 +502,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ta.StagedList.SelectedGitItem = ta.StagedList.AllItems.Single(i => i.Item.Name.Contains("original2.txt")).Item;
 
                 selectedDiffInternal.Focus();
-
-                while (selectedDiffInternal.GetTestAccessor().TextEditor.Document.TextLength < 30)
-                {
-                    await Task.Delay(1);
-                }
+                ThreadHelper.JoinPendingOperations();
 
                 selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.SelectionManager.SetSelection(
                     new TextLocation(2, 11), new TextLocation(5, 12));
