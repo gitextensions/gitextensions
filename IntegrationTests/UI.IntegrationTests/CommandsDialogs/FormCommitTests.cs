@@ -23,6 +23,11 @@ namespace GitExtensions.UITests.CommandsDialogs
         // Created once for each test
         private GitUICommands _commands;
 
+        public FormCommitTests()
+        {
+            Application.EnableVisualStyles();
+        }
+
         [SetUp]
         public void SetUp()
         {
@@ -507,12 +512,23 @@ namespace GitExtensions.UITests.CommandsDialogs
                 selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.SelectionManager.SetSelection(
                     new TextLocation(2, 11), new TextLocation(5, 12));
 
-                selectedDiff.ConfirmResetLines = false;
+                int textLengthBeforeReset = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.Document.TextLength;
+
+                selectedDiff.ResetSelectedLinesConfirmationDialog.Created += (s, e) =>
+                {
+                    // Auto-press `Yes`
+                    selectedDiff.ResetSelectedLinesConfirmationDialog.Buttons[0].PerformClick();
+                };
                 selectedDiff.ExecuteCommand(FileViewer.Command.ResetLines);
 
                 ta.RescanChanges();
                 ThreadHelper.JoinPendingOperations();
 
+                int textLengthAfterReset = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.Document.TextLength;
+
+                textLengthBeforeReset.Should().BeGreaterThan(0);
+                textLengthAfterReset.Should().BeGreaterThan(0);
+                textLengthAfterReset.Should().BeLessThan(textLengthBeforeReset);
                 FileStatusItem? stagedAndRenamed = ta.StagedList.AllItems.FirstOrDefault(i => i.Item.Name.Contains("original2.txt"));
                 stagedAndRenamed.Should().NotBeNull();
                 stagedAndRenamed!.Item.IsRenamed.Should().BeTrue();

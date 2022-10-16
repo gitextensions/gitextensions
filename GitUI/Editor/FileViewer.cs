@@ -73,9 +73,7 @@ namespace GitUI.Editor
         private Func<Task>? _deferShowFunc;
         private readonly ContinuousScrollEventManager _continuousScrollEventManager;
         private FileStatusItem? _viewItem;
-
-        // This variable is used by tests to avoid popups
-        private bool _unitTestConfirmResetLines = true;
+        private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
 
         private static string[] _rangeDiffFullPrefixes = { "      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    " };
         private static string[] _combinedDiffFullPrefixes = { "  ", "++", "+ ", " +", "--", "- ", " -" };
@@ -200,6 +198,16 @@ namespace GitUI.Editor
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             SupportLinePatching = false;
+
+            _NO_TRANSLATE_resetSelectedLinesConfirmationDialog = new()
+            {
+                Text = TranslatedStrings.ResetSelectedLinesConfirmation,
+                Caption = TranslatedStrings.ResetChangesCaption,
+                Icon = TaskDialogIcon.Warning,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                DefaultButton = TaskDialogButton.Yes,
+                SizeToContent = true,
+            };
         }
 
         // Public properties
@@ -1481,8 +1489,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            if (_unitTestConfirmResetLines && MessageBox.Show(this, TranslatedStrings.ResetSelectedLinesConfirmation, TranslatedStrings.ResetChangesCaption,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            if (TaskDialog.ShowDialog(Handle, _NO_TRANSLATE_resetSelectedLinesConfirmationDialog) == TaskDialogButton.No)
             {
                 return;
             }
@@ -1992,12 +1999,7 @@ namespace GitUI.Editor
                 set => _fileViewer.ShowSyntaxHighlightingInDiff = value;
             }
 
-            public bool ConfirmResetLines
-            {
-                get => _fileViewer._unitTestConfirmResetLines;
-                set => _fileViewer._unitTestConfirmResetLines = value;
-            }
-
+            public TaskDialogPage ResetSelectedLinesConfirmationDialog => _fileViewer._NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
             public ToolStripButton IgnoreWhitespaceAtEolButton => _fileViewer.ignoreWhitespaceAtEol;
             public ToolStripMenuItem IgnoreWhitespaceAtEolMenuItem => _fileViewer.ignoreWhitespaceAtEolToolStripMenuItem;
 
