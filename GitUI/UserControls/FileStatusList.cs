@@ -892,6 +892,7 @@ namespace GitUI
                 if (firstSelectedItem is not null)
                 {
                     firstSelectedItem.Focused = true;
+                    firstSelectedItem.Selected = true;
                     firstSelectedItem.EnsureVisible();
                 }
             }
