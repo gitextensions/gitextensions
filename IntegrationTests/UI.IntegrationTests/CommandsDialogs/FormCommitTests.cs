@@ -23,11 +23,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         // Created once for each test
         private GitUICommands _commands;
 
-        public FormCommitTests()
-        {
-            Application.EnableVisualStyles();
-        }
-
         [SetUp]
         public void SetUp()
         {
