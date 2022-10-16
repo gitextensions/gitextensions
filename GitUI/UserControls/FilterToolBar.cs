@@ -18,12 +18,12 @@ namespace GitUI.UserControls
         public FilterToolBar()
         {
             InitializeComponent();
-            tsmiShowReflog.ToolTipText = TranslatedStrings.ShowReflog;
-            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflog;
+            tsmiShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip;
+            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip;
             tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent;
 
             // Select an option until we get a filter bound.
-            SelectShowBranchesFilterOption(selectedIndex: 1);
+            SelectShowBranchesFilterOption(selectedIndex: 0);
 
             tscboBranchFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
             tstxtRevisionFilter.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
@@ -122,24 +122,24 @@ namespace GitUI.UserControls
             // Note: it is a weird combination, and it is mimicking the implementations in RevisionGridControl.
             // Refer to it for more details.
 
-            byte selectedIndex = 1;
+            ToolStripItem selectedItem = tsmiShowBranchesAll;
 
             if (e.ShowReflogReferences)
             {
                 // Show reflog
-                selectedIndex = 0;
+                selectedItem = tsmiShowReflog;
             }
 
             if (e.ShowAllBranches)
             {
                 // Show all branches
-                selectedIndex = 1;
+                selectedItem = tsmiShowBranchesAll;
             }
 
             if (e.ShowFilteredBranches)
             {
                 // Show filtered branches
-                selectedIndex = 2;
+                selectedItem = tsmiShowBranchesFiltered;
 
                 // Keep value if other filter
                 tscboBranchFilter.Text = e.BranchFilter;
@@ -148,9 +148,10 @@ namespace GitUI.UserControls
             if (e.ShowCurrentBranchOnly)
             {
                 // Show current branch only
-                selectedIndex = 3;
+                selectedItem = tsmiShowBranchesCurrent;
             }
 
+            int selectedIndex = tssbtnShowBranches.DropDownItems.IndexOf(selectedItem);
             SelectShowBranchesFilterOption(selectedIndex);
         }
 
@@ -178,7 +179,7 @@ namespace GitUI.UserControls
             control.DropDownClosed += ToolStripSplitButtonDropDownClosed;
         }
 
-        private void SelectShowBranchesFilterOption(byte selectedIndex)
+        private void SelectShowBranchesFilterOption(int selectedIndex)
         {
             if (selectedIndex >= tssbtnShowBranches.DropDownItems.Count)
             {

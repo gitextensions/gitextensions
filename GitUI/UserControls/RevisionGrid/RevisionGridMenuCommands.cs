@@ -221,21 +221,21 @@ namespace GitUI.UserControls.RevisionGrid
                 MenuCommand.CreateGroupHeader(TranslatedStrings.Branches),
                 new MenuCommand
                 {
-                    Name = "ShowReflogReferences",
-                    Text = "Show &reflog references",
-                    Image = Images.Book,
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ShowReflogReferences),
-                    ExecuteAction = () => _revisionGrid.ToggleShowReflogReferences(),
-                    IsCheckedFunc = () => _revisionGrid.CurrentFilter.ShowReflogReferences
-                },
-                new MenuCommand
-                {
                     Name = "ShowAllBranches",
                     Text = "Show &all branches",
                     Image = Images.BranchLocal,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ShowAllBranches),
                     ExecuteAction = () => _revisionGrid.ShowAllBranches(),
                     IsCheckedFunc = () => _revisionGrid.CurrentFilter.IsShowAllBranchesChecked
+                },
+                new MenuCommand
+                {
+                    Name = "ShowCurrentBranchOnly",
+                    Text = "Show &current branch only",
+                    Image = Images.BranchFilter,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ShowCurrentBranchOnly),
+                    ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnly(),
+                    IsCheckedFunc = () => _revisionGrid.CurrentFilter.IsShowCurrentBranchOnlyChecked
                 },
                 new MenuCommand
                 {
@@ -248,12 +248,12 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
-                    Name = "ShowCurrentBranchOnly",
-                    Text = "Show &current branch only",
-                    Image = Images.BranchFilter,
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ShowCurrentBranchOnly),
-                    ExecuteAction = () => _revisionGrid.ShowCurrentBranchOnly(),
-                    IsCheckedFunc = () => _revisionGrid.CurrentFilter.IsShowCurrentBranchOnlyChecked
+                    Name = "ShowReflogReferences",
+                    Text = "Show &reflog references",
+                    Image = Images.Book,
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Command.ShowReflogReferences),
+                    ExecuteAction = () => _revisionGrid.ToggleShowReflogReferences(),
+                    IsCheckedFunc = () => _revisionGrid.CurrentFilter.ShowReflogReferences
                 },
 
                 MenuCommand.CreateSeparator(),
