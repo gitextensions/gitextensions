@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ko">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe 인수</target>
+        <target>msbuild.exe 매개변수</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
@@ -322,7 +322,7 @@
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -371,7 +371,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
@@ -426,7 +426,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>브랜치에 결합된 브랜치들을 삭제합니다</target>
+        <target>브랜치에 완전히 병합된 브랜치들을 삭제합니다</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -451,7 +451,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>정규식을 사용하여 브랜치 필터링</target>
+        <target>regex를 사용하여 브랜치 필터링</target>
         
       </trans-unit>
     </body>
@@ -529,7 +529,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -539,7 +539,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
@@ -549,7 +549,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
