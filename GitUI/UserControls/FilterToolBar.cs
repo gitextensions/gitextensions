@@ -128,24 +128,24 @@ namespace GitUI.UserControls
             // Note: it is a weird combination, and it is mimicking the implementations in RevisionGridControl.
             // Refer to it for more details.
 
-            byte selectedIndex = 1;
+            ToolStripItem selectedItem = tsmiShowBranchesAll;
 
             if (e.ShowReflogReferences)
             {
                 // Show reflog
-                selectedIndex = 3;
+                selectedItem = tsmiShowReflog;
             }
 
             if (e.ShowAllBranches)
             {
                 // Show all branches
-                selectedIndex = 0;
+                selectedItem = tsmiShowBranchesAll;
             }
 
             if (e.ShowFilteredBranches)
             {
                 // Show filtered branches
-                selectedIndex = 2;
+                selectedItem = tsmiShowBranchesFiltered;
 
                 // Keep value if other filter
                 tscboBranchFilter.Text = e.BranchFilter;
@@ -154,9 +154,10 @@ namespace GitUI.UserControls
             if (e.ShowCurrentBranchOnly)
             {
                 // Show current branch only
-                selectedIndex = 1;
+                selectedItem = tsmiShowBranchesCurrent;
             }
 
+            int selectedIndex = tssbtnShowBranches.DropDownItems.IndexOf(selectedItem);
             SelectShowBranchesFilterOption(selectedIndex);
         }
 
@@ -184,7 +185,7 @@ namespace GitUI.UserControls
             control.DropDownClosed += ToolStripSplitButtonDropDownClosed;
         }
 
-        private void SelectShowBranchesFilterOption(byte selectedIndex)
+        private void SelectShowBranchesFilterOption(int selectedIndex)
         {
             if (selectedIndex >= tssbtnShowBranches.DropDownItems.Count)
             {

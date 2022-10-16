@@ -12,6 +12,7 @@ namespace GitUI.UserControls
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
             this.tsmiBranchLocal = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBranchRemote = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiBranchTag = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,6 +39,7 @@ namespace GitUI.UserControls
             this.tsddbtnRevisionFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.tsbShowReflog = new System.Windows.Forms.ToolStripButton();
             this.tsmiShowOnlyFirstParent = new System.Windows.Forms.ToolStripButton();
+            toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.SuspendLayout();
             // 
             // tsmiCommitFilter
@@ -125,6 +127,7 @@ namespace GitUI.UserControls
             this.tsmiShowBranchesAll,
             this.tsmiShowBranchesCurrent,
             this.tsmiShowBranchesFiltered,
+            toolStripSeparator1,
             this.tsmiShowReflog});
             this.tssbtnShowBranches.Image = global::GitUI.Properties.Images.BranchLocal;
             this.tssbtnShowBranches.Name = "tssbtnShowBranches";
@@ -266,6 +269,11 @@ namespace GitUI.UserControls
             this.tsmiShowOnlyFirstParent.Name = "tsmiShowOnlyFirstParent";
             this.tsmiShowOnlyFirstParent.Size = new System.Drawing.Size(23, 20);
             this.tsmiShowOnlyFirstParent.Click += new System.EventHandler(this.tsmiShowOnlyFirstParent_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(6, 6);
             // 
             // FilterToolBar
             // 
