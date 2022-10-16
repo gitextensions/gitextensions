@@ -55,11 +55,11 @@
             this._NO_TRANSLATE_lblPathFilter = new System.Windows.Forms.Label();
             this.PathFilterCheck = new System.Windows.Forms.CheckBox();
             this.PathFilter = new System.Windows.Forms.TextBox();
-            this.ReflogCheck = new System.Windows.Forms.CheckBox();
-            this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_lblBranches = new System.Windows.Forms.Label();
             this.BranchFilterCheck = new System.Windows.Forms.CheckBox();
             this.BranchFilter = new System.Windows.Forms.TextBox();
+            this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
+            this.ReflogCheck = new System.Windows.Forms.CheckBox();
             this.OnlyFirstParentCheck = new System.Windows.Forms.CheckBox();
             this.MergeCommitsCheck = new System.Windows.Forms.CheckBox();
             this.SimplifyByDecorationCheck = new System.Windows.Forms.CheckBox();
@@ -359,32 +359,6 @@
             this.PathFilter.Size = new System.Drawing.Size(285, 23);
             this.PathFilter.TabIndex = 24;
             // 
-            // ReflogCheck
-            // 
-            this.ReflogCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.ReflogCheck.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.ReflogCheck, 2);
-            this.ReflogCheck.Location = new System.Drawing.Point(76, 255);
-            this.ReflogCheck.Name = "ReflogCheck";
-            this.ReflogCheck.Size = new System.Drawing.Size(89, 19);
-            this.ReflogCheck.TabIndex = 25;
-            this.ReflogCheck.Text = "Show &reflog";
-            this.ReflogCheck.UseVisualStyleBackColor = true;
-            this.ReflogCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
-            // 
-            // CurrentBranchOnlyCheck
-            // 
-            this.CurrentBranchOnlyCheck.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.CurrentBranchOnlyCheck, 2);
-            this.CurrentBranchOnlyCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CurrentBranchOnlyCheck.Location = new System.Drawing.Point(76, 280);
-            this.CurrentBranchOnlyCheck.Name = "CurrentBranchOnlyCheck";
-            this.CurrentBranchOnlyCheck.Size = new System.Drawing.Size(305, 19);
-            this.CurrentBranchOnlyCheck.TabIndex = 26;
-            this.CurrentBranchOnlyCheck.Text = "Show current branch &only";
-            this.CurrentBranchOnlyCheck.UseVisualStyleBackColor = true;
-            this.CurrentBranchOnlyCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
-            // 
             // _NO_TRANSLATE_lblBranches
             // 
             this._NO_TRANSLATE_lblBranches.AutoSize = true;
@@ -392,7 +366,7 @@
             this._NO_TRANSLATE_lblBranches.Location = new System.Drawing.Point(3, 302);
             this._NO_TRANSLATE_lblBranches.Name = "_NO_TRANSLATE_lblBranches";
             this._NO_TRANSLATE_lblBranches.Size = new System.Drawing.Size(67, 29);
-            this._NO_TRANSLATE_lblBranches.TabIndex = 27;
+            this._NO_TRANSLATE_lblBranches.TabIndex = 25;
             this._NO_TRANSLATE_lblBranches.Text = "Branches";
             this._NO_TRANSLATE_lblBranches.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -403,7 +377,7 @@
             this.BranchFilterCheck.Location = new System.Drawing.Point(76, 309);
             this.BranchFilterCheck.Name = "BranchFilterCheck";
             this.BranchFilterCheck.Size = new System.Drawing.Size(14, 14);
-            this.BranchFilterCheck.TabIndex = 28;
+            this.BranchFilterCheck.TabIndex = 26;
             this.BranchFilterCheck.UseVisualStyleBackColor = true;
             this.BranchFilterCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
@@ -413,7 +387,33 @@
             this.BranchFilter.Location = new System.Drawing.Point(96, 305);
             this.BranchFilter.Name = "BranchFilter";
             this.BranchFilter.Size = new System.Drawing.Size(285, 23);
-            this.BranchFilter.TabIndex = 29;
+            this.BranchFilter.TabIndex = 27;
+            // 
+            // CurrentBranchOnlyCheck
+            // 
+            this.CurrentBranchOnlyCheck.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.CurrentBranchOnlyCheck, 2);
+            this.CurrentBranchOnlyCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CurrentBranchOnlyCheck.Location = new System.Drawing.Point(76, 280);
+            this.CurrentBranchOnlyCheck.Name = "CurrentBranchOnlyCheck";
+            this.CurrentBranchOnlyCheck.Size = new System.Drawing.Size(305, 19);
+            this.CurrentBranchOnlyCheck.TabIndex = 28;
+            this.CurrentBranchOnlyCheck.Text = "Show current branch &only";
+            this.CurrentBranchOnlyCheck.UseVisualStyleBackColor = true;
+            this.CurrentBranchOnlyCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
+            // 
+            // ReflogCheck
+            // 
+            this.ReflogCheck.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.ReflogCheck.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.ReflogCheck, 2);
+            this.ReflogCheck.Location = new System.Drawing.Point(76, 255);
+            this.ReflogCheck.Name = "ReflogCheck";
+            this.ReflogCheck.Size = new System.Drawing.Size(89, 19);
+            this.ReflogCheck.TabIndex = 29;
+            this.ReflogCheck.Text = "Show &reflog";
+            this.ReflogCheck.UseVisualStyleBackColor = true;
+            this.ReflogCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // OnlyFirstParentCheck
             // 
@@ -511,11 +511,11 @@
             this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblPathFilter, 0, 8);
             this.tableLayoutPanel1.Controls.Add(this.PathFilterCheck, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.PathFilter, 2, 8);
-            this.tableLayoutPanel1.Controls.Add(this.ReflogCheck, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblBranches, 0, 9);
+            this.tableLayoutPanel1.Controls.Add(this.BranchFilterCheck, 1, 9);
+            this.tableLayoutPanel1.Controls.Add(this.BranchFilter, 2, 9);
             this.tableLayoutPanel1.Controls.Add(this.CurrentBranchOnlyCheck, 1, 10);
-            this.tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_lblBranches, 0, 11);
-            this.tableLayoutPanel1.Controls.Add(this.BranchFilterCheck, 1, 11);
-            this.tableLayoutPanel1.Controls.Add(this.BranchFilter, 2, 11);
+            this.tableLayoutPanel1.Controls.Add(this.ReflogCheck, 1, 11);
             this.tableLayoutPanel1.Controls.Add(this.OnlyFirstParentCheck, 1, 12);
             this.tableLayoutPanel1.Controls.Add(this.MergeCommitsCheck, 1, 13);
             this.tableLayoutPanel1.Controls.Add(this.SimplifyByDecorationCheck, 1, 14);
@@ -597,11 +597,11 @@
         private System.Windows.Forms.Label _NO_TRANSLATE_lblPathFilter;
         private System.Windows.Forms.CheckBox PathFilterCheck;
         private System.Windows.Forms.TextBox PathFilter;
-        private System.Windows.Forms.CheckBox ReflogCheck;
         private System.Windows.Forms.Label _NO_TRANSLATE_lblBranches;
+        private System.Windows.Forms.CheckBox BranchFilterCheck;
         private System.Windows.Forms.TextBox BranchFilter;
         private System.Windows.Forms.CheckBox CurrentBranchOnlyCheck;
-        private System.Windows.Forms.CheckBox BranchFilterCheck;
+        private System.Windows.Forms.CheckBox ReflogCheck;
         private System.Windows.Forms.CheckBox OnlyFirstParentCheck;
         private System.Windows.Forms.CheckBox MergeCommitsCheck;
         private System.Windows.Forms.CheckBox SimplifyByDecorationCheck;
