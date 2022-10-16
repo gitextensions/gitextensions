@@ -18,8 +18,8 @@ namespace GitUI.UserControls
         public FilterToolBar()
         {
             InitializeComponent();
-            tsmiShowReflog.ToolTipText = TranslatedStrings.ShowReflog;
-            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflog;
+            tsmiShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip;
+            tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip;
             tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent;
 
             // Select an option until we get a filter bound.

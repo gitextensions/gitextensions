@@ -3212,7 +3212,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbShowReflog.ToolTipText">
-        <source>Show reflog</source>
+        <source>Show all reflog references</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
@@ -3320,7 +3320,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowReflog.ToolTipText">
-        <source>Show reflog</source>
+        <source>Show all reflog references</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
@@ -10966,6 +10966,10 @@ the last selected commit.</source>
       </trans-unit>
       <trans-unit id="_showReflog.Text">
         <source>Show reflog</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showReflogTooltip.Text">
+        <source>Show all reflog references</source>
         <target />
       </trans-unit>
       <trans-unit id="_simplifyByDecoration.Text">
