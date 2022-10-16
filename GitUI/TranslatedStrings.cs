@@ -125,6 +125,7 @@ the last selected commit.");
         private readonly TranslationString _pathFilter = new("Path filter");
         private readonly TranslationString _showOnlyFirstParent = new("Show only first parent");
         private readonly TranslationString _showReflog = new("Show reflog");
+        private readonly TranslationString _showReflogTooltip = new("Show all reflog references");
         private readonly TranslationString _showCurrentBranchOnly = new("Show current branch only");
         private readonly TranslationString _simplifyByDecoration = new("Simplify by decoration");
 
@@ -260,6 +261,7 @@ the last selected commit.");
         public static string PathFilter = _instance.Value._pathFilter.Text;
         public static string ShowOnlyFirstParent = _instance.Value._showOnlyFirstParent.Text;
         public static string ShowReflog = _instance.Value._showReflog.Text;
+        public static string ShowReflogTooltip = _instance.Value._showReflogTooltip.Text;
         public static string ShowCurrentBranchOnly = _instance.Value._showCurrentBranchOnly.Text;
         public static string SimplifyByDecoration = _instance.Value._simplifyByDecoration.Text;
 
