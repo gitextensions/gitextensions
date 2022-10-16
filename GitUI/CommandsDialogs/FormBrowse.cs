@@ -976,6 +976,7 @@ namespace GitUI.CommandsDialogs
             gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitBash).ToShortcutKeyDisplayString();
             commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Commit).ToShortcutKeyDisplayString();
             stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Stash).ToShortcutKeyDisplayString();
+            stashStagedToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.StashStaged).ToShortcutKeyDisplayString();
             stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.StashPop).ToShortcutKeyDisplayString();
             closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CloseRepository).ToShortcutKeyDisplayString();
             gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGui).ToShortcutKeyDisplayString();
@@ -2091,6 +2092,7 @@ namespace GitUI.CommandsDialogs
             QuickPull = 12,
             QuickPush = 13,
             Stash = 16,
+            StashStaged = 46,
             StashPop = 17,
             GoToSuperproject = 27,
             GoToSubmodule = 28,
@@ -2214,6 +2216,7 @@ namespace GitUI.CommandsDialogs
                 case Command.QuickPush: UICommands.StartPushDialog(this, true); break;
                 case Command.CloseRepository: SetWorkingDir(""); break;
                 case Command.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
+                case Command.StashStaged: UICommands.StashStaged(this); break;
                 case Command.StashPop: UICommands.StashPop(this); break;
                 case Command.OpenCommitsWithDifftool: RevisionGrid.DiffSelectedCommitsWithDifftool(); break;
                 case Command.OpenWithDifftool: OpenWithDifftool(); break;
