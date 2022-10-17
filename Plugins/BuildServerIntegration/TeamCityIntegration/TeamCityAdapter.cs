@@ -419,6 +419,14 @@ namespace TeamCityIntegration
                     UpdateHttpClientOptionsCredentialsAuth(buildServerCredentials!);
                 }
 
+                var useBuildServerBearerToken = buildServerCredentials is not null
+                                                && buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.BearerToken
+                                                && !string.IsNullOrWhiteSpace(buildServerCredentials.BearerToken);
+                if (useBuildServerBearerToken)
+                {
+                    UpdateHttpClientOptionsBearerTokenAuth(buildServerCredentials!);
+                }
+
                 if (buildServerCredentials is null
                     || buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.Guest)
                 {
@@ -471,10 +479,30 @@ namespace TeamCityIntegration
             _httpClient.DefaultRequestHeaders.Authorization = CreateBasicHeader(buildServerCredentials.Username, buildServerCredentials.Password);
         }
 
+        private void UpdateHttpClientOptionsBearerTokenAuth(IBuildServerCredentials buildServerCredentials)
+        {
+            Validates.NotNull(_httpClient);
+            Validates.NotNull(_httpClientHandler);
+            Validates.NotNull(buildServerCredentials.BearerToken);
+
+            _httpClientHostSuffix = "";
+            _httpClient.DefaultRequestHeaders.Authorization = CreateBearerTokenHeader(buildServerCredentials.BearerToken);
+
+            foreach (Cookie co in _httpClientHandler.CookieContainer.GetAllCookies())
+            {
+                co.Expired = true;
+            }
+        }
+
         private static AuthenticationHeaderValue CreateBasicHeader(string username, string password)
         {
-            byte[] byteArray = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", username, password));
+            byte[] byteArray = Encoding.UTF8.GetBytes($"{username}:{password}");
             return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+        }
+
+        private static AuthenticationHeaderValue CreateBearerTokenHeader(string bearerToken)
+        {
+            return new AuthenticationHeaderValue("Bearer", bearerToken);
         }
 
         private Task<XDocument> GetXmlResponseAsync(string relativePath, CancellationToken cancellationToken)
