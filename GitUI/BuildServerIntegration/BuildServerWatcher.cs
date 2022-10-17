@@ -131,13 +131,15 @@ namespace GitUI.BuildServerIntegration
         {
             lock (_buildServerCredentialsLock)
             {
-                IBuildServerCredentials? buildServerCredentials = new BuildServerCredentials { UseGuestAccess = true };
-                var foundInConfig = false;
+                IBuildServerCredentials? buildServerCredentials = new BuildServerCredentials { BuildServerCredentialsType = BuildServerCredentialsType.Guest };
+                bool foundInConfig = false;
 
                 const string CredentialsConfigName = "Credentials";
                 const string UseGuestAccessKey = "UseGuestAccess";
+                const string BuildServerCredentialsTypeKey = "BuildServerCredentialsType";
                 const string UsernameKey = "Username";
                 const string PasswordKey = "Password";
+                const string BearerTokenKey = "BearerToken";
                 using (var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Read, FileShare.Read))
                 {
                     if (stream.Position < stream.Length)
@@ -161,10 +163,22 @@ namespace GitUI.BuildServerIntegration
 
                             if (section is not null)
                             {
-                                buildServerCredentials.UseGuestAccess = section.GetValueAsBool(UseGuestAccessKey,
-                                    true);
+                                string? buildServerCredentialsType = section.GetValue(BuildServerCredentialsTypeKey);
+                                if (!string.IsNullOrWhiteSpace(buildServerCredentialsType))
+                                {
+                                    buildServerCredentials.BuildServerCredentialsType = Enum.Parse<BuildServerCredentialsType>(buildServerCredentialsType);
+                                }
+                                else
+                                {
+                                    buildServerCredentials.BuildServerCredentialsType =
+                                        section.GetValueAsBool(UseGuestAccessKey, true)
+                                            ? BuildServerCredentialsType.Guest
+                                            : BuildServerCredentialsType.UsernameAndPassword;
+                                }
+
                                 buildServerCredentials.Username = section.GetValue(UsernameKey);
                                 buildServerCredentials.Password = section.GetValue(PasswordKey);
+                                buildServerCredentials.BearerToken = section.GetValue(BearerTokenKey);
                                 foundInConfig = true;
 
                                 if (useStoredCredentialsIfExisting)
@@ -195,9 +209,10 @@ namespace GitUI.BuildServerIntegration
 
                         var section = credentialsConfig.FindOrCreateConfigSection(CredentialsConfigName);
 
-                        section.SetValueAsBool(UseGuestAccessKey, buildServerCredentials.UseGuestAccess);
+                        section.SetValue(BuildServerCredentialsTypeKey, buildServerCredentials.BuildServerCredentialsType.ToString());
                         section.SetValue(UsernameKey, buildServerCredentials.Username);
                         section.SetValue(PasswordKey, buildServerCredentials.Password);
+                        section.SetValue(BearerTokenKey, buildServerCredentials.BearerToken);
 
                         using var stream = GetBuildServerOptionsIsolatedStorageStream(buildServerAdapter, FileAccess.Write, FileShare.None);
                         using MemoryStream memoryStream = new();

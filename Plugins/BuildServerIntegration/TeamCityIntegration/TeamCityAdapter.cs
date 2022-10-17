@@ -412,18 +412,20 @@ namespace TeamCityIntegration
 
                 var buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, true);
                 var useBuildServerCredentials = buildServerCredentials is not null
-                                                && !buildServerCredentials.UseGuestAccess
-                                                && (string.IsNullOrWhiteSpace(buildServerCredentials.Username) && string.IsNullOrWhiteSpace(buildServerCredentials.Password));
+                                                && buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.UsernameAndPassword
+                                                && !string.IsNullOrWhiteSpace(buildServerCredentials.Username) && !string.IsNullOrWhiteSpace(buildServerCredentials.Password);
                 if (useBuildServerCredentials)
                 {
                     UpdateHttpClientOptionsCredentialsAuth(buildServerCredentials!);
-                    return GetStreamAsync(restServicePath, cancellationToken);
                 }
-                else
+
+                if (buildServerCredentials is null
+                    || buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.Guest)
                 {
                     UpdateHttpClientOptionsNtlmAuth(buildServerCredentials);
-                    return GetStreamAsync(restServicePath, cancellationToken);
                 }
+
+                return GetStreamAsync(restServicePath, cancellationToken);
             }
 
             throw new HttpRequestException(task.CompletedResult().ReasonPhrase);
