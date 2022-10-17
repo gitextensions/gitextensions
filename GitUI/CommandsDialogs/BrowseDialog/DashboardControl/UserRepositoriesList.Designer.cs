@@ -35,11 +35,16 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserRepositoriesList));
-            System.Windows.Forms.ListViewGroup lvgPinned = new System.Windows.Forms.ListViewGroup("Pinned", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup lvgAllRecent = new System.Windows.Forms.ListViewGroup("Recent", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup lvgOther = new System.Windows.Forms.ListViewGroup("Other", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Pinned", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Recent", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Other", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            "C:\\Users\\russkie\\AppData\\Roaming\\GitExtensions\\GitExtensions",
+            "refs/heads/master",
+            "Favourite"}, 0);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserRepositoriesList));
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Default", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "C:\\Users\\russkie\\AppData\\Roaming\\GitExtensions\\GitExtensions",
             "refs/heads/master",
             "Favourite"}, 0);
@@ -47,9 +52,14 @@
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.lblRecentRepositories = new System.Windows.Forms.Label();
             this.pnlBody = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.listViewRecentRepositories = new GitUI.UserControls.NativeListView();
+            this.clmhdrPath = new System.Windows.Forms.ColumnHeader();
+            this.clmhdrBranch = new System.Windows.Forms.ColumnHeader();
+            this.clmhdrCategory = new System.Windows.Forms.ColumnHeader();
             this.contextMenuStripRepository = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiOpenFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiCategories = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,8 +67,12 @@
             this.tsmiCategoryAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiRemoveFromList = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiRemoveMissingReposFromList = new System.Windows.Forms.ToolStripMenuItem();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.textBoxSearch = new System.Windows.Forms.TextBox();
+            this.imageListLarge = new System.Windows.Forms.ImageList(this.components);
+            this.imageListSmall = new System.Windows.Forms.ImageList(this.components);
+            this.listViewAllRepositories = new GitUI.UserControls.NativeListView();
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.contextMenuStripCategory = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiCategoryRename = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiCategoryDelete = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,14 +80,10 @@
             this.menuStripRecentMenu = new System.Windows.Forms.MenuStrip();
             this.mnuTop = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuConfigure = new System.Windows.Forms.ToolStripMenuItem();
-            this.listView1 = new GitUI.UserControls.NativeListView();
-            this.clmhdrPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmhdrBranch = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmhdrCategory = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pnlHeader.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.pnlBody.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
+            this.flowLayoutPanel.SuspendLayout();
             this.contextMenuStripRepository.SuspendLayout();
             this.contextMenuStripCategory.SuspendLayout();
             this.menuStripRecentMenu.SuspendLayout();
@@ -105,9 +115,10 @@
             // 
             this.tableLayoutPanel1.AutoSize = true;
             this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel1.Controls.Add(this.textBoxSearch, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.lblRecentRepositories, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(20, 30);
@@ -115,25 +126,34 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(411, 32);
             this.tableLayoutPanel1.TabIndex = 3;
+            // 
+            // textBoxSearch
+            // 
+            this.textBoxSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxSearch.Location = new System.Drawing.Point(220, 3);
+            this.textBoxSearch.Name = "textBoxSearch";
+            this.textBoxSearch.Size = new System.Drawing.Size(188, 23);
+            this.textBoxSearch.TabIndex = 0;
             // 
             // lblRecentRepositories
             // 
             this.lblRecentRepositories.AutoSize = true;
             this.lblRecentRepositories.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblRecentRepositories.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lblRecentRepositories.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lblRecentRepositories.ForeColor = System.Drawing.Color.DimGray;
             this.lblRecentRepositories.Location = new System.Drawing.Point(0, 0);
             this.lblRecentRepositories.Margin = new System.Windows.Forms.Padding(0);
             this.lblRecentRepositories.Name = "lblRecentRepositories";
-            this.lblRecentRepositories.Size = new System.Drawing.Size(411, 32);
+            this.lblRecentRepositories.Size = new System.Drawing.Size(217, 32);
             this.lblRecentRepositories.TabIndex = 2;
             this.lblRecentRepositories.Text = "Recent repositories";
             // 
             // pnlBody
             // 
-            this.pnlBody.Controls.Add(this.tableLayoutPanel2);
+            this.pnlBody.Controls.Add(this.flowLayoutPanel);
             this.pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlBody.Location = new System.Drawing.Point(0, 73);
             this.pnlBody.Margin = new System.Windows.Forms.Padding(0);
@@ -142,20 +162,72 @@
             this.pnlBody.Size = new System.Drawing.Size(451, 210);
             this.pnlBody.TabIndex = 1;
             // 
-            // tableLayoutPanel2
+            // flowLayoutPanel
             // 
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.listView1, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.textBoxSearch, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(20, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(411, 204);
-            this.tableLayoutPanel2.TabIndex = 4;
+            this.flowLayoutPanel.BackColor = System.Drawing.SystemColors.MenuHighlight;
+            this.flowLayoutPanel.Controls.Add(this.listViewRecentRepositories);
+            this.flowLayoutPanel.Controls.Add(this.listViewAllRepositories);
+            this.flowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel.Location = new System.Drawing.Point(20, 18);
+            this.flowLayoutPanel.Name = "flowLayoutPanel";
+            this.flowLayoutPanel.Size = new System.Drawing.Size(411, 189);
+            this.flowLayoutPanel.TabIndex = 3;
+            this.flowLayoutPanel.SizeChanged += new System.EventHandler(this.flowLayoutPanel_SizeChanged);
+            // 
+            // listViewRecentRepositories
+            // 
+            this.listViewRecentRepositories.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.listViewRecentRepositories.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewRecentRepositories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.clmhdrPath,
+            this.clmhdrBranch,
+            this.clmhdrCategory});
+            this.listViewRecentRepositories.ContextMenuStrip = this.contextMenuStripRepository;
+            this.listViewRecentRepositories.FullRowSelect = true;
+            listViewGroup1.Header = "Pinned";
+            listViewGroup1.Name = "lvgPinned";
+            listViewGroup2.Header = "Recent";
+            listViewGroup2.Name = "lvgAllRecent";
+            listViewGroup3.Header = "Other";
+            listViewGroup3.Name = "lvgOther";
+            this.listViewRecentRepositories.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3});
+            this.listViewRecentRepositories.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewRecentRepositories.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1});
+            this.listViewRecentRepositories.LargeImageList = this.imageListLarge;
+            this.listViewRecentRepositories.Location = new System.Drawing.Point(0, 3);
+            this.listViewRecentRepositories.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.listViewRecentRepositories.MinimumSize = new System.Drawing.Size(500, 120);
+            this.listViewRecentRepositories.MultiSelect = false;
+            this.listViewRecentRepositories.Name = "listViewRecentRepositories";
+            this.listViewRecentRepositories.OwnerDraw = true;
+            this.listViewRecentRepositories.ShowItemToolTips = true;
+            this.listViewRecentRepositories.Size = new System.Drawing.Size(500, 120);
+            this.listViewRecentRepositories.SmallImageList = this.imageListSmall;
+            this.listViewRecentRepositories.TabIndex = 1;
+            this.listViewRecentRepositories.TileSize = new System.Drawing.Size(350, 50);
+            this.listViewRecentRepositories.UseCompatibleStateImageBehavior = false;
+            this.listViewRecentRepositories.View = System.Windows.Forms.View.Tile;
+            this.listViewRecentRepositories.GroupTaskLinkClick += new System.EventHandler<System.Windows.Forms.ListViewGroupEventArgs>(this.ListView1_GroupTaskLinkClick);
+            this.listViewRecentRepositories.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView1_DrawItem);
+            this.listViewRecentRepositories.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseClick);
+            this.listViewRecentRepositories.MouseLeave += new System.EventHandler(this.listView1_MouseLeave);
+            this.listViewRecentRepositories.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseMove);
+            // 
+            // clmhdrPath
+            // 
+            this.clmhdrPath.Text = "Path";
+            // 
+            // clmhdrBranch
+            // 
+            this.clmhdrBranch.Text = "Branch";
+            // 
+            // clmhdrCategory
+            // 
+            this.clmhdrCategory.Text = "Category";
             // 
             // contextMenuStripRepository
             // 
@@ -218,21 +290,63 @@
             this.tsmiRemoveMissingReposFromList.Text = "Remove missing projects from the list";
             this.tsmiRemoveMissingReposFromList.Click += new System.EventHandler(this.tsmiRemoveMissingReposFromList_Click);
             // 
-            // imageList1
+            // imageListLarge
             // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "source_code.png");
+            this.imageListLarge.ColorDepth = System.Windows.Forms.ColorDepth.Depth16Bit;
+            this.imageListLarge.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListLarge.ImageStream")));
+            this.imageListLarge.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListLarge.Images.SetKeyName(0, "source_code.png");
             // 
-            // textBoxSearch
+            // imageListSmall
             // 
-            this.textBoxSearch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxSearch.Location = new System.Drawing.Point(3, 3);
-            this.textBoxSearch.Name = "textBoxSearch";
-            this.textBoxSearch.Size = new System.Drawing.Size(439, 20);
-            this.textBoxSearch.TabIndex = 0;
-            this.textBoxSearch.TextChanged += TextBoxSearch_TextChanged;
-            this.textBoxSearch.KeyDown += TextBoxSearch_KeyDown;
+            this.imageListSmall.ColorDepth = System.Windows.Forms.ColorDepth.Depth16Bit;
+            this.imageListSmall.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListSmall.ImageStream")));
+            this.imageListSmall.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListSmall.Images.SetKeyName(0, "source_code.png");
+            // 
+            // listViewAllRepositories
+            // 
+            this.listViewAllRepositories.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.listViewAllRepositories.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewAllRepositories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.listViewAllRepositories.ContextMenuStrip = this.contextMenuStripRepository;
+            this.listViewAllRepositories.FullRowSelect = true;
+            listViewGroup4.Header = "Default";
+            listViewGroup4.Name = "lvgDefaultGroup";
+            this.listViewAllRepositories.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup4});
+            this.listViewAllRepositories.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewAllRepositories.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem2});
+            this.listViewAllRepositories.LargeImageList = this.imageListLarge;
+            this.listViewAllRepositories.Location = new System.Drawing.Point(0, 129);
+            this.listViewAllRepositories.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.listViewAllRepositories.MinimumSize = new System.Drawing.Size(500, 120);
+            this.listViewAllRepositories.MultiSelect = false;
+            this.listViewAllRepositories.Name = "listViewAllRepositories";
+            this.listViewAllRepositories.OwnerDraw = true;
+            this.listViewAllRepositories.ShowItemToolTips = true;
+            this.listViewAllRepositories.Size = new System.Drawing.Size(500, 120);
+            this.listViewAllRepositories.SmallImageList = this.imageListSmall;
+            this.listViewAllRepositories.TabIndex = 2;
+            this.listViewAllRepositories.TileSize = new System.Drawing.Size(350, 50);
+            this.listViewAllRepositories.UseCompatibleStateImageBehavior = false;
+            this.listViewAllRepositories.View = System.Windows.Forms.View.Tile;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Path";
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Branch";
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Category";
             // 
             // contextMenuStripCategory
             // 
@@ -271,7 +385,7 @@
             // 
             this.menuStripRecentMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuTop});
-            this.menuStripRecentMenu.Location = new System.Drawing.Point(0, 73);
+            this.menuStripRecentMenu.Location = new System.Drawing.Point(0, 0);
             this.menuStripRecentMenu.Name = "menuStripRecentMenu";
             this.menuStripRecentMenu.Size = new System.Drawing.Size(451, 24);
             this.menuStripRecentMenu.TabIndex = 3;
@@ -292,71 +406,15 @@
             this.mnuConfigure.Text = "Recent repositories &settings";
             this.mnuConfigure.Click += new System.EventHandler(this.mnuConfigure_Click);
             // 
-            // listView1
-            // 
-            this.listView1.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.clmhdrPath,
-            this.clmhdrBranch,
-            this.clmhdrCategory});
-            this.listView1.ContextMenuStrip = this.contextMenuStripRepository;
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.FullRowSelect = true;
-            lvgPinned.Header = "Pinned";
-            lvgPinned.Name = "lvgPinned";
-            lvgAllRecent.Header = "Recent";
-            lvgAllRecent.Name = "lvgAllRecent";
-            lvgOther.Header = "Other";
-            lvgOther.Name = "lvgOther";
-            this.listView1.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            lvgPinned,
-            lvgAllRecent,
-            lvgOther});
-            this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listView1.HideSelection = false;
-            this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
-            this.listView1.LargeImageList = this.imageList1;
-            this.listView1.Location = new System.Drawing.Point(0, 33);
-            this.listView1.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.OwnerDraw = true;
-            this.listView1.ShowItemToolTips = true;
-            this.listView1.Size = new System.Drawing.Size(445, 168);
-            this.listView1.TabIndex = 1;
-            this.listView1.TileSize = new System.Drawing.Size(350, 50);
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Tile;
-            this.listView1.GroupTaskLinkClick += new System.EventHandler<System.Windows.Forms.ListViewGroupEventArgs>(this.ListView1_GroupTaskLinkClick);
-            this.listView1.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView1_DrawItem);
-            this.listView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseClick);
-            this.listView1.MouseLeave += new System.EventHandler(this.listView1_MouseLeave);
-            this.listView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseMove);
-            this.listView1.GotFocus += new System.EventHandler(this.listView1_GotFocus);
-            this.listView1.KeyDown += listView1_KeyDown;
-            // 
-            // clmhdrPath
-            // 
-            this.clmhdrPath.Text = "Path";
-            // 
-            // clmhdrBranch
-            // 
-            this.clmhdrBranch.Text = "Branch";
-            // 
-            // clmhdrCategory
-            // 
-            this.clmhdrCategory.Text = "Category";
-            // 
             // UserRepositoriesList
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.menuStripRecentMenu);
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.pnlBody);
             this.Controls.Add(this.pnlHeader);
+            this.Controls.Add(this.menuStripRecentMenu);
             this.DoubleBuffered = true;
             this.Name = "UserRepositoriesList";
             this.Size = new System.Drawing.Size(451, 283);
@@ -366,8 +424,7 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.pnlBody.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
+            this.flowLayoutPanel.ResumeLayout(false);
             this.contextMenuStripRepository.ResumeLayout(false);
             this.contextMenuStripCategory.ResumeLayout(false);
             this.menuStripRecentMenu.ResumeLayout(false);
@@ -396,15 +453,20 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiCategoryDelete;
         private System.Windows.Forms.ToolStripMenuItem tsmiCategoryClear;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private GitUI.UserControls.NativeListView listView1;
+        private GitUI.UserControls.NativeListView listViewRecentRepositories;
         private System.Windows.Forms.ColumnHeader clmhdrPath;
         private System.Windows.Forms.ColumnHeader clmhdrBranch;
         private System.Windows.Forms.ColumnHeader clmhdrCategory;
-        private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ImageList imageListLarge;
         private System.Windows.Forms.MenuStrip menuStripRecentMenu;
         private System.Windows.Forms.ToolStripMenuItem mnuTop;
         private System.Windows.Forms.ToolStripMenuItem mnuConfigure;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TextBox textBoxSearch;
+        private UserControls.NativeListView listViewAllRepositories;
+        private ColumnHeader columnHeader1;
+        private ColumnHeader columnHeader2;
+        private ColumnHeader columnHeader3;
+        private FlowLayoutPanel flowLayoutPanel;
+        private ImageList imageListSmall;
     }
 }

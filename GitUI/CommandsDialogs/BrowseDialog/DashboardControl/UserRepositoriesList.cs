@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.Git;
@@ -83,13 +83,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
 
-            listView1.Items.Clear();
-            listView1.Groups.Clear();
+            listViewRecentRepositories.Items.Clear();
+            listViewRecentRepositories.Groups.Clear();
+            listViewAllRepositories.Items.Clear();
+            listViewAllRepositories.Groups.Clear();
 
-            imageList1.Images.Clear();
-            imageList1.ImageSize = DpiUtil.Scale(imageList1.ImageSize);
-            imageList1.Images.Add(Images.DashboardFolderGit);
-            imageList1.Images.Add(Images.DashboardFolderError);
+            imageListLarge.Images.Clear();
+            imageListLarge.ImageSize = DpiUtil.Scale(imageListLarge.ImageSize);
+            imageListLarge.Images.Add(Images.DashboardFolderGit);
+            imageListLarge.Images.Add(Images.DashboardFolderError);
+
+            imageListSmall.Images.Clear();
+            imageListSmall.ImageSize = DpiUtil.Scale(imageListSmall.ImageSize);
+            imageListSmall.Images.Add(Images.DashboardFolderGit);
+            imageListSmall.Images.Add(Images.DashboardFolderError);
 
             DragEnter += OnDragEnter;
             DragDrop += OnDragDrop;
@@ -145,7 +152,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 }
 
                 base.ForeColor = value;
-                listView1.ForeColor = value;
+                listViewRecentRepositories.ForeColor = value;
+                listViewAllRepositories.ForeColor = value;
                 _foreColorBrush?.Dispose();
                 _foreColorBrush = new SolidBrush(value);
                 Invalidate();
@@ -229,7 +237,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 _mainBackColor = value;
                 BackColor = value;
-                listView1.BackColor = value;
+                listViewRecentRepositories.BackColor = value;
+                listViewAllRepositories.BackColor = value;
             }
         }
 
@@ -247,15 +256,28 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 {
                     // The previously hovered item may be already removed from the view, example:
                     // user locates mouse pointer over an item and triggers data refresh by pressing F5
-                    if (listView1.Items.Contains(_hoveredItem))
+                    if (listViewRecentRepositories.Items.Contains(_hoveredItem))
                     {
-                        listView1.Invalidate(listView1.GetItemRect(_hoveredItem.Index));
+                        listViewRecentRepositories.Invalidate(listViewRecentRepositories.GetItemRect(_hoveredItem.Index));
+                    }
+
+                    if (listViewAllRepositories.Items.Contains(_hoveredItem))
+                    {
+                        listViewAllRepositories.Invalidate(listViewAllRepositories.GetItemRect(_hoveredItem.Index));
                     }
                 }
 
                 if (value is not null)
                 {
-                    listView1.Invalidate(listView1.GetItemRect(value.Index));
+                    if (listViewRecentRepositories.Items.Contains(value))
+                    {
+                        listViewRecentRepositories.Invalidate(listViewRecentRepositories.GetItemRect(value.Index));
+                    }
+
+                    if (listViewAllRepositories.Items.Contains(value))
+                    {
+                        listViewAllRepositories.Invalidate(listViewAllRepositories.GetItemRect(value.Index));
+                    }
                 }
 
                 _hoveredItem = value;
@@ -281,19 +303,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             try
             {
-                listView1.BeginUpdate();
-                listView1.Groups.Clear();
-                listView1.Items.Clear();
+                listViewRecentRepositories.BeginUpdate();
+                listViewRecentRepositories.Groups.Clear();
+                listViewRecentRepositories.Items.Clear();
+                listViewAllRepositories.BeginUpdate();
+                listViewAllRepositories.Groups.Clear();
+                listViewAllRepositories.Items.Clear();
                 if (recentRepositories.Count > 0 || favouriteRepositories.Count > 0)
                 {
-                    listView1.TileSize = GetTileSize(recentRepositories, favouriteRepositories);
+                    listViewRecentRepositories.TileSize = GetTileSize(recentRepositories);
+                    listViewAllRepositories.TileSize = GetTileSize(favouriteRepositories);
                 }
 
                 _hasInvalidRepos = false;
 
-                var groups = new[] { _lvgRecentRepositories }
-                    .Concat(recentRepositories.Concat(favouriteRepositories)
-                        .Select(repo => repo.Repo.Category)
+                listViewRecentRepositories.Groups.Add(_lvgRecentRepositories);
+
+                var groups = favouriteRepositories.Select(repo => repo.Repo.Category)
                         .Where(c => !string.IsNullOrWhiteSpace(c))
                         .Distinct(GroupHeaderComparer)
                         .OrderBy(c => c)
@@ -301,19 +327,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         {
                             CollapsedState = ListViewGroupCollapsedState.Expanded,
                             TaskLink = _groupActions.Text
-                        }))
-                    .ToArray();
+                        })
+                        .ToArray();
 
-                listView1.Groups.AddRange(groups);
-                BindRepositories(recentRepositories, isFavourite: false);
-                BindRepositories(favouriteRepositories, isFavourite: true);
+                listViewAllRepositories.Groups.AddRange(groups);
+
+                BindRepositories(listViewRecentRepositories, recentRepositories, repo => _lvgRecentRepositories);
+                BindRepositories(listViewAllRepositories, favouriteRepositories, repo => GetTileGroup(repo));
             }
             finally
             {
-                listView1.EndUpdate();
+                listViewRecentRepositories.EndUpdate();
+                listViewAllRepositories.EndUpdate();
             }
 
-            void BindRepositories(IReadOnlyList<RecentRepoInfo> repos, bool isFavourite)
+            void BindRepositories(UserControls.NativeListView listView, IReadOnlyList<RecentRepoInfo> repos, Func<Repository, ListViewGroup> lvgSelector)
             {
                 for (var index = 0; index < repos.Count; index++)
                 {
@@ -322,13 +350,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     {
                         ForeColor = ForeColor,
                         Font = AppSettings.Font,
-                        Group = isFavourite ? GetTileGroup(recent.Repo) : _lvgRecentRepositories,
+                        Group = lvgSelector.Invoke(recent.Repo),
                         ImageIndex = 0,
                         UseItemStyleForSubItems = false,
                         Tag = recent.Repo,
                         ToolTipText = recent.Repo.Path
                     };
-                    listView1.Items.Add(item);
+                    listView.Items.Add(item);
 
                     ThreadHelper.FileAndForget(async () =>
                     {
@@ -390,7 +418,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private IEnumerable<Repository> GetRepositories()
         {
-            return listView1.Items.Cast<ListViewItem>()
+            return listViewRecentRepositories.Items.Cast<ListViewItem>()
+                .Concat(listViewAllRepositories.Items.Cast<ListViewItem>())
                 .Select(lvi => (Repository)lvi.Tag)
                 .Where(r => r is not null);
         }
@@ -412,12 +441,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private Repository? GetSelectedRepository()
         {
-            if (listView1.SelectedItems.Count < 1)
+            if (listViewRecentRepositories.SelectedItems.Count < 1)
             {
                 return null;
             }
 
-            var selected = listView1.SelectedItems[0].Tag as Repository;
+            var selected = listViewRecentRepositories.SelectedItems[0].Tag as Repository;
             if (string.IsNullOrWhiteSpace(selected?.Path))
             {
                 return null;
@@ -428,34 +457,33 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private ListViewGroup GetTileGroup(Repository repository)
         {
-            return listView1.Groups.Cast<ListViewGroup>()
+            return listViewAllRepositories.Groups.Cast<ListViewGroup>()
                 .SingleOrDefault(x => GroupHeaderComparer.Equals(x.Header, repository.Category));
         }
 
-        private Size GetTileSize(IEnumerable<RecentRepoInfo> recentRepositories, IEnumerable<RecentRepoInfo> favouriteRepositories)
+        private Size GetTileSize(IEnumerable<RecentRepoInfo> repositories)
         {
             var spacing1 = DpiUtil.Scale(1f);
             var spacing2 = DpiUtil.Scale(2f);
 
-            var longestPath = recentRepositories.Union(favouriteRepositories)
-                                                .Select(r =>
+            var longestPath = repositories.Select(r =>
+                                            {
+                                                var size = TextRenderer.MeasureText(r.Caption, AppSettings.Font);
+                                                return new
                                                 {
-                                                    var size = TextRenderer.MeasureText(r.Caption, AppSettings.Font);
-                                                    return new
-                                                    {
-                                                        r.Caption,
-                                                        size.Width,
-                                                        size.Height
-                                                    };
-                                                })
-                                               .OrderByDescending(r => r.Width)
-                                               .First();
+                                                    r.Caption,
+                                                    size.Width,
+                                                    size.Height
+                                                };
+                                            })
+                                            .OrderByDescending(r => r.Width)
+                                            .First();
             var branchTextSize = TextRenderer.MeasureText("A", _secondaryFont);
 
             var width = AppSettings.RecentReposComboMinWidth;
             if (width < 1)
             {
-                width = longestPath.Width + imageList1.ImageSize.Width;
+                width = longestPath.Width + imageListLarge.ImageSize.Width;
             }
 
             var height = longestPath.Height + (2 * branchTextSize.Height) +
@@ -476,7 +504,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private static string ShortenText(string text, Font font, float maxWidth)
         {
-            var ellipsis = '…';
+            var ellipsis = '�';
             var width = TextRenderer.MeasureText(text, font).Width;
             if (width < maxWidth)
             {
@@ -569,7 +597,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var spacing4 = DpiUtil.Scale(4f);
             var spacing6 = DpiUtil.Scale(6f);
 
-            var textOffset = spacing2 + imageList1.ImageSize.Width + spacing2;
+            var textOffset = spacing2 + imageListLarge.ImageSize.Width + spacing2;
             int textWidth = e.Bounds.Width - (int)textOffset;
 
             if (e.Item == HoveredItem || e.Item.Selected)
@@ -586,12 +614,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // render anchor icon
             if (!string.IsNullOrWhiteSpace((e.Item.Tag as Repository)?.Category))
             {
-                PointF pointImage1 = new(pointImage.X + imageList1.ImageSize.Width - 12, e.Bounds.Top + spacing2);
+                PointF pointImage1 = new(pointImage.X + imageListLarge.ImageSize.Width - 12, e.Bounds.Top + spacing2);
                 e.Graphics.DrawImage(Images.Star, pointImage1.X, pointImage1.Y, 16, 16);
             }
 
             // render icon
-            e.Graphics.DrawImage(imageList1.Images[e.Item.ImageIndex], pointImage);
+            e.Graphics.DrawImage(imageListLarge.Images[e.Item.ImageIndex], pointImage);
 
             // render path
             PointF textPadding = new(e.Bounds.Left + spacing4, e.Bounds.Top + spacing6);
@@ -628,14 +656,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void ListView1_GroupTaskLinkClick(object sender, ListViewGroupEventArgs e)
         {
-            ListViewGroup group = listView1.Groups[e.GroupIndex];
+            ListViewGroup group = listViewRecentRepositories.Groups[e.GroupIndex];
             bool isRecentRepositoriesGroup = group == _lvgRecentRepositories;
             tsmiCategoryDelete.Visible = !isRecentRepositoriesGroup;
             tsmiCategoryRename.Visible = !isRecentRepositoriesGroup;
             tsmiCategoryClear.Visible = isRecentRepositoriesGroup;
 
             contextMenuStripCategory.Tag = group;
-            contextMenuStripCategory.Show(listView1, listView1.PointToClient(Cursor.Position));
+            contextMenuStripCategory.Show(listViewRecentRepositories, listViewRecentRepositories.PointToClient(Cursor.Position));
         }
 
         private void listView1_MouseClick(object sender, MouseEventArgs e)
@@ -646,7 +674,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
             else if (e.Button == MouseButtons.Right)
             {
-                _rightClickedItem = listView1.GetItemAt(e.X, e.Y);
+                _rightClickedItem = listViewRecentRepositories.GetItemAt(e.X, e.Y);
                 if (_rightClickedItem is not null)
                 {
                     _rightClickedItem.Selected = true;
@@ -664,7 +692,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (e.KeyCode == Keys.Enter)
             {
                 // Open the first repo in the list
-                var items = listView1.Items;
+                var items = listViewRecentRepositories.Items;
                 if (items.Count == 0)
                 {
                     return;
@@ -680,7 +708,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void listView1_MouseMove(object sender, MouseEventArgs e)
         {
-            HoveredItem = listView1.GetItemAt(e.X, e.Y);
+            HoveredItem = listViewRecentRepositories.GetItemAt(e.X, e.Y);
         }
 
         private void listView1_MouseLeave(object sender, EventArgs e)
@@ -941,6 +969,39 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
 
             return true;
+        }
+
+        private void flowLayoutPanel_SizeChanged(object sender, EventArgs e)
+        {
+            int width = flowLayoutPanel.Width;
+            int height = flowLayoutPanel.Height;
+            int w30 = (int)(width * 0.3);
+
+            if (w30 < 500)
+            {
+                if (width < 1000)
+                {
+                    // If 30% of width is less than 500px and overall width is less than 1000px, then arrange panes vertically.
+                    listViewRecentRepositories.Width = width - listViewRecentRepositories.Margin.Left - listViewRecentRepositories.Margin.Right;
+                    listViewAllRepositories.Width = width - listViewAllRepositories.Margin.Left - listViewAllRepositories.Margin.Right;
+                    flowLayoutPanel.SetFlowBreak(listViewAllRepositories, true);
+
+                    listViewRecentRepositories.Height = (int)((height * 0.3) - listViewRecentRepositories.Margin.Top - listViewRecentRepositories.Margin.Bottom);
+                    listViewAllRepositories.Height = (int)((height * 0.7) - listViewAllRepositories.Margin.Top - listViewAllRepositories.Margin.Bottom);
+                    return;
+                }
+                else
+                {
+                    w30 = 500;
+                }
+            }
+
+            listViewRecentRepositories.Width = w30 - listViewRecentRepositories.Margin.Left - listViewRecentRepositories.Margin.Right;
+            listViewAllRepositories.Width = width - w30 - listViewAllRepositories.Margin.Left - listViewAllRepositories.Margin.Right;
+            listViewRecentRepositories.Height = height - listViewRecentRepositories.Margin.Top - listViewRecentRepositories.Margin.Bottom;
+            listViewAllRepositories.Height = height - listViewAllRepositories.Margin.Top - listViewAllRepositories.Margin.Bottom;
+
+            flowLayoutPanel.SetFlowBreak(listViewAllRepositories, false);
         }
     }
 }
