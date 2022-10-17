@@ -3,7 +3,6 @@ using System.Text;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace CommonTestUtils
@@ -15,7 +14,6 @@ namespace CommonTestUtils
         private readonly List<MockProcess> _processes = new();
         private int _nextCommandId;
 
-        [MustUseReturnValue]
         public IDisposable StageOutput(string arguments, string output, int? exitCode = 0, string? error = null)
         {
             var stack = _outputStackByArguments.GetOrAdd(
@@ -36,7 +34,6 @@ namespace CommonTestUtils
                 });
         }
 
-        [MustUseReturnValue]
         public IDisposable StageCommand(string arguments)
         {
             var id = Interlocked.Increment(ref _nextCommandId);
@@ -98,7 +95,7 @@ namespace CommonTestUtils
 
         private sealed class MockProcess : IProcess
         {
-            public MockProcess([CanBeNull] string output, int? exitCode = 0, [CanBeNull] string error = null)
+            public MockProcess(string? output, int? exitCode = 0, string? error = null)
             {
                 StandardOutput = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(output ?? "")));
                 StandardError = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(error ?? "")));
