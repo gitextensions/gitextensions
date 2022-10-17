@@ -102,7 +102,7 @@ namespace GitCommandsTests.Git.Gpg
                 gitRef.LocalName
             };
 
-            using var _ = _executable.StageOutput(args.ToString(), gitCmdReturn);
+            using var _ = _executable.StageOutput(args.ToString(), output: "", error: gitCmdReturn);
 
             var actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
@@ -168,7 +168,7 @@ namespace GitCommandsTests.Git.Gpg
                         revision.Refs = new[] { gitRef };
 
                         GitArgumentBuilder args = new("verify-tag") { gitRef.LocalName };
-                        validate = _executable.StageOutput(args.ToString(), gitRef.LocalName);
+                        validate = _executable.StageOutput(args.ToString(), output: "", error: gitRef.LocalName);
 
                         break;
                     }
@@ -179,13 +179,13 @@ namespace GitCommandsTests.Git.Gpg
                         GitRef gitRef1 = new(_module, objectId, "refs/tags/FirstTag^{}");
 
                         GitArgumentBuilder args = new("verify-tag") { gitRef1.LocalName };
-                        _executable.StageOutput(args.ToString(), gitRef1.LocalName);
+                        _executable.StageOutput(args.ToString(), output: "", error: gitRef1.LocalName);
 
                         GitRef gitRef2 = new(_module, objectId, "refs/tags/SecondTag^{}");
                         revision.Refs = new[] { gitRef1, gitRef2 };
 
                         args = new GitArgumentBuilder("verify-tag") { gitRef2.LocalName };
-                        validate = _executable.StageOutput(args.ToString(), gitRef2.LocalName);
+                        validate = _executable.StageOutput(args.ToString(), output: "", error: gitRef2.LocalName);
 
                         break;
                     }

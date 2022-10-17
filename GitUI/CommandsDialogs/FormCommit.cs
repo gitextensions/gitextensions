@@ -1958,18 +1958,10 @@ namespace GitUI.CommandsDialogs
                         files.Add(item);
                     }
 
-                    bool wereErrors = false;
-                    if (AppSettings.ShowErrorsWhenStagingFiles)
+                    bool wereErrors = !Module.StageFiles(files, out string output);
+                    if (wereErrors && AppSettings.ShowErrorsWhenStagingFiles)
                     {
-                        var output = Module.StageFiles(files, out wereErrors);
-                        if (wereErrors)
-                        {
-                            FormStatus.ShowErrorDialog(this, _stageDetails.Text, string.Format(_stageFiles.Text + "\n", files.Count), output);
-                        }
-                    }
-                    else
-                    {
-                        Module.StageFiles(files, out wereErrors);
+                        FormStatus.ShowErrorDialog(this, _stageDetails.Text, string.Format(_stageFiles.Text + "\n", files.Count), output);
                     }
 
                     if (wereErrors)
@@ -2525,7 +2517,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.Clear();
 
-            Module.SkipWorktreeFiles(Unstaged.SelectedItems.Items().ToList(), true);
+            Module.SkipWorktreeFiles(Unstaged.SelectedItems.Items().ToList(), true, out _);
 
             Initialize();
         }
@@ -2539,7 +2531,7 @@ namespace GitUI.CommandsDialogs
 
             SelectedDiff.Clear();
 
-            Module.SkipWorktreeFiles(Unstaged.SelectedItems.Items().ToList(), false);
+            Module.SkipWorktreeFiles(Unstaged.SelectedItems.Items().ToList(), false, out _);
 
             Initialize();
         }
