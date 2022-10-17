@@ -894,7 +894,7 @@ See the changes in the commit form.");
                 return;
             }
 
-            Module.AssumeUnchangedFiles(new List<GitItemStatus> { itemStatus }, true, out var wereErrors);
+            bool wereErrors = !Module.AssumeUnchangedFiles(new List<GitItemStatus> { itemStatus }, true, out _);
 
             if (wereErrors)
             {

@@ -232,13 +232,14 @@ namespace GitCommands.Gpg
                 return null;
             }
 
-            var module = GetModule();
             GitArgumentBuilder args = new("verify-tag")
             {
                 { raw, "--raw" },
                 tagName
             };
-            return module.GitExecutable.GetOutput(args);
+
+            // 'verify-tag' returns info in stderr
+            return GetModule().GitExecutable.Execute(args).StandardError;
         }
 
         private string? EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)

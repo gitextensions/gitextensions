@@ -315,6 +315,7 @@ namespace GitExtensions.Plugins.GitFlow
             ttDebug.RemoveAll();
             ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + result.ExitCode);
 
+            // TODO Can AllOutput be replaced with StandardOutput?
             var resultText = Regex.Replace(result.AllOutput, @"\r\n?|\n", Environment.NewLine);
 
             if (result.ExitedSuccessfully)

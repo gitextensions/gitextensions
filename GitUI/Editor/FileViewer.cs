@@ -1608,6 +1608,7 @@ namespace GitUI.Editor
 
         private void ProcessApplyOutput(GitArgumentBuilder args, byte[] patch, bool patchUpdateDiff = false)
         {
+            // TODO Cleanup the handling and separate AllOutput to StandardOutput/StandardError
             ExecutionResult result = Module.GitExecutable.Execute(args, inputWriter => inputWriter.BaseStream.Write(patch), throwOnErrorExit: false);
             string output = result.AllOutput.Trim();
             if (EnvUtils.RunningOnWindows())
