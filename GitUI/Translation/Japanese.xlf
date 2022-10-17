@@ -3993,8 +3993,8 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="tsbShowReflog.ToolTipText">
-        <source>Show reflog</source>
-        <target>reflogを表示</target>
+        <source>Show all reflog references</source>
+        <target>reflog参照をすべて表示</target>
         
       </trans-unit>
       <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
@@ -4128,8 +4128,8 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="tsmiShowReflog.ToolTipText">
-        <source>Show reflog</source>
-        <target>reflogを表示</target>
+        <source>Show all reflog references</source>
+        <target>reflog参照をすべて表示</target>
         
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
@@ -13800,6 +13800,11 @@ the last selected commit.</source>
       <trans-unit id="_showReflog.Text">
         <source>Show reflog</source>
         <target>reflogを表示</target>
+        
+      </trans-unit>
+      <trans-unit id="_showReflogTooltip.Text">
+        <source>Show all reflog references</source>
+        <target>reflog参照をすべて表示</target>
         
       </trans-unit>
       <trans-unit id="_simplifyByDecoration.Text">
