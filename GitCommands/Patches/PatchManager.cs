@@ -90,18 +90,37 @@ namespace GitCommands.Patches
 
         private static string CorrectHeaderForRenamedFile(string header)
         {
+            // Expected input:
+            //
+            // diff --git a/original.txt b/original2.txt
+            // similarity index 88%
+            // rename from original.txt
+            // rename to original2.txt
+            // index 0e05069..d4029ea 100644
+            // --- a/original.txt
+            // +++ b/original2.txt
+
+            // Expected output:
+            //
+            // diff --git a/original2.txt b/original2.txt
+            // index 0e05069..d4029ea 100644
+            // --- a/original2.txt
+            // +++ b/original2.txt
+
             string[] headerLines = header.Split(new[] { '\n' });
-            string? oldNameFull = null;
+            string? oldNameWithPrefix = null;
             string? newName = null;
             foreach (string line in headerLines)
             {
                 if (line.StartsWith("+++"))
                 {
+                    // Takes the "original2.txt" part from patch file line: +++ b/original2.txt
                     newName = line[6..];
                 }
                 else if (line.StartsWith("---"))
                 {
-                    oldNameFull = line[4..];
+                    // Takes the "a/original.txt" part from patch file line: --- a/original.txt
+                    oldNameWithPrefix = line[4..];
                 }
             }
 
@@ -114,12 +133,13 @@ namespace GitCommands.Patches
                 {
                     line = $"--- a/{newName}";
                 }
-                else if (line.Contains($" {oldNameFull} "))
+                else if (line.Contains($" {oldNameWithPrefix} "))
                 {
-                    line = line.Replace($" {oldNameFull} ", $" a/{newName} ");
+                    line = line.Replace($" {oldNameWithPrefix} ", $" a/{newName} ");
                 }
                 else if (line.StartsWith("rename from ") || line.StartsWith("rename to ") || line.StartsWith("similarity index "))
                 {
+                    // Note: this logic depends on git not localizing patch file format
                     continue;
                 }
 
