@@ -167,7 +167,7 @@ namespace GitUI.UserControls
             tstxtRevisionFilter.ForeColor = toolForeColor;
         }
 
-        private void SelectShowBranchesFilterOption(byte selectedIndex)
+        private void SelectShowBranchesFilterOption(int selectedIndex)
         {
             if (selectedIndex >= tssbtnShowBranches.DropDownItems.Count)
             {
