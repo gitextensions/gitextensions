@@ -40,10 +40,18 @@
         public const int EM_CHARFROMPOS = 0x00D7;
         public const int EM_GETFIRSTVISIBLELINE = 0xCE;
 
+        public static readonly IntPtr FALSE = IntPtr.Zero;
+        public static readonly IntPtr TRUE = new(1);
+
         /// <summary>
         /// The WM_NULL message performs no operation. An application sends the WM_NULL message if it wants to post a message that the recipient window will ignore.
         /// </summary>
         public const int WM_NULL = 0x0000;
+
+        /// <summary>
+        /// The WM_SETREDRAW message is sent to a window to allow changes in that window to be redrawn, or to prevent changes in that window from being redrawn.
+        /// </summary>
+        public const int WM_SETREDRAW = 0x000B;
 
         /// <summary>
         /// The WM_PAINT message is sent when the system or another application makes a request to paint a portion of an application's window. The message is sent when the UpdateWindow or RedrawWindow function is called, or by the DispatchMessage function when the application obtains a WM_PAINT message by using the GetMessage or PeekMessage function.

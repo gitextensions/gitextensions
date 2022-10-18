@@ -39,16 +39,11 @@ namespace GitUI
             }
         }
 
-        [DllImport("user32.dll")]
-        private static extern int SendMessage(IntPtr hwnd, int wmsg, bool wparam, int lparam);
-
-        private const int WM_SETREDRAW = 11;
-
         private static void SuspendDrawing(Control control)
         {
             if (control != null)
             {
-                SendMessage(control.Handle, WM_SETREDRAW, false, 0);
+                NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.FALSE, IntPtr.Zero);
             }
         }
 
@@ -56,7 +51,7 @@ namespace GitUI
         {
             if (control != null)
             {
-                SendMessage(control.Handle, WM_SETREDRAW, true, 0);
+                NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.TRUE, IntPtr.Zero);
                 control.Refresh();
             }
         }
