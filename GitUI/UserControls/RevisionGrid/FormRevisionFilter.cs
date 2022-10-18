@@ -131,8 +131,8 @@ namespace GitUI.UserControls.RevisionGrid
             _filterInfo.PathFilter = PathFilter.Text;
             _filterInfo.ByBranchFilter = BranchFilterCheck.Checked;
             _filterInfo.BranchFilter = BranchFilter.Text;
-            _filterInfo.ShowReflogReferences = ReflogCheck.Checked;
             _filterInfo.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
+            _filterInfo.ShowReflogReferences = ReflogCheck.Checked;
             _filterInfo.ShowOnlyFirstParent = OnlyFirstParentCheck.Checked;
             _filterInfo.ShowMergeCommits = MergeCommitsCheck.Checked;
             _filterInfo.ShowSimplifyByDecoration = SimplifyByDecorationCheck.Checked;
