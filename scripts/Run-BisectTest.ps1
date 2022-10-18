@@ -9,15 +9,23 @@ param (
     [Parameter(Mandatory = $false,
         ParameterSetName = 'BisectStart')]
     [string[]]$Skip,
-    [switch]$Force    
+    [switch]$Force,
+    [switch]$FirstParent
 )
+
 Copy-Item  -Force .\scripts\Bisect-Test.ps1 $env:TEMP
 $tester = Join-Path -Path $env:TEMP -ChildPath Bisect-Test.ps1
 $tester = $tester + ' -Build -Run'
+
 if ($Force) {
     $tester = $tester + ' -Force'
 }
-git bisect start $Bad $Good 2>&1 | Tee-Object Bisect.log
+
+$fp = ""
+if ($FirstParent) {
+    $fp = '--first-parent'
+}
+git bisect start $Bad $Good $fp 2>&1 | Tee-Object Bisect.log
 
 foreach ($s in $Skip) { 
     git bisect skip $s
