@@ -27,13 +27,22 @@ namespace GitUI.CommandsDialogs
             CompleteTheInitialization();
         }
 
-        public FormStash(GitUICommands commands)
+        public FormStash(GitUICommands commands, string? initialStash = null)
             : base(commands)
         {
             InitializeComponent();
             View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(this, EventArgs.Empty); };
             View.TopScrollReached += FileViewer_TopScrollReached;
             View.BottomScrollReached += FileViewer_BottomScrollReached;
+            if (initialStash is not null)
+            {
+                string initialIndex = initialStash.SubstringAfter('{').SubstringUntil('}');
+                if (int.TryParse(initialIndex, out int res))
+                {
+                    _lastSelectedStashIndex = res + 1;
+                }
+            }
+
             CompleteTheInitialization();
         }
 

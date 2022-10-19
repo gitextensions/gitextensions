@@ -42,6 +42,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.ShowAuthorAvatarColumn = false;
 
             AppSettings.RepoObjectsTreeShowTags = true;
+            AppSettings.RepoObjectsTreeShowStashes = true;
         }
 
         [OneTimeTearDown]

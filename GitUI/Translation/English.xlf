@@ -9141,6 +9141,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Fetch and prune all remotes</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnApplyStash.Text">
+        <source>&amp;Apply stash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnApplyStash.ToolTipText">
+        <source>Apply this stash</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnCollapse.Text">
         <source>Collapse</source>
         <target />
@@ -9175,6 +9183,14 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnDisableRemote.Text">
         <source>&amp;Deactivate</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnDropStash.Text">
+        <source>&amp;Drop stash...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnDropStash.ToolTipText">
+        <source>Drop this stash</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnEnableRemote.Text">
@@ -9229,6 +9245,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Manage remotes</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnManageStashFromRootNode.Text">
+        <source>&amp;Manage stashes...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnManageSubmodules.Text">
         <source>&amp;Manage...</source>
         <target />
@@ -9261,12 +9281,28 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Open selected submodule in a new instance</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnOpenStash.Text">
+        <source>&amp;Open stash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnOpenStash.ToolTipText">
+        <source>Open this stash</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
         <source>&amp;Open</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.ToolTipText">
         <source>Open selected submodule</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnPopStash.Text">
+        <source>&amp;Pop stash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnPopStash.ToolTipText">
+        <source>Pop this stash</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
@@ -9287,6 +9323,14 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.ToolTipText">
         <source>Reset selected submodule</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnStashAllFromRootNode.Text">
+        <source>&amp;Stash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnStashStagedFromRootNode.Text">
+        <source>S&amp;tash staged</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnStashSubmodule.Text">
@@ -9335,6 +9379,14 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="tsbShowRemotes.ToolTipText">
         <source>Remotes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsbShowStashes.Text">
+        <source>St&amp;ashes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsbShowStashes.ToolTipText">
+        <source>Stashes</source>
         <target />
       </trans-unit>
       <trans-unit id="tsbShowSubmodules.Text">
@@ -10994,6 +11046,10 @@ the last selected commit.</source>
       </trans-unit>
       <trans-unit id="_stashDropConfirmTitle.Text">
         <source>Drop Stash Confirmation</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stashesText.Text">
+        <source>Stashes</source>
         <target />
       </trans-unit>
       <trans-unit id="_submodulesText.Text">

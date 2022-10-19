@@ -24,6 +24,7 @@ using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using Microsoft;
+using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using TaskDialog = System.Windows.Forms.TaskDialog;
@@ -888,6 +889,12 @@ namespace GitUI
             Lazy<IReadOnlyList<IGitRef>> getUnfilteredRefs = new(() => (getRefs ?? capturedModule.GetRefs)(RefsFilter.NoFilter));
             _ambiguousRefs = new(() => GitRef.GetAmbiguousRefNames(getUnfilteredRefs.Value));
 
+            // Get the "main" stash commit, including the reflog selector
+            Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
+                !AppSettings.ShowStashes
+                ? Array.Empty<GitRevision>()
+                : new RevisionReader(capturedModule, hasReflogSelector: true).GetStashes(cancellationToken));
+
             try
             {
                 _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
@@ -986,9 +993,7 @@ namespace GitUI
 
                     await TaskScheduler.Default;
 
-                    // Get the "main" stash commit, including the reflog selector
-                    IReadOnlyCollection<GitRevision> stashRevs = new RevisionReader(capturedModule, hasReflogSelector: true).GetStashes(cancellationToken);
-                    stashesById = stashRevs.ToDictionary(r => r.ObjectId);
+                    stashesById = getStashRevs.Value.ToDictionary(r => r.ObjectId);
 
                     // Git stores stashes in 2 or 3 commits. The (first) "stash" commit is listed by git-stash-list,
                     // does not include untracked files, may be stored in the third "untracked" commit.
@@ -1004,10 +1009,10 @@ namespace GitUI
                     }
 
                     // "stash" commits to insert (before regular commit)
-                    stashesByParentId = stashRevs.ToLookup(r => r.FirstParentId);
+                    stashesByParentId = getStashRevs.Value.ToLookup(r => r.FirstParentId);
 
                     // "untracked" commits to insert (parent to "stash" commits)
-                    Dictionary<ObjectId, ObjectId> untrackedChildIds = stashRevs.Where(stash => stash.ParentIds.Count >= 3)
+                    Dictionary<ObjectId, ObjectId> untrackedChildIds = getStashRevs.Value.Where(stash => stash.ParentIds.Count >= 3)
                         .Take(AppSettings.MaxStashesWithUntrackedFiles)
                         .ToDictionary(stash => stash.ParentIds[2], stash => stash.ObjectId);
                     IReadOnlyCollection<GitRevision> untrackedRevs = new RevisionReader(capturedModule, hasReflogSelector: false)
@@ -1015,7 +1020,7 @@ namespace GitUI
                     untrackedByStashId = untrackedRevs.ToDictionary(r => untrackedChildIds[r.ObjectId]);
 
                     // Remove parents not included ("index" and empty "untracked" commits).
-                    foreach (GitRevision stash in stashRevs)
+                    foreach (GitRevision stash in getStashRevs.Value)
                     {
                         if (!untrackedByStashId.ContainsKey(stash.ObjectId))
                         {
@@ -1054,7 +1059,7 @@ namespace GitUI
                     });
 
                 // Initiate update side panel
-                RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
+                RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
             }
             catch
             {
@@ -1338,7 +1343,7 @@ namespace GitUI
                         }
 
                         _isRefreshingRevisions = false;
-                        RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
+                        RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
                     }).FileAndForget();
                     return;
                 }
@@ -1403,7 +1408,7 @@ namespace GitUI
 
                     SetPage(_gridView);
                     _isRefreshingRevisions = false;
-                    RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, forceRefresh));
+                    RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
                     HighlightRevisionsByAuthor(GetSelectedRevisions());
 
                     await TaskScheduler.Default;

@@ -677,11 +677,11 @@ namespace GitUI
             return DoActionOnRepo(owner, Action, changesRepo: false);
         }
 
-        public bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true)
+        public bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string initialStash = null)
         {
             bool Action()
             {
-                using FormStash form = new(this) { ManageStashes = manageStashes };
+                using FormStash form = new(this, initialStash) { ManageStashes = manageStashes };
                 form.ShowDialog(owner);
                 return true;
             }
