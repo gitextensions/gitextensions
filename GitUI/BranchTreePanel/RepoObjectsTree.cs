@@ -234,8 +234,8 @@ namespace GitUI.BranchTreePanel
         }
 
         /// <summary>
-        /// Toggles filtering mode on or off to the git refs present in the left panel depending on the app's global filtering rules .
-        /// These rules include: show all branches / show current branch / show filtered branches, etc.
+        /// FormBrowse refreshing the side panel when refreshing the grid.
+        /// (Update the objects in the panel.)
         /// </summary>
         /// <param name="getRefs">Function to get refs.</param>
         /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
@@ -250,6 +250,18 @@ namespace GitUI.BranchTreePanel
         }
 
         /// <summary>
+        /// FormBrowse refreshing the side panel after updating the grid.
+        /// (Update the visibility for side panel objects.)
+        /// </summary>
+        public void RefreshRevisionsLoaded()
+        {
+            // Some refs may not be visible
+            _branchesTree.UpdateVisibility();
+            _remotesTree.UpdateVisibility();
+            _tagTree.UpdateVisibility();
+        }
+
+        /// <summary>
         /// Refresh after resorting.
         /// </summary>
         /// <param name="getRefs">Git references</param>
@@ -258,6 +270,10 @@ namespace GitUI.BranchTreePanel
             _branchesTree.Refresh(getRefs);
             _remotesTree.Refresh(getRefs);
             _tagTree.Refresh(getRefs);
+
+            _branchesTree.UpdateVisibility();
+            _remotesTree.UpdateVisibility();
+            _tagTree.UpdateVisibility();
         }
 
         public void ReloadHotkeys()
