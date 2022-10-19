@@ -3,7 +3,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.BranchTreePanel
 {
-    internal abstract class BaseBranchLeafNode : BaseBranchNode
+    internal abstract class BaseBranchLeafNode : BaseRevisionNode
     {
         private readonly string _imageKeyMerged;
         private readonly string _imageKeyUnmerged;
@@ -34,9 +34,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public ObjectId? ObjectId { get; }
-
-        protected override void ApplyStyle()
+        public override void ApplyStyle()
         {
             base.ApplyStyle();
 

@@ -27,7 +27,7 @@ namespace GitUI.BranchTreePanel
         private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
         private readonly List<Tree> _rootNodes = new();
         private readonly SearchControl<string> _txtBranchCriterion;
-        private BranchTree _branchesTree;
+        private LocalBranchTree _branchesTree;
         private RemoteBranchTree _remotesTree;
         private TagTree _tagTree;
         private SubmoduleTree _submoduleTree;
@@ -182,7 +182,7 @@ namespace GitUI.BranchTreePanel
                     {
                         foreach (TreeNode node in nodes)
                         {
-                            if (node.Tag is BaseBranchNode branch)
+                            if (node.Tag is BaseRevisionNode branch)
                             {
                                 if (!branch.HasChildren)
                                 {
@@ -237,19 +237,23 @@ namespace GitUI.BranchTreePanel
         /// Toggles filtering mode on or off to the git refs present in the left panel depending on the app's global filtering rules .
         /// These rules include: show all branches / show current branch / show filtered branches, etc.
         /// </summary>
+        /// <param name="getRefs">Function to get refs.</param>
+        /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
         /// <param name="isFiltering">
         ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
         /// </param>
-        /// <param name="getRefs">Function to get refs.</param>
-        /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
-        public void Refresh(bool isFiltering, bool forceRefresh, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, bool forceRefresh, bool isFiltering)
         {
-            _branchesTree.Refresh(isFiltering, forceRefresh, getRefs);
-            _remotesTree.Refresh(isFiltering, forceRefresh, getRefs);
-            _tagTree.Refresh(isFiltering, forceRefresh, getRefs);
+            _branchesTree.Refresh(getRefs, forceRefresh, isFiltering);
+            _remotesTree.Refresh(getRefs, forceRefresh, isFiltering);
+            _tagTree.Refresh(getRefs, forceRefresh, isFiltering);
         }
 
-        public void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        /// <summary>
+        /// Refresh after resorting.
+        /// </summary>
+        /// <param name="getRefs">Git references</param>
+        public void ResortRefs(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
             _branchesTree.Refresh(getRefs);
             _remotesTree.Refresh(getRefs);
@@ -343,7 +347,7 @@ namespace GitUI.BranchTreePanel
                 SelectedImageKey = nameof(Images.BranchLocalRoot)
             };
 
-            _branchesTree = new BranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource);
+            _branchesTree = new LocalBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource);
         }
 
         private void CreateRemotes()
@@ -473,7 +477,7 @@ namespace GitUI.BranchTreePanel
                 {
                     var n = queue.Dequeue();
 
-                    if (n.Tag is BaseBranchNode branch)
+                    if (n.Tag is BaseRevisionNode branch)
                     {
                         if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
                         {
@@ -544,7 +548,7 @@ namespace GitUI.BranchTreePanel
             Node.OnNode<Node>(e.Node, node =>
             {
                 // prevent selection of refs hidden from the revision grid by filtering
-                if (node is not BaseBranchNode branchNode || branchNode.Visible)
+                if (node is not BaseRevisionNode revNode || revNode.Visible)
                 {
                     node.OnSelected();
                 }

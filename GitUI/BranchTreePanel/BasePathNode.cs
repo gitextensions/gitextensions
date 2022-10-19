@@ -2,13 +2,13 @@
 
 namespace GitUI.BranchTreePanel
 {
-    internal class BasePathNode : BaseBranchNode
+    internal class BasePathNode : BaseRevisionNode
     {
         public BasePathNode(Tree tree, string fullPath) : base(tree, fullPath, visible: true)
         {
         }
 
-        protected override void ApplyStyle()
+        public override void ApplyStyle()
         {
             base.ApplyStyle();
 

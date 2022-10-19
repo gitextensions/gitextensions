@@ -3051,7 +3051,6 @@ namespace GitCommands
 
             ArgumentString cmd = GitCommandHelpers.GetRefsCmd(getRef, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
             ExecutionResult result = _gitExecutable.Execute(cmd, throwOnErrorExit: false);
-            ////TODO: Handle non-empty result.StandardError
             return result.ExitedSuccessfully
                 ? ParseRefs(result.StandardOutput)
                 : Array.Empty<IGitRef>();
