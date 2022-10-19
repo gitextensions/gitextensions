@@ -37,7 +37,7 @@ namespace GitUI.BranchTreePanel
         }
 
         #region style / appearance
-        protected virtual void ApplyStyle()
+        public virtual void ApplyStyle()
         {
             SetFont(GetFontStyle());
             TreeViewNode.ToolTipText = string.Empty;

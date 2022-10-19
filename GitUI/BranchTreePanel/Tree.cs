@@ -10,9 +10,6 @@ namespace GitUI.BranchTreePanel
         private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new();
         private bool _firstReloadNodesSinceModuleChanged = true;
 
-        // A flag to indicate whether the data is being filtered (e.g. Show Current Branch Only).
-        private protected AsyncLocal<bool> IsFiltering = new();
-
         protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
         {
             Nodes = new Nodes(this);
@@ -51,7 +48,6 @@ namespace GitUI.BranchTreePanel
         public bool IgnoreSelectionChangedEvent { get; set; }
         protected GitModule Module => UICommands.Module;
         protected bool IsAttached { get; private set; }
-        protected virtual bool SupportsFiltering { get; } = false;
 
         public void Attached()
         {
@@ -61,7 +57,6 @@ namespace GitUI.BranchTreePanel
 
         protected virtual void OnAttached()
         {
-            IsFiltering.Value = false;
         }
 
         public void Detached()
@@ -74,50 +69,6 @@ namespace GitUI.BranchTreePanel
         protected virtual void OnDetached()
         {
         }
-
-        /// <summary>
-        /// Requests to refresh the data tree and to apply filtering, if necessary.
-        /// </summary>
-        protected internal virtual void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-        {
-            // NOTE: descendants may need to break their local caches to ensure the latest data is loaded.
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ReloadNodesAsync(LoadNodesAsync, getRefs);
-            });
-        }
-
-        /// <summary>
-        /// Requests to refresh the data tree and to apply filtering, if necessary.
-        /// </summary>
-        /// <param name="isFiltering">
-        ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
-        /// </param>
-        /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
-        internal void Refresh(bool isFiltering, bool forceRefresh, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-        {
-            if (!IsAttached)
-            {
-                return;
-            }
-
-            // If we're not currently filtering and no need to filter now -> exit.
-            // Else we need to iterate over the list and rebind the tree - whilst there
-            // could be a situation whether a user just refreshed the grid, there could
-            // also be a situation where the user applied a different filter, or checked
-            // out a different ref (e.g. a branch or commit), and we have a different
-            // set of branches to show/hide.
-            if (!forceRefresh && (!SupportsFiltering || (!isFiltering && !IsFiltering.Value)))
-            {
-                return;
-            }
-
-            IsFiltering.Value = isFiltering && SupportsFiltering;
-            Refresh(getRefs);
-        }
-
-        protected abstract Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs);
 
         public IEnumerable<TNode> DepthEnumerator<TNode>() where TNode : NodeBase
             => Nodes.DepthEnumerator<TNode>();
@@ -203,7 +154,7 @@ namespace GitUI.BranchTreePanel
 
                 if (node is not null)
                 {
-                    TreeViewNode.TreeView.SelectedNode = !(node.Tag is BaseBranchNode branchNode) || branchNode.Visible
+                    TreeViewNode.TreeView.SelectedNode = !(node.Tag is BaseRevisionNode branchNode) || branchNode.Visible
                         ? node
                         : null;
                 }

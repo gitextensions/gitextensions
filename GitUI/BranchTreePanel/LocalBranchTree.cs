@@ -2,53 +2,20 @@
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
 {
-    internal sealed class BranchTree : Tree
+    internal sealed class LocalBranchTree : BaseRefTree
     {
         private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
-        private readonly ICheckRefs _refsSource;
 
-        // Retains the list of currently loaded branches.
-        // This is needed to apply filtering without reloading the data.
-        // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
-        private IReadOnlyList<IGitRef>? _loadedBranches;
-
-        public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource)
-            : base(treeNode, uiCommands)
+        public LocalBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource)
+            : base(treeNode, uiCommands, refsSource, RefsFilter.Heads)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
-            _refsSource = refsSource;
         }
 
-        protected override bool SupportsFiltering => true;
-
-        protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-        {
-            await TaskScheduler.Default;
-            token.ThrowIfCancellationRequested();
-
-            if (!IsFiltering.Value || _loadedBranches is null)
-            {
-                _loadedBranches = getRefs(RefsFilter.Heads);
-                token.ThrowIfCancellationRequested();
-            }
-
-            return FillBranchTree(_loadedBranches, token);
-        }
-
-        /// <inheritdoc/>
-        protected internal override void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-        {
-            // Break the local cache to ensure the data is requeried to reflect the required sort order.
-            _loadedBranches = null;
-
-            base.Refresh(getRefs);
-        }
-
-        private Nodes FillBranchTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
+        protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
         {
             #region example
 
@@ -84,7 +51,7 @@ namespace GitUI.BranchTreePanel
             var aheadBehindData = _aheadBehindDataProvider?.GetData();
 
             var currentBranch = Module.GetSelectedBranch();
-            Dictionary<string, BaseBranchNode> pathToNode = new();
+            Dictionary<string, BaseRevisionNode> pathToNode = new();
             foreach (IGitRef branch in branches)
             {
                 token.ThrowIfCancellationRequested();

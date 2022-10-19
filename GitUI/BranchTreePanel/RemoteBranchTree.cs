@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Git;
 using GitCommands.Remotes;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -7,53 +8,20 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
 {
-    internal sealed class RemoteBranchTree : Tree
+    internal sealed class RemoteBranchTree : BaseRefTree
     {
-        private readonly ICheckRefs _refsSource;
-
-        // Retains the list of currently loaded branches.
-        // This is needed to apply filtering without reloading the data.
-        // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
-        private IReadOnlyList<IGitRef>? _loadedBranches;
-
         public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
-            : base(treeNode, uiCommands)
+            : base(treeNode, uiCommands, refsSource, RefsFilter.Remotes)
         {
-            _refsSource = refsSource;
         }
 
-        protected override bool SupportsFiltering => true;
-
-        protected override async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-        {
-            await TaskScheduler.Default;
-            token.ThrowIfCancellationRequested();
-
-            if (!IsFiltering.Value || _loadedBranches is null)
-            {
-                _loadedBranches = getRefs(RefsFilter.Remotes);
-                token.ThrowIfCancellationRequested();
-            }
-
-            return await FillBranchTreeAsync(_loadedBranches, token);
-        }
-
-        /// <inheritdoc/>
-        protected internal override void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
-        {
-            // Break the local cache to ensure the data is requeried to reflect the required sort order.
-            _loadedBranches = null;
-
-            base.Refresh(getRefs);
-        }
-
-        private async Task<Nodes> FillBranchTreeAsync(IReadOnlyList<IGitRef> branches, CancellationToken token)
+        protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
         {
             Nodes nodes = new(this);
-            Dictionary<string, BaseBranchNode> pathToNodes = new();
+            Dictionary<string, BaseRevisionNode> pathToNodes = new();
 
             List<RemoteRepoNode> enabledRemoteRepoNodes = new();
-            Dictionary<string, Remote> remoteByName = (await Module.GetRemotesAsync().ConfigureAwaitRunInline()).ToDictionary(r => r.Name);
+            Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(async () => (await Module.GetRemotesAsync()).ToDictionary(r => r.Name));
 
             ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
 
@@ -118,7 +86,7 @@ namespace GitUI.BranchTreePanel
 
             return nodes;
 
-            BaseBranchNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
+            BaseRevisionNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
             {
                 if (parentPath == remote.Name)
                 {

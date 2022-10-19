@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                RefreshLeftPanel(e.ForceRefresh, e.GetRefs);
+                RefreshLeftPanel(e.GetRefs, e.ForceRefresh);
             };
 
             RevisionGrid.SelectionChanged += (sender, e) =>

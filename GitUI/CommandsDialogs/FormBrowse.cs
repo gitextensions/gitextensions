@@ -1208,7 +1208,7 @@ namespace GitUI.CommandsDialogs
             revisionGpgInfo1.DisplayGpgInfo(info);
         }
 
-        private void RefreshLeftPanel(bool forceRefresh, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+        private void RefreshLeftPanel(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, bool forceRefresh)
         {
             // Apply filtering when:
             // 1. don't show reflog, and
@@ -1218,7 +1218,7 @@ namespace GitUI.CommandsDialogs
             // (this check ignores other revision filters)
             bool isFiltering = !AppSettings.ShowReflogReferences
                             && (AppSettings.ShowCurrentBranchOnly || AppSettings.BranchFilterEnabled);
-            repoObjectsTree.Refresh(isFiltering, forceRefresh, getRefs);
+            repoObjectsTree.RefreshRevisionsLoading(getRefs, forceRefresh, isFiltering);
         }
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
@@ -2937,7 +2937,7 @@ namespace GitUI.CommandsDialogs
 
             if (!MainSplitContainer.Panel1Collapsed)
             {
-                RefreshLeftPanel(forceRefresh: true, new FilteredGitRefsProvider(UICommands.GitModule).GetRefs);
+                RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs, forceRefresh: true);
             }
         }
 

@@ -865,12 +865,13 @@ namespace GitUI
                       ? Module.GetSelectedBranch(setDefaultIfEmpty: false)
                       : "");
 
-            // Revision info is read in two parallel steps:
+            // Revision info is read in three parallel steps:
             // 1. Read current commit, refs, prepare grid etc.
-            // 2. Read all revisions with git-log.
+            // 2. Read stashes (if enabled).
+            // 3. Read all revisions with git-log.
             //    Git will provide log information when available (so slower to first revision if sorting).
-            // Both these operations can take a long time and is done async in parallel.
-            // Step 2. requires that the information in 1. is available when adding revisions,
+            // These operations can take a long time and is done async in parallel.
+            // Step 3. requires that the information in 1 and 2 is available when adding revisions,
             // and is therefore protected with a semaphore.
             SemaphoreSlim semaphoreUpdateGrid = new(initialCount: 0, maxCount: 2);
             CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
