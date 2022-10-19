@@ -1884,6 +1884,12 @@ namespace GitCommands
             set => SetBool("RepoObjectsTree.ShowTags", value);
         }
 
+        public static bool RepoObjectsTreeShowStashes
+        {
+            get => GetBool("RepoObjectsTree.ShowStashes", true);
+            set => SetBool("RepoObjectsTree.ShowStashes", value);
+        }
+
         public static bool RepoObjectsTreeShowSubmodules
         {
             get => GetBool("RepoObjectsTree.ShowSubmodules", true);
@@ -1912,6 +1918,12 @@ namespace GitCommands
         {
             get => GetInt("RepoObjectsTree.SubmodulesIndex", 3);
             set => SetInt("RepoObjectsTree.SubmodulesIndex", value);
+        }
+
+        public static int RepoObjectsTreeStashesIndex
+        {
+            get => GetInt("RepoObjectsTree.StashesIndex", 4);
+            set => SetInt("RepoObjectsTree.StashesIndex", value);
         }
 
         public static bool BlameDisplayAuthorFirst

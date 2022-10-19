@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                RefreshLeftPanel(e.GetRefs, e.ForceRefresh);
+                RefreshLeftPanel(e.GetRefs, e.GetStashRevs, e.ForceRefresh);
             };
 
             RevisionGrid.RevisionsLoaded += (sender, e) =>

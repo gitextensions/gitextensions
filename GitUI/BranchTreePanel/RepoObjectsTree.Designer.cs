@@ -40,6 +40,7 @@ namespace GitUI.BranchTreePanel
                 _remotesTree?.Dispose();
                 _tagTree?.Dispose();
                 _submoduleTree?.Dispose();
+                _stashTree?.Dispose();
             }
 
             base.Dispose(disposing);
@@ -88,7 +89,16 @@ namespace GitUI.BranchTreePanel
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.mnubtnCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnDeleteAllBranches = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnubtnStashAllFromRootNode = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnStashStagedFromRootNode = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnManageStashFromRootNode = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnubtnOpenStash = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnApplyStash = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnPopStash = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnDropStash = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.mnubtnCollapse = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnExpand = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -104,6 +114,7 @@ namespace GitUI.BranchTreePanel
             this.tsbShowBranches = new System.Windows.Forms.ToolStripButton();
             this.tsbShowRemotes = new System.Windows.Forms.ToolStripButton();
             this.tsbShowTags = new System.Windows.Forms.ToolStripButton();
+            this.tsbShowStashes = new System.Windows.Forms.ToolStripButton();
             this.tsbShowSubmodules = new System.Windows.Forms.ToolStripButton();
             this.branchSearchPanel = new System.Windows.Forms.TableLayoutPanel();
             this.btnSearch = new System.Windows.Forms.Button();
@@ -163,7 +174,16 @@ namespace GitUI.BranchTreePanel
             this.toolStripSeparator6,
             this.mnubtnCreateBranch,
             this.mnubtnDeleteAllBranches,
+            this.toolStripSeparator10,
+            this.mnubtnStashAllFromRootNode,
+            this.mnubtnStashStagedFromRootNode,
+            this.mnubtnManageStashFromRootNode,
             this.toolStripSeparator7,
+            this.mnubtnOpenStash,
+            this.mnubtnApplyStash,
+            this.mnubtnPopStash,
+            this.mnubtnDropStash,
+            this.toolStripSeparator9,
             this.mnubtnCollapse,
             this.mnubtnExpand,
             this.toolStripSeparator4,
@@ -408,10 +428,66 @@ namespace GitUI.BranchTreePanel
             this.mnubtnDeleteAllBranches.ToolTipText = "Delete all child branchs, which must all be fully merged in its upstream branch o" +
     "r in HEAD";
             // 
+            // toolStripSeparator10
+            // 
+            this.toolStripSeparator10.Name = "toolStripSeparator10";
+            this.toolStripSeparator10.Size = new System.Drawing.Size(263, 6);
+            // 
+            // mnubtnStashAllFromRootNode
+            // 
+            this.mnubtnStashAllFromRootNode.Name = "mnubtnStashAllFromRootNode";
+            this.mnubtnStashAllFromRootNode.Size = new System.Drawing.Size(266, 26);
+            this.mnubtnStashAllFromRootNode.Text = "&Stash";
+            // 
+            // mnubtnStashStagedFromRootNode
+            // 
+            this.mnubtnStashStagedFromRootNode.Name = "mnubtnStashStagedFromRootNode";
+            this.mnubtnStashStagedFromRootNode.Size = new System.Drawing.Size(266, 26);
+            this.mnubtnStashStagedFromRootNode.Text = "S&tash staged";
+            // 
+            // mnubtnManageStashFromRootNode
+            // 
+            this.mnubtnManageStashFromRootNode.Name = "mnubtnManageStashFromRootNode";
+            this.mnubtnManageStashFromRootNode.Size = new System.Drawing.Size(266, 26);
+            this.mnubtnManageStashFromRootNode.Text = "&Manage stashes...";
+            // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(263, 6);
+            // 
+            // mnubtnOpenStash
+            // 
+            this.mnubtnOpenStash.Name = "mnubtnOpenStash";
+            this.mnubtnOpenStash.Size = new System.Drawing.Size(266, 26);
+            this.mnubtnOpenStash.Text = "&Open stash";
+            this.mnubtnOpenStash.ToolTipText = "Open this stash";
+            // 
+            // mnubtnApplyStash
+            // 
+            this.mnubtnApplyStash.Name = "mnubtnApplyStash";
+            this.mnubtnApplyStash.Size = new System.Drawing.Size(266, 26);
+            this.mnubtnApplyStash.Text = "&Apply stash";
+            this.mnubtnApplyStash.ToolTipText = "Apply this stash";
+            // 
+            // mnubtnPopStash
+            // 
+            this.mnubtnPopStash.Name = "mnubtnPopStash";
+            this.mnubtnPopStash.Size = new System.Drawing.Size(266, 26);
+            this.mnubtnPopStash.Text = "&Pop stash";
+            this.mnubtnPopStash.ToolTipText = "Pop this stash";
+            // 
+            // mnubtnDropStash
+            // 
+            this.mnubtnDropStash.Name = "mnubtnDropStash";
+            this.mnubtnDropStash.Size = new System.Drawing.Size(266, 26);
+            this.mnubtnDropStash.Text = "&Drop stash...";
+            this.mnubtnDropStash.ToolTipText = "Drop this stash";
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(263, 6);
             // 
             // mnubtnCollapse
             // 
@@ -502,7 +578,8 @@ namespace GitUI.BranchTreePanel
             this.tsbShowBranches,
             this.tsbShowRemotes,
             this.tsbShowTags,
-            this.tsbShowSubmodules});
+            this.tsbShowSubmodules,
+            this.tsbShowStashes});
             this.leftPanelToolStrip.Location = new System.Drawing.Point(0, 0);
             this.leftPanelToolStrip.Name = "leftPanelToolStrip";
             this.leftPanelToolStrip.Size = new System.Drawing.Size(300, 27);
@@ -560,6 +637,17 @@ namespace GitUI.BranchTreePanel
             this.tsbShowSubmodules.Size = new System.Drawing.Size(29, 24);
             this.tsbShowSubmodules.Text = "&Submodules";
             this.tsbShowSubmodules.Click += new System.EventHandler(this.tsbShowSubmodules_Click);
+            // 
+            // tsbShowStashes
+            // 
+            this.tsbShowStashes.CheckOnClick = true;
+            this.tsbShowStashes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbShowStashes.Image = global::GitUI.Properties.Images.Stash;
+            this.tsbShowStashes.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbShowStashes.Name = "tsbShowStashes";
+            this.tsbShowStashes.Size = new System.Drawing.Size(29, 24);
+            this.tsbShowStashes.Text = "St&ashes";
+            this.tsbShowStashes.Click += new System.EventHandler(this.tsbShowStashes_Click);
             // 
             // branchSearchPanel
             // 
@@ -636,6 +724,7 @@ namespace GitUI.BranchTreePanel
         private ToolStripButton tsbShowBranches;
         private ToolStripButton tsbShowRemotes;
         private ToolStripButton tsbShowTags;
+        private ToolStripButton tsbShowStashes;
         private ToolStripButton tsbShowSubmodules;
         private UserControls.RevisionGrid.CopyContextMenuItem copyContextMenuItem;
         private ToolStripMenuItem filterForSelectedRefsMenuItem;
@@ -670,7 +759,16 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnFetchOneBranch;
         private ToolStripMenuItem mnubtnCreateBranch;
         private ToolStripMenuItem mnubtnDeleteAllBranches;
+        private ToolStripSeparator toolStripSeparator10;
+        private ToolStripMenuItem mnubtnStashAllFromRootNode;
+        private ToolStripMenuItem mnubtnStashStagedFromRootNode;
+        private ToolStripMenuItem mnubtnManageStashFromRootNode;
         private ToolStripSeparator toolStripSeparator7;
+        private ToolStripMenuItem mnubtnOpenStash;
+        private ToolStripMenuItem mnubtnApplyStash;
+        private ToolStripMenuItem mnubtnPopStash;
+        private ToolStripMenuItem mnubtnDropStash;
+        private ToolStripSeparator toolStripSeparator9;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem runScriptToolStripMenuItem;
 

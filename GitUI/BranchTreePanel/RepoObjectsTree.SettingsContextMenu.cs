@@ -31,7 +31,8 @@ namespace GitUI.BranchTreePanel
                 [_branchesTree] = AppSettings.RepoObjectsTreeBranchesIndex,
                 [_remotesTree] = AppSettings.RepoObjectsTreeRemotesIndex,
                 [_tagTree] = AppSettings.RepoObjectsTreeTagsIndex,
-                [_submoduleTree] = AppSettings.RepoObjectsTreeSubmodulesIndex
+                [_submoduleTree] = AppSettings.RepoObjectsTreeSubmodulesIndex,
+                [_stashTree] = AppSettings.RepoObjectsTreeStashesIndex
             };
         }
 
@@ -41,6 +42,7 @@ namespace GitUI.BranchTreePanel
             AppSettings.RepoObjectsTreeRemotesIndex = treeToPositionIndex[_remotesTree];
             AppSettings.RepoObjectsTreeTagsIndex = treeToPositionIndex[_tagTree];
             AppSettings.RepoObjectsTreeSubmodulesIndex = treeToPositionIndex[_submoduleTree];
+            AppSettings.RepoObjectsTreeStashesIndex = treeToPositionIndex[_stashTree];
         }
 
         private void ReorderTreeNode(TreeNode node, bool up)
@@ -79,6 +81,7 @@ namespace GitUI.BranchTreePanel
             RemoveTree(_remotesTree);
             RemoveTree(_tagTree);
             RemoveTree(_submoduleTree);
+            RemoveTree(_stashTree);
             ShowEnabledTrees();
         }
 
@@ -102,6 +105,11 @@ namespace GitUI.BranchTreePanel
             if (tsbShowSubmodules.Checked)
             {
                 AddTree(_submoduleTree);
+            }
+
+            if (tsbShowStashes.Checked)
+            {
+                AddTree(_stashTree);
             }
         }
 
@@ -162,6 +170,21 @@ namespace GitUI.BranchTreePanel
             else
             {
                 RemoveTree(_submoduleTree);
+            }
+        }
+
+        private void tsbShowStashes_Click(object sender, EventArgs e)
+        {
+            AppSettings.RepoObjectsTreeShowStashes = tsbShowStashes.Checked;
+            _searchResult = null;
+            if (tsbShowStashes.Checked)
+            {
+                AddTree(_stashTree);
+                _searchResult = null;
+            }
+            else
+            {
+                RemoveTree(_stashTree);
             }
         }
     }
