@@ -7,15 +7,13 @@ using GitUIPluginInterfaces;
 namespace GitUI.BranchTreePanel
 {
     [DebuggerDisplay("(Tag) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
-    internal sealed class TagNode : BaseBranchNode, IGitRefActions, ICanDelete
+    internal sealed class TagNode : BaseRevisionNode, IGitRefActions, ICanDelete
     {
         public TagNode(Tree tree, in ObjectId? objectId, string fullPath, bool visible)
             : base(tree, fullPath, visible)
         {
             ObjectId = objectId;
         }
-
-        public ObjectId? ObjectId { get; }
 
         internal override void OnSelected()
         {
@@ -53,7 +51,7 @@ namespace GitUI.BranchTreePanel
             return UICommands.StartMergeBranchDialog(TreeViewNode.TreeView, FullPath);
         }
 
-        protected override void ApplyStyle()
+        public override void ApplyStyle()
         {
             base.ApplyStyle();
 

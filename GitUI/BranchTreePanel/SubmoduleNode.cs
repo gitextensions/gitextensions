@@ -120,7 +120,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        protected override void ApplyStyle()
+        public override void ApplyStyle()
         {
             base.ApplyStyle();
             ApplyStatus(); // Note that status is applied also after the tree is created, when status is applied

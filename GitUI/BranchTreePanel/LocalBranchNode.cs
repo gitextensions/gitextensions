@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GitCommands;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
@@ -6,13 +7,17 @@ using GitUIPluginInterfaces;
 namespace GitUI.BranchTreePanel
 {
     [DebuggerDisplay("(Local) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
-    internal sealed class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
+    internal class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
     {
         public LocalBranchNode(Tree tree, in ObjectId? objectId, string fullPath, bool isCurrent, bool visible)
             : base(tree, objectId, fullPath, visible, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
         {
             IsCurrent = isCurrent;
         }
+
+        protected string? AheadBehind { get; set; }
+
+        protected string? RelatedBranch { get; set; }
 
         /// <summary>Indicates whether this is the currently checked-out branch.</summary>
         public bool IsCurrent { get; }
@@ -75,6 +80,29 @@ namespace GitUI.BranchTreePanel
         public bool Rename()
         {
             return UICommands.StartRenameDialog(ParentWindow(), branch: FullPath);
+        }
+
+        public void UpdateAheadBehind(string aheadBehindData, string relatedBranch)
+        {
+            AheadBehind = aheadBehindData;
+            RelatedBranch = relatedBranch;
+        }
+
+        protected override string DisplayText()
+        {
+            return string.IsNullOrEmpty(AheadBehind) ? Name : $"{Name} ({AheadBehind})";
+        }
+
+        protected override void SelectRevision()
+        {
+            TreeViewNode.TreeView?.BeginInvoke(() =>
+            {
+                string branch = RelatedBranch is null || !Control.ModifierKeys.HasFlag(Keys.Alt)
+                    ? FullPath
+                    : RelatedBranch.Substring(startIndex: GitRefName.RefsRemotesPrefix.Length);
+                UICommands.BrowseGoToRef(branch, showNoRevisionMsg: true, toggleSelection: Control.ModifierKeys.HasFlag(Keys.Control));
+                TreeViewNode.TreeView?.Focus();
+            });
         }
     }
 }

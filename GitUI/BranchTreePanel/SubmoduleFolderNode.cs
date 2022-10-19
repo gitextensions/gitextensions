@@ -18,7 +18,7 @@ namespace GitUI.BranchTreePanel
             return string.Format(_name);
         }
 
-        protected override void ApplyStyle()
+        public override void ApplyStyle()
         {
             base.ApplyStyle();
             TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.FolderClosed);

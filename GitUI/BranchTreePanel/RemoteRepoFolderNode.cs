@@ -4,13 +4,13 @@ using GitUI.Properties;
 namespace GitUI.BranchTreePanel
 {
     [DebuggerDisplay("(Folder) FullPath = {FullPath}")]
-    internal sealed class RemoteRepoFolderNode : BaseBranchNode
+    internal sealed class RemoteRepoFolderNode : BaseRevisionNode
     {
         public RemoteRepoFolderNode(Tree tree, string name) : base(tree, name, true)
         {
         }
 
-        protected override void ApplyStyle()
+        public override void ApplyStyle()
         {
             base.ApplyStyle();
             TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.EyeClosed);

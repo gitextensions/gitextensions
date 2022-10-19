@@ -8,7 +8,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 namespace GitUI.BranchTreePanel
 {
     [DebuggerDisplay("Remote = {_remote.Name}, FullPath = {FullPath}")]
-    internal sealed class RemoteRepoNode : BaseBranchNode
+    internal sealed class RemoteRepoNode : BaseRevisionNode
     {
         private readonly Remote _remote;
         private readonly IConfigFileRemoteSettingsManager _remotesManager;
@@ -69,7 +69,7 @@ namespace GitUI.BranchTreePanel
             UICommands.RepoChangedNotifier.Notify();
         }
 
-        protected override void ApplyStyle()
+        public override void ApplyStyle()
         {
             base.ApplyStyle();
 
