@@ -1,4 +1,5 @@
-﻿using GitUI.UserControls.RevisionGrid;
+﻿using System.Threading;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.BranchTreePanel
 {
@@ -12,24 +13,32 @@ namespace GitUI.BranchTreePanel
             _refsSource = refsSource;
         }
 
-        internal void UpdateVisibility()
+        internal virtual void UpdateVisibility()
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                foreach (Node node in Nodes)
+                await _updateSemaphore.WaitAsync();
+                try
                 {
-                    if (node is not BaseRevisionNode baseNode || baseNode.ObjectId is null)
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    foreach (BaseRevisionNode node in Nodes.DepthEnumerator<BaseRevisionNode>())
                     {
-                        continue;
-                    }
+                        if (node.ObjectId is null)
+                        {
+                            continue;
+                        }
 
-                    bool isVisible = _refsSource.Contains(baseNode.ObjectId);
-                    if (baseNode.Visible != isVisible)
-                    {
-                        baseNode.Visible = isVisible;
-                        baseNode.ApplyStyle();
+                        bool isVisible = _refsSource.Contains(node.ObjectId);
+                        if (node.Visible != isVisible)
+                        {
+                            node.Visible = isVisible;
+                            node.ApplyStyle();
+                        }
                     }
+                }
+                finally
+                {
+                    _updateSemaphore.Release();
                 }
             }).FileAndForget();
         }
