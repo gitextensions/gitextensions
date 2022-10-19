@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Threading;
+using GitCommands;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
@@ -9,6 +10,7 @@ namespace GitUI.BranchTreePanel
         private readonly IGitUICommandsSource _uiCommandsSource;
         private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new();
         private bool _firstReloadNodesSinceModuleChanged = true;
+        protected readonly SemaphoreSlim _updateSemaphore = new(1, 1);
 
         protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
         {
@@ -37,6 +39,7 @@ namespace GitUI.BranchTreePanel
         {
             Detached();
             _reloadCancellationTokenSequence.Dispose();
+            _updateSemaphore.Dispose();
         }
 
         public GitUICommands UICommands => _uiCommandsSource.UICommands;
@@ -94,48 +97,56 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            // Module is invalid in Dashboard
-            Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(token, getRefs) : new(tree: null);
-
-            await treeView.SwitchToMainThreadAsync(token);
-
-            // remember multi-selected nodes
-            HashSet<int> multiSelected = GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
-
-            Nodes.Clear();
-            Nodes.AddNodes(newNodes);
-
-            // re-apply multi-selection
-            if (multiSelected.Count > 0)
-            {
-                foreach (NodeBase node in GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode())))
-                {
-                    node.IsSelected = true;
-                }
-            }
-
-            // Check again after switch to main thread
-            treeView = TreeViewNode.TreeView;
-
-            if (treeView is null || !IsAttached)
-            {
-                return;
-            }
-
+            await _updateSemaphore.WaitAsync(token);
             try
             {
-                string? originalSelectedNodeFullNamePath = treeView.SelectedNode?.GetFullNamePath();
+                // Module is invalid in Dashboard
+                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(token, getRefs) : new(tree: null);
 
-                treeView.BeginUpdate();
-                IgnoreSelectionChangedEvent = true;
-                FillTreeViewNode(originalSelectedNodeFullNamePath, _firstReloadNodesSinceModuleChanged);
+                await treeView.SwitchToMainThreadAsync(token);
+
+                // remember multi-selected nodes
+                HashSet<int> multiSelected = GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
+
+                Nodes.Clear();
+                Nodes.AddNodes(newNodes);
+
+                // re-apply multi-selection
+                if (multiSelected.Count > 0)
+                {
+                    foreach (NodeBase node in GetNodesAndSelf().Where(node => multiSelected.Contains(node.GetHashCode())))
+                    {
+                        node.IsSelected = true;
+                    }
+                }
+
+                // Check again after switch to main thread
+                treeView = TreeViewNode.TreeView;
+
+                if (treeView is null || !IsAttached)
+                {
+                    return;
+                }
+
+                try
+                {
+                    string? originalSelectedNodeFullNamePath = treeView.SelectedNode?.GetFullNamePath();
+
+                    treeView.BeginUpdate();
+                    IgnoreSelectionChangedEvent = true;
+                    FillTreeViewNode(originalSelectedNodeFullNamePath, _firstReloadNodesSinceModuleChanged);
+                }
+                finally
+                {
+                    IgnoreSelectionChangedEvent = false;
+                    treeView.EndUpdate();
+                    ExpandPathToSelectedNode();
+                    _firstReloadNodesSinceModuleChanged = false;
+                }
             }
             finally
             {
-                IgnoreSelectionChangedEvent = false;
-                treeView.EndUpdate();
-                ExpandPathToSelectedNode();
-                _firstReloadNodesSinceModuleChanged = false;
+                _updateSemaphore?.Release();
             }
         }
 

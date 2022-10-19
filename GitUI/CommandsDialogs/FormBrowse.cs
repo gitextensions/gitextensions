@@ -1210,15 +1210,7 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshLeftPanel(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, bool forceRefresh)
         {
-            // Apply filtering when:
-            // 1. don't show reflog, and
-            // 2. one of the following
-            //      a) show the current branch only, or
-            //      b) filter on specific branch
-            // (this check ignores other revision filters)
-            bool isFiltering = !AppSettings.ShowReflogReferences
-                            && (AppSettings.ShowCurrentBranchOnly || AppSettings.BranchFilterEnabled);
-            repoObjectsTree.RefreshRevisionsLoading(getRefs, forceRefresh, isFiltering);
+            repoObjectsTree.RefreshRevisionsLoading(getRefs, forceRefresh, RevisionGrid.FilterIsApplied());
         }
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
@@ -2937,7 +2929,9 @@ namespace GitUI.CommandsDialogs
 
             if (!MainSplitContainer.Panel1Collapsed)
             {
+                // Refresh the side panel, update visibility of objects separately
                 RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.GitModule).GetRefs, forceRefresh: true);
+                repoObjectsTree.RefreshRevisionsLoaded();
             }
         }
 

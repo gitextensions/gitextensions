@@ -32,11 +32,10 @@ namespace GitUI.BranchTreePanel
 
                 Validates.NotNull(branch.ObjectId);
 
-                bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
                 var remoteName = branch.Name.SubstringUntil('/');
                 if (remoteByName.TryGetValue(remoteName, out Remote remote))
                 {
-                    RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, isVisible);
+                    RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, visible: true);
 
                     var parent = remoteBranchNode.CreateRootNode(
                         pathToNodes,

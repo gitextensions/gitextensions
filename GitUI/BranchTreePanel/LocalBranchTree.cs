@@ -58,8 +58,7 @@ namespace GitUI.BranchTreePanel
 
                 Validates.NotNull(branch.ObjectId);
 
-                bool isVisible = !IsFiltering.Value || _refsSource.Contains(branch.ObjectId);
-                LocalBranchNode localBranchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, isVisible);
+                LocalBranchNode localBranchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, visible: true);
 
                 if (aheadBehindData is not null && aheadBehindData.TryGetValue(localBranchNode.FullPath, out AheadBehindData aheadBehind))
                 {
