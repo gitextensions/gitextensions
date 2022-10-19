@@ -3404,6 +3404,8 @@ namespace GitUI.CommandsDialogs
             internal CheckBox ResetAuthor => _formCommit.ResetAuthor;
 
             internal CheckBox Amend => _formCommit.Amend;
+
+            internal void RescanChanges() => _formCommit.RescanChanges();
         }
     }
 

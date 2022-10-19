@@ -73,6 +73,7 @@ namespace GitUI.Editor
         private Func<Task>? _deferShowFunc;
         private readonly ContinuousScrollEventManager _continuousScrollEventManager;
         private FileStatusItem? _viewItem;
+        private readonly TaskDialogPage _NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
 
         private static string[] _rangeDiffFullPrefixes = { "      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    " };
         private static string[] _combinedDiffFullPrefixes = { "  ", "++", "+ ", " +", "--", "- ", " -" };
@@ -197,6 +198,16 @@ namespace GitUI.Editor
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             SupportLinePatching = false;
+
+            _NO_TRANSLATE_resetSelectedLinesConfirmationDialog = new()
+            {
+                Text = TranslatedStrings.ResetSelectedLinesConfirmation,
+                Caption = TranslatedStrings.ResetChangesCaption,
+                Icon = TaskDialogIcon.Warning,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                DefaultButton = TaskDialogButton.Yes,
+                SizeToContent = true,
+            };
         }
 
         // Public properties
@@ -1446,7 +1457,9 @@ namespace GitUI.Editor
                     GetSelectionLength(),
                     isIndex: !stage,
                     Encoding,
-                    _viewItem.Item.IsNew);
+                    reset: false,
+                    _viewItem.Item.IsNew,
+                    _viewItem.Item.IsRenamed);
             }
 
             if (patch is null || patch.Length == 0)
@@ -1476,8 +1489,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            if (MessageBox.Show(this, TranslatedStrings.ResetSelectedLinesConfirmation, TranslatedStrings.ResetChangesCaption,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.No)
+            if (TaskDialog.ShowDialog(Handle, _NO_TRANSLATE_resetSelectedLinesConfirmationDialog) == TaskDialogButton.No)
             {
                 return;
             }
@@ -1508,7 +1520,9 @@ namespace GitUI.Editor
                     GetSelectionLength(),
                     isIndex: true,
                     Encoding,
-                    _viewItem.Item.IsNew);
+                    reset: true,
+                    _viewItem.Item.IsNew,
+                    _viewItem.Item.IsRenamed);
             }
             else
             {
@@ -1579,7 +1593,9 @@ namespace GitUI.Editor
                     selectionLength,
                     isIndex: false,
                     Encoding,
-                    _viewItem.Item.IsNew);
+                    reset: false,
+                    _viewItem.Item.IsNew,
+                    _viewItem.Item.IsRenamed);
             }
             else
             {
@@ -1983,6 +1999,7 @@ namespace GitUI.Editor
                 set => _fileViewer.ShowSyntaxHighlightingInDiff = value;
             }
 
+            public TaskDialogPage ResetSelectedLinesConfirmationDialog => _fileViewer._NO_TRANSLATE_resetSelectedLinesConfirmationDialog;
             public ToolStripButton IgnoreWhitespaceAtEolButton => _fileViewer.ignoreWhitespaceAtEol;
             public ToolStripMenuItem IgnoreWhitespaceAtEolMenuItem => _fileViewer.ignoreWhitespaceAtEolToolStripMenuItem;
 
@@ -1991,6 +2008,8 @@ namespace GitUI.Editor
 
             public ToolStripButton IgnoreAllWhitespacesButton => _fileViewer.ignoreAllWhitespaces;
             public ToolStripMenuItem IgnoreAllWhitespacesMenuItem => _fileViewer.ignoreAllWhitespaceChangesToolStripMenuItem;
+
+            internal CommandStatus ExecuteCommand(Command command) => _fileViewer.ExecuteCommand((int)command);
 
             internal void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceAtEolToolStripMenuItem_Click(sender, e);
             internal void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceChangesToolStripMenuItemClick(sender, e);

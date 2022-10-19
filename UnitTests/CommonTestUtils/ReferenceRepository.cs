@@ -8,13 +8,10 @@ namespace CommonTestUtils
 {
     public class ReferenceRepository : IDisposable
     {
-        private GitModuleTestHelper _moduleTestHelper;
-        private string _commitHash;
+        private readonly GitModuleTestHelper _moduleTestHelper = new();
 
         public ReferenceRepository()
         {
-            _moduleTestHelper = new GitModuleTestHelper();
-
             CreateCommit("A commit message", "A");
         }
 
@@ -22,7 +19,7 @@ namespace CommonTestUtils
         /// Reset the repo if possible, if it is null or reset throws create a new.
         /// </summary>
         /// <param name="refRepo">The repo to reset, possibly null.</param>
-        public static void ResetRepo(ref ReferenceRepository refRepo)
+        public static void ResetRepo(ref ReferenceRepository? refRepo)
         {
             if (refRepo is null)
             {
@@ -45,7 +42,7 @@ namespace CommonTestUtils
 
         public GitModule Module => _moduleTestHelper.Module;
 
-        public string CommitHash => _commitHash;
+        public string? CommitHash { get; private set; }
 
         private const string _fileName = "A.txt";
 
@@ -71,25 +68,30 @@ namespace CommonTestUtils
             _moduleTestHelper.CreateRepoFile(_fileName, content ?? commitMessage);
             repository.Index.Add(_fileName);
 
-            _commitHash = Commit(repository, commitMessage);
-            Console.WriteLine($"Created commit: {_commitHash}, message: {commitMessage}");
-            return _commitHash;
+            CommitHash = Commit(repository, commitMessage);
+            Console.WriteLine($"Created commit: {CommitHash}, message: {commitMessage}");
+            return CommitHash;
         }
 
-        public string CreateCommit(string commitMessage, string content1, string fileName1, string content2, string fileName2)
+        public string CreateCommit(string commitMessage, string content1, string fileName1, string? content2 = null, string? fileName2 = null)
         {
             using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
             _moduleTestHelper.CreateRepoFile(fileName1, content1);
             repository.Index.Add(fileName1);
-            _moduleTestHelper.CreateRepoFile(fileName2, content2);
-            repository.Index.Add(fileName2);
+            if (content2 != null && fileName2 != null)
+            {
+                _moduleTestHelper.CreateRepoFile(fileName2, content2);
+                repository.Index.Add(fileName2);
+            }
 
-            _commitHash = Commit(repository, commitMessage);
-            Console.WriteLine($"Created commit: {_commitHash}, message: {commitMessage}");
-            return _commitHash;
+            CommitHash = Commit(repository, commitMessage);
+            Console.WriteLine($"Created commit: {CommitHash}, message: {commitMessage}");
+            return CommitHash;
         }
 
         public string CreateRepoFile(string fileName, string fileContent) => _moduleTestHelper.CreateRepoFile(fileName, fileContent);
+
+        public string DeleteRepoFile(string fileName) => _moduleTestHelper.DeleteRepoFile(fileName);
 
         public void CreateAnnotatedTag(string tagName, string commitHash, string message)
         {

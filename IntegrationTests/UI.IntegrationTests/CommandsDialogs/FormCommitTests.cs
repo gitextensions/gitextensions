@@ -4,6 +4,8 @@ using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.Editor;
+using GitUI.UserControls;
 using ICSharpCode.TextEditor;
 using NUnit.Framework;
 
@@ -244,7 +246,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 testform.StageAllToolItem.PerformClick();
 
-                var fileNotMatchedByFilterIsStillUnstaged = testform.UnstagedList.AllItems.Where(i => i.Item.Name == "file2.txt").Any();
+                var fileNotMatchedByFilterIsStillUnstaged = testform.UnstagedList.AllItems.Any(i => i.Item.Name == "file2.txt");
 
                 Assert.AreEqual(2, testform.StagedList.AllItemsCount);
                 Assert.AreEqual(1, testform.UnstagedList.AllItemsCount);
@@ -296,7 +298,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 testform.UnstageAllToolItem.PerformClick();
 
-                var fileNotMatchedByFilterIsStillStaged = testform.StagedList.AllItems.Where(i => i.Item.Name == "file2.txt").Any();
+                var fileNotMatchedByFilterIsStillStaged = testform.StagedList.AllItems.Any(i => i.Item.Name == "file2.txt");
 
                 Assert.AreEqual(2, testform.UnstagedList.AllItemsCount);
                 Assert.AreEqual(1, testform.StagedList.AllItemsCount);
@@ -304,7 +306,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             });
         }
 
-        [Test, TestCaseSource(typeof(CommitMessageTestData), "TestCases")]
+        [Test, TestCaseSource(typeof(CommitMessageTestData), nameof(CommitMessageTestData.TestCases))]
         public void AddSelectionToCommitMessage_shall_be_ignored_unless_diff_is_focused(
             string message,
             int selectionStart,
@@ -317,7 +319,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 expectedResult: false, expectedMessage: message, expectedSelectionStart: selectionStart);
         }
 
-        [Test, TestCaseSource(typeof(CommitMessageTestData), "TestCases")]
+        [Test, TestCaseSource(typeof(CommitMessageTestData), nameof(CommitMessageTestData.TestCases))]
         public void AddSelectionToCommitMessage_shall_be_ignored_if_no_difftext_is_selected(
             string message,
             int selectionStart,
@@ -330,7 +332,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 expectedResult: false, expectedMessage: message, expectedSelectionStart: selectionStart);
         }
 
-        [Test, TestCaseSource(typeof(CommitMessageTestData), "TestCases")]
+        [Test, TestCaseSource(typeof(CommitMessageTestData), nameof(CommitMessageTestData.TestCases))]
         public void AddSelectionToCommitMessage_shall_modify_the_commit_message(
             string message,
             int selectionStart,
@@ -344,7 +346,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         }
 
         [Test]
-        public void editFileToolStripMenuItem_Click_no_selection_should_not_throw()
+        public void EditFileToolStripMenuItem_Click_no_selection_should_not_throw()
         {
             RunFormTest(async form =>
             {
@@ -470,6 +472,61 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ta.Message.Text.Should().Be(expectedMessage);
                 ta.Message.SelectionStart.Should().Be(expectedSelectionStart);
                 ta.Message.SelectionLength.Should().Be(expectedResult ? 0 : selectionLength);
+            });
+        }
+
+        [Test]
+        public void ShouldNotUndoRenameFileWhenResettingStagedLines()
+        {
+            RunFormTest(form =>
+            {
+                FormCommit.TestAccessor ta = form.GetTestAccessor();
+
+                FileViewer.TestAccessor selectedDiff = ta.SelectedDiff.GetTestAccessor();
+                FileViewerInternal? selectedDiffInternal = selectedDiff.FileViewerInternal;
+
+                // Commit a file, rename it and introduce a slight content change
+                string contents = "this\nhas\nmany\nlines\nthis\nhas\nmany\nlines\nthis\nhas\nmany\nlines?\n";
+                _referenceRepository.CreateCommit("commit", contents, "original.txt");
+                _referenceRepository.DeleteRepoFile("original.txt");
+                contents = contents.Replace("?", "!");
+                _referenceRepository.CreateRepoFile("original2.txt", contents);
+
+                ta.RescanChanges();
+                ThreadHelper.JoinPendingOperations();
+
+                ta.UnstagedList.SelectedItems = ta.UnstagedList.AllItems;
+                ta.UnstagedList.Focus();
+                ta.ExecuteCommand(FormCommit.Command.StageSelectedFile);
+
+                ta.StagedList.SelectedGitItem = ta.StagedList.AllItems.Single(i => i.Item.Name.Contains("original2.txt")).Item;
+
+                selectedDiffInternal.Focus();
+                ThreadHelper.JoinPendingOperations();
+
+                selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.SelectionManager.SetSelection(
+                    new TextLocation(2, 11), new TextLocation(5, 12));
+
+                int textLengthBeforeReset = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.Document.TextLength;
+
+                selectedDiff.ResetSelectedLinesConfirmationDialog.Created += (s, e) =>
+                {
+                    // Auto-press `Yes`
+                    selectedDiff.ResetSelectedLinesConfirmationDialog.Buttons[0].PerformClick();
+                };
+                selectedDiff.ExecuteCommand(FileViewer.Command.ResetLines);
+
+                ta.RescanChanges();
+                ThreadHelper.JoinPendingOperations();
+
+                int textLengthAfterReset = selectedDiffInternal.GetTestAccessor().TextEditor.ActiveTextAreaControl.Document.TextLength;
+
+                textLengthBeforeReset.Should().BeGreaterThan(0);
+                textLengthAfterReset.Should().BeGreaterThan(0);
+                textLengthAfterReset.Should().BeLessThan(textLengthBeforeReset);
+                FileStatusItem? stagedAndRenamed = ta.StagedList.AllItems.FirstOrDefault(i => i.Item.Name.Contains("original2.txt"));
+                stagedAndRenamed.Should().NotBeNull();
+                stagedAndRenamed!.Item.IsRenamed.Should().BeTrue();
             });
         }
 
