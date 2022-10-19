@@ -36,6 +36,7 @@ namespace GitUI
         private readonly TranslationString _branchesText = new("Branches");
         private readonly TranslationString _remotesText = new("Remotes");
         private readonly TranslationString _tagsText = new("Tags");
+        private readonly TranslationString _stashesText = new("Stashes");
         private readonly TranslationString _submodulesText = new("Submodules");
         private readonly TranslationString _bodyNotLoaded = new("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
         private readonly TranslationString _searchingFor = new("Searching for: ");
@@ -182,6 +183,7 @@ the last selected commit.");
         public static string Branches => _instance.Value._branchesText.Text;
         public static string Remotes => _instance.Value._remotesText.Text;
         public static string Tags => _instance.Value._tagsText.Text;
+        public static string Stashes => _instance.Value._stashesText.Text;
         public static string Submodules => _instance.Value._submodulesText.Text;
 
         public static string BodyNotLoaded => _instance.Value._bodyNotLoaded.Text;

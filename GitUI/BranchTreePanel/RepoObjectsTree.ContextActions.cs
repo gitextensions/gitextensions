@@ -92,6 +92,13 @@ namespace GitUI.BranchTreePanel
             _sortOrderContextMenuItem.Enable(isSingleRefSelected && showSortOrder);
         }
 
+        private void EnableStashContextMenu(bool hasSingleSelection, NodeBase selectedNode)
+        {
+            bool isSingleStashSelected = hasSingleSelection && selectedNode is StashNode;
+            bool isBareRepository = Module.IsBareRepository();
+            EnableMenuItems(isSingleStashSelected && !isBareRepository, mnubtnOpenStash, mnubtnApplyStash, mnubtnPopStash, mnubtnDropStash);
+        }
+
         private void EnableSubmoduleContextMenu(bool hasSingleSelection, NodeBase selectedNode)
         {
             bool isSingleSubmoduleSelected = hasSingleSelection && selectedNode is SubmoduleNode;
@@ -171,6 +178,15 @@ namespace GitUI.BranchTreePanel
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
             RegisterClick<BranchPathNode>(mnubtnCreateBranch, branchPath => branchPath.CreateBranch());
 
+            // Stash
+            RegisterClick(mnubtnStashAllFromRootNode, () => _stashTree.StashAll(this));
+            RegisterClick(mnubtnStashStagedFromRootNode, () => _stashTree.StashStaged(this));
+            RegisterClick(mnubtnManageStashFromRootNode, () => _stashTree.OpenStash(this));
+            RegisterClick<StashNode>(mnubtnOpenStash, node => node.OpenStash(this));
+            RegisterClick<StashNode>(mnubtnApplyStash, node => node.ApplyStash(this));
+            RegisterClick<StashNode>(mnubtnPopStash, node => node.PopStash(this));
+            RegisterClick<StashNode>(mnubtnDropStash, node => node.DropStash(this));
+
             // Expand / Collapse
             RegisterClick(mnubtnCollapse, () => GetSelectedNodes().HavingChildren().Collapsible().ForEach(node => node.TreeViewNode.Collapse()));
             RegisterClick(mnubtnExpand, () => GetSelectedNodes().HavingChildren().Expandable().ForEach(node => node.TreeViewNode.ExpandAll()));
@@ -196,7 +212,7 @@ namespace GitUI.BranchTreePanel
             bool hasSingleSelection = selectedNodes.Length <= 1;
             var selectedNode = treeMain.SelectedNode.Tag as NodeBase;
 
-            copyContextMenuItem.Enable(hasSingleSelection && selectedNode is BaseBranchLeafNode branch && branch.Visible);
+            copyContextMenuItem.Enable(hasSingleSelection && ((selectedNode is BaseBranchLeafNode branch && branch.Visible) || selectedNode is StashNode));
             filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any()); // enable if selection contains refs
 
             var selectedLocalBranch = selectedNode as LocalBranchNode;
@@ -219,6 +235,8 @@ namespace GitUI.BranchTreePanel
             EnableMenuItems(_tagNodeMenuItems, _ => hasSingleSelection && selectedNode is TagNode);
             EnableMenuItems(hasSingleSelection && selectedNode is RemoteBranchTree, mnuBtnManageRemotesFromRootNode, mnuBtnFetchAllRemotes, mnuBtnPruneAllRemotes);
             EnableRemoteRepoContextMenu(hasSingleSelection, selectedNode);
+            EnableMenuItems(hasSingleSelection && selectedNode is StashTree, mnubtnStashAllFromRootNode, mnubtnStashStagedFromRootNode, mnubtnManageStashFromRootNode);
+            EnableStashContextMenu(hasSingleSelection, selectedNode);
             EnableSubmoduleContextMenu(hasSingleSelection, selectedNode);
             EnableMenuItems(hasSingleSelection && selectedNode is BranchPathNode, mnubtnCreateBranch, mnubtnDeleteAllBranches);
             EnableExpandCollapseContextMenu(selectedNodes);
