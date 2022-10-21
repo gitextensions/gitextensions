@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Text.RegularExpressions;
 using GitExtUtils;
 using GitUIPluginInterfaces;
@@ -8,6 +9,7 @@ namespace GitCommands.Git
     public interface IAheadBehindDataProvider
     {
         IDictionary<string, AheadBehindData>? GetData(string branchName = "");
+        void ResetCache();
     }
 
     public class AheadBehindDataProvider : IAheadBehindDataProvider
@@ -23,10 +25,18 @@ namespace GitCommands.Git
                    (?<remote_p>.*?)::(?<remote_u>.*?)::(?<branch>.*)$",
                 RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
         private readonly string _refFormat = @"%(push:track,nobracket)::%(upstream:track,nobracket)::%(push)::%(upstream)::%(refname:short)";
+        private Lazy<IDictionary<string, AheadBehindData>?> _lazyData;
+        private string _branchName;
 
         public AheadBehindDataProvider(Func<IExecutable> getGitExecutable)
         {
             _getGitExecutable = getGitExecutable;
+        }
+
+        public void ResetCache()
+        {
+            _lazyData = null;
+            _branchName = null;
         }
 
         public IDictionary<string, AheadBehindData>? GetData(string branchName = "")
@@ -36,7 +46,16 @@ namespace GitCommands.Git
                 return null;
             }
 
-            return GetData(null, branchName);
+            // Callers setting branchname has the responisibility to ensure that not all are needed
+            if (string.IsNullOrWhiteSpace(branchName) && !string.IsNullOrWhiteSpace(_branchName))
+            {
+                // Debug.Fail($"Unexpectedly call for all branches after cache filled with specific branch {_branchName}");
+                ResetCache();
+            }
+
+            _lazyData ??= new(() => GetData(null, branchName));
+            _branchName = branchName;
+            return _lazyData.Value;
         }
 
         // This method is required to facilitate unit tests
