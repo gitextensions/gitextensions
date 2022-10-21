@@ -410,18 +410,18 @@ namespace TeamCityIntegration
             {
                 Validates.NotNull(_buildServerWatcher);
 
-                var buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, true);
-                var useBuildServerCredentials = buildServerCredentials is not null
-                                                && buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.UsernameAndPassword
-                                                && !string.IsNullOrWhiteSpace(buildServerCredentials.Username) && !string.IsNullOrWhiteSpace(buildServerCredentials.Password);
+                IBuildServerCredentials? buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, true);
+                bool useBuildServerCredentials = buildServerCredentials is not null
+                    && buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.UsernameAndPassword
+                    && !string.IsNullOrWhiteSpace(buildServerCredentials.Username) && !string.IsNullOrWhiteSpace(buildServerCredentials.Password);
                 if (useBuildServerCredentials)
                 {
                     UpdateHttpClientOptionsCredentialsAuth(buildServerCredentials!);
                 }
 
-                var useBuildServerBearerToken = buildServerCredentials is not null
-                                                && buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.BearerToken
-                                                && !string.IsNullOrWhiteSpace(buildServerCredentials.BearerToken);
+                bool useBuildServerBearerToken = buildServerCredentials is not null
+                    && buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.BearerToken
+                    && !string.IsNullOrWhiteSpace(buildServerCredentials.BearerToken);
                 if (useBuildServerBearerToken)
                 {
                     UpdateHttpClientOptionsBearerTokenAuth(buildServerCredentials!);

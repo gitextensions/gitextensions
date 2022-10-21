@@ -166,7 +166,12 @@ namespace GitUI.BuildServerIntegration
                                 string? buildServerCredentialsType = section.GetValue(BuildServerCredentialsTypeKey);
                                 if (!string.IsNullOrWhiteSpace(buildServerCredentialsType))
                                 {
-                                    buildServerCredentials.BuildServerCredentialsType = Enum.Parse<BuildServerCredentialsType>(buildServerCredentialsType);
+                                    if (!Enum.TryParse(buildServerCredentialsType, ignoreCase: true, out BuildServerCredentialsType credentialsType))
+                                    {
+                                        credentialsType = BuildServerCredentialsType.Guest;
+                                    }
+
+                                    buildServerCredentials.BuildServerCredentialsType = credentialsType;
                                 }
                                 else
                                 {
