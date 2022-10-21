@@ -17,15 +17,15 @@ namespace GitUI.BranchTreePanel
 
         public ObjectId? ObjectId { get; }
 
-        internal override void OnSelected()
+        internal override void OnSelected(MouseButtons clickedMouseButton)
         {
             if (Tree.IgnoreSelectionChangedEvent)
             {
                 return;
             }
 
-            base.OnSelected();
-            SelectRevision();
+            base.OnSelected(clickedMouseButton);
+            SelectRevision(clickedMouseButton);
         }
 
         internal override void OnDoubleClick()

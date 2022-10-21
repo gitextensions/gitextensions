@@ -97,14 +97,14 @@ namespace GitUI.BranchTreePanel
             GitUICommands.LaunchBrowse(workingDir: Info.Path.EnsureTrailingPathSeparator(), selected, first);
         }
 
-        internal override void OnSelected()
+        internal override void OnSelected(MouseButtons clickedMouseButton)
         {
             if (Tree.IgnoreSelectionChangedEvent)
             {
                 return;
             }
 
-            base.OnSelected();
+            base.OnSelected(clickedMouseButton);
         }
 
         internal override void OnDoubleClick()

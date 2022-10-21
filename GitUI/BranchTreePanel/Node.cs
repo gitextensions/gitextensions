@@ -68,7 +68,7 @@ namespace GitUI.BranchTreePanel
             _treeViewNode.Text = DisplayText();
         }
 
-        internal virtual void OnSelected()
+        internal virtual void OnSelected(MouseButtons clickedMouseButton)
         {
         }
 

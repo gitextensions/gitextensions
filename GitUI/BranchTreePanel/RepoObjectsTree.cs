@@ -39,6 +39,9 @@ namespace GitUI.BranchTreePanel
         private IScriptHostControl _scriptHost;
         private IRunScript _scriptRunner;
 
+        // used to remember the clicked mouse button from a click event until the node selection is triggered
+        private MouseButtons _clickedMouseButton;
+
         public RepoObjectsTree()
         {
             Disposed += (s, e) => _selectionCancellationTokenSequence.Dispose();
@@ -77,11 +80,15 @@ namespace GitUI.BranchTreePanel
             _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
             _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
 
-            _explorerNavigationDecorator = new NativeTreeViewExplorerNavigationDecorator(treeMain);
-            _explorerNavigationDecorator.AfterSelect += OnNodeSelected;
-
+            // add our own NodeMouseClick handler to remember mouse button (see OnNodeClick)
+            // before NativeTreeViewExplorerNavigationDecorator constructor adds one
+            // that triggers OnNodeSelected (requiring the clicked mouse button)
+            // in NativeTreeViewExplorerNavigationDecorator.OnNodeMouseClick
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
+
+            _explorerNavigationDecorator = new NativeTreeViewExplorerNavigationDecorator(treeMain);
+            _explorerNavigationDecorator.AfterSelect += OnNodeSelected;
 
             return;
 
@@ -541,7 +548,8 @@ namespace GitUI.BranchTreePanel
 
         private void OnNodeSelected(object sender, TreeViewEventArgs e)
         {
-            Node.OnNode<Node>(e.Node, node => node.OnSelected());
+            Node.OnNode<Node>(e.Node, node => node.OnSelected(_clickedMouseButton));
+            _clickedMouseButton = MouseButtons.None; // to reset after use in case selection happens without mouse
         }
 
         private IEnumerable<NodeBase> GetSelectedNodes()
@@ -550,6 +558,7 @@ namespace GitUI.BranchTreePanel
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             var node = e.Node.Tag as NodeBase;
+            _clickedMouseButton = e.Button; // to remember it later
 
             if (e.Button == MouseButtons.Right && node.IsSelected)
             {
