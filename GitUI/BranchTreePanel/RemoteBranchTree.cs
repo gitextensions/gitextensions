@@ -10,15 +10,20 @@ namespace GitUI.BranchTreePanel
 {
     internal sealed class RemoteBranchTree : BaseRefTree
     {
-        public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
+        private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+
+        public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource)
             : base(treeNode, uiCommands, refsSource, RefsFilter.Remotes)
         {
+            _aheadBehindDataProvider = aheadBehindDataProvider;
         }
 
         protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
         {
+            // More than one local can point to a single remote branch, pick one of them.
             Nodes nodes = new(this);
             Dictionary<string, BaseRevisionNode> pathToNodes = new();
+            var aheadBehindData = _aheadBehindDataProvider?.GetData().DistinctBy(r => r.Value.RemoteRef).ToDictionary(r => r.Value.RemoteRef, r => r.Value);
 
             List<RemoteRepoNode> enabledRemoteRepoNodes = new();
             Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(async () => (await Module.GetRemotesAsync()).ToDictionary(r => r.Name));
@@ -36,6 +41,10 @@ namespace GitUI.BranchTreePanel
                 if (remoteByName.TryGetValue(remoteName, out Remote remote))
                 {
                     RemoteBranchNode remoteBranchNode = new(this, branch.ObjectId, branch.Name, visible: true);
+                    if (aheadBehindData is not null && aheadBehindData.TryGetValue(branch.CompleteName, out AheadBehindData aheadBehind))
+                    {
+                        remoteBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
+                    }
 
                     var parent = remoteBranchNode.CreateRootNode(
                         pathToNodes,

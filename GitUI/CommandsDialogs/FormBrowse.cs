@@ -577,6 +577,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            _aheadBehindDataProvider.ResetCache();
             bool isDashboard = string.IsNullOrEmpty(Module.WorkingDir) || (_dashboard?.Visible ?? false);
             if (isDashboard)
             {
@@ -905,7 +906,9 @@ namespace GitUI.CommandsDialogs
 
                     _formBrowseMenus.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
 
-                    toolStripButtonPush.DisplayAheadBehindInformation(RevisionGrid.CurrentBranch.Value);
+                    // Request for all branches if side panel is shown
+                    var aheadBehindData = _aheadBehindDataProvider?.GetData(MainSplitContainer.Panel1Collapsed ? RevisionGrid.CurrentBranch.Value : "");
+                    toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, RevisionGrid.CurrentBranch.Value);
 
                     ActiveControl = RevisionGrid;
                 }
