@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
             ResetToDefaultState();
         }
 
-        public void DisplayAheadBehindInformation(string branchName)
+        public void DisplayAheadBehindInformation(IDictionary<string, AheadBehindData>? aheadBehindData, string branchName)
         {
             ResetToDefaultState();
 
@@ -33,7 +33,6 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var aheadBehindData = _aheadBehindDataProvider?.GetData(branchName);
             if (aheadBehindData is null || aheadBehindData.Count < 1 || !aheadBehindData.ContainsKey(branchName))
             {
                 return;

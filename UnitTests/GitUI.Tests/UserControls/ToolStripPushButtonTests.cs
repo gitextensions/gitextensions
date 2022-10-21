@@ -40,7 +40,7 @@ namespace GitUITests.UserControls
         {
             _sut.Initialize(null);
 
-            _sut.DisplayAheadBehindInformation("any-branchName");
+            _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(), "any-branchName");
 
             _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
             _sut.ToolTipText.Should().Be("Push");
@@ -81,7 +81,7 @@ namespace GitUITests.UserControls
             var branchName = "(no branch) or any-branch";
             _aheadBehindDataProvider.GetData(branchName).Returns(x => null);
 
-            _sut.DisplayAheadBehindInformation(branchName);
+            _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName);
 
             _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
             _sut.ToolTipText.Should().Be("Push");
@@ -98,7 +98,7 @@ namespace GitUITests.UserControls
             };
             _aheadBehindDataProvider.GetData(branchName).Returns(x => data);
 
-            _sut.DisplayAheadBehindInformation(branchName);
+            _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName);
 
             _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
             _sut.ToolTipText.Should().Contain("9 new commit(s) will be pushed");
@@ -116,7 +116,7 @@ namespace GitUITests.UserControls
             };
             _aheadBehindDataProvider.GetData(branchName).Returns(x => data);
 
-            _sut.DisplayAheadBehindInformation(branchName);
+            _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName);
 
             _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
             _sut.ToolTipText.Should().NotContain("new commit(s) will be pushed");
@@ -134,7 +134,7 @@ namespace GitUITests.UserControls
             };
             _aheadBehindDataProvider.GetData(branchName).Returns(x => data);
 
-            _sut.DisplayAheadBehindInformation(branchName);
+            _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName);
 
             _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
             _sut.ToolTipText.Should().Contain("99 new commit(s) will be pushed");
@@ -149,7 +149,7 @@ namespace GitUITests.UserControls
 
             var branchName = "my-branch";
 
-            _sut.DisplayAheadBehindInformation(branchName);
+            _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName);
 
             _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
             _sut.ToolTipText.Should().NotContain("99 new commit(s) will be pushed");

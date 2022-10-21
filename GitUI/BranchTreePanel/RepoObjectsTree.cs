@@ -382,7 +382,7 @@ namespace GitUI.BranchTreePanel
                 SelectedImageKey = nameof(Images.BranchRemoteRoot)
             };
 
-            _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource, _refsSource);
+            _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource);
         }
 
         private void CreateTags()
