@@ -19,7 +19,7 @@ namespace GitUI.BranchTreePanel
                 throw new ArgumentNullException(nameof(fullPath));
             }
 
-            var dirs = fullPath.Split(PathSeparator);
+            string[] dirs = fullPath.Split(PathSeparator);
             Name = dirs[dirs.Length - 1];
             ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator.ToString());
             Visible = visible;
@@ -88,7 +88,7 @@ namespace GitUI.BranchTreePanel
 
             BaseBranchNode? result;
 
-            if (pathToNode.TryGetValue(ParentPath, out var parent))
+            if (pathToNode.TryGetValue(ParentPath, out BaseBranchNode parent))
             {
                 result = null;
             }
