@@ -109,17 +109,13 @@ namespace GitUI.BranchTreePanel
             return string.IsNullOrEmpty(AheadBehind) ? Name : $"{Name} ({AheadBehind})";
         }
 
-        protected void SelectRevision(MouseButtons clickedMouseButton)
+        protected void SelectRevision()
         {
             TreeViewNode.TreeView?.BeginInvoke(new Action(() =>
             {
                 string branch = RelatedBranch is null || !Control.ModifierKeys.HasFlag(Keys.Alt)
                     ? FullPath : RelatedBranch.Substring(startIndex: GitRefName.RefsRemotesPrefix.Length);
-
-                UICommands.BrowseGoToRef(branch,
-                    showNoRevisionMsg: !clickedMouseButton.HasFlag(MouseButtons.Right),
-                    toggleSelection: Control.ModifierKeys.HasFlag(Keys.Control));
-
+                UICommands.BrowseGoToRef(branch, showNoRevisionMsg: true, toggleSelection: Control.ModifierKeys.HasFlag(Keys.Control));
                 TreeViewNode.TreeView?.Focus();
             }));
         }
