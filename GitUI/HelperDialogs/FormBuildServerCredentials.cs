@@ -17,9 +17,24 @@ namespace GitUI.HelperDialogs
         {
             BuildServerCredentials ??= new BuildServerCredentials();
 
-            BuildServerCredentials.UseGuestAccess = radioButtonGuestAccess.Checked;
+            if (radioButtonGuestAccess.Checked)
+            {
+                BuildServerCredentials.BuildServerCredentialsType = BuildServerCredentialsType.Guest;
+            }
+
+            if (radioButtonAuthenticatedUser.Checked)
+            {
+                BuildServerCredentials.BuildServerCredentialsType = BuildServerCredentialsType.UsernameAndPassword;
+            }
+
+            if (radioButtonBearerToken.Checked)
+            {
+                BuildServerCredentials.BuildServerCredentialsType = BuildServerCredentialsType.BearerToken;
+            }
+
             BuildServerCredentials.Username = textBoxUserName.Text;
             BuildServerCredentials.Password = textBoxPassword.Text;
+            BuildServerCredentials.BearerToken = textBoxBearerToken.Text;
 
             Close();
         }
@@ -28,10 +43,12 @@ namespace GitUI.HelperDialogs
         {
             if (BuildServerCredentials is not null)
             {
-                radioButtonGuestAccess.Checked = BuildServerCredentials.UseGuestAccess;
-                radioButtonAuthenticatedUser.Checked = !BuildServerCredentials.UseGuestAccess;
+                radioButtonGuestAccess.Checked = BuildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.Guest;
+                radioButtonAuthenticatedUser.Checked = BuildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.UsernameAndPassword;
+                radioButtonBearerToken.Checked = BuildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.BearerToken;
                 textBoxUserName.Text = BuildServerCredentials.Username;
                 textBoxPassword.Text = BuildServerCredentials.Password;
+                textBoxBearerToken.Text = BuildServerCredentials.BearerToken;
             }
 
             UpdateUI();
@@ -44,8 +61,9 @@ namespace GitUI.HelperDialogs
 
         private void UpdateUI()
         {
-            textBoxUserName.Enabled = !radioButtonGuestAccess.Checked;
-            textBoxPassword.Enabled = !radioButtonGuestAccess.Checked;
+            textBoxUserName.Enabled = radioButtonAuthenticatedUser.Checked;
+            textBoxPassword.Enabled = radioButtonAuthenticatedUser.Checked;
+            textBoxBearerToken.Enabled = radioButtonBearerToken.Checked;
         }
     }
 }
