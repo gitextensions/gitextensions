@@ -536,11 +536,11 @@ namespace JenkinsIntegration
         {
             Validates.NotNull(_httpClient);
 
-            if (buildServerCredentials is null || buildServerCredentials.UseGuestAccess)
+            if (buildServerCredentials is null || buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.Guest)
             {
                 _httpClient.DefaultRequestHeaders.Authorization = null;
             }
-            else
+            else if (buildServerCredentials.BuildServerCredentialsType == BuildServerCredentialsType.UsernameAndPassword)
             {
                 Validates.NotNull(buildServerCredentials.Username);
                 Validates.NotNull(buildServerCredentials.Password);
