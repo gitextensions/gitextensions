@@ -38,36 +38,22 @@ namespace GitUI
             }
         }
 
-        private static void SuspendDrawing(Control control)
-        {
-            if (control != null)
-            {
-                NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.FALSE, IntPtr.Zero);
-            }
-        }
-
-        private static void ResumeDrawing(Control control)
-        {
-            if (control != null)
-            {
-                NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.TRUE, IntPtr.Zero);
-                control.Refresh();
-            }
-        }
-
         private void SplitButton_DropDownOpening(object? sender, EventArgs e)
         {
-            if (sender is ToolStripDropDownItem item)
+            if (sender is ToolStripDropDownItem item && item.Owner is Control control)
             {
-                SuspendDrawing(item.Owner);
+                // Suspends the control's rendering process.
+                NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.FALSE, IntPtr.Zero);
             }
         }
 
         private void SplitButton_DropDownClosed(object? sender, EventArgs e)
         {
-            if (sender is ToolStripDropDownItem item)
+            if (sender is ToolStripDropDownItem item && item.Owner is Control control)
             {
-                ResumeDrawing(item.Owner);
+                // Resumes the control's rendering process and trigger a redraw.
+                NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.TRUE, IntPtr.Zero);
+                control.Refresh();
             }
         }
 
