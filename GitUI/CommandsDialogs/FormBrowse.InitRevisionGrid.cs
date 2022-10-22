@@ -22,7 +22,9 @@ namespace GitUI.CommandsDialogs
                         })
                     .FileAndForget();
             };
+
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
+
             RevisionGrid.FilterChanged += (sender, e) =>
             {
                 Text = _appTitleGenerator.Generate(Module.WorkingDir, Module.IsValidGitWorkingDir(), RevisionGrid.CurrentBranch.Value, TranslatedStrings.NoBranch, e.PathFilter);
@@ -38,6 +40,7 @@ namespace GitUI.CommandsDialogs
                 revisionDiff.FallbackFollowedFile = path;
                 fileTree.FallbackFollowedFile = path;
             };
+
             RevisionGrid.RevisionsLoading += (sender, e) =>
             {
                 // The FileTree tab should be shown at first start, in "filehistory" mode
@@ -54,21 +57,15 @@ namespace GitUI.CommandsDialogs
                     return;
                 }
 
-                // Apply filtering when:
-                // 1. don't show reflog, and
-                // 2. one of the following
-                //      a) show the current branch only, or
-                //      b) filter on specific branch
-                // (this check ignores other revision filters)
-                bool isFiltering = !AppSettings.ShowReflogReferences
-                                && (AppSettings.ShowCurrentBranchOnly || AppSettings.BranchFilterEnabled);
-                repoObjectsTree.Refresh(isFiltering, e.ForceRefresh, e.GetRefs);
+                RefreshLeftPanel(e.ForceRefresh, e.GetRefs);
             };
+
             RevisionGrid.SelectionChanged += (sender, e) =>
             {
                 _selectedRevisionUpdatedTargets = UpdateTargets.None;
                 RefreshSelection();
             };
+
             RevisionGrid.ToggledBetweenArtificialAndHeadCommits += (s, e) =>
             {
                 if (!revisionDiff.Visible)
