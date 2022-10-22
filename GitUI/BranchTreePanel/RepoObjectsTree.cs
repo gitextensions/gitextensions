@@ -541,7 +541,13 @@ namespace GitUI.BranchTreePanel
 
         private void OnNodeSelected(object sender, TreeViewEventArgs e)
         {
-            Node.OnNode<Node>(e.Node, node => node.OnSelected());
+            Node.OnNode<Node>(e.Node, node =>
+            {
+                if (node is not BaseBranchNode branchNode || branchNode.Visible)
+                {
+                    node.OnSelected();
+                }
+            });
         }
 
         private IEnumerable<NodeBase> GetSelectedNodes()
