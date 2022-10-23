@@ -1,5 +1,6 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using FluentAssertions;
+using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 
@@ -16,6 +17,23 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             ReferenceRepository.ResetRepo(ref _referenceRepository);
             _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
+        }
+
+        private void RebasePrep(string branch = "RebaseTest")
+        {
+            // master commits
+            string content = $"{Guid.NewGuid():N}";
+            string from = _referenceRepository.CreateCommit("I", content);
+            _referenceRepository.CreateCommit("A", $"{content}{Guid.NewGuid():N}");
+
+            _referenceRepository.CreateBranch(branch, from, true);
+            _referenceRepository.CheckoutBranch(branch);
+
+            // {branch} commits
+            for (int i = 0; i <= 3; i++)
+            {
+                _referenceRepository.CreateCommit($"{i}", $"{Guid.NewGuid():N}", $"{i}.txt");
+            }
         }
 
         [Test]
@@ -163,6 +181,65 @@ namespace GitExtensions.UITests.CommandsDialogs
                 from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
         }
 
+        [Test]
+        public void StartRebaseDialog_GpgPanel_Visible()
+        {
+            RunFormTest(
+               form =>
+               {
+                   var accessor = form.GetTestAccessor();
+                   accessor.flpnlGPG.Visible.Should().BeTrue();
+               },
+               from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+        }
+
+        [Test]
+        public void startRebaseImmediately_GpgPanel_NotVisible()
+        {
+            RebasePrep();
+            // _referenceRepository.Module.RunGitK(); // Before Rebase
+            RunFormTest(
+              form =>
+              {
+                  var accessor = form.GetTestAccessor();
+                  accessor.flpnlGPG.Visible.Should().BeFalse();
+              },
+              from: "", to: null, onto: "master", interactive: false, startRebaseImmediately: true);
+            // _referenceRepository.Module.RunGitK(); // After rebase
+        }
+
+        [Test(Description = "Used to verify appveyor build has a gpg key.  This test will fail if you run locally and have no keys ")]
+        public void StartRebaseDialog_HasGpgKeys()
+        {
+            RunFormTest(
+               form =>
+               {
+                   var accessor = form.GetTestAccessor();
+                   var keys = accessor.cboGpgSecretKeys.CurrentKeys
+                        .Skip(1) // Ignore the "No key" selected entry
+                        .ToList();
+                   foreach (var k in keys)
+                   {
+                       Console.WriteLine(k.Caption);
+                   }
+
+                   keys.Any().Should().BeTrue();
+               },
+               from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+        }
+
+        [Test]
+        public void GpgAction_Not_Unselected()
+        {
+            RunFormTest(
+               form =>
+               {
+                   var accessor = form.GetTestAccessor();
+                   accessor.cboGpgAction.SelectedIndex.Should().NotBe(-1);
+               },
+               from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+        }
+
         private void RunFormTest(Action<FormRebase> testDriver, string from, string to, string onto,
             bool interactive, bool startRebaseImmediately)
         {
@@ -181,6 +258,11 @@ namespace GitExtensions.UITests.CommandsDialogs
             UITest.RunForm(
                 () =>
                 {
+                    if (startRebaseImmediately)
+                    {
+                        AppSettings.CloseProcessDialog = true; // Prevent modal process dialog from blocking test run.
+                    }
+
                     _commands.StartRebaseDialog(owner: null, from, to, onto, interactive, startRebaseImmediately);
                 },
                 testDriverAsync);

@@ -1,5 +1,6 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git.Commands;
+using GitCommands.Gpg;
 using GitCommands.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
@@ -28,6 +29,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             _commitMessageManager = new CommitMessageManager(this, Module.WorkingDirGitDir, Module.CommitEncoding);
+            comboboxGpgSecretKeys.Initilize(this, new GpgSecretKeysParser());
 
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
@@ -73,6 +75,10 @@ namespace GitUI.CommandsDialogs
                     Branches.SetSelectedText(merge);
                 }
             }
+
+            var gpg = comboboxGpgSecretKeys.KeysUIController;
+            bool commitSign = gpg.AreCommitSignedByDefault();
+            comboboxGpgSignType.SelectedIndex = commitSign ? 1 : 0;
 
             Branches.Select();
         }
@@ -190,6 +196,52 @@ namespace GitUI.CommandsDialogs
                 .Detailed();
 
             detailedSettings.MergeLogMessagesCount = Convert.ToInt32(nbMessages.Value);
+        }
+
+        private void comboboxGpgSignType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateKeyStatus();
+        }
+
+        private void UpdateKeyStatus()
+        {
+            switch (comboboxGpgSignType.SelectedIndex)
+            {
+                case 0:
+                    comboboxGpgSecretKeys.KeyID = "";
+                    comboboxGpgSecretKeys.Enabled = false;
+                    break;
+                case 1:
+                    comboboxGpgSecretKeys.SelectDefaultKey();
+                    comboboxGpgSecretKeys.Enabled = false;
+                    break;
+                case 2:
+                    if (comboboxGpgSecretKeys.KeyID == "")
+                    {
+                        comboboxGpgSecretKeys.SelectDefaultKey();
+                    }
+
+                    comboboxGpgSecretKeys.Enabled = true;
+                    break;
+            }
+        }
+
+        private void noCommit_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateVisibleFromNoCommit();
+        }
+
+        private void UpdateVisibleFromNoCommit()
+        {
+            comboboxGpgSignType.Visible = !noCommit.Checked;
+            comboboxGpgSecretKeys.Visible = !noCommit.Checked;
+            label1.Visible = !noCommit.Checked;
+            label3.Visible = !noCommit.Checked;
+        }
+
+        private void comboboxGpgSecretKeys_KeysLoaded(object sender, EventArgs e)
+        {
+            UpdateKeyStatus();
         }
     }
 }

@@ -5242,6 +5242,18 @@ command "git help shortlog"</source>
         <source>Allow unrelated histories</source>
         <target />
       </trans-unit>
+      <trans-unit id="comboboxGpgSignType.Item0">
+        <source>Do not sign commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="comboboxGpgSignType.Item1">
+        <source>Sign with default GPG</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="comboboxGpgSignType.Item2">
+        <source>Sign with specific GPG</source>
+        <target />
+      </trans-unit>
       <trans-unit id="fastForward.Text">
         <source>Keep a single branch line if possible (fast forward)</source>
         <target />
@@ -5250,8 +5262,16 @@ command "git help shortlog"</source>
         <source>Merge</source>
         <target />
       </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>GPG Signing Action</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label2.Text">
         <source>Merge branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>GPG Signing Key</source>
         <target />
       </trans-unit>
       <trans-unit id="noCommit.Text">
@@ -5993,6 +6013,18 @@ Nothing to rebase.</source>
 </source>
         <target />
       </trans-unit>
+      <trans-unit id="cboGpgAction.Item0">
+        <source>Do not sign commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboGpgAction.Item1">
+        <source>Sign with default GPG</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboGpgAction.Item2">
+        <source>Sign with specific GPG</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkAutosquash.Text">
         <source>Autos&amp;quash</source>
         <target />
@@ -6041,6 +6073,14 @@ commit date), ignoring the original author date.</source>
       </trans-unit>
       <trans-unit id="lblCurrent.Text">
         <source>Current branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblGpgAction.Text">
+        <source>GPG Signing Action</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblGpgKey.Text">
+        <source>GPG Signing Key</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRangeFrom.Text">
@@ -8056,6 +8096,14 @@ Would you like to save them?</source>
       </trans-unit>
       <trans-unit id="linkLabelHelp.Text">
         <source>Help</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GpgSecretKeysSelector" source-language="en">
+    <body>
+      <trans-unit id="refreshToolStripMenuItem.Text">
+        <source>&amp;Refresh</source>
         <target />
       </trans-unit>
     </body>
@@ -10516,14 +10564,6 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_yes.Text">
         <source>Yes</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="Translations" source-language="en">
-    <body>
-      <trans-unit id="_noKeySelected.Text">
-        <source>No key selected</source>
         <target />
       </trans-unit>
     </body>
