@@ -543,6 +543,7 @@ namespace GitUI.BranchTreePanel
         {
             Node.OnNode<Node>(e.Node, node =>
             {
+                // prevent selection of refs hidden from the revision grid by filtering
                 if (node is not BaseBranchNode branchNode || branchNode.Visible)
                 {
                     node.OnSelected();
