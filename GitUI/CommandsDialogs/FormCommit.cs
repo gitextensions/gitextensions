@@ -21,6 +21,7 @@ using GitUI.Properties;
 using GitUI.Script;
 using GitUI.SpellChecker;
 using GitUI.UserControls;
+using GitUI.UserControls.GPGKeys;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -284,12 +285,6 @@ namespace GitUI.CommandsDialogs
             };
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
-            /* If not changed, by default show "no sign commit" */
-            if (gpgSignCommitToolStripComboBox.SelectedIndex == -1)
-            {
-                gpgSignCommitToolStripComboBox.SelectedIndex = 0;
-            }
-
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowImageMargin = true;
             ((ToolStripDropDownMenu)commitTemplatesToolStripMenuItem.DropDown).ShowCheckMargin = false;
 
@@ -331,6 +326,8 @@ namespace GitUI.CommandsDialogs
             WorkaroundPaddingIncreaseBug();
 
             InitializeComplete();
+
+            toolStripGpgKeyComboBox.UICommandsSource = this;
 
             // By calling this in the constructor, we prevent flickering caused by resizing the
             // form, for example when it is restored to maximised, but first drawn as a smaller window.
@@ -488,6 +485,22 @@ namespace GitUI.CommandsDialogs
             // The problem is likely caused by 'splitRight.FixedPanel = FixedPanel.Panel2' fact, but other forms
             // have the same setting, and don't appear to suffer from the same bug.
             splitRight.SplitterDistance -= 6;
+
+            /* If not changed, by default show "no sign commit" */
+            if (gpgSignCommitToolStripComboBox.SelectedIndex == -1)
+            {
+                var gpg = toolStripGpgKeyComboBox.KeysUIController;
+                bool commitSign = false;
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    commitSign = await gpg.GetCommitGPGSignAsync();
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    if (commitSign)
+                    {
+                        gpgSignCommitToolStripComboBox.SelectedIndex = 1;
+                    }
+                });
+            }
         }
 
         protected override void OnShown(EventArgs e)
@@ -861,7 +874,7 @@ namespace GitUI.CommandsDialogs
                 case Command.Refresh: RescanChanges(); return true;
                 case Command.SelectNext:
                 case Command.SelectNext_AlternativeHotkey1:
-                case Command.SelectNext_AlternativeHotkey2: MoveSelection(1);  return true;
+                case Command.SelectNext_AlternativeHotkey2: MoveSelection(1); return true;
                 case Command.SelectPrevious:
                 case Command.SelectPrevious_AlternativeHotkey1:
                 case Command.SelectPrevious_AlternativeHotkey2: MoveSelection(-1); return true;
@@ -1364,7 +1377,7 @@ namespace GitUI.CommandsDialogs
                         _useFormCommitMessage,
                         noVerifyToolStripMenuItem.Checked,
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
-                        toolStripGpgKeyTextBox.Text,
+                        toolStripGpgKeyComboBox.KeyID,
                         Staged.IsEmpty,
                         resetAuthor);
 
@@ -3021,6 +3034,11 @@ namespace GitUI.CommandsDialogs
             UpdateAuthorInfo();
         }
 
+        private void toolStripGpgKeyComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            toolStripGpgKeyComboBox.ToolTipText = toolStripGpgKeyComboBox.Text;
+        }
+
         private void gpgSignCommitChanged(object sender, EventArgs e)
         {
             // Change the icon for commit button
@@ -3028,7 +3046,25 @@ namespace GitUI.CommandsDialogs
                 ? Images.Key
                 : Images.RepoStateClean;
 
-            toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
+            toolStripGpgKeyComboBox.Enabled = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
+
+            // Select default or empty key based on sign option selected. Provides info to user if the default key is set.
+            switch (gpgSignCommitToolStripComboBox.SelectedIndex)
+            {
+                case 0: // Do not sign
+                    toolStripGpgKeyComboBox.KeyID = "";
+                    break;
+                case 1: // Sign with default key
+                    toolStripGpgKeyComboBox.SelectDefaultKey();
+                    break;
+                case 2: // Sign with specific key
+                    if (toolStripGpgKeyComboBox.KeyID == "")
+                    {
+                        toolStripGpgKeyComboBox.SelectDefaultKey();
+                    }
+
+                    break;
+            }
         }
 
         #region Selection filtering

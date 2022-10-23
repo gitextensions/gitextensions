@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitUI.Editor;
 using GitUI.SpellChecker;
+using GitUI.UserControls.GPGKeys;
 using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.CommandsDialogs
@@ -142,7 +143,7 @@ namespace GitUI.CommandsDialogs
             this.noVerifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.gpgSignCommitToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripGpgKeyTextBox = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripGpgKeyComboBox = new ToolStripGPGSecretKeysComboBox();
             this.commitTemplatesToolStripMenuItem = new System.Windows.Forms.ToolStripDropDownButton();
             this.createBranchToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.commitStatusStrip = new System.Windows.Forms.StatusStrip();
@@ -1113,7 +1114,7 @@ namespace GitUI.CommandsDialogs
             this.flowCommitButtons.Controls.Add(this.CommitAndPush);
             this.flowCommitButtons.Controls.Add(this.StageInSuperproject);
             this.flowCommitButtons.Controls.Add(this.Amend);
-            var resetAuthorPanel = new Panel{ AutoSize = false, Size = this.ResetAuthor.Size, Margin = new Padding(0) };
+            var resetAuthorPanel = new Panel { AutoSize = false, Size = this.ResetAuthor.Size, Margin = new Padding(0) };
             resetAuthorPanel.Controls.Add(this.ResetAuthor);
             this.flowCommitButtons.Controls.Add(resetAuthorPanel);
             this.flowCommitButtons.Controls.Add(this.StashStaged);
@@ -1294,10 +1295,10 @@ namespace GitUI.CommandsDialogs
             this.noVerifyToolStripMenuItem,
             this.toolStripSeparator14,
             this.gpgSignCommitToolStripComboBox,
-            this.toolStripGpgKeyTextBox});
+            this.toolStripGpgKeyComboBox});
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
             this.toolStripMenuItem3.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(62, 23);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(62, 120);
             this.toolStripMenuItem3.Text = "&Options";
             // 
             // closeDialogAfterEachCommitToolStripMenuItem
@@ -1373,14 +1374,14 @@ namespace GitUI.CommandsDialogs
             this.gpgSignCommitToolStripComboBox.Name = "gpgSignCommitToolStripComboBox";
             this.gpgSignCommitToolStripComboBox.Size = new System.Drawing.Size(230, 23);
             this.gpgSignCommitToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.gpgSignCommitChanged);
+
             // 
-            // toolStripGpgKeyTextBox
+            // toolStripGpgKeyComboBox
             // 
-            this.toolStripGpgKeyTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.toolStripGpgKeyTextBox.MaxLength = 16;
-            this.toolStripGpgKeyTextBox.Name = "toolStripGpgKeyTextBox";
-            this.toolStripGpgKeyTextBox.Size = new System.Drawing.Size(230, 23);
-            this.toolStripGpgKeyTextBox.Visible = false;
+            this.toolStripGpgKeyComboBox.Name = "toolStripGpgKeyComboBox";
+            this.toolStripGpgKeyComboBox.Size = new System.Drawing.Size(230, 23);
+            this.toolStripGpgKeyComboBox.Enabled = false;
+            this.toolStripGpgKeyComboBox.SelectedIndexChanged += new System.EventHandler(toolStripGpgKeyComboBox_SelectedIndexChanged);
             // 
             // commitTemplatesToolStripMenuItem
             // 
@@ -1708,7 +1709,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripStatusLabel branchNameLabel;
         private ToolStripStatusLabel remoteNameLabel;
         private ToolStripSeparator toolStripSeparator14;
-        private ToolStripTextBox toolStripGpgKeyTextBox;
+        private ToolStripGPGSecretKeysComboBox toolStripGpgKeyComboBox;
         private ToolStripComboBox gpgSignCommitToolStripComboBox;
         private ToolStripMenuItem stopTrackingThisFileToolStripMenuItem;
         private Button modifyCommitMessageButton;
