@@ -1,8 +1,10 @@
-﻿using GitCommands.Git.Commands;
+﻿using GitCommands.Config;
+using GitCommands.Git.Commands;
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
 using GitUI.HelperDialogs;
 using GitUI.Script;
+using GitUI.UserControls.GPGKeys;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -20,7 +22,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
-
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormCreateTag()
@@ -52,6 +53,7 @@ namespace GitUI.CommandsDialogs
             }
 
             _gitTagController = new GitTagController(commands);
+            gpgSecretKeysCombobox.UICommandsSource = this;
         }
 
         private void FormCreateTag_Load(object sender, EventArgs e)
@@ -64,6 +66,17 @@ namespace GitUI.CommandsDialogs
             }
 
             pushTag.Text = string.Format(_pushToCaption.Text, _currentRemote);
+            var gpg = gpgSecretKeysCombobox.KeysUIController;
+            bool tagSign = false;
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                tagSign = await gpg.GetTagGPGSignAsync();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                if (tagSign)
+                {
+                    annotate.SelectedIndex = 2;
+                }
+            });
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -93,11 +106,14 @@ namespace GitUI.CommandsDialogs
                 return "";
             }
 
+            TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
+            bool useKey = tagOperation == TagOperation.SignWithSpecificKey;
+
             GitCreateTagArgs createTagArgs = new(textBoxTagName.Text,
                                                      objectId,
-                                                     GetSelectedOperation(annotate.SelectedIndex),
+                                                     tagOperation,
                                                      tagMessage.Text,
-                                                     textBoxGpgKey.Text,
+                                                     useKey ? gpgSecretKeysCombobox.KeyID : "",
                                                      ForceTag.Checked);
             var success = _gitTagController.CreateTag(createTagArgs, this);
             if (!success)
@@ -135,8 +151,29 @@ namespace GitUI.CommandsDialogs
         private void AnnotateDropDownChanged(object sender, EventArgs e)
         {
             TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
-            textBoxGpgKey.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
+            gpgSecretKeysCombobox.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
             keyIdLbl.Enabled = tagOperation == TagOperation.SignWithSpecificKey;
+
+            // Select default or empty key based on tagOperation value. Provides info to user if the default key is set.
+            if (tagOperation == TagOperation.SignWithDefaultKey)
+            {
+                gpgSecretKeysCombobox.SelectDefaultKey();
+            }
+            else if (tagOperation == TagOperation.SignWithSpecificKey)
+            {
+                if (gpgSecretKeysCombobox.KeyID == "")
+                {
+                    gpgSecretKeysCombobox.SelectDefaultKey();
+                }
+            }
+
+            // Select no key.
+            else
+            {
+                // Non signing tag option
+                gpgSecretKeysCombobox.KeyID = "";
+            }
+
             bool providesMessage = tagOperation.CanProvideMessage();
             tagMessage.Enabled = providesMessage;
             tagMessage.BorderStyle = providesMessage ? BorderStyle.FixedSingle : BorderStyle.None;
