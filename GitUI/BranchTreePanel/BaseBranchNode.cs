@@ -19,7 +19,7 @@ namespace GitUI.BranchTreePanel
                 throw new ArgumentNullException(nameof(fullPath));
             }
 
-            var dirs = fullPath.Split(PathSeparator);
+            string[] dirs = fullPath.Split(PathSeparator);
             Name = dirs[dirs.Length - 1];
             ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator.ToString());
             Visible = visible;
@@ -88,7 +88,7 @@ namespace GitUI.BranchTreePanel
 
             BaseBranchNode? result;
 
-            if (pathToNode.TryGetValue(ParentPath, out var parent))
+            if (pathToNode.TryGetValue(ParentPath, out BaseBranchNode parent))
             {
                 result = null;
             }
@@ -113,9 +113,9 @@ namespace GitUI.BranchTreePanel
         {
             TreeViewNode.TreeView?.BeginInvoke(new Action(() =>
             {
-                string branch = RelatedBranch is null || !RepoObjectsTree.ModifierKeys.HasFlag(Keys.Alt)
+                string branch = RelatedBranch is null || !Control.ModifierKeys.HasFlag(Keys.Alt)
                     ? FullPath : RelatedBranch.Substring(startIndex: GitRefName.RefsRemotesPrefix.Length);
-                UICommands.BrowseGoToRef(branch, showNoRevisionMsg: true, toggleSelection: RepoObjectsTree.ModifierKeys.HasFlag(Keys.Control));
+                UICommands.BrowseGoToRef(branch, showNoRevisionMsg: true, toggleSelection: Control.ModifierKeys.HasFlag(Keys.Control));
                 TreeViewNode.TreeView?.Focus();
             }));
         }

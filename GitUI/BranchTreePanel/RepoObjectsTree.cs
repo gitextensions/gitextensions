@@ -541,7 +541,14 @@ namespace GitUI.BranchTreePanel
 
         private void OnNodeSelected(object sender, TreeViewEventArgs e)
         {
-            Node.OnNode<Node>(e.Node, node => node.OnSelected());
+            Node.OnNode<Node>(e.Node, node =>
+            {
+                // prevent selection of refs hidden from the revision grid by filtering
+                if (node is not BaseBranchNode branchNode || branchNode.Visible)
+                {
+                    node.OnSelected();
+                }
+            });
         }
 
         private IEnumerable<NodeBase> GetSelectedNodes()
