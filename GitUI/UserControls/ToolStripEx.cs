@@ -18,6 +18,45 @@ namespace GitUI
             _gripButton = propGrip.GetValue(this) as ToolStripButton;
         }
 
+        protected override void OnItemAdded(ToolStripItemEventArgs e)
+        {
+            base.OnItemAdded(e);
+
+            if (e.Item is ToolStripDropDownItem item)
+            {
+                item.DropDownOpening += SplitButton_DropDownOpening;
+                item.DropDownClosed += SplitButton_DropDownClosed;
+            }
+        }
+
+        protected override void OnItemRemoved(ToolStripItemEventArgs e)
+        {
+            if (e.Item is ToolStripDropDownItem item)
+            {
+                item.DropDownOpening -= SplitButton_DropDownOpening;
+                item.DropDownClosed -= SplitButton_DropDownClosed;
+            }
+        }
+
+        private void SplitButton_DropDownOpening(object? sender, EventArgs e)
+        {
+            if (sender is ToolStripDropDownItem item && item.Owner is Control control)
+            {
+                // Suspends the control's rendering process.
+                NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.FALSE, IntPtr.Zero);
+            }
+        }
+
+        private void SplitButton_DropDownClosed(object? sender, EventArgs e)
+        {
+            if (sender is ToolStripDropDownItem item && item.Owner is Control control)
+            {
+                // Resumes the control's rendering process and trigger a redraw.
+                NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.TRUE, IntPtr.Zero);
+                control.Refresh();
+            }
+        }
+
         /// <summary>
         /// Gets or sets whether the ToolStripEx honors item clicks when its containing form does
         /// not have input focus.

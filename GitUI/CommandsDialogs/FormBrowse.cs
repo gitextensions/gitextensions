@@ -1107,7 +1107,6 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_WorkingDir.DropDownItems.Add(mnuRecentReposSettings);
 
-            ToolStripFilters.PreventToolStripSplitButtonClosing((ToolStripSplitButton)sender);
             _NO_TRANSLATE_WorkingDir.DropDown.ResumeLayout();
         }
 
@@ -1948,7 +1947,6 @@ namespace GitUI.CommandsDialogs
             branchSelect.DropDownItems.Add(new ToolStripSeparator());
             AddBranchesMenuItems();
 
-            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
             branchSelect.DropDown.ResumeLayout();
 
             void AddCheckoutBranchMenuItem()
@@ -2580,11 +2578,6 @@ namespace GitUI.CommandsDialogs
             SetWorkingDir(path);
         }
 
-        private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
-        {
-            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
-        }
-
         #region Submodules
 
         private ToolStripItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat = "{0}")
@@ -2808,11 +2801,6 @@ namespace GitUI.CommandsDialogs
         {
             FormUpdates updateForm = new(AppSettings.AppVersion);
             updateForm.SearchForUpdatesAndShow(Owner, true);
-        }
-
-        private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
-        {
-            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         /// <summary>
@@ -3075,11 +3063,6 @@ namespace GitUI.CommandsDialogs
             {
                 RefreshRevisions();
             }
-        }
-
-        private void toolStripSplitStash_DropDownOpened(object sender, EventArgs e)
-        {
-            ToolStripFilters.PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
