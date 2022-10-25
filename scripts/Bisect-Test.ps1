@@ -1,3 +1,46 @@
+<#
+.SYNOPSIS
+    Runs build output and asks user if app behaved as expected.
+.DESCRIPTION
+    This script is the helper script that runs in the bisect run call from the Run-BisectTest script.
+    You can run this script with a redirect to a file to validate functionality of current commit and note the problem if a problem is found. Then use the file in an issue report.
+.PARAMETER Force
+    Skip asking the user if they want to perform the git clean on their repo. 
+.PARAMETER Run
+    Run the test and if build output does not exist build and then test.
+.PARAMETER Build
+    Force a build even if build output exists.  Uses the right build functionality based on if the build script exists or not.
+.OUTPUTS
+    Only used when this script is being used from another script or program like Run-BisectTest
+    125 - Build failure or user answered Unsure.  Causes git bisect run to run git bisect skip on current commit.
+      1 - User answered No. Causes git bisect run to run git bisect bad on current commit.
+      0 - User answered Yes. Causes git bisect run to run git bisect good on current commit.
+     -1 - User aborted by saying no to the clean question.  To prevent testing weird state that is not reproducable cleans are required.  Make sure your code is commited.
+
+.EXAMPLE
+    Bisect-Test.ps1 -Build
+    Just builds.
+    Asks user if it should run the cleans before building.
+.EXAMPLE 
+    Bisect-Test.ps1 -Build -Run
+    Builds output and then runs build output.  After user closes program, script will ask if it behaved.  If Unsure or No responses, then user is asked to describe the failure.  
+    Asks user if it should run the cleans before building.
+.EXAMPLE
+    Bisect-Test.ps1 -Build -Run -Force
+    Builds output and then runs build output.  After user closes program, script will ask if it behaved.  If Unsure or No responses, then user is asked to describe the failure.  
+    Skips asking user if it should run the cleans before building.
+.EXAMPLE
+    Bisect-Test.ps1 -Run
+    Runs output and if build output does not exist then runs build first.  After user closes program, script will ask if it behaved.  If Unsure or No responses, then user is asked to describe the failure.  
+    Asks user if it should run the cleans before building if a build is run.
+.EXAMPLE
+    Bisect-Test.ps1 -Run -Force
+    Runs output and if build output does not exist then runs build first.  After user closes program, script will ask if it behaved.  If Unsure or No responses, then user is asked to describe the failure.  
+    Skips asking user if it should run the cleans before building if a build is run.
+
+#>
+
+
 Param([switch] $Force,
     [switch] $Run,
     [switch] $Build)
