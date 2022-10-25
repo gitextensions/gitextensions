@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.UserControls;
 using Microsoft;
 using ResourceManager;
 
@@ -153,7 +154,8 @@ namespace GitUI.CommandsDialogs
                     key = toolbarItem.Name;
                 }
 
-                bool visible = LoadVisibilitySetting(key);
+                bool visible = LoadVisibilitySetting(key, IsVisibleByDefault(key));
+
                 toolbarItem.Visible = visible;
 
                 ToolStripMenuItem menuToolbarItem = new(toolbarItem.ToolTipText)
@@ -170,11 +172,11 @@ namespace GitUI.CommandsDialogs
 
                     if (!BelongToAGroup(toolbarItem, out var group))
                     {
-                        SaveVisibilitySetting(toolbarItem.Name, toolbarItem.Visible);
+                        SaveVisibilitySetting(toolbarItem.Name, toolbarItem.Visible, IsVisibleByDefault(toolbarItem.Name));
                     }
                     else
                     {
-                        SaveVisibilitySetting(group, toolbarItem.Visible);
+                        SaveVisibilitySetting(group, toolbarItem.Visible, IsVisibleByDefault(toolbarItem.Name));
                         foreach (ToolStripItem item in senderToolStrip.Items)
                         {
                             if (item.Tag == (object)group)
@@ -195,8 +197,11 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            static void SaveVisibilitySetting(string key, bool visible) => AppSettings.SetBool(toolbarSettingsPrefix + key, visible ? null : false);
-            static bool LoadVisibilitySetting(string key) => AppSettings.GetBool(toolbarSettingsPrefix + key, true);
+            bool IsVisibleByDefault(string buttonKey) => !buttonKey.Contains(FilterToolBar.ReflogButtonName);
+            static void SaveVisibilitySetting(string key, bool visible, bool defaultValue = true)
+                => AppSettings.SetBool(toolbarSettingsPrefix + key, visible == defaultValue ? null : visible);
+            static bool LoadVisibilitySetting(string key, bool defaultValue = true)
+                => AppSettings.GetBool(toolbarSettingsPrefix + key, defaultValue);
 
             static bool BelongToAGroup(ToolStripItem toolbarItem, out string groupName)
             {
