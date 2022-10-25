@@ -85,7 +85,7 @@ namespace GitUI.BranchTreePanel
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await ReloadNodesAsync(LoadNodesAsync, getRefs);
-            });
+            }).FileAndForget();
         }
 
         internal override void UpdateVisibility()

@@ -36,7 +36,7 @@ namespace GitUI.BranchTreePanel
 
                     return loadNodesTask;
                 }, null).ConfigureAwait(false);
-            });
+            }).FileAndForget();
         }
 
         private async Task<Nodes> LoadNodesAsync(CancellationToken token, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs)
