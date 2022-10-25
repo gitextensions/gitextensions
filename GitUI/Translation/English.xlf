@@ -8093,6 +8093,10 @@ Context menu for additional operations</source>
         <source>Automatically stash before doing a rebase</source>
         <target />
       </trans-unit>
+      <trans-unit id="checkBoxUpdateRefs.Text">
+        <source>Rebase also dependent branches</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en">

@@ -32,6 +32,7 @@
             this.checkBoxFetchPrune = new System.Windows.Forms.CheckBox();
             this.checkBoxPullRebase = new System.Windows.Forms.CheckBox();
             this.checkBoxRebaseAutosquash = new System.Windows.Forms.CheckBox();
+            this.checkBoxUpdateRefs = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // checkBoxRebaseAutostash
@@ -74,6 +75,16 @@
             this.checkBoxRebaseAutosquash.Text = "Automatically squash commits when doing an interactive rebase";
             this.checkBoxRebaseAutosquash.UseVisualStyleBackColor = true;
             // 
+            // checkBoxUpdateRefs
+            // 
+            this.checkBoxUpdateRefs.AutoSize = true;
+            this.checkBoxUpdateRefs.Location = new System.Drawing.Point(19, 152);
+            this.checkBoxUpdateRefs.Name = "checkBoxUpdateRefs";
+            this.checkBoxUpdateRefs.Size = new System.Drawing.Size(198, 19);
+            this.checkBoxUpdateRefs.TabIndex = 3;
+            this.checkBoxUpdateRefs.Text = "Rebase also dependent branches";
+            this.checkBoxUpdateRefs.UseVisualStyleBackColor = true;
+            // 
             // GitConfigAdvancedSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -81,9 +92,10 @@
             this.Controls.Add(this.checkBoxRebaseAutostash);
             this.Controls.Add(this.checkBoxFetchPrune);
             this.Controls.Add(this.checkBoxPullRebase);
+            this.Controls.Add(this.checkBoxUpdateRefs);
             this.Controls.Add(this.checkBoxRebaseAutosquash);
             this.Name = "GitConfigAdvancedSettingsPage";
-            this.Size = new System.Drawing.Size(1527, 384);
+            this.Size = new System.Drawing.Size(1439, 516);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -95,5 +107,6 @@
         private System.Windows.Forms.CheckBox checkBoxFetchPrune;
         private System.Windows.Forms.CheckBox checkBoxPullRebase;
         private System.Windows.Forms.CheckBox checkBoxRebaseAutosquash;
+        private System.Windows.Forms.CheckBox checkBoxUpdateRefs;
     }
 }
