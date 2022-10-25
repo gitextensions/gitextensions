@@ -121,6 +121,7 @@ namespace GitCommands
         public bool SupportRangeDiffTool => this >= v2_19_0;
         public bool SupportStashStaged => this >= v2_35_0;
         public bool SupportUpdateRefs => this >= v2_38_0;
+        public bool SupportRangeDiffPath => this >= v2_38_0;
 
         public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
 

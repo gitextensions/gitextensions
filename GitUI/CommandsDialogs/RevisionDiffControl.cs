@@ -577,6 +577,7 @@ namespace GitUI.CommandsDialogs
 
             await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
                 openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick(),
+                additionalCommandInfo: (DiffFiles.SelectedItem?.Item?.IsRangeDiff is true) && Module.GitVersion.SupportRangeDiffPath ? _revisionGrid.CurrentFilter.PathFilter : "",
                 cancellationToken: _viewChangesSequence.Next());
         }
 
