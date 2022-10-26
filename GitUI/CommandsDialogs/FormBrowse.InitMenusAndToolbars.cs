@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!string.IsNullOrWhiteSpace(pathFilter))
                 {
-                    SetPathFilter(pathFilter);
+                    SetPathFilter(pathFilter.QuoteNE());
                 }
             }
 

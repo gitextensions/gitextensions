@@ -654,7 +654,7 @@ namespace GitUI.CommandsDialogs
 
         private void diffFilterFileInGridToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            (FindForm() as FormBrowse)?.SetPathFilter(DiffFiles.SelectedItems.First().Item.Name.ToPosixPath());
+            (FindForm() as FormBrowse)?.SetPathFilter(string.Join(" ", DiffFiles.SelectedItems.Select(f => f.Item.Name.ToPosixPath().QuoteNE())));
         }
 
         private void UpdateStatusOfMenuItems()
@@ -719,7 +719,7 @@ namespace GitUI.CommandsDialogs
 
             // Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
             diffShowInFileTreeToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
-            diffFilterFileInGridToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
+            diffFilterFileInGridToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowResetFileMenus(selectionInfo);
             fileHistoryDiffToolstripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
             blameToolStripMenuItem.Enabled = AppSettings.UseDiffViewerForBlame.Value
                 ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
