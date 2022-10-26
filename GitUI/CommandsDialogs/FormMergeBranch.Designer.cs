@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.strategyToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.Ok = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -61,16 +60,6 @@
             this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nbMessages)).BeginInit();
             this.SuspendLayout();
-            // 
-            // strategyToolTip
-            // 
-            this.strategyToolTip.AutomaticDelay = 100;
-            this.strategyToolTip.AutoPopDelay = 0;
-            this.strategyToolTip.InitialDelay = 1;
-            this.strategyToolTip.ReshowDelay = 1;
-            this.strategyToolTip.ShowAlways = true;
-            this.strategyToolTip.UseAnimation = false;
-            this.strategyToolTip.UseFading = false;
             // 
             // Ok
             // 
@@ -454,7 +443,6 @@
 
         #endregion
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ToolTip strategyToolTip;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private Help.HelpImageDisplayUserControl helpImageDisplayUserControl1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
