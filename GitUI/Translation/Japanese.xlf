@@ -429,7 +429,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>設定された秒ごとに fetch (0 で無効)</target>
+        <target>設定された秒ごとにフェッチ (0 で無効)</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
@@ -686,7 +686,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
         <source>Detect move and copy in all files</source>
-        <target>移動を検出してすべてのファイルをコピーする</target>
+        <target>移動を検出してすべてのファイルをコピー</target>
         
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInThisFile.Text">
@@ -6129,7 +6129,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="detectMoveAndCopyInAllFilesToolStripMenuItem.Text">
         <source>Detect move and copy in all files</source>
-        <target>移動を検出してすべてのファイルをコピーする</target>
+        <target>移動を検出してすべてのファイルをコピー</target>
         
       </trans-unit>
       <trans-unit id="detectMoveAndCopyInThisFileToolStripMenuItem.Text">
@@ -11470,6 +11470,16 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
         <target>リモートをすべてフェッチしてプルーン</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnApplyStash.Text">
+        <source>&amp;Apply stash</source>
+        <target>スタッシュを適用(&amp;A)</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnApplyStash.ToolTipText">
+        <source>Apply this stash</source>
+        <target>このスタッシュを適用</target>
+        
+      </trans-unit>
       <trans-unit id="mnubtnCollapse.Text">
         <source>Collapse</source>
         <target>たたむ</target>
@@ -11513,6 +11523,16 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
       <trans-unit id="mnubtnDisableRemote.Text">
         <source>&amp;Deactivate</source>
         <target>無効化(&amp;D)</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnDropStash.Text">
+        <source>&amp;Drop stash...</source>
+        <target>スタッシュを削除(&amp;D)...</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnDropStash.ToolTipText">
+        <source>Drop this stash</source>
+        <target>このスタッシュを削除</target>
         
       </trans-unit>
       <trans-unit id="mnubtnEnableRemote.Text">
@@ -11580,6 +11600,11 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
         <target>リモートの管理</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnManageStashFromRootNode.Text">
+        <source>&amp;Manage stashes...</source>
+        <target>スタッシュを管理(&amp;M)...</target>
+        
+      </trans-unit>
       <trans-unit id="mnubtnManageSubmodules.Text">
         <source>&amp;Manage...</source>
         <target>管理(&amp;M)...</target>
@@ -11620,6 +11645,16 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
         <target>選択したサブモジュールを新しいインスタンスで開く</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnOpenStash.Text">
+        <source>&amp;Open stash</source>
+        <target>スタッシュを開く(&amp;O)</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnOpenStash.ToolTipText">
+        <source>Open this stash</source>
+        <target>このスタッシュを開く</target>
+        
+      </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
         <source>&amp;Open</source>
         <target>開く(&amp;O)</target>
@@ -11628,6 +11663,16 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
       <trans-unit id="mnubtnOpenSubmodule.ToolTipText">
         <source>Open selected submodule</source>
         <target>選択したサブモジュールを開く</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnPopStash.Text">
+        <source>&amp;Pop stash</source>
+        <target>退避した変更を戻す(&amp;P)</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnPopStash.ToolTipText">
+        <source>Pop this stash</source>
+        <target>このスタッシュを戻す</target>
         
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
@@ -11653,6 +11698,16 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
       <trans-unit id="mnubtnResetSubmodule.ToolTipText">
         <source>Reset selected submodule</source>
         <target>選択したサブモジュールをリセット</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnStashAllFromRootNode.Text">
+        <source>&amp;Stash</source>
+        <target>スタッシュ(&amp;S)</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnStashStagedFromRootNode.Text">
+        <source>S&amp;tash staged</source>
+        <target>ステージ済をスタッシュ(&amp;T)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnStashSubmodule.Text">
@@ -11713,6 +11768,16 @@ CTRLを押しながらクリックすると複数選択でき、さらにSHIFT�
       <trans-unit id="tsbShowRemotes.ToolTipText">
         <source>Remotes</source>
         <target>リモート</target>
+        
+      </trans-unit>
+      <trans-unit id="tsbShowStashes.Text">
+        <source>St&amp;ashes</source>
+        <target>スタッシュ(&amp;A)</target>
+        
+      </trans-unit>
+      <trans-unit id="tsbShowStashes.ToolTipText">
+        <source>Stashes</source>
+        <target>スタッシュ</target>
         
       </trans-unit>
       <trans-unit id="tsbShowSubmodules.Text">
@@ -13837,6 +13902,11 @@ the last selected commit.</source>
         <target>スタッシュ削除の確認</target>
         
       </trans-unit>
+      <trans-unit id="_stashesText.Text">
+        <source>Stashes</source>
+        <target>スタッシュ</target>
+        
+      </trans-unit>
       <trans-unit id="_submodulesText.Text">
         <source>Submodules</source>
         <target>サブモジュール</target>
@@ -14137,7 +14207,7 @@ Details: Is {1} expected {2}</source>
       </trans-unit>
       <trans-unit id="columnHeaderBranch.Text">
         <source>Will be fetched to branch</source>
-        <target>ブランチとしてFetchされます</target>
+        <target>ブランチとしてフェッチされます</target>
         
       </trans-unit>
       <trans-unit id="columnHeaderBy.Text">
