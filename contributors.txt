@@ -180,3 +180,4 @@ YYYY/MM/DD, github id, Full name, email
 2022/08/23, huangsunyang, SunYang Huang, huangsunyang(at)126.com
 2022/10/03, ralphromero, Ralph Romero, ralph(at)romero.id.au
 2022/10/15, TanukiSharp, Sebastien ROBERT, sebastien.saigo(at)gmail.com
+2022/10/26, zachesposito, Zach Esposito, zach(at)zachesposito.me
