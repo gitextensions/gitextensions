@@ -43,7 +43,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMustAuthenticate.Location = new System.Drawing.Point(65, 47);
             this.lblMustAuthenticate.Name = "lblMustAuthenticate";
-            this.lblMustAuthenticate.Size = new System.Drawing.Size(258, 22);
+            this.lblMustAuthenticate.AutoSize = true;
             this.lblMustAuthenticate.TabIndex = 3;
             this.lblMustAuthenticate.Text = "You must authenticate to run this command.";
             // 
@@ -89,7 +89,7 @@
             this.lblPleaseLoadKey.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.lblPleaseLoadKey.Location = new System.Drawing.Point(64, 18);
             this.lblPleaseLoadKey.Name = "lblPleaseLoadKey";
-            this.lblPleaseLoadKey.Size = new System.Drawing.Size(259, 34);
+            this.lblPleaseLoadKey.AutoSize = true;
             this.lblPleaseLoadKey.TabIndex = 2;
             this.lblPleaseLoadKey.Text = "Please load your SSH private key";
             // 
