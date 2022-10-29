@@ -48,6 +48,17 @@ namespace GitCommands
         private readonly IExecutable _gitExecutable;
         private readonly IExecutable _gitWindowsExecutable;
 
+        // Parse lines of format:
+        //
+        // 69a7c7a40230346778e7eebed809773a6bc45268 refs/heads/master
+        // 69a7c7a40230346778e7eebed809773a6bc45268 refs/remotes/origin/master
+        // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
+        //
+        // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
+        private static readonly Regex _refRegex = new(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
+
+        private static readonly Regex _headerRegex = new(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.Compiled);
+
         /// <summary>
         /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
         /// This can be seen as the Git "instance" identifier.
@@ -3091,17 +3102,7 @@ namespace GitCommands
 
         public IReadOnlyList<IGitRef> ParseRefs(string refList)
         {
-            // Parse lines of format:
-            //
-            // 69a7c7a40230346778e7eebed809773a6bc45268 refs/heads/master
-            // 69a7c7a40230346778e7eebed809773a6bc45268 refs/remotes/origin/master
-            // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
-            //
-            // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
-
-            Regex regex = new(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline | RegexOptions.Compiled);
-
-            var matches = regex.Matches(refList);
+            var matches = _refRegex.Matches(refList);
 
             List<IGitRef> gitRefs = new();
             Dictionary<string, GitRef> headByRemote = new();
@@ -3400,8 +3401,6 @@ namespace GitCommands
             Dictionary<ObjectId, GitBlameCommit> commitByObjectId = new();
             List<GitBlameLine> lines = new(capacity: 256);
 
-            Regex headerRegex = new(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.Compiled);
-
             bool hasCommitHeader;
             ObjectId? objectId;
             int finalLineNumber;
@@ -3421,7 +3420,7 @@ namespace GitCommands
 
             foreach (var line in output.LazySplit('\n').Select(l => l.TrimEnd('\r')))
             {
-                var match = headerRegex.Match(line);
+                var match = _headerRegex.Match(line);
 
                 if (match.Success)
                 {
