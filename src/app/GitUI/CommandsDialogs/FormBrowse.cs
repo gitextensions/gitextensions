@@ -197,6 +197,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _buildReportTabCaption = new("Build Report");
         private readonly TranslationString _consoleTabCaption = new("Console");
+        private readonly TranslationString _outputHistoryTabCaption = new("Output");
 
         private readonly TranslationString _noWorkingFolderText = new("No working directory");
         private readonly TranslationString _commitButtonText = new("Commit");
@@ -228,6 +229,7 @@ namespace GitUI.CommandsDialogs
         private bool _fileBlameHistoryLeftPanelStartupState;
 
         private TabPage? _consoleTabPage;
+        private OutputHistoryControllerBase _outputHistoryController;
 
         private readonly Dictionary<Brush, Icon> _overlayIconByBrush = [];
 
@@ -1941,18 +1943,21 @@ namespace GitUI.CommandsDialogs
         internal enum Command
         {
             // Focus or visuals
+            FocusLeftPanel = 25,
             FocusRevisionGrid = 3,
             FocusCommitInfo = 4,
             FocusDiff = 5,
             FocusFileTree = 6,
-            FocusFilter = 18,
-            ToggleLeftPanel = 21,
-            FocusLeftPanel = 25,
             FocusGpgInfo = 26,
             FocusGitConsole = 29,
             FocusBuildServerStatus = 30,
+            FocusOutputHistoryAndToggleIfPanel = 47,
             FocusNextTab = 31,
             FocusPrevTab = 32,
+
+            FocusFilter = 18,
+
+            ToggleLeftPanel = 21,
 
             // START menu
             OpenRepo = 45,
@@ -2102,6 +2107,7 @@ namespace GitUI.CommandsDialogs
                 case Command.FocusGpgInfo when AppSettings.ShowGpgInformation.Value: FocusTabOf(revisionGpgInfo1, (c, alreadyContainedFocus) => c.Focus()); break;
                 case Command.FocusGitConsole: FocusGitConsole(); break;
                 case Command.FocusBuildServerStatus: FocusTabOf(_buildReportTabPageExtension?.Control, (c, alreadyContainedFocus) => c.Focus()); break;
+                case Command.FocusOutputHistoryAndToggleIfPanel: return _outputHistoryController.ToggleControl();
                 case Command.FocusNextTab: FocusNextTab(); break;
                 case Command.FocusPrevTab: FocusNextTab(forward: false); break;
                 case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
@@ -2279,6 +2285,7 @@ namespace GitUI.CommandsDialogs
             _splitterManager.AddSplitter(RevisionsSplitContainer, nameof(RevisionsSplitContainer));
             _splitterManager.AddSplitter(MainSplitContainer, nameof(MainSplitContainer));
             _splitterManager.AddSplitter(RightSplitContainer, nameof(RightSplitContainer));
+            _splitterManager.AddSplitter(LeftSplitContainer, nameof(LeftSplitContainer));
 
             revisionDiff.InitSplitterManager(_splitterManager);
             fileTree.InitSplitterManager(_splitterManager);
@@ -2304,6 +2311,8 @@ namespace GitUI.CommandsDialogs
                     // Catching because bad value can raise an exception
                 }
             }
+
+            LeftSplitContainer.Panel2Collapsed = !AppSettings.OutputHistoryPanelVisible.Value;
         }
 
         private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)

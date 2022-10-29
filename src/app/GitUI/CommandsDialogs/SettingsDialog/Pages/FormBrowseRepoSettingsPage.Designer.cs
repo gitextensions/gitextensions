@@ -1,4 +1,7 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+﻿using System.ComponentModel;
+using GitUI.UserControls.Settings;
+
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     partial class FormBrowseRepoSettingsPage
     {
@@ -36,14 +39,18 @@
             chkUseDiffViewerForBlame = new CheckBox();
             gbGeneral = new GroupBox();
             gbTabs = new GroupBox();
+            _NO_TRANSLATE_OutputHistoryDepth = new NumericUpDown();
+            lblOutputHistoryDepth = new Label();
+            chkShowOutputHistoryAsTab = new SettingsCheckBox();
             gbGeneral.SuspendLayout();
             gbTabs.SuspendLayout();
+            ((ISupportInitialize)_NO_TRANSLATE_OutputHistoryDepth).BeginInit();
             SuspendLayout();
             // 
             // chkShowGpgInformation
             // 
             chkShowGpgInformation.AutoSize = true;
-            chkShowGpgInformation.Location = new Point(9, 48);
+            chkShowGpgInformation.Location = new Point(9, 47);
             chkShowGpgInformation.Name = "chkShowGpgInformation";
             chkShowGpgInformation.Size = new Size(147, 19);
             chkShowGpgInformation.TabIndex = 7;
@@ -53,7 +60,7 @@
             // chkChowConsoleTab
             // 
             chkChowConsoleTab.AutoSize = true;
-            chkChowConsoleTab.Location = new Point(9, 25);
+            chkChowConsoleTab.Location = new Point(9, 22);
             chkChowConsoleTab.Name = "chkChowConsoleTab";
             chkChowConsoleTab.Size = new Size(141, 19);
             chkChowConsoleTab.TabIndex = 6;
@@ -84,7 +91,7 @@
             chkUseBrowseForFileHistory.AutoSize = true;
             chkUseBrowseForFileHistory.Location = new Point(9, 48);
             chkUseBrowseForFileHistory.Name = "chkUseBrowseForFileHistory";
-            chkUseBrowseForFileHistory.Size = new Size(165, 19);
+            chkUseBrowseForFileHistory.Size = new Size(221, 19);
             chkUseBrowseForFileHistory.TabIndex = 4;
             chkUseBrowseForFileHistory.Text = "Show file history in the main window";
             chkUseBrowseForFileHistory.UseVisualStyleBackColor = true;
@@ -108,7 +115,7 @@
             gbGeneral.Controls.Add(chkUseDiffViewerForBlame);
             gbGeneral.Location = new Point(11, 11);
             gbGeneral.Name = "gbGeneral";
-            gbGeneral.Size = new Size(435, 104);
+            gbGeneral.Size = new Size(1505, 104);
             gbGeneral.TabIndex = 1;
             gbGeneral.TabStop = false;
             gbGeneral.Text = "General";
@@ -116,14 +123,50 @@
             // gbTabs
             // 
             gbTabs.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            gbTabs.Controls.Add(_NO_TRANSLATE_OutputHistoryDepth);
+            gbTabs.Controls.Add(lblOutputHistoryDepth);
+            gbTabs.Controls.Add(chkShowOutputHistoryAsTab);
             gbTabs.Controls.Add(chkShowGpgInformation);
             gbTabs.Controls.Add(chkChowConsoleTab);
             gbTabs.Location = new Point(11, 121);
             gbTabs.Name = "gbTabs";
-            gbTabs.Size = new Size(435, 82);
+            gbTabs.Size = new Size(1505, 125);
             gbTabs.TabIndex = 5;
             gbTabs.TabStop = false;
             gbTabs.Text = "Tabs (restart required)";
+            // 
+            // _NO_TRANSLATE_OutputHistoryDepth
+            // 
+            _NO_TRANSLATE_OutputHistoryDepth.Location = new Point(360, 92);
+            _NO_TRANSLATE_OutputHistoryDepth.Maximum = new decimal(new int[] { 1000, 0, 0, 0 });
+            _NO_TRANSLATE_OutputHistoryDepth.Name = "_NO_TRANSLATE_OutputHistoryDepth";
+            _NO_TRANSLATE_OutputHistoryDepth.Size = new Size(48, 23);
+            _NO_TRANSLATE_OutputHistoryDepth.TabIndex = 10;
+            _NO_TRANSLATE_OutputHistoryDepth.Value = new decimal(new int[] { 1000, 0, 0, 0 });
+            // 
+            // lblOutputHistoryDepth
+            // 
+            lblOutputHistoryDepth.AutoSize = true;
+            lblOutputHistoryDepth.Location = new Point(9, 94);
+            lblOutputHistoryDepth.Name = "lblOutputHistoryDepth";
+            lblOutputHistoryDepth.Size = new Size(192, 15);
+            lblOutputHistoryDepth.TabIndex = 9;
+            lblOutputHistoryDepth.Text = "Output history depth (0 to disable):";
+            // 
+            // chkShowOutputHistoryAsTab
+            // 
+            chkShowOutputHistoryAsTab.AutoSize = true;
+            chkShowOutputHistoryAsTab.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            chkShowOutputHistoryAsTab.Checked = false;
+            chkShowOutputHistoryAsTab.Location = new Point(9, 72);
+            chkShowOutputHistoryAsTab.ManualSectionAnchorName = "show-output-history-as-tab-otherwise-as-panel";
+            chkShowOutputHistoryAsTab.Margin = new Padding(4, 3, 4, 3);
+            chkShowOutputHistoryAsTab.Name = "chkShowOutputHistoryAsTab";
+            chkShowOutputHistoryAsTab.Size = new Size(277, 19);
+            chkShowOutputHistoryAsTab.TabIndex = 8;
+            chkShowOutputHistoryAsTab.Text = "Show output history as tab (otherwise as panel)";
+            chkShowOutputHistoryAsTab.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
+            chkShowOutputHistoryAsTab.ToolTipText = null;
             // 
             // FormBrowseRepoSettingsPage
             // 
@@ -133,15 +176,15 @@
             Controls.Add(gbGeneral);
             Name = "FormBrowseRepoSettingsPage";
             Padding = new Padding(8);
-            Size = new Size(457, 215);
+            Size = new Size(1527, 686);
             Text = "Browse repository window";
             gbGeneral.ResumeLayout(false);
             gbGeneral.PerformLayout();
             gbTabs.ResumeLayout(false);
             gbTabs.PerformLayout();
+            ((ISupportInitialize)_NO_TRANSLATE_OutputHistoryDepth).EndInit();
             ResumeLayout(false);
             PerformLayout();
-
         }
 
         #endregion
@@ -154,5 +197,8 @@
         private CheckBox chkUseDiffViewerForBlame;
         private GroupBox gbGeneral;
         private GroupBox gbTabs;
+        private SettingsCheckBox chkShowOutputHistoryAsTab;
+        private Label lblOutputHistoryDepth;
+        private NumericUpDown _NO_TRANSLATE_OutputHistoryDepth;
     }
 }
