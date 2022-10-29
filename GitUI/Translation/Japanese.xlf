@@ -10172,6 +10172,11 @@ Context menu for additional operations</source>
         <target>リベースする前に自動的にスタッシュ</target>
         
       </trans-unit>
+      <trans-unit id="checkBoxUpdateRefs.Text">
+        <source>Rebase also dependent branches</source>
+        <target>依存するブランチもリベースする</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="ja">
