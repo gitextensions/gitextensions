@@ -27,6 +27,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.UseBrowseForFileHistory.Value = chkUseBrowseForFileHistory.Checked;
             AppSettings.UseDiffViewerForBlame.Value = chkUseDiffViewerForBlame.Checked;
             AppSettings.ShowGpgInformation.Value = chkShowGpgInformation.Checked;
+            AppSettings.ProcessHistoryAsTab.Value = chkProcessHistoryAsTab.Checked;
+            AppSettings.ProcessHistoryDepth.Value = (int)_NO_TRANSLATE_ProcessHistoryDepth.Value;
 
             AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem).Name.ToLowerInvariant();
             base.PageToSettings();
@@ -38,6 +40,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseBrowseForFileHistory.Checked = AppSettings.UseBrowseForFileHistory.Value;
             chkUseDiffViewerForBlame.Checked = AppSettings.UseDiffViewerForBlame.Value;
             chkShowGpgInformation.Checked = AppSettings.ShowGpgInformation.Value;
+            chkProcessHistoryAsTab.Checked = AppSettings.ProcessHistoryAsTab.Value;
+            _NO_TRANSLATE_ProcessHistoryDepth.Value = Math.Clamp(AppSettings.ProcessHistoryDepth.Value, _NO_TRANSLATE_ProcessHistoryDepth.Minimum, _NO_TRANSLATE_ProcessHistoryDepth.Maximum);
 
             foreach (IShellDescriptor shell in _shellProvider.GetShells())
             {
