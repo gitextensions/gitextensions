@@ -144,6 +144,7 @@ namespace GitUI.CommandsDialogs
 
         private void EnableButtons()
         {
+            bool conflictedMerge = Module.InTheMiddleOfConflictedMerge();
             if (Module.InTheMiddleOfRebase())
             {
                 if (Height < 200)
@@ -157,8 +158,9 @@ namespace GitUI.CommandsDialogs
 
                 btnAddFiles.Visible = true;
                 btnCommit.Visible = true;
-                btnContinueRebase.Visible = !Module.InTheMiddleOfConflictedMerge();
-                btnSolveConflicts.Visible = Module.InTheMiddleOfConflictedMerge();
+                btnEditTodo.Visible = true;
+                btnContinueRebase.Visible = !conflictedMerge;
+                btnSolveConflicts.Visible = conflictedMerge;
                 btnSkip.Visible = true;
                 btnAbort.Visible = true;
             }
@@ -168,6 +170,7 @@ namespace GitUI.CommandsDialogs
                 btnRebase.Visible = true;
                 btnAddFiles.Visible = false;
                 btnCommit.Visible = false;
+                btnEditTodo.Visible = false;
                 btnContinueRebase.Visible = false;
                 btnSolveConflicts.Visible = false;
                 btnSkip.Visible = false;
@@ -175,7 +178,7 @@ namespace GitUI.CommandsDialogs
                 chkStash.Enabled = Module.IsDirtyDir();
             }
 
-            btnSolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
+            btnSolveMergeconflicts.Visible = conflictedMerge;
 
             btnContinueRebase.Text = _continueRebaseText.Text;
             btnSolveConflicts.Text = _solveConflictsText.Text;
@@ -185,7 +188,7 @@ namespace GitUI.CommandsDialogs
 
             var highlightColor = Color.Yellow.AdaptBackColor();
 
-            if (Module.InTheMiddleOfConflictedMerge())
+            if (conflictedMerge)
             {
                 AcceptButton = btnSolveConflicts;
                 btnSolveConflicts.Focus();
@@ -280,6 +283,23 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 FormProcess.ShowDialog(this, arguments: GitCommandHelpers.AbortRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+
+                if (!Module.InTheMiddleOfRebase())
+                {
+                    Skipped.Clear();
+                    Close();
+                }
+
+                EnableButtons();
+                PatchGrid.Initialize();
+            }
+        }
+
+        private void EditTodoClick(object sender, EventArgs e)
+        {
+            using (WaitCursorScope.Enter())
+            {
+                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.EditTodoRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {

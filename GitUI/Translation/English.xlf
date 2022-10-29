@@ -5865,6 +5865,10 @@ Nothing to rebase.</source>
         <source>&amp;Continue rebase</source>
         <target />
       </trans-unit>
+      <trans-unit id="btnEditTodo.Text">
+        <source>&amp;Edit todo...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="btnRebase.Text">
         <source>Rebase</source>
         <target />

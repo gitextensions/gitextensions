@@ -467,6 +467,11 @@ namespace GitCommands.Git.Commands
             return new GitArgumentBuilder("rebase") { "--abort" };
         }
 
+        public static ArgumentString EditTodoRebaseCmd()
+        {
+            return new GitArgumentBuilder("rebase") { "--edit-todo" };
+        }
+
         public static ArgumentString ResolvedCmd()
         {
             return new GitArgumentBuilder("am")
