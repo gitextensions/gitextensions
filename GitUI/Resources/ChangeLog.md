@@ -1,10 +1,38 @@
 Changelog
 =========
 
-### Version 4.0.0-beta (3 Oct 2022)
+### Version 4.0.0 (31 Oct 2022)
 
 #### Changes:
+* [#10294] FormBrowse: Hide Reflog button by default
+* [#10286] Git 2.38.1
+* [#10285] Refresh the left panel when it's shown
+* [#10283] Preventing popup "Revision X not being visible in the revision grid" on right mouse button click
+* [#10262] Cleanup handling of AllOutput for processes
+* [#10261] Git Executable: return stderr also if not throwOnErrorExit is suppressed
+* [#10260] Removed changes of PR #3833, suspend/resume redrawn of ToolStripEx when dropdown menu is opened/closed
+* [#10258] SidePanel: Show Stashes
+* [#10253] Redo selection of the first item to fix shift-select of multiple items
+* [#10248] Hotkey: Add a hotkey for "Stash Staged" menu item
+* [#10245] Form rebase: some small fixes
+* [#10244] Update FormManageWorktree layout
+* [#10243] Enable <ImplicitUsings> and clean unneeded namespace declarations.
+* [#10240] Custom options to git-log
+* [#10239] Revision filter combobox
+* [#10234] Restore the order of the branch view options
+* [#10232] Update DiffViewerSettingsPage layout
+* [#10229] Update to latest 6.0 .Net Runtime/SDK
+* [#10228] ShowOnlyCurrentBranch were not showing commits
+* [#10227] Do not cache current GetRevision data
+* [#10224] Worktree: redesign 'Manage worktree' form
+* [#10222] Ignore .gitmodules without path
+* [#10217] ShellExtension: rename item in the setting form with same name it have in shell extension menu
+* [#10216] Disable reloading of Explorer when uninstalling.
+* [#10212] Update filter toolbar when filters change
+* [#10208] ConEmu 220807
 * [#10205] Move revision filters to advanced filter form
+* [#10203] FormDeleteRemoteBranch: GetMergedRemoteBranches() in background
+* [#10193] Protect AppSettings saving using global mutex
 * [#10191] Add Update-DotnetVersion script
 * [#10190] Tests: Disable some commonly failed tests
 * [#10189] Reorder items in View menu
@@ -53,61 +81,6 @@ Changelog
 * [#10027] Replace hard-coded `Ctrl+O` shortcuts with `Hotkey`s
 * [#10026] `CommitInfo`: Ensure empty line between sections
 * [#10021] Do not throw when cancelling current token
-
-[10205]:https://github.com/gitextensions/gitextensions/pull/10205
-[10191]:https://github.com/gitextensions/gitextensions/pull/10191
-[10190]:https://github.com/gitextensions/gitextensions/pull/10190
-[10189]:https://github.com/gitextensions/gitextensions/pull/10189
-[10188]:https://github.com/gitextensions/gitextensions/pull/10188
-[10183]:https://github.com/gitextensions/gitextensions/pull/10183
-[10180]:https://github.com/gitextensions/gitextensions/pull/10180
-[10172]:https://github.com/gitextensions/gitextensions/pull/10172
-[10169]:https://github.com/gitextensions/gitextensions/pull/10169
-[10164]:https://github.com/gitextensions/gitextensions/pull/10164
-[10163]:https://github.com/gitextensions/gitextensions/pull/10163
-[10161]:https://github.com/gitextensions/gitextensions/pull/10161
-[10159]:https://github.com/gitextensions/gitextensions/pull/10159
-[10154]:https://github.com/gitextensions/gitextensions/pull/10154
-[10153]:https://github.com/gitextensions/gitextensions/pull/10153
-[10149]:https://github.com/gitextensions/gitextensions/pull/10149
-[10146]:https://github.com/gitextensions/gitextensions/pull/10146
-[10145]:https://github.com/gitextensions/gitextensions/pull/10145
-[10139]:https://github.com/gitextensions/gitextensions/pull/10139
-[10138]:https://github.com/gitextensions/gitextensions/pull/10138
-[10137]:https://github.com/gitextensions/gitextensions/pull/10137
-[10136]:https://github.com/gitextensions/gitextensions/pull/10136
-[10135]:https://github.com/gitextensions/gitextensions/pull/10135
-[10130]:https://github.com/gitextensions/gitextensions/pull/10130
-[10129]:https://github.com/gitextensions/gitextensions/pull/10129
-[10127]:https://github.com/gitextensions/gitextensions/pull/10127
-[10125]:https://github.com/gitextensions/gitextensions/pull/10125
-[10124]:https://github.com/gitextensions/gitextensions/pull/10124
-[10123]:https://github.com/gitextensions/gitextensions/pull/10123
-[10119]:https://github.com/gitextensions/gitextensions/pull/10119
-[10118]:https://github.com/gitextensions/gitextensions/pull/10118
-[10117]:https://github.com/gitextensions/gitextensions/pull/10117
-[10116]:https://github.com/gitextensions/gitextensions/pull/10116
-[10101]:https://github.com/gitextensions/gitextensions/pull/10101
-[10090]:https://github.com/gitextensions/gitextensions/pull/10090
-[10088]:https://github.com/gitextensions/gitextensions/pull/10088
-[10086]:https://github.com/gitextensions/gitextensions/pull/10086
-[10085]:https://github.com/gitextensions/gitextensions/pull/10085
-[10084]:https://github.com/gitextensions/gitextensions/pull/10084
-[10083]:https://github.com/gitextensions/gitextensions/pull/10083
-[10082]:https://github.com/gitextensions/gitextensions/pull/10082
-[10079]:https://github.com/gitextensions/gitextensions/pull/10079
-[10076]:https://github.com/gitextensions/gitextensions/pull/10076
-[10073]:https://github.com/gitextensions/gitextensions/pull/10073
-[10072]:https://github.com/gitextensions/gitextensions/pull/10072
-[10030]:https://github.com/gitextensions/gitextensions/pull/10030
-[10027]:https://github.com/gitextensions/gitextensions/pull/10027
-[10026]:https://github.com/gitextensions/gitextensions/pull/10026
-[10021]:https://github.com/gitextensions/gitextensions/pull/10021
-
-
-### Version 4.0.0-alpha (11 Jun 2022)
-
-#### Changes:
 * [#10011] CommitInfo: Fixup revision links in commit message
 * [#10005] Add menu item "Show in explorer" in Resolve merge conflicts window
 * [#10003] Use grayscaled icon for "Reset another branch to here"
@@ -148,6 +121,7 @@ Changelog
 * [#9908] RevDiff: async SetDiff
 * [#9905] Main menu: Standardize capitalization and use US English
 * [#9904] Display assigned hotkeys in View menu on startup
+* [#9903] Remove unused `TreeGuid`
 * [#9900] RevisionGrid: Add option to fill git ref labels again
 * [#9898] Make common hotkeys visible as Hotkeys
 * [#9897] Browse: Clarify RefreshRevisions() handling
@@ -514,13 +488,92 @@ Changelog
 * [#8804] Introduce new interface for named git refs
 * [#8799] Revert "Add test accessors borrowed from https://github.com/dotnet/winforms/"
 * [#8797] C#8 simplified using to reduce nesting
+* [#8790] Cache azuredevops build results
 * [#8709] Implemented F2 rename branch in RepoObjectsTree.
 * [#8700] Custom difftool in RevDiff, FileHistory, Commit, RevGrid
 * [#8522] Migrate to .NET 5.0
+* [#8452] Allow highlight branch by ALT+Click in the grid
 * [#8156] Update packages.
 * [#8010] Feature/add windows explorer integration in settings
 
 
+[10294]:https://github.com/gitextensions/gitextensions/pull/10294
+[10286]:https://github.com/gitextensions/gitextensions/pull/10286
+[10285]:https://github.com/gitextensions/gitextensions/pull/10285
+[10283]:https://github.com/gitextensions/gitextensions/pull/10283
+[10262]:https://github.com/gitextensions/gitextensions/pull/10262
+[10261]:https://github.com/gitextensions/gitextensions/pull/10261
+[10260]:https://github.com/gitextensions/gitextensions/pull/10260
+[10258]:https://github.com/gitextensions/gitextensions/pull/10258
+[10253]:https://github.com/gitextensions/gitextensions/pull/10253
+[10248]:https://github.com/gitextensions/gitextensions/pull/10248
+[10245]:https://github.com/gitextensions/gitextensions/pull/10245
+[10244]:https://github.com/gitextensions/gitextensions/pull/10244
+[10243]:https://github.com/gitextensions/gitextensions/pull/10243
+[10240]:https://github.com/gitextensions/gitextensions/pull/10240
+[10239]:https://github.com/gitextensions/gitextensions/pull/10239
+[10234]:https://github.com/gitextensions/gitextensions/pull/10234
+[10232]:https://github.com/gitextensions/gitextensions/pull/10232
+[10229]:https://github.com/gitextensions/gitextensions/pull/10229
+[10228]:https://github.com/gitextensions/gitextensions/pull/10228
+[10227]:https://github.com/gitextensions/gitextensions/pull/10227
+[10224]:https://github.com/gitextensions/gitextensions/pull/10224
+[10222]:https://github.com/gitextensions/gitextensions/pull/10222
+[10217]:https://github.com/gitextensions/gitextensions/pull/10217
+[10216]:https://github.com/gitextensions/gitextensions/pull/10216
+[10212]:https://github.com/gitextensions/gitextensions/pull/10212
+[10208]:https://github.com/gitextensions/gitextensions/pull/10208
+[10205]:https://github.com/gitextensions/gitextensions/pull/10205
+[10203]:https://github.com/gitextensions/gitextensions/pull/10203
+[10193]:https://github.com/gitextensions/gitextensions/pull/10193
+[10191]:https://github.com/gitextensions/gitextensions/pull/10191
+[10190]:https://github.com/gitextensions/gitextensions/pull/10190
+[10189]:https://github.com/gitextensions/gitextensions/pull/10189
+[10188]:https://github.com/gitextensions/gitextensions/pull/10188
+[10183]:https://github.com/gitextensions/gitextensions/pull/10183
+[10180]:https://github.com/gitextensions/gitextensions/pull/10180
+[10172]:https://github.com/gitextensions/gitextensions/pull/10172
+[10169]:https://github.com/gitextensions/gitextensions/pull/10169
+[10164]:https://github.com/gitextensions/gitextensions/pull/10164
+[10163]:https://github.com/gitextensions/gitextensions/pull/10163
+[10161]:https://github.com/gitextensions/gitextensions/pull/10161
+[10159]:https://github.com/gitextensions/gitextensions/pull/10159
+[10154]:https://github.com/gitextensions/gitextensions/pull/10154
+[10153]:https://github.com/gitextensions/gitextensions/pull/10153
+[10149]:https://github.com/gitextensions/gitextensions/pull/10149
+[10146]:https://github.com/gitextensions/gitextensions/pull/10146
+[10145]:https://github.com/gitextensions/gitextensions/pull/10145
+[10139]:https://github.com/gitextensions/gitextensions/pull/10139
+[10138]:https://github.com/gitextensions/gitextensions/pull/10138
+[10137]:https://github.com/gitextensions/gitextensions/pull/10137
+[10136]:https://github.com/gitextensions/gitextensions/pull/10136
+[10135]:https://github.com/gitextensions/gitextensions/pull/10135
+[10130]:https://github.com/gitextensions/gitextensions/pull/10130
+[10129]:https://github.com/gitextensions/gitextensions/pull/10129
+[10127]:https://github.com/gitextensions/gitextensions/pull/10127
+[10125]:https://github.com/gitextensions/gitextensions/pull/10125
+[10124]:https://github.com/gitextensions/gitextensions/pull/10124
+[10123]:https://github.com/gitextensions/gitextensions/pull/10123
+[10119]:https://github.com/gitextensions/gitextensions/pull/10119
+[10118]:https://github.com/gitextensions/gitextensions/pull/10118
+[10117]:https://github.com/gitextensions/gitextensions/pull/10117
+[10116]:https://github.com/gitextensions/gitextensions/pull/10116
+[10101]:https://github.com/gitextensions/gitextensions/pull/10101
+[10090]:https://github.com/gitextensions/gitextensions/pull/10090
+[10088]:https://github.com/gitextensions/gitextensions/pull/10088
+[10086]:https://github.com/gitextensions/gitextensions/pull/10086
+[10085]:https://github.com/gitextensions/gitextensions/pull/10085
+[10084]:https://github.com/gitextensions/gitextensions/pull/10084
+[10083]:https://github.com/gitextensions/gitextensions/pull/10083
+[10082]:https://github.com/gitextensions/gitextensions/pull/10082
+[10079]:https://github.com/gitextensions/gitextensions/pull/10079
+[10076]:https://github.com/gitextensions/gitextensions/pull/10076
+[10073]:https://github.com/gitextensions/gitextensions/pull/10073
+[10072]:https://github.com/gitextensions/gitextensions/pull/10072
+[10030]:https://github.com/gitextensions/gitextensions/pull/10030
+[10027]:https://github.com/gitextensions/gitextensions/pull/10027
+[10026]:https://github.com/gitextensions/gitextensions/pull/10026
+[10021]:https://github.com/gitextensions/gitextensions/pull/10021
 [10011]:https://github.com/gitextensions/gitextensions/pull/10011
 [10005]:https://github.com/gitextensions/gitextensions/pull/10005
 [10003]:https://github.com/gitextensions/gitextensions/pull/10003
@@ -561,6 +614,7 @@ Changelog
 [9908]:https://github.com/gitextensions/gitextensions/pull/9908
 [9905]:https://github.com/gitextensions/gitextensions/pull/9905
 [9904]:https://github.com/gitextensions/gitextensions/pull/9904
+[9903]:https://github.com/gitextensions/gitextensions/pull/9903
 [9900]:https://github.com/gitextensions/gitextensions/pull/9900
 [9898]:https://github.com/gitextensions/gitextensions/pull/9898
 [9897]:https://github.com/gitextensions/gitextensions/pull/9897
@@ -927,9 +981,11 @@ Changelog
 [8804]:https://github.com/gitextensions/gitextensions/pull/8804
 [8799]:https://github.com/gitextensions/gitextensions/pull/8799
 [8797]:https://github.com/gitextensions/gitextensions/pull/8797
+[8790]:https://github.com/gitextensions/gitextensions/pull/8790
 [8709]:https://github.com/gitextensions/gitextensions/pull/8709
 [8700]:https://github.com/gitextensions/gitextensions/pull/8700
 [8522]:https://github.com/gitextensions/gitextensions/pull/8522
+[8452]:https://github.com/gitextensions/gitextensions/pull/8452
 [8156]:https://github.com/gitextensions/gitextensions/pull/8156
 [8010]:https://github.com/gitextensions/gitextensions/pull/8010
 

@@ -829,7 +829,7 @@ Because of this, make sure to fill in all the fields in the report template plea
 Send report anyway?</source>
         <target>Lütfen geliştiricilerin bu sorunu çözmelerine yardımcı olmak için mümkün olduğunca fazla bilgi verin. Aksi takdirde, sorun biletin herhangi bir geliştirici takibi olmaksızın kapatılabilir.
 
- Bu nedenle, lütfen rapor şablonundaki tüm alanları doldurduğundan emin ol.
+Bu nedenle, lütfen rapor şablonundaki tüm alanları doldurduğundan emin ol.
 
 Yine de raporu göndermek istiyor musun?</target>
         
@@ -1929,7 +1929,7 @@ Lütfen, Windows için Git'in yüklü olduğuna emin ol veya doğru komutu elle 
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>Seçili {0} dalı silmek istediğinize emin misiniz?</target>
+        <target>Seçili {0} dalı silmek istediğine emin misin?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
@@ -1968,7 +1968,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>Birleştirilmemiş dalların silinmesi, teslimlerin sarkmasına neden olur. Dikkatli kullanın!</target>
+        <target>Birleştirilmemiş dalların silinmesi, teslimlerin sarkmasına neden olur. Dikkatli kullan!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -2038,7 +2038,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>Dalları filtrelemek için regex'i (düzenli/kurallı ifadeleri) kullan</target>
+        <target>Dalları filtrelemek için regex'i (düzenli ifadeleri) kullan</target>
         
       </trans-unit>
     </body>
@@ -2072,17 +2072,17 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>Regex (düzenli/kurallı ifade) filtresi, büyük/küçük harf duyarlı mı?</target>
+        <target>Regex (düzenli ifade) filtresi, büyük/küçük harf duyarlı mı?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>Silinecek dalları filtrelemek için regex (düzenli/kurallı ifadesi)</target>
+        <target>Silinecek dalları filtrelemek için regex (düzenli ifadesi)</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
-        <target> Regex (düzenli/kurallı ifadesi) ile eşleşmeyen dalları ara</target>
+        <target> Regex (düzenli ifadesi) ile eşleşmeyen dalları ara</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
@@ -2092,7 +2092,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>Silinecek dalları filtrelemek için regex'i (düzenli/kurallı ifadeleri) kullan</target>
+        <target>Silinecek dalları filtrelemek için regex'i (düzenli ifadeleri) kullan</target>
         
       </trans-unit>
     </body>
@@ -2230,6 +2230,10 @@ the last selected commit.</source>
 Simgeler ve aralık farkları hakkında daha fazla bilgi için belgelere bakın.
 - Birden fazla seçili teslim için (dörde kadar), son seçilen teslim ile ilk seçilen teslimle olan tüm farkını göster.
 - Dörtten fazla seçili teslim için, ilk seçilen teslimden son seçilen teslime kadar olan farkı göster.</target>
+        
+      </trans-unit>
+      <trans-unit id="gbGeneral.Text">
+        <source>General</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -3582,11 +3586,6 @@ Devam etmek istiyor musun?</target>
         <target>Bir zula &amp;oluştur...</target>
         
       </trans-unit>
-      <trans-unit id="createWorktreeToolStripMenuItem.Text">
-        <source>&amp;Create a worktree...</source>
-        <target>Bir çalışma ağacı &amp;oluştur...</target>
-        
-      </trans-unit>
       <trans-unit id="dashboardToolStripMenuItem.Text">
         <source>&amp;Dashboard</source>
         <target>&amp;Pano</target>
@@ -3748,8 +3747,7 @@ Devam etmek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="manageWorktreeToolStripMenuItem.Text">
-        <source>&amp;Manage worktrees...</source>
-        <target>Çalışma ağaçlarını &amp;yönet...</target>
+        <source>Manage &amp;worktrees...</source>
         
       </trans-unit>
       <trans-unit id="menuCommitInfoPosition.ToolTipText">
@@ -3759,7 +3757,7 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="menuitemSparse.Text">
         <source>Sparse Wor&amp;king Copy</source>
-        <target>&amp;Aralıklı Çalışma Kopyası</target>
+        <target>Aralıklı Çalışma Kopyası</target>
         
       </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
@@ -3972,11 +3970,6 @@ Devam etmek istiyor musun?</target>
         <target>Referans g&amp;ünlüğünü göster...</target>
         
       </trans-unit>
-      <trans-unit id="toolStripMenuItemWorktrees.Text">
-        <source>&amp;Worktrees</source>
-        <target>&amp;Çalışma ağaçları</target>
-        
-      </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
         <source>Manage stashes</source>
         <target>Zulaları yönet</target>
@@ -3984,7 +3977,7 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="toolbarsMenuItem.Text">
         <source>Toolbars</source>
-        <target>Araç Çubukları</target>
+        <target>Araç çubukları</target>
         
       </trans-unit>
       <trans-unit id="toolsToolStripMenuItem.Text">
@@ -3998,7 +3991,7 @@ Devam etmek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="tsbShowReflog.ToolTipText">
-        <source>Show reflog</source>
+        <source>Show all reflog references</source>
         
       </trans-unit>
       <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
@@ -4129,7 +4122,7 @@ Devam etmek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="tsmiShowReflog.ToolTipText">
-        <source>Show reflog</source>
+        <source>Show all reflog references</source>
         
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
@@ -7062,21 +7055,6 @@ Daha fazla bilgi için,
         <target>Dal</target>
         
       </trans-unit>
-      <trans-unit id="Delete.HeaderText">
-        <source>Delete</source>
-        <target>Sil</target>
-        
-      </trans-unit>
-      <trans-unit id="IsDeleted.HeaderText">
-        <source>Deleted</source>
-        <target>Silindi</target>
-        
-      </trans-unit>
-      <trans-unit id="Open.HeaderText">
-        <source>Open</source>
-        <target>Aç</target>
-        
-      </trans-unit>
       <trans-unit id="Path.HeaderText">
         <source>Path</source>
         <target>Yol</target>
@@ -7117,9 +7095,20 @@ Daha fazla bilgi için,
         <target>Bir çalışma ağacı aç</target>
         
       </trans-unit>
+      <trans-unit id="buttonCreateNewWorktree.Text">
+        <source>&amp;Create...</source>
+        
+      </trans-unit>
+      <trans-unit id="buttonDeleteSelectedWorktree.Text">
+        <source>&amp;Delete selected</source>
+        
+      </trans-unit>
+      <trans-unit id="buttonOpenSelectedWorktree.Text">
+        <source>&amp;Open selected</source>
+        
+      </trans-unit>
       <trans-unit id="buttonPruneWorktrees.Text">
-        <source>Prune the deleted worktrees</source>
-        <target>Silinen çalışma ağaçlarını buda</target>
+        <source>&amp;Prune deleted worktrees</source>
         
       </trans-unit>
     </body>
@@ -7597,7 +7586,7 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="_pullFetchPruneAllConfirmation.Text">
         <source>Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?</source>
-        <target>Uyarı! Budama ile getirmede, uzak depolarda artık  bulunmayan tüm uzaktan izleme referansları kaldıracaktır. Devam etmek istiyor musun?</target>
+        <target>Uyarı! Budama ile getirmede, uzak depolarda artık bulunmayan tüm uzaktan izleme referansları kaldıracaktır. Devam etmek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="_questionInitSubmodules.Text">
@@ -9687,7 +9676,7 @@ Bu nedenle İptal düğmesi yapılan değişiklikleri GERİ ALAMAZ.</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Check for update</source>
-        <target>Güncellemeyi kontrol et</target>
+        <target>Güncellemeleri kontrol et</target>
         
       </trans-unit>
       <trans-unit id="UpdateLabel.Text">
@@ -10065,7 +10054,7 @@ Kurtar düğmesine Bağlam menüsüne bas</target>
       </trans-unit>
       <trans-unit id="chkTelemetry.Text">
         <source>Yes, I allow telemetry!</source>
-        <target>Evet, telemetriye (izlemeye) izin veyorum!</target>
+        <target>Evet, telemetriye (izlemeye) izin veriyorum!</target>
         
       </trans-unit>
       <trans-unit id="chkUpdateModules.Text">
@@ -10144,6 +10133,10 @@ Kurtar düğmesine Bağlam menüsüne bas</target>
       <trans-unit id="checkBoxRebaseAutostash.Text">
         <source>Automatically stash before doing a rebase</source>
         <target>Yeniden temellendirme (rebase) yapmadan önce otomatik olarak zulala</target>
+        
+      </trans-unit>
+      <trans-unit id="checkBoxUpdateRefs.Text">
+        <source>Rebase also dependent branches</source>
         
       </trans-unit>
     </body>
@@ -10728,7 +10721,7 @@ Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlay
 Gource can be only be started from a valid git repository.</source>
         <target>Geçerli dizin geçerli bir git deposu değil.
 
-Gource yalnızca geçerli bir git deposundan başlatılabilir. </target>
+Gource yalnızca geçerli bir git deposundan başlatılabilir.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
@@ -11431,6 +11424,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Tüm uzak depoları getir ve buda</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnApplyStash.Text">
+        <source>&amp;Apply stash</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnApplyStash.ToolTipText">
+        <source>Apply this stash</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnCollapse.Text">
         <source>Collapse</source>
         <target>Daralt</target>
@@ -11474,6 +11475,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="mnubtnDisableRemote.Text">
         <source>&amp;Deactivate</source>
         <target>&amp;Pasifleştir</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnDropStash.Text">
+        <source>&amp;Drop stash...</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnDropStash.ToolTipText">
+        <source>Drop this stash</source>
         
       </trans-unit>
       <trans-unit id="mnubtnEnableRemote.Text">
@@ -11541,6 +11550,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Uzak depoları yönet</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnManageStashFromRootNode.Text">
+        <source>&amp;Manage stashes...</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnManageSubmodules.Text">
         <source>&amp;Manage...</source>
         <target>&amp;Yönet...</target>
@@ -11581,6 +11594,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Seçili alt modülü yeni bir örnekte aç</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnOpenStash.Text">
+        <source>&amp;Open stash</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnOpenStash.ToolTipText">
+        <source>Open this stash</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
         <source>&amp;Open</source>
         <target>&amp;Aç</target>
@@ -11589,6 +11610,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="mnubtnOpenSubmodule.ToolTipText">
         <source>Open selected submodule</source>
         <target>Seçili alt modülü aç</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnPopStash.Text">
+        <source>&amp;Pop stash</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnPopStash.ToolTipText">
+        <source>Pop this stash</source>
         
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
@@ -11614,6 +11643,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="mnubtnResetSubmodule.ToolTipText">
         <source>Reset selected submodule</source>
         <target>Seçili alt modülü sıfırla</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnStashAllFromRootNode.Text">
+        <source>&amp;Stash</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnStashStagedFromRootNode.Text">
+        <source>S&amp;tash staged</source>
         
       </trans-unit>
       <trans-unit id="mnubtnStashSubmodule.Text">
@@ -11674,6 +11711,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="tsbShowRemotes.ToolTipText">
         <source>Remotes</source>
         <target>Uzak Depolar</target>
+        
+      </trans-unit>
+      <trans-unit id="tsbShowStashes.Text">
+        <source>St&amp;ashes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsbShowStashes.ToolTipText">
+        <source>Stashes</source>
         
       </trans-unit>
       <trans-unit id="tsbShowSubmodules.Text">
@@ -12962,13 +13007,13 @@ Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bi
  - 'Build (read)'
  - 'Project and team (read)'</source>
         <target>Aşağıdaki kapsamlara sahip bir jeton (token) oluşturmanız gerekiyor:
- - 'Build (read)' Derle (oku)
- - 'Project and team (read)' Proje ve takım (oku)</target>
+- 'Build (read)' Derle (oku)
+- 'Project and team (read)' Proje ve takım (oku)</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'Derleme tanımlama adı' düzenli(kurallı) ifadesi geçerli değil ve kaydedilmeyecek!</target>
+        <target>'Derleme tanımlama adı' düzenli ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
     </body>
@@ -12983,96 +13028,6 @@ Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bi
       <trans-unit id="cbAlwaysShowAllCommands.Text">
         <source>Always show all commands</source>
         <target>Her zaman tüm komutları göster</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item0">
-        <source>Add files...</source>
-        <target>Dosyaları ekle...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item1">
-        <source>Apply patch...</source>
-        <target>Yamayı uygula...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item10">
-        <source>File history</source>
-        <target>Dosya geçmişi</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item11">
-        <source>Pull/Fetch...</source>
-        <target>Çek/Getir...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item12">
-        <source>Push...</source>
-        <target>İt...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item13">
-        <source>Reset file changes..</source>
-        <target>Dosya değişikliklerini sıfırla..</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item14">
-        <source>Revert</source>
-        <target>Geri al</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item15">
-        <source>Settings</source>
-        <target>Ayarlar</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item16">
-        <source>View stash</source>
-        <target>Zulayı görüntüle</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item17">
-        <source>View changes</source>
-        <target>Değişiklikleri görüntüle</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item2">
-        <source>Browse</source>
-        <target>Gözat</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item3">
-        <source>Create branch...</source>
-        <target>Dal oluştur...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item4">
-        <source>Checkout branch...</source>
-        <target>Daldan çık...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item5">
-        <source>Checkout revision...</source>
-        <target>Düzeltimden(revizyondan) çık...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item6">
-        <source>Clone...</source>
-        <target>Klonla...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item7">
-        <source>Commit...</source>
-        <target>Teslim Et...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item8">
-        <source>Create new repository...</source>
-        <target>Yeni depo oluştur...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item9">
-        <source>Open with difftool</source>
-        <target>Fark aracı ile aç</target>
         
       </trans-unit>
       <trans-unit id="gbShellExtensions.Text">
@@ -13828,6 +13783,10 @@ Simgeler ve aralık farkları hakkında daha fazla bilgi için belgelere bakın.
         <source>Show reflog</source>
         
       </trans-unit>
+      <trans-unit id="_showReflogTooltip.Text">
+        <source>Show all reflog references</source>
+        
+      </trans-unit>
       <trans-unit id="_simplifyByDecoration.Text">
         <source>Simplify by decoration</source>
         <target>Dekorasyonla basitleştir</target>
@@ -13855,6 +13814,10 @@ Simgeler ve aralık farkları hakkında daha fazla bilgi için belgelere bakın.
       </trans-unit>
       <trans-unit id="_stashDropConfirmTitle.Text">
         <source>Drop Stash Confirmation</source>
+        
+      </trans-unit>
+      <trans-unit id="_stashesText.Text">
+        <source>Stashes</source>
         
       </trans-unit>
       <trans-unit id="_submodulesText.Text">
@@ -14069,7 +14032,7 @@ Eylem geri alınamaz.</target>
     <body>
       <trans-unit id="$this.Text">
         <source>View Pull Requests</source>
-        <target>Çekme İsteklerini Görüntüleme</target>
+        <target>Çekme İsteklerini Görüntüle</target>
         
       </trans-unit>
       <trans-unit id="_addAndFetchBtn.Text">

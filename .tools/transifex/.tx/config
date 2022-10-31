@@ -1,52 +1,53 @@
 [main]
 host = https://www.transifex.com
 
-[git-extensions-v4.gitui-translation-english-xlf--release-4-0]
-file_filter = <lang>.xlf
-source_file = English.xlf
-source_lang = en
-trans.cs = Czech.xlf
-trans.de = German.xlf
-trans.es = Spanish.xlf
-trans.es_AR = Spanish (Argentina).xlf
-trans.fr = French.xlf
-trans.id = Indonesian.xlf
-trans.it = Italian.xlf
-trans.ja = Japanese.xlf
-trans.ko = Korean.xlf
-trans.lv = Latvian.xlf
-trans.nl = Dutch.xlf
-trans.pl = Polish.xlf
-trans.pt = Portuguese.xlf
-trans.pt_BR = Portuguese (Brazil).xlf
-trans.ro = Romanian.xlf
-trans.ru = Russian.xlf
-trans.tr = Turkish.xlf
-trans.zh-Hans = Simplified Chinese.xlf
-trans.zh-Hant = Traditional Chinese.xlf
-type = XLIFF
-
-[git-extensions-v4.gitui-translation-english-plugins-xlf--release-4-0]
-file_filter = <lang>.Plugins.xlf
-source_file = English.Plugins.xlf
-source_lang = en
-trans.cs = Czech.Plugins.xlf
-trans.de = German.Plugins.xlf
-trans.es = Spanish.Plugins.xlf
-trans.es_AR = Spanish (Argentina).Plugins.xlf
-trans.fr = French.Plugins.xlf
-trans.id = Indonesian.Plugins.xlf
-trans.it = Italian.Plugins.xlf
-trans.ja = Japanese.Plugins.xlf
-trans.ko = Korean.Plugins.xlf
-trans.lv = Latvian.Plugins.xlf
-trans.nl = Dutch.Plugins.xlf
-trans.pl = Polish.Plugins.xlf
-trans.pt = Portuguese.Plugins.xlf
-trans.pt_BR = Portuguese (Brazil).Plugins.xlf
-trans.ro = Romanian.Plugins.xlf
-trans.ru = Russian.Plugins.xlf
-trans.tr = Turkish.Plugins.xlf
-trans.zh-Hans = Simplified Chinese.Plugins.xlf
+[o:git-extensions:p:git-extensions-v4:r:gitui-translation-english-plugins-xlf--release-4-0]
+file_filter   = <lang>.Plugins.xlf
+source_file   = English.Plugins.xlf
+source_lang   = en
+type          = XLIFF
+trans.es      = Spanish.Plugins.xlf
+trans.es_AR   = Spanish (Argentina).Plugins.xlf
+trans.id      = Indonesian.Plugins.xlf
+trans.ja      = Japanese.Plugins.xlf
+trans.ko      = Korean.Plugins.xlf
+trans.pt      = Portuguese.Plugins.xlf
+trans.cs      = Czech.Plugins.xlf
+trans.de      = German.Plugins.xlf
+trans.fr      = French.Plugins.xlf
+trans.pl      = Polish.Plugins.xlf
 trans.zh-Hant = Traditional Chinese.Plugins.xlf
-type = XLIFF
+trans.tr      = Turkish.Plugins.xlf
+trans.zh-Hans = Simplified Chinese.Plugins.xlf
+trans.it      = Italian.Plugins.xlf
+trans.lv      = Latvian.Plugins.xlf
+trans.nl      = Dutch.Plugins.xlf
+trans.pt_BR   = Portuguese (Brazil).Plugins.xlf
+trans.ro      = Romanian.Plugins.xlf
+trans.ru      = Russian.Plugins.xlf
+
+[o:git-extensions:p:git-extensions-v4:r:gitui-translation-english-xlf--release-4-0]
+file_filter   = <lang>.xlf
+source_file   = English.xlf
+source_lang   = en
+type          = XLIFF
+trans.ro      = Romanian.xlf
+trans.it      = Italian.xlf
+trans.es_AR   = Spanish (Argentina).xlf
+trans.id      = Indonesian.xlf
+trans.ja      = Japanese.xlf
+trans.ko      = Korean.xlf
+trans.lv      = Latvian.xlf
+trans.pt      = Portuguese.xlf
+trans.pt_BR   = Portuguese (Brazil).xlf
+trans.es      = Spanish.xlf
+trans.pl      = Polish.xlf
+trans.tr      = Turkish.xlf
+trans.zh-Hant = Traditional Chinese.xlf
+trans.de      = German.xlf
+trans.fr      = French.xlf
+trans.nl      = Dutch.xlf
+trans.ru      = Russian.xlf
+trans.zh-Hans = Simplified Chinese.xlf
+trans.cs      = Czech.xlf
+

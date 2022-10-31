@@ -2215,6 +2215,10 @@ all the first selected with the last selected commit.
 the last selected commit.</source>
         
       </trans-unit>
+      <trans-unit id="gbGeneral.Text">
+        <source>General</source>
+        
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Vertical ruler position [chars]</source>
         <target>세로 눈금자 [문자열]</target>
@@ -3564,11 +3568,6 @@ Do you want to continue?</source>
         <target>&amp;파일 담아내기_stash 생성...</target>
         
       </trans-unit>
-      <trans-unit id="createWorktreeToolStripMenuItem.Text">
-        <source>&amp;Create a worktree...</source>
-        <target>&amp;작업 트리 생성...</target>
-        
-      </trans-unit>
       <trans-unit id="dashboardToolStripMenuItem.Text">
         <source>&amp;Dashboard</source>
         <target>&amp;대시보드</target>
@@ -3730,8 +3729,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="manageWorktreeToolStripMenuItem.Text">
-        <source>&amp;Manage worktrees...</source>
-        <target>&amp;작업트리 관리...</target>
+        <source>Manage &amp;worktrees...</source>
         
       </trans-unit>
       <trans-unit id="menuCommitInfoPosition.ToolTipText">
@@ -3951,11 +3949,6 @@ Do you want to continue?</source>
         <target>&amp; 참조 기록 보기...</target>
         
       </trans-unit>
-      <trans-unit id="toolStripMenuItemWorktrees.Text">
-        <source>&amp;Worktrees</source>
-        <target>&amp;작업트리</target>
-        
-      </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
         <source>Manage stashes</source>
         <target>Stash 관리하기</target>
@@ -3977,7 +3970,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="tsbShowReflog.ToolTipText">
-        <source>Show reflog</source>
+        <source>Show all reflog references</source>
         
       </trans-unit>
       <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
@@ -4102,7 +4095,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="tsmiShowReflog.ToolTipText">
-        <source>Show reflog</source>
+        <source>Show all reflog references</source>
         
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
@@ -6740,7 +6733,7 @@ _ReSharper*/</target>
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>{0:N0} 코드 라인</target>
+        <target>{0:N0} 코드 줄</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
@@ -7029,21 +7022,6 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <target>브랜치</target>
         
       </trans-unit>
-      <trans-unit id="Delete.HeaderText">
-        <source>Delete</source>
-        <target>제거</target>
-        
-      </trans-unit>
-      <trans-unit id="IsDeleted.HeaderText">
-        <source>Deleted</source>
-        <target>삭제됨</target>
-        
-      </trans-unit>
-      <trans-unit id="Open.HeaderText">
-        <source>Open</source>
-        <target>열기</target>
-        
-      </trans-unit>
       <trans-unit id="Path.HeaderText">
         <source>Path</source>
         <target>경로</target>
@@ -7084,9 +7062,20 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
         <target>작업 트리 열기</target>
         
       </trans-unit>
+      <trans-unit id="buttonCreateNewWorktree.Text">
+        <source>&amp;Create...</source>
+        
+      </trans-unit>
+      <trans-unit id="buttonDeleteSelectedWorktree.Text">
+        <source>&amp;Delete selected</source>
+        
+      </trans-unit>
+      <trans-unit id="buttonOpenSelectedWorktree.Text">
+        <source>&amp;Open selected</source>
+        
+      </trans-unit>
       <trans-unit id="buttonPruneWorktrees.Text">
-        <source>Prune the deleted worktrees</source>
-        <target>삭제된 작업트리 Prune</target>
+        <source>&amp;Prune deleted worktrees</source>
         
       </trans-unit>
     </body>
@@ -10101,6 +10090,10 @@ Context menu for additional operations</source>
         <target>Rebase 하기 전에 자동으로 Stash 하기</target>
         
       </trans-unit>
+      <trans-unit id="checkBoxUpdateRefs.Text">
+        <source>Rebase also dependent branches</source>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="ko">
@@ -11197,7 +11190,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
-        <target>'보낸 사람' 커밋을 지정해야 합니다.</target>
+        <target>'보내는' 커밋을 지정해야 합니다.</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
@@ -11207,7 +11200,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
-        <target>HTML 테이블(으)로</target>
+        <target>HTML 테이블로</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
@@ -11390,6 +11383,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>모든 원격 브랜치 Fetch 및 Prune</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnApplyStash.Text">
+        <source>&amp;Apply stash</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnApplyStash.ToolTipText">
+        <source>Apply this stash</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnCollapse.Text">
         <source>Collapse</source>
         <target>축소</target>
@@ -11433,6 +11434,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="mnubtnDisableRemote.Text">
         <source>&amp;Deactivate</source>
         <target>&amp;비활성화</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnDropStash.Text">
+        <source>&amp;Drop stash...</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnDropStash.ToolTipText">
+        <source>Drop this stash</source>
         
       </trans-unit>
       <trans-unit id="mnubtnEnableRemote.Text">
@@ -11500,6 +11509,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>원격 저장소 관리</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnManageStashFromRootNode.Text">
+        <source>&amp;Manage stashes...</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnManageSubmodules.Text">
         <source>&amp;Manage...</source>
         <target>&amp;관리</target>
@@ -11540,6 +11553,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>선택된 서브모듈을 새 인스턴스로 열기</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnOpenStash.Text">
+        <source>&amp;Open stash</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnOpenStash.ToolTipText">
+        <source>Open this stash</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
         <source>&amp;Open</source>
         <target>&amp;열기</target>
@@ -11548,6 +11569,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="mnubtnOpenSubmodule.ToolTipText">
         <source>Open selected submodule</source>
         <target>선택된 서브모듈 열기</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnPopStash.Text">
+        <source>&amp;Pop stash</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnPopStash.ToolTipText">
+        <source>Pop this stash</source>
         
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
@@ -11573,6 +11602,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="mnubtnResetSubmodule.ToolTipText">
         <source>Reset selected submodule</source>
         <target>선택한 서브모듈 리셋</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnStashAllFromRootNode.Text">
+        <source>&amp;Stash</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnStashStagedFromRootNode.Text">
+        <source>S&amp;tash staged</source>
         
       </trans-unit>
       <trans-unit id="mnubtnStashSubmodule.Text">
@@ -11633,6 +11670,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="tsbShowRemotes.ToolTipText">
         <source>Remotes</source>
         <target>Remotes</target>
+        
+      </trans-unit>
+      <trans-unit id="tsbShowStashes.Text">
+        <source>St&amp;ashes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsbShowStashes.ToolTipText">
+        <source>Stashes</source>
         
       </trans-unit>
       <trans-unit id="tsbShowSubmodules.Text">
@@ -12944,96 +12989,6 @@ URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할
         <target>항상 모든 명령어 표시</target>
         
       </trans-unit>
-      <trans-unit id="chlMenuEntries.Item0">
-        <source>Add files...</source>
-        <target>파일 추가...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item1">
-        <source>Apply patch...</source>
-        <target>패치 적용</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item10">
-        <source>File history</source>
-        <target>파일 히스토리</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item11">
-        <source>Pull/Fetch...</source>
-        <target>Pull/Fetch...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item12">
-        <source>Push...</source>
-        <target>Push...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item13">
-        <source>Reset file changes..</source>
-        <target>파일 수정사항 초기화...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item14">
-        <source>Revert</source>
-        <target>되돌리기</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item15">
-        <source>Settings</source>
-        <target>설정</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item16">
-        <source>View stash</source>
-        <target>Stash 보기</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item17">
-        <source>View changes</source>
-        <target>수정사항 보기</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item2">
-        <source>Browse</source>
-        <target>찾기</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item3">
-        <source>Create branch...</source>
-        <target>브랜치 생성...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item4">
-        <source>Checkout branch...</source>
-        <target>체크아웃 브랜치...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item5">
-        <source>Checkout revision...</source>
-        <target>체크아웃 리비전...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item6">
-        <source>Clone...</source>
-        <target>복제</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item7">
-        <source>Commit...</source>
-        <target>커밋...</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item8">
-        <source>Create new repository...</source>
-        <target>새로운 저장소 만들기</target>
-        
-      </trans-unit>
-      <trans-unit id="chlMenuEntries.Item9">
-        <source>Open with difftool</source>
-        <target>파일비교툴로 열기</target>
-        
-      </trans-unit>
       <trans-unit id="gbShellExtensions.Text">
         <source>Cascaded Context Menu</source>
         <target>계단식 Context 메뉴</target>
@@ -13782,6 +13737,10 @@ the last selected commit.</source>
         <source>Show reflog</source>
         
       </trans-unit>
+      <trans-unit id="_showReflogTooltip.Text">
+        <source>Show all reflog references</source>
+        
+      </trans-unit>
       <trans-unit id="_simplifyByDecoration.Text">
         <source>Simplify by decoration</source>
         <target>Simplify by decoration</target>
@@ -13809,6 +13768,10 @@ the last selected commit.</source>
       </trans-unit>
       <trans-unit id="_stashDropConfirmTitle.Text">
         <source>Drop Stash Confirmation</source>
+        
+      </trans-unit>
+      <trans-unit id="_stashesText.Text">
+        <source>Stashes</source>
         
       </trans-unit>
       <trans-unit id="_submodulesText.Text">

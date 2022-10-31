@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -270,7 +270,7 @@
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>Çekme İsteklerini Görüntüleme</target>
+        <target>Çekme İsteklerini Görüntüle</target>
         
       </trans-unit>
     </body>
@@ -1801,8 +1801,8 @@ Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bi
  - 'Build (read)'
  - 'Project and team (read)'</source>
         <target>Aşağıdaki kapsamlara sahip bir jeton (token) oluşturmanız gerekiyor:
- - 'Build (read)' Derle (oku)
- - 'Project and team (read)' Proje ve takım (oku)</target>
+- 'Build (read)' Derle (oku)
+- 'Project and team (read)' Proje ve takım (oku)</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
@@ -1849,7 +1849,7 @@ Lütfen, sunucu URL'sini doğrulayın.</target>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>&quot;Derleme Kimliği Filtresi (Build Id Filter)&quot; normal ifadesi geçerli değil ve kaydedilmeyecek!</target>
+        <target>&quot;Derleme Kimliği Filtresi (Build Id Filter)&quot; düzenli(kurallı) ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
