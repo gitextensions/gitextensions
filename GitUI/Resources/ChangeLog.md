@@ -4,497 +4,497 @@ Changelog
 ### Version 4.0.0 (31 Oct 2022)
 
 #### Changes:
-* [#10294] FormBrowse: Hide Reflog button by default
-* [#10286] Git 2.38.1
-* [#10285] Refresh the left panel when it's shown
-* [#10283] Preventing popup "Revision X not being visible in the revision grid" on right mouse button click
-* [#10262] Cleanup handling of AllOutput for processes
-* [#10261] Git Executable: return stderr also if not throwOnErrorExit is suppressed
-* [#10260] Removed changes of PR #3833, suspend/resume redrawn of ToolStripEx when dropdown menu is opened/closed
-* [#10258] SidePanel: Show Stashes
-* [#10253] Redo selection of the first item to fix shift-select of multiple items
-* [#10248] Hotkey: Add a hotkey for "Stash Staged" menu item
-* [#10245] Form rebase: some small fixes
-* [#10244] Update FormManageWorktree layout
-* [#10243] Enable <ImplicitUsings> and clean unneeded namespace declarations.
-* [#10240] Custom options to git-log
-* [#10239] Revision filter combobox
-* [#10234] Restore the order of the branch view options
-* [#10232] Update DiffViewerSettingsPage layout
-* [#10229] Update to latest 6.0 .Net Runtime/SDK
-* [#10228] ShowOnlyCurrentBranch were not showing commits
-* [#10227] Do not cache current GetRevision data
-* [#10224] Worktree: redesign 'Manage worktree' form
-* [#10222] Ignore .gitmodules without path
-* [#10217] ShellExtension: rename item in the setting form with same name it have in shell extension menu
-* [#10216] Disable reloading of Explorer when uninstalling.
-* [#10212] Update filter toolbar when filters change
-* [#10208] ConEmu 220807
-* [#10205] Move revision filters to advanced filter form
-* [#10203] FormDeleteRemoteBranch: GetMergedRemoteBranches() in background
-* [#10193] Protect AppSettings saving using global mutex
-* [#10191] Add Update-DotnetVersion script
-* [#10190] Tests: Disable some commonly failed tests
-* [#10189] Reorder items in View menu
-* [#10188] Blame: fix path displayed in the gutter
-* [#10183] Blame: fix blame revision older revision when the file has been renamed
-* [#10180] Update .NET references
-* [#10172] Decouple filter options
-* [#10169] Tests: Disable some commonly failed tests
-* [#10164] RevGrid: Custom tools were only loaded at settings changes
-* [#10163] Insert artificial commits if filter without any matches is applied
-* [#10161] FormStash: Display index of stashes
-* [#10159] Settings: Don't clear setting search when leaving the search box
-* [#10154] Set RuntimeFrameworkVersion for DotnetRuntimeBootstrapper
-* [#10153] Do not call DoDragDrop when mouse is up
-* [#10149] Reword/Edit: Rebase on actual parent
-* [#10146] Sidepanel: Keep revisions opening a new instance
-* [#10145] Open new instance if double click on current submodule
-* [#10139] VS Code build support
-* [#10138] Show Stash in rev grid
-* [#10137] Do not start NBug if mergetool exits with other than 0
-* [#10136] BranchFilter text was added backwards
-* [#10135] Support User local paths for VsCode merge tools
-* [#10130] Eliminate static methods in RevisionReader
-* [#10129] Cleanup git-log filter option handling
-* [#10127] Fix search not launching/working when changing filter selection
-* [#10125] Improve menu responsiveness with SuspendLayout
-* [#10124] Set branch name in repo menu async
-* [#10123] Add `rebase.autosquash` setting in Git Advanced settings panel
-* [#10119] Restore WindowState when activating
-* [#10118] FormDiff:  Show range diff with merge base
-* [#10117] Show tags by default in side panel
-* [#10116] Allow merge base to parent with three selected
-* [#10101] RevDiff: Align rules for hotkey execution to menu items
-* [#10090] fix: Cannot cherry-pick new file from stash
-* [#10088] Use WinForms API to check for minimized
-* [#10086] ConEmu 220418
-* [#10085] Git 2.37.1
-* [#10084] Add most recent repos to all recent list
-* [#10083] Select remote branch on Alt+Click in side panel
-* [#10082] RevGrid: Optimize onlyFirstParent handling
-* [#10079] Improve the clarity of tooltips for Rebase UI date options
-* [#10076] Exclude boundary commits with --grep
-* [#10073] Blame: No change of control at double click
-* [#10072] FormDiff: Set HEAD for diff calculator
-* [#10030] RevisionGrid: Cleanup PerformRefreshRevisions
-* [#10027] Replace hard-coded `Ctrl+O` shortcuts with `Hotkey`s
-* [#10026] `CommitInfo`: Ensure empty line between sections
-* [#10021] Do not throw when cancelling current token
-* [#10011] CommitInfo: Fixup revision links in commit message
-* [#10005] Add menu item "Show in explorer" in Resolve merge conflicts window
-* [#10003] Use grayscaled icon for "Reset another branch to here"
-* [#9992] Refresh regardless of formProcess results
-* [#9989] Show reword commit dialog only once
-* [#9985] Enable artificial commits for empty repos
-* [#9983] Add statistics for 1C Enterprise and 1Script files
-* [#9982] Reset pathfilter by disabling checkbox
-* [#9981] Do not assert for head when creating branches
-* [#9975] Left panel/overview node inheritance
-* [#9970] Make SetDiffsAsync cancellable
-* [#9968] More xml-related fixes
-* [#9967] Left panel: split up large code files
-* [#9966] left panel: reverted menu icon scale to match item font size
-* [#9965] Remove designer-specific workarounds
-* [#9963] Migrates FabricBot automation to "Config-as-Code"
-* [#9962] Ensure commit message textbox is visible
-* [#9961] Fix FormCreateBranch layout
-* [#9960] Correct label alignment
-* [#9958] Show 'no changes' in grid for artificial
-* [#9956] git-fetch --jobs==0 if no configuration
-* [#9949] FileViewer: Display error text rather than popup
-* [#9948] Load grid to selected revisions
-* [#9947] Show multi revision diff also with no HEAD
-* [#9943] CommitInfo: Workaround for `Show all tags`
-* [#9942] FormResolveConflicts: Clearer label and confirmation messages for Reset button
-* [#9940] Register CodePagesEncodingProvider to support more encodings
-* [#9936] Adjust color for build in progress indication
-* [#9933] CommitInfo: Clear RevisionInfo if no real revision
-* [#9932] Increase contrast between graph colors
-* [#9931] Replace `ShortcutKeys` `Ctrl+F` with Hotkeys
-* [#9930] Fix test View_reflects_applied_branch_filter
-* [#9924] Correct ownership of Push taskdialog
-* [#9923] Package missing assemblies
-* [#9919] Handle detached HEAD for orphan branches
-* [#9917] FormCommit: Reset commit options after push
-* [#9912] Upgrade pkg SmartFormat to v3.0.0
-* [#9908] RevDiff: async SetDiff
-* [#9905] Main menu: Standardize capitalization and use US English
-* [#9904] Display assigned hotkeys in View menu on startup
-* [#9903] Remove unused `TreeGuid`
-* [#9900] RevisionGrid: Add option to fill git ref labels again
-* [#9898] Make common hotkeys visible as Hotkeys
-* [#9897] Browse: Clarify RefreshRevisions() handling
-* [#9896] Share gitRefs when reloading after changing sort criterias
-* [#9890] Enable fetching moved tags
-* [#9888] Init sidepanel only when loading
-* [#9887] RevisionGrid: Set accessibility values
-* [#9886] RevGrid: Save currently selected before clearing the grid
-* [#9885] RevGrid: Lazy handling for current branch
-* [#9879] Show CurrentCommitId for super project for submodules
-* [#9878] Add SelectNextForkPointAsDiffBase hotkey
-* [#9871] IndexWatcher: Use for refresh icon only
-* [#9864] RefreshGrid: async reading refs and logs in parallel
-* [#9862] FileHistory mode at browse startup
-* [#9860] Bump to .NET 6.0
-* [#9856] Tests: Protect RefRepos with mutex before reset
-* [#9855] FormPull: fix button size
-* [#9848] Add git stash --staged
-* [#9846] RevisionGrid: Use Hotkeys for navigation
-* [#9842] FileTree: Goto line in Blame from RevDiff
-* [#9841] Pull rebase: Fix detection of merge commits
-* [#9833] RevGrid: Show popup when a revision is not in the revision grid
-* [#9832] Blame: Start on line also when control already exists
-* [#9831] RevDiff: Setting to show Blame in FileTree
-* [#9829] LostObjects: better `log` command and regex
-* [#9828] RevisionDiffControl: Add hotkey for selecting all changes (in the first group)
-* [#9827] Route hotkeys to all visible controls
-* [#9826] FileViewer: Add hotkeys
-* [#9819] Ignore nonexisting submodule paths
-* [#9817] Blame settings: Auto size for checkboxes
-* [#9816] BlameControl: cancellation token for git-blame
-* [#9815] Reset theme to default
-* [#9808] ShowSimplifyByDecoration: Not dependent on branch filter
-* [#9807] AdvancedFilter: Disable filters button dropdown
-* [#9806] AppTitle: File name in path filter first
-* [#9805] Blame: Start on line also when control already exists
-* [#9804] RevDiff: Persist Blame until another file is selected
-* [#9803] ShowFullHistory in View menu
-* [#9801] Add Blame Settings page
-* [#9800] Adjust BrowseRepoSettings
-* [#9799] Support colorblind variation of default theme
-* [#9798] FileSystemWatcher is not working for \\wsl$
-* [#9797] Decrease CustomDiffMergeToolProvider start delay
-* [#9795] make ToolStripEx [great again] use ToolStripExSystemRenderer by default as before #9608
-* [#9793] Conemu 210912
-* [#9791] Replace AppSettings.UseFastChecks with ShowGitStatusInBrowseToolbar
-* [#9790] Do not report Git error for a command seemingly executed in the background
-* [#9789] Updated tooltip for ShowDiffForAllParents
-* [#9788] FileHistory: Launch commandline in FormBrowse
-* [#9787] Theming readme update
-* [#9786] GitNotes: Reduce overhead when Body exists
-* [#9785] BuildServer: Correct settings paths
-* [#9784] Load app colors from CSS themes
-* [#9781] signed CLA
-* [#9780] Fix #8918: Mergetool and difftool commands are now populated if paths…
-* [#9778] Allow amend commits to also add --reset-author
-* [#9767] Update .NET Runtime Bootstrapper
-* [#9765] Add mnemonics to filter toolbar
-* [#9764] Simplify FileStatus list image
-* [#9763] GitVersion: Remove support for obsolete versions
-* [#9762] range-diff: Handle artificial commits
-* [#9760] Settings could not be read from \\wsl$
-* [#9759] RevisionGrid: Option for git log with --topo-order
-* [#9757] RevDiff: Move RangeDiff to A->B group
-* [#9753] Tests: Ignore flaky UI tests
-* [#9749] Allow running TranslationApp in Debug
-* [#9747] Fix tests
-* [#9745] Adjust Debug.Assert for tests
-* [#9744] Make the Debug build debuggable
-* [#9735] Share GitRef() at startup
-* [#9734] LeftPanel was initiated twice at startup
-* [#9733] PathFilter: Set FallbackFollowedFile at every filter update
-* [#9732] appveyor: avoid warnings about crlf
-* [#9729] FormBrowse init optimizations
-* [#9728] RevisionFilter: Indicate filters with button state and tooltip
-* [#9727] Let RTB extension `GetPlainText` ignore links
-* [#9725] AppTitle was set to previous repo branch
-* [#9723] Select and filter for multiple branches and tags from repo objects tree in left panel
-* [#9722] signed contributors.txt
-* [#9720] BASE diff: Icons for unique changes
-* [#9719] TweakPng for some icons
-* [#9718] RevDiff: Count number of changed files per group
-* [#9708] RevisionGridControl: prevent exception when switching repository
-* [#9704] Generate .NET installer
-* [#9702] Support Git in WSL
-* [#9700] GitStatusMonitor could start multiple commands
-* [#9698] Reset another branch to here path format
-* [#9696] Add Shortcut for Create Branch in Commit Form
-* [#9695] Fix interactive add for new files
-* [#9693] Some more mnemonics
-* [#9687] Change Revision Links separator (#9668)
-* [#9686] `Rebase --onto`: Display only the current branch to make selection easier
-* [#9685] Remove transitive dependencies already included by other projects
-* [#9684] Fix toolbar dpi scaling issue
-* [#9683] Fix running scripts without arguments
-* [#9682] Update Feature request template to use the new template
-* [#9680] GitVersion: Remove support for obsolete versions
-* [#9679] "--format" must be quoted
-* [#9678] PushLocalCmd: path must be absolute
-* [#9673] Make "Initialize submodules?" message box respect "Update submodules on checkout" settings option
-* [#9672] Make reset "Soft" the default option
-* [#9671] Revert: stack commit message
-* [#9666] NBug copy text were url encoded
-* [#9664] Fix build
-* [#9661] Fix loading user plugins.
-* [#9655] Add mnemonics to every menu item in FormBrowse
-* [#9652] Fix: Prevent the find-replace dialog from blocking Windows shutdown
-* [#9650] Fix revision lane order
-* [#9645] Add ellipses (...) to branch context menu items which require additional steps to complete; update item labels to match other menus
-* [#9639] Fixup splitter persistence for CommitInfo
-* [#9638] Update issue template and update BugReporter to use the new template
-* [#9635] Fix #9634: Minor PR template issue: body text being rendered as a header
-* [#9632] Fix #9119: Value was either too large or too small for an Int32
-* [#9630] Add support for Del key to RepoObjectsTree nodes
-* [#9629] Package plugins
-* [#9625] Remove `Rename` menu item for remote branches from Repo Tree
-* [#9623] Don't update filters or issue CD command to the terminal
-* [#9622] Pull dialog: add mnemonics, fix tab order
-* [#9621] Rebase & Apply Patch: add mnemonics, fix tab order, add a shortcut
-* [#9620] Fix #8211: Incorrect EOL in diff
-* [#9619] Remove "process: null" for FormProcess 
-* [#9616] Fix #6276: "Show messages of annotated tags" truncates to ten lines without notice
-* [#9611] Ensure all grid views can be sorted
-* [#9608] Fix branch copy and Open with difftool menu switching back to System style
-* [#9607] Stabilise left panel tests
-* [#9603] Add keyboard hotkeys to one menu and one dialog
-* [#9593] Clean up `FormBrowse` load sequence
-* [#9590] Fix leaking brushes
-* [#9586] Show toolbar grips
-* [#9583] Select HOME where .gitconfig is accessible first
-* [#9580] Sync advanced filter and filters toolbar
-* [#9564] NBug: Include GE specific exception info
-* [#9562] Do not throw if process exits with 0
-* [#9561] Check that directory exists before running submodule command
-* [#9557] Reduce amount of TaskCanceledException
-* [#9555] Allow hiding stash references on revision grid
-* [#9542] Reinstate SmartFormat legacy error handling
-* [#9541] Update translations at 75%+
-* [#9540] Remove CorePath class
-* [#9539] Simplify the ISettingsSource class
-* [#9528] Enhance the filters toolbar
-* [#9524] GetRangeDiff() should be Async
-* [#9522] Cancellation for Executable
-* [#9519] Truncate tooltips for blame commit long summary
-* [#9518] Add yerudako (myself) to the list of project contributors
-* [#9508] Update readme and changelog
-* [#9488] Execution interface cleanup
-* [#9483] SetDiff: Init for CommitDiff
-* [#9478] Takes 2 at trying to fix failing tests
-* [#9477] Reset revision filter when switching repos
-* [#9468] Avoid popup at successful FileViewer patching
-* [#9461] Stabilise RevisionGridControl filtering tests
-* [#9460] Don't show delete dialog on CTRL+ALT+DEL
-* [#9459] Artificial commits: Invalidate rowcache when inserting
-* [#9455] Improve handling of encodings with conflicting names
-* [#9454] Attempt to fix tests failure for MEF
-* [#9453] GitHub PR template - merge strategies
-* [#9446] Clean up `FilterToolBar` logic
-* [#9445] Blame/filter in Browse, replace formfilehistory
-* [#9444] Fixed Commit info varying indents. Fixes #9164
-* [#9443] Updated Nuget packages for all projects
-* [#9432] RevGrid commit count: Do not reset when creating artificial commits
-* [#9430] BashShell: Try git-bash.exe first
-* [#9426] Diff to actual parent in filtered grids
-* [#9425] ToggleBetweenArtificialAndHeadCommits: Go to WorkTree if HEAD is hidden
-* [#9424] RevFileTree: Blame instead of View
-* [#9413] Rename detection for Advanced filter
-* [#9406] Do not allow duplicate submodule paths
-* [#9398] Sign contributors document
-* [#9393] Show artificial commits also for filtered grid
-* [#9392] Do not blame folders
-* [#9389] Addendum to #9372
-* [#9387] Enable use of the designer
-* [#9386] Remove PuTTY binaries from installer
-* [#9385] Do not check if path exists before settings GIT_SSH
-* [#9384] Update contributors.txt
-* [#9380] Recent repo search
-* [#9372] Update layout of ConfirmationsSettingsPage
-* [#9371] Cleanup ListView control
-* [#9361] Fixup localization verification
-* [#9359] Log RevisionReader parse errors
-* [#9358]  RevisionReader allow empty subject
-* [#9357] Fixup main menu item `Git bash`
-* [#9356] Fixup user scripts running PS in foreground
-* [#9346] Update ChangeLog
-* [#9344] Remove BinaryFormatter. Fixes #9150
-* [#9336] Preparations for exceptions on git error (part 4 of 4)
-* [#9335] Browse: Advanced filter improvements
-* [#9334] Preparations for exceptions on git error (part 3 of 4)
-* [#9332] Add support for setting console emulator font name
-* [#9330] Reduce window flicker and loss of focus
-* [#9329] Fix/9166 gdi objects
-* [#9326] FormRebase: Avoid list refs if not advanced
-* [#9324] Remove custom ToHashSet() methods. Fixes #9159
-* [#9320] Quick search in whole commit message if loaded
-* [#9318] Create empty settings file if missing
-* [#9317] GitRevision: Remove Name property
-* [#9310] Load plugins
-* [#9309] Increase test robustness
-* [#9308] Stash: Keyboard navigation
-* [#9305] Fix PathUtil handling of spaces in file names
-* [#9301] Make showing commit message body in the revision graph optional
-* [#9300] Changes from release/3.5 to master
-* [#9299] Comprehensive fix of misspellings/typos
-* [#9286] Fixup partial graph rendering
-* [#9285] Add mnemonics to context menu of `RevisionDiffControl`
-* [#9284] Commit: Unstage new files did not display the worktree file
-* [#9282] Add mnemonics to frequently used dialogs
-* [#9277] Gray / hide selections in `FormBrowse` if not focused
-* [#9274] Handle `laneInfo` being `null`
-* [#9268] Allow rollForward for .NET 5.0 SDK version
-* [#9266] Update Clone dialog's handling of clipboard text
-* [#9265] FormCheckoutBranch add mnemonics
-* [#9264] Enable CA1416: Validate platform compatibility
-* [#9256] Limit superproject refs in rev grid
-* [#9252] Catch GDI exception
-* [#9246] Use static/cached GitVersion to resolve Git path
-* [#9243] RevisionReader: Parse raw commit body
-* [#9235] Use System.Windows.Forms.TaskDialog
-* [#9231] Preparations for exceptions on git error (part 2)
-* [#9226] Improve RevisionGridControlTests
-* [#9222] Git commands should never have colors
-* [#9217] Replace PathUtil.Combine and GetExtension with Path.
-* [#9216] Use fullPathResolver for viewing local files
-* [#9212] Preparations for exceptions on git error
-* [#9210] Delete temp files from settings tests
-* [#9206] Use enum interface for GetRefs()
-* [#9203] LogCaptureCallStacks in AppSettings
-* [#9197] Diff/Commit: Do not show Open for deleted items
-* [#9196] Do not try to show deleted images in diffviewer
-* [#9188] Keep persistent ssh settings in registry
-* [#9187] Ignore failure getting Process.Id for ShellExecute
-* [#9186] sign cla | change email
-* [#9184] Restore build pipeline
-* [#9182] Set GIT_SSH only if path exists
-* [#9172] Do not attempt to switch to a not created worktree
-* [#9171] fix: all unused imports removed
-* [#9170] Update contributors.txt
-* [#9161] Use Microsoft.Build.CentralPackageVersions
-* [#9149] OpenSSH presented as OtherSSH in settings
-* [#9148] sign off from @MrJithil
-* [#9145] Stash pop/apply: Refresh grid if command was successful
-* [#9141] `FileViewer`: Remove decoration of default encoding
-* [#9140] feat: add dot command to GitUICommands
-* [#9136] Update README
-* [#9132] Sanitize localized stack trace in exception tests
-* [#9129] Install `Newtonsoft.Json.dll` not only for plugins
-* [#9123] Let installer not activate disabled telemetry
-* [#9122] View changed submodule could hang GE
-* [#9107] Start using MEF
-* [#9106] Restore splitter persistence
-* [#9105] Fix stage/unstage implementations
-* [#9097] Reduce allocations for RevisionGraph lane straightening
-* [#9095] c# new var
-* [#9087] FormCommitDiff cannot handle artificial commits
-* [#9086] fix-9085 Change DialogResult only after saving before closing
-* [#9082] Fix settings saving for "Detailed" section by selected setting source
-* [#9081] Conemu v21.03.14
-* [#9078] Left Panel: Fixup "is merged" status issues
-* [#9075] Some GitHub plugin fixes
-* [#9073] Remove false comment regarding ColorSettingsPage
-* [#9072] GitHub token: Add a link to let the user generate its Personal Access Token
-* [#9066] Color settings page changes
-* [#9064] Do not reset a valid `AppSettings.GitBinDir`
-* [#9063] Report bugs in a separate process
-* [#9060] Suppress "Theme not found" if setting is empty
-* [#9059] Use exit status instead of IsGitErrorMessage()
-* [#9058] AutoComplete: Avoid Git for non tracked files
-* [#9057] rev-parse should use --quiet --verify
-* [#9056] Throw on non-zero exit code and on stderror output
-* [#9053] Color settings page events
-* [#9050] Straighten graph lanes over multiple rows
-* [#9049] Fix tab control flickering in dark theme
-* [#9045] Updated contributors.txt
-* [#9044] Added 'Allow Empty' checkbox to commit form, and updated command logic
-* [#9040] Remove unused memory settings
-* [#9039] Remove redundant creation of settings container
-* [#9038] Improve display of exceptions
-* [#9037] Handle errors accessing the amend state file
-* [#9034] Restore "Commit & push" button if amending
-* [#9028] Straighten graph lanes
-* [#9027] #9013 Use Close in Clean working directory
-* [#9025] Update UI only after save settings
-* [#9018] Ignore git clone prefix when checking clipboard for source URL
-* [#9011] Check Before script failure to abort action
-* [#9010] Allow opening files in Visual Studio
-* [#9009] FormBisect: Autosize form to prevent content to be clipped
-* [#9008] Push from empty FormCommit
-* [#9004] Add contributor
-* [#8996] Small bits
-* [#8995] Resolve PluginSettings key names issue
-* [#8994] Fix "Commit & push" button color when ameding is enabled
-* [#8993] Move ImpactLoader.cs from GitCommands.Statistics to GitExtensions.Plugins.GitImpact
-* [#8990] Include stash, bisect in grid if tags are shown
-* [#8986] Fixup the initial view menu item state of #8942
-* [#8984] Move all plugins to "GitExtensions.Plugins" namespace
-* [#8983] Move BackgroundFetch plugin to "GitExtensions.Plugins" namespace
-* [#8982] Move AutoCompileSubmodules plugin to "GitExtensions.Plugins" namespace
-* [#8981] Move GitImpact plugin to "GitExtensions.Plugins" namespace
-* [#8975] Move GitStatistics plugin to "GitExtensions.Plugins" namespace
-* [#8973] Remove redundant suppressions
-* [#8972] Use pattern matching
-* [#8967] Fix invalid null value assertion in plugin code
-* [#8964] Annotate plugins
-* [#8962] Optimise string split operations
-* [#8961] Report `SaveBlobAs` errors without crashing the app
-* [#8959] Remove redundant await
-* [#8958] Rename translation strings to avoid conflict
-* [#8957] Dialogs layout alignment - `FormDeleteRemoteBranch`
-* [#8956] Dialogs layout alignment - `FormDeleteBranch`
-* [#8954] Remove return value from AsyncLoader
-* [#8952] range-diff: Incorrect limit when selecting four commits
-* [#8950] Disable CodeCov integration
-* [#8949] Stop loading custom diff tools during tests
-* [#8943] Use null coalescing assignment
-* [#8942] FormBrowse Toolbar: Being able to hide each control separately
-* [#8939] Annotate resource manager project
-* [#8938] Stop AsyncLoader passing null on cancellation
-* [#8937] Fix invalid XML in DotSettings file
-* [#8936] Prevent exception when running unit tests
-* [#8935] Use switch expression
-* [#8934] Add missing solution items
-* [#8933] Remove invalid solution items
-* [#8932] Focus ComboBox Branches of FormResetAnotherBranch
-* [#8929] Remove redundant property setters
-* [#8928] Use null propagation
-* [#8927] Remove unused field from RevisionDiffController
-* [#8926] Merge sequential checks into pattern matching expressions
-* [#8925] Remove IExecutable.GetOutput
-* [#8924] Use null coalescing assignment
-* [#8923] Fix hang when requesting submodule status
-* [#8907] Hide theme fields for serialization from public interface
-* [#8903] Graph: Ensure branch colors are not equal to branchs they are merged to
-* [#8902] Sidepanel submodule: Recreate tree only at structure changes
-* [#8901] Test to force same colors in AppColorDefaults and invariant.css
-* [#8900] Add branch rendering improvements
-* [#8899] Fix tool strip border in dark theme
-* [#8898] Move ExternalOperationException to GitExtUtils
-* [#8897] Refactor PaintGraphCell
-* [#8896] Add UI improvements
-* [#8894] RevDiff: Request GitStatus updates at file manipulations
-* [#8888] Eliminate boxing allocation
-* [#8887] Eliminate closure allocations
-* [#8886] GitStatusMonitor increase minimum time between updates
-* [#8883] Use pattern matching
-* [#8882] Avoid boxing while unpacking flags
-* [#8881] Fix submodule status loading error
-* [#8878] Annotate GitUIPluginInterfaces
-* [#8877] Remove redundant #nullable directives
-* [#8876] Remove redundant null check
-* [#8875] Remove double execution of GetSubmoduleStatusAsync
-* [#8868] fix ListView column border in dark theme
-* [#8867] Submodule SidePanel updated too often
-* [#8866] Cache Git commands related to submodules
-* [#8860] Link style was not applied to the dashboard
-* [#8854] Browse: Avoid extra git-rev-parse at start
-* [#8846] Annotate GitExtensions and GitUI projects
-* [#8844] Experimental flipping of branch colors
-* [#8838] Remove /en/latest from Doc links
-* [#8836] Jira plugin configuration - Password renamed to Password/API token
-* [#8830] AppVeyor: Handle v2 tokens
-* [#8819] Correct padding increase
-* [#8809] Improve RevisionDataGridView responsiveness
-* [#8804] Introduce new interface for named git refs
-* [#8799] Revert "Add test accessors borrowed from https://github.com/dotnet/winforms/"
-* [#8797] C#8 simplified using to reduce nesting
-* [#8790] Cache azuredevops build results
-* [#8709] Implemented F2 rename branch in RepoObjectsTree.
-* [#8700] Custom difftool in RevDiff, FileHistory, Commit, RevGrid
-* [#8522] Migrate to .NET 5.0
-* [#8452] Allow highlight branch by ALT+Click in the grid
-* [#8156] Update packages.
-* [#8010] Feature/add windows explorer integration in settings
+* [10294] FormBrowse: Hide Reflog button by default
+* [10286] Git 2.38.1
+* [10285] Refresh the left panel when it's shown
+* [10283] Preventing popup "Revision X not being visible in the revision grid" on right mouse button click
+* [10262] Cleanup handling of AllOutput for processes
+* [10261] Git Executable: return stderr also if not throwOnErrorExit is suppressed
+* [10260] Removed changes of PR #3833, suspend/resume redrawn of ToolStripEx when dropdown menu is opened/closed
+* [10258] SidePanel: Show Stashes
+* [10253] Redo selection of the first item to fix shift-select of multiple items
+* [10248] Hotkey: Add a hotkey for "Stash Staged" menu item
+* [10245] Form rebase: some small fixes
+* [10244] Update FormManageWorktree layout
+* [10243] Enable <ImplicitUsings> and clean unneeded namespace declarations.
+* [10240] Custom options to git-log
+* [10239] Revision filter combobox
+* [10234] Restore the order of the branch view options
+* [10232] Update DiffViewerSettingsPage layout
+* [10229] Update to latest 6.0 .Net Runtime/SDK
+* [10228] ShowOnlyCurrentBranch were not showing commits
+* [10227] Do not cache current GetRevision data
+* [10224] Worktree: redesign 'Manage worktree' form
+* [10222] Ignore .gitmodules without path
+* [10217] ShellExtension: rename item in the setting form with same name it have in shell extension menu
+* [10216] Disable reloading of Explorer when uninstalling.
+* [10212] Update filter toolbar when filters change
+* [10208] ConEmu 220807
+* [10205] Move revision filters to advanced filter form
+* [10203] FormDeleteRemoteBranch: GetMergedRemoteBranches() in background
+* [10193] Protect AppSettings saving using global mutex
+* [10191] Add Update-DotnetVersion script
+* [10190] Tests: Disable some commonly failed tests
+* [10189] Reorder items in View menu
+* [10188] Blame: fix path displayed in the gutter
+* [10183] Blame: fix blame revision older revision when the file has been renamed
+* [10180] Update .NET references
+* [10172] Decouple filter options
+* [10169] Tests: Disable some commonly failed tests
+* [10164] RevGrid: Custom tools were only loaded at settings changes
+* [10163] Insert artificial commits if filter without any matches is applied
+* [10161] FormStash: Display index of stashes
+* [10159] Settings: Don't clear setting search when leaving the search box
+* [10154] Set RuntimeFrameworkVersion for DotnetRuntimeBootstrapper
+* [10153] Do not call DoDragDrop when mouse is up
+* [10149] Reword/Edit: Rebase on actual parent
+* [10146] Sidepanel: Keep revisions opening a new instance
+* [10145] Open new instance if double click on current submodule
+* [10139] VS Code build support
+* [10138] Show Stash in rev grid
+* [10137] Do not start NBug if mergetool exits with other than 0
+* [10136] BranchFilter text was added backwards
+* [10135] Support User local paths for VsCode merge tools
+* [10130] Eliminate static methods in RevisionReader
+* [10129] Cleanup git-log filter option handling
+* [10127] Fix search not launching/working when changing filter selection
+* [10125] Improve menu responsiveness with SuspendLayout
+* [10124] Set branch name in repo menu async
+* [10123] Add `rebase.autosquash` setting in Git Advanced settings panel
+* [10119] Restore WindowState when activating
+* [10118] FormDiff:  Show range diff with merge base
+* [10117] Show tags by default in side panel
+* [10116] Allow merge base to parent with three selected
+* [10101] RevDiff: Align rules for hotkey execution to menu items
+* [10090] fix: Cannot cherry-pick new file from stash
+* [10088] Use WinForms API to check for minimized
+* [10086] ConEmu 220418
+* [10085] Git 2.37.1
+* [10084] Add most recent repos to all recent list
+* [10083] Select remote branch on Alt+Click in side panel
+* [10082] RevGrid: Optimize onlyFirstParent handling
+* [10079] Improve the clarity of tooltips for Rebase UI date options
+* [10076] Exclude boundary commits with --grep
+* [10073] Blame: No change of control at double click
+* [10072] FormDiff: Set HEAD for diff calculator
+* [10030] RevisionGrid: Cleanup PerformRefreshRevisions
+* [10027] Replace hard-coded `Ctrl+O` shortcuts with `Hotkey`s
+* [10026] `CommitInfo`: Ensure empty line between sections
+* [10021] Do not throw when cancelling current token
+* [10011] CommitInfo: Fixup revision links in commit message
+* [10005] Add menu item "Show in explorer" in Resolve merge conflicts window
+* [10003] Use grayscaled icon for "Reset another branch to here"
+* [9992] Refresh regardless of formProcess results
+* [9989] Show reword commit dialog only once
+* [9985] Enable artificial commits for empty repos
+* [9983] Add statistics for 1C Enterprise and 1Script files
+* [9982] Reset pathfilter by disabling checkbox
+* [9981] Do not assert for head when creating branches
+* [9975] Left panel/overview node inheritance
+* [9970] Make SetDiffsAsync cancellable
+* [9968] More xml-related fixes
+* [9967] Left panel: split up large code files
+* [9966] left panel: reverted menu icon scale to match item font size
+* [9965] Remove designer-specific workarounds
+* [9963] Migrates FabricBot automation to "Config-as-Code"
+* [9962] Ensure commit message textbox is visible
+* [9961] Fix FormCreateBranch layout
+* [9960] Correct label alignment
+* [9958] Show 'no changes' in grid for artificial
+* [9956] git-fetch --jobs==0 if no configuration
+* [9949] FileViewer: Display error text rather than popup
+* [9948] Load grid to selected revisions
+* [9947] Show multi revision diff also with no HEAD
+* [9943] CommitInfo: Workaround for `Show all tags`
+* [9942] FormResolveConflicts: Clearer label and confirmation messages for Reset button
+* [9940] Register CodePagesEncodingProvider to support more encodings
+* [9936] Adjust color for build in progress indication
+* [9933] CommitInfo: Clear RevisionInfo if no real revision
+* [9932] Increase contrast between graph colors
+* [9931] Replace `ShortcutKeys` `Ctrl+F` with Hotkeys
+* [9930] Fix test View_reflects_applied_branch_filter
+* [9924] Correct ownership of Push taskdialog
+* [9923] Package missing assemblies
+* [9919] Handle detached HEAD for orphan branches
+* [9917] FormCommit: Reset commit options after push
+* [9912] Upgrade pkg SmartFormat to v3.0.0
+* [9908] RevDiff: async SetDiff
+* [9905] Main menu: Standardize capitalization and use US English
+* [9904] Display assigned hotkeys in View menu on startup
+* [9903] Remove unused `TreeGuid`
+* [9900] RevisionGrid: Add option to fill git ref labels again
+* [9898] Make common hotkeys visible as Hotkeys
+* [9897] Browse: Clarify RefreshRevisions() handling
+* [9896] Share gitRefs when reloading after changing sort criterias
+* [9890] Enable fetching moved tags
+* [9888] Init sidepanel only when loading
+* [9887] RevisionGrid: Set accessibility values
+* [9886] RevGrid: Save currently selected before clearing the grid
+* [9885] RevGrid: Lazy handling for current branch
+* [9879] Show CurrentCommitId for super project for submodules
+* [9878] Add SelectNextForkPointAsDiffBase hotkey
+* [9871] IndexWatcher: Use for refresh icon only
+* [9864] RefreshGrid: async reading refs and logs in parallel
+* [9862] FileHistory mode at browse startup
+* [9860] Bump to .NET 6.0
+* [9856] Tests: Protect RefRepos with mutex before reset
+* [9855] FormPull: fix button size
+* [9848] Add git stash --staged
+* [9846] RevisionGrid: Use Hotkeys for navigation
+* [9842] FileTree: Goto line in Blame from RevDiff
+* [9841] Pull rebase: Fix detection of merge commits
+* [9833] RevGrid: Show popup when a revision is not in the revision grid
+* [9832] Blame: Start on line also when control already exists
+* [9831] RevDiff: Setting to show Blame in FileTree
+* [9829] LostObjects: better `log` command and regex
+* [9828] RevisionDiffControl: Add hotkey for selecting all changes (in the first group)
+* [9827] Route hotkeys to all visible controls
+* [9826] FileViewer: Add hotkeys
+* [9819] Ignore nonexisting submodule paths
+* [9817] Blame settings: Auto size for checkboxes
+* [9816] BlameControl: cancellation token for git-blame
+* [9815] Reset theme to default
+* [9808] ShowSimplifyByDecoration: Not dependent on branch filter
+* [9807] AdvancedFilter: Disable filters button dropdown
+* [9806] AppTitle: File name in path filter first
+* [9805] Blame: Start on line also when control already exists
+* [9804] RevDiff: Persist Blame until another file is selected
+* [9803] ShowFullHistory in View menu
+* [9801] Add Blame Settings page
+* [9800] Adjust BrowseRepoSettings
+* [9799] Support colorblind variation of default theme
+* [9798] FileSystemWatcher is not working for \\wsl$
+* [9797] Decrease CustomDiffMergeToolProvider start delay
+* [9795] make ToolStripEx [great again] use ToolStripExSystemRenderer by default as before #9608
+* [9793] Conemu 210912
+* [9791] Replace AppSettings.UseFastChecks with ShowGitStatusInBrowseToolbar
+* [9790] Do not report Git error for a command seemingly executed in the background
+* [9789] Updated tooltip for ShowDiffForAllParents
+* [9788] FileHistory: Launch commandline in FormBrowse
+* [9787] Theming readme update
+* [9786] GitNotes: Reduce overhead when Body exists
+* [9785] BuildServer: Correct settings paths
+* [9784] Load app colors from CSS themes
+* [9781] signed CLA
+* [9780] Fix #8918: Mergetool and difftool commands are now populated if paths…
+* [9778] Allow amend commits to also add --reset-author
+* [9767] Update .NET Runtime Bootstrapper
+* [9765] Add mnemonics to filter toolbar
+* [9764] Simplify FileStatus list image
+* [9763] GitVersion: Remove support for obsolete versions
+* [9762] range-diff: Handle artificial commits
+* [9760] Settings could not be read from \\wsl$
+* [9759] RevisionGrid: Option for git log with --topo-order
+* [9757] RevDiff: Move RangeDiff to A->B group
+* [9753] Tests: Ignore flaky UI tests
+* [9749] Allow running TranslationApp in Debug
+* [9747] Fix tests
+* [9745] Adjust Debug.Assert for tests
+* [9744] Make the Debug build debuggable
+* [9735] Share GitRef() at startup
+* [9734] LeftPanel was initiated twice at startup
+* [9733] PathFilter: Set FallbackFollowedFile at every filter update
+* [9732] appveyor: avoid warnings about crlf
+* [9729] FormBrowse init optimizations
+* [9728] RevisionFilter: Indicate filters with button state and tooltip
+* [9727] Let RTB extension `GetPlainText` ignore links
+* [9725] AppTitle was set to previous repo branch
+* [9723] Select and filter for multiple branches and tags from repo objects tree in left panel
+* [9722] signed contributors.txt
+* [9720] BASE diff: Icons for unique changes
+* [9719] TweakPng for some icons
+* [9718] RevDiff: Count number of changed files per group
+* [9708] RevisionGridControl: prevent exception when switching repository
+* [9704] Generate .NET installer
+* [9702] Support Git in WSL
+* [9700] GitStatusMonitor could start multiple commands
+* [9698] Reset another branch to here path format
+* [9696] Add Shortcut for Create Branch in Commit Form
+* [9695] Fix interactive add for new files
+* [9693] Some more mnemonics
+* [9687] Change Revision Links separator (#9668)
+* [9686] `Rebase --onto`: Display only the current branch to make selection easier
+* [9685] Remove transitive dependencies already included by other projects
+* [9684] Fix toolbar dpi scaling issue
+* [9683] Fix running scripts without arguments
+* [9682] Update Feature request template to use the new template
+* [9680] GitVersion: Remove support for obsolete versions
+* [9679] "--format" must be quoted
+* [9678] PushLocalCmd: path must be absolute
+* [9673] Make "Initialize submodules?" message box respect "Update submodules on checkout" settings option
+* [9672] Make reset "Soft" the default option
+* [9671] Revert: stack commit message
+* [9666] NBug copy text were url encoded
+* [9664] Fix build
+* [9661] Fix loading user plugins.
+* [9655] Add mnemonics to every menu item in FormBrowse
+* [9652] Fix: Prevent the find-replace dialog from blocking Windows shutdown
+* [9650] Fix revision lane order
+* [9645] Add ellipses (...) to branch context menu items which require additional steps to complete; update item labels to match other menus
+* [9639] Fixup splitter persistence for CommitInfo
+* [9638] Update issue template and update BugReporter to use the new template
+* [9635] Fix #9634: Minor PR template issue: body text being rendered as a header
+* [9632] Fix #9119: Value was either too large or too small for an Int32
+* [9630] Add support for Del key to RepoObjectsTree nodes
+* [9629] Package plugins
+* [9625] Remove `Rename` menu item for remote branches from Repo Tree
+* [9623] Don't update filters or issue CD command to the terminal
+* [9622] Pull dialog: add mnemonics, fix tab order
+* [9621] Rebase & Apply Patch: add mnemonics, fix tab order, add a shortcut
+* [9620] Fix #8211: Incorrect EOL in diff
+* [9619] Remove "process: null" for FormProcess 
+* [9616] Fix #6276: "Show messages of annotated tags" truncates to ten lines without notice
+* [9611] Ensure all grid views can be sorted
+* [9608] Fix branch copy and Open with difftool menu switching back to System style
+* [9607] Stabilise left panel tests
+* [9603] Add keyboard hotkeys to one menu and one dialog
+* [9593] Clean up `FormBrowse` load sequence
+* [9590] Fix leaking brushes
+* [9586] Show toolbar grips
+* [9583] Select HOME where .gitconfig is accessible first
+* [9580] Sync advanced filter and filters toolbar
+* [9564] NBug: Include GE specific exception info
+* [9562] Do not throw if process exits with 0
+* [9561] Check that directory exists before running submodule command
+* [9557] Reduce amount of TaskCanceledException
+* [9555] Allow hiding stash references on revision grid
+* [9542] Reinstate SmartFormat legacy error handling
+* [9541] Update translations at 75%+
+* [9540] Remove CorePath class
+* [9539] Simplify the ISettingsSource class
+* [9528] Enhance the filters toolbar
+* [9524] GetRangeDiff() should be Async
+* [9522] Cancellation for Executable
+* [9519] Truncate tooltips for blame commit long summary
+* [9518] Add yerudako (myself) to the list of project contributors
+* [9508] Update readme and changelog
+* [9488] Execution interface cleanup
+* [9483] SetDiff: Init for CommitDiff
+* [9478] Takes 2 at trying to fix failing tests
+* [9477] Reset revision filter when switching repos
+* [9468] Avoid popup at successful FileViewer patching
+* [9461] Stabilise RevisionGridControl filtering tests
+* [9460] Don't show delete dialog on CTRL+ALT+DEL
+* [9459] Artificial commits: Invalidate rowcache when inserting
+* [9455] Improve handling of encodings with conflicting names
+* [9454] Attempt to fix tests failure for MEF
+* [9453] GitHub PR template - merge strategies
+* [9446] Clean up `FilterToolBar` logic
+* [9445] Blame/filter in Browse, replace formfilehistory
+* [9444] Fixed Commit info varying indents. Fixes #9164
+* [9443] Updated Nuget packages for all projects
+* [9432] RevGrid commit count: Do not reset when creating artificial commits
+* [9430] BashShell: Try git-bash.exe first
+* [9426] Diff to actual parent in filtered grids
+* [9425] ToggleBetweenArtificialAndHeadCommits: Go to WorkTree if HEAD is hidden
+* [9424] RevFileTree: Blame instead of View
+* [9413] Rename detection for Advanced filter
+* [9406] Do not allow duplicate submodule paths
+* [9398] Sign contributors document
+* [9393] Show artificial commits also for filtered grid
+* [9392] Do not blame folders
+* [9389] Addendum to #9372
+* [9387] Enable use of the designer
+* [9386] Remove PuTTY binaries from installer
+* [9385] Do not check if path exists before settings GIT_SSH
+* [9384] Update contributors.txt
+* [9380] Recent repo search
+* [9372] Update layout of ConfirmationsSettingsPage
+* [9371] Cleanup ListView control
+* [9361] Fixup localization verification
+* [9359] Log RevisionReader parse errors
+* [9358]  RevisionReader allow empty subject
+* [9357] Fixup main menu item `Git bash`
+* [9356] Fixup user scripts running PS in foreground
+* [9346] Update ChangeLog
+* [9344] Remove BinaryFormatter. Fixes #9150
+* [9336] Preparations for exceptions on git error (part 4 of 4)
+* [9335] Browse: Advanced filter improvements
+* [9334] Preparations for exceptions on git error (part 3 of 4)
+* [9332] Add support for setting console emulator font name
+* [9330] Reduce window flicker and loss of focus
+* [9329] Fix/9166 gdi objects
+* [9326] FormRebase: Avoid list refs if not advanced
+* [9324] Remove custom ToHashSet() methods. Fixes #9159
+* [9320] Quick search in whole commit message if loaded
+* [9318] Create empty settings file if missing
+* [9317] GitRevision: Remove Name property
+* [9310] Load plugins
+* [9309] Increase test robustness
+* [9308] Stash: Keyboard navigation
+* [9305] Fix PathUtil handling of spaces in file names
+* [9301] Make showing commit message body in the revision graph optional
+* [9300] Changes from release/3.5 to master
+* [9299] Comprehensive fix of misspellings/typos
+* [9286] Fixup partial graph rendering
+* [9285] Add mnemonics to context menu of `RevisionDiffControl`
+* [9284] Commit: Unstage new files did not display the worktree file
+* [9282] Add mnemonics to frequently used dialogs
+* [9277] Gray / hide selections in `FormBrowse` if not focused
+* [9274] Handle `laneInfo` being `null`
+* [9268] Allow rollForward for .NET 5.0 SDK version
+* [9266] Update Clone dialog's handling of clipboard text
+* [9265] FormCheckoutBranch add mnemonics
+* [9264] Enable CA1416: Validate platform compatibility
+* [9256] Limit superproject refs in rev grid
+* [9252] Catch GDI exception
+* [9246] Use static/cached GitVersion to resolve Git path
+* [9243] RevisionReader: Parse raw commit body
+* [9235] Use System.Windows.Forms.TaskDialog
+* [9231] Preparations for exceptions on git error (part 2)
+* [9226] Improve RevisionGridControlTests
+* [9222] Git commands should never have colors
+* [9217] Replace PathUtil.Combine and GetExtension with Path.
+* [9216] Use fullPathResolver for viewing local files
+* [9212] Preparations for exceptions on git error
+* [9210] Delete temp files from settings tests
+* [9206] Use enum interface for GetRefs()
+* [9203] LogCaptureCallStacks in AppSettings
+* [9197] Diff/Commit: Do not show Open for deleted items
+* [9196] Do not try to show deleted images in diffviewer
+* [9188] Keep persistent ssh settings in registry
+* [9187] Ignore failure getting Process.Id for ShellExecute
+* [9186] sign cla | change email
+* [9184] Restore build pipeline
+* [9182] Set GIT_SSH only if path exists
+* [9172] Do not attempt to switch to a not created worktree
+* [9171] fix: all unused imports removed
+* [9170] Update contributors.txt
+* [9161] Use Microsoft.Build.CentralPackageVersions
+* [9149] OpenSSH presented as OtherSSH in settings
+* [9148] sign off from @MrJithil
+* [9145] Stash pop/apply: Refresh grid if command was successful
+* [9141] `FileViewer`: Remove decoration of default encoding
+* [9140] feat: add dot command to GitUICommands
+* [9136] Update README
+* [9132] Sanitize localized stack trace in exception tests
+* [9129] Install `Newtonsoft.Json.dll` not only for plugins
+* [9123] Let installer not activate disabled telemetry
+* [9122] View changed submodule could hang GE
+* [9107] Start using MEF
+* [9106] Restore splitter persistence
+* [9105] Fix stage/unstage implementations
+* [9097] Reduce allocations for RevisionGraph lane straightening
+* [9095] c# new var
+* [9087] FormCommitDiff cannot handle artificial commits
+* [9086] fix-9085 Change DialogResult only after saving before closing
+* [9082] Fix settings saving for "Detailed" section by selected setting source
+* [9081] Conemu v21.03.14
+* [9078] Left Panel: Fixup "is merged" status issues
+* [9075] Some GitHub plugin fixes
+* [9073] Remove false comment regarding ColorSettingsPage
+* [9072] GitHub token: Add a link to let the user generate its Personal Access Token
+* [9066] Color settings page changes
+* [9064] Do not reset a valid `AppSettings.GitBinDir`
+* [9063] Report bugs in a separate process
+* [9060] Suppress "Theme not found" if setting is empty
+* [9059] Use exit status instead of IsGitErrorMessage()
+* [9058] AutoComplete: Avoid Git for non tracked files
+* [9057] rev-parse should use --quiet --verify
+* [9056] Throw on non-zero exit code and on stderror output
+* [9053] Color settings page events
+* [9050] Straighten graph lanes over multiple rows
+* [9049] Fix tab control flickering in dark theme
+* [9045] Updated contributors.txt
+* [9044] Added 'Allow Empty' checkbox to commit form, and updated command logic
+* [9040] Remove unused memory settings
+* [9039] Remove redundant creation of settings container
+* [9038] Improve display of exceptions
+* [9037] Handle errors accessing the amend state file
+* [9034] Restore "Commit & push" button if amending
+* [9028] Straighten graph lanes
+* [9027] #9013 Use Close in Clean working directory
+* [9025] Update UI only after save settings
+* [9018] Ignore git clone prefix when checking clipboard for source URL
+* [9011] Check Before script failure to abort action
+* [9010] Allow opening files in Visual Studio
+* [9009] FormBisect: Autosize form to prevent content to be clipped
+* [9008] Push from empty FormCommit
+* [9004] Add contributor
+* [8996] Small bits
+* [8995] Resolve PluginSettings key names issue
+* [8994] Fix "Commit & push" button color when ameding is enabled
+* [8993] Move ImpactLoader.cs from GitCommands.Statistics to GitExtensions.Plugins.GitImpact
+* [8990] Include stash, bisect in grid if tags are shown
+* [8986] Fixup the initial view menu item state of #8942
+* [8984] Move all plugins to "GitExtensions.Plugins" namespace
+* [8983] Move BackgroundFetch plugin to "GitExtensions.Plugins" namespace
+* [8982] Move AutoCompileSubmodules plugin to "GitExtensions.Plugins" namespace
+* [8981] Move GitImpact plugin to "GitExtensions.Plugins" namespace
+* [8975] Move GitStatistics plugin to "GitExtensions.Plugins" namespace
+* [8973] Remove redundant suppressions
+* [8972] Use pattern matching
+* [8967] Fix invalid null value assertion in plugin code
+* [8964] Annotate plugins
+* [8962] Optimise string split operations
+* [8961] Report `SaveBlobAs` errors without crashing the app
+* [8959] Remove redundant await
+* [8958] Rename translation strings to avoid conflict
+* [8957] Dialogs layout alignment - `FormDeleteRemoteBranch`
+* [8956] Dialogs layout alignment - `FormDeleteBranch`
+* [8954] Remove return value from AsyncLoader
+* [8952] range-diff: Incorrect limit when selecting four commits
+* [8950] Disable CodeCov integration
+* [8949] Stop loading custom diff tools during tests
+* [8943] Use null coalescing assignment
+* [8942] FormBrowse Toolbar: Being able to hide each control separately
+* [8939] Annotate resource manager project
+* [8938] Stop AsyncLoader passing null on cancellation
+* [8937] Fix invalid XML in DotSettings file
+* [8936] Prevent exception when running unit tests
+* [8935] Use switch expression
+* [8934] Add missing solution items
+* [8933] Remove invalid solution items
+* [8932] Focus ComboBox Branches of FormResetAnotherBranch
+* [8929] Remove redundant property setters
+* [8928] Use null propagation
+* [8927] Remove unused field from RevisionDiffController
+* [8926] Merge sequential checks into pattern matching expressions
+* [8925] Remove IExecutable.GetOutput
+* [8924] Use null coalescing assignment
+* [8923] Fix hang when requesting submodule status
+* [8907] Hide theme fields for serialization from public interface
+* [8903] Graph: Ensure branch colors are not equal to branchs they are merged to
+* [8902] Sidepanel submodule: Recreate tree only at structure changes
+* [8901] Test to force same colors in AppColorDefaults and invariant.css
+* [8900] Add branch rendering improvements
+* [8899] Fix tool strip border in dark theme
+* [8898] Move ExternalOperationException to GitExtUtils
+* [8897] Refactor PaintGraphCell
+* [8896] Add UI improvements
+* [8894] RevDiff: Request GitStatus updates at file manipulations
+* [8888] Eliminate boxing allocation
+* [8887] Eliminate closure allocations
+* [8886] GitStatusMonitor increase minimum time between updates
+* [8883] Use pattern matching
+* [8882] Avoid boxing while unpacking flags
+* [8881] Fix submodule status loading error
+* [8878] Annotate GitUIPluginInterfaces
+* [8877] Remove redundant #nullable directives
+* [8876] Remove redundant null check
+* [8875] Remove double execution of GetSubmoduleStatusAsync
+* [8868] fix ListView column border in dark theme
+* [8867] Submodule SidePanel updated too often
+* [8866] Cache Git commands related to submodules
+* [8860] Link style was not applied to the dashboard
+* [8854] Browse: Avoid extra git-rev-parse at start
+* [8846] Annotate GitExtensions and GitUI projects
+* [8844] Experimental flipping of branch colors
+* [8838] Remove /en/latest from Doc links
+* [8836] Jira plugin configuration - Password renamed to Password/API token
+* [8830] AppVeyor: Handle v2 tokens
+* [8819] Correct padding increase
+* [8809] Improve RevisionDataGridView responsiveness
+* [8804] Introduce new interface for named git refs
+* [8799] Revert "Add test accessors borrowed from https://github.com/dotnet/winforms/"
+* [8797] C#8 simplified using to reduce nesting
+* [8790] Cache azuredevops build results
+* [8709] Implemented F2 rename branch in RepoObjectsTree.
+* [8700] Custom difftool in RevDiff, FileHistory, Commit, RevGrid
+* [8522] Migrate to .NET 5.0
+* [8452] Allow highlight branch by ALT+Click in the grid
+* [8156] Update packages.
+* [8010] Feature/add windows explorer integration in settings
 
 
 [10294]:https://github.com/gitextensions/gitextensions/pull/10294
