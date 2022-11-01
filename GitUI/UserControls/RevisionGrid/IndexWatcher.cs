@@ -55,7 +55,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     GitIndexWatcher.Path = _gitDirPath;
                     GitIndexWatcher.Filter = "index";
-                    GitIndexWatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite | NotifyFilters.CreationTime;
+                    GitIndexWatcher.NotifyFilter = NotifyFilters.CreationTime | NotifyFilters.LastWrite;
                     GitIndexWatcher.IncludeSubdirectories = false;
                     GitIndexWatcher.EnableRaisingEvents = _enabled;
 
