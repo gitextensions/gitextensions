@@ -57,10 +57,10 @@ namespace GitUI.BranchTreePanel
         private void EnableMoveTreeUpDownContexMenu(bool hasSingleSelection, NodeBase? selectedNode)
         {
             bool isSingleTreeSelected = hasSingleSelection && selectedNode is Tree;
-            TreeNode treeNode = (selectedNode as Tree)?.TreeViewNode;
+            TreeNode? treeNode = (selectedNode as Tree)?.TreeViewNode;
             mnubtnMoveUp.Visible = mnubtnMoveDown.Visible = isSingleTreeSelected;
-            mnubtnMoveUp.Enabled = isSingleTreeSelected && treeNode.PrevNode is not null;
-            mnubtnMoveDown.Enabled = isSingleTreeSelected && treeNode.NextNode is not null;
+            mnubtnMoveUp.Enabled = isSingleTreeSelected && treeNode?.PrevNode is not null;
+            mnubtnMoveDown.Enabled = isSingleTreeSelected && treeNode?.NextNode is not null;
         }
 
         private void EnableRemoteBranchContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
