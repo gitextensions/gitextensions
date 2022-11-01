@@ -6,6 +6,10 @@
     },
     "Dashboard": {
       "commandName": "Project"
+    },
+    "Blame": {
+      "commandName": "Project",
+      "commandLineArgs": "blame GitExtensions.settings"
     }
   }
 }

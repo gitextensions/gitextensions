@@ -247,7 +247,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            var newBlameLine = _blame.Lines[selectedLine];
+            GitBlameLine newBlameLine = _blame.Lines[selectedLine];
 
             if (ReferenceEquals(_lastBlameLine?.Commit, newBlameLine.Commit))
             {
@@ -255,7 +255,8 @@ namespace GitUI.Blame
             }
 
             _lastBlameLine = newBlameLine;
-            CommitInfo.Revision = _revGrid.GetActualRevision(_lastBlameLine.Commit.ObjectId);
+            ObjectId objectId = _lastBlameLine.Commit.ObjectId;
+            CommitInfo.Revision = _revGrid is null ? Module.GetRevision(objectId) : _revGrid.GetActualRevision(objectId);
         }
 
         private void BlameAuthor_HScrollPositionChanged(object sender, EventArgs e)
