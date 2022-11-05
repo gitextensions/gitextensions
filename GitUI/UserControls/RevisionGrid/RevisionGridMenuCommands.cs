@@ -218,7 +218,7 @@ namespace GitUI.UserControls.RevisionGrid
                 //
                 // After refactoring the three items should be added to RevisionGrid
                 // as done with "ShowRemoteBranches" and not via RevisionGrid.Designer.cs
-                MenuCommand.CreateGroupHeader(TranslatedStrings.Branches),
+                MenuCommand.CreateGroupHeader("Branches"),
                 new MenuCommand
                 {
                     Name = "ShowAllBranches",
