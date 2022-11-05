@@ -107,8 +107,9 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Retrieves registered remotes by running <c>git remote show</c> command.
         /// </summary>
+        /// <param name="throwOnErrorExit">Throw if the Git command exits with an error.</param>
         /// <returns>Registered remotes.</returns>
-        IReadOnlyList<string> GetRemoteNames();
+        IReadOnlyList<string> GetRemoteNames(bool throwOnErrorExit = true);
 
         /// <summary>
         /// Gets the commit ID of the currently checked out commit.

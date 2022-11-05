@@ -2245,13 +2245,13 @@ namespace GitCommands
                 });
         }
 
-        public IReadOnlyList<string> GetRemoteNames()
+        public IReadOnlyList<string> GetRemoteNames(bool throwOnErrorExit = true)
         {
-            return _gitExecutable
-                .Execute("remote")
-                .StandardOutput
-                .LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
-                .ToList();
+            ExecutionResult result = _gitExecutable.Execute("remote", throwOnErrorExit: throwOnErrorExit);
+            return result.ExitedSuccessfully
+               ? result.StandardOutput.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
+                .ToList()
+               : Array.Empty<string>();
         }
 
         private static readonly Regex _remoteVerboseLineRegex = new(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);

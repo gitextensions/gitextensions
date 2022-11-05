@@ -559,6 +559,20 @@ namespace GitCommandsTests
         }
 
         [Test]
+        public void GetRemoteNamesNoThrowOutsideRepoIfSet()
+        {
+            var remotes = new GitModule(@"c:\").GetRemoteNames(throwOnErrorExit: false);
+
+            Assert.AreEqual(Array.Empty<string>(), remotes);
+        }
+
+        [Test]
+        public void GetRemoteNamesThrowOutsideRepo()
+        {
+            Assert.Throws<GitExtUtils.ExternalOperationException>(() => new GitModule(@"c:\").GetRemoteNames(throwOnErrorExit: true));
+        }
+
+        [Test]
         public void GetParents_calls_correct_command_and_parses_response()
         {
             GitArgumentBuilder args = new("rev-parse")

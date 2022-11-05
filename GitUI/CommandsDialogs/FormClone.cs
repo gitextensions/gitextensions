@@ -114,7 +114,7 @@ namespace GitUI.CommandsDialogs
                     var currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
                     if (string.IsNullOrEmpty(currentBranchRemote))
                     {
-                        var remotes = Module.GetRemoteNames();
+                        var remotes = Module.GetRemoteNames(throwOnErrorExit: false);
 
                         if (remotes.Any(s => s.Equals("origin", StringComparison.InvariantCultureIgnoreCase)))
                         {
