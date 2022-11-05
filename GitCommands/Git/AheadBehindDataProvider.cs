@@ -46,13 +46,14 @@ namespace GitCommands.Git
                 return null;
             }
 
-            // Callers setting branchname has the responisibility to ensure that not all are needed
+            // Callers setting branchname has the responsibility to ensure that not all are needed
             if (string.IsNullOrWhiteSpace(branchName) && !string.IsNullOrWhiteSpace(_branchName))
             {
                 // Debug.Fail($"Unexpectedly call for all branches after cache filled with specific branch {_branchName}");
                 ResetCache();
             }
 
+            // Use Lazy<> to syncronize callers
             _lazyData ??= new(() => GetData(null, branchName));
             _branchName = branchName;
             return _lazyData.Value;
