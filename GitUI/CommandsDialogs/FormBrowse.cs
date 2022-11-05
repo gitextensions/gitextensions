@@ -641,9 +641,13 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
+        /// <summary>
+        /// Set the path filter.
+        /// </summary>
+        /// <param name="pathFilter">Zero or more quoted paths, separated by spaces.</param>
         public void SetPathFilter(string pathFilter)
         {
-            RevisionGrid.SetAndApplyPathFilter(pathFilter.QuoteNE());
+            RevisionGrid.SetAndApplyPathFilter(pathFilter);
         }
 
         private void ShowDashboard()

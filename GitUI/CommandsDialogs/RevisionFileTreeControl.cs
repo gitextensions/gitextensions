@@ -564,7 +564,7 @@ See the changes in the commit form.");
         {
             if (TryGetSelectedName(out string name))
             {
-                (FindForm() as FormBrowse)?.SetPathFilter(name.ToPosixPath());
+                (FindForm() as FormBrowse)?.SetPathFilter(name.ToPosixPath().QuoteNE());
             }
         }
 
