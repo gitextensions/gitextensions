@@ -2438,6 +2438,7 @@ namespace GitCommands
             ObjectId? firstBase,
             ObjectId? secondBase,
             string extraDiffArguments,
+            string? pathFilter,
             CancellationToken cancellationToken)
         {
             // range-diff is not possible for artificial commits, use HEAD
@@ -2456,7 +2457,9 @@ namespace GitCommands
                 "--find-copies",
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 extraDiffArguments,
-                { firstBase is null || secondBase is null,  $"{first}...{second}", $"{firstBase}..{first} {secondBase}..{second}" }
+                { firstBase is null || secondBase is null,  $"{first}...{second}", $"{firstBase}..{first} {secondBase}..{second}" },
+                { GitVersion.SupportRangeDiffPath && !string.IsNullOrWhiteSpace(pathFilter), "--" },
+                { GitVersion.SupportRangeDiffPath && !string.IsNullOrWhiteSpace(pathFilter), pathFilter }
             };
 
             ExecutionResult result = await _gitExecutable.ExecuteAsync(
