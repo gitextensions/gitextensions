@@ -23,7 +23,7 @@ namespace GitUI.BranchTreePanel
             // More than one local can point to a single remote branch, pick one of them.
             Nodes nodes = new(this);
             Dictionary<string, BaseRevisionNode> pathToNodes = new();
-            var aheadBehindData = _aheadBehindDataProvider?.GetData().DistinctBy(r => r.Value.RemoteRef).ToDictionary(r => r.Value.RemoteRef, r => r.Value);
+            IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData()?.DistinctBy(r => r.Value.RemoteRef).ToDictionary(r => r.Value.RemoteRef, r => r.Value);
 
             List<RemoteRepoNode> enabledRemoteRepoNodes = new();
             Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(async () => (await Module.GetRemotesAsync()).ToDictionary(r => r.Name));
