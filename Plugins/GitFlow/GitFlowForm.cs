@@ -49,7 +49,8 @@ namespace GitExtensions.Plugins.GitFlow
                     "--get",
                     "gitflow.branch.master"
                 };
-                return !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.GitExecutable.GetOutput(args));
+                ExecutionResult exec = _gitUiCommands.GitModule.GitExecutable.Execute(args, throwOnErrorExit: false);
+                return exec.ExitedSuccessfully && !string.IsNullOrWhiteSpace(exec.StandardOutput);
             }
         }
 
