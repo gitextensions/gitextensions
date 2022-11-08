@@ -424,7 +424,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             var commitTitle = lines[0];
 
             // Draw markers for fixup! and squash! commits
-            if (commitTitle.StartsWith(CommitKind.Fixup.GetPrefix()) || commitTitle.StartsWith(CommitKind.Squash.GetPrefix()))
+            if (commitTitle.StartsWith(CommitKind.Fixup.GetPrefix()) || commitTitle.StartsWith(CommitKind.Squash.GetPrefix()) || commitTitle.StartsWith(CommitKind.Amend.GetPrefix()))
             {
                 DrawImage(e, _fixupAndSquashImage, messageBounds, ref offset);
             }

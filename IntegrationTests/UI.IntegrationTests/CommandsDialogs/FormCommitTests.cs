@@ -179,6 +179,26 @@ namespace GitExtensions.UITests.CommandsDialogs
         }
 
         [Test]
+        public void PreserveCommitMessageOnReopenFromAmendCommit()
+        {
+            var oldCommitMessage = _referenceRepository.Module.GetRevision().Body;
+            var newCommitMessageWithAmend = $"amend! {oldCommitMessage}\n\nNew commit message";
+
+            RunFormTest(
+                form =>
+                {
+                    Assert.AreEqual($"amend! {oldCommitMessage}\n\n{oldCommitMessage}", form.GetTestAccessor().Message.Text);
+                    form.GetTestAccessor().Message.Text = newCommitMessageWithAmend;
+                },
+                CommitKind.Amend);
+
+            RunFormTest(form =>
+            {
+                Assert.AreEqual(newCommitMessageWithAmend, form.GetTestAccessor().Message.Text);
+            });
+        }
+
+        [Test]
         public void SelectMessageFromHistory()
         {
             RunFormTest(form =>
@@ -560,6 +580,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         CommitKind.Normal => _commands.StartCommitDialog(owner: null),
                         CommitKind.Squash => _commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),
                         CommitKind.Fixup => _commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),
+                        CommitKind.Amend => _commands.StartAmendCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),
                         _ => throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind))
                     });
 

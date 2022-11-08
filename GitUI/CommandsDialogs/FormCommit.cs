@@ -183,8 +183,8 @@ namespace GitUI.CommandsDialogs
             {
                 _commitKind = value;
 
-                modifyCommitMessageButton.Visible = _useFormCommitMessage && CommitKind != CommitKind.Normal;
-                bool messageCanBeChanged = _useFormCommitMessage && CommitKind == CommitKind.Normal;
+                modifyCommitMessageButton.Visible = _useFormCommitMessage && CommitKind is not (CommitKind.Normal or CommitKind.Amend);
+                bool messageCanBeChanged = _useFormCommitMessage && CommitKind is (CommitKind.Normal or CommitKind.Amend);
                 Message.Enabled = messageCanBeChanged;
                 commitMessageToolStripMenuItem.Enabled = messageCanBeChanged;
                 commitTemplatesToolStripMenuItem.Enabled = messageCanBeChanged;
@@ -454,7 +454,7 @@ namespace GitUI.CommandsDialogs
             {
                 // Do not remember commit message of fixup or squash commits, since they have
                 // a special meaning, and can be dangerous if used inappropriately.
-                if (CommitKind == CommitKind.Normal)
+                if (CommitKind is (CommitKind.Normal or CommitKind.Amend))
                 {
                     _commitMessageManager.MergeOrCommitMessage = Message.Text;
                     _commitMessageManager.AmendState = Amend.Checked;
@@ -507,6 +507,10 @@ namespace GitUI.CommandsDialogs
                 case CommitKind.Squash:
                     Validates.NotNull(_editedCommit);
                     message = TryAddPrefix(_editedCommit.Subject);
+                    break;
+                case CommitKind.Amend:
+                    Validates.NotNull(_editedCommit);
+                    message = $"{TryAddPrefix(_editedCommit.Subject)}{Environment.NewLine}{Environment.NewLine}{_editedCommit.Body}";
                     break;
                 default:
                     message = _commitMessageManager.MergeOrCommitMessage;
@@ -1474,7 +1478,7 @@ namespace GitUI.CommandsDialogs
                         {
                             if (!Message.Text.StartsWith(CommitKind.Fixup.GetPrefix()) &&
                                 !Message.Text.StartsWith(CommitKind.Squash.GetPrefix()) &&
-                                !Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx) &&
+                                !Regex.IsMatch(GetTextToValidate(Message.Text), AppSettings.CommitValidationRegEx) &&
                                 MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                             {
                                 return false;
@@ -1486,6 +1490,17 @@ namespace GitUI.CommandsDialogs
                     }
 
                     return true;
+                }
+
+                static string GetTextToValidate(string text)
+                {
+                    string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    if (text.StartsWith(CommitKind.Amend.GetPrefix()) && lines.Length > 2 && lines[1].Length == 0)
+                    {
+                        return string.Join(Environment.NewLine, lines.Skip(2));
+                    }
+
+                    return text;
                 }
             }
         }
@@ -3415,7 +3430,8 @@ namespace GitUI.CommandsDialogs
     {
         Normal,
         Fixup,
-        Squash
+        Squash,
+        Amend,
     }
 
     public static class CommitKindExtensions
@@ -3425,6 +3441,7 @@ namespace GitUI.CommandsDialogs
             {
                 CommitKind.Fixup => "fixup!",
                 CommitKind.Squash => "squash!",
+                CommitKind.Amend => "amend!",
                 CommitKind.Normal => string.Empty,
                 _ => throw new System.ComponentModel.InvalidEnumArgumentException(nameof(commitKind), (int)commitKind, typeof(CommitKind)),
             };
