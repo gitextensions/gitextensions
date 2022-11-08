@@ -65,6 +65,7 @@ namespace GitUI
             this.rewordCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixupCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.squashCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.amendCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.navigateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -450,6 +451,7 @@ namespace GitUI
             this.rewordCommitToolStripMenuItem,
             this.fixupCommitToolStripMenuItem,
             this.squashCommitToolStripMenuItem,
+            this.amendCommitToolStripMenuItem,
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem});
             this.manipulateCommitToolStripMenuItem.Name = "manipulateCommitToolStripMenuItem";
             this.manipulateCommitToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
@@ -468,6 +470,13 @@ namespace GitUI
             this.squashCommitToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.squashCommitToolStripMenuItem.Text = "Create a &squash commit...";
             this.squashCommitToolStripMenuItem.Click += new System.EventHandler(this.SquashCommitToolStripMenuItemClick);
+            // 
+            // amendCommitToolStripMenuItem
+            // 
+            this.amendCommitToolStripMenuItem.Name = "amendCommitToolStripMenuItem";
+            this.amendCommitToolStripMenuItem.Size = new System.Drawing.Size(272, 22);
+            this.amendCommitToolStripMenuItem.Text = "Create an &amend commit...";
+            this.amendCommitToolStripMenuItem.Click += new System.EventHandler(this.AmendCommitToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
@@ -634,5 +643,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripSeparator compareStripSeparator;
         private System.Windows.Forms.ToolStripSeparator stashStripSeparator;
+        private ToolStripMenuItem amendCommitToolStripMenuItem;
     }
 }

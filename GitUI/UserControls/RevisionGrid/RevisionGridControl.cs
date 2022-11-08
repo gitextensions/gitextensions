@@ -1996,6 +1996,7 @@ namespace GitUI
             SetEnabled(revertCommitToolStripMenuItem, !bareRepositoryOrArtificial);
             SetEnabled(cherryPickCommitToolStripMenuItem, !bareRepositoryOrArtificial);
             SetEnabled(manipulateCommitToolStripMenuItem, !bareRepositoryOrArtificial);
+            SetEnabled(amendCommitToolStripMenuItem, !bareRepositoryOrArtificial && Module.GitVersion.SupportAmendCommits);
 
             SetEnabled(copyToClipboardToolStripMenuItem, !revision.IsArtificial);
             SetEnabled(createNewBranchToolStripMenuItem, !bareRepositoryOrArtificial);
@@ -2344,6 +2345,16 @@ namespace GitUI
             }
 
             UICommands.StartSquashCommitDialog(ParentForm, LatestSelectedRevision);
+        }
+
+        private void AmendCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (LatestSelectedRevision is null)
+            {
+                return;
+            }
+
+            UICommands.StartAmendCommitDialog(ParentForm, LatestSelectedRevision);
         }
 
         internal void ToggleShowRelativeDate(EventArgs e)
