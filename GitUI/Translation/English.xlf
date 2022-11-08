@@ -9110,6 +9110,10 @@ See the changes in the commit form.</source>
         <source>Loading</source>
         <target />
       </trans-unit>
+      <trans-unit id="amendCommitToolStripMenuItem.Text">
+        <source>Create an &amp;amend commit...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="applyStashToolStripMenuItem.Text">
         <source>Appl&amp;y stash</source>
         <target />
