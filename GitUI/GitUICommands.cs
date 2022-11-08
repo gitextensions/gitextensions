@@ -498,6 +498,18 @@ namespace GitUI
             return DoActionOnRepo(Action);
         }
 
+        public bool StartAmendCommitDialog(IWin32Window? owner, GitRevision revision)
+        {
+            bool Action()
+            {
+                using FormCommit form = new(this, CommitKind.Amend, revision);
+                form.ShowDialog(owner);
+                return true;
+            }
+
+            return DoActionOnRepo(Action);
+        }
+
         public bool StartCommitDialog(IWin32Window? owner, string? commitMessage = null, bool showOnlyWhenChanges = false)
         {
             if (Module.IsBareRepository())
