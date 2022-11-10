@@ -1190,7 +1190,7 @@ namespace GitUI.CommandsDialogs
             this.StashStaged.Size = new System.Drawing.Size(171, 26);
             this.StashStaged.TabIndex = 14;
             this.StashStaged.TabStop = false;
-            this.StashStaged.Text = "S&tash staged changes";
+            this.StashStaged.Text = "Stas&h staged changes";
             this.StashStaged.UseVisualStyleBackColor = true;
             this.StashStaged.Click += new System.EventHandler(this.StashStagedClick);
             // 

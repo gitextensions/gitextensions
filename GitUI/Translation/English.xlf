@@ -3428,7 +3428,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target />
       </trans-unit>
       <trans-unit id="StashStaged.Text">
-        <source>S&amp;tash staged changes</source>
+        <source>Stas&amp;h staged changes</source>
         <target />
       </trans-unit>
       <trans-unit id="_addSelectionToCommitMessage.Text">
