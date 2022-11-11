@@ -105,18 +105,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 return repositories;
             }
 
-            List<Repository> repos = new();
-            for (var i = repositories.Count - 1; i >= 0; i--)
-            {
-                var repo = repositories[i];
-                if (repo.Path.Contains(pattern, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    repos.Add(repo);
-                    continue;
-                }
-            }
-
-            return repos;
+            return repositories
+                .Where(r => r.Path.Contains(pattern, StringComparison.CurrentCultureIgnoreCase))
+                .ToList();
         }
     }
 }
