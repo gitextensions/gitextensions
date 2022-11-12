@@ -50,6 +50,7 @@ install:
     cd scripts
     C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
     cd ..
+    git --version
 
 
 # to run your custom scripts instead of automatic MSBuild
