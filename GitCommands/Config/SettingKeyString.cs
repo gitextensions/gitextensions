@@ -60,5 +60,10 @@
         /// merge.tool
         /// </summary>
         public static string MergeToolNoGuiKey = "merge.tool";
+
+        /// <summary>
+        /// protocol.file.allow
+        /// </summary>
+        public static string AllowFileProtocol = "protocol.file.allow";
     }
 }
