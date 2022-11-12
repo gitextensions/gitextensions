@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 using ApprovalTests;
 using ApprovalTests.Namers;
@@ -691,6 +692,7 @@ namespace GitCommandsTests
                 for (int i = 0; i < numModules; ++i)
                 {
                     moduleTestHelpers.Add(new CommonTestUtils.GitModuleTestHelper($"repo{i}"));
+                    Debug.WriteLine($"Repo[{i}]:{moduleTestHelpers[i].TemporaryPath}");
                 }
 
                 foreach (var helper in moduleTestHelpers)
