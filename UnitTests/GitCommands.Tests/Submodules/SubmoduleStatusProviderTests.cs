@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -56,6 +57,17 @@ namespace GitCommandsTests.Submodules
             _repo1Module = _repo1.Module;
             _repo2Module = submodules.ElementAt(0);
             _repo3Module = submodules.ElementAt(1);
+
+            GitModule[] actualModules = new GitModule[]
+            {
+                _repo1Module,
+                _repo2Module,
+                _repo3Module
+            };
+            for (int i = 0; i < actualModules.Length; i++)
+            {
+                Debug.WriteLine($"Repo[{i + 1}]:{actualModules[i].WorkingDir}");
+            }
 
             _provider = new SubmoduleStatusProvider();
         }
