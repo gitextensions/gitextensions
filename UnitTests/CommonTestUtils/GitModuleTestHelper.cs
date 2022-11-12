@@ -1,7 +1,10 @@
+using System.Diagnostics;
 using System.Text;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git.Commands;
+using GitExtUtils;
+using NUnit.Framework;
 
 namespace CommonTestUtils
 {
@@ -136,6 +139,7 @@ namespace CommonTestUtils
             module.LocalConfigFile.SetString(SettingKeyString.UserName, "author");
             module.LocalConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
             module.LocalConfigFile.FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            module.LocalConfigFile.SetString(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
             module.LocalConfigFile.Save();
         }
 
@@ -149,7 +153,15 @@ namespace CommonTestUtils
             // Submodules require at least one commit
             subModuleHelper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial empty commit""");
 
-            Module.GitExecutable.Execute(GitCommandHelpers.AddSubmoduleCmd(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true), throwOnErrorExit: false);
+            // Ensure config is set to allow file submodules
+            string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol)?.Trim('\n');
+            Assert.That(fileEnabled == "always");
+
+            // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
+            IEnumerable<GitConfigItem> cfgs = GitCommandHelpers.GetAllowFileConfig();
+
+            var result = Module.GitExecutable.Execute(GitCommandHelpers.AddSubmoduleCmd(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true, cfgs));
+            Debug.WriteLine(result.AllOutput);
             Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
         }
 
@@ -159,7 +171,10 @@ namespace CommonTestUtils
         /// <returns>All submodule Modules</returns>
         public IEnumerable<GitModule> GetSubmodulesRecursive()
         {
-            Module.GitExecutable.Execute(@"submodule update --init --recursive", throwOnErrorExit: false);
+            IEnumerable<GitConfigItem> configs = GitCommandHelpers.GetAllowFileConfig();
+            ArgumentString args = GitCommandHelpers.SubmoduleUpdateCmd(name: null, configs: configs);
+
+            Module.GitExecutable.Execute(args);
             var paths = Module.GetSubmodulesLocalPaths(recursive: true);
             return paths.Select(path =>
             {
