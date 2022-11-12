@@ -684,14 +684,14 @@ namespace GitCommandsTests
         [Test]
         public void GetSubmodulesLocalPaths()
         {
-            List<CommonTestUtils.GitModuleTestHelper> moduleTestHelpers = new();
+            List<GitModuleTestHelper> moduleTestHelpers = new();
             try
             {
                 const int numModules = 4;
 
                 for (int i = 0; i < numModules; ++i)
                 {
-                    moduleTestHelpers.Add(new CommonTestUtils.GitModuleTestHelper($"repo{i}"));
+                    moduleTestHelpers.Add(new GitModuleTestHelper($"repo{i}"));
                     Debug.WriteLine($"Repo[{i}]:{moduleTestHelpers[i].TemporaryPath}");
                 }
 
@@ -748,7 +748,7 @@ namespace GitCommandsTests
         public void GetSuperprojectCurrentCheckout()
         {
             // Create super and sub repo
-            using CommonTestUtils.GitModuleTestHelper moduleTestHelperSuper = new("super repo"),
+            using GitModuleTestHelper moduleTestHelperSuper = new("super repo"),
                                                        moduleTestHelperSub = new("sub repo");
 
             // Add and init the submodule
