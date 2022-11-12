@@ -77,9 +77,9 @@ namespace GitUI.BranchTreePanel
             bool isSingleRemoteRepoSelected = hasSingleSelection && selectedNode is RemoteRepoNode;
             RemoteRepoNode? remoteRepo = selectedNode as RemoteRepoNode;
             mnubtnManageRemotes.Enable(isSingleRemoteRepoSelected);
-            EnableMenuItems(isSingleRemoteRepoSelected && remoteRepo?.Enabled is not null, mnubtnFetchAllBranchesFromARemote, mnubtnDisableRemote, mnuBtnPruneAllBranchesFromARemote);
-            mnuBtnOpenRemoteUrlInBrowser.Enable(isSingleRemoteRepoSelected && remoteRepo?.IsRemoteUrlUsingHttp is not null);
-            EnableMenuItems(isSingleRemoteRepoSelected && !remoteRepo?.Enabled is not null, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
+            EnableMenuItems(isSingleRemoteRepoSelected && remoteRepo?.Enabled is true, mnubtnFetchAllBranchesFromARemote, mnubtnDisableRemote, mnuBtnPruneAllBranchesFromARemote);
+            mnuBtnOpenRemoteUrlInBrowser.Enable(isSingleRemoteRepoSelected && remoteRepo?.IsRemoteUrlUsingHttp is true);
+            EnableMenuItems(isSingleRemoteRepoSelected && remoteRepo?.Enabled is false, mnubtnEnableRemote, mnubtnEnableRemoteAndFetch);
         }
 
         private void EnableSortContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
@@ -104,9 +104,9 @@ namespace GitUI.BranchTreePanel
             bool isSingleSubmoduleSelected = hasSingleSelection && selectedNode is SubmoduleNode;
             SubmoduleNode? submoduleNode = selectedNode as SubmoduleNode;
             bool isBareRepository = Module.IsBareRepository();
-            mnubtnOpenSubmodule.Enable(isSingleSubmoduleSelected && !submoduleNode?.IsCurrent is not null);
+            mnubtnOpenSubmodule.Enable(isSingleSubmoduleSelected && submoduleNode?.IsCurrent is false);
             EnableMenuItems(isSingleSubmoduleSelected, mnubtnOpenGESubmodule, mnubtnUpdateSubmodule);
-            EnableMenuItems(isSingleSubmoduleSelected && !isBareRepository && submoduleNode?.IsCurrent is not null, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
+            EnableMenuItems(isSingleSubmoduleSelected && !isBareRepository && submoduleNode?.IsCurrent is true, mnubtnManageSubmodules, mnubtnSynchronizeSubmodules);
             EnableMenuItems(isSingleSubmoduleSelected && !isBareRepository, mnubtnResetSubmodule, mnubtnStashSubmodule, mnubtnCommitSubmodule);
         }
 
