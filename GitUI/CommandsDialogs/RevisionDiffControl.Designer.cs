@@ -1,4 +1,5 @@
 using System.Windows.Forms;
+using GitUI.CommandsDialogs.Menus;
 
 namespace GitUI.CommandsDialogs
 {
@@ -51,7 +52,7 @@ namespace GitUI.CommandsDialogs
             this.diffEditWorkingDirectoryFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffDeleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
-            this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyPathsToolStripMenuItem = new CopyPathsToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator33 = new System.Windows.Forms.ToolStripSeparator();
             this.diffShowInFileTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -137,7 +138,7 @@ namespace GitUI.CommandsDialogs
             this.diffEditWorkingDirectoryFileToolStripMenuItem,
             this.diffDeleteFileToolStripMenuItem,
             this.diffToolStripSeparator13,
-            this.copyFilenameToClipboardToolStripMenuItem1,
+            this.copyPathsToolStripMenuItem,
             this.openContainingFolderToolStripMenuItem,
             this.toolStripSeparator33,
             this.diffShowInFileTreeToolStripMenuItem,
@@ -379,14 +380,9 @@ namespace GitUI.CommandsDialogs
             this.diffToolStripSeparator13.Size = new System.Drawing.Size(259, 6);
             this.diffToolStripSeparator13.Tag = "1";
             // 
-            // copyFilenameToClipboardToolStripMenuItem1
+            // copyPathsToolStripMenuItem
             // 
-            this.copyFilenameToClipboardToolStripMenuItem1.Image = global::GitUI.Properties.Images.CopyToClipboard;
-            this.copyFilenameToClipboardToolStripMenuItem1.Name = "copyFilenameToClipboardToolStripMenuItem1";
-            this.copyFilenameToClipboardToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyFilenameToClipboardToolStripMenuItem1.Size = new System.Drawing.Size(262, 22);
-            this.copyFilenameToClipboardToolStripMenuItem1.Text = "Copy full &path(s)";
-            this.copyFilenameToClipboardToolStripMenuItem1.Click += new System.EventHandler(this.copyFilenameToClipboardToolStripMenuItem1_Click);
+            this.copyPathsToolStripMenuItem.Name = "copyPathsToolStripMenuItem";
             // 
             // openContainingFolderToolStripMenuItem
             // 
@@ -491,7 +487,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator33;
         private ToolStripMenuItem diffShowInFileTreeToolStripMenuItem;
         private ToolStripMenuItem openContainingFolderToolStripMenuItem;
-        private ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem1;
+        private CopyPathsToolStripMenuItem copyPathsToolStripMenuItem;
         private ToolStripMenuItem stageFileToolStripMenuItem;
         private ToolStripMenuItem unstageFileToolStripMenuItem;
         private ToolStripMenuItem cherryPickSelectedDiffFileToolStripMenuItem;

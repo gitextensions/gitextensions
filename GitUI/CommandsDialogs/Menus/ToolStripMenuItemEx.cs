@@ -14,6 +14,9 @@ namespace GitUI.CommandsDialogs.Menus
         protected GitUICommands UICommands
             => (_getUICommands ?? throw new InvalidOperationException("The button is not initialized")).Invoke();
 
+        protected GitModule Module
+            => UICommands.Module;
+
         /// <summary>
         ///  Gets the form that is displaying the menu item.
         /// </summary>

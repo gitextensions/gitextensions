@@ -62,6 +62,7 @@ namespace GitUI.CommandsDialogs
             DiffText.LinePatchingBlocksUntilReload = true;
             BlameControl.HideCommitInfo();
             diffFilterFileInGridToolStripMenuItem.Text = TranslatedStrings.FilterFileInGrid;
+            copyPathsToolStripMenuItem.Initialize(() => UICommands, () => DiffFiles.SelectedItems.Select(fsi => fsi.Item.Name));
         }
 
         private void FileViewer_TopScrollReached(object sender, EventArgs e)
@@ -723,7 +724,7 @@ namespace GitUI.CommandsDialogs
             diffDeleteFileToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
             diffDeleteFileToolStripMenuItem.Visible = diffDeleteFileToolStripMenuItem.Enabled;
 
-            copyFilenameToClipboardToolStripMenuItem1.Enabled = _revisionDiffController.ShouldShowMenuCopyFileName(selectionInfo);
+            copyPathsToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuCopyFileName(selectionInfo);
             openContainingFolderToolStripMenuItem.Enabled = false;
 
             foreach (var item in DiffFiles.SelectedItems)
@@ -817,11 +818,6 @@ namespace GitUI.CommandsDialogs
         private void cherryPickSelectedDiffFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DiffText.CherryPickAllChanges();
-        }
-
-        private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            FormBrowse.CopyFullPathToClipboard(DiffFiles, Module);
         }
 
         private void findInDiffToolStripMenuItem_Click(object sender, EventArgs e)
