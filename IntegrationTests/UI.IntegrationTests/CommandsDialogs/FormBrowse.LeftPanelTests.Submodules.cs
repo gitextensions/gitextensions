@@ -94,6 +94,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _repo3.Dispose();
         }
 
+        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [Test]
         public void RepoObjectTree_should_show_all_submodules()
         {
