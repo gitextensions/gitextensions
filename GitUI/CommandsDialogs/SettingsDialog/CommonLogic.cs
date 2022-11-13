@@ -59,10 +59,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 configFileGlobalSettings);
         }
 
-        public const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
-        public const string GitExtensionsShellEx64Name = "GitExtensionsShellEx64.dll";
-
-        public static string GetRegistryValue(RegistryKey root, string subkey, string? key)
+        /// <summary>
+        /// Reads the registry key.
+        /// </summary>
+        /// <param name="root">Registry root</param>
+        /// <param name="subkey">Registry subkey</param>
+        /// <param name="key">Registry key, specify <see langword="null"/> to read default key</param>
+        /// <returns>registry value or empty string in case of error</returns>
+        public static string GetRegistryValue(RegistryKey root, string subkey, string? key = null)
         {
             string? value = null;
             try
