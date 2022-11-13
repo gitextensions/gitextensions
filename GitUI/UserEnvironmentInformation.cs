@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI;
@@ -8,11 +9,12 @@ namespace GitUI
 {
     public static class UserEnvironmentInformation
     {
+        private static readonly string DOTNET_CMD = "dotnet";
         private static bool _alreadySet;
         private static bool _dirty;
         private static string? _sha;
 
-        public static void CopyInformation() => ClipboardUtil.TrySetText(GetInformation());
+        public static void CopyInformation() => ClipboardUtil.TrySetText(GetInformation() + GetDotnetVersionInfo());
 
         public static string GetInformation()
         {
@@ -65,6 +67,40 @@ namespace GitUI
             }
 
             return gitVersion;
+        }
+
+        private static string GetDotnetVersionInfo()
+        {
+            StringBuilder sb = new();
+            Executable dotnet = new(DOTNET_CMD);
+            ArgumentString args = new ArgumentBuilder()
+            {
+                "--list-runtimes"
+            };
+
+            sb.AppendLine("- Microsoft.WindowsDesktop.App Versions");
+            sb.AppendLine();
+            sb.AppendLine("```");
+            try
+            {
+                string output = dotnet.GetOutput(args);
+                var desktopAppMatches = Regex.Matches(output, @"^(?=.*\bMicrosoft\.WindowsDesktop\.App\b)[^\n\r]*", RegexOptions.Multiline).Cast<Match>();
+                var desktopAppLines = string.Join(Environment.NewLine, desktopAppMatches);
+
+                desktopAppLines = Regex.Replace(desktopAppLines, "^", "    ", RegexOptions.Multiline);
+                sb.AppendLine($"{desktopAppLines}");
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine(Regex.Replace(ex.Message, "^", "    ", RegexOptions.Multiline));
+            }
+            finally
+            {
+                sb.AppendLine("```");
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
         }
 
         public static void Initialise(string sha, bool isDirty)
