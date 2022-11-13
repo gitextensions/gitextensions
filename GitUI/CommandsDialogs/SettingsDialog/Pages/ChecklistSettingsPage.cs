@@ -103,9 +103,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _configureMergeTool =
             new("You need to configure merge tool in order to solve merge conflicts.");
 
-        private readonly TranslationString _cantRegisterShellExtension =
-            new("Could not register the shell extension because '{0}' could not be found.");
-
         private readonly TranslationString _noDiffToolConfiguredCaption =
             new("Difftool");
 
@@ -219,18 +216,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
-            try
-            {
-                ShellExtensionManager.Register();
-            }
-            catch (FileNotFoundException exception)
-            {
-                MessageBox.Show(this, string.Format(_cantRegisterShellExtension.Text, exception.FileName), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (System.ComponentModel.Win32Exception)
-            {
-                // User cancel operation, continue;
-            }
+            ShellExtensionManager.Register();
 
             CheckSettings();
         }

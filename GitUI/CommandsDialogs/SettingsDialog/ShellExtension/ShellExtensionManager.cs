@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using GitCommands;
+using GitUI.NBugReports;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension
@@ -63,21 +64,28 @@ namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension
 
             static void RunRegSvrForSingleDll(string dllName, string argumentsPattern)
             {
-                string path = FindFileInBinFolders(dllName);
-                if (string.IsNullOrEmpty(path))
+                try
                 {
-                    throw new FileNotFoundException(null, dllName);
-                }
+                    string path = FindFileInBinFolders(dllName);
+                    if (string.IsNullOrEmpty(path))
+                    {
+                        throw new FileNotFoundException(null, dllName);
+                    }
 
-                string arguments = string.Format(argumentsPattern, path.Quote());
-                ProcessStartInfo pi = new()
+                    string arguments = string.Format(argumentsPattern, path.Quote());
+                    ProcessStartInfo pi = new()
+                    {
+                        FileName = "regsvr32",
+                        Arguments = arguments,
+                        Verb = "RunAs",
+                        UseShellExecute = true
+                    };
+                    Process.Start(pi)?.WaitForExit();
+                }
+                catch (Exception ex)
                 {
-                    FileName = "regsvr32",
-                    Arguments = arguments,
-                    Verb = "RunAs",
-                    UseShellExecute = true
-                };
-                Process.Start(pi)?.WaitForExit();
+                    throw new UserExternalOperationException(ex);
+                }
             }
         }
 
