@@ -836,10 +836,6 @@ A valid GitHub account is required</source>
         <source>You should configure a diff tool to show file diff in external program.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_cantRegisterShellExtension.Text">
-        <source>Could not register the shell extension because '{0}' could not be found.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
         <source>You need to configure merge tool in order to solve merge conflicts.</source>
         <target />
@@ -10383,12 +10379,24 @@ Please ensure that the url is valid and that the API token has access to build a
         <source>Shell extension</source>
         <target />
       </trans-unit>
+      <trans-unit id="RegisterButton.Text">
+        <source>&amp;Enable shell extension</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="UnregisterButton.Text">
+        <source>&amp;Disable shell extension</source>
+        <target />
+      </trans-unit>
       <trans-unit id="cbAlwaysShowAllCommands.Text">
         <source>Always show all commands</source>
         <target />
       </trans-unit>
-      <trans-unit id="gbShellExtensions.Text">
+      <trans-unit id="gbCascadingMenu.Text">
         <source>Cascaded Context Menu</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbExplorerIntegration.Text">
+        <source>Windows Explorer integration</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">

@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -8,6 +9,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Shell extension";
+            UpdateRegistrationStatus();
             InitializeComplete();
 
             // when the dock is set in the designer it causes weird visual artifacts in scaled Windows environments
@@ -69,6 +71,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             labelPreview.Text = topLevel + "Git Extensions > \r\n" + cascaded;
+        }
+
+        private void RegisterButton_Click(object sender, EventArgs e)
+        {
+            ShellExtensionManager.Register();
+            UpdateRegistrationStatus();
+        }
+
+        private void UnregisterButton_Click(object sender, EventArgs e)
+        {
+            ShellExtensionManager.Unregister();
+            UpdateRegistrationStatus();
+        }
+
+        private void UpdateRegistrationStatus()
+        {
+            gbExplorerIntegration.Enabled = ShellExtensionManager.FilesExist();
+            RegisterButton.Enabled = !ShellExtensionManager.IsRegistered();
         }
     }
 }
