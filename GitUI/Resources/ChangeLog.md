@@ -1,6 +1,13 @@
 Changelog
 =========
 
+### Version 4.0.0 (31 Oct 2022)
+
+#### Changes:
+
+* https://github.com/gitextensions/gitextensions/releases/tag/v4
+
+
 ### Version 3.5.4 (25 Sep 2021)
 
 #### Changes:
