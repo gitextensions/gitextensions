@@ -30,7 +30,7 @@ namespace CommonTestUtils
             Module = module;
 
             // Don't assume global user/email
-            SetDummyUserEmail(module);
+            SetRepoConfig(module);
 
             // Stage operations may fail due to different line endings, so want only warning and not a fatal error
             //
@@ -131,10 +131,10 @@ namespace CommonTestUtils
         }
 
         /// <summary>
-        /// Set dummy user and email locally for the module, no global setting in AppVeyor
+        /// Set dummy user and email locally for the module along with specific tests configs, no global setting in AppVeyor
         /// Must also be set on the submodule, local settings are not included when adding it
         /// </summary>
-        private void SetDummyUserEmail(GitModule module)
+        private void SetRepoConfig(GitModule module)
         {
             module.LocalConfigFile.SetString(SettingKeyString.UserName, "author");
             module.LocalConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
@@ -162,6 +162,7 @@ namespace CommonTestUtils
 
             var result = Module.GitExecutable.Execute(GitCommandHelpers.AddSubmoduleCmd(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true, cfgs));
             Debug.WriteLine(result.AllOutput);
+
             Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
         }
 
@@ -179,7 +180,7 @@ namespace CommonTestUtils
             return paths.Select(path =>
             {
                 GitModule module = new(Path.Combine(Module.WorkingDir, path).ToNativePath());
-                SetDummyUserEmail(module);
+                SetRepoConfig(module);
                 return module;
             });
         }
