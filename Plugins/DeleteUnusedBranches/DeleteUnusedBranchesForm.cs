@@ -278,10 +278,9 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
         private async Task RefreshObsoleteBranchesAsync()
         {
-            Validates.NotNull(_refreshCancellation);
-
             if (IsRefreshing)
             {
+                Validates.NotNull(_refreshCancellation);
                 _refreshCancellation.Cancel();
                 IsRefreshing = false;
                 return;
@@ -290,6 +289,8 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             Validates.NotNull(_gitUiCommands);
 
             IsRefreshing = true;
+            Validates.NotNull(_refreshCancellation);
+
             var curBranch = _gitUiCommands.GitModule.GetSelectedBranch();
             RefreshContext context = new(
                 _gitCommands,
