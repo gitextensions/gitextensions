@@ -691,18 +691,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void listView1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Up)
+            if (e.KeyCode == Keys.Up && listView1.SelectedItems.Count > 0)
             {
-                if (listView1.SelectedItems.Count > 0)
+                // Compare current item to the very first item to see if it's at the top
+                ListViewItem selectedItem = listView1.SelectedItems[0];
+                if (selectedItem.Bounds.Y == listView1.Items[0].Bounds.Y)
                 {
-                    // Compare current item to the very first item to see if it's at the top
-                    ListViewItem selectedItem = listView1.SelectedItems[0];
-                    if (selectedItem.Bounds.Y == listView1.Items[0].Bounds.Y)
-                    {
-                        textBoxSearch.Focus();
-                        selectedItem.Selected = true;
-                        e.Handled = true;
-                    }
+                    textBoxSearch.Focus();
+                    selectedItem.Selected = true;
+                    e.Handled = true;
                 }
             }
         }
