@@ -103,6 +103,22 @@
 
   <!--
     ============================================================
+                       _PatchRuntimeConfigJson
+
+    Retain only the reference to Microsoft.WindowsDesktop.App in the packaged *.runtimeconfig.json.
+    See https://github.com/gitextensions/gitextensions/issues/10337 for more details.
+    ============================================================
+    -->
+    <Target Name="_PatchRuntimeConfigJson" AfterTargets="Publish">
+      <ItemGroup>
+        <RuntimeConfigJsonFiles Include="$(AppPublishDir)\*.runtimeconfig.json"/>
+      </ItemGroup>
+  
+      <Exec Command="powershell.exe $(RepoRoot)\scripts\Patch-RuntimeConfigJsonFiles.ps1 '@(RuntimeConfigJsonFiles)'" />
+    </Target>
+  
+  <!--
+    ============================================================
                        _EnsureBundleContent
 
     Copies all necessary files for the pack step.
@@ -201,7 +217,9 @@
   <!-- Any errors in targets that executed as 'AfterTargets' don't break the build: https://github.com/microsoft/msbuild/issues/3345
        A fix is going out in VS16.6p3, but it is way too long for us to wait.
     -->
-  <Target Name="CreatePortable" AfterTargets="Publish" DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_DownloadPluginManager;_EnsureBundleContent;_CleanupBeforePack">
+  <Target Name="CreatePortable"
+          AfterTargets="Publish"
+          DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_DownloadPluginManager;_EnsureBundleContent;_CleanupBeforePack;_PatchRuntimeConfigJson">
     <PropertyGroup>
       <_TargetAppConfig>@(AppConfigFileDestination)</_TargetAppConfig>
 
