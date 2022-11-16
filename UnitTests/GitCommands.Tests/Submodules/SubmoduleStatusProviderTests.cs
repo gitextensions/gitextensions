@@ -81,7 +81,6 @@ namespace GitCommandsTests.Submodules
             _repo3.Dispose();
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task UpdateSubmoduleStructure_valid_result_for_top_module()
@@ -97,7 +96,6 @@ namespace GitCommandsTests.Submodules
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task UpdateSubmoduleStructure_valid_result_for_first_nested_submodule()
@@ -114,7 +112,6 @@ namespace GitCommandsTests.Submodules
             result.OurSubmodules.Select(info => info.Path).Should().ContainSingle(_repo3Module.WorkingDir);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task UpdateSubmoduleStructure_valid_result_for_second_nested_submodule()
@@ -130,7 +127,6 @@ namespace GitCommandsTests.Submodules
             result.OurSubmodules.Select(info => info.Path).Should().BeEmpty();
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_change()
@@ -164,7 +160,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_commit()
@@ -199,7 +194,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_change_commit()
@@ -236,7 +230,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_second_nested_module_change()
@@ -272,7 +265,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_first_nested_module_commit_second_nested_module_change()
@@ -321,7 +313,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_second_nested_module_commit()
@@ -357,7 +348,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_top_module_change()
@@ -391,7 +381,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_top_module_commit()
@@ -423,7 +412,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_first_nested_module_with_top_module_changes()
@@ -455,7 +443,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_first_nested_module_with_second_nested_module_changes()
@@ -490,7 +477,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_first_nested_module_with_second_nested_module_commit()
@@ -525,7 +511,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_second_nested_module_changes()
@@ -558,7 +543,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_second_nested_module_commit()
@@ -588,7 +572,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_first_nested_module_commit()
@@ -654,7 +637,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_top_module_with_top_module_changes()
@@ -684,7 +666,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_first_nested_module_prechanges()
@@ -708,7 +689,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_prechanges_noupdate()
@@ -741,7 +721,6 @@ namespace GitCommandsTests.Submodules
             await CheckRevertedStatus(result);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [NonParallelizable]
         [Test]
         public async Task Submodule_status_changes_for_second_nested_module_with_first_nested_module_precommit()
