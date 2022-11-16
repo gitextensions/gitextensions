@@ -680,7 +680,6 @@ namespace GitCommandsTests
             Assert.AreEqual(status, stagedStatus);
         }
 
-        [Ignore("See https://github.com/gitextensions/gitextensions/issues/10387")]
         [Test]
         public void GetSubmodulesLocalPaths()
         {
