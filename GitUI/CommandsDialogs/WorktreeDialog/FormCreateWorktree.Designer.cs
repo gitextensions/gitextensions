@@ -72,6 +72,7 @@
             // radioButtonCheckoutExistingBranch
             //
             this.radioButtonCheckoutExistingBranch.AutoSize = true;
+            this.radioButtonCheckoutExistingBranch.Checked = true;
             this.radioButtonCheckoutExistingBranch.Location = new System.Drawing.Point(3, 3);
             this.radioButtonCheckoutExistingBranch.Name = "radioButtonCheckoutExistingBranch";
             this.radioButtonCheckoutExistingBranch.Size = new System.Drawing.Size(165, 17);

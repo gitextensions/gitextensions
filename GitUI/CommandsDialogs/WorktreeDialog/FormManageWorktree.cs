@@ -246,7 +246,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void buttonCreateNewWorktree_Click(object sender, EventArgs e)
         {
-            using FormCreateWorktree formCreateWorktree = new(UICommands);
+            using FormCreateWorktree formCreateWorktree = new(UICommands, _worktrees[0].Path);
             DialogResult dialogResult = formCreateWorktree.ShowDialog(this);
             if (dialogResult != DialogResult.OK)
             {
