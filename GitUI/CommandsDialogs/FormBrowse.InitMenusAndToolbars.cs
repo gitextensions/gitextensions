@@ -12,6 +12,8 @@ namespace GitUI.CommandsDialogs
     {
         // This file is dedicated to init logic for FormBrowse menus and toolbars
 
+        internal static readonly string FetchPullToolbarShortcutsPrefix = "pull_shortcut_";
+
         private void InitMenusAndToolbars(string? revFilter, string? pathFilter)
         {
             commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
@@ -43,6 +45,8 @@ namespace GitUI.CommandsDialogs
                 pushToolStripMenuItem,
                 branchToolStripMenuItem,
             }.ForEach(ColorHelper.AdaptImageLightness);
+
+            InsertFetchPullShortcuts();
 
             if (!EnvUtils.RunningOnWindows())
             {
@@ -136,6 +140,35 @@ namespace GitUI.CommandsDialogs
                     Debug.Assert(toolStrips[i].Left < toolStrips[i - 1].Left, $"{toolStrips[i - 1].Name} must be placed before {toolStrips[i].Name}");
                 }
 #endif
+            }
+        }
+
+        private void InsertFetchPullShortcuts()
+        {
+            int i = ToolStripMain.Items.IndexOf(toolStripButtonPull);
+            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchToolStripMenuItem));
+            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchAllToolStripMenuItem));
+            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(fetchPruneAllToolStripMenuItem));
+            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(mergeToolStripMenuItem));
+            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(rebaseToolStripMenuItem1));
+            ToolStripMain.Items.Insert(i++, CreateCorrespondingToolbarButton(pullToolStripMenuItem1));
+
+            ToolStripButton CreateCorrespondingToolbarButton(ToolStripMenuItem toolStripMenuItem)
+            {
+                string toolTipText = toolStripMenuItem.Text.Replace("&", string.Empty);
+                ToolStripButton clonedToolStripMenuItem = new()
+                {
+                    Image = toolStripMenuItem.Image,
+                    ImageTransparentColor = toolStripMenuItem.ImageTransparentColor,
+                    Name = FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
+                    Size = toolStripMenuItem.Size,
+                    Text = toolTipText,
+                    ToolTipText = toolTipText,
+                    DisplayStyle = ToolStripItemDisplayStyle.Image,
+                };
+
+                clonedToolStripMenuItem.Click += (_, _) => toolStripMenuItem.PerformClick();
+                return clonedToolStripMenuItem;
             }
         }
 
