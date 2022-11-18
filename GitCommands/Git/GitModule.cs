@@ -4184,7 +4184,7 @@ namespace GitCommands
             };
 
             ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
-            return !exec.ExitedSuccessfully
+            return exec.ExitedSuccessfully
                 ? exec.StandardOutput.TrimEnd()
                 : null;
         }
