@@ -19,7 +19,7 @@ environment:
   # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   # Use latest version of current used .NET version.  6.0 could use the latest of 6.0.  See .\Scripts\Update-DotnetVersion.ps1
-  GE_USE_LATEST_DOTNET: false
+  GE_USE_LATEST_DOTNET: true
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
