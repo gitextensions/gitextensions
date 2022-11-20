@@ -288,6 +288,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
             Validates.NotNull(_gitUiCommands);
 
+            // IsRefreshing will set _refreshCancellation
             IsRefreshing = true;
             Validates.NotNull(_refreshCancellation);
 
