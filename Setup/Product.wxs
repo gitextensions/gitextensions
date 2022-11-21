@@ -474,6 +474,24 @@
       <Component Id="Russian.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.Plugins.xlf" />
       </Component>
+      <Component Id="SimplifiedChinese.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.gif" />
+      </Component>
+      <Component Id="SimplifiedChinese.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.xlf" />
+      </Component>
+      <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.Plugins.xlf" />
+      </Component>
+      <Component Id="TraditionalChinese.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Traditional Chinese.gif" />
+      </Component>
+      <Component Id="TraditionalChinese.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Traditional Chinese.xlf" />
+      </Component>
+      <Component Id="TraditionalChinese.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Traditional Chinese.Plugins.xlf" />
+      </Component>
       <Component Id="Turkish.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.gif" />
       </Component>
@@ -755,6 +773,16 @@
           <ComponentRef Id="Russian.xlf" />
           <ComponentRef Id="Russian.Plugins.xlf" />
           <ComponentRef Id="Russian.gif" />
+        </Feature>
+        <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+          <ComponentRef Id="SimplifiedChinese.xlf" />
+          <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
+          <ComponentRef Id="SimplifiedChinese.gif" />
+        </Feature>
+        <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
+          <ComponentRef Id="TraditionalChinese.xlf" />
+          <ComponentRef Id="TraditionalChinese.Plugins.xlf" />
+          <ComponentRef Id="TraditionalChinese.gif" />
         </Feature>
         <Feature Id="Turkish" Title="Turkish" Level="1">
           <ComponentRef Id="Turkish.xlf" />

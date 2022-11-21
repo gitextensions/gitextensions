@@ -2234,6 +2234,7 @@ Simgeler ve aralık farkları hakkında daha fazla bilgi için belgelere bakın.
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
         <source>General</source>
+        <target>Genel</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -9346,6 +9347,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="FullHistoryCheck.Text">
         <source>Full &amp;history</source>
+        <target>Dosya &amp;geçmişi</target>
         
       </trans-unit>
       <trans-unit id="IgnoreCase.Text">
@@ -9379,22 +9381,27 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="_author.Text">
         <source>&amp;Author</source>
+        <target>&amp;Yazar</target>
         
       </trans-unit>
       <trans-unit id="_branches.Text">
         <source>&amp;Branches</source>
+        <target>&amp;Dallar</target>
         
       </trans-unit>
       <trans-unit id="_committer.Text">
         <source>&amp;Committer</source>
+        <target>&amp;Teslim Alan</target>
         
       </trans-unit>
       <trans-unit id="_diffContent.Text">
         <source>&amp;Diff contains</source>
+        <target>&amp;Fark içerir</target>
         
       </trans-unit>
       <trans-unit id="_diffContentToolTip.Text">
         <source>SLOW</source>
+        <target>YAVAŞ</target>
         
       </trans-unit>
       <trans-unit id="_limit.Text">

@@ -1,6 +1,37 @@
 Changelog
 =========
 
+### Version 4.0.1 (23 Nov 2022)
+
+#### Changes:
+* [10418] Fixup "Derived from tag"
+* [10396] Fix 'Delete obsolete branches' plugin
+* [10390] FormClone: Check that current module is valid
+* [10388] SidePanel: Context menu at no selection
+* [10377] [NBug] Value must not be null. (Open Settings)
+* [10355] Retain only Microsoft.WindowsDesktop.App in *.runtimeconfig.json
+* [10347] "Delete obsolete branches" plugin stop working in version 4
+* [10341] GitFlow: Do not throw if git-flow is not init
+* [10340] SidePanel: Context menu at no selection
+* [10339] SidePanel: AheadBehind null check
+* [10338] .NET 6.0.10
+* [10316] Fixup standalone blame
+
+
+[10418]:https://github.com/gitextensions/gitextensions/pull/10418
+[10396]:https://github.com/gitextensions/gitextensions/pull/10396
+[10390]:https://github.com/gitextensions/gitextensions/pull/10390
+[10388]:https://github.com/gitextensions/gitextensions/pull/10388
+[10377]:https://github.com/gitextensions/gitextensions/issues/10377
+[10355]:https://github.com/gitextensions/gitextensions/pull/10355
+[10347]:https://github.com/gitextensions/gitextensions/issues/10347
+[10341]:https://github.com/gitextensions/gitextensions/pull/10341
+[10340]:https://github.com/gitextensions/gitextensions/pull/10340
+[10339]:https://github.com/gitextensions/gitextensions/pull/10339
+[10338]:https://github.com/gitextensions/gitextensions/pull/10338
+[10316]:https://github.com/gitextensions/gitextensions/pull/10316
+
+
 ### Version 4.0.0 (31 Oct 2022)
 
 #### Changes:
