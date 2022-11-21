@@ -2,14 +2,13 @@
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
-using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public sealed partial class SettingsTreeViewUserControl : UserControl
     {
         private bool _isSelectionChangeTriggeredByGoto;
-        private List<TreeNode>? _nodesFoundByTextBox;
+        private List<TreeNode> _nodesFoundByTextBox = new();
         private readonly Dictionary<SettingsPageReference, TreeNode> _pages2NodeMap = new();
         private readonly List<ISettingsPage> _settingsPages = new();
 
@@ -114,7 +113,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         private void textBoxFind_TextChanged(object sender, EventArgs e)
         {
-            _nodesFoundByTextBox = new List<TreeNode>();
+            _nodesFoundByTextBox.Clear();
 
             if (string.IsNullOrWhiteSpace(textBoxFind.Text))
             {
@@ -214,8 +213,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 // TODO: how to avoid the windows sound when pressing ENTER?
                 e.Handled = true;
-
-                Validates.NotNull(_nodesFoundByTextBox);
 
                 // each enter key press selects next highlighted node (cycle)
                 int indexOfSelectedNode = _nodesFoundByTextBox.IndexOf(treeView1.SelectedNode);
