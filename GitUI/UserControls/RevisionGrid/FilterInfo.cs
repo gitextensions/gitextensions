@@ -199,7 +199,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         /// <summary>
         /// Disables all active filters.
-        /// Reflog is not disabled.
+        /// CurrentBranch and Reflog are not disabled.
         /// FullHistory and SimplifyMerges are considered settings and not reset.
         /// </summary>
         public void ResetAllFilters()
@@ -212,7 +212,6 @@ namespace GitUI.UserControls.RevisionGrid
             ByDiffContent = false;
             ByPathFilter = false;
             ByBranchFilter = false;
-            ShowCurrentBranchOnly = false;
             ShowOnlyFirstParent = false;
             ShowMergeCommits = true;
             ShowSimplifyByDecoration = false;
