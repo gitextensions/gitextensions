@@ -140,6 +140,30 @@ the last selected commit.");
         private readonly TranslationString _errorSshPuTTYNotConfigured = new("PuTTY is not configured as SSH client");
         private readonly TranslationString _errorSshPuTTYWhereConfigure = new("SSH client can be configured in Settings > SSH.");
 
+        // Dubious ownership popup
+        private readonly TranslationString _gitSecurityError = new("Git security error");
+        private readonly TranslationString _gitDubiousOwnershipHeader = new("Do you want to trust this repository by adding a security exception?");
+        private readonly TranslationString _gitDubiousOwnershipText = new(@"Git detected a security problem that prevents opening the repository.
+Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+
+To be able to open this repository, you need to either:
+- add a security exception for the repository to make git trust it, or
+- correct the ownership of the repository.");
+        private readonly TranslationString _gitDubiousOwnershipTrustRepository = new("Trust this repository");
+        private readonly TranslationString _gitDubiousOwnershipTrustAllRepositories = new("Trust all repositories");
+        private readonly TranslationString _gitDubiousOwnershipOpenRepositoryFolder = new("Open repository in Explorer");
+        private readonly TranslationString _gitDubiousOwnershipSeeGitCommandOutput = new("See git command output...");
+        private readonly TranslationString _gitDubiousOwnershipHideGitCommandOutput = new("Hide git command output...");
+        private readonly TranslationString _gitDubiousOwnershipTrustAllInstruction = new(@"Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
+run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
+repositories.
+
+If you wish to trust all git repositories on your system even if they are owned by someone else, run the
+following command.
+
+!!! THIS CAN BE DANGEROUS !!!");
+
         // public only because of FormTranslate
         public TranslatedStrings()
         {
@@ -300,5 +324,15 @@ the last selected commit.");
         public static string StashDropConfirmTitle => _instance.Value._stashDropConfirmTitle.Text;
         public static string CannotBeUndone => _instance.Value._cannotBeUndone.Text;
         public static string AreYouSure => _instance.Value._areYouSure.Text;
+
+        public static string GitSecurityError => _instance.Value._gitSecurityError.Text;
+        public static string GitDubiousOwnershipHeader => _instance.Value._gitDubiousOwnershipHeader.Text;
+        public static string GitDubiousOwnershipText => _instance.Value._gitDubiousOwnershipText.Text;
+        public static string GitDubiousOwnershipTrustRepository => _instance.Value._gitDubiousOwnershipTrustRepository.Text;
+        public static string GitDubiousOwnershipTrustAllRepositories => _instance.Value._gitDubiousOwnershipTrustAllRepositories.Text;
+        public static string GitDubiousOwnershipOpenRepositoryFolder => _instance.Value._gitDubiousOwnershipOpenRepositoryFolder.Text;
+        public static string GitDubiousOwnershipSeeGitCommandOutput => _instance.Value._gitDubiousOwnershipSeeGitCommandOutput.Text;
+        public static string GitDubiousOwnershipHideGitCommandOutput => _instance.Value._gitDubiousOwnershipHideGitCommandOutput.Text;
+        public static string GitDubiousOwnershipTrustAllInstruction => _instance.Value._gitDubiousOwnershipTrustAllInstruction.Text;
     }
 }
