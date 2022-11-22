@@ -74,7 +74,7 @@ namespace GitUI.CommitInfo
 
         public string GetPlainText()
         {
-            return rtbRevisionHeader.GetPlainText();
+            return _commitDataHeaderRenderer.GetPlainText(rtbRevisionHeader.GetPlainText());
         }
 
         private void LoadAuthorImage(GitRevision? revision)

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -11,6 +12,11 @@ namespace ResourceManager.CommitDataRenders
     /// </summary>
     public interface ICommitDataHeaderRenderer
     {
+        /// <summary>
+        /// Gets the plain text for the clipboard - without tabs, relative date, children and parents.
+        /// </summary>
+        string GetPlainText(string header);
+
         Font GetFont(Graphics g);
 
         IEnumerable<int> GetTabStops();
@@ -42,6 +48,16 @@ namespace ResourceManager.CommitDataRenders
             _dateFormatter = dateFormatter;
             _headerRendererStyleProvider = headerRendererStyleProvider;
             _linkFactory = linkFactory;
+        }
+
+        public string GetPlainText(string header)
+        {
+            string children = $"({TranslatedStrings.GetChildren(1)})|({TranslatedStrings.GetChildren(2)})|({TranslatedStrings.GetChildren(10)})";
+            string parents = $"({TranslatedStrings.GetParents(1)})|({TranslatedStrings.GetParents(2)})|({TranslatedStrings.GetParents(10)})";
+            header = Regex.Replace(header, @"[ \t]+", " ");
+            header = Regex.Replace(header, @"(\n[^:]+: ).* ago \(([^)]+)\)", "$1$2");
+            header = Regex.Replace(header, @$"\n({children}|{parents})[^\n]*", "");
+            return header;
         }
 
         public Font GetFont(Graphics g)
