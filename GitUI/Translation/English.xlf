@@ -10812,8 +10812,57 @@ Select this commit to populate the full message.</source>
         <source>Failed to read "{0}" due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHeader.Text">
+        <source>Do you want to trust this repository by adding a security exception?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHideGitCommandOutput.Text">
+        <source>Hide git command output...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipOpenRepositoryFolder.Text">
+        <source>Open repository in Explorer</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipSeeGitCommandOutput.Text">
+        <source>See git command output...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipText.Text">
+        <source>Git detected a security problem that prevents opening the repository.
+Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+
+To be able to open this repository, you need to either:
+- add a security exception for the repository to make git trust it, or
+- correct the ownership of the repository.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
+        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
+run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
+repositories.
+
+If you wish to trust all git repositories on your system even if they are owned by someone else, run the
+following command.
+
+!!! THIS CAN BE DANGEROUS !!!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
+        <source>Trust all repositories</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">
+        <source>Trust this repository</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
         <source>The Git executable could not be located on your system.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitSecurityError.Text">
+        <source>Git security error</source>
         <target />
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">
