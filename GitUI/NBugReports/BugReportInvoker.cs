@@ -6,11 +6,14 @@ using BugReporter;
 using BugReporter.Serialization;
 using GitCommands;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
 
 namespace GitUI.NBugReports
 {
     public static class BugReportInvoker
     {
+        private const string _dubiousOwnershipSecurityConfigString = "config --global --add safe.directory";
+
         private static Form? OwnerForm
             => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
 
@@ -100,6 +103,14 @@ namespace GitUI.NBugReports
                 LogError(exception, isTerminating);
             }
 
+            if (exception is ExternalOperationException externalOperationException
+                && externalOperationException.InnerException is { }
+                && externalOperationException.InnerException.Message.Contains(_dubiousOwnershipSecurityConfigString))
+            {
+                ReportDubiousOwnership(externalOperationException.InnerException);
+                return;
+            }
+
             if (isTerminating)
             {
                 // TODO: this is not very efficient
@@ -169,6 +180,107 @@ namespace GitUI.NBugReports
                 string buttonText = isTerminating ? TranslatedStrings.ButtonCloseApp : TranslatedStrings.ButtonIgnore;
                 TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText);
                 page.Buttons.Add(taskDialogCommandLink);
+            }
+        }
+
+        private static void ReportDubiousOwnership(Exception exception)
+        {
+            string error = exception.Message;
+            TaskDialogPage pageSecurity = new()
+            {
+                Icon = TaskDialogIcon.Error,
+                Caption = TranslatedStrings.GitSecurityError,
+                Heading = TranslatedStrings.GitDubiousOwnershipHeader,
+                Text = TranslatedStrings.GitDubiousOwnershipText,
+                AllowCancel = true,
+                SizeToContent = true,
+            };
+            int startIndex = error.IndexOf(_dubiousOwnershipSecurityConfigString);
+            string gitConfigTrustRepoCommand = error[startIndex..];
+            string folderPath = error[(startIndex + _dubiousOwnershipSecurityConfigString.Length + 1)..];
+
+            TaskDialogCommandLinkButton openExplorerButton = new(TranslatedStrings.GitDubiousOwnershipOpenRepositoryFolder, allowCloseDialog: false);
+            openExplorerButton.Click += (_, _) => OsShellUtil.OpenWithFileExplorer(PathUtil.ToNativePath(folderPath));
+            pageSecurity.Buttons.Add(openExplorerButton);
+
+            AddTrustRepoButton(TranslatedStrings.GitDubiousOwnershipTrustRepository, gitConfigTrustRepoCommand);
+            AddTrustAllReposButton(TranslatedStrings.GitDubiousOwnershipTrustAllRepositories);
+
+            TaskDialogButton helpButton = TaskDialogButton.Help;
+            helpButton.Click += (_, _) =>
+            {
+                OsShellUtil.OpenUrlInDefaultBrowser("https://git-scm.com/docs/git-config/#Documentation/git-config.txt-safedirectory");
+            };
+
+            pageSecurity.Buttons.Add(helpButton);
+            pageSecurity.Buttons.Add(TaskDialogButton.Close);
+
+            pageSecurity.Expander = new TaskDialogExpander
+            {
+                CollapsedButtonText = TranslatedStrings.GitDubiousOwnershipSeeGitCommandOutput,
+                ExpandedButtonText = TranslatedStrings.GitDubiousOwnershipHideGitCommandOutput,
+                Position = TaskDialogExpanderPosition.AfterFootnote,
+                Text = error,
+            };
+
+            TaskDialogButton button = TaskDialog.ShowDialog(OwnerFormHandle, pageSecurity);
+            if (button == TaskDialogButton.Cancel || button == TaskDialogButton.Close)
+            {
+                ShowGitRepo(OwnerForm, workingDir: null);
+            }
+
+            return;
+
+            void AddTrustRepoButton(string buttonText, string command)
+            {
+                TaskDialogCommandLinkButton button = new(buttonText)
+                {
+                    DescriptionText = $"git {command}"
+                };
+
+                button.Click += (_, _) =>
+                {
+                    new GitModule(".").GitExecutable.Start(command);
+                    ShowGitRepo(OwnerForm, folderPath);
+                };
+
+                pageSecurity.Buttons.Add(button);
+            }
+
+            void AddTrustAllReposButton(string buttonText)
+            {
+                TaskDialogCommandLinkButton button = new(buttonText, allowCloseDialog: false)
+                {
+                    DescriptionText = $"git {_dubiousOwnershipSecurityConfigString} *",
+                };
+
+                button.Click += (_, _) =>
+                {
+                    string tempFile = Path.GetTempFileName();
+                    File.WriteAllText(tempFile, $"{TranslatedStrings.GitDubiousOwnershipTrustAllInstruction}\r\n\r\ngit {_dubiousOwnershipSecurityConfigString} \"*\"");
+
+                    using FormEditor formEditor = new(new GitUICommands(new GitModule(null)), tempFile, showWarning: false, readOnly: true);
+                    formEditor.ShowDialog();
+
+                    try
+                    {
+                        File.Delete(tempFile);
+                    }
+                    catch
+                    {
+                        // no-op
+                    }
+                };
+
+                pageSecurity.Buttons.Add(button);
+            }
+
+            static void ShowGitRepo(Form? ownerForm, string? workingDir)
+            {
+                if (ownerForm is FormBrowse formBrowse)
+                {
+                    formBrowse.Invoke(() => formBrowse.SetWorkingDir(workingDir));
+                }
             }
         }
 
