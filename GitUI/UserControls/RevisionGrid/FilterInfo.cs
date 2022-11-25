@@ -137,9 +137,8 @@ namespace GitUI.UserControls.RevisionGrid
             get => AppSettings.ShowReflogReferences;
             set
             {
-                // Do not unset ByBranchFilter or ShowCurrentBranchOnly.
-                // ShowReflogReferences dominates those settings and if the user
-                // toggles the Reflog button, the curremt branch fílter should appear.
+                // ShowReflogReferences dominates ByBranchFilter and ShowCurrentBranchOnly,
+                // if the user toggles the Reflog button, the curremt branch fílter should appear.
                 AppSettings.ShowReflogReferences = value;
             }
         }
@@ -171,14 +170,13 @@ namespace GitUI.UserControls.RevisionGrid
         /// <summary>
         /// Has any filters in addition to revision filters that sets the history.
         /// Currently, this is only branch and date filters.
-        /// Note that All/Reflog are not considered as filters.
+        /// Note that Current/Reflog are not considered as filters (All is default).
         /// </summary>
         public bool HasFilter
         {
             get => HasRevisionFilter
                 || ByDateFrom
                 || ByDateTo
-                || ShowCurrentBranchOnly
                 || ShowOnlyFirstParent
                 || !string.IsNullOrWhiteSpace(BranchFilter);
         }
