@@ -107,20 +107,29 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void Should_correctly_setup_for_defined_pull_action(AppSettings.PullAction pullAction,
             bool mergeChecked, bool pruneRemoteBranches, bool pruneRemoteBranchesAndTags, bool rebaseChecked, bool fetchChecked, bool autoStashChecked, bool pruneRemoteBranchesEnabled, bool pruneRemoteBranchesAndTagsEnabled)
         {
+            AppSettings.PullAction defaultPullAction = AppSettings.DefaultPullAction;
+            AppSettings.DefaultPullAction = AppSettings.PullAction.Merge;
             RunFormTest(
                 form =>
                 {
-                    var accessor = form.GetTestAccessor();
+                    try
+                    {
+                        var accessor = form.GetTestAccessor();
 
-                    accessor.Merge.Checked.Should().Be(mergeChecked);
-                    accessor.Prune.Checked.Should().Be(pruneRemoteBranches);
-                    accessor.PruneTags.Checked.Should().Be(pruneRemoteBranchesAndTags);
-                    accessor.Rebase.Checked.Should().Be(rebaseChecked);
-                    accessor.Fetch.Checked.Should().Be(fetchChecked);
-                    accessor.AutoStash.Checked.Should().Be(autoStashChecked);
-                    accessor.Prune.Enabled.Should().Be(pruneRemoteBranchesEnabled);
-                    accessor.PruneTags.Enabled.Should().Be(pruneRemoteBranchesAndTagsEnabled);
-                    accessor.Remotes.Text.Should().Be("[ All ]");
+                        accessor.Merge.Checked.Should().Be(mergeChecked);
+                        accessor.Prune.Checked.Should().Be(pruneRemoteBranches);
+                        accessor.PruneTags.Checked.Should().Be(pruneRemoteBranchesAndTags);
+                        accessor.Rebase.Checked.Should().Be(rebaseChecked);
+                        accessor.Fetch.Checked.Should().Be(fetchChecked);
+                        accessor.AutoStash.Checked.Should().Be(autoStashChecked);
+                        accessor.Prune.Enabled.Should().Be(pruneRemoteBranchesEnabled);
+                        accessor.PruneTags.Enabled.Should().Be(pruneRemoteBranchesAndTagsEnabled);
+                        accessor.Remotes.Text.Should().Be("[ All ]");
+                    }
+                    finally
+                    {
+                        AppSettings.DefaultPullAction = defaultPullAction;
+                    }
                 },
                 null, null, pullAction);
         }
