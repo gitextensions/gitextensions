@@ -67,16 +67,14 @@ namespace GitCommands
                     _tools = ParseCustomDiffMergeTool(output, defaultTool);
                 }
             }
-            catch
+            finally
             {
                 if (_tools is null)
                 {
                     // Parsing has failed, just provide an empty list, no user notification
                     _tools = Array.Empty<string>();
                 }
-            }
-            finally
-            {
+
                 _mutex.Release();
             }
 
