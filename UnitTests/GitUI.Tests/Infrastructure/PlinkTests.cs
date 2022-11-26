@@ -1,7 +1,7 @@
-﻿using GitCommands;
+﻿using GitUI.Infrastructure;
 using NUnit.Framework;
 
-namespace GitCommandsTests
+namespace GitUITests.Infrastructure
 {
     [TestFixture]
     public sealed class PlinkTests

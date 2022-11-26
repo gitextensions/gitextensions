@@ -1,7 +1,9 @@
 ﻿using System.Text;
-using GitUI;
+using GitCommands;
+using GitExtUtils;
+using GitUI.NBugReports;
 
-namespace GitCommands
+namespace GitUI.Infrastructure
 {
     public sealed class Plink
     {
@@ -59,13 +61,14 @@ namespace GitCommands
 
         public Plink(Executable? executable = null)
         {
+            ThrowIfFileNotFound(AppSettings.Plink, $"'{AppSettings.Plink}'\r\n\r\n{TranslatedStrings.ErrorSshPuTTYInstalled}");
+
             _executable = executable ?? new Executable("cmd.exe");
         }
 
         public bool Connect(string host)
         {
-            return ThreadHelper.JoinableTaskFactory.Run(
-                () => ConnectAsync(host));
+            return ThreadHelper.JoinableTaskFactory.Run(() => ConnectAsync(host));
         }
 
         public async Task<bool> ConnectAsync(string host)
@@ -111,6 +114,15 @@ namespace GitCommands
                 .Append('"');
 
             return fixedUrl.ToString();
+        }
+
+        private static void ThrowIfFileNotFound(string filePath, string errorMessage, string? heading = null)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new UserExternalOperationException(errorMessage,
+                    new ExternalOperationException(innerException: new FileNotFoundException(heading ?? TranslatedStrings.ErrorFileNotFound)));
+            }
         }
     }
 }

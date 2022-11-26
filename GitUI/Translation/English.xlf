@@ -6737,10 +6737,6 @@ Inactive remote is completely invisible to git.</source>
         <source>An active remote named "{0}" already exists.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_errorNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
         <source>Edit Remote Details</source>
         <target />
@@ -8767,10 +8763,6 @@ help</source>
         <source>The current directory is not a valid git repository.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_pageantNotFound.Text">
-        <source>Cannot load SSH key. PuTTY is not configured properly.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_reason.Text">
         <source>Reason</source>
         <target />
@@ -10748,6 +10740,26 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_errorCaptionNotOnBranch.Text">
         <source>Not on a branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_errorPuTTYNotFound.Text">
+        <source>SSH agent could not be found</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_errorSshKeyNotFound.Text">
+        <source>SSH key file could not be found</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYInstalled.Text">
+        <source>Is PuTTY installed?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYNotConfigured.Text">
+        <source>PuTTY is not configured as SSH client</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYWhereConfigure.Text">
+        <source>SSH client can be configured in Settings &gt; SSH.</source>
         <target />
       </trans-unit>
       <trans-unit id="_exitCodeText.Text">

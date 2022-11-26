@@ -10,6 +10,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
+using GitUI.Infrastructure;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
@@ -885,34 +886,24 @@ namespace GitUI.CommandsDialogs
 
         private void LoadPuttyKey()
         {
-            if (!GitSshHelpers.Plink())
+            if (!GitSshHelpers.IsPlink)
             {
                 return;
             }
 
-            if (File.Exists(AppSettings.Pageant))
+            HashSet<string> files = new(new PathEqualityComparer());
+            foreach (var remote in GetSelectedRemotes())
             {
-                HashSet<string> files = new(new PathEqualityComparer());
-                foreach (var remote in GetSelectedRemotes())
+                var sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);
+                if (!string.IsNullOrEmpty(sshKeyFile))
                 {
-                    var sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);
-                    if (!string.IsNullOrEmpty(sshKeyFile))
-                    {
-                        files.Add(sshKeyFile);
-                    }
-                }
-
-                foreach (var sshKeyFile in files)
-                {
-                    if (File.Exists(sshKeyFile))
-                    {
-                        GitModule.StartPageantWithKey(sshKeyFile);
-                    }
+                    files.Add(sshKeyFile);
                 }
             }
-            else
+
+            foreach (var sshKeyFile in files)
             {
-                MessageBoxes.PAgentNotFound(this);
+                PuttyHelpers.StartPageantIfConfigured(() => sshKeyFile);
             }
 
             return;
