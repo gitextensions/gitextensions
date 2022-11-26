@@ -1,442 +1,442 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="nl">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>Geef testresultaten weer in samenvatting build status voor ieder bouw resultaat (netwerk intensief!)</target>
+        <target>Mostrar los resultados de las pruebas en el resumen de estado de compilación para cada resultado de compilación (¡uso intensivo de la red!)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Auto compile SubModules</source>
-        <target>Compileer SubModules automatisch</target>
+        <target>Autocompilar submódulos</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>Wil je {0} builden?
+        <target>¿Quieres compilar {0}?
 
 {1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Voer a.u.b. het correcte pad naar MSBuild in in het instellingenscherm van de plugin en probeer nogmaals.</target>
+        <target>Por favor ingrese el directorio correcto para MSBuild en el diálogo de configuración del plugin e intente nuevamente.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe argumenten</target>
+        <target>Argumentos para msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>Ingeschakeld</target>
+        <target>Habilitado</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>Pad naar msbuild.exe</target>
+        <target>Ruta hacia msbuild.exe</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Periodic background fetch</source>
-        <target>Fetch periodiek op de achtergrond</target>
+        <target>Ejecuta fetch periódicamente en segundo plano</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>Ververs het scherm na iedere fetch</target>
+        <target>Actualizar vista luego de un fetch</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>Fetch alle submodules</target>
+        <target>Cargar todos los submódulos</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>Fetch iedere (seconden) - zet op 0 om uit te schakelen</target>
+        <target>Hacer fetch cada (segundos) - dejar valor en 0 para desactivar</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
-        <target>Argumenten voor het git-commando</target>
+        <target>Argumentos para el comando de git a ejecutarse</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
-        <target>Specificeer de base URL naar Bitbucket</target>
+        <target>Especifique la URL base de Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
         <source>Disable SSL verification</source>
-        <target>Deactiveer SSL verificatie</target>
+        <target>Deshabilitar verificación SSL</target>
         
       </trans-unit>
       <trans-unit id="BitbucketPassword.Caption">
         <source>Bitbucket Password</source>
-        <target>Bitbucket Wachtwoord</target>
+        <target>Contraseña de Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="BitbucketUsername.Caption">
         <source>Bitbucket Username</source>
-        <target>Btibucket Gebruikersnaam</target>
+        <target>Nombre de usuario de Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="Name.Text">
         <source>Bitbucket Server</source>
-        <target>Bitbucket Server</target>
+        <target>Servidor Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>Uw repository wordt niet gehost in Bitbucket Server.</target>
+        <target>Su repositorio no está alojado en Bitbucket.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Bitbucket Server</source>
-        <target>Bitbucket Server</target>
+        <target>Servidor Bitbucket</target>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
-        <target>{0} gecommit
+        <target>{0} Commiteado
 {1}</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>Fout</target>
+        <target>Error</target>
         
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
-        <target>Rechtermuisknop om de link te kopiëren </target>
+        <target>Clic derecho para copiar el enlace</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
-        <target>Succes</target>
+        <target>Todo bien</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
-        <target>Goedkeuren</target>
+        <target>Aprobar</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
         <source>Create</source>
-        <target>Aanmaken</target>
+        <target>Crear</target>
         
       </trans-unit>
       <trans-unit id="btnMerge.Text">
         <source>Merge</source>
-        <target>Samenvoegen</target>
+        <target>Merge</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
         <source>Pull Request Info</source>
-        <target>Pull Request Info</target>
+        <target>Información de las Pull Request.</target>
         
       </trans-unit>
       <trans-unit id="groupBoxInformation.Text">
         <source>Information</source>
-        <target>Informatie</target>
+        <target>Información</target>
         
       </trans-unit>
       <trans-unit id="groupBoxPullRequestInfo.Text">
         <source>Pull Request Info</source>
-        <target>Pull Request Info</target>
+        <target>Información de las Pull Request.</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSource.Text">
         <source>Source</source>
-        <target>Bron</target>
+        <target>Fuente</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSourceRepoView.Text">
         <source>Source</source>
-        <target>Bron</target>
+        <target>Fuente</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTarget.Text">
         <source>Target</source>
-        <target>Doel</target>
+        <target>Destino</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTargetRepoView.Text">
         <source>Target</source>
-        <target>Doel</target>
+        <target>Destino</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
-        <target>Auteur</target>
+        <target>Autor</target>
         
       </trans-unit>
       <trans-unit id="lblBranchView.Text">
         <source>Branch</source>
-        <target>Vertakking</target>
+        <target>Branch</target>
         
       </trans-unit>
       <trans-unit id="lblDescription.Text">
         <source>Description</source>
-        <target>Omschrijving</target>
+        <target>Descripción</target>
         
       </trans-unit>
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
-        <target>Omschrijving</target>
+        <target>Descripción</target>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>Repository</target>
+        <target>Repositorio</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
         <source>Reviewer (approved)</source>
-        <target>Reviewer (goedgekeurd)</target>
+        <target>Revisor (aprovado)</target>
         
       </trans-unit>
       <trans-unit id="lblSourceBranch.Text">
         <source>Branch</source>
-        <target>Vertakking</target>
+        <target>Branch</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>Repository</target>
+        <target>Repositorio</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>Repository</target>
+        <target>Repositorio</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
         <source>State</source>
-        <target>Status</target>
+        <target>Estado</target>
         
       </trans-unit>
       <trans-unit id="lblTargetBranch.Text">
         <source>Branch</source>
-        <target>Vertakking</target>
+        <target>Branch</target>
         
       </trans-unit>
       <trans-unit id="lblTargetRepoView.Text">
         <source>Branch</source>
-        <target>Vertakking</target>
+        <target>Branch</target>
         
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
-        <target>Repository</target>
+        <target>Repositorio</target>
         
       </trans-unit>
       <trans-unit id="lblTitle.Text">
         <source>Title</source>
-        <target>Titel</target>
+        <target>Título</target>
         
       </trans-unit>
       <trans-unit id="lblTitleView.Text">
         <source>Title</source>
-        <target>Titel</target>
+        <target>Título</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>Maak download verzoek</target>
+        <target>Crear un pull request</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>Bekijk binnenhaal verzoek</target>
+        <target>Ver pedidos de Pull</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>Maak lokale tracking branches</target>
+        <target>Crear ramas locales de tracking</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>Maak lokale tracking branches</target>
+        <target>Crear ramas locales de tracking</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
-        <target>Remote waarvoor tracking branches gemaakt moeten worden</target>
+        <target>Remoto para el cual crear ramas de tracking</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Create local tracking branches</source>
-        <target>Maak lokale tracking branches</target>
+        <target>Crear ramas locales de tracking</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
-        <target>Verwijder achterhaalde branches</target>
+        <target>Eliminar ramas obsoletas</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
-        <target>Laatste auteur</target>
+        <target>Último autor</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>Sluiten</target>
+        <target>Cerrar</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Verwijder</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>Verwijder remote branches van</target>
+        <target>Borrar ramas remotas en</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
-        <target>Laatste bericht</target>
+        <target>Último mensaje</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
-        <target>Zoek branches</target>
+        <target>Buscar ramas</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>Weet je zeker dat je {0} geselecteerde branches wilt verwijderen?</target>
+        <target>Está seguro que quiere eliminar {0} ramas seleccionadas?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
-        <target>{0}/{1} branches geselecteerd.</target>
+        <target>{0}/{1} ramas seleccionadas.</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
         <source>Cancel</source>
-        <target>Annuleer</target>
+        <target>Cancelar</target>
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>Kies branches om te verwijderen. Alleen branches die volledig zijn gemerged in '{0}' worden verwijderd.</target>
+        <target>Escoja ramas a eliminar. Sólo ramas que hayan sido completamente fusionadas con '{0}' serán borradas.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>GEVAARLIJKE ACTIE
-Branches worden verwijderd op de remote '{0}'. Dit kan niet ongedaan gemaakt worden.
-Weet u zeker dat u door wilt gaan?</target>
+        <target>¡ACCIÓN PELIGROSA!
+Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. 
+¿Está seguro de que desea continuar?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Verwijder</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
-        <target>Bezig met branches verwijderen...</target>
+        <target>Eliminando ramas...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>Het verwijderen van niet-gemergde branches zal resulteren in losse commits. Wees voorizchtig!</target>
+        <target>Eliminar ramas sin fusionar resultará en commits colgados. ¡Use con cuidado!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>Laden...</target>
+        <target>Cargando...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
-        <target>Druk '{0}' om branches te zoeken om te verwijderen.</target>
+        <target>Presione '{0}' para buscar ramas a borrar.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>Zoek branches</target>
+        <target>Buscar ramas</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>Selecteer branches om te verwijderen met de checkboxes in de '{0}' kolom.</target>
+        <target>Selecciona las ramas a borrar usando los Checkbox en la columna '{0}'.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>Instellingen</target>
+        <target>Configuración</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
-        <target>Laatste activiteit</target>
+        <target>Actividad más reciente</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Inclusief niet-gemergde branches</target>
+        <target>Incluir ramas sin fusionar</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>Verwijder branches ouder dan x dagen</target>
+        <target>Eliminar ramas más antiguas de x días.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>Verwijder branches die volledig gemerged zijn in branch</target>
+        <target>Eliminar ramas completamente fusionadas con la rama</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>Naam</target>
+        <target>Nombre</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
-        <target>Matcht niet</target>
+        <target>No coincide</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
@@ -446,124 +446,125 @@ Weet u zeker dat u door wilt gaan?</target>
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
-        <target>Niet-hoofdlettergevoelig</target>
+        <target>Insensible a mayúsculas</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>Gebruik regex om branches te filteren</target>
+        <target>Usar regex para filtrar ramas</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Delete obsolete branches</source>
-        <target>Verwijder achterhaalde branches</target>
+        <target>Eliminar ramas obsoletas</target>
         
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
-        <target>Verwijder verouderde branches ouder dan (dagen)</target>
+        <target>Eliminar ramas obsoletas anteriores a (días)</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
-        <target>Verwijder verouderde branches van extern</target>
+        <target>Eliminar ramas obsoletas del remoto</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
-        <target>Verwijder niet-gemergde branches</target>
+        <target>Eliminar ramas sin fusionar</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
-        <target>De branch waar alle branches in gemerged moeten worden</target>
+        <target>Rama con la que todas las ramas deben ser fusionadas</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>Is regex filter hoofdletter gevoelig?</target>
+        <target>El filtro de expresiones regulares, ¿distingue mayúsculas de minúsculas?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>Regex filter om branches te verwijderen</target>
+        <target>Expresión regular para filtrar las ramas a ser borradas</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
-        <target>Zoek branch die niet voldoen aan de regex</target>
+        <target>Buscar ramas que no coincidan con la expresión regular</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
-        <target>Externe naam van verouderde branches moeten worden verwijderd</target>
+        <target>Nombre del repositorio remoto a partir del cual las ramas obsoletas deben ser borradas</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
+        <target>Usá una expresión regular para filtrar las ramas que se van a eliminar</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
-        <target>Zoek grote bestanden</target>
+        <target>Encontrar archivos grandes</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>Sluiten</target>
+        <target>Cerrar</target>
         
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
-        <target>Gecomprimeerde grootte</target>
+        <target>Tamaño comprimido</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Verwijder</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>Weet u zeker dat u de geselecteerde regels wilt verwijderen?</target>
+        <target>Está seguro que quiere eliminar los archivos seleccionados?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Verwijder</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>Aantal commits</target>
+        <target>Número de commits</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>Verwijder</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>Reset lokale wijzigingen voor het verwijderen van bestanden. Kies bestanden om te verwijderen. Push geforceerd om data te vervangen op de remote repository.</target>
+        <target>Deshaga los cambios locales antes de eliminar los archivos. Seleccione los archivos a eliminar. Fuerce un push para reemplazar los datos en el repositorio remoto.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
-        <target>Laatste commit datum</target>
+        <target>Fecha del último Commit.</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
         <source>Path</source>
-        <target>Pad</target>
+        <target>Directorio</target>
         
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
@@ -573,221 +574,224 @@ Weet u zeker dat u door wilt gaan?</target>
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
-        <target>Grootte</target>
+        <target>Tamaño</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Find large files</source>
-        <target>Zoek grote bestanden</target>
+        <target>Encontrar archivos grandes</target>
         
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>Zoek bestanden groter dan (Mb)</target>
+        <target>Buscar archivos mayores que (Mb)</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Change Submitted</source>
-        <target>Wijziging gepubliceerd</target>
+        <target>Cambio enviado</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
         <source>Close</source>
-        <target>Sluiten</target>
+        <target>Cerrar</target>
         
       </trans-unit>
       <trans-unit id="labelSubmitted.Text">
         <source>Your change has been submitted for review at the following location:</source>
-        <target>Uw wijziging is verstuurd om te worden gereviewed naar:</target>
+        <target>Su cambio ha sido enviado para revisión en la siguiente ubicación:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Download Gerrit Change</source>
-        <target>Download Gerrit wijziging</target>
+        <target>Descargar cambio Gerrit</target>
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>Beheer externen</target>
+        <target>Administrar remotos</target>
         
       </trans-unit>
       <trans-unit id="Download.Text">
         <source>&amp;Download</source>
-        <target>&amp;Download</target>
+        <target>&amp;Descargar</target>
         
       </trans-unit>
       <trans-unit id="_cannotGetChangeDetails.Text">
         <source>Could not retrieve the change details</source>
-        <target>Kon de wijzigingsdetails niet ophalen</target>
+        <target>No se pudo obtener el detalle del cambio</target>
         
       </trans-unit>
       <trans-unit id="_downloadCaption.Text">
         <source>Download change {0}</source>
-        <target>Download wijziging {0}</target>
+        <target>Descargar cambio {0}</target>
         
       </trans-unit>
       <trans-unit id="_downloadGerritChangeCaption.Text">
         <source>Download Gerrit Change</source>
-        <target>Download Gerrit wijziging</target>
+        <target>Descargar cambio Gerrit</target>
         
       </trans-unit>
       <trans-unit id="_selectChange.Text">
         <source>Please enter a change</source>
-        <target>Voer wijziging in</target>
+        <target>Por favor ingrese un cambio</target>
         
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>Selecteer een externe directorie</target>
+        <target>Elegí un repositorio remoto</target>
         
       </trans-unit>
       <trans-unit id="labelChange.Text">
         <source>Change:</source>
-        <target>Wijziging:</target>
+        <target>Cambio:</target>
         
       </trans-unit>
       <trans-unit id="labelEnterChangeIdOrNumber.Text">
         <source>Enter the Change-Id or the number from the Gerrit URL</source>
-        <target>Voer het Change-Id of het nummer uit de Gerrit URL in</target>
+        <target>Ingrese el Change-Id o el número de la URL Gerrit</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
         <source>Remote:</source>
-        <target>Externe:</target>
+        <target>Remoto:</target>
         
       </trans-unit>
       <trans-unit id="labelTopicBranch.Text">
         <source>Topic branch:</source>
-        <target>Topic branch:</target>
+        <target>Rama tema:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Publish Gerrit Change</source>
-        <target>Gerrit Change publiceren</target>
+        <target>Publicar cambio Gerrit</target>
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>Beheer externen</target>
+        <target>Administrar remotos</target>
         
       </trans-unit>
       <trans-unit id="Publish.Text">
         <source>&amp;Publish</source>
-        <target>%Publiceer</target>
+        <target>&amp;Publicar</target>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
         <source>Publish change</source>
-        <target>Publiceer wijziging</target>
+        <target>Publicar cambio</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
-        <target>Gerrit Change publiceren</target>
+        <target>Publicar cambio Gerrit</target>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
         <source>Please enter a branch</source>
-        <target>Voer naam vertakking in</target>
+        <target>Por favor ingrese una rama</target>
         
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>Selecteer een externe directorie</target>
+        <target>Elegí un repositorio remoto</target>
         
       </trans-unit>
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
-        <target>Vertakking:</target>
+        <target>Rama:</target>
         
       </trans-unit>
       <trans-unit id="labelCc.Text">
         <source>CC:</source>
+        <target>CC:</target>
         
       </trans-unit>
       <trans-unit id="labelHashtag.Text">
         <source>Hashtag:</source>
+        <target>Etiqueta:</target>
         
       </trans-unit>
       <trans-unit id="labelPublishType.Text">
         <source>Publish Type:</source>
+        <target>Tipo de Publicación:</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
         <source>Remote:</source>
-        <target>Externe:</target>
+        <target>Remoto:</target>
         
       </trans-unit>
       <trans-unit id="labelReviewers.Text">
         <source>Reviewer(s):</source>
-        <target>Reviewer(s):</target>
+        <target>Revisor(es):</target>
         
       </trans-unit>
       <trans-unit id="labelTopic.Text">
         <source>Topic:</source>
-        <target>Onderwerp:</target>
+        <target>Tema:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .gitreview</source>
-        <target>Wijzig .gitreview</target>
+        <target>Editar .gitreview</target>
         
       </trans-unit>
       <trans-unit id="Save.Text">
         <source>Save</source>
-        <target>Opslaan</target>
+        <target>Guardar</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitreview.Text">
         <source>Failed to save .gitreview.
 Check if file is accessible.</source>
-        <target>Het opslaan van .gitreview is mislukt.
-Controleer bestandstoegang.</target>
+        <target>Fallo al guardar .gitreview.
+Compruebe que el archivo sea accesible.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitreviewCaption.Text">
         <source>Failed to save .gitreview</source>
-        <target>Het opslaan van .gitreview is mislukt</target>
+        <target>Fallo al guardar .gitreview</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
         <source>.gitreview is only supported when there is a working directory.</source>
-        <target>.gitreview wordt alleen ondersteund in een werk directorie.</target>
+        <target>.gitreview sólo está soportado cuando hay un directorio de trabajo.</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
-        <target>Geen werkdirectory</target>
+        <target>No hay ningún directorio de trabajo</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .gitreview?</source>
-        <target>Wijzigingen in .gitreview opslaan?</target>
+        <target>¿Guardar cambios a .gitreview?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestionCaption.Text">
         <source>Save changes?</source>
-        <target>Wijzigingen opslaan?</target>
+        <target>¿Querés guardar los cambios?</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -803,10 +807,10 @@ project=department/project.git
 defaultbranch=master
 defaultremote=review
 defaultrebase=0</source>
-        <target>Voeg eerst de configuratie 
-van Gerrit toe aan .gitreview.
+        <target>Provea la configuración de
+.gitreview para usar Gerrit.
 
-Voorbeeld:
+Configuración de ejemplo:
 
 [gerrit]
 host=review.example.com
@@ -819,71 +823,71 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="lnkGitReviewHelp.Text">
         <source>GitHub page for git-review</source>
-        <target>GitHub pagina voor git-review</target>
+        <target>Página de GitHub para git-review</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
-        <target>Statistieken</target>
+        <target>Estadísticas</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
-        <target>Bezig...</target>
+        <target>Cargando…</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
-        <target>Laden...</target>
+        <target>Cargando...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
-        <target>Laden...</target>
+        <target>Cargando...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
-        <target>Laden...</target>
+        <target>Cargando...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
-        <target>Laden...</target>
+        <target>Cargando...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
-        <target>Totaal commits</target>
+        <target>Commits totales.</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
-        <target>Totaal regels code</target>
+        <target>Total de líneas de código</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
-        <target>Totaal regels code</target>
+        <target>Total de líneas de código</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
-        <target>Totaal regels code</target>
+        <target>Total de líneas de código</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>{0:N0} Lege regels ({1:P1})</target>
+        <target>{0:N0} Líneas en blanco ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0:N0} Regels commentaar ({1:P1})</target>
+        <target>{0:N0} Líneas con comentarios ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
@@ -893,218 +897,226 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>{0:N0} Commits door {1}</target>
+        <target>{0:N0} Commits de {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>{0:N0} Regels code</target>
+        <target>{0:N0} Líneas de código</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{0:N0}  Regels code in {1} bestanden ({2:P1})</target>
+        <target>{0:N0} Líneas de código en {1} archivos ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>{0:N0} Regels code ({1:P1})</target>
+        <target>{0:N0} Líneas de código ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>{0:N0} Regels in designer-bestanden ({1:P1})</target>
+        <target>{0:N0} Líneas en archivos de diseño ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>{0:N0} Regels productiecode ({1:P1})</target>
+        <target>{0:N0} Líneas de código de producción ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>{0:N0} Regels testcode</target>
+        <target>{0:N0} Líneas de código de prueba</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>{0:N0} Regels test code ({1:P1})</target>
+        <target>{0:N0} Líneas de código de prueba ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
-        <target>Regels code per taal</target>
+        <target>Líneas de código por lenguaje</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
-        <target>Commits per persoon</target>
+        <target>Commits por contribuidor</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
-        <target>Regels code per type</target>
+        <target>Líneas de código por tipo</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
-        <target>Regels test code</target>
+        <target>Líneas de código de pruebas</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
-        <target>Impact</target>
+        <target>Impacto</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} ({1} Commits, {2} Gewijzigde Regels)</target>
+        <target>{0} ({1} Commits, {2} Líneas con cambios)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
-        <target>Inclusief submodules</target>
+        <target>Incluyendo submódulos</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
-        <target>Auteur</target>
+        <target>Autor</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Gerrit Plugin</source>
-        <target>Gerrit Plugin</target>
+        <target>Complemento Gerrit</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
         <source>Close</source>
-        <target>Sluiten</target>
+        <target>Cerrar</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
         <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target>El plugin Gerrit de Git Extensions brinda integración con Gerrit, y está basado en la herramienta git-review.
+
+Para habilitar Gerrit para un repositorio debe existir el archivo .gitreview, lo que se puede hacer mediante la opción de menú Repositorio | Editar .gitreview. Para más información acerca del archivo .gitreview y de la herramienta git-review, mirá el siguiente enlace.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="_publishTypeDraft.Text">
         <source>Draft</source>
+        <target>Borrador</target>
         
       </trans-unit>
       <trans-unit id="_publishTypePrivate.Text">
         <source>Private</source>
-        <target>Prive</target>
+        <target>Privado</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeReview.Text">
         <source>For Review</source>
+        <target>Para Revisión</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeWip.Text">
         <source>Work-in-Progress</source>
+        <target>Trabajo-en-Progreso</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Gerrit Code Review</source>
-        <target>Gerrit Code Review</target>
+        <target>Revisión de código Gerrit</target>
         
       </trans-unit>
       <trans-unit id="_downloadGerritChange.Text">
         <source>Download Gerrit Change</source>
-        <target>Download Gerrit wijziging</target>
+        <target>Descargar cambio Gerrit</target>
         
       </trans-unit>
       <trans-unit id="_editGitReview.Text">
         <source>Edit .gitreview</source>
-        <target>Wijzig .gitreview</target>
+        <target>Editar .gitreview</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHook.Text">
         <source>Install Hook</source>
-        <target>Installeer Hook</target>
+        <target>Instalar Gancho</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
         <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>Kon het commit-msg bestand niet downloaden. Installeer de commit-msg hook handmatig.</target>
+        <target>No se pudo descargar el archivo commit-msg. Instale el gancho commit-msg manualmente.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
         <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
+        <target>No se pudo crear el directorio hooks. Probá crear el directorio manualmente e intentá de vuelta.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
         <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit vereist een commit-msg hook. Wilt u deze installeren in uw repository?</target>
+        <target>Gerrit requiere que esté instalado un gancho commit-msg. ¿Desea instalar el gancho commit-msg en su repositorio?</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookShortText.Text">
         <source>Install commit-msg hook</source>
-        <target>Installeer commit-msg hook</target>
+        <target>Instalar gancho commit-msg</target>
         
       </trans-unit>
       <trans-unit id="_predefinedGerritVersion.Caption">
         <source>Treat Gerrit as having version</source>
+        <target>Tratar a Gerrit como si tuviera versión</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
         <source>Publish Gerrit Change</source>
-        <target>Gerrit Change publiceren</target>
+        <target>Publicar cambio Gerrit</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="_settingsError.Text">
         <source>Error loading .gitreview file.</source>
-        <target>Fout bij laden van .gitreview bestand</target>
+        <target>Error al cargar archivo .gitreview.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
         <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        <target>De remote &quot;{0}&quot; die in .gitreview vermeld staat als &quot;defaultremote&quot;verwijst niet naar een geconfigureerde remote. Of maak deze remote aan of wijzig het .gitreview bestand.</target>
+        <target>El remoto &quot;{0}&quot; especificado con la opción &quot;defaultremote&quot; en el archivo gitreview no se refiere a un remoto configurado. Cree este remoto o cambie la opción en el archivo gitreview.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorFileNotFound.Text">
         <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        <target>Kan het &quot;.gitreview&quot; bestand niet vinden in de werk directory.</target>
+        <target>No se encontró el archivo &quot;.gitreview&quot; en el directorio de trabajo.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorHostNotEntered.Text">
         <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
-        <target>De instelling &quot;host&quot; in het bestand &quot;.gitreview&quot; is vereist.</target>
+        <target>El ajuste &quot;host&quot; en el archivo .gitreview es obligatorio.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorPortNotNumeric.Text">
         <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
-        <target>De waarde voor &quot;port&quot; in het &quot;.gitreview&quot; bestand mag alleen uit cijfers bestaan.</target>
+        <target>El &quot;port&quot; especificado en el archivo .gitreview sólo puede contener dígitos.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorProjectNotEntered.Text">
         <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        <target>De instelling &quot;project&quot; in het .gitreview bestand is vereist.</target>
+        <target>El ajuste &quot;project&quot; del archivo .gitreview es obligatorio.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
@@ -1113,90 +1125,92 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
-        <target>Een goed branch model voor je Git project...</target>
+        <target>Un buen modelo de ramas para tu proyecto con Git...</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>Laden...</target>
+        <target>Cargando...</target>
         
       </trans-unit>
       <trans-unit id="_noBranchExist.Text">
         <source>No {0} branches exist.</source>
-        <target>Er bestaan geen {0} branches.</target>
+        <target>Ninguna rama {0} existe.</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
         <source>Close</source>
-        <target>Sluiten</target>
+        <target>Cerrar</target>
         
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
-        <target>Start!</target>
+        <target>Iniciar!</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
-        <target>Finish</target>
+        <target>Finalizar</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
-        <target>Init GitFlow</target>
+        <target>Iniciar GitFlow</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
-        <target>Publiceer</target>
+        <target>Publicar</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
         <source>Pull</source>
-        <target>Ophalen</target>
+        <target>Pull</target>
         
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
-        <target>gebaseerd op:</target>
+        <target>basado en:</target>
         
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
+        <target>Hacer push al terminar</target>
         
       </trans-unit>
       <trans-unit id="cbSquash.Text">
         <source>Squash</source>
+        <target>Aplastar</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
-        <target>Beheer bestaande branches:</target>
+        <target>Gestionar ramas existentes:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
-        <target>Start branch:</target>
+        <target>Iniciar rama:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
-        <target>branch:</target>
+        <target>rama:</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
-        <target>Verwachte naam:</target>
+        <target>Nombre esperado:</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
-        <target>commando:</target>
+        <target>comando:</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
-        <target>Remote om van te pullen:</target>
+        <target>Remoto a pullear:</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
@@ -1211,22 +1225,22 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
-        <target>[prefix]/</target>
+        <target>[prefijo]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
-        <target>Over GitFlow</target>
+        <target>Acerca de GitFlow</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
-        <target>Resultaat van uitvoeren git flow</target>
+        <target>Resultado de ejecutar el commando git flow</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>GitFlow</source>
@@ -1235,7 +1249,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>GitHub</source>
@@ -1244,57 +1258,60 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
+        <target>GitHub (Enterprise) hostname</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
-        <target>OAuth Token</target>
+        <target>Token OAuth</target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        <target>Ya tiene un token de OAuth. Para obtener uno nuevo, elimine primero el antiguo en Extensiones &gt; Configuraciones.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
+        <target>Ver en {0}</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Impact Graph</source>
-        <target>Impact Grafiek</target>
+        <target>Gráfico de Impacto</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Statistics</source>
-        <target>Statistieken</target>
+        <target>Estadísticas</target>
         
       </trans-unit>
       <trans-unit id="_codeFiles.Caption">
         <source>Code files</source>
-        <target>Code bestanden</target>
+        <target>Archivos de código</target>
         
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>Te negeren directories (EndsWith)</target>
+        <target>Directorios a ignorar (EndsWith)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
-        <target>Negeer submodules</target>
+        <target>Ignorar submódulos</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Gource</source>
@@ -1303,44 +1320,43 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
-        <target>{0} bytes gedownload.</target>
+        <target>{0} bytes descargados.</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Kan Gource niet vinden.
-Download Gource, a.u.b., en stel het correcte pad in in het plugin instellingen scherm.</target>
+        <target>No se encuentra Gource. Por favor, descargue Gource y configure la ruta en el diálogo de configuración de extensiones.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>De huidige directory is geen geldige git repository.
+        <target>El directorio actual no es un repositorio válido de git.
 
-Gource kan alleen gestart worden in een geldige git repository.</target>
+Gource sólo puede ser iniciado desde un repositorio válido de git.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
-        <target>Het pad naar Gource is niet ingesteld.
+        <target>No hay una ruta de Gourge configurada
 
-Wilt u automatisch Gource downloaden?</target>
+¿Desea que se descargue Gourge automáticamente?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
-        <target>Downloaden</target>
+        <target>Descargar</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Downloaden mislukt.
-Download Gource en stel het pad in in het plugins instellingen scherm.</target>
+        <target>Descarga fallida.
+Por favor, descargue Gource y configure la ruta en el diálogo de configuración de extensiones.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1350,31 +1366,31 @@ Download Gource en stel het pad in in het plugins instellingen scherm.</target>
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
-        <target>Argumenten</target>
+        <target>Argumentos</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
-        <target>Gource is gedownload en ge-unzipt.</target>
+        <target>Gource ha sido descargado y descomprimido.</target>
         
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>Pad naar Gource</target>
+        <target>Ruta a Gource</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>Kan Gource niet vinden in het opgegeven pad: {0}.
+        <target>No se ha podido encontrar Gourge en la ruta de configuración: {0}
 
-Wilt het het pad opnieuw instellen?</target>
+¿Desea reiniciar la ruta de configuración?</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
@@ -1383,357 +1399,363 @@ Wilt het het pad opnieuw instellen?</target>
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
-        <target>Argumenten</target>
+        <target>Argumentos</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>Bladeren</target>
+        <target>Mostrar</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>Bladeren</target>
+        <target>Mostrar</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Start</source>
-        <target>Start</target>
+        <target>Inicio</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
-        <target>Pad naar Gource</target>
+        <target>Ruta a Gource</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>Repository</target>
+        <target>Repositorio</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>Gource project</target>
+        <target>Proyecto Gourge.</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
-        <target>Gource command line</target>
+        <target>Línea de comandos de Gourge.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
-        <target>Negeer build voor branch</target>
+        <target>Ignorar el build para la rama</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>URL van Jenkins server</target>
+        <target>URL del servidor Jenkins</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>Projectnaam</target>
+        <target>Nombre del proyecto</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Jira Commit Hint</source>
-        <target>Jira Commit Hint</target>
+        <target>Pista del commit de Jira</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">
         <source>First Task Preview</source>
+        <target>Vista preliminar de la primera tarea</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultMessage.Text">
         <source>[Empty Jira Query Result]</source>
+        <target>[Resultado de la Consulta de Jira vacío]</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
         <source>Invalid Jira url</source>
+        <target>Url de Jira no válida</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
         <source>A valid url is required to launch the Jira query helper</source>
+        <target>Se requiere una url válida para lanzar el ayudante de consultas de Jira</target>
         
       </trans-unit>
       <trans-unit id="JiraFieldsLabel.Text">
         <source>Jira fields</source>
-        <target>Jira velden</target>
+        <target>Campos de Jira</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
         <source>Preview</source>
-        <target>Voorbeeld</target>
+        <target>Vista previa</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperLinkText.Text">
         <source>Open the query helper inside Jira</source>
+        <target>Abrir el ayudante de consultas en Jira</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
+        <target>Incapaz de abrir el ayudante de consultas</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
-        <target>Jira inloggegevens</target>
+        <target>Credenciales de Jira</target>
         
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
-        <target>Jira hint plugin ge-enabled</target>
+        <target>El plugin Jira Hint está habilitado</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
-        <target>JQL Query</target>
+        <target>Consulta JQL</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
-        <target>Beheer Sjabloon</target>
+        <target>Plantilla de mensaje</target>
         
       </trans-unit>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
-        <target>Jira URL</target>
+        <target>URL de Jira</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
-        <target>Proxy Switcher</target>
+        <target>Cambiador de proxy</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>Globaal toepassen</target>
+        <target>Aplicar globalmente</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
-        <target>Globale http.proxy:</target>
+        <target>http.proxy global:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
-        <target>Lokale http.proxy:</target>
+        <target>http.proxy local:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
-        <target>Proxy instellen</target>
+        <target>Establecer proxy</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
-        <target>Geen proxy</target>
+        <target>Quitar proxy</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>Er is geen proxy ingesteld. Vul de proxy server in in het instellingen scherm van de plugin.</target>
+        <target>No hay ningún proxy configurado. Por favor configure el host del proxy en los ajustes del plugin.</target>
         
       </trans-unit>
       <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
-        <target>Proxy Switcher</target>
+        <target>Cambiador de proxy</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Proxy Switcher</source>
-        <target>Proxy Switcher</target>
+        <target>Cambiador de proxy</target>
         
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
-        <target>HTTP proxy</target>
+        <target>Proxy HTTP</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
-        <target>HTTP proxy port</target>
+        <target>Puerto del proxy HTTP</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
-        <target>Wachtwoord</target>
+        <target>Contraseña</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>Gebruikersnaam</target>
+        <target>Nombre de usuario:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>Release Notes Generator</target>
+        <target>Generador de Notas de Versión.</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
-        <target>Ongeldige invoer</target>
+        <target>Entrada no válida</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Commit log van '{0}' tot '{1}' ({2}):</target>
+        <target>Log de commit desde '{0}' hasta '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
-        <target>Specificeer de van-commit</target>
+        <target>El campo &quot;Desde&quot; debe ser especificado</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
-        <target>Specificeer de naar-commit</target>
+        <target>El campo &quot;Hacia&quot; debe ser especificado</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
-        <target>als HTML tabel</target>
+        <target>como tabla HTML</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>als tekst tabel (spaties)</target>
+        <target>como tabla de texto (espacios)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
-        <target>als tekst tabel (tabs)</target>
+        <target>como tabla de texto (tabulaciones)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
-        <target>originele output</target>
+        <target>resultado original</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
-        <target>Genereer</target>
+        <target>Generar</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
-        <target>Resultaat</target>
+        <target>Resultado</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>Kopiëren naar het klembord</target>
+        <target>Copiar al portapapeles</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>Commit expressie &quot;Naar&quot; (inclusief):</target>
+        <target>Expresión de commit &quot;Hasta&quot; (inclusive):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
-        <target>scheid kolommen met spaties</target>
+        <target>separar columnas con espacios</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>Het klembord zal HTML code (platte tekst) en HTML formaat bevatten.
-Dit kan geplakt worden in programma's als MS Word en LibreOffice Writer.</target>
+        <target>El portapapeles tendrá código HTML (texto plano) y formato HTML que puede ser pegado en programas como MS Word o LibreOffice Writer.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>Commit expressie &quot;Van&quot; (exclusief):</target>
+        <target>Expresión de commit &quot;Desde&quot; (exclusive):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>git log argumenten:</target>
+        <target>argumentos para git log</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>{0} = van; {1} = naar</target>
+        <target>{0} = desde; {1} = hasta</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>Sortering: Meest recente revisies bovenaan.</target>
+        <target>Orden: Las revisiones más recientes aparecen arriba.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
-        <target>Aantal revisies =</target>
+        <target>Número de revisiones = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
-        <target>(Commit expressies kunnen commit hashes,
-branch namen of tag namen zijn)</target>
+        <target>(Las expresiones de commit pueden ser: hashes de commits,
+nombres de ramas, ó nombres de tags)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
-        <target>as is</target>
+        <target>sin modificaciones</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>scheid kolommen met tabs</target>
+        <target>separar columnas con tabulaciones</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
         <source>n/a</source>
-        <target>n/b</target>
+        <target>n/a</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Name.Text">
         <source>Release Notes Generator</source>
-        <target>Release Notes Generator</target>
+        <target>Generador de Notas de Versión.</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
+        <target>Extraer datos de la URL del resultado de un build copiada en el portapapeles</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>Ga naar token management pagina</target>
+        <target>Ir a la página de administración de tokens</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Could not extract data</source>
-        <target>Kan data niet extraheren</target>
+        <target>No se pudieron extraer los datos</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1741,16 +1763,24 @@ branch namen of tag namen zijn)</target>
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
+        <target>El portapapeles no contiene una URL de build válida.
+
+Copiá la URL del build en el portapapeles antes de intentar nuevamente.
+(Por lo menos tiene que incluir el parámetro &quot;buildId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        <target>Error al intentar recuperar la información de la definición del build de la URL.
+
+Asegurate de que la URL sea válida y de que el token de la API tenga acceso al build y a la información del proyecto.</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
         <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        <target>No se puede recuperar la información de la definición del build sin el token de la API. El campo va a quedar en blanco.</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1758,31 +1788,38 @@ Please ensure that the url is valid and that the API token has access to build a
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>Ejemplo:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
  - 'Build (read)'
  - 'Project and team (read)'</source>
+        <target>Tenés que crear un token con los siguientes alcances:
+- 'Build (para lectura)'
+- 'Proyecto y equipo (para lectura)'</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>De regular expressie voor &quot;Bouw definitienaam&quot; is niet geldig en wordt niet opgeslagen!</target>
+        <target>¡La expresión regular 'Build definition name' no es válida y no será guardada!</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
-        <target>Log als gast om het bouw rapport weer te geven</target>
+        <target>Inicia sesión como invitado para visualizar el informe de Builds</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
-        <target>Build url ongeldig</target>
+        <target>Url de Build no válida</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1790,41 +1827,41 @@ Please ensure that the url is valid and that the API token has access to build a
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>Het klembord bevat geen geldige build url.
+        <target>El portapapeles no contiene una url de Build válida
 
-Kopieer a.u.b. eerst de url van de build naar het klembord.
-(De url bevat op zijn minst de &quot;buildTypeId&quot; parameter)</target>
+Por favor, copie en el portapapeles una url de la Build antes de reintentarlo.
+(Debería contener al menos el parámetro &quot;buildTypeId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
-        <target>Fout tijdens het laden van de projecten en build lijst</target>
+        <target>Se ha producido un error cuando se cargaban los proyectos y la lista de Builds</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>Laden van projecten en build lijst mislukt.
-Controleer a.u.b. de server url.</target>
+        <target>Se produjo un fallo al cargar los proyecto y la lista de Builds.
+Por favor, verifique la url del servidor.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>De regular expressie voor &quot;Bouw Id Filter&quot; is niet geldig en wordt niet opgeslagen!</target>
+        <target>¡La expresión regular &quot;Build Id Filter&quot; no es válida y no será guardada!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
-        <target>Haal de gegevens uit de build url op het klembord</target>
+        <target>Extraer la información de la ruta de compilación copiada en el portapapeles</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>De regular expressie voor &quot;Bouw definitienaam&quot; is niet geldig en wordt niet opgeslagen!</target>
+        <target>¡La expresión regular 'Build definition name' no es válida y no será guardada!</target>
         
       </trans-unit>
     </body>

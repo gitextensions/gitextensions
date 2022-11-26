@@ -1,9 +1,9 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>それぞれのビルド結果に対してビルド状態サマリ内にテスト結果を表示する（ネットワークが集中します！）</target>
+        <target>それぞれのビルド結果に対してビルド状態サマリ内にテスト結果を表示(ネットワークが集中します!)</target>
         
       </trans-unit>
     </body>
@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>fetch 後に表示を更新</target>
+        <target>フェッチ後に表示を更新</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
@@ -65,7 +65,7 @@
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>設定された秒ごとに fetch (0 で無効)</target>
+        <target>設定された秒ごとにフェッチ (0 で無効)</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
@@ -489,7 +489,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>正規表現で削除するブランチをフィルタ</target>
+        <target>削除するブランチをフィルタする正規表現</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
@@ -504,7 +504,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>正規表現を利用して削除するブランチをフィルタ</target>
+        <target>削除するブランチのフィルタに正規表現を使用</target>
         
       </trans-unit>
     </body>
@@ -523,7 +523,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
-        <target>圧縮サイズ</target>
+        <target>圧縮後のサイズ</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
@@ -630,7 +630,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_cannotGetChangeDetails.Text">
         <source>Could not retrieve the change details</source>
-        <target>変更の詳細を復元できませんでした。</target>
+        <target>変更の詳細を取得できませんでした</target>
         
       </trans-unit>
       <trans-unit id="_downloadCaption.Text">
@@ -650,7 +650,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>リモートリポジトリを選択してください。</target>
+        <target>リモートリポジトリを選択してください</target>
         
       </trans-unit>
       <trans-unit id="labelChange.Text">
@@ -709,7 +709,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>リモートリポジトリを選択してください。</target>
+        <target>リモートリポジトリを選択してください</target>
         
       </trans-unit>
       <trans-unit id="labelBranch.Text">
@@ -753,7 +753,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .gitreview</source>
-        <target>.gitreviewを編集</target>
+        <target>.gitreview を編集</target>
         
       </trans-unit>
       <trans-unit id="Save.Text">
@@ -770,7 +770,7 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_cannotAccessGitreviewCaption.Text">
         <source>Failed to save .gitreview</source>
-        <target>.gitreviewの保存に失敗しました。</target>
+        <target>.gitreviewの保存に失敗しました</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
@@ -785,7 +785,7 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .gitreview?</source>
-        <target>.gitreviewの変更を保存しますか？</target>
+        <target>.gitreview の変更を保存しますか？</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestionCaption.Text">
@@ -1041,12 +1041,12 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_editGitReview.Text">
         <source>Edit .gitreview</source>
-        <target>.gitreviewを編集</target>
+        <target>.gitreview を編集</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHook.Text">
         <source>Install Hook</source>
-        <target>フックのインストール</target>
+        <target>フックをインストール</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
@@ -1090,7 +1090,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
         <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        <target>.gitreview ファイルで &quot;defaultremote&quot;に設定されているリモートの記述 “{0}”は、正しいリモートを参照していません。 所定の場所にリモートを作成するか、 .gitreview ファイルの設定を変更してください。</target>
+        <target>.gitreview ファイルで &quot;defaultremote&quot;に設定されているリモートの記述 「{0}」は、正しいリモートを参照していません。 所定の場所にリモートを作成するか、 .gitreview ファイルの設定を変更してください。</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorFileNotFound.Text">
@@ -1144,17 +1144,17 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
-        <target>開始！</target>
+        <target>開始</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
-        <target>終了</target>
+        <target>完了</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
-        <target>GitFlowを初期化</target>
+        <target>GitFlow を初期化</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
@@ -1184,7 +1184,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
-        <target>既存のブランチをマージ:</target>
+        <target>既存のブランチの管理:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
@@ -1414,7 +1414,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Start</source>
-        <target>スタート</target>
+        <target>開始</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1472,7 +1472,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="EmptyQueryResultMessage.Text">
         <source>[Empty Jira Query Result]</source>
-        <target>[ Jiraのクエリー結果がありません ]</target>
+        <target>[Jiraのクエリ結果がありません]</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
@@ -1502,7 +1502,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
-        <target>Jiraのクエリーヘルパーを開くことができません</target>
+        <target>Jiraクエリヘルパーを開くことができません</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
@@ -1512,7 +1512,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
-        <target>Jiraヒントプラグイン有効</target>
+        <target>Jiraヒントプラグインが有効</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
@@ -1700,7 +1700,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>整列：最新のリビジョンを上に表示。</target>
+        <target>並べ替え: 最新のリビジョンを上に表示。</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">

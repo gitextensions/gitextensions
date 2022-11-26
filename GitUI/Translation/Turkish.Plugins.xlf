@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -104,7 +104,7 @@
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>Deponuz, BitBucket Sunucusunda barındırılmıyor.</target>
+        <target>Depon, BitBucket Sunucusunda barındırılmıyor.</target>
         
       </trans-unit>
     </body>
@@ -307,7 +307,7 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
-        <target>Eski dalları silme</target>
+        <target>Eski dalları sil</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
@@ -342,7 +342,7 @@
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>Seçili {0} dalı silmek istediğinize emin misiniz?</target>
+        <target>Seçili {0} dalı silmek istediğine emin misin?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
@@ -381,7 +381,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>Birleştirilmemiş dalların silinmesi, teslimlerin sarkmasına neden olur. Dikkatli kullanın!</target>
+        <target>Birleştirilmemiş dalların silinmesi, teslimlerin sarkmasına neden olur. Dikkatli kullan!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -495,7 +495,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
-        <target> Regex (düzenli ifadesi) ile eşleşmeyen dalları ara</target>
+        <target>Regex (düzenli ifadesi) ile eşleşmeyen dalları ara</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
@@ -534,7 +534,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>Seçili dosyaları silmek istediğinize emin misiniz?</target>
+        <target>Seçili dosyaları silmek istediğine emin misin?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -554,7 +554,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>Dosyaları silmeden önce yerel değişiklikleri sıfırlayın. Silmek istediğiniz dosyaları seçin. Uzak depodaki verileri değiştirmek için zorla itin.</target>
+        <target>Dosyaları silmeden önce yerel değişiklikleri sıfırla. Silmek istediğin dosyaları seç. Uzak depodaki verileri değiştirmek için zorla it.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
@@ -730,7 +730,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="labelPublishType.Text">
         <source>Publish Type:</source>
-        <target>Yayın Türü: </target>
+        <target>Yayın Türü:</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
@@ -1062,7 +1062,7 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
         <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit'i kullanmak için commit-msg kancasına (hook) ihtiyacınız var. Commit-msg kancasını (hook), deponuza yüklemek istiyor musunuz?</target>
+        <target>Gerrit'i kullanmak için commit-msg kancasına (hook) ihtiyacın var. Commit-msg kancasını (hook), depona yüklemek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookShortText.Text">
@@ -1268,7 +1268,7 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
-        <target>Zaten bir tane OAuth jetonunuz (token) var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar'ı içerisinden eski jetonu (token'u) silin.</target>
+        <target>Zaten bir tane OAuth jetonun var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar'ı içerisinden eski jetonu sil.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -1336,7 +1336,7 @@ Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlay
 Gource can be only be started from a valid git repository.</source>
         <target>Geçerli dizin geçerli bir git deposu değil.
 
-Gource yalnızca geçerli bir git deposundan başlatılabilir. </target>
+Gource yalnızca geçerli bir git deposundan başlatılabilir.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="de">
     <body>
       <trans-unit id="cbLoadTestResults.Text">

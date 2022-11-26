@@ -1,797 +1,804 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>[Ḓīşƥŀȧẏ ŧḗşŧ řḗşŭŀŧş īƞ ƀŭīŀḓ şŧȧŧŭş şŭḿḿȧřẏ ƒǿř ḗȧƈħ ƀŭīŀḓ řḗşŭŀŧ (ƞḗŧẇǿřķ īƞŧḗƞşīṽḗ!) 鶱ϱϰϱ鶱ϑ鶱 ǅΐϑ鶱 ǋ]</target>
+        <target>在每个构建结果的构建状态摘要中显示测试结果（会大量使用网络！）</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Auto compile SubModules</source>
-        <target>[Ȧŭŧǿ ƈǿḿƥīŀḗ ŞŭƀḾǿḓŭŀḗş ẛϑ靐ϵ ǈϐςϰ靐ϰ]</target>
+        <target>自动编译子模块</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>[Ḓǿ ẏǿŭ ẇȧƞŧ ŧǿ ƀŭīŀḓ {0}?
+        <target>你要构建 {0} 吗?
 
-{1} ϐϐ ǲϐϑ ǅǈ靐]</target>
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>[Ƥŀḗȧşḗ ḗƞŧḗř ƈǿřřḗƈŧ ḾŞƁŭīŀḓ ƥȧŧħ īƞ ŧħḗ ƥŀŭɠīƞ şḗŧŧīƞɠş ḓīȧŀǿɠ ȧƞḓ ŧřẏ ȧɠȧīƞ. ı衋ΐϰſΐ ǋϕǲ靐ϐ]</target>
+        <target>请在 &quot;插件设置&quot; 对话框中输入正确的 msbuild 路径, 然后重试。</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>[ḿşƀŭīŀḓ.ḗẋḗ ȧřɠŭḿḗƞŧş ǋϐϰΰǲΰ衋ǅϵ衋]</target>
+        <target>msbuild.exe 引數
+</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>[Ḗƞȧƀŀḗḓ ıΰϰıςǈ衋]</target>
+        <target>啟用</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>[Ƥȧŧħ ŧǿ ḿşƀŭīŀḓ.ḗẋḗ ϵϵǋϵ ϱǈ ϐ衋靐]</target>
+        <target>msbuild.exe 的路径</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en">
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Periodic background fetch</source>
-        <target>[Ƥḗřīǿḓīƈ ƀȧƈķɠřǿŭƞḓ ƒḗŧƈħ ϑϕΐǋ靐ǈϱς ϰǲ]</target>
+        <target>周期性背景提取</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>[Řḗƒřḗşħ ṽīḗẇ ȧƒŧḗř ƒḗŧƈħ ϑϑϖϵǲϖΰ ǅǲ]</target>
+        <target>拉取后刷新视图</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>[Ƒḗŧƈħ ȧŀŀ şŭƀḿǿḓŭŀḗş ϱ鶱ǈϰϖ ΐϕϕ ſſ]</target>
+        <target>拉取所有子模块</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>[Ƒḗŧƈħ ḗṽḗřẏ (şḗƈǿƞḓş) - şḗŧ ŧǿ 0 ŧǿ ḓīşȧƀŀḗ ǋϕǅſǋ ſϱ靐ϱ]</target>
+        <target>每（几）秒自动拉取一次 - 设为 0 以禁用</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
-        <target>[Ȧřɠŭḿḗƞŧş ǿƒ ɠīŧ ƈǿḿḿȧƞḓ ŧǿ řŭƞ ϖϱϱẛſΐ靐ϕǋ ΐ]</target>
+        <target>git 命令运行参数</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BitbucketPlugin" source-language="en">
+  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
-        <target>[Şƥḗƈīƒẏ ŧħḗ ƀȧşḗ ŬŘĿ ŧǿ Ɓīŧƀŭƈķḗŧ ςǈ衋ϐςıς ςϐ]</target>
+        <target>指定 Bitbucket 服务器的根 URL</target>
         
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
         <source>Disable SSL verification</source>
-        <target>[Ḓīşȧƀŀḗ ŞŞĿ ṽḗřīƒīƈȧŧīǿƞ ſ靐ϕΰϵϕϖ ΰı]</target>
+        <target>禁用SSL驗證
+</target>
         
       </trans-unit>
       <trans-unit id="BitbucketPassword.Caption">
         <source>Bitbucket Password</source>
-        <target>[Ɓīŧƀŭƈķḗŧ Ƥȧşşẇǿřḓ 鶱ſ靐ſ鶱ϰϱϑǋ]</target>
+        <target>Bitbucket 密碼</target>
         
       </trans-unit>
       <trans-unit id="BitbucketUsername.Caption">
         <source>Bitbucket Username</source>
-        <target>[Ɓīŧƀŭƈķḗŧ Ŭşḗřƞȧḿḗ ẛϕϱ鶱ǋǋ鶱鶱ϵ]</target>
+        <target>Bitbucket 使用名稱
+</target>
         
       </trans-unit>
       <trans-unit id="Name.Text">
         <source>Bitbucket Server</source>
-        <target>[Ɓīŧƀŭƈķḗŧ Şḗřṽḗř ẛϱϰΰϑϖ靐ǋΐ ϵ]</target>
+        <target>Bitbucket 伺服器</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>[Ẏǿŭř řḗƥǿşīŧǿřẏ īş ƞǿŧ ħǿşŧḗḓ īƞ ƁīŧƁŭƈķḗŧ Şḗřṽḗř. ΰǋǋϰ ϖǈ]</target>
+        <target>你的檔案庫未被Bitbucket 伺服器託管
+</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en">
+  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Bitbucket Server</source>
-        <target>[Ɓīŧƀŭƈķḗŧ Şḗřṽḗř ǅǋǋΐǅϱϵẛǲ ſ]</target>
+        <target>Bitbucket 伺服器</target>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
-        <target>[{0} ƈǿḿḿīŧŧḗḓ
-{1} ϕϖΐ ϖǋϱϰϕϖſϑ]</target>
+        <target>提交</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>[Ḗřřǿř ς靐ΰ衋ΰ]</target>
+        <target>錯誤</target>
         
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
-        <target>[Řīɠħŧ-ƈŀīƈķ ŧǿ ƈǿƥẏ ŀīƞķ ǋǅı鶱ǅǅǲẛẛẛ]</target>
+        <target>右鍵複製連結
+</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
-        <target>[Şŭƈƈḗşş ϕϵǅǅϵςς]</target>
+        <target>成功</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
-        <target>[Ȧƥƥřǿṽḗ 靐ϰϱςϰ靐ϕ]</target>
+        <target>批准</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
         <source>Create</source>
-        <target>[Ƈřḗȧŧḗ 靐ΰςΰ靐ΐ]</target>
+        <target>建立</target>
         
       </trans-unit>
       <trans-unit id="btnMerge.Text">
         <source>Merge</source>
-        <target>[Ḿḗřɠḗ ıϰΐϵǋ]</target>
+        <target>合併</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
         <source>Pull Request Info</source>
-        <target>[Ƥŭŀŀ Řḗɋŭḗşŧ Īƞƒǿ ǲſϰ衋 靐鶱ϵſςǈΰ]</target>
+        <target>拉取请求信息</target>
         
       </trans-unit>
       <trans-unit id="groupBoxInformation.Text">
         <source>Information</source>
-        <target>[Īƞƒǿřḿȧŧīǿƞ ϰ衋ϖΐϰ鶱ΐǈϖǲı]</target>
+        <target>信息</target>
         
       </trans-unit>
       <trans-unit id="groupBoxPullRequestInfo.Text">
         <source>Pull Request Info</source>
-        <target>[Ƥŭŀŀ Řḗɋŭḗşŧ Īƞƒǿ ſϰΰ鶱 ẛϵǈſϰϐǋ]</target>
+        <target>拉取请求信息</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSource.Text">
         <source>Source</source>
-        <target>[Şǿŭřƈḗ ϱϵ衋ſςϐ]</target>
+        <target>來源</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSourceRepoView.Text">
         <source>Source</source>
-        <target>[Şǿŭřƈḗ ςϑϵϑϕǅ]</target>
+        <target>來源</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTarget.Text">
         <source>Target</source>
-        <target>[Ŧȧřɠḗŧ ẛ鶱ΰϰǋǅ]</target>
+        <target>目標</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTargetRepoView.Text">
         <source>Target</source>
-        <target>[Ŧȧřɠḗŧ ẛǲϵϖϖϖ]</target>
+        <target>目標</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
-        <target>[Ȧŭŧħǿř ϑϑ鶱靐ϱǋ]</target>
+        <target>作者</target>
         
       </trans-unit>
       <trans-unit id="lblBranchView.Text">
         <source>Branch</source>
-        <target>[Ɓřȧƞƈħ ϑ衋ǲϑϐǅ]</target>
+        <target>分支</target>
         
       </trans-unit>
       <trans-unit id="lblDescription.Text">
         <source>Description</source>
-        <target>[Ḓḗşƈřīƥŧīǿƞ ſϵǋǈǲϑẛϖ鶱ςǲ]</target>
+        <target>說明</target>
         
       </trans-unit>
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
-        <target>[Ḓḗşƈřīƥŧīǿƞ ΰςϕ鶱ΰϑǲϖǋς衋]</target>
+        <target>說明</target>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>[Řḗƥǿşīŧǿřẏ ſΰǋ靐ϰΰẛΐϱϖ]</target>
+        <target>檔案庫
+</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
         <source>Reviewer (approved)</source>
-        <target>[Řḗṽīḗẇḗř (ȧƥƥřǿṽḗḓ) ΐϖΐϵϑΐıϖ ϖϵ]</target>
+        <target>檢視者(核准)</target>
         
       </trans-unit>
       <trans-unit id="lblSourceBranch.Text">
         <source>Branch</source>
-        <target>[Ɓřȧƞƈħ ẛϱǅ靐ǋǅ]</target>
+        <target>分支</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>[Řḗƥǿşīŧǿřẏ ẛ靐ſǈϰΐǅϖϰ靐]</target>
+        <target>檔案庫
+</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>[Řḗƥǿşīŧǿřẏ ϕ衋ǋϵϕς鶱靐ϕϐ]</target>
+        <target>檔案庫
+</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
         <source>State</source>
-        <target>[Şŧȧŧḗ ǋϐϖẛǅ]</target>
+        <target>狀態</target>
         
       </trans-unit>
       <trans-unit id="lblTargetBranch.Text">
         <source>Branch</source>
-        <target>[Ɓřȧƞƈħ ǅǲΰςǈǋ]</target>
+        <target>分支</target>
         
       </trans-unit>
       <trans-unit id="lblTargetRepoView.Text">
         <source>Branch</source>
-        <target>[Ɓřȧƞƈħ ϖϕ衋ϰϑς]</target>
+        <target>分支</target>
         
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
-        <target>[Řḗƥǿşīŧǿřẏ ǲϵ鶱ςǈϰǲıẛΐ]</target>
+        <target>檔案庫
+</target>
         
       </trans-unit>
       <trans-unit id="lblTitle.Text">
         <source>Title</source>
-        <target>[Ŧīŧŀḗ ǋϵΐ鶱ς]</target>
+        <target>標題</target>
         
       </trans-unit>
       <trans-unit id="lblTitleView.Text">
         <source>Title</source>
-        <target>[Ŧīŧŀḗ ǈς靐ϖǋ]</target>
+        <target>標題</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>[Ƈřḗȧŧḗ Ƥŭŀŀ Řḗɋŭḗşŧ 靐ıſ鶱ϵǲ ΐϵ鶱ǲ]</target>
+        <target>建立拉取請求</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>[Ṽīḗẇ Ƥŭŀŀ Řḗɋŭḗşŧş ſϖſ衋 ǅǈǅς]</target>
+        <target>檢視拉取請求</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en">
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>[Ƈřḗȧŧḗ ŀǿƈȧŀ ŧřȧƈķīƞɠ ƀřȧƞƈħḗş ǲıſϵǋǲ ϵϱſ]</target>
+        <target>创建本地跟踪分支</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>[Ƈřḗȧŧḗ ŀǿƈȧŀ ŧřȧƈķīƞɠ ƀřȧƞƈħḗş ϕϱıςϕϱ ſǋϕ]</target>
+        <target>创建本地跟踪分支</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
-        <target>[Řḗḿǿŧḗ ŧǿ ƈřḗȧŧḗ ŧřȧƈķīƞɠ ƀřȧƞƈħḗş ƒǿř ſςϐΰıǋ ϰϵ ϖ]</target>
+        <target>创建远程存储库跟踪分支</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en">
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Create local tracking branches</source>
-        <target>[Ƈřḗȧŧḗ ŀǿƈȧŀ ŧřȧƈķīƞɠ ƀřȧƞƈħḗş 鶱ǈǋǲϱϱ ǈǈǋ]</target>
+        <target>创建本地跟踪分支</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en">
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
-        <target>[Ḓḗŀḗŧḗ ǿƀşǿŀḗŧḗ ƀřȧƞƈħḗş ΰςϕ靐ſϱ ϐıǋ]</target>
+        <target>删除废弃的分支</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
         <source>Last author</source>
-        <target>[Ŀȧşŧ ȧŭŧħǿř ΐǅſẛ ϰϐΰǈΐ靐]</target>
+        <target>最后的作者</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>[Ƈŀǿşḗ ıϱ鶱ΰẛ]</target>
+        <target>關閉</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>[Ḓḗŀḗŧḗ ǅϕ衋ϕǅϵ]</target>
+        <target>刪除</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>[Ḓḗŀḗŧḗ řḗḿǿŧḗ ƀřȧƞƈħḗş ƒřǿḿ ǈſϰϰϱǈ ẛϕǈ]</target>
+        <target>删除远程分支</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
         <source>Last message</source>
-        <target>[Ŀȧşŧ ḿḗşşȧɠḗ ϐϐǅı ſǋǈ衋ς]</target>
+        <target>最后的消息</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
         <source>Search branches</source>
-        <target>[Şḗȧřƈħ ƀřȧƞƈħḗş 鶱ϐ鶱ϵϰı ϰϱϐ]</target>
+        <target>搜索分支</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>[Ȧřḗ ẏǿŭ şŭřḗ ŧǿ ḓḗŀḗŧḗ {0} şḗŀḗƈŧḗḓ ƀřȧƞƈħḗş? ΰǈς 靐ϐǋ 靐ϕ]</target>
+        <target>您确定要删除选中的{0}分支吗？</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
-        <target>[{0}/{1} ƀřȧƞƈħḗş şḗŀḗƈŧḗḓ. ϐϐǈϱϵẛ鶱 ϱΰϰ]</target>
+        <target>{0}/{1} 分支被选中.</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
         <source>Cancel</source>
-        <target>[Ƈȧƞƈḗŀ ς鶱ϵ衋ſϕ]</target>
+        <target>取消</target>
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>[Ƈħǿǿşḗ ƀřȧƞƈħḗş ŧǿ ḓḗŀḗŧḗ. Ǿƞŀẏ ƀřȧƞƈħḗş ŧħȧŧ ȧřḗ ƒŭŀŀẏ ḿḗřɠḗḓ īƞ '{0}' ẇīŀŀ ƀḗ ḓḗŀḗŧḗḓ. ıǅΐǋ衋ϵ 鶱ϕϵẛǅẛ衋ΐ]</target>
+        <target>选择要删除的分支。只有在 &quot;{0}&quot; 中完全合并的分支才会被删除。</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>[ḒȦȠƓḖŘǾŬŞ ȦƇŦĪǾȠ!
-Ɓřȧƞƈħḗş ẇīŀŀ ƀḗ ḓḗŀḗŧḗḓ ǿƞ ŧħḗ řḗḿǿŧḗ '{0}'. Ŧħīş ƈȧƞ ƞǿŧ ƀḗ ŭƞḓǿƞḗ.
-Ȧřḗ ẏǿŭ şŭřḗ ẏǿŭ ẇȧƞŧ ŧǿ ƈǿƞŧīƞŭḗ? ǋǋǅϵ靐ϵẛǋς ϐǲſϑ靐ϑΰΰıϐϖϕϐ]</target>
+        <target>危险的行为! 
+将在远程存储库上删除分支 &quot;{0}&quot; 。这是不能撤消的。 
+确实要继续吗？</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>[Ḓḗŀḗŧḗ ſΐϑϰ靐ς]</target>
+        <target>刪除</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
-        <target>[Ḓḗŀḗŧīƞɠ ƀřȧƞƈħḗş... ϕ衋ǲϕϐΰϵϰ ẛ衋ϕ]</target>
+        <target>删除分支</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>[Ḓḗŀḗŧīƞɠ ŭƞḿḗřɠḗḓ ƀřȧƞƈħḗş ẇīŀŀ řḗşŭŀŧ īƞ ḓȧƞɠŀīƞɠ ƈǿḿḿīŧş. Ŭşḗ ẇīŧħ ƈȧŭŧīǿƞ! ſſıΰ衋ıΐ衋 ǋſ衋]</target>
+        <target>删除未合并的分支将导致悬空提交。小心使用!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>[Ŀǿȧḓīƞɠ... ϵ靐ϕſςϑϰ鶱ǲſ]</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
-        <target>[Ƥřḗşş '{0}' ŧǿ şḗȧřƈħ ƒǿř ƀřȧƞƈħḗş ŧǿ ḓḗŀḗŧḗ. ϐς衋ǋϵ ϵ衋]</target>
+        <target>按 &quot;{0}&quot; 搜索要删除的分支。</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>[Şḗȧřƈħ ƀřȧƞƈħḗş ǲϰǅϐΰǲ ϕ衋ϐ]</target>
+        <target>搜索分支</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>[Şḗŀḗƈŧ ƀřȧƞƈħḗş ŧǿ ḓḗŀḗŧḗ ŭşīƞɠ ƈħḗƈķƀǿẋḗş īƞ '{0}' ƈǿŀŭḿƞ. ı衋ΰϱΰΐ ſǈ鶱]</target>
+        <target>使用 &quot;{0}&quot; 列中的复选框选择要删除的分支。</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>[Şḗŧŧīƞɠş ϕϑǈǅ鶱ϕ衋ǅ]</target>
+        <target>設定</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
-        <target>[Ŀȧşŧ ȧƈŧīṽīŧẏ ſςϐϰ ΰ衋ϕ衋ΰǅ]</target>
+        <target>上次的活动</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>[Īƞƈŀŭḓḗ ŭƞḿḗřɠḗḓ ƀřȧƞƈħḗş ϱϐıϑϵΰẛ ẛǅϵ]</target>
+        <target>包含未合并的分支</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>[Ḓḗŀḗŧḗ ƀřȧƞƈħḗş ǿŀḓḗř ŧħȧƞ ẋ ḓȧẏş 靐ẛϰϱΐϖ ıϱϑ]</target>
+        <target>删除x天前的分支</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>[Ḓḗŀḗŧḗ ƀřȧƞƈħḗş ƒŭŀŀẏ ḿḗřɠḗḓ īƞŧǿ ƀřȧƞƈħ ſϐǋ衋ϑϕ ıϑǈ]</target>
+        <target>删除全部分支合并到分支</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>[Ƞȧḿḗ ϐΐϑΐ]</target>
+        <target>名稱</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
-        <target>[Ḓǿḗş ƞǿŧ ḿȧŧƈħ 鶱ςςϖ ϰǋǋ ǋϑϕ]</target>
+        <target>不匹配</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
-        <target>[/(ƒḗȧŧŭřḗ|ḓḗṽḗŀǿƥ)/ ΐǋ衋ϵǋẛϱϰ鶱衋ϱ]</target>
+        <target>/(特性|开发)/</target>
         
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
-        <target>[Ƈȧşḗ īƞşḗƞşīŧīṽḗ 鶱ǲϵΰ ǈΐϱϵ鶱ϰ]</target>
+        <target>不区分大小写</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>[Ŭşḗ řḗɠḗẋ ŧǿ ƒīŀŧḗř ƀřȧƞƈħḗş ϕıϱ ϵΐǋΰΐ ΐ]</target>
+        <target>使用正则表达式过滤分支</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en">
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Delete obsolete branches</source>
-        <target>[Ḓḗŀḗŧḗ ǿƀşǿŀḗŧḗ ƀřȧƞƈħḗş ϰϱϐ衋ϱϰ ςϑẛ]</target>
+        <target>删除废弃的分支</target>
         
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
-        <target>[Ḓḗŀḗŧḗ ǿƀşǿŀḗŧḗ ƀřȧƞƈħḗş ǿŀḓḗř ŧħȧƞ (ḓȧẏş) ςϰǋϕϵϰ ǈıϰ]</target>
+        <target>删除未变更超过多少（天）的过时分支</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
-        <target>[Ḓḗŀḗŧḗ ǿƀşǿŀḗŧḗ ƀřȧƞƈħḗş ƒřǿḿ řḗḿǿŧḗ ϵ鶱ϐ鶱衋ϰ ΰǈΰ]</target>
+        <target>删除过时分支的时一并删除远程分支</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
-        <target>[Ḓḗŀḗŧḗ ŭƞḿḗřɠḗḓ ƀřȧƞƈħḗş ϐ鶱靐ϱẛǲ ϵ鶱ΐ]</target>
+        <target>删除未合并的分支</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
-        <target>[Ɓřȧƞƈħ ẇħḗřḗ ȧŀŀ ƀřȧƞƈħḗş şħǿŭŀḓ ƀḗ ḿḗřɠḗḓ īƞ ıẛϵẛϐΰ ΰΐϕ]</target>
+        <target>所有分支将要合入的分支</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>[Īş řḗɠḗẋ ƒīŀŧḗř ƈȧşḗ īƞşḗƞşīŧīṽḗ? ǲϐ ϖϰϱϐΰ ϱ]</target>
+        <target>正则表达式过滤器是否大小写不敏感？</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>[Řḗɠḗẋ ŧǿ ƒīŀŧḗř ƀřȧƞƈħḗş ŧǿ ḓḗŀḗŧḗ ϵϱϕ鶱衋 ẛϱ 靐]</target>
+        <target>用于过滤要删除的分支的正则表达式</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
-        <target>[Şḗȧřƈħ ƀřȧƞƈħḗş ŧħȧŧ ḓǿḗş ƞǿŧ ḿȧŧƈħ řḗɠḗẋ ǋϵıϱǋǈ ǅϑ衋ΰ]</target>
+        <target>搜索与正则表达式不匹配的分支</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
-        <target>[Řḗḿǿŧḗ ƞȧḿḗ ǿƀşǿŀḗŧḗḓ ƀřȧƞƈħḗş şħǿŭŀḓ ƀḗ ḓḗŀḗŧḗḓ ƒřǿḿ ΐϖǲẛϖϱ]</target>
+        <target>删除过时的远程分支的名字</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>[Ŭşḗ řḗɠḗẋ ŧǿ ƒīŀŧḗř ƀřȧƞƈħḗş ŧǿ ḓḗŀḗŧḗ 鶱ǈı ϐϰΰǲſ ς]</target>
+        <target>使用正则表达式筛选分支以删除</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en">
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
-        <target>[Ƒīƞḓ ŀȧřɠḗ ƒīŀḗş ıϐϑϱ ϰϕǋϐΐ]</target>
+        <target>查找大文件</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>[Ƈŀǿşḗ ϕıſϕẛ]</target>
+        <target>關閉</target>
         
       </trans-unit>
       <trans-unit id="CompressedSize.HeaderText">
         <source>Compressed size</source>
-        <target>[Ƈǿḿƥřḗşşḗḓ şīzḗ ΰ鶱ϱΰϵ鶱ΰϕΐ靐]</target>
+        <target>压缩大小</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>[Ḓḗŀḗŧḗ ϵ靐ǋϱẛΐ]</target>
+        <target>刪除</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>[Ȧřḗ ẏǿŭ şŭřḗ ŧǿ ḓḗŀḗŧḗ ŧħḗ şḗŀḗƈŧḗḓ ƒīŀḗş? ẛ靐ϑ ϐẛς ΰǋ]</target>
+        <target>确定删除所选文件吗？</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>[Ḓḗŀḗŧḗ ΐẛϖςϕı]</target>
+        <target>刪除</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>[Ƈǿḿḿīŧ ƈǿŭƞŧ ıǋǈςΐΐ ΐ鶱ϕ]</target>
+        <target>提交數</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>[Ḓḗŀḗŧḗ ϕẛϵǈ衋ϐ]</target>
+        <target>刪除</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>[Řḗşḗŧ ŀǿƈȧŀ ƈħȧƞɠḗş ƀḗƒǿřḗ ḓḗŀḗŧīƞɠ ƒīŀḗş. Ƈħǿǿşḗ ƒīŀḗş ŧǿ ḓḗŀḗŧḗ. Ƒǿřƈḗ ƥŭşħ ƒǿř řḗƥŀȧƈīƞɠ ḓȧŧȧ ǿƞ řḗḿǿŧḗ řḗƥǿşīŧǿřẏ. ΐϱϖϐı ẛıǅ衋ı ϑǲı靐ςϐϱ]</target>
+        <target>删除文件前重置本地修改。选择要删除的文件。强制推送到远程库覆盖数据。</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
-        <target>[Ŀȧşŧ ƈǿḿḿīŧ ḓȧŧḗ ϐ衋ǋſ ϵϐ鶱鶱ςς]</target>
+        <target>最后提交日期</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
         <source>Path</source>
-        <target>[Ƥȧŧħ ς靐鶱ſ]</target>
+        <target>路徑</target>
         
       </trans-unit>
       <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
         <source>SHA</source>
-        <target>[ŞĦȦ ϑſϰ]</target>
+        <target>SHA</target>
         
       </trans-unit>
       <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
         <source>Size</source>
-        <target>[Şīzḗ ϰẛẛϵ]</target>
+        <target>大小</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en">
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Find large files</source>
-        <target>[Ƒīƞḓ ŀȧřɠḗ ƒīŀḗş ϰϖǲſ ıϑϱϰǲ]</target>
+        <target>查找大文件</target>
         
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>[Ƒīƞḓ ŀȧřɠḗ ƒīŀḗş ƀīɠɠḗř ŧħȧƞ (Ḿƀ) ΐǲϐϵ ϐǲſǅϰ]</target>
+        <target>查找大于多少（Mb）的大文件</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en">
+  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Change Submitted</source>
-        <target>[Ƈħȧƞɠḗ Şŭƀḿīŧŧḗḓ ǅϱϐϵΰϰ ẛẛϱ靐]</target>
+        <target>變更已發送</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
         <source>Close</source>
-        <target>[Ƈŀǿşḗ ςϑΐǋϵ]</target>
+        <target>關閉</target>
         
       </trans-unit>
       <trans-unit id="labelSubmitted.Text">
         <source>Your change has been submitted for review at the following location:</source>
-        <target>[Ẏǿŭř ƈħȧƞɠḗ ħȧş ƀḗḗƞ şŭƀḿīŧŧḗḓ ƒǿř řḗṽīḗẇ ȧŧ ŧħḗ ƒǿŀŀǿẇīƞɠ ŀǿƈȧŧīǿƞ: ϱẛ衋ϕ ϑϕϱǈſ]</target>
+        <target>已發送您的變更以進行review, 在這個位置:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en">
+  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Download Gerrit Change</source>
-        <target>[Ḓǿẇƞŀǿȧḓ Ɠḗřřīŧ Ƈħȧƞɠḗ ΰẛ鶱ϰſǲǋΰ ǅϕ]</target>
+        <target>下載Gerrit變更</target>
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>[Ḿȧƞȧɠḗ řḗḿǿŧḗş 鶱靐衋靐ϐϑ ΰϱǲϕ靐]</target>
+        <target>管理遠端</target>
         
       </trans-unit>
       <trans-unit id="Download.Text">
         <source>&amp;Download</source>
-        <target>[&amp;Ḓǿẇƞŀǿȧḓ ϱıẛǲϕϕſǋǈǲſ]</target>
+        <target>下載(&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="_cannotGetChangeDetails.Text">
         <source>Could not retrieve the change details</source>
-        <target>[Ƈǿŭŀḓ ƞǿŧ řḗŧřīḗṽḗ ŧħḗ ƈħȧƞɠḗ ḓḗŧȧīŀş ϰϵΰǅſ ǲϕǋ]</target>
+        <target>無法取得變更細節</target>
         
       </trans-unit>
       <trans-unit id="_downloadCaption.Text">
         <source>Download change {0}</source>
-        <target>[Ḓǿẇƞŀǿȧḓ ƈħȧƞɠḗ {0} ẛϖǅǅϱϵſǅ ǋǅ]</target>
+        <target>下載變更 {0}</target>
         
       </trans-unit>
       <trans-unit id="_downloadGerritChangeCaption.Text">
         <source>Download Gerrit Change</source>
-        <target>[Ḓǿẇƞŀǿȧḓ Ɠḗřřīŧ Ƈħȧƞɠḗ ϰϖı鶱ſ鶱ſς ϑǅ]</target>
+        <target>下載Gerrit變更</target>
         
       </trans-unit>
       <trans-unit id="_selectChange.Text">
         <source>Please enter a change</source>
-        <target>[Ƥŀḗȧşḗ ḗƞŧḗř ȧ ƈħȧƞɠḗ 衋ϑϐϑϑǅ ς衋ϰ]</target>
+        <target>請輸入變更</target>
         
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>[Ƥŀḗȧşḗ şḗŀḗƈŧ ȧ řḗḿǿŧḗ řḗƥǿşīŧǿřẏ ϐϐııϱϰ ǋϕϖ]</target>
+        <target>請選擇遠端repository</target>
         
       </trans-unit>
       <trans-unit id="labelChange.Text">
         <source>Change:</source>
-        <target>[Ƈħȧƞɠḗ: ǅẛǅΐıΐϰ]</target>
+        <target>變更:</target>
         
       </trans-unit>
       <trans-unit id="labelEnterChangeIdOrNumber.Text">
         <source>Enter the Change-Id or the number from the Gerrit URL</source>
-        <target>[Ḗƞŧḗř ŧħḗ Ƈħȧƞɠḗ-Īḓ ǿř ŧħḗ ƞŭḿƀḗř ƒřǿḿ ŧħḗ Ɠḗřřīŧ ŬŘĿ ıϖϐϖϱ ǋ]</target>
+        <target>輸入Change ID或Gerrit URL上的數字</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
         <source>Remote:</source>
-        <target>[Řḗḿǿŧḗ: ǈǋıϵıϐǈ]</target>
+        <target>遠端:</target>
         
       </trans-unit>
       <trans-unit id="labelTopicBranch.Text">
         <source>Topic branch:</source>
-        <target>[Ŧǿƥīƈ ƀřȧƞƈħ: ǲ鶱ΰſς ǅςςϐǲ]</target>
+        <target>主題branch:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en">
+  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Publish Gerrit Change</source>
-        <target>[Ƥŭƀŀīşħ Ɠḗřřīŧ Ƈħȧƞɠḗ ςϐϵϕ鶱ǅſ ǅǅ]</target>
+        <target>發布Gerrit變更</target>
         
       </trans-unit>
       <trans-unit id="AddRemote.Text">
         <source>Manage remotes</source>
-        <target>[Ḿȧƞȧɠḗ řḗḿǿŧḗş 衋鶱靐鶱ς鶱 ǲſǅΰẛ]</target>
+        <target>管理遠端</target>
         
       </trans-unit>
       <trans-unit id="Publish.Text">
         <source>&amp;Publish</source>
-        <target>[&amp;Ƥŭƀŀīşħ ſǅǋǋǲΐϱϵϵϰ]</target>
+        <target>發布(&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="_publishCaption.Text">
         <source>Publish change</source>
-        <target>[Ƥŭƀŀīşħ ƈħȧƞɠḗ ϵ靐ǋΰϖΐϕ ϵϑǈΰ]</target>
+        <target>發布變更</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChangeCaption.Text">
         <source>Publish Gerrit Change</source>
-        <target>[Ƥŭƀŀīşħ Ɠḗřřīŧ Ƈħȧƞɠḗ ϑϖϰϖϖ靐ϕ ǈǋ]</target>
+        <target>發布Gerrit變更</target>
         
       </trans-unit>
       <trans-unit id="_selectBranch.Text">
         <source>Please enter a branch</source>
-        <target>[Ƥŀḗȧşḗ ḗƞŧḗř ȧ ƀřȧƞƈħ 鶱衋ıǲ鶱衋 ǅſς]</target>
+        <target>請輸入branch</target>
         
       </trans-unit>
       <trans-unit id="_selectRemote.Text">
         <source>Please select a remote repository</source>
-        <target>[Ƥŀḗȧşḗ şḗŀḗƈŧ ȧ řḗḿǿŧḗ řḗƥǿşīŧǿřẏ ϰ衋ϱǅ靐ϑ 鶱ϰǋ]</target>
+        <target>請選擇遠端repository</target>
         
       </trans-unit>
       <trans-unit id="labelBranch.Text">
         <source>Branch:</source>
-        <target>[Ɓřȧƞƈħ: ϵ鶱ǈϐǈςǅ]</target>
+        <target>分支：</target>
         
       </trans-unit>
       <trans-unit id="labelCc.Text">
         <source>CC:</source>
-        <target>[ƇƇ: ϱϐϐ]</target>
+        <target>CC：</target>
         
       </trans-unit>
       <trans-unit id="labelHashtag.Text">
         <source>Hashtag:</source>
-        <target>[Ħȧşħŧȧɠ: ẛΐǋΰẛϰẛ靐]</target>
+        <target># 标签：</target>
         
       </trans-unit>
       <trans-unit id="labelPublishType.Text">
         <source>Publish Type:</source>
-        <target>[Ƥŭƀŀīşħ Ŧẏƥḗ: ǈΰẛϱΰǈϑ 靐ϑǈ]</target>
+        <target>发布类型：</target>
         
       </trans-unit>
       <trans-unit id="labelRemote.Text">
         <source>Remote:</source>
-        <target>[Řḗḿǿŧḗ: ΰ衋ẛǈΐẛϐ]</target>
+        <target>遠端:</target>
         
       </trans-unit>
       <trans-unit id="labelReviewers.Text">
         <source>Reviewer(s):</source>
-        <target>[Řḗṽīḗẇḗř(ş): ϵ鶱ϖϕςǅǅ鶱鶱ϑ]</target>
+        <target>审核者：</target>
         
       </trans-unit>
       <trans-unit id="labelTopic.Text">
         <source>Topic:</source>
-        <target>[Ŧǿƥīƈ: ǅϕςϑ衋ϱ]</target>
+        <target>主題:</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en">
+  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Edit .gitreview</source>
-        <target>[Ḗḓīŧ .ɠīŧřḗṽīḗẇ ſϑϐς 鶱ſǲϖϵ]</target>
+        <target>邊輯.gitreview</target>
         
       </trans-unit>
       <trans-unit id="Save.Text">
         <source>Save</source>
-        <target>[Şȧṽḗ 靐ϵςϑ]</target>
+        <target>儲存</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitreview.Text">
         <source>Failed to save .gitreview.
 Check if file is accessible.</source>
-        <target>[Ƒȧīŀḗḓ ŧǿ şȧṽḗ .ɠīŧřḗṽīḗẇ.
-Ƈħḗƈķ īƒ ƒīŀḗ īş ȧƈƈḗşşīƀŀḗ. 靐ǅΐǅϕǅ ǋ]</target>
+        <target>儲存.gitreview失敗!請檢查檔案存取權限.</target>
         
       </trans-unit>
       <trans-unit id="_cannotAccessGitreviewCaption.Text">
         <source>Failed to save .gitreview</source>
-        <target>[Ƒȧīŀḗḓ ŧǿ şȧṽḗ .ɠīŧřḗṽīḗẇ ϱẛ衋ϵı靐 ϰ鶱 ǅ]</target>
+        <target>儲存.gitreview失敗</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
         <source>.gitreview is only supported when there is a working directory.</source>
-        <target>[.ɠīŧřḗṽīḗẇ īş ǿƞŀẏ şŭƥƥǿřŧḗḓ ẇħḗƞ ŧħḗřḗ īş ȧ ẇǿřķīƞɠ ḓīřḗƈŧǿřẏ. ıϱϰ衋衋ſϖϱ衋]</target>
+        <target>.gitreview只支援有工作目錄的個人repository.</target>
         
       </trans-unit>
       <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
         <source>No working directory</source>
-        <target>[Ƞǿ ẇǿřķīƞɠ ḓīřḗƈŧǿřẏ ΰϑ ǈϵΐϖſ靐ǈ 鶱]</target>
+        <target>無工作目錄</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .gitreview?</source>
-        <target>[Şȧṽḗ ƈħȧƞɠḗş ŧǿ .ɠīŧřḗṽīḗẇ? ςǅϰϵ ǈϑǲϱ靐]</target>
+        <target>儲存變更到.gitreview?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestionCaption.Text">
         <source>Save changes?</source>
-        <target>[Şȧṽḗ ƈħȧƞɠḗş? 鶱ϵΰϖ ẛϑſǈǲϐ]</target>
+        <target>儲存變更</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -807,957 +814,958 @@ project=department/project.git
 defaultbranch=master
 defaultremote=review
 defaultrebase=0</source>
-        <target>[Ƥřǿṽīḓḗ ŧħḗ ƈǿƞƒīɠŭřȧŧīǿƞ ƒǿř
-.ɠīŧřḗṽīḗẇ ŧǿ şḗŧŭƥ Ɠḗřřīŧ.
+        <target>提供配置.gitreview示例
+来设置Gerrit。
 
-Ḗẋȧḿƥŀḗ ƈǿƞƒīɠŭřȧŧīǿƞ:
+配置示例：
 
-[ɠḗřřīŧ]
-ħǿşŧ=řḗṽīḗẇ.ḗẋȧḿƥŀḗ.ƈǿḿ
-ƥǿřŧ=29418
-ƥřǿĵḗƈŧ=ḓḗƥȧřŧḿḗƞŧ/ƥřǿĵḗƈŧ.ɠīŧ
-ḓḗƒȧŭŀŧƀřȧƞƈħ=ḿȧşŧḗř
-ḓḗƒȧŭŀŧřḗḿǿŧḗ=řḗṽīḗẇ
-ḓḗƒȧŭŀŧřḗƀȧşḗ=0 ϰ衋ϱ鶱ςϑΐ ςǲẛ ſςǲϐΐǅǋΐϰıǋϰǋ ϕϖϱ衋ϐǲǋΐϕϵǲ衋ǲϑ]</target>
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</target>
         
       </trans-unit>
       <trans-unit id="lnkGitReviewHelp.Text">
         <source>GitHub page for git-review</source>
-        <target>[ƓīŧĦŭƀ ƥȧɠḗ ƒǿř ɠīŧ-řḗṽīḗẇ ϐıǅΰǋǅ ϰϰϵϖ]</target>
+        <target>git-review的GitHub頁面</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en">
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
-        <target>[Şŧȧŧīşŧīƈş ẛǲϖ鶱ΰǲıΐΐϐ]</target>
+        <target>统计</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
         <source>Loading..</source>
-        <target>[Ŀǿȧḓīƞɠ.. ϑΰΐςſϕ衋ϱΐ]</target>
+        <target>载入...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
-        <target>[Ŀǿȧḓīƞɠ... ϖǲΰΐΰǈſϱϖς]</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
-        <target>[Ŀǿȧḓīƞɠ... ϕ鶱ϖΐϱǈ鶱鶱鶱ı]</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
-        <target>[Ŀǿȧḓīƞɠ... ǋǅϕ鶱ϵϑı靐ϱǈ]</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
-        <target>[Ŀǿȧḓīƞɠ... ϱΐϑ靐ΐςıϱ衋ΰ]</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
-        <target>[Ŧǿŧȧŀ ƈǿḿḿīŧş ϐ靐ϰǲϵ ΐ靐ϑ衋ǋ]</target>
+        <target>总提交</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
-        <target>[Ŧǿŧȧŀ ŀīƞḗş ǿƒ ƈǿḓḗ ϐǲǋǅϑ ϱ靐ǋ鶱鶱]</target>
+        <target>总代码行</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
-        <target>[Ŧǿŧȧŀ ŀīƞḗş ǿƒ ƈǿḓḗ ıϖ鶱ſẛ ǋϱıǅǅ]</target>
+        <target>总代码行</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
-        <target>[Ŧǿŧȧŀ ŀīƞḗş ǿƒ ƈǿḓḗ ẛΐϑϱϱ 衋ΐſ靐ſ]</target>
+        <target>总代码行</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>[{0:Ƞ0} Ɓŀȧƞķ ŀīƞḗş ({1:Ƥ1}) ΰϱ衋ϐǈǲ ςϐ靐]</target>
+        <target>{0:N0} 空白行 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>[{0:Ƞ0} Ƈǿḿḿḗƞŧ ŀīƞḗş ({1:Ƥ1}) ϰϱǲıǈϐ ΰǋǈ鶱]</target>
+        <target>{0:N0} 注释行 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
-        <target>[{0:Ƞ0} Ƈǿḿḿīŧş ǈ衋ϑǅΰς ςΐΰϐϰ]</target>
+        <target>{0:N0} 提交</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>[{0:Ƞ0} Ƈǿḿḿīŧş ƀẏ {1} ςǅϰıΐǲ ǲ鶱ſ]</target>
+        <target>{0:N0} 被 {1} 提交</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>[{0:Ƞ0} Ŀīƞḗş ǿƒ ƈǿḓḗ ǅǋΰ靐ǈı ΐǅ鶱ϐΐ]</target>
+        <target>{0:N0} 行代码</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>[{0:Ƞ0} Ŀīƞḗş ǿƒ ƈǿḓḗ īƞ {1} ƒīŀḗş ({2:Ƥ1}) 靐ſ靐ϐΐϰ ϑẛǅ]</target>
+        <target>{0:N0} 行代码在 {1} 文件 ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>[{0:Ƞ0} Ŀīƞḗş ǿƒ ƈǿḓḗ ({1:Ƥ1}) ǈϑǈϱΰ鶱 ϑ衋ϱǅ]</target>
+        <target>{0:N0} 行代码 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>[{0:Ƞ0} Ŀīƞḗş īƞ ḓḗşīɠƞḗř ƒīŀḗş ({1:Ƥ1}) ϵϕǲΐϰΰ ΐǲϵ]</target>
+        <target>{0:N0}行在开发的({1:P1})文件中</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>[{0:Ƞ0} Ŀīƞḗş ǿƒ ƥřǿḓŭƈŧīǿƞ ƈǿḓḗ ({1:Ƥ1}) 靐ϕϐ靐ΐ衋 ς鶱ϕ]</target>
+        <target>{0:N0} 行生产代码 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>[{0:Ƞ0} Ŀīƞḗş ǿƒ ŧḗşŧ ƈǿḓḗ 衋ǅǋıΐẛ ϱ靐衋ẛ]</target>
+        <target>{0:N0} 行测试代码</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>[{0:Ƞ0} Ŀīƞḗş ǿƒ ŧḗşŧ ƈǿḓḗ ({1:Ƥ1}) ϰϵǲǅϐı ǲǋΰ]</target>
+        <target>{0:N0} 行测试代码 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
-        <target>[Ŀīƞḗş ǿƒ ƈǿḓḗ ƥḗř ŀȧƞɠŭȧɠḗ ǅϰϑϰϑ ıϱ ı衋]</target>
+        <target>行代码每种语言</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
-        <target>[Ƈǿḿḿīŧş ƥḗř ƈǿƞŧřīƀŭŧǿř 靐衋靐ǲ靐ϱς ẛΐϵ]</target>
+        <target>提交数每位贡献者</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
-        <target>[Ŀīƞḗş ǿƒ ƈǿḓḗ ƥḗř ŧẏƥḗ ΐϖǈı靐 ǲǈ ϵǈ]</target>
+        <target>行代码每种类型</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
-        <target>[Ŀīƞḗş ǿƒ ŧḗşŧ ƈǿḓḗ ϵΐ靐ǈϖ ϕΐ ς]</target>
+        <target>行测试代码</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en">
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
-        <target>[Īḿƥȧƈŧ ςΰ鶱ϵ衋ς]</target>
+        <target>影响</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>[{0} ({1} Ƈǿḿḿīŧş, {2} Ƈħȧƞɠḗḓ Ŀīƞḗş) ǈϖϰ ǈ靐ẛς ΐ]</target>
+        <target>{0} ({1} 提交, {2} 行修改)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
-        <target>[Īƞƈŀŭḓīƞɠ şŭƀḿǿḓŭŀḗş ǋϰıΐ鶱ẛ鶱ϐ衋 ı衋]</target>
+        <target>包含子模块</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
         <source>Author</source>
-        <target>[Ȧŭŧħǿř ǋϕ鶱ϖϕı]</target>
+        <target>作者</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en">
+  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Gerrit Plugin</source>
-        <target>[Ɠḗřřīŧ Ƥŀŭɠīƞ ſ靐ǲΰı衋 衋ϖϑΰ]</target>
+        <target>Gerrit 插件</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
         <source>Close</source>
-        <target>[Ƈŀǿşḗ ǋϑΰςϵ]</target>
+        <target>關閉</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
         <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>[Ŧħḗ Ɠḗřřīŧ ƥŀŭɠīƞ ƒǿř Ɠīŧ Ḗẋŧḗƞşīǿƞş ƥřǿṽīḓḗş īƞŧḗɠřȧŧīǿƞ ẇīŧħ Ɠḗřřīŧ ƒǿř Ɠīŧ Ḗẋŧḗƞşīǿƞş. Ŧħīş ƥŀŭɠīƞ ħȧş ƀḗḗƞ ƀȧşḗḓ ǿƞ ŧħḗ ɠīŧ-řḗṽīḗẇ ŧǿǿŀ.
+        <target>用于Git Extensions的Gerrit插件提供了与用于Git Extensions的Gerrit的集成。 该插件基于git-review工具。
 
-Ŧǿ ḗƞȧƀŀḗ Ɠḗřřīŧ şŭƥƥǿřŧ ƒǿř ȧ řḗƥǿşīŧǿřẏ, ȧ .ɠīŧřḗṽīḗẇ ƒīŀḗ ḿŭşŧ ƀḗ ƈřḗȧŧḗḓ. Ŧħīş ƈȧƞ ƀḗ ḓǿƞḗ ŧħřǿŭɠħ ŧħḗ Řḗƥǿşīŧǿřẏ | Ḗḓīŧ .ɠīŧřḗṽīḗẇ ḿḗƞŭ ǿƥŧīǿƞ. Şḗḗ ŧħḗ ŀīƞķ ƀḗŀǿẇ ƒǿř ḿǿřḗ īƞƒǿřḿȧŧīǿƞ ǿƞ ŧħḗ .ɠīŧřḗṽīḗẇ ƒīŀḗ ȧƞḓ ŧħḗ ɠīŧ-řḗṽīḗẇ ŧǿǿŀ. ſǈϐ ϖϵϖϑςϕ ǈǈϱǈ靐ς ıϱǈ 靐ϖ衋 靐ϑǋııẛϐǲςǅ ǅΰϖſǅ衋衋ı ſſϰ衋ϐ鶱ǅ衋ΰǅϕ ıǋϕϐ ϵϑϖ衋ǲ鶱 ϕϖ]</target>
+要启用对版本库的Gerrit支持，必须创建.gitreview文件。 可以通过版本库 | 编辑.gitreview菜单选项。 有关.gitreview文件和git-review工具的更多信息，请参见下面的链接。</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritCapabilities" source-language="en">
+  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="_publishTypeDraft.Text">
         <source>Draft</source>
-        <target>[Ḓřȧƒŧ 鶱ϐΐǈΰ]</target>
+        <target>草稿</target>
         
       </trans-unit>
       <trans-unit id="_publishTypePrivate.Text">
         <source>Private</source>
-        <target>[Ƥřīṽȧŧḗ ǋ靐ıǋΰΐϵ]</target>
+        <target>私有</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeReview.Text">
         <source>For Review</source>
-        <target>[Ƒǿř Řḗṽīḗẇ ǅ靐ϖ 衋ϕϕ鶱鶱ϑ]</target>
+        <target>待审查</target>
         
       </trans-unit>
       <trans-unit id="_publishTypeWip.Text">
         <source>Work-in-Progress</source>
-        <target>[Ẇǿřķ-īƞ-Ƥřǿɠřḗşş ςǲϱϑϖϖϰ衋ſıǅ]</target>
+        <target>尚未完工</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en">
+  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Gerrit Code Review</source>
-        <target>[Ɠḗřřīŧ Ƈǿḓḗ Řḗṽīḗẇ ϰΰ靐ϱǋǲ ẛǋϕ]</target>
+        <target>Gerrit代码审查</target>
         
       </trans-unit>
       <trans-unit id="_downloadGerritChange.Text">
         <source>Download Gerrit Change</source>
-        <target>[Ḓǿẇƞŀǿȧḓ Ɠḗřřīŧ Ƈħȧƞɠḗ ẛǲǲſϐϖϐǅ 靐ı]</target>
+        <target>下載Gerrit變更</target>
         
       </trans-unit>
       <trans-unit id="_editGitReview.Text">
         <source>Edit .gitreview</source>
-        <target>[Ḗḓīŧ .ɠīŧřḗṽīḗẇ ΰϰϐϵ ΐ衋靐ſϰ]</target>
+        <target>邊輯.gitreview</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHook.Text">
         <source>Install Hook</source>
-        <target>[Īƞşŧȧŀŀ Ħǿǿķ ǲςǋǈ靐ϕ靐 ǅϖ]</target>
+        <target>安裝Hook</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
         <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>[Ƈǿŭŀḓ ƞǿŧ ḓǿẇƞŀǿȧḓ ŧħḗ ƈǿḿḿīŧ-ḿşɠ ƒīŀḗ. Ƥŀḗȧşḗ īƞşŧȧŀŀ ŧħḗ ƈǿḿḿīŧ-ḿşɠ ħǿǿķ ḿȧƞŭȧŀŀẏ. ſ鶱ı鶱ẛ ΰ靐ı ϖ鶱ϐ]</target>
+        <target>無法下載commit-msg檔案. 請手動安裝commit-msg hook.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
         <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
-        <target>[Ƈǿŭŀḓ ƞǿŧ ƈřḗȧŧḗ ŧħḗ ħǿǿķş ƒǿŀḓḗř. Ƥŀḗȧşḗ ƈřḗȧŧḗ ŧħḗ ƒǿŀḓḗř ḿȧƞŭȧŀŀẏ ȧƞḓ ŧřẏ ȧɠȧīƞ. 衋ϑıΰϵ ıϵǅ ΰǅϱ]</target>
+        <target>无法创建钩子文件夹。请手动创建文件夹，然后再试一次。</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
         <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>[Ɠḗřřīŧ řḗɋŭīřḗş ȧ ƈǿḿḿīŧ-ḿşɠ ħǿǿķ ŧǿ ƀḗ īƞşŧȧŀŀḗḓ. Ḓǿ ẏǿŭ ẇȧƞŧ ŧǿ īƞşŧȧŀŀ ŧħḗ ƈǿḿḿīŧ-ḿşɠ ħǿǿķ īƞŧǿ ẏǿŭř řḗƥǿşīŧǿřẏ? ϑϵǲϰΐΰ ϑϰϑıǅϕΐϱ ǈ 衋ϕ]</target>
+        <target>Gerrit需要安裝commit-msg hook. 您要安裝commit-msg hook到你的repository嗎?</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookShortText.Text">
         <source>Install commit-msg hook</source>
-        <target>[Īƞşŧȧŀŀ ƈǿḿḿīŧ-ḿşɠ ħǿǿķ ϖ靐ΰϐ靐ϰſ ϵϰǲ]</target>
+        <target>安裝commit-msg hook</target>
         
       </trans-unit>
       <trans-unit id="_predefinedGerritVersion.Caption">
         <source>Treat Gerrit as having version</source>
-        <target>[Ŧřḗȧŧ Ɠḗřřīŧ ȧş ħȧṽīƞɠ ṽḗřşīǿƞ ſǋϰǲϱ ǈǅϖǅ]</target>
+        <target>将视Gerrit为已有版本</target>
         
       </trans-unit>
       <trans-unit id="_publishGerritChange.Text">
         <source>Publish Gerrit Change</source>
-        <target>[Ƥŭƀŀīşħ Ɠḗřřīŧ Ƈħȧƞɠḗ ǲϖϵΰΰ鶱ϕ 靐ǈ]</target>
+        <target>發布Gerrit變更</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en">
+  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="_settingsError.Text">
         <source>Error loading .gitreview file.</source>
-        <target>[Ḗřřǿř ŀǿȧḓīƞɠ .ɠīŧřḗṽīḗẇ ƒīŀḗ. ǋΰ靐ςǅ ϕǅ衋ǅ]</target>
+        <target>載入.gitreview檔案發生錯誤</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
         <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        <target>[Ŧħḗ řḗḿǿŧḗ &quot;{0}&quot; şƥḗƈīƒīḗḓ ẇīŧħ ŧħḗ &quot;ḓḗƒȧŭŀŧřḗḿǿŧḗ&quot; şḗŧŧīƞɠ īƞ ŧħḗ .ɠīŧřḗṽīḗẇ ƒīŀḗ ḓǿḗş ƞǿŧ řḗƒḗř ŧǿ ȧ ƈǿƞƒīɠŭřḗḓ řḗḿǿŧḗ. Ḗīŧħḗř ƈřḗȧŧḗ ŧħīş řḗḿǿŧḗ ǿř ƈħȧƞɠḗ ŧħḗ şḗŧŧīƞɠ īƞ ŧħḗ .ɠīŧřḗṽīḗẇ ƒīŀḗ. ϖǈ鶱 ẛẛǈϐΐΐ ϖ衋ſΰǲϑ衋ΐııǅ鶱ǅϱẛ ϵıſǈ靐ϐǲϑǅ ϐϵ]</target>
+        <target>远程档案库 &quot;{0}&quot;指定了&quot;defaultremote&quot;设置,.gitreview文件没有找到与之匹配的远程档案库。创建远程档案库或者更改.gitreview文件来完善配置。</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorFileNotFound.Text">
         <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        <target>[Ƈȧƞƞǿŧ ƒīƞḓ ŧħḗ &quot;.ɠīŧřḗṽīḗẇ&quot; ƒīŀḗ īƞ ŧħḗ ẇǿřķīƞɠ ḓīřḗƈŧǿřẏ. ẛϕǅΰ衋ǋ ϵǋϖ]</target>
+        <target>工作目錄找不到&quot;.gitreview&quot;這個檔案</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorHostNotEntered.Text">
         <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
-        <target>[Ŧħḗ &quot;ħǿşŧ&quot; şḗŧŧīƞɠ īƞ ŧħḗ .ɠīŧřḗṽīḗẇ ƒīŀḗ īş ḿȧƞḓȧŧǿřẏ. ϑ鶱ϵ ǲǲǅſıϵ]</target>
+        <target>.gitreview檔案中&quot;host&quot;設定必填</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorPortNotNumeric.Text">
         <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
-        <target>[Ŧħḗ &quot;ƥǿřŧ&quot; şƥḗƈīƒīḗḓ īƞ ŧħḗ .ɠīŧřḗṽīḗẇ ƒīŀḗ ḿȧẏ ǿƞŀẏ ƈǿƞŧȧīƞ ḓīɠīŧş. ϑςı ΰ衋ẛϕǲ鶱ǲǲ]</target>
+        <target>.gitreview檔案中&quot;port&quot;設定只能為數字.</target>
         
       </trans-unit>
       <trans-unit id="_settingsErrorProjectNotEntered.Text">
         <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        <target>[Ŧħḗ &quot;ƥřǿĵḗƈŧ&quot; şḗŧŧīƞɠ īƞ ŧħḗ .ɠīŧřḗṽīḗẇ ƒīŀḗ īş ḿȧƞḓȧŧǿřẏ. ǅ鶱ǅ ẛ衋ϕ靐ςς]</target>
+        <target>.gitreview檔案中&quot;project&quot;設定必填</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowForm" source-language="en">
+  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
-        <target>[ƓīŧƑŀǿẇ ǈϰϐϐϕǈϐ]</target>
+        <target>GitFlow</target>
         
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
-        <target>[Ȧ ɠǿǿḓ ƀřȧƞƈħ ḿǿḓḗŀ ƒǿř ẏǿŭř ƥřǿĵḗƈŧ ẇīŧħ Ɠīŧ... ς 鶱ΐϕΰ ϵϐϐ]</target>
+        <target>用git为您的项目搭建好分支模型</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>[Ŀǿȧḓīƞɠ... 衋ǅ靐ϐϰǈϕϑϑẛ]</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="_noBranchExist.Text">
         <source>No {0} branches exist.</source>
-        <target>[Ƞǿ {0} ƀřȧƞƈħḗş ḗẋīşŧ. ϑǋ ſǋς ΰϱϕǅ]</target>
+        <target>{0} 分支不存在。</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
         <source>Close</source>
-        <target>[Ƈŀǿşḗ ΰϱϖǋϖ]</target>
+        <target>關閉</target>
         
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
-        <target>[Şŧȧřŧ! 靐ẛ靐ϱǅϕ]</target>
+        <target>开始！</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
-        <target>[Ƒīƞīşħ ςϐϕϐ鶱ϐ]</target>
+        <target>完成</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
-        <target>[Īƞīŧ ƓīŧƑŀǿẇ ϐẛ衋ϑ ǈϖϑ靐ϱ]</target>
+        <target> 初始化Git项目</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
-        <target>[Ƥŭƀŀīşħ ϑϐϰΰΐϵϱ]</target>
+        <target>发布</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
         <source>Pull</source>
-        <target>[Ƥŭŀŀ ϰΰςϵ]</target>
+        <target>拉取</target>
         
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
-        <target>[ƀȧşḗḓ ǿƞ: 衋ıϐ靐ẛ ϑΰǲ]</target>
+        <target>基于:</target>
         
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
-        <target>[Ƥŭşħ ȧƒŧḗř ƒīƞīşħ ẛſı靐 ΐϰϰ鶱ı ẛ]</target>
+        <target>完成后推送</target>
         
       </trans-unit>
       <trans-unit id="cbSquash.Text">
         <source>Squash</source>
-        <target>[Şɋŭȧşħ ϑϰϖǋϕſ]</target>
+        <target>Squash提交</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
-        <target>[Ḿȧƞȧɠḗ ḗẋīşŧīƞɠ ƀřȧƞƈħḗş: ǋſǈϱΰẛ 靐衋ΐϰ]</target>
+        <target>管理已有分支：</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
-        <target>[Şŧȧřŧ ƀřȧƞƈħ: ςẛϰǈſ ΰǈϱǅϵ]</target>
+        <target>创建分支：</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
-        <target>[ƀřȧƞƈħ: ẛϰ鶱ϖı靐ǈ]</target>
+        <target>分支：</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
-        <target>[Ḗẋƥḗƈŧḗḓ ƞȧḿḗ: ǲıςϕ衋ςẛς ǲϰǅ]</target>
+        <target>预期名称：</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
-        <target>[ƈǿḿḿȧƞḓ: ΐΰϰϐ靐ϵϖſ]</target>
+        <target>命令：</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
-        <target>[Řḗḿǿŧḗ ŧǿ ƥŭŀŀ ƒřǿḿ : ϖϵ衋靐ϱϑ ϖ鶱]</target>
+        <target>拉取自：</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
-        <target>[ĦḖȦḒ: ϰϐϑϖı]</target>
+        <target>HEAD:</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
         <source>ref/...</source>
-        <target>[řḗƒ/... ϕΐςΐ靐ẛϕ]</target>
+        <target>ref/...</target>
         
       </trans-unit>
       <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
-        <target>[[ƥřḗƒīẋ]/ ẛΐΰϐϱſſ靐衋]</target>
+        <target>[前缀]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
-        <target>[Ȧƀǿŭŧ ƓīŧƑŀǿẇ ϖı衋ϰ鶱 ǈẛϐςẛ]</target>
+        <target>关于GitFlow</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
-        <target>[Řḗşŭŀŧ ǿƒ ɠīŧ ƒŀǿẇ ƈǿḿḿȧƞḓ řŭƞ ϰϕϵϵϰǅ ϖǅ]</target>
+        <target>git工作流命令允许结果</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en">
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>GitFlow</source>
-        <target>[ƓīŧƑŀǿẇ 鶱ǲϰϖϵǲ鶱]</target>
+        <target>GitFlow</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en">
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>GitHub</source>
-        <target>[ƓīŧĦŭƀ ϑϑẛǲϱϵ]</target>
+        <target>GitHub</target>
         
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
-        <target>[ƓīŧĦŭƀ (Ḗƞŧḗřƥřīşḗ) ħǿşŧƞȧḿḗ ϐΐϑςϕΰ 靐衋ϖς]</target>
+        <target>GitHub (Enterprise) 主机名</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
-        <target>[ǾȦŭŧħ Ŧǿķḗƞ ϱΐǲſΐ 衋ſϐΰǅ]</target>
+        <target>授权令牌</target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
-        <target>[Ẏǿŭ ȧŀřḗȧḓẏ ħȧṽḗ ȧƞ ǾȦŭŧħ ŧǿķḗƞ. Ŧǿ ɠḗŧ ȧ ƞḗẇ ǿƞḗ, ḓḗŀḗŧḗ ẏǿŭř ǿŀḓ ǿƞḗ īƞ Ƥŀŭɠīƞş &gt; Şḗŧŧīƞɠş ƒīřşŧ. 靐ǈϖ ςǋϰϱΰϐǈ ſΐǈſ]</target>
+        <target>你已经有一个OAuth令牌.获取一个新的,在插件&gt;设置中删除老的令牌.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
-        <target>[Ṽīḗẇ īƞ {0} ϑϵ鶱ϐ ǲϰ ϑϱΰ]</target>
+        <target>在 {0} 中查看</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en">
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Impact Graph</source>
-        <target>[Īḿƥȧƈŧ Ɠřȧƥħ ϖ衋ẛΐϖẛ ϰǅǅ]</target>
+        <target>影响图形</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Statistics</source>
-        <target>[Şŧȧŧīşŧīƈş ΐſΰǲΐΐϰϕϵϖ]</target>
+        <target>统计</target>
         
       </trans-unit>
       <trans-unit id="_codeFiles.Caption">
         <source>Code files</source>
-        <target>[Ƈǿḓḗ ƒīŀḗş ϵǋϖẛ ǲϑϵ鶱ϵ]</target>
+        <target>代码文件</target>
         
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>[Ḓīřḗƈŧǿřīḗş ŧǿ īɠƞǿřḗ (ḖƞḓşẆīŧħ) ϐςΐǈϱϑ靐ẛǈǲϐ]</target>
+        <target>忽略目录(以××结尾)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
-        <target>[Īɠƞǿřḗ şŭƀḿǿḓŭŀḗş ǅςϑϕϕϱ ϰΰΰ鶱ſ]</target>
+        <target>忽略子模块</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en">
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Gource</source>
-        <target>[Ɠǿŭřƈḗ ϵΐıϰǈϰ]</target>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
-        <target>[{0} ƀẏŧḗş ḓǿẇƞŀǿȧḓḗḓ. ΰΐϐ ϕϱΰΰϕ]</target>
+        <target>{0} 字节已下载</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>[Ƈȧƞƞǿŧ ƒīƞḓ Ɠǿŭřƈḗ.
-Ƥŀḗȧşḗ ḓǿẇƞŀǿȧḓ Ɠǿŭřƈḗ ȧƞḓ şḗŧ ŧħḗ ƥȧŧħ īƞ ŧħḗ ƥŀŭɠīƞş şḗŧŧīƞɠş ḓīȧŀǿɠ. 靐ϕϐıςς ϕΰϑı ςΐϰ]</target>
+        <target>找不到Gource.
+请下载Gource并在插件设置框中设置Gource路径。</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>[Ŧħḗ ƈŭřřḗƞŧ ḓīřḗƈŧǿřẏ īş ƞǿŧ ȧ ṽȧŀīḓ ɠīŧ řḗƥǿşīŧǿřẏ.
+        <target>当前目录不是有效的 git 档案库。
 
-Ɠǿŭřƈḗ ƈȧƞ ƀḗ ǿƞŀẏ ƀḗ şŧȧřŧḗḓ ƒřǿḿ ȧ ṽȧŀīḓ ɠīŧ řḗƥǿşīŧǿřẏ. ϐΰı ẛǲǋϰǲϕϐ 靐ǅϑϖſΐϑ]</target>
+Gource 只能从有效的 git 档案库启动。</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
-        <target>[Ŧħḗřḗ īş ƞǿ ƥȧŧħ ŧǿ Ɠǿŭřƈḗ ƈǿƞƒīɠŭřḗḓ.
+        <target>没有设置Gource路径。
 
-Ḓǿ ẏǿŭ ẇȧƞŧ ŧǿ ȧŭŧǿḿȧŧīƈȧŀŀẏ ḓǿẇƞŀǿȧḓ Ɠǿŭřƈḗ? ǅǅΰ鶱ǋ ϐǲ ſϑ ϱϱ]</target>
+是否自动下载Gource？</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
         <source>Download</source>
-        <target>[Ḓǿẇƞŀǿȧḓ ΰϑϰııΰΰϵ]</target>
+        <target>下载</target>
         
       </trans-unit>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>[Ḓǿẇƞŀǿȧḓīƞɠ ƒȧīŀḗḓ.
-Ƥŀḗȧşḗ ḓǿẇƞŀǿȧḓ Ɠǿŭřƈḗ ȧƞḓ şḗŧ ŧħḗ ƥȧŧħ īƞ ŧħḗ ƥŀŭɠīƞş şḗŧŧīƞɠş ḓīȧŀǿɠ. 衋ǅſǈıϖΰ衋靐ϕǅ ϰǈΐ]</target>
+        <target>下载失败。
+请下载Gource并在插件设置框中设置Gource路径。</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
         <source>Gource</source>
-        <target>[Ɠǿŭřƈḗ ϑ鶱ςẛ靐衋]</target>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
-        <target>[Ȧřɠŭḿḗƞŧş 衋ϑıϖϰςϰ鶱ϵ]</target>
+        <target>参数</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
-        <target>[Ɠǿŭřƈḗ ħȧş ƀḗḗƞ ḓǿẇƞŀǿȧḓḗḓ ȧƞḓ ŭƞzīƥƥḗḓ. ϵϱϱϱϖϕ 衋ςǲ]</target>
+        <target>Gource已经下载并解压。</target>
         
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>[Ƥȧŧħ ŧǿ Ɠǿŭřƈḗ ϕ鶱ΐϵ ſ靐 ǋςϐϐ]</target>
+        <target>Gource路径</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>[Ƈȧƞƞǿŧ ƒīƞḓ Ɠǿŭřƈḗ īƞ ŧħḗ ƈǿƞƒīɠŭřḗḓ ƥȧŧħ: {0}.
+        <target>在已配置的路径: {0}找不到Gource。
 
-Ḓǿ ẏǿŭ ẇȧƞŧ ŧǿ řḗşḗŧ ŧħḗ ƈǿƞƒīɠŭřḗḓ ƥȧŧħ? ǅ靐ϑıςϵ ϑǅϕ鶱 ΐϱǲ]</target>
+是否重置已配置的路径？</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourceStart" source-language="en">
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Gource</source>
-        <target>[Ɠǿŭřƈḗ ςΰϵΰΰϖ]</target>
+        <target>Gource</target>
         
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
-        <target>[Ȧřɠŭḿḗƞŧş ϰǈϖǈǲΰϰǋϱ]</target>
+        <target>参数</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>[Ɓřǿẇşḗ ϐςϱϱǋǈ]</target>
+        <target>瀏覽</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>[Ɓřǿẇşḗ ϕϰϱϕςϖ]</target>
+        <target>瀏覽</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Start</source>
-        <target>[Şŧȧřŧ ϰϰΰς靐]</target>
+        <target>開始</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
-        <target>[Ƥȧŧħ ŧǿ Ɠǿŭřƈḗ ϐϕǅẛ ǲϖ ǅſςϱ]</target>
+        <target>Gource路径</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>[Řḗƥǿşīŧǿřẏ ϖ靐ϑ衋ϕϕ鶱ǈϐ衋]</target>
+        <target>檔案庫
+</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>[Ɠǿŭřƈḗ ƥřǿĵḗƈŧ ϰıΰΰϐϱ ϰϑϑẛǲ]</target>
+        <target>Gource项目</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
-        <target>[Ɠǿŭřƈḗ ƈǿḿḿȧƞḓ ŀīƞḗ ΐſϐǲϖΐ ςǅ鶱鶱]</target>
+        <target>Gource命令行</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
-        <target>[Īɠƞǿřḗ ƀŭīŀḓ ƒǿř ƀřȧƞƈħ ϵ靐ΰ鶱ǲϖ ϐϑǲϱ]</target>
+        <target>对分支忽略构建</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>[Ĵḗƞķīƞş şḗřṽḗř ŬŘĿ ΰϖ鶱ϑıΰǋ ϐ靐]</target>
+        <target>Jenkins伺服器位址</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>[Ƥřǿĵḗƈŧ ƞȧḿḗ ıϵΰϐΰϱǈ ϑΐ]</target>
+        <target>專案名稱</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en">
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Jira Commit Hint</source>
-        <target>[Ĵīřȧ Ƈǿḿḿīŧ Ħīƞŧ ϖΰıϵ 鶱ẛ鶱ǈΰẛ]</target>
+        <target>Jira Commit 提示</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">
         <source>First Task Preview</source>
-        <target>[Ƒīřşŧ Ŧȧşķ Ƥřḗṽīḗẇ ϖΐ靐ıǈ ǋǅϰΰ]</target>
+        <target>首任务预览</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultMessage.Text">
         <source>[Empty Jira Query Result]</source>
-        <target>[[Ḗḿƥŧẏ Ĵīřȧ Ɋŭḗřẏ Řḗşŭŀŧ] ſϵǋϑ衋鶱 ϰϵς鶱]</target>
+        <target>[空白 Jira 查询结果]</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
         <source>Invalid Jira url</source>
-        <target>[Īƞṽȧŀīḓ Ĵīřȧ ŭřŀ 鶱ΐǅϰϕϑς ΐϕϑ]</target>
+        <target>无效的 Jira URL</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
         <source>A valid url is required to launch the Jira query helper</source>
-        <target>[Ȧ ṽȧŀīḓ ŭřŀ īş řḗɋŭīřḗḓ ŧǿ ŀȧŭƞƈħ ŧħḗ Ĵīřȧ ɋŭḗřẏ ħḗŀƥḗř ϱ ΰǅϖϖϰ]</target>
+        <target>需要有效的 URL 才能启动 Jira 查询助手</target>
         
       </trans-unit>
       <trans-unit id="JiraFieldsLabel.Text">
         <source>Jira fields</source>
-        <target>[Ĵīřȧ ƒīḗŀḓş ǲıϐ靐 ϱϖϑǋϵΰ]</target>
+        <target>Jira 字段</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
         <source>Preview</source>
-        <target>[Ƥřḗṽīḗẇ ıǈǋ鶱ϰ衋ẛ]</target>
+        <target>預覽</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperLinkText.Text">
         <source>Open the query helper inside Jira</source>
-        <target>[Ǿƥḗƞ ŧħḗ ɋŭḗřẏ ħḗŀƥḗř īƞşīḓḗ Ĵīřȧ ǅſΐ衋 ſǈı ς]</target>
+        <target>打开 Jira 内置的查询助手</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
-        <target>[Ŭƞȧƀŀḗ ŧǿ ǿƥḗƞ Ĵīřȧ ɋŭḗřẏ ħḗŀƥḗř ǋ鶱ǈǋ鶱ΐ ϖϑ ϐ]</target>
+        <target>无法打开 Jira 查询助手</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
-        <target>[Ĵīřȧ ƈřḗḓḗƞŧīȧŀş ıǅϰǲ ſẛΰϱ衋ϖ]</target>
+        <target>Jira 登录凭证</target>
         
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
-        <target>[Ĵīřȧ ħīƞŧ ƥŀŭɠīƞ ḗƞȧƀŀḗḓ ϕϑϑΐ ΐǅϰı]</target>
+        <target>已启用 Jira 提示插件</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
-        <target>[ĴɊĿ Ɋŭḗřẏ ϵǋϕ ıǲ靐ΐ靐]</target>
+        <target>JQL查询</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
-        <target>[Ḿḗşşȧɠḗ Ŧḗḿƥŀȧŧḗ 衋ǋǲΰẛϵϵ 靐衋ẛ]</target>
+        <target>提交注释模板</target>
         
       </trans-unit>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
-        <target>[Ĵīřȧ ŬŘĿ ϕ鶱ϖǲ ϕıẛ]</target>
+        <target>Jira 地址</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
-        <target>[Ƥřǿẋẏ Şẇīŧƈħḗř ǅϵϖϖ靐 ϰςϵǋǈẛ]</target>
+        <target>代理切换</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>[Ȧƥƥŀẏ ɠŀǿƀȧŀŀẏ 靐衋鶱ϐϵ ϕϐϵẛϐſ]</target>
+        <target>套用到全域</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
-        <target>[Ɠŀǿƀȧŀ ħŧŧƥ.ƥřǿẋẏ: ϱſϐẛϐΐ ϵ鶱衋]</target>
+        <target>全局HTTP代理http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
-        <target>[Ŀǿƈȧŀ ħŧŧƥ.ƥřǿẋẏ: ΐϑ衋衋ẛ ΐ靐ϱſϖſ]</target>
+        <target>局部HTTP代理http.proxy:</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
-        <target>[Şḗŧ ƥřǿẋẏ 衋ϖ鶱 ǋ鶱ϰǲϕ]</target>
+        <target>设置代理</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
-        <target>[Ŭƞşḗŧ ƥřǿẋẏ ǈΰıϱϐ ΰϑςſϱ]</target>
+        <target>取消代理</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>[Ŧħḗřḗ īş ƞǿ ƥřǿẋẏ ƈǿƞƒīɠŭřḗḓ. Ƥŀḗȧşḗ şḗŧ ŧħḗ ƥřǿẋẏ ħǿşŧ īƞ ŧħḗ ƥŀŭɠīƞ şḗŧŧīƞɠş. ϱǈϕϐẛ ςϰ 鶱ǅ]</target>
+        <target>沒有設定proxy. 請在插件中設定proxy host.</target>
         
       </trans-unit>
       <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
-        <target>[Ƥřǿẋẏ Şẇīŧƈħḗř ΰϑΐϵ衋 ϖΰ靐ϐϑǅ]</target>
+        <target>代理切换</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en">
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Proxy Switcher</source>
-        <target>[Ƥřǿẋẏ Şẇīŧƈħḗř ǲϖϖǈϵ ǋǋϐΰ鶱ǈ]</target>
+        <target>代理切换</target>
         
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
-        <target>[ĦŦŦƤ ƥřǿẋẏ ΰǅςϖ 衋ǲſ靐ϑ]</target>
+        <target>HTTP代理</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
-        <target>[ĦŦŦƤ ƥřǿẋẏ ƥǿřŧ ǋıΐǅ ϰϐϰΰſ]</target>
+        <target>HTTP代理端口</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
-        <target>[Ƥȧşşẇǿřḓ ǋ衋ẛϕϐϵΰϱ]</target>
+        <target>密码</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>[Ŭşḗřƞȧḿḗ ϱϕΐẛϑſǲ衋]</target>
+        <target>使用者</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>[Řḗŀḗȧşḗ Ƞǿŧḗş Ɠḗƞḗřȧŧǿř ı衋靐鶱ϑ鶱ϱ ẛǲſ]</target>
+        <target>发行注记</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
-        <target>[Īƞṽȧŀīḓ īƞƥŭŧ ϰϖſϱΰſ衋 ẛ衋ϑ]</target>
+        <target>无效输入</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>[Ƈǿḿḿīŧ ŀǿɠ ƒřǿḿ '{0}' ŧǿ '{1}' ({2}): 鶱鶱ǅ衋ϐϰ ǋ]</target>
+        <target>提交历史从 '{0}' 到 '{1}' ({2})：</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
-        <target>['Ƒřǿḿ' ƈǿḿḿīŧ ḿŭşŧ ƀḗ şƥḗƈīƒīḗḓ ıΰϵǋϕ鶱ϵẛςϰǲ]</target>
+        <target>必须指定“发件人”提交</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
-        <target>['Ŧǿ' ƈǿḿḿīŧ ḿŭşŧ ƀḗ şƥḗƈīƒīḗḓ ſϐϱϑ靐ǲ靐ϑǈΰ]</target>
+        <target>必须指定'目标'提交</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
-        <target>[ȧş ĦŦḾĿ ŧȧƀŀḗ ϐſ ıϕſς ςςϱ]</target>
+        <target>像网页表格</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>[ȧş ŧḗẋŧ ŧȧƀŀḗ (şƥȧƈḗş) ΐϰ ϰǅẛ靐 鶱ΰẛ]</target>
+        <target>as text table (spaces)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
-        <target>[ȧş ŧḗẋŧ ŧȧƀŀḗ (ŧȧƀş) ǈϕ ϱϐϵſ ıςǋΐ]</target>
+        <target>as text table (tabs)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
-        <target>[ǿřīɠīƞȧŀ ǿŭŧƥŭŧ ıǅǲϖǅıςǋ 鶱]</target>
+        <target>原始输出</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
-        <target>[Ɠḗƞḗřȧŧḗ ϵ衋ıϕϑẛϐϑ]</target>
+        <target>产生</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
-        <target>[Řḗşŭŀŧ ſϐϕϑϖǅ]</target>
+        <target>结果</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>[Ƈǿƥẏ ŧǿ ƈŀīƥƀǿȧřḓ ǈ靐ǲϱ ΐſ ΰϐẛς]</target>
+        <target>複製到剪貼簿</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>[Ƈǿḿḿīŧ ḗẋƥřḗşşīǿƞ &quot;Ŧǿ&quot; (īƞƈŀŭḓīƞɠ): ϖǲϰϐǋϰ ϰϰ靐]</target>
+        <target>Commit expression &quot;To&quot; (including):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
-        <target>[şḗƥȧřȧŧḗ ƈǿŀŭḿƞş ẇīŧħ şƥȧƈḗş ǲΐ衋ǋϰϖϰǲ ϑϕ]</target>
+        <target>用空格分隔列</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>[Ƈŀīƥƀǿȧřḓ ẇīŀŀ ƈǿƞŧȧīƞ ĦŦḾĿ ƈǿḓḗ (ƥŀȧīƞ ŧḗẋŧ) ȧƞḓ ĦŦḾĿ ƒǿřḿȧŧ
-ẇħīƈħ ƈȧƞ ƀḗ ƥȧşŧḗḓ ŧǿ ƥřǿɠřȧḿş ŀīķḗ ḾŞ Ẇǿřḓ ǿř ĿīƀřḗǾƒƒīƈḗ Ẇřīŧḗř. 靐ϑΰ鶱ΐẛǅϵϖ 鶱ϑ衋ΰ ſϕϵϕϖϵı]</target>
+        <target>剪贴板将包含HTML代码(纯文本)和HTML格式。
+可以粘贴到Word或LibreOffice里。</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>[Ƈǿḿḿīŧ ḗẋƥřḗşşīǿƞ &quot;Ƒřǿḿ&quot; (ḗẋƈŀŭḓīƞɠ): ǲΰſϐϕı ϰ衋ẛ]</target>
+        <target>Commit expression &quot;From&quot; (excluding):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>[ɠīŧ ŀǿɠ ȧřɠŭḿḗƞŧş: ϵϕϵ ı鶱ΰ ϖ鶱]</target>
+        <target>git log 参数：</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>[{0} = ƒřǿḿ; {1} = ŧǿ ΰſǅ ΐ ϱǅϑǈǈ]</target>
+        <target>{0} = 从; {1} = 到</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>[Şǿřŧīƞɠ: Ḿǿşŧ řḗƈḗƞŧ řḗṽīşīǿƞş ȧřḗ ŀīşŧḗḓ ǿƞ ŧǿƥ. 靐ϖıϵΰϐǅϑ ΰ]</target>
+        <target>分类: 最近的修订列在最上面。</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
-        <target>[Řḗṽīşīǿƞş ƈǿŭƞŧ =  ǲϐϰϕǲϕſΐΐ]</target>
+        <target>修订次数=</target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
-        <target>[(Ƈǿḿḿīŧ ḗẋƥřḗşşīǿƞş ƈȧƞ ƀḗ ƈǿḿḿīŧ ħȧşħḗş,
-ƀřȧƞƈħ ƞȧḿḗş, ŧȧɠ ƞȧḿḗş) ϖ衋ϑΰſϰẛ ǲς]</target>
+        <target>(提交信息可以是提交码,
+分支名称, 标签名称)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
-        <target>[ȧş īş 靐ϰ ǅϐ]</target>
+        <target>就这样</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>[şḗƥȧřȧŧḗ ƈǿŀŭḿƞş ẇīŧħ ŧȧƀş ıǋϕıẛǅΐẛ ϵ衋]</target>
+        <target>用制表符来分隔列</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
         <source>n/a</source>
-        <target>[ƞ/ȧ 鶱ϰǋ]</target>
+        <target>n/a</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en">
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="Name.Text">
         <source>Release Notes Generator</source>
-        <target>[Řḗŀḗȧşḗ Ƞǿŧḗş Ɠḗƞḗřȧŧǿř ıΐςϱǋΐϕ 鶱ϑ衋]</target>
+        <target>发行注记</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
-        <target>[Ḗẋŧřȧƈŧ ḓȧŧȧ ƒřǿḿ ȧ ƀŭīŀḓ řḗşŭŀŧ ŭřŀ ƈǿƥīḗḓ īƞ ŧħḗ ƈŀīƥƀǿȧřḓ ϱǲẛϱΰẛϑ ǲ]</target>
+        <target>从剪贴板复制来的构建结果URL中提取数据</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>[Ɠǿ ŧǿ ŧǿķḗƞ ḿȧƞȧɠḗḿḗƞŧ ƥȧɠḗ ϱϖ ϐǋ ǈſϰϵ]</target>
+        <target>转到令牌管理页</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Could not extract data</source>
-        <target>[Ƈǿŭŀḓ ƞǿŧ ḗẋŧřȧƈŧ ḓȧŧȧ ϵ鶱ſΐϑ ſϱſ ẛ]</target>
+        <target>无法提取数据</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1765,24 +1773,24 @@ branch names, tag names)</source>
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>[Ŧħḗ ƈŀīƥƀǿȧřḓ ḓǿḗşƞ'ŧ ƈǿƞŧȧīƞ ȧ ṽȧŀīḓ ƀŭīŀḓ ŭřŀ.
+        <target>剪贴板中并不包含可用的构建网址。
 
-Ƥŀḗȧşḗ ƈǿƥẏ ŧħḗ ŭřŀ ǿƒ ŧħḗ ƀŭīŀḓ īƞŧǿ ŧħḗ ƈŀīƥƀǿȧřḓ ƀḗƒǿřḗ řḗŧřẏīƞɠ.
-(Şħǿŭŀḓ ƈǿƞŧȧīƞ ȧŧ ŀḗȧşŧ ŧħḗ &quot;ƀŭīŀḓĪḓ&quot; ƥȧřȧḿḗŧḗř) ΰϱϖ ΐ靐鶱ǈẛΐ鶱ΐΐ ǋſΐſϑςẛ鶱ϵϖϐϖ 靐ǋϕϵςς]</target>
+请复制构建网址到剪贴板后再重试。
+（应该至少包含“buildID”参数）</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>[Ḗřřǿř ẇħīŀḗ ŧřẏīƞɠ ŧǿ řḗŧřīḗṽḗ ƀŭīŀḓ ḓḗƒīƞīŧīǿƞ īƞƒǿřḿȧŧīǿƞ ƒřǿḿ ŭřŀ.
+        <target>在尝试从网址取回构建定义信息时发生错误。
 
-Ƥŀḗȧşḗ ḗƞşŭřḗ ŧħȧŧ ŧħḗ ŭřŀ īş ṽȧŀīḓ ȧƞḓ ŧħȧŧ ŧħḗ ȦƤĪ ŧǿķḗƞ ħȧş ȧƈƈḗşş ŧǿ ƀŭīŀḓ ȧƞḓ ƥřǿĵḗƈŧ īƞƒǿřḿȧŧīǿƞ. ςı靐ǲΰ ϱ鶱ϵǈϱ ϐϕςǲıǈ ϱǋ ϰςǋϵϐϕẛ衋]</target>
+请确定网址有效且应用程序界面符号有权限访问构建和工程信息。</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
         <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
-        <target>[Ŭƞȧƀŀḗ ŧǿ řḗŧřīḗṽḗ ƀŭīŀḓ ḓḗƒīƞīŧīǿƞ īƞƒǿřḿȧŧīǿƞ ẇīŧħǿŭŧ ȦƤĪ ŧǿķḗƞ. Ƒīḗŀḓ ẇīŀŀ ƀḗ ŀḗƒŧ ƀŀȧƞķ. ϱǋ衋ǈΐϖ ϕϕ ϑ靐鶱ϱς]</target>
+        <target>没有应用程序界面符号无法取回构建定义信息。字段将会留为空白。</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1790,38 +1798,38 @@ Please ensure that the url is valid and that the API token has access to build a
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>[Ḗẋȧḿƥŀḗş:
- - ħŧŧƥş://ḓḗṽ.ȧzŭřḗ.ƈǿḿ/ẏǿŭřǿřɠȧƞīzȧŧīǿƞ/ƥřǿĵḗƈŧƞȧḿḗ/
- - ħŧŧƥş://ẏǿŭřħǿşŧ:8080/ŧƒş/ƈǿŀŀḗƈŧīǿƞƞȧḿḗ/ƥřǿĵḗƈŧƞȧḿḗ/
- - ħŧŧƥş://ẏǿŭřǿřɠȧƞīzȧŧīǿƞ.ṽīşŭȧŀşŧŭḓīǿ.ƈǿḿ/ƥřǿĵḗƈŧƞȧḿḗ/ ǈ鶱ǈǅſẛϕϰſϕ ǅ ẛΐǋ衋ǅϐϵǈϰϱϱϕςϖ鶱ϱǋϵϑ]</target>
+        <target>范例：
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
  - 'Build (read)'
  - 'Project and team (read)'</source>
-        <target>[Ẏǿŭ ƞḗḗḓ ŧǿ ƈřḗȧŧḗ ȧ ŧǿķḗƞ ẇīŧħ ŧħḗ ƒǿŀŀǿẇīƞɠ şƈǿƥḗş:
- - 'Ɓŭīŀḓ (řḗȧḓ)'
- - 'Ƥřǿĵḗƈŧ ȧƞḓ ŧḗȧḿ (řḗȧḓ)' ςΐ靐 ǋΐςǋ ϱϖ ϖΐẛϕǋϑ ϵ]</target>
+        <target>您需要创建具有以下范围的令牌:
+ - '编译(读)'
+ - '工程和团队(读)'</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>[Ŧħḗ 'Ɓŭīŀḓ ḓḗƒīƞīŧīǿƞ ƞȧḿḗ' řḗɠŭŀȧř ḗẋƥřḗşşīǿƞ īş ƞǿŧ ṽȧŀīḓ ȧƞḓ ẇǿƞ'ŧ ƀḗ şȧṽḗḓ! ıϰı ϕ鶱ϰ靐鶱衋靐鶱ϰſı]</target>
+        <target>&quot;生成定义名称&quot; 正则表达式无效, 无法保存!</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
-        <target>[Ŀǿɠ ȧş ɠŭḗşŧ ŧǿ ḓīşƥŀȧẏ ŧħḗ ƀŭīŀḓ řḗƥǿřŧ ϰǅϖ ϰΰ ſǲſ]</target>
+        <target>作为来宾登陆以显示生成报告</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
-        <target>[Ɓŭīŀḓ ŭřŀ ƞǿŧ ṽȧŀīḓ ΐϕ靐ǅǅ 鶱ΰϑ 衋]</target>
+        <target>生产url无效</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1829,41 +1837,41 @@ Please ensure that the url is valid and that the API token has access to build a
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>[Ŧħḗ ƈŀīƥƀǿȧřḓ ḓǿḗşƞ'ŧ ƈǿƞŧȧīƞ ȧ ṽȧŀīḓ ƀŭīŀḓ ŭřŀ.
+        <target>剪切版不包含有效的构建URL。
 
-Ƥŀḗȧşḗ ƈǿƥẏ īƞ ŧħḗ ƈŀīƥƀǿȧřḓ ŧħḗ ŭřŀ ǿƒ ŧħḗ ƀŭīŀḓ ƀḗƒǿřḗ řḗŧřẏīƞɠ.
-(Şħǿŭŀḓ ƈǿƞŧȧīƞ ȧŧ ŀḗȧşŧ ŧħḗ &quot;ƀŭīŀḓŦẏƥḗĪḓ&quot; ƥȧřȧḿḗŧḗř) 鶱ΰǋ ẛΐϕϖϕςϵıϱ 鶱靐ǈǲ靐鶱ǈΰſ靐ϑΰ ςǈıϖϵǋı]</target>
+请复制剪贴板的构建URL后重试。
+(至少应包含&quot;buildTypeId&quot;参数)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
-        <target>[Ḗřřǿř ẇħḗƞ ŀǿȧḓīƞɠ ŧħḗ ƥřǿĵḗƈŧş ȧƞḓ ƀŭīŀḓ ŀīşŧ ſϱϑıϕ ǋςϰϵ]</target>
+        <target>加载项目和生成列表时出错</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>[Ƒȧīŀḗḓ ŧǿ ŀǿȧḓ ŧħḗ ƥřǿĵḗƈŧş ȧƞḓ ƀŭīŀḓ ŀīşŧ.
-Ƥŀḗȧşḗ ṽḗřīƒẏ ŧħḗ şḗřṽḗř ŭřŀ. ϱϱẛǋǲϐ ǋϰ ϕ]</target>
+        <target>未能加载项目和生成列表。
+请验证服务器 url。</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>[Ŧħḗ &quot;Ɓŭīŀḓ Īḓ Ƒīŀŧḗř&quot; řḗɠŭŀȧř ḗẋƥřḗşşīǿƞ īş ƞǿŧ ṽȧŀīḓ ȧƞḓ ẇǿƞ'ŧ ƀḗ şȧṽḗḓ! ϵſϐ ςǋϕϐΰẛϖǲſ靐]</target>
+        <target>&quot;生成 id 筛选器&quot; 正则表达式无效, 无法保存!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
-        <target>[Ḗẋŧřȧƈŧ ŧħḗ ḓȧŧȧ ƒřǿḿ ŧħḗ ƀŭīŀḓ ŭřŀ ƈǿƥīḗḓ īƞ ŧħḗ ƈŀīƥƀǿȧřḓ ǅıϖ鶱ϵΰΰ]</target>
+        <target>从剪贴板中复制的生成 url 中提取数据</target>
         
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en">
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>[Ŧħḗ 'Ɓŭīŀḓ ḓḗƒīƞīŧīǿƞ ƞȧḿḗ' řḗɠŭŀȧř ḗẋƥřḗşşīǿƞ īş ƞǿŧ ṽȧŀīḓ ȧƞḓ ẇǿƞ'ŧ ƀḗ şȧṽḗḓ! ϰΰı ΐϑϑıǅẛẛϱǅ衋靐]</target>
+        <target>&quot;生成定义名称&quot; 正则表达式无效, 无法保存!</target>
         
       </trans-unit>
     </body>

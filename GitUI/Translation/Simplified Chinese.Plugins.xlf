@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -1463,7 +1463,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="Name.Text">
         <source>Jira Commit Hint</source>
-        <target>Jira Commit 提示</target>
+        <target>Jira 提交提示</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">

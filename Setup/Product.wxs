@@ -15,7 +15,7 @@
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
     <Property Id="LAUNCH" Value="0" />
     <Property Id="TELEMETRY_ENABLED" Value="1" Secure="yes" />
-    <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable"/>
+    <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
     <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
     <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
     <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
@@ -227,7 +227,6 @@
       <Component Id="System.Reactive.Linq.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\System.Reactive.Linq.dll" />
       </Component>
-
       <!-- Shell extensions -->
       <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
       <Component Id="GitExtensionsShellEx32.dll" Guid="*">
@@ -439,15 +438,6 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="TranslationsDir">
-      <Component Id="Dutch.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.gif" />
-      </Component>
-      <Component Id="Dutch.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.xlf" />
-      </Component>
-      <Component Id="Dutch.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Dutch.Plugins.xlf" />
-      </Component>
       <Component Id="English.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\English.gif" />
       </Component>
@@ -520,6 +510,15 @@
       <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.Plugins.xlf" />
       </Component>
+      <Component Id="Spanish_Argentina.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).gif" />
+      </Component>
+      <Component Id="Spanish_Argentina.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).xlf" />
+      </Component>
+      <Component Id="Spanish_Argentina.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).Plugins.xlf" />
+      </Component>
       <Component Id="Spanish.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.gif" />
       </Component>
@@ -528,6 +527,15 @@
       </Component>
       <Component Id="Spanish.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.Plugins.xlf" />
+      </Component>
+      <Component Id="TraditionalChinese.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Traditional Chinese.gif" />
+      </Component>
+      <Component Id="TraditionalChinese.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Traditional Chinese.xlf" />
+      </Component>
+      <Component Id="TraditionalChinese.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Traditional Chinese.Plugins.xlf" />
       </Component>
       <Component Id="Turkish.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.gif" />
@@ -615,7 +623,6 @@
         <RemoveFolder Id="GitExtensions.desktop" On="uninstall" />
       </Component>
     </DirectoryRef>
-
     <Feature Id="GitExtensions" Title="Git Extensions" Level="1" Display="expand">
       <!-- Application build artifacts -->
       <ComponentGroupRef Id="Component.ConEmuFiles" />
@@ -797,11 +804,6 @@
         </Feature>
       </Feature>
       <Feature Id="Translation" Title="Translations" Level="1">
-        <Feature Id="Dutch" Title="Dutch" Level="1">
-          <ComponentRef Id="Dutch.xlf" />
-          <ComponentRef Id="Dutch.Plugins.xlf" />
-          <ComponentRef Id="Dutch.gif" />
-        </Feature>
         <Feature Id="French" Title="French" Level="1">
           <ComponentRef Id="French.xlf" />
           <ComponentRef Id="French.Plugins.xlf" />
@@ -837,10 +839,20 @@
           <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
           <ComponentRef Id="SimplifiedChinese.gif" />
         </Feature>
+        <Feature Id="Spanish_Argentina" Title="Spanish (Argentina)" Level="1">
+          <ComponentRef Id="Spanish_Argentina.xlf" />
+          <ComponentRef Id="Spanish_Argentina.Plugins.xlf" />
+          <ComponentRef Id="Spanish_Argentina.gif" />
+        </Feature>
         <Feature Id="Spanish" Title="Spanish" Level="1">
           <ComponentRef Id="Spanish.xlf" />
           <ComponentRef Id="Spanish.Plugins.xlf" />
           <ComponentRef Id="Spanish.gif" />
+        </Feature>
+        <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
+          <ComponentRef Id="TraditionalChinese.xlf" />
+          <ComponentRef Id="TraditionalChinese.Plugins.xlf" />
+          <ComponentRef Id="TraditionalChinese.gif" />
         </Feature>
         <Feature Id="Turkish" Title="Turkish" Level="1">
           <ComponentRef Id="Turkish.xlf" />
