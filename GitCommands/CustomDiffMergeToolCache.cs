@@ -67,6 +67,10 @@ namespace GitCommands
                     _tools = ParseCustomDiffMergeTool(output, defaultTool);
                 }
             }
+            catch
+            {
+                // No action.
+            }
             finally
             {
                 if (_tools is null)
