@@ -55,23 +55,16 @@
 
             public override void LoadSetting(ISettingsSource settings, NumericUpDown control)
             {
-                object? settingVal = settings.SettingLevel == SettingLevel.Effective
-                    ? Setting.ValueOrDefault(settings)
-                    : Setting[settings];
-
-                control.Value = (int)settingVal;
+                control.Value = Setting.ValueOrDefault(settings);
             }
 
             public override void SaveSetting(ISettingsSource settings, NumericUpDown control)
             {
-                var controlValue = control.Value;
+                decimal controlValue = control.Value;
 
-                if (settings.SettingLevel == SettingLevel.Effective)
+                if (Setting.ValueOrDefault(settings) == controlValue)
                 {
-                    if (Setting.ValueOrDefault(settings) == controlValue)
-                    {
-                        return;
-                    }
+                    return;
                 }
 
                 Setting[settings] = controlValue;
