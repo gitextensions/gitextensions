@@ -757,9 +757,12 @@ namespace GitUITests.UserControls
                                                 {
                                                     foreach (bool showCurrentBranchOnly in new[] { false, true })
                                                     {
-                                                        foreach (string branchFilter in new[] { "branch1", "", null })
+                                                        foreach (bool showReflogReferences in new[] { false, true })
                                                         {
-                                                            yield return new TestCaseData(byDateFrom, byDateTo, byAuthor, byCommitter, byMessage, byDiffContent, showSimplifyByDecoration, showMergeCommits, pathFilter, showCurrentBranchOnly, branchFilter);
+                                                            foreach (string branchFilter in new[] { "branch1", "", null })
+                                                            {
+                                                                yield return new TestCaseData(byDateFrom, byDateTo, byAuthor, byCommitter, byMessage, byDiffContent, showSimplifyByDecoration, showMergeCommits, pathFilter, showCurrentBranchOnly, showReflogReferences, branchFilter);
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -775,7 +778,7 @@ namespace GitUITests.UserControls
         }
 
         [TestCaseSource(nameof(FilterInfo_HasFilterTestCases))]
-        public void FilterInfo_HasFilter_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byDiffContent, bool showSimplifyByDecoration, bool showMergeCommits, string pathFilter, bool showCurrentBranchOnly, string branchFilter)
+        public void FilterInfo_HasFilter_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byDiffContent, bool showSimplifyByDecoration, bool showMergeCommits, string pathFilter, bool showCurrentBranchOnly, bool showReflogReferences, string branchFilter)
         {
             FilterInfo filterInfo = new()
             {
@@ -790,15 +793,16 @@ namespace GitUITests.UserControls
                 ByPathFilter = true,
                 PathFilter = pathFilter,
                 ShowCurrentBranchOnly = showCurrentBranchOnly,
+                ShowReflogReferences = showReflogReferences,
                 ByBranchFilter = true,
                 BranchFilter = branchFilter
             };
 
-            filterInfo.HasFilter.Should().Be(byDateFrom || byDateTo || byAuthor || byCommitter || byMessage || byDiffContent || showSimplifyByDecoration || !showMergeCommits || !string.IsNullOrWhiteSpace(pathFilter) || showCurrentBranchOnly || !string.IsNullOrWhiteSpace(branchFilter));
+            filterInfo.HasFilter.Should().Be(byDateFrom || byDateTo || byAuthor || byCommitter || byMessage || byDiffContent || showSimplifyByDecoration || !showMergeCommits || !string.IsNullOrWhiteSpace(pathFilter) || !string.IsNullOrWhiteSpace(branchFilter));
         }
 
         [TestCaseSource(nameof(FilterInfo_HasFilterTestCases))]
-        public void FilterInfo_ResetAllFilters_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byDiffContent, bool showSimplifyByDecoration, bool showMergeCommits, string pathFilter, bool showCurrentBranchOnly, string branchFilter)
+        public void FilterInfo_ResetAllFilters_expected(bool byDateFrom, bool byDateTo, bool byAuthor, bool byCommitter, bool byMessage, bool byDiffContent, bool showSimplifyByDecoration, bool showMergeCommits, string pathFilter, bool showCurrentBranchOnly, bool showReflogReferences, string branchFilter)
         {
             FilterInfo filterInfo = new()
             {
@@ -813,6 +817,7 @@ namespace GitUITests.UserControls
                 ByPathFilter = true,
                 PathFilter = pathFilter,
                 ShowCurrentBranchOnly = showCurrentBranchOnly,
+                ShowReflogReferences = showReflogReferences,
                 ByBranchFilter = true,
                 BranchFilter = branchFilter
             };
@@ -828,8 +833,10 @@ namespace GitUITests.UserControls
             filterInfo.ShowSimplifyByDecoration.Should().BeFalse();
             filterInfo.ShowMergeCommits.Should().BeTrue();
             filterInfo.ByPathFilter.Should().BeFalse();
-            filterInfo.ShowCurrentBranchOnly.Should().BeFalse();
             filterInfo.ByBranchFilter.Should().BeFalse();
+
+            filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly && !showReflogReferences);
+            filterInfo.ShowReflogReferences.Should().Be(showReflogReferences);
         }
 
         [TestCase("author1", "committer2", "message3", "diffContent4", true, false, "pathFilter7", false, false, "branchFilter8",
