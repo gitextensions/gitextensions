@@ -82,7 +82,7 @@ Turn off if you experience problems with the console emulator.</source>
         <source>Use last chosen &quot;local changes&quot; action as default action.
 This action will be performed without warning while checking out branch.</source>
         <target>最後に選択した「ローカルの変更」をデフォルトの挙動とする。
-この設定をするとブランチの切り替え時に警告を表示しなくなります。</target>
+この設定をするとブランチのチェックアウト時に警告を表示しなくなります。</target>
         
       </trans-unit>
       <trans-unit id="grpCommit.Text">
@@ -1045,7 +1045,7 @@ GitHubアカウントが必要です。</target>
       </trans-unit>
       <trans-unit id="_cantRegisterShellExtension.Text">
         <source>Could not register the shell extension because '{0}' could not be found.</source>
-        <target>シェル拡張を登録できませんでした: '{0}'が見つかりません。</target>
+        <target>'{0}' が見つからなかったため、シェル拡張を登録できませんでした。</target>
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
@@ -4231,7 +4231,7 @@ Do you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Checkout branch</source>
-        <target>ブランチを切り替え</target>
+        <target>ブランチをチェックアウト</target>
         
       </trans-unit>
       <trans-unit id="LocalBranch.Text">
@@ -4822,9 +4822,9 @@ Do you want to continue?</source>
         <source>Tell git to not check the status of this file for performance benefits.
 Use this feature when a file is big and never change.
 Git will never check if the file has changed that will improve status check performance.</source>
-        <target>パフォーマンス向上のため、このファイルの状態をチェックしないようにします。
+        <target>パフォーマンス向上のため、このファイルの状態を確認しないようにします。
 この機能は、ファイルが大きくかつ変更しない場合に使用します。
-Gitはファイルの変更をチェックしないため、ステータスチェックのパフォーマンスが向上します。</target>
+Gitはファイルの変更を確認しないため、状態確認のパフォーマンスが向上します。</target>
         
       </trans-unit>
       <trans-unit id="_commitAndPush.Text">
@@ -7278,7 +7278,7 @@ subtree
       </trans-unit>
       <trans-unit id="btCheckoutBranch.Text">
         <source>Checkout Branch</source>
-        <target>ブランチを切り替え</target>
+        <target>ブランチをチェックアウト</target>
         
       </trans-unit>
       <trans-unit id="btOpenSubmodule.Text">
@@ -8487,11 +8487,6 @@ Inactive remote is completely invisible to git.</source>
         <target>アクティブなリモート &quot;{0}&quot; は既に存在します。</target>
         
       </trans-unit>
-      <trans-unit id="_errorNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target>SSH鍵がありません</target>
-        
-      </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
         <source>Edit Remote Details</source>
         <target>リモートの詳細を編集</target>
@@ -8732,7 +8727,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>This will delete any uncommitted work.</source>
-        <target>コミットしていない変更はすべて削除されます。</target>
+        <target>未コミットの変更はすべて削除されます。</target>
         
       </trans-unit>
     </body>
@@ -8753,7 +8748,7 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <source>&amp;Hard: reset working directory and index
 (discard ALL local changes, even uncommitted changes)</source>
         <target>Hard(&amp;H): 作業ディレクトリとインデックスをリセット先の状態にする
-(コミットしていない変更点をすべて破棄します)</target>
+(未コミットの変更点をすべて破棄します)</target>
         
       </trans-unit>
       <trans-unit id="Keep.Text">
@@ -10030,7 +10025,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="chkCheckForUncommittedChangesInCheckoutBranch.Text">
         <source>Check for uncommitted changes in checkout branch dialog</source>
-        <target>ブランチ切り替えダイアログでコミット前の変更をチェック</target>
+        <target>ブランチチェックアウトダイアログでコミット前の変更を確認</target>
         
       </trans-unit>
       <trans-unit id="chkCloseProcessDialog.Text">
@@ -11039,11 +11034,6 @@ help</source>
       <trans-unit id="_notValidGitDirectory.Text">
         <source>The current directory is not a valid git repository.</source>
         <target>現在のディレクトリは有効な git リポジトリではありません。</target>
-        
-      </trans-unit>
-      <trans-unit id="_pageantNotFound.Text">
-        <source>Cannot load SSH key. PuTTY is not configured properly.</source>
-        <target>SSH鍵を読み込めません。PuTTYが正しく設定されていません。</target>
         
       </trans-unit>
       <trans-unit id="_reason.Text">
@@ -13350,7 +13340,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_buttonCheckoutBranch.Text">
         <source>Checkout branch</source>
-        <target>ブランチを切り替え</target>
+        <target>ブランチをチェックアウト</target>
         
       </trans-unit>
       <trans-unit id="_buttonCloseApp.Text">
@@ -13551,6 +13541,31 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_errorCaptionNotOnBranch.Text">
         <source>Not on a branch</source>
         <target>ブランチ上にいません</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorPuTTYNotFound.Text">
+        <source>SSH agent could not be found</source>
+        <target>SSH エージェントが見つかりませんでした</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshKeyNotFound.Text">
+        <source>SSH key file could not be found</source>
+        <target>SSH キーファイルが見つかりませんでした</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYInstalled.Text">
+        <source>Is PuTTY installed?</source>
+        <target>PuTTY はインストール済ですか?</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYNotConfigured.Text">
+        <source>PuTTY is not configured as SSH client</source>
+        <target>PuTTY が SSH クライアントとして構成されていません</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYWhereConfigure.Text">
+        <source>SSH client can be configured in Settings &gt; SSH.</source>
+        <target>SSH クライアントは 設定 &gt; SSH で構成できます。</target>
         
       </trans-unit>
       <trans-unit id="_exitCodeText.Text">
