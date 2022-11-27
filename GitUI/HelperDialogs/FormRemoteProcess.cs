@@ -1,6 +1,7 @@
 using GitCommands;
 using GitCommands.Config;
 using GitExtUtils;
+using GitUI.Infrastructure;
 using GitUI.UserControls;
 using ResourceManager;
 
@@ -66,7 +67,7 @@ Do you want to register the host's fingerprint and restart the process?");
         protected override void BeforeProcessStart()
         {
             _restart = false;
-            Plink = GitSshHelpers.Plink();
+            Plink = GitSshHelpers.IsPlink;
             base.BeforeProcessStart();
         }
 

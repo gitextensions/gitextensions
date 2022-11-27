@@ -126,8 +126,6 @@ namespace GitUIPluginInterfaces
         string GetSetting(string setting);
         string GetEffectiveSetting(string setting);
 
-        bool StartPageantForRemote(string remote);
-
         /// <summary>Gets the current branch; or "(no branch)" if HEAD is detached.</summary>
         string GetSelectedBranch();
 

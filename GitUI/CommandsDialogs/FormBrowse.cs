@@ -23,6 +23,7 @@ using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
+using GitUI.Infrastructure;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.NBugReports;
 using GitUI.Properties;
@@ -1535,12 +1536,12 @@ namespace GitUI.CommandsDialogs
 
         private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new Executable(AppSettings.Pageant, Module.WorkingDir).Start();
+            PuttyHelpers.StartPageant(Module.WorkingDir);
         }
 
         private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            new Executable(AppSettings.Puttygen, Module.WorkingDir).Start();
+            PuttyHelpers.StartPuttygen(Module.WorkingDir);
         }
 
         private void CommitInfoTabControl_SelectedIndexChanged(object sender, EventArgs e)

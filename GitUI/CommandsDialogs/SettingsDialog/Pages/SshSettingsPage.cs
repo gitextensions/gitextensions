@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 OpenSSH.Checked = true;
             }
-            else if (GitSshHelpers.Plink())
+            else if (GitSshHelpers.IsPlink)
             {
                 Putty.Checked = true;
             }
@@ -69,7 +69,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             // Set persistent settings as well as the env var used by Git
-            GitSshHelpers.SetSsh(path);
+            GitSshHelpers.SetGitSshEnvironmentVariable(path);
             AppSettings.SshPath = path;
         }
 

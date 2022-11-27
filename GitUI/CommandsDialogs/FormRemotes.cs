@@ -3,6 +3,7 @@ using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using GitUI.Infrastructure;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -54,9 +55,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _sshKeyOpenCaption =
             new("Select ssh key file");
-
-        private readonly TranslationString _errorNoKeyEntered =
-            new("No SSH key file entered");
 
         private readonly TranslationString _labelUrlAsFetch =
             new("Fetch Url");
@@ -321,7 +319,7 @@ Inactive remote is completely invisible to git.");
                     $" Either {nameof(PreselectRemoteOnLoad)} or {nameof(PreselectLocalOnLoad)}");
             }
 
-            pnlMgtPuttySsh.Visible = GitSshHelpers.Plink();
+            pnlMgtPuttySsh.Visible = GitSshHelpers.IsPlink;
 
             // if Putty SSH isn't enabled, reduce the minimum height of the form
             MinimumSize = new Size(MinimumSize.Width, pnlMgtPuttySsh.Visible ? MinimumSize.Height : MinimumSize.Height - pnlMgtPuttySsh.Height);
@@ -516,14 +514,7 @@ Inactive remote is completely invisible to git.");
 
         private void LoadSshKeyClick(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(PuttySshKey.Text))
-            {
-                MessageBox.Show(this, _errorNoKeyEntered.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                GitModule.StartPageantWithKey(PuttySshKey.Text);
-            }
+            PuttyHelpers.StartPageantIfConfigured(() => PuttySshKey.Text);
         }
 
         private void TestConnectionClick(object sender, EventArgs e)
