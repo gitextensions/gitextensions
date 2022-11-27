@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Utils;
+using GitUI.Infrastructure;
 using Microsoft;
 using Microsoft.Win32;
 using ResourceManager;
@@ -180,7 +181,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SshConfig_Click(object sender, EventArgs e)
         {
-            if (GitSshHelpers.Plink())
+            if (GitSshHelpers.IsPlink)
             {
                 Validates.NotNull(SshSettingsPage);
                 if (SshSettingsPage.AutoFindPuttyPaths())
@@ -436,7 +437,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckSSHSettings()
         {
             SshConfig.Visible = true;
-            if (GitSshHelpers.Plink())
+            if (GitSshHelpers.IsPlink)
             {
                 return RenderSettingSetUnset(() => !File.Exists(AppSettings.Plink) || !File.Exists(AppSettings.Puttygen) || !File.Exists(AppSettings.Pageant),
                                         SshConfig, SshConfig_Fix,

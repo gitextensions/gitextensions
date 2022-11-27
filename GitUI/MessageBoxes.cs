@@ -26,9 +26,6 @@ namespace GitUI
         private readonly TranslationString _middleOfPatchApplyCaption = new("Patch apply");
         private readonly TranslationString _middleOfPatchApply = new("You are in the middle of a patch apply, continue patch apply?");
 
-        private const string _putty = "PuTTY";
-        private readonly TranslationString _pageantNotFound = new("Cannot load SSH key. PuTTY is not configured properly.");
-
         private readonly TranslationString _serverHostkeyNotCachedText =
             new("The server's host key is not cached in the registry.\n\nDo you want to trust this host key and then try again?");
 
@@ -86,9 +83,6 @@ namespace GitUI
 
         public static bool MiddleOfPatchApply(IWin32Window? owner)
             => Confirm(owner, Instance._middleOfPatchApply.Text, Instance._middleOfPatchApplyCaption.Text);
-
-        public static void PAgentNotFound(IWin32Window? owner)
-            => ShowError(owner, Instance._pageantNotFound.Text, _putty);
 
         public static void SelectOnlyOneOrTwoRevisions(IWin32Window? owner)
             => ShowError(owner, Instance._selectOnlyOneOrTwoRevisions.Text, Instance._archiveRevisionCaption.Text);

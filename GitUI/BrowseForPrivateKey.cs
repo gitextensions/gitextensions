@@ -1,4 +1,4 @@
-﻿using GitCommands;
+﻿using GitUI.Infrastructure;
 
 namespace GitUI
 {
@@ -12,12 +12,12 @@ namespace GitUI
         /// </summary>
         public static string? BrowseAndLoad(IWin32Window parent)
         {
-            var path = Browse(parent);
-            if (!string.IsNullOrEmpty(path))
+            string? sshKeyFile = Browse(parent);
+            if (!string.IsNullOrEmpty(sshKeyFile))
             {
-                if (LoadKey(parent, path))
+                if (PuttyHelpers.StartPageantIfConfigured(() => sshKeyFile))
                 {
-                    return path;
+                    return sshKeyFile;
                 }
             }
 
@@ -41,21 +41,6 @@ namespace GitUI
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Tries to load the given key. Returns whether successful.
-        /// </summary>
-        public static bool LoadKey(IWin32Window parent, string? path)
-        {
-            if (!File.Exists(AppSettings.Pageant))
-            {
-                MessageBoxes.PAgentNotFound(parent);
-                return false;
-            }
-
-            GitModule.StartPageantWithKey(path);
-            return true;
         }
     }
 }

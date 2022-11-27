@@ -5,6 +5,7 @@ using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
+using GitUI.Infrastructure;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -318,7 +319,7 @@ namespace GitUI.CommandsDialogs
 
         private void FormCloneLoad(object sender, EventArgs e)
         {
-            if (!GitSshHelpers.Plink())
+            if (!GitSshHelpers.IsPlink)
             {
                 LoadSSHKey.Visible = false;
             }

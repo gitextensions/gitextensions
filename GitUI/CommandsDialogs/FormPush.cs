@@ -10,6 +10,7 @@ using GitCommands.Settings;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
+using GitUI.Infrastructure;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Settings;
@@ -318,7 +319,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 Validates.NotNull(selectedRemoteName);
-                EnsurePageant(selectedRemoteName);
+                StartPageant(selectedRemoteName);
 
                 destination = selectedRemoteName;
                 remote = selectedRemoteName.Trim();
@@ -885,21 +886,9 @@ namespace GitUI.CommandsDialogs
 
         private void StartPageant(string? remote)
         {
-            if (!File.Exists(AppSettings.Pageant))
+            if (GitSshHelpers.IsPlink)
             {
-                MessageBoxes.PAgentNotFound(this);
-            }
-            else
-            {
-                Module.StartPageantForRemote(remote);
-            }
-        }
-
-        private void EnsurePageant(string? remote)
-        {
-            if (GitSshHelpers.Plink())
-            {
-                StartPageant(remote);
+                PuttyHelpers.StartPageantIfConfigured(() => Module.GetPuttyKeyFileForRemote(remote));
             }
         }
 
@@ -968,7 +957,7 @@ namespace GitUI.CommandsDialogs
 
                 if (detailedSettings.GetRemoteBranchesDirectlyFromRemote)
                 {
-                    EnsurePageant(remote);
+                    StartPageant(remote);
 
                     FormRemoteProcess formProcess = new(UICommands, $"ls-remote --heads \"{remote}\"")
                     {

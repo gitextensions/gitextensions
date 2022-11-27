@@ -134,6 +134,12 @@ the last selected commit.");
         private readonly TranslationString _cannotBeUndone = new("This action cannot be undone.");
         private readonly TranslationString _areYouSure = new("Are you sure you want to drop the stash? This action cannot be undone.");
 
+        private readonly TranslationString _errorPuTTYNotFound = new("SSH agent could not be found");
+        private readonly TranslationString _errorSshKeyNotFound = new("SSH key file could not be found");
+        private readonly TranslationString _errorSshPuTTYInstalled = new("Is PuTTY installed?");
+        private readonly TranslationString _errorSshPuTTYNotConfigured = new("PuTTY is not configured as SSH client");
+        private readonly TranslationString _errorSshPuTTYWhereConfigure = new("SSH client can be configured in Settings > SSH.");
+
         // public only because of FormTranslate
         public TranslatedStrings()
         {
@@ -213,6 +219,12 @@ the last selected commit.");
         public static string ErrorCaptionFailedDeleteFile => _instance.Value._errorCaptionFailedDeleteFile.Text;
         public static string ErrorCaptionFailedDeleteFolder => _instance.Value._errorCaptionFailedDeleteFolder.Text;
         public static string ErrorCaptionNotOnBranch => _instance.Value._errorCaptionNotOnBranch.Text;
+
+        public static string ErrorFileNotFound => _instance.Value._errorPuTTYNotFound.Text;
+        public static string ErrorSshKeyNotFound => _instance.Value._errorSshKeyNotFound.Text;
+        public static string ErrorSshPuTTYInstalled => _instance.Value._errorSshPuTTYInstalled.Text;
+        public static string ErrorSshPuTTYNotConfigured => _instance.Value._errorSshPuTTYNotConfigured.Text;
+        public static string ErrorSshPuTTYWhereConfigure => _instance.Value._errorSshPuTTYWhereConfigure.Text;
 
         public static string ErrorInstructionNotOnBranch => _instance.Value._mainInstructionNotOnBranch.Text;
 

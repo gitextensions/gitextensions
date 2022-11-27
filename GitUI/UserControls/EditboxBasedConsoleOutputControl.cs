@@ -3,6 +3,7 @@ using System.Text;
 using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
+using GitUI.Infrastructure;
 using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.UserControls
@@ -99,7 +100,7 @@ namespace GitUI.UserControls
             {
                 EnvironmentConfiguration.SetEnvironmentVariables();
 
-                bool ssh = GitSshHelpers.UseSsh(arguments);
+                bool ssh = UseSsh(arguments);
 
                 KillProcess();
 
@@ -187,6 +188,25 @@ namespace GitUI.UserControls
             }
 
             base.Dispose(disposing);
+        }
+
+        private static bool UseSsh(string arguments)
+        {
+            return arguments.Contains("plink")
+                || (!GitSshHelpers.IsPlink && DoArgumentsRequireSsh());
+
+            bool DoArgumentsRequireSsh()
+            {
+                return (arguments.Contains('@') && arguments.Contains("://")) ||
+                       (arguments.Contains('@') && arguments.Contains(':')) ||
+                       arguments.Contains("ssh://") ||
+                       arguments.Contains("http://") ||
+                       arguments.Contains("git://") ||
+                       arguments.Contains("push") ||
+                       arguments.Contains("remote") ||
+                       arguments.Contains("fetch") ||
+                       arguments.Contains("pull");
+            }
         }
 
         #region ProcessOutputThrottle

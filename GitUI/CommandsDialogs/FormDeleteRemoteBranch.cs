@@ -2,6 +2,7 @@ using GitCommands;
 using GitCommands.Git.Commands;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
+using GitUI.Infrastructure;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -131,16 +132,9 @@ namespace GitUI.CommandsDialogs
 
         private void EnsurePageant(string remote)
         {
-            if (GitSshHelpers.Plink())
+            if (GitSshHelpers.IsPlink)
             {
-                if (!File.Exists(AppSettings.Pageant))
-                {
-                    MessageBoxes.PAgentNotFound(this);
-                }
-                else
-                {
-                    Module.StartPageantForRemote(remote);
-                }
+                PuttyHelpers.StartPageantIfConfigured(() => Module.GetPuttyKeyFileForRemote(remote));
             }
         }
     }

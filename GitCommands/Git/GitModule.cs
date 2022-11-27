@@ -1437,47 +1437,12 @@ namespace GitCommands
 
         /// <summary>Tries to start Pageant for the specified remote repo (using the remote's PuTTY key file).</summary>
         /// <returns>true if the remote has a PuTTY key file; otherwise, false.</returns>
-        public bool StartPageantForRemote(string? remote)
-        {
-            var sshKeyFile = GetPuttyKeyFileForRemote(remote);
-            if (string.IsNullOrEmpty(sshKeyFile) || !File.Exists(sshKeyFile))
-            {
-                return false;
-            }
-
-            StartPageantWithKey(sshKeyFile);
-            return true;
-        }
-
-        public static void StartPageantWithKey(string? sshKeyFile)
-        {
-            Executable pageantExecutable = new(AppSettings.Pageant);
-
-            // ensure pageant is loaded, so we can wait for loading a key in the next command
-            // otherwise we'll stuck there waiting until pageant exits
-            if (!IsPageantRunning())
-            {
-                // NOTE we leave the process to dangle here
-                var process = pageantExecutable.Start("");
-
-                process.WaitForInputIdle();
-            }
-
-            pageantExecutable.RunCommand(sshKeyFile.Quote());
-
-            static bool IsPageantRunning()
-            {
-                var pageantProcName = Path.GetFileNameWithoutExtension(AppSettings.Pageant);
-                return Process.GetProcessesByName(pageantProcName).Length != 0;
-            }
-        }
-
         public string GetPuttyKeyFileForRemote(string? remote)
         {
             if (string.IsNullOrEmpty(remote) ||
                 string.IsNullOrEmpty(AppSettings.Pageant) ||
                 !AppSettings.AutoStartPageant ||
-                !GitSshHelpers.Plink())
+                !GitSshHelpers.IsPlink)
             {
                 return "";
             }
