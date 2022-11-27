@@ -26,7 +26,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             InitializeComponent();
             InitializeComplete();
 
-            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
             Visible = false;
 
             tableLayoutPanel1.AutoSize = true;
@@ -50,17 +50,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             // Focus the control in order for the search bar to have focus once the dashboard is shown
             userRepositoriesList.Focus();
-        }
-
-        // need this to stop flickering of the background images, nothing else works
-        protected override CreateParams CreateParams
-        {
-            get
-            {
-                CreateParams cp = base.CreateParams;
-                cp.ExStyle |= 0x02000000;
-                return cp;
-            }
         }
 
         public void RefreshContent()
