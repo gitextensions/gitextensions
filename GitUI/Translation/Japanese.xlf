@@ -13598,9 +13598,79 @@ Select this commit to populate the full message.</source>
         <target>次のエラーのため &quot;{0}&quot; の読み込みに失敗しました:{1}{1}{2}{1}{1}この問題の性質上、アプリケーションの動作を保証することはできないため、アプリケーションを閉じなければなりません。{1}{1}この問題を修正して、Git Extensions を再度開いてください。</target>
         
       </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHeader.Text">
+        <source>Do you want to trust this repository by adding a security exception?</source>
+        <target>セキュリティの例外を追加して、このリポジトリを信頼しますか?</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHideGitCommandOutput.Text">
+        <source>Hide git command output...</source>
+        <target>Git コマンド出力を非表示...</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipOpenRepositoryFolder.Text">
+        <source>Open repository in Explorer</source>
+        <target>リポジトリをエクスプローラーで開く</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipSeeGitCommandOutput.Text">
+        <source>See git command output...</source>
+        <target>Git コマンド出力を表示...</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipText.Text">
+        <source>Git detected a security problem that prevents opening the repository.
+Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+
+To be able to open this repository, you need to either:
+- add a security exception for the repository to make git trust it, or
+- correct the ownership of the repository.</source>
+        <target>Git がセキュリティ上の問題点を検出したため、リポジトリを開けなくなりました。
+Git が追跡しているディレクトリは、現在のユーザー以外が所有していると安全ではないと見なされます。
+
+このリポジトリを開けるようにするには、次のいずれかを行う必要があります:
+- リポジトリにセキュリティの例外を追加して git に信頼させる
+- リポジトリの所有者を変更する</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
+        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
+run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
+repositories.
+
+If you wish to trust all git repositories on your system even if they are owned by someone else, run the
+following command.
+
+!!! THIS CAN BE DANGEROUS !!!</source>
+        <target>Git が追跡しているディレクトリは、現在のユーザー以外が所有していると安全でないと見なされます。
+デフォルトでは、Git は他人が所有するリポジトリの Git 構成を構文解析することさえ拒否しますし、
+フックを実行することもできません。
+
+自分のシステム上のすべての Git リポジトリを、たとえ他人のものであっても信頼したい場合は、
+以下のコマンドを実行します:
+
+!!! これは危険です !!!</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
+        <source>Trust all repositories</source>
+        <target>リポジトリをすべて信頼</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">
+        <source>Trust this repository</source>
+        <target>このリポジトリを信頼</target>
+        
+      </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
         <source>The Git executable could not be located on your system.</source>
         <target>gitの実行ファイルはシステムで見つかりませんでした。</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitSecurityError.Text">
+        <source>Git security error</source>
+        <target>Git セキュリティエラー</target>
         
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">
