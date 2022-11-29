@@ -524,11 +524,11 @@ namespace GitUI
             }
 
             ListViewItem currentItem = FileStatusListView.Items[curIdx];
-            var currentGroup = currentItem.Group;
+            ListViewGroup currentGroup = currentItem.Group;
 
             if (searchBackward)
             {
-                var nextItem = FindPrevItemInGroups();
+                ListViewItem? nextItem = FindPrevItemInGroups();
                 if (nextItem is null)
                 {
                     return loop ? GetLastIndex() : curIdx;
@@ -538,7 +538,7 @@ namespace GitUI
             }
             else
             {
-                var nextItem = FindNextItemInGroups();
+                ListViewItem? nextItem = FindNextItemInGroups();
                 if (nextItem is null)
                 {
                     return loop ? 0 : curIdx;
@@ -550,8 +550,8 @@ namespace GitUI
             ListViewItem? FindPrevItemInGroups()
             {
                 List<ListViewGroup> searchInGroups = new();
-                var foundCurrentGroup = false;
-                for (var i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
+                bool foundCurrentGroup = false;
+                for (int i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
                 {
                     if (FileStatusListView.Groups[i] == currentGroup)
                     {
@@ -564,10 +564,10 @@ namespace GitUI
                     }
                 }
 
-                var idx = curIdx;
-                foreach (var grp in searchInGroups)
+                int idx = curIdx;
+                foreach (ListViewGroup grp in searchInGroups)
                 {
-                    for (var i = idx - 1; i >= 0; i--)
+                    for (int i = idx - 1; i >= 0; i--)
                     {
                         if (FileStatusListView.Items[i].Group == grp)
                         {
@@ -584,8 +584,8 @@ namespace GitUI
             ListViewItem? FindNextItemInGroups()
             {
                 List<ListViewGroup> searchInGroups = new();
-                var foundCurrentGroup = false;
-                for (var i = 0; i < FileStatusListView.Groups.Count; i++)
+                bool foundCurrentGroup = false;
+                for (int i = 0; i < FileStatusListView.Groups.Count; i++)
                 {
                     if (FileStatusListView.Groups[i] == currentGroup)
                     {
@@ -598,10 +598,10 @@ namespace GitUI
                     }
                 }
 
-                var idx = curIdx;
-                foreach (var grp in searchInGroups)
+                int idx = curIdx;
+                foreach (ListViewGroup grp in searchInGroups)
                 {
-                    for (var i = idx + 1; i < FileStatusListView.Items.Count; i++)
+                    for (int i = idx + 1; i < FileStatusListView.Items.Count; i++)
                     {
                         if (FileStatusListView.Items[i].Group == grp)
                         {
