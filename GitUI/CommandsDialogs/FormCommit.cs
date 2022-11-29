@@ -1394,7 +1394,8 @@ namespace GitUI.CommandsDialogs
                         gpgSignCommitToolStripComboBox.SelectedIndex > 0,
                         gpgSignCommitToolStripComboBox.SelectedIndex == 2 ? toolStripGPGSecretKeysSelector.KeyID : "",
                         Staged.IsEmpty,
-                        resetAuthor);
+                        resetAuthor,
+                        Module.GitVersion.SupportNoGpgSign);
 
                     success = FormProcess.ShowDialog(this, UICommands, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
 

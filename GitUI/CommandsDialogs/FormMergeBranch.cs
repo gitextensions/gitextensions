@@ -5,6 +5,7 @@ using GitCommands.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
+using GitUI.UserControls.GPGKeys;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.Settings;
 using ResourceManager;
@@ -115,7 +116,10 @@ namespace GitUI.CommandsDialogs
                                                             _NO_TRANSLATE_mergeStrategy.Text,
                                                             allowUnrelatedHistories.Checked,
                                                             Module.GetGitExecPath(mergeMessagePath),
-                                                            addLogMessages.Checked ? (int)nbMessages.Value : (int?)null);
+                                                            addLogMessages.Checked ? (int)nbMessages.Value : (int?)null,
+                                                            comboboxGpgSignType.SelectedIndex > 0,
+                                                            comboboxGpgSignType.SelectedIndex == 2 ? comboboxGpgSecretKeys.KeyID : "",
+                                                            Module.GitVersion.SupportNoGpgSign);
             success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 
             var wasConflict = MergeConflictHandler.HandleMergeConflicts(UICommands, this, !noCommit.Checked);

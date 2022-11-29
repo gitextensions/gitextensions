@@ -347,7 +347,10 @@ namespace GitUI.CommandsDialogs
                                                             chkCommitterDateIsAuthorDate.Checked,
                                                             txtFrom.Text,
                                                             cboBranches.Text,
-                                                            supportRebaseMerges: Module.GitVersion.SupportRebaseMerges);
+                                                            supportRebaseMerges: Module.GitVersion.SupportRebaseMerges,
+                                                            gpgSign: cboGpgAction.SelectedIndex > 0,
+                                                            gpgKeyId: cboGpgAction.SelectedIndex == 2 ? cboGpgSecretKeys.KeyID : "",
+                                                            supportNoGpgSign: Module.GitVersion.SupportNoGpgSign);
                 }
                 else
                 {
@@ -358,7 +361,10 @@ namespace GitUI.CommandsDialogs
                                                              chkStash.Checked,
                                                              chkIgnoreDate.Checked,
                                                              chkCommitterDateIsAuthorDate.Checked,
-                                                             supportRebaseMerges: Module.GitVersion.SupportRebaseMerges);
+                                                             supportRebaseMerges: Module.GitVersion.SupportRebaseMerges,
+                                                             gpgSign: cboGpgAction.SelectedIndex > 0,
+                                                             gpgKeyId: cboGpgAction.SelectedIndex == 2 ? cboGpgSecretKeys.KeyID : "",
+                                                             supportNoGpgSign: Module.GitVersion.SupportNoGpgSign);
                 }
 
                 string cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
