@@ -136,17 +136,19 @@ namespace GitCommands.Settings
 
         private Encoding? GetEncoding(string settingName)
         {
-            // The keys in AppSettings.AvailableEncodings are lower-case, and the actual
-            // configuration is case-insensitive, and can be configured uppercase on the
-            // command line. If configured as UTF-8, then if we don't use the predefined
-            // encoding, it will use the default, which adds BOM.
-            // Convert it to lowercase, to ensure matching.
-            string encodingName = GetValue(settingName).ToLowerInvariant();
+            string? encodingName = GetValue(settingName);
 
             if (string.IsNullOrEmpty(encodingName))
             {
                 return null;
             }
+
+            // The keys in AppSettings.AvailableEncodings are lower-case, and the actual
+            // configuration is case-insensitive, and can be configured uppercase on the
+            // command line. If configured as UTF-8, then if we don't use the predefined
+            // encoding, it will use the default, which adds BOM.
+            // Convert it to lowercase, to ensure matching.
+            encodingName = encodingName.ToLowerInvariant();
 
             if (AppSettings.AvailableEncodings.TryGetValue(encodingName, out var result))
             {
