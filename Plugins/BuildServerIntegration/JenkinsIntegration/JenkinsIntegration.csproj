@@ -1,9 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <AssemblyName>GitExtensions.JenkinsIntegration</AssemblyName>
-  </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="..\..\..\GitExtUtils\Validates.cs" Link="Validates.cs" />
   </ItemGroup>
