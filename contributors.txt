@@ -182,3 +182,4 @@ YYYY/MM/DD, github id, Full name, email
 2022/10/15, TanukiSharp, Sebastien ROBERT, sebastien.saigo(at)gmail.com
 2022/10/26, zachesposito, Zach Esposito, zach(at)zachesposito.me
 2022/11/07, Dub1shu, Kazuki Watanabe, dubian1shu(at)gmail.com
+2022/11/29, orgads, Orgad Shaneh, orgads(at)gmail.com

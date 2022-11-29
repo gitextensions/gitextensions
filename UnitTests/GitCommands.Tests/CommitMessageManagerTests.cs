@@ -21,7 +21,7 @@ namespace GitCommandsTests
         private ReferenceRepository _referenceRepository;
 
         private readonly string _workingDirGitDir = @"c:\dev\repo\.git";
-        private readonly Encoding _encoding = Encoding.UTF8;
+        private readonly Encoding _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
         private readonly string _amendSaveStatePath;
         private readonly string _commitMessagePath;
@@ -39,6 +39,12 @@ namespace GitCommandsTests
             _commitMessagePath = Path.Combine(_workingDirGitDir, "COMMITMESSAGE");
             _mergeMessagePath = Path.Combine(_workingDirGitDir, "MERGE_MSG");
             _rememberAmendCommitState = AppSettings.RememberAmendCommitState;
+        }
+
+        [OneTimeSetUp]
+        public void Init()
+        {
+            AppSettings.LoadSettings();
         }
 
         [SetUp]
@@ -212,6 +218,24 @@ namespace GitCommandsTests
             manager.WriteCommitMessageToFile(message, CommitMessageType.Normal, false, false);
 
             File.Exists(manager.CommitMessagePath).Should().BeTrue();
+        }
+
+        [TestCase("utf-8")]
+        [TestCase("Utf-8")]
+        [TestCase("UTF-8")]
+        public void WriteCommitMessageToFile_no_bom(string encodingName)
+        {
+            _referenceRepository.Module.EffectiveConfigFile.SetString("i18n.commitEncoding", encodingName);
+            _referenceRepository.Module.CommitEncoding.Preamble.Length.Should().Be(0);
+            CommitMessageManager manager = new(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding);
+
+            File.Exists(manager.CommitMessagePath).Should().BeFalse();
+
+            string message = "Test message";
+            manager.WriteCommitMessageToFile(message, CommitMessageType.Normal, false, false);
+
+            File.Exists(manager.CommitMessagePath).Should().BeTrue();
+            File.ReadAllBytes(manager.CommitMessagePath).Should().BeEquivalentTo(Encoding.ASCII.GetBytes(message + "\r\n"));
         }
 
         [Test]
