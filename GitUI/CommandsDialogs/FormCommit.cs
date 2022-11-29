@@ -152,6 +152,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _statusBarBranchWithoutRemote = new("(remote not configured)");
         private readonly TranslationString _untrackedRemote = new("(untracked)");
+
+        private TranslationString _invalidSignCaption = new("Commit Signing Options");
         #endregion
 
         private event Action? OnStageAreaLoaded;
@@ -1312,6 +1314,14 @@ namespace GitUI.CommandsDialogs
                 }
 
                 GPGKeysUIController gpg = toolStripGPGSecretKeysSelector.KeysUIController;
+                if (!gpg.ValidateCommitSign(gpgSignCommitToolStripComboBox.SelectedIndex > 0, toolStripGPGSecretKeysSelector.KeyID))
+                {
+                    MessageBox.Show(this, TranslatedStrings.InvalidGpgSignOptions, _invalidSignCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    toolStripMenuItem3.ShowDropDown();
+                    gpgSignCommitToolStripComboBox.Focus();
+
+                    return;
+                }
 
                 if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == _commitTemplate))
                 {

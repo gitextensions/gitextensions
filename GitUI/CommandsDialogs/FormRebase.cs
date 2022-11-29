@@ -46,6 +46,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _branchUpToDateCaption = new("Rebase");
 
         private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
+
+        private TranslationString _invalidSignCaption = new("Commit Signing Options");
         #endregion
 
         private static readonly List<PatchFile> Skipped = new();
@@ -328,6 +330,19 @@ namespace GitUI.CommandsDialogs
                 if (string.IsNullOrEmpty(cboBranches.Text))
                 {
                     MessageBox.Show(this, _noBranchSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                GPGKeysUIController gpg = cboGpgSecretKeys.KeysUIController;
+                if (!gpg.ValidateCommitSign(cboGpgAction.SelectedIndex > 0, cboGpgSecretKeys.KeyID))
+                {
+                    MessageBox.Show(this, TranslatedStrings.InvalidGpgSignOptions, _invalidSignCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    if (!Module.InTheMiddleOfRebase())
+                    {
+                        flpnlGPG.Visible = true;
+                        cboGpgAction.Focus();
+                    }
+
                     return;
                 }
 

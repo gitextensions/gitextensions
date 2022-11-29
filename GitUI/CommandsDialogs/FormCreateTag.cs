@@ -59,6 +59,7 @@ namespace GitUI.CommandsDialogs
             }
 
             pushTag.Text = string.Format(_pushToCaption.Text, _currentRemote);
+
             var gpg = gpgSecretKeysCombobox.KeysUIController;
             bool tagSign = gpg.AreTagsSignedByDefault();
             if (tagSign)
@@ -96,6 +97,14 @@ namespace GitUI.CommandsDialogs
 
             TagOperation tagOperation = GetSelectedOperation(annotate.SelectedIndex);
             bool useKey = tagOperation == TagOperation.SignWithSpecificKey;
+
+            GPGKeysUIController gpg = gpgSecretKeysCombobox.KeysUIController;
+
+            if (!gpg.ValidateTagSign(tagOperation, gpgSecretKeysCombobox.KeyID))
+            {
+                MessageBox.Show(this, TranslatedStrings.InvalidGpgSignOptions, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return "";
+            }
 
             GitCreateTagArgs createTagArgs = new(textBoxTagName.Text,
                                                      objectId,

@@ -1,4 +1,5 @@
 using GitCommands;
+using GitCommands.Config;
 using ResourceManager;
 
 namespace GitUI
@@ -177,6 +178,7 @@ following command.
         private readonly TranslationString _failedToLoadFileOrAssemblyFormat = new("Could not load file or assembly '{0}'.");
         private readonly TranslationString _failedToLoadFileOrAssemblyText = new("Most of the times the error is temporary, likely caused by Windows Update.");
         private readonly TranslationString __noKeySelected = new("No key selected");
+        private readonly TranslationString _invalidGpgSignOptions = new($"The selected signing option and selected key are invalid. Verify you have selected a key or set a default key in git config ({SettingKeyString.UserSigningKey}).");
 
         // public only because of FormTranslate
         public TranslatedStrings()
@@ -362,5 +364,6 @@ following command.
         public static string FailedToLoadFileOrAssemblyFormat => _instance.Value._failedToLoadFileOrAssemblyFormat.Text;
         public static string FailedToLoadFileOrAssemblyText => _instance.Value._failedToLoadFileOrAssemblyText.Text;
         public static string NoKeySelected => _instance.Value.__noKeySelected.Text;
+        public static string InvalidGpgSignOptions => _instance.Value._invalidGpgSignOptions.Text;
     }
 }

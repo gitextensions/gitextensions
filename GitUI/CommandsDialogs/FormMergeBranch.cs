@@ -16,6 +16,8 @@ namespace GitUI.CommandsDialogs
     public partial class FormMergeBranch : GitModuleForm
     {
         private readonly TranslationString _formMergeBranchHoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
+        private TranslationString _invalidSignCaption = new("Commit Signing Options");
+
         private readonly string? _defaultBranch;
         private ICommitMessageManager _commitMessageManager;
 
@@ -94,6 +96,14 @@ namespace GitUI.CommandsDialogs
             bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeMerge, this);
             if (!success)
             {
+                return;
+            }
+
+            GPGKeysUIController gpg = comboboxGpgSecretKeys.KeysUIController;
+            if (!noCommit.Checked && !gpg.ValidateCommitSign(comboboxGpgSignType.SelectedIndex > 0, comboboxGpgSecretKeys.KeyID))
+            {
+                MessageBox.Show(this, TranslatedStrings.InvalidGpgSignOptions, _invalidSignCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                comboboxGpgSignType.Focus();
                 return;
             }
 
