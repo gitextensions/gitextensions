@@ -91,6 +91,18 @@ namespace CommonTestUtils
 
         public string CreateRepoFile(string fileName, string fileContent) => _moduleTestHelper.CreateRepoFile(fileName, fileContent);
 
+        public string CreateCommitRelative(string fileRelativePath, string fileName, string commitMessage, string content = null)
+        {
+            using Repository repository = new(_moduleTestHelper.Module.WorkingDir);
+            _moduleTestHelper.CreateRepoFile(fileRelativePath, fileName, content ?? commitMessage);
+            repository.Index.Add(Path.Combine(fileRelativePath, fileName));
+
+            CommitHash = Commit(repository, commitMessage);
+            Console.WriteLine($"Created commit: {CommitHash}, message: {commitMessage}");
+
+            return CommitHash;
+        }
+
         public string DeleteRepoFile(string fileName) => _moduleTestHelper.DeleteRepoFile(fileName);
 
         public void CreateAnnotatedTag(string tagName, string commitHash, string message)
