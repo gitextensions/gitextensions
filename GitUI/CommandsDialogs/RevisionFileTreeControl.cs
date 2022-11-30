@@ -61,14 +61,14 @@ See the changes in the commit form.");
                                                                          new GitRevisionInfoProvider(() => Module),
                                                                          new FileAssociatedIconProvider());
             BlameControl.HideCommitInfo();
-            blameToolStripMenuItem1.Checked = AppSettings.RevisionFileTreeShowBlame;
             filterFileInGridToolStripMenuItem.Text = TranslatedStrings.FilterFileInGrid;
         }
 
-        public void Bind(RevisionGridControl revisionGrid, Action? refreshGitStatus)
+        public void Bind(RevisionGridControl revisionGrid, Action? refreshGitStatus, bool isBlame)
         {
             _revisionGrid = revisionGrid;
             _refreshGitStatus = refreshGitStatus;
+            blameToolStripMenuItem1.Checked = isBlame;
         }
 
         /// <summary>
@@ -134,9 +134,10 @@ See the changes in the commit form.");
                     return;
                 }
 
-                if (requestBlame && !AppSettings.RevisionFileTreeShowBlame)
+                if (requestBlame)
                 {
-                    blameToolStripMenuItem1.Checked = AppSettings.RevisionFileTreeShowBlame = true;
+                    // Force blame without changing settings
+                    blameToolStripMenuItem1.Checked = true;
                 }
 
                 // AfterSelect will not fire when selecting again, show manually
@@ -525,7 +526,13 @@ See the changes in the commit form.");
             }
 
             blameToolStripMenuItem1.Checked = !blameToolStripMenuItem1.Checked;
-            AppSettings.RevisionFileTreeShowBlame = blameToolStripMenuItem1.Checked;
+            if (AppSettings.RevisionFileTreeShowBlame != blameToolStripMenuItem1.Checked)
+            {
+                // Update settings only if actually changed
+                // (FileHistory will set the Checked box but not update settings).
+                AppSettings.RevisionFileTreeShowBlame = blameToolStripMenuItem1.Checked;
+            }
+
             int? line = FileText.Visible ? FileText.CurrentFileLine : null;
 
             ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem, line));

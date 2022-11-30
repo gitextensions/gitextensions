@@ -849,12 +849,10 @@ namespace GitCommands
             set => SetBool("opensubmodulediffinseparatewindow", value);
         }
 
-        // This is a "view settings" which is configured for the lifetime of the app instance,
-        // and it doesn't get persisted and shared between different instances of the app.
         public static bool RevisionFileTreeShowBlame
         {
-            get;
-            set;
+            get => GetBool("RevisionFileTreeShowBlame", true);
+            set => SetBool("RevisionFileTreeShowBlame", value);
         }
 
         /// <summary>
