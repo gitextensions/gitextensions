@@ -153,7 +153,7 @@ namespace GitExtensions.Plugins.Gource
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://github.com/acaudwell/Gource/blob/master/README");
+            Process.Start(@"https://github.com/acaudwell/Gource#readme");
         }
     }
 }
