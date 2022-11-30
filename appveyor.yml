@@ -45,6 +45,16 @@ install:
       {
         .\scripts\Update-DotnetVersion.ps1
       }
+# generate gpg key
+- cmd: |-
+       gpg --batch --generate-key .\scripts\gen-gpg.dat
+       gpg  -K --with-colons | awk -F: '/^sec:/ { print $5 }' > gpgkey.txt
+# set git config global user.signingKey to the key that was generated above
+- ps:  |-
+       $gpgKey = Get-Content gpgkey.txt -Head 1
+       git config --global user.signingKey $gpgKey
+       git config user.signingKey
+       rm gpgkey.txt
 - ps: |
       # Install the required .NET SDK
       Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile "./dotnet-install.ps1"
@@ -57,7 +67,6 @@ install:
     C:\\Python311\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
     cd ..
     git --version
-
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
