@@ -18,8 +18,11 @@ public class FormFileHistoryTests
     {
         AppSettings.UseBrowseForFileHistory.Value = false;
 
-        TestComposition? composition = TestComposition.Empty
-            .AddParts(typeof(MockLinkFactory));
+            _composition = TestComposition.Empty
+                .AddParts(typeof(MockLinkFactory))
+                .AddParts(typeof(MockWindowsJumpListManager))
+                .AddParts(typeof(MockRepositoryDescriptionProvider))
+                .AddParts(typeof(MockAppTitleGenerator));
 
         ExportProvider mefExportProvider = composition.ExportProviderFactory.CreateExportProvider();
         ManagedExtensibility.SetTestExportProvider(mefExportProvider);
