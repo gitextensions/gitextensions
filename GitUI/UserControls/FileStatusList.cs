@@ -830,8 +830,20 @@ namespace GitUI
         public void SetSelectedIndex(int idx, bool notify)
         {
             _enableSelectedIndexChangeEvent = notify;
-            SelectedIndex = idx;
-            _enableSelectedIndexChangeEvent = true;
+            try
+            {
+                SelectedIndex = idx;
+
+                ListViewGroup? group = FileStatusListView.SelectedItems.Cast<ListViewItem>().FirstOrDefault()?.Group;
+                if (group?.CollapsedState is ListViewGroupCollapsedState.Collapsed)
+                {
+                    group.CollapsedState = ListViewGroupCollapsedState.Expanded;
+                }
+            }
+            finally
+            {
+                _enableSelectedIndexChangeEvent = true;
+            }
         }
 
         public int SetSelectionFilter(string selectionFilter)
