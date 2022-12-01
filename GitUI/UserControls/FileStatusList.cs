@@ -541,7 +541,7 @@ namespace GitUI
                 ListViewItem? nextItem = FindNextItemInGroups();
                 if (nextItem is null)
                 {
-                    return loop ? 0 : curIdx;
+                    return loop ? GetFirstIndex() : curIdx;
                 }
 
                 return nextItem.Index;
@@ -615,6 +615,40 @@ namespace GitUI
                 }
 
                 return null;
+            }
+
+            int GetFirstIndex()
+            {
+                if (FileStatusListView.Items.Count == 0)
+                {
+                    return -1;
+                }
+
+                if (FileStatusListView.Groups.Count < 2)
+                {
+                    return 0;
+                }
+
+                ListViewGroup? firstNonEmptyGroup = null;
+                foreach (ListViewGroup group in FileStatusListView.Groups)
+                {
+                    if (ContainsSearchableItem(group))
+                    {
+                        firstNonEmptyGroup = group;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < FileStatusListView.Items.Count; ++i)
+                {
+                    ListViewItem item = FileStatusListView.Items[i];
+                    if (item.Group == firstNonEmptyGroup && IsSearchableItem(item))
+                    {
+                        return i;
+                    }
+                }
+
+                return -1;
             }
 
             int GetLastIndex()
