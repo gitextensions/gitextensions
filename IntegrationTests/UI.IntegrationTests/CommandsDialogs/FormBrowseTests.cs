@@ -171,7 +171,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.BranchFilterEnabled.Should().BeFalse();
-                        AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
+                        AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
                         form.GetTestAccessor().ToolStripFilters.GetTestAccessor().tscboBranchFilter.Text.Should().BeEmpty();
                     }
                     finally
