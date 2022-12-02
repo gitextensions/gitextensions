@@ -363,16 +363,16 @@
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.Bitbucket.dll" />
       </Component>
       <Component Id="TeamCityIntegration.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\TeamCityIntegration.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.TeamCityIntegration.dll" />
       </Component>
       <Component Id="AppVeyorIntegration.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\AppVeyorIntegration.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.AppVeyorIntegration.dll" />
       </Component>
       <Component Id="JenkinsIntegration.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\JenkinsIntegration.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.JenkinsIntegration.dll" />
       </Component>
       <Component Id="AzureDevOpsIntegration.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\AzureDevOpsIntegration.dll" />
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.AzureDevOpsIntegration.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginManagerDir">
