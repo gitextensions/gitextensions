@@ -16,7 +16,7 @@
   <PropertyGroup Condition=" '$(MSBuildProjectName)' != 'GitUIPluginInterfaces'">
     <!-- for dev versions only load .dll prefixed with 'GitExtensions.' -->
     <_AssemblyRename>false</_AssemblyRename>
-    <_AssemblyRename Condition="$(ContinuousIntegrationBuild) != true and !$(MSBuildProjectName.StartsWith('GitExtensions.'))">true</_AssemblyRename>
+    <_AssemblyRename Condition="!$(MSBuildProjectName.StartsWith('GitExtensions.'))">true</_AssemblyRename>
     <AssemblyName Condition="$(_AssemblyRename) == true">GitExtensions.$(MSBuildProjectName)</AssemblyName>
 
     <!-- we don't want to have folder with too long names - drop 'GitExtensions.Plugins.' from folder names -->
