@@ -132,6 +132,12 @@ namespace GitUI.NBugReports
                                                  or PathTooLongException
                                                  or Win32Exception;
 
+            // Treat all git fatal errors (e.g., those starting with "fatal: ") as user issues
+            if (exception.InnerException?.Message?.StartsWith("fatal: ") ?? false)
+            {
+                isUserExternalOperation = true;
+            }
+
             StringBuilder text = GetExceptionInfo(exception);
             string rootError = GetRootError(exception);
 
