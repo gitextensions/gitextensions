@@ -103,7 +103,9 @@ namespace GitUI.NBugReports
                 LogError(exception, isTerminating);
             }
 
-            if (exception is ExternalOperationException externalOperationException
+            ExternalOperationException externalOperationException = exception as ExternalOperationException;
+
+            if (externalOperationException is not null
                 && externalOperationException.InnerException is { }
                 && externalOperationException.InnerException.Message.Contains(_dubiousOwnershipSecurityConfigString))
             {
@@ -132,8 +134,9 @@ namespace GitUI.NBugReports
                                                  or PathTooLongException
                                                  or Win32Exception;
 
-            // Treat all git fatal errors (e.g., those starting with "fatal: ") as user issues
-            if (exception.InnerException?.Message?.StartsWith("fatal: ") ?? false)
+            // Treat all git errors as user issues
+            if (string.Equals(AppSettings.GitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase)
+             || string.Equals(AppSettings.WslGitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 isUserExternalOperation = true;
             }
