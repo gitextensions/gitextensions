@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using GitCommands;
+using GitExtUtils;
 using GitUI.NBugReports;
 using Microsoft.Win32;
 
@@ -41,7 +42,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension
         /// <exception cref="FileNotFoundException">If at least one necessary for registration file wasn't found</exception>
         /// <exception cref="Win32Exception">If user canceled elevation dialog (when ex.NativeErrorCode == 1223)</exception>
         /// <exception cref="Exception">Other potential error</exception>
-        public static void Register() => RunRegSvrForShellExtensionDlls("{0}");
+        public static void Register() => RunRegSvrForShellExtensionDlls("/s {0}");
 
         /// <summary>
         /// Unregister shell extensions
@@ -49,7 +50,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension
         /// <exception cref="FileNotFoundException">If at least one necessary for registration file wasn't found</exception>
         /// <exception cref="Win32Exception">If user canceled elevation dialog (when ex.NativeErrorCode == 1223)</exception>
         /// <exception cref="Exception">Other potential error</exception>
-        public static void Unregister() => RunRegSvrForShellExtensionDlls("/u {0}");
+        public static void Unregister() => RunRegSvrForShellExtensionDlls("/s /u {0}");
 
         private static void RunRegSvrForShellExtensionDlls(string argumentsPattern)
         {
@@ -80,7 +81,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension
                         Verb = "RunAs",
                         UseShellExecute = true
                     };
-                    Process.Start(pi)?.WaitForExit();
+                    Process? process = Process.Start(pi);
+                    process?.WaitForExit();
+                    if (process?.ExitCode is not 0)
+                    {
+                        throw new ExternalOperationException(pi.FileName, pi.Arguments, exitCode: process?.ExitCode);
+                    }
+                }
+                catch (ExternalOperationException ex)
+                {
+                    throw new UserExternalOperationException(context: null, ex);
                 }
                 catch (Exception ex)
                 {
