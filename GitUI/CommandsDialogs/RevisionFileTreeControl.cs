@@ -526,13 +526,6 @@ See the changes in the commit form.");
             }
 
             blameToolStripMenuItem1.Checked = !blameToolStripMenuItem1.Checked;
-            if (AppSettings.RevisionFileTreeShowBlame != blameToolStripMenuItem1.Checked)
-            {
-                // Update settings only if actually changed
-                // (FileHistory will set the Checked box but not update settings).
-                AppSettings.RevisionFileTreeShowBlame = blameToolStripMenuItem1.Checked;
-            }
-
             int? line = FileText.Visible ? FileText.CurrentFileLine : null;
 
             ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem, line));
