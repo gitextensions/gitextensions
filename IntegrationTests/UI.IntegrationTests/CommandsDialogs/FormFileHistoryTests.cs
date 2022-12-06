@@ -18,7 +18,7 @@ public class FormFileHistoryTests
     {
         AppSettings.UseBrowseForFileHistory.Value = false;
 
-        var composition = TestComposition.Empty
+        TestComposition composition = TestComposition.Empty
             .AddParts(typeof(MockLinkFactory))
             .AddParts(typeof(MockWindowsJumpListManager))
             .AddParts(typeof(MockRepositoryDescriptionProvider))
@@ -54,7 +54,7 @@ public class FormFileHistoryTests
     private static void RunFormTest(Action<FormFileHistory> testDriver, string fileName, GitUICommands commands)
     {
         UITest.RunForm(
-            showForm: () => commands.ShowFileHistoryDialog(fileName),
+            showForm: () => commands.GetTestAccessor().ShowFileHistoryDialog(fileName),
             (FormFileHistory form) =>
             {
                 testDriver(form);

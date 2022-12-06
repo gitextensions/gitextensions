@@ -1154,16 +1154,6 @@ namespace GitUI
             return true;
         }
 
-        public void ShowFileHistoryDialog(string fileName)
-        {
-            RunFileHistoryCommand(new[]
-            {
-                "",
-                "filehistory",
-                fileName,
-            }, showBlame: false);
-        }
-
         public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
         {
             string arguments = AppSettings.UseBrowseForFileHistory.Value ? $"browse {PathFilterArg}={fileName.Quote()} -commit={revision?.ObjectId}"
@@ -1997,6 +1987,9 @@ namespace GitUI
             internal string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
 
             internal bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
+
+            internal void ShowFileHistoryDialog(string fileName)
+                => _commands.RunFileHistoryCommand(args: new string[] { "", "", fileName }, showBlame: false);
         }
     }
 }
