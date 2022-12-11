@@ -1164,7 +1164,7 @@ namespace GitUI.CommandsDialogs
             this.Amend.Name = "Amend";
             this.Amend.Size = new System.Drawing.Size(97, 17);
             this.Amend.TabIndex = 0;
-            this.Amend.Text = "&Amend Commit";
+            this.Amend.Text = "&Amend commit";
             this.Amend.UseVisualStyleBackColor = true;
             this.Amend.CheckedChanged += new System.EventHandler(this.Amend_CheckedChanged);
             // 
@@ -1176,7 +1176,7 @@ namespace GitUI.CommandsDialogs
             this.ResetAuthor.Name = "ResetAuthor";
             this.ResetAuthor.Size = new System.Drawing.Size(97, 17);
             this.ResetAuthor.TabIndex = 0;
-            this.ResetAuthor.Text = "R&eset Author";
+            this.ResetAuthor.Text = "R&eset author";
             this.ResetAuthor.UseVisualStyleBackColor = true;
             this.ResetAuthor.Visible = false;
             // 

@@ -3387,7 +3387,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target />
       </trans-unit>
       <trans-unit id="Amend.Text">
-        <source>&amp;Amend Commit</source>
+        <source>&amp;Amend commit</source>
         <target />
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -3407,7 +3407,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target />
       </trans-unit>
       <trans-unit id="ResetAuthor.Text">
-        <source>R&amp;eset Author</source>
+        <source>R&amp;eset author</source>
         <target />
       </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
