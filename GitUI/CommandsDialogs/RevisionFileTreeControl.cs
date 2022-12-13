@@ -136,7 +136,6 @@ See the changes in the commit form.");
 
                 if (requestBlame)
                 {
-                    // Force blame without changing settings
                     blameToolStripMenuItem1.Checked = true;
                 }
 
