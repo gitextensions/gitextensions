@@ -310,6 +310,7 @@ namespace GitUI.CommandsDialogs
             repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
             revisionDiff.Bind(RevisionGrid, fileTree, RefreshGitStatusMonitor);
 
+            // Show blame by default if not started from command line
             fileTree.Bind(RevisionGrid, RefreshGitStatusMonitor, _isFileBlameHistory);
             RevisionGrid.ResumeRefreshRevisions();
 
