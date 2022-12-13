@@ -1717,6 +1717,8 @@ namespace GitUI
                 return false;
             }
 
+            fileHistoryFileName = fileHistoryFileName.QuoteNE();
+
             GitRevision? revision = null;
             if (args.Count > 3)
             {
@@ -1985,6 +1987,9 @@ namespace GitUI
             internal string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
 
             internal bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
+
+            internal void ShowFileHistoryDialog(string fileName)
+                => _commands.RunFileHistoryCommand(args: new string[] { "", "", fileName }, showBlame: false);
         }
     }
 }

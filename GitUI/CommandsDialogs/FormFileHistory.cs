@@ -688,5 +688,20 @@ namespace GitUI.CommandsDialogs
         {
             FormGitCommandLog.ShowOrActivate(this);
         }
+
+        internal TestAccessor GetTestAccessor()
+            => new(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FormFileHistory _form;
+
+            public TestAccessor(FormFileHistory form)
+            {
+                _form = form;
+            }
+
+            public RevisionGridControl RevisionGrid => _form.RevisionGrid;
+        }
     }
 }
