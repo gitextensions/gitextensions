@@ -849,12 +849,6 @@ namespace GitCommands
             set => SetBool("opensubmodulediffinseparatewindow", value);
         }
 
-        public static bool RevisionFileTreeShowBlame
-        {
-            get => GetBool("RevisionFileTreeShowBlame", true);
-            set => SetBool("RevisionFileTreeShowBlame", value);
-        }
-
         /// <summary>
         /// Gets or sets whether to show artificial commits in the revision graph.
         /// </summary>
