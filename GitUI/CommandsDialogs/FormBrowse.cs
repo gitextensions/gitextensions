@@ -250,12 +250,6 @@ namespace GitUI.CommandsDialogs
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
 
             _isFileBlameHistory = args.IsFileBlameHistory;
-            if (_isFileBlameHistory)
-            {
-                // Blame was explicitly requested (otherwise start with last used)
-                AppSettings.RevisionFileTreeShowBlame = true;
-            }
-
             InitializeComponent();
             BackColor = OtherColors.BackgroundColor;
 
@@ -315,7 +309,9 @@ namespace GitUI.CommandsDialogs
             toolStripButtonPush.Initialize(_aheadBehindDataProvider);
             repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, RevisionGrid, RevisionGrid, RevisionGrid);
             revisionDiff.Bind(RevisionGrid, fileTree, RefreshGitStatusMonitor);
-            fileTree.Bind(RevisionGrid, RefreshGitStatusMonitor);
+
+            // Show blame by default if not started from command line
+            fileTree.Bind(RevisionGrid, RefreshGitStatusMonitor, _isFileBlameHistory);
             RevisionGrid.ResumeRefreshRevisions();
 
             // Application is init, the repo related operations are triggered in OnLoad()
