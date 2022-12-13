@@ -1452,7 +1452,7 @@ namespace GitCommands
 
         public ArgumentString FetchCmd(string? remote, string? remoteBranch, string? localBranch, bool? fetchTags = false, bool isUnshallow = false, bool pruneRemoteBranches = false, bool pruneRemoteBranchesAndTags = false)
         {
-            return new GitArgumentBuilder("fetch")
+            return new GitArgumentBuilder("fetch", gitOptions: GetFetchOptions())
             {
                 "--progress",
                 {
@@ -1464,7 +1464,7 @@ namespace GitCommands
 
         public ArgumentString PullCmd(string remote, string? remoteBranch, bool rebase, bool? fetchTags = false, bool isUnshallow = false)
         {
-            return new GitArgumentBuilder("pull")
+            return new GitArgumentBuilder("pull", gitOptions: GetFetchOptions())
             {
                 { rebase, "--rebase" },
                 "--progress",
@@ -1495,13 +1495,9 @@ namespace GitCommands
                 }
             }
 
-            bool jobsConfig = string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("fetch.parallel"))
-                && string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchJobs"));
-
             // TODO return ArgumentBuilder and add special case ArgumentBuilder.Add(ArgumentBuilder childBuilder)
             return new ArgumentBuilder
             {
-                { jobsConfig, "--jobs=0" },
                 remote.ToPosixPath()?.Trim().Quote(),
                 branchArguments,
                 { fetchTags == true, "--tags" },
@@ -1509,6 +1505,15 @@ namespace GitCommands
                 { isUnshallow, "--unshallow" },
                 { pruneRemoteBranches || pruneRemoteBranchesAndTags, "--prune --force" },
                 { pruneRemoteBranchesAndTags, "--prune-tags" },
+            };
+        }
+
+        private ArgumentString GetFetchOptions()
+        {
+            return new ArgumentBuilder
+            {
+                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("fetch.parallel")), "-c fetch.parallel=0" },
+                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchJobs")), "-c submodule.fetchJobs=0" },
             };
         }
 
