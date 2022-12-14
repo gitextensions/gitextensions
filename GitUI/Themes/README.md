@@ -56,13 +56,13 @@ Use .css import directive to reuse color values from another theme.
 - To import from a preinstalled theme:
 
 ```css
-@import url("dark.css");
+@import url("bright.css");
 ```
 
 - To import from a user-defined theme:
 
 ```css
-@import url("{UserAppData}/dark.css");
+@import url("{UserAppData}/bright_custom.css");
 ```
 
 ### Specify alternative color values for colorblind users
