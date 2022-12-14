@@ -255,7 +255,7 @@ namespace GitUI.Hotkey
                 new HotkeySettings(
                     FormBrowse.HotkeySettingsName,
                     Hk(FormBrowse.Command.AddNotes, Keys.Control | Keys.Shift | Keys.N),
-                    Hk(FormBrowse.Command.CheckoutBranch, Keys.Control | Keys.Decimal),
+                    Hk(FormBrowse.Command.CheckoutBranch, Keys.Control | Keys.OemPeriod),
                     Hk(FormBrowse.Command.CloseRepository, Keys.Control | Keys.W),
                     Hk(FormBrowse.Command.Commit, Keys.Control | Keys.Space),
                     Hk(FormBrowse.Command.CreateBranch, Keys.Control | Keys.B),
