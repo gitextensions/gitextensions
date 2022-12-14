@@ -105,9 +105,7 @@ namespace GitUI.NBugReports
 
             ExternalOperationException externalOperationException = exception as ExternalOperationException;
 
-            if (externalOperationException is not null
-                && externalOperationException.InnerException is { }
-                && externalOperationException.InnerException.Message.Contains(_dubiousOwnershipSecurityConfigString))
+            if (externalOperationException?.InnerException?.Message?.Contains(_dubiousOwnershipSecurityConfigString) is true)
             {
                 ReportDubiousOwnership(externalOperationException.InnerException);
                 return;
