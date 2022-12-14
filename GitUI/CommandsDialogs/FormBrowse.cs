@@ -552,7 +552,15 @@ namespace GitUI.CommandsDialogs
         {
             // Note that this called in most FormBrowse context to "be sure"
             // that the repo has not been updated externally.
-            RefreshRevisions(e.GetRefs);
+
+            // It can also be called from background tasks, e.g. from BackgroundFetchPlugin.
+            if (ThreadHelper.JoinableTaskContext.IsOnMainThread)
+            {
+                RefreshRevisions(e.GetRefs);
+                return;
+            }
+
+            Invoke(() => RefreshRevisions(e.GetRefs));
         }
 
         /// <summary>
