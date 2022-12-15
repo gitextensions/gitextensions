@@ -113,6 +113,8 @@ namespace GitUIPluginInterfaces
 
             ComposableCatalog? catalog = ComposableCatalog.Create(Resolver.DefaultInstance).AddParts(parts);
 
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
             _aggregateCatalog = catalog;
         }
 
@@ -134,6 +136,40 @@ namespace GitUIPluginInterfaces
         public static void SetTestExportProvider(ExportProvider exportProvider)
         {
             _exportProvider = new Lazy<ExportProvider>(() => exportProvider);
+        }
+
+        /// <summary>
+        /// W/A for not working assembly probing in MEF.
+        /// Trying to find dependent assembly in the same folder.
+        /// </summary>
+        private static Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+        {
+            try
+            {
+                if (args.RequestingAssembly == null)
+                {
+                    return null;
+                }
+
+                string fullName = Directory.GetParent(args.RequestingAssembly.Location)?.FullName;
+                if (fullName == null)
+                {
+                    return null;
+                }
+
+                string? dll = Directory.GetFiles(fullName)
+                    .FirstOrDefault(f =>
+                    {
+                        string? fileDescription = FileVersionInfo.GetVersionInfo(f).FileDescription;
+
+                        return fileDescription != null && args.Name.StartsWith(fileDescription);
+                    });
+                return dll == null ? null : Assembly.LoadFile(dll);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
