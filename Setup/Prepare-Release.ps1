@@ -73,9 +73,10 @@ function Update-Contributors {
     [xml]$content = Get-Content $file -Encoding UTF8;
     $rawTeam = ($content.root.data | Where name -eq "Team").Value;
     $rawContributors = ($content.root.data | Where name -eq "Coders").Value;
+    $rawIgnoreContributors = ($content.root.data | Where name -eq "IgnoreContributors").Value;
     $allContributors = "$rawTeam, $rawContributors";
 
-    $cmd = "git shortlog 700a3000a8672205a6f523e6d4dc70f0f66314d9..HEAD -s --no-merges";
+    $cmd = "git shortlog 0a5ef9ca6ce87754a510aa02c7a96d8b915714ac..HEAD -s --no-merges";
     Write-Host "Getting contributors by running: $cmd";
     $result = iex $cmd
 
@@ -83,7 +84,8 @@ function Update-Contributors {
     $result | ForEach-Object {
         # extract each contributor and add it to the global list, if absent
         if ($_ -match "\s*\d{1,}\s*(?<name>.*)" -and
-            -not $allContributors.Contains($Matches['name'])) {
+            -not $allContributors.Contains($Matches['name']) -and
+            -not $rawIgnoreContributors.Contains($Matches['name'])) {
             $rawContributors += ', ' + $Matches['name']
             $count++;
         }

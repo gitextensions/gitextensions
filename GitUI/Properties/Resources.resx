@@ -86,8 +86,11 @@
   <data name="Designers" xml:space="preserve">
     <value>Andréj Telle, Oliver Friedrich</value>
   </data>
+  <data name="Team" xml:space="preserve">
+    <value>Gerhard Olsson, Michael Seibt, Philippe Miossec, Igor Velikorossov</value>
+  </data>
   <data name="Coders" xml:space="preserve">
-    <value>Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
+    <value>Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, Drew Noakes, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
 Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington,
 Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick,
 Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl,
@@ -120,7 +123,7 @@ Katelyn Gigante, Levente Koncz, Lucas Trzesniewski, Lysogorskiy Aleksey, Matt Si
 Oleksandr Redko, Ondrej Novak, Orgad Shaneh, RaMMicHaeL, Rui Lopes, Sebastien ROBERT, Tao Gomez Gil,
 agabden, crypto_rsa, gpongelli, ierof, leak, liiws, mserfli, palver123, Alex Povar, Andrey Helldar,
 David Warner, Duncan Ogilvie, Eric Wieser, Evgeny Morozov, Fabrizio Mancin, Fisher Tsai, Glen Nicol,
-Hans F. Nordhaug, IEVin, Ilya Mokin, Ivan Vinogradov, Johan Henkens, Markas Gedminas, Michael Seibt, 
+Hans F. Nordhaug, IEVin, Ilya Mokin, Ivan Vinogradov, Johan Henkens, Markas Gedminas, 
 Michael Werle, Mihai Pantea, Mohamed Hamdy, Nikolay Hidalgo Diaz, NikolayHD, Nikos Polideropoulos,
 Ori Ashual, Paul McSweeney, SamuelLongchamps, Szali Szali, Thomas Butz, Thomas Levesque, Vladimir Shimanskiy,
 aivanov-oneinc, chun, oriash93, pmme, szaliszali, Ákos Szabados, Antonio Maiorano, Christian Dreier,
@@ -134,16 +137,29 @@ manuelspezzani, Emmanuel Counasse, Igor Melnikov, Ivan Kochurkin, phdussud, Andr
 Karsten Rathlev, Kasper B. Graversen, Le Garrec Vincent, Manish Kungwani, R0nd, Ralph J Smart, Roland Gneev,
 Ruslan Lekhman, manishkungwani, rickaas, Aaron Sherber, Aleksandr Kostikov, Alexei Skachykhin, Chris Oliver,
 Giorgi Tsouvaltzis, Itamar Shoham, Jörg Pichler, LE GARREC Vincent, MarkJ74, Miloš Havlíček, Nick Bulleid,
-dfev77, dimfish</value>
+dfev77, dimfish, Adam Shakhabov, Alexey Golub, AntonKedrov, Arnaud TAMAILLON, Artem Eliseev, Borja Serrano,
+Brian Freeman, Bruno Colaço, Błażej Szuca, Chris Blyth, Christian Wischenbart, Damit Senanayake, Dasith Wijes,
+Dasith Wijesiriwardena, Evgeny Vrublevsky, George Tisdelle, GintasS, Gintautas Švedas, Guy Barker (CELA),
+Holger Schmidt, Jean-Jacques Lafay, Josef Pihrt, JuPrgn, Julien PEYREGNE, Jurjen Biewenga, Kevin Yockey,
+Liza, Matthias Lischka, Matyáš Bach, Maximov Valery, Mihaly Hobor, MrJithil, NikolayXHD, Oleksandr Povar,
+Otis Hix, Philip Cole, Ricardo K, Rubén Ruiz, Timwi, Valeriano A.R, Vincent Legarrec, axunonb, blitzmann,
+bstecisa, calebnhay, darkcamper, jithil, jwfx, keco2, lanzhiquan, n.idalgo, ransontech, simonmckenzie,
+thimmy687, wischi, ADTC, hansen, RussKie, Ralph Romero, zachesposito, Dub1shu, Pavel Kotrč, Saumya</value>
+  </data>
+  <data name="Translators" xml:space="preserve">
+    <value>79 collaborators on Transifex website, Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz,
+gor, xaro, bleis-tift, Ralph Haußmann, Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio, australiensun,
+Airat Salikhov, Dave Brotherstone, diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh,
+Victor Shih, bygreencn, mrahn80, Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
+  </data>
+  <data name="IgnoreContributors" xml:space="preserve">
+    <value>transifex-integration[bot]</value>
   </data>
   <data name="FileStatusRemoved" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\FileStatusRemoved.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ChangeLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/ChangeLog.md;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="Team" xml:space="preserve">
-    <value>Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, Igor Velikorossov aka RussKie, Gerhard Olsson, Drew Noakes</value>
   </data>
   <data name="information" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\information.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -162,12 +178,6 @@ dfev77, dimfish</value>
   </data>
   <data name="Blame" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Blame.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Translators" xml:space="preserve">
-    <value>79 collaborators on Transifex website, Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift, Ralph Haußmann,
-Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio, australiensun, Airat Salikhov, Dave Brotherstone,
-diegoaossas, hogelog, Philippe Miossec, Michael Benz (Copro), KUNIMI Taiyoh, Victor Shih, bygreencn, mrahn80,
-Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   </data>
   <data name="DeleteText" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\DeleteText.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

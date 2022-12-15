@@ -1,0 +1,39 @@
+git:
+
+  filters:
+    - filter_type: file
+      # all supported i18n types: https://docs.transifex.com/formats
+      file_format: XLIFF
+      source_language: en
+      source_file: GitUI/Translation/English.xlf
+      # path expression to translation files, must contain <lang> placeholder
+      translation_files_expression: 'GitUI/Translation/<lang>.xlf'
+
+    - filter_type: file
+      # all supported i18n types: https://docs.transifex.com/formats
+      file_format: XLIFF
+      source_language: en
+      source_file: GitUI/Translation/English.Plugins.xlf
+      # path expression to translation files, must contain <lang> placeholder
+      translation_files_expression: 'GitUI/Translation/<lang>.Plugins.xlf'
+
+  settings:
+    language_mapping:
+      cs: Czech
+      de: German
+      es: Spanish
+      es_AR: Spanish (Argentina)
+      fr: French
+      id: Indonesian
+      it: Italian
+      ja: Japanese
+      ko: Korean
+      lv: Latvian
+      nl: Dutch
+      pl: Polish
+      pt: Portuguese
+      pt_BR: Portuguese (Brazil)
+      ro: Romanian
+      ru: Russian
+      zh-Hans: Simplified Chinese
+      zh-Hant: Traditional Chinese
