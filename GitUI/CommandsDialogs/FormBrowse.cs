@@ -554,13 +554,13 @@ namespace GitUI.CommandsDialogs
             // that the repo has not been updated externally.
 
             // It can also be called from background tasks, e.g. from BackgroundFetchPlugin.
-            if (ThreadHelper.JoinableTaskContext.IsOnMainThread)
+            if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
             {
-                RefreshRevisions(e.GetRefs);
+                Invoke(() => RefreshRevisions(e.GetRefs));
                 return;
             }
 
-            Invoke(() => RefreshRevisions(e.GetRefs));
+            RefreshRevisions(e.GetRefs);
         }
 
         /// <summary>
