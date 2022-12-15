@@ -1,34 +1,58 @@
 Changelog
 =========
 
-### Version 4.0.1 (23 Nov 2022)
+### Version 4.0.1 (15 Dec 2022)
 
 #### Changes:
+* [10521] Git 2.39 bugs out for fetch --jobs=0
+* [10516] theme: remove dark themes from deliverables
+* [10514] Unable to run git commands from Git Extensions
+* [10487] Create new user script in enabled state
+* [10484] Report git fatal errors as not app errors
+* [10482] Fixup text search in diffs (multiple groups)
+* [10480] Filters_should_behave_as_expected: Current branch is persisted
+* [10477] [NBug] An error occurred trying to start process
+* [10455] Stop endless dashboard repaint loop
+* [10453] Make "blame" setting non-sticky
+* [10451] Set custom difftool list to empty if parsing is cancelled
+* [10438] Quote file name for the File History form
+* [10436] Better handle git security exception
+* [10431] Persist Current Branch setting
 * [10418] Fixup "Derived from tag"
 * [10396] Fix 'Delete obsolete branches' plugin
 * [10390] FormClone: Check that current module is valid
 * [10388] SidePanel: Context menu at no selection
-* [10377] [NBug] Value must not be null. (Open Settings)
+* [10357] Verify utility's file exists before invoking it
 * [10355] Retain only Microsoft.WindowsDesktop.App in *.runtimeconfig.json
-* [10347] "Delete obsolete branches" plugin stop working in version 4
 * [10341] GitFlow: Do not throw if git-flow is not init
 * [10340] SidePanel: Context menu at no selection
 * [10339] SidePanel: AheadBehind null check
-* [10338] .NET 6.0.10
 * [10316] Fixup standalone blame
 
 
+[10521]:https://github.com/gitextensions/gitextensions/pull/10521
+[10516]:https://github.com/gitextensions/gitextensions/pull/10516
+[10514]:https://github.com/gitextensions/gitextensions/issues/10514
+[10487]:https://github.com/gitextensions/gitextensions/pull/10487
+[10484]:https://github.com/gitextensions/gitextensions/pull/10484
+[10482]:https://github.com/gitextensions/gitextensions/pull/10482
+[10480]:https://github.com/gitextensions/gitextensions/pull/10480
+[10477]:https://github.com/gitextensions/gitextensions/pull/10477
+[10455]:https://github.com/gitextensions/gitextensions/pull/10455
+[10453]:https://github.com/gitextensions/gitextensions/pull/10453
+[10451]:https://github.com/gitextensions/gitextensions/pull/10451
+[10438]:https://github.com/gitextensions/gitextensions/pull/10438
+[10436]:https://github.com/gitextensions/gitextensions/pull/10436
+[10431]:https://github.com/gitextensions/gitextensions/pull/10431
 [10418]:https://github.com/gitextensions/gitextensions/pull/10418
 [10396]:https://github.com/gitextensions/gitextensions/pull/10396
 [10390]:https://github.com/gitextensions/gitextensions/pull/10390
 [10388]:https://github.com/gitextensions/gitextensions/pull/10388
-[10377]:https://github.com/gitextensions/gitextensions/issues/10377
+[10357]:https://github.com/gitextensions/gitextensions/pull/10357
 [10355]:https://github.com/gitextensions/gitextensions/pull/10355
-[10347]:https://github.com/gitextensions/gitextensions/issues/10347
 [10341]:https://github.com/gitextensions/gitextensions/pull/10341
 [10340]:https://github.com/gitextensions/gitextensions/pull/10340
 [10339]:https://github.com/gitextensions/gitextensions/pull/10339
-[10338]:https://github.com/gitextensions/gitextensions/pull/10338
 [10316]:https://github.com/gitextensions/gitextensions/pull/10316
 
 

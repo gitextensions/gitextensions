@@ -8493,11 +8493,6 @@ Inactive remote is completely invisible to git.</source>
         <target>Активный внешний с именем &quot;{0}&quot; уже существует.</target>
         
       </trans-unit>
-      <trans-unit id="_errorNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target>Файл ключа SSH не введен</target>
-        
-      </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
         <source>Edit Remote Details</source>
         <target>Изменить данные внешнего репозитория</target>
@@ -11048,11 +11043,6 @@ help</source>
         <target>Текущий каталог не является допустимым git репозиторием.</target>
         
       </trans-unit>
-      <trans-unit id="_pageantNotFound.Text">
-        <source>Cannot load SSH key. PuTTY is not configured properly.</source>
-        <target>Не удалось загрузить SSH ключ. PuTTY не настроен должным образом.</target>
-        
-      </trans-unit>
       <trans-unit id="_reason.Text">
         <source>Reason</source>
         <target>Причина</target>
@@ -13544,6 +13534,26 @@ Select this commit to populate the full message.</source>
         <target>Не на ветке</target>
         
       </trans-unit>
+      <trans-unit id="_errorPuTTYNotFound.Text">
+        <source>SSH agent could not be found</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshKeyNotFound.Text">
+        <source>SSH key file could not be found</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYInstalled.Text">
+        <source>Is PuTTY installed?</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYNotConfigured.Text">
+        <source>PuTTY is not configured as SSH client</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYWhereConfigure.Text">
+        <source>SSH client can be configured in Settings &gt; SSH.</source>
+        
+      </trans-unit>
       <trans-unit id="_exitCodeText.Text">
         <source>Exit code</source>
         <target>Вод возврата</target>
@@ -13574,9 +13584,58 @@ Select this commit to populate the full message.</source>
         <target>Не удалось прочитать &quot;{0}&quot; из-за следующей ошибки: {1} {1} {2} {1} {1} Из-за характера этой проблемы поведение приложения не может быть гарантировано, и его необходимо закрыть . {1} {1} Исправьте эту проблему и повторно откройте Git Extensions.</target>
         
       </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHeader.Text">
+        <source>Do you want to trust this repository by adding a security exception?</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHideGitCommandOutput.Text">
+        <source>Hide git command output...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipOpenRepositoryFolder.Text">
+        <source>Open repository in Explorer</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipSeeGitCommandOutput.Text">
+        <source>See git command output...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipText.Text">
+        <source>Git detected a security problem that prevents opening the repository.
+Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+
+To be able to open this repository, you need to either:
+- add a security exception for the repository to make git trust it, or
+- correct the ownership of the repository.</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
+        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
+run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
+repositories.
+
+If you wish to trust all git repositories on your system even if they are owned by someone else, run the
+following command.
+
+!!! THIS CAN BE DANGEROUS !!!</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
+        <source>Trust all repositories</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">
+        <source>Trust this repository</source>
+        
+      </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
         <source>The Git executable could not be located on your system.</source>
         <target>Исполняемый файл Git не найден в системе.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitSecurityError.Text">
+        <source>Git security error</source>
         
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">

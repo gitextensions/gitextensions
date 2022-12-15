@@ -9643,7 +9643,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="Status.HeaderText">
         <source>Status</source>
-        <target>ステータス</target>
+        <target>状態</target>
         
       </trans-unit>
       <trans-unit id="SynchronizeSubmodule.Text">
@@ -9698,7 +9698,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Status</source>
-        <target>ステータス</target>
+        <target>状態</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -11086,7 +11086,7 @@ Do you want to trust this host key and then try again?</source>
       </trans-unit>
       <trans-unit id="_unresolvedMergeConflicts.Text">
         <source>There are unresolved merge conflicts, solve conflicts now?</source>
-        <target>未解決のマージ競合が存在します。今すぐ競合を解消しますか？</target>
+        <target>未解決のマージ競合があります。今すぐ競合を解消しますか？</target>
         
       </trans-unit>
       <trans-unit id="_unresolvedMergeConflictsCaption.Text">
@@ -11119,7 +11119,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="Status.HeaderText">
         <source>Status</source>
-        <target>ステータス</target>
+        <target>状態</target>
         
       </trans-unit>
       <trans-unit id="_unableToShowPatchDetails.Text">

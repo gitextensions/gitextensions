@@ -4404,6 +4404,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="Pick.Text">
         <source>&amp;Cherry pick</source>
+        <target>选择最优(&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="_noneParentSelectedText.Text">
@@ -5810,6 +5811,7 @@ You can unset the template:
       <trans-unit id="_deleteBranchQuestion.Text">
         <source>The selected branch(es) have not been merged into HEAD.
 Proceed?</source>
+        <target>所选分支未进行合并。继续？</target>
         
       </trans-unit>
       <trans-unit id="_useReflogHint.Text">
@@ -8153,6 +8155,7 @@ Nothing to rebase.</source>
       </trans-unit>
       <trans-unit id="PinnedLabel.Text">
         <source>Pinned repositories</source>
+        <target>固定的版本库</target>
         
       </trans-unit>
       <trans-unit id="anchorToAllRecentReposToolStripMenuItem.Text">
@@ -8438,11 +8441,6 @@ Inactive remote is completely invisible to git.</source>
       <trans-unit id="_enabledRemoteAlreadyExists.Text">
         <source>An active remote named &quot;{0}&quot; already exists.</source>
         <target>名为&quot;{0}&quot;的非活动远程版本库已存在。</target>
-        
-      </trans-unit>
-      <trans-unit id="_errorNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target>无SSH密匙文件</target>
         
       </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
@@ -10873,6 +10871,7 @@ help</source>
       </trans-unit>
       <trans-unit id="_cannotFindRevisionCaption.Text">
         <source>Cannot find revision</source>
+        <target>找不到修订版</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindRevisionFilter.Text">
@@ -10885,6 +10884,7 @@ help</source>
       </trans-unit>
       <trans-unit id="_cannotOpenSubmoduleCaption.Text">
         <source>Cannot open submodule</source>
+        <target>不能打开子模块</target>
         
       </trans-unit>
       <trans-unit id="_directoryDoesNotExist.Text">
@@ -10924,11 +10924,6 @@ help</source>
       <trans-unit id="_notValidGitDirectory.Text">
         <source>The current directory is not a valid git repository.</source>
         <target>当前目录不是一个有效的git档案库。</target>
-        
-      </trans-unit>
-      <trans-unit id="_pageantNotFound.Text">
-        <source>Cannot load SSH key. PuTTY is not configured properly.</source>
-        <target>无法载入SSH密钥。 PuTTY配置的不正确。</target>
         
       </trans-unit>
       <trans-unit id="_reason.Text">
@@ -11708,6 +11703,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
         <source>First: A </source>
+        <target>第一个： A</target>
         
       </trans-unit>
       <trans-unit id="_multipleDescription.Text">
@@ -11732,6 +11728,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
         <source>Second: B </source>
+        <target>第二个：B</target>
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem.Text">
@@ -12130,6 +12127,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="Grid_infoToolStripMenuItem.Text">
         <source>Grid info</source>
+        <target>网格信息</target>
         
       </trans-unit>
       <trans-unit id="Grid_labelsToolStripMenuItem.Text">
@@ -13404,6 +13402,28 @@ Select this commit to populate the full message.</source>
         <target>不在一个分支。</target>
         
       </trans-unit>
+      <trans-unit id="_errorPuTTYNotFound.Text">
+        <source>SSH agent could not be found</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshKeyNotFound.Text">
+        <source>SSH key file could not be found</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYInstalled.Text">
+        <source>Is PuTTY installed?</source>
+        <target>PuTTY 已安装？</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYNotConfigured.Text">
+        <source>PuTTY is not configured as SSH client</source>
+        <target>Putty 没有配置为SSH客户端</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYWhereConfigure.Text">
+        <source>SSH client can be configured in Settings &gt; SSH.</source>
+        
+      </trans-unit>
       <trans-unit id="_exitCodeText.Text">
         <source>Exit code</source>
         <target>退出码</target>
@@ -13434,9 +13454,61 @@ Select this commit to populate the full message.</source>
         <target>由于以下错误，未能读取 &quot;{0}&quot;：{1}{1}{2}{1}{1}由于此问题的性质，无法保证本应用程序能够正常运行，必须将其关闭。{1}{1}请修正此问题并重新打开 Git Extensions。</target>
         
       </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHeader.Text">
+        <source>Do you want to trust this repository by adding a security exception?</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHideGitCommandOutput.Text">
+        <source>Hide git command output...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipOpenRepositoryFolder.Text">
+        <source>Open repository in Explorer</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipSeeGitCommandOutput.Text">
+        <source>See git command output...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipText.Text">
+        <source>Git detected a security problem that prevents opening the repository.
+Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+
+To be able to open this repository, you need to either:
+- add a security exception for the repository to make git trust it, or
+- correct the ownership of the repository.</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
+        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
+run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
+repositories.
+
+If you wish to trust all git repositories on your system even if they are owned by someone else, run the
+following command.
+
+!!! THIS CAN BE DANGEROUS !!!</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
+        <source>Trust all repositories</source>
+        <target>信任所有仓库</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">
+        <source>Trust this repository</source>
+        <target>信任此仓库</target>
+        
+      </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
         <source>The Git executable could not be located on your system.</source>
         <target>无法在你的系统中定位到git可执行文件</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitSecurityError.Text">
+        <source>Git security error</source>
+        <target>Git 安全错误</target>
         
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">

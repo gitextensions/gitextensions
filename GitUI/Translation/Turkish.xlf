@@ -8472,11 +8472,6 @@ Pasif olan bir uzak depo git tarafında tamamen görünmez olur.</target>
         <target>&quot;{0}&quot; adlı etkin bir uzak depon zaten var.</target>
         
       </trans-unit>
-      <trans-unit id="_errorNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target>Güvenli Kabuk (SSH) anahtar dosyası girilmedi</target>
-        
-      </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
         <source>Edit Remote Details</source>
         <target>Uzak Depoların Ayrıntılarını Düzenle</target>
@@ -11000,11 +10995,6 @@ göster</target>
         <target>Geçerli dizin geçerli bir git deposu değil.</target>
         
       </trans-unit>
-      <trans-unit id="_pageantNotFound.Text">
-        <source>Cannot load SSH key. PuTTY is not configured properly.</source>
-        <target>Güvenli Kabuk (SSH) anahtarı yüklenemiyor. PuTTY doğru şekilde yapılandırılmamış.</target>
-        
-      </trans-unit>
       <trans-unit id="_reason.Text">
         <source>Reason</source>
         <target>Sebep</target>
@@ -11490,6 +11480,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnDropStash.ToolTipText">
         <source>Drop this stash</source>
+        <target>Bu zulayı at</target>
         
       </trans-unit>
       <trans-unit id="mnubtnEnableRemote.Text">
@@ -11559,6 +11550,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnManageStashFromRootNode.Text">
         <source>&amp;Manage stashes...</source>
+        <target>Zulaları &amp;yönet...</target>
         
       </trans-unit>
       <trans-unit id="mnubtnManageSubmodules.Text">
@@ -11603,10 +11595,12 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnOpenStash.Text">
         <source>&amp;Open stash</source>
+        <target>Zulayı &amp;aç</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenStash.ToolTipText">
         <source>Open this stash</source>
+        <target>Bu zulayı aç</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
@@ -11621,10 +11615,12 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnPopStash.Text">
         <source>&amp;Pop stash</source>
+        <target>Zulayı &amp;patlat</target>
         
       </trans-unit>
       <trans-unit id="mnubtnPopStash.ToolTipText">
         <source>Pop this stash</source>
+        <target>Bu zulayı patlat</target>
         
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
@@ -11654,10 +11650,12 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnStashAllFromRootNode.Text">
         <source>&amp;Stash</source>
+        <target>&amp;Zulala</target>
         
       </trans-unit>
       <trans-unit id="mnubtnStashStagedFromRootNode.Text">
         <source>S&amp;tash staged</source>
+        <target>&amp;Sahneleneni zulala</target>
         
       </trans-unit>
       <trans-unit id="mnubtnStashSubmodule.Text">
@@ -11726,6 +11724,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="tsbShowStashes.ToolTipText">
         <source>Stashes</source>
+        <target>Zulalar</target>
         
       </trans-unit>
       <trans-unit id="tsbShowSubmodules.Text">
@@ -12172,10 +12171,12 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="ColumnsToolStripMenuItem.Text">
         <source>Columns</source>
+        <target>Sütunlar</target>
         
       </trans-unit>
       <trans-unit id="CommitsToolStripMenuItem.Text">
         <source>Commits</source>
+        <target>Teslimler</target>
         
       </trans-unit>
       <trans-unit id="GotoChildCommit.Text">
@@ -12209,10 +12210,12 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="Grid_infoToolStripMenuItem.Text">
         <source>Grid info</source>
+        <target>Izgara bilgisi</target>
         
       </trans-unit>
       <trans-unit id="Grid_labelsToolStripMenuItem.Text">
         <source>Grid labels</source>
+        <target>Izgara etiketleri</target>
         
       </trans-unit>
       <trans-unit id="HighlightSelectedBranch.Text">
@@ -12281,6 +12284,7 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="ShowStashes.Text">
         <source>Show stashes</source>
+        <target>Zulaları göster</target>
         
       </trans-unit>
       <trans-unit id="ShowSuperprojectBranches.Text">
@@ -12599,6 +12603,7 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="popStashToolStripMenuItem.Text">
         <source>Pop &amp;stash</source>
+        <target>Zulayı &amp;patlat</target>
         
       </trans-unit>
       <trans-unit id="rebaseInteractivelyToolStripMenuItem.Text">
@@ -13482,6 +13487,30 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
         <target>Bir dal üzerinde değil</target>
         
       </trans-unit>
+      <trans-unit id="_errorPuTTYNotFound.Text">
+        <source>SSH agent could not be found</source>
+        <target>SSH aracısı(agent) bulunamadı</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshKeyNotFound.Text">
+        <source>SSH key file could not be found</source>
+        <target>SSH anahtar dosyası bulunamadı</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYInstalled.Text">
+        <source>Is PuTTY installed?</source>
+        <target>PuTTY kurulu mu?</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYNotConfigured.Text">
+        <source>PuTTY is not configured as SSH client</source>
+        <target>PuTTY, SSH istemcisi olarak yapılandırılmadı</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYWhereConfigure.Text">
+        <source>SSH client can be configured in Settings &gt; SSH.</source>
+        
+      </trans-unit>
       <trans-unit id="_exitCodeText.Text">
         <source>Exit code</source>
         <target>Çıkış kodu</target>
@@ -13512,9 +13541,58 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
         <target>Aşağıdaki hata nedeniyle &quot;{0}&quot; okunamadı:{1}{1}{2}{1}{1}Bu sorunun doğası gereği, uygulamanın davranışı garanti edilemez ve kapatılması gerekir.{1}{1}Lütfen bu sorunu düzeltin ve Git Extensions'ı(Uzantılarını) yeniden açın.</target>
         
       </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHeader.Text">
+        <source>Do you want to trust this repository by adding a security exception?</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHideGitCommandOutput.Text">
+        <source>Hide git command output...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipOpenRepositoryFolder.Text">
+        <source>Open repository in Explorer</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipSeeGitCommandOutput.Text">
+        <source>See git command output...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipText.Text">
+        <source>Git detected a security problem that prevents opening the repository.
+Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+
+To be able to open this repository, you need to either:
+- add a security exception for the repository to make git trust it, or
+- correct the ownership of the repository.</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
+        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
+run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
+repositories.
+
+If you wish to trust all git repositories on your system even if they are owned by someone else, run the
+following command.
+
+!!! THIS CAN BE DANGEROUS !!!</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
+        <source>Trust all repositories</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">
+        <source>Trust this repository</source>
+        
+      </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
         <source>The Git executable could not be located on your system.</source>
         <target>Git'in çalıştırma dosyası sisteminizde bulunamadı.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitSecurityError.Text">
+        <source>Git security error</source>
         
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">
@@ -13825,6 +13903,7 @@ Simgeler ve aralık farkları hakkında daha fazla bilgi için belgelere bakın.
       </trans-unit>
       <trans-unit id="_stashesText.Text">
         <source>Stashes</source>
+        <target>Zulalar</target>
         
       </trans-unit>
       <trans-unit id="_submodulesText.Text">
