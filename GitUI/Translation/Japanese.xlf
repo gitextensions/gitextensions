@@ -1043,11 +1043,6 @@ GitHubアカウントが必要です。</target>
         <target>外部プログラムでファイル差分を表示するため、Diffツールを設定する必要があります。</target>
         
       </trans-unit>
-      <trans-unit id="_cantRegisterShellExtension.Text">
-        <source>Could not register the shell extension because '{0}' could not be found.</source>
-        <target>シェル拡張を登録できませんでした: '{0}'が見つかりません。</target>
-        
-      </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
         <source>You need to configure merge tool in order to solve merge conflicts.</source>
         <target>マージ競合を解決するためのマージツールを設定する必要があります。</target>
@@ -8439,11 +8434,6 @@ Inactive remote is completely invisible to git.</source>
         <target>アクティブなリモート &quot;{0}&quot; は既に存在します。</target>
         
       </trans-unit>
-      <trans-unit id="_errorNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target>SSH鍵がありません</target>
-        
-      </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
         <source>Edit Remote Details</source>
         <target>リモートの詳細を編集</target>
@@ -9600,7 +9590,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="Status.HeaderText">
         <source>Status</source>
-        <target>ステータス</target>
+        <target>状態</target>
         
       </trans-unit>
       <trans-unit id="SynchronizeSubmodule.Text">
@@ -9655,7 +9645,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Status</source>
-        <target>ステータス</target>
+        <target>状態</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -10993,11 +10983,6 @@ help</source>
         <target>現在のディレクトリは有効な git リポジトリではありません。</target>
         
       </trans-unit>
-      <trans-unit id="_pageantNotFound.Text">
-        <source>Cannot load SSH key. PuTTY is not configured properly.</source>
-        <target>SSH鍵を読み込めません。PuTTYが正しく設定されていません。</target>
-        
-      </trans-unit>
       <trans-unit id="_reason.Text">
         <source>Reason</source>
         <target>理由</target>
@@ -11048,7 +11033,7 @@ Do you want to trust this host key and then try again?</source>
       </trans-unit>
       <trans-unit id="_unresolvedMergeConflicts.Text">
         <source>There are unresolved merge conflicts, solve conflicts now?</source>
-        <target>未解決のマージ競合が存在します。今すぐ競合を解消しますか？</target>
+        <target>未解決のマージ競合があります。今すぐ競合を解消しますか？</target>
         
       </trans-unit>
       <trans-unit id="_unresolvedMergeConflictsCaption.Text">
@@ -11081,7 +11066,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="Status.HeaderText">
         <source>Status</source>
-        <target>ステータス</target>
+        <target>状態</target>
         
       </trans-unit>
       <trans-unit id="_unableToShowPatchDetails.Text">
@@ -13052,14 +13037,29 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
         <target>シェル拡張</target>
         
       </trans-unit>
+      <trans-unit id="RegisterButton.Text">
+        <source>&amp;Enable shell extension</source>
+        <target>シェル拡張を有効にする(&amp;E)</target>
+        
+      </trans-unit>
+      <trans-unit id="UnregisterButton.Text">
+        <source>&amp;Disable shell extension</source>
+        <target>シェル拡張を無効にする(&amp;D)</target>
+        
+      </trans-unit>
       <trans-unit id="cbAlwaysShowAllCommands.Text">
         <source>Always show all commands</source>
         <target>常にコマンドをすべて表示</target>
         
       </trans-unit>
-      <trans-unit id="gbShellExtensions.Text">
+      <trans-unit id="gbCascadingMenu.Text">
         <source>Cascaded Context Menu</source>
         <target>カスケードコンテキストメニュー</target>
+        
+      </trans-unit>
+      <trans-unit id="gbExplorerIntegration.Text">
+        <source>Windows Explorer integration</source>
+        <target>Windows エクスプローラー統合</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -13505,6 +13505,31 @@ Select this commit to populate the full message.</source>
         <target>ブランチ上にいません</target>
         
       </trans-unit>
+      <trans-unit id="_errorPuTTYNotFound.Text">
+        <source>SSH agent could not be found</source>
+        <target>SSH エージェントが見つかりませんでした</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshKeyNotFound.Text">
+        <source>SSH key file could not be found</source>
+        <target>SSH キーファイルが見つかりませんでした</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYInstalled.Text">
+        <source>Is PuTTY installed?</source>
+        <target>PuTTY はインストール済ですか?</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYNotConfigured.Text">
+        <source>PuTTY is not configured as SSH client</source>
+        <target>PuTTY が SSH クライアントとして構成されていません</target>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYWhereConfigure.Text">
+        <source>SSH client can be configured in Settings &gt; SSH.</source>
+        <target>SSH クライアントは 設定 &gt; SSH で構成できます。</target>
+        
+      </trans-unit>
       <trans-unit id="_exitCodeText.Text">
         <source>Exit code</source>
         <target>終了コード</target>
@@ -13535,9 +13560,79 @@ Select this commit to populate the full message.</source>
         <target>次のエラーのため &quot;{0}&quot; の読み込みに失敗しました:{1}{1}{2}{1}{1}この問題の性質上、アプリケーションの動作を保証することはできないため、アプリケーションを閉じなければなりません。{1}{1}この問題を修正して、Git Extensions を再度開いてください。</target>
         
       </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHeader.Text">
+        <source>Do you want to trust this repository by adding a security exception?</source>
+        <target>セキュリティの例外を追加して、このリポジトリを信頼しますか?</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHideGitCommandOutput.Text">
+        <source>Hide git command output...</source>
+        <target>Git コマンド出力を非表示...</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipOpenRepositoryFolder.Text">
+        <source>Open repository in Explorer</source>
+        <target>リポジトリをエクスプローラーで開く</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipSeeGitCommandOutput.Text">
+        <source>See git command output...</source>
+        <target>Git コマンド出力を表示...</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipText.Text">
+        <source>Git detected a security problem that prevents opening the repository.
+Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+
+To be able to open this repository, you need to either:
+- add a security exception for the repository to make git trust it, or
+- correct the ownership of the repository.</source>
+        <target>Git がセキュリティ上の問題点を検出したため、リポジトリを開けなくなりました。
+Git が追跡しているディレクトリは、現在のユーザー以外が所有していると安全ではないと見なされます。
+
+このリポジトリを開けるようにするには、次のいずれかを行う必要があります:
+- リポジトリにセキュリティの例外を追加して git に信頼させる
+- リポジトリの所有者を変更する</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
+        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
+run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
+repositories.
+
+If you wish to trust all git repositories on your system even if they are owned by someone else, run the
+following command.
+
+!!! THIS CAN BE DANGEROUS !!!</source>
+        <target>Git が追跡しているディレクトリは、現在のユーザー以外が所有していると安全でないと見なされます。
+デフォルトでは、Git は他人が所有するリポジトリの Git 構成を構文解析することさえ拒否しますし、
+フックを実行することもできません。
+
+自分のシステム上のすべての Git リポジトリを、たとえ他人のものであっても信頼したい場合は、
+以下のコマンドを実行します:
+
+!!! これは危険です !!!</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
+        <source>Trust all repositories</source>
+        <target>リポジトリをすべて信頼</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">
+        <source>Trust this repository</source>
+        <target>このリポジトリを信用</target>
+        
+      </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
         <source>The Git executable could not be located on your system.</source>
         <target>gitの実行ファイルはシステムで見つかりませんでした。</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitSecurityError.Text">
+        <source>Git security error</source>
+        <target>Git セキュリティエラー</target>
         
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">

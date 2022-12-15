@@ -1037,11 +1037,6 @@ A valid GitHub account is required</source>
         <target>파일을 비교해 보여줄 수 있는 파일비교 툴을 설정하세요. </target>
         
       </trans-unit>
-      <trans-unit id="_cantRegisterShellExtension.Text">
-        <source>Could not register the shell extension because '{0}' could not be found.</source>
-        <target>'{0}'을(를) 찾을수 없어 쉘확장 서비스를 등록할 수 없습니다.</target>
-        
-      </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
         <source>You need to configure merge tool in order to solve merge conflicts.</source>
         <target>파일머지/충돌처리 툴 또는 외부 프로그램을 설정하세요.</target>
@@ -8385,11 +8380,6 @@ Inactive remote is completely invisible to git.</source>
         <target>{0} 과 같은 이름의 원격브랜치가 이미 존재합니다.</target>
         
       </trans-unit>
-      <trans-unit id="_errorNoKeyEntered.Text">
-        <source>No SSH key file entered</source>
-        <target>SSH 키 파일이 입력되지 않았습니다</target>
-        
-      </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
         <source>Edit Remote Details</source>
         <target>원격 브랜치 세부정보 수정하기</target>
@@ -10910,11 +10900,6 @@ help</source>
         <target>작업 폴더가 유효한 Git 저장소가 아닙니다.</target>
         
       </trans-unit>
-      <trans-unit id="_pageantNotFound.Text">
-        <source>Cannot load SSH key. PuTTY is not configured properly.</source>
-        <target>SSH 키를 읽을 수 없습니다. PuTTY 설정을 확인하세요.</target>
-        
-      </trans-unit>
       <trans-unit id="_reason.Text">
         <source>Reason</source>
         <target>원인</target>
@@ -12941,14 +12926,25 @@ URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할
         <target>쉘 확장 프로그램</target>
         
       </trans-unit>
+      <trans-unit id="RegisterButton.Text">
+        <source>&amp;Enable shell extension</source>
+        
+      </trans-unit>
+      <trans-unit id="UnregisterButton.Text">
+        <source>&amp;Disable shell extension</source>
+        
+      </trans-unit>
       <trans-unit id="cbAlwaysShowAllCommands.Text">
         <source>Always show all commands</source>
         <target>항상 모든 명령어 표시</target>
         
       </trans-unit>
-      <trans-unit id="gbShellExtensions.Text">
+      <trans-unit id="gbCascadingMenu.Text">
         <source>Cascaded Context Menu</source>
-        <target>계단식 Context 메뉴</target>
+        
+      </trans-unit>
+      <trans-unit id="gbExplorerIntegration.Text">
+        <source>Windows Explorer integration</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -13390,6 +13386,26 @@ Select this commit to populate the full message.</source>
         <target>브랜치 소속이 아님</target>
         
       </trans-unit>
+      <trans-unit id="_errorPuTTYNotFound.Text">
+        <source>SSH agent could not be found</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshKeyNotFound.Text">
+        <source>SSH key file could not be found</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYInstalled.Text">
+        <source>Is PuTTY installed?</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYNotConfigured.Text">
+        <source>PuTTY is not configured as SSH client</source>
+        
+      </trans-unit>
+      <trans-unit id="_errorSshPuTTYWhereConfigure.Text">
+        <source>SSH client can be configured in Settings &gt; SSH.</source>
+        
+      </trans-unit>
       <trans-unit id="_exitCodeText.Text">
         <source>Exit code</source>
         <target>코드 종료</target>
@@ -13420,9 +13436,58 @@ Select this commit to populate the full message.</source>
         <target>다음 오류 때문에 &quot;{0}&quot;을 읽지 못했습니다. {1}{1}{2}{1}{1}이 문제의 특성상 응용 프로그램의 동작을 보장할 수 없으므로 종료되어야 합니다. {1}{1}이 문제를 해결하고 Git Extensions을 다시 여십시오.</target>
         
       </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHeader.Text">
+        <source>Do you want to trust this repository by adding a security exception?</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipHideGitCommandOutput.Text">
+        <source>Hide git command output...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipOpenRepositoryFolder.Text">
+        <source>Open repository in Explorer</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipSeeGitCommandOutput.Text">
+        <source>See git command output...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipText.Text">
+        <source>Git detected a security problem that prevents opening the repository.
+Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+
+To be able to open this repository, you need to either:
+- add a security exception for the repository to make git trust it, or
+- correct the ownership of the repository.</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
+        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
+By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
+run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
+repositories.
+
+If you wish to trust all git repositories on your system even if they are owned by someone else, run the
+following command.
+
+!!! THIS CAN BE DANGEROUS !!!</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
+        <source>Trust all repositories</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">
+        <source>Trust this repository</source>
+        
+      </trans-unit>
       <trans-unit id="_gitExecutableNotFoundText.Text">
         <source>The Git executable could not be located on your system.</source>
         <target>Git 실행 파일을 시스템에서 찾을 수 없습니다.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitSecurityError.Text">
+        <source>Git security error</source>
         
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">
