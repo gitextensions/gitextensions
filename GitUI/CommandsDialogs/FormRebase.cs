@@ -381,9 +381,11 @@ namespace GitUI.CommandsDialogs
             bool previousValueBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool previousValueShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool previousValueShowReflogReferences = AppSettings.ShowReflogReferences;
+            bool previousValueShowStashes = AppSettings.ShowStashes;
 
             try
             {
+                AppSettings.ShowStashes = false;
                 using FormChooseCommit chooseForm = new(UICommands, txtFrom.Text, showCurrentBranchOnly: true);
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
@@ -392,6 +394,7 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
+                AppSettings.ShowStashes = previousValueShowStashes;
                 AppSettings.BranchFilterEnabled = previousValueBranchFilterEnabled;
                 AppSettings.ShowCurrentBranchOnly = previousValueShowCurrentBranchOnly;
                 AppSettings.ShowReflogReferences = previousValueShowReflogReferences;
