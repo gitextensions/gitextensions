@@ -103,9 +103,9 @@ namespace GitUI.NBugReports
                 LogError(exception, isTerminating);
             }
 
-            if (exception is ExternalOperationException externalOperationException
-                && externalOperationException.InnerException is { }
-                && externalOperationException.InnerException.Message.Contains(_dubiousOwnershipSecurityConfigString))
+            ExternalOperationException externalOperationException = exception as ExternalOperationException;
+
+            if (externalOperationException?.InnerException?.Message?.Contains(_dubiousOwnershipSecurityConfigString) is true)
             {
                 ReportDubiousOwnership(externalOperationException.InnerException);
                 return;
@@ -131,6 +131,13 @@ namespace GitUI.NBugReports
                                                  or DirectoryNotFoundException
                                                  or PathTooLongException
                                                  or Win32Exception;
+
+            // Treat all git errors as user issues
+            if (string.Equals(AppSettings.GitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase)
+             || string.Equals(AppSettings.WslGitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase))
+            {
+                isUserExternalOperation = true;
+            }
 
             StringBuilder text = GetExceptionInfo(exception);
             string rootError = GetRootError(exception);
