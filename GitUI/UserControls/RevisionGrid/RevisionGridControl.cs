@@ -847,7 +847,7 @@ namespace GitUI
         /// <summary>
         ///  Queries git for the new set of revisions and refreshes the grid.
         /// </summary>
-        /// <exception cref="AggregateException"></exception>
+        /// <exception cref="Exception"></exception>
         /// <param name="forceRefresh">Refresh may be required as references may be changed.</param>
         public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null, bool forceRefresh = false)
         {
@@ -1313,7 +1313,7 @@ namespace GitUI
                 _isRefreshingRevisions = false;
 
                 // Rethrow the exception on the UI thread
-                this.InvokeAsync(() => throw new AggregateException(exception))
+                this.InvokeAsync(() => throw exception)
                     .FileAndForget();
             }
 
