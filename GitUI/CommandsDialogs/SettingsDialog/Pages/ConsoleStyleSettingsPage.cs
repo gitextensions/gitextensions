@@ -19,12 +19,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // Bind settings with controls
             AddSettingBinding(AppSettings.ConEmuStyle, _NO_TRANSLATE_cboStyle);
             SetCurrentConsoleFont(AppSettings.ConEmuConsoleFont);
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
         {
             Validates.NotNull(_consoleFont);
             AppSettings.ConEmuConsoleFont = _consoleFont;
+
+            base.PageToSettings();
         }
 
         public static SettingsPageReference GetPageReference()
