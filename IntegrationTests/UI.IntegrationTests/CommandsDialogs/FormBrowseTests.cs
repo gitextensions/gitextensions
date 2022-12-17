@@ -184,6 +184,44 @@ namespace GitExtensions.UITests.CommandsDialogs
                 });
         }
 
+        [TestCase("", "file.txt")]
+        [TestCase("", "file with spaces.txt")]
+        [TestCase("Dir with spaces", "file.txt")]
+        [TestCase("Dir with spaces", "file with spaces.txt")]
+        public void File_history_should_behave_as_expected(string fileRelativePath, string fileName)
+        {
+            using ReferenceRepository referenceRepository = new();
+            GitUICommands commands = new(referenceRepository.Module);
+
+            string revision1 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Create '{fileName}' in directory '{fileRelativePath}'");
+            string revision2 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Update '{fileName}' in directory '{fileRelativePath}'");
+            string revision3 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Update '{fileName}' in directory '{fileRelativePath}' again");
+
+            bool useBrowseForFileHistory = AppSettings.UseBrowseForFileHistory.Value;
+
+            AppSettings.UseBrowseForFileHistory.Value = true;
+
+            UITest.RunForm(
+                showForm: () => commands.GetTestAccessor().ShowFileHistoryDialog(Path.Combine(fileRelativePath, fileName)),
+                (FormBrowse form) =>
+                {
+                    try
+                    {
+                        WaitForRevisionsToBeLoaded(form);
+
+                        form.GetTestAccessor().RevisionGrid.GetRevision(ObjectId.Parse(revision1)).Should().NotBeNull();
+                        form.GetTestAccessor().RevisionGrid.GetRevision(ObjectId.Parse(revision2)).Should().NotBeNull();
+                        form.GetTestAccessor().RevisionGrid.GetRevision(ObjectId.Parse(revision3)).Should().NotBeNull();
+
+                        return Task.CompletedTask;
+                    }
+                    finally
+                    {
+                        AppSettings.UseBrowseForFileHistory.Value = useBrowseForFileHistory;
+                    }
+                });
+        }
+
         [Test]
         public void ShowStashes_starting_disabled_should_filter_as_expected()
         {
@@ -201,6 +239,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
             AppSettings.ShowStashes = false;
             AppSettings.RevisionGraphShowArtificialCommits = false;
+
             RunFormTest(
                 form =>
                 {
