@@ -23,6 +23,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SetCurrentDiffFont(AppSettings.FixedWidthFont);
             SetCurrentCommitFont(AppSettings.CommitFont);
             SetCurrentMonospaceFont(AppSettings.MonospaceFont);
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -36,6 +38,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.Font = _applicationFont;
             AppSettings.CommitFont = _commitFont;
             AppSettings.MonospaceFont = _monospaceFont;
+
+            base.PageToSettings();
         }
 
         private void diffFontChangeButton_Click(object sender, EventArgs e)

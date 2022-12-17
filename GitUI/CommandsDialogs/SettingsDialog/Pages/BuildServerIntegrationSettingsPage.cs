@@ -70,6 +70,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                     BuildServerType.SelectedItem = buildServerSettings.ServerName ?? _noneItem.Text;
                     ActivateBuildServerSettingsControl();
+
+                    base.SettingsToPage();
                 });
         }
 
@@ -87,6 +89,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             var control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
             control?.SaveSettings(buildServerSettings.SettingsSource);
+
+            base.PageToSettings();
         }
 
         private void ActivateBuildServerSettingsControl()

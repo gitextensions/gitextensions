@@ -37,12 +37,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             CategoryChanged();
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
         {
             Validates.NotNull(_externalLinksManager);
             _externalLinksManager.Save();
+
+            base.PageToSettings();
         }
 
         public static SettingsPageReference GetPageReference()

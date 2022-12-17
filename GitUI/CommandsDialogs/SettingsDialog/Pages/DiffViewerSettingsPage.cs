@@ -28,6 +28,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
             chkShowAllCustomDiffTools.Checked = AppSettings.ShowAvailableDiffTools;
             VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -43,6 +45,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
             AppSettings.ShowAvailableDiffTools = chkShowAllCustomDiffTools.Checked;
             AppSettings.DiffVerticalRulerPosition = (int)VerticalRulerPosition.Value;
+
+            base.PageToSettings();
         }
 
         public static SettingsPageReference GetPageReference()

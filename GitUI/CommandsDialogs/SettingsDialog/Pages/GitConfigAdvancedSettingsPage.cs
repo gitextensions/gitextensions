@@ -43,6 +43,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 gitSetting.MappedCheckbox.Checked = CurrentSettings.GetValue(gitSetting.GitSettingKey) == "true";
             }
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -52,6 +54,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 CurrentSettings.SetValue(gitSetting.GitSettingKey, gitSetting.MappedCheckbox.Checked ? "true" : "false");
             }
+
+            base.PageToSettings();
         }
     }
 }

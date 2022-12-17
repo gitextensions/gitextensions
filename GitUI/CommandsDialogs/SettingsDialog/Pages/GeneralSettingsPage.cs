@@ -99,6 +99,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SetSubmoduleStatus();
 
             chkTelemetry.Checked = AppSettings.TelemetryEnabled ?? false;
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -124,6 +126,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
 
             AppSettings.TelemetryEnabled = chkTelemetry.Checked;
+
+            base.PageToSettings();
         }
 
         private static Func<Repository, string> GetParentPath()

@@ -35,6 +35,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
             cboAutoNormaliseSymbol.SelectedValue = AppSettings.AutoNormaliseSymbol;
             chkCommitAndPushForcedWhenAmend.Checked = AppSettings.CommitAndPushForcedWhenAmend;
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -49,6 +51,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;
             AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue;
             AppSettings.CommitAndPushForcedWhenAmend = chkCommitAndPushForcedWhenAmend.Checked;
+
+            base.PageToSettings();
         }
 
         public static SettingsPageReference GetPageReference()
