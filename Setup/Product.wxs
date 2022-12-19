@@ -161,8 +161,9 @@
       <Component Id="Microsoft.VisualStudio.Composition.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Composition.dll" />
       </Component>
-      <Component Id="Microsoft.VisualStudio.Composition.NetFxAttributes.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Composition.NetFxAttributes.dll" />
+      <!-- Remove unused dll, installed in versions <= 4.0.1 -->
+      <Component Id="Microsoft.VisualStudio.Composition.NetFxAttributes.dll" Guid="D4782F6D-044B-5BD2-858A-1A3D8510B277">
+        <RemoveFile Name="Microsoft.VisualStudio.Composition.NetFxAttributes.dll" Id="Microsoft.VisualStudio.Composition.NetFxAttributes.dll" On="both" />
       </Component>
       <Component Id="Microsoft.VisualStudio.Interop.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Interop.dll" />
