@@ -20,7 +20,10 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": false,
+        "IsUncommittedAdded": false
     },
     {
         "Name": "testfile2.txt",
@@ -43,6 +46,9 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": false,
+        "IsUncommittedAdded": false
     }
 ]

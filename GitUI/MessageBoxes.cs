@@ -40,7 +40,6 @@ namespace GitUI
 
         private readonly TranslationString _shellNotFoundCaption = new("Shell not found");
         private readonly TranslationString _shellNotFound = new("The selected shell is not installed, or is not on your path.");
-        private readonly TranslationString _resetChangesCaption = new("Reset changes");
 
         private readonly TranslationString _submoduleDirectoryDoesNotExist = new(@"The directory ""{0}"" does not exist for submodule ""{1}"".");
         private readonly TranslationString _directoryDoesNotExist = new(@"The directory ""{0}"" does not exist.");
@@ -98,9 +97,6 @@ namespace GitUI
 
         public static bool CacheHostkey(IWin32Window? owner)
             => Confirm(owner, Instance._serverHostkeyNotCachedText.Text, "SSH");
-
-        public static bool ConfirmResetSelectedFiles(IWin32Window? owner, string text)
-            => Confirm(owner, text, Instance._resetChangesCaption.Text);
 
         public static bool ConfirmResolveMergeConflicts(IWin32Window? owner)
             => Confirm(owner, Instance._unresolvedMergeConflicts.Text, Instance._unresolvedMergeConflictsCaption.Text);

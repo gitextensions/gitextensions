@@ -182,6 +182,25 @@ namespace GitCommands
 
         #endregion
 
+        #region Derived Flags
+
+        /// <summary>
+        /// True if the Git item is added in the (artificial or real) commit.
+        /// </summary>
+        public bool IsAdded
+            => IsNew || IsCopied;
+
+        /// <summary>
+        /// True if Staged is set and the commit is artificial.
+        /// </summary>
+        public bool IsUncommitted
+            => Staged is (StagedStatus.WorkTree or StagedStatus.Index);
+
+        public bool IsUncommittedAdded
+            => IsUncommitted && IsAdded;
+
+        #endregion
+
         /// <summary>
         /// Gets a task whose result is the submodule status.
         /// </summary>

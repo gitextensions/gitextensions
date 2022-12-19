@@ -20,7 +20,10 @@
         "IsSubmodule": true,
         "IsDirty": true,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": false
     },
     {
         "Name": "subm2",
@@ -43,6 +46,9 @@
         "IsSubmodule": true,
         "IsDirty": true,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": false
     }
 ]
