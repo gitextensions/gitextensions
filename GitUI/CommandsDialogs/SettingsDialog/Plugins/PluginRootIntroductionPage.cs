@@ -12,14 +12,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComplete();
         }
 
-        protected override void SettingsToPage()
-        {
-        }
-
-        protected override void PageToSettings()
-        {
-        }
-
         protected override ISettingsSource GetCurrentSettings()
         {
             return AppSettings.SettingsContainer;

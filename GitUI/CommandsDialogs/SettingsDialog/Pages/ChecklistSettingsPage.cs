@@ -142,14 +142,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override bool IsInstantSavePage => true;
 
-        protected override void SettingsToPage()
-        {
-        }
-
-        protected override void PageToSettings()
-        {
-        }
-
         public override void OnPageShown()
         {
             CheckSettings();
