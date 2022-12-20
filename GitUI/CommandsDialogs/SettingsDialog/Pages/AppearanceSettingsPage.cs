@@ -118,6 +118,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             chkShowRelativeDate.Checked = AppSettings.RelativeDate;
 
+            base.SettingsToPage();
             return;
 
             int GetTruncatePathMethodIndex(TruncatePathMethod method)
@@ -171,6 +172,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.Dictionary = Dictionary.SelectedIndex == 0 ? "none" : Dictionary.Text;
 
+            base.PageToSettings();
             return;
 
             TruncatePathMethod GetTruncatePathMethodString(int index) => index switch

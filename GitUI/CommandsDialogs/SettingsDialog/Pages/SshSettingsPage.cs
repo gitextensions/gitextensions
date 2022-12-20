@@ -44,6 +44,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             EnableSshOptions();
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -71,6 +73,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // Set persistent settings as well as the env var used by Git
             GitSshHelpers.SetGitSshEnvironmentVariable(path);
             AppSettings.SshPath = path;
+
+            base.PageToSettings();
         }
 
         private void OpenSSH_CheckedChanged(object sender, EventArgs e)

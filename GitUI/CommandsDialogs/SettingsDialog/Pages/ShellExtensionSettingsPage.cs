@@ -24,6 +24,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbAlwaysShowAllCommands.Checked = AppSettings.AlwaysShowAllCommands;
 
             UpdatePreview();
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -44,6 +46,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.CascadeShellMenuItems = l_CascadeShellMenuItems;
             AppSettings.AlwaysShowAllCommands = cbAlwaysShowAllCommands.Checked;
+
+            base.PageToSettings();
         }
 
         private void chlMenuEntries_SelectedValueChanged(object sender, EventArgs e)

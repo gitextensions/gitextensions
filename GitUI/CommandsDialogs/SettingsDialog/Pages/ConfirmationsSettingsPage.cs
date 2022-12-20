@@ -40,6 +40,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             // Worktrees:
             chkSwitchWorktree.Checked = !AppSettings.DontConfirmSwitchWorktree;
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -71,6 +73,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             // Worktrees:
             AppSettings.DontConfirmSwitchWorktree = !chkSwitchWorktree.Checked;
+
+            base.PageToSettings();
         }
 
         public static SettingsPageReference GetPageReference()

@@ -22,6 +22,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowResetAllChanges.Checked = AppSettings.ShowResetAllChanges;
             chkAutocomplete.Checked = AppSettings.ProvideAutocompletion;
             cbRememberAmendCommitState.Checked = AppSettings.RememberAmendCommitState;
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -35,6 +37,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowResetAllChanges = chkShowResetAllChanges.Checked;
             AppSettings.ProvideAutocompletion = chkAutocomplete.Checked;
             AppSettings.RememberAmendCommitState = cbRememberAmendCommitState.Checked;
+
+            base.PageToSettings();
         }
     }
 }

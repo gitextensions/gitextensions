@@ -24,6 +24,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cbShowLineNumbers.Checked = AppSettings.BlameShowLineNumbers;
             cbShowOriginalFilePath.Checked = AppSettings.BlameShowOriginalFilePath;
             cbShowAuthorAvatar.Checked = AppSettings.BlameShowAuthorAvatar;
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -39,6 +41,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.BlameShowLineNumbers = cbShowLineNumbers.Checked;
             AppSettings.BlameShowOriginalFilePath = cbShowOriginalFilePath.Checked;
             AppSettings.BlameShowAuthorAvatar = cbShowAuthorAvatar.Checked;
+
+            base.PageToSettings();
         }
 
         public static SettingsPageReference GetPageReference()

@@ -115,6 +115,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions;
             chkFillRefLabels.Checked = AppSettings.FillRefLabels;
             _controller.ShowThemeSettings();
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -126,6 +128,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.HighlightAuthoredRevisions = chkHighlightAuthored.Checked;
             AppSettings.FillRefLabels = chkFillRefLabels.Checked;
             _controller.ApplyThemeSettings();
+
+            base.PageToSettings();
         }
 
         public void PopulateThemeMenu(IEnumerable<ThemeId> themeIds)
