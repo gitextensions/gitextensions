@@ -98,6 +98,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             globalAutoCrlfInput.Checked = autocrlf is AutoCRLFType.input;
             globalAutoCrlfTrue.Checked = autocrlf is AutoCRLFType.@true;
             globalAutoCrlfNotSet.Checked = autocrlf is null;
+
+            base.SettingsToPage();
         }
 
         /// <summary>
@@ -109,6 +111,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(CurrentSettings);
 
             CurrentSettings.FilesEncoding = (Encoding)Global_FilesEncoding.SelectedItem;
+
+            base.PageToSettings();
 
             if (!CheckSettingsLogic.CanFindGitCmd())
             {

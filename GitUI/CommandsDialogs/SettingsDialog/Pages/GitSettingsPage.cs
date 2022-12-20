@@ -32,12 +32,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             GitPath.Text = AppSettings.GitCommandValue;
             GitBinPath.Text = AppSettings.GitBinDir;
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
         {
             AppSettings.GitCommandValue = GitPath.Text;
             AppSettings.GitBinDir = GitBinPath.Text;
+
+            base.PageToSettings();
         }
 
         private void BrowseGitPath_Click(object sender, EventArgs e)

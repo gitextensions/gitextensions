@@ -12,11 +12,15 @@
         protected override void SettingsToPage()
         {
             controlHotkeys.ReloadSettings();
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
         {
             controlHotkeys.SaveSettings();
+
+            base.PageToSettings();
         }
     }
 }

@@ -169,6 +169,8 @@ Current Branch:
             {
                 BindScripts(_scripts, null);
             }
+
+            base.SettingsToPage();
         }
 
         protected override void PageToSettings()
@@ -184,6 +186,8 @@ Current Branch:
             }
 
             AppSettings.OwnScripts = ScriptManager.SerializeIntoXml();
+
+            base.PageToSettings();
         }
 
         private void BindScripts(IList<ScriptInfoProxy> scripts, ScriptInfoProxy? selectedScript)
