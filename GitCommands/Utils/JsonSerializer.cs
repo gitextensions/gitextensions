@@ -9,7 +9,7 @@ namespace GitCommands.Utils
             var json = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(T));
             MemoryStream stream = new();
             json.WriteObject(stream, myObject);
-            return Encoding.UTF8.GetString(stream.ToArray());
+            return Encoding.UTF8.GetString(stream.GetBuffer(), 0, (int)stream.Position);
         }
 
         public static T? Deserialize<T>(string myString) where T : class
