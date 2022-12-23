@@ -104,6 +104,7 @@ namespace GitUIPluginInterfaces
 
         public static void Initialise(IEnumerable<Assembly> assemblies, string userPluginsPath = null)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             SetUserPluginsPath(userPluginsPath);
 
             PartDiscovery? discovery = PartDiscovery.Combine(
@@ -112,8 +113,6 @@ namespace GitUIPluginInterfaces
             DiscoveredParts? parts = ThreadHelper.JoinableTaskFactory.Run(() => discovery.CreatePartsAsync(assemblies));
 
             ComposableCatalog? catalog = ComposableCatalog.Create(Resolver.DefaultInstance).AddParts(parts);
-
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
             _aggregateCatalog = catalog;
         }
