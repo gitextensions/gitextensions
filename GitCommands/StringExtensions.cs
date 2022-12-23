@@ -258,7 +258,7 @@ namespace System
                 return str.Substring(0, maxLength);
             }
 
-            return str.Substring(0, maxLength - 3) + "...";
+            return $"{str.AsSpan(0, maxLength - 3)}...";
         }
 
         /// <summary>
