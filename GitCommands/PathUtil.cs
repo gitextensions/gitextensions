@@ -369,7 +369,7 @@ namespace GitCommands
                     length--;
                 }
 
-                return $"~{path.Substring(userProfile.Length, length)}";
+                return $"~{path.AsSpan(userProfile.Length, length)}";
             }
 
             return path;
