@@ -381,7 +381,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>Supprimer des branches non fusionnées donnera des commits instables. A utiliser avec prudence !</target>
+        <target>Supprimer des branches non fusionnées donnera des commits instables. À utiliser avec prudence !</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -1061,7 +1061,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
         <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit nécessite qu'un crochet commit-msg soit installé. Voulez vous intaller le crochet commit-msg dans cotre dépôt?</target>
+        <target>Gerrit nécessite qu'un crochet commit-msg soit installé. Voulez vous intaller le crochet commit-msg dans votre dépôt ?</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookShortText.Text">
@@ -1110,7 +1110,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_settingsErrorProjectNotEntered.Text">
         <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        <target>The paramètre &quot;projet&quot; dans le fichier .gitreview est obligatoire.</target>
+        <target>Le paramètre &quot;projet&quot; dans le fichier .gitreview est obligatoire.</target>
         
       </trans-unit>
     </body>
@@ -1566,7 +1566,7 @@ Voulez-vous réinitialiser le chemin configuré?</target>
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>Il n'y a pas de proxy configuré. Activer l'hôte proxy dans les paramètres des plugins s'il vous plait. </target>
+        <target>Il n'y a pas de proxy configuré. Activer l'hôte proxy dans les paramètres des plugins s'il vous plait.</target>
         
       </trans-unit>
       <trans-unit id="_pluginName.Text">
@@ -1681,7 +1681,7 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
         <target>Le presse-papier contiendra du code HTML (texte pur) et du HTML formaté
-qui peut être coller dans des programmes comme MS Word ou LibreOffice Writer.</target>
+qui peut être collé dans des programmes comme MS Word ou LibreOffice Writer.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -1701,7 +1701,7 @@ qui peut être coller dans des programmes comme MS Word ou LibreOffice Writer.</
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>Tri en cours : Les révisions les plus récentes sont listés en haut.</target>
+        <target>Tri en cours : Les révisions les plus récentes sont listées en haut.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
@@ -1840,7 +1840,7 @@ Veuillez vérifier l'url du serveur.</target>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>L'expression régulière pour &quot;le filtre d'Id de build&quot; n'est pas valide et ne sera pas enregistrée!</target>
+        <target>L'expression rationnelle pour &quot;le filtre d'Id de build&quot; n'est pas valide et ne sera pas enregistrée !</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
@@ -1854,7 +1854,7 @@ Veuillez vérifier l'url du serveur.</target>
     <body>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>L'expression régulière pour &quot;le nom de la définition de build&quot; n'est pas valide et ne sera pas enregistrée!</target>
+        <target>L'expression rationnelle pour &quot;le nom de la définition de build&quot; n'est pas valide et ne sera pas enregistrée !</target>
         
       </trans-unit>
     </body>
