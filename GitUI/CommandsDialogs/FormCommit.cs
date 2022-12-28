@@ -44,6 +44,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitAndPush = new("Commit && &push");
 
+        private readonly TranslationString _commitAndForcePush = new("Commit && force &push");
+
         private readonly TranslationString _deleteFailed = new("Delete file failed");
 
         private readonly TranslationString _deleteSelectedFiles =
@@ -3360,7 +3362,9 @@ namespace GitUI.CommandsDialogs
 
         private void SetCommitAndPushText()
         {
-            CommitAndPush.Text = Reset.Enabled || Amend.Checked ? _commitAndPush.Text : TranslatedStrings.ButtonPush;
+            CommitAndPush.Text = Amend.Checked && AppSettings.CommitAndPushForcedWhenAmend ? _commitAndForcePush.Text
+                : Reset.Enabled || Amend.Checked ? _commitAndPush.Text
+                : TranslatedStrings.ButtonPush;
         }
 
         internal TestAccessor GetTestAccessor()

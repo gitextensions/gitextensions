@@ -3452,6 +3452,10 @@ Use this feature when a file is big and never change.
 Git will never check if the file has changed that will improve status check performance.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_commitAndForcePush.Text">
+        <source>Commit &amp;&amp; force &amp;push</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_commitAndPush.Text">
         <source>Commit &amp;&amp; &amp;push</source>
         <target />
