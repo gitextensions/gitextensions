@@ -138,20 +138,23 @@ namespace GitUIPluginInterfaces
         }
 
         /// <summary>
-        /// W/A for not working assembly probing in MEF.
-        /// Trying to find dependent assembly in the same folder.
+        /// Workaround for not working assembly probing in MEF.
+        /// Some plugins have third-party dependencies.
+        /// True way to load dependencies from subfolders is probing in app config.
+        /// But there is known issue (https://stackoverflow.com/questions/20306892/mef-plugin-application-without-probing-config-or-assembly-resolve-event)
+        /// Until it'll be fixed, we trying to find dependent assembly in the same plugin folder.
         /// </summary>
         private static Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
         {
             try
             {
-                if (args.RequestingAssembly == null)
+                if (args.RequestingAssembly is null)
                 {
                     return null;
                 }
 
                 string fullName = Directory.GetParent(args.RequestingAssembly.Location)?.FullName;
-                if (fullName == null)
+                if (fullName is null)
                 {
                     return null;
                 }
@@ -161,9 +164,9 @@ namespace GitUIPluginInterfaces
                     {
                         string? fileDescription = FileVersionInfo.GetVersionInfo(f).FileDescription;
 
-                        return fileDescription != null && args.Name.StartsWith(fileDescription);
+                        return fileDescription is not null && args.Name.StartsWith(fileDescription);
                     });
-                return dll == null ? null : Assembly.LoadFile(dll);
+                return dll is null ? null : Assembly.LoadFile(dll);
             }
             catch
             {
