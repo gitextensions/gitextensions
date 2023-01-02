@@ -67,9 +67,6 @@ namespace GitUI.Infrastructure
 
             ThrowIfFileNotFound(AppSettings.Pageant, $"'{AppSettings.Pageant}'\r\n\r\n{TranslatedStrings.ErrorSshPuTTYInstalled}");
 
-            string? sshKeyFile = sshKeyFileLoader();
-            ThrowIfFileNotFound(sshKeyFile, $"'{sshKeyFile}'", TranslatedStrings.ErrorSshKeyNotFound);
-
             Executable pageantExecutable = new(AppSettings.Pageant);
 
             // ensure pageant is loaded, so we can wait for loading a key in the next command
@@ -80,6 +77,14 @@ namespace GitUI.Infrastructure
                 IProcess process = pageantExecutable.Start();
                 process.WaitForInputIdle();
             }
+
+            string? sshKeyFile = sshKeyFileLoader();
+            if (string.IsNullOrWhiteSpace(sshKeyFile))
+            {
+                return false;
+            }
+
+            ThrowIfFileNotFound(sshKeyFile, $"'{sshKeyFile}'", TranslatedStrings.ErrorSshKeyNotFound);
 
             return pageantExecutable.RunCommand(sshKeyFile.Quote());
 
