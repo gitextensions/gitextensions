@@ -182,16 +182,6 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
-        /// Has any filters which might hide branches or tags.
-        /// </summary>
-        public bool HasRefsFilter
-        {
-            get => HasFilter
-                || HasCommitsLimit
-                || IsShowCurrentBranchOnlyChecked;
-        }
-
-        /// <summary>
         /// Has revision filters that potentially hides parents, not just branches.
         /// </summary>
         public bool HasRevisionFilter
