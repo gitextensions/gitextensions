@@ -10,6 +10,10 @@
     "Blame": {
       "commandName": "Project",
       "commandLineArgs": "blame GitExtensions.settings"
+    },
+    "FileHistory": {
+      "commandName": "Project",
+      "commandLineArgs": "filehistory GitExtensions.settings"
     }
   }
 }

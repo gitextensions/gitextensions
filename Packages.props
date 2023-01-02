@@ -15,8 +15,9 @@
     <PackageReference Update="LibGit2Sharp" Version="0.26.2" />
     <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageReference Update="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
-    <PackageReference Update="Microsoft.VisualStudio.Composition" Version="16.9.20" />
-    <PackageReference Update="Microsoft.VisualStudio.Threading" Version="17.0.64" />
+    <PackageReference Update="System.ComponentModel.Composition" Version="6.0.0" /> <!-- Required by GitExtensions.PluginManager -->
+    <PackageReference Update="Microsoft.VisualStudio.Composition" Version="17.2.41" />
+    <PackageReference Update="Microsoft.VisualStudio.Threading" Version="17.4.27" />
     <PackageReference Update="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
     <PackageReference Update="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageReference Update="Newtonsoft.Json" Version="13.0.1" />

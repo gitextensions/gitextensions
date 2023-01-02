@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using GitCommands;
 
 namespace ResourceManager.Xliff
 {
@@ -298,7 +299,7 @@ namespace ResourceManager.Xliff
         public static Dictionary<string, List<Type>> GetTranslatableTypes()
         {
             Dictionary<string, List<Type>> dictionary = new();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic))
             {
                 if (_processedAssemblies.Contains(assembly.FullName))
                 {
@@ -312,19 +313,19 @@ namespace ResourceManager.Xliff
                     continue;
                 }
 
-                foreach (var type in GetLoadableTypes(assembly))
+                bool isPlugin = assembly.Location.ToPosixPath().IndexOf("/Plugins/", StringComparison.OrdinalIgnoreCase) != -1;
+                string key = isPlugin ? ".Plugins" : "";
+
+                if (!dictionary.TryGetValue(key, out List<Type> list))
+                {
+                    list = new();
+                    dictionary.Add(key, list);
+                }
+
+                foreach (Type type in GetLoadableTypes(assembly))
                 {
                     if (type.IsClass && typeof(ITranslate).IsAssignableFrom(type) && !type.IsAbstract)
                     {
-                        var isPlugin = assembly.Location.IndexOf("Plugins/", StringComparison.OrdinalIgnoreCase) != -1;
-                        var val = isPlugin ? ".Plugins" : "";
-
-                        if (!dictionary.TryGetValue(val, out var list))
-                        {
-                            list = new List<Type>();
-                            dictionary.Add(val, list);
-                        }
-
                         list.Add(type);
                     }
                 }
@@ -368,6 +369,14 @@ namespace ResourceManager.Xliff
             }
             catch (ReflectionTypeLoadException e)
             {
+                Console.WriteLine($"ERROR getting types of {assembly.Location}:");
+                Console.WriteLine(e);
+                Console.WriteLine("Processing the following types anyway:");
+                foreach (Type type in e.Types.Where(t => t != null))
+                {
+                    Console.WriteLine(type.FullName);
+                }
+
                 return e.Types.Where(t => t != null);
             }
         }

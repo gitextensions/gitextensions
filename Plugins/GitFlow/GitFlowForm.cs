@@ -64,6 +64,12 @@ namespace GitExtensions.Plugins.GitFlow
             lblPrefixManage.Text = string.Empty;
             ttGitFlow.SetToolTip(lnkGitFlow, _gitFlowTooltip.Text);
 
+            // To accommodate the translation app
+            if (gitUiCommands is null)
+            {
+                return;
+            }
+
             Init();
         }
 

@@ -1717,8 +1717,6 @@ namespace GitUI
                 return false;
             }
 
-            fileHistoryFileName = fileHistoryFileName.QuoteNE();
-
             GitRevision? revision = null;
             if (args.Count > 3)
             {
@@ -1744,6 +1742,9 @@ namespace GitUI
             // Similar to StartFileHistoryDialog()
             if (AppSettings.UseBrowseForFileHistory.Value)
             {
+                // NOTE: fileHistoryFileName doesn't need to be quoted, as it the filter will get quoted
+                // when the filter gets set.
+
                 ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
                                  () => new FormBrowse(commands: this, new BrowseArguments
                                  {
@@ -1755,8 +1756,10 @@ namespace GitUI
             }
             else
             {
+                // NOTE: fileHistoryFileName must be quoted.
+
                 ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
-                                 () => new FormFileHistory(commands: this, fileHistoryFileName, revision, filterByRevision, showBlame));
+                                 () => new FormFileHistory(commands: this, fileHistoryFileName.QuoteNE(), revision, filterByRevision, showBlame));
             }
 
             return true;

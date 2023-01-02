@@ -32,9 +32,10 @@ namespace TranslationApp
                                     }
                                 }
                             }
-                            catch
+                            catch (Exception ex)
                             {
-                                // no-op
+                                Console.WriteLine($"ERROR instantiating type {type.FullName}:");
+                                Console.WriteLine(ex);
                             }
                         }
                     }
