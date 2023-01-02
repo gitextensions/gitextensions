@@ -185,17 +185,21 @@ namespace GitCommands
         #region Derived Flags
 
         /// <summary>
-        /// True if the Git item is added in the (artificial or real) commit.
+        /// Indicates whether the Git item was added in the (artificial or real) commit.
         /// </summary>
         public bool IsAdded
             => IsNew || IsCopied;
 
         /// <summary>
-        /// True if Staged is set and the commit is artificial.
+        /// Indicates whether the Git item is yet to be committed;
+        /// that is it belongs to either WorkTree or Index (<see cref="Staged"/> must be set).
         /// </summary>
         public bool IsUncommitted
             => Staged is (StagedStatus.WorkTree or StagedStatus.Index);
 
+        /// <summary>
+        /// Indicates whether the Git item is new or copied and has not been committed yet.
+        /// </summary>
         public bool IsUncommittedAdded
             => IsUncommitted && IsAdded;
 
