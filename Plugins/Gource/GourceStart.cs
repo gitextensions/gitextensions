@@ -14,6 +14,13 @@ namespace GitExtensions.Plugins.Gource
         {
             InitializeComponent();
             InitializeComplete();
+
+            // To accommodate the translation app
+            if (gitUIArgs is null)
+            {
+                return;
+            }
+
             PathToGource = pathToGource;
             GitUIArgs = gitUIArgs;
             GitWorkingDir = gitUIArgs.GitModule.WorkingDir;

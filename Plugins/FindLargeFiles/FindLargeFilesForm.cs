@@ -31,6 +31,12 @@ namespace GitExtensions.Plugins.FindLargeFiles
 
             InitializeComplete();
 
+            // To accommodate the translation app
+            if (gitUiEventArgs is null)
+            {
+                return;
+            }
+
             sHADataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.SHA);
             pathDataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.Path);
             sizeDataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.Size);
