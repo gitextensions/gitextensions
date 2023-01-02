@@ -499,16 +499,18 @@ namespace GitUI.CommandsDialogs
                 {
                     // Reset to selected revision
 
-                    var deletedItems = selectedItems
+                    List<string> deletedItems = selectedItems
                         .Where(item => item.Item.IsDeleted)
-                        .Select(item => item.Item.Name).ToList();
+                        .Select(item => item.Item.Name)
+                        .ToList();
                     Module.RemoveFiles(deletedItems, false);
 
                     foreach (var childId in selectedItems.SecondIds())
                     {
-                        var itemsToCheckout = selectedItems
+                        List<string> itemsToCheckout = selectedItems
                             .Where(item => !item.Item.IsDeleted && item.SecondRevision.ObjectId == childId)
-                            .Select(item => item.Item.Name).ToList();
+                            .Select(item => item.Item.Name)
+                            .ToList();
                         Module.CheckoutFiles(itemsToCheckout, childId, force: false);
                     }
                 }
@@ -532,9 +534,10 @@ namespace GitUI.CommandsDialogs
 
                     foreach (var parentId in selectedItems.FirstIds())
                     {
-                        var itemsToCheckout = selectedItems
+                        List<string> itemsToCheckout = selectedItems
                             .Where(item => !item.Item.IsNew && item.FirstRevision?.ObjectId == parentId)
-                            .Select(item => item.Item.Name).ToList();
+                            .Select(item => item.Item.Name)
+                            .ToList();
                         Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
                     }
                 }
