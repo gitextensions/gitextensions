@@ -16,10 +16,15 @@
 
         public ActionEnum SelectedAction { get; private set; }
 
-        public FormResetChanges(bool hasExistingFiles, bool hasNewFiles)
+        public FormResetChanges(bool hasExistingFiles, bool hasNewFiles, string? confirmationMessage = null)
         {
             InitializeComponent();
             InitializeComplete();
+
+            if (confirmationMessage is not null)
+            {
+                label1.Text = confirmationMessage;
+            }
 
             if (!hasExistingFiles)
             {
@@ -45,9 +50,10 @@
         /// <param name="owner">Shows this form as a modal dialog with the specified owner.</param>
         /// <param name="hasExistingFiles">Where there are existing (modified) files selected.</param>
         /// <param name="hasNewFiles">Where there are new (untracked) files selected.</param>
-        public static ActionEnum ShowResetDialog(IWin32Window? owner, bool hasExistingFiles, bool hasNewFiles)
+        /// <param name="confirmationMessage">Optional confirmation message replacing the default.</param>
+        public static ActionEnum ShowResetDialog(IWin32Window? owner, bool hasExistingFiles, bool hasNewFiles, string? confirmationMessage = null)
         {
-            using FormResetChanges form = new(hasExistingFiles, hasNewFiles);
+            using FormResetChanges form = new(hasExistingFiles, hasNewFiles, confirmationMessage);
             form.ShowDialog(owner);
             return form.SelectedAction;
         }

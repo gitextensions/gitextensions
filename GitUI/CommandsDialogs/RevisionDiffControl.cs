@@ -26,6 +26,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _selectedRevision = new("Second: B ");
         private readonly TranslationString _firstRevision = new("First: A ");
 
+        private readonly TranslationString _resetSelectedChangesText =
+            new("Are you sure you want to reset all selected files to {0}?");
+
         private RevisionGridControl? _revisionGrid;
         private RevisionFileTreeControl? _revisionFileTree;
         private readonly IRevisionDiffController _revisionDiffController = new RevisionDiffController();
@@ -1130,7 +1133,7 @@ namespace GitUI.CommandsDialogs
 
         private void resetFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ResetSelectedItemsTo(sender == resetFileToSelectedToolStripMenuItem, deleteUncommittedAddedItems: true);
+            ResetSelectedItemsWithConfirmation(resetToSelected: sender == resetFileToSelectedToolStripMenuItem);
         }
 
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -1421,19 +1424,31 @@ namespace GitUI.CommandsDialogs
                 return true;
             }
 
+            // Reset to first (parent)
+            ResetSelectedItemsWithConfirmation(resetToSelected: false);
+            return true;
+        }
+
+        private void ResetSelectedItemsWithConfirmation(bool resetToSelected)
+        {
             IEnumerable<FileStatusItem> items = DiffFiles.SelectedItems;
+
             bool hasNewFiles = items.Any(item => item.Item.IsUncommittedAdded);
             bool hasExistingFiles = items.Any(item => !item.Item.IsUncommittedAdded);
-            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(ParentForm, hasExistingFiles, hasNewFiles);
+
+            string revDescription = resetToSelected
+                ? $"{_selectedRevision.Text}{DescribeRevision(items.SecondRevs().ToList())}"
+                : $"{_firstRevision.Text}{DescribeRevision(items.FirstRevs().ToList())}";
+            string confirmationMessage = string.Format(_resetSelectedChangesText.Text, revDescription);
+
+            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(ParentForm, hasExistingFiles, hasNewFiles, confirmationMessage);
             if (resetAction == FormResetChanges.ActionEnum.Cancel)
             {
-                return true;
+                return;
             }
 
-            // Reset to first (parent)
             bool deleteUncommittedAddedItems = resetAction == FormResetChanges.ActionEnum.ResetAndDelete;
-            ResetSelectedItemsTo(actsAsChild: false, deleteUncommittedAddedItems);
-            return true;
+            ResetSelectedItemsTo(resetToSelected, deleteUncommittedAddedItems);
         }
 
         internal TestAccessor GetTestAccessor()
