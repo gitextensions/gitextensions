@@ -198,7 +198,7 @@ namespace GitCommands
             => Staged is (StagedStatus.WorkTree or StagedStatus.Index);
 
         /// <summary>
-        /// Indicates whether the Git item is new or copied and has not been committed yet.
+        /// Indicates whether the Git item is new or copied (<see cref="IsAdded"/>) and has not been committed yet (<see cref="IsUncommitted"/>).
         /// </summary>
         public bool IsUncommittedAdded
             => IsUncommitted && IsAdded;
