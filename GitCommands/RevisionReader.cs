@@ -192,7 +192,8 @@ namespace GitCommands
                 { AppSettings.RevisionSortOrder == RevisionSortOrder.Topology, "--topo-order" },
 
                 revisionFilter,
-                { !string.IsNullOrWhiteSpace(pathFilter), $"-- {pathFilter}" }
+                "--",
+                { !string.IsNullOrWhiteSpace(pathFilter), pathFilter }
             };
         }
 
