@@ -20,6 +20,9 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": false
     }
 ]

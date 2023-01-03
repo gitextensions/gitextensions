@@ -20,7 +20,10 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": true,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": true
     },
     {
         "Name": "adfs.h",
@@ -43,7 +46,10 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": false
     },
     {
         "Name": "adfs.h",
@@ -66,6 +72,9 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": false
     }
 ]
