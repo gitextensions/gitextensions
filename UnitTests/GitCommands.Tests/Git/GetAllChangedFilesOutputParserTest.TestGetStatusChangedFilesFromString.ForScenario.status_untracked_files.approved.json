@@ -20,7 +20,10 @@
         "IsSubmodule": true,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": false
     },
     {
         "Name": "ignored_file",
@@ -43,6 +46,9 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": true,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": true
     }
 ]

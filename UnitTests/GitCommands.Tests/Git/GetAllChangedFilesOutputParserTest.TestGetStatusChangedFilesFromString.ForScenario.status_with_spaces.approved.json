@@ -20,7 +20,10 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": false
     },
     {
         "Name": " no trim space1 ",
@@ -43,6 +46,9 @@
         "IsSubmodule": true,
         "IsDirty": true,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": true,
+        "IsUncommittedAdded": false
     }
 ]

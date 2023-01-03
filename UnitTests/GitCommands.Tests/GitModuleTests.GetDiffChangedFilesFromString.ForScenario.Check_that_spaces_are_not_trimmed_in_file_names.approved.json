@@ -20,7 +20,10 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": false,
+        "IsUncommittedAdded": false
     },
     {
         "Name": " no trim space1 ",
@@ -43,7 +46,10 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": false,
+        "IsUncommitted": false,
+        "IsUncommittedAdded": false
     },
     {
         "Name": " no trim space2 ",
@@ -66,6 +72,9 @@
         "IsSubmodule": false,
         "IsDirty": false,
         "IsStatusOnly": false,
-        "IsRangeDiff": false
+        "IsRangeDiff": false,
+        "IsAdded": true,
+        "IsUncommitted": false,
+        "IsUncommittedAdded": false
     }
 ]

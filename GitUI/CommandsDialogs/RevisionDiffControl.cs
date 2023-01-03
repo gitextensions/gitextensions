@@ -485,7 +485,7 @@ namespace GitUI.CommandsDialogs
             RefreshArtificial();
         }
 
-        private void ResetSelectedItemsTo(bool actsAsChild)
+        private void ResetSelectedItemsTo(bool actsAsChild, bool deleteUncommittedAddedItems)
         {
             var selectedItems = DiffFiles.SelectedItems.ToList();
             if (!selectedItems.Any())
@@ -493,41 +493,59 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (actsAsChild)
+            try
             {
-                // selected revisions
-                var deletedItems = selectedItems
-                    .Where(item => item.Item.IsDeleted)
-                    .Select(item => item.Item.Name).ToList();
-                Module.RemoveFiles(deletedItems, false);
-
-                foreach (var childId in selectedItems.SecondIds())
+                if (actsAsChild)
                 {
-                    var itemsToCheckout = selectedItems
-                        .Where(item => !item.Item.IsDeleted && item.SecondRevision.ObjectId == childId)
-                        .Select(item => item.Item.Name).ToList();
-                    Module.CheckoutFiles(itemsToCheckout, childId, force: false);
+                    // Reset to selected revision
+
+                    List<string> deletedItems = selectedItems
+                        .Where(item => item.Item.IsDeleted)
+                        .Select(item => item.Item.Name)
+                        .ToList();
+                    Module.RemoveFiles(deletedItems, false);
+
+                    foreach (var childId in selectedItems.SecondIds())
+                    {
+                        List<string> itemsToCheckout = selectedItems
+                            .Where(item => !item.Item.IsDeleted && item.SecondRevision.ObjectId == childId)
+                            .Select(item => item.Item.Name)
+                            .ToList();
+                        Module.CheckoutFiles(itemsToCheckout, childId, force: false);
+                    }
+                }
+                else
+                {
+                    // Reset to parent revision
+
+                    // If file is new to the parent or is copied, it has to be deleted or removed if un/committed, respectively
+                    IEnumerable<FileStatusItem> addedItems = selectedItems.Where(item => item.Item.IsAdded);
+                    if (selectedItems.First().Item.IsUncommitted)
+                    {
+                        if (deleteUncommittedAddedItems)
+                        {
+                            DeleteFromFilesystem(addedItems);
+                        }
+                    }
+                    else
+                    {
+                        Module.RemoveFiles(addedItems.Select(item => item.Item.Name).ToList(), force: false);
+                    }
+
+                    foreach (var parentId in selectedItems.FirstIds())
+                    {
+                        List<string> itemsToCheckout = selectedItems
+                            .Where(item => !item.Item.IsNew && item.FirstRevision?.ObjectId == parentId)
+                            .Select(item => item.Item.Name)
+                            .ToList();
+                        Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
+                    }
                 }
             }
-            else
+            finally
             {
-                // acts as parent
-                // if file is new to the parent or is copied, it has to be removed
-                var addedItems = selectedItems
-                    .Where(item => item.Item.IsNew || item.Item.IsCopied)
-                    .Select(item => item.Item.Name).ToList();
-                Module.RemoveFiles(addedItems, false);
-
-                foreach (var parentId in selectedItems.FirstIds())
-                {
-                    var itemsToCheckout = selectedItems
-                        .Where(item => !item.Item.IsNew && item.FirstRevision?.ObjectId == parentId)
-                        .Select(item => item.Item.Name).ToList();
-                    Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
-                }
+                RequestRefresh();
             }
-
-            RequestRefresh();
         }
 
         /// <summary>
@@ -1117,7 +1135,7 @@ namespace GitUI.CommandsDialogs
 
         private void resetFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ResetSelectedItemsTo(sender == resetFileToSelectedToolStripMenuItem);
+            ResetSelectedItemsWithConfirmation(resetToSelected: sender == resetFileToSelectedToolStripMenuItem);
         }
 
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -1212,25 +1230,16 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                // If any file is staged, it must be unstaged
-                Module.BatchUnstageFiles(DiffFiles.SelectedItems.Where(item => item.Item.Staged == StagedStatus.Index).Select(item => item.Item));
-
                 DiffFiles.StoreNextIndexToSelect();
-                var items = DiffFiles.SelectedItems.Where(item => !item.Item.IsSubmodule);
-                foreach (var item in items)
-                {
-                    var path = _fullPathResolver.Resolve(item.Item.Name);
-                    if (Directory.Exists(path))
-                    {
-                        Directory.Delete(path, recursive: true);
-                    }
-                    else
-                    {
-                        File.Delete(path);
-                    }
-                }
 
-                RequestRefresh();
+                try
+                {
+                    DeleteFromFilesystem(DiffFiles.SelectedItems);
+                }
+                finally
+                {
+                    RequestRefresh();
+                }
             }
             catch (Exception ex)
             {
@@ -1239,6 +1248,27 @@ namespace GitUI.CommandsDialogs
             }
 
             return true;
+        }
+
+        private void DeleteFromFilesystem(IEnumerable<FileStatusItem> items)
+        {
+            items = items.Where(item => !item.Item.IsSubmodule);
+
+            // If any file is staged, it must be unstaged
+            Module.BatchUnstageFiles(items.Where(item => item.Item.Staged == StagedStatus.Index).Select(item => item.Item));
+
+            foreach (FileStatusItem item in items)
+            {
+                string? path = _fullPathResolver.Resolve(item.Item.Name);
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, recursive: true);
+                }
+                else
+                {
+                    File.Delete(path);
+                }
+            }
         }
 
         private void diffDeleteFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1396,16 +1426,31 @@ namespace GitUI.CommandsDialogs
                 return true;
             }
 
-            var rev = _firstRevision.Text + (DescribeRevision(DiffFiles.SelectedItems.FirstRevs().ToList()) ?? string.Empty);
-            var text = string.Format(_resetSelectedChangesText.Text, rev);
-            if (!MessageBoxes.ConfirmResetSelectedFiles(this, text))
+            // Reset to first (parent)
+            ResetSelectedItemsWithConfirmation(resetToSelected: false);
+            return true;
+        }
+
+        private void ResetSelectedItemsWithConfirmation(bool resetToSelected)
+        {
+            IEnumerable<FileStatusItem> items = DiffFiles.SelectedItems;
+
+            bool hasNewFiles = items.Any(item => item.Item.IsUncommittedAdded);
+            bool hasExistingFiles = items.Any(item => !item.Item.IsUncommittedAdded);
+
+            string revDescription = resetToSelected
+                ? $"{_selectedRevision.Text}{DescribeRevision(items.SecondRevs().ToList())}"
+                : $"{_firstRevision.Text}{DescribeRevision(items.FirstRevs().ToList())}";
+            string confirmationMessage = string.Format(_resetSelectedChangesText.Text, revDescription);
+
+            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(ParentForm, hasExistingFiles, hasNewFiles, confirmationMessage);
+            if (resetAction == FormResetChanges.ActionEnum.Cancel)
             {
-                return true;
+                return;
             }
 
-            // Reset to first (parent)
-            ResetSelectedItemsTo(actsAsChild: false);
-            return true;
+            bool deleteUncommittedAddedItems = resetAction == FormResetChanges.ActionEnum.ResetAndDelete;
+            ResetSelectedItemsTo(resetToSelected, deleteUncommittedAddedItems);
         }
 
         internal TestAccessor GetTestAccessor()
