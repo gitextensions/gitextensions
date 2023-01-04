@@ -118,7 +118,7 @@ namespace GitExtensions.UITests
                 runTestAsync: form => runTestAsync(control));
         }
 
-        public static void ProcessUntil(string processName, Func<bool> condition, int maxIterations = 25)
+        public static void ProcessUntil(string processName, Func<bool> condition, int maxIterations = 50)
         {
             for (int iteration = 0; iteration < maxIterations; ++iteration)
             {
