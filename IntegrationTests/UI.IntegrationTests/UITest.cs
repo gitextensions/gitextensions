@@ -135,6 +135,17 @@ namespace GitExtensions.UITests
             Assert.Fail($"'{processName}' didn't finish in {maxIterations} iterations");
         }
 
+        public static void ProcessEventsFor(int milliseconds)
+        {
+            const int delay = 25;
+            int maxIterations = milliseconds / delay;
+            for (int iteration = 0; iteration < maxIterations; ++iteration)
+            {
+                Application.DoEvents();
+                Thread.Sleep(delay);
+            }
+        }
+
         private readonly struct VoidResult
         {
         }
