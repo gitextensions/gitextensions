@@ -6,12 +6,8 @@ namespace GitUI.BranchTreePanel
 {
     internal abstract class BaseRefTree : BaseRevisionTree
     {
-        // A flag to indicate whether the data is being filtered (e.g. Show Current Branch Only).
-        private bool _isFiltering = false;
-
         // Retains the list of currently loaded refs (branches/tags).
         // This is needed to apply filtering without reloading the data.
-        // Whether or not force the reload of data is controlled by <see cref="_isFiltering"/> flag.
         protected IReadOnlyList<IGitRef>? _loadedRefs;
 
         protected readonly RefsFilter _refsFilter;
@@ -49,28 +45,15 @@ namespace GitUI.BranchTreePanel
         /// </summary>
         /// <param name="getRefs">Function to get refs.</param>
         /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
-        /// <param name="isFiltering">
-        ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
-        /// </param>
-        internal void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, bool forceRefresh, bool isFiltering)
+        internal void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, bool forceRefresh)
         {
             if (!IsAttached)
             {
                 return;
             }
 
-            // If we're not currently filtering and no need to filter now -> exit.
-            // Else we need to iterate over the list and rebind the tree - whilst there
-            // could be a situation whether a user just refreshed the grid, there could
-            // also be a situation where the user applied a different filter, or checked
-            // out a different ref (e.g. a branch or commit), and we have a different
-            // set of branches to show/hide.
-            if (_loadedRefs is not null && !forceRefresh && (!isFiltering && !_isFiltering))
-            {
-                return;
-            }
-
-            _isFiltering = isFiltering;
+            // Since the commits of some branches or tags could have been filtered or not been loaded,
+            // we need to iterate over the list and rebind the tree.
             Refresh(getRefs);
         }
 
@@ -90,7 +73,7 @@ namespace GitUI.BranchTreePanel
 
         internal override void UpdateVisibility()
         {
-            if (!IsAttached || !_isFiltering)
+            if (!IsAttached)
             {
                 return;
             }
