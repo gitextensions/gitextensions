@@ -953,14 +953,6 @@ Do you want to reset the configured path?</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="Plugin" source-language="en">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Plugin Manager</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ProxySwitcherForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
