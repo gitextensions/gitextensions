@@ -16,14 +16,17 @@ namespace GitUI.Shells
             switch (shell.Name)
             {
                 case BashShell.ShellName:
+                    // Use a ConEmu macro to send the sequence for clearing the bash command line
                     terminal.RunningSession.BeginGuiMacro("Keys").WithParam("^A").WithParam("^K").ExecuteSync();
-                    terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
+                    terminal.RunningSession.WriteInputTextAsync(command);
                     break;
 
                 default:
-                    terminal.RunningSession.WriteInputTextAsync($"\x1B{command}{Environment.NewLine}");
+                    terminal.RunningSession.WriteInputTextAsync($"\x1B{command}");
                     break;
             }
+
+            terminal.RunningSession.BeginGuiMacro("Keys").WithParam("Enter").ExecuteSync();
         }
     }
 }
