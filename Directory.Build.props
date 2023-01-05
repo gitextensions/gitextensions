@@ -25,6 +25,9 @@
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 
     <IsPublishable>false</IsPublishable>
+
+    <!-- Opt in to build acceleration in VS (from 17.5 onwards): https://github.com/dotnet/project-system/blob/main/docs/build-acceleration.md -->
+    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 
   <PropertyGroup>
