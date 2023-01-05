@@ -8,6 +8,7 @@ namespace GitExtensions.UITests
 {
     public static class UITest
     {
+        // Same delay as RevisionDataGridView.BackgroundThreadUpdatePeriod
         private const int _processDelayMilliseconds = 25;
 
         public static async Task WaitForIdleAsync()
