@@ -31,6 +31,33 @@ namespace GitUI.CommandsDialogs.Menus
             _getUICommands = getUICommands;
         }
 
+        /// <summary>
+        ///  Returns the string representation of <paramref name="commandCode"/> if it exists in <paramref name="hotkeys"/> collection.
+        /// </summary>
+        /// <param name="hotkeys">The collection of configured shortcut keys.</param>
+        /// <param name="commandCode">The required shortcut identifier.</param>
+        /// <returns>The string representation of the shortcut, if exists; otherwise, the string representation of <see cref="Keys.None"/>.</returns>
+        protected static string GetShortcutKey(IEnumerable<HotkeyCommand>? hotkeys, int commandCode)
+        {
+            return (hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode)?.KeyData ?? Keys.None).ToShortcutKeyDisplayString();
+        }
+
+        /// <summary>
+        ///  Allows reloading/reassigning the configured shortcut key.
+        /// </summary>
+        //// <param name="hotkeys"></param>
+        public virtual void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
+        {
+        }
+
+        /// <summary>
+        ///  Allows refreshing the state of the menu item depending on the state of the loaded git repository.
+        /// </summary>
+        /// <param name="bareRepository"><see lang="true"/> if the current git repository is bare; otherwise, <see lang="false"/>.</param>
+        public virtual void RefreshState(bool bareRepository)
+        {
+        }
+
         void ITranslate.AddTranslationItems(ITranslation translation)
         {
             TranslationUtils.AddTranslationItemsFromFields("FormBrowse", this, translation);

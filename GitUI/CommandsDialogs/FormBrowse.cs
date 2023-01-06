@@ -253,6 +253,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
 
             helpToolStripMenuItem.Initialize(() => UICommands);
+            toolsToolStripMenuItem.Initialize(() => UICommands);
 
             BackColor = OtherColors.BackgroundColor;
 
@@ -897,7 +898,8 @@ namespace GitUI.CommandsDialogs
 
                 stashChangesToolStripMenuItem.Enabled = !bareRepository;
                 stashStagedToolStripMenuItem.Visible = Module.GitVersion.SupportStashStaged;
-                gitGUIToolStripMenuItem.Enabled = !bareRepository;
+
+                toolsToolStripMenuItem.RefreshState(bareRepository);
 
                 SetShortcutKeyDisplayStringsFromHotkeySettings();
 
@@ -989,16 +991,12 @@ namespace GitUI.CommandsDialogs
         {
             // Add shortcuts to the menu items
             openToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.OpenRepo).ToShortcutKeyDisplayString();
-            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitBash).ToShortcutKeyDisplayString();
             commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Commit).ToShortcutKeyDisplayString();
             stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Stash).ToShortcutKeyDisplayString();
             stashStagedToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.StashStaged).ToShortcutKeyDisplayString();
             stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.StashPop).ToShortcutKeyDisplayString();
             closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CloseRepository).ToShortcutKeyDisplayString();
-            gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGui).ToShortcutKeyDisplayString();
-            kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGitK).ToShortcutKeyDisplayString();
             checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CheckoutBranch).ToShortcutKeyDisplayString();
-            settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.OpenSettings).ToShortcutKeyDisplayString();
             branchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CreateBranch).ToShortcutKeyDisplayString();
             tagToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CreateTag).ToShortcutKeyDisplayString();
             mergeBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.MergeBranches).ToShortcutKeyDisplayString();
@@ -1007,6 +1005,9 @@ namespace GitUI.CommandsDialogs
             pushToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Push).ToShortcutKeyDisplayString();
             rebaseToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
             rebaseToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeys(Command.Rebase).ToShortcutKeyDisplayString();
+
+            helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
+            toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
 
             // Set shortcuts on the Browse toolbar with commands in RevGrid
             RevisionGrid.SetFilterShortcutKeys(ToolStripFilters);
@@ -1309,19 +1310,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void GitGuiToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Module.RunGui();
-        }
-
         private void FormatPatchToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartFormatPatchDialog(this);
-        }
-
-        private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            FormGitCommandLog.ShowOrActivate(this);
         }
 
         private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)
@@ -1374,19 +1365,29 @@ namespace GitUI.CommandsDialogs
             UICommands.StartMergeBranchDialog(this, null);
         }
 
+        private void toolsToolStripMenuItem_SettingsChanged(object sender, Menus.SettingsChangedEventArgs e)
+        {
+            HandleSettingsChanged(e.OldTranslation, e.OldCommitInfoPosition);
+        }
+
         private void OnShowSettingsClick(object sender, EventArgs e)
         {
-            var translation = AppSettings.Translation;
-            var commitInfoPosition = AppSettings.CommitInfoPosition;
+            string translation = AppSettings.Translation;
+            CommitInfoPosition commitInfoPosition = AppSettings.CommitInfoPosition;
 
             UICommands.StartSettingsDialog(this);
 
-            if (translation != AppSettings.Translation)
+            HandleSettingsChanged(translation, commitInfoPosition);
+        }
+
+        private void HandleSettingsChanged(string oldTranslation, CommitInfoPosition oldCommitInfoPosition)
+        {
+            if (oldTranslation != AppSettings.Translation)
             {
                 Translator.Translate(this, AppSettings.CurrentTranslation);
             }
 
-            if (commitInfoPosition != AppSettings.CommitInfoPosition)
+            if (oldCommitInfoPosition != AppSettings.CommitInfoPosition)
             {
                 LayoutRevisionInfo();
             }
@@ -1426,11 +1427,6 @@ namespace GitUI.CommandsDialogs
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartCreateTagDialog(this, RevisionGrid.LatestSelectedRevision);
-        }
-
-        private void KGitToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Module.RunGitK();
         }
 
         private static void SaveApplicationSettings()
@@ -1527,16 +1523,6 @@ namespace GitUI.CommandsDialogs
             {
                 UICommands.StartRebaseDialog(this, revisions.First().Guid);
             }
-        }
-
-        private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            PuttyHelpers.StartPageant(Module.WorkingDir);
-        }
-
-        private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            PuttyHelpers.StartPuttygen(Module.WorkingDir);
         }
 
         private void CommitInfoTabControl_SelectedIndexChanged(object sender, EventArgs e)

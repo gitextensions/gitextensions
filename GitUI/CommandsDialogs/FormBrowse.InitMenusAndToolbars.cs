@@ -47,12 +47,6 @@ namespace GitUI.CommandsDialogs
 
             InsertFetchPullShortcuts();
 
-            if (!EnvUtils.RunningOnWindows())
-            {
-                toolStripSeparator6.Visible = false;
-                PuTTYToolStripMenuItem.Visible = false;
-            }
-
             pullToolStripMenuItem1.Tag = AppSettings.PullAction.None;
             mergeToolStripMenuItem.Tag = AppSettings.PullAction.Merge;
             rebaseToolStripMenuItem1.Tag = AppSettings.PullAction.Rebase;
@@ -262,8 +256,6 @@ namespace GitUI.CommandsDialogs
                 userShell.ToolTipText = shell.Name;
                 userShell.Tag = shell;
             }
-
-            gitBashToolStripMenuItem.Tag = _shellProvider.GetShell(BashShell.ShellName);
         }
 
         private void RefreshDefaultPullAction()
