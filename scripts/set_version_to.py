@@ -54,7 +54,7 @@ if __name__ == '__main__':
                     data[1] = args.text
                     line = '"'.join(data)
             o += line
-        outfile = open(filename, "w")
+        outfile = open(filename, "w", newline='\n')
         outfile.writelines(o)
     
     filename = "..\GitExtensionsShellEx\GitExtensionsShellEx.rc"

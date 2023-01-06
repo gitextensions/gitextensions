@@ -48,7 +48,7 @@ install:
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
     cd scripts
-    C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
+    C:\\Python311\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
     cd ..
 
 
