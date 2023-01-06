@@ -1223,7 +1223,7 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshLeftPanel(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
         {
-            repoObjectsTree.RefreshRevisionsLoading(getRefs, getStashRevs, forceRefresh, RevisionGrid.FilterIsApplied());
+            repoObjectsTree.RefreshRevisionsLoading(getRefs, getStashRevs, forceRefresh);
         }
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)

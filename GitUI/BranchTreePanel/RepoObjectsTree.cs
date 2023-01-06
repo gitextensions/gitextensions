@@ -243,14 +243,11 @@ namespace GitUI.BranchTreePanel
         /// <param name="getRefs">Function to get refs.</param>
         /// <param name="getStashRevs">Lazy accessor for stash commits.</param>
         /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
-        /// <param name="isFiltering">
-        ///  <see langword="true"/>, if the data is being filtered; otherwise <see langword="false"/>.
-        /// </param>
-        public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh, bool isFiltering)
+        public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
         {
-            _branchesTree.Refresh(getRefs, forceRefresh, isFiltering);
-            _remotesTree.Refresh(getRefs, forceRefresh, isFiltering);
-            _tagTree.Refresh(getRefs, forceRefresh, isFiltering);
+            _branchesTree.Refresh(getRefs, forceRefresh);
+            _remotesTree.Refresh(getRefs, forceRefresh);
+            _tagTree.Refresh(getRefs, forceRefresh);
             _stashTree.Refresh(getStashRevs);
         }
 

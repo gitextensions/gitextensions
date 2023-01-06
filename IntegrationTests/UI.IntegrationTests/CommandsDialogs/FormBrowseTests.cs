@@ -169,6 +169,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                         using ReferenceRepository repository = new();
                         form.SetWorkingDir(repository.Module.WorkingDir);
                         WaitForRevisionsToBeLoaded(form);
+                        form.RevisionGridControl.Invalidate();
+                        UITest.ProcessEventsFor(1000);
                         // Assert
                         AppSettings.BranchFilterEnabled.Should().BeFalse();
                         AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
@@ -256,6 +258,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                         Console.WriteLine("Scenario 1: change 'Show stashes' to enabled");
                         form.GetTestAccessor().RevisionGrid.ToggleShowStashes();
                         WaitForRevisionsToBeLoaded(form);
+                        form.RevisionGridControl.Invalidate();
+                        UITest.ProcessEventsFor(1000);
                         // Assert
                         AppSettings.ShowStashes.Should().BeTrue();
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(7);
@@ -302,6 +306,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                         Console.WriteLine("Scenario 2: change 'Show stash' to disabled");
                         form.GetTestAccessor().RevisionGrid.ToggleShowStashes();
                         WaitForRevisionsToBeLoaded(form);
+                        form.RevisionGridControl.Invalidate();
+                        UITest.ProcessEventsFor(1000);
                         // Assert
                         AppSettings.ShowStashes.Should().BeFalse();
 #if DEBUG
