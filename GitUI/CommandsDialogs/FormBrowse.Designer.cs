@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using GitUI.CommandsDialogs.Menus;
 
 namespace GitUI.CommandsDialogs
 {
@@ -162,17 +163,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator15 = new System.Windows.Forms.ToolStripSeparator();
             this.pluginSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.userManualToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.changelogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.translateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-            this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportAnIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiTelemetryEnabled = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new GitUI.CommandsDialogs.Menus.HelpToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitcommandLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
@@ -1500,96 +1491,8 @@ namespace GitUI.CommandsDialogs
             // 
             // helpToolStripMenuItem
             // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.userManualToolStripMenuItem,
-            this.changelogToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.translateToolStripMenuItem,
-            this.toolStripSeparator16,
-            this.donateToolStripMenuItem,
-            this.tsmiTelemetryEnabled,
-            this.reportAnIssueToolStripMenuItem,
-            this.checkForUpdatesToolStripMenuItem,
-            this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "&Help";
-            this.helpToolStripMenuItem.DropDownOpening += new System.EventHandler(this.HelpToolStripMenuItem_DropDownOpening);
-            // 
-            // userManualToolStripMenuItem
-            // 
-            this.userManualToolStripMenuItem.Image = global::GitUI.Properties.Images.GotoManual;
-            this.userManualToolStripMenuItem.Name = "userManualToolStripMenuItem";
-            this.userManualToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.userManualToolStripMenuItem.Text = "User &manual";
-            this.userManualToolStripMenuItem.Click += new System.EventHandler(this.UserManualToolStripMenuItemClick);
-            // 
-            // changelogToolStripMenuItem
-            // 
-            this.changelogToolStripMenuItem.Image = global::GitUI.Properties.Images.Changelog;
-            this.changelogToolStripMenuItem.Name = "changelogToolStripMenuItem";
-            this.changelogToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.changelogToolStripMenuItem.Text = "&Changelog";
-            this.changelogToolStripMenuItem.Click += new System.EventHandler(this.ChangelogToolStripMenuItemClick);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(167, 6);
-            // 
-            // translateToolStripMenuItem
-            // 
-            this.translateToolStripMenuItem.Image = global::GitUI.Properties.Images.Translate;
-            this.translateToolStripMenuItem.Name = "translateToolStripMenuItem";
-            this.translateToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.translateToolStripMenuItem.Text = "&Translate";
-            this.translateToolStripMenuItem.Click += new System.EventHandler(this.TranslateToolStripMenuItemClick);
-            // 
-            // toolStripSeparator16
-            // 
-            this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(167, 6);
-            // 
-            // donateToolStripMenuItem
-            // 
-            this.donateToolStripMenuItem.Image = global::GitUI.Properties.Images.DollarSign;
-            this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.donateToolStripMenuItem.Text = "&Donate";
-            this.donateToolStripMenuItem.Click += new System.EventHandler(this.DonateToolStripMenuItemClick);
-            // 
-            // reportAnIssueToolStripMenuItem
-            // 
-            this.reportAnIssueToolStripMenuItem.Image = global::GitUI.Properties.Images.BugReport;
-            this.reportAnIssueToolStripMenuItem.Name = "reportAnIssueToolStripMenuItem";
-            this.reportAnIssueToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.reportAnIssueToolStripMenuItem.Text = "&Report an issue";
-            this.reportAnIssueToolStripMenuItem.Click += new System.EventHandler(this.reportAnIssueToolStripMenuItem_Click);
-            // 
-            // checkForUpdatesToolStripMenuItem
-            // 
-            this.checkForUpdatesToolStripMenuItem.Image = global::GitUI.Properties.Images.CheckForUpdates;
-            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.checkForUpdatesToolStripMenuItem.Text = "Check for &updates";
-            this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Image = global::GitUI.Properties.Images.Information;
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
-            this.aboutToolStripMenuItem.Text = "&About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
-            // 
-            // tsmiTelemetryEnabled
-            // 
-            this.tsmiTelemetryEnabled.Checked = true;
-            this.tsmiTelemetryEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tsmiTelemetryEnabled.Name = "tsmiTelemetryEnabled";
-            this.tsmiTelemetryEnabled.Size = new System.Drawing.Size(278, 34);
-            this.tsmiTelemetryEnabled.Text = "&Yes, I allow telemetry";
-            this.tsmiTelemetryEnabled.Click += new System.EventHandler(this.TsmiTelemetryEnabled_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -1855,15 +1758,8 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem editmailmapToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator13;
         private ToolStripMenuItem settingsToolStripMenuItem;
-        private ToolStripMenuItem helpToolStripMenuItem;
+        private GitUI.CommandsDialogs.Menus.HelpToolStripMenuItem helpToolStripMenuItem;
         private ToolStripMenuItem toolsToolStripMenuItem;
-        private ToolStripMenuItem userManualToolStripMenuItem;
-        private ToolStripMenuItem changelogToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator3;
-        private ToolStripMenuItem translateToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator16;
-        private ToolStripMenuItem donateToolStripMenuItem;
-        private ToolStripMenuItem aboutToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator21;
         private ToolStripSeparator toolStripSeparator25;
         private ToolStripSeparator toolStripSeparator22;
@@ -1878,14 +1774,12 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem fetchAllToolStripMenuItem;
         private ToolStripMenuItem fetchPruneAllToolStripMenuItem;
         private ToolStripMenuItem resetToolStripMenuItem;
-        private ToolStripMenuItem reportAnIssueToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator41;
         private ToolStripSeparator toolStripSeparator42;
         private ToolStripSeparator toolStripSeparator43;
         private ToolStripSeparator toolStripSeparator44;
         private ToolStripSeparator toolStripSeparator45;
         private ToolStripSeparator toolStripSeparator46;
-        private ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private ToolStripMenuItem gitcommandLogToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem menuitemSparse;
@@ -1903,7 +1797,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem commitInfoBelowMenuItem;
         private ToolStripMenuItem commitInfoLeftwardMenuItem;
         private ToolStripMenuItem commitInfoRightwardMenuItem;
-        private ToolStripMenuItem tsmiTelemetryEnabled;
         private Panel RevisionGridContainer;
         private UserControls.InteractiveGitActionControl notificationBarBisectInProgress;
         private UserControls.InteractiveGitActionControl notificationBarGitActionInProgress;

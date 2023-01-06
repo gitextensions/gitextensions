@@ -251,6 +251,9 @@ namespace GitUI.CommandsDialogs
 
             _isFileBlameHistory = args.IsFileBlameHistory;
             InitializeComponent();
+
+            helpToolStripMenuItem.Initialize(() => UICommands);
+
             BackColor = OtherColors.BackgroundColor;
 
             WorkaroundPaddingIncreaseBug();
@@ -1271,12 +1274,6 @@ namespace GitUI.CommandsDialogs
             _dashboard?.RefreshContent();
         }
 
-        private void AboutToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            using FormAbout frm = new();
-            frm.ShowDialog(this);
-        }
-
         private void PatchToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartViewPatchDialog(this);
@@ -1436,12 +1433,6 @@ namespace GitUI.CommandsDialogs
             Module.RunGitK();
         }
 
-        private void DonateToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            using FormDonate frm = new();
-            frm.ShowDialog(this);
-        }
-
         private static void SaveApplicationSettings()
         {
             AppSettings.SaveSettings();
@@ -1561,12 +1552,6 @@ namespace GitUI.CommandsDialogs
             {
                 fileTree.SwitchFocus(alreadyContainedFocus: false);
             }
-        }
-
-        private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            using FormChangeLog frm = new();
-            frm.ShowDialog(this);
         }
 
         private void ToolStripButtonPushClick(object sender, EventArgs e)
@@ -1694,12 +1679,6 @@ namespace GitUI.CommandsDialogs
         private void CloseToolStripMenuItemClick(object sender, EventArgs e)
         {
             SetWorkingDir("");
-        }
-
-        private void UserManualToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            // Point to the default documentation, will work also if the old doc version is removed
-            OsShellUtil.OpenUrlInDefaultBrowser(AppSettings.DocumentationBaseUrl);
         }
 
         private void CleanupToolStripMenuItemClick(object sender, EventArgs e)
@@ -1869,11 +1848,6 @@ namespace GitUI.CommandsDialogs
             }
 
             RegisterPlugins();
-        }
-
-        private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
         }
 
         private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
@@ -2796,18 +2770,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            UserEnvironmentInformation.CopyInformation();
-            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/issues");
-        }
-
-        private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormUpdates updateForm = new(AppSettings.AppVersion);
-            updateForm.SearchForUpdatesAndShow(Owner, true);
-        }
-
         /// <summary>
         /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
         /// </summary>
@@ -3174,16 +3136,6 @@ namespace GitUI.CommandsDialogs
             {
                 e.Effect = DragDropEffects.Move;
             }
-        }
-
-        private void TsmiTelemetryEnabled_Click(object sender, EventArgs e)
-        {
-            UICommands.StartGeneralSettingsDialog(this);
-        }
-
-        private void HelpToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-        {
-            tsmiTelemetryEnabled.Checked = AppSettings.TelemetryEnabled ?? false;
         }
     }
 }
