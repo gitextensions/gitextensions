@@ -1103,6 +1103,80 @@ Do you want to reset the configured path?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Jira Commit Hint</source>
+        <target>Jira 커밋 힌트</target>
+        
+      </trans-unit>
+      <trans-unit id="EmptyQueryResultCaption.Text">
+        <source>First Task Preview</source>
+        <target>첫 번째 작업 미리보기</target>
+        
+      </trans-unit>
+      <trans-unit id="EmptyQueryResultMessage.Text">
+        <source>[Empty Jira Query Result]</source>
+        <target>[빈 Jira 쿼리 결과]</target>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlCaption.Text">
+        <source>Invalid Jira url</source>
+        <target>잘못된 Jira URL</target>
+        
+      </trans-unit>
+      <trans-unit id="InvalidUrlMessage.Text">
+        <source>A valid url is required to launch the Jira query helper</source>
+        <target>Jira 쿼리 도우미를 시작하려면 올바른 URL이 필요합니다.</target>
+        
+      </trans-unit>
+      <trans-unit id="JiraFieldsLabel.Text">
+        <source>Jira fields</source>
+        <target>Jira 필드</target>
+        
+      </trans-unit>
+      <trans-unit id="PreviewButtonText.Text">
+        <source>Preview</source>
+        <target>미리보기</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperLinkText.Text">
+        <source>Open the query helper inside Jira</source>
+        <target>Jira 내에서 쿼리 도우미 열기</target>
+        
+      </trans-unit>
+      <trans-unit id="QueryHelperOpenErrorText.Text">
+        <source>Unable to open Jira query helper</source>
+        <target>Jira 쿼리 도우미를 열 수 없습니다.</target>
+        
+      </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        <target>Jira 자격 증명</target>
+        
+      </trans-unit>
+      <trans-unit id="_enabledSettings.Caption">
+        <source>Jira hint plugin enabled</source>
+        <target>Jira 힌트 플러그인 사용</target>
+        
+      </trans-unit>
+      <trans-unit id="_jqlQuerySettings.Caption">
+        <source>JQL Query</source>
+        <target>JQL 쿼리</target>
+        
+      </trans-unit>
+      <trans-unit id="_stringTemplateSetting.Caption">
+        <source>Message Template</source>
+        <target>메시지 템플릿</target>
+        
+      </trans-unit>
+      <trans-unit id="_urlSettings.Caption">
+        <source>Jira URL</source>
+        <target>Jira URL</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="ko">
     <body>
       <trans-unit id="$this.Text">
