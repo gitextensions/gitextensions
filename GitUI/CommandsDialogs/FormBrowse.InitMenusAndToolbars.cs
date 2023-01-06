@@ -30,7 +30,6 @@ namespace GitUI.CommandsDialogs
 
             new ToolStripItem[]
             {
-                translateToolStripMenuItem,
                 recoverLostObjectsToolStripMenuItem,
                 branchSelect,
                 toolStripButtonPull,
