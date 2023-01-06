@@ -104,6 +104,7 @@ namespace GitUIPluginInterfaces
 
         public static void Initialise(IEnumerable<Assembly> assemblies, string userPluginsPath = null)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             SetUserPluginsPath(userPluginsPath);
 
             PartDiscovery? discovery = PartDiscovery.Combine(
@@ -134,6 +135,43 @@ namespace GitUIPluginInterfaces
         public static void SetTestExportProvider(ExportProvider exportProvider)
         {
             _exportProvider = new Lazy<ExportProvider>(() => exportProvider);
+        }
+
+        /// <summary>
+        /// Workaround for not working assembly probing in MEF.
+        /// Some plugins have third-party dependencies.
+        /// True way to load dependencies from subfolders is probing in app config.
+        /// But there is known issue (https://stackoverflow.com/questions/20306892/mef-plugin-application-without-probing-config-or-assembly-resolve-event)
+        /// Until it'll be fixed, we trying to find dependent assembly in the same plugin folder.
+        /// </summary>
+        private static Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+        {
+            try
+            {
+                if (args.RequestingAssembly is null)
+                {
+                    return null;
+                }
+
+                string fullName = Directory.GetParent(args.RequestingAssembly.Location)?.FullName;
+                if (fullName is null)
+                {
+                    return null;
+                }
+
+                string? dll = Directory.GetFiles(fullName)
+                    .FirstOrDefault(f =>
+                    {
+                        string? fileDescription = FileVersionInfo.GetVersionInfo(f).FileDescription;
+
+                        return fileDescription is not null && args.Name.StartsWith(fileDescription);
+                    });
+                return dll is null ? null : Assembly.LoadFile(dll);
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

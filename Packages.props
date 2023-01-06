@@ -3,7 +3,7 @@
   <ItemGroup>
     <!-- Solution dependencies -->
     <PackageReference Update="AdysTech.CredentialManager" Version="2.3.0" />
-    <PackageReference Update="Atlassian.SDK" Version="12.4.0" />
+    <PackageReference Update="Atlassian.SDK" Version="13.0.0" />
     <PackageReference Update="AppInsights.WindowsDesktop" Version="2.18.1" />
     <PackageReference Update="Ben.Demystifier" Version="0.4.1" />
     <PackageReference Update="ConEmu.Core" Version="22.12.18" />
