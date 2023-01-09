@@ -68,7 +68,7 @@
           ContinueOnError="false" />
 
     <!-- 5. Verify no changes to English*.xlf -->
-    <Exec Command="git add *.xlf --ignore-errors"
+    <Exec Command="git -c core.autocrlf=false add *.xlf --ignore-errors"
           IgnoreStandardErrorWarningFormat="true"
           WorkingDirectory="$(RepoRoot)"
           IgnoreExitCode="true">
