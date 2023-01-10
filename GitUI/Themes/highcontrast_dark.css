@@ -1,0 +1,50 @@
+/* See (App install)\Themes\README.md for instructions on how to create or modify a theme */
+
+/* System colors */
+.ActiveBorder            { color: #5e6060; }
+.ActiveCaption           { color: #4d5766; }
+.ActiveCaptionText       { color: #afb1b3; }
+.AppWorkspace            { color: #2d3133; }
+.Control                 { color: #2d3133; }
+.ControlDark             { color: #5a5e65; }
+.ControlDarkDark         { color: #7a8085; }
+.ControlLight            { color: #37393e; }
+.ControlLightLight       { color: #292c2c; }
+.ControlText             { color: #afb1b3; }
+.Desktop                 { color: #2b2b2b; }
+.GrayText                { color: #767676; }
+.Highlight               { color: #6290e6; }
+.HighlightText           { color: #000000; }
+.HotTrack                { color: #98b7ef; }
+.InactiveBorder          { color: #4c4d4d; }
+.InactiveCaption         { color: #3c3f41; }
+.InactiveCaptionText     { color: #afb1b3; }
+.Info                    { color: #373832; }
+.InfoText                { color: #a9b7c6; }
+.Menu                    { color: #2d3133; }
+.MenuText                { color: #afb1b3; }
+.ScrollBar               { color: #464b4f; }
+.Window                  { color: #1a1a1a; }
+.WindowFrame             { color: #6290e6; }
+.WindowText              { color: #a9b7c6; }
+.GradientActiveCaption   { color: #39444d; }
+.GradientInactiveCaption { color: #222324; }
+.MenuBar                 { color: #2d3133; }
+.MenuHighlight           { color: #6290e6; }
+
+/* Application colors */
+.OtherTag                    { color: #a1a1a1; }
+.AuthoredHighlight           { color: #2a2b26; }
+.HighlightAllOccurences      { color: #606020; }
+.Tag                         { color: #408080; }
+.Graph                       { color: #882d00; }
+.Branch                      { color: #00d76b; }
+.RemoteBranch                { color: #ff8080; } /* hsl(0,   100%, 75%) */
+.RemoteBranch.colorblind     { color: #0080ff; } /* hsl(210, 100%, 50%) */
+.DiffSection                 { color: #4f4f4f; }
+.DiffRemoved                 { color: #4b0606; } /* hsl(0,   85%,  16%) */
+.DiffRemoved.colorblind      { color: #080646; } /* hsl(242, 84%,  15%) */
+.DiffRemovedExtra            { color: #6c0404; } /* hsl(0,   93%,  22%) */
+.DiffRemovedExtra.colorblind { color: #09058a; } /* hsl(242, 93%,  28%) */
+.DiffAdded                   { color: #054224; }
+.DiffAddedExtra              { color: #046c38; }
