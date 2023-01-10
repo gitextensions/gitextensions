@@ -306,6 +306,9 @@
       <Component Id="Themes.bright.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\bright.css" />
       </Component>
+      <Component Id="Themes.highcontrast_dark.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\highcontrast_dark.css" />
+      </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
       <Component Id="DeleteUnusedBranches.dll" Guid="*">
@@ -590,6 +593,7 @@
       <ComponentRef Id="Themes.README.md" />
       <ComponentRef Id="Themes.invariant.css" />
       <ComponentRef Id="Themes.bright.css" />
+      <ComponentRef Id="Themes.highcontrast_dark.css" />
     </ComponentGroup>
     <ComponentGroup Id="Component.Translation">
       <ComponentRef Id="English.gif" />
