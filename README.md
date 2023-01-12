@@ -181,7 +181,7 @@ If you want to **update a portable version**, you should delete all the files an
   <tr>
     <td>
       <strong>Current dev stream</strong><br />
-      NB: expect :unicorn: :unicorn: and :dragon: :dragon:
+      NB: expect :unicorn: :unicorn:
     </td>
     <td>
       <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master/artifacts">[ Download ]</a><br />
