@@ -185,3 +185,4 @@ YYYY/MM/DD, github id, Full name, email
 2022/11/29, orgads, Orgad Shaneh, orgads(at)gmail.com
 2022/11/30, SaumyaBhushan, Saumya, saumya@knoldus.com
 2022/12/15, siyavash1984,Siyavash Khojasteh, khojasteh(at)outlook.com
+2023/01/12, nhance, Nick Hance, nhance+dragons+are+bs(at)reenhanced.com
