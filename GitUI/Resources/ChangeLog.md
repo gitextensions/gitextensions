@@ -1,6 +1,53 @@
 Changelog
 =========
 
+
+### Version 4.0.2 (15 Jan 2023)
+
+#### Changes:
+* [#10621] Add high contrast theme file
+* [#10604] Stabilize FormBrowseTests regarding Left Panel
+* [#10601] Avoid ambiguity of branch filter
+* [#10590] ConEmu 221218
+* [#10581] Store plugins translations in *.Plugins.xlf
+* [#10559] Notify Left Panel of filtering for current branch
+* [#10556] Delete files if resetting new, not yet committed files
+* [#10548] Bump Microsoft.VisualStudio.Composition version
+* [#10546] Avoid double quoting while showing File History dialog
+* [#10545] Do not throw if SSH key is missing
+* [#10544] Load/store console style settings
+* [#10532] Avoid losing git exception in background
+* [#10526] Change default hotkey of `CheckoutBranch` to `Ctrl+.`
+* [#10525] FormBrowse: Refresh revisions on main thread
+* [#10524] 9659 MEF assemblies fixes (for jira hint plugin)
+* [#10475] Fixup null check for #10434
+* [#10434] Do not add BOM when commitEncoding is set to upcase UTF-8
+* [#10341] GitFlow: Do not throw if git-flow is not init
+* [#10309] Misc fixes
+
+
+[#10621]:https://github.com/gitextensions/gitextensions/pull/10621
+[#10604]:https://github.com/gitextensions/gitextensions/pull/10604
+[#10601]:https://github.com/gitextensions/gitextensions/pull/10601
+[#10590]:https://github.com/gitextensions/gitextensions/pull/10590
+[#10581]:https://github.com/gitextensions/gitextensions/pull/10581
+[#10559]:https://github.com/gitextensions/gitextensions/pull/10559
+[#10556]:https://github.com/gitextensions/gitextensions/pull/10556
+[#10548]:https://github.com/gitextensions/gitextensions/pull/10548
+[#10546]:https://github.com/gitextensions/gitextensions/pull/10546
+[#10545]:https://github.com/gitextensions/gitextensions/pull/10545
+[#10544]:https://github.com/gitextensions/gitextensions/pull/10544
+[#10532]:https://github.com/gitextensions/gitextensions/pull/10532
+[#10526]:https://github.com/gitextensions/gitextensions/pull/10526
+[#10525]:https://github.com/gitextensions/gitextensions/pull/10525
+[#10524]:https://github.com/gitextensions/gitextensions/pull/10524
+[#10475]:https://github.com/gitextensions/gitextensions/pull/10475
+[#10434]:https://github.com/gitextensions/gitextensions/pull/10434
+[#10341]:https://github.com/gitextensions/gitextensions/pull/10341
+[#10309]:https://github.com/gitextensions/gitextensions/pull/10309
+
+
+
 ### Version 4.0.1 (15 Dec 2022)
 
 #### Changes:
