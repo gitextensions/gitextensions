@@ -1,66 +1,21 @@
 ﻿using GitCommands;
-using GitCommands.Git;
 using GitCommands.Gpg;
-using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.CommandsDialogs
 {
     public interface IFormBrowseController
     {
-        void AddRecentRepositories(ToolStripDropDownItem menuItemContainer,
-                                   Repository repo,
-                                   string? caption,
-                                   Action<object, GitModuleEventArgs> setGitModule);
-
         Task<GpgInfo?> LoadGpgInfoAsync(GitRevision? revision);
     }
 
     public class FormBrowseController : IFormBrowseController
     {
         private readonly IGitGpgController _gitGpgController;
-        private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
-        private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
 
-        public FormBrowseController(IGitGpgController gitGpgController,
-                                    IRepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider,
-                                    IInvalidRepositoryRemover invalidRepositoryRemover)
+        public FormBrowseController(IGitGpgController gitGpgController)
         {
             _gitGpgController = gitGpgController;
-            _repositoryCurrentBranchNameProvider = repositoryCurrentBranchNameProvider;
-            _invalidRepositoryRemover = invalidRepositoryRemover;
-        }
-
-        public void AddRecentRepositories(ToolStripDropDownItem menuItemContainer,
-                                          Repository repo,
-                                          string? caption,
-                                          Action<object, GitModuleEventArgs> setGitModule)
-        {
-            ToolStripMenuItem item = new(caption)
-            {
-                DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
-            };
-
-            menuItemContainer.DropDownItems.Add(item);
-
-            item.Click += (obj, args) =>
-            {
-                OpenRepo(repo.Path, setGitModule);
-            };
-
-            if (repo.Path != caption)
-            {
-                item.ToolTipText = repo.Path;
-            }
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await TaskScheduler.Default;
-                string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                item.ShortcutKeyDisplayString = branchName;
-            }).FileAndForget();
         }
 
         public async Task<GpgInfo?> LoadGpgInfoAsync(GitRevision? revision)
@@ -87,29 +42,6 @@ namespace GitUI.CommandsDialogs
                                _gitGpgController.GetCommitVerificationMessage(revision),
                                tagStatus,
                                _gitGpgController.GetTagVerifyMessage(revision));
-        }
-
-        private void ChangeWorkingDir(string path, Action<object, GitModuleEventArgs> setGitModule)
-        {
-            GitModule module = new(path);
-            if (module.IsValidGitWorkingDir())
-            {
-                setGitModule(this, new GitModuleEventArgs(module));
-                return;
-            }
-
-            _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
-        }
-
-        private void OpenRepo(string repoPath, Action<object, GitModuleEventArgs> setGitModule)
-        {
-            if (Control.ModifierKeys != Keys.Control)
-            {
-                ChangeWorkingDir(repoPath, setGitModule);
-                return;
-            }
-
-            GitUICommands.LaunchBrowse(repoPath);
         }
     }
 }

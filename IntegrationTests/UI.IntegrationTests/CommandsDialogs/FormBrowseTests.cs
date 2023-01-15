@@ -63,29 +63,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
-        [Test]
-        public void PopulateFavouriteRepositoriesMenu_should_order_favourites_alphabetically()
-        {
-            RunFormTest(
-                form =>
-                {
-                    ToolStripMenuItem tsmiFavouriteRepositories = new();
-                    List<Repository> repositoryHistory = new()
-                    {
-                        new Repository(@"c:\") { Category = "D" },
-                        new Repository(@"c:\") { Category = "A" },
-                        new Repository(@"c:\") { Category = "C" },
-                        new Repository(@"c:\") { Category = "B" }
-                    };
-
-                    form.GetTestAccessor().PopulateFavouriteRepositoriesMenu(tsmiFavouriteRepositories, repositoryHistory);
-
-                    // assert
-                    var categories = tsmiFavouriteRepositories.DropDownItems.Cast<ToolStripMenuItem>().Select(x => x.Text).ToList();
-                    categories.Should().BeInAscendingOrder();
-                });
-        }
-
 #if !DEBUG
         [Ignore("This test is unstable in AppVeyor")]
 #endif
