@@ -45,6 +45,10 @@ function Generate-Changelog {
 
     $totalIssues | Sort-Object number -Descending | ForEach-Object {
         $issue = $_;
+        if (!$issue.html_url.Contains('/pull/')) {
+            return;
+        }
+
         $issues += $issue;
         $issueLinks += "[$($issue.number)]:$($issue.html_url)"
     }

@@ -43,8 +43,11 @@ install:
         .\scripts\Update-DotnetVersion.ps1
       }
 - ps: |
+      # Install the required .NET SDK
       Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile "./dotnet-install.ps1"
       ./dotnet-install.ps1 -JsonFile global.json -InstallDir 'C:\Program Files\dotnet'
+      # Remove the script so it doesn't "pollute" the build
+      Remove-Item -Path .\dotnet-install.ps1
 - cmd: git submodule update --init --recursive
 - cmd: |-
     cd scripts
@@ -83,11 +86,13 @@ build_script:
     Pop-Location
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
+
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
     dotnet test -c Release --no-restore --nologo --verbosity q --test-adapter-path:. --logger:Appveyor --logger:trx /bl:.\artifacts\log\tests.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
 
 # scripts to run after tests
 after_test:
