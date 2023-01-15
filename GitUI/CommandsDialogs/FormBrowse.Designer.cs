@@ -20,8 +20,6 @@ namespace GitUI.CommandsDialogs
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-            System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator14;
             System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
             this.ToolStripMain = new GitUI.ToolStripEx();
@@ -77,17 +75,7 @@ namespace GitUI.CommandsDialogs
             this.GpgInfoTabPage = new System.Windows.Forms.TabPage();
             this.revisionGpgInfo1 = new GitUI.CommandsDialogs.RevisionGpgInfoControl();
             this.FilterToolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.initNewRepositoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiFavouriteRepositories = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiRecentRepositories = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearRecentRepositoriesListToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
-            this.tsmiRecentRepositoriesClear = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
-            this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileToolStripMenuItem = new GitUI.CommandsDialogs.Menus.StartToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshDashboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -163,8 +151,6 @@ namespace GitUI.CommandsDialogs
             this._addUpstreamRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripFilters = new GitUI.UserControls.FilterToolBar();
             this.ToolStripScripts = new GitUI.ToolStripEx();
-            toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripMain.SuspendLayout();
@@ -194,18 +180,6 @@ namespace GitUI.CommandsDialogs
             this.toolPanel.TopToolStripPanel.SuspendLayout();
             this.toolPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // toolStripMenuItem2
-            // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new System.Drawing.Size(122, 22);
-            toolStripMenuItem2.Text = "...";
-            // 
-            // toolStripMenuItem4
-            // 
-            toolStripMenuItem4.Name = "toolStripMenuItem4";
-            toolStripMenuItem4.Size = new System.Drawing.Size(83, 22);
-            toolStripMenuItem4.Text = "...";
             // 
             // toolStripSeparator14
             // 
@@ -782,94 +756,10 @@ namespace GitUI.CommandsDialogs
             // 
             // fileToolStripMenuItem
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.initNewRepositoryToolStripMenuItem,
-            this.openToolStripMenuItem,
-            this.tsmiFavouriteRepositories,
-            this.tsmiRecentRepositories,
-            this.toolStripSeparator12,
-            this.cloneToolStripMenuItem,
-            this.toolStripMenuItem1,
-            this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
-            this.fileToolStripMenuItem.Text = "&Start";
-            // 
-            // initNewRepositoryToolStripMenuItem
-            // 
-            this.initNewRepositoryToolStripMenuItem.Image = global::GitUI.Properties.Images.RepoCreate;
-            this.initNewRepositoryToolStripMenuItem.Name = "initNewRepositoryToolStripMenuItem";
-            this.initNewRepositoryToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.initNewRepositoryToolStripMenuItem.Text = "&Create new repository...";
-            this.initNewRepositoryToolStripMenuItem.Click += new System.EventHandler(this.InitNewRepositoryToolStripMenuItemClick);
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.Image = global::GitUI.Properties.Images.RepoOpen;
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.openToolStripMenuItem.Text = "&Open...";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
-            // 
-            // tsmiFavouriteRepositories
-            // 
-            this.tsmiFavouriteRepositories.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            toolStripMenuItem4});
-            this.tsmiFavouriteRepositories.Image = global::GitUI.Properties.Images.Star;
-            this.tsmiFavouriteRepositories.Name = "tsmiFavouriteRepositories";
-            this.tsmiFavouriteRepositories.Size = new System.Drawing.Size(198, 22);
-            this.tsmiFavouriteRepositories.Text = "&Favorite repositories";
-            this.tsmiFavouriteRepositories.DropDownOpening += new System.EventHandler(this.tsmiFavouriteRepositories_DropDownOpening);
-            // 
-            // tsmiRecentRepositories
-            // 
-            this.tsmiRecentRepositories.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            toolStripMenuItem2,
-            this.clearRecentRepositoriesListToolStripMenuItem,
-            this.tsmiRecentRepositoriesClear});
-            this.tsmiRecentRepositories.Image = global::GitUI.Properties.Images.RecentRepositories;
-            this.tsmiRecentRepositories.Name = "tsmiRecentRepositories";
-            this.tsmiRecentRepositories.Size = new System.Drawing.Size(198, 22);
-            this.tsmiRecentRepositories.Text = "&Recent repositories";
-            this.tsmiRecentRepositories.DropDownOpening += new System.EventHandler(this.tsmiRecentRepositories_DropDownOpening);
-            // 
-            // clearRecentRepositoriesListToolStripMenuItem
-            // 
-            this.clearRecentRepositoriesListToolStripMenuItem.Name = "clearRecentRepositoriesListToolStripMenuItem";
-            this.clearRecentRepositoriesListToolStripMenuItem.Size = new System.Drawing.Size(119, 6);
-            // 
-            // tsmiRecentRepositoriesClear
-            // 
-            this.tsmiRecentRepositoriesClear.Name = "tsmiRecentRepositoriesClear";
-            this.tsmiRecentRepositoriesClear.Size = new System.Drawing.Size(122, 22);
-            this.tsmiRecentRepositoriesClear.Text = "Clear list";
-            this.tsmiRecentRepositoriesClear.Click += new System.EventHandler(this.tsmiRecentRepositoriesClear_Click);
-            // 
-            // toolStripSeparator12
-            // 
-            this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(195, 6);
-            // 
-            // cloneToolStripMenuItem
-            // 
-            this.cloneToolStripMenuItem.Image = global::GitUI.Properties.Images.CloneRepoGit;
-            this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
-            this.cloneToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.cloneToolStripMenuItem.Text = "C&lone repository...";
-            this.cloneToolStripMenuItem.Click += new System.EventHandler(this.CloneToolStripMenuItemClick);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(195, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.exitToolStripMenuItem.Text = "E&xit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(43, 19);
+            this.fileToolStripMenuItem.GitModuleChanged += new System.EventHandler<GitCommands.Git.GitModuleEventArgs>(this.SetGitModule);
+            this.fileToolStripMenuItem.RecentRepositoriesCleared += new System.EventHandler(this.fileToolStripMenuItem_RecentRepositoriesCleared);
             // 
             // closeToolStripMenuItem
             // 
@@ -1589,16 +1479,11 @@ namespace GitUI.CommandsDialogs
         private ToolStripSplitButton branchSelect;
         private ToolStripButton toggleBranchTreePanel;
         private ToolStripButton toggleSplitViewLayout;
-        private ToolStripMenuItem fileToolStripMenuItem;
-        private ToolStripMenuItem openToolStripMenuItem;
+        private GitUI.CommandsDialogs.Menus.StartToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
         private ToolStripMenuItem refreshToolStripMenuItem;
         private ToolStripMenuItem refreshDashboardToolStripMenuItem;
-        private ToolStripMenuItem tsmiRecentRepositories;
-        private ToolStripSeparator toolStripSeparator12;
         private ToolStripMenuItem fileExplorerToolStripMenuItem;
-        private ToolStripSeparator toolStripMenuItem1;
-        private ToolStripMenuItem exitToolStripMenuItem;
         private ToolStripMenuItem repositoryToolStripMenuItem;
         private ToolStripMenuItem commandsToolStripMenuItem;
         private ToolStripMenuItem applyPatchToolStripMenuItem;
@@ -1608,14 +1493,12 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem checkoutToolStripMenuItem;
         private ToolStripMenuItem cherryPickToolStripMenuItem;
         private ToolStripMenuItem cleanupToolStripMenuItem;
-        private ToolStripMenuItem cloneToolStripMenuItem;
         private ToolStripMenuItem commitToolStripMenuItem;
         private ToolStripMenuItem branchToolStripMenuItem;
         private ToolStripMenuItem tagToolStripMenuItem;
         private ToolStripMenuItem deleteBranchToolStripMenuItem;
         private ToolStripMenuItem deleteTagToolStripMenuItem;
         private ToolStripMenuItem formatPatchToolStripMenuItem;
-        private ToolStripMenuItem initNewRepositoryToolStripMenuItem;
         private ToolStripMenuItem mergeBranchToolStripMenuItem;
         private ToolStripMenuItem pullToolStripMenuItem;
         private ToolStripMenuItem pushToolStripMenuItem;
@@ -1674,12 +1557,9 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem editgitinfoexcludeToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItemReflog;
         private ToolStripMenuItem manageWorktreeToolStripMenuItem;
-        private ToolStripMenuItem tsmiRecentRepositoriesClear;
-        private ToolStripSeparator clearRecentRepositoriesListToolStripMenuItem;
         private ToolStripButton toolStripFileExplorer;
         private ToolStripMenuItem createAStashToolStripMenuItem;
         private ToolStripMenuItem undoLastCommitToolStripMenuItem;
-        private ToolStripMenuItem tsmiFavouriteRepositories;
         private ToolStripSplitButton menuCommitInfoPosition;
         private ToolStripMenuItem commitInfoBelowMenuItem;
         private ToolStripMenuItem commitInfoLeftwardMenuItem;
