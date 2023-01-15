@@ -42,8 +42,11 @@ install:
         .\scripts\Update-DotnetVersion.ps1
       }
 - ps: |
+      # Install the required .NET SDK
       Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile "./dotnet-install.ps1"
       ./dotnet-install.ps1 -JsonFile global.json -InstallDir 'C:\Program Files\dotnet'
+      # Remove the script so it doesn't "pollute" the build
+      Remove-Item -Path .\dotnet-install.ps1
 - cmd: git submodule update --init --recursive
 - cmd: |-
     cd scripts
