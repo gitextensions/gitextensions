@@ -67,10 +67,6 @@ build_script:
         $buildArgs += " /p:GitCommit=$gitCommit /p:GitSha=$($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)"
     }
 - ps: |
-    # add to index, to adjust crlf configured in .gitattributes
-    git -c core.autocrlf=false add -A
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-- ps: |
     # build VC++
     dotnet build .\scripts\native.proj -c Release --verbosity q --nologo /bl:.\artifacts\log\native.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
@@ -79,6 +75,9 @@ build_script:
     $cmd = "dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog $buildArgs"
     Invoke-Expression $cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+- ps: |
+    # We are done with the build, reset all pending changes
+    git reset --hard HEAD
 - ps: |
     # Verify that new strings (if any) have been processed and ready for localisation
     Push-Location .\GitExtensions
@@ -90,7 +89,7 @@ build_script:
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
-    dotnet test -c Release --no-restore --nologo --verbosity q --test-adapter-path:. --logger:Appveyor --logger:trx /bl:.\artifacts\log\tests.binlog
+    dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:Appveyor --logger:trx /bl:.\artifacts\log\tests.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 
