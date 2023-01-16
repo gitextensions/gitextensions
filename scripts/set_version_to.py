@@ -54,7 +54,7 @@ if __name__ == '__main__':
                     data[1] = args.text
                     line = '"'.join(data)
             o += line
-        outfile = open(filename, "w")
+        outfile = open(filename, "w", newline='\n')
         outfile.writelines(o)
     
     filename = "..\GitExtensionsShellEx\GitExtensionsShellEx.rc"
@@ -79,7 +79,7 @@ if __name__ == '__main__':
             data[1] = '"' + args.text + '"\n'
             line = ', '.join(data)
         o += line
-    outfile = open(filename, "w")
+    outfile = open(filename, "w", newline='\n')
     outfile.writelines(o)
     
     filename = "..\GitExtSshAskPass\SshAskPass.rc2"
@@ -104,7 +104,7 @@ if __name__ == '__main__':
             data[1] = '"' + args.text + '"\n'
             line = ', '.join(data)
         o += line
-    outfile = open(filename, "w")
+    outfile = open(filename, "w", newline='\n')
     outfile.writelines(o)
 
     for i in range(1, len(verSplitted)):
