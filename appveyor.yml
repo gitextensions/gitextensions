@@ -76,6 +76,9 @@ build_script:
     Invoke-Expression $cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 - ps: |
+    # We are done with the build, reset all pending changes
+    git reset --hard HEAD
+- ps: |
     # Verify that new strings (if any) have been processed and ready for localisation
     Push-Location .\GitExtensions
     dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
@@ -86,7 +89,7 @@ build_script:
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
-    dotnet test -c Release --no-restore --nologo --verbosity q --test-adapter-path:. --logger:Appveyor --logger:trx /bl:.\artifacts\log\tests.binlog
+    dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:Appveyor --logger:trx /bl:.\artifacts\log\tests.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 
