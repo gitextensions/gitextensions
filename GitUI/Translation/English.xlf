@@ -2336,7 +2336,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
-        <source>&amp;Configure this menu</source>
+        <source>&amp;Configure this menu...</source>
         <target />
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">
@@ -2702,7 +2702,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Plugin &amp;Settings</source>
+        <source>Plugins &amp;settings...</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginsLoadingToolStripMenuItem.Text">
@@ -2746,7 +2746,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="repoSettingsToolStripMenuItem.Text">
-        <source>Rep&amp;ository settings</source>
+        <source>Rep&amp;ository settings...</source>
         <target />
       </trans-unit>
       <trans-unit id="reportAnIssueToolStripMenuItem.Text">
@@ -2770,7 +2770,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
-        <source>&amp;Settings</source>
+        <source>&amp;Settings...</source>
         <target />
       </trans-unit>
       <trans-unit id="startAuthenticationAgentToolStripMenuItem.Text">
