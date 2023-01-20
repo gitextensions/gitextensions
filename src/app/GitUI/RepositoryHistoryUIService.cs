@@ -2,6 +2,7 @@
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
+using GitUI.Properties;
 
 namespace GitUI;
 
@@ -41,12 +42,17 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         _invalidRepositoryRemover = invalidRepositoryRemover;
     }
 
-    private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption)
+    private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, bool anchored = false)
     {
         ToolStripMenuItem item = new(caption)
         {
             DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
         };
+
+        if (anchored)
+        {
+            item.Image = Images.Pin;
+        }
 
         menuItemContainer.DropDownItems.Add(item);
 
@@ -162,7 +168,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         foreach (RecentRepoInfo repo in pinnedRepos)
         {
-            AddRecentRepositories(container, repo.Repo, repo.Caption);
+            AddRecentRepositories(container, repo.Repo, repo.Caption, repo.Anchored);
         }
 
         if (allRecentRepos.Count > 0)
@@ -174,7 +180,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
             foreach (RecentRepoInfo repo in allRecentRepos)
             {
-                AddRecentRepositories(container, repo.Repo, repo.Caption);
+                AddRecentRepositories(container, repo.Repo, repo.Caption, repo.Anchored);
             }
         }
     }
