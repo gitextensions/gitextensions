@@ -201,7 +201,6 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                         "-d",
                         localBranch.Name
                     };
-                    _gitCommands.GitExecutable.GetOutput(args);
 
                     // Delete branches one by one, because it is possible one fails
                     _gitCommands.GitExecutable.GetOutput(args);
