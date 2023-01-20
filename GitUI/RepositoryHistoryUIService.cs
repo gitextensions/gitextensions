@@ -162,7 +162,7 @@ namespace GitUI
 
             if (allRecentRepos.Count > 0)
             {
-                if (pinnedRepos.Count > 0 && (AppSettings.SortPinnedRepos || AppSettings.SortAllRecentRepos))
+                if (pinnedRepos.Count > 0)
                 {
                     container.DropDownItems.Add(new ToolStripSeparator());
                 }
