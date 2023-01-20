@@ -126,8 +126,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             {
                  "--list",
                  { context.IncludeRemotes, "-r" },
-                 { !context.IncludeUnmerged, "--merged" },
-                 context.ReferenceBranch
+                 { !context.IncludeUnmerged, "--merged " + context.ReferenceBranch }
             };
 
             var result = context.Commands.GitExecutable.Execute(args, throwOnErrorExit: false);
