@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noReposHostPluginLoaded = new("No repository host plugin loaded.");
         private readonly TranslationString _noReposHostFound = new("Could not find any relevant repository hosts for the currently open repository.");
 
-        private readonly TranslationString _configureWorkingDirMenu = new("&Configure this menu");
+        private readonly TranslationString _configureWorkingDirMenu = new("&Configure this menu...");
 
         private readonly TranslationString _updateCurrentSubmodule = new("Update current submodule");
 
