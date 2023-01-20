@@ -5,14 +5,16 @@
         public Repository Repo { get; }
         public string? Caption { get; set; }
         public bool MostRecent { get; set; }
+        public bool Anchored { get; set; }
         public DirectoryInfo? DirInfo { get; set; }
         public string? ShortName { get; }
         public string DirName { get; }
 
-        public RecentRepoInfo(Repository repo, bool mostRecent)
+        public RecentRepoInfo(Repository repo, bool mostRecent, bool anchored)
         {
             Repo = repo;
             MostRecent = mostRecent;
+            Anchored = anchored;
             try
             {
                 DirInfo = new DirectoryInfo(Repo.Path);
@@ -73,7 +75,7 @@
             {
                 bool mostRecent = (topRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
                     repository.Anchor == Repository.RepositoryAnchor.AnchoredInTop;
-                RecentRepoInfo ri = new(repository, mostRecent);
+                RecentRepoInfo ri = new(repository, mostRecent, repository.Anchor == Repository.RepositoryAnchor.AnchoredInTop || repository.Anchor == Repository.RepositoryAnchor.AnchoredInRecent);
                 if (ri.MostRecent)
                 {
                     topRepos.Add(ri);
