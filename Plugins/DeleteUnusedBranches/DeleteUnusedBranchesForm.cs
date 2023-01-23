@@ -63,8 +63,6 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             {
                 return;
             }
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }
 
         protected override void OnLoad(EventArgs e)
@@ -83,6 +81,8 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
             checkBoxHeaderCell.CheckBoxClicked += CheckBoxHeader_OnCheckBoxClicked;
             _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText = string.Empty;
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
 
             BranchesGrid.DataSource = _branches;
         }
