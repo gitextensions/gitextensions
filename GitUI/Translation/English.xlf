@@ -384,6 +384,10 @@ Click this info icon for more details.</source>
   </file>
   <file datatype="plaintext" original="BranchMenuItemsStrings" source-language="en">
     <body>
+      <trans-unit id="Checkout.Text">
+        <source>Chec&amp;kout branch...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="CheckoutTooltip.Text">
         <source>Checkout this branch</source>
         <target />
@@ -392,12 +396,20 @@ Click this info icon for more details.</source>
         <source>Create a local branch from this branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>&amp;Delete branch...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="MergeTooltip.Text">
         <source>Merge this branch into current branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="Rebase.Text">
+        <source>&amp;Rebase current branch on this branch...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="RebaseTooltip.Text">
-        <source>Rebase current branch to this branch</source>
+        <source>Rebase current branch on this branch</source>
         <target />
       </trans-unit>
       <trans-unit id="RenameTooltip.Text">
@@ -7982,24 +7994,12 @@ help</source>
   </file>
   <file datatype="plaintext" original="MenuItemsStrings" source-language="en">
     <body>
-      <trans-unit id="Checkout.Text">
-        <source>Chec&amp;kout branch...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="CreateBranch.Text">
         <source>Create &amp;branch...</source>
         <target />
       </trans-unit>
-      <trans-unit id="Delete.Text">
-        <source>&amp;Delete branch...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="Merge.Text">
-        <source>&amp;Merge branches...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Rebase.Text">
-        <source>&amp;Rebase...</source>
+        <source>&amp;Merge into current branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="Rename.Text">
@@ -8178,8 +8178,20 @@ This will just checkout on the submodule the commit determined by the superproje
   </file>
   <file datatype="plaintext" original="RemoteBranchMenuItemsStrings" source-language="en">
     <body>
+      <trans-unit id="Checkout.Text">
+        <source>Chec&amp;kout remote branch...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>&amp;Delete remote branch...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="DeleteTooltip.Text">
         <source>Delete the branch from the remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Rebase.Text">
+        <source>&amp;Rebase current branch on this remote branch...</source>
         <target />
       </trans-unit>
     </body>
@@ -8277,7 +8289,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.ToolTipText">
-        <source>Delete all child branchs, which must all be fully merged in its upstream branch or in HEAD</source>
+        <source>Delete all child branches, which must all be fully merged in its upstream branch or in HEAD</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnDisableRemote.Text">
@@ -8325,7 +8337,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFetchOneBranch.ToolTipText">
-        <source>Fetch the new remote branch</source>
+        <source>Fetch this remote branch</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.Text">
@@ -8333,7 +8345,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.ToolTipText">
-        <source>Fetch &amp; Rebase current branch to this branch</source>
+        <source>Fetch then rebase current branch on this remote branch</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
@@ -8408,12 +8420,16 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Fetch &amp;&amp; Merge (&amp;Pull)</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnPullFromRemoteBranch.ToolTipText">
+        <source>Fetch then merge this remote branch into current branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.Text">
         <source>&amp;Fetch &amp;&amp; Checkout</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.ToolTipText">
-        <source>Checkout this branch</source>
+        <source>Fetch then checkout this remote branch</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.Text">
@@ -9571,12 +9587,20 @@ When OpenSSH is used, command line dialogs are shown!
   </file>
   <file datatype="plaintext" original="TagMenuItemsStrings" source-language="en">
     <body>
+      <trans-unit id="Checkout.Text">
+        <source>Chec&amp;kout tag revision...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="CheckoutTooltip.Text">
-        <source>Checkout this tag</source>
+        <source>Checkout this tag revision</source>
         <target />
       </trans-unit>
       <trans-unit id="CreateTooltip.Text">
         <source>Create a local branch from this tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>&amp;Delete tag...</source>
         <target />
       </trans-unit>
       <trans-unit id="DeleteTooltip.Text">
@@ -9587,8 +9611,12 @@ When OpenSSH is used, command line dialogs are shown!
         <source>Merge this tag into current branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="Rebase.Text">
+        <source>&amp;Rebase current branch on this tag revision...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="RebaseTooltip.Text">
-        <source>Rebase current branch to this tag</source>
+        <source>Rebase current branch on this tag</source>
         <target />
       </trans-unit>
       <trans-unit id="ResetTooltip.Text">
