@@ -34,6 +34,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
         private readonly IGitPlugin _gitPlugin;
         private readonly GitBranchOutputCommandParser _commandOutputParser;
         private CancellationTokenSource? _refreshCancellation;
+        public bool HasDeletedBranch { get; internal set; }
 
         public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands? gitUiCommands, IGitPlugin gitPlugin)
         {
@@ -174,6 +175,8 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                     return;
                 }
             }
+
+            HasDeletedBranch = true;
 
             var localBranches = selectedBranches.Except(remoteBranches).ToList();
             SetWorkingState(isWorking: true);
