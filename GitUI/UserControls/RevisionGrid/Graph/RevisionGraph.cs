@@ -154,7 +154,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             // Use a local variable, because the cached list can be reset
             var localOrderedRowCache = _orderedRowCache;
-            if (localOrderedRowCache is null || row >= localOrderedRowCache.Count)
+            if (localOrderedRowCache is null || row < 0 || row >= localOrderedRowCache.Count)
             {
                 return null;
             }
