@@ -7,6 +7,7 @@ using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
@@ -660,16 +661,18 @@ See the changes in the commit form.");
 
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
-            var itemSelected = gitItem is not null;
-            var isFile = gitItem?.ObjectType == GitObjectType.Blob;
-            var isFolder = gitItem?.ObjectType == GitObjectType.Tree;
-            var isFileOrFolder = isFile || isFolder;
+            GitItem? gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
+            bool itemSelected = gitItem is not null;
+            bool isFile = gitItem?.ObjectType == GitObjectType.Blob;
+            bool isFolder = gitItem?.ObjectType == GitObjectType.Tree;
+            bool isFileOrFolder = isFile || isFolder;
 
             // Many items does not make sense if a local file does not exist, why this is used for Enabled
-            var isExistingFileOrDirectory = gitItem is not null && FormBrowseUtil.IsFileOrDirectory(_fullPathResolver.Resolve(gitItem.FileName));
+            bool isExistingFileOrDirectory = gitItem is not null && FormBrowseUtil.IsFileOrDirectory(_fullPathResolver.Resolve(gitItem.FileName));
 
-            var openSubVisible = gitItem?.ObjectType == GitObjectType.Commit && isExistingFileOrDirectory;
+            filterFileInGridToolStripMenuItem.Enabled = itemSelected;
+
+            bool openSubVisible = gitItem?.ObjectType == GitObjectType.Commit && isExistingFileOrDirectory;
             openSubmoduleMenuItem.Visible = openSubVisible;
             if (openSubVisible)
             {
@@ -700,8 +703,8 @@ See the changes in the commit form.");
             openWithDifftoolToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Enabled = isExistingFileOrDirectory;
-            Validates.NotNull(_revision);
-            var fsi = _rememberFileContextMenuController.CreateFileStatusItem(gitItem?.FileName ?? "", _revision);
+            FileStatusItem fsi = _revision is null ? null
+                : _rememberFileContextMenuController.CreateFileStatusItem(gitItem?.FileName ?? "", _revision);
             diffWithRememberedFileToolStripMenuItem.Visible = _rememberFileContextMenuController.RememberedDiffFileItem is not null;
             diffWithRememberedFileToolStripMenuItem.Enabled = isFile && fsi != _rememberFileContextMenuController.RememberedDiffFileItem
                                                                          && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(fsi);
