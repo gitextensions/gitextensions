@@ -1,4 +1,5 @@
-﻿using GitUI.BranchTreePanel.Interfaces;
+﻿using GitCommands;
+using GitUI.BranchTreePanel.Interfaces;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel.ContextMenu
@@ -21,6 +22,11 @@ namespace GitUI.BranchTreePanel.ContextMenu
         internal readonly TranslationString Delete = new("&Delete branch...");
 
         internal Dictionary<MenuItemKey, TranslationString> Tooltips { get; } = new Dictionary<MenuItemKey, TranslationString>();
+
+        public MenuItemsStrings()
+        {
+            Translator.Translate(this, AppSettings.CurrentTranslation);
+        }
     }
 
     public class BranchMenuItemsStrings : Translate
@@ -31,6 +37,11 @@ namespace GitUI.BranchTreePanel.ContextMenu
         internal readonly TranslationString RebaseTooltip = new("Rebase current branch to this branch");
         internal readonly TranslationString ResetTooltip = new("Reset current branch to here");
         internal readonly TranslationString RenameTooltip = new("Rename this branch");
+
+        public BranchMenuItemsStrings()
+        {
+            Translator.Translate(this, AppSettings.CurrentTranslation);
+        }
 
         public void ApplyTo(MenuItemsStrings strings)
         {

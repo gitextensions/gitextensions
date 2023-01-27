@@ -1,4 +1,5 @@
-﻿using GitUI.BranchTreePanel.Interfaces;
+﻿using GitCommands;
+using GitUI.BranchTreePanel.Interfaces;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel.ContextMenu
@@ -15,6 +16,11 @@ namespace GitUI.BranchTreePanel.ContextMenu
     public class RemoteBranchMenuItemsStrings : Translate
     {
         internal readonly TranslationString DeleteTooltip = new("Delete the branch from the remote");
+
+        public RemoteBranchMenuItemsStrings()
+        {
+            Translator.Translate(this, AppSettings.CurrentTranslation);
+        }
 
         public void ApplyTo(MenuItemsStrings strings)
         {

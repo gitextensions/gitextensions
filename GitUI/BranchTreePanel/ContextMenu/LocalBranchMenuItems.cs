@@ -1,4 +1,5 @@
-﻿using GitUI.BranchTreePanel.Interfaces;
+﻿using GitCommands;
+using GitUI.BranchTreePanel.Interfaces;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel.ContextMenu
@@ -19,6 +20,11 @@ namespace GitUI.BranchTreePanel.ContextMenu
     public class LocalBranchMenuItemsStrings : Translate
     {
         internal readonly TranslationString DeleteTooltip = new("Delete the branch, which must be fully merged in its upstream branch or in HEAD");
+
+        public LocalBranchMenuItemsStrings()
+        {
+            Translator.Translate(this, AppSettings.CurrentTranslation);
+        }
 
         public void ApplyTo(MenuItemsStrings strings)
         {
