@@ -25,7 +25,7 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly BackgroundUpdater _backgroundUpdater;
         private readonly Stopwatch _lastRepaint = Stopwatch.StartNew();
         private readonly Stopwatch _lastScroll = Stopwatch.StartNew();
-        private readonly Stopwatch _consecutiveScroll = new();
+        private readonly Stopwatch _consecutiveScroll = Stopwatch.StartNew();
         private readonly List<ColumnProvider> _columnProviders = new();
 
         internal RevisionGraph _revisionGraph = new();
@@ -633,13 +633,9 @@ namespace GitUI.UserControls.RevisionGrid
             // is spinning fast (with free-spinning mouse wheels) or while dragging
             // the scroll bar fast. In such cases, force a repaint to make the GUI
             // feel more responsive.
-            if (_lastScroll.ElapsedMilliseconds < 100)
+            if (_lastScroll.ElapsedMilliseconds > 100)
             {
-                _consecutiveScroll.Start();
-            }
-            else
-            {
-                _consecutiveScroll.Reset();
+                _consecutiveScroll.Restart();
             }
 
             if (_consecutiveScroll.ElapsedMilliseconds > 50
