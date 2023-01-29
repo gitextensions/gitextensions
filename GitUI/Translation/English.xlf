@@ -5907,7 +5907,7 @@ Nothing to rebase.</source>
         <target />
       </trans-unit>
       <trans-unit id="chkSpecificRange.Text">
-        <source>Sp&amp;ecific range</source>
+        <source>Specific ra&amp;nge</source>
         <target />
       </trans-unit>
       <trans-unit id="chkStash.Text">

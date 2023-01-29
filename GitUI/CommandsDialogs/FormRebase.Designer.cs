@@ -392,7 +392,7 @@ namespace GitUI.CommandsDialogs
             this.chkSpecificRange.Name = "chkSpecificRange";
             this.chkSpecificRange.Size = new System.Drawing.Size(100, 19);
             this.chkSpecificRange.TabIndex = 19;
-            this.chkSpecificRange.Text = "Sp&ecific range";
+            this.chkSpecificRange.Text = "Specific ra&nge";
             this.chkSpecificRange.UseVisualStyleBackColor = true;
             this.chkSpecificRange.CheckedChanged += new System.EventHandler(this.chkUseFromOnto_CheckedChanged);
             // 
