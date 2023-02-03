@@ -24,6 +24,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         private readonly BackgroundUpdater _backgroundUpdater;
         private readonly Stopwatch _lastRepaint = Stopwatch.StartNew();
+        private readonly Stopwatch _lastScroll = Stopwatch.StartNew();
+        private readonly Stopwatch _consecutiveScroll = Stopwatch.StartNew();
         private readonly List<ColumnProvider> _columnProviders = new();
 
         internal RevisionGraph _revisionGraph = new();
@@ -33,7 +35,6 @@ namespace GitUI.UserControls.RevisionGrid
         private int _loadedToBeSelectedRevisionsCount = 0;
 
         private int _backgroundScrollTo;
-        private int _consecutiveScrollMessageCnt = 0; // Is used to detect if a forced repaint is needed.
         private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
 
         private VisibleRowRange _visibleRowRange;
@@ -91,7 +92,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             };
 
-            Scroll += (_, _) => UpdateVisibleRowRange();
+            Scroll += (_, _) => OnScroll();
             Resize += (_, _) => UpdateVisibleRowRange();
             GotFocus += (_, _) => InvalidateSelectedRows();
             LostFocus += (_, _) => InvalidateSelectedRows();
@@ -622,6 +623,31 @@ namespace GitUI.UserControls.RevisionGrid
             SelectRowsIfReady(rowCount);
         }
 
+        private void OnScroll()
+        {
+            UpdateVisibleRowRange();
+
+            // When scrolling many rows within a short time, the message pump is
+            // flooded with WM_CTLCOLORSCROLLBAR messages and the DataGridView
+            // is not repainted. This happens for example when the mouse wheel
+            // is spinning fast (with free-spinning mouse wheels) or while dragging
+            // the scroll bar fast. In such cases, force a repaint to make the GUI
+            // feel more responsive.
+            if (_lastScroll.ElapsedMilliseconds > 100)
+            {
+                _consecutiveScroll.Restart();
+            }
+
+            if (_consecutiveScroll.ElapsedMilliseconds > 50
+                && _lastRepaint.ElapsedMilliseconds > 50)
+            {
+                Update();
+                _lastRepaint.Restart();
+            }
+
+            _lastScroll.Restart();
+        }
+
         private void UpdateVisibleRowRange()
         {
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
@@ -790,41 +816,6 @@ namespace GitUI.UserControls.RevisionGrid
                 default:
                     base.OnKeyDown(e);
                     break;
-            }
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            ConditionalRepaintInjector(m);
-            base.WndProc(ref m);
-        }
-
-        /// <summary>
-        /// Forces a repaint if the last repaint was more than 50ms ago.
-        /// </summary>
-        /// <remarks>
-        /// In situations where the mouse wheel is spinning fast (for example with free-spinning mouse wheels),
-        /// the message pump is flooded with WM_CTLCOLORSCROLLBAR messages and the DataGridView is not repainted.
-        /// This method injects a WM_PAINT message in such cases to make the GUI feel more responsive.
-        /// </remarks>
-        private void ConditionalRepaintInjector(Message m)
-        {
-            if (m.Msg != NativeMethods.WM_CTLCOLORSCROLLBAR)
-            {
-                _consecutiveScrollMessageCnt = 0;
-                return;
-            }
-
-            _consecutiveScrollMessageCnt++;
-
-            if (_consecutiveScrollMessageCnt > 5 && _lastRepaint.ElapsedMilliseconds > 50)
-            {
-                // inject paint message
-                var mm = new Message() { HWnd = Handle, Msg = NativeMethods.WM_PAINT };
-                base.WndProc(ref mm);
-
-                _consecutiveScrollMessageCnt = 0;
-                _lastRepaint.Restart();
             }
         }
 
