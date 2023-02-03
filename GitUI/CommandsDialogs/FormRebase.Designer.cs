@@ -34,6 +34,7 @@ namespace GitUI.CommandsDialogs
             System.Windows.Forms.FlowLayoutPanel PanelCurrentBranch;
             this.btnAddFiles = new System.Windows.Forms.Button();
             this.btnCommit = new System.Windows.Forms.Button();
+            this.btnEditTodo = new System.Windows.Forms.Button();
             this.btnSkip = new System.Windows.Forms.Button();
             this.lblCurrent = new System.Windows.Forms.Label();
             this.Currentbranch = new System.Windows.Forms.Label();
@@ -107,6 +108,7 @@ namespace GitUI.CommandsDialogs
             flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             flowLayoutPanel1.Controls.Add(this.btnAddFiles);
             flowLayoutPanel1.Controls.Add(this.btnCommit);
+            flowLayoutPanel1.Controls.Add(this.btnEditTodo);
             flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -139,6 +141,19 @@ namespace GitUI.CommandsDialogs
             this.btnCommit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnCommit.UseVisualStyleBackColor = true;
             this.btnCommit.Click += new System.EventHandler(this.Commit_Click);
+            // 
+            // btnEditTodo
+            // 
+            this.btnEditTodo.AutoSize = true;
+            this.btnEditTodo.Image = global::GitUI.Properties.Images.EditFile;
+            this.btnEditTodo.Location = new System.Drawing.Point(180, 3);
+            this.btnEditTodo.Name = "btnEditTodo";
+            this.btnEditTodo.Size = new System.Drawing.Size(79, 25);
+            this.btnEditTodo.TabIndex = 36;
+            this.btnEditTodo.Text = "&Edit todo...";
+            this.btnEditTodo.UseVisualStyleBackColor = true;
+            this.btnEditTodo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnEditTodo.Click += new System.EventHandler(this.EditTodoClick);
             // 
             // flowLayoutPanel2
             // 
@@ -377,7 +392,7 @@ namespace GitUI.CommandsDialogs
             this.chkSpecificRange.Name = "chkSpecificRange";
             this.chkSpecificRange.Size = new System.Drawing.Size(100, 19);
             this.chkSpecificRange.TabIndex = 19;
-            this.chkSpecificRange.Text = "Sp&ecific range";
+            this.chkSpecificRange.Text = "Specific ra&nge";
             this.chkSpecificRange.UseVisualStyleBackColor = true;
             this.chkSpecificRange.CheckedChanged += new System.EventHandler(this.chkUseFromOnto_CheckedChanged);
             // 
@@ -478,7 +493,7 @@ namespace GitUI.CommandsDialogs
             this.btnSolveMergeconflicts.Location = new System.Drawing.Point(12, 426);
             this.btnSolveMergeconflicts.Name = "btnSolveMergeconflicts";
             this.btnSolveMergeconflicts.Size = new System.Drawing.Size(213, 27);
-            this.btnSolveMergeconflicts.TabIndex = 41;
+            this.btnSolveMergeconflicts.TabIndex = 42;
             this.btnSolveMergeconflicts.Text = "There are unresolved merge conflicts\r\n";
             this.btnSolveMergeconflicts.UseVisualStyleBackColor = false;
             this.btnSolveMergeconflicts.Visible = false;
@@ -682,6 +697,7 @@ namespace GitUI.CommandsDialogs
         private Help.HelpImageDisplayUserControl PanelLeftImage;
         private System.Windows.Forms.CheckBox chkStash;
         private System.Windows.Forms.Button btnCommit;
+        private System.Windows.Forms.Button btnEditTodo;
         private System.Windows.Forms.CheckBox chkIgnoreDate;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox chkCommitterDateIsAuthorDate;
