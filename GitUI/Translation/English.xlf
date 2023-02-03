@@ -85,6 +85,10 @@ This action will be performed without warning while checking out branch.</source
         <source>Fonts</source>
         <target />
       </trans-unit>
+      <trans-unit id="ShowEolMarkerAsGlyph.Text">
+        <source>Show end-of-line markers as glyph instead of "\r\n" etc.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="applicationFontChangeButton.Text">
         <source>font name</source>
         <target />
@@ -98,7 +102,7 @@ This action will be performed without warning while checking out branch.</source
         <target />
       </trans-unit>
       <trans-unit id="gbFonts.Text">
-        <source>Fonts</source>
+        <source>Fonts (restart required)</source>
         <target />
       </trans-unit>
       <trans-unit id="label26.Text">
