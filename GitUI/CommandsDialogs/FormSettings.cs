@@ -282,6 +282,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 settingsTreeView.GotoPage(_initialPage);
+
+                settingsTreeView.Focus();
             }
         }
 
