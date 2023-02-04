@@ -15,6 +15,9 @@ namespace GitUI.BranchTreePanel.ContextMenu
 
     public class RemoteBranchMenuItemsStrings : Translate
     {
+        internal readonly TranslationString Checkout = new("Chec&kout remote branch...");
+        internal readonly TranslationString Rebase = new("&Rebase current branch on this remote branch...");
+        internal readonly TranslationString Delete = new("&Delete remote branch...");
         internal readonly TranslationString DeleteTooltip = new("Delete the branch from the remote");
 
         public RemoteBranchMenuItemsStrings()
@@ -25,6 +28,9 @@ namespace GitUI.BranchTreePanel.ContextMenu
         public void ApplyTo(MenuItemsStrings strings)
         {
             new BranchMenuItemsStrings().ApplyTo(strings);
+            strings.Checkout = Checkout;
+            strings.Rebase = Rebase;
+            strings.Delete = Delete;
             strings.Tooltips[MenuItemKey.Delete] = DeleteTooltip;
         }
     }

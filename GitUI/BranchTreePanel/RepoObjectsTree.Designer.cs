@@ -373,7 +373,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnRemoteBranchFetchAndCheckout.Name = "mnubtnRemoteBranchFetchAndCheckout";
             this.mnubtnRemoteBranchFetchAndCheckout.Size = new System.Drawing.Size(266, 26);
             this.mnubtnRemoteBranchFetchAndCheckout.Text = "&Fetch && Checkout";
-            this.mnubtnRemoteBranchFetchAndCheckout.ToolTipText = "Checkout this branch";
+            this.mnubtnRemoteBranchFetchAndCheckout.ToolTipText = "Fetch then checkout this remote branch";
             // 
             // mnubtnPullFromRemoteBranch
             // 
@@ -381,6 +381,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnPullFromRemoteBranch.Name = "mnubtnPullFromRemoteBranch";
             this.mnubtnPullFromRemoteBranch.Size = new System.Drawing.Size(266, 26);
             this.mnubtnPullFromRemoteBranch.Text = "Fetch && Merge (&Pull)";
+            this.mnubtnPullFromRemoteBranch.ToolTipText = "Fetch then merge this remote branch into current branch";
             // 
             // mnubtnFetchRebase
             // 
@@ -388,7 +389,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnFetchRebase.Name = "mnubtnFetchRebase";
             this.mnubtnFetchRebase.Size = new System.Drawing.Size(266, 26);
             this.mnubtnFetchRebase.Text = "Fetch && Re&base";
-            this.mnubtnFetchRebase.ToolTipText = "Fetch & Rebase current branch to this branch";
+            this.mnubtnFetchRebase.ToolTipText = "Fetch then rebase current branch on this remote branch";
             // 
             // mnubtnFetchCreateBranch
             // 
@@ -404,7 +405,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnFetchOneBranch.Name = "mnubtnFetchOneBranch";
             this.mnubtnFetchOneBranch.Size = new System.Drawing.Size(266, 26);
             this.mnubtnFetchOneBranch.Text = "Fe&tch";
-            this.mnubtnFetchOneBranch.ToolTipText = "Fetch the new remote branch";
+            this.mnubtnFetchOneBranch.ToolTipText = "Fetch this remote branch";
             // 
             // toolStripSeparator6
             // 
@@ -425,7 +426,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnDeleteAllBranches.Name = "mnubtnDeleteAllBranches";
             this.mnubtnDeleteAllBranches.Size = new System.Drawing.Size(266, 26);
             this.mnubtnDeleteAllBranches.Text = "Delete All";
-            this.mnubtnDeleteAllBranches.ToolTipText = "Delete all child branchs, which must all be fully merged in its upstream branch o" +
+            this.mnubtnDeleteAllBranches.ToolTipText = "Delete all child branches, which must all be fully merged in its upstream branch o" +
     "r in HEAD";
             // 
             // toolStripSeparator10
