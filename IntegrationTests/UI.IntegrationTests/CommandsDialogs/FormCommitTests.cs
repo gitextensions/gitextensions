@@ -2,10 +2,12 @@
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using NUnit.Framework;
 
@@ -423,6 +425,77 @@ namespace GitExtensions.UITests.CommandsDialogs
                 Assert.True(testForm.Amend.Checked);
                 Assert.True(testForm.ResetAuthor.Visible);
                 Assert.False(testForm.ResetAuthor.Checked);
+            });
+        }
+
+        [Test]
+        public void ResetSoft()
+        {
+            AppSettings.CommitAndPushForcedWhenAmend = true;
+            AppSettings.DontConfirmAmend = true;
+            AppSettings.CloseCommitDialogAfterCommit = false;
+            AppSettings.CloseCommitDialogAfterLastCommit = false;
+            AppSettings.CloseProcessDialog = true;
+
+            int defaultBackColor = SystemColors.ButtonFace.AdaptBackColor().ToArgb();
+            int forceBackColor = OtherColors.AmendButtonForcedColor.ToArgb();
+
+            const string originalCommitMessage = "commit to be amended by reset soft";
+            const string amendedCommitMessage = "replacement commit";
+
+            ObjectId? previousCommitId = _commands.Module.RevParse("HEAD");
+            string originalCommitHash = _referenceRepository.CreateCommit(originalCommitMessage, "original content", "theFile");
+
+            RunFormTest(form =>
+            {
+                FormCommit.TestAccessor ta = form.GetTestAccessor();
+
+                // initial state
+                ta.Amend.Enabled.Should().BeTrue();
+                ta.Amend.Checked.Should().BeFalse();
+                ta.CommitAndPush.BackColor.ToArgb().Should().Be(defaultBackColor);
+                ta.ResetSoft.Visible.Should().BeFalse();
+                ta.Message.Text.Should().BeEmpty();
+
+                // amend needs to be activated first
+                ta.Amend.Checked = true;
+
+                ta.Amend.Enabled.Should().BeTrue();
+                ta.Amend.Checked.Should().BeTrue();
+                ta.CommitAndPush.BackColor.ToArgb().Should().Be(forceBackColor);
+                ta.ResetSoft.Visible.Should().BeTrue();
+                ta.ResetSoft.Enabled.Should().BeTrue();
+                ta.Message.Text.Should().Be(originalCommitMessage);
+
+                // reset soft
+                ta.Message.Text = amendedCommitMessage;
+                ta.ResetSoft.PerformClick();
+
+                // update the form
+                Application.DoEvents();
+                ThreadHelper.JoinPendingOperations();
+
+                _commands.Module.RevParse("HEAD").Should().Be(previousCommitId);
+                ta.Amend.Enabled.Should().BeFalse();
+                ta.Amend.Checked.Should().BeFalse();
+                ta.CommitAndPush.BackColor.ToArgb().Should().Be(forceBackColor);
+                ta.CommitAndPush.Text.Should().Be(ta.CommitAndForcePushText);
+                ta.ResetSoft.Visible.Should().BeFalse();
+                ta.Message.Text.Should().Be(amendedCommitMessage);
+
+                // commit
+                ta.Commit.PerformClick();
+
+                // update the form
+                Application.DoEvents();
+                ThreadHelper.JoinPendingOperations();
+
+                ta.Amend.Enabled.Should().BeTrue();
+                ta.Amend.Checked.Should().BeFalse();
+                ta.CommitAndPush.BackColor.ToArgb().Should().Be(forceBackColor);
+                ta.CommitAndPush.Text.Should().Be(TranslatedStrings.ButtonPush);
+                ta.ResetSoft.Visible.Should().BeFalse();
+                ta.Message.Text.Should().BeEmpty();
             });
         }
 

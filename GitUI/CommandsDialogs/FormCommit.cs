@@ -32,10 +32,17 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
 
-        private readonly TranslationString _amendCommit =
-            new("You are about to rewrite history." + Environment.NewLine +
-                                  "Only use amend if the commit is not published yet!" + Environment.NewLine +
-                                  Environment.NewLine + "Do you want to continue?");
+        private readonly TranslationString _amendCommit
+            = new("You are about to rewrite history." + Environment.NewLine
+                + "Only use Amend if the commit has not been published yet!" + Environment.NewLine
+                + Environment.NewLine
+                + "Do you want to continue?");
+
+        private readonly TranslationString _amendResetSoft
+            = new("You are about to rewrite history by Soft Reset to the previous commit." + Environment.NewLine
+                + "Only use Amend / Reset if the commit has not been published yet!" + Environment.NewLine
+                + Environment.NewLine
+                + "Do you want to continue?");
 
         private readonly TranslationString _amendCommitCaption = new("Amend commit");
 
@@ -193,6 +200,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        /// <summary>
+        /// Flag whether the push needs to be forced, i.e. after amending a commit or after soft reset to the previous commit.
+        /// </summary>
+        /// The Amend checkbox is disabled after soft reset.
+        private bool PushForced => (Amend.Checked || !Amend.Enabled) && AppSettings.CommitAndPushForcedWhenAmend;
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private FormCommit()
@@ -317,6 +330,12 @@ namespace GitUI.CommandsDialogs
 
             SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeconflicts.SetForeColorForBackColor();
+
+            if (AppSettings.DontConfirmAmend)
+            {
+                ResetSoft.BackColor = OtherColors.AmendButtonForcedColor;
+                ResetSoft.SetForeColorForBackColor();
+            }
 
             toolStripStatusBranchIcon.AdaptImageLightness();
 
@@ -763,7 +782,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            ResetSoftClick(this, EventArgs.Empty);
+            ResetFilesClick(this, EventArgs.Empty);
             return true;
         }
 
@@ -992,7 +1011,6 @@ namespace GitUI.CommandsDialogs
 
                     Commit.Enabled = false;
                     CommitAndPush.Enabled = false;
-                    Amend.Enabled = false;
                     Reset.Enabled = false;
                     ResetUnStaged.Enabled = false;
                     EnableStageButtons(false);
@@ -1059,7 +1077,6 @@ namespace GitUI.CommandsDialogs
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
-            Amend.Enabled = true;
             UpdateButtonStates();
 
             EnableStageButtons(true);
@@ -1183,8 +1200,12 @@ namespace GitUI.CommandsDialogs
             ExecuteCommitCommand();
         }
 
-        private void CheckForStagedAndCommit(bool amend, bool push, bool resetAuthor)
+        private void CheckForStagedAndCommit(bool push)
         {
+            bool createAmendCommit = Amend.Checked;
+            bool resetAuthor = Amend.Checked && ResetAuthor.Checked;
+            bool pushForced = PushForced;
+
             BypassFormActivatedEventHandler(() =>
             {
                 if (ConfirmOrStageCommit())
@@ -1195,7 +1216,7 @@ namespace GitUI.CommandsDialogs
 
             bool ConfirmOrStageCommit()
             {
-                if (amend)
+                if (createAmendCommit)
                 {
                     return ConfirmAmendCommit();
                 }
@@ -1362,7 +1383,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     var commitCmd = Module.CommitCmd(
-                        amend,
+                        createAmendCommit,
                         signOffToolStripMenuItem.Checked,
                         toolAuthor.Text,
                         _useFormCommitMessage,
@@ -1391,13 +1412,13 @@ namespace GitUI.CommandsDialogs
                     {
                         if (push)
                         {
-                            bool pushForced = AppSettings.CommitAndPushForcedWhenAmend && amend;
-                            UICommands.StartPushDialog(this, true, pushForced, out pushCompleted);
+                            UICommands.StartPushDialog(owner: this, pushOnShow: true, forceWithLease: pushForced, out pushCompleted);
                         }
                     }
                     finally
                     {
                         Message.Text = string.Empty;
+                        Amend.Enabled = true;
                         Amend.Checked = false;
                         noVerifyToolStripMenuItem.Checked = false;
                     }
@@ -2067,7 +2088,6 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(true);
 
                 Commit.Enabled = true;
-                Amend.Enabled = true;
             }
 
             if (AppSettings.RevisionGraphShowArtificialCommits)
@@ -2076,7 +2096,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void ResetSoftClick(object sender, EventArgs e)
+        private void ResetFilesClick(object sender, EventArgs e)
         {
             _shouldRescanChanges = false;
             try
@@ -2168,6 +2188,31 @@ namespace GitUI.CommandsDialogs
             }
 
             Initialize();
+        }
+
+        private void ResetSoftClick(object sender, EventArgs e)
+        {
+            if (!AppSettings.DontConfirmAmend)
+            {
+                if (MessageBox.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
+            try
+            {
+                ArgumentString cmd = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
+                Module.GitExecutable.RunCommand(cmd);
+                Amend.Enabled = false;
+                Amend.Checked = false;
+                Message.Focus();
+            }
+            finally
+            {
+                UICommands.RepoChangedNotifier.Notify();
+                Initialize();
+            }
         }
 
         private void DeleteFileToolStripMenuItemClick(object sender, EventArgs e)
@@ -2764,11 +2809,12 @@ namespace GitUI.CommandsDialogs
         {
             if (CommitAndPush.Text == TranslatedStrings.ButtonPush)
             {
-                UICommands.StartPushDialog(this, pushOnShow: true);
+                bool pushForced = CommitAndPush.BackColor == OtherColors.AmendButtonForcedColor;
+                UICommands.StartPushDialog(owner: this, pushOnShow: true, forceWithLease: pushForced, out _);
                 return;
             }
 
-            CheckForStagedAndCommit(amend: Amend.Checked, push: true, resetAuthor: Amend.Checked && ResetAuthor.Checked);
+            CheckForStagedAndCommit(push: true);
         }
 
         private void UpdateAuthorInfo()
@@ -2819,7 +2865,7 @@ namespace GitUI.CommandsDialogs
 
         private void ExecuteCommitCommand()
         {
-            CheckForStagedAndCommit(amend: Amend.Checked, push: false, resetAuthor: Amend.Checked && ResetAuthor.Checked);
+            CheckForStagedAndCommit(push: false);
         }
 
         private void Message_KeyDown(object sender, KeyEventArgs e)
@@ -3275,7 +3321,7 @@ namespace GitUI.CommandsDialogs
 
         private void Amend_CheckedChanged(object sender, EventArgs e)
         {
-            ResetAuthor.Visible = Amend.Checked;
+            AmendPanel.Visible = Amend.Checked;
 
             if (!Amend.Checked && ResetAuthor.Checked)
             {
@@ -3289,7 +3335,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.CommitAndPushForcedWhenAmend)
             {
-                CommitAndPush.BackColor = Amend.Checked
+                CommitAndPush.BackColor = PushForced
                     ? OtherColors.AmendButtonForcedColor
                     : SystemColors.ButtonFace.AdaptBackColor();
 
@@ -3297,6 +3343,8 @@ namespace GitUI.CommandsDialogs
             }
 
             UpdateButtonStates();
+
+            ViewFirstStagedFile();
         }
 
         private void StageInSuperproject_CheckedChanged(object sender, EventArgs e)
@@ -3329,6 +3377,11 @@ namespace GitUI.CommandsDialogs
         }
 
         private void Message_Enter(object sender, EventArgs e)
+        {
+            ViewFirstStagedFile();
+        }
+
+        private void ViewFirstStagedFile()
         {
             if (Staged.AllItemsCount != 0 && !Staged.SelectedItems.Any())
             {
@@ -3366,7 +3419,7 @@ namespace GitUI.CommandsDialogs
         private void UpdateButtonStates()
         {
             Reset.Enabled = Unstaged.AllItems.Any() || Staged.AllItems.Any();
-            CommitAndPush.Text = Amend.Checked && AppSettings.CommitAndPushForcedWhenAmend ? _commitAndForcePush.Text
+            CommitAndPush.Text = PushForced ? _commitAndForcePush.Text
                 : Reset.Enabled || Amend.Checked ? _commitAndPush.Text
                 : TranslatedStrings.ButtonPush;
         }
@@ -3412,6 +3465,14 @@ namespace GitUI.CommandsDialogs
             internal CheckBox ResetAuthor => _formCommit.ResetAuthor;
 
             internal CheckBox Amend => _formCommit.Amend;
+
+            internal Button Commit => _formCommit.Commit;
+
+            internal Button CommitAndPush => _formCommit.CommitAndPush;
+
+            internal string CommitAndForcePushText => _formCommit._commitAndForcePush.Text;
+
+            internal Button ResetSoft => _formCommit.ResetSoft;
 
             internal void RescanChanges() => _formCommit.RescanChanges();
         }
