@@ -8,8 +8,11 @@ internal readonly struct RevisionGraphConfig
 
     public bool ReduceGraphCrossings => !MergeGraphLanesHavingCommonParent;
 
+    public bool RenderGraphWithDiagonals { get; }
+
     public RevisionGraphConfig()
     {
         MergeGraphLanesHavingCommonParent = AppSettings.MergeGraphLanesHavingCommonParent.Value;
+        RenderGraphWithDiagonals = AppSettings.RenderGraphWithDiagonals.Value;
     }
 }
