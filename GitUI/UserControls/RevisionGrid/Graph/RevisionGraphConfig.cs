@@ -8,6 +8,8 @@ internal readonly struct RevisionGraphConfig
 
     public bool ReduceGraphCrossings => !MergeGraphLanesHavingCommonParent;
 
+    public bool RenderGraphWithDiagonals { get; }
+
     /// <summary>
     ///  <see cref="AppSettings.StraightenGraphSegmentsLimit"/>
     /// </summary>
@@ -16,6 +18,7 @@ internal readonly struct RevisionGraphConfig
     public RevisionGraphConfig()
     {
         MergeGraphLanesHavingCommonParent = AppSettings.MergeGraphLanesHavingCommonParent.Value;
+        RenderGraphWithDiagonals = AppSettings.RenderGraphWithDiagonals.Value;
         StraightenGraphSegmentsLimit = AppSettings.StraightenGraphSegmentsLimit.Value;
     }
 }

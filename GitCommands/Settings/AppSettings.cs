@@ -35,6 +35,7 @@ namespace GitCommands
         private static readonly SettingsPath AppearanceSettingsPath = new AppSettingsPath("Appearance");
         private static readonly SettingsPath ConfirmationsSettingsPath = new AppSettingsPath("Confirmations");
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
+        private static readonly SettingsPath ExperimentalSettingsPath = new AppSettingsPath(DetailedSettingsPath, "Experimental");
         private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
 
@@ -1511,6 +1512,8 @@ namespace GitCommands
         }
 
         public static ISetting<bool> MergeGraphLanesHavingCommonParent { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(MergeGraphLanesHavingCommonParent), true);
+
+        public static ISetting<bool> RenderGraphWithDiagonals { get; } = Setting.Create(ExperimentalSettingsPath, nameof(RenderGraphWithDiagonals), true);
 
         /// <summary>
         ///  The limit when to skip the straightening of revision graph segments.
