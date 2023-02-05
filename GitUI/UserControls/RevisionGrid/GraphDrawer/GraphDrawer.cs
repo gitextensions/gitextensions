@@ -1,8 +1,10 @@
-﻿using System.Drawing.Drawing2D;
+﻿using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.GraphDrawer
 {
@@ -72,9 +74,32 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
 
                     Brush laneBrush = GetBrushForLaneInfo(revisionGraphSegment.LaneInfo, revisionGraphSegment.Child.IsRelative, revisionGraphDrawStyle);
                     using Pen lanePen = new(laneBrush, LaneLineWidth);
-                    SegmentDrawer segmentDrawer = new(g, lanePen);
+                    SegmentDrawer segmentDrawer = new(g, lanePen, LaneWidth, rowHeight);
 
-                    DrawSegment(segmentDrawer, p, lanes);
+                    if (AppSettings.DrawGraphWithDiagonals.Value)
+                    {
+                        Lazy<SegmentLanes> previousLanes = new(() =>
+                        {
+                            Validates.NotNull(previousRow);
+                            return GetLanes(revisionGraphSegment, getSegmentsForRow(index - 2), previousRow, currentRow);
+                        });
+                        Lazy<SegmentLanes> nextLanes = new(() =>
+                        {
+                            Validates.NotNull(nextRow);
+                            return GetLanes(revisionGraphSegment, currentRow, nextRow, getSegmentsForRow(index + 2));
+                        });
+                        Lazy<SegmentLanes> farLanesDontMatter = null;
+
+                        Lazy<SegmentLaneFlags> previousLaneFlags = new(() => GetDiagonalLaneFlags(previousLanes: farLanesDontMatter, currentLanes: previousLanes.Value, nextLanes: new(() => lanes)));
+                        Lazy<SegmentLaneFlags> nextLaneFlags = new(() => GetDiagonalLaneFlags(previousLanes: new(() => lanes), currentLanes: nextLanes.Value, nextLanes: farLanesDontMatter));
+                        SegmentLaneFlags currentLaneFlags = GetDiagonalLaneFlags(previousLanes, lanes, nextLanes);
+
+                        DrawSegmentWithDiagonals(segmentDrawer, p, previousLaneFlags, currentLaneFlags, nextLaneFlags);
+                    }
+                    else
+                    {
+                        DrawSegmentCurvy(segmentDrawer, p, lanes);
+                    }
                 }
 
                 if (currentRow.GetCurrentRevisionLane() < MaxLanes)
@@ -123,9 +148,9 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
             IRevisionGraphRow? previousRow,
             IRevisionGraphRow currentRow,
             IRevisionGraphRow? nextRow,
-            Action<LaneInfo?>? setLaneInfo)
+            Action<LaneInfo?>? setLaneInfo = null)
         {
-            SegmentLanes lanes = new() { StartLane = _noLane, EndLane = _noLane };
+            SegmentLanes lanes = new() { StartLane = _noLane, EndLane = _noLane, IsTheRevisionLane = true };
 
             Lane currentLane = currentRow.GetLaneForSegment(revisionGraphSegment);
 
@@ -159,9 +184,11 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
                     lanes.StartLane = GetLaneForRow(previousRow, revisionGraphSegment);
                     lanes.CenterLane = currentLane.Index;
                     lanes.EndLane = GetLaneForRow(nextRow, revisionGraphSegment);
+                    lanes.IsTheRevisionLane = false;
                 }
             }
 
+            lanes.PrimaryEndLane = lanes.EndLane;
             switch (currentLane.Sharing)
             {
                 case LaneSharing.DifferentStart:
@@ -191,7 +218,86 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
             return lanes;
         }
 
-        private static void DrawSegment(SegmentDrawer segmentDrawer, SegmentPoints p, SegmentLanes lanes)
+        private static SegmentLaneFlags GetDiagonalLaneFlags(Lazy<SegmentLanes>? previousLanes,
+            SegmentLanes currentLanes,
+            Lazy<SegmentLanes>? nextLanes)
+        {
+            SegmentLaneFlags flags = new()
+            {
+                DrawFromStart = currentLanes.DrawFromStart,
+                DrawToEnd = currentLanes.DrawToEnd,
+                IsTheRevisionLane = currentLanes.IsTheRevisionLane
+            };
+
+            int startShift = currentLanes.CenterLane - currentLanes.StartLane;
+            int endShift = currentLanes.EndLane - currentLanes.CenterLane;
+            bool startIsDiagonal = Math.Abs(startShift) == 1;
+            bool endIsDiagonal = Math.Abs(endShift) == 1;
+            bool isBowOfDiagonals = startIsDiagonal && endIsDiagonal && -Math.Sign(startShift) == Math.Sign(endShift);
+            int bowOffset = LaneWidth / 5;
+            int junctionBowOffset = AppSettings.MergeGraphLanesHavingCommonParent.Value ? LaneLineWidth : bowOffset;
+            flags.HorizontalOffset = isBowOfDiagonals ? -Math.Sign(startShift) * junctionBowOffset : 0;
+
+            // Go perpendicularly through the center in order to avoid crossing independend nodes
+            bool straightOneLaneDiagonals = AppSettings.StraightOneLaneDiagonals.Value;
+            flags.DrawCenterToStartPerpendicularly = flags.DrawFromStart && (straightOneLaneDiagonals
+                ? (startShift == 0 || (!startIsDiagonal && !flags.IsTheRevisionLane))
+                : !startIsDiagonal);
+            flags.DrawCenterToEndPerpendicularly = flags.DrawToEnd && (straightOneLaneDiagonals
+                ? (endShift == 0 || (!endIsDiagonal && !flags.IsTheRevisionLane))
+                : !endIsDiagonal);
+            flags.DrawCenterPerpendicularly
+                = isBowOfDiagonals
+                //// lane shifted by one at end, not starting a diagonal over multiple lanes
+                || (!straightOneLaneDiagonals
+                    && (currentLanes.StartLane < 0 || startShift == 0)
+                    && endIsDiagonal
+                    && (nextLanes?.Value.EndLane is not >= 0 || endShift != nextLanes!.Value.EndLane - currentLanes.EndLane))
+                //// lane shifted by one at start, not starting a diagonal over multiple lanes
+                || (!straightOneLaneDiagonals
+                    && (currentLanes.EndLane < 0 || endShift == 0)
+                    && startIsDiagonal
+                    && (previousLanes?.Value.StartLane is not >= 0 || startShift != currentLanes.StartLane - previousLanes!.Value.StartLane));
+            flags.DrawCenter = flags.DrawCenterPerpendicularly
+                || !flags.DrawFromStart
+                || !flags.DrawToEnd
+                || (!flags.DrawCenterToStartPerpendicularly && !flags.DrawCenterToEndPerpendicularly);
+
+            // handle non-straight junctions
+            if (currentLanes.EndLane < 0 && currentLanes.PrimaryEndLane >= 0 && startShift != 0)
+            {
+                endShift = currentLanes.PrimaryEndLane - currentLanes.CenterLane;
+                bool sameDirection = Math.Sign(endShift) == Math.Sign(startShift);
+                if (startIsDiagonal)
+                {
+                    if (straightOneLaneDiagonals && (!sameDirection || Math.Abs(endShift) > 1))
+                    {
+                        flags.DrawCenterToEndPerpendicularly = true;
+                        flags.DrawCenter = false;
+                        flags.HorizontalOffset = -Math.Sign(startShift) * (endShift == 0 || sameDirection ? LaneLineWidth / 3 : bowOffset);
+                    }
+                }
+                else if (Math.Abs(endShift) == 1)
+                {
+                    // multi-lane crossing continued by a diagonal
+                    flags.DrawCenterToStartPerpendicularly = false;
+                    if (!sameDirection)
+                    {
+                        // bow
+                        flags.HorizontalOffset = -Math.Sign(startShift) * LaneLineWidth * 2 / 3;
+                    }
+                }
+                else if (straightOneLaneDiagonals)
+                {
+                    // multi-lane crossing continued by a straight or a multi-lane crossing
+                    flags.DrawCenterToStartPerpendicularly = false;
+                }
+            }
+
+            return flags;
+        }
+
+        private static void DrawSegmentCurvy(SegmentDrawer segmentDrawer, SegmentPoints p, SegmentLanes lanes)
         {
             if (lanes.DrawFromStart)
             {
@@ -203,6 +309,99 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
             if (lanes.DrawToEnd)
             {
                 segmentDrawer.DrawTo(p.End);
+            }
+        }
+
+        private static void DrawSegmentWithDiagonals(SegmentDrawer segmentDrawer,
+            SegmentPoints p,
+            Lazy<SegmentLaneFlags> previousLaneFlags,
+            SegmentLaneFlags currentLaneFlags,
+            Lazy<SegmentLaneFlags> nextLaneFlags)
+        {
+            int halfPerpendicularHeight = segmentDrawer.RowHeight / 5;
+            int diagonalLaneEndOffset = segmentDrawer.RowHeight / 20;
+
+            if (currentLaneFlags.DrawFromStart)
+            {
+                SegmentLaneFlags previous = previousLaneFlags.Value;
+                Debug.Assert(previous.DrawToEnd || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(previous.DrawToEnd));
+                int startX = p.Start.X + previous.HorizontalOffset;
+                if (previous.DrawCenterToEndPerpendicularly)
+                {
+                    segmentDrawer.DrawTo(startX, p.Start.Y + halfPerpendicularHeight);
+                }
+                else if (previous.DrawCenter)
+                {
+                    // shift diagonal lane end
+                    if (previous.IsTheRevisionLane && !previous.DrawCenterPerpendicularly && !previous.DrawFromStart)
+                    {
+                        segmentDrawer.DrawTo(startX, p.Start.Y + diagonalLaneEndOffset, toPerpendicularly: false);
+                    }
+                    else
+                    {
+                        segmentDrawer.DrawTo(startX, p.Start.Y, previous.DrawCenterPerpendicularly);
+                    }
+                }
+                else
+                {
+                    segmentDrawer.DrawTo(startX, p.Start.Y - halfPerpendicularHeight);
+                }
+            }
+
+            int centerX = p.Center.X + currentLaneFlags.HorizontalOffset;
+
+            if (currentLaneFlags.DrawCenterToStartPerpendicularly)
+            {
+                segmentDrawer.DrawTo(centerX, p.Center.Y - halfPerpendicularHeight);
+            }
+
+            if (currentLaneFlags.DrawCenter)
+            {
+                // shift diagonal lane ends
+                if (currentLaneFlags.IsTheRevisionLane && !currentLaneFlags.DrawCenterPerpendicularly && !currentLaneFlags.DrawToEnd)
+                {
+                    segmentDrawer.DrawTo(centerX, p.Center.Y - diagonalLaneEndOffset, toPerpendicularly: false);
+                }
+                else if (currentLaneFlags.IsTheRevisionLane && !currentLaneFlags.DrawCenterPerpendicularly && !currentLaneFlags.DrawFromStart)
+                {
+                    segmentDrawer.DrawTo(centerX, p.Center.Y + diagonalLaneEndOffset, toPerpendicularly: false);
+                }
+                else
+                {
+                    segmentDrawer.DrawTo(centerX, p.Center.Y, currentLaneFlags.DrawCenterPerpendicularly);
+                }
+            }
+
+            if (currentLaneFlags.DrawCenterToEndPerpendicularly)
+            {
+                segmentDrawer.DrawTo(centerX, p.Center.Y + halfPerpendicularHeight);
+            }
+
+            if (currentLaneFlags.DrawToEnd)
+            {
+                SegmentLaneFlags next = nextLaneFlags.Value;
+                Debug.Assert(next.DrawFromStart || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(next.DrawFromStart));
+                int endX = p.End.X + next.HorizontalOffset;
+                if (next.DrawCenterToStartPerpendicularly)
+                {
+                    segmentDrawer.DrawTo(endX, p.End.Y - halfPerpendicularHeight);
+                }
+                else if (next.DrawCenter)
+                {
+                    // shift diagonal lane end
+                    if (next.IsTheRevisionLane && !next.DrawCenterPerpendicularly && !next.DrawToEnd)
+                    {
+                        segmentDrawer.DrawTo(endX, p.End.Y - diagonalLaneEndOffset, toPerpendicularly: false);
+                    }
+                    else
+                    {
+                        segmentDrawer.DrawTo(endX, p.End.Y, next.DrawCenterPerpendicularly);
+                    }
+                }
+                else
+                {
+                    segmentDrawer.DrawTo(endX, p.End.Y + halfPerpendicularHeight);
+                }
             }
         }
 
@@ -222,10 +421,14 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
         {
             if (row is not null)
             {
-                return row.GetLaneForSegment(revisionGraphRevision).Index;
+                int lane = row.GetLaneForSegment(revisionGraphRevision).Index;
+                if (lane >= 0)
+                {
+                    return lane;
+                }
             }
 
-            return -1;
+            return _noLane;
         }
     }
 }

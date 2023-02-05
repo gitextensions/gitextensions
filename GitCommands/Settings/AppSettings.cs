@@ -1517,7 +1517,11 @@ namespace GitCommands
             set => SetBool("FillRefLabels", value);
         }
 
+        public static readonly BoolViewSetting DrawGraphWithDiagonals = new(nameof(DrawGraphWithDiagonals), true);
+
         public static readonly BoolViewSetting MergeGraphLanesHavingCommonParent = new(nameof(MergeGraphLanesHavingCommonParent), true);
+
+        public static readonly BoolViewSetting StraightOneLaneDiagonals = new(nameof(StraightOneLaneDiagonals), true);
 
         public static string LastFormatPatchDir
         {
