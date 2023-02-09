@@ -29,7 +29,8 @@ namespace GitExtensions.Plugins.BackgroundFetch
             tb.Multiline = true;
             tb.Height = 500;
         });
-        private readonly StringSetting _gitCommand = new("Arguments of git command to run", "fetch --all");
+        private const string _defaultGitCommand = "fetch --all";
+        private readonly StringSetting _gitCommand = new("Arguments of git command to run", _defaultGitCommand);
         private readonly NumberSetting<int> _fetchInterval = new("Fetch every (seconds) - set to 0 to disable", 0);
         private readonly BoolSetting _autoRefresh = new("Refresh view after fetch", false);
         private readonly BoolSetting _fetchAllSubmodules = new("Fetch all submodules", false);
@@ -114,7 +115,13 @@ namespace GitExtensions.Plugins.BackgroundFetch
                                           }
                                       }
 
-                                      var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim().Split(Delimiters.Space, StringSplitOptions.RemoveEmptyEntries);
+                                      string gitCmdString = _gitCommand.ValueOrDefault(Settings);
+                                      if (string.IsNullOrWhiteSpace(gitCmdString))
+                                      {
+                                          gitCmdString = _defaultGitCommand;
+                                      }
+
+                                      string[] gitCmd = gitCmdString.Trim().Split(Delimiters.Space, StringSplitOptions.RemoveEmptyEntries);
                                       args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
                                       string msg;
                                       try
