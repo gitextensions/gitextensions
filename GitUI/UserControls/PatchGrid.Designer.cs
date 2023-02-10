@@ -86,7 +86,6 @@
             // Action
             // 
             this.Action.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Action.DataPropertyName = "Action";
             this.Action.HeaderText = "Action";
             this.Action.Name = "Action";
             this.Action.ReadOnly = true;
@@ -95,7 +94,6 @@
             // CommitHash
             // 
             this.CommitHash.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.CommitHash.DataPropertyName = "ObjectId";
             this.CommitHash.HeaderText = "Commit hash";
             this.CommitHash.Name = "CommitHash";
             this.CommitHash.ReadOnly = true;

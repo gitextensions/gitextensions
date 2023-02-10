@@ -8126,6 +8126,14 @@ This will just checkout on the submodule the commit determined by the superproje
   </file>
   <file datatype="plaintext" original="PatchGrid" source-language="en">
     <body>
+      <trans-unit id="Action.HeaderText">
+        <source>Action</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="CommitHash.HeaderText">
+        <source>Commit hash</source>
+        <target />
+      </trans-unit>
       <trans-unit id="FileName.HeaderText">
         <source>Name</source>
         <target />
