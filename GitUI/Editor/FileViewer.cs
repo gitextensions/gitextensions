@@ -1636,7 +1636,8 @@ namespace GitUI.Editor
 
             if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))
             {
-                MessageBox.Show(this, $"{output}\n\n{Encoding.GetString(patch)}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string truncated_output = Encoding.GetString(patch).LazySplit('\n').Take(20).Join("\n");
+                MessageBox.Show(this, $"{output}\n\n{truncated_output}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else if (!result.ExitedSuccessfully || output.StartsWith("error: ") || output.StartsWith("warning: "))
             {
