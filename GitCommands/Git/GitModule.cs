@@ -1219,7 +1219,14 @@ namespace GitCommands
 
         public GitModule GetSubmodule(string? localPath)
         {
-            return new GitModule(GetSubmoduleFullPath(localPath));
+            try
+            {
+                return new GitModule(GetSubmoduleFullPath(localPath));
+            }
+            catch (GitConfigurationException)
+            {
+                return new GitModule(null);
+            }
         }
 
         IGitModule IGitModule.GetSubmodule(string submoduleName)
