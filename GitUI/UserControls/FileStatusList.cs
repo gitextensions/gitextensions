@@ -1027,23 +1027,18 @@ namespace GitUI
             List<ListViewItem> list = new();
             foreach (var i in GitItemStatusesWithDescription)
             {
-                ListViewGroup? group = null;
-                if (i.FirstRev is not null)
+                string name = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
+                    ? i.Summary
+                    : $"({i.Statuses.Count}) {i.Summary}";
+                ListViewGroup group = new(name)
                 {
-                    string name = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
-                        ? i.Summary
-                        : $"({i.Statuses.Count}) {i.Summary}";
-                    group = new ListViewGroup(name)
-                    {
-                        // Collapse some groups for diffs with common BASE
-                        CollapsedState = i.Statuses.Count <= 7 || GitItemStatusesWithDescription.Count < 3 || i == GitItemStatusesWithDescription[0]
-                            ? ListViewGroupCollapsedState.Expanded
-                            : ListViewGroupCollapsedState.Collapsed,
-                        Tag = i.FirstRev
-                    };
-
-                    FileStatusListView.Groups.Add(group);
-                }
+                    // Collapse some groups for diffs with common BASE
+                    CollapsedState = i.Statuses.Count <= 7 || GitItemStatusesWithDescription.Count < 3 || i == GitItemStatusesWithDescription[0]
+                        ? ListViewGroupCollapsedState.Expanded
+                        : ListViewGroupCollapsedState.Collapsed,
+                    Tag = i.FirstRev
+                };
+                FileStatusListView.Groups.Add(group);
 
                 IReadOnlyList<GitItemStatus> itemStatuses;
                 if (hasChanges && i.Statuses.Count == 0)
