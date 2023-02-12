@@ -1,4 +1,6 @@
-﻿namespace GitUI.Editor
+﻿using ICSharpCode.TextEditor.Document;
+
+namespace GitUI.Editor
 {
     public class SelectedLineEventArgs : EventArgs
     {
@@ -42,7 +44,7 @@
         int VScrollPosition { get; set; }
 
         bool? ShowLineNumbers { get; set; }
-        bool ShowEOLMarkers { get; set; }
+        EolMarkerStyle EolMarkerStyle { get; set; }
         bool ShowSpaces { get; set; }
         bool ShowTabs { get; set; }
         int VRulerPosition { get; set; }

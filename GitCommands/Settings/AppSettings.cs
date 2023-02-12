@@ -1473,6 +1473,12 @@ namespace GitCommands
             set => SetFont("conemuconsolefont", value);
         }
 
+        public static bool ShowEolMarkerAsGlyph
+        {
+            get => GetBool("ShowEolMarkerAsGlyph", false);
+            set => SetBool("ShowEolMarkerAsGlyph", value);
+        }
+
         #endregion
 
         public static bool MulticolorBranches
