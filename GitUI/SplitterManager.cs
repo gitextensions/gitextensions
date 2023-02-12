@@ -59,6 +59,7 @@ namespace GitUI
             private string DistanceSettingsKey => _settingName + "_Distance";
             private string FontSizeSettingsKey => _settingName + "_FontSize";
             private string Panel1CollapsedSettingsKey => _settingName + "_Panel1Collapsed";
+            private string Panel2CollapsedSettingsKey => _settingName + "_Panel2Collapsed";
 
             public void RestoreFromSettings(ISettingsSource settings)
             {
@@ -100,6 +101,7 @@ namespace GitUI
                 }
 
                 _splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: false);
+                _splitter.Panel2Collapsed = settings.GetBool(Panel2CollapsedSettingsKey, defaultValue: false);
 
                 _splitter.ResumeLayout();
                 _splitter.EndInit();
@@ -112,6 +114,7 @@ namespace GitUI
                 settings.SetInt(DistanceSettingsKey, _splitter.SplitterDistance);
                 settings.SetFloat(FontSizeSettingsKey, _splitter.Font.Size);
                 settings.SetBool(Panel1CollapsedSettingsKey, _splitter.Panel1Collapsed);
+                settings.SetBool(Panel2CollapsedSettingsKey, _splitter.Panel2Collapsed);
             }
 
             private void SetSplitterDistance(float distance)
