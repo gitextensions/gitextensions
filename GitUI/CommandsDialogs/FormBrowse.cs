@@ -2219,7 +2219,7 @@ namespace GitUI.CommandsDialogs
 
             // Since #8849 and #8557 we have a geometry bug, which pushes the splitter up by 4px.
             // Account for this shift. This is a workaround at best in the same way as for FormCommit.
-            if (!RevisionsSplitContainer.Panel2Collapsed)
+            if (!RevisionsSplitContainer.Panel2Collapsed && RevisionsSplitContainer.FixedPanel == FixedPanel.Panel2)
             {
                 RevisionsSplitContainer.SplitterDistance -= 4;
             }
