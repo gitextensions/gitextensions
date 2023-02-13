@@ -1636,7 +1636,25 @@ namespace GitUI.Editor
 
             if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))
             {
-                string truncated_output = Encoding.GetString(patch).LazySplit('\n').Take(20).Join("\n");
+                const int max_lines = 20;
+                int count = 0;
+                string truncated_output = Encoding.GetString(patch).LazySplit('\n').Take(max_lines + 1).Select(x =>
+                {
+                    count++;
+
+                    if (count > max_lines)
+                    {
+                        return "";
+                    }
+
+                    return x;
+                }).Join("\n");
+
+                if (count > max_lines)
+                {
+                    truncated_output += "...\n\nOutput truncated.";
+                }
+
                 MessageBox.Show(this, $"{output}\n\n{truncated_output}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else if (!result.ExitedSuccessfully || output.StartsWith("error: ") || output.StartsWith("warning: "))
