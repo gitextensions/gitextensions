@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO.Pipes;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -1636,26 +1637,24 @@ namespace GitUI.Editor
 
             if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))
             {
-                const int max_lines = 20;
-                int count = 0;
-                string truncated_output = Encoding.GetString(patch).LazySplit('\n').Take(max_lines + 1).Select(x =>
+                TaskDialogPage page = new()
                 {
-                    count++;
+                    Heading = "Failed to apply patch",
+                    Text = output,
+                    Icon = TaskDialogIcon.Error,
+                    Buttons = { TaskDialogButton.OK },
+                    AllowCancel = true
+                };
 
-                    if (count > max_lines)
-                    {
-                        return "";
-                    }
-
-                    return x;
-                }).Join("\n");
-
-                if (count > max_lines)
+                page.Expander = new TaskDialogExpander
                 {
-                    truncated_output += "...\n\nOutput truncated.";
-                }
+                    CollapsedButtonText = TranslatedStrings.GitDubiousOwnershipSeeGitCommandOutput,
+                    ExpandedButtonText = TranslatedStrings.GitDubiousOwnershipHideGitCommandOutput,
+                    Position = TaskDialogExpanderPosition.AfterFootnote,
+                    Text = Encoding.GetString(patch),
+                };
 
-                MessageBox.Show(this, $"{output}\n\n{truncated_output}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                TaskDialog.ShowDialog(page);
             }
             else if (!result.ExitedSuccessfully || output.StartsWith("error: ") || output.StartsWith("warning: "))
             {
