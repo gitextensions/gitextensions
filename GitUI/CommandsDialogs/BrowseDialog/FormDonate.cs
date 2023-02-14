@@ -1,4 +1,5 @@
-﻿using ResourceManager;
+﻿using GitCommands;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

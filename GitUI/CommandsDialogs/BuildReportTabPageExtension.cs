@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Net;
+using GitCommands;
 using GitCommands.Settings;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;

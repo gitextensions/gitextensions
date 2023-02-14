@@ -1,5 +1,4 @@
-﻿using GitCommands;
-namespace GitUI
+﻿namespace GitCommands
 {
     public static class OsShellUtil
     {
@@ -29,19 +28,10 @@ namespace GitUI
             new Executable("rundll32.exe").Start("shell32.dll,OpenAs_RunDLL " + filePath, redirectOutput: true, outputEncoding: System.Text.Encoding.UTF8);
         }
 
-        public static void SelectPathInFileExplorer(string filePath)
-        {
-            OpenWithFileExplorer($"/select, {filePath.Quote()}", quote: false);
-        }
+        public static void SelectPathInFileExplorer(string filePath) => OpenWithFileExplorer($"/select, {filePath.Quote()}", quote: false);
 
-        public static void OpenWithFileExplorer(string arguments, bool quote = true)
-        {
-            new Executable("explorer.exe").Start(quote ? arguments.Quote() : arguments);
-        }
+        public static void OpenWithFileExplorer(string arguments, bool quote = true) => new Executable("explorer.exe").Start(quote ? arguments.Quote() : arguments);
 
-        /// <summary>
-        /// opens urls even with anchor.
-        /// </summary>
         public static void OpenUrlInDefaultBrowser(string? url)
         {
             if (!string.IsNullOrWhiteSpace(url))
