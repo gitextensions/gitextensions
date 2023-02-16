@@ -30,9 +30,6 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm
     {
-        private const string fixupPrefix = "fixup!";
-        private const string squashPrefix = "squash!";
-
         #region Translation
 
         private readonly TranslationString _amendCommit =
@@ -507,11 +504,11 @@ namespace GitUI.CommandsDialogs
             {
                 case CommitKind.Fixup:
                     Validates.NotNull(_editedCommit);
-                    message = TryAddPrefix(fixupPrefix, _editedCommit.Subject);
+                    message = TryAddPrefix(_editedCommit.Subject);
                     break;
                 case CommitKind.Squash:
                     Validates.NotNull(_editedCommit);
-                    message = TryAddPrefix(squashPrefix, _editedCommit.Subject);
+                    message = TryAddPrefix(_editedCommit.Subject);
                     break;
                 default:
                     message = _commitMessageManager.MergeOrCommitMessage;
@@ -532,8 +529,10 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            string TryAddPrefix(string prefix, string suffix)
+            string TryAddPrefix(string suffix)
             {
+                string prefix = CommitKind.GetPrefix();
+
                 return suffix.StartsWith(prefix) ? suffix : $"{prefix} {suffix}";
             }
 
@@ -1475,8 +1474,8 @@ namespace GitUI.CommandsDialogs
                     {
                         try
                         {
-                            if (!Message.Text.StartsWith(fixupPrefix) &&
-                                !Message.Text.StartsWith(squashPrefix) &&
+                            if (!Message.Text.StartsWith(CommitKind.Fixup.GetPrefix()) &&
+                                !Message.Text.StartsWith(CommitKind.Squash.GetPrefix()) &&
                                 !Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx) &&
                                 MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                             {
@@ -3421,5 +3420,17 @@ namespace GitUI.CommandsDialogs
         Normal,
         Fixup,
         Squash
+    }
+
+    public static class CommitKindExtensions
+    {
+        public static string GetPrefix(this CommitKind commitKind)
+            => commitKind switch
+            {
+                CommitKind.Fixup => "fixup!",
+                CommitKind.Squash => "squash!",
+                CommitKind.Normal => string.Empty,
+                _ => throw new System.ComponentModel.InvalidEnumArgumentException(nameof(commitKind), (int)commitKind, typeof(CommitKind)),
+            };
     }
 }
