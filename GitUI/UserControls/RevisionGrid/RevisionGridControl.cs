@@ -2758,6 +2758,8 @@ namespace GitUI
         internal void SetShortcutKeys()
         {
             SetShortcutString(fixupCommitToolStripMenuItem, Command.CreateFixupCommit);
+            SetShortcutString(squashCommitToolStripMenuItem, Command.CreateSquashCommit);
+            SetShortcutString(amendCommitToolStripMenuItem, Command.CreateAmendCommit);
             SetShortcutString(selectAsBaseToolStripMenuItem, Command.SelectAsBaseToCompare);
             SetShortcutString(openCommitsWithDiffToolMenuItem, Command.OpenCommitsWithDifftool);
             SetShortcutString(compareToBaseToolStripMenuItem, Command.CompareToBase);
@@ -3040,6 +3042,8 @@ namespace GitUI
                 case Command.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CompareToBase: compareToBaseToolStripMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CreateFixupCommit: FixupCommitToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.CreateSquashCommit: SquashCommitToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.CreateAmendCommit: AmendCommitToolStripMenuItemClick(this, EventArgs.Empty); break;
                 case Command.OpenCommitsWithDifftool: DiffSelectedCommitsWithDifftool(); break;
                 case Command.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;
