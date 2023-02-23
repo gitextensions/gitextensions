@@ -19,7 +19,7 @@ namespace GitUIPluginInterfaces
         public const string CombinedDiffGuid = "3333333333333333333333333333333333333333";
 
         public static readonly Regex Sha1HashRegex = new(@"^[a-f\d]{40}$", RegexOptions.Compiled);
-        public static readonly Regex Sha1HashShortRegex = new(@"\b[a-f\d]{7,40}\b", RegexOptions.Compiled);
+        public static readonly Regex Sha1HashShortRegex = new(@"\b[a-f\d]{7,40}\b(?![^@\s]*@)", RegexOptions.Compiled);
 
         private BuildInfo? _buildStatus;
         private string? _body;
