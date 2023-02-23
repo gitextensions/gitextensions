@@ -52,11 +52,18 @@ namespace ResourceManagerTests.CommitDataRenders
                 Array.Empty<ObjectId>(),
                 "John Doe (Acme Inc) <John.Doe@test.com>", DateTime.UtcNow,
                 "John Doe <John.Doe@test.com>", DateTime.UtcNow,
-                "fix\n\nAllow cherry-picking multiple commits from FormBrowse menu\r\n\r\nThe ability to do so from the RevisionGrid context menu has been added in commit\r\nb3e7944792 and 11119447928051cfb3494c9c0ef1a1d0ecde56a8\r\n");
+                @"fix\n\nAllow cherry-picking multiple commits from FormBrowse menu
+
+The ability to do so from the RevisionGrid context menu has been added in commit
+b3e7944792 and 11119447928051cfb3494c9c0ef1a1d0ecde56a8
+");
 
             var result = _rendererReal.Render(data, true);
 
-            result.Should().Be("fix\n\nAllow cherry-picking multiple commits from FormBrowse menu\r\n\r\nThe ability to do so from the RevisionGrid context menu has been added in commit\r\n<a href='gitext://gotocommit/b3e79447928051cfb3494c9c0ef1a1d0ecde56a8'>b3e7944792</a> and <a href='gitext://gotocommit/11119447928051cfb3494c9c0ef1a1d0ecde56a8'>11119447928051cfb3494c9c0ef1a1d0ecde56a8</a>");
+            result.Should().Be(@"fix\n\nAllow cherry-picking multiple commits from FormBrowse menu
+
+The ability to do so from the RevisionGrid context menu has been added in commit
+<a href='gitext://gotocommit/b3e79447928051cfb3494c9c0ef1a1d0ecde56a8'>b3e7944792</a> and <a href='gitext://gotocommit/11119447928051cfb3494c9c0ef1a1d0ecde56a8'>11119447928051cfb3494c9c0ef1a1d0ecde56a8</a>");
         }
 
         [Test]
