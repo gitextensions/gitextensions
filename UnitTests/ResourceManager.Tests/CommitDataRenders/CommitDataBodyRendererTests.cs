@@ -54,20 +54,22 @@ namespace ResourceManagerTests.CommitDataRenders
                 "John Doe <John.Doe@test.com>", DateTime.UtcNow,
                 @"fix\n\nAllow cherry-picking multiple commits from FormBrowse menu
 
-This short hex number shall not be turned into a link 12ab56.
+This short hex number shall not be turned into a link 12ab56, neither a github e-mail 1234567+user@github.com
 b3e79447928051cfb3494c9c0ef1a1d0ecde56a8f is too long for a commit hash.
 The ability to do so from the RevisionGrid context menu has been added in commit
-b3e7944 and 11119447928051cfb3494c9c0ef1a1d0ecde56a8.
+b3e7944 and 11119447928051cfb3494c9c0ef1a1d0ecde56a8
+@line 42.
 ");
 
             var result = _rendererReal.Render(data, true);
 
             result.Should().Be(@"fix\n\nAllow cherry-picking multiple commits from FormBrowse menu
 
-This short hex number shall not be turned into a link 12ab56.
+This short hex number shall not be turned into a link 12ab56, neither a github e-mail 1234567+user@github.com
 b3e79447928051cfb3494c9c0ef1a1d0ecde56a8f is too long for a commit hash.
 The ability to do so from the RevisionGrid context menu has been added in commit
-<a href='gitext://gotocommit/b3e79447928051cfb3494c9c0ef1a1d0ecde56a8'>b3e7944</a> and <a href='gitext://gotocommit/11119447928051cfb3494c9c0ef1a1d0ecde56a8'>11119447928051cfb3494c9c0ef1a1d0ecde56a8</a>.");
+<a href='gitext://gotocommit/b3e79447928051cfb3494c9c0ef1a1d0ecde56a8'>b3e7944</a> and <a href='gitext://gotocommit/11119447928051cfb3494c9c0ef1a1d0ecde56a8'>11119447928051cfb3494c9c0ef1a1d0ecde56a8</a>
+@line 42.");
         }
 
         [Test]
