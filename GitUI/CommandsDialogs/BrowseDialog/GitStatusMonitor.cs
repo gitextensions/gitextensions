@@ -36,6 +36,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private const int PeriodicUpdateIntervalWSL = 60 * 1000;
 
+        /// <summary>
+        /// The number how often an update must fail in a row until the monitoring is stopped.
+        /// </summary>
+        private const int _maxConsecutiveErrors = 3;
+
+        /// <summary>
+        /// The number of consecutive update failures.
+        /// </summary>
+        private int _consecutiveErrorCount;
+
         private readonly FileSystemWatcher _workTreeWatcher = new();
         private readonly FileSystemWatcher _gitDirWatcher = new();
         private readonly System.Windows.Forms.Timer _timerRefresh;
@@ -50,10 +60,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         // Timestamps to schedule status updates, limit the update interval dynamically
         // Note that TickCount wraps after 25 days uptime, always compare diff
 
-        // Next scheduled update time
+        /// <summary>
+        /// Next scheduled update time
+        /// </summary>
         private int _nextUpdateTime;
 
-        // Earliest time for an scheduled update (interactive requests bypasses this)
+        /// <summary>
+        /// Earliest time for an scheduled update (interactive requests bypasses this)
+        /// </summary>
         private int _nextEarliestTime;
 
         private GitStatusMonitorState _currentStatus;
@@ -200,7 +214,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             get { return _currentStatus; }
             set
             {
-                var prevStatus = _currentStatus;
+                ThreadHelper.AssertOnUIThread();
+
+                GitStatusMonitorState prevStatus = _currentStatus;
                 _currentStatus = value;
                 switch (_currentStatus)
                 {
@@ -209,6 +225,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             _timerRefresh.Stop();
                             _workTreeWatcher.EnableRaisingEvents = false;
                             _gitDirWatcher.EnableRaisingEvents = false;
+                            _consecutiveErrorCount = 0;
+
+                            if (_currentStatus != prevStatus)
+                            {
+                                InvalidateGitWorkingDirectoryStatus();
+                            }
                         }
 
                         break;
@@ -224,7 +246,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                     case GitStatusMonitorState.Inactive:
                         {
-                            if (prevStatus != GitStatusMonitorState.Inactive)
+                            if (_currentStatus != prevStatus)
                             {
                                 InvalidateGitWorkingDirectoryStatus();
                             }
@@ -424,8 +446,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     {
                         try
                         {
-                            GitExtUtils.ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: noLocks);
-                            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, cancellationToken: cancelToken).ConfigureAwait(false);
+                            GitExtUtils.ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, noLocks: noLocks);
+                            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, cancellationToken: cancelToken).ConfigureAwait(continueOnCapturedContext: false);
 
                             if (result.ExitedSuccessfully && !ModuleHasChanged())
                             {
@@ -436,6 +458,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                                 GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(changedFiles));
                             }
+
+                            _consecutiveErrorCount = 0;
                         }
                         catch (OperationCanceledException)
                         {
@@ -445,6 +469,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         {
                             try
                             {
+                                if (++_consecutiveErrorCount < _maxConsecutiveErrors)
+                                {
+                                    // Try again
+                                    ScheduleNextInteractiveTime();
+                                    return;
+                                }
+
                                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
                                 // Avoid possible popups on every file changes
