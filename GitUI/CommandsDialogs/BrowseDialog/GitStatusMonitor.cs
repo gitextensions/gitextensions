@@ -437,6 +437,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                 GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(changedFiles));
                             }
                         }
+                        catch (OperationCanceledException)
+                        {
+                            // No action
+                        }
                         catch
                         {
                             try
@@ -455,7 +459,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         {
                             lock (_statusSequence)
                             {
-                                if (_commandIsRunning && !ModuleHasChanged() && !cancelToken.IsCancellationRequested)
+                                if (!ModuleHasChanged() && !cancelToken.IsCancellationRequested)
                                 {
                                     // Adjust the min time to next update
                                     int endTime = Environment.TickCount;
@@ -469,10 +473,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                     }
                                 }
 
-                                if (!cancelToken.IsCancellationRequested)
-                                {
-                                    _commandIsRunning = false;
-                                }
+                                _commandIsRunning = false;
                             }
                         }
                     })
@@ -518,7 +519,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // Start commands, also if running already
             lock (_statusSequence)
             {
-                _commandIsRunning = false;
                 _statusSequence.CancelCurrent();
 
                 int ticks = Environment.TickCount;
