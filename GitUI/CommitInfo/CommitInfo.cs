@@ -4,6 +4,7 @@ using System.Net;
 using System.Reactive.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;
@@ -299,8 +300,6 @@ namespace GitUI.CommitInfo
             _tags = null;
             _annotatedTagsMessages = null;
 
-            UpdateCommitMessage();
-
             _annotatedTagsInfo = "";
             _linksInfo = "";
             _branchInfo = "";
@@ -313,20 +312,26 @@ namespace GitUI.CommitInfo
             }
             else
             {
+                rtbxCommitMessage.SetXHTMLText(GetFixCommitMessage());
                 RevisionInfo.Clear();
             }
 
             return;
 
-            void UpdateCommitMessage()
+            string GetFixCommitMessage()
             {
                 if (_revision is null)
                 {
-                    rtbxCommitMessage.SetXHTMLText(string.Empty);
-                    return;
+                    return string.Empty;
                 }
 
-                var data = _commitDataManager.CreateFromRevision(_revision, _children);
+                CommitData data = _commitDataManager.CreateFromRevision(_revision, _children);
+                return _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: false);
+            }
+
+            async Task UpdateCommitMessageAsync()
+            {
+                CommitData data = _commitDataManager.CreateFromRevision(_revision, _children);
 
                 if (_revision.Body is null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
                 {
@@ -335,7 +340,9 @@ namespace GitUI.CommitInfo
                     _revision.HasNotes = true;
                 }
 
-                var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
+                string commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
+
+                await this.SwitchToMainThreadAsync();
                 rtbxCommitMessage.SetXHTMLText(commitMessage);
             }
 
@@ -347,6 +354,8 @@ namespace GitUI.CommitInfo
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     List<Task> tasks = new();
+
+                    tasks.Add(UpdateCommitMessageAsync());
 
                     tasks.Add(LoadLinksForRevisionAsync(initialRevision, settings));
 
