@@ -1104,6 +1104,7 @@ namespace GitUI.CommandsDialogs
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
             this.Message.Enter += new System.EventHandler(this.Message_Enter);
             this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
+            this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
             // 
             // flowCommitButtons
             // 
