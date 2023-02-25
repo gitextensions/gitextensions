@@ -21,9 +21,28 @@ namespace GitUI.CommandsDialogs.Menus
             return this;
         }
 
+        private void CopyPathsToClipboard(string prefixDir, Func<string, string> convertPath)
+        {
+            IEnumerable<string?> selectedFilePaths
+                = (_getSelectedFilePaths ?? throw new InvalidOperationException("The menu is not initialized.")).Invoke();
+            string filePaths = GetFilePaths(selectedFilePaths, prefixDir, convertPath);
+            if (!string.IsNullOrWhiteSpace(filePaths))
+            {
+                ClipboardUtil.TrySetText(filePaths);
+            }
+        }
+
+        private static string GetFilePaths(IEnumerable<string?> selectedFilePaths, string prefixDir, Func<string, string> convertPath)
+        {
+            return selectedFilePaths
+                .Where(path => !string.IsNullOrEmpty(path))
+                .Select(path => convertPath(Path.Combine(prefixDir, path)))
+                .Join(Environment.NewLine);
+        }
+
         private void CopyFullPathsNativeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ((ToolStripItem)sender).GetCurrentParent().Hide();
+            GetCurrentParent().Hide();
             CopyPathsToClipboard(Module.WorkingDir, PathUtil.ToNativePath);
         }
 
@@ -45,25 +64,6 @@ namespace GitUI.CommandsDialogs.Menus
         private void CopyRelativePathsPosixToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CopyPathsToClipboard(prefixDir: "", PathUtil.ToPosixPath);
-        }
-
-        private void CopyPathsToClipboard(string prefixDir, Func<string, string> convertPath)
-        {
-            IEnumerable<string?> selectedFilePaths
-                = (_getSelectedFilePaths ?? throw new InvalidOperationException("The menu is not initialized.")).Invoke();
-            string filePaths = GetFilePaths(selectedFilePaths, prefixDir, convertPath);
-            if (!string.IsNullOrWhiteSpace(filePaths))
-            {
-                ClipboardUtil.TrySetText(filePaths);
-            }
-        }
-
-        private static string GetFilePaths(IEnumerable<string?> selectedFilePaths, string prefixDir, Func<string, string> convertPath)
-        {
-            return selectedFilePaths
-                .Where(path => !string.IsNullOrEmpty(path))
-                .Select(path => convertPath(Path.Combine(prefixDir, path)))
-                .Join(Environment.NewLine);
         }
     }
 }

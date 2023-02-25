@@ -53,13 +53,16 @@ namespace GitCommands
             }
 
             path = path.ToPosixPath();
-            Match match = Regex.Match(path, "^([A-Za-z]):(.*)$");
-            if (match.Groups.Count != 3)
+            if (path.Length >= 2 && path[1] == ':')
             {
-                return path;
+                char drive = char.ToLowerInvariant(path[0]);
+                if (drive is (>= 'a' and <= 'z'))
+                {
+                    return $"{prefix}{drive}{path[2..]}";
+                }
             }
 
-            return $"{prefix}{match.Groups[1].Value.ToLowerInvariant()}{match.Groups[2]}";
+            return path;
         }
 
         /// <summary>
