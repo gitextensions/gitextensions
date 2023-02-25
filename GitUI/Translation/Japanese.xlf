@@ -50,7 +50,7 @@ If enabled, any illegal symbols will be replaced with the replacement symbol of 
       </trans-unit>
       <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
         <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
-        <target>「コミットを修正」にチェックして「コミットしてプッシュ」実行時に&quot;--force-with-lease&quot;オプションを有効にする</target>
+        <target>「コミットを修正」にチェックして「コミットしてプッシュ」実行時に「--force-with-lease」オプションを有効にする</target>
         
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
@@ -587,7 +587,7 @@ GitHubアカウントが必要です。</target>
       </trans-unit>
       <trans-unit id="btnCopy.Text">
         <source>&amp;Copy</source>
-        <target>コピー (&amp;C)</target>
+        <target>コピー(&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="contentsLabel.Text">
@@ -637,7 +637,7 @@ GitHubアカウントが必要です。</target>
       </trans-unit>
       <trans-unit id="quitButton.Text">
         <source>&amp;Quit</source>
-        <target>終了 (&amp;Q)</target>
+        <target>終了(&amp;Q)</target>
         
       </trans-unit>
       <trans-unit id="reportContentsTabPage.Text">
@@ -647,7 +647,7 @@ GitHubアカウントが必要です。</target>
       </trans-unit>
       <trans-unit id="sendAndQuitButton.Text">
         <source>&amp;Send and Quit</source>
-        <target>送信して終了 (&amp;S)</target>
+        <target>送信して終了(&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="sizeColumnHeader.Text">
@@ -1138,7 +1138,7 @@ Git for Windowsがインストールされているか確認し、正しいコ�
       </trans-unit>
       <trans-unit id="_copyLink.Text">
         <source>Copy &amp;link ({0})</source>
-        <target>リンクをコピー ({0}) (&amp;L)</target>
+        <target>リンクをコピー({0})(&amp;L)</target>
         
       </trans-unit>
       <trans-unit id="_derivesFromNoTag.Text">
@@ -1168,7 +1168,7 @@ Git for Windowsがインストールされているか確認し、正しいコ�
       </trans-unit>
       <trans-unit id="addNoteToolStripMenuItem.Text">
         <source>Add &amp;notes</source>
-        <target>注釈を追記 (&amp;N)</target>
+        <target>注釈を追記(&amp;N)</target>
         
       </trans-unit>
       <trans-unit id="copyCommitInfoToolStripMenuItem.Text">
@@ -2040,7 +2040,7 @@ the last selected commit.</source>
       </trans-unit>
       <trans-unit id="_noSearchString.Text">
         <source>No string specified to look for!</source>
-        <target>検索する文字列が指定されていません！</target>
+        <target>検索する文字列が指定されていません。</target>
         
       </trans-unit>
       <trans-unit id="_notFoundString.Text">
@@ -2153,7 +2153,7 @@ the last selected commit.</source>
       </trans-unit>
       <trans-unit id="_strCouldNotFetchReposOfUser.Text">
         <source>Could not fetch repositories of user!</source>
-        <target>ユーザからリポジトリを取得（フェッチ）できませんでした。</target>
+        <target>ユーザからリポジトリをフェッチできませんでした。</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToFork.Text">
@@ -2163,7 +2163,7 @@ the last selected commit.</source>
       </trans-unit>
       <trans-unit id="_strFailedToGetRepos.Text">
         <source>Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu &quot;Plugins/{0}&quot;.</source>
-        <target>リポジトリの取得に失敗しました。最も可能性が高いのは、{0}を設定していないことです。&quot;Plugins/{0}&quot;で設定してください。</target>
+        <target>リポジトリの取得に失敗しました。最も可能性が高いのは、{0} を設定していないことです。メニュー「Plugins/{0}」で設定してください。</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -2198,7 +2198,7 @@ the last selected commit.</source>
       </trans-unit>
       <trans-unit id="_strWillBeAddedAsARemote.Text">
         <source>&quot;{0}&quot; will be added as a remote.</source>
-        <target>&quot;{0}&quot;が リモートとして追加されます。</target>
+        <target>「{0}」がリモートとして追加されます。</target>
         
       </trans-unit>
       <trans-unit id="_strWillCloneInfo.Text">
@@ -2356,7 +2356,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Git Extensions is open source. Get involved!</source>
-        <target>Git Extensionsはオープンソースなので、気軽に参加しましょう！</target>
+        <target>Git Extensionsはオープンソースなので、気軽に参加しましょう。</target>
         
       </trans-unit>
       <trans-unit id="linkLabelIcons.Text">
@@ -3768,7 +3768,7 @@ Enter valid branch name or select predefined value.</source>
         <source>You are going to reset the “{0}” branch to a new location discarding ALL the commited changes since the {1} revision.
 
 Are you sure?</source>
-        <target>{1} リビジョン以降のコミット済みの変更をすべて破棄して、ブランチ &quot;{0}&quot; を新しい場所にリセットしようとしています。
+        <target>{1} リビジョン以降のコミット済みの変更をすべて破棄して、ブランチ「{0}」を新しい場所にリセットしようとしています。
 
 実行してよろしいですか？</target>
         
@@ -4148,8 +4148,8 @@ revision:</source>
       <trans-unit id="_questionOpenRepo.Text">
         <source>The repository has been cloned successfully.
 Do you want to open the new repository &quot;{0}&quot; now?</source>
-        <target>リポジトリは正常にCloneされました。
-今すぐリポジトリ&quot;{0}&quot;を開きますか？</target>
+        <target>リポジトリは正常にクローンされました。
+今すぐ新しいリポジトリ「{0}」を開きますか？</target>
         
       </trans-unit>
       <trans-unit id="_questionOpenRepoCaption.Text">
@@ -4284,7 +4284,7 @@ Only use amend if the commit is not published yet!
 
 Do you want to continue?</source>
         <target>あなたは履歴を書き換えようとしています。
-コミットがまだ公開されていない場合しかやってはいけません！
+コミットがまだ公開されていない場合しかやってはいけません!
 
 続行してよろしいですか？</target>
         
@@ -4897,7 +4897,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
         <source>Author: (Format: &quot;name &lt;mail&gt;&quot;)</source>
-        <target>作者: (フォーマット: &quot;name &lt;mail&gt;&quot;)</target>
+        <target>作者: (書式:「名前 &lt;メールアドレス&gt;」)</target>
         
       </trans-unit>
       <trans-unit id="toolRefreshItem.Text">
@@ -5328,8 +5328,8 @@ Proceed?</source>
       <trans-unit id="_confirmDeleteUnmergedRemoteBranchMessage.Text">
         <source>At least one remote branch is unmerged. Are you sure you want to delete it?
 Deleting a branch can cause commits to be deleted too!</source>
-        <target>少なくとも1つのリモートブランチがマージされていません。削除してよろしいですか？
-ブランチを削除すると、コミットも削除される可能性があります！</target>
+        <target>少なくとも1つのリモートブランチがマージされていません。削除してよろしいですか?
+ブランチを削除すると、コミットも削除される可能性があります!</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesCaption.Text">
@@ -5539,7 +5539,7 @@ Click on the button below to get more information about making a donation.</sour
         <source>Here be dragons!
 Changing this file by hand can be harmful and might break something.
 If you are not sure just close this window.</source>
-        <target>ここは危険だ！
+        <target>ここは危険だ!
 このファイルを手動で変更すると、なんらかの不具合を生じることがあります。
 よくわからない場合、ウィンドウを閉じてください。</target>
         
@@ -5766,10 +5766,10 @@ If you are not sure just close this window.</source>
 &quot; {0} &quot;
 
 Do you want Git Extensions to help locate the correct folder?</source>
-        <target>環境変数 HOME は Gitのグローバル設定ファイルを含むフォルダを指していません。
-&quot;{0}&quot;
+        <target>環境変数 HOME は Git のグローバル設定ファイルを含むフォルダを指していません。
+「{0}」
 
-Git Extensionsによって、正しいフォルダに配置しますか？</target>
+Git Extensions によって、正しいフォルダに配置しますか？</target>
         
       </trans-unit>
       <trans-unit id="_gitGlobalConfigNotFoundCaption.Text">
@@ -5801,7 +5801,7 @@ Git Extensionsによって、正しいフォルダに配置しますか？</targ
         <source>The environment variable HOME points to a directory that is not accessible:
 &quot;{0}&quot;</source>
         <target>環境変数 HOME がアクセスできないディレクトリを指しています:
-&quot;{0}&quot;</target>
+「{0}」</target>
         
       </trans-unit>
       <trans-unit id="_noHomeDirectorySpecified.Text">
@@ -6026,8 +6026,8 @@ slnファイルをバイナリとしてマークする例:
 あるファイルをテキストとしてマークする例:
 weirdchars.txt text
 
-これより詳しい情報は
-&quot;git help gitattributes&quot;コマンドを参照してください。</target>
+これより詳しい情報は、コマンド
+「git help gitattributes」を実行してください。</target>
         
       </trans-unit>
     </body>
@@ -6370,8 +6370,8 @@ command &quot;git help shortlog&quot;</source>
 Henk Westhuis &lt;Henk@.(none)&gt;
 Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
 
-これより詳しい情報は
-&quot;git help shortlog&quot;コマンドを参照してください。</target>
+これより詳しい情報は、コマンド
+「git help shortlog」を実行してください。</target>
         
       </trans-unit>
     </body>
@@ -6892,7 +6892,7 @@ you must specify a remote branch.</source>
         <source>You cannot &quot;pull&quot; when git head detached.
 
 Do you want to continue?</source>
-        <target>遊離したheadの状態では、&quot;Pull&quot;はできません。
+        <target>遊離した head の状態では、「プル」はできません。
 
 続行しますか？</target>
         
@@ -6919,7 +6919,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_pullFetchPruneAllConfirmation.Text">
         <source>Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?</source>
-        <target>警告！プルーン付きのフェッチは、既にリモートに存在しないすべてのリモートトラッキング参照を除去します。続行しますか？</target>
+        <target>警告! プルーン付きのフェッチは、既にリモートに存在しないすべてのリモートトラッキング参照を除去します。続行しますか?</target>
         
       </trans-unit>
       <trans-unit id="_questionInitSubmodules.Text">
@@ -7145,7 +7145,7 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
         <source>Push was rejected from &quot;{0}&quot;</source>
-        <target>プッシュは&quot;{0}&quot;から拒否されました</target>
+        <target>プッシュは「{0}」から拒否されました</target>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryForceInstruction.Text">
@@ -7802,12 +7802,12 @@ Inactive remote is completely invisible to git.</source>
       </trans-unit>
       <trans-unit id="_disabledRemoteAlreadyExists.Text">
         <source>An inactive remote named &quot;{0}&quot; already exists.</source>
-        <target>非アクティブのリモート &quot;{0}&quot; は既に存在します。</target>
+        <target>非アクティブのリモート「{0}」は既に存在します。</target>
         
       </trans-unit>
       <trans-unit id="_enabledRemoteAlreadyExists.Text">
         <source>An active remote named &quot;{0}&quot; already exists.</source>
-        <target>アクティブなリモート &quot;{0}&quot; は既に存在します。</target>
+        <target>アクティブなリモート「{0}」は既に存在します。</target>
         
       </trans-unit>
       <trans-unit id="_gbMgtPanelHeaderEdit.Text">
@@ -8236,7 +8236,7 @@ This action cannot be made undone.</source>
       </trans-unit>
       <trans-unit id="_areYouSureYouWantDeleteFilesCaption.Text">
         <source>WARNING!</source>
-        <target>警告！</target>
+        <target>警告!</target>
         
       </trans-unit>
       <trans-unit id="_askMergeConflictSolved.Text">
@@ -8496,14 +8496,14 @@ Fall back to 2-way merge?</source>
         <source>There is no mergetool configured.
 Please go to settings and set a mergetool!</source>
         <target>マージツールの設定がありません。
-マージツールの設定を行ってください！</target>
+マージツールの設定を行ってください。</target>
         
       </trans-unit>
       <trans-unit id="_noMergeToolConfigured.Text">
         <source>The mergetool is not correctly configured.
 Please go to settings and configure the mergetool!</source>
         <target>マージツールの設定が正しくありません。
-マージツールの設定を行ってください！</target>
+マージツールの設定を行ってください。</target>
         
       </trans-unit>
       <trans-unit id="_openMergeToolItemText.Text">
@@ -9566,12 +9566,12 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="globalAutoCrlfFalse.Text">
         <source>Checkout as-is, commit as-is (&quot;core.autocrlf&quot;  is set to &quot;false&quot;)</source>
-        <target>そのままにする (&quot;core.autocrlf&quot;を&quot;false&quot;に設定)</target>
+        <target>そのままにする (「core.autocrlf」に「false」を設定)</target>
         
       </trans-unit>
       <trans-unit id="globalAutoCrlfInput.Text">
         <source>Checkout as-is, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;input&quot;)</source>
-        <target>そのままチェックアウトし、Unix-styleでコミット (&quot;core.autocrlf&quot;を&quot;input&quot;に設定)</target>
+        <target>そのままチェックアウトし、Unix スタイルの改行でコミット (「core.autocrlf」に「input」を設定)</target>
         
       </trans-unit>
       <trans-unit id="globalAutoCrlfNotSet.Text">
@@ -9581,7 +9581,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="globalAutoCrlfTrue.Text">
         <source>Checkout Windows-style, commit Unix-style line endings (&quot;core.autocrlf&quot;  is set to &quot;true&quot;)</source>
-        <target>Windows-styleでチェックアウトし、Unix-styleでコミット (&quot;core.autocrlf&quot;を&quot;true&quot;に設定)</target>
+        <target>Windows スタイルでチェックアウトし、Unix スタイルの改行でコミット (「core.autocrlf」に「true」を設定)</target>
         
       </trans-unit>
       <trans-unit id="groupBoxLineEndings.Text">
@@ -9860,7 +9860,7 @@ Gitはワーキングコピーの完全リストアができなくなります�
       </trans-unit>
       <trans-unit id="EditsTheContentsOfTheGitInfoSparseCheckoutFile.Text">
         <source>Edits the contents of the “.git/info/sparse-checkout” file.</source>
-        <target>&quot;.git/info/sparse-checkout&quot; ファイルの内容を編集します。</target>
+        <target>「.git/info/sparse-checkout」ファイルの内容を編集します。</target>
         
       </trans-unit>
       <trans-unit id="Enable.Text">
@@ -9908,12 +9908,12 @@ nActual command line: {0}</source>
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToFalseForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to False for the local repository.</source>
-        <target>ローカルリポジトリ上で、Gitリポジトリ&quot;{0}&quot;を無効に設定</target>
+        <target>ローカルリポジトリで Git プロパティ「{0}」に False を設定します。</target>
         
       </trans-unit>
       <trans-unit id="SetsTheGitPropertyToTrueForTheLocalRepository.Text">
         <source>Sets the Git property “{0}” to True for the local repository.</source>
-        <target>ローカルリポジトリ上で、Gitリポジトリ&quot;{0}&quot;を有効に設定</target>
+        <target>ローカルリポジトリで Git プロパティ「{0}」に True を設定します。</target>
         
       </trans-unit>
       <trans-unit id="SparseWorkingCopy.Text">
@@ -12308,7 +12308,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_diffSelectedWithRememberedFile.Text">
         <source>&amp;Diff with &quot;{0}&quot;</source>
-        <target>&quot;{0}&quot;と比較(&amp;D)</target>
+        <target>「{0}」と比較(&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
@@ -12403,7 +12403,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_generalGitConfigExceptionMessage.Text">
         <source>Failed to read &quot;{0}&quot; due to the following error:{1}{1}{2}{1}{1}Due to the nature of this problem, the behavior of the application cannot be guaranteed and it must be closed.{1}{1}Please correct this issue and re-open Git Extensions.</source>
-        <target>次のエラーのため &quot;{0}&quot; の読み込みに失敗しました:{1}{1}{2}{1}{1}この問題の性質上、アプリケーションの動作を保証することはできないため、アプリケーションを閉じなければなりません。{1}{1}この問題を修正して、Git Extensions を再度開いてください。</target>
+        <target>以下のエラーのため「{0}」の読み込みに失敗しました:{1}{1}{2}{1}{1}この問題の性質上、アプリケーションの動作を保証することはできないため、アプリケーションを閉じなければなりません。{1}{1}この問題を修正して、Git Extensions を再度開いてください。</target>
         
       </trans-unit>
       <trans-unit id="_gitDubiousOwnershipHeader.Text">
@@ -12922,7 +12922,7 @@ The action cannot be undone.</source>
         <source>Do you want to delete category &quot;{0}&quot; with {1} repositories?
 
 The action cannot be undone.</source>
-        <target>{1}リポジトリが入っているカテゴリ名&quot;{0}&quot;を削除しますか？
+        <target>{1} リポジトリが入っているカテゴリ「{0}」を削除しますか？
 
 この操作は取り返しがつきません。</target>
         
@@ -13058,7 +13058,7 @@ The action cannot be undone.</source>
       </trans-unit>
       <trans-unit id="_strCouldNotLoadDiscussion.Text">
         <source>Could not load discussion!</source>
-        <target>ディスカッションを読み込めません！</target>
+        <target>ディスカッションを読み込めません。</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToClosePullRequest.Text">
@@ -13078,7 +13078,7 @@ The action cannot be undone.</source>
       </trans-unit>
       <trans-unit id="_strFailedToLoadDiscussionItem.Text">
         <source>Failed to post discussion item!</source>
-        <target>ディスカッションアイテムの投稿に失敗しました！</target>
+        <target>ディスカッションアイテムの投稿に失敗しました。</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">
@@ -13089,8 +13089,8 @@ The action cannot be undone.</source>
       <trans-unit id="_strRemoteAlreadyExist.Text">
         <source>ERROR: Remote with name {0} already exists but it points to a different repository!
 Details: Is {1} expected {2}</source>
-        <target>エラー: リモート {0} は既に存在しますが、別のリポジトリを指しています！
-詳細: Is {1} expected {2}</target>
+        <target>エラー: リモート {0} は既に存在しますが、別のリポジトリを指しています。
+詳細: 実際 {1}、期待 {2}</target>
         
       </trans-unit>
       <trans-unit id="_strRemoteIgnore.Text">
