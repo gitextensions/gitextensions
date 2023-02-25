@@ -1,4 +1,5 @@
-﻿using Microsoft;
+﻿using GitCommands;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.UserControls

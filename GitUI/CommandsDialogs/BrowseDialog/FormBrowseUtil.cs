@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.BrowseDialog
+﻿using GitCommands;
+
+namespace GitUI.CommandsDialogs.BrowseDialog
 {
     internal static class FormBrowseUtil
     {

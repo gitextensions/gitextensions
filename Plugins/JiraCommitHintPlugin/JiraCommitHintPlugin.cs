@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
-using System.Diagnostics;
 using Atlassian.Jira;
+using GitCommands;
 using GitExtensions.Plugins.JiraCommitHintPlugin.Properties;
 using GitExtUtils.GitUI;
 using GitUI;
@@ -124,7 +124,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
             try
             {
-                Process.Start(_urlSettings.CustomControl.Text + "/secure/IssueNavigator.jspa?mode=show&createNew=true");
+                OsShellUtil.OpenUrlInDefaultBrowser(_urlSettings.CustomControl.Text + "/secure/IssueNavigator.jspa?mode=show&createNew=true");
             }
             catch (Exception ex)
             {
