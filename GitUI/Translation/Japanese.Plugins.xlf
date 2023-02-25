@@ -363,9 +363,9 @@
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>危険な操作です！
+        <target>危険な操作です!
 リモート '{0}' のブランチを削除しようとしています。
-これはやり直せませんが、続行してよろしいですか？</target>
+これはやり直せませんが、続行してよろしいですか?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -1450,7 +1450,7 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'ビルド定義名'の正規表現は無効なため保存されません！</target>
+        <target>'ビルド定義名'の正規表現は無効なため保存されません。</target>
         
       </trans-unit>
     </body>
@@ -1492,7 +1492,7 @@ Please verify the server url.</source>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>&quot;ビルドIDフィルタ&quot;の正規表現は無効なため保存されません！</target>
+        <target>「ビルド ID フィルタ」の正規表現は無効なため保存されません。</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
