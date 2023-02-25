@@ -363,9 +363,9 @@
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>危険な操作です！
+        <target>危険な操作です!
 リモート '{0}' のブランチを削除しようとしています。
-これはやり直せませんが、続行してよろしいですか？</target>
+これはやり直せませんが、続行してよろしいですか?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -1325,7 +1325,7 @@ Do you want to reset the configured path?</source>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>クリップボードはHTMLコード(プレーンテキスト)やHTMLフォーマットを含んでおり、MS WordやLibreOffice Writerに貼り付けることが可能です。</target>
+        <target>クリップボードは HTML コード (プレーンテキスト) や HTML 形式を含んでおり、MS Word や LibreOffice Writer に貼り付けられます。</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -1408,10 +1408,10 @@ branch names, tag names)</source>
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>クリップボードには有効なビルドURLが含まれていません。
+        <target>クリップボードには有効なビルド URL が含まれていません。
 
-リトライする前に、ビルドのURLをクリップボードにコピーしてください。
-(&quot;buildTypeId&quot;パラメータは必須です)</target>
+リトライする前に、ビルドの URL をクリップボードにコピーしてください。
+(「buildId」パラメータは必須です)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
@@ -1450,7 +1450,7 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'ビルド定義名'の正規表現は無効なため保存されません！</target>
+        <target>'ビルド定義名'の正規表現は無効なため保存されません。</target>
         
       </trans-unit>
     </body>
@@ -1472,10 +1472,10 @@ URLが有効であり、APIトークンがビルドおよびプロジェクト�
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>クリップボードには有効なビルドURLが含まれていません。
+        <target>クリップボードには有効なビルド URL が含まれていません。
 
-リトライする前に、ビルドのURLをクリップボードにコピーしてください。
-(&quot;buildTypeId&quot;パラメータは必須です)</target>
+リトライする前に、ビルドの URL をクリップボードにコピーしてください。
+(「buildTypeId」パラメータは必須です)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1492,7 +1492,7 @@ Please verify the server url.</source>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>&quot;ビルドIDフィルタ&quot;の正規表現は無効なため保存されません！</target>
+        <target>「ビルド ID フィルタ」の正規表現は無効なため保存されません。</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
