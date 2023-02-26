@@ -2811,8 +2811,6 @@ namespace GitUI.CommandsDialogs
 
         private void Message_KeyDown(object sender, KeyEventArgs e)
         {
-            // Prevent adding a line break when all we want is to commit
-            // Ctrl + Enter = Commit
             if (e.Control && e.KeyCode == Keys.Enter)
             {
                 ExecuteCommitCommand();
