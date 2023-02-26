@@ -2284,6 +2284,10 @@ compare with first:</source>
         <source>Build Report</source>
         <target />
       </trans-unit>
+      <trans-unit id="_closeAll.Text">
+        <source>Close all windows</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_commitButtonText.Text">
         <source>Commit</source>
         <target />
