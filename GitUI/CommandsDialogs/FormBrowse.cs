@@ -541,6 +541,25 @@ namespace GitUI.CommandsDialogs
             base.OnUICommandsChanged(e);
         }
 
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == NativeMethods.WM_SYSCOMMAND && m.WParam == NativeMethods.SC_CLOSE)
+            {
+                // Application close is requested, e.g. using the Taskbar context menu.
+                // This request is directed to the main form also if a modal form like FormCommit is on top.
+                // So forward the request and try to close the modal form.
+                Form? modalForm = Application.OpenForms.Cast<Form>().FirstOrDefault(form => form.Modal);
+                if (modalForm is not null)
+                {
+                    modalForm.Close();
+                }
+
+                Close();
+            }
+
+            base.WndProc(ref m);
+        }
+
         public override void AddTranslationItems(ITranslation translation)
         {
             base.AddTranslationItems(translation);

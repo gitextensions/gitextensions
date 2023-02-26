@@ -64,6 +64,12 @@
         public const int WM_NCPAINT = 0x0085;
 
         /// <summary>
+        /// The WM_SYSCOMMAND message is sent when the user chooses a command from the Window menu
+        /// or when the user chooses the maximize button, minimize button, restore button, or close button.
+        /// </summary>
+        public const int WM_SYSCOMMAND = 0x0112;
+
+        /// <summary>
         /// The WM_CTLCOLORSCROLLBAR message is sent to the parent window of a scroll bar control when the control is about to be drawn.
         /// </summary>
         public const int WM_CTLCOLORSCROLLBAR = 0x0137;
@@ -87,5 +93,10 @@
         /// The WM_NCMOUSELEAVE message is posted to a window when the cursor leaves the nonclient area of the window specified in a prior call to TrackMouseEvent.
         /// </summary>
         public const int WM_NCMOUSELEAVE = 0x02A2;
+
+        /// <summary>
+        /// The type of a WM_SYSCOMMAND (given in WParam).
+        /// </summary>
+        public const nint SC_CLOSE = 0xf060;
     }
 }
