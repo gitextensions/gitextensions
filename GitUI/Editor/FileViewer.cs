@@ -786,9 +786,12 @@ namespace GitUI.Editor
                     code = " " + code;
                 }
 
-                var lines = code.LazySplit('\n')
-                    .Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
                 var hpos = fileText.IndexOf("\n@@");
+
+                var lines = code.LazySplit('\n')
+                    .Where(s => !s.StartsWith("@@")
+                    && code.IndexOf(s) > hpos
+                    && (s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0])));
 
                 // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
