@@ -357,39 +357,14 @@ namespace GitUI.CommandsDialogs
                     bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
                     bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowArtificialCommits;
 
-                    var brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
+                    Brush brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
                     toolStripButtonLevelUp.Image = Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                     if (countToolbar || countArtificial)
                     {
-                        if (!ReferenceEquals(brush, lastBrush)
-                            && EnvUtils.RunningOnWindowsWithMainWindow())
-                        {
-                            lastBrush = brush;
-
-                            if (!_overlayIconByBrush.TryGetValue(brush, out Icon overlay))
-                            {
-                                const int imgDim = 32;
-                                const int dotDim = 15;
-                                const int pad = 2;
-                                using Bitmap bmp = new(imgDim, imgDim);
-                                using Graphics g = Graphics.FromImage(bmp);
-                                g.SmoothingMode = SmoothingMode.AntiAlias;
-                                g.Clear(Color.Transparent);
-                                g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
-
-                                overlay = bmp.ToIcon();
-                                _overlayIconByBrush.Add(brush, overlay);
-                            }
-
-                            TaskbarManager.Instance.SetOverlayIcon(overlay, "");
-
-                            RepoStateVisualiser repoStateVisualiser = new();
-                            var (image, _) = repoStateVisualiser.Invoke(status);
-                            _windowsJumpListManager.UpdateCommitIcon(image);
-                        }
+                        UpdateStatusInTaskbar();
 
                         if (AppSettings.ShowSubmoduleStatus)
                         {
@@ -409,6 +384,43 @@ namespace GitUI.CommandsDialogs
                                 }
                             });
                         }
+                    }
+
+                    return;
+
+                    void UpdateStatusInTaskbar()
+                    {
+                        if (!EnvUtils.RunningOnWindowsWithMainWindow())
+                        {
+                            return;
+                        }
+
+                        if (ReferenceEquals(brush, lastBrush))
+                        {
+                            TaskbarManager.Instance.SetOverlayIcon(_overlayIconByBrush[lastBrush], "");
+                            return;
+                        }
+
+                        lastBrush = brush;
+
+                        if (!_overlayIconByBrush.TryGetValue(brush, out Icon overlay))
+                        {
+                            const int imgDim = 32;
+                            const int dotDim = 15;
+                            const int pad = 2;
+                            using Bitmap bmp = new(imgDim, imgDim);
+                            using Graphics g = Graphics.FromImage(bmp);
+                            g.SmoothingMode = SmoothingMode.AntiAlias;
+                            g.Clear(Color.Transparent);
+                            g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
+
+                            overlay = bmp.ToIcon();
+                            _overlayIconByBrush.Add(brush, overlay);
+                        }
+
+                        TaskbarManager.Instance.SetOverlayIcon(overlay, "");
+
+                        _windowsJumpListManager.UpdateCommitIcon(toolStripButtonCommit.Image);
                     }
                 };
             }
