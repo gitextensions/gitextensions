@@ -866,7 +866,7 @@ namespace GitUI.CommandsDialogs
                 case Command.Refresh: RescanChanges(); return true;
                 case Command.SelectNext:
                 case Command.SelectNext_AlternativeHotkey1:
-                case Command.SelectNext_AlternativeHotkey2: MoveSelection(1);  return true;
+                case Command.SelectNext_AlternativeHotkey2: MoveSelection(1); return true;
                 case Command.SelectPrevious:
                 case Command.SelectPrevious_AlternativeHotkey1:
                 case Command.SelectPrevious_AlternativeHotkey2: MoveSelection(-1); return true;
@@ -2818,16 +2818,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Message_KeyUp(object sender, KeyEventArgs e)
-        {
-            // Ctrl + Enter = Commit
-            if (e.Control && e.KeyCode == Keys.Enter)
-            {
-                ExecuteCommitCommand();
-                e.Handled = true;
-            }
-        }
-
         private void ExecuteCommitCommand()
         {
             CheckForStagedAndCommit(amend: Amend.Checked, push: false, resetAuthor: Amend.Checked && ResetAuthor.Checked);
@@ -2835,9 +2825,9 @@ namespace GitUI.CommandsDialogs
 
         private void Message_KeyDown(object sender, KeyEventArgs e)
         {
-            // Prevent adding a line break when all we want is to commit
             if (e.Control && e.KeyCode == Keys.Enter)
             {
+                ExecuteCommitCommand();
                 e.Handled = true;
             }
         }
