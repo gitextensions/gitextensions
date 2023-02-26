@@ -168,6 +168,8 @@ namespace GitUI.CommandsDialogs
 
         #region Translation
 
+        private readonly TranslationString _closeAll = new("Close all windows");
+
         private readonly TranslationString _noSubmodulesPresent = new("No submodules");
         private readonly TranslationString _topProjectModuleFormat = new("Top project: {0}");
         private readonly TranslationString _superprojectModuleFormat = new("Superproject: {0}");
@@ -202,6 +204,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
+        private readonly uint _closeAllMessage = NativeMethods.RegisterWindowMessageW("Global.GitExtensions.CloseAllInstances");
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormBrowse"));
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FormBrowseMenus _formBrowseMenus;
@@ -486,7 +489,8 @@ namespace GitUI.CommandsDialogs
                     new WindowsThumbnailToolbarButtons(
                         new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
                         new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
-                        new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
+                        new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick),
+                        new WindowsThumbnailToolbarButton(_closeAll.Text, Images.DeleteFile, (s, e) => NativeMethods.PostMessageW(NativeMethods.HWND_BROADCAST, _closeAllMessage))));
             }
 
             this.InvokeAsync(OnActivate).FileAndForget();
@@ -543,7 +547,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == NativeMethods.WM_SYSCOMMAND && m.WParam == NativeMethods.SC_CLOSE)
+            if (m.Msg == _closeAllMessage || (m.Msg == NativeMethods.WM_SYSCOMMAND && m.WParam == NativeMethods.SC_CLOSE))
             {
                 // Application close is requested, e.g. using the Taskbar context menu.
                 // This request is directed to the main form also if a modal form like FormCommit is on top.
