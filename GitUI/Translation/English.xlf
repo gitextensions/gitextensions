@@ -5358,8 +5358,19 @@ command "git help shortlog"</source>
         <source>&amp;Prune remote branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="_pruneToolTip.Text">
+        <source>Removes remote tracking branches that no longer exist on the remote (e.g. if someone else deleted them).
+                  
+Actual command line (if checked): --prune --force
+        </source>
+        <target />
+      </trans-unit>
       <trans-unit id="PruneTags.Text">
         <source>Prune remote branches an&amp;d tags</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pruneTagsToolTip.Text">
+        <source>Before fetching, remove any local tags that no longer exist on the remote if --prune is enabled.</source>
         <target />
       </trans-unit>
       <trans-unit id="Pull.Text">
@@ -5370,8 +5381,16 @@ command "git help shortlog"</source>
         <source>&amp;Remote</source>
         <target />
       </trans-unit>
+      <trans-unit id="_pullFromRemoteToolTip.Text">
+        <source>Remote repository to pull from</source>
+        <target />
+      </trans-unit>
       <trans-unit id="PullFromUrl.Text">
         <source>&amp;URL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pullFromUrlToolTip.Text">
+        <source>Url to pull from</source>
         <target />
       </trans-unit>
       <trans-unit id="ReachableTags.Text">
@@ -5518,8 +5537,16 @@ This will initialize and update all submodules recursive.</source>
         <source>&amp;Local branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="_lblLocalBranchToolTip.Text">
+        <source>Remote branch to pull. Leave empty to pull all branches.</source>
+        <target />
+      </trans-unit>  
       <trans-unit id="lblRemoteBranch.Text">
         <source>Rem&amp;ote branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_lblRemoteBranchToolTip.Text">
+        <source>Remote branch to pull. Leave empty to pull all branches.</source>
         <target />
       </trans-unit>
     </body>

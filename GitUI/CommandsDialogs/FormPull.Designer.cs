@@ -101,7 +101,6 @@
             this.PullFromUrl.Size = new System.Drawing.Size(46, 19);
             this.PullFromUrl.TabIndex = 8;
             this.PullFromUrl.Text = "&URL";
-            this.Tooltip.SetToolTip(this.PullFromUrl, "Url to pull from");
             this.PullFromUrl.UseVisualStyleBackColor = true;
             this.PullFromUrl.CheckedChanged += new System.EventHandler(this.PullFromUrlCheckedChanged);
             // 
@@ -115,7 +114,6 @@
             this.PullFromRemote.TabIndex = 5;
             this.PullFromRemote.TabStop = true;
             this.PullFromRemote.Text = "&Remote";
-            this.Tooltip.SetToolTip(this.PullFromRemote, "Remote repository to pull from");
             this.PullFromRemote.UseVisualStyleBackColor = true;
             this.PullFromRemote.CheckedChanged += new System.EventHandler(this.PullFromRemoteCheckedChanged);
             // 
@@ -127,7 +125,6 @@
             this.lblLocalBranch.Size = new System.Drawing.Size(75, 15);
             this.lblLocalBranch.TabIndex = 11;
             this.lblLocalBranch.Text = "&Local branch";
-            this.Tooltip.SetToolTip(this.lblLocalBranch, "Remote branch to pull. Leave empty to pull all branches.");
             // 
             // lblRemoteBranch
             // 
@@ -137,7 +134,6 @@
             this.lblRemoteBranch.Size = new System.Drawing.Size(88, 15);
             this.lblRemoteBranch.TabIndex = 13;
             this.lblRemoteBranch.Text = "Rem&ote branch";
-            this.Tooltip.SetToolTip(this.lblRemoteBranch, "Remote branch to pull. Leave empty to pull all branches.");
             // 
             // Prune
             // 
@@ -148,8 +144,6 @@
             this.Prune.Size = new System.Drawing.Size(149, 19);
             this.Prune.TabIndex = 26;
             this.Prune.Text = "&Prune remote branches";
-            this.Tooltip.SetToolTip(this.Prune, "Removes remote tracking branches that no longer exist on the remote (e.g. if some" +
-        "one else deleted them).\r\n\r\nActual command line (if checked): --prune --force\r\n");
             this.Prune.CheckedChanged += new System.EventHandler(this.Prune_CheckedChanged);
             // 
             // PruneTags
@@ -162,8 +156,6 @@
             this.PruneTags.Size = new System.Drawing.Size(197, 19);
             this.PruneTags.TabIndex = 27;
             this.PruneTags.Text = "Prune remote branches an&d tags";
-            this.Tooltip.SetToolTip(this.PruneTags, "Before fetching, remove any local tags that no longer exist on the remote if --pr" +
-        "une is enabled.");
             this.PruneTags.CheckedChanged += new System.EventHandler(this.PruneTags_CheckedChanged);
             // 
             // Unshallow

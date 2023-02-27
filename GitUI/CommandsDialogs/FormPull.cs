@@ -103,6 +103,17 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pruneBranchesBranch =
             new("Do you want to delete all stale remote-tracking branches?");
 
+        private readonly TranslationString _pullFromUrlToolTip = new("Url to pull from");
+        private readonly TranslationString _pullFromRemoteToolTip = new("Remote repository to pull from");
+        private readonly TranslationString _lblLocalBranchToolTip = new("Remote branch to pull. Leave empty to pull all branches.");
+        private readonly TranslationString _lblRemoteBranchToolTip = new("Remote branch to pull. Leave empty to pull all branches.");
+        private readonly TranslationString _pruneToolTip =
+            new("Removes remote tracking branches that no longer exist on the remote (e.g. if some" +
+            "one else deleted them)." + Environment.NewLine +
+             Environment.NewLine +
+            "Actual command line (if checked): --prune --force");
+        private readonly TranslationString _pruneTagsToolTip = new("Before fetching, remove any local tags that no longer exist on the remote if --prune is enabled.");
+
         private readonly TranslationString _pruneFromCaption = new("Prune remote branches from {0}");
 
         private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
@@ -138,6 +149,13 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             InitializeComplete();
+
+            Tooltip.SetToolTip(PullFromUrl, _pullFromUrlToolTip.Text);
+            Tooltip.SetToolTip(PullFromRemote, _pullFromRemoteToolTip.Text);
+            Tooltip.SetToolTip(lblLocalBranch, _lblLocalBranchToolTip.Text);
+            Tooltip.SetToolTip(lblRemoteBranch, _lblRemoteBranchToolTip.Text);
+            Tooltip.SetToolTip(Prune, _pruneToolTip.Text);
+            Tooltip.SetToolTip(PruneTags, _pruneTagsToolTip.Text);
 
             PanelLeftImage.Visible = !AppSettings.DontShowHelpImages;
             PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
