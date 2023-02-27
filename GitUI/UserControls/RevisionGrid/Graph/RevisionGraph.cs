@@ -102,7 +102,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public void CacheTo(int currentRowIndex, int lastToCacheRowIndex)
         {
             // Graph segments shall be straightened. For this, we need to look ahead some rows.
-            // If lanes of a row are moved, go back the same number of rows as for the lookahead
+            // If lanes of a row are moved, go back the same number of rows as for the look-ahead
             // because then the previous rows could benefit from segment straightening, too.
             //
             // row 0
@@ -113,9 +113,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // ...
             // last partially straightened row
             // row to continue straightening           <-- GetCachedCount() + _straightenLanesLookAhead
-            // first lookahead row for straightening
+            // first look-ahead row for straightening
             // ...
-            // last lookahead row for straightening    <-- GetCachedCount() + 2 * _straightenLanesLookAhead
+            // last look-ahead row for straightening   <-- GetCachedCount() + 2 * _straightenLanesLookAhead
             //
             currentRowIndex += 2 * _straightenLanesLookAhead;
             lastToCacheRowIndex += 2 * _straightenLanesLookAhead;
@@ -438,10 +438,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // Straightening does not apply to the first and the last row. The single node there shall not be moved.
             // So the straightening algorithm can presume that a previous and a next row do exist.
-            // Straighten only lines for which the full lookahead is loaded.
+            // Straighten only lines for which the full look-ahead is loaded.
             int straightenStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead);
             int straightenLastIndex = _loadingCompleted && lastToCacheRowIndex == lastOrderedNodeIndex ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead;
-            StraightenLanes(straightenStartIndex, straightenLastIndex, lastLookaheadIndex: lastToCacheRowIndex, localOrderedRowCache);
+            StraightenLanes(straightenStartIndex, straightenLastIndex, lastLookAheadIndex: lastToCacheRowIndex, localOrderedRowCache);
 
             // Overwrite the global instance at the end, to prevent flickering
             _orderedRowCache = localOrderedRowCache;
@@ -450,7 +450,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             return;
 
-            static void StraightenLanes(int startIndex, int lastStraightenIndex, int lastLookaheadIndex, IList<RevisionGraphRow> localOrderedRowCache)
+            static void StraightenLanes(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, IList<RevisionGraphRow> localOrderedRowCache)
             {
                 // Try to detect this:
                 // | | |<-- previous lane
@@ -460,7 +460,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // | |
                 // | |
                 // |\ \
-                // | | |<-- lookahead lane
+                // | | |<-- look-ahead lane
                 //
                 // And change it into this:
                 // | | |
@@ -497,20 +497,24 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         }
 
                         int straightenedCurrentLane = currentLane + 1;
-                        int lookaheadLane = currentLane;
-                        for (int lookaheadIndex = currentIndex + 1; lookaheadLane == currentLane && lookaheadIndex <= Math.Min(currentIndex + _straightenLanesLookAhead, lastLookaheadIndex); ++lookaheadIndex)
+                        int lookAheadLane = currentLane;
+                        RevisionGraphSegment segmentOrAncestor = currentRow.FirstParentOrSelf(revisionGraphSegment);
+                        for (int lookAheadIndex = currentIndex + 1; lookAheadLane == currentLane && lookAheadIndex <= Math.Min(currentIndex + _straightenLanesLookAhead, lastLookAheadIndex); ++lookAheadIndex)
                         {
-                            lookaheadLane = localOrderedRowCache[lookaheadIndex].GetLaneForSegment(revisionGraphSegment).Index;
-                            if ((lookaheadLane == straightenedCurrentLane) || (lookaheadLane > straightenedCurrentLane && previousLane == straightenedCurrentLane))
+                            RevisionGraphRow lookAheadRow = localOrderedRowCache[lookAheadIndex];
+                            lookAheadLane = lookAheadRow.GetLaneForSegment(segmentOrAncestor).Index;
+                            if ((lookAheadLane == straightenedCurrentLane) || (lookAheadLane > straightenedCurrentLane && previousLane == straightenedCurrentLane))
                             {
-                                for (int moveIndex = currentIndex; moveIndex < lookaheadIndex; ++moveIndex)
+                                for (int moveIndex = currentIndex; moveIndex < lookAheadIndex; ++moveIndex)
                                 {
                                     localOrderedRowCache[moveIndex].MoveLanesRight(currentLane);
                                 }
 
                                 moved = true;
-                                break; // from for lookaheadIndex
+                                break; // from for lookAheadIndex
                             }
+
+                            segmentOrAncestor = lookAheadRow.FirstParentOrSelf(segmentOrAncestor);
                         }
 
                         if (moved)
