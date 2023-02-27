@@ -463,26 +463,34 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     {
                         int previousLane = previousRow.GetLaneIndexForSegment(revisionGraphSegment);
                         int currentLane = currentRow.GetLaneIndexForSegment(revisionGraphSegment);
-                        if (previousLane > currentLane)
-                        {
-                            int straightenedCurrentLane = currentLane + 1;
-                            int lookaheadLane = currentLane;
-                            int nextIndex = currentIndex + 1;
-                            for (int lookaheadIndex = nextIndex; lookaheadLane == currentLane && lookaheadIndex <= Math.Min(currentIndex + _straightenLanesLookAhead, lastIndex); ++lookaheadIndex)
-                            {
-                                lookaheadLane = localOrderedRowCache[lookaheadIndex].GetLaneIndexForSegment(revisionGraphSegment);
-                                if ((lookaheadLane == straightenedCurrentLane) || (lookaheadLane > straightenedCurrentLane && previousLane == straightenedCurrentLane))
-                                {
-                                    currentRow.MoveLanesRight(currentLane);
-                                    for (; nextIndex < lookaheadIndex; ++nextIndex)
-                                    {
-                                        localOrderedRowCache[nextIndex].MoveLanesRight(currentLane);
-                                    }
 
-                                    moved = true;
-                                    break;
+                        if (previousLane <= currentLane)
+                        {
+                            continue;
+                        }
+
+                        int straightenedCurrentLane = currentLane + 1;
+                        int lookaheadLane = currentLane;
+                        int nextIndex = currentIndex + 1;
+                        var segmentOrAncestor = localOrderedRowCache[currentIndex].FirstParentOrSelf(revisionGraphSegment);
+
+                        for (int lookaheadIndex = nextIndex; lookaheadLane == currentLane && lookaheadIndex <= Math.Min(currentIndex + _straightenLanesLookAhead, lastIndex); ++lookaheadIndex)
+                        {
+                            RevisionGraphRow lookaheadRow = localOrderedRowCache[lookaheadIndex];
+                            lookaheadLane = lookaheadRow.GetLaneIndexForSegment(segmentOrAncestor);
+                            if ((lookaheadLane == straightenedCurrentLane) || (lookaheadLane > straightenedCurrentLane && previousLane == straightenedCurrentLane))
+                            {
+                                currentRow.MoveLanesRight(currentLane);
+                                for (; nextIndex < lookaheadIndex; ++nextIndex)
+                                {
+                                    localOrderedRowCache[nextIndex].MoveLanesRight(currentLane);
                                 }
+
+                                moved = true;
+                                break;
                             }
+
+                            segmentOrAncestor = lookaheadRow.FirstParentOrSelf(segmentOrAncestor);
                         }
                     }
 
