@@ -105,7 +105,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _pullFromUrlToolTip = new("Url to pull from");
         private readonly TranslationString _pullFromRemoteToolTip = new("Remote repository to pull from");
-        private readonly TranslationString _lblLocalBranchToolTip = new("Remote branch to pull. Leave empty to pull all branches.");
+        private readonly TranslationString _lblLocalBranchToolTip = new("Local branch to pull. Leave empty to pull all branches.");
         private readonly TranslationString _lblRemoteBranchToolTip = new("Remote branch to pull. Leave empty to pull all branches.");
         private readonly TranslationString _pruneToolTip =
             new("Removes remote tracking branches that no longer exist on the remote (e.g. if some" +

@@ -5538,7 +5538,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="_lblLocalBranchToolTip.Text">
-        <source>Remote branch to pull. Leave empty to pull all branches.</source>
+        <source>Local branch to pull. Leave empty to pull all branches.</source>
         <target />
       </trans-unit>  
       <trans-unit id="lblRemoteBranch.Text">
