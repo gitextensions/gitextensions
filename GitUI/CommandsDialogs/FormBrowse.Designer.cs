@@ -512,7 +512,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripFileExplorer.ImageTransparentColor = System.Drawing.Color.Gray;
             this.toolStripFileExplorer.Name = "toolStripFileExplorer";
             this.toolStripFileExplorer.Size = new System.Drawing.Size(23, 22);
-            this.toolStripFileExplorer.ToolTipText = "File E&xplorer";
+            this.toolStripFileExplorer.ToolTipText = "File Explorer";
             this.toolStripFileExplorer.Click += new System.EventHandler(this.FileExplorerToolStripMenuItemClick);
             // 
             // userShell
@@ -521,7 +521,7 @@ namespace GitUI.CommandsDialogs
             this.userShell.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.userShell.Name = "userShell";
             this.userShell.Size = new System.Drawing.Size(23, 22);
-            this.userShell.ToolTipText = "Git &bash";
+            this.userShell.ToolTipText = "Git bash";
             this.userShell.Click += new System.EventHandler(this.userShell_Click);
             // 
             // EditSettings
