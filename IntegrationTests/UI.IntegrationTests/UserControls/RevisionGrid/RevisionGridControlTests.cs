@@ -199,6 +199,10 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void ToggleBetweenArtificialAndHeadCommits_no_empty([Values(false, true)] bool showGitStatusForArtificialCommits)
         {
+            File.WriteAllText(Path.Combine(_referenceRepository.Module.WorkingDir, "new.txt"), "new");
+            File.WriteAllText(Path.Combine(_referenceRepository.Module.WorkingDir, "stage.txt"), "staged");
+            _referenceRepository.Module.StageFile("stage.txt");
+
             RunToggleBetweenArtificialAndHeadCommitsTest(
                 showGitStatusForArtificialCommits,
                 revisionGridControl =>
@@ -231,7 +235,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void ToggleBetweenArtificialAndHeadCommits_no_workdir_change([Values(false, true)] bool showGitStatusForArtificialCommits)
         {
-            File.Delete(Path.Combine(_referenceRepository.Module.WorkingDir, "A.txt"));
+            File.WriteAllText(Path.Combine(_referenceRepository.Module.WorkingDir, "stage.txt"), "staged");
+            _referenceRepository.Module.StageFile("stage.txt");
 
             RunToggleBetweenArtificialAndHeadCommitsTest(
                 showGitStatusForArtificialCommits,
@@ -267,7 +272,6 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void ToggleBetweenArtificialAndHeadCommits_no_index_change([Values(false, true)] bool showGitStatusForArtificialCommits)
         {
-            _referenceRepository.Module.Reset(ResetMode.Hard);
             File.WriteAllText(Path.Combine(_referenceRepository.Module.WorkingDir, "new.txt"), "new");
 
             RunToggleBetweenArtificialAndHeadCommitsTest(
@@ -303,8 +307,6 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void ToggleBetweenArtificialAndHeadCommits_no_change([Values(false, true)] bool showGitStatusForArtificialCommits)
         {
-            _referenceRepository.Module.Reset(ResetMode.Hard);
-
             RunToggleBetweenArtificialAndHeadCommitsTest(
                 showGitStatusForArtificialCommits,
                 revisionGridControl =>

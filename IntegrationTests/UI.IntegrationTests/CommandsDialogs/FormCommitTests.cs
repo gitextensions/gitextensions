@@ -201,23 +201,29 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void SelectMessageFromHistory()
         {
+            const string lastCommitMessage = "last commit message";
+            AppSettings.LastCommitMessage = lastCommitMessage;
+
             RunFormTest(form =>
             {
                 var commitMessageToolStripMenuItem = form.GetTestAccessor().CommitMessageToolStripMenuItem;
 
                 // Verify the message appears correctly
                 commitMessageToolStripMenuItem.ShowDropDown();
-                Assert.AreEqual("A commit message", commitMessageToolStripMenuItem.DropDownItems[0].Text);
+                commitMessageToolStripMenuItem.DropDownItems[0].Text.Should().Be(lastCommitMessage);
 
                 // Verify the message is selected correctly
                 commitMessageToolStripMenuItem.DropDownItems[0].PerformClick();
-                Assert.AreEqual("A commit message", form.GetTestAccessor().Message.Text);
+                form.GetTestAccessor().Message.Text.Should().Be(lastCommitMessage);
             });
         }
 
         [Test]
         public void Should_handle_well_commit_message_in_commit_message_menu()
         {
+            const string lastCommitMessage = "last commit message";
+            AppSettings.LastCommitMessage = lastCommitMessage;
+
             _referenceRepository.CreateCommit("Only first line\n\nof a multi-line commit message\nmust be displayed in the menu");
             _referenceRepository.CreateCommit("Too long commit message that should be shorten because first line of a commit message is only 50 chars long");
             RunFormTest(form =>
@@ -226,8 +232,9 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                 // Verify the message appears correctly
                 commitMessageToolStripMenuItem.ShowDropDown();
-                Assert.AreEqual("Too long commit message that should be shorten because first line of ...", commitMessageToolStripMenuItem.DropDownItems[0].Text);
-                Assert.AreEqual("Only first line", commitMessageToolStripMenuItem.DropDownItems[1].Text);
+                commitMessageToolStripMenuItem.DropDownItems[0].Text.Should().Be(lastCommitMessage);
+                commitMessageToolStripMenuItem.DropDownItems[1].Text.Should().Be("Too long commit message that should be shorten because first line of ...");
+                commitMessageToolStripMenuItem.DropDownItems[2].Text.Should().Be("Only first line");
             });
         }
 
