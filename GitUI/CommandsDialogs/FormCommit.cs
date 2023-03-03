@@ -1019,6 +1019,8 @@ namespace GitUI.CommandsDialogs
                 var (headRev, indexRev, _) = GetHeadRevisions();
                 Staged.SetDiffs(headRev, indexRev, Module.GetIndexFilesWithSubmodulesStatus());
             }
+
+            UpdateButtonStates();
         }
 
         /// <summary>
@@ -1052,16 +1054,13 @@ namespace GitUI.CommandsDialogs
             Unstaged.SetDiffs(indexRev, workTreeRev, unstagedFiles);
             Staged.SetDiffs(headRev, indexRev, stagedFiles);
 
-            var doChangesExist = Unstaged.AllItems.Any() || Staged.AllItems.Any();
-
             Loading.Visible = false;
             Loading.IsAnimating = false;
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
             Amend.Enabled = true;
-            Reset.Enabled = doChangesExist;
-            SetCommitAndPushText();
+            UpdateButtonStates();
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -3297,7 +3296,7 @@ namespace GitUI.CommandsDialogs
                 CommitAndPush.SetForeColorForBackColor();
             }
 
-            SetCommitAndPushText();
+            UpdateButtonStates();
         }
 
         private void StageInSuperproject_CheckedChanged(object sender, EventArgs e)
@@ -3364,8 +3363,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void SetCommitAndPushText()
+        private void UpdateButtonStates()
         {
+            Reset.Enabled = Unstaged.AllItems.Any() || Staged.AllItems.Any();
             CommitAndPush.Text = Amend.Checked && AppSettings.CommitAndPushForcedWhenAmend ? _commitAndForcePush.Text
                 : Reset.Enabled || Amend.Checked ? _commitAndPush.Text
                 : TranslatedStrings.ButtonPush;
