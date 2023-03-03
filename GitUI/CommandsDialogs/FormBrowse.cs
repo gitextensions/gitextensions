@@ -284,7 +284,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.SuspendRefreshRevisions();
 
             ToolStripFilters.Bind(() => Module, RevisionGrid);
-            InitMenusAndToolbars(args.RevFilter, args.PathFilter);
+            InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
 
             InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileBlameHistory);
             InitCommitDetails();
