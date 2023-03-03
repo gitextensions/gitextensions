@@ -249,6 +249,71 @@ namespace GitUITests.UserControls.RevisionGrid
             ");
         }
 
+        [Test]
+        public void SegmentsAreNotStraightenedIfThisCausesWidthIncrease()
+        {
+            var revisionGraph = CreateGraph(" 1  2:1  3:1  4:1  5:1,4  6:2  7:2,6  8:5  9:5,8,3,7 ");
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\----\
+                | * | |
+                |/ / /
+                | | *
+                | | |\
+                | | | *
+                | |  \|
+                * |   |
+                |\ \  |
+                | * | |
+                |/ / /
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
+        }
+
+        [Test]
+        public void SegmentsAreNotStraightenedIfThisCausesALargerShiftForAnotherSegment()
+        {
+            var revisionGraph = CreateGraph(" 1  a:1  b:1  2:1  3:1  4:1  5:4,1  6:3  7:5,6  8:7,2,6  c:8  d:8  e:8  9:8,e,d,c,b,a ");
+
+            // Two segments cross at the 'X'. The one going '/' could be straightened, but then the
+            // one going '\' would shift across more lanes where they cross. We should avoid that.
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\--------\
+                | * | | | |
+                |/ / /  | |
+                | * |   | |
+                |/ /    | |
+                | *     | |
+                |/      | |
+                *       | |
+                |\--\   | |
+                * | |   | |
+                |\ X    | |
+                | * |   | |
+                | | |   | |
+                * | |   | |
+                |\ \ \  | |
+                * | | | | |
+                |/ / / / /
+                | * | | |
+                |/ / / /
+                | * | |
+                |/ / /
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
+        }
+
         private static int LookAhead => 20;
 
         private static IEnumerable<GitRevision> Revisions

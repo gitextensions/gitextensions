@@ -52,10 +52,12 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             List<RevisionGraphSegment> segments = new() { _segment, _segment1, _segment2 };
             IRevisionGraphRow revisionGraphRow = new RevisionGraphRow(_segment.Child, segments);
             revisionGraphRow.GetLaneCount().Should().Be(3);
+            int newLaneCount = revisionGraphRow.LaneCountAfterMovingLanesRight(fromLane);
 
             revisionGraphRow.MoveLanesRight(fromLane);
 
-            revisionGraphRow.GetLaneCount().Should().Be(fromLane >= segments.Count ? segments.Count : segments.Count + 1);
+            newLaneCount.Should().Be(revisionGraphRow.GetLaneCount());
+            revisionGraphRow.GetLaneCount().Should().Be(expectedLane2 + 1);
             revisionGraphRow.GetLaneIndexForSegment(_segment).Should().Be(expectedLane);
             revisionGraphRow.GetLaneIndexForSegment(_segment1).Should().Be(expectedLane1);
             revisionGraphRow.GetLaneIndexForSegment(_segment2).Should().Be(expectedLane2);
@@ -88,8 +90,12 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             revisionGraphRow.GetLaneCount().Should().Be(3);
 
             revisionGraphRow.MoveLanesRight(fromLane1);
+
+            int newLaneCount = revisionGraphRow.LaneCountAfterMovingLanesRight(fromLane2);
+
             revisionGraphRow.MoveLanesRight(fromLane2);
 
+            newLaneCount.Should().Be(revisionGraphRow.GetLaneCount());
             revisionGraphRow.GetLaneCount().Should().Be(expectedLane2 + 1);
             revisionGraphRow.GetLaneIndexForSegment(_segment).Should().Be(expectedLane);
             revisionGraphRow.GetLaneIndexForSegment(_segment1).Should().Be(expectedLane1);

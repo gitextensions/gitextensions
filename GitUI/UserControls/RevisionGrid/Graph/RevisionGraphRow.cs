@@ -1,4 +1,5 @@
-﻿using Microsoft;
+﻿using System.Runtime.CompilerServices;
+using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -11,6 +12,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
         int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision);
         void MoveLanesRight(int fromLane);
+        int LaneCountAfterMovingLanesRight(int laneIndex);
+        bool HasGap(int currentLane, int curLane);
     }
 
     // The RevisionGraphRow contains an ordered list of Segments that crosses the row or connects to the revision in the row.
@@ -215,6 +218,21 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
+        public int LaneCountAfterMovingLanesRight(int laneIndex)
+        {
+            if (laneIndex >= _laneCount)
+            {
+                return _laneCount;
+            }
+
+            if (_gaps?.Any(g => g > laneIndex) == true)
+            {
+                return _laneCount;
+            }
+
+            return _laneCount + 1;
+        }
+
         /// <summary>
         /// If this row is the parent row of <paramref name="segment"/>, returns the segment leading
         /// to this row's first parent (if any). Otherwise, returns <paramref name="segment"/>.
@@ -228,6 +246,28 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             return Segments.FirstOrDefault(s => s.Child == Revision)
                 ?? segment;
+        }
+
+        /// <summary>
+        /// Returns true if this row has a gap between <paramref name="firstLane"/> and <paramref name="lastLane"/>,
+        /// inclusive
+        /// </summary>
+        public bool HasGap(int firstLane, int lastLane)
+        {
+            if (_gaps is null)
+            {
+                return false;
+            }
+
+            for (int lane = firstLane; lane <= lastLane; ++lane)
+            {
+                if (_gaps.Contains(lane))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

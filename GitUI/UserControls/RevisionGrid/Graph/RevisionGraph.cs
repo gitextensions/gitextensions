@@ -458,13 +458,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                     bool moved = false;
                     IRevisionGraphRow previousRow = localOrderedRowCache[currentIndex - 1];
-                    IRevisionGraphRow nextRow = localOrderedRowCache[currentIndex + 1];
+
                     foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments)
                     {
                         int previousLane = previousRow.GetLaneIndexForSegment(revisionGraphSegment);
                         int currentLane = currentRow.GetLaneIndexForSegment(revisionGraphSegment);
 
-                        if (previousLane <= currentLane)
+                        if (currentLane >= previousLane)
                         {
                             continue;
                         }
@@ -480,10 +480,19 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             lookaheadLane = lookaheadRow.GetLaneIndexForSegment(segmentOrAncestor);
                             if ((lookaheadLane == straightenedCurrentLane) || (lookaheadLane > straightenedCurrentLane && previousLane == straightenedCurrentLane))
                             {
-                                currentRow.MoveLanesRight(currentLane);
-                                for (; nextIndex < lookaheadIndex; ++nextIndex)
+                                if (MovingCausesWidthIncrease(currentIndex, lookaheadIndex, currentLane))
                                 {
-                                    localOrderedRowCache[nextIndex].MoveLanesRight(currentLane);
+                                    break;
+                                }
+
+                                if (MovingIncreasesASegmentBend(currentRow, previousRow, currentLane))
+                                {
+                                    break;
+                                }
+
+                                for (int index = currentIndex; index < lookaheadIndex; ++index)
+                                {
+                                    localOrderedRowCache[index].MoveLanesRight(currentLane);
                                 }
 
                                 moved = true;
@@ -496,6 +505,46 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                     // if moved, check again whether the lanes of the previous row can be moved, too
                     currentIndex = moved ? Math.Max(currentIndex - _straightenLanesLookAhead, startIndex) : currentIndex + 1;
+                }
+
+                bool MovingCausesWidthIncrease(int startIndex, int endIndex, int laneToMove)
+                {
+                    int previousRowWidth = localOrderedRowCache[startIndex - 1].GetLaneCount();
+
+                    for (int index = startIndex; index < endIndex; ++index)
+                    {
+                        if (localOrderedRowCache[index].LaneCountAfterMovingLanesRight(laneToMove) > previousRowWidth)
+                        {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+
+                static bool MovingIncreasesASegmentBend(IRevisionGraphRow currentRow, IRevisionGraphRow previousRow, int laneToMove)
+                {
+                    foreach (var segment in currentRow.Segments)
+                    {
+                        int currentLane = currentRow.GetLaneIndexForSegment(segment);
+                        if (currentLane <= laneToMove || currentRow.HasGap(laneToMove, currentLane))
+                        {
+                            // This segment lies to the left of the moved lane, or right of an
+                            // intervening gap, so will not be affected
+                            continue;
+                        }
+
+                        // This segment will be moved right in the current row
+                        int previousLane = previousRow.GetLaneIndexForSegment(segment);
+                        if (previousLane != -1 && previousLane <= currentLane)
+                        {
+                            // The segment comes straight down or shifts right from the previous row.
+                            // So, moving will create a bend or make it shift across more lanes than before.
+                            return true;
+                        }
+                    }
+
+                    return false;
                 }
             }
         }
