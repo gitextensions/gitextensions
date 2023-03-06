@@ -509,11 +509,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 bool MovingCausesWidthIncrease(int startIndex, int endIndex, int laneToMove)
                 {
-                    int previousRowWidth = localOrderedRowCache[startIndex - 1].GetLaneCount();
+                    int maxRowWidth = 0;
+                    for (int index = Math.Max(0, startIndex - _straightenLanesLookAhead); index < startIndex + _straightenLanesLookAhead && index < lastIndex; ++index)
+                    {
+                        maxRowWidth = Math.Max(maxRowWidth, localOrderedRowCache[index].GetLaneCount());
+                    }
 
                     for (int index = startIndex; index < endIndex; ++index)
                     {
-                        if (localOrderedRowCache[index].LaneCountAfterMovingLanesRight(laneToMove) > previousRowWidth)
+                        if (localOrderedRowCache[index].LaneCountAfterMovingLanesRight(laneToMove) > maxRowWidth)
                         {
                             return true;
                         }

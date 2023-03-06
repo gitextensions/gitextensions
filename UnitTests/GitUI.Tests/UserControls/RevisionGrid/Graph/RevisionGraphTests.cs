@@ -276,6 +276,30 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
+        public void SegmentsAreStraightenedWhenGraphIsWideEnoughCloseBy()
+        {
+            var revisionGraph = CreateGraph(" 1  2:1  3:1  6:1  7:1,6  8:3,2  9:7  10:7,9,8 ");
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\--\
+                | * |
+                |/  |
+                |   *
+                |   |\
+                *   | |
+                |\  | |
+                | * | |
+                |/ / /
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
+        }
+
+        [Test]
         public void SegmentsAreNotStraightenedIfThisCausesALargerShiftForAnotherSegment()
         {
             var revisionGraph = CreateGraph(" 1  a:1  b:1  2:1  3:1  4:1  5:4,1  6:3  7:5,6  8:7,2,6  c:8  d:8  e:8  9:8,e,d,c,b,a ");
