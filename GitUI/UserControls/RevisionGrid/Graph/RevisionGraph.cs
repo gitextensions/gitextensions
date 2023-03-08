@@ -471,10 +471,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                         int straightenedCurrentLane = currentLane + 1;
                         int lookaheadLane = currentLane;
-                        int nextIndex = currentIndex + 1;
                         var segmentOrAncestor = localOrderedRowCache[currentIndex].FirstParentOrSelf(revisionGraphSegment);
 
-                        for (int lookaheadIndex = nextIndex; lookaheadLane == currentLane && lookaheadIndex <= Math.Min(currentIndex + _straightenLanesLookAhead, lastIndex); ++lookaheadIndex)
+                        for (int lookaheadIndex = currentIndex + 1; lookaheadLane == currentLane && lookaheadIndex <= Math.Min(currentIndex + _straightenLanesLookAhead, lastIndex); ++lookaheadIndex)
                         {
                             RevisionGraphRow lookaheadRow = localOrderedRowCache[lookaheadIndex];
                             lookaheadLane = lookaheadRow.GetLaneIndexForSegment(segmentOrAncestor);
@@ -490,9 +489,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                                     break;
                                 }
 
-                                for (int index = currentIndex; index < lookaheadIndex; ++index)
+                                for (int moveIndex = currentIndex; moveIndex < lookaheadIndex; ++moveIndex)
                                 {
-                                    localOrderedRowCache[index].MoveLanesRight(currentLane);
+                                    localOrderedRowCache[moveIndex].MoveLanesRight(currentLane);
                                 }
 
                                 moved = true;
