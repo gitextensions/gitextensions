@@ -189,3 +189,4 @@ YYYY/MM/DD, github id, Full name, email
 2023/02/24, RauulDev, Raul Molina, remolina7@gmail.com
 2023/03/03, pedrolamas, Pedro Lamas, pedrolamas@gmail.com
 2023/03/07, o-kloster, Oddvar Kloster, okloster(at)gmail.com
+2023/03/08, RemiGaudin, Rémi Gaudin, remi.gaudin(at)gmail.com
