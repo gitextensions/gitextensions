@@ -501,6 +501,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                             segmentOrAncestor = lookaheadRow.FirstParentOrSelf(segmentOrAncestor);
                         }
+
+                        if (moved)
+                        {
+                            break;
+                        }
                     }
 
                     // if moved, check again whether the lanes of the previous row can be moved, too
