@@ -126,7 +126,7 @@ namespace GitExtensions.Plugins.BackgroundFetch
                                       string msg;
                                       try
                                       {
-                                          msg = _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
+                                          msg = _currentGitUiCommands.GitModule.GitExecutable.Execute(args).AllOutput;
                                       }
                                       catch
                                       {
