@@ -126,7 +126,10 @@ namespace GitExtensions.Plugins.BackgroundFetch
                                       string msg;
                                       try
                                       {
-                                          msg = _currentGitUiCommands.GitModule.GitExecutable.Execute(args).AllOutput;
+                                          // git fetch is writing result details into standard error and not standard output, see:
+                                          // https://github.com/gitextensions/gitextensions/pull/10793
+                                          // https://lore.kernel.org/git/xmqq7cvqrdu6.fsf@gitster.g/
+                                          msg = _currentGitUiCommands.GitModule.GitExecutable.Execute(args).StandardError;
                                       }
                                       catch
                                       {
