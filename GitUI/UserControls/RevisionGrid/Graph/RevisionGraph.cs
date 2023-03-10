@@ -499,7 +499,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return _orderedNodesCache;
             }
 
-            // The Score of the referenced nodes can still be rewritten.
+            // The Score of the referenced nodes can be rewritten by another thread.
             // Then the cache is invalidated by setting _reorder.
             // So if Sort() complains in this case, try again.
             while (true)
