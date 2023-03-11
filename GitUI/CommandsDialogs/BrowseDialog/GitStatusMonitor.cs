@@ -46,10 +46,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private int _consecutiveErrorCount;
 
+        /// <summary>
+        /// git-status command is running that is not cancelled
+        /// </summary>
+        private bool _commandIsRunning;
+
         private readonly FileSystemWatcher _workTreeWatcher = new();
         private readonly FileSystemWatcher _gitDirWatcher = new();
         private readonly System.Windows.Forms.Timer _timerRefresh;
-        private bool _commandIsRunning;
         private bool _isFirstPostRepoChanged;
         private string? _gitPath;
         private string? _submodulesPath;
@@ -430,15 +434,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 // capture a consistent state in the main thread
                 module = Module;
-                cancelToken = _statusSequence.Next();
                 noLocks = !_isFirstPostRepoChanged;
+                cancelToken = _statusSequence.Next();
+                _commandIsRunning = true;
 
                 // Schedule periodic update, even if we don't know that anything changed
                 _nextUpdateTime = commandStartTime
                     + (PathUtil.IsWslPath(_workTreeWatcher.Path) ? PeriodicUpdateIntervalWSL : PeriodicUpdateInterval);
                 _nextEarliestTime = commandStartTime + MinUpdateInterval;
                 _isFirstPostRepoChanged = false;
-                _commandIsRunning = true;
             }
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
@@ -490,21 +494,24 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         {
                             lock (_statusSequence)
                             {
-                                if (!ModuleHasChanged() && !cancelToken.IsCancellationRequested)
+                                if (!cancelToken.IsCancellationRequested)
                                 {
-                                    // Adjust the min time to next update
-                                    int endTime = Environment.TickCount;
-                                    int commandTime = endTime - commandStartTime;
-                                    int minDelay = Math.Max(MinUpdateInterval, 2 * commandTime);
-                                    _nextEarliestTime = endTime + minDelay;
-                                    if (_nextUpdateTime - commandStartTime < _nextEarliestTime - commandStartTime)
+                                    if (!ModuleHasChanged())
                                     {
-                                        // Postpone the requested update
-                                        _nextUpdateTime = _nextEarliestTime;
+                                        // Adjust the min time to next update
+                                        int endTime = Environment.TickCount;
+                                        int commandTime = endTime - commandStartTime;
+                                        int minDelay = Math.Max(MinUpdateInterval, 2 * commandTime);
+                                        _nextEarliestTime = endTime + minDelay;
+                                        if (_nextUpdateTime - commandStartTime < _nextEarliestTime - commandStartTime)
+                                        {
+                                            // Postpone the requested update
+                                            _nextUpdateTime = _nextEarliestTime;
+                                        }
                                     }
-                                }
 
-                                _commandIsRunning = false;
+                                    _commandIsRunning = false;
+                                }
                             }
                         }
                     })
@@ -550,6 +557,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // Start commands, also if running already
             lock (_statusSequence)
             {
+                _commandIsRunning = false;
                 _statusSequence.CancelCurrent();
 
                 int ticks = Environment.TickCount;
