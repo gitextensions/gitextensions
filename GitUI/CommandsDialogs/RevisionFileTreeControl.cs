@@ -63,6 +63,8 @@ See the changes in the commit form.");
                                                                          new FileAssociatedIconProvider());
             BlameControl.HideCommitInfo();
             filterFileInGridToolStripMenuItem.Text = TranslatedStrings.FilterFileInGrid;
+
+            copyPathsToolStripMenuItem.Initialize(() => UICommands, () => new string[] { (tvGitTree.SelectedNode?.Tag as GitItem)?.FileName });
         }
 
         public void Bind(RevisionGridControl revisionGrid, Action? refreshGitStatus, bool isBlame)
@@ -531,18 +533,6 @@ See the changes in the commit form.");
             ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem, line));
         }
 
-        private void copyFilenameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
-            {
-                var fileName = _fullPathResolver.Resolve(gitItem.FileName);
-                if (fileName is not null)
-                {
-                    ClipboardUtil.TrySetText(fileName.ToNativePath());
-                }
-            }
-        }
-
         private bool TryGetSelectedName([NotNullWhen(returnValue: true)] out string? name)
         {
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
@@ -723,7 +713,7 @@ See the changes in the commit form.");
             editCheckedOutFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             toolStripSeparatorFileSystemActions.Visible = isFile;
 
-            copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected;
+            copyPathsToolStripMenuItem.Visible = itemSelected;
             fileTreeOpenContainingFolderToolStripMenuItem.Visible = itemSelected;
             fileTreeOpenContainingFolderToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             toolStripSeparatorFileNameActions.Visible = itemSelected;

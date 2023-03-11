@@ -29,6 +29,42 @@ namespace GitCommands
             return path?.Replace(PosixDirectorySeparatorChar, NativeDirectorySeparatorChar);
         }
 
+        /// <summary>Replaces native path separator with posix path separator (/) and drive letter X: with /mnt/x for use in WSL.</summary>
+        [return: NotNullIfNotNull("path")]
+        public static string? ToWslPath(this string? path)
+        {
+            return path?.ToMountPath("/mnt/");
+        }
+
+        /// <summary>Replaces native path separator with posix path separator (/) and drive letter X: with /cygdrive/x.</summary>
+        [return: NotNullIfNotNull("path")]
+        public static string? ToCygwinPath(this string? path)
+        {
+            return path?.ToMountPath("/cygdrive/");
+        }
+
+        /// <summary>Replaces native path separator with posix path separator (/) and drive letter X: with /prefix/x.</summary>
+        [return: NotNullIfNotNull("path")]
+        public static string? ToMountPath(this string? path, string prefix)
+        {
+            if (path is null)
+            {
+                return null;
+            }
+
+            path = path.ToPosixPath();
+            if (path.Length >= 2 && path[1] == ':')
+            {
+                char drive = char.ToLowerInvariant(path[0]);
+                if (drive is (>= 'a' and <= 'z'))
+                {
+                    return $"{prefix}{drive}{path[2..]}";
+                }
+            }
+
+            return path;
+        }
+
         /// <summary>
         /// Removes any trailing path separator character from the end of <paramref name="dirPath"/>.
         /// </summary>

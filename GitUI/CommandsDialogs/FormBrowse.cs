@@ -1701,35 +1701,6 @@ namespace GitUI.CommandsDialogs
             UICommands.StartEditGitAttributesDialog(this);
         }
 
-        public static void CopyFullPathToClipboard(FileStatusList diffFiles, GitModule module)
-        {
-            if (!diffFiles.SelectedItems.Any())
-            {
-                return;
-            }
-
-            StringBuilder fileNames = new();
-            foreach (var item in diffFiles.SelectedItems)
-            {
-                var path = Path.Combine(module.WorkingDir, item.Item.Name);
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    continue;
-                }
-
-                // Only use append line when multiple items are selected.
-                // This to make it easier to use the text from clipboard when 1 file is selected.
-                if (fileNames.Length > 0)
-                {
-                    fileNames.AppendLine();
-                }
-
-                fileNames.Append(path.ToNativePath());
-            }
-
-            ClipboardUtil.TrySetText(fileNames.ToString());
-        }
-
         private void deleteIndexLockToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try

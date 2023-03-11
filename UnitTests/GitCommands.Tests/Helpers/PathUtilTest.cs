@@ -41,6 +41,42 @@ namespace GitCommandsTests.Helpers
         }
 
         [Test]
+        public void ToWslPathTest()
+        {
+            Assert.AreEqual(PathUtil.ToWslPath(null), null);
+            Assert.AreEqual(@"C:/Work/GitExtensions/".ToWslPath(), "/mnt/c/Work/GitExtensions/");
+            Assert.AreEqual(@"C:\Work\GitExtensions\".ToWslPath(), "/mnt/c/Work/GitExtensions/");
+            Assert.AreEqual(@"/var/tmp/".ToWslPath(), "/var/tmp/");
+        }
+
+        [Test]
+        public void ToCygwinPathTest()
+        {
+            Assert.AreEqual(PathUtil.ToCygwinPath(null), null);
+            Assert.AreEqual(@"C:/Work/GitExtensions/".ToCygwinPath(), "/cygdrive/c/Work/GitExtensions/");
+            Assert.AreEqual(@"C:\Work\GitExtensions\".ToCygwinPath(), "/cygdrive/c/Work/GitExtensions/");
+            Assert.AreEqual(@"/var/tmp/".ToCygwinPath(), "/var/tmp/");
+        }
+
+        [Test]
+        public void ToMountPathTest()
+        {
+            const string prefix = "PrEfiX";
+            Assert.AreEqual(PathUtil.ToMountPath(null, prefix), null);
+            Assert.AreEqual(@"".ToMountPath(prefix), "");
+            Assert.AreEqual(@"C".ToMountPath(prefix), "C");
+            Assert.AreEqual(@".:".ToMountPath(prefix), $".:");
+            Assert.AreEqual(@"C:".ToMountPath(prefix), $"{prefix}c");
+            Assert.AreEqual(@"C:_".ToMountPath(prefix), $"{prefix}c_");
+            Assert.AreEqual(@"C:\".ToMountPath(prefix), $"{prefix}c/");
+            Assert.AreEqual(@"C:/".ToMountPath(prefix), $"{prefix}c/");
+            Assert.AreEqual(@"C:\folder".ToMountPath(prefix), $"{prefix}c/folder");
+            Assert.AreEqual(@"C:/Work/GitExtensions/".ToMountPath(prefix), $"{prefix}c/Work/GitExtensions/");
+            Assert.AreEqual(@"C:\Work\GitExtensions\".ToMountPath(prefix), $"{prefix}c/Work/GitExtensions/");
+            Assert.AreEqual(@"/var/tmp/".ToMountPath(prefix), "/var/tmp/");
+        }
+
+        [Test]
         public void EnsureTrailingPathSeparatorTest()
         {
             Assert.IsNull(((string)null).EnsureTrailingPathSeparator());
