@@ -46,11 +46,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private int _consecutiveErrorCount;
 
-        /// <summary>
-        /// git-status command is running that is not cancelled
-        /// </summary>
-        private bool _commandIsRunning;
-
         private readonly FileSystemWatcher _workTreeWatcher = new();
         private readonly FileSystemWatcher _gitDirWatcher = new();
         private readonly System.Windows.Forms.Timer _timerRefresh;
@@ -75,6 +70,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private int _nextEarliestTime;
 
         private GitStatusMonitorState _currentStatus;
+
+        /// <summary>
+        /// git-status command is running that is not cancelled
+        /// </summary>
+        private bool _uncancelledCommandIsRunning;
 
         public bool Active
         {
@@ -233,6 +233,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                             if (_currentStatus != prevStatus)
                             {
+                                lock (_statusSequence)
+                                {
+                                    if (_uncancelledCommandIsRunning)
+                                    {
+                                        _statusSequence.CancelCurrent();
+                                        _uncancelledCommandIsRunning = false;
+                                    }
+                                }
+
                                 InvalidateGitWorkingDirectoryStatus();
                             }
                         }
@@ -265,7 +274,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                 // Timer is already running, schedule a new command only if a command is not running,
                                 // to avoid that many commands are started (and cancelled) if quickly switching Inactive/Running
                                 // If data has changed when Inactive it should be updated by normal means
-                                if (!_commandIsRunning)
+                                if (!_uncancelledCommandIsRunning)
                                 {
                                     ScheduleNextInteractiveTime();
                                 }
@@ -419,7 +428,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             lock (_statusSequence)
             {
-                if (_commandIsRunning)
+                if (_uncancelledCommandIsRunning)
                 {
                     return;
                 }
@@ -436,7 +445,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 module = Module;
                 noLocks = !_isFirstPostRepoChanged;
                 cancelToken = _statusSequence.Next();
-                _commandIsRunning = true;
+                _uncancelledCommandIsRunning = true;
 
                 // Schedule periodic update, even if we don't know that anything changed
                 _nextUpdateTime = commandStartTime
@@ -496,6 +505,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             {
                                 if (!cancelToken.IsCancellationRequested)
                                 {
+                                    _uncancelledCommandIsRunning = false;
                                     if (!ModuleHasChanged())
                                     {
                                         // Adjust the min time to next update
@@ -509,8 +519,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                             _nextUpdateTime = _nextEarliestTime;
                                         }
                                     }
-
-                                    _commandIsRunning = false;
                                 }
                             }
                         }
@@ -557,8 +565,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // Start commands, also if running already
             lock (_statusSequence)
             {
-                _commandIsRunning = false;
                 _statusSequence.CancelCurrent();
+                _uncancelledCommandIsRunning = false;
 
                 int ticks = Environment.TickCount;
                 _nextEarliestTime = ticks + MinUpdateInterval;
