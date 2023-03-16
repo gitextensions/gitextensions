@@ -49,13 +49,13 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Returns a task that completes when the process exits, or when this object is disposed.
         /// </summary>
-        /// <returns>A task that yields the process's exit code, or <c>null</c> if this object was disposed before the process exited.</returns>
+        /// <returns>A task that yields the process's exit code, or throws an exception if this object was disposed before the process exited.</returns>
         Task<int> WaitForExitAsync();
 
         /// <summary>
         /// Returns a cancellable task that completes when the process exits, or when this object is disposed.
         /// </summary>
-        /// <returns>A task that yields the process's exit code, or <c>null</c> if this object was disposed before the process exited.</returns>
+        /// <returns>A task that yields the process's exit code, or throws an exception if this object was disposed before the process exited.</returns>
         Task<int> WaitForExitAsync(CancellationToken token);
 
         /// <summary>
