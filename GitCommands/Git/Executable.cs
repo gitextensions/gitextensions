@@ -4,6 +4,7 @@ using GitCommands.Logging;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
@@ -220,10 +221,7 @@ namespace GitCommands
             public Task<int> WaitForExitAsync() => _exitTaskCompletionSource.Task;
 
             /// <inheritdoc />
-            public Task WaitForProcessExitAsync(CancellationToken token)
-            {
-                return _process.WaitForExitAsync(token);
-            }
+            public Task<int> WaitForExitAsync(CancellationToken token) => WaitForExitAsync().WithCancellation(token);
 
             /// <inheritdoc />
             public int WaitForExit()
