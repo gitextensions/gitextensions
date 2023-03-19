@@ -588,7 +588,7 @@ namespace GitUI.CommitInfo
 
             if (_branches is not null && string.IsNullOrEmpty(_branchInfo))
             {
-                _branches.Sort(new BranchComparer(Module.GetSelectedBranch()));
+                _branches.Sort(new BranchComparer(_branches, Module.GetSelectedBranch()));
                 _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
             }
 
@@ -801,20 +801,99 @@ namespace GitUI.CommitInfo
 
         internal sealed class BranchComparer : IComparer<string>
         {
-            private const string RemoteBranchPrefix = "remotes/";
-
-            private static readonly Regex _importantRepoRegex = new($"^{RemoteBranchPrefix}(origin|upstream)/",
-                RegexOptions.Compiled | RegexOptions.CultureInvariant);
-            private static readonly Regex _remoteMasterRegex = new($"^{RemoteBranchPrefix}.*/(main|master)[^/]*$",
-                RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
+            private const string _remoteBranchPrefix = "remotes/";
             private readonly string _currentBranch;
             private readonly bool _isDetachedHead;
+            private Dictionary<string, int> _orderByBranch = new();
 
-            public BranchComparer(string currentBranch)
+            public BranchComparer(List<string> branches, string currentBranch)
             {
                 _currentBranch = currentBranch;
                 _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);
+                string[] branchRegexes = AppSettings.PrioritizedBranchNames.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                string[] localBranchRegexes = branchRegexes.Select(regex => $"^({regex})$").ToArray();
+                string[] remoteBranchRegexes = branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$").ToArray();
+                string[] remoteRegexes = AppSettings.PrioritizedRemoteNames.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(regex => $"^{_remoteBranchPrefix}({regex})/").ToArray();
+
+                foreach (string branch in branches)
+                {
+                    _orderByBranch[branch] = GetBranchOrder(branch);
+                }
+
+                return;
+
+                // Get the order for each branch.
+                // Add max possible order value to next "level" to sort properly with the order for each regex.
+                int GetBranchOrder(string branch)
+                {
+                    int order = 0;
+                    if (_isDetachedHead ? DetachedHeadParser.IsDetachedHead(branch) : branch == _currentBranch)
+                    {
+                        return order;
+                    }
+
+                    order++;
+                    if (IsLocalBranch())
+                    {
+                        if (!TryGetOrder(branch, localBranchRegexes, out int localBranchOrder))
+                        {
+                            // Non prioritized branches added after prioritized remote branches
+                            order += prioritizedRemoteBranchesLength();
+                        }
+
+                        // Order by branch priority
+                        // Non priority has localBranchOrder==localBranchRegexes.Length, an extra priority level
+                        order += localBranchOrder;
+
+                        return order;
+                    }
+
+                    // Remote branches
+                    order += localBranchRegexes.Length;
+                    if (!TryGetOrder(branch, remoteBranchRegexes, out int remoteBranchOrder))
+                    {
+                        // after non priority local branches
+                        order += 1;
+                    }
+
+                    // Group by branch prio then remote (with not prioritized remotes as an extra level)
+                    order += (remoteBranchOrder * (remoteRegexes.Length + 1)) + GetOrder(branch, remoteRegexes);
+
+                    return order;
+
+                    bool IsLocalBranch() => !branch.StartsWith(_remoteBranchPrefix);
+
+                    // Prioritized remote 'range' adds the non-prioritized remotes as an additional level.
+                    // (There are remoteBranchRegexes.Length groups as the non matching branches are added after the locals).
+                    int prioritizedRemoteBranchesLength() => remoteBranchRegexes.Length * (remoteRegexes.Length + 1);
+
+                    // Get the index of the match for prioritized sorting,
+                    // set order to regexes.Length at no match
+                    bool TryGetOrder(string branch, string[] regexes, out int order)
+                    {
+                        int currentOrder = 0;
+                        foreach (string regex in regexes)
+                        {
+                            if (Regex.IsMatch(branch, regex, RegexOptions.ExplicitCapture))
+                            {
+                                order = currentOrder;
+                                return true;
+                            }
+
+                            currentOrder++;
+                        }
+
+                        order = currentOrder;
+                        return false;
+                    }
+
+                    int GetOrder(string branch, string[] regexes)
+                    {
+                        TryGetOrder(branch, regexes, out int order);
+                        return order;
+                    }
+                }
             }
 
             public int Compare(string? a, string? b)
@@ -829,26 +908,9 @@ namespace GitUI.CommitInfo
                     return 1;
                 }
 
-                int priorityA = GetBranchPriority(a);
-                int priorityB = GetBranchPriority(b);
-                return priorityA == priorityB ? StringComparer.Ordinal.Compare(a, b)
-                    : priorityA - priorityB;
-            }
-
-            private int GetBranchPriority(string branch)
-            {
-                return (_isDetachedHead ? DetachedHeadParser.IsDetachedHead(branch) : branch == _currentBranch) ? 0
-                    : IsImportantLocalBranch() ? 1
-                    : IsImportantRemoteBranch() ? IsImportantRepo() ? 2 : 3
-                    : IsLocalBranch() ? 4
-                    : IsImportantRepo() ? 5
-                    : 6;
-
-                // Note: This assumes that branches starting with "master" are important branches, this is not configurable.
-                bool IsImportantLocalBranch() => branch.StartsWith("master") || branch.StartsWith("main");
-                bool IsImportantRemoteBranch() => _remoteMasterRegex.IsMatch(branch);
-                bool IsImportantRepo() => _importantRepoRegex.IsMatch(branch);
-                bool IsLocalBranch() => !branch.StartsWith(RemoteBranchPrefix);
+                int priorityA = _orderByBranch[a];
+                int priorityB = _orderByBranch[b];
+                return priorityA == priorityB ? StringComparer.Ordinal.Compare(a, b) : priorityA - priorityB;
             }
         }
 
