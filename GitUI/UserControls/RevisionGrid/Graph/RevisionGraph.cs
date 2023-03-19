@@ -794,6 +794,49 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             break; // from for revisionGraphSegment
                         }
 
+                        // Join multi-lane crossings
+                        // Try to detect this:
+                        // | | * | <-- previous lane (not diagonal)
+                        // | |/ /
+                        // | * | <---- current lane
+                        // |,-´
+                        // | <-------- next lane (not diagonal)
+                        //
+                        // And change it into this:
+                        // | | * | <-- previous lane
+                        // | |/  |
+                        // | *   | <-- current lane
+                        // |,---´
+                        // | <-------- next lane
+                        int deltaPrev = previousLane - currentLane;
+                        if (previousLane >= 0 && Math.Abs(deltaPrev) >= 1)
+                        {
+                            RevisionGraphSegment segmentOrAncestor = currentRow.FirstParentOrSelf(revisionGraphSegment);
+                            IRevisionGraphRow nextRow = localOrderedRowCache[currentIndex + 1];
+                            int nextLane = nextRow.GetLaneForSegment(segmentOrAncestor).Index;
+                            int deltaNext = currentLane - nextLane;
+                            if (nextLane >= 0 && Math.Sign(deltaNext) == Math.Sign(deltaPrev) && Math.Abs(deltaNext + deltaPrev) >= 3 && !IsPrevLaneDiagonal(Math.Sign(deltaPrev)) && !IsNextLaneDiagonal())
+                            {
+                                int moveBy = deltaNext < 0 ? -deltaNext : deltaPrev;
+                                currentRow.MoveLanesRight(currentLane, moveBy);
+                                currentLane += moveBy;
+                                moved = true;
+                                break; // from for revisionGraphSegment
+                            }
+
+                            bool IsNextLaneDiagonal()
+                            {
+                                if (currentIndex + 2 > currentLastLookAheadIndex)
+                                {
+                                    return false;
+                                }
+
+                                segmentOrAncestor = nextRow.FirstParentOrSelf(segmentOrAncestor);
+                                int nextNextLane = localOrderedRowCache[currentIndex + 2].GetLaneForSegment(segmentOrAncestor).Index;
+                                return nextNextLane >= 0 && nextNextLane == nextLane - Math.Sign(deltaNext);
+                            }
+                        }
+
                         continue; // for revisionGraphSegment (added just as a separator for the local function)
 
                         bool IsPrevLaneDiagonal(int diagonalDelta = 1)

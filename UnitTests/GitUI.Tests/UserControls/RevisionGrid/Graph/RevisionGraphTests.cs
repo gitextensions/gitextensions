@@ -335,6 +335,32 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
+        [TestCase("0:3,2 1:5 2:5 3:5 4:R 5:R R")]
+        [TestCase("0:3,2 1:5 2:5 3:5 4:6 5:6 6:7,8 7:R 8:R R")]
+        [TestCase("0:5,4 1:7 2:6 3:R 4:7 5:7 6:R 7:R R")]
+        [TestCase("0:R,3 1:2 2:8,7 3:4,5,6 4:R 5:R 6:R 7:8 8:R R")]
+        public async Task JoinMultiLaneCrossings(string commitSpecs)
+        {
+            AppSettings.StraightenGraphDiagonals.Value = true;
+
+            RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
+
+            await VerifyGraphLayoutAsync(revisionGraph);
+        }
+
+        [Test]
+        [TestCase("0:6 1:6 2:6 3:6 4:R 5:7 6:R 7:R R")]
+        [TestCase("0:1,4,R 1:2,R 2:3,R 3:R 4:R R")]
+        public async Task DoNotJoinMultiLaneCrossings(string commitSpecs)
+        {
+            AppSettings.StraightenGraphDiagonals.Value = true;
+
+            RevisionGraph revisionGraph = CreateGraphTopDown(commitSpecs);
+
+            await VerifyGraphLayoutAsync(revisionGraph);
+        }
+
+        [Test]
         public async Task MoveVisibleAndInvisibleLanesRight([Values] bool moveFirstLane)
         {
             List<GitRevision> laneCommits = [];
