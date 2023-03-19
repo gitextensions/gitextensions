@@ -8,6 +8,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     public partial class FormOpenDirectory : GitExtensionsForm
     {
         private readonly TranslationString _warningOpenFailed = new("The selected directory is not a valid git repository.");
+        private readonly TranslationString _btnFolderGoUpButtonToolTip = new("Go to parent directory...");
+        private readonly TranslationString _toolTipTittle = new("Help");
 
         private GitModule? _chosenModule;
 
@@ -15,6 +17,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             InitializeComponent();
             InitializeComplete();
+
+            toolTip1.SetToolTip(folderGoUpButton, _btnFolderGoUpButtonToolTip.Text);
+            toolTip1.ToolTipTitle = _toolTipTittle.Text;
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {

@@ -384,7 +384,6 @@ namespace GitUI.CommandsDialogs
             this.StageInSuperproject.Size = new System.Drawing.Size(130, 17);
             this.StageInSuperproject.TabIndex = 103;
             this.StageInSuperproject.Text = "Stage &in Superproject";
-            this.fileTooltip.SetToolTip(this.StageInSuperproject, "Stage current submodule in superproject after commit");
             this.StageInSuperproject.UseVisualStyleBackColor = true;
             this.StageInSuperproject.CheckedChanged += new System.EventHandler(this.StageInSuperproject_CheckedChanged);
             // 

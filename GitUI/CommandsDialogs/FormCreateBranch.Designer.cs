@@ -126,7 +126,6 @@
             this.Orphan.Size = new System.Drawing.Size(101, 19);
             this.Orphan.TabIndex = 1;
             this.Orphan.Text = "Create or&phan";
-            this.toolTip.SetToolTip(this.Orphan, "New branch will have NO parents");
             this.Orphan.UseVisualStyleBackColor = true;
             this.Orphan.CheckedChanged += new System.EventHandler(this.Orphan_CheckedChanged);
             // 
@@ -141,7 +140,6 @@
             this.ClearOrphan.Size = new System.Drawing.Size(204, 19);
             this.ClearOrphan.TabIndex = 3;
             this.ClearOrphan.Text = "Clear &working directory and index";
-            this.toolTip.SetToolTip(this.ClearOrphan, "Remove files from the working directory and from the index");
             this.ClearOrphan.UseVisualStyleBackColor = true;
             // 
             // Ok

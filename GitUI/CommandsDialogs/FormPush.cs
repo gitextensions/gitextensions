@@ -83,7 +83,8 @@ namespace GitUI.CommandsDialogs
             new("Force push may overwrite changes since your last fetch. Do you want to use the safer force with lease instead?");
         private readonly TranslationString _forceWithLeaseTooltips =
             new("Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository");
-
+        private readonly TranslationString _pushToUrlRadioBtnToolTip = new("Url to push to");
+        private readonly TranslationString _pushToRemoteRadioBtnToolTip = new("Remote repository to push to");
         #endregion
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
@@ -107,6 +108,9 @@ namespace GitUI.CommandsDialogs
             DeleteColumn.Width = DpiUtil.Scale(108);
 
             InitializeComplete();
+
+            toolTip1.SetToolTip(PushToUrl, _pushToUrlRadioBtnToolTip.Text);
+            toolTip1.SetToolTip(PushToRemote, _pushToRemoteRadioBtnToolTip.Text);
 
             ForcePushTags.DataBindings.Add("Checked", ckForceWithLease, "Checked",
                 formattingEnabled: false, updateMode: DataSourceUpdateMode.OnPropertyChanged);

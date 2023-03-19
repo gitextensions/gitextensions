@@ -116,7 +116,6 @@
             this.PushToUrl.Size = new System.Drawing.Size(38, 17);
             this.PushToUrl.TabIndex = 3;
             this.PushToUrl.Text = "U&rl";
-            this.toolTip1.SetToolTip(this.PushToUrl, "Url to push to");
             this.PushToUrl.UseVisualStyleBackColor = true;
             this.PushToUrl.CheckedChanged += new System.EventHandler(this.PushToUrlCheckedChanged);
             // 
@@ -130,7 +129,6 @@
             this.PushToRemote.TabIndex = 0;
             this.PushToRemote.TabStop = true;
             this.PushToRemote.Text = "&Remote";
-            this.toolTip1.SetToolTip(this.PushToRemote, "Remote repository to push to");
             this.PushToRemote.UseVisualStyleBackColor = true;
             // 
             // Push

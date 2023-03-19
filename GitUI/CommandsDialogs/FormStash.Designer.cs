@@ -139,7 +139,6 @@ namespace GitUI.CommandsDialogs
             this.StashSelectedFiles.Size = new System.Drawing.Size(274, 50);
             this.StashSelectedFiles.TabIndex = 18;
             this.StashSelectedFiles.Text = "Stash &selected changes";
-            this.toolTip.SetToolTip(this.StashSelectedFiles, "Stash changes for the selected files, then revert them to the original state");
             this.StashSelectedFiles.UseVisualStyleBackColor = true;
             this.StashSelectedFiles.Click += new System.EventHandler(this.StashSelectedFiles_Click);
             // 
@@ -153,7 +152,6 @@ namespace GitUI.CommandsDialogs
             this.Stash.Size = new System.Drawing.Size(274, 50);
             this.Stash.TabIndex = 15;
             this.Stash.Text = "S&tash all changes";
-            this.toolTip.SetToolTip(this.Stash, "Save local changes to a new stash, then revert local changes");
             this.Stash.UseVisualStyleBackColor = true;
             this.Stash.Click += new System.EventHandler(this.StashClick);
             // 
@@ -167,7 +165,6 @@ namespace GitUI.CommandsDialogs
             this.chkIncludeUntrackedFiles.Size = new System.Drawing.Size(128, 29);
             this.chkIncludeUntrackedFiles.TabIndex = 14;
             this.chkIncludeUntrackedFiles.Text = "&Include untracked files";
-            this.toolTip.SetToolTip(this.chkIncludeUntrackedFiles, "All untracked files are also stashed and then cleaned");
             this.chkIncludeUntrackedFiles.UseVisualStyleBackColor = true;
             // 
             // StashKeepIndex
@@ -180,7 +177,6 @@ namespace GitUI.CommandsDialogs
             this.StashKeepIndex.Size = new System.Drawing.Size(128, 29);
             this.StashKeepIndex.TabIndex = 13;
             this.StashKeepIndex.Text = "&Keep index";
-            this.toolTip.SetToolTip(this.StashKeepIndex, "All changes already added to the index are left intact");
             this.StashKeepIndex.UseVisualStyleBackColor = true;
             // 
             // Apply
@@ -193,7 +189,6 @@ namespace GitUI.CommandsDialogs
             this.Apply.Size = new System.Drawing.Size(274, 50);
             this.Apply.TabIndex = 17;
             this.Apply.Text = "&Apply Selected Stash";
-            this.toolTip.SetToolTip(this.Apply, "Apply the selected stash on top of the current working directory state");
             this.Apply.UseVisualStyleBackColor = true;
             this.Apply.Click += new System.EventHandler(this.ApplyClick);
             // 
@@ -207,7 +202,6 @@ namespace GitUI.CommandsDialogs
             this.Clear.Size = new System.Drawing.Size(274, 50);
             this.Clear.TabIndex = 16;
             this.Clear.Text = "&Drop Selected Stash";
-            this.toolTip.SetToolTip(this.Clear, "Remove the selected stash from the list");
             this.Clear.UseVisualStyleBackColor = true;
             this.Clear.Click += new System.EventHandler(this.ClearClick);
             // 

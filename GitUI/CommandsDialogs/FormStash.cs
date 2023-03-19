@@ -12,6 +12,12 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _currentWorkingDirChanges = new("Current working directory changes");
         private readonly TranslationString _noStashes = new("There are no stashes.");
+        private readonly TranslationString _chkStashKeepIndexToolTip = new("All changes already added to the index are left intact");
+        private readonly TranslationString _chkIncludeUntrackedFilesToolTip = new("All untracked files are also stashed and then cleaned");
+        private readonly TranslationString _btnStashToolTip = new("Save local changes to a new stash, then revert local changes");
+        private readonly TranslationString _btnStashSelectedFilesToolTip = new("Stash changes for the selected files, then revert them to the original state");
+        private readonly TranslationString _btnClearToolTip = new("Remove the selected stash from the list");
+        private readonly TranslationString _btnApplyToolTip = new("Apply the selected stash on top of the current working directory state");
 
         private readonly CancellationTokenSequence _viewChangesSequence = new();
         private readonly AsyncLoader _asyncLoader = new();
@@ -44,6 +50,13 @@ namespace GitUI.CommandsDialogs
             }
 
             CompleteTheInitialization();
+
+            toolTip.SetToolTip(StashKeepIndex, _chkStashKeepIndexToolTip.Text);
+            toolTip.SetToolTip(chkIncludeUntrackedFiles, _chkIncludeUntrackedFilesToolTip.Text);
+            toolTip.SetToolTip(Stash, _btnStashToolTip.Text);
+            toolTip.SetToolTip(StashSelectedFiles, _btnStashSelectedFilesToolTip.Text);
+            toolTip.SetToolTip(Clear, _btnClearToolTip.Text);
+            toolTip.SetToolTip(Apply, _btnApplyToolTip.Text);
         }
 
         private void CompleteTheInitialization()

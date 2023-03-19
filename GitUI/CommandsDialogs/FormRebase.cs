@@ -44,6 +44,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _branchUpToDateCaption = new("Rebase");
 
         private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
+        private readonly TranslationString _chkIgnoreDateToolTip = new("Sets the author date to the current date (same as" + Environment.NewLine + "commit date), ignoring the original author date.");
+        private readonly TranslationString _chkCommitterDateIsAuthorDateToolTip = new("Sets the commit date to the original author date" + Environment.NewLine + "(instead of the current date).");
         #endregion
 
         private static readonly List<PatchFile> Skipped = new();
@@ -78,6 +80,9 @@ namespace GitUI.CommandsDialogs
             }
 
             InitializeComplete();
+
+            toolTip1.SetToolTip(chkIgnoreDate, _chkIgnoreDateToolTip.Text);
+            toolTip1.SetToolTip(chkCommitterDateIsAuthorDate, _chkCommitterDateIsAuthorDateToolTip.Text);
         }
 
         public FormRebase(GitUICommands commands, string? from, string? to, string? defaultBranch, bool interactive = false, bool startRebaseImmediately = true)

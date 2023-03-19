@@ -465,7 +465,6 @@ namespace GitUI.CommandsDialogs
             this.New.Name = "New";
             this.New.Size = new System.Drawing.Size(26, 26);
             this.New.TabIndex = 0;
-            this.toolTip1.SetToolTip(this.New, "Add new remote");
             this.New.UseVisualStyleBackColor = true;
             this.New.Click += new System.EventHandler(this.NewClick);
             // 
@@ -476,7 +475,6 @@ namespace GitUI.CommandsDialogs
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(26, 26);
             this.Delete.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.Delete, "Delete the selected remote");
             this.Delete.UseVisualStyleBackColor = true;
             this.Delete.Click += new System.EventHandler(this.DeleteClick);
             // 
@@ -487,7 +485,6 @@ namespace GitUI.CommandsDialogs
             this.btnToggleState.Name = "btnToggleState";
             this.btnToggleState.Size = new System.Drawing.Size(26, 26);
             this.btnToggleState.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.btnToggleState, "Enable or disable the selected remote");
             this.btnToggleState.UseVisualStyleBackColor = true;
             this.btnToggleState.Click += new System.EventHandler(this.btnToggleState_Click);
             // 

@@ -60,10 +60,4 @@
   <metadata name="ttHints.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="cbDownloadFullHistory.ToolTip" xml:space="preserve">
-    <value>The default Git behavior is to download all historical revisions.
-If you turn this off, we'll only download the latest revision for all branches.
-
-Actual command line (if unchecked): --depth 1 --no-single-branch</value>
-  </data>
 </root>

@@ -96,7 +96,6 @@
             this.folderGoUpButton.Name = "folderGoUpButton";
             this.folderGoUpButton.Size = new System.Drawing.Size(26, 25);
             this.folderGoUpButton.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.folderGoUpButton, "Go to parent directory...");
             this.folderGoUpButton.UseVisualStyleBackColor = true;
             this.folderGoUpButton.Click += new System.EventHandler(this.folderGoUpButton_Click);
             // 
@@ -104,7 +103,6 @@
             // 
             this.toolTip1.AutomaticDelay = 100;
             this.toolTip1.ShowAlways = true;
-            this.toolTip1.ToolTipTitle = "Help";
             // 
             // FormOpenDirectory
             // 

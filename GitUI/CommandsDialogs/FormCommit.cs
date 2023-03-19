@@ -43,6 +43,8 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _commitAndForcePush = new("Commit && force &push");
 
+        private readonly TranslationString _stageInSuperprojectToolTip = new("Stage current submodule in superproject after commit");
+
         private readonly TranslationString _deleteFailed = new("Delete file failed");
 
         private readonly TranslationString _deleteSelectedFiles =
@@ -273,6 +275,7 @@ namespace GitUI.CommandsDialogs
             stageToolStripMenuItem.Text = toolStageItem.Text;
             stageSubmoduleToolStripMenuItem.Text = toolStageItem.Text;
             stagedUnstageToolStripMenuItem.Text = toolUnstageItem.Text;
+            fileTooltip.SetToolTip(StageInSuperproject, _stageInSuperprojectToolTip.Text);
 
             toolAuthor.Control.PreviewKeyDown += (_, e) =>
             {

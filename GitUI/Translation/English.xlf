@@ -3010,6 +3010,30 @@ Do you want to continue?</source>
         <source>Apply stashed items to working directory again?</source>
         <target />
       </trans-unit>
+      <trans-unit id="_chkStashKeepIndexToolTip.Text">
+        <source>All changes already added to the index are left intact</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_chkIncludeUntrackedFilesToolTip.Text">
+        <source>All untracked files are also stashed and then cleaned</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_btnStashToolTip.Text">
+        <source>Save local changes to a new stash, then revert local changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_btnStashSelectedFilesToolTip.Text">
+        <source>Stash changes for the selected files, then revert them to the original state</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_btnClearToolTip.Text">
+        <source>Remove the selected stash from the list</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_btnApplyToolTip.Text">
+        <source>Apply the selected stash on top of the current working directory state</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_applyStashedItemsAgainCaption.Text">
         <source>Auto stash</source>
         <target />
@@ -3361,6 +3385,13 @@ Do you want to open the new repository "{0}" now?</source>
         <source>Download full &amp;history</source>
         <target />
       </trans-unit>
+      <trans-unit id="_cbDownloadFullHistoryToolTip.Text">
+        <source>The default Git behavior is to download all historical revisions.
+If you turn this off, we'll only download the latest revision for all branches.
+
+Actual command line (if unchecked): --depth 1 --no-single-branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="cbIntializeAllSubmodules.Text">
         <source>Initialize all submodules</source>
         <target />
@@ -3441,6 +3472,10 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="StageInSuperproject.Text">
         <source>Stage &amp;in Superproject</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stageInSuperprojectToolTip.Text">
+        <source>Stage current submodule in superproject after commit</source>
         <target />
       </trans-unit>
       <trans-unit id="StashStaged.Text">
@@ -4066,12 +4101,20 @@ You can unset the template:
         <source>Clear &amp;working directory and index</source>
         <target />
       </trans-unit>
+      <trans-unit id="_chkClearOrphanTollTip.Text">
+        <source>Remove files from the working directory and from the index</source>
+        <target />
+      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>&amp;Create branch</source>
         <target />
       </trans-unit>
       <trans-unit id="Orphan.Text">
         <source>Create or&amp;phan</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_chkOrphanTollTip.Text">
+        <source>New branch will have NO parents</source>
         <target />
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -5294,6 +5337,14 @@ command "git help shortlog"</source>
         <source>The selected directory is not a valid git repository.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_btnFolderGoUpButtonToolTip.Text">
+        <source>Go to parent directory...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_toolTipTittle.Text">
+        <source>Help</source>
+        <target />
+      </trans-unit>
       <trans-unit id="folderBrowserButton.Text">
         <source>&amp;Browse...</source>
         <target />
@@ -5613,8 +5664,16 @@ This will initialize and update all submodules recursive.</source>
         <source>&amp;Remote</source>
         <target />
       </trans-unit>
+      <trans-unit id="_pushToRemoteRadioBtnToolTip.Text">
+        <source>Remote repository to push to</source>
+        <target />
+      </trans-unit>
       <trans-unit id="PushToUrl.Text">
         <source>U&amp;rl</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pushToUrlRadioBtnToolTip.Text">
+        <source>Url to push to</source>
         <target />
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
@@ -5937,8 +5996,18 @@ Nothing to rebase.</source>
         <source>Co&amp;mmitter date is author date</source>
         <target />
       </trans-unit>
+      <trans-unit id="_chkCommitterDateIsAuthorDate.Text">
+        <source>Sets the commit date to the original author date
+(instead of the current date).</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkIgnoreDate.Text">
         <source>Ignore &amp;date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_chkIgnoreDateToolTip.Text">
+        <source>Sets the author date to the current date (same as
+commit date), ignoring the original author date.</source>
         <target />
       </trans-unit>
       <trans-unit id="chkInteractive.Text">
@@ -6216,6 +6285,10 @@ Do you want to register the host's fingerprint and restart the process?</source>
       </trans-unit>
       <trans-unit id="_btnNewTooltip.Text">
         <source>Add a new remote</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_btnToggleStateDefaultTooltip.Text">
+        <source>Enable or disable the selected remote</source>
         <target />
       </trans-unit>
       <trans-unit id="_btnToggleStateTooltip_Activate.Text">

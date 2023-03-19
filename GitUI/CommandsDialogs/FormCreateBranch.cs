@@ -13,6 +13,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelected = new("Select 1 revision to create the branch on.");
         private readonly TranslationString _branchNameIsEmpty = new("Enter branch name.");
         private readonly TranslationString _branchNameIsNotValid = new("“{0}” is not valid branch name.");
+        private readonly TranslationString _chkOrphanTollTip = new("New branch will have NO parents");
+        private readonly TranslationString _chkClearOrphanTollTip = new("Remove files from the working directory and from the index");
+
         private readonly IGitBranchNameNormaliser _branchNameNormaliser = new GitBranchNameNormaliser();
         private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
 
@@ -34,6 +37,9 @@ namespace GitUI.CommandsDialogs
             MinimumSize = new Size(Width, PreferredMinimumHeight);
 
             InitializeComplete();
+
+            toolTip.SetToolTip(Orphan, _chkOrphanTollTip.Text);
+            toolTip.SetToolTip(ClearOrphan, _chkClearOrphanTollTip.Text);
 
             groupBox1.AutoSize = true;
 

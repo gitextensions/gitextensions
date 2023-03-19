@@ -74,6 +74,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _btnNewTooltip =
             new("Add a new remote");
 
+        private readonly TranslationString _btnToggleStateDefaultTooltip = new("Enable or disable the selected remote");
+
         private readonly TranslationString _btnToggleStateTooltip_Activate =
             new("Activate the selected remote");
 
@@ -113,6 +115,9 @@ Inactive remote is completely invisible to git.");
             Delete.Text = string.Empty;
             toolTip1.SetToolTip(New, _btnNewTooltip.Text);
             toolTip1.SetToolTip(Delete, _btnDeleteTooltip.Text);
+
+            // if no remotes are displayed in 'Remotes' list, otherwise tool tip set in 'BindBtnToggleState' method
+            toolTip1.SetToolTip(btnToggleState, _btnToggleStateDefaultTooltip.Text);
 
             _lvgEnabled = new ListViewGroup(_lvgEnabledHeader.Text, HorizontalAlignment.Left);
             _lvgDisabled = new ListViewGroup(_lvgDisabledHeader.Text, HorizontalAlignment.Left);
