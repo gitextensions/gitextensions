@@ -8,7 +8,7 @@
         int GetLaneCount();
         IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
         Lane GetLaneForSegment(RevisionGraphSegment revisionGraphRevision);
-        void MoveLanesRight(int fromLane);
+        void MoveLanesRight(int fromLane, int by = 1);
         RevisionGraphSegment FirstParentOrSelf(RevisionGraphSegment segment);
     }
 }

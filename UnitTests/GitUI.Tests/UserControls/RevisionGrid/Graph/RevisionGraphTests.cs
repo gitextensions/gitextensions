@@ -1,4 +1,6 @@
-﻿using GitUI.UserControls.RevisionGrid.Graph;
+﻿using FluentAssertions.Execution;
+using GitCommands;
+using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 
 namespace GitUITests.UserControls.RevisionGrid
@@ -11,6 +13,9 @@ namespace GitUITests.UserControls.RevisionGrid
         [SetUp]
         public void Setup()
         {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = true;
+            AppSettings.StraightenGraphDiagonals.Value = false;
+
             _revisionGraph = new RevisionGraph();
 
             foreach (GitRevision revision in Revisions)
@@ -155,21 +160,21 @@ namespace GitUITests.UserControls.RevisionGrid
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:4  6:5  7:5,6  8:7,2 ");
 
             AssertGraphLayout(revisionGraph, @"
-                *
+                8
                 |\
-                * |
+                7 |
                 |\ \
-                | * |
+                | 6 |
                 |/  |
-                *   |
+                5   |
                 |   |
-                *   |
+                4   |
                 |\  |
-                | * |
+                | 3 |
                 |/ /
-                | *
+                | 2
                 |/
-                *
+                1
             ");
         }
 
@@ -179,23 +184,23 @@ namespace GitUITests.UserControls.RevisionGrid
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:5  7:4  8:4,7  9:8,6 ");
 
             AssertGraphLayout(revisionGraph, @"
-                *
+                9
                 |\
-                * |
+                8 |
                 |\ \
-                | * |
+                | 7 |
                 |/  |
-                |   *
+                |   6
                 |   |
-                |   *
+                |   5
                 |   |
-                *   |
+                4   |
                 |\  |
-                | * |
+                | 3 |
                 |/ /
-                | *
+                | 2
                 |/
-                *
+                1
             ");
         }
 
@@ -205,23 +210,23 @@ namespace GitUITests.UserControls.RevisionGrid
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:4,5  7:6  8:6,7  9:8,5 ");
 
             AssertGraphLayout(revisionGraph, @"
-                *
+                9
                 |\
-                * |
+                8 |
                 |\ \
-                | * |
+                | 7 |
                 |/ /
-                * |
+                6 |
                 |\|
-                | *
+                | 5
                 | |
-                * |
+                4 |
                 |\ \
-                | * |
+                | 3 |
                 |/ /
-                | *
+                | 2
                 |/
-                *
+                1
             ");
         }
 
@@ -231,21 +236,21 @@ namespace GitUITests.UserControls.RevisionGrid
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2,4  6:4  7:4,6  8:7,5 ");
 
             AssertGraphLayout(revisionGraph, @"
-                *
+                8
                 |\
-                * |
+                7 |
                 |\ \
-                | * |
+                | 6 |
                 |/  |
-                |   *
-                |--/|
-                *   |
+                |   5
+                |--´|
+                4   |
                 |\  |
-                | * |
+                | 3 |
                 |/ /
-                | *
+                | 2
                 |/
-                *
+                1
             ");
         }
 
@@ -255,47 +260,47 @@ namespace GitUITests.UserControls.RevisionGrid
             RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1  5:1,4  6:2  7:2,6  8:5  9:5,8,3,7 ");
 
             AssertGraphLayout(revisionGraph, @"
-                *
-                |\----\
-                | * | |
+                9
+                |\----ˎ
+                | 8 | |
                 |/  | |
-                |   | *
+                |   | 7
                 |   | |\
-                |   | | *
+                |   | | 6
                 |   | |/
-                *   | |
+                5   | |
                 |\  | |
-                | * | |
+                | 4 | |
                 |/ / /
-                | * |
+                | 3 |
                 |/ /
-                | *
+                | 2
                 |/
-                *
+                1
             ");
         }
 
         [Test]
         public void SegmentsWithOutgoingPrimaryMergesAreStraightened()
         {
-            RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  6:1  7:1,6  8:3,2  9:7  10:7,9,8 ");
+            RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  6:1  7:1,6  8:3,2  9:7  0:7,9,8 ");
 
             AssertGraphLayout(revisionGraph, @"
-                *
-                |\--\
-                | * |
+                0
+                |\--ˎ
+                | 9 |
                 |/  |
-                |   *
+                |   8
                 |   |\
-                *   | |
+                7   | |
                 |\  | |
-                | * | |
+                | 6 | |
                 |/ / /
-                | * |
+                | 3 |
                 |/ /
-                | *
+                | 2
                 |/
-                *
+                1
             ");
         }
 
@@ -308,33 +313,549 @@ namespace GitUITests.UserControls.RevisionGrid
             // but then it would shift the parent node causing an unwanted gap.
 
             AssertGraphLayout(revisionGraph, @"
-                *
-                |\--------\
-                | * | | | |
+                9
+                |\--------ˎ
+                | e | | | |
                 |/ / /  | |
-                | * |   | |
+                | d |   | |
                 |/ /    | |
-                | *     | |
+                | c     | |
                 |/      | |
-                *       | |
-                |\--\   | |
-                * | |   | |
+                8       | |
+                |\--ˎ   | |
+                7 | |   | |
                 |\ X    | |
-                | * |   | |
+                | 6 |   | |
                 | | |   | |
-                * | |   | |
+                5 | |   | |
                 |\ \ \  | |
-                * | | | | |
+                4 | | | | |
                 |/ / / / /
-                | * | | |
+                | 3 | | |
                 |/ / / /
-                | * | |
+                | 2 | |
                 |/ / /
-                | * |
+                | b |
                 |/ /
-                | *
+                | a
                 |/
-                *
+                1
+            ");
+        }
+
+        [Test]
+        public void SegmentsAreNotStraightenedOverMultiLaneCrossings()
+        {
+            const string graphWithMultiLaneCrossings = "0:C,1,2,3,4,5,6,7,8,9,A,B 1:R 2:R 3:R 4:C 5:C 6:C 7:R 8:C 9:R A:C B:R C:D D:E E:F F:G G:H,K,R H:I,R I:J,R J:R K:R R";
+
+            RevisionGraph revisionGraph = CreateGraphTopDown(graphWithMultiLaneCrossings);
+
+            // No need to straighten the segments 7:R, 9:R, B:R at rows C to G because shared.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\--------------------ˎ
+                | 1 | | | | | | | | | |
+                | | | | | | | | | | | |
+                | | 2 | | | | | | | | |
+                | |/ / / / / / / / / /
+                | | 3 | | | | | | | |
+                | |/ / / / / / / / /
+                | | 4 | | | | | | |
+                |-|´ / / / / / / /
+                | | 5 | | | | | |
+                |-|´ / / / / / /
+                | | 6 | | | | |
+                |-|´ / / / / /
+                | | 7 | | | |
+                | |/ / / / /
+                | | 8 | | |
+                |-|´ / / /
+                | | 9 | |
+                | |/ / /
+                | | A |
+                |-|´ /
+                | | B
+                | |/
+                C |
+                | |
+                D |
+                | |
+                E |
+                | |
+                F |
+                | |
+                G |
+                |\-\ˎ
+                H | |
+                |\ /
+                I | |
+                |\| |
+                J | |
+                |/ /
+                | K
+                |/
+                R
+            ");
+
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
+
+            revisionGraph = CreateGraphTopDown(graphWithMultiLaneCrossings);
+
+            // Do not move the segments 7:R, 9:R, B:R at rows C to G.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\--------------------ˎ
+                | 1 | | | | | | | | | |
+                | | | | | | | | | | | |
+                | | 2 | | | | | | | | |
+                | | | | | | | | | | | |
+                | | | 3 | | | | | | | |
+                | | | | | | | | | | | |
+                | | | | 4 | | | | | | |
+                | | | | | | | | | | | |
+                | | | | | 5 | | | | | |
+                | | | | | | | | | | | |
+                | | | | | | 6 | | | | |
+                | | | | | | | | | | | |
+                | | | | | | | 7 | | | |
+                | | | | | | | | | | | |
+                | | | | | | | | 8 | | |
+                | | | | | | | | | | | |
+                | | | | | | | | | 9 | |
+                | | | | | | | | | | | |
+                | | | | | | | | | | A |
+                | | | | | | | | | | | |
+                | | | | | | | | | | | B
+                |-|-|-|-----,--------´
+                C | | | | | |
+                | | | | | | |
+                D | | | | | |
+                | | | | | | |
+                E | | | | | |
+                | | | | | | |
+                F | | | | | |
+                | | | | | | |
+                G | | | | | |
+                |\-`-`-`-`-`-`--ˎ
+                H | | | | | | | |
+                |\ \ \ \ \ \ \ \ \
+                I | | | | | | | | |
+                |\ \ \ \ \ \ \ \ \ \
+                J | | | | | | | | | |
+                | | | | | | | | | | |
+                | | | K | | | | | | |
+                |/-----------------´
+                R
+            ");
+
+            AppSettings.StraightenGraphDiagonals.Value = true;
+
+            revisionGraph = CreateGraphTopDown(graphWithMultiLaneCrossings);
+
+            // Do not straighten the segments 7:R, 9:R, B:R at rows C to G but create diagonals.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\--------------------ˎ
+                | 1 | | | | | | | | | |
+                | | | | | | | | | | | |
+                | | 2 | | | | | | | | |
+                | | | | | | | | | | | |
+                | | | 3 | | | | | | | |
+                | | | | | | | | | | | |
+                | | | | 4 | | | | | | |
+                | | | | | | | | | | | |
+                | | | | | 5 | | | | | |
+                | | | | | | | | | | | |
+                | | | | | | 6 | | | | |
+                | | | | | | | | | | | |
+                | | | | | | | 7 | | | |
+                | | | | | | | | | | | |
+                | | | | | | | | 8 | | |
+                | | | | | | | | | | | |
+                | | | | | | | | | 9 | |
+                | | | | | | | | | | | |
+                | | | | | | | | | | A |
+                | | | | | | | | | | | |
+                | | | | | | | | | | | B
+                |-|-|-|------/---/-´ /
+                C | | |     |   |   |
+                | | | |    /   /   /
+                D | | |   |   |   |
+                | | | |  /   /   /
+                E | | | |   |   |
+                | | | | |  /   /
+                F | | | | |   |
+                |  \ \ \ \ \  |
+                G   | | | | | |
+                |\--ˎ\ \ \ \ \ \
+                H | | | | | | | |
+                |\ \ \ \ \ \ \ \ \
+                I | | | | | | | | |
+                |\ \ \ \ \ \ \ \ \ \
+                J | | | | | | | | | |
+                | | | | | | | | | | |
+                | | | K | | | | | | |
+                |/-----------------´
+                R
+            ");
+        }
+
+        [Test]
+        public void TurnMultiLaneCrossingsIntoDiagonals()
+        {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
+            AppSettings.StraightenGraphDiagonals.Value = true;
+
+            RevisionGraph revisionGraph = CreateGraph("R 5:R 4:R 3:R 2:R,5,4 1:2 0:1,3");
+
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                1 |
+                |  \
+                2   |
+                |\--ˎ\
+                | | | 3
+                | | | |
+                | | 4 |
+                | | | |
+                | 5 | |
+                |/---´
+                R
+            ");
+
+            revisionGraph = CreateGraph("R 7:R 6:R 5:R 4:R 3:R,7,6,5 2:3 1:2 0:1,4");
+
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                1 |
+                |  \
+                2   |
+                |    \
+                3     |
+                |\----ˎ\
+                | | | | 4
+                | | | | |
+                | | | 5 |
+                | | | | |
+                | | 6 | |
+                | | | | |
+                | 7 | | |
+                |/-----´
+                R
+            ");
+
+            revisionGraph = CreateGraph("R 8:R 7:R 6:R 5:R 4:R 3:R,8,7,6,5 2:3 1:2 0:1,4");
+
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                1 |
+                | |
+                2 |
+                | |
+                3 |
+                |\-`------ˎ
+                | | | | | 4
+                | | | | | |
+                | | | | 5 |
+                | | | | | |
+                | | | 6 | |
+                | | | | | |
+                | | 7 | | |
+                | | | | | |
+                | 8 | | | |
+                |/-------´
+                R
+            ");
+        }
+
+        [Test]
+        public void UnfoldOneLaneShiftsToDiagonals()
+        {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
+            AppSettings.StraightenGraphDiagonals.Value = true;
+
+            using (new AssertionScope())
+            {
+                RevisionGraph revisionGraph = CreateGraph("R 4:R 3:R 2:R,3 1:2 0:1,4");
+
+                AssertGraphLayout(revisionGraph, @"
+                    0
+                    |\
+                    1 |
+                    |  \
+                    2   |
+                    |\  |
+                    | 3 |
+                    | | |
+                    | | 4
+                    |/-´
+                    R
+                ");
+
+                revisionGraph = CreateGraph("R 9:R 8:9 7:R,R 6:7,R 5:6 4:5,8 3:R 2:4,3 1:2,R 0:1,R");
+
+                AssertGraphLayout(revisionGraph, @"
+                    0
+                    |\
+                    1 |
+                    |\ \
+                    2 | |
+                    |\ \ \
+                    | 3 | |
+                    |  \ \ \
+                    4   | | |
+                    |\  | | |
+                    5 | | | |
+                    | | | | |
+                    6 | | | |
+                    |\ \ \ \ \
+                    7 | | | | |
+                    |\ \ \ \ \ \
+                    | | | 8 | | |
+                    | | | | | | |
+                    | | | 9 | | |
+                    |/---------´
+                    R
+                ");
+
+                revisionGraph = CreateGraph("R H:R G:H F:R E:F D:R C:F B:C A:B 9:A 8:9 7:G 6:C 5:C 4:E 3:E 2:D 1:D 0:D,1,2,3,4,5,6,B,8,9,7");
+
+                AssertGraphLayout(revisionGraph, @"
+                    0
+                    |\------------------ˎ
+                    | 1 | | | | | | | | |
+                    | | | | | | | | | | |
+                    | | 2 | | | | | | | |
+                    | | | | | | | | | | |
+                    | | | 3 | | | | | | |
+                    | | | | | | | | | | |
+                    | | | | 4 | | | | | |
+                    | | | | | | | | | | |
+                    | | | | | 5 | | | | |
+                    | | | | | | | | | | |
+                    | | | | | | 6 | | | |
+                    | | | | | | | | | | |
+                    | | | | | | | | | | 7
+                    | | | | | | | | | | |
+                    | | | | | | | | 8 | |
+                    | | | | | | | | |/  |
+                    | | | | | | | | 9   |
+                    | | | | | | | | |  /
+                    | | | | | | | | A |
+                    | | | | | | | |/ /
+                    | | | | | | | B |
+                    | | | | | |/-´ /
+                    | | | | | C   |
+                    |/-´ / / /   /
+                    D   | | |   |
+                    | ,/,--´   /
+                    | E |     |
+                    | |/     /
+                    | F     |
+                    | |    /
+                    | |   G
+                    | |  /
+                    | | H
+                    |/-´
+                    R
+                ");
+
+                revisionGraph = CreateGraphTopDown("0:1 1:2,4 2:3 3:R,5 4:5,R 5:R R");
+
+                AssertGraphLayout(revisionGraph, @"
+                    0
+                    |
+                    1
+                    |\
+                    2 |
+                    |  \
+                    3   |
+                    |\  |
+                    | | 4
+                    | |/|
+                    | 5 |
+                    |/-´
+                    R
+                ");
+
+                revisionGraph = CreateGraphTopDown("0:4 1:3,2 2:6 3:8,B 4:5 5:A,6 6:7 7:8 8:C,R 9:A A:B,R B:R C:R R");
+
+                AssertGraphLayout(revisionGraph, @"
+                    0
+                    |
+                    | 1
+                    | |\
+                    | | 2
+                    | |  \
+                    | 3   |
+                    | |\   \
+                    4 | |   |
+                    | |  \  |
+                    5 |   | |
+                    |\,\--|´
+                    | 6 | |
+                    | | | |
+                    | 7 | |
+                    | |/  |
+                    | 8   |
+                    | |\  |
+                    | | | | 9
+                    |-|--\-\
+                    A |   | |
+                    |\-\--|´
+                    B | | |
+                    | | | |
+                    | | C |
+                    |/---´
+                    R
+                ");
+            }
+        }
+
+        [Test]
+        public void DoNotUnfoldOneLaneShiftFollowedByDiagonal()
+        {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
+            AppSettings.StraightenGraphDiagonals.Value = true;
+
+            RevisionGraph revisionGraph = CreateGraph("R 5:R 4:R 3:R,4 2:R,3 1:2 0:1,5");
+
+            // Do not move the right lane of row 2.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                1 |
+                | |
+                2 |
+                |\ \
+                | 3 |
+                | |\ \
+                | | 4 |
+                | | | |
+                | | | 5
+                |/---´
+                R
+            ");
+
+            revisionGraph = CreateGraph("R 9:R 8:9 7:8,R 6:7 5:6 4:5,R 3:R 2:4,3 1:2,R 0:1,R");
+
+            // Do not move the right lanes of row 6.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                1 |
+                |\ \
+                2 | |
+                |\ \ \
+                | 3 | |
+                |  \ \ \
+                4   | | |
+                |\  | | |
+                5 | | | |
+                | | | | |
+                6 | | | |
+                | | | | |
+                7 | | | |
+                |\ \ \ \ \
+                8 | | | | |
+                | | | | | |
+                9 | | | | |
+                |/-------´
+                R
+            ");
+
+            revisionGraph = CreateGraph("R 9:R 8:9 7:R,R 6:7,R 5:6,R 4:5,8 3:R 2:4,3 1:2,R 0:1,R");
+
+            // Do not move the right lanes of row 4.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                1 |
+                |\ \
+                2 | |
+                |\ \ \
+                | 3 | |
+                | | | |
+                4 | | |
+                |\ \ \ \
+                5 | | | |
+                |\ \ \ \ \
+                6 | | | | |
+                |\ \ \ \ \ \
+                7 | | | | | |
+                |\ \ \ \ \ \ \
+                | | | | 8 | | |
+                | | | | | | | |
+                | | | | 9 | | |
+                |/-----------´
+                R
+            ");
+
+            revisionGraph = CreateGraphTopDown("0:5,1,2,3,4 1:5 2:5 3:6 4:8 5:R 6:7 7:8,B 8:9 9:R,A A:R B:R R");
+
+            // Do not move segment 4:8 at row 6 & 5.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\------ˎ
+                | 1 | | |
+                | | | | |
+                | | 2 | |
+                | | | | |
+                | | | 3 |
+                | | | | |
+                | | | | 4
+                |/-´ / /
+                5   | |
+                |  / /
+                | 6 |
+                | | |
+                | 7 |
+                | |X
+                | 8 |
+                | |  \
+                | 9   |
+                | |\  |
+                | | A |
+                | | | |
+                | | | B
+                |/---´
+                R
+            ");
+
+            revisionGraph = CreateGraphTopDown("0:5,1,2,3,4 1:5 2:5 3:6 4:8 5:R 6:7 7:8,B 8:9 9:R,A A:R,C B:R C:R R");
+
+            // Do not move segment 7:B at row 9.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\------ˎ
+                | 1 | | |
+                | | | | |
+                | | 2 | |
+                | | | | |
+                | | | 3 |
+                | | | | |
+                | | | | 4
+                |/-´ / /
+                5   | |
+                |  / /
+                | 6 |
+                | | |
+                | 7 |
+                | |X
+                | 8 |
+                | | |
+                | 9 |
+                | |\ \
+                | | A |
+                | | |\ \
+                | | | | B
+                | | | | |
+                | | | C |
+                |/-----´
+                R
             ");
         }
 
@@ -412,6 +933,7 @@ namespace GitUITests.UserControls.RevisionGrid
                 string id = parts[0];
 
                 GitRevision commit = new(ObjectId.Random());
+                commit.Subject = id;
                 commits.Add(commit);
                 commitsById.Add(id, commit);
 
@@ -437,6 +959,11 @@ namespace GitUITests.UserControls.RevisionGrid
             graph.CacheTo(lastRowIndex, lastRowIndex);
 
             return graph;
+        }
+
+        private RevisionGraph CreateGraphTopDown(string commitSpecs)
+        {
+            return CreateGraph(commitSpecs.Split(' ').Reverse().Join(" "));
         }
 
         /// <summary>
@@ -480,7 +1007,8 @@ namespace GitUITests.UserControls.RevisionGrid
                 }
 
                 // Show '*' in lane of actual commit
-                line[row.GetCurrentRevisionLane() * 2] = '*';
+                string? subject = row.Revision.GitRevision.Subject;
+                line[row.GetCurrentRevisionLane() * 2] = subject?.Length is 1 ? subject[0] : '*';
 
                 graph.Add(new string(line).Trim());
 
@@ -547,8 +1075,8 @@ namespace GitUITests.UserControls.RevisionGrid
                     else if (toPos > fromPos)
                     {
                         // Segment shifts multiple lanes to the right
-                        line[fromPos + 1] = '\\';
-                        line[toPos] = '\\';
+                        line[fromPos + 1] = '`';
+                        line[toPos] = 'ˎ';
                         for (int pos = fromPos + 2; pos < toPos; ++pos)
                         {
                             line[pos] = '-';
@@ -557,8 +1085,8 @@ namespace GitUITests.UserControls.RevisionGrid
                     else if (toPos < fromPos)
                     {
                         // Segment shifts multiple lanes to the left
-                        line[fromPos - 1] = '/';
-                        line[toPos] = '/';
+                        line[fromPos - 1] = '´';
+                        line[toPos] = ',';
                         for (int pos = toPos + 1; pos < fromPos - 1; ++pos)
                         {
                             line[pos] = '-';

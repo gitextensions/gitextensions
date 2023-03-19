@@ -9,7 +9,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     //     *  <- child revision
     //     |
     //     *  <- parent revision
-    [DebuggerDisplay("{Objectid}")]
+    [DebuggerDisplay("{Objectid} {GitRevision.Subject}")]
     public class RevisionGraphRevision
     {
         private ImmutableStack<RevisionGraphRevision> _parents = ImmutableStack<RevisionGraphRevision>.Empty;

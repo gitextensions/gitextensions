@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Diagnostics;
+using GitCommands;
 using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
@@ -7,6 +8,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // The segments can be returned in the order how it is stored.
     // Segments are not the same as lanes.A crossing segment is a lane, but multiple segments can connect to the revision.
     // Therefore, a single lane can have multiple segments.
+    [DebuggerDisplay("{Revision}")]
     public class RevisionGraphRow : IRevisionGraphRow
     {
         private static readonly Lane _noLane = new(-1, LaneSharing.ExclusiveOrPrimary);
@@ -230,6 +232,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             return _noLane;
+        }
+
+        public void MoveLanesRight(int fromLane, int by)
+        {
+            for (; by > 0; --by, ++fromLane)
+            {
+                MoveLanesRight(fromLane);
+            }
         }
 
         public void MoveLanesRight(int fromLane)

@@ -1,5 +1,8 @@
-﻿namespace GitUI.UserControls.RevisionGrid.Graph
+﻿using System.Diagnostics;
+
+namespace GitUI.UserControls.RevisionGrid.Graph
 {
+    [DebuggerDisplay("{Index} {Sharing}")]
     public sealed class Lane
     {
         public int Index;

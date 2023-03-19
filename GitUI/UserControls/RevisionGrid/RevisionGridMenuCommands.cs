@@ -458,6 +458,7 @@ namespace GitUI.UserControls.RevisionGrid
                 CreateBoolViewSettingItem(AppSettings.MergeGraphLanesHavingCommonParent, GetLabel, reloadRevisions: true),
                 CreateBoolViewSettingItem(AppSettings.DrawGraphWithDiagonals, GetLabel),
                 CreateBoolViewSettingItem(AppSettings.StraightOneLaneDiagonals, GetLabel),
+                CreateBoolViewSettingItem(AppSettings.StraightenGraphDiagonals, GetLabel, reloadRevisions: true),
                 MenuCommand.CreateSeparator(),
 
                 MenuCommand.CreateGroupHeader("Settings"),
