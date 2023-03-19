@@ -10,9 +10,12 @@ internal readonly struct RevisionGraphConfig
 
     public bool RenderGraphWithDiagonals { get; }
 
+    public bool StraightenGraphDiagonals { get; }
+
     public RevisionGraphConfig()
     {
         MergeGraphLanesHavingCommonParent = AppSettings.MergeGraphLanesHavingCommonParent.Value;
         RenderGraphWithDiagonals = AppSettings.RenderGraphWithDiagonals.Value;
+        StraightenGraphDiagonals = AppSettings.StraightenGraphDiagonals.Value;
     }
 }

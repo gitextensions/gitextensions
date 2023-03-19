@@ -1515,6 +1515,8 @@ namespace GitCommands
 
         public static ISetting<bool> RenderGraphWithDiagonals { get; } = Setting.Create(ExperimentalSettingsPath, nameof(RenderGraphWithDiagonals), true);
 
+        public static ISetting<bool> StraightenGraphDiagonals { get; } = Setting.Create(ExperimentalSettingsPath, nameof(StraightenGraphDiagonals), true);
+
         public static string LastFormatPatchDir
         {
             get => GetString("lastformatpatchdir", "");

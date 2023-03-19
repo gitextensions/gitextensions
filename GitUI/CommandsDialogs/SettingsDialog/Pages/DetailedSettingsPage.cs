@@ -29,6 +29,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
             chkMergeGraphLanesHavingCommonParent.Checked = AppSettings.MergeGraphLanesHavingCommonParent.Value;
+            chkRenderGraphWithDiagonals.Checked = AppSettings.RenderGraphWithDiagonals.Value;
+            chkStraightenGraphDiagonals.Checked = AppSettings.StraightenGraphDiagonals.Value;
 
             IDetailedSettings detailedSettings = GetCurrentSettings()
                 .Detailed();
@@ -47,6 +49,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             AppSettings.MergeGraphLanesHavingCommonParent.Value = chkMergeGraphLanesHavingCommonParent.Checked;
+            AppSettings.RenderGraphWithDiagonals.Value = chkRenderGraphWithDiagonals.Checked;
+            AppSettings.StraightenGraphDiagonals.Value = chkStraightenGraphDiagonals.Checked;
 
             IDetailedSettings detailedSettings = GetCurrentSettings()
                 .Detailed();
