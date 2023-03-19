@@ -649,17 +649,17 @@ namespace GitUITests.UserControls.RevisionGrid
                     | | | | | | | B |
                     | | | | | |/-´ /
                     | | | | | C   |
-                    |/-´ / / /   /
-                    D   | | |   |
-                    | ,/,--´   /
-                    | E |     |
-                    | |/     /
-                    | F     |
-                    | |    /
-                    | |   G
-                    | |  /
-                    | | H
-                    |/-´
+                    |/-´ /  | |  /
+                    D   |   | | |
+                    | ,/---´  | |
+                    | E       | |
+                    | |------´ /
+                    | F       |
+                    | |      /
+                    | |     G
+                    | |     |
+                    | |     H
+                    |/-----´
                     R
                 ");
 
@@ -854,6 +854,148 @@ namespace GitUITests.UserControls.RevisionGrid
                 | | | | B
                 | | | | |
                 | | | C |
+                |/-----´
+                R
+            ");
+        }
+
+        [Test]
+        public void JoinMultiLaneCrossings()
+        {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
+            AppSettings.StraightenGraphDiagonals.Value = true;
+
+            RevisionGraph revisionGraph = CreateGraphTopDown("0:3,2 1:5 2:5 3:5 4:R 5:R R");
+
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                | | 1
+                | | |
+                | 2 |
+                | | |
+                3 | |
+                | | |
+                | | | 4
+                |/-´  |
+                5     |
+                |----´
+                R
+            ");
+
+            revisionGraph = CreateGraphTopDown("0:3,2 1:5 2:5 3:5 4:6 5:6 6:7,8 7:R 8:R R");
+
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                | | 1
+                | | |
+                | 2 |
+                | | |
+                3 | |
+                | | |
+                | | | 4
+                |/-´  |
+                5     |
+                |----´
+                6
+                |\
+                7 |
+                | |
+                | 8
+                |/
+                R
+            ");
+
+            revisionGraph = CreateGraph("R 7:R 6:R 5:7 4:7 3:R 2:6 1:7 0:5,4");
+
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                | | 1
+                | | |
+                | | | 2
+                | | | |
+                | | | | 3
+                | | | | |
+                | 4 | | |
+                | | | | |
+                5 | | | |
+                | | | | |
+                | | | 6 |
+                |/-´  | |
+                7     | |
+                |------´
+                R
+            ");
+
+            revisionGraph = CreateGraphTopDown("0:R,3 1:2 2:8,7 3:4,5,6 4:R 5:R 6:R 7:8 8:R R");
+
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\
+                | | 1
+                | | |
+                | | 2
+                | |  \----ˎ
+                | 3   |   |
+                | |\--ˎ\  |
+                | 4 | | | |
+                | | | | | |
+                | | 5 | | |
+                | | | | | |
+                | | | 6 | |
+                | | | | | |
+                | | | | | 7
+                | | | | |/
+                | | | | 8
+                |/-----´
+                R
+            ");
+        }
+
+        [Test]
+        public void DoNotJoinMultiLaneCrossings()
+        {
+            AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
+            AppSettings.StraightenGraphDiagonals.Value = true;
+
+            RevisionGraph revisionGraph = CreateGraph("R 7:R 6:R 5:7 4:R 3:6 2:6 1:6 0:6");
+
+            // Do not move the multi-lane crossing 5:7 at row 6.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |
+                | 1
+                | |
+                | | 2
+                | | |
+                | | | 3
+                | | | |
+                | | | | 4
+                | | | | |
+                | | | | | 5
+                |/,-,----´
+                6 | |
+                | | |
+                | | 7
+                |/-´
+                R
+            ");
+
+            revisionGraph = CreateGraphTopDown("0:1,4,R 1:2,R 2:3,R 3:R 4:R R");
+
+            // Do not move the multi-lane crossing to 0:R at row 1.
+            AssertGraphLayout(revisionGraph, @"
+                0
+                |\--ˎ
+                1 | |
+                |\ \ \
+                2 | | |
+                |\ \ \ \
+                3 | | | |
+                | | | | |
+                | | | 4 |
                 |/-----´
                 R
             ");
