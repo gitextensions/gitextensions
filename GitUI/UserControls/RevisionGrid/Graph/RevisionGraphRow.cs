@@ -3,6 +3,7 @@
 // This reactivated a minor hyperactivity of line-straightening over commits (#11059).
 ////#define ALL_PRIMARY_LANES
 
+using System.Diagnostics;
 using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
@@ -17,13 +18,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         int GetLaneCount();
         Lane GetLaneForSegment(RevisionGraphSegment revisionGraphRevision);
         IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
-        void MoveLanesRight(int fromLane);
+        void MoveLanesRight(int fromLane, int by = 1);
     }
 
     // The RevisionGraphRow contains an ordered list of Segments that crosses the row or connects to the revision in the row.
     // The segments can be returned in the order how it is stored.
     // Segments are not the same as lanes.A crossing segment is a lane, but multiple segments can connect to the revision.
     // Therefore, a single lane can have multiple segments.
+    [DebuggerDisplay("{Revision}")]
     public class RevisionGraphRow : IRevisionGraphRow
     {
         private static readonly Lane _noLane = new(Index: -1, LaneSharing.ExclusiveOrPrimary);
@@ -256,6 +258,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             return _noLane;
+        }
+
+        public void MoveLanesRight(int fromLane, int by)
+        {
+            for (; by > 0; --by, ++fromLane)
+            {
+                MoveLanesRight(fromLane);
+            }
         }
 
         public void MoveLanesRight(int fromLane)

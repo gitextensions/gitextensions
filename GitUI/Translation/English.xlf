@@ -1309,6 +1309,14 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Get remote branches directly from the remote</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkRenderGraphWithDiagonals.Text">
+        <source>Render graph with diagonals</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkStraightenGraphDiagonals.Text">
+        <source>Straighten graph diagonals</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkUseSSL.Text">
         <source>Use SSL/TLS</source>
         <target />
