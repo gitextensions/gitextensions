@@ -291,7 +291,7 @@ namespace GitUI.UserControls.RevisionGrid
             return searchParametersChanged;
         }
 
-        public ArgumentString GetRevisionFilter()
+        public ArgumentString GetRevisionFilter(Lazy<string> currentBranch)
         {
             if (IsRaw)
             {
@@ -303,7 +303,7 @@ namespace GitUI.UserControls.RevisionGrid
             // Separate the filters in groups
             GetCommitRevisionFilter(filter);
             GetLimitingRevisionFilter(filter);
-            GetBranchRevisionFilter(filter);
+            GetBranchRevisionFilter(filter, currentBranch);
 
             return filter;
         }
@@ -411,7 +411,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// Branch revision filters, not affecting parent rewriting.
         /// </summary>
         /// <param name="filter">ArgumentBuilder arg</param>
-        private void GetBranchRevisionFilter(ArgumentBuilder filter)
+        private void GetBranchRevisionFilter(ArgumentBuilder filter, Lazy<string> currentBranch)
         {
             if (ShowOnlyFirstParent)
             {
@@ -423,31 +423,27 @@ namespace GitUI.UserControls.RevisionGrid
                 // All commits
                 filter.Add("--reflog");
             }
-            else if (IsShowCurrentBranchOnlyChecked || (IsShowFilteredBranchesChecked && !string.IsNullOrWhiteSpace(BranchFilter)))
+            else if (IsShowCurrentBranchOnlyChecked && !string.IsNullOrWhiteSpace(currentBranch.Value))
             {
-                // See handling for --all below, explicitly add most recent stash
-                if (AppSettings.ShowStashes)
-                {
-                    // stash@{0} requires that the repo has commits and --glob=refs/stash is handled as refs/stash/*,
-                    // so this weird pattern must be used: "--glob=refs/stas[h]"
-                    filter.Add($"--glob={GitRefName.RefsStashPrefix.Remove(GitRefName.RefsStashPrefix.Length - 1, 1)}[h]");
-                }
+                // Git default, no option by default (stashes is special).
 
-                if (IsShowCurrentBranchOnlyChecked)
-                {
-                    // Default git-log (no option), only current branch (HEAD)
-                    if (AppSettings.ShowStashes)
-                    {
-                        filter.Add("HEAD");
-                    }
-                }
-                else
-                {
-                    // Show filtered branches only
-                    // Do not add suffix /* to the filter
-                    bool isSimpleBranchFilter = BranchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
-                    filter.Add(isSimpleBranchFilter ? BranchFilter : $"--branches={BranchFilter}");
-                }
+                AddFirstStashRef();
+
+                // Add as filter (even if Git default is current branch) as the branch (ref) must exist
+                // and the repo must contain commits, otherwise Git will exit with errors.
+                filter.Add($"--branches={GetFilterRefName(currentBranch.Value)}");
+            }
+            else if (IsShowFilteredBranchesChecked && !string.IsNullOrWhiteSpace(BranchFilter))
+            {
+                // Show filtered branches only
+
+                AddFirstStashRef();
+
+                // If BranchFilter contains wildcards, "--branches=" must be prepended.
+                // Use the simple branch filter if without wildcards (must be Git reference)
+                // in order to avoid git adding implicit /* to the "--branches=" filter.
+                bool useSimpleBranchFilter = BranchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
+                filter.Add(useSimpleBranchFilter ? BranchFilter : $"--branches={BranchFilter}");
             }
             else
             {
@@ -474,6 +470,28 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     filter.Add("--boundary");
                 }
+            }
+
+            return;
+
+            // git-log filters add implicit /* to the filters, unless there are wildcard characters in the ref name
+            // get around this by adding a filter, that matches the branch name
+            string GetFilterRefName(string gitRef)
+            {
+                return $"{gitRef[..^1]}[{gitRef[^1]}]";
+            }
+
+            // Add the most recent stash to the grid
+            void AddFirstStashRef()
+            {
+                if (!AppSettings.ShowStashes)
+                {
+                    return;
+                }
+
+                // stash@{0} requires that the repo has commits and --glob=refs/stash is handled as refs/stash/*,
+                // so this weird pattern must be used: "--glob=refs/stas[h]"
+                filter.Add($"--glob={GetFilterRefName(GitRefName.RefsStashPrefix)}");
             }
         }
 
