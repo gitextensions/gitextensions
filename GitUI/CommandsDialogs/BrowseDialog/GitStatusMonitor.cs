@@ -42,6 +42,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private const int _maxConsecutiveErrors = 3;
 
         /// <summary>
+        /// git-status command is running and no cancellation has been requested
+        /// </summary>
+        private bool _commandIsRunningAndNotCancelled;
+
+        /// <summary>
         /// The number of consecutive update failures.
         /// </summary>
         private int _consecutiveErrorCount;
@@ -70,11 +75,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private int _nextEarliestTime;
 
         private GitStatusMonitorState _currentStatus;
-
-        /// <summary>
-        /// git-status command is running that is not cancelled
-        /// </summary>
-        private bool _uncancelledCommandIsRunning;
 
         public bool Active
         {
@@ -235,10 +235,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             {
                                 lock (_statusSequence)
                                 {
-                                    if (_uncancelledCommandIsRunning)
+                                    if (_commandIsRunningAndNotCancelled)
                                     {
                                         _statusSequence.CancelCurrent();
-                                        _uncancelledCommandIsRunning = false;
+                                        _commandIsRunningAndNotCancelled = false;
                                     }
                                 }
 
@@ -274,7 +274,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                 // Timer is already running, schedule a new command only if a command is not running,
                                 // to avoid that many commands are started (and cancelled) if quickly switching Inactive/Running
                                 // If data has changed when Inactive it should be updated by normal means
-                                if (!_uncancelledCommandIsRunning)
+                                if (!_commandIsRunningAndNotCancelled)
                                 {
                                     ScheduleNextInteractiveTime();
                                 }
@@ -428,7 +428,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             lock (_statusSequence)
             {
-                if (_uncancelledCommandIsRunning)
+                if (_commandIsRunningAndNotCancelled)
                 {
                     return;
                 }
@@ -445,7 +445,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 module = Module;
                 noLocks = !_isFirstPostRepoChanged;
                 cancelToken = _statusSequence.Next();
-                _uncancelledCommandIsRunning = true;
+                _commandIsRunningAndNotCancelled = true;
 
                 // Schedule periodic update, even if we don't know that anything changed
                 _nextUpdateTime = commandStartTime
@@ -505,7 +505,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             {
                                 if (!cancelToken.IsCancellationRequested)
                                 {
-                                    _uncancelledCommandIsRunning = false;
+                                    _commandIsRunningAndNotCancelled = false;
                                     if (!ModuleHasChanged())
                                     {
                                         // Adjust the min time to next update
@@ -566,7 +566,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             lock (_statusSequence)
             {
                 _statusSequence.CancelCurrent();
-                _uncancelledCommandIsRunning = false;
+                _commandIsRunningAndNotCancelled = false;
 
                 int ticks = Environment.TickCount;
                 _nextEarliestTime = ticks + MinUpdateInterval;
