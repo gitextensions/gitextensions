@@ -80,8 +80,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return 0;
             }
 
+            // _loadingCompleted is set already when all _nodes have been loaded.
+            // Return the full number of rows only if the straightening of segments has finished, too.
             int cachedCount = _orderedRowCache.Count;
-            return _loadingCompleted ? cachedCount : cachedCount - _straightenLanesLookAhead;
+            return _loadingCompleted && cachedCount == Count ? cachedCount : Math.Max(0, cachedCount - _straightenLanesLookAhead);
         }
 
         /// <summary>
