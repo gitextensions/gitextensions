@@ -662,8 +662,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         private async Task UpdateVisibleRowRangeInternalAsync()
         {
-            var fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
-            var visibleRowCount = _rowHeight > 0 ? (Height / _rowHeight) + 2 /*Add 2 for rounding*/ : 0;
+            int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
+            int visibleRowCount = _rowHeight <= 0 ? 0 : (Height / _rowHeight) + 2 /*Add 2 for rounding*/;
 
             visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
 
@@ -682,16 +682,13 @@ namespace GitUI.UserControls.RevisionGrid
 
                         if (AppSettings.ShowRevisionGridGraphColumn)
                         {
-                            int scrollTo;
                             int curCount;
-
                             do
                             {
-                                scrollTo = newBackgroundScrollTo;
                                 curCount = _revisionGraph.GetCachedCount();
-                                await UpdateGraphAsync(fromIndex: curCount, toIndex: scrollTo);
+                                await UpdateGraphAsync(fromIndex: curCount, toIndex: newBackgroundScrollTo);
                             }
-                            while (curCount < scrollTo);
+                            while (curCount < newBackgroundScrollTo);
                         }
                         else
                         {
