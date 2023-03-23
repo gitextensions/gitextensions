@@ -49,16 +49,14 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Returns a task that completes when the process exits, or when this object is disposed.
         /// </summary>
-        /// <returns>A task that yields the process's exit code, or <c>null</c> if this object was disposed before the process exited.</returns>
+        /// <returns>A task that yields the process's exit code, or throws an exception if this object was disposed before the process exited.</returns>
         Task<int> WaitForExitAsync();
 
         /// <summary>
-        /// Instructs the process component to wait for the associated process to exit, or for the cancellationToken to be cancelled (cancells the process).
-        /// Note that the exit task must be awaited too.
+        /// Returns a cancellable task that completes when the process exits, or when this object is disposed.
         /// </summary>
-        /// <param name="token">An optional token to cancel the asynchronous operation.</param>
-        /// <returns>A task that will complete when the process has exited, cancellation has been requested, or an error occurs.</returns>
-        Task WaitForProcessExitAsync(CancellationToken token);
+        /// <returns>A task that yields the process's exit code, or throws an exception if this object was disposed before the process exited.</returns>
+        Task<int> WaitForExitAsync(CancellationToken token);
 
         /// <summary>
         /// Waits for the process to reach an idle state.

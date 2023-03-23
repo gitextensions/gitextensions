@@ -12,7 +12,7 @@ namespace GitCommands
         private static readonly GitVersion v2_38_0 = new("2.38.0");
 
         /// <summary>
-        /// The recommonded Git version (normally latest official before a GE release).
+        /// The recommended Git version (normally latest official before a GE release).
         /// This and later versions are green in the settings check.
         /// </summary>
         public static readonly GitVersion LastRecommendedVersion = new("2.38.1");
@@ -174,11 +174,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            return Full
-                .Replace(".windows.0", "")
-                .Replace(".windows.1", "")
-                .Replace(".windows.2", "")
-                .Replace(".windows.3", "");
+            return Full;
         }
     }
 }

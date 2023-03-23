@@ -1048,7 +1048,7 @@ namespace GitUI
                     cancellationToken.ThrowIfCancellationRequested();
                     reader.GetLog(
                         observeRevisions,
-                        _filterInfo.GetRevisionFilter(),
+                        _filterInfo.GetRevisionFilter(CurrentBranch),
                         pathFilter,
                         cancellationToken);
                 }).FileAndForget(

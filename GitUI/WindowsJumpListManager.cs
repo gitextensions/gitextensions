@@ -31,6 +31,7 @@ namespace GitUI
     {
         private static readonly Dictionary<Image, Icon> _iconByImage = new();
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
+        private ThumbnailToolBarButton? _closeAllButton;
         private ThumbnailToolBarButton? _commitButton;
         private ThumbnailToolBarButton? _pushButton;
         private ThumbnailToolBarButton? _pullButton;
@@ -62,6 +63,7 @@ namespace GitUI
         {
             if (disposing)
             {
+                _closeAllButton?.Dispose();
                 _commitButton?.Dispose();
                 _pushButton?.Dispose();
                 _pullButton?.Dispose();
@@ -122,10 +124,12 @@ namespace GitUI
                     return;
                 }
 
+                Validates.NotNull(_closeAllButton);
                 Validates.NotNull(_commitButton);
                 Validates.NotNull(_pushButton);
                 Validates.NotNull(_pullButton);
 
+                _closeAllButton.Enabled = true;
                 _commitButton.Enabled = true;
                 _pushButton.Enabled = true;
                 _pullButton.Enabled = true;
@@ -193,8 +197,11 @@ namespace GitUI
                 _pullButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Pull.Image, 48, true), thumbButtons.Pull.Text);
                 _pullButton.Click += thumbButtons.Pull.Click;
 
+                _closeAllButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.CloseAll.Image, 48, true), thumbButtons.CloseAll.Text);
+                _closeAllButton.Click += thumbButtons.CloseAll.Click;
+
                 // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, because of how the WindowsAPICodePack was implemented.
-                TaskbarManager.Instance.ThumbnailToolBars.AddButtons(handle, _commitButton, _pullButton, _pushButton);
+                TaskbarManager.Instance.ThumbnailToolBars.AddButtons(handle, _commitButton, _pullButton, _pushButton, _closeAllButton);
             }
         }
 
@@ -210,9 +217,11 @@ namespace GitUI
 
             SafeInvoke(() =>
             {
+                Validates.NotNull(_closeAllButton);
                 Validates.NotNull(_commitButton);
                 Validates.NotNull(_pushButton);
                 Validates.NotNull(_pullButton);
+                _closeAllButton.Enabled = false;
                 _commitButton.Enabled = false;
                 _pushButton.Enabled = false;
                 _pullButton.Enabled = false;

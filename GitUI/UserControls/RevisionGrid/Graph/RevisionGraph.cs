@@ -499,21 +499,34 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return _orderedNodesCache;
             }
 
-            // Reset the reorder flag and the orderedUntilScore. This makes sure it isn't marked dirty before we even got to
-            // rebuilding it.
-            _orderedUntilScore = int.MinValue;
-            _reorder = false;
-
-            // Use a local variable, because the cached list can be reset
-            var localOrderedNodesCache = _nodes.ToArray();
-            Array.Sort(localOrderedNodesCache, (x, y) => x.Score.CompareTo(y.Score));
-            _orderedNodesCache = localOrderedNodesCache;
-            if (localOrderedNodesCache.Length > 0)
+            // The Score of the referenced nodes can be rewritten by another thread.
+            // Then the cache is invalidated by setting _reorder.
+            // So if Sort() complains in this case, try again.
+            while (true)
             {
-                _orderedUntilScore = localOrderedNodesCache.Last().Score;
-            }
+                try
+                {
+                    // Reset the reorder flag and the orderedUntilScore. This makes sure it isn't marked dirty before we even got to
+                    // rebuilding it.
+                    _orderedUntilScore = int.MinValue;
+                    _reorder = false;
 
-            return localOrderedNodesCache;
+                    // Use a local variable, because the cached list can be reset.
+                    RevisionGraphRevision[] localOrderedNodesCache = _nodes.ToArray();
+                    Array.Sort(localOrderedNodesCache, (x, y) => x.Score.CompareTo(y.Score));
+                    _orderedNodesCache = localOrderedNodesCache;
+                    if (localOrderedNodesCache.Length > 0)
+                    {
+                        _orderedUntilScore = localOrderedNodesCache.Last().Score;
+                    }
+
+                    return localOrderedNodesCache;
+                }
+                catch (ArgumentException ex) when (_reorder && ex.Message.Contains("IComparer.Compare()"))
+                {
+                    // ignore and try again
+                }
+            }
         }
 
         private void MarkCacheAsInvalidIfNeeded(RevisionGraphRevision revisionGraphRevision)

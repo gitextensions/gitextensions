@@ -2284,6 +2284,10 @@ compare with first:</source>
         <source>Build Report</source>
         <target />
       </trans-unit>
+      <trans-unit id="_closeAll.Text">
+        <source>Close all windows</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_commitButtonText.Text">
         <source>Commit</source>
         <target />
@@ -2468,6 +2472,26 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="compressGitDatabaseToolStripMenuItem.Text">
         <source>&amp;Compress git database</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="copyFullPathsCygwinToolStripMenuItem.Text">
+        <source>Copy full path(s) - &amp;Cygwin</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="copyFullPathsNativeToolStripMenuItem.Text">
+        <source>Copy &amp;full path(s) - native</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="copyFullPathsWslToolStripMenuItem.Text">
+        <source>Copy full path(s) - &amp;WSL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="copyRelativePathsNativeToolStripMenuItem.Text">
+        <source>Copy relative path(s) - &amp;native</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="copyRelativePathsPosixToolStripMenuItem.Text">
+        <source>Copy relative path(s) - &amp;POSIX</source>
         <target />
       </trans-unit>
       <trans-unit id="createAStashToolStripMenuItem.Text">
@@ -2767,7 +2791,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripFileExplorer.ToolTipText">
-        <source>File E&amp;xplorer</source>
+        <source>File Explorer</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripLabel1.Text">
@@ -2935,7 +2959,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="userShell.ToolTipText">
-        <source>Git &amp;bash</source>
+        <source>Git bash</source>
         <target />
       </trans-unit>
       <trans-unit id="viewToolStripMenuItem.Text">
@@ -3457,6 +3481,10 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <source>R&amp;eset author</source>
         <target />
       </trans-unit>
+      <trans-unit id="ResetSoft.Text">
+        <source>Reset so&amp;ft</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
         <source>Reset u&amp;nstaged changes</source>
         <target />
@@ -3488,13 +3516,20 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="_amendCommit.Text">
         <source>You are about to rewrite history.
-Only use amend if the commit is not published yet!
+Only use Amend if the commit has not been published yet!
 
 Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="_amendCommitCaption.Text">
         <source>Amend commit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_amendResetSoft.Text">
+        <source>You are about to rewrite history by Soft Reset to the previous commit.
+Only use Amend / Reset if the commit has not been published yet!
+
+Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="_assumeUnchangedToolTip.Text">
@@ -4400,8 +4435,8 @@ Deleting a branch can cause commits to be deleted too!</source>
         <source>Open diff using &amp;directory diff tool</source>
         <target />
       </trans-unit>
-      <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
-        <source>Copy full path(s)</source>
+      <trans-unit id="copyPathsToolStripMenuItem.Text">
+        <source>Copy &amp;path(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
@@ -8684,8 +8719,8 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Cherr&amp;y pick changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
-        <source>Copy full &amp;path(s)</source>
+      <trans-unit id="copyPathsToolStripMenuItem.Text">
+        <source>Copy &amp;path(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="diffCommitSubmoduleChanges.Text">
@@ -8874,8 +8909,8 @@ See the changes in the commit form.</source>
         <source>Collapse All</source>
         <target />
       </trans-unit>
-      <trans-unit id="copyFilenameToClipboardToolStripMenuItem.Text">
-        <source>Copy full path</source>
+      <trans-unit id="copyPathsToolStripMenuItem.Text">
+        <source>Copy &amp;path(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">

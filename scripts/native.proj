@@ -43,7 +43,7 @@
 
     <!-- Build GitExtSshAskPass project, x86 -->
     <Exec
-        Command="msbuild.exe $(_GitExtSshAskPassPath) $(_ProjectArgs32_) /p:OutDir=$(_OutputPath)GitExtSshAskPass\ /bl:$(_ArtifactsLogDir)\GitExtSshAskPass.binlog"
+        Command="msbuild.exe $(_GitExtSshAskPassPath) $(_ProjectArgs32) /p:OutDir=$(_OutputPath)GitExtSshAskPass\ /bl:$(_ArtifactsLogDir)\GitExtSshAskPass.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
         ConsoleToMsBuild="true"

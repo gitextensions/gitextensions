@@ -168,6 +168,8 @@ namespace GitUI.CommandsDialogs
 
         #region Translation
 
+        private readonly TranslationString _closeAll = new("Close all windows");
+
         private readonly TranslationString _noSubmodulesPresent = new("No submodules");
         private readonly TranslationString _topProjectModuleFormat = new("Top project: {0}");
         private readonly TranslationString _superprojectModuleFormat = new("Superproject: {0}");
@@ -202,6 +204,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
+        private readonly uint _closeAllMessage = NativeMethods.RegisterWindowMessageW("Global.GitExtensions.CloseAllInstances");
         private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormBrowse"));
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FormBrowseMenus _formBrowseMenus;
@@ -284,7 +287,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.SuspendRefreshRevisions();
 
             ToolStripFilters.Bind(() => Module, RevisionGrid);
-            InitMenusAndToolbars(args.RevFilter, args.PathFilter);
+            InitMenusAndToolbars(args.RevFilter, args.PathFilter.ToPosixPath());
 
             InitRevisionGrid(args.SelectedId, args.FirstId, args.IsFileBlameHistory);
             InitCommitDetails();
@@ -357,39 +360,14 @@ namespace GitUI.CommandsDialogs
                     bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
                     bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowArtificialCommits;
 
-                    var brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
+                    Brush brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
 
                     RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
                     toolStripButtonLevelUp.Image = Module.SuperprojectModule is not null ? Images.NavigateUp : Images.SubmodulesManage;
 
                     if (countToolbar || countArtificial)
                     {
-                        if (!ReferenceEquals(brush, lastBrush)
-                            && EnvUtils.RunningOnWindowsWithMainWindow())
-                        {
-                            lastBrush = brush;
-
-                            if (!_overlayIconByBrush.TryGetValue(brush, out Icon overlay))
-                            {
-                                const int imgDim = 32;
-                                const int dotDim = 15;
-                                const int pad = 2;
-                                using Bitmap bmp = new(imgDim, imgDim);
-                                using Graphics g = Graphics.FromImage(bmp);
-                                g.SmoothingMode = SmoothingMode.AntiAlias;
-                                g.Clear(Color.Transparent);
-                                g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
-
-                                overlay = bmp.ToIcon();
-                                _overlayIconByBrush.Add(brush, overlay);
-                            }
-
-                            TaskbarManager.Instance.SetOverlayIcon(overlay, "");
-
-                            RepoStateVisualiser repoStateVisualiser = new();
-                            var (image, _) = repoStateVisualiser.Invoke(status);
-                            _windowsJumpListManager.UpdateCommitIcon(image);
-                        }
+                        UpdateStatusInTaskbar();
 
                         if (AppSettings.ShowSubmoduleStatus)
                         {
@@ -409,6 +387,43 @@ namespace GitUI.CommandsDialogs
                                 }
                             });
                         }
+                    }
+
+                    return;
+
+                    void UpdateStatusInTaskbar()
+                    {
+                        if (!EnvUtils.RunningOnWindowsWithMainWindow())
+                        {
+                            return;
+                        }
+
+                        if (ReferenceEquals(brush, lastBrush))
+                        {
+                            TaskbarManager.Instance.SetOverlayIcon(_overlayIconByBrush[lastBrush], "");
+                            return;
+                        }
+
+                        lastBrush = brush;
+
+                        if (!_overlayIconByBrush.TryGetValue(brush, out Icon overlay))
+                        {
+                            const int imgDim = 32;
+                            const int dotDim = 15;
+                            const int pad = 2;
+                            using Bitmap bmp = new(imgDim, imgDim);
+                            using Graphics g = Graphics.FromImage(bmp);
+                            g.SmoothingMode = SmoothingMode.AntiAlias;
+                            g.Clear(Color.Transparent);
+                            g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
+
+                            overlay = bmp.ToIcon();
+                            _overlayIconByBrush.Add(brush, overlay);
+                        }
+
+                        TaskbarManager.Instance.SetOverlayIcon(overlay, "");
+
+                        _windowsJumpListManager.UpdateCommitIcon(toolStripButtonCommit.Image);
                     }
                 };
             }
@@ -474,7 +489,8 @@ namespace GitUI.CommandsDialogs
                     new WindowsThumbnailToolbarButtons(
                         new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
                         new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
-                        new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
+                        new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick),
+                        new WindowsThumbnailToolbarButton(_closeAll.Text, Images.DeleteFile, (s, e) => NativeMethods.PostMessageW(NativeMethods.HWND_BROADCAST, _closeAllMessage))));
             }
 
             this.InvokeAsync(OnActivate).FileAndForget();
@@ -527,6 +543,25 @@ namespace GitUI.CommandsDialogs
             UICommands.BrowseRepo = this;
 
             base.OnUICommandsChanged(e);
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == _closeAllMessage || (m.Msg == NativeMethods.WM_SYSCOMMAND && m.WParam == NativeMethods.SC_CLOSE))
+            {
+                // Application close is requested, e.g. using the Taskbar context menu.
+                // This request is directed to the main form also if a modal form like FormCommit is on top.
+                // So forward the request and try to close the modal form.
+                Form? modalForm = Application.OpenForms.Cast<Form>().FirstOrDefault(form => form.Modal);
+                if (modalForm is not null)
+                {
+                    modalForm.Close();
+                }
+
+                Close();
+            }
+
+            base.WndProc(ref m);
         }
 
         public override void AddTranslationItems(ITranslation translation)
@@ -1699,35 +1734,6 @@ namespace GitUI.CommandsDialogs
         private void editGitAttributesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UICommands.StartEditGitAttributesDialog(this);
-        }
-
-        public static void CopyFullPathToClipboard(FileStatusList diffFiles, GitModule module)
-        {
-            if (!diffFiles.SelectedItems.Any())
-            {
-                return;
-            }
-
-            StringBuilder fileNames = new();
-            foreach (var item in diffFiles.SelectedItems)
-            {
-                var path = Path.Combine(module.WorkingDir, item.Item.Name);
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    continue;
-                }
-
-                // Only use append line when multiple items are selected.
-                // This to make it easier to use the text from clipboard when 1 file is selected.
-                if (fileNames.Length > 0)
-                {
-                    fileNames.AppendLine();
-                }
-
-                fileNames.Append(path.ToNativePath());
-            }
-
-            ClipboardUtil.TrySetText(fileNames.ToString());
         }
 
         private void deleteIndexLockToolStripMenuItem_Click(object sender, EventArgs e)
