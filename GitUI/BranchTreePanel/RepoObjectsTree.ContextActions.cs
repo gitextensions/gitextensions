@@ -212,7 +212,7 @@ namespace GitUI.BranchTreePanel
             bool hasSingleSelection = selectedNodes.Length == 1;
             NodeBase? selectedNode = treeMain.SelectedNode?.Tag as NodeBase;
 
-            copyContextMenuItem.Enable(hasSingleSelection && ((selectedNode is BaseBranchLeafNode branch && branch.Visible) || selectedNode is StashNode));
+            copyContextMenuItem.Enable(hasSingleSelection && (selectedNode is BaseBranchLeafNode or StashNode) && selectedNode.Visible);
             filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any()); // enable if selection contains refs
 
             var selectedLocalBranch = selectedNode as LocalBranchNode;
