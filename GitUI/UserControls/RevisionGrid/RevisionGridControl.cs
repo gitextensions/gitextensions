@@ -488,15 +488,7 @@ namespace GitUI
 
         public void SetAndApplyBranchFilter(string filter)
         {
-            // TODO: clean up and move all internals to FilterInfo
-
-            _filterInfo.ShowCurrentBranchOnly = false;
-
-            // Set filtered branches if there is a filter, handled as all branches otherwise
-            string newFilter = filter?.Trim() ?? string.Empty;
-            _filterInfo.ByBranchFilter = !string.IsNullOrWhiteSpace(newFilter);
-            _filterInfo.BranchFilter = newFilter;
-
+            _filterInfo.SetBranchFilter(filter);
             PerformRefreshRevisions();
         }
 
