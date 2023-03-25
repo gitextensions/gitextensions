@@ -219,13 +219,6 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void ShowBranches_Reflog_should_invoke_ToggleShowReflogReferences()
-        {
-            _filterToolBar.GetTestAccessor().tsmiShowReflog.PerformClick();
-            _revisionGridFilter.Received(1).ShowReflog();
-        }
-
-        [Test]
         public void ShowBranches_ShowAll_should_invoke_ShowAllBranches()
         {
             _filterToolBar.GetTestAccessor().tsmiShowBranchesAll.PerformClick();

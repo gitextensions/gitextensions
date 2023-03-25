@@ -496,10 +496,6 @@ namespace GitUI
             string newFilter = filter?.Trim() ?? string.Empty;
             _filterInfo.ByBranchFilter = !string.IsNullOrWhiteSpace(newFilter);
             _filterInfo.BranchFilter = newFilter;
-            if (_filterInfo.ByBranchFilter)
-            {
-                _filterInfo.ShowReflogReferences = false;
-            }
 
             PerformRefreshRevisions();
         }
@@ -1778,8 +1774,6 @@ namespace GitUI
                 return;
             }
 
-            // Do not unset ByBranchFilter or ShowCurrentBranchOnly,
-            // see FilterInfo.ShowReflogReferences.
             _filterInfo.ShowReflogReferences = true;
 
             PerformRefreshRevisions();
@@ -1794,7 +1788,6 @@ namespace GitUI
 
             _filterInfo.ByBranchFilter = false;
             _filterInfo.ShowCurrentBranchOnly = false;
-            _filterInfo.ShowReflogReferences = false;
 
             PerformRefreshRevisions();
         }
@@ -1809,7 +1802,6 @@ namespace GitUI
             // Must be able to set ByBranchFilter without a filter to edit it
             _filterInfo.ByBranchFilter = true;
             _filterInfo.ShowCurrentBranchOnly = false;
-            _filterInfo.ShowReflogReferences = false;
 
             PerformRefreshRevisions();
         }
@@ -1823,7 +1815,6 @@ namespace GitUI
 
             _filterInfo.ByBranchFilter = false;
             _filterInfo.ShowCurrentBranchOnly = true;
-            _filterInfo.ShowReflogReferences = false;
 
             PerformRefreshRevisions();
         }

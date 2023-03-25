@@ -19,7 +19,6 @@ namespace GitUI.UserControls
         public FilterToolBar()
         {
             InitializeComponent();
-            tsmiShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip;
             tsbShowReflog.ToolTipText = TranslatedStrings.ShowReflogTooltip;
             tsmiShowOnlyFirstParent.ToolTipText = TranslatedStrings.ShowOnlyFirstParent;
 
@@ -124,12 +123,6 @@ namespace GitUI.UserControls
             // Refer to it for more details.
 
             ToolStripItem selectedItem = tsmiShowBranchesAll;
-
-            if (e.ShowReflogReferences)
-            {
-                // Show reflog
-                selectedItem = tsmiShowReflog;
-            }
 
             if (e.ShowAllBranches)
             {
@@ -468,7 +461,6 @@ namespace GitUI.UserControls
             public ToolStripLabel tslblRevisionFilter => _control.tslblRevisionFilter;
             public ToolStripSplitButton tsbtnAdvancedFilter => _control.tsbtnAdvancedFilter;
             public ToolStripSplitButton tssbtnShowBranches => _control.tssbtnShowBranches;
-            public ToolStripMenuItem tsmiShowReflog => _control.tsmiShowReflog;
             public ToolStripMenuItem tsmiShowBranchesAll => _control.tsmiShowBranchesAll;
             public ToolStripMenuItem tsmiShowBranchesCurrent => _control.tsmiShowBranchesCurrent;
             public ToolStripMenuItem tsmiShowBranchesFiltered => _control.tsmiShowBranchesFiltered;
