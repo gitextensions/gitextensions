@@ -21,6 +21,11 @@ namespace GitUI.BranchTreePanel
         /// </summary>
         protected internal bool IsSelected { get; set; }
 
+        /// <summary>
+        /// Gets whether the commit that the node represents is currently visible in the revision grid.
+        /// </summary>
+        public bool Visible { get; set; }
+
         protected internal void Select(bool select, bool includingDescendants = false)
         {
             IsSelected = select;

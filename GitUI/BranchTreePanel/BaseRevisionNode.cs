@@ -38,11 +38,6 @@ namespace GitUI.BranchTreePanel
         public string FullPath => ParentPath.Combine(PathSeparator.ToString(), Name)!;
 
         /// <summary>
-        /// Gets whether the commit that the node represents is currently visible in the revision grid.
-        /// </summary>
-        public bool Visible { get; set; }
-
-        /// <summary>
         /// ObjectId for nodes with a revision.
         /// </summary>
         public ObjectId? ObjectId { get; init; }
