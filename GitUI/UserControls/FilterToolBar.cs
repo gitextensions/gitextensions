@@ -69,6 +69,9 @@ namespace GitUI.UserControls
             {
                 List<string> newFilter = new();
                 IReadOnlyList<IGitRef> refs = _getRefs(RefsFilter.NoFilter);
+
+                // Split at whitespace (char[])null is default) but with split options.
+                // Ignore quouting, Git revisions do not allow spaces.
                 foreach (string branch in filter.Split((char[])null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
                 {
                     bool wildcardBranchFilter = branch.IndexOfAny(new[] { '?', '*', '[' }) >= 0;
