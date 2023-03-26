@@ -316,8 +316,8 @@ namespace GitCommandsTests
         [TestCase("branch -a --contains",
             true,
             true,
-            "  aaa\n* current\n+ feature/worktree\n  feature/zzz_another\n  remotes/origin/master\n  remotes/origin/current\n  remotes/upstream/master\n",
-            new string[] { "aaa", "current", "feature/worktree", "feature/zzz_another", "remotes/origin/master", "remotes/origin/current", "remotes/upstream/master" })]
+            "  aaa\n* current\n+ feature/worktree\n  feature/zzz_another\n  remotes/origin/master\n  remotes/origin/current\n  remotes/upstream/master\n  a+b",
+            new string[] { "aaa", "current", "feature/worktree", "feature/zzz_another", "remotes/origin/master", "remotes/origin/current", "remotes/upstream/master", "a+b" })]
         [TestCase("branch --contains",
             true,
             false,

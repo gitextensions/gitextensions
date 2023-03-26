@@ -3141,12 +3141,12 @@ namespace GitCommands
                 return Array.Empty<string>();
             }
 
-            var result = exec.StandardOutput.Split(new[] { '\r', '\n', '*', '+' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] result = exec.StandardOutput.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Remove symlink targets as in "origin/HEAD -> origin/master"
-            for (var i = 0; i < result.Length; i++)
+            for (int i = 0; i < result.Length; i++)
             {
-                var item = result[i].Trim();
+                string item = Regex.Replace(result[i], @"^[*+ ] ", "");
 
                 if (getRemote)
                 {
