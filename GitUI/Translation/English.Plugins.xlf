@@ -699,6 +699,10 @@ Are you sure you want to continue?</source>
         <source>About GitFlow</source>
         <target />
       </trans-unit>
+      <trans-unit id="lnkGitFlow.ttGitFlow">
+        <source>A good branch model for your project with Git...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
         <target />

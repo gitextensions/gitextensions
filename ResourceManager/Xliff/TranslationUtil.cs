@@ -141,6 +141,24 @@ namespace ResourceManager.Xliff
         {
             foreach (var (itemName, itemObj) in items)
             {
+                if (itemObj is ToolTip tooltip)
+                {
+                    foreach (var (itemNameForTooltip, itemObjForTooltip) in items)
+                    {
+                        if (itemObjForTooltip is Control control)
+                        {
+                            var tooltipString = tooltip.GetToolTip(control);
+                            if (!string.IsNullOrEmpty(tooltipString))
+                            {
+                                // Will add an entry in the xlf file with id `NameOfControl.NameOfTooltipControl` ex: "PushToRemote.toolTip1"
+                                translation.AddTranslationItem(category, itemNameForTooltip, itemName, tooltipString);
+                            }
+                        }
+                    }
+
+                    continue;
+                }
+
                 foreach (var property in GetItemPropertiesEnumerator(itemName, itemObj))
                 {
                     var value = property.GetValue(itemObj, null);
@@ -187,6 +205,26 @@ namespace ResourceManager.Xliff
                 if (itemName == "$this" && itemObj.GetType().Name != category)
                 {
                     Debug.WriteLine($"TRANSLATION: [{category}]: Skip '$this' for {itemObj.GetType().Name}");
+                    continue;
+                }
+
+                if (itemObj is ToolTip tooltip)
+                {
+                    static string ProvideDefaultValue() => null;
+
+                    foreach (var (itemNameForTooltip, itemObjForTooltip) in items)
+                    {
+                        if (itemObjForTooltip is Control control)
+                        {
+                            string? tooltipString = translation.TranslateItem(category, itemNameForTooltip, itemName, ProvideDefaultValue);
+
+                            if (!string.IsNullOrEmpty(tooltipString))
+                            {
+                                tooltip.SetToolTip(control, tooltipString);
+                            }
+                        }
+                    }
+
                     continue;
                 }
 

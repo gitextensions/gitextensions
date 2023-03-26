@@ -485,6 +485,10 @@ A valid GitHub account is required</source>
         <source>&amp;Copy</source>
         <target />
       </trans-unit>
+      <trans-unit id="btnCopy.toolTip">
+        <source>Copy the issue details into clipboard</source>
+        <target />
+      </trans-unit>
       <trans-unit id="contentsLabel.Text">
         <source>Double-click an item to open it with the associated program.</source>
         <target />
@@ -525,12 +529,21 @@ A valid GitHub account is required</source>
         <source>&amp;Quit</source>
         <target />
       </trans-unit>
+      <trans-unit id="quitButton.toolTip">
+        <source>Quit application without reporting the issue</source>
+        <target />
+      </trans-unit>
       <trans-unit id="reportContentsTabPage.Text">
         <source>Report Contents</source>
         <target />
       </trans-unit>
       <trans-unit id="sendAndQuitButton.Text">
         <source>&amp;Send and Quit</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="sendAndQuitButton.toolTip">
+        <source>Report the issue to GitHub and quit application.
+A valid GitHub account is required</source>
         <target />
       </trans-unit>
       <trans-unit id="sizeColumnHeader.Text">
@@ -3385,6 +3398,13 @@ Do you want to open the new repository "{0}" now?</source>
         <source>Download full &amp;history</source>
         <target />
       </trans-unit>
+      <trans-unit id="cbDownloadFullHistory.ttHints">
+        <source>The default Git behavior is to download all historical revisions.
+If you turn this off, we'll only download the latest revision for all branches.
+
+Actual command line (if unchecked): --depth 1 --no-single-branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="cbIntializeAllSubmodules.Text">
         <source>Initialize all submodules</source>
         <target />
@@ -3454,6 +3474,10 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <source>Reset so&amp;ft</source>
         <target />
       </trans-unit>
+      <trans-unit id="ResetSoft.fileTooltip">
+        <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
         <source>Reset u&amp;nstaged changes</source>
         <target />
@@ -3469,6 +3493,10 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="StageInSuperproject.Text">
         <source>Stage &amp;in Superproject</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="StageInSuperproject.fileTooltip">
+        <source>Stage current submodule in superproject after commit</source>
         <target />
       </trans-unit>
       <trans-unit id="StashStaged.Text">
@@ -4101,12 +4129,20 @@ You can unset the template:
         <source>Clear &amp;working directory and index</source>
         <target />
       </trans-unit>
+      <trans-unit id="ClearOrphan.toolTip">
+        <source>Remove files from the working directory and from the index</source>
+        <target />
+      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>&amp;Create branch</source>
         <target />
       </trans-unit>
       <trans-unit id="Orphan.Text">
         <source>Create or&amp;phan</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Orphan.toolTip">
+        <source>New branch will have NO parents</source>
         <target />
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -5333,6 +5369,10 @@ command "git help shortlog"</source>
         <source>&amp;Browse...</source>
         <target />
       </trans-unit>
+      <trans-unit id="folderGoUpButton.toolTip1">
+        <source>Go to parent directory...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Directory:</source>
         <target />
@@ -5393,8 +5433,19 @@ command "git help shortlog"</source>
         <source>&amp;Prune remote branches</source>
         <target />
       </trans-unit>
+      <trans-unit id="Prune.Tooltip">
+        <source>Removes remote tracking branches that no longer exist on the remote (e.g. if someone else deleted them).
+
+Actual command line (if checked): --prune --force
+</source>
+        <target />
+      </trans-unit>
       <trans-unit id="PruneTags.Text">
         <source>Prune remote branches an&amp;d tags</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="PruneTags.Tooltip">
+        <source>Before fetching, remove any local tags that no longer exist on the remote if --prune is enabled.</source>
         <target />
       </trans-unit>
       <trans-unit id="Pull.Text">
@@ -5405,8 +5456,16 @@ command "git help shortlog"</source>
         <source>&amp;Remote</source>
         <target />
       </trans-unit>
+      <trans-unit id="PullFromRemote.Tooltip">
+        <source>Remote repository to pull from</source>
+        <target />
+      </trans-unit>
       <trans-unit id="PullFromUrl.Text">
         <source>&amp;URL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="PullFromUrl.Tooltip">
+        <source>Url to pull from</source>
         <target />
       </trans-unit>
       <trans-unit id="ReachableTags.Text">
@@ -5553,8 +5612,16 @@ This will initialize and update all submodules recursive.</source>
         <source>&amp;Local branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblLocalBranch.Tooltip">
+        <source>Remote branch to pull. Leave empty to pull all branches.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblRemoteBranch.Text">
         <source>Rem&amp;ote branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblRemoteBranch.Tooltip">
+        <source>Remote branch to pull. Leave empty to pull all branches.</source>
         <target />
       </trans-unit>
     </body>
@@ -5621,8 +5688,16 @@ This will initialize and update all submodules recursive.</source>
         <source>&amp;Remote</source>
         <target />
       </trans-unit>
+      <trans-unit id="PushToRemote.toolTip1">
+        <source>Remote repository to push to</source>
+        <target />
+      </trans-unit>
       <trans-unit id="PushToUrl.Text">
         <source>U&amp;rl</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="PushToUrl.toolTip1">
+        <source>Url to push to</source>
         <target />
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
@@ -5945,8 +6020,18 @@ Nothing to rebase.</source>
         <source>Co&amp;mmitter date is author date</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkCommitterDateIsAuthorDate.toolTip1">
+        <source>Sets the commit date to the original author date
+(instead of the current date).</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkIgnoreDate.Text">
         <source>Ignore &amp;date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkIgnoreDate.toolTip1">
+        <source>Sets the author date to the current date (same as
+commit date), ignoring the original author date.</source>
         <target />
       </trans-unit>
       <trans-unit id="chkInteractive.Text">
@@ -6190,12 +6275,20 @@ Do you want to register the host's fingerprint and restart the process?</source>
         <source>Local branch name</source>
         <target />
       </trans-unit>
+      <trans-unit id="Delete.toolTip1">
+        <source>Delete the selected remote</source>
+        <target />
+      </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
         <source>Load SSH key</source>
         <target />
       </trans-unit>
       <trans-unit id="MergeWith.HeaderText">
         <source>Default merge with</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="New.toolTip1">
+        <source>Add new remote</source>
         <target />
       </trans-unit>
       <trans-unit id="RemoteCombo.HeaderText">
@@ -6299,6 +6392,10 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="_sshKeyOpenFilter.Text">
         <source>Private key (*.ppk)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnToggleState.toolTip1">
+        <source>Enable or disable the selected remote</source>
         <target />
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
@@ -7064,20 +7161,40 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <source>&amp;Apply Selected Stash</source>
         <target />
       </trans-unit>
+      <trans-unit id="Apply.toolTip">
+        <source>Apply the selected stash on top of the current working directory state</source>
+        <target />
+      </trans-unit>
       <trans-unit id="Clear.Text">
         <source>&amp;Drop Selected Stash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Clear.toolTip">
+        <source>Remove the selected stash from the list</source>
         <target />
       </trans-unit>
       <trans-unit id="Stash.Text">
         <source>S&amp;tash all changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="Stash.toolTip">
+        <source>Save local changes to a new stash, then revert local changes</source>
+        <target />
+      </trans-unit>
       <trans-unit id="StashKeepIndex.Text">
         <source>&amp;Keep index</source>
         <target />
       </trans-unit>
+      <trans-unit id="StashKeepIndex.toolTip">
+        <source>All changes already added to the index are left intact</source>
+        <target />
+      </trans-unit>
       <trans-unit id="StashSelectedFiles.Text">
         <source>Stash &amp;selected changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="StashSelectedFiles.toolTip">
+        <source>Stash changes for the selected files, then revert them to the original state</source>
         <target />
       </trans-unit>
       <trans-unit id="Stashes.ToolTipText">
@@ -7098,6 +7215,10 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="chkIncludeUntrackedFiles.Text">
         <source>&amp;Include untracked files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkIncludeUntrackedFiles.toolTip">
+        <source>All untracked files are also stashed and then cleaned</source>
         <target />
       </trans-unit>
       <trans-unit id="messageLabel.Text">
@@ -8259,6 +8380,10 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="_sortOrderContextMenuItem.Text">
         <source>&amp;Sort order...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnSearch.toolTip">
+        <source>Search</source>
         <target />
       </trans-unit>
       <trans-unit id="copyContextMenuItem.Text">
@@ -9569,6 +9694,12 @@ Current Branch:
       </trans-unit>
       <trans-unit id="lblMenuEntries.Text">
         <source>Configuration of items in the context menu</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="menuHelp.toolTip1">
+        <source>* Checked: at top level for direct access
+* Intermediate: in a cascaded context menu
+* Unchecked: not added to the menu</source>
         <target />
       </trans-unit>
     </body>
