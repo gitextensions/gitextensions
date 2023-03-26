@@ -361,6 +361,12 @@ namespace GitCommands
             get => GetString("WslGitCommand", "wsl");
         }
 
+        // Currently not configurable
+        public static string WslGitPath
+        {
+            get => GetString("WslGitPath", "git");
+        }
+
         public static bool StashKeepIndex
         {
             get => GetBool("stashkeepindex", false);
