@@ -809,10 +809,12 @@ namespace GitUI.CommitInfo
                 RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
             private readonly string _currentBranch;
+            private readonly bool _isDetachedHead;
 
             public BranchComparer(string currentBranch)
             {
                 _currentBranch = currentBranch;
+                _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);
             }
 
             public int Compare(string a, string b)
@@ -825,7 +827,7 @@ namespace GitUI.CommitInfo
 
             private int GetBranchPriority(string branch)
             {
-                return branch == _currentBranch ? 0
+                return (_isDetachedHead ? DetachedHeadParser.IsDetachedHead(branch) : branch == _currentBranch) ? 0
                     : IsImportantLocalBranch() ? 1
                     : IsImportantRemoteBranch() ? IsImportantRepo() ? 2 : 3
                     : IsLocalBranch() ? 4

@@ -8,7 +8,7 @@ namespace GitUITests.UserControls.CommitInfo
         [SetCulture("en-US")]
         [SetUICulture("en-US")]
         [Test]
-        public void BranchComparer([Values(null, "current")] string currentBranch)
+        public void BranchComparer([Values(null, "current", "(no branch)")] string currentBranch)
         {
             List<string> expectedBranches = new()
             {
