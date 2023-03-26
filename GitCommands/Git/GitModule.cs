@@ -3146,7 +3146,13 @@ namespace GitCommands
             // Remove symlink targets as in "origin/HEAD -> origin/master"
             for (int i = 0; i < result.Length; i++)
             {
-                string item = Regex.Replace(result[i], @"^[*+ ] ", "");
+                string item = result[i];
+
+                // remove prepended branch state "* ", "+ ", "  "
+                if (item.Length >= 2 && item[1] == ' ' && item[0] is (' ' or '*' or '+'))
+                {
+                    item = item[2..];
+                }
 
                 if (getRemote)
                 {
