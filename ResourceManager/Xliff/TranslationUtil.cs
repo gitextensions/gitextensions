@@ -143,11 +143,18 @@ namespace ResourceManager.Xliff
             {
                 if (itemObj is ToolTip tooltip)
                 {
+                    string toolTipTitle = tooltip.ToolTipTitle;
+
+                    if (!string.IsNullOrEmpty(toolTipTitle))
+                    {
+                        translation.AddTranslationItem(category, itemName, "ToolTipTitle", toolTipTitle);
+                    }
+
                     foreach (var (itemNameForTooltip, itemObjForTooltip) in items)
                     {
                         if (itemObjForTooltip is Control control)
                         {
-                            var tooltipString = tooltip.GetToolTip(control);
+                            string tooltipString = tooltip.GetToolTip(control);
                             if (!string.IsNullOrEmpty(tooltipString))
                             {
                                 // Will add an entry in the xlf file with id `NameOfControl.NameOfTooltipControl` ex: "PushToRemote.toolTip1"
@@ -211,6 +218,13 @@ namespace ResourceManager.Xliff
                 if (itemObj is ToolTip tooltip)
                 {
                     static string ProvideDefaultValue() => null;
+
+                    string? toolTipTitle = translation.TranslateItem(category, itemName, "ToolTipTitle", ProvideDefaultValue);
+
+                    if (!string.IsNullOrEmpty(toolTipTitle))
+                    {
+                        tooltip.ToolTipTitle = toolTipTitle;
+                    }
 
                     foreach (var (itemNameForTooltip, itemObjForTooltip) in items)
                     {
