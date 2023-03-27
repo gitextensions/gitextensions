@@ -819,9 +819,14 @@ namespace GitUI.CommitInfo
 
             public int Compare(string? a, string? b)
             {
-                if (a is null || b is null)
+                if (b is null)
                 {
                     return -1;
+                }
+
+                if (a is null)
+                {
+                    return 1;
                 }
 
                 int priorityA = GetBranchPriority(a);
@@ -860,7 +865,7 @@ namespace GitUI.CommitInfo
 
             public int Compare(string? a, string? b)
             {
-                return a is null || b is null ? -1 : IndexOf(a) - IndexOf(b);
+                return b is null ? -1 : a is null ? 1 : IndexOf(a) - IndexOf(b);
 
                 int IndexOf(string s)
                 {
