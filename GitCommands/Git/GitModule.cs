@@ -3141,12 +3141,18 @@ namespace GitCommands
                 return Array.Empty<string>();
             }
 
-            var result = exec.StandardOutput.Split(new[] { '\r', '\n', '*', '+' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] result = exec.StandardOutput.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Remove symlink targets as in "origin/HEAD -> origin/master"
-            for (var i = 0; i < result.Length; i++)
+            for (int i = 0; i < result.Length; i++)
             {
-                var item = result[i].Trim();
+                string item = result[i];
+
+                // remove prepended branch state "* ", "+ ", "  "
+                if (item.Length >= 2 && item[1] == ' ' && item[0] is (' ' or '*' or '+'))
+                {
+                    item = item[2..];
+                }
 
                 if (getRemote)
                 {
