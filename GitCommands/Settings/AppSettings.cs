@@ -576,7 +576,7 @@ namespace GitCommands
 
         public static int AvatarImageCacheDays
         {
-            get => GetInt("authorimagecachedays", 5);
+            get => GetInt("authorimagecachedays", 13);
             set => SetInt("authorimagecachedays", value);
         }
 
@@ -588,8 +588,14 @@ namespace GitCommands
 
         public static AvatarProvider AvatarProvider
         {
-            get => GetEnumViaString("Appearance.AvatarProvider", AvatarProvider.Default);
+            get => GetEnumViaString("Appearance.AvatarProvider", AvatarProvider.None);
             set => SetString("Appearance.AvatarProvider", value.ToString());
+        }
+
+        public static int AvatarCacheSize
+        {
+            get => GetInt("Appearance.AvatarCacheSize", 50);
+            set => SetInt("Appearance.AvatarCacheSize", value);
         }
 
         /// <summary>

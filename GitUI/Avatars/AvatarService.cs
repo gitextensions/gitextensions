@@ -110,7 +110,7 @@ namespace GitUI.Avatars
         private static (IAvatarProvider provider, IAvatarCacheCleaner cacheCleaner) SetupCachingAndFallback()
         {
             FileSystemAvatarCache persistentCacheProvider = new(HotSwapProvider);
-            AvatarMemoryCache memoryCachedProvider = new(persistentCacheProvider);
+            AvatarMemoryCache memoryCachedProvider = new(persistentCacheProvider, AppSettings.AvatarCacheSize);
 
             MultiCacheCleaner cacheCleaner = new(persistentCacheProvider, memoryCachedProvider);
 
