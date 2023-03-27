@@ -5625,7 +5625,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblLocalBranch.Tooltip">
-        <source>Remote branch to pull. Leave empty to pull all branches.</source>
+        <source>Local branch to create or reset to the remote branch selected.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRemoteBranch.Text">
