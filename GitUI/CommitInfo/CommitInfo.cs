@@ -1,10 +1,11 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;
@@ -452,7 +453,7 @@ namespace GitUI.CommitInfo
 
                         Dictionary<string, string> result = new();
 
-                        foreach (var gitRef in refs)
+                        foreach (IGitRef gitRef in refs)
                         {
                             #region Note on annotated tags
                             // Notice that for the annotated tags, gitRef's come in pairs because they're produced
@@ -481,8 +482,7 @@ namespace GitUI.CommitInfo
 
                             if (gitRef.IsTag && gitRef.IsDereference)
                             {
-                                string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
-
+                                string? content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
                                 if (content is not null)
                                 {
                                     result.Add(gitRef.LocalName, content);
@@ -817,8 +817,13 @@ namespace GitUI.CommitInfo
                 _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);
             }
 
-            public int Compare(string a, string b)
+            public int Compare(string? a, string? b)
             {
+                if (a is null || b is null)
+                {
+                    return -1;
+                }
+
                 int priorityA = GetBranchPriority(a);
                 int priorityB = GetBranchPriority(b);
                 return priorityA == priorityB ? StringComparer.Ordinal.Compare(a, b)
@@ -853,9 +858,9 @@ namespace GitUI.CommitInfo
                 _prefix = prefix;
             }
 
-            public int Compare(string a, string b)
+            public int Compare(string? a, string? b)
             {
-                return IndexOf(a) - IndexOf(b);
+                return a is null || b is null ? -1 : IndexOf(a) - IndexOf(b);
 
                 int IndexOf(string s)
                 {
