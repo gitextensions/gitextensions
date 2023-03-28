@@ -673,7 +673,8 @@ namespace GitUI.UserControls.RevisionGrid
 
                 if (visibleRowCount > 0)
                 {
-                    int newBackgroundScrollTo = fromIndex + visibleRowCount;
+                    // Preload the next page, too, in order to avoid delayed display of the graph when scrolling down
+                    int newBackgroundScrollTo = fromIndex + (2 * visibleRowCount);
 
                     // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working when we scroll up
                     if (_backgroundScrollTo != newBackgroundScrollTo)
