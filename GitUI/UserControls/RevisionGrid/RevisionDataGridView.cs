@@ -687,8 +687,14 @@ namespace GitUI.UserControls.RevisionGrid
                             {
                                 curCount = _revisionGraph.GetCachedCount();
                                 await UpdateGraphAsync(fromIndex: curCount, toIndex: newBackgroundScrollTo);
+
+                                // Take changes to _backgroundScrollTo and IsDataLoadComplete by another thread into account
+                                if (IsDataLoadComplete)
+                                {
+                                    _backgroundScrollTo = Math.Min(_backgroundScrollTo, _revisionGraph.Count);
+                                }
                             }
-                            while (curCount < newBackgroundScrollTo);
+                            while (curCount < _backgroundScrollTo);
                         }
                         else
                         {
