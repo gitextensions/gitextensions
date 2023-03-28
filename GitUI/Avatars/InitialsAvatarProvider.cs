@@ -18,10 +18,24 @@ namespace GitUI.Avatars
         {
             var (initials, hashCode) = GetInitialsAndHashCode(email, name);
 
-            var avatarColor = _avatarColors[Math.Abs(hashCode) % _avatarColors.Length];
+            var avatarColor = _avatarColors[hashCode];
             var avatar = DrawText(initials, avatarColor, imageSize);
 
             return Task.FromResult<Image?>(avatar);
+        }
+
+        private int GetDeterministicHashCode(string str)
+        {
+            unchecked
+            {
+                int hash = 23;
+                foreach (char c in str)
+                {
+                    hash = (hash * 31) + c;
+                }
+
+                return Math.Abs(hash) % _avatarColors.Length;
+            }
         }
 
         protected internal (string? initials, int hashCode) GetInitialsAndHashCode(string email, string? name)
@@ -36,7 +50,7 @@ namespace GitUI.Avatars
             var nameParts = selectedName.Split(separator);
             var initials = GetInitialsFromNames(nameParts);
 
-            return (initials, selectedName.GetHashCode());
+            return (initials, GetDeterministicHashCode(selectedName));
         }
 
         private static (string? name, char[]? separator) NameSelector(string? name, string? email)
