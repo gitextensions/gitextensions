@@ -82,8 +82,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // _loadingCompleted is set already when all _nodes have been loaded.
             // Return the full number of rows only if the straightening of segments has finished, too.
+            // Else do not show rows yet which might be affected by the straightening of segments (refer to the CacheTo function).
             int cachedCount = _orderedRowCache.Count;
-            return _loadingCompleted && cachedCount == Count ? cachedCount : Math.Max(0, cachedCount - _straightenLanesLookAhead);
+            return _loadingCompleted && cachedCount == Count ? cachedCount : Math.Max(0, cachedCount - (2 * _straightenLanesLookAhead));
         }
 
         /// <summary>
@@ -99,8 +100,24 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </param>
         public void CacheTo(int currentRowIndex, int lastToCacheRowIndex)
         {
-            currentRowIndex += _straightenLanesLookAhead;
-            lastToCacheRowIndex += _straightenLanesLookAhead;
+            // Graph segments shall be straightened. For this, we need to look ahead some rows.
+            // If lanes of a row are moved, go back the same number of rows as for the lookahead
+            // because then the previous rows could benefit from segment straightening, too.
+            //
+            // row 0
+            // row 1
+            // ...
+            // last finally straightened row           <-- GetCachedCount()
+            // first partially straightened row        <-- go back not further than here
+            // ...
+            // last partially straightened row
+            // row to continue straightening           <-- GetCachedCount() + _straightenLanesLookAhead
+            // first lookahead row for straightening
+            // ...
+            // last lookahead row for straightening    <-- GetCachedCount() + 2 * _straightenLanesLookAhead
+            //
+            currentRowIndex += 2 * _straightenLanesLookAhead;
+            lastToCacheRowIndex += 2 * _straightenLanesLookAhead;
 
             RevisionGraphRevision[] orderedNodesCache = BuildOrderedNodesCache(currentRowIndex);
 
@@ -420,8 +437,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // Straightening does not apply to the first and the last row. The single node there shall not be moved.
             // So the straightening algorithm can presume that a previous and a next row do exist.
+            // Straighten only lines for which the full lookahead is loaded.
             int straightenStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead);
-            int straightenLastIndex = lastToCacheRowIndex - 1;
+            int straightenLastIndex = _loadingCompleted && lastToCacheRowIndex == lastOrderedNodeIndex ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead;
             StraightenLanes(straightenStartIndex, straightenLastIndex, lastLookaheadIndex: lastToCacheRowIndex, localOrderedRowCache);
 
             // Overwrite the global instance at the end, to prevent flickering
@@ -454,8 +472,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // | | |
                 //
                 // also if the distance is > 1 but only if the other distance is exactly 1
+
+                int goBackLimit = 1;
                 for (int currentIndex = startIndex; currentIndex <= lastStraightenIndex;)
                 {
+                    goBackLimit = Math.Max(goBackLimit, currentIndex - _straightenLanesLookAhead);
                     IRevisionGraphRow currentRow = localOrderedRowCache[currentIndex];
                     if (currentRow.Segments.Count >= MaxLanes)
                     {
@@ -498,7 +519,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     }
 
                     // if moved, check again whether the lanes of previous rows can be moved, too
-                    currentIndex = moved ? Math.Max(currentIndex - _straightenLanesLookAhead, startIndex) : currentIndex + 1;
+                    currentIndex = moved ? Math.Max(currentIndex - _straightenLanesLookAhead, goBackLimit) : currentIndex + 1;
                 }
             }
         }

@@ -141,7 +141,7 @@ namespace GitUITests.UserControls.RevisionGrid
             Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetCurrentRevisionLane());
         }
 
-        private static int LookAhead => 20;
+        private const int LookAhead = 20 * 2;
 
         private static IEnumerable<GitRevision> Revisions
         {
