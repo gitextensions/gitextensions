@@ -598,6 +598,14 @@ namespace GitCommands
             set => SetInt("Appearance.AvatarCacheSize", value);
         }
 
+        // Names from here: https://learn.microsoft.com/en-us/dotnet/api/system.windows.media.brushes?view=windowsdesktop-7.0
+        // or #AARRGGBB code
+        public static string AvatarAuthorInitialsPalette
+        {
+            get => GetString("Appearance.AvatarAuthorInitialsPalette", "SlateGray,RoyalBlue,Purple,OrangeRed,Teal,OliveDrab");
+            set => SetString("Appearance.AvatarAuthorInitialsPalette", value);
+        }
+
         /// <summary>
         /// Loads a setting with GetString and parses it to an enum
         /// </summary>

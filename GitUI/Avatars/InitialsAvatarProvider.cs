@@ -128,14 +128,19 @@ namespace GitUI.Avatars
         private readonly Graphics _graphics = Graphics.FromImage(new Bitmap(1, 1));
         private readonly Brush _textBrush = new SolidBrush(Color.WhiteSmoke);
 
-        private readonly Color[] _avatarColors =
+        private readonly Color[] _avatarColors = AppSettings.AvatarAuthorInitialsPalette.Split(",").Select(ConvertToColor).ToArray();
+
+        private static Color ConvertToColor(string colorCode)
         {
-            Color.RoyalBlue,
-            Color.DarkRed,
-            Color.Purple,
-            Color.ForestGreen,
-            Color.DarkOrange
-        };
+            try
+            {
+                return ColorTranslator.FromHtml(colorCode);
+            }
+            catch (Exception)
+            {
+                return Color.Black;
+            }
+        }
 
         private Image DrawText(string? text, Color backColor, int size)
         {
