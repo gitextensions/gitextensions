@@ -1484,6 +1484,10 @@ the last selected commit.</source>
   </file>
   <file datatype="plaintext" original="FileStatusList" source-language="en">
     <body>
+      <trans-unit id="FilterToolTip.ToolTipTitle">
+        <source>RegEx</source>
+        <target />
+      </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files using a regular expression...</source>
         <target />
@@ -2259,6 +2263,10 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="EditSettings.ToolTipText">
         <source>Settings</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="FilterToolTip.ToolTipTitle">
+        <source>RegEx</source>
         <target />
       </trans-unit>
       <trans-unit id="GpgInfoTabPage.Text">
@@ -5377,6 +5385,10 @@ command "git help shortlog"</source>
         <source>&amp;Directory:</source>
         <target />
       </trans-unit>
+      <trans-unit id="toolTip1.ToolTipTitle">
+        <source>Help</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormPull" source-language="en">
@@ -5613,7 +5625,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblLocalBranch.Tooltip">
-        <source>Remote branch to pull. Leave empty to pull all branches.</source>
+        <source>Local branch to create or reset to the remote branch selected.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblRemoteBranch.Text">
