@@ -37,6 +37,16 @@ namespace ResourceManagerTests
             Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
+        public void ParseGoToBranchLinkWithDetachedHead()
+        {
+            const string linkCaption = "(HEAD detached at 178264)";
+            LinkFactory linkFactory = new();
+            linkFactory.CreateBranchLink(linkCaption);
+            string expected = "gitext://gotobranch/HEAD";
+            Assert.True(linkFactory.GetTestAccessor().TryParseLink($"{linkCaption}#{expected}", out Uri? actualUri));
+            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+        }
+
         private static void TestCreateLink(string caption, string uri)
         {
             LinkFactory linkFactory = new();

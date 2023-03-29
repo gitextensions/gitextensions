@@ -1,10 +1,11 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;
@@ -452,7 +453,7 @@ namespace GitUI.CommitInfo
 
                         Dictionary<string, string> result = new();
 
-                        foreach (var gitRef in refs)
+                        foreach (IGitRef gitRef in refs)
                         {
                             #region Note on annotated tags
                             // Notice that for the annotated tags, gitRef's come in pairs because they're produced
@@ -481,8 +482,7 @@ namespace GitUI.CommitInfo
 
                             if (gitRef.IsTag && gitRef.IsDereference)
                             {
-                                string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
-
+                                string? content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
                                 if (content is not null)
                                 {
                                     result.Add(gitRef.LocalName, content);
@@ -809,14 +809,26 @@ namespace GitUI.CommitInfo
                 RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
             private readonly string _currentBranch;
+            private readonly bool _isDetachedHead;
 
             public BranchComparer(string currentBranch)
             {
                 _currentBranch = currentBranch;
+                _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);
             }
 
-            public int Compare(string a, string b)
+            public int Compare(string? a, string? b)
             {
+                if (b is null)
+                {
+                    return -1;
+                }
+
+                if (a is null)
+                {
+                    return 1;
+                }
+
                 int priorityA = GetBranchPriority(a);
                 int priorityB = GetBranchPriority(b);
                 return priorityA == priorityB ? StringComparer.Ordinal.Compare(a, b)
@@ -825,7 +837,7 @@ namespace GitUI.CommitInfo
 
             private int GetBranchPriority(string branch)
             {
-                return branch == _currentBranch ? 0
+                return (_isDetachedHead ? DetachedHeadParser.IsDetachedHead(branch) : branch == _currentBranch) ? 0
                     : IsImportantLocalBranch() ? 1
                     : IsImportantRemoteBranch() ? IsImportantRepo() ? 2 : 3
                     : IsLocalBranch() ? 4
@@ -851,9 +863,9 @@ namespace GitUI.CommitInfo
                 _prefix = prefix;
             }
 
-            public int Compare(string a, string b)
+            public int Compare(string? a, string? b)
             {
-                return IndexOf(a) - IndexOf(b);
+                return b is null ? -1 : a is null ? 1 : IndexOf(a) - IndexOf(b);
 
                 int IndexOf(string s)
                 {

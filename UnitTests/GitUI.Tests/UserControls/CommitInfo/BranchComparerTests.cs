@@ -8,7 +8,7 @@ namespace GitUITests.UserControls.CommitInfo
         [SetCulture("en-US")]
         [SetUICulture("en-US")]
         [Test]
-        public void BranchComparer([Values(null, "current")] string currentBranch)
+        public void BranchComparer([Values(null, "", "current", "(no branch)")] string? currentBranch)
         {
             List<string> expectedBranches = new()
             {
@@ -73,7 +73,7 @@ namespace GitUITests.UserControls.CommitInfo
 
             void SortAndCheckListsForEquality()
             {
-                branches.Sort(new GitUI.CommitInfo.CommitInfo.BranchComparer(currentBranch));
+                branches.Sort(new GitUI.CommitInfo.CommitInfo.BranchComparer(currentBranch ?? ""));
 
                 branches.Count.Should().Be(expectedBranches.Count);
                 for (int index = 0; index < branches.Count; ++index)

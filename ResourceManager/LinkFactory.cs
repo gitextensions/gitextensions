@@ -2,6 +2,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 
 namespace ResourceManager
@@ -49,7 +50,8 @@ namespace ResourceManager
         {
             if (noPrefixBranch != "…")
             {
-                return CreateLink(noPrefixBranch, $"{InternalScheme}://gotobranch/" + noPrefixBranch);
+                string linkTarget = DetachedHeadParser.IsDetachedHead(noPrefixBranch) ? "HEAD" : noPrefixBranch;
+                return CreateLink(noPrefixBranch, $"{InternalScheme}://gotobranch/{linkTarget}");
             }
 
             return WebUtility.HtmlEncode(noPrefixBranch);
