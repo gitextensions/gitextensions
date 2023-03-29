@@ -4,7 +4,7 @@ using GitCommands;
 
 namespace GitUI.Avatars
 {
-    public sealed class GravatarProvider : IAvatarProvider
+    public sealed class GravatarProvider : IAvatarProvider, IDisposable
     {
         // For details about the rating see https://en.gravatar.com/site/implement/images#rating
         // "g": suitable for display on all websites with any audience type.
@@ -14,6 +14,11 @@ namespace GitUI.Avatars
         private readonly AvatarFallbackType? _fallback;
         private readonly bool _forceFallback;
 
+        // Hash specified at http://en.gravatar.com/site/implement/hash/
+        private readonly MD5 _md5 = MD5.Create();
+
+        private readonly string _queryString;
+
         public GravatarProvider(
             IAvatarDownloader downloader,
             AvatarFallbackType? fallback,
@@ -22,6 +27,16 @@ namespace GitUI.Avatars
             _downloader = downloader ?? throw new ArgumentNullException(nameof(downloader));
             _fallback = fallback;
             _forceFallback = forceFallback;
+
+            string fallbackString = SerializeFallbackType(_fallback) ?? "404";
+            _queryString = $"r={_rating}&d={fallbackString}";
+
+            if (_forceFallback)
+            {
+                _queryString += "&f=y";
+            }
+
+            _queryString += "&s=";
         }
 
         public static bool IsFallbackSupportedByGravatar(AvatarFallbackType fallback)
@@ -32,19 +47,13 @@ namespace GitUI.Avatars
         /// <inheritdoc/>
         public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            var fallback = SerializeFallbackType(_fallback) ?? "404";
             var hash = ComputeHash(email);
 
             UriBuilder uri = new("https", "www.gravatar.com")
             {
                 Path = $"/avatar/{hash}",
-                Query = $"s={imageSize}&r={_rating}&d={fallback}"
+                Query = _queryString + imageSize
             };
-
-            if (_forceFallback)
-            {
-                uri.Query += "&f=y";
-            }
 
             var avatarUri = uri.Uri;
 
@@ -57,16 +66,11 @@ namespace GitUI.Avatars
             return _downloader.DownloadImageAsync(avatarUri);
         }
 
-        private static string ComputeHash(string email)
+        private string ComputeHash(string email)
         {
-#pragma warning disable SYSLIB0021 // 'MD5CryptoServiceProvider' is obsolete
-            // Hash specified at http://en.gravatar.com/site/implement/hash/
-            using MD5CryptoServiceProvider md5 = new();
-#pragma warning restore SYSLIB0021 // 'MD5CryptoServiceProvider' is obsolete
-
             // Gravatar doesn't specify an encoding
             var emailBytes = Encoding.UTF8.GetBytes(email.Trim().ToLowerInvariant());
-            var hashBytes = md5.ComputeHash(emailBytes);
+            var hashBytes = _md5.ComputeHash(emailBytes);
 
             return HexString.FromByteArray(hashBytes);
         }
@@ -82,6 +86,11 @@ namespace GitUI.Avatars
                 AvatarFallbackType.Robohash => "robohash",
                 _ => null,
             };
+        }
+
+        public void Dispose()
+        {
+            _md5.Dispose();
         }
     }
 }
