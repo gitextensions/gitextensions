@@ -113,12 +113,12 @@ namespace GitUI.UserControls.RevisionGrid
             set => _branchFilter = value ?? string.Empty;
         }
 
-        public bool IsShowAllBranchesChecked => !ByBranchFilter && !ShowCurrentBranchOnly && !ShowReflogReferences;
+        public bool IsShowAllBranchesChecked => !ByBranchFilter && !ShowCurrentBranchOnly;
 
-        public bool IsShowCurrentBranchOnlyChecked => ShowCurrentBranchOnly && !ShowReflogReferences;
+        public bool IsShowCurrentBranchOnlyChecked => ShowCurrentBranchOnly;
 
         // IsChecked is not the same as a filter is active, see ByBranchFilter
-        public bool IsShowFilteredBranchesChecked => ByBranchFilter && !ShowCurrentBranchOnly && !ShowReflogReferences;
+        public bool IsShowFilteredBranchesChecked => ByBranchFilter && !ShowCurrentBranchOnly;
 
         public bool ShowCurrentBranchOnly
         {
@@ -135,12 +135,7 @@ namespace GitUI.UserControls.RevisionGrid
         public bool ShowReflogReferences
         {
             get => AppSettings.ShowReflogReferences;
-            set
-            {
-                // ShowReflogReferences dominates ByBranchFilter and ShowCurrentBranchOnly,
-                // if the user toggles the Reflog button, the curremt branch fílter should appear.
-                AppSettings.ShowReflogReferences = value;
-            }
+            set => AppSettings.ShowReflogReferences = value;
         }
 
         public bool ShowSimplifyByDecoration
@@ -423,7 +418,8 @@ namespace GitUI.UserControls.RevisionGrid
                 // All commits
                 filter.Add("--reflog");
             }
-            else if (IsShowCurrentBranchOnlyChecked && !string.IsNullOrWhiteSpace(currentBranch.Value))
+
+            if (IsShowCurrentBranchOnlyChecked && !string.IsNullOrWhiteSpace(currentBranch.Value))
             {
                 // Git default, no option by default (stashes is special).
 
@@ -576,7 +572,8 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 filter.AppendLine(TranslatedStrings.ShowReflog);
             }
-            else if (ShowCurrentBranchOnly)
+
+            if (ShowCurrentBranchOnly)
             {
                 filter.AppendLine(TranslatedStrings.ShowCurrentBranchOnly);
             }

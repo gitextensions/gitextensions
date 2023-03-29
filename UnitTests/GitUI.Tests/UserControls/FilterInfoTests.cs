@@ -749,9 +749,9 @@ namespace GitUITests.UserControls
                 filterInfo.HasFilter.Should().BeFalse();
 
                 // showCurrentBranchOnly dominates byBranchFilter
-                filterInfo.IsShowAllBranchesChecked.Should().Be(!byBranchFilter && !showCurrentBranchOnly && !showReflog);
-                filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly && !showReflog);
-                filterInfo.IsShowFilteredBranchesChecked.Should().Be(byBranchFilter && !showCurrentBranchOnly && !showReflog);
+                filterInfo.IsShowAllBranchesChecked.Should().Be(!byBranchFilter && !showCurrentBranchOnly);
+                filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly);
+                filterInfo.IsShowFilteredBranchesChecked.Should().Be(byBranchFilter && !showCurrentBranchOnly);
 
                 filterInfo.ByBranchFilter.Should().Be(byBranchFilter);
                 AppSettings.BranchFilterEnabled.Should().Be(byBranchFilter);
@@ -904,7 +904,7 @@ namespace GitUITests.UserControls
             filterInfo.ByPathFilter.Should().BeFalse();
             filterInfo.ByBranchFilter.Should().BeFalse();
 
-            filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly && !showReflogReferences);
+            filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly);
             filterInfo.ShowReflogReferences.Should().Be(showReflogReferences);
         }
 
@@ -1116,10 +1116,10 @@ namespace GitUITests.UserControls
                 BranchFilter = branchFilter
             };
             string args = filterInfo.GetRevisionFilter(new Lazy<string>(() => currentBranch));
-            bool showAll = (!showReflog && !showCurrentBranchOnly && string.IsNullOrWhiteSpace(branchFilter))
-                || (!showReflog && showCurrentBranchOnly && string.IsNullOrWhiteSpace(currentBranch));
-            bool showCurrent = !showReflog && showCurrentBranchOnly && !string.IsNullOrWhiteSpace(currentBranch);
-            bool showFiltredOrCurrent = !showReflog && (showCurrent || (!showCurrentBranchOnly && !string.IsNullOrWhiteSpace(branchFilter)));
+            bool showAll = (!showCurrentBranchOnly && string.IsNullOrWhiteSpace(branchFilter))
+                || (showCurrentBranchOnly && string.IsNullOrWhiteSpace(currentBranch));
+            bool showCurrent = showCurrentBranchOnly && !string.IsNullOrWhiteSpace(currentBranch);
+            bool showFiltredOrCurrent = showCurrent || (!showCurrentBranchOnly && !string.IsNullOrWhiteSpace(branchFilter));
 
             try
             {
