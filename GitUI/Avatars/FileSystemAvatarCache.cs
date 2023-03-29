@@ -88,16 +88,26 @@ namespace GitUI.Avatars
 
                 bool HasExpired()
                 {
-                    var info = _fileSystem.FileInfo.FromFileName(path);
+                    IFileInfo info = _fileSystem.FileInfo.FromFileName(path);
 
-                    var cacheDays = AppSettings.AvatarImageCacheDays;
+                    if (!info.Exists)
+                    {
+                        return true;
+                    }
+
+                    if (AppSettings.AvatarProvider == AvatarProvider.None)
+                    {
+                        // No need to refresh because the image returned is always the same.
+                        return false;
+                    }
+
+                    int cacheDays = AppSettings.AvatarImageCacheDays;
                     if (cacheDays < 1)
                     {
                         cacheDays = DefaultCacheDays;
                     }
 
-                    return !info.Exists ||
-                           info.LastWriteTime < DateTime.Now.AddDays(-cacheDays);
+                    return info.LastWriteTime < DateTime.Now.AddDays(-cacheDays);
                 }
 
                 void TryDelete()
