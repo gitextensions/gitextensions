@@ -12,6 +12,7 @@ namespace GitUI.Avatars
     public sealed class AvatarMemoryCache : IAvatarProvider, IAvatarCacheCleaner
     {
         private readonly MruCache<(string email, int imageSize), Image> _cache;
+        private HashSet<(string email, int imageSize)> _requested = new(6);
         private readonly IAvatarProvider _inner;
 
         public AvatarMemoryCache(IAvatarProvider inner, int capacity = 30)
@@ -26,25 +27,74 @@ namespace GitUI.Avatars
         /// <inheritdoc />
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
+            (string email, int imageSize) key = (email, imageSize);
             lock (_cache)
             {
-                if (_cache.TryGetValue((email, imageSize), out var cachedImage))
+                if (_cache.TryGetValue(key, out var cachedImage))
                 {
                     return cachedImage;
                 }
             }
 
-            var image = await _inner.GetAvatarAsync(email, name, imageSize);
-
-            if (image is not null)
+            // The revision grid could trigger same request multiple times at the same time
+            // => Wait that the first finish and result is added to the cache.
+            if (IsRequestInProgress(key))
             {
-                lock (_cache)
+                for (int i = 0; i < 10_000; i++)
                 {
-                    _cache.Add((email, imageSize), image);
+                    lock (_cache)
+                    {
+                        if (_cache.TryGetValue(key, out var cachedImage))
+                        {
+                            return cachedImage;
+                        }
+                    }
+
+                    if (!IsRequestInProgress(key))
+                    {
+                        // Early exit when the image is not in the cache and key is no more in the requests list
+                        // => the request has failed!
+                        break;
+                    }
+
+                    await Task.Delay(5); // Approximative time to read from disk to not slow down the grid scrolling
                 }
             }
 
-            return image;
+            try
+            {
+                lock (_requested)
+                {
+                    _requested.Add(key);
+                }
+
+                Image image = await _inner.GetAvatarAsync(email, name, imageSize);
+
+                if (image is not null)
+                {
+                    lock (_cache)
+                    {
+                        _cache.Add(key, image);
+                    }
+                }
+
+                return image;
+            }
+            finally
+            {
+                lock (_requested)
+                {
+                    _requested.Remove(key);
+                }
+            }
+
+            bool IsRequestInProgress((string email, int imageSize) avatarKey)
+            {
+                lock (_requested)
+                {
+                    return _requested.Contains(avatarKey);
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -53,6 +103,11 @@ namespace GitUI.Avatars
             lock (_cache)
             {
                 _cache.Clear();
+            }
+
+            lock (_requested)
+            {
+                _requested.Clear();
             }
 
             CacheCleared?.Invoke(this, EventArgs.Empty);
