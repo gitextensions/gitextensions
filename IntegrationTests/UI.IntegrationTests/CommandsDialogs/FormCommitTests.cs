@@ -70,6 +70,8 @@ namespace GitExtensions.UITests.CommandsDialogs
             {
                 var commitAuthorStatus = form.GetTestAccessor().CommitAuthorStatusToolStripStatusLabel;
 
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
                 Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
 
                 using (Form tempForm = new())
@@ -85,7 +87,6 @@ namespace GitExtensions.UITests.CommandsDialogs
                 form.Focus();
                 Application.DoEvents();
 
-                await Task.Delay(1000);
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Committer new author <new_author@mail.com>", commitAuthorStatus.Text);

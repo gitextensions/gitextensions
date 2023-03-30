@@ -2830,7 +2830,7 @@ namespace GitUI.CommandsDialogs
                     string committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
 
                     await this.SwitchToMainThreadAsync();
-                    commitAuthorStatus.Text = string.IsNullOrEmpty(toolAuthor.Text?.Trim())
+                    commitAuthorStatus.Text = string.IsNullOrWhiteSpace(toolAuthor.Text)
                         ? committer
                         : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
                 });
