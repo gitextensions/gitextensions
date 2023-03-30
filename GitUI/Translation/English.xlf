@@ -10129,6 +10129,10 @@ following command.
         <source>{0} {1:hour|hours} ago</source>
         <target />
       </trans-unit>
+      <trans-unit id="_ignoringReference.Text">
+        <source>"{0}" is not a Git revision and will be ignored.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_indexText.Text">
         <source>Commit index</source>
         <target />
@@ -10195,6 +10199,10 @@ following command.
       </trans-unit>
       <trans-unit id="_noRevision.Text">
         <source>No revision</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_nonexistingGitRevision.Text">
+        <source>Git revision does not exist</source>
         <target />
       </trans-unit>
       <trans-unit id="_okText.Text">

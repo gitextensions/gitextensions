@@ -2,6 +2,7 @@
 using System.Text;
 using GitCommands;
 using GitExtUtils;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -111,6 +112,16 @@ namespace GitUI.UserControls.RevisionGrid
         {
             get => GetValue(ByBranchFilter, _branchFilter, string.Empty);
             set => _branchFilter = value ?? string.Empty;
+        }
+
+        public void SetBranchFilter(string filter)
+        {
+            // Set filtered branches if there is a filter, handled as all branches otherwise
+            ShowCurrentBranchOnly = false;
+
+            string newFilter = filter?.Trim() ?? string.Empty;
+            ByBranchFilter = !string.IsNullOrWhiteSpace(newFilter);
+            BranchFilter = newFilter;
         }
 
         public bool IsShowAllBranchesChecked => !ByBranchFilter && !ShowCurrentBranchOnly;
@@ -436,10 +447,19 @@ namespace GitUI.UserControls.RevisionGrid
                 AddFirstStashRef();
 
                 // If BranchFilter contains wildcards, "--branches=" must be prepended.
-                // Use the simple branch filter if without wildcards (must be Git reference)
+                // Use the simple branch filter if without wildcards (must be Git revision)
                 // in order to avoid git adding implicit /* to the "--branches=" filter.
-                bool useSimpleBranchFilter = BranchFilter.IndexOfAny(new[] { '?', '*', '[' }) == -1;
-                filter.Add(useSimpleBranchFilter ? BranchFilter : $"--branches={BranchFilter}");
+                // Also add apparent options.
+
+                // Split at whitespace (char[])null is default) but with split options.
+                // Ignore quouting, Git revisions do not allow spaces.
+                foreach (string branch in BranchFilter.Split((char[])null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                {
+                    bool wildcardBranchFilter = branch.IndexOfAny(new[] { '?', '*', '[' }) >= 0;
+                    filter.Add(wildcardBranchFilter && !branch.StartsWith("--")
+                        ? $"--branches={branch}"
+                        : branch);
+                }
             }
             else
             {
@@ -573,7 +593,7 @@ namespace GitUI.UserControls.RevisionGrid
                 filter.AppendLine(TranslatedStrings.ShowReflog);
             }
 
-            if (ShowCurrentBranchOnly)
+            if (IsShowCurrentBranchOnlyChecked)
             {
                 filter.AppendLine(TranslatedStrings.ShowCurrentBranchOnly);
             }

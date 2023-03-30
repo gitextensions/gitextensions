@@ -51,7 +51,7 @@ namespace GitUI.UserControls
         /// <summary>
         ///  Applies custom branch filters supplied via the filter textbox.
         /// </summary>
-        private void ApplyCustomBranchFilter()
+        private void ApplyCustomBranchFilter(bool checkBranch = true)
         {
             if (_isApplyingFilter)
             {
@@ -65,6 +65,49 @@ namespace GitUI.UserControls
 
             // Apply the textbox contents, no check if the (multiple) options is in tscboBranchFilter.Items (or that the list is generated)
             string filter = tscboBranchFilter.Text == TranslatedStrings.NoResultsFound ? string.Empty : tscboBranchFilter.Text;
+            if (checkBranch && !string.IsNullOrWhiteSpace(filter))
+            {
+                List<string> newFilter = new();
+                IReadOnlyList<IGitRef> refs = _getRefs(RefsFilter.NoFilter);
+
+                // Split at whitespace (char[])null is default) but with split options.
+                // Ignore quoting, Git revisions do not allow spaces.
+                foreach (string branch in filter.Split((char[])null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+                {
+                    bool wildcardBranchFilter = branch.IndexOfAny(new[] { '?', '*', '[' }) >= 0;
+                    if (branch.StartsWith("--") || refs.Any(r => r.LocalName == branch))
+                    {
+                        // Added as git-log option or revision filter
+                    }
+                    else if (wildcardBranchFilter)
+                    {
+                        // Added as --branches= option
+                    }
+                    else
+                    {
+                        ObjectId oid = GetModule().RevParse(branch);
+                        if (oid is null)
+                        {
+                            TaskDialogPage page = new()
+                            {
+                                Heading = string.Format(TranslatedStrings.IgnoringReference, branch),
+                                Caption = TranslatedStrings.NonexistingGitRevision,
+                                Buttons = { TaskDialogButton.OK },
+                                Icon = TaskDialogIcon.Warning,
+                                SizeToContent = true
+                            };
+
+                            TaskDialog.ShowDialog(this, page);
+                            continue;
+                        }
+                    }
+
+                    newFilter.Add(branch);
+                }
+
+                filter = string.Join(" ", newFilter);
+            }
+
             RevisionGridFilter.SetAndApplyBranchFilter(filter);
 
             _isApplyingFilter = false;
@@ -176,12 +219,13 @@ namespace GitUI.UserControls
 
         /// <summary>
         ///  Sets the branches filter.
+        ///  No check that the branches exist (must be checked already, expected to be called from side panel).
         /// </summary>
-        /// <param name="filter">The filter to apply.</param>
+        /// <param name="filter">The branches to filter separated by whitespace.</param>
         public void SetBranchFilter(string? filter)
         {
             tscboBranchFilter.Text = filter;
-            ApplyCustomBranchFilter();
+            ApplyCustomBranchFilter(checkBranch: false);
         }
 
         /// <summary>
@@ -401,7 +445,7 @@ namespace GitUI.UserControls
         {
             if (e.KeyCode == Keys.Enter)
             {
-                ApplyCustomBranchFilter();
+                ApplyCustomBranchFilter(checkBranch: true);
             }
         }
 
@@ -465,6 +509,7 @@ namespace GitUI.UserControls
             public ToolStripMenuItem tsmiShowBranchesCurrent => _control.tsmiShowBranchesCurrent;
             public ToolStripMenuItem tsmiShowBranchesFiltered => _control.tsmiShowBranchesFiltered;
             public ToolStripComboBox tscboBranchFilter => _control.tscboBranchFilter;
+            public void RefreshRevisionFunction(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs) => _control.RefreshRevisionFunction(getRefs);
             public ToolStripDropDownButton tsddbtnBranchFilter => _control.tsddbtnBranchFilter;
             public ToolStripDropDownButton tsddbtnRevisionFilter => _control.tsddbtnRevisionFilter;
             public bool _isApplyingFilter => _control._isApplyingFilter;
@@ -472,7 +517,7 @@ namespace GitUI.UserControls
 
             public IRevisionGridFilter RevisionGridFilter => _control.RevisionGridFilter;
 
-            public void ApplyCustomBranchFilter() => _control.ApplyCustomBranchFilter();
+            public void ApplyCustomBranchFilter(bool checkBranch) => _control.ApplyCustomBranchFilter(checkBranch);
 
             public void ApplyRevisionFilter() => _control.ApplyRevisionFilter();
 

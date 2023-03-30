@@ -133,6 +133,8 @@ the last selected commit.");
         private readonly TranslationString _stashDropConfirmTitle = new("Drop Stash Confirmation");
         private readonly TranslationString _cannotBeUndone = new("This action cannot be undone.");
         private readonly TranslationString _areYouSure = new("Are you sure you want to drop the stash? This action cannot be undone.");
+        private readonly TranslationString _nonexistingGitRevision = new("Git revision does not exist");
+        private readonly TranslationString _ignoringReference = new("\"{0}\" is not a Git revision and will be ignored.");
 
         private readonly TranslationString _errorPuTTYNotFound = new("SSH agent could not be found");
         private readonly TranslationString _errorSshKeyNotFound = new("SSH key file could not be found");
@@ -324,6 +326,8 @@ following command.
         public static string StashDropConfirmTitle => _instance.Value._stashDropConfirmTitle.Text;
         public static string CannotBeUndone => _instance.Value._cannotBeUndone.Text;
         public static string AreYouSure => _instance.Value._areYouSure.Text;
+        public static string NonexistingGitRevision => _instance.Value._nonexistingGitRevision.Text;
+        public static string IgnoringReference => _instance.Value._ignoringReference.Text;
 
         public static string GitSecurityError => _instance.Value._gitSecurityError.Text;
         public static string GitDubiousOwnershipHeader => _instance.Value._gitDubiousOwnershipHeader.Text;
