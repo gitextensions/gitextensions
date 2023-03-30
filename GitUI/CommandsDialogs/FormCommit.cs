@@ -2819,14 +2819,21 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateAuthorInfo()
         {
-            var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
-            var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    await TaskScheduler.Default;
 
-            var committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
+                    // Do not cache results in order to update the info on FormActivate
+                    string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false);
+                    string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false);
+                    string committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
 
-            commitAuthorStatus.Text = string.IsNullOrEmpty(toolAuthor.Text?.Trim())
-                ? committer
-                : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
+                    await this.SwitchToMainThreadAsync();
+                    commitAuthorStatus.Text = string.IsNullOrEmpty(toolAuthor.Text?.Trim())
+                        ? committer
+                        : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
+                });
         }
 
         private bool SenderToFileStatusList(object sender, [NotNullWhen(returnValue: true)] out FileStatusList? list)

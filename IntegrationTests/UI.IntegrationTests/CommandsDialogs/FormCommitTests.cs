@@ -52,9 +52,12 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_show_committer_info_on_open()
         {
-            RunFormTest(form =>
+            RunFormTest(async form =>
             {
                 var commitAuthorStatus = form.GetTestAccessor().CommitAuthorStatusToolStripStatusLabel;
+
+                await Task.Delay(1000);
+                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
             });
@@ -80,7 +83,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                 }
 
                 form.Focus();
+                Application.DoEvents();
 
+                await Task.Delay(1000);
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
                 Assert.AreEqual("Committer new author <new_author@mail.com>", commitAuthorStatus.Text);
