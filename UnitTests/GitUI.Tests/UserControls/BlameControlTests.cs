@@ -109,7 +109,7 @@ namespace GitUITests.UserControls
         {
             StringBuilder line = new();
 
-            _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+            _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, expectedResult.Length + 10, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
                 "fileName_different.txt", showAuthor, showAuthorDate, showFilePath, displayAuthorFirst);
 
             line.ToString().Should().StartWith(expectedResult);
@@ -120,7 +120,7 @@ namespace GitUITests.UserControls
         {
             StringBuilder line = new();
 
-            _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
+            _blameControl.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, 50, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
                 "fileName.txt", true, true, true, false);
 
             line.ToString().Should().StartWith("3/22/2010 - author1");
