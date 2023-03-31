@@ -16,14 +16,22 @@ namespace GitUI.Avatars
         /// <inheritdoc/>
         public Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            var (initials, hashCode) = GetInitialsAndHashCode(email, name);
+            (string initials, int hashCode) = GetInitialsAndHashCode(email, name);
 
-            var avatarColor = _avatarColors[hashCode];
-            var avatar = DrawText(initials, avatarColor, imageSize);
+            Color avatarColor = _avatarColors[hashCode];
+            Image avatar = DrawText(initials, avatarColor, imageSize);
 
             return Task.FromResult<Image?>(avatar);
         }
 
+        /// <summary>
+        /// Calculate the most simpler non-cryptographic deterministic hash (to get the same result every times it is calculated for the same string)
+        /// We just need an inexpensive way to convert a string to an integer, and calculating a hash is a good way to do it.
+        /// We are not using <c>GetHashCode()</c> because it returns a different value for each process.
+        /// Borrowed from https://stackoverflow.com/a/5155015
+        /// </summary>
+        /// <param name="str">The string to calculate a hash for.</param>
+        /// <returns>The calculated hash.</returns>
         private int GetDeterministicHashCode(string str)
         {
             unchecked
@@ -34,23 +42,23 @@ namespace GitUI.Avatars
                     hash = (hash * 31) + c;
                 }
 
-                return Math.Abs(hash) % _avatarColors.Length;
+                return Math.Abs(hash);
             }
         }
 
         protected internal (string? initials, int hashCode) GetInitialsAndHashCode(string email, string? name)
         {
-            (var selectedName, var separator) = NameSelector(name, email);
+            (string selectedName, char[] separator) = NameSelector(name, email);
 
             if (selectedName is null)
             {
                 return ("?", _unkownCounter++);
             }
 
-            var nameParts = selectedName.Split(separator);
-            var initials = GetInitialsFromNames(nameParts);
+            string[] nameParts = selectedName.Split(separator);
+            string initials = GetInitialsFromNames(nameParts);
 
-            return (initials, GetDeterministicHashCode(selectedName));
+            return (initials, GetDeterministicHashCode(email) % _avatarColors.Length);
         }
 
         private static (string? name, char[]? separator) NameSelector(string? name, string? email)
@@ -62,7 +70,7 @@ namespace GitUI.Avatars
 
             if (!string.IsNullOrWhiteSpace(email))
             {
-                var withoutDomain = email.LazySplit('@').First().TrimStart();
+                string withoutDomain = email.LazySplit('@').First().TrimStart();
                 return (withoutDomain, _emailInitialSeparator);
             }
 
@@ -79,22 +87,42 @@ namespace GitUI.Avatars
                 return null;
             }
 
+            string name = names[0];
+
             // If only a single valid name-element is found ...
             if (names.Length == 1)
             {
                 // ... and that name-element is only a single character long ...
-                if (names[0].Length == 1)
+                if (name.Length == 1)
                 {
                     // ... return that character as uppercase
-                    return names[0][0].ToString().ToUpper();
+                    return name.ToUpper();
+                }
+
+                if (char.IsUpper(name[1]))
+                {
+                    return $"{char.ToUpper(name[0])}{name[1]}";
+                }
+
+                string[] splitNames = name.Split(_emailInitialSeparator);
+
+                if (splitNames.Length > 1)
+                {
+                    return GetInitialsFromNames(splitNames);
+                }
+
+                char[] upperChars = name.Where(char.IsUpper).ToArray();
+                if (upperChars.Length > 1)
+                {
+                    return $"{upperChars[0]}{upperChars[upperChars.Length - 1]}";
                 }
 
                 // return first letter upper-case and second letter original/lower case.
-                return $"{char.ToUpper(names[0][0])}{names[0][1]}";
+                return $"{char.ToUpper(name[0])}{name[1]}";
             }
 
             // Return initials from first and last name-element as uppercase
-            return $"{names[0][0]}{names[names.Length - 1][0]}".ToUpper();
+            return $"{name[0]}{names[names.Length - 1][0]}".ToUpper();
         }
 
         private readonly Graphics _graphics = Graphics.FromImage(new Bitmap(1, 1));
