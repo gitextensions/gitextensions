@@ -3064,6 +3064,7 @@ namespace GitUI
         Point IScriptHostControl.GetQuickItemSelectorLocation()
             => GetQuickItemSelectorLocation();
 
+        string IScriptHostControl.CurrentBranch() => CurrentBranch.Value;
         #endregion
 
         bool ICheckRefs.Contains(ObjectId objectId) => _gridView.Contains(objectId);
