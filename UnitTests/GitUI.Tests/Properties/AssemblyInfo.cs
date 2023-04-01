@@ -6,3 +6,4 @@ using CommonTestUtils;
 [assembly: ConfigureJoinableTaskFactory]
 [assembly: TestAppSettings]
 [assembly: UseReporter(typeof(NUnitReporter), typeof(AppVeyorReporter), typeof(DiffReporter))]
+[assembly: NUnit.Framework.Category("UnitTests")]
