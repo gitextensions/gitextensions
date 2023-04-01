@@ -2318,6 +2318,12 @@ namespace GitCommands
             return EffectiveConfigFile.GetValue(setting);
         }
 
+        public string GetEffectiveGitSetting(string setting, bool cache = true)
+        {
+            GitArgumentBuilder args = new("config") { "--includes", "--get", setting };
+            return GitExecutable.GetOutput(args, cache: cache ? GitCommandCache : null).Trim();
+        }
+
         public void UnsetSetting(string setting)
         {
             SetSetting(setting, null);
