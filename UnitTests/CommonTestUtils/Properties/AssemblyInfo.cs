@@ -7,3 +7,4 @@ using CommonTestUtils;
 [assembly: AssemblyDescription("Common Test Utils")]
 
 [assembly: TestAppSettings]
+[assembly: NUnit.Framework.Category("UnitTests")]
