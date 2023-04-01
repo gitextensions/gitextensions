@@ -247,7 +247,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             return;
                         }
 
-                        IRevisionGraphRow? previousRow = _revisionGraph.GetSegmentsForRow(Math.Max(0, index - 1));
+                        IRevisionGraphRow? previousRow = _revisionGraph.GetSegmentsForRow(index - 1);
                         IRevisionGraphRow? nextRow = _revisionGraph.GetSegmentsForRow(index + 1);
 
                         int centerY = top + (rowHeight / 2);

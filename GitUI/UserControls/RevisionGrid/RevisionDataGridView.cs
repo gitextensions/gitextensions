@@ -662,8 +662,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         private async Task UpdateVisibleRowRangeInternalAsync()
         {
-            var fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
-            var visibleRowCount = _rowHeight > 0 ? (Height / _rowHeight) + 2 /*Add 2 for rounding*/ : 0;
+            int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
+            int visibleRowCount = _rowHeight <= 0 ? 0 : (Height / _rowHeight) + 2 /*Add 2 for rounding*/;
 
             visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
 
@@ -673,7 +673,8 @@ namespace GitUI.UserControls.RevisionGrid
 
                 if (visibleRowCount > 0)
                 {
-                    int newBackgroundScrollTo = fromIndex + visibleRowCount;
+                    // Preload the next page, too, in order to avoid delayed display of the graph when scrolling down
+                    int newBackgroundScrollTo = fromIndex + (2 * visibleRowCount);
 
                     // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working when we scroll up
                     if (_backgroundScrollTo != newBackgroundScrollTo)
@@ -682,16 +683,19 @@ namespace GitUI.UserControls.RevisionGrid
 
                         if (AppSettings.ShowRevisionGridGraphColumn)
                         {
-                            int scrollTo;
                             int curCount;
-
                             do
                             {
-                                scrollTo = newBackgroundScrollTo;
                                 curCount = _revisionGraph.GetCachedCount();
-                                await UpdateGraphAsync(fromIndex: curCount, toIndex: scrollTo);
+                                await UpdateGraphAsync(fromIndex: curCount, toIndex: newBackgroundScrollTo);
+
+                                // Take changes to _backgroundScrollTo and IsDataLoadComplete by another thread into account
+                                if (IsDataLoadComplete)
+                                {
+                                    _backgroundScrollTo = Math.Min(_backgroundScrollTo, _revisionGraph.Count);
+                                }
                             }
-                            while (curCount < scrollTo);
+                            while (curCount < _backgroundScrollTo);
                         }
                         else
                         {
