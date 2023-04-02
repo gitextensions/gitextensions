@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Reflection;
+using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
@@ -446,6 +447,15 @@ namespace GitUI.UserControls.RevisionGrid
                     Text = "Arrange c&ommits by topo order (ancestor order)",
                     ExecuteAction = () => _revisionGrid.ToggleTopoOrder(),
                     IsCheckedFunc = () => AppSettings.RevisionSortOrder == RevisionSortOrder.Topology
+                },
+                MenuCommand.CreateSeparator(),
+
+                MenuCommand.CreateGroupHeader("Settings"),
+                new MenuCommand
+                {
+                    Name = "SaveAsDefault",
+                    Text = "Save current view settings as default",
+                    ExecuteAction = SaveAsDefaultViewSettings
                 }
             };
         }
@@ -492,6 +502,17 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 MessageBoxes.CannotFindGitRevision(owner: _revisionGrid);
             }
+        }
+
+        private void SaveAsDefaultViewSettings()
+        {
+            foreach (FieldInfo viewSettingField in typeof(AppSettings).GetFields(BindingFlags.Public | BindingFlags.NonPublic | System.Reflection.BindingFlags.Static))
+            {
+                IViewSetting viewSetting = viewSettingField.GetValue(null) as IViewSetting;
+                viewSetting?.Save();
+            }
+
+            AppSettings.SaveSettings();
         }
     }
 }
