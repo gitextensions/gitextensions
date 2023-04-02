@@ -100,7 +100,8 @@ namespace GitCommands.Git
                     continue;
                 }
 
-                if (x != '?' && x != '!' && x != ' ')
+                // Skip unmerged where both are modified: Only worktree interesting.
+                if ((x != '?' && x != '!' && x != ' ') || (x == 'U' && y == 'U'))
                 {
                     GitItemStatus gitItemStatusX;
                     var stagedX = fromDiff ? staged : StagedStatus.Index;
@@ -226,7 +227,12 @@ namespace GitCommands.Git
                         continue;
                     }
 
-                    UpdateItemStatus(x, true, subm, fileName, oldFileName, renamePercent);
+                    // Skip unmerged where both are modified: Only worktree interesting.
+                    if (entryType != 'u' || x != 'U' || y != 'U')
+                    {
+                        UpdateItemStatus(x, true, subm, fileName, oldFileName, renamePercent);
+                    }
+
                     UpdateItemStatus(y, false, subm, fileName, oldFileName, renamePercent);
                 }
             }
