@@ -2224,13 +2224,13 @@ namespace GitUI
 
         internal void ToggleAuthorDateSort()
         {
-            AppSettings.RevisionSortOrder = AppSettings.RevisionSortOrder != RevisionSortOrder.AuthorDate ? RevisionSortOrder.AuthorDate : RevisionSortOrder.GitDefault;
+            AppSettings.RevisionSortOrder.Value = AppSettings.RevisionSortOrder != RevisionSortOrder.AuthorDate ? RevisionSortOrder.AuthorDate : RevisionSortOrder.GitDefault;
             PerformRefreshRevisions();
         }
 
         internal void ToggleTopoOrder()
         {
-            AppSettings.RevisionSortOrder = AppSettings.RevisionSortOrder != RevisionSortOrder.Topology ? RevisionSortOrder.Topology : RevisionSortOrder.GitDefault;
+            AppSettings.RevisionSortOrder.Value = AppSettings.RevisionSortOrder != RevisionSortOrder.Topology ? RevisionSortOrder.Topology : RevisionSortOrder.GitDefault;
             PerformRefreshRevisions();
         }
 

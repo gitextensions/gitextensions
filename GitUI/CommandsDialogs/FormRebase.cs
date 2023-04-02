@@ -398,9 +398,9 @@ namespace GitUI.CommandsDialogs
             finally
             {
                 AppSettings.ShowStashes = previousValueShowStashes;
-                AppSettings.BranchFilterEnabled = previousValueBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = previousValueShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = previousValueShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = previousValueBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = previousValueShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = previousValueShowReflogReferences;
             }
         }
 

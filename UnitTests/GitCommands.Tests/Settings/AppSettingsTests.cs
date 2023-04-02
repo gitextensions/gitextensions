@@ -291,9 +291,12 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.LastFormatPatchDir)], string.Empty, true, false);
                 yield return (properties[nameof(AppSettings.IgnoreWhitespaceKind)], IgnoreWhitespaceKind.None, false, false);
                 yield return (properties[nameof(AppSettings.RememberIgnoreWhiteSpacePreference)], true, false, false);
+                yield return (properties[nameof(AppSettings.ShowNonPrintingChars)], false, false, false);
                 yield return (properties[nameof(AppSettings.RememberShowNonPrintingCharsPreference)], false, false, false);
+                yield return (properties[nameof(AppSettings.ShowEntireFile)], false, false, false);
                 yield return (properties[nameof(AppSettings.RememberShowEntireFilePreference)], false, false, false);
                 yield return (properties[nameof(AppSettings.RememberNumberOfContextLines)], false, false, false);
+                yield return (properties[nameof(AppSettings.ShowSyntaxHighlightingInDiff)], true, false, false);
                 yield return (properties[nameof(AppSettings.RememberShowSyntaxHighlightingInDiff)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowRepoCurrentBranch)], true, false, false);
                 yield return (properties[nameof(AppSettings.OwnScripts)], string.Empty, true, false);

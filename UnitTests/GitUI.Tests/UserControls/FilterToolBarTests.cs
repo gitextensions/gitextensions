@@ -26,7 +26,7 @@ namespace GitUITests.UserControls
             _originalShowOnlyFirstParent = AppSettings.ShowOnlyFirstParent;
             _originalShowReflogReferences = AppSettings.ShowReflogReferences;
             AppSettings.ShowOnlyFirstParent = false;
-            AppSettings.ShowReflogReferences = false;
+            AppSettings.ShowReflogReferences.Value = false;
 
             _gitModule = Substitute.For<IGitModule>();
             _revisionGridFilter = Substitute.For<IRevisionGridFilter>();
@@ -39,7 +39,7 @@ namespace GitUITests.UserControls
         public void TearDown()
         {
             AppSettings.ShowOnlyFirstParent = _originalShowOnlyFirstParent;
-            AppSettings.ShowReflogReferences = _originalShowReflogReferences;
+            AppSettings.ShowReflogReferences.Value = _originalShowReflogReferences;
         }
 
         [Test]
@@ -258,14 +258,14 @@ namespace GitUITests.UserControls
             bool original = AppSettings.ShowReflogReferences;
             try
             {
-                AppSettings.ShowReflogReferences = settingValue;
+                AppSettings.ShowReflogReferences.Value = settingValue;
 
                 _revisionGridFilter.FilterChanged += Raise.EventWith(_revisionGridFilter, new FilterChangedEventArgs(new()));
                 _filterToolBar.GetTestAccessor().tsbShowReflog.Checked.Should().Be(settingValue);
             }
             finally
             {
-                AppSettings.ShowReflogReferences = original;
+                AppSettings.ShowReflogReferences.Value = original;
             }
         }
 

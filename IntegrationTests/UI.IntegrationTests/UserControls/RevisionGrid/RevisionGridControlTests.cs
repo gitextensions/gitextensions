@@ -67,9 +67,9 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void Assert_default_filter_related_settings()
         {
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.BranchFilterEnabled = false;
-            AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
             AppSettings.ShowGitNotes = true;
 
             RunSetAndApplyBranchFilterTest(
@@ -115,9 +115,9 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void View_reflects_applied_branch_filter()
         {
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.BranchFilterEnabled = false;
-            AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
             AppSettings.ShowGitNotes = true;
 
             RunSetAndApplyBranchFilterTest(
@@ -157,9 +157,9 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [Test]
         public void View_reflects_reset_branch_filter()
         {
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.BranchFilterEnabled = false;
-            AppSettings.ShowCurrentBranchOnly = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
             AppSettings.ShowGitNotes = true;
 
             RunSetAndApplyBranchFilterTest(

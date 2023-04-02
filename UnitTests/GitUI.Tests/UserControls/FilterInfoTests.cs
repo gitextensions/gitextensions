@@ -30,9 +30,9 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
             AppSettings.MaxRevisionGraphCommits = 1;
 
             try
@@ -42,9 +42,9 @@ namespace GitUITests.UserControls
             }
             finally
             {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 
@@ -54,9 +54,9 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
             AppSettings.MaxRevisionGraphCommits = 1;
 
             try
@@ -66,9 +66,9 @@ namespace GitUITests.UserControls
             }
             finally
             {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 
@@ -435,36 +435,36 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
 
             try
             {
                 FilterInfo filterInfo = new();
                 filterInfo.ByBranchFilter.Should().BeFalse();
-                AppSettings.BranchFilterEnabled.Should().BeFalse();
+                AppSettings.BranchFilterEnabled.Value.Should().BeFalse();
                 filterInfo.HasFilter.Should().BeFalse();
 
                 filterInfo.ByBranchFilter = true;
                 filterInfo.ByBranchFilter.Should().BeTrue();
-                AppSettings.BranchFilterEnabled.Should().BeTrue();
+                AppSettings.BranchFilterEnabled.Value.Should().BeTrue();
                 filterInfo.HasFilter.Should().BeFalse();
 
                 filterInfo.ByBranchFilter = false;
                 filterInfo.ByBranchFilter.Should().BeFalse();
-                AppSettings.BranchFilterEnabled.Should().BeFalse();
+                AppSettings.BranchFilterEnabled.Value.Should().BeFalse();
                 filterInfo.HasFilter.Should().BeFalse();
 
-                AppSettings.BranchFilterEnabled = true;
+                AppSettings.BranchFilterEnabled.Value = true;
                 filterInfo.ByBranchFilter.Should().BeTrue();
                 filterInfo.HasFilter.Should().BeFalse();
             }
             finally
             {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 
@@ -477,9 +477,9 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
 
             try
             {
@@ -502,9 +502,9 @@ namespace GitUITests.UserControls
             }
             finally
             {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 
@@ -517,9 +517,9 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
 
             try
             {
@@ -535,9 +535,9 @@ namespace GitUITests.UserControls
             }
             finally
             {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 
@@ -550,9 +550,9 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
 
             try
             {
@@ -568,9 +568,9 @@ namespace GitUITests.UserControls
             }
             finally
             {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 
@@ -583,9 +583,9 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
 
             try
             {
@@ -601,9 +601,9 @@ namespace GitUITests.UserControls
             }
             finally
             {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 
@@ -613,36 +613,36 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
 
             try
             {
                 FilterInfo filterInfo = new();
                 filterInfo.ShowCurrentBranchOnly.Should().BeFalse();
-                AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
+                AppSettings.ShowCurrentBranchOnly.Value.Should().BeFalse();
                 filterInfo.HasFilter.Should().BeFalse();
 
                 filterInfo.ShowCurrentBranchOnly = true;
                 filterInfo.ShowCurrentBranchOnly.Should().BeTrue();
-                AppSettings.ShowCurrentBranchOnly.Should().BeTrue();
+                AppSettings.ShowCurrentBranchOnly.Value.Should().BeTrue();
                 filterInfo.HasFilter.Should().BeFalse();
 
                 filterInfo.ShowCurrentBranchOnly = false;
                 filterInfo.ShowCurrentBranchOnly.Should().BeFalse();
-                AppSettings.ShowCurrentBranchOnly.Should().BeFalse();
+                AppSettings.ShowCurrentBranchOnly.Value.Should().BeFalse();
                 filterInfo.HasFilter.Should().BeFalse();
 
-                AppSettings.ShowCurrentBranchOnly = true;
+                AppSettings.ShowCurrentBranchOnly.Value = true;
                 filterInfo.ShowCurrentBranchOnly.Should().BeTrue();
                 filterInfo.HasFilter.Should().BeFalse();
             }
             finally
             {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 
@@ -685,36 +685,36 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
 
             try
             {
                 FilterInfo filterInfo = new();
                 filterInfo.ShowReflogReferences.Should().BeFalse();
-                AppSettings.ShowReflogReferences.Should().BeFalse();
+                AppSettings.ShowReflogReferences.Value.Should().BeFalse();
                 filterInfo.HasFilter.Should().BeFalse();
 
                 filterInfo.ShowReflogReferences = true;
                 filterInfo.ShowReflogReferences.Should().BeTrue();
-                AppSettings.ShowReflogReferences.Should().BeTrue();
+                AppSettings.ShowReflogReferences.Value.Should().BeTrue();
                 filterInfo.HasFilter.Should().BeFalse();
 
                 filterInfo.ShowReflogReferences = false;
                 filterInfo.ShowReflogReferences.Should().BeFalse();
-                AppSettings.ShowReflogReferences.Should().BeFalse();
+                AppSettings.ShowReflogReferences.Value.Should().BeFalse();
                 filterInfo.HasFilter.Should().BeFalse();
 
-                AppSettings.ShowReflogReferences = true;
+                AppSettings.ShowReflogReferences.Value = true;
                 filterInfo.ShowReflogReferences.Should().BeTrue();
                 filterInfo.HasFilter.Should().BeFalse();
             }
             finally
             {
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 
@@ -731,9 +731,9 @@ namespace GitUITests.UserControls
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool originalShowReflogReferences = AppSettings.ShowReflogReferences;
-            AppSettings.ShowReflogReferences = false;
-            AppSettings.ShowCurrentBranchOnly = false;
-            AppSettings.BranchFilterEnabled = false;
+            AppSettings.ShowReflogReferences.Value = false;
+            AppSettings.ShowCurrentBranchOnly.Value = false;
+            AppSettings.BranchFilterEnabled.Value = false;
 
             try
             {
@@ -753,18 +753,18 @@ namespace GitUITests.UserControls
                 filterInfo.IsShowFilteredBranchesChecked.Should().Be(byBranchFilter && !showCurrentBranchOnly);
 
                 filterInfo.ByBranchFilter.Should().Be(byBranchFilter);
-                AppSettings.BranchFilterEnabled.Should().Be(byBranchFilter);
+                AppSettings.BranchFilterEnabled.Value.Should().Be(byBranchFilter);
                 filterInfo.ShowCurrentBranchOnly.Should().Be(showCurrentBranchOnly);
-                AppSettings.ShowCurrentBranchOnly.Should().Be(showCurrentBranchOnly);
+                AppSettings.ShowCurrentBranchOnly.Value.Should().Be(showCurrentBranchOnly);
 
                 filterInfo.HasFilter.Should().BeFalse();
             }
             finally
             {
-                AppSettings.ShowReflogReferences = false;
-                AppSettings.BranchFilterEnabled = originalBranchFilterEnabled;
-                AppSettings.ShowCurrentBranchOnly = originalShowCurrentBranchOnly;
-                AppSettings.ShowReflogReferences = originalShowReflogReferences;
+                AppSettings.ShowReflogReferences.Value = false;
+                AppSettings.BranchFilterEnabled.Value = originalBranchFilterEnabled;
+                AppSettings.ShowCurrentBranchOnly.Value = originalShowCurrentBranchOnly;
+                AppSettings.ShowReflogReferences.Value = originalShowReflogReferences;
             }
         }
 

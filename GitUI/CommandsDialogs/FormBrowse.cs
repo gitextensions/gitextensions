@@ -1694,7 +1694,6 @@ namespace GitUI.CommandsDialogs
                     // If we're applying custom branch or revision filters - reset them
                     RevisionGrid.ResetAllFilters();
                     ToolStripFilters.ClearQuickFilters();
-                    AppSettings.BranchFilterEnabled = AppSettings.BranchFilterEnabled;
                     revisionDiff.RepositoryChanged();
                 }
 
