@@ -1517,6 +1517,10 @@ namespace GitCommands
             set => SetBool("FillRefLabels", value);
         }
 
+        public static readonly BoolViewSetting DebugGraphCurves = new(nameof(DebugGraphCurves), false);
+
+        public static readonly BoolViewSetting DebugGraphPoints = new(nameof(DebugGraphPoints), false);
+
         public static readonly BoolViewSetting DrawGraphWithDiagonals = new(nameof(DrawGraphWithDiagonals), true);
 
         public static readonly BoolViewSetting MergeGraphLanesHavingCommonParent = new(nameof(MergeGraphLanesHavingCommonParent), true);

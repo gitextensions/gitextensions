@@ -1,4 +1,5 @@
 ﻿using System.Drawing.Drawing2D;
+using GitCommands;
 
 namespace GitUI.UserControls.RevisionGrid.GraphDrawer
 {
@@ -43,8 +44,26 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
 
         private static void DrawTo(Graphics g, Pen pen, Point fromPoint, Point toPoint, bool fromPerpendicularly, bool toPerpendicularly, int laneWidth, int rowHeight)
         {
+            if (AppSettings.DebugGraphPoints.Value)
+            {
+                if (fromPoint.X == toPoint.X)
+                {
+                    return;
+                }
+
+                g.SmoothingMode = SmoothingMode.None;
+                g.DrawLine(pen, new Point(fromPoint.X, fromPoint.Y - 1), new Point(fromPoint.X, fromPoint.Y + 1));
+                g.DrawLine(pen, new Point(toPoint.X, toPoint.Y - 1), new Point(toPoint.X, toPoint.Y + 1));
+                return;
+            }
+
             if (fromPoint.X == toPoint.X)
             {
+                if (AppSettings.DebugGraphCurves.Value)
+                {
+                    return;
+                }
+
                 // direct line without anti-aliasing
                 g.SmoothingMode = SmoothingMode.None;
                 g.DrawLine(pen, fromPoint, toPoint);
@@ -64,6 +83,11 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
 
             if (!fromPerpendicularly && !toPerpendicularly && singleLane)
             {
+                if (AppSettings.DebugGraphCurves.Value)
+                {
+                    return;
+                }
+
                 // direct line with anti-aliasing
                 g.DrawLine(pen, e0, e1);
             }
@@ -94,7 +118,10 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
                             // draw diagonally to e1
                             c1.X -= diagonalFractionStraight * laneWidth;
                             c1.Y -= diagonalFractionStraight * rowHeight;
-                            g.DrawLine(pen, c1, e1);
+                            if (!AppSettings.DebugGraphCurves.Value)
+                            {
+                                g.DrawLine(pen, c1, e1);
+                            }
 
                             // prepare remaining curve
                             e1 = c1;
@@ -107,7 +134,10 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
                             // draw diagonally from e0
                             c0.X += diagonalFractionStraight * laneWidth;
                             c0.Y += diagonalFractionStraight * rowHeight;
-                            g.DrawLine(pen, e0, c0);
+                            if (!AppSettings.DebugGraphCurves.Value)
+                            {
+                                g.DrawLine(pen, e0, c0);
+                            }
 
                             // prepare remaining curve
                             e0 = c0;
@@ -132,7 +162,10 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
                             // draw diagonally from e0
                             c0.X += diagonalFractionStraight * laneWidth;
                             c0.Y += diagonalFractionStraight * rowHeight;
-                            g.DrawLine(pen, e0, c0);
+                            if (!AppSettings.DebugGraphCurves.Value)
+                            {
+                                g.DrawLine(pen, e0, c0);
+                            }
 
                             // prepare remaining curve
                             e0 = c0;
@@ -149,7 +182,10 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
                             // draw diagonally to e1
                             c1.X -= diagonalFractionStraight * laneWidth;
                             c1.Y -= diagonalFractionStraight * rowHeight;
-                            g.DrawLine(pen, c1, e1);
+                            if (!AppSettings.DebugGraphCurves.Value)
+                            {
+                                g.DrawLine(pen, c1, e1);
+                            }
 
                             // prepare remaining curve
                             e1 = c1;
@@ -159,7 +195,17 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
                     }
                 }
 
-                g.DrawBezier(pen, e0, c0, c1, e1);
+                if (AppSettings.DebugGraphCurves.Value)
+                {
+                    g.DrawLine(pen, e0, new(e0.X, e0.Y + 1));
+                    g.DrawLine(pen, c0, new(c0.X, c0.Y + 1));
+                    g.DrawLine(pen, c1, new(c1.X, c1.Y + 1));
+                    g.DrawLine(pen, e1, new(e1.X, e1.Y + 1));
+                }
+                else
+                {
+                    g.DrawBezier(pen, e0, c0, c1, e1);
+                }
             }
         }
     }
