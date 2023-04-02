@@ -52,7 +52,7 @@ namespace GitUI.BranchTreePanel
 
             Nodes nodes = new(this);
             var aheadBehindData = _aheadBehindDataProvider?.GetData();
-            string currentBranch = _scriptHost.CurrentBranch();
+            string currentBranch = _scriptHost.GetCurrentBranch();
             Dictionary<string, BaseRevisionNode> pathToNode = new();
             foreach (IGitRef branch in branches)
             {

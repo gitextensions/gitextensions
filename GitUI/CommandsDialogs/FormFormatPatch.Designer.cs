@@ -295,7 +295,7 @@ namespace GitUI.CommandsDialogs
             this.CurrentBranch.AutoSize = true;
             this.CurrentBranch.Location = new System.Drawing.Point(75, 0);
             this.CurrentBranch.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.CurrentBranch.Name = "CurrentBranch";
+            this.CurrentBranch.Name = "GetCurrentBranch";
             this.CurrentBranch.Size = new System.Drawing.Size(0, 23);
             this.CurrentBranch.TabIndex = 5;
             // 
