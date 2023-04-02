@@ -2107,14 +2107,14 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // Show a form asking the user if they want to reset the changes.
-                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, _currentFilesList.SelectedItems.Any(item => !item.Item.IsNew), _currentFilesList.SelectedItems.Any(item => item.Item.IsNew));
+                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, _currentFilesList.SelectedItems.Any(item => !DeletableItem(item)), _currentFilesList.SelectedItems.Any(item => DeletableItem(item)));
                 if (resetType == FormResetChanges.ActionEnum.Cancel)
                 {
                     return;
                 }
 
                 // Unstage file first, then reset
-                var selectedFiles = Staged.SelectedItems.Items().ToList();
+                List<GitItemStatus> selectedFiles = Staged.SelectedItems.Items().ToList();
                 toolStripProgressBar1.Visible = true;
                 toolStripProgressBar1.Maximum = selectedFiles.Count;
                 toolStripProgressBar1.Value = 0;
@@ -2126,13 +2126,13 @@ namespace GitUI.CommandsDialogs
                 // remember max selected index
                 _currentFilesList.StoreNextIndexToSelect();
 
-                var deleteNewFiles = _currentFilesList.SelectedItems.Any(item => item.Item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
+                bool deleteNewFiles = _currentFilesList.SelectedItems.Any(item => DeletableItem(item)) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 List<string> filesInUse = new();
                 List<string> filesToReset = new();
                 StringBuilder output = new();
                 foreach (var item in _currentFilesList.SelectedItems)
                 {
-                    if (item.Item.IsNew)
+                    if (DeletableItem(item))
                     {
                         if (deleteNewFiles)
                         {
@@ -2157,7 +2157,12 @@ namespace GitUI.CommandsDialogs
                             }
                         }
                     }
-                    else
+
+                    if (item.Item.IsRenamed)
+                    {
+                        filesToReset.Add(item.Item.OldName);
+                    }
+                    else if (!item.Item.IsNew)
                     {
                         filesToReset.Add(item.Item.Name);
                     }
@@ -2188,6 +2193,10 @@ namespace GitUI.CommandsDialogs
             }
 
             Initialize();
+
+            return;
+
+            static bool DeletableItem(FileStatusItem item) => item.Item.IsNew || item.Item.IsRenamed;
         }
 
         private void ResetSoftClick(object sender, EventArgs e)
