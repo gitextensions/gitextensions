@@ -2129,6 +2129,7 @@ namespace GitUI.CommandsDialogs
                 bool deleteNewFiles = _currentFilesList.SelectedItems.Any(item => DeletableItem(item)) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 List<string> filesInUse = new();
                 List<string> filesToReset = new();
+                List<string> conflictsToReset = new();
                 StringBuilder output = new();
                 foreach (var item in _currentFilesList.SelectedItems)
                 {
@@ -2162,6 +2163,10 @@ namespace GitUI.CommandsDialogs
                     {
                         filesToReset.Add(item.Item.OldName);
                     }
+                    else if (item.Item.IsConflict)
+                    {
+                        conflictsToReset.Add(item.Item.Name);
+                    }
                     else if (!item.Item.IsNew)
                     {
                         filesToReset.Add(item.Item.Name);
@@ -2169,6 +2174,14 @@ namespace GitUI.CommandsDialogs
                 }
 
                 output.Append(Module.ResetFiles(filesToReset));
+                if (conflictsToReset.Count > 0)
+                {
+                    // Special handling for conflicted files, shown in worktree (with the raw diff).
+                    // Must be reset to HEAD as Index is just a status marker.
+                    ObjectId headId = Module.RevParse("HEAD");
+                    Module.CheckoutFiles(conflictsToReset, headId, force: false);
+                }
+
                 toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
                 toolStripProgressBar1.Visible = false;
 
