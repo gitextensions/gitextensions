@@ -101,7 +101,7 @@ namespace GitCommands.Git
                 }
 
                 // Skip unmerged where both are modified: Only worktree interesting.
-                if ((x != '?' && x != '!' && x != ' ') || (x == 'U' && y == 'U'))
+                if ((x != '?' && x != '!' && x != ' ') || !(x == 'U' && y == 'U'))
                 {
                     GitItemStatus gitItemStatusX;
                     var stagedX = fromDiff ? staged : StagedStatus.Index;
