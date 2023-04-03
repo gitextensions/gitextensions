@@ -2,6 +2,7 @@
 using System.Drawing.Text;
 using GitCommands;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Avatars
 {
@@ -18,8 +19,8 @@ namespace GitUI.Avatars
         {
             (string initials, int hashCode) = GetInitialsAndHashCode(email, name);
 
-            Color avatarColor = _avatarColors[hashCode];
-            Image avatar = DrawText(initials, avatarColor, imageSize);
+            (Brush foregroundBrush, Color backgroundColor) = _avatarColors[hashCode];
+            Image avatar = DrawText(initials, foregroundBrush, backgroundColor, imageSize);
 
             return Task.FromResult<Image?>(avatar);
         }
@@ -126,23 +127,29 @@ namespace GitUI.Avatars
         }
 
         private readonly Graphics _graphics = Graphics.FromImage(new Bitmap(1, 1));
-        private readonly Brush _textBrush = new SolidBrush(Color.WhiteSmoke);
 
-        private readonly Color[] _avatarColors = AppSettings.AvatarAuthorInitialsPalette.Split(",").Select(ConvertToColor).ToArray();
+        private readonly (Brush foregroundBrush, Color backgroundColor)[] _avatarColors = AppSettings.AvatarAuthorInitialsPalette.Split(",").Select(GetAvatarDrawingMaterial).ToArray();
 
-        private static Color ConvertToColor(string colorCode)
+        private static (Brush foregroundBrush, Color backgroundColor) GetAvatarDrawingMaterial(string colorCode)
         {
-            try
+            Color backgroundColor = ConvertToColor(colorCode);
+
+            return (new SolidBrush(backgroundColor.GetContrastColor(AppSettings.AvatarAuthorInitialsLuminanceThreshold)), backgroundColor);
+
+            Color ConvertToColor(string colorCode)
             {
-                return ColorTranslator.FromHtml(colorCode);
-            }
-            catch (Exception)
-            {
-                return Color.Black;
+                try
+                {
+                    return ColorTranslator.FromHtml(colorCode);
+                }
+                catch (Exception)
+                {
+                    return Color.Black;
+                }
             }
         }
 
-        private Image DrawText(string? text, Color backColor, int size)
+        private Image DrawText(string? text, Brush foreColor, Color backColor, int size)
         {
             lock (_avatarColors)
             {
@@ -165,7 +172,7 @@ namespace GitUI.Avatars
 
                 var x = textSize.Width >= textSize.Height ? 0 : (textSize.Height - textSize.Width) / 2;
                 var y = textSize.Width >= textSize.Height ? (textSize.Width - textSize.Height) / 2 : 0;
-                drawing.DrawString(text, font, _textBrush, x, y);
+                drawing.DrawString(text, font, foreColor, x, y);
                 drawing.Save();
 
                 return img;
