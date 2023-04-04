@@ -2066,60 +2066,31 @@ namespace GitCommands
             SettingsContainer.SettingsCache.Import(GetSettingsFromRegistry());
         }
 
-        public static bool? GetBool(string name)
-        {
-            return SettingsContainer.GetBool(name);
-        }
+        #region Save in settings file
 
-        public static bool GetBool(string name, bool defaultValue)
-        {
-            return SettingsContainer.GetBool(name, defaultValue);
-        }
+        // String
+        [return: NotNullIfNotNull("defaultValue")]
+        public static string? GetString(string name, string? defaultValue) => SettingsContainer.GetString(name, defaultValue);
+        public static void SetString(string name, string value) => SettingsContainer.SetString(name, value);
 
-        public static void SetBool(string name, bool? value)
-        {
-            SettingsContainer.SetBool(name, value);
-        }
+        // Bool
+        public static bool? GetBool(string name) => SettingsContainer.GetBool(name);
+        public static bool GetBool(string name, bool defaultValue) => SettingsContainer.GetBool(name, defaultValue);
+        public static void SetBool(string name, bool? value) => SettingsContainer.SetBool(name, value);
 
-        public static void SetInt(string name, int? value)
-        {
-            SettingsContainer.SetInt(name, value);
-        }
+        // Int
+        public static int? GetInt(string name) => SettingsContainer.GetInt(name);
+        public static int GetInt(string name, int defaultValue) => SettingsContainer.GetInt(name, defaultValue);
+        public static void SetInt(string name, int? value) => SettingsContainer.SetInt(name, value);
 
-        public static int? GetInt(string name)
-        {
-            return SettingsContainer.GetInt(name);
-        }
+        // Date
+        public static DateTime? GetDate(string name) => SettingsContainer.GetDate(name);
+        public static DateTime GetDate(string name, DateTime defaultValue) => SettingsContainer.GetDate(name, defaultValue);
+        public static void SetDate(string name, DateTime? value) => SettingsContainer.SetDate(name, value);
 
-        public static DateTime GetDate(string name, DateTime defaultValue)
-        {
-            return SettingsContainer.GetDate(name, defaultValue);
-        }
-
-        public static void SetDate(string name, DateTime? value)
-        {
-            SettingsContainer.SetDate(name, value);
-        }
-
-        public static DateTime? GetDate(string name)
-        {
-            return SettingsContainer.GetDate(name);
-        }
-
-        public static int GetInt(string name, int defaultValue)
-        {
-            return SettingsContainer.GetInt(name, defaultValue);
-        }
-
-        public static void SetFont(string name, Font value)
-        {
-            SettingsContainer.SetFont(name, value);
-        }
-
-        public static Font GetFont(string name, Font defaultValue)
-        {
-            return SettingsContainer.GetFont(name, defaultValue);
-        }
+        // Font
+        public static Font GetFont(string name, Font defaultValue) => SettingsContainer.GetFont(name, defaultValue);
+        public static void SetFont(string name, Font value) => SettingsContainer.SetFont(name, value);
 
         [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is")]
         public static Color GetColor(AppColor name)
@@ -2127,36 +2098,13 @@ namespace GitCommands
             return SettingsContainer.GetColor(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));
         }
 
-        public static void SetEnum<T>(string name, T value) where T : Enum
-        {
-            SettingsContainer.SetEnum(name, value);
-        }
+        // Enum
+        public static T GetEnum<T>(string name, T defaultValue) where T : struct, Enum => SettingsContainer.GetEnum(name, defaultValue);
+        public static void SetEnum<T>(string name, T value) where T : Enum => SettingsContainer.SetEnum(name, value);
 
-        public static T GetEnum<T>(string name, T defaultValue) where T : struct, Enum
-        {
-            return SettingsContainer.GetEnum(name, defaultValue);
-        }
-
-        public static void SetNullableEnum<T>(string name, T? value) where T : struct, Enum
-        {
-            SettingsContainer.SetNullableEnum(name, value);
-        }
-
-        public static T? GetNullableEnum<T>(string name) where T : struct
-        {
-            return SettingsContainer.GetNullableEnum<T>(name);
-        }
-
-        public static void SetString(string name, string value)
-        {
-            SettingsContainer.SetString(name, value);
-        }
-
-        [return: NotNullIfNotNull("defaultValue")]
-        public static string? GetString(string name, string? defaultValue)
-        {
-            return SettingsContainer.GetString(name, defaultValue);
-        }
+        public static T? GetNullableEnum<T>(string name) where T : struct => SettingsContainer.GetNullableEnum<T>(name);
+        public static void SetNullableEnum<T>(string name, T? value) where T : struct, Enum => SettingsContainer.SetNullableEnum(name, value);
+        #endregion
 
         private static void LoadEncodings()
         {
