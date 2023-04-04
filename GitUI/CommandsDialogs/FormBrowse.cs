@@ -1881,7 +1881,7 @@ namespace GitUI.CommandsDialogs
             FocusDiff = 5,
             FocusFileTree = 6,
             FocusFilter = 18,
-            ToggleBranchTreePanel = 21,
+            ToggleLeftPanel = 21,
             FocusBranchTree = 25,
             FocusGpgInfo = 26,
             FocusGitConsole = 29,
@@ -2055,7 +2055,7 @@ namespace GitUI.CommandsDialogs
                 case Command.OpenWithDifftoolFirstToLocal: OpenWithDifftoolFirstToLocal(); break;
                 case Command.OpenWithDifftoolSelectedToLocal: OpenWithDifftoolSelectedToLocal(); break;
                 case Command.OpenSettings: EditSettings.PerformClick(); break;
-                case Command.ToggleBranchTreePanel: toggleBranchTreePanel.PerformClick(); break;
+                case Command.ToggleLeftPanel: toggleBranchTreePanel.PerformClick(); break;
                 case Command.EditFile: EditFile(); break;
                 case Command.OpenAsTempFile when fileTree.Visible: fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenAsTempFile); break;
                 case Command.OpenAsTempFileWith when fileTree.Visible: fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenAsTempFileWith); break;
