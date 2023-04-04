@@ -2083,6 +2083,9 @@ namespace GitCommands
         public static int GetInt(string name, int defaultValue) => SettingsContainer.GetInt(name, defaultValue);
         public static void SetInt(string name, int? value) => SettingsContainer.SetInt(name, value);
 
+        // Float
+        public static float GetFloat(string name, float defaultValue) => SettingsContainer.GetFloat(name, defaultValue);
+
         // Date
         public static DateTime? GetDate(string name) => SettingsContainer.GetDate(name);
         public static DateTime GetDate(string name, DateTime defaultValue) => SettingsContainer.GetDate(name, defaultValue);

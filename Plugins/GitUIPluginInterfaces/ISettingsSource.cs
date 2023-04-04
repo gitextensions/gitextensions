@@ -67,7 +67,12 @@ namespace GitUIPluginInterfaces
         {
             string? stringValue = GetValue(name);
 
-            if (float.TryParse(stringValue, out var result))
+            if (float.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var result))
+            {
+                return result;
+            }
+
+            if (float.TryParse(stringValue, out result))
             {
                 return result;
             }
@@ -75,9 +80,11 @@ namespace GitUIPluginInterfaces
             return null;
         }
 
+        public float GetFloat(string name, float defaultValue) => GetFloat(name) ?? defaultValue;
+
         public void SetFloat(string name, float? value)
         {
-            string? stringValue = value.HasValue ? value.ToString() : null;
+            string? stringValue = value.HasValue ? value.Value.ToString(CultureInfo.InvariantCulture) : null;
 
             SetValue(name, stringValue);
         }
