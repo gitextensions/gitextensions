@@ -3918,7 +3918,7 @@ Do you want to continue?</source>
         <target>Создать &amp;метку…</target>
         
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
         <target>Переключить левую панель</target>
         

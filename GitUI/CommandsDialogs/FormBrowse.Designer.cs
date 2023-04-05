@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStripMain = new GitUI.ToolStripEx();
             this.RefreshButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator0 = new System.Windows.Forms.ToolStripSeparator();
-            this.toggleBranchTreePanel = new System.Windows.Forms.ToolStripButton();
+            this.toggleLeftPanel = new System.Windows.Forms.ToolStripButton();
             this.toggleSplitViewLayout = new System.Windows.Forms.ToolStripButton();
             this.menuCommitInfoPosition = new System.Windows.Forms.ToolStripSplitButton();
             this.commitInfoBelowMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs
             this.userShell = new System.Windows.Forms.ToolStripSplitButton();
             this.EditSettings = new System.Windows.Forms.ToolStripButton();
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.repoObjectsTree = new GitUI.BranchTreePanel.RepoObjectsTree();
+            this.repoObjectsTree = new GitUI.LeftPanel.RepoObjectsTree();
             this.RightSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionsSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionGridContainer = new System.Windows.Forms.Panel();
@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.RefreshButton,
             this.toolStripSeparator0,
-            this.toggleBranchTreePanel,
+            this.toggleLeftPanel,
             this.toggleSplitViewLayout,
             this.menuCommitInfoPosition,
             this.toolStripSeparator17,
@@ -236,14 +236,14 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator0.Name = "toolStripSeparator0";
             this.toolStripSeparator0.Size = new System.Drawing.Size(6, 25);
             // 
-            // toggleBranchTreePanel
+            // toggleLeftPanel
             // 
-            this.toggleBranchTreePanel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toggleBranchTreePanel.Image = global::GitUI.Properties.Images.LayoutSidebarLeft;
-            this.toggleBranchTreePanel.Name = "toggleBranchTreePanel";
-            this.toggleBranchTreePanel.Size = new System.Drawing.Size(23, 22);
-            this.toggleBranchTreePanel.ToolTipText = "Toggle left panel";
-            this.toggleBranchTreePanel.Click += new System.EventHandler(this.toggleBranchTreePanel_Click);
+            this.toggleLeftPanel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toggleLeftPanel.Image = global::GitUI.Properties.Images.LayoutSidebarLeft;
+            this.toggleLeftPanel.Name = "toggleLeftPanel";
+            this.toggleLeftPanel.Size = new System.Drawing.Size(23, 22);
+            this.toggleLeftPanel.ToolTipText = "Toggle left panel";
+            this.toggleLeftPanel.Click += new System.EventHandler(this.toggleLeftPanel_Click);
             // 
             // toggleSplitViewLayout
             // 
@@ -1448,7 +1448,7 @@ namespace GitUI.CommandsDialogs
         private BindingSource gitItemBindingSource;
         private GitUI.RevisionGridControl RevisionGrid;
         private CommitInfo.CommitInfo RevisionInfo;
-        private GitUI.BranchTreePanel.RepoObjectsTree repoObjectsTree;
+        private GitUI.LeftPanel.RepoObjectsTree repoObjectsTree;
         private ToolTip FilterToolTip;
         private RevisionFileTreeControl fileTree;
         private RevisionDiffControl revisionDiff;
@@ -1477,7 +1477,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem manageStashesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator17;
         private ToolStripSplitButton branchSelect;
-        private ToolStripButton toggleBranchTreePanel;
+        private ToolStripButton toggleLeftPanel;
         private ToolStripButton toggleSplitViewLayout;
         private GitUI.CommandsDialogs.Menus.StartToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;

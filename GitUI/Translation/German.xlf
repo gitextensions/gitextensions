@@ -3809,7 +3809,7 @@ Wollen Sie weiter machen?</target>
         <source>Create &amp;tag...</source>
         
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
         <target>Linkes Panel ein-/ausblenden</target>
         

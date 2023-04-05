@@ -219,7 +219,7 @@ namespace GitUI.UserControls
 
         /// <summary>
         ///  Sets the branches filter.
-        ///  No check that the branches exist (must be checked already, expected to be called from side panel).
+        ///  No check that the branches exist (must be checked already, expected to be called from left panel).
         /// </summary>
         /// <param name="filter">The branches to filter separated by whitespace.</param>
         public void SetBranchFilter(string? filter)
@@ -269,7 +269,7 @@ namespace GitUI.UserControls
         /// Update the tscboBranchFilter dropdown items matching the current filter.
         /// This is called when dropdown clicked or text is manually changed
         /// (so tscboBranchFilter.Items is not necessarily available when set externally
-        /// from the sidepanel or FormBrowse).
+        /// from the left panel or FormBrowse).
         /// </summary>
         private void UpdateBranchFilterItems()
         {

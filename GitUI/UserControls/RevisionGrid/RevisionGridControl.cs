@@ -1046,7 +1046,7 @@ namespace GitUI
                         return false;
                     });
 
-                // Initiate update side panel
+                // Initiate update left panel
                 RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
             }
             catch

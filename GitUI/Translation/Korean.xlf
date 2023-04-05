@@ -3895,7 +3895,7 @@ Do you want to continue?</source>
         <target>&amp;태그 생성...</target>
         
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
         <target>왼쪽 패널 전환</target>
         

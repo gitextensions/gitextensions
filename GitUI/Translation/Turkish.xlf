@@ -3916,7 +3916,7 @@ Devam etmek istiyor musun?</target>
         <target>&amp;Etiket oluştur...</target>
         
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
         <target>Sol paneli aç/kapat</target>
         
