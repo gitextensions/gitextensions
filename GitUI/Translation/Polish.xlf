@@ -3769,7 +3769,7 @@ Chcesz kontynuować?</target>
         <source>Create &amp;tag...</source>
         
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
         <target>Przełącz lewy panel</target>
         

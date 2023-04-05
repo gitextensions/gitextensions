@@ -3774,7 +3774,7 @@ Do you want to continue?</source>
         <source>Create &amp;tag...</source>
         
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
         <target>Mostrar/Ocultar panel izquierdo</target>
         

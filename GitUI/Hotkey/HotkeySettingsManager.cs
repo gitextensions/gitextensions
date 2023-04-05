@@ -1,9 +1,9 @@
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
-using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.LeftPanel;
 using GitUI.Script;
 using Microsoft;
 using ResourceManager;
@@ -262,7 +262,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.CreateTag, Keys.Control | Keys.T),
                     Hk(FormBrowse.Command.EditFile, EditFileHotkey),
                     Hk(FormBrowse.Command.FindFileInSelectedCommit, Keys.Control | Keys.Shift | Keys.F),
-                    Hk(FormBrowse.Command.FocusBranchTree, Keys.Control | Keys.D0),
+                    Hk(FormBrowse.Command.FocusLeftPanel, Keys.Control | Keys.D0),
                     Hk(FormBrowse.Command.FocusRevisionGrid, Keys.Control | Keys.D1),
                     Hk(FormBrowse.Command.FocusCommitInfo, Keys.Control | Keys.D2),
                     Hk(FormBrowse.Command.FocusDiff, Keys.Control | Keys.D3),

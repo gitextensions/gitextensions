@@ -3917,7 +3917,7 @@ Do you want to continue?</source>
         <target>タグを作成(&amp;T)...</target>
         
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
         <target>左のパネルを切り替え</target>
         

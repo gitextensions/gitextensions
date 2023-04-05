@@ -3917,7 +3917,7 @@ Do you want to continue?</source>
         <target>创建标签...</target>
         
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
         <target>切换左面板</target>
         

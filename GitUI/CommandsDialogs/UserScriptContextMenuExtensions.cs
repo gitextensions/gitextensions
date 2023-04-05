@@ -1,5 +1,5 @@
-﻿using GitUI.BranchTreePanel.ContextMenu;
-using GitUI.Hotkey;
+﻿using GitUI.Hotkey;
+using GitUI.LeftPanel.ContextMenu;
 using GitUI.Script;
 using ResourceManager;
 
