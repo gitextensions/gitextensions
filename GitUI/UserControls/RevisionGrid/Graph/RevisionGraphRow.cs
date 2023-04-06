@@ -6,10 +6,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         RevisionGraphRevision Revision { get; }
         IReadOnlyList<RevisionGraphSegment> Segments { get; }
+
         int GetCurrentRevisionLane();
         int GetLaneCount();
-        IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
         int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision);
+        IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
         void MoveLanesRight(int fromLane);
     }
 
@@ -32,7 +33,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// <summary>
         /// This dictionary contains a cached list of all segments and the lane index the segment is in for this row.
         /// </summary>
-        private IDictionary<RevisionGraphSegment, int>? _segmentLanes;
+        private Dictionary<RevisionGraphSegment, int>? _segmentLanes;
 
         /// <summary>
         /// Contains the gaps created by. <cref>MoveLanesRight</cref>
@@ -61,86 +62,80 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            // We do not want SegmentLanes to be build multiple times. Lock it.
+            // We do not want SegmentLanes to be built multiple times. Lock it.
             lock (Revision)
             {
-                // Another thread could be waiting for the lock, while the segmentlanes were being built. Check again if segmentslanes is null.
+                // Another thread could be waiting for the lock, while the _segmentLanes were being built. Check again if _segmentLanes is null.
                 if (_segmentLanes is not null)
                 {
                     return;
                 }
 
-                Dictionary<RevisionGraphSegment, int> newSegmentLanes = new();
+                _segmentLanes = new(capacity: Segments.Count);
+                _laneCount = 0;
+                _revisionLane = -1;
 
-                int currentRevisionLane = -1;
-                int laneIndex = 0;
-                foreach (var segment in Segments)
+                foreach (RevisionGraphSegment segment in Segments)
+                {
+                    _segmentLanes.Add(segment, CreateOrReuseLane(segment));
+                }
+
+                if (_revisionLane < 0)
+                {
+                    _revisionLane = CreateLane();
+                }
+
+                return;
+
+                int CreateOrReuseLane(RevisionGraphSegment segment)
                 {
                     if (segment.Child == Revision || segment.Parent == Revision)
                     {
                         // The current segment connects to the revision of this row. Store the revision lane.
-                        if (currentRevisionLane < 0)
+                        if (_revisionLane < 0)
                         {
-                            currentRevisionLane = laneIndex;
-                            laneIndex++;
+                            _revisionLane = CreateLane();
                         }
 
                         // All segments that connect to the current revision are in the same lane.
-                        newSegmentLanes[segment] = currentRevisionLane;
+                        return _revisionLane;
                     }
-                    else
+
+                    // This is a crossing lane. We could not merge it in the lane with this row's revision.
+
+                    // Try to detect this:
+                    // *
+                    // |
+                    // | *
+                    // | |
+                    // | |  <- this is the row we are processing
+                    // |/
+                    // *    <- same parent, not on current row
+                    //
+                    // And change it into this, by merging the segments in a singe lane:
+                    // *
+                    // |
+                    // | *
+                    // |/
+                    // |    <- merge into a singe lane to simplify graph
+                    // |
+                    // *
+                    foreach (var searchParent in _segmentLanes)
                     {
-                        // This is a crossing lane. We could not merge it in the lane with this row's revision.
-
-                        // Try to detect this:
-                        // *
-                        // |
-                        // | *
-                        // | |
-                        // | |  <- this is the row we are processing
-                        // |/
-                        // *    <- same parent, not on current row
-                        //
-                        // And change it into this, by merging the segments in a singe lane:
-                        // *
-                        // |
-                        // | *
-                        // |/
-                        // |    <- merge into a singe lane to simplify graph
-                        // |
-                        // *
-                        bool added = false;
-                        foreach (var searchParent in newSegmentLanes)
+                        // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
+                        if (searchParent.Value != _revisionLane && searchParent.Key.Parent == segment.Parent)
                         {
-                            // If there is another segment with the same parent, and its not this row's revision, merge into 1 lane.
-                            if (searchParent.Value != currentRevisionLane && searchParent.Key.Parent == segment.Parent)
-                            {
-                                // Use indexer to overwrite if segments was already added. This shouldn't happen, but it does.
-                                newSegmentLanes[segment] = searchParent.Value;
-                                added = true;
-                                break;
-                            }
-                        }
-
-                        // Segment has not been assigned a lane yet
-                        if (!added)
-                        {
-                            newSegmentLanes[segment] = laneIndex;
-                            laneIndex++;
+                            return searchParent.Value;
                         }
                     }
+
+                    // Segment has not been assigned a lane yet
+                    return CreateLane();
                 }
 
-                _segmentLanes = newSegmentLanes;
-                _laneCount = laneIndex;
-                if (currentRevisionLane >= 0)
+                int CreateLane()
                 {
-                    _revisionLane = currentRevisionLane;
-                }
-                else
-                {
-                    _revisionLane = _laneCount;
-                    _laneCount++;
+                    return _laneCount++;
                 }
             }
         }
