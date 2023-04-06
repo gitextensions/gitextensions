@@ -1,4 +1,5 @@
 ﻿using GitCommands.Git;
+using GitUI.Script;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -8,11 +9,13 @@ namespace GitUI.BranchTreePanel
     internal sealed class LocalBranchTree : BaseRefTree
     {
         private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+        private readonly IScriptHostControl _scriptHost;
 
-        public LocalBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource)
+        public LocalBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, IAheadBehindDataProvider? aheadBehindDataProvider, ICheckRefs refsSource, IScriptHostControl scriptHost)
             : base(treeNode, uiCommands, refsSource, RefsFilter.Heads)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
+            _scriptHost = scriptHost;
         }
 
         protected override Nodes FillTree(IReadOnlyList<IGitRef> branches, CancellationToken token)
@@ -49,8 +52,7 @@ namespace GitUI.BranchTreePanel
 
             Nodes nodes = new(this);
             var aheadBehindData = _aheadBehindDataProvider?.GetData();
-
-            var currentBranch = Module.GetSelectedBranch();
+            string currentBranch = _scriptHost.GetCurrentBranch();
             Dictionary<string, BaseRevisionNode> pathToNode = new();
             foreach (IGitRef branch in branches)
             {

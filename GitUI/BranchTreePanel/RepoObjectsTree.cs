@@ -367,7 +367,7 @@ namespace GitUI.BranchTreePanel
                 SelectedImageKey = nameof(Images.BranchLocalRoot)
             };
 
-            _branchesTree = new LocalBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource);
+            _branchesTree = new LocalBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource, _scriptHost);
         }
 
         private void CreateRemotes()
