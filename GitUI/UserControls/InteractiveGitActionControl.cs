@@ -59,7 +59,11 @@ namespace GitUI.UserControls
             SetGitAction(GitAction.None, false);
         }
 
-        public void RefreshGitAction()
+        /// <summary>
+        /// Refresh the banner in the revision grid after reactivation.
+        /// </summary>
+        /// <param name="checkForConflicts">Allow running Git command to check for conflicts.</param>
+        public void RefreshGitAction(bool checkForConflicts)
         {
             // get the current state of the repo
 
@@ -72,9 +76,9 @@ namespace GitUI.UserControls
             try
             {
                 // This command can be executed seemingly in the background (selecting Browse),
-                // do not notify the user (this can occur if Git is upgraded)
-                // The command also occasionally fails when "reactivating" WSL Git.
-                hasConflicts = Module.InTheMiddleOfConflictedMerge(throwOnErrorExit: false);
+                // do not notify the user (this can occur if Git is upgraded).
+                // Running Git commands async when restoring may fail.
+                hasConflicts = checkForConflicts && Module.InTheMiddleOfConflictedMerge(throwOnErrorExit: false);
             }
             catch (Win32Exception)
             {

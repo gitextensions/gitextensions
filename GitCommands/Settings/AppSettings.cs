@@ -2005,9 +2005,14 @@ namespace GitCommands
         }
 
         // Set manually in settings file
-        public static bool WorkaroundRestoreFromMinimize
+        public static bool WorkaroundActivateFromMinimize
         {
-            get => GetBool("WorkaroundRestoreFromMinimize", false);
+            get => GetBool("WorkaroundActivateFromMinimize", false);
+        }
+
+        public static bool GitAsyncWhenMinimized
+        {
+            get => GetBool("GitAsyncWhenMinimized", true);
         }
 
         private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()

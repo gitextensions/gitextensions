@@ -1059,7 +1059,8 @@ namespace GitUI.CommandsDialogs
             notificationBarBisectInProgress.RefreshBisect();
 
             // check if we are in the middle of an action (merge/rebase/etc.)
-            notificationBarGitActionInProgress.RefreshGitAction();
+            notificationBarGitActionInProgress.RefreshGitAction(
+                checkForConflicts: AppSettings.GitAsyncWhenMinimized || (WindowState != FormWindowState.Minimized));
         }
 
         private void UpdateStashCount()
