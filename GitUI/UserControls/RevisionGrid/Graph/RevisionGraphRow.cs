@@ -8,20 +8,25 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // Therefore, a single lane can have multiple segments.
     public class RevisionGraphRow : IRevisionGraphRow
     {
-        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments)
+        private static readonly Lane _noLane = new(-1, LaneSharing.ExclusiveOrPrimary);
+
+        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments, RevisionGraphRow previousRow)
         {
             Revision = revision;
             Segments = segments;
+            _previousRow = previousRow;
         }
 
         public RevisionGraphRevision Revision { get; }
 
         public IReadOnlyList<RevisionGraphSegment> Segments { get; }
 
+        private readonly RevisionGraphRow _previousRow;
+
         /// <summary>
         /// This dictionary contains a cached list of all segments and the lane index the segment is in for this row.
         /// </summary>
-        private Dictionary<RevisionGraphSegment, int>? _segmentLanes;
+        private Dictionary<RevisionGraphSegment, Lane>? _segmentLanes;
 
         /// <summary>
         /// Contains the gaps created by. <cref>MoveLanesRight</cref>
@@ -62,6 +67,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 _segmentLanes = new(capacity: Segments.Count);
                 _laneCount = 0;
                 _revisionLane = -1;
+                bool hasStart = false;
+                bool hasEnd = false;
 
                 foreach (RevisionGraphSegment segment in Segments)
                 {
@@ -75,50 +82,106 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 return;
 
-                int CreateOrReuseLane(RevisionGraphSegment segment)
+                Lane CreateOrReuseLane(RevisionGraphSegment segment)
                 {
-                    if (segment.Child == Revision || segment.Parent == Revision)
+                    // All segments that connect to the current revision are in the same lane.
+                    //              | | * |                               prev StartLane:   0                   1                   2               3
+                    //              | |/ /                                prev LaneSharing: ExclusiveOrPrimary, ExclusiveOrPrimary, DifferentStart, ExclusiveOrPrimary
+                    // start        * | |                                      StartLane:   0                   1                   1               2
+                    //              |/_/     <-- segment.Parent == Revision => LaneSharing: ExclusiveOrPrimary, DifferentStart,     Entire,         DifferentStart
+                    // center       *____    <-- this.Revision                 CenterLane:  _revisionLane                                           ^^^ impossible: would also be shared with lane 1
+                    //              |\ \ \   <-- segment.Child == Revision  => LaneSharing: ExclusiveOrPrimary, DifferentEnd, DifferentEnd, DifferentEnd (never entirely shared)
+                    // end          | | * |                                    EndLane:     0                   1             2             3
+
+                    if (segment.Child == Revision)
                     {
-                        // The current segment connects to the revision of this row. Store the revision lane.
+                        // The current segment starts at the revision of this row. Store the revision lane.
                         if (_revisionLane < 0)
                         {
                             _revisionLane = CreateLane();
                         }
 
-                        // All segments that connect to the current revision are in the same lane.
-                        return _revisionLane;
+                        LaneSharing laneSharing;
+                        if (!hasStart)
+                        {
+                            hasStart = true;
+                            laneSharing = LaneSharing.ExclusiveOrPrimary;
+                        }
+                        else
+                        {
+                            laneSharing = LaneSharing.DifferentEnd;
+                        }
+
+                        return new Lane(_revisionLane, laneSharing);
+                    }
+
+                    if (segment.Parent == Revision)
+                    {
+                        // The current segment ends at the revision of this row. Store the revision lane.
+                        if (_revisionLane < 0)
+                        {
+                            _revisionLane = CreateLane();
+                        }
+
+                        // prev start   | | *                                 prev StartLane:   0                   1                   2
+                        //              | |/                                  prev LaneSharing: ExclusiveOrPrimary, ExclusiveOrPrimary, DifferentStart
+                        // prev center  * |                                        StartLane:   0                   1                   1
+                        //              |/       <-- segment.Parent == Revision => LaneSharing: ExclusiveOrPrimary, DifferentStart,     Entire
+                        // prev end     *        <-- this.Revision                 CenterLane:  _revisionLane
+                        LaneSharing laneSharing;
+                        if (!hasEnd)
+                        {
+                            hasEnd = true;
+                            laneSharing = LaneSharing.ExclusiveOrPrimary;
+                        }
+                        else
+                        {
+                            laneSharing = GetSecondarySharingOfContinuedSegment();
+                        }
+
+                        return new Lane(_revisionLane, laneSharing);
                     }
 
                     // This is a crossing lane. We could not merge it in the lane with this row's revision.
 
                     // Try to detect this:
-                    // *
-                    // |
-                    // | *
-                    // | |
-                    // | |  <- this is the row we are processing
-                    // |/
-                    // *    <- same parent, not on current row
+                    // | * | |
+                    // | | | |
+                    // * | | |
+                    // | | | |
+                    // | | | | <-- this is the row we are processing
+                    // |/_/_/
+                    // *       <-- same parent, not on current row
                     //
                     // And change it into this, by merging the segments in a singe lane:
-                    // *
+                    // | * |
+                    // | |/    <-- LaneSharing: ExclusiveOrPrimary, ExclusiveOrPrimary, DifferentStart, Entire
+                    // * |     <-- (previous row: merge into a singe lane to simplify graph - added here just for LaneSharing value)
+                    // |/      <-- LaneSharing: ExclusiveOrPrimary, DifferentStart,     Entire,         Entire
+                    // |       <-- processed row: merge into a singe lane to simplify graph
                     // |
-                    // | *
-                    // |/
-                    // |    <- merge into a singe lane to simplify graph
-                    // |
                     // *
-                    foreach (var searchParent in _segmentLanes)
+                    foreach (KeyValuePair<RevisionGraphSegment, Lane> searchParent in _segmentLanes)
                     {
                         // If there is another segment with the same parent, and it is not this row's revision, merge into one lane.
-                        if (searchParent.Value != _revisionLane && searchParent.Key.Parent == segment.Parent)
+                        if (searchParent.Value.Index != _revisionLane && searchParent.Key.Parent == segment.Parent)
                         {
-                            return searchParent.Value;
+                            return new Lane(searchParent.Value.Index, GetSecondarySharingOfContinuedSegment());
                         }
                     }
 
                     // Segment has not been assigned a lane yet
-                    return CreateLane();
+                    return new Lane(CreateLane(), LaneSharing.ExclusiveOrPrimary);
+
+                    LaneSharing GetSecondarySharingOfContinuedSegment()
+                    {
+                        return _previousRow.GetLaneForSegment(segment).Sharing switch
+                        {
+                            LaneSharing.ExclusiveOrPrimary or LaneSharing.DifferentEnd => LaneSharing.DifferentStart,
+                            LaneSharing.Entire or LaneSharing.DifferentStart => LaneSharing.Entire,
+                            _ => throw new NotImplementedException()
+                        };
+                    }
                 }
 
                 int CreateLane()
@@ -143,24 +206,24 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index)
         {
             BuildSegmentLanes();
-            foreach (var keyValue in _segmentLanes!)
+            foreach (KeyValuePair<RevisionGraphSegment, Lane> keyValue in _segmentLanes!)
             {
-                if (keyValue.Value == index)
+                if (keyValue.Value.Index == index)
                 {
                     yield return keyValue.Key;
                 }
             }
         }
 
-        public int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision)
+        public Lane GetLaneForSegment(RevisionGraphSegment revisionGraphRevision)
         {
             BuildSegmentLanes();
-            if (_segmentLanes!.TryGetValue(revisionGraphRevision, out int index))
+            if (_segmentLanes!.TryGetValue(revisionGraphRevision, out Lane lane))
             {
-                return index;
+                return lane;
             }
 
-            return -1;
+            return _noLane;
         }
 
         public void MoveLanesRight(int fromLane)
@@ -173,7 +236,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             Validates.NotNull(_segmentLanes);
-            RevisionGraphSegment[] segmentsToBeMoved = _segmentLanes.Where(keyValue => keyValue.Value >= fromLane && keyValue.Value < nextGap)
+            RevisionGraphSegment[] segmentsToBeMoved = _segmentLanes.Where(keyValue => keyValue.Value.Index >= fromLane && keyValue.Value.Index < nextGap)
                                                                     .Select(keyValue => keyValue.Key)
                                                                     .ToArray();
             if (!segmentsToBeMoved.Any())
@@ -194,7 +257,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             foreach (RevisionGraphSegment segment in segmentsToBeMoved)
             {
-                ++_segmentLanes[segment];
+                ++_segmentLanes[segment].Index;
             }
         }
     }
