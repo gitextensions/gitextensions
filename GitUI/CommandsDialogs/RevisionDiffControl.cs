@@ -506,7 +506,7 @@ namespace GitUI.CommandsDialogs
                         .ToList();
                     Module.RemoveFiles(deletedItems, false);
 
-                    foreach (var childId in selectedItems.SecondIds())
+                    foreach (ObjectId childId in selectedItems.SecondIds())
                     {
                         List<string> itemsToCheckout = selectedItems
                             .Where(item => !item.Item.IsDeleted && item.SecondRevision.ObjectId == childId)
@@ -520,7 +520,7 @@ namespace GitUI.CommandsDialogs
                     // Reset to parent revision
 
                     // If file is new to the parent or is copied, it has to be deleted or removed if un/committed, respectively
-                    IEnumerable<FileStatusItem> addedItems = selectedItems.Where(item => item.Item.IsAdded);
+                    IEnumerable<FileStatusItem> addedItems = selectedItems.Where(item => item.Item.IsAdded || RenamedIndexItem(item));
                     if (selectedItems.First().Item.IsUncommitted)
                     {
                         if (deleteUncommittedAddedItems)
@@ -533,11 +533,11 @@ namespace GitUI.CommandsDialogs
                         Module.RemoveFiles(addedItems.Select(item => item.Item.Name).ToList(), force: false);
                     }
 
-                    foreach (var parentId in selectedItems.FirstIds())
+                    foreach (ObjectId parentId in selectedItems.FirstIds())
                     {
                         List<string> itemsToCheckout = selectedItems
                             .Where(item => !item.Item.IsNew && item.FirstRevision?.ObjectId == parentId)
-                            .Select(item => item.Item.Name)
+                            .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
                         Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
                     }
@@ -1433,8 +1433,8 @@ namespace GitUI.CommandsDialogs
         {
             IEnumerable<FileStatusItem> items = DiffFiles.SelectedItems;
 
-            bool hasNewFiles = items.Any(item => item.Item.IsUncommittedAdded);
-            bool hasExistingFiles = items.Any(item => !item.Item.IsUncommittedAdded);
+            bool hasExistingFiles = items.Any(item => !(item.Item.IsUncommittedAdded || RenamedIndexItem(item)));
+            bool hasNewFiles = items.Any(item => item.Item.IsUncommittedAdded || RenamedIndexItem(item));
 
             string revDescription = resetToSelected
                 ? $"{_selectedRevision.Text}{DescribeRevision(items.SecondRevs().ToList())}"
@@ -1450,6 +1450,8 @@ namespace GitUI.CommandsDialogs
             bool deleteUncommittedAddedItems = resetAction == FormResetChanges.ActionEnum.ResetAndDelete;
             ResetSelectedItemsTo(resetToSelected, deleteUncommittedAddedItems);
         }
+
+        private static bool RenamedIndexItem(FileStatusItem item) => item.Item.IsRenamed && item.Item.Staged == StagedStatus.Index;
 
         internal TestAccessor GetTestAccessor()
             => new(this);
