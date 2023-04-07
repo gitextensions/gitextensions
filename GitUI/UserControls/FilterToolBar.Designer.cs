@@ -274,7 +274,6 @@ namespace GitUI.UserControls
             this.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbtnAdvancedFilter,
             this.tsbShowReflog,
-            this.tsmiShowOnlyFirstParent,
             this.tssbtnShowBranches,
             this.toolStripLabel1,
             this.tscboBranchFilter,
@@ -282,7 +281,8 @@ namespace GitUI.UserControls
             this.toolStripSeparator19,
             this.tslblRevisionFilter,
             this.tstxtRevisionFilter,
-            this.tsddbtnRevisionFilter});
+            this.tsddbtnRevisionFilter,
+            this.tsmiShowOnlyFirstParent});
             this.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.Location = new System.Drawing.Point(584, 0);
             this.Name = "ToolStripFilters";
