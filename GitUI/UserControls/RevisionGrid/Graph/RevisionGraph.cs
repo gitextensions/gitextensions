@@ -492,8 +492,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     IRevisionGraphRow previousRow = localOrderedRowCache[currentIndex - 1];
                     foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments)
                     {
+                        Lane currentRowLane = currentRow.GetLaneForSegment(revisionGraphSegment);
+                        if (currentRowLane.Sharing != LaneSharing.ExclusiveOrPrimary)
+                        {
+                            continue; // with next revisionGraphSegment
+                        }
+
+                        int currentLane = currentRowLane.Index;
                         int previousLane = previousRow.GetLaneForSegment(revisionGraphSegment).Index;
-                        int currentLane = currentRow.GetLaneForSegment(revisionGraphSegment).Index;
                         if (previousLane <= currentLane)
                         {
                             continue; // with next revisionGraphSegment
