@@ -1,4 +1,5 @@
 ﻿using System.Drawing.Drawing2D;
+using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
@@ -126,11 +127,21 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
         {
             SegmentLanes lanes = new() { StartLane = _noLane, EndLane = _noLane };
 
+            Lane currentLane = currentRow.GetLaneForSegment(revisionGraphSegment);
+
+            // Avoid drawing the same curve twice (caused aliasing artefacts, particularly in different colors)
+            if (currentLane.Sharing == LaneSharing.Entire)
+            {
+                lanes.DrawFromStart = false;
+                lanes.DrawToEnd = false;
+                return lanes;
+            }
+
             if (revisionGraphSegment.Parent == currentRow.Revision)
             {
                 // This lane ends here
                 lanes.StartLane = GetLaneForRow(previousRow, revisionGraphSegment);
-                lanes.CenterLane = GetLaneForRow(currentRow, revisionGraphSegment);
+                lanes.CenterLane = currentLane.Index;
                 setLaneInfo?.Invoke(revisionGraphSegment.LaneInfo);
             }
             else
@@ -138,7 +149,7 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
                 if (revisionGraphSegment.Child == currentRow.Revision)
                 {
                     // This lane starts here
-                    lanes.CenterLane = GetLaneForRow(currentRow, revisionGraphSegment);
+                    lanes.CenterLane = currentLane.Index;
                     lanes.EndLane = GetLaneForRow(nextRow, revisionGraphSegment);
                     setLaneInfo?.Invoke(revisionGraphSegment.LaneInfo);
                 }
@@ -146,9 +157,32 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
                 {
                     // This lane crosses
                     lanes.StartLane = GetLaneForRow(previousRow, revisionGraphSegment);
-                    lanes.CenterLane = GetLaneForRow(currentRow, revisionGraphSegment);
+                    lanes.CenterLane = currentLane.Index;
                     lanes.EndLane = GetLaneForRow(nextRow, revisionGraphSegment);
                 }
+            }
+
+            switch (currentLane.Sharing)
+            {
+                case LaneSharing.DifferentStart:
+                    if (AppSettings.ShowRevisionGridGraphColumn)
+                    {
+                        lanes.EndLane = _noLane;
+                    }
+                    else if (lanes.EndLane != _noLane)
+                    {
+                        throw new Exception($"{currentRow.Revision.Objectid.ToShortString()}: lane {lanes.CenterLane} has DifferentStart but has EndLane {lanes.EndLane} (StartLane {lanes.StartLane})");
+                    }
+
+                    break;
+
+                case LaneSharing.DifferentEnd:
+                    if (lanes.StartLane != _noLane)
+                    {
+                        throw new Exception($"{currentRow.Revision.Objectid.ToShortString()}: lane {lanes.CenterLane} has DifferentEnd but has StartLane {lanes.StartLane} (EndLane {lanes.EndLane})");
+                    }
+
+                    break;
             }
 
             lanes.DrawFromStart = lanes.StartLane >= 0 && lanes.CenterLane >= 0 && (lanes.StartLane <= MaxLanes || lanes.CenterLane <= MaxLanes);
