@@ -127,9 +127,16 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
             Lane currentLane = currentRow.GetLaneForSegment(revisionGraphSegment);
 
             int startLane = _noLane;
+            int centerLane = _noLane;
             int endLane = _noLane;
 
-            int centerLane = currentLane.Index;
+            // Avoid drawing the same curve twice (caused aliasing artifacts, particularly when in different colors)
+            if (currentLane.Sharing == LaneSharing.Entire)
+            {
+                return new SegmentLanesInfo(startLane, centerLane, endLane, drawFromStart: false, drawToEnd: false);
+            }
+
+            centerLane = currentLane.Index;
             if (revisionGraphSegment.Parent == currentRow.Revision)
             {
                 // This lane ends here
@@ -150,6 +157,29 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
                     startLane = GetLaneForRow(previousRow, revisionGraphSegment);
                     endLane = GetLaneForRow(nextRow, revisionGraphSegment);
                 }
+            }
+
+            switch (currentLane.Sharing)
+            {
+                case LaneSharing.DifferentStart:
+                    if (AppSettings.ShowRevisionGridGraphColumn)
+                    {
+                        endLane = _noLane;
+                    }
+                    else if (endLane != _noLane)
+                    {
+                        throw new Exception($"{currentRow.Revision.Objectid.ToShortString()}: lane {centerLane} has DifferentStart but has EndLane {endLane} (StartLane {startLane})");
+                    }
+
+                    break;
+
+                case LaneSharing.DifferentEnd:
+                    if (startLane != _noLane)
+                    {
+                        throw new Exception($"{currentRow.Revision.Objectid.ToShortString()}: lane {centerLane} has DifferentEnd but has StartLane {startLane} (EndLane {endLane})");
+                    }
+
+                    break;
             }
 
             return new SegmentLanesInfo(startLane, centerLane, endLane,
