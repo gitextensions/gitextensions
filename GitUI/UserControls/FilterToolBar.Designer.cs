@@ -273,16 +273,16 @@ namespace GitUI.UserControls
             this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbtnAdvancedFilter,
+            this.tsbShowReflog,
             this.tssbtnShowBranches,
             this.toolStripLabel1,
             this.tscboBranchFilter,
             this.tsddbtnBranchFilter,
-            this.tsbShowReflog,
-            this.tsmiShowOnlyFirstParent,
             this.toolStripSeparator19,
             this.tslblRevisionFilter,
             this.tstxtRevisionFilter,
-            this.tsddbtnRevisionFilter});
+            this.tsddbtnRevisionFilter,
+            this.tsmiShowOnlyFirstParent});
             this.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.Location = new System.Drawing.Point(584, 0);
             this.Name = "ToolStripFilters";
