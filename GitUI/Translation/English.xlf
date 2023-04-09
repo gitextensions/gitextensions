@@ -9703,13 +9703,13 @@ Current Branch:
         <target />
       </trans-unit>
       <trans-unit id="_prioBranchNamesTooltip.Text">
-        <source>Regex to prioritize branch names in the side panel and commit info.
+        <source>Regex to prioritize branch names in the left panel and commit info.
 The branches matching the pattern will be shown before the others.
 Separate the priorities with ';'.</source>
         <target />
       </trans-unit>
       <trans-unit id="_prioRemoteNamesTooltip.Text">
-        <source>Regex to prioritize remote names in the side panel and commit info.
+        <source>Regex to prioritize remote names in the left panel and commit info.
 The remotes matching the pattern will be shown before the others.
 Separate the priorities with ';'.</source>
         <target />

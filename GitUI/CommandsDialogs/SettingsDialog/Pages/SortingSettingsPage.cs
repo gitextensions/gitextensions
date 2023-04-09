@@ -9,10 +9,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class SortingSettingsPage : SettingsPageWithHeader
     {
         private readonly TranslationString _revisionSortWarningTooltip = new("Sorting revisions may delay rendering of the revision graph.");
-        private readonly TranslationString _prioBranchNamesTooltip = new("Regex to prioritize branch names in the side panel and commit info.\n" +
+        private readonly TranslationString _prioBranchNamesTooltip = new("Regex to prioritize branch names in the left panel and commit info.\n" +
             "The branches matching the pattern will be shown before the others.\n" +
             "Separate the priorities with ';'.");
-        private readonly TranslationString _prioRemoteNamesTooltip = new("Regex to prioritize remote names in the side panel and commit info.\n" +
+        private readonly TranslationString _prioRemoteNamesTooltip = new("Regex to prioritize remote names in the left panel and commit info.\n" +
             "The remotes matching the pattern will be shown before the others.\n" +
             "Separate the priorities with ';'.");
 
