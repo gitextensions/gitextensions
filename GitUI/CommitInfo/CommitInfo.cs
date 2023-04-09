@@ -804,7 +804,7 @@ namespace GitUI.CommitInfo
             private const string _remoteBranchPrefix = "remotes/";
             private readonly string _currentBranch;
             private readonly bool _isDetachedHead;
-            private Dictionary<string, int> _orderByBranch = new();
+            private readonly Dictionary<string, int> _orderByBranch = new();
 
             public BranchComparer(List<string> branches, string currentBranch)
             {
@@ -833,18 +833,19 @@ namespace GitUI.CommitInfo
                         return order;
                     }
 
-                    // length of current branch
+                    // length of "current branch" group
                     order += 1;
+
                     if (IsLocalBranch())
                     {
                         if (!TryGetOrder(branch, localBranchRegexes, out int localBranchOrder))
                         {
-                            // Non prioritized branches added after prioritized remote branches
+                            // Non prioritized local branches added after prioritized remote branches
+                            // localBranchOrder==localBranchRegexes.Length, an extra priority level
                             order += prioritizedRemoteBranchesLength();
                         }
 
                         // Order by branch priority
-                        // Non priority has localBranchOrder==localBranchRegexes.Length, an extra priority level
                         order += localBranchOrder;
 
                         return order;
@@ -852,25 +853,25 @@ namespace GitUI.CommitInfo
 
                     // Remote branches after local prioritized branches
                     order += localBranchRegexes.Length;
+
                     if (!TryGetOrder(branch, remoteBranchRegexes, out int remoteBranchOrder))
                     {
-                        // after non priority local branches, inserted after prioritzed branches
-                        const int localNonprioritizedLength = 1;
-                        order += localNonprioritizedLength;
+                        // after non priority local branches (that are inserted after remote prioritzed branches)
+                        const int localNonprioritizedBranchesLength = 1;
+                        order += localNonprioritizedBranchesLength;
                     }
 
-                    // Group by branch prio then remote (with not prioritized remotes as an extra level)
+                    // Group by branch priority then order by remote
                     order += (remoteBranchOrder * remotesGroupLength()) + GetOrder(branch, remoteRegexes);
 
                     return order;
 
                     bool IsLocalBranch() => !branch.StartsWith(_remoteBranchPrefix);
 
-                    // Each group for each level of prioritized branches has the unprioritized remotes as an extra level
+                    // The groups for a prioritized remote branch adds the unprioritized remotes to the regexes
                     int remotesGroupLength() => remoteRegexes.Length + 1;
 
-                    // Prioritized remote 'range' adds the non-prioritized remotes as an additional level.
-                    // (There are remoteBranchRegexes.Length groups as the non matching branches are added after the locals).
+                    // Length of the block of all prioritized remote branches (non prioritized branches separate)
                     int prioritizedRemoteBranchesLength() => remoteBranchRegexes.Length * remotesGroupLength();
 
                     // Get the index of the match for prioritized sorting,
