@@ -102,7 +102,8 @@ namespace GitCommands.Git
 
                 // Skip unmerged where both are modified: Only worktree interesting.
                 if ((x != GitItemStatusConverter.UntrackedStatus && x != GitItemStatusConverter.IgnoredStatus && x != GitItemStatusConverter.UnmodifiedStatus_v1)
-                    || !(x == GitItemStatusConverter.UnmergedStatus && y == GitItemStatusConverter.UnmergedStatus))
+                    || x != GitItemStatusConverter.UnmergedStatus
+                    || y != GitItemStatusConverter.UnmergedStatus)
                 {
                     GitItemStatus gitItemStatusX;
                     var stagedX = fromDiff ? staged : StagedStatus.Index;
@@ -197,7 +198,7 @@ namespace GitCommands.Git
                 const char RenamedEntry = '2';
                 const char UnmergedEntry = 'u';
 
-                if (entryType != OrdinaryEntry && entryType != RenamedEntry && entryType != UnmergedEntry)
+                if ((entryType != OrdinaryEntry && entryType != RenamedEntry && entryType != UnmergedEntry) || line.Length <= 3)
                 {
                     // Illegal entry type
                     continue;
