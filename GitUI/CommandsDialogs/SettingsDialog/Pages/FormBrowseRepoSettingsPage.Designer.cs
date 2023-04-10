@@ -141,6 +141,7 @@
             this.gbTabs.ResumeLayout(false);
             this.gbTabs.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

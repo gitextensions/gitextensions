@@ -31,7 +31,7 @@ namespace GitUI.BranchTreePanel
             ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
 
             // Create nodes for enabled remotes with branches
-            foreach (IGitRef branch in branches)
+            foreach (IGitRef branch in PrioritizedBranches(branches))
             {
                 token.ThrowIfCancellationRequested();
 
@@ -69,25 +69,27 @@ namespace GitUI.BranchTreePanel
             }
 
             // Add enabled remote nodes in order
-            enabledRemoteRepoNodes
-                .OrderBy(node => node.FullPath)
-                .ForEach(node => nodes.AddNode(node));
+            foreach (RemoteRepoNode node in PrioritizedRemotes(enabledRemoteRepoNodes))
+            {
+                nodes.AddNode(node);
+            }
 
             // Add disabled remotes, if any
             var disabledRemotes = remotesManager.GetDisabledRemotes();
             if (disabledRemotes.Count > 0)
             {
                 List<RemoteRepoNode> disabledRemoteRepoNodes = new();
-                foreach (var remote in disabledRemotes.OrderBy(remote => remote.Name))
+                foreach (Remote remote in disabledRemotes)
                 {
                     RemoteRepoNode node = new(this, remote.Name, remotesManager, remote, false);
                     disabledRemoteRepoNodes.Add(node);
                 }
 
                 RemoteRepoFolderNode disabledFolderNode = new(this, TranslatedStrings.Inactive);
-                disabledRemoteRepoNodes
-                    .OrderBy(node => node.FullPath)
-                    .ForEach(node => disabledFolderNode.Nodes.AddNode(node));
+                foreach (RemoteRepoNode node in PrioritizedRemotes(disabledRemoteRepoNodes))
+                {
+                    disabledFolderNode.Nodes.AddNode(node);
+                }
 
                 nodes.AddNode(disabledFolderNode);
             }
