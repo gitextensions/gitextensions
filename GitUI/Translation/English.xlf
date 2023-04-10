@@ -309,7 +309,7 @@ Click this info icon for more details.</source>
   <file datatype="plaintext" original="BlameViewerSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Blame Viewer</source>
+        <source>Blame viewer</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
@@ -1326,7 +1326,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
   <file datatype="plaintext" original="DiffViewerSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Diff Viewer</source>
+        <source>Diff viewer</source>
         <target />
       </trans-unit>
       <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
@@ -7575,7 +7575,7 @@ Context menu for additional operations</source>
         <target />
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistory.Text">
-        <source>Follow renames in file history (experimental)</source>
+        <source>Follow renames in file history</source>
         <target />
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
@@ -9673,7 +9673,7 @@ Current Branch:
         <target />
       </trans-unit>
       <trans-unit id="gbCascadingMenu.Text">
-        <source>Cascaded Context Menu</source>
+        <source>Cascaded context menu</source>
         <target />
       </trans-unit>
       <trans-unit id="gbExplorerIntegration.Text">
