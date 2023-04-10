@@ -54,7 +54,7 @@ namespace GitUI.BranchTreePanel
             var aheadBehindData = _aheadBehindDataProvider?.GetData();
             string currentBranch = _scriptHost.GetCurrentBranch();
             Dictionary<string, BaseRevisionNode> pathToNode = new();
-            foreach (IGitRef branch in branches)
+            foreach (IGitRef branch in PrioritizedBranches(branches))
             {
                 token.ThrowIfCancellationRequested();
 

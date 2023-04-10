@@ -1934,6 +1934,18 @@ namespace GitCommands
             set => SetInt("RepoObjectsTree.StashesIndex", value);
         }
 
+        public static string PrioritizedBranchNames
+        {
+            get => GetString("PrioritizedBranchNames", "main[^/]*|master[^/]*|release/.*");
+            set => SetString("PrioritizedBranchNames", value);
+        }
+
+        public static string PrioritizedRemoteNames
+        {
+            get => GetString("PrioritizedRemoteNames", "origin|upstream");
+            set => SetString("PrioritizedRemoteNames", value);
+        }
+
         public static bool BlameDisplayAuthorFirst
         {
             get => GetBool("Blame.DisplayAuthorFirst", false);
