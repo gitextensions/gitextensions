@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private readonly TranslationString _selectFile =
             new("Select file");
 
-        public readonly RepoDistSettingsSet RepoDistSettingsSet;
+        public readonly DistributedSettingsSet DistributedSettingsSet;
         public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
         public readonly GitModule Module;
 
@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             // For translation only
             Module = null!;
-            RepoDistSettingsSet = null!;
+            DistributedSettingsSet = null!;
             ConfigFileSettingsSet = null!;
         }
 
@@ -34,12 +34,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             Module = module;
 
-            var repoDistGlobalSettings = RepoDistSettings.CreateGlobal(false);
-            var repoDistPulledSettings = RepoDistSettings.CreateDistributed(module, false);
-            var repoDistLocalSettings = RepoDistSettings.CreateLocal(module, false);
-            RepoDistSettings repoDistEffectiveSettings = new(
-                new RepoDistSettings(repoDistGlobalSettings, repoDistPulledSettings.SettingsCache, SettingLevel.Distributed),
-                repoDistLocalSettings.SettingsCache,
+            var distributedGlobalSettings = DistributedSettings.CreateGlobal(false);
+            var distributedPulledSettings = DistributedSettings.CreateDistributed(module, false);
+            var distributedLocalSettings = DistributedSettings.CreateLocal(module, false);
+            DistributedSettings distributedEffectiveSettings = new(
+                new DistributedSettings(distributedGlobalSettings, distributedPulledSettings.SettingsCache, SettingLevel.Distributed),
+                distributedLocalSettings.SettingsCache,
                 SettingLevel.Effective);
 
             var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
@@ -47,11 +47,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             ConfigFileSettings configFileEffectiveSettings = new(
                 configFileGlobalSettings, configFileLocalSettings.SettingsCache, SettingLevel.Effective);
 
-            RepoDistSettingsSet = new RepoDistSettingsSet(
-                repoDistEffectiveSettings,
-                repoDistLocalSettings,
-                repoDistPulledSettings,
-                repoDistGlobalSettings);
+            DistributedSettingsSet = new DistributedSettingsSet(
+                distributedEffectiveSettings,
+                distributedLocalSettings,
+                distributedPulledSettings,
+                distributedGlobalSettings);
 
             ConfigFileSettingsSet = new ConfigFileSettingsSet(
                 configFileEffectiveSettings,

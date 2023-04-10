@@ -1,8 +1,10 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace GitCommands
 {
+    [DebuggerDisplay("{" + nameof(_byNameMap) + ".Count}")]
     public abstract class SettingsCache : IDisposable
     {
         private readonly ConcurrentDictionary<string, string?> _byNameMap = new();

@@ -7,7 +7,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public sealed partial class RevisionLinksSettingsPage : RepoDistSettingsPage
+    public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
     {
         private readonly TranslationString _addTemplate = new("Add {0} templates");
         private ExternalLinksManager? _externalLinksManager;

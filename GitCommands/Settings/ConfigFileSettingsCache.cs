@@ -1,8 +1,10 @@
-﻿using GitCommands.Config;
+﻿using System.Diagnostics;
+using GitCommands.Config;
 using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
+    [DebuggerDisplay("{_byNameMap.Count} cached {" + nameof(SettingsFilePath) + ",nq}")]
     public class ConfigFileSettingsCache : FileSettingsCache
     {
         private Lazy<ConfigFile> _configFile;

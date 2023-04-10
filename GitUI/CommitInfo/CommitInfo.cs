@@ -347,7 +347,7 @@ namespace GitUI.CommitInfo
                 rtbxCommitMessage.SetXHTMLText(commitMessage);
             }
 
-            void StartAsyncDataLoad(RepoDistSettings settings)
+            void StartAsyncDataLoad(DistributedSettings settings)
             {
                 var cancellationToken = _asyncLoadCancellation.Next();
                 var initialRevision = _revision;
@@ -399,7 +399,7 @@ namespace GitUI.CommitInfo
 
                 return;
 
-                async Task LoadLinksForRevisionAsync(GitRevision revision, RepoDistSettings settings)
+                async Task LoadLinksForRevisionAsync(GitRevision revision, DistributedSettings settings)
                 {
                     await TaskScheduler.Default;
                     cancellationToken.ThrowIfCancellationRequested();
@@ -417,7 +417,7 @@ namespace GitUI.CommitInfo
 
                     return;
 
-                    string GetLinksForRevision(RepoDistSettings settings)
+                    string GetLinksForRevision(DistributedSettings settings)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 

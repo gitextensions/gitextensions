@@ -1,8 +1,10 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Xml;
 
 namespace GitCommands.Settings
 {
+    [DebuggerDisplay("{_byNameMap.Count} cached {" + nameof(SettingsFilePath) + ",nq}")]
     public class GitExtSettingsCache : FileSettingsCache
     {
         private readonly XmlSerializableDictionary<string, string> _encodedNameMap = new();

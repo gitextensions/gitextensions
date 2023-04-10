@@ -12,9 +12,9 @@
         void SetEffectiveSettings();
     }
 
-    public interface IRepoDistSettingsPage : ILocalSettingsPage
+    public interface IDistributedSettingsPage : ILocalSettingsPage
     {
-        void SetRepoDistSettings();
+        void SetDistributedSettings();
     }
 
     public partial class SettingsPageHeader
@@ -39,7 +39,7 @@
 
         private void ConfigureHeader()
         {
-            if (!(_page is ILocalSettingsPage localSettings))
+            if (!(_page is ILocalSettingsPage localSettingsPage))
             {
                 GlobalRB.Checked = true;
 
@@ -57,7 +57,7 @@
                 {
                     if (LocalRB.Checked)
                     {
-                        localSettings.SetLocalSettings();
+                        localSettingsPage.SetLocalSettings();
                     }
                 };
 
@@ -66,7 +66,7 @@
                     if (EffectiveRB.Checked)
                     {
                         arrows1.ForeColor = EffectiveRB.ForeColor;
-                        localSettings.SetEffectiveSettings();
+                        localSettingsPage.SetEffectiveSettings();
                     }
                     else
                     {
@@ -79,7 +79,7 @@
 
                 EffectiveRB.Checked = true;
 
-                if (!(localSettings is IRepoDistSettingsPage repoDistPage))
+                if (!(localSettingsPage is IDistributedSettingsPage distributedSettingsPage))
                 {
                     DistributedRB.Visible = false;
                     arrow3.Visible = false;
@@ -90,7 +90,7 @@
                     {
                         if (DistributedRB.Checked)
                         {
-                            repoDistPage.SetRepoDistSettings();
+                            distributedSettingsPage.SetDistributedSettings();
                         }
                     };
                 }

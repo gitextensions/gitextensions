@@ -4,6 +4,7 @@ using Timer = System.Timers.Timer;
 
 namespace GitCommands.Settings
 {
+    [DebuggerDisplay("{_byNameMap.Count} {" + nameof(SettingsFilePath) + ",nq}")]
     public abstract class FileSettingsCache : SettingsCache
     {
         private const double SaveTime = 2000;

@@ -8,7 +8,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class BuildServerIntegrationSettingsPage : RepoDistSettingsPage
+    public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPage
     {
         private readonly TranslationString _noneItem =
             new("None");

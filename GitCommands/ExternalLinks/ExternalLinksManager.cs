@@ -5,14 +5,14 @@ namespace GitCommands.ExternalLinks
     // NB: this implementation is stateful
     public sealed class ExternalLinksManager
     {
-        private readonly RepoDistSettings _cachedSettings;
+        private readonly DistributedSettings _cachedSettings;
         private readonly ExternalLinksManager? _lowerPriority;
         private readonly IExternalLinksStorage _externalLinksStorage = new ExternalLinksStorage();
         private readonly List<ExternalLinkDefinition> _definitions;
 
-        public ExternalLinksManager(RepoDistSettings settings)
+        public ExternalLinksManager(DistributedSettings settings)
         {
-            _cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
+            _cachedSettings = new DistributedSettings(null, settings.SettingsCache, settings.SettingLevel);
             _definitions = _externalLinksStorage.Load(_cachedSettings).ToList();
 
             if (settings.LowerPriority is not null)

@@ -11,10 +11,10 @@ namespace GitCommandsTests.Settings
     internal sealed class BuildServerSettingsTests
     {
         private GitModuleTestHelper _testHelper;
-        private RepoDistSettings _userRoaming;
-        private RepoDistSettings _repoDistributed;
-        private RepoDistSettings _repoLocal;
-        private RepoDistSettings _effective;
+        private DistributedSettings _userRoaming;
+        private DistributedSettings _repoDistributed;
+        private DistributedSettings _repoLocal;
+        private DistributedSettings _effective;
         private string _userRoamingConfigFilePath;
         private string _repoDistributedConfigFilePath;
         private string _repoLocalConfigFilePath;
@@ -31,10 +31,10 @@ namespace GitCommandsTests.Settings
             content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level1_repogit_GitExtensions.settings.xml");
             _repoLocalConfigFilePath = _testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
 
-            _userRoaming = new RepoDistSettings(null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
-            _repoDistributed = new RepoDistSettings(_userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
-            _repoLocal = new RepoDistSettings(_repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
-            _effective = new RepoDistSettings(_repoLocal, new GitExtSettingsCache(null), SettingLevel.Effective);
+            _userRoaming = new DistributedSettings(null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
+            _repoDistributed = new DistributedSettings(_userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
+            _repoLocal = new DistributedSettings(_repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
+            _effective = new DistributedSettings(_repoLocal, new GitExtSettingsCache(null), SettingLevel.Effective);
         }
 
         [TearDown]

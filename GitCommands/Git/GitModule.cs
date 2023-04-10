@@ -214,9 +214,9 @@ namespace GitCommands
             return topModule;
         }
 
-        private RepoDistSettings? _effectiveSettings;
+        private DistributedSettings? _effectiveSettings;
 
-        public RepoDistSettings EffectiveSettings
+        public DistributedSettings EffectiveSettings
         {
             get
             {
@@ -224,7 +224,7 @@ namespace GitCommands
                 {
                     lock (_lock)
                     {
-                        _effectiveSettings ??= RepoDistSettings.CreateEffective(this);
+                        _effectiveSettings ??= DistributedSettings.CreateEffective(this);
                     }
                 }
 
@@ -237,9 +237,9 @@ namespace GitCommands
             return EffectiveSettings;
         }
 
-        private RepoDistSettings? _localSettings;
+        private DistributedSettings? _localSettings;
 
-        public RepoDistSettings LocalSettings
+        public DistributedSettings LocalSettings
         {
             get
             {
@@ -247,7 +247,7 @@ namespace GitCommands
                 {
                     lock (_lock)
                     {
-                        _localSettings ??= new RepoDistSettings(null, EffectiveSettings.SettingsCache, SettingLevel.Local);
+                        _localSettings ??= new DistributedSettings(null, EffectiveSettings.SettingsCache, SettingLevel.Local);
                     }
                 }
 

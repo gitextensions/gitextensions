@@ -30,7 +30,7 @@ namespace GitCommands
         public static string SettingsFilePath => Path.Combine(ApplicationDataPath.Value, SettingsFileName);
         public static string UserPluginsPath => Path.Combine(LocalApplicationDataPath.Value, UserPluginsDirectoryName);
 
-        public static RepoDistSettings SettingsContainer { get; private set; }
+        public static DistributedSettings SettingsContainer { get; private set; }
 
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
 
@@ -74,7 +74,7 @@ namespace GitCommands
 
             bool newFile = CreateEmptySettingsFileIfMissing();
 
-            SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath), SettingLevel.Unknown);
+            SettingsContainer = new DistributedSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath), SettingLevel.Unknown);
 
             if (newFile || !File.Exists(SettingsFilePath))
             {
@@ -179,7 +179,7 @@ namespace GitCommands
             set => SetBool("RememberAmendCommitState", value);
         }
 
-        public static void UsingContainer(RepoDistSettings settingsContainer, Action action)
+        public static void UsingContainer(DistributedSettings settingsContainer, Action action)
         {
             SettingsContainer.LockedAction(() =>
                 {

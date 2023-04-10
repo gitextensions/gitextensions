@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             valid = SolveEditor() && valid;
 
             CommonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
-            CommonLogic.RepoDistSettingsSet.EffectiveSettings.Save();
+            CommonLogic.DistributedSettingsSet.EffectiveSettings.Save();
 
             return valid;
         }

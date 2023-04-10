@@ -3,7 +3,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public abstract partial class AutoLayoutSettingsPage : RepoDistSettingsPage, ISettingsLayout
+    public abstract partial class AutoLayoutSettingsPage : DistributedSettingsPage, ISettingsLayout
     {
         private ISettingsLayout? _settingsLayout;
 

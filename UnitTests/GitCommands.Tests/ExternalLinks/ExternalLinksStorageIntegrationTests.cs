@@ -28,7 +28,7 @@ namespace GitCommandsTests.ExternalLinks
             using GitModuleTestHelper testHelper = new();
             var settingsFile = testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
             using GitExtSettingsCache settingsCache = new(settingsFile);
-            RepoDistSettings settings = new(null, settingsCache, SettingLevel.Unknown);
+            DistributedSettings settings = new(null, settingsCache, SettingLevel.Unknown);
 
             var definitions = _externalLinksStorage.Load(settings);
             definitions.Count.Should().Be(expected);
@@ -40,7 +40,7 @@ namespace GitCommandsTests.ExternalLinks
             using GitModuleTestHelper testHelper = new();
             string settingsFile = testHelper.CreateRepoFile(".git", "GitExtensions.settings", "﻿<dictionary />");
             using GitExtSettingsCache settingsCache = new(settingsFile);
-            RepoDistSettings settings = new(null, settingsCache, SettingLevel.Unknown);
+            DistributedSettings settings = new(null, settingsCache, SettingLevel.Unknown);
 
             ExternalLinkDefinition definition = new()
             {

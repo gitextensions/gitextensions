@@ -12,7 +12,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads all persisted external link definitions across all setting layers.
         /// </summary>
-        IReadOnlyList<ExternalLinkDefinition> Get(RepoDistSettings settings);
+        IReadOnlyList<ExternalLinkDefinition> Get(DistributedSettings settings);
     }
 
     /// <summary>
@@ -30,14 +30,14 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Loads all persisted external link definitions across all setting layers.
         /// </summary>
-        public IReadOnlyList<ExternalLinkDefinition> Get(RepoDistSettings settings)
+        public IReadOnlyList<ExternalLinkDefinition> Get(DistributedSettings settings)
         {
             if (settings is null)
             {
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            RepoDistSettings cachedSettings = new(null, settings.SettingsCache, SettingLevel.Unknown);
+            DistributedSettings cachedSettings = new(null, settings.SettingsCache, SettingLevel.Unknown);
             IEnumerable<ExternalLinkDefinition>? effective = _externalLinksStorage.Load(cachedSettings);
 
             Validates.NotNull(effective);

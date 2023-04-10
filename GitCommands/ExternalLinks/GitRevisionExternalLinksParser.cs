@@ -5,7 +5,7 @@ namespace GitCommands.ExternalLinks
 {
     public interface IGitRevisionExternalLinksParser
     {
-        IEnumerable<ExternalLink> Parse(GitRevision revision, RepoDistSettings settings);
+        IEnumerable<ExternalLink> Parse(GitRevision revision, DistributedSettings settings);
     }
 
     public sealed class GitRevisionExternalLinksParser : IGitRevisionExternalLinksParser
@@ -19,7 +19,7 @@ namespace GitCommands.ExternalLinks
             _externalLinkRevisionParser = externalLinkRevisionParser;
         }
 
-        public IEnumerable<ExternalLink> Parse(GitRevision revision, RepoDistSettings settings)
+        public IEnumerable<ExternalLink> Parse(GitRevision revision, DistributedSettings settings)
         {
             var definitions = _effectiveLinkDefinitionsProvider.Get(settings);
             return definitions.Where(definition => definition.Enabled)
