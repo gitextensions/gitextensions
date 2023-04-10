@@ -29,6 +29,7 @@ namespace GitUI
         private readonly TranslationString _containedInTagsText = new("Contained in tags:");
         private readonly TranslationString _containedInNoTagText = new("Contained in no tag");
         private readonly TranslationString _invisibleCommitText = new("'{0}' is not currently visible");
+        private readonly TranslationString _addUpstreamRemote = new("Add upstream remote");
         private readonly TranslationString _viewPullRequest = new("View pull requests");
         private readonly TranslationString _createPullRequest = new("Create pull request");
         private readonly TranslationString _forkCloneRepo = new("Fork or clone a repository");
@@ -210,6 +211,7 @@ following command.
         public static string CreatePullRequest => _instance.Value._createPullRequest.Text;
         public static string ForkCloneRepo => _instance.Value._forkCloneRepo.Text;
         public static string ViewPullRequest => _instance.Value._viewPullRequest.Text;
+        public static string AddUpstreamRemote => _instance.Value._addUpstreamRemote.Text;
 
         public static string Branch => _instance.Value._branchText.Text;
         public static string Branches => _instance.Value._branchesText.Text;

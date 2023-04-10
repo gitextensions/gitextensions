@@ -739,6 +739,10 @@ Are you sure you want to continue?</source>
         <source>Manage GitHub personal access token</source>
         <target />
       </trans-unit>
+      <trans-unit id="_noteRestartNeeded.Text">
+        <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
         <source>Fail to open the link. Reason: </source>
         <target />
