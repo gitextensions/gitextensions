@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 using System.Globalization;
-using System.Text;
 using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Config;
@@ -1823,7 +1822,7 @@ namespace GitUI.CommandsDialogs
 
         private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetRepositoryHost(out var repoHost))
+            if (!TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
             {
                 return;
             }
@@ -1833,7 +1832,7 @@ namespace GitUI.CommandsDialogs
 
         private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetRepositoryHost(out var repoHost))
+            if (!TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
             {
                 return;
             }
@@ -1843,19 +1842,12 @@ namespace GitUI.CommandsDialogs
 
         private void _addUpstreamRemoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            if (!TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
             {
-                if (!TryGetRepositoryHost(out var repoHost))
-                {
-                    return;
-                }
+                return;
+            }
 
-                var remoteName = await repoHost.AddUpstreamRemoteAsync();
-                if (!string.IsNullOrEmpty(remoteName))
-                {
-                    UICommands.StartPullDialogAndPullImmediately(this, null, remoteName, AppSettings.PullAction.Fetch);
-                }
-            }).FileAndForget();
+            UICommands.AddUpstreamRemote(this, repoHost);
         }
 
         private bool TryGetRepositoryHost([NotNullWhen(returnValue: true)] out IRepositoryHostPlugin? repoHost)

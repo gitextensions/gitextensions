@@ -71,6 +71,7 @@ namespace GitExtensions.Plugins.GitHub3
         private readonly TranslationString _generateToken = new("Generate a GitHub personal access token");
         private readonly TranslationString _manageToken = new("Manage GitHub personal access token");
         private readonly TranslationString _openLinkFailed = new("Fail to open the link. Reason: ");
+        private readonly TranslationString _noteRestartNeeded = new("Note: Git Extensions need to be restarted so that the token is taken into account.");
 
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
@@ -108,6 +109,8 @@ namespace GitExtensions.Plugins.GitHub3
             LinkLabel manageTokenLink = new() { Text = _manageToken.Text };
             manageTokenLink.Click += ManageTokenLink_Click;
             yield return new PseudoSetting(manageTokenLink);
+
+            yield return new PseudoSetting(_noteRestartNeeded.Text);
         }
 
         private void GenerateTokenLink_Click(object sender, EventArgs e)

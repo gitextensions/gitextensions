@@ -1338,6 +1338,22 @@ namespace GitUI
                                 });
         }
 
+        internal void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster)
+        {
+            WrapRepoHostingCall(TranslatedStrings.AddUpstreamRemote, gitHoster,
+                                gh =>
+                                {
+                                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                                    {
+                                        string remoteName = await gh.AddUpstreamRemoteAsync();
+                                        if (!string.IsNullOrEmpty(remoteName))
+                                        {
+                                            StartPullDialogAndPullImmediately(owner, remoteBranch: null, remoteName, AppSettings.PullAction.Fetch);
+                                        }
+                                    }).FileAndForget();
+                                });
+        }
+
         public void StartCreatePullRequest(IWin32Window? owner)
         {
             List<IRepositoryHostPlugin> relevantHosts =
