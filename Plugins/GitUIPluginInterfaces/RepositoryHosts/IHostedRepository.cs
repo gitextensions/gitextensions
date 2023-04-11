@@ -12,11 +12,10 @@
 
         string Homepage { get; }
 
-        string? ParentReadOnlyUrl { get; }
+        string? ParentUrl { get; }
         string? ParentOwner { get; }
 
-        string CloneReadWriteUrl { get; }
-        string CloneReadOnlyUrl { get; }
+        string CloneUrl { get; }
 
         /// <summary>
         /// Requests details of branches from the GitHub remote repository.
