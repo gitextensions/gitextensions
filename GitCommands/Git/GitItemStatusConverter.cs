@@ -2,17 +2,19 @@
 {
     public static class GitItemStatusConverter
     {
-        public static readonly char AddedStatus = 'A';
-        public static readonly char CopiedStatus = 'C';
-        public static readonly char DeletedStatus = 'D';
-        public static readonly char ModifiedStatus = 'M';
-        public static readonly char IgnoredStatus = '!';
-        public static readonly char RenamedStatus = 'R';
-        public static readonly char SkippedStatus = 'S';
-        public static readonly char UnmergedStatus = 'U';
-        public static readonly char UnmodifiedStatus_v1 = ' ';
-        public static readonly char UnmodifiedStatus_v2 = '.';
-        public static readonly char UntrackedStatus = '?';
+        // const instead of static readonly:
+        // These are external constants not expected to be changed or be used as a standalone library
+        public const char AddedStatus = 'A';
+        public const char CopiedStatus = 'C';
+        public const char DeletedStatus = 'D';
+        public const char ModifiedStatus = 'M';
+        public const char IgnoredStatus = '!';
+        public const char RenamedStatus = 'R';
+        public const char SkippedStatus = 'S';
+        public const char UnmergedStatus = 'U';
+        public const char UnmodifiedStatus_v1 = ' ';
+        public const char UnmodifiedStatus_v2 = '.';
+        public const char UntrackedStatus = '?';
 
         public static GitItemStatus FromStatusCharacter(StagedStatus staged, string fileName, char x)
         {
