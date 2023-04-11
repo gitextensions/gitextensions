@@ -209,7 +209,7 @@
             this.gbCascadingMenu.Size = new System.Drawing.Size(1480, 502);
             this.gbCascadingMenu.TabIndex = 0;
             this.gbCascadingMenu.TabStop = false;
-            this.gbCascadingMenu.Text = "Cascaded Context Menu";
+            this.gbCascadingMenu.Text = "Cascaded context menu";
             // 
             // tlpnlCascadingMenu
             // 

@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public DiffViewerSettingsPage()
         {
             InitializeComponent();
-            Text = "Diff Viewer";
+            Text = "Diff viewer";
             InitializeComplete();
 
             chkShowDiffForAllParents.Text = TranslatedStrings.ShowDiffForAllParentsText;

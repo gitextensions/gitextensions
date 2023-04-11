@@ -11,7 +11,7 @@
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">
-        <source>Auto compile SubModules</source>
+        <source>Auto compile submodules</source>
         <target />
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">

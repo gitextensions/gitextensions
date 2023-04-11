@@ -495,7 +495,7 @@
             this.chkFollowRenamesInFileHistory.Name = "chkFollowRenamesInFileHistory";
             this.chkFollowRenamesInFileHistory.Size = new System.Drawing.Size(264, 17);
             this.chkFollowRenamesInFileHistory.TabIndex = 5;
-            this.chkFollowRenamesInFileHistory.Text = "Follow renames in file history (experimental)";
+            this.chkFollowRenamesInFileHistory.Text = "Follow renames in file history";
             this.chkFollowRenamesInFileHistory.UseVisualStyleBackColor = true;
             // 
             // lblDefaultPullAction
