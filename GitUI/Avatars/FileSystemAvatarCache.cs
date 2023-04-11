@@ -26,10 +26,10 @@ namespace GitUI.Avatars
         /// <inheritdoc />
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
-            var cacheDir = AppSettings.AvatarImageCachePath;
-            var path = Path.Combine(cacheDir, $"{email}.{imageSize}px.png");
+            string cacheDir = AppSettings.AvatarImageCachePath;
+            string path = Path.Combine(cacheDir, $"{email}.{imageSize}px.png");
 
-            var image = ReadImage() ?? await _inner.GetAvatarAsync(email, name, imageSize);
+            Image image = ReadImage() ?? await _inner.GetAvatarAsync(email, name, imageSize);
 
             if (image is not null)
             {
@@ -47,12 +47,24 @@ namespace GitUI.Avatars
 
                 try
                 {
-                    using var output = _fileSystem.File.OpenWrite(path);
+                    using Stream output = _fileSystem.File.OpenWrite(path);
                     image.Save(output, ImageFormat.Png);
                 }
                 catch
                 {
-                    // do nothing
+                    // Workaround to avoid the "A generic error occurred in GDI+." exception when saving
+                    // where copying the image in a new one allows the save on disk to be successful...
+                    try
+                    {
+                        using (Bitmap newImage = new(image))
+                        {
+                            using Stream output = _fileSystem.File.OpenWrite(path);
+                            newImage.Save(output, ImageFormat.Png);
+                        }
+                    }
+                    catch
+                    {
+                    }
                 }
             }
 
@@ -62,7 +74,7 @@ namespace GitUI.Avatars
                 {
                     try
                     {
-                        using var stream = _fileSystem.File.OpenRead(path);
+                        using Stream stream = _fileSystem.File.OpenRead(path);
                         return Image.FromStream(stream);
                     }
                     catch
@@ -76,16 +88,26 @@ namespace GitUI.Avatars
 
                 bool HasExpired()
                 {
-                    var info = _fileSystem.FileInfo.FromFileName(path);
+                    IFileInfo info = _fileSystem.FileInfo.FromFileName(path);
 
-                    var cacheDays = AppSettings.AvatarImageCacheDays;
+                    if (!info.Exists)
+                    {
+                        return true;
+                    }
+
+                    if (AppSettings.AvatarProvider == AvatarProvider.None)
+                    {
+                        // No need to refresh because the image returned is always the same.
+                        return false;
+                    }
+
+                    int cacheDays = AppSettings.AvatarImageCacheDays;
                     if (cacheDays < 1)
                     {
                         cacheDays = DefaultCacheDays;
                     }
 
-                    return !info.Exists ||
-                           info.LastWriteTime < DateTime.Now.AddDays(-cacheDays);
+                    return info.LastWriteTime < DateTime.Now.AddDays(-cacheDays);
                 }
 
                 void TryDelete()
