@@ -201,12 +201,12 @@ namespace GitExtensions.Plugins.GitHub3
                 return null;
             }
 
-            if ((await gitModule.GetRemotesAsync()).Any(r => r.Name == UpstreamConventionName || r.FetchUrl == hostedRepository.ParentReadOnlyUrl))
+            if ((await gitModule.GetRemotesAsync()).Any(r => r.Name == UpstreamConventionName || r.FetchUrl == hostedRepository.ParentUrl))
             {
                 return null;
             }
 
-            gitModule.AddRemote(UpstreamConventionName, hostedRepository.ParentReadOnlyUrl);
+            gitModule.AddRemote(UpstreamConventionName, hostedRepository.ParentUrl);
             return UpstreamConventionName;
         }
 
