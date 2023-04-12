@@ -188,9 +188,10 @@ namespace GitCommands.Git
 
                 if (entryType == GitItemStatusConverter.UntrackedStatus || entryType == GitItemStatusConverter.IgnoredStatus)
                 {
-                    // Other entry types, just the path following
+                    // Untracked and ignored with just the path following, supply dummy data for most info.
                     string otherFileName = line.Substring(2);
-                    UpdateItemStatus(entryType, false, "N...", otherFileName, null, null);
+                    const string NotSumoduleEntry = "N...";
+                    UpdateItemStatus(entryType, false, NotSumoduleEntry, otherFileName, null, null);
                     continue;
                 }
 
