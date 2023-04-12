@@ -87,24 +87,27 @@ namespace GitCommands.Git
                 }
                 else
                 {
-                    status = files[n].Substring(0, splitIndex);
-                    fileName = files[n].Substring(splitIndex);
+                    status = files[n][..splitIndex];
+                    fileName = files[n][splitIndex..];
                 }
 
                 char x = status[0];
-                char y = status.Length > 1 ? status[1] : ' ';
+                char y = status.Length > 1 ? status[1] : GitItemStatusConverter.UnmodifiedStatus_v1;
 
-                if (fromDiff && staged == StagedStatus.WorkTree && x == 'U')
+                if (fromDiff && staged == StagedStatus.WorkTree && x == GitItemStatusConverter.UnmergedStatus)
                 {
                     // git-diff has two lines to inform that a file is modified and has a merge conflict
                     continue;
                 }
 
-                if (x != '?' && x != '!' && x != ' ')
+                // Skip unmerged where both are modified: Only worktree interesting.
+                if ((x != GitItemStatusConverter.UntrackedStatus && x != GitItemStatusConverter.IgnoredStatus && x != GitItemStatusConverter.UnmodifiedStatus_v1)
+                    || x != GitItemStatusConverter.UnmergedStatus
+                    || y != GitItemStatusConverter.UnmergedStatus)
                 {
                     GitItemStatus gitItemStatusX;
                     var stagedX = fromDiff ? staged : StagedStatus.Index;
-                    if (x == 'R' || x == 'C')
+                    if (x == GitItemStatusConverter.RenamedStatus || x == GitItemStatusConverter.CopiedStatus)
                     {
                         // Find renamed files...
                         string nextFile = n + 1 < files.Length ? files[n + 1] : "";
@@ -124,14 +127,14 @@ namespace GitCommands.Git
                     diffFiles.Add(gitItemStatusX);
                 }
 
-                if (fromDiff || y == ' ')
+                if (fromDiff || y == GitItemStatusConverter.UnmodifiedStatus_v1)
                 {
                     continue;
                 }
 
                 GitItemStatus gitItemStatusY;
                 var stagedY = StagedStatus.WorkTree;
-                if (y == 'R' || y == 'C')
+                if (y == GitItemStatusConverter.RenamedStatus || y == GitItemStatusConverter.CopiedStatus)
                 {
                     // Find renamed files...
                     string nextFile = n + 1 < files.Length ? files[n + 1] : "";
@@ -175,67 +178,88 @@ namespace GitCommands.Git
             for (int n = 0; n < files.Length; n++)
             {
                 string line = files[n];
+                if (line.Length <= 2 || line[1] != ' ')
+                {
+                    // Illegal info, like error output
+                    continue;
+                }
+
                 char entryType = line[0];
 
-                if (entryType == '?' || entryType == '!')
+                if (entryType == GitItemStatusConverter.UntrackedStatus || entryType == GitItemStatusConverter.IgnoredStatus)
                 {
-                    Debug.Assert(line.Length > 2 && line[1] == ' ', "Cannot parse for untracked:" + line);
-                    string fileName = line.Substring(2);
-                    UpdateItemStatus(entryType, false, "N...", fileName, null, null);
+                    // Untracked and ignored with just the path following, supply dummy data for most info.
+                    string otherFileName = line[2..];
+                    const string NotSumoduleEntry = "N...";
+                    UpdateItemStatus(entryType, false, NotSumoduleEntry, otherFileName, null, null);
+                    continue;
                 }
-                else if (entryType == '1' || entryType == '2' || entryType == 'u')
+
+                const char OrdinaryEntry = '1';
+                const char RenamedEntry = '2';
+                const char UnmergedEntry = 'u';
+
+                if ((entryType != OrdinaryEntry && entryType != RenamedEntry && entryType != UnmergedEntry) || line.Length <= 3)
                 {
-                    // Parse from git-status documentation, assuming SHA-1 is used
-                    // Ignore octal and treeGuid
-                    // 1 XY subm <mH> <mI> <mW> <hH> <hI> <path>
-                    // renamed:
-                    // 2 XY subm <mH> <mI> <mW> <hH> <hI> <X><score> <path><sep><origPath>
-                    // worktree (merge conflicts)
-                    // u XY subm <m1> <m2> <m3> <mW> <h1> <h2> <h3> <path>
+                    // Illegal entry type
+                    continue;
+                }
 
-                    char x = line[2];
-                    char y = line[3];
-                    string fileName;
-                    string? oldFileName = null;
-                    string? renamePercent = null;
-                    string subm = line.Substring(5, 4);
+                // Parse from git-status documentation, assuming SHA-1 is used
+                // Ignore octal and treeGuid
+                // 1 XY subm <mH> <mI> <mW> <hH> <hI> <path>
+                // renamed:
+                // 2 XY subm <mH> <mI> <mW> <hH> <hI> <X><score> <path><sep><origPath>
+                // worktree (merge conflicts)
+                // u XY subm <m1> <m2> <m3> <mW> <h1> <h2> <h3> <path>
 
-                    if (entryType == '1')
-                    {
-                        Debug.Assert(line.Length > 113 && line[1] == ' ', "Cannot parse line:" + line);
-                        fileName = line.Substring(113);
-                    }
-                    else if (entryType == '2')
-                    {
-                        Debug.Assert(line.Length > 2 && n + 1 < files.Length, "Cannot parse renamed:" + line);
+                char x = line[2];
+                char y = line[3];
+                string fileName;
+                string? oldFileName = null;
+                string? renamePercent = null;
+                string subm = line.Substring(5, 4);
 
-                        // Find renamed files...
-                        string[] renames = line.Substring(114).Split(Delimiters.Space, 2);
-                        renamePercent = renames[0];
-                        fileName = renames[1];
-                        oldFileName = files[++n];
-                    }
-                    else if (entryType == 'u')
-                    {
-                        Debug.Assert(line.Length > 161, "Cannot parse unmerged:" + line);
-                        fileName = line.Substring(161);
-                    }
-                    else
-                    {
-                        // illegal
-                        continue;
-                    }
+                if (entryType == OrdinaryEntry)
+                {
+                    Debug.Assert(line.Length > 113, "Cannot parse line:" + line);
+                    fileName = line[113..];
+                }
+                else if (entryType == RenamedEntry)
+                {
+                    Debug.Assert(n + 1 < files.Length, "Cannot parse renamed:" + line);
 
+                    // Find renamed files...
+                    string[] renames = line[114..].Split(Delimiters.Space, 2);
+                    renamePercent = renames[0];
+                    fileName = renames[1];
+                    oldFileName = files[++n];
+                }
+                else if (entryType == UnmergedEntry)
+                {
+                    Debug.Assert(line.Length > 161, "Cannot parse unmerged:" + line);
+                    fileName = line[161..];
+                }
+                else
+                {
+                    // illegal, already checked
+                    continue;
+                }
+
+                // Skip unmerged where both are modified: Only worktree interesting.
+                if (entryType != UnmergedEntry || x != GitItemStatusConverter.UnmergedStatus || y != GitItemStatusConverter.UnmergedStatus)
+                {
                     UpdateItemStatus(x, true, subm, fileName, oldFileName, renamePercent);
-                    UpdateItemStatus(y, false, subm, fileName, oldFileName, renamePercent);
                 }
+
+                UpdateItemStatus(y, false, subm, fileName, oldFileName, renamePercent);
             }
 
             return diffFiles;
 
             void UpdateItemStatus(char x, bool isIndex, string subm, string fileName, string? oldFileName, string? renamePercent)
             {
-                if (x == '.')
+                if (x == GitItemStatusConverter.UnmodifiedStatus_v2)
                 {
                     return;
                 }
@@ -252,7 +276,8 @@ namespace GitCommands.Git
                     gitItemStatus.RenameCopyPercentage = renamePercent;
                 }
 
-                if (subm[0] == 'S')
+                const char SubmoduleState = 'S';
+                if (subm[0] == SubmoduleState)
                 {
                     gitItemStatus.IsSubmodule = true;
 
@@ -260,8 +285,8 @@ namespace GitCommands.Git
                     {
                         // Slight modification on how the following flags are used
                         // Changed commit
-                        gitItemStatus.IsChanged = subm[1] == 'C';
-                        gitItemStatus.IsDirty = subm[2] == 'M' || subm[3] == 'U';
+                        gitItemStatus.IsChanged = subm[1] == GitItemStatusConverter.CopiedStatus;
+                        gitItemStatus.IsDirty = subm[2] == GitItemStatusConverter.ModifiedStatus || subm[3] == GitItemStatusConverter.UnmergedStatus;
                     }
                 }
 
@@ -288,7 +313,7 @@ namespace GitCommands.Git
             gitItemStatus.IsNew = false;
             gitItemStatus.IsChanged = false;
             gitItemStatus.IsDeleted = false;
-            if (x == 'R')
+            if (x == GitItemStatusConverter.RenamedStatus)
             {
                 gitItemStatus.IsRenamed = true;
             }
@@ -300,7 +325,7 @@ namespace GitCommands.Git
             gitItemStatus.IsTracked = true;
             if (status.Length > 2)
             {
-                gitItemStatus.RenameCopyPercentage = status.Substring(1);
+                gitItemStatus.RenameCopyPercentage = status[1..];
             }
 
             gitItemStatus.Staged = staged;
