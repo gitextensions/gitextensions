@@ -87,8 +87,8 @@ namespace GitCommands.Git
                 }
                 else
                 {
-                    status = files[n].Substring(0, splitIndex);
-                    fileName = files[n].Substring(splitIndex);
+                    status = files[n][..splitIndex];
+                    fileName = files[n][splitIndex..];
                 }
 
                 char x = status[0];
@@ -189,7 +189,7 @@ namespace GitCommands.Git
                 if (entryType == GitItemStatusConverter.UntrackedStatus || entryType == GitItemStatusConverter.IgnoredStatus)
                 {
                     // Untracked and ignored with just the path following, supply dummy data for most info.
-                    string otherFileName = line.Substring(2);
+                    string otherFileName = line[2..];
                     const string NotSumoduleEntry = "N...";
                     UpdateItemStatus(entryType, false, NotSumoduleEntry, otherFileName, null, null);
                     continue;
@@ -223,14 +223,14 @@ namespace GitCommands.Git
                 if (entryType == OrdinaryEntry)
                 {
                     Debug.Assert(line.Length > 113, "Cannot parse line:" + line);
-                    fileName = line.Substring(113);
+                    fileName = line[113..];
                 }
                 else if (entryType == RenamedEntry)
                 {
                     Debug.Assert(n + 1 < files.Length, "Cannot parse renamed:" + line);
 
                     // Find renamed files...
-                    string[] renames = line.Substring(114).Split(Delimiters.Space, 2);
+                    string[] renames = line[114..].Split(Delimiters.Space, 2);
                     renamePercent = renames[0];
                     fileName = renames[1];
                     oldFileName = files[++n];
@@ -238,7 +238,7 @@ namespace GitCommands.Git
                 else if (entryType == UnmergedEntry)
                 {
                     Debug.Assert(line.Length > 161, "Cannot parse unmerged:" + line);
-                    fileName = line.Substring(161);
+                    fileName = line[161..];
                 }
                 else
                 {
@@ -325,7 +325,7 @@ namespace GitCommands.Git
             gitItemStatus.IsTracked = true;
             if (status.Length > 2)
             {
-                gitItemStatus.RenameCopyPercentage = status.Substring(1);
+                gitItemStatus.RenameCopyPercentage = status[1..];
             }
 
             gitItemStatus.Staged = staged;
