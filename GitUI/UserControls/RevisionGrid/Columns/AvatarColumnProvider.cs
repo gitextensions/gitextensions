@@ -13,6 +13,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private readonly RevisionDataGridView _revisionGridView;
         private readonly IAvatarProvider _avatarProvider;
         private readonly IAvatarCacheCleaner _avatarCacheCleaner;
+        private static readonly int _padding = DpiUtil.Scale(2);
+        private static Bitmap _placeholderImage;
 
         public AvatarColumnProvider(RevisionDataGridView revisionGridView, IAvatarProvider avatarProvider, IAvatarCacheCleaner avatarCacheCleaner)
             : base("Avatar")
@@ -46,55 +48,68 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Column.Width = e.CellBounds.Height;
 
-            var padding = DpiUtil.Scale(2);
-            var imageSize = e.CellBounds.Height - padding - padding;
+            int imageSize = e.CellBounds.Height - _padding - _padding;
 
-            Image? image;
-            var imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, revision.Author, imageSize);
+            Task<Image?> imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, revision.Author, imageSize);
 
-            if (imageTask.Status == TaskStatus.RanToCompletion)
+            Rectangle rect = new(
+                e.CellBounds.Left + _padding,
+                e.CellBounds.Top + _padding,
+                imageSize,
+                imageSize);
+
+            if (imageTask.Status != TaskStatus.RanToCompletion)
             {
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-                image = imageTask.Result;
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
-            }
-            else
-            {
-                // Image is not yet loaded -- use a placeholder for now
-                image = Images.User80;
+                // First time, draw at the good size the placeholder image and cache it
+                if (_placeholderImage is null)
+                {
+                    _placeholderImage = new Bitmap(imageSize, imageSize);
+                    using Graphics g = Graphics.FromImage(_placeholderImage);
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.DrawImage(Images.User80, 0, 0, imageSize, imageSize);
+                }
 
-                // One the image has loaded, invalidate for repaint
+                // and draw this placeholder for now
+                e.Graphics.DrawImageUnscaled(_placeholderImage, rect);
+
+                // Once the image has loaded, invalidate only the avatar area for repaint
                 imageTask.ContinueWith(
                     t =>
                     {
                         if (t.Status == TaskStatus.RanToCompletion)
                         {
-                            _revisionGridView.Invalidate();
+                            _revisionGridView.Invalidate(rect);
                         }
+
+                        imageTask.Dispose();
                     }, TaskScheduler.Current)
                     .FileAndForget();
+                return;
             }
 
-            Rectangle rect = new(
-                e.CellBounds.Left + padding,
-                e.CellBounds.Top + padding,
-                imageSize,
-                imageSize);
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            Image? image = imageTask.Result;
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
 
-            var container = e.Graphics.BeginContainer();
-            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            GraphicsContainer container = e.Graphics.BeginContainer();
             e.Graphics.DrawImage(image, rect);
             e.Graphics.EndContainer(container);
 
+            // Draw above (so after) avatar image to round the corners
+            // Algorithm not dependent of dpi scaling (because not working with scaling)
+            // Top left corner
             e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Top, 2, 1);
             e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Top, 1, 2);
 
+            // Top right corner
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 2, rect.Top, 2, 1);
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Top, 1, 2);
 
+            // Bottom left corner
             e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Bottom - 1, 2, 1);
             e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Bottom - 2, 1, 2);
 
+            // Bottom right corner
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 2, rect.Bottom - 1, 2, 1);
             e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Bottom - 2, 1, 2);
         }
