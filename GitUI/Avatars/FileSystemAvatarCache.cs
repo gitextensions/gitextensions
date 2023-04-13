@@ -29,7 +29,14 @@ namespace GitUI.Avatars
             string cacheDir = AppSettings.AvatarImageCachePath;
             string path = Path.Combine(cacheDir, $"{email}.{imageSize}px.png");
 
-            Image image = ReadImage() ?? await _inner.GetAvatarAsync(email, name, imageSize);
+            Image image = ReadImage();
+
+            if (image is not null)
+            {
+                return image;
+            }
+
+            image = await _inner.GetAvatarAsync(email, name, imageSize);
 
             if (image is not null)
             {
