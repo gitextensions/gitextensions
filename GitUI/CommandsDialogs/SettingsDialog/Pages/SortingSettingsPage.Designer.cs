@@ -65,7 +65,6 @@
             tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 10F));
             tlpnlMain.Size = new Size(1511, 669);
-            tlpnlMain.TabIndex = 0;
             // 
             // gbGeneral
             // 
@@ -77,7 +76,6 @@
             gbGeneral.Name = "gbGeneral";
             gbGeneral.Padding = new Padding(8);
             gbGeneral.Size = new Size(1505, 197);
-            gbGeneral.TabIndex = 0;
             gbGeneral.TabStop = false;
             gbGeneral.Text = "Sorting";
             // 
@@ -115,7 +113,6 @@
             tlpnlGeneral.RowStyles.Add(new RowStyle());
             tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tlpnlGeneral.Size = new Size(1489, 165);
-            tlpnlGeneral.TabIndex = 0;
             // 
             // _NO_TRANSLATE_cmbBranchesOrder
             // 
@@ -126,7 +123,6 @@
             _NO_TRANSLATE_cmbBranchesOrder.Location = new Point(120, 61);
             _NO_TRANSLATE_cmbBranchesOrder.Name = "_NO_TRANSLATE_cmbBranchesOrder";
             _NO_TRANSLATE_cmbBranchesOrder.Size = new Size(322, 23);
-            _NO_TRANSLATE_cmbBranchesOrder.TabIndex = 0;
             // 
             // _NO_TRANSLATE_cmbBranchesSortBy
             // 
@@ -137,7 +133,6 @@
             _NO_TRANSLATE_cmbBranchesSortBy.Location = new Point(120, 32);
             _NO_TRANSLATE_cmbBranchesSortBy.Name = "_NO_TRANSLATE_cmbBranchesSortBy";
             _NO_TRANSLATE_cmbBranchesSortBy.Size = new Size(322, 23);
-            _NO_TRANSLATE_cmbBranchesSortBy.TabIndex = 1;
             // 
             // _NO_TRANSLATE_cmbRevisionsSortBy
             // 
@@ -148,7 +143,6 @@
             _NO_TRANSLATE_cmbRevisionsSortBy.Location = new Point(120, 3);
             _NO_TRANSLATE_cmbRevisionsSortBy.Name = "_NO_TRANSLATE_cmbRevisionsSortBy";
             _NO_TRANSLATE_cmbRevisionsSortBy.Size = new Size(322, 23);
-            _NO_TRANSLATE_cmbRevisionsSortBy.TabIndex = 2;
             // 
             // txtPrioBranchNames
             // 
@@ -156,7 +150,6 @@
             txtPrioBranchNames.Location = new Point(120, 90);
             txtPrioBranchNames.Name = "txtPrioBranchNames";
             txtPrioBranchNames.Size = new Size(322, 23);
-            txtPrioBranchNames.TabIndex = 3;
             // 
             // txtPrioRemoteNames
             // 
@@ -164,7 +157,6 @@
             txtPrioRemoteNames.Location = new Point(120, 119);
             txtPrioRemoteNames.Name = "txtPrioRemoteNames";
             txtPrioRemoteNames.Size = new Size(322, 23);
-            txtPrioRemoteNames.TabIndex = 4;
             // 
             // RevisionSortOrderHelp
             // 
@@ -175,7 +167,6 @@
             RevisionSortOrderHelp.Name = "RevisionSortOrderHelp";
             RevisionSortOrderHelp.Size = new Size(16, 16);
             RevisionSortOrderHelp.SizeMode = PictureBoxSizeMode.AutoSize;
-            RevisionSortOrderHelp.TabIndex = 5;
             RevisionSortOrderHelp.TabStop = false;
             // 
             // PrioBranchNamesHelp
@@ -187,7 +178,6 @@
             PrioBranchNamesHelp.Name = "PrioBranchNamesHelp";
             PrioBranchNamesHelp.Size = new Size(16, 16);
             PrioBranchNamesHelp.SizeMode = PictureBoxSizeMode.AutoSize;
-            PrioBranchNamesHelp.TabIndex = 6;
             PrioBranchNamesHelp.TabStop = false;
             // 
             // PrioRemoteNamesHelp
@@ -199,7 +189,6 @@
             PrioRemoteNamesHelp.Name = "PrioRemoteNamesHelp";
             PrioRemoteNamesHelp.Size = new Size(16, 16);
             PrioRemoteNamesHelp.SizeMode = PictureBoxSizeMode.AutoSize;
-            PrioRemoteNamesHelp.TabIndex = 7;
             PrioRemoteNamesHelp.TabStop = false;
             // 
             // lblBranchesOrder
@@ -209,7 +198,6 @@
             lblBranchesOrder.Location = new Point(3, 58);
             lblBranchesOrder.Name = "lblBranchesOrder";
             lblBranchesOrder.Size = new Size(111, 29);
-            lblBranchesOrder.TabIndex = 8;
             lblBranchesOrder.Text = "Order branches";
             lblBranchesOrder.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -220,7 +208,6 @@
             lblBranchesSortBy.Location = new Point(3, 29);
             lblBranchesSortBy.Name = "lblBranchesSortBy";
             lblBranchesSortBy.Size = new Size(111, 29);
-            lblBranchesSortBy.TabIndex = 9;
             lblBranchesSortBy.Text = "Sort branches by";
             lblBranchesSortBy.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -231,7 +218,6 @@
             lblRevisionsSortBy.Location = new Point(3, 0);
             lblRevisionsSortBy.Name = "lblRevisionsSortBy";
             lblRevisionsSortBy.Size = new Size(111, 29);
-            lblRevisionsSortBy.TabIndex = 10;
             lblRevisionsSortBy.Text = "Sort revisions by";
             lblRevisionsSortBy.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -243,7 +229,6 @@
             lblPrioBranchNames.Name = "lblPrioBranchNames";
             lblPrioBranchNames.Padding = new Padding(0, 0, 0, 2);
             lblPrioBranchNames.Size = new Size(111, 29);
-            lblPrioBranchNames.TabIndex = 11;
             lblPrioBranchNames.Text = "Prioritized branches";
             lblPrioBranchNames.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -255,7 +240,6 @@
             lblPrioRemoteNames.Name = "lblPrioRemoteNames";
             lblPrioRemoteNames.Padding = new Padding(0, 0, 0, 2);
             lblPrioRemoteNames.Size = new Size(111, 29);
-            lblPrioRemoteNames.TabIndex = 12;
             lblPrioRemoteNames.Text = "Prioritized remotes";
             lblPrioRemoteNames.TextAlign = ContentAlignment.MiddleLeft;
             // 
