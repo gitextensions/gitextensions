@@ -88,9 +88,7 @@
             tlpnlGeneral.ColumnCount = 5;
             tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
             tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
-            tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
-            tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
-            tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
+            tlpnlGeneral.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tlpnlGeneral.Controls.Add(_NO_TRANSLATE_cmbBranchesOrder, 1, 2);
             tlpnlGeneral.Controls.Add(_NO_TRANSLATE_cmbBranchesSortBy, 1, 1);
             tlpnlGeneral.Controls.Add(_NO_TRANSLATE_cmbRevisionsSortBy, 1, 0);
@@ -146,7 +144,7 @@
             _NO_TRANSLATE_cmbRevisionsSortBy.Dock = DockStyle.Fill;
             _NO_TRANSLATE_cmbRevisionsSortBy.DropDownStyle = ComboBoxStyle.DropDownList;
             _NO_TRANSLATE_cmbRevisionsSortBy.FormattingEnabled = true;
-            _NO_TRANSLATE_cmbRevisionsSortBy.Items.AddRange(new object[] { "Git Default", "Author Date", "Topo (Ancestor)", "Git Default", "Author Date", "Topo (Ancestor)" });
+            _NO_TRANSLATE_cmbRevisionsSortBy.Items.AddRange(new object[] { "Git Default", "Author Date", "Topo (Ancestor)" });
             _NO_TRANSLATE_cmbRevisionsSortBy.Location = new Point(120, 3);
             _NO_TRANSLATE_cmbRevisionsSortBy.Name = "_NO_TRANSLATE_cmbRevisionsSortBy";
             _NO_TRANSLATE_cmbRevisionsSortBy.Size = new Size(322, 23);
