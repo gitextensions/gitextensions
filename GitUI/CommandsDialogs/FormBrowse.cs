@@ -1522,24 +1522,13 @@ namespace GitUI.CommandsDialogs
 
             if (revisions.Count == 2)
             {
-                string? to = null;
-                string? from = null;
+                // Set defaults in rebase form to rebase commits defined by the range *from* first selected commit *to* HEAD
+                // *onto* 2nd selected commit
+                string? from = revisions[1].ObjectId.ToShortString(); // 1st selected commit (excluded from rebase)
+                string? to = RevisionGrid.CurrentBranch.Value; // current branch checked out (HEAD)
+                string? onto = revisions[0].ObjectId.ToString(); // 2nd selected commit
 
-                string currentBranch = RevisionGrid.CurrentBranch.Value;
-                var currentCheckout = RevisionGrid.CurrentCheckout;
-
-                if (revisions[0].ObjectId == currentCheckout)
-                {
-                    from = revisions[1].ObjectId.ToShortString();
-                    to = currentBranch;
-                }
-                else if (revisions[1].ObjectId == currentCheckout)
-                {
-                    from = revisions[0].ObjectId.ToShortString();
-                    to = currentBranch;
-                }
-
-                UICommands.StartRebaseDialog(this, from, to, null, interactive: false, startRebaseImmediately: false);
+                UICommands.StartRebaseDialog(this, from, to, onto, interactive: false, startRebaseImmediately: false);
             }
             else
             {
@@ -2246,12 +2235,13 @@ namespace GitUI.CommandsDialogs
             branchToolStripMenuItem.Enabled =
             deleteBranchToolStripMenuItem.Enabled =
             mergeBranchToolStripMenuItem.Enabled =
-            rebaseToolStripMenuItem.Enabled =
             checkoutBranchToolStripMenuItem.Enabled =
             cherryPickToolStripMenuItem.Enabled =
             checkoutToolStripMenuItem.Enabled =
             bisectToolStripMenuItem.Enabled =
                 singleNormalCommit && !Module.IsBareRepository();
+
+            rebaseToolStripMenuItem.Enabled = selectedRevisions.Count is (1 or 2) && selectedRevisions.All(r => !r.IsArtificial) && !Module.IsBareRepository();
 
             tagToolStripMenuItem.Enabled =
             deleteTagToolStripMenuItem.Enabled =

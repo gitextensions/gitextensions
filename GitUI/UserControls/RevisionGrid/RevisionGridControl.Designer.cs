@@ -259,6 +259,7 @@ namespace GitUI
             this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
             this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
             this.rebaseOnToolStripMenuItem.Text = "&Rebase current branch on";
+            this.rebaseOnToolStripMenuItem.DropDownOpening += RebaseOnToolStripMenuItem_DropDownOpening;
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 

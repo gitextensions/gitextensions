@@ -1039,9 +1039,9 @@ namespace GitUI
                 interactive: true, startRebaseImmediately: true);
         }
 
-        public bool StartRebaseDialogWithAdvOptions(IWin32Window? owner, string onto)
+        public bool StartRebaseDialogWithAdvOptions(IWin32Window? owner, string onto, string from = "")
         {
-            return StartRebaseDialog(owner, from: "", to: null, onto, interactive: false, startRebaseImmediately: false);
+            return StartRebaseDialog(owner, from: from, to: null, onto, interactive: false, startRebaseImmediately: false);
         }
 
         public bool StartRebaseDialog(IWin32Window? owner, string? onto)
