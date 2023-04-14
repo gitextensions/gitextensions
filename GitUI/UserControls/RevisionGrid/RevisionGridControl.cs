@@ -2053,6 +2053,17 @@ namespace GitUI
                 : gitRef.Name;
         }
 
+        private void RebaseOnToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
+            rebaseToolStripMenuItem.Enabled
+                = rebaseInteractivelyToolStripMenuItem.Enabled
+                = _rebaseOnTopOf is not null && selectedRevisions.Count == 1;
+            rebaseWithAdvOptionsToolStripMenuItem.Enabled = _rebaseOnTopOf is not null
+                && (selectedRevisions.Count == 1
+                    || (selectedRevisions.Count == 2 && selectedRevisions.All(r => !r.IsArtificial)));
+        }
+
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
         {
             if (_rebaseOnTopOf is null)
@@ -2137,7 +2148,19 @@ namespace GitUI
         {
             if (_rebaseOnTopOf is not null)
             {
-                UICommands.StartRebaseDialogWithAdvOptions(ParentForm, _rebaseOnTopOf);
+                IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
+                string from;
+                if (selectedRevisions.Count == 2)
+                {
+                    // Rebase onto: define the lower boundary of commits range that will be rebased
+                    from = selectedRevisions[1].ObjectId.ToShortString();
+                }
+                else
+                {
+                    from = string.Empty;
+                }
+
+                UICommands.StartRebaseDialogWithAdvOptions(ParentForm, _rebaseOnTopOf, from);
             }
         }
 

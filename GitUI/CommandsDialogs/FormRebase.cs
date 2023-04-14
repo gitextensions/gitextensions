@@ -88,6 +88,7 @@ namespace GitUI.CommandsDialogs
             chkInteractive.Checked = interactive;
             chkAutosquash.Enabled = interactive;
             _startRebaseImmediately = startRebaseImmediately;
+            chkSpecificRange.Checked = !string.IsNullOrEmpty(from);
         }
 
         protected override void OnShown(EventArgs e)
