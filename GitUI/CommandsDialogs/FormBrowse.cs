@@ -1960,6 +1960,14 @@ namespace GitUI.CommandsDialogs
 
         private void FindFileInSelectedCommit()
         {
+            IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            if (selectedRevisions.Count > 1 || (selectedRevisions.Count == 1 && selectedRevisions[0].IsArtificial))
+            {
+                GitRevision potentialRevision = selectedRevisions[0];
+                ObjectId? targetCommit = potentialRevision.IsArtificial ? RevisionGrid.CurrentCheckout : potentialRevision.ObjectId;
+                RevisionGrid.SetSelectedRevision(targetCommit);
+            }
+
             CommitInfoTabControl.SelectedTab = TreeTabPage;
 
             AppSettings.ShowSplitViewLayout = true;
