@@ -1461,6 +1461,11 @@ namespace GitUI.CommandsDialogs
 
         private static bool RenamedIndexItem(FileStatusItem item) => item.Item.IsRenamed && item.Item.Staged == StagedStatus.Index;
 
+        internal void RegisterGitHostingPluginInBlameControl()
+        {
+            BlameControl.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
+        }
+
         internal TestAccessor GetTestAccessor()
             => new(this);
 
