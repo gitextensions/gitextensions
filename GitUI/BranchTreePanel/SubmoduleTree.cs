@@ -98,9 +98,15 @@ namespace GitUI.BranchTreePanel
 
                 if (_currentNodes is not null)
                 {
-                    var token = cts?.Token ?? e.Token;
-                    await LoadNodeDetailsAsync(_currentNodes, token).ConfigureAwaitRunInline();
-                    LoadNodeToolTips(_currentNodes, token);
+                    CancellationToken token = cts?.Token ?? e.Token;
+                    try
+                    {
+                        await LoadNodeDetailsAsync(_currentNodes, token).ConfigureAwaitRunInline();
+                        LoadNodeToolTips(_currentNodes, token);
+                    }
+                    catch (Exception) when (token.IsCancellationRequested)
+                    {
+                    }
                 }
 
                 Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
