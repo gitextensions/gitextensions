@@ -2042,7 +2042,7 @@ namespace GitCommands
 
         public static bool GitAsyncWhenMinimized
         {
-            get => GetBool("GitAsyncWhenMinimized", true);
+            get => GetBool("GitAsyncWhenMinimized", false);
         }
 
         private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
