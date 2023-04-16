@@ -1409,8 +1409,10 @@ namespace GitUI
                 cm.Items.Add(_NO_TRANSLATE_openInVisualStudioMenuItem);
             }
 
-            _NO_TRANSLATE_openInVisualStudioMenuItem.Visible = _openInVisualStudioSeparator.Visible = VisualStudioIntegration.IsVisualStudioRunning;
-            _NO_TRANSLATE_openInVisualStudioMenuItem.Enabled = File.Exists(SelectedItemAbsolutePath);
+            bool fileExists = File.Exists(SelectedItemAbsolutePath);
+            _NO_TRANSLATE_openInVisualStudioMenuItem.Enabled = fileExists;
+            _NO_TRANSLATE_openInVisualStudioMenuItem.Visible = fileExists;
+            _openInVisualStudioSeparator.Visible = fileExists;
 
             if (!cm.Items.Find(_sortByContextMenu.Name, true).Any())
             {
