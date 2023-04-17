@@ -35,8 +35,8 @@
 
 /* Application colors */
 .OtherTag                { color: #808080; }
-.AuthoredHighlight       { color: #ffffe0; }
-.HighlightAllOccurences  { color: #ffffe0; }
+.AuthoredHighlight       { color: #eaf1ff; }
+.HighlightAllOccurences  { color: #e8e8ff; }
 .Tag                     { color: #00008b; }
 .Graph                   { color: #8b0000; }
 .Branch                  { color: #008000; }
