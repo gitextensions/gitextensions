@@ -102,6 +102,8 @@ namespace GitUI
 
             base.Enter += FileStatusList_Enter;
 
+            VisualStudioIntegration.Init();
+
             return;
 
             ImageList CreateImageList()
@@ -199,14 +201,10 @@ namespace GitUI
                 };
                 item.Click += (_, _) =>
                 {
-                    var itemName = SelectedItemAbsolutePath;
-                    if (itemName != null && !VisualStudioIntegration.TryOpenFile(itemName))
+                    string? itemName = SelectedItemAbsolutePath;
+                    if (itemName is not null)
                     {
-                        MessageBox.Show(
-                            TranslatedStrings.OpenInVisualStudioFailureText,
-                            TranslatedStrings.OpenInVisualStudioFailureCaption,
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning);
+                        VisualStudioIntegration.OpenFile(itemName);
                     }
                 };
                 return item;
@@ -1409,10 +1407,10 @@ namespace GitUI
                 cm.Items.Add(_NO_TRANSLATE_openInVisualStudioMenuItem);
             }
 
-            bool fileExists = File.Exists(SelectedItemAbsolutePath);
-            _NO_TRANSLATE_openInVisualStudioMenuItem.Enabled = fileExists;
-            _NO_TRANSLATE_openInVisualStudioMenuItem.Visible = fileExists;
-            _openInVisualStudioSeparator.Visible = fileExists;
+            bool canOpenInVisualStudio = File.Exists(SelectedItemAbsolutePath) && VisualStudioIntegration.IsVisualStudioInstalled;
+            _NO_TRANSLATE_openInVisualStudioMenuItem.Enabled = canOpenInVisualStudio;
+            _NO_TRANSLATE_openInVisualStudioMenuItem.Visible = canOpenInVisualStudio;
+            _openInVisualStudioSeparator.Visible = canOpenInVisualStudio;
 
             if (!cm.Items.Find(_sortByContextMenu.Name, true).Any())
             {

@@ -1,15 +1,52 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
+using GitCommands;
+using GitExtUtils;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
 {
     internal static class VisualStudioIntegration
     {
-        public static bool TryOpenFile(string filePath)
+        static VisualStudioIntegration()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default;
+                Executable executable = new($@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}\Microsoft Visual Studio\Installer\vswhere.exe");
+                ArgumentBuilder arguments = new()
+                {
+                    "-latest",
+                    "-property productPath"
+                };
+                _devEnvPath = await executable.GetOutputAsync(arguments);
+            }).FileAndForget();
+        }
 
+        public static void Init()
+        {
+            // just create the static instance
+        }
+
+        public static void OpenFile(string filePath)
+        {
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default;
+                if (!await TryOpenFileInRunningInstanceAsync(filePath))
+                {
+                    if (_devEnvPath is not null)
+                    {
+                        using IProcess process = new Executable(_devEnvPath).Start(filePath);
+                    }
+                }
+            }).FileAndForget();
+        }
+
+        public static async Task<bool> TryOpenFileInRunningInstanceAsync(string filePath)
+        {
             if (!File.Exists(filePath))
             {
                 // When opening the context menu, we disable this item if the file does not exist.
@@ -26,6 +63,8 @@ namespace GitUI
                     // Open the file
                     dte.ExecuteCommand("File.OpenFile", filePath);
 
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
                     // Bring the Visual Studio window to the front of the desktop
                     NativeMethods.SetForegroundWindow(dte.MainWindow.HWnd);
 
@@ -36,7 +75,9 @@ namespace GitUI
             return false;
         }
 
-        public static bool IsVisualStudioRunning => GetVisualStudioInstances().Any();
+        public static bool IsVisualStudioInstalled => _devEnvPath is not null;
+
+        private static string? _devEnvPath;
 
         private static IEnumerable<DTE> GetVisualStudioInstances()
         {
