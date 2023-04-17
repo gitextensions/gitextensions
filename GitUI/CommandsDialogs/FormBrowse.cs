@@ -2805,7 +2805,7 @@ namespace GitUI.CommandsDialogs
             int commitInfoPositionNumber = (int)AppSettings.CommitInfoPosition;
             var selectedMenuItem = menuCommitInfoPosition.DropDownItems[commitInfoPositionNumber];
             menuCommitInfoPosition.Image = selectedMenuItem.Image;
-            menuCommitInfoPosition.ToolTipText = selectedMenuItem.Text;
+            menuCommitInfoPosition.ToolTipText = selectedMenuItem.Text?.Replace("&", string.Empty);
         }
 
         private void LayoutRevisionInfo()
