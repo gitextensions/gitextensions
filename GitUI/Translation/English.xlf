@@ -2468,7 +2468,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="commitInfoRightwardMenuItem.Text">
-        <source>Commit info &amp;right of graph</source>
+        <source>Commit info right of graph</source>
         <target />
       </trans-unit>
       <trans-unit id="commitToolStripMenuItem.Text">
@@ -2572,7 +2572,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="fileExplorerToolStripMenuItem.Text">
-        <source>File E&amp;xplorer</source>
+        <source>File Explorer</source>
         <target />
       </trans-unit>
       <trans-unit id="fileToolStripMenuItem.Text">
