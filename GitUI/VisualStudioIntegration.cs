@@ -15,7 +15,14 @@ namespace GitUI
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
-                Executable executable = new($@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}\Microsoft Visual Studio\Installer\vswhere.exe");
+
+                string vswhere = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}\Microsoft Visual Studio\Installer\vswhere.exe";
+                if (!File.Exists(vswhere))
+                {
+                    return;
+                }
+
+                Executable executable = new(vswhere);
                 ArgumentBuilder arguments = new()
                 {
                     "-latest",
