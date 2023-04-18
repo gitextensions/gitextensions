@@ -1,4 +1,4 @@
-namespace GitUIPluginInterfaces.BuildServerIntegration
+﻿namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     public class BuildInfo
     {
@@ -22,5 +22,15 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         public bool ShowInBuildReportTab { get; set; } = true;
         public string? Tooltip { get; set; }
         public string? PullRequestUrl { get; set; }
+
+        public string StatusSymbol => Status switch
+        {
+            BuildStatus.Success => "✔",
+            BuildStatus.Failure => "❌",
+            BuildStatus.InProgress => "▶️",
+            BuildStatus.Stopped => "⏹️",
+            BuildStatus.Unstable => "❗",
+            _ => "❓",
+        };
     }
 }

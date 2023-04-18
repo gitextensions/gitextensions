@@ -19,3 +19,4 @@
   ShowInBuildReportTab: true
   Tooltip: 
   PullRequestUrl: 
+  StatusSymbol: ✔
