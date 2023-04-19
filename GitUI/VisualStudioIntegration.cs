@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
 using EnvDTE;
 using GitCommands;
 using GitExtUtils;
@@ -61,16 +62,16 @@ namespace GitUI
                 return false;
             }
 
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             foreach (DTE dte in GetVisualStudioInstances())
             {
                 ProjectItem projectItem = dte.Solution.FindProjectItem(filePath);
 
-                if (projectItem != null)
+                if (projectItem is not null)
                 {
                     // Open the file
                     dte.ExecuteCommand("File.OpenFile", filePath);
-
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
                     // Bring the Visual Studio window to the front of the desktop
                     NativeMethods.SetForegroundWindow(dte.MainWindow.HWnd);
@@ -88,6 +89,9 @@ namespace GitUI
 
         private static IEnumerable<DTE> GetVisualStudioInstances()
         {
+            // The DTE object must be retrieved from the main thread. Otherwise it denies to get DTE.MainWindow.HWnd sometimes.
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             int retVal = NativeMethods.GetRunningObjectTable(0, out IRunningObjectTable rot);
 
             if (retVal != 0)
@@ -99,17 +103,17 @@ namespace GitUI
 
             const int count = 1;
 
-            var moniker = new IMoniker[count];
+            IMoniker[] moniker = new IMoniker[count];
 
             while (enumMoniker.Next(count, moniker, pceltFetched: IntPtr.Zero) == 0)
             {
-                NativeMethods.CreateBindCtx(0, out IBindCtx bindCtx);
+                NativeMethods.CreateBindCtx(reserved: 0, out IBindCtx bindCtx);
 
                 string? displayName = null;
 
                 try
                 {
-                    moniker[0].GetDisplayName(bindCtx, null, out displayName);
+                    moniker[0].GetDisplayName(bindCtx, pmkToLeft: null, out displayName);
                 }
                 catch (UnauthorizedAccessException)
                 {
