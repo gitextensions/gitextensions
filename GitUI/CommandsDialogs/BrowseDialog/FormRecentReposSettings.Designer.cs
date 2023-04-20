@@ -311,6 +311,7 @@
             this.AllRecentLB.TabIndex = 2;
             this.AllRecentLB.UseCompatibleStateImageBehavior = false;
             this.AllRecentLB.View = System.Windows.Forms.View.Details;
+            this.AllRecentLB.DoubleClick += AllRecentLB_DoubleClick;
             this.AllRecentLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
             // 
             // chdrRepository1
@@ -393,6 +394,7 @@
             this.PinnedLB.TabIndex = 0;
             this.PinnedLB.UseCompatibleStateImageBehavior = false;
             this.PinnedLB.View = System.Windows.Forms.View.Details;
+            this.PinnedLB.DoubleClick += PinnedLB_DoubleClick;
             this.PinnedLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
             // 
             // chdrRepository

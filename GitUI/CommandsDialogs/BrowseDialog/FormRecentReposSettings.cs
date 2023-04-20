@@ -228,10 +228,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 return GetSelectedRepos(item.Owner, out repos);
             }
-            else
-            {
-                sender = null;
-            }
 
             ListView? lb;
             if (sender == PinnedLB)
@@ -259,7 +255,22 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             return repos.Count != 0;
         }
 
+        private void AllRecentLB_DoubleClick(object sender, EventArgs e)
+        {
+            AnchorToMostRecentRepositories(sender);
+        }
+
+        private void PinnedLB_DoubleClick(object sender, EventArgs e)
+        {
+            AnchorToLessRecentRepositories(sender);
+        }
+
         private void anchorToMostToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AnchorToMostRecentRepositories(sender);
+        }
+
+        private void AnchorToMostRecentRepositories(object sender)
         {
             if (GetSelectedRepos(sender, out List<RecentRepoInfo?> repos))
             {
@@ -273,6 +284,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         private void anchorToLessToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AnchorToLessRecentRepositories(sender);
+        }
+
+        private void AnchorToLessRecentRepositories(object sender)
         {
             if (GetSelectedRepos(sender, out List<RecentRepoInfo?> repos))
             {
