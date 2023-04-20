@@ -10253,14 +10253,6 @@ following command.
         <source>Open in &amp;Visual Studio</source>
         <target />
       </trans-unit>
-      <trans-unit id="_openInVisualStudioFailureCaption.Text">
-        <source>Unable to open file</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_openInVisualStudioFailureText.Text">
-        <source>Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_openReport.Text">
         <source>Open report</source>
         <target />
