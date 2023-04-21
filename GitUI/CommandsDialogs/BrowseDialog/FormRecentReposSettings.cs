@@ -145,6 +145,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 item.Font = new Font(item.Font, FontStyle.Bold);
             }
 
+            if (!Directory.Exists(repo.Repo.Path))
+            {
+                item.ForeColor = Color.Red;
+            }
+
             return item;
         }
 
