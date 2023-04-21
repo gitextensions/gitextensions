@@ -73,7 +73,7 @@
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            tlpnlMain.Size = new System.Drawing.Size(1511, 583);
+            tlpnlMain.Size = new System.Drawing.Size(983, 432);
             tlpnlMain.TabIndex = 0;
             // 
             // gbRevisionGraph
@@ -85,7 +85,7 @@
             this.gbRevisionGraph.Location = new System.Drawing.Point(3, 3);
             this.gbRevisionGraph.Name = "gbRevisionGraph";
             this.gbRevisionGraph.Padding = new System.Windows.Forms.Padding(8);
-            this.gbRevisionGraph.Size = new System.Drawing.Size(1505, 182);
+            this.gbRevisionGraph.Size = new System.Drawing.Size(977, 182);
             this.gbRevisionGraph.TabIndex = 0;
             this.gbRevisionGraph.TabStop = false;
             this.gbRevisionGraph.Text = "Revision graph";
@@ -113,7 +113,7 @@
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlRevisionGraph.Size = new System.Drawing.Size(1489, 150);
+            this.tlpnlRevisionGraph.Size = new System.Drawing.Size(961, 150);
             this.tlpnlRevisionGraph.TabIndex = 0;
             // 
             // chkFillRefLabels
@@ -191,7 +191,7 @@
             this.gbTheme.Location = new System.Drawing.Point(3, 191);
             this.gbTheme.Name = "gbTheme";
             this.gbTheme.Padding = new System.Windows.Forms.Padding(8);
-            this.gbTheme.Size = new System.Drawing.Size(1505, 129);
+            this.gbTheme.Size = new System.Drawing.Size(977, 129);
             this.gbTheme.TabIndex = 3;
             this.gbTheme.TabStop = false;
             this.gbTheme.Text = "Theme";
@@ -217,7 +217,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1489, 97);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(961, 97);
             this.tableLayoutPanel1.TabIndex = 9;
             // 
             // chkUseSystemVisualStyle
@@ -312,7 +312,7 @@
             this.Controls.Add(tlpnlMain);
             this.Name = "ColorsSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(1527, 599);
+            this.Size = new System.Drawing.Size(999, 448);
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbRevisionGraph.ResumeLayout(false);
