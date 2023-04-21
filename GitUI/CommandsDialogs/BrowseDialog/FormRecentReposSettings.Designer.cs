@@ -306,6 +306,7 @@
             this.AllRecentLB.LabelWrap = false;
             this.AllRecentLB.Location = new System.Drawing.Point(0, 162);
             this.AllRecentLB.Name = "AllRecentLB";
+            this.AllRecentLB.ShowItemToolTips = true;
             this.AllRecentLB.Size = new System.Drawing.Size(354, 165);
             this.AllRecentLB.TabIndex = 2;
             this.AllRecentLB.UseCompatibleStateImageBehavior = false;
@@ -387,6 +388,7 @@
             this.PinnedLB.LabelWrap = false;
             this.PinnedLB.Location = new System.Drawing.Point(0, 19);
             this.PinnedLB.Name = "PinnedLB";
+            this.PinnedLB.ShowItemToolTips = true;
             this.PinnedLB.Size = new System.Drawing.Size(354, 121);
             this.PinnedLB.TabIndex = 0;
             this.PinnedLB.UseCompatibleStateImageBehavior = false;

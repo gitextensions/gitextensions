@@ -8,7 +8,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormRecentReposSettings : GitExtensionsForm
     {
-        private static Font AnchorFont = new(new ListViewItem().Font, FontStyle.Bold);
         private IList<Repository>? _repositoryHistory;
 
         public FormRecentReposSettings()
@@ -126,25 +125,27 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             foreach (var repo in pinnedRepos)
             {
-                var item = new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption };
-                if (repo.Repo.Anchor == Repository.RepositoryAnchor.Pinned)
-                {
-                    item.Font = AnchorFont;
-                }
-                PinnedLB.Items.Add(item);
+                PinnedLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.Pinned));
             }
 
             foreach (var repo in allRecentRepos)
             {
-                var item = new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption };
-                if (repo.Repo.Anchor == Repository.RepositoryAnchor.AllRecent)
-                {
-                    item.Font = AnchorFont;
-                }
-                AllRecentLB.Items.Add(item);
+                AllRecentLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.AllRecent));
             }
 
             SetComboWidth();
+        }
+
+        private ListViewItem GetRepositoryListViewItem(RecentRepoInfo repo, bool anchored)
+        {
+            ListViewItem item = new(repo.Caption) { Tag = repo, ToolTipText = repo.Repo.Path };
+
+            if (anchored)
+            {
+                item.Font = new Font(item.Font, FontStyle.Bold);
+            }
+
+            return item;
         }
 
         private void SetComboWidth()
