@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
             this.commitInfoRightwardMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonLevelUp = new System.Windows.Forms.ToolStripSplitButton();
-            this._NO_TRANSLATE_WorkingDir = new System.Windows.Forms.ToolStripSplitButton();
+            this._NO_TRANSLATE_WorkingDir = new WorkingDirectoryToolStripSplitButton();
             this.branchSelect = new System.Windows.Forms.ToolStripSplitButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSplitStash = new System.Windows.Forms.ToolStripSplitButton();
@@ -308,17 +308,9 @@ namespace GitUI.CommandsDialogs
             // 
             // _NO_TRANSLATE_WorkingDir
             // 
-            this._NO_TRANSLATE_WorkingDir.Image = global::GitUI.Properties.Resources.RepoOpen;
-            this._NO_TRANSLATE_WorkingDir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this._NO_TRANSLATE_WorkingDir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._NO_TRANSLATE_WorkingDir.Name = "_NO_TRANSLATE_WorkingDir";
             this._NO_TRANSLATE_WorkingDir.Size = new System.Drawing.Size(83, 22);
             this._NO_TRANSLATE_WorkingDir.Text = "WorkingDir";
-            this._NO_TRANSLATE_WorkingDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_WorkingDir.ToolTipText = "Change working directory";
-            this._NO_TRANSLATE_WorkingDir.ButtonClick += new System.EventHandler(this.WorkingDirClick);
-            this._NO_TRANSLATE_WorkingDir.DropDownOpening += new System.EventHandler(this.WorkingDirDropDownOpening);
-            this._NO_TRANSLATE_WorkingDir.MouseUp += new System.Windows.Forms.MouseEventHandler(this._NO_TRANSLATE_WorkingDir_MouseUp);
             // 
             // branchSelect
             // 
@@ -1461,7 +1453,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripEx ToolStripScripts;
 
         private ToolStripButton toolStripButtonCommit;
-        private ToolStripSplitButton _NO_TRANSLATE_WorkingDir;
+        private WorkingDirectoryToolStripSplitButton _NO_TRANSLATE_WorkingDir;
         private ToolStripSeparator toolStripSeparator0;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSplitButton userShell;

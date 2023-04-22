@@ -9,22 +9,21 @@ namespace GitUI.CommandsDialogs.Menus
         private Func<GitUICommands>? _getUICommands;
 
         /// <summary>
-        ///  Gets the current instance of the UI commands.
-        /// </summary>
-        protected GitUICommands UICommands
-            => (_getUICommands ?? throw new InvalidOperationException("The button is not initialized")).Invoke();
-
-        /// <summary>
         ///  Gets the current instance of the git module.
         /// </summary>
-        protected GitModule Module
-            => UICommands.Module;
+        protected GitModule Module => UICommands.Module;
 
         /// <summary>
         ///  Gets the form that is displaying the menu item.
         /// </summary>
         protected static Form? OwnerForm
             => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
+
+        /// <summary>
+        ///  Gets the current instance of the UI commands.
+        /// </summary>
+        protected GitUICommands UICommands
+            => (_getUICommands ?? throw new InvalidOperationException("The button is not initialized")).Invoke();
 
         /// <summary>
         ///  Initializes the menu item.
