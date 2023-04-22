@@ -20,6 +20,7 @@ namespace GitUI.CommandsDialogs.Menus
 
         // NOTE: This is pretty bad, but we want to share the same look and feel of the menu items defined in the Start menu.
         private StartToolStripMenuItem _startToolStripMenuItem;
+        private ToolStripMenuItem _closeToolStripMenuItem;
 
         public WorkingDirectoryToolStripSplitButton()
         {
@@ -59,13 +60,14 @@ namespace GitUI.CommandsDialogs.Menus
         /// </summary>
         /// <param name="getUICommands">The method that returns the current instance of UI commands.</param>
         public void Initialize(Func<GitUICommands> getUICommands, RepositoryHistoryUIService repositoryHistoryUIService,
-                               StartToolStripMenuItem startToolStripMenuItem)
+                               StartToolStripMenuItem startToolStripMenuItem, ToolStripMenuItem closeToolStripMenuItem)
         {
             Translator.Translate(this, AppSettings.CurrentTranslation);
 
             _getUICommands = getUICommands;
             _dont_use_me_repositoryHistoryUIService = repositoryHistoryUIService;
             _startToolStripMenuItem = startToolStripMenuItem;
+            _closeToolStripMenuItem = closeToolStripMenuItem;
         }
 
         protected override void OnButtonClick(EventArgs e)
@@ -96,6 +98,12 @@ namespace GitUI.CommandsDialogs.Menus
             };
             mnuOpenLocalRepository.Click += (s, e) => _startToolStripMenuItem.OpenRepositoryMenuItem.PerformClick();
             DropDownItems.Add(mnuOpenLocalRepository);
+
+            ToolStripMenuItem mnuCloseRepo = new(_closeToolStripMenuItem.Text);
+            mnuCloseRepo.Click += (hs, he) => _closeToolStripMenuItem.PerformClick();
+            DropDownItems.Add(mnuCloseRepo);
+
+            DropDownItems.Add(new ToolStripSeparator());
 
             ToolStripMenuItem mnuRecentReposSettings = new(_configureWorkingDirMenu.Text);
             mnuRecentReposSettings.Click += (hs, he) =>

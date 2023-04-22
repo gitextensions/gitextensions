@@ -258,7 +258,7 @@ namespace GitUI.CommandsDialogs
             fileToolStripMenuItem.Initialize(() => UICommands);
             helpToolStripMenuItem.Initialize(() => UICommands);
             toolsToolStripMenuItem.Initialize(() => UICommands);
-            _NO_TRANSLATE_WorkingDir.Initialize(() => UICommands, _repositoryHistoryUIService, fileToolStripMenuItem);
+            _NO_TRANSLATE_WorkingDir.Initialize(() => UICommands, _repositoryHistoryUIService, fileToolStripMenuItem, closeToolStripMenuItem);
 
             _repositoryHistoryUIService.GitModuleChanged += SetGitModule;
 
