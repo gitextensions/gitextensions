@@ -1,3 +1,5 @@
+#nullable enable
+
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
@@ -14,13 +16,23 @@ namespace GitUI.CommandsDialogs.Menus
     {
         private readonly TranslationString _noWorkingFolderText = new("No working directory");
         private readonly TranslationString _configureWorkingDirMenu = new("&Configure this menu");
+        private readonly TranslationString _repositorySearchPlaceholder = new("Search repositories...");
 
-        private Func<GitUICommands>? _getUICommands;
-        private RepositoryHistoryUIService _dont_use_me_repositoryHistoryUIService;
+        // This will mark controls which are to be excluded from the filtering considerations.
+        private static readonly object _excludeFromFilterMarker = new();
+
+        private Func<GitUICommands>? _use_property_instead_getUICommands;
+        private RepositoryHistoryUIService? _use_property_instead_repositoryHistoryUIService;
+
+        private ToolStripMenuItem _tsmiCategorisedRepos = null!;
+        private ToolStripMenuItem _tsmiOpenLocalRepository = null!;
+        private ToolStripMenuItem _tsmiCloseRepo = null!;
+        private ToolStripMenuItem _tsmiRecentReposSettings = null!;
+        private readonly ToolStripTextBox _txtFilter = new();
 
         // NOTE: This is pretty bad, but we want to share the same look and feel of the menu items defined in the Start menu.
-        private StartToolStripMenuItem _startToolStripMenuItem;
-        private ToolStripMenuItem _closeToolStripMenuItem;
+        private StartToolStripMenuItem _startToolStripMenuItem = null!;
+        private ToolStripMenuItem _closeToolStripMenuItem = null!;
 
         public WorkingDirectoryToolStripSplitButton()
         {
@@ -30,6 +42,59 @@ namespace GitUI.CommandsDialogs.Menus
             ImageAlign = ContentAlignment.MiddleLeft;
             ImageTransparentColor = Color.Magenta;
             TextAlign = ContentAlignment.MiddleLeft;
+
+            // Even 20 char filter is excessive, but we'll set it at this.
+            // Show a compelling use case to increase.
+            _txtFilter.MaxLength = 20;
+
+            _txtFilter.Size = new Size(250, 23);
+            _txtFilter.Tag = _excludeFromFilterMarker;
+
+            TextBox filterTextbox = _txtFilter.TextBox;
+            filterTextbox.PlaceholderText = _repositorySearchPlaceholder.Text;
+            filterTextbox.TextChanged += (s, e) =>
+            {
+                if (_txtFilter.GetCurrentParent() is null)
+                {
+                    // We are clearing the textbox while opening the dropdown
+                    return;
+                }
+
+                // Default items include:
+                //  1. filter
+                //  2. separator
+                //  3. favourite items
+                //      ... recent items
+                //  4. "Open repo..."
+                //  5. "Close repo..."
+                //  6. separator
+                //  7. "Configure menu"
+                const int defaultItemCount = 7;
+                if (DropDown.Items.Count <= defaultItemCount)
+                {
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(filterTextbox.Text))
+                {
+                    foreach (ToolStripItem item in DropDown.Items)
+                    {
+                        item.Visible = true;
+                    }
+
+                    return;
+                }
+
+                foreach (ToolStripItem item in DropDown.Items)
+                {
+                    if (item is ToolStripSeparator || item.Tag == _excludeFromFilterMarker)
+                    {
+                        continue;
+                    }
+
+                    item.Visible = item.Text.Contains(filterTextbox.Text, StringComparison.CurrentCultureIgnoreCase);
+                }
+            };
         }
 
         /// <summary>
@@ -47,13 +112,13 @@ namespace GitUI.CommandsDialogs.Menus
         ///  Gets the current instance of the <see cref="RepositoryHistoryUIService"/>.
         /// </summary>
         protected RepositoryHistoryUIService RepositoryHistoryUIService
-            => _dont_use_me_repositoryHistoryUIService ?? throw new InvalidOperationException("The button is not initialized");
+            => _use_property_instead_repositoryHistoryUIService ?? throw new InvalidOperationException("The button is not initialized");
 
         /// <summary>
         ///  Gets the current instance of the UI commands.
         /// </summary>
         protected GitUICommands UICommands
-            => (_getUICommands ?? throw new InvalidOperationException("The button is not initialized")).Invoke();
+            => (_use_property_instead_getUICommands ?? throw new InvalidOperationException("The button is not initialized")).Invoke();
 
         /// <summary>
         ///  Initializes the menu item.
@@ -64,10 +129,45 @@ namespace GitUI.CommandsDialogs.Menus
         {
             Translator.Translate(this, AppSettings.CurrentTranslation);
 
-            _getUICommands = getUICommands;
-            _dont_use_me_repositoryHistoryUIService = repositoryHistoryUIService;
+            _use_property_instead_getUICommands = getUICommands;
+            _use_property_instead_repositoryHistoryUIService = repositoryHistoryUIService;
             _startToolStripMenuItem = startToolStripMenuItem;
             _closeToolStripMenuItem = closeToolStripMenuItem;
+
+            // Initilize toolstip menu items
+            // ----------------------------------------
+
+            _tsmiCategorisedRepos = new(_startToolStripMenuItem.FavouriteRepositoriesMenuItem.Text, _startToolStripMenuItem.FavouriteRepositoriesMenuItem.Image)
+            {
+                Tag = _excludeFromFilterMarker
+            };
+
+            _tsmiOpenLocalRepository = new(_startToolStripMenuItem.OpenRepositoryMenuItem.Text, _startToolStripMenuItem.OpenRepositoryMenuItem.Image)
+            {
+                ShortcutKeys = _startToolStripMenuItem.OpenRepositoryMenuItem.ShortcutKeys,
+                Tag = _excludeFromFilterMarker
+            };
+            _tsmiOpenLocalRepository.Click += (s, e) => _startToolStripMenuItem.OpenRepositoryMenuItem.PerformClick();
+
+            _tsmiCloseRepo = new(_closeToolStripMenuItem.Text, _closeToolStripMenuItem.Image)
+            {
+                Tag = _excludeFromFilterMarker
+            };
+            _tsmiCloseRepo.Click += (hs, he) => _closeToolStripMenuItem.PerformClick();
+
+            _tsmiRecentReposSettings = new(_configureWorkingDirMenu.Text)
+            {
+                Tag = _excludeFromFilterMarker
+            };
+            _tsmiRecentReposSettings.Click += (hs, he) =>
+            {
+                using (FormRecentReposSettings frm = new())
+                {
+                    frm.ShowDialog(OwnerForm);
+                }
+
+                RefreshContent();
+            };
         }
 
         protected override void OnButtonClick(EventArgs e)
@@ -81,42 +181,24 @@ namespace GitUI.CommandsDialogs.Menus
             DropDown.SuspendLayout();
             DropDownItems.Clear();
 
-            ToolStripMenuItem tsmiCategorisedRepos = new(_startToolStripMenuItem.FavouriteRepositoriesMenuItem.Text, _startToolStripMenuItem.FavouriteRepositoriesMenuItem.Image);
-            RepositoryHistoryUIService.PopulateFavouriteRepositoriesMenu(tsmiCategorisedRepos);
-            if (tsmiCategorisedRepos.DropDownItems.Count > 0)
+            _txtFilter.Text = string.Empty;
+
+            DropDownItems.Add(_txtFilter);
+            DropDownItems.Add(new ToolStripSeparator());
+
+            RepositoryHistoryUIService.PopulateFavouriteRepositoriesMenu(_tsmiCategorisedRepos);
+            if (_tsmiCategorisedRepos.DropDownItems.Count > 0)
             {
-                DropDownItems.Add(tsmiCategorisedRepos);
+                DropDownItems.Add(_tsmiCategorisedRepos);
             }
 
             RepositoryHistoryUIService.PopulateRecentRepositoriesMenu(this);
 
             DropDownItems.Add(new ToolStripSeparator());
-
-            ToolStripMenuItem mnuOpenLocalRepository = new(_startToolStripMenuItem.OpenRepositoryMenuItem.Text, _startToolStripMenuItem.OpenRepositoryMenuItem.Image)
-            {
-                ShortcutKeys = _startToolStripMenuItem.OpenRepositoryMenuItem.ShortcutKeys
-            };
-            mnuOpenLocalRepository.Click += (s, e) => _startToolStripMenuItem.OpenRepositoryMenuItem.PerformClick();
-            DropDownItems.Add(mnuOpenLocalRepository);
-
-            ToolStripMenuItem mnuCloseRepo = new(_closeToolStripMenuItem.Text);
-            mnuCloseRepo.Click += (hs, he) => _closeToolStripMenuItem.PerformClick();
-            DropDownItems.Add(mnuCloseRepo);
-
+            DropDownItems.Add(_tsmiOpenLocalRepository);
+            DropDownItems.Add(_tsmiCloseRepo);
             DropDownItems.Add(new ToolStripSeparator());
-
-            ToolStripMenuItem mnuRecentReposSettings = new(_configureWorkingDirMenu.Text);
-            mnuRecentReposSettings.Click += (hs, he) =>
-            {
-                using (FormRecentReposSettings frm = new())
-                {
-                    frm.ShowDialog(OwnerForm);
-                }
-
-                RefreshContent();
-            };
-
-            DropDownItems.Add(mnuRecentReposSettings);
+            DropDownItems.Add(_tsmiRecentReposSettings);
 
             DropDown.ResumeLayout();
         }
@@ -134,9 +216,16 @@ namespace GitUI.CommandsDialogs.Menus
         /// <summary>Updates the text shown on the combo button itself.</summary>
         public void RefreshContent()
         {
+            if (OwnerForm is null)
+            {
+                // The component is unparented, no point doing anything.
+                return;
+            }
+
             string path = Module.WorkingDir;
 
-            // it appears at times Module.WorkingDir path is an empty string, this caused issues like #4874
+            // It appears at times Module.WorkingDir path is an empty string,
+            // this caused issues like https://github.com/gitextensions/gitextensions/issues/4874.
             if (string.IsNullOrWhiteSpace(path))
             {
                 Text = _noWorkingFolderText.Text;
@@ -154,7 +243,7 @@ namespace GitUI.CommandsDialogs.Menus
 
             splitter.SplitRecentRepos(recentRepositoryHistory, pinnedRepos, pinnedRepos);
 
-            RecentRepoInfo ri = pinnedRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
+            RecentRepoInfo? ri = pinnedRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
 
             Text = PathUtil.GetDisplayPath(ri?.Caption ?? path);
 
