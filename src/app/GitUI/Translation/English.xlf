@@ -2377,7 +2377,7 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
-        <source>&amp;Configure this menu...</source>
+        <source>Co&amp;nfigure this menu...</source>
         <target />
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">

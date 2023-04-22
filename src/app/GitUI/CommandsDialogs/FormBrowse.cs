@@ -183,8 +183,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noReposHostPluginLoaded = new("No repository host plugin loaded.");
         private readonly TranslationString _noReposHostFound = new("Could not find any relevant repository hosts for the currently open repository.");
 
-        private readonly TranslationString _configureWorkingDirMenu = new("&Configure this menu...");
-
         private readonly TranslationString _updateCurrentSubmodule = new("Update current submodule");
 
         private readonly TranslationString _pullFetch = new("Fetch");
@@ -197,7 +195,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _buildReportTabCaption = new("Build Report");
         private readonly TranslationString _consoleTabCaption = new("Console");
 
-        private readonly TranslationString _noWorkingFolderText = new("No working directory");
         private readonly TranslationString _commitButtonText = new("Commit");
 
         private readonly TranslationString _undoLastCommitText = new("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
@@ -216,11 +213,11 @@ namespace GitUI.CommandsDialogs
         private readonly IWindowsJumpListManager _windowsJumpListManager;
         private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
         private readonly IScriptsManager _scriptsManager;
+        private readonly IRepositoryHistoryUIService _repositoryHistoryUIService;
         private List<ToolStripItem>? _currentSubmoduleMenuItems;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
         private BuildReportTabPageExtension? _buildReportTabPageExtension;
         private readonly ShellProvider _shellProvider = new();
-        private readonly RepositoryHistoryUIService _repositoryHistoryUIService = new();
         private ConEmuControl? _terminal;
         private Dashboard? _dashboard;
         private bool _isFileHistoryMode;
@@ -257,9 +254,12 @@ namespace GitUI.CommandsDialogs
             _isFileHistoryMode = args.IsFileHistoryMode;
             InitializeComponent();
 
+            _repositoryHistoryUIService = commands.GetRequiredService<IRepositoryHistoryUIService>();
+
             fileToolStripMenuItem.Initialize(() => UICommands);
             helpToolStripMenuItem.Initialize(() => UICommands);
             toolsToolStripMenuItem.Initialize(() => UICommands);
+            _NO_TRANSLATE_WorkingDir.Initialize(() => UICommands, _repositoryHistoryUIService, fileToolStripMenuItem);
 
             _repositoryHistoryUIService.GitModuleChanged += SetGitModule;
 
@@ -439,7 +439,10 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                _repositoryHistoryUIService.GitModuleChanged -= SetGitModule;
+                if (_repositoryHistoryUIService is not null)
+                {
+                    _repositoryHistoryUIService.GitModuleChanged -= SetGitModule;
+                }
 
                 _formBrowseMenus?.Dispose();
                 components?.Dispose();
@@ -991,7 +994,7 @@ namespace GitUI.CommandsDialogs
 
                 toolsToolStripMenuItem.RefreshState(bareRepository);
 
-                RefreshWorkingDirComboText();
+                _NO_TRANSLATE_WorkingDir.RefreshContent();
 
                 OnActivate();
 
@@ -1167,102 +1170,6 @@ namespace GitUI.CommandsDialogs
 
             return base.GetScriptOptionsProvider();
         }
-
-        #region Working directory combo box
-
-        /// <summary>Updates the text shown on the combo button itself.</summary>
-        private void RefreshWorkingDirComboText()
-        {
-            string path = Module.WorkingDir;
-
-            // it appears at times Module.WorkingDir path is an empty string, this caused issues like #4874
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                _NO_TRANSLATE_WorkingDir.Text = _noWorkingFolderText.Text;
-                return;
-            }
-
-            IList<Repository> recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
-                () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
-
-            List<RecentRepoInfo> topRepos = new();
-            RecentRepoSplitter splitter = new()
-            {
-                MeasureFont = _NO_TRANSLATE_WorkingDir.Font,
-            };
-
-            splitter.SplitRecentRepos(recentRepositoryHistory, topRepos, topRepos);
-
-            RecentRepoInfo ri = topRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
-
-            _NO_TRANSLATE_WorkingDir.Text = PathUtil.GetDisplayPath(ri?.Caption ?? path);
-
-            if (AppSettings.RecentReposComboMinWidth > 0)
-            {
-                _NO_TRANSLATE_WorkingDir.AutoSize = false;
-                int captionWidth = TextRenderer.MeasureText(_NO_TRANSLATE_WorkingDir.Text, _NO_TRANSLATE_WorkingDir.Font).Width;
-                captionWidth = captionWidth + _NO_TRANSLATE_WorkingDir.DropDownButtonWidth + 5;
-                _NO_TRANSLATE_WorkingDir.Width = Math.Max(AppSettings.RecentReposComboMinWidth, captionWidth);
-            }
-            else
-            {
-                _NO_TRANSLATE_WorkingDir.AutoSize = true;
-            }
-        }
-
-        private void WorkingDirDropDownOpening(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_WorkingDir.DropDown.SuspendLayout();
-            _NO_TRANSLATE_WorkingDir.DropDownItems.Clear();
-
-            ToolStripMenuItem tsmiCategorisedRepos = new(fileToolStripMenuItem.FavouriteRepositoriesMenuItem.Text, fileToolStripMenuItem.FavouriteRepositoriesMenuItem.Image);
-            _repositoryHistoryUIService.PopulateFavouriteRepositoriesMenu(tsmiCategorisedRepos);
-            if (tsmiCategorisedRepos.DropDownItems.Count > 0)
-            {
-                _NO_TRANSLATE_WorkingDir.DropDownItems.Add(tsmiCategorisedRepos);
-            }
-
-            _repositoryHistoryUIService.PopulateRecentRepositoriesMenu(_NO_TRANSLATE_WorkingDir);
-
-            _NO_TRANSLATE_WorkingDir.DropDownItems.Add(new ToolStripSeparator());
-
-            ToolStripMenuItem mnuOpenLocalRepository = new(fileToolStripMenuItem.OpenRepositoryMenuItem.Text, fileToolStripMenuItem.OpenRepositoryMenuItem.Image)
-            {
-                ShortcutKeyDisplayString = fileToolStripMenuItem.OpenRepositoryMenuItem.ShortcutKeyDisplayString
-            };
-            mnuOpenLocalRepository.Click += (s, e) => fileToolStripMenuItem.OpenRepositoryMenuItem.PerformClick();
-            _NO_TRANSLATE_WorkingDir.DropDownItems.Add(mnuOpenLocalRepository);
-
-            ToolStripMenuItem mnuRecentReposSettings = new(_configureWorkingDirMenu.Text);
-            mnuRecentReposSettings.Click += (hs, he) =>
-            {
-                using (FormRecentReposSettings frm = new())
-                {
-                    frm.ShowDialog(this);
-                }
-
-                RefreshWorkingDirComboText();
-            };
-
-            _NO_TRANSLATE_WorkingDir.DropDownItems.Add(mnuRecentReposSettings);
-
-            _NO_TRANSLATE_WorkingDir.DropDown.ResumeLayout();
-        }
-
-        private void WorkingDirClick(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_WorkingDir.ShowDropDown();
-        }
-
-        private void _NO_TRANSLATE_WorkingDir_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                fileToolStripMenuItem.OpenRepositoryMenuItem.PerformClick();
-            }
-        }
-
-        #endregion
 
         private void FillFileTree(GitRevision revision)
         {
