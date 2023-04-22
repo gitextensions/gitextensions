@@ -1,6 +1,7 @@
 ﻿using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.Hotkey;
 
@@ -8,7 +9,7 @@ namespace GitUI.CommandsDialogs.Menus
 {
     internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
     {
-        private readonly RepositoryHistoryUIService _repositoryHistoryUIService = new();
+        private IRepositoryHistoryUIService? _repositoryHistoryUIService;
 
         public event EventHandler<GitModuleEventArgs> GitModuleChanged;
         public event EventHandler RecentRepositoriesCleared;
@@ -16,8 +17,6 @@ namespace GitUI.CommandsDialogs.Menus
         public StartToolStripMenuItem()
         {
             InitializeComponent();
-
-            _repositoryHistoryUIService.GitModuleChanged += repositoryHistoryUIService_GitModuleChanged;
         }
 
         internal ToolStripMenuItem OpenRepositoryMenuItem => openToolStripMenuItem;
@@ -33,10 +32,21 @@ namespace GitUI.CommandsDialogs.Menus
             {
                 components.Dispose();
 
-                _repositoryHistoryUIService.GitModuleChanged -= repositoryHistoryUIService_GitModuleChanged;
+                if (_repositoryHistoryUIService is not null)
+                {
+                    _repositoryHistoryUIService.GitModuleChanged -= repositoryHistoryUIService_GitModuleChanged;
+                }
             }
 
             base.Dispose(disposing);
+        }
+
+        public override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            _repositoryHistoryUIService = UICommands.GetRequiredService<IRepositoryHistoryUIService>();
+            _repositoryHistoryUIService.GitModuleChanged += repositoryHistoryUIService_GitModuleChanged;
         }
 
         public override void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
