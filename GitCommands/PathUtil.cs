@@ -11,6 +11,7 @@ namespace GitCommands
 
         // Windows build 21354 supports wsl.localhost too, not supported for WSL Git
         private const string WslPrefix = @"\\wsl$\";
+        private const string WslLocalhostPrefix = @"\\wsl.localhost\";
 
         public static readonly char PosixDirectorySeparatorChar = '/';
         public static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
@@ -146,6 +147,23 @@ namespace GitCommands
             }
         }
 
+        /// <summary>
+        ///  Replaces <c>\\wsl.localhost\</c> with <c>\\wsl$\</c>, if found. Else returns the <paramref name="path"/> untouched.
+        /// </summary>
+        /// <param name="path">The path to normalize.</param>
+        /// <returns>The WSL normalized path.</returns>
+        public static string NormalizeWslPath(this string path)
+        {
+            // NOTE: path is expected to be already normalized!
+
+            if (!IsWslLocalhostPrefixPath(path))
+            {
+                return path;
+            }
+
+            return path.Replace(WslLocalhostPrefix, WslPrefix, StringComparison.OrdinalIgnoreCase);
+        }
+
         public static string Resolve(string path, string relativePath = "")
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -198,23 +216,26 @@ namespace GitCommands
         /// Check if the path is any known path for WSL that may require special handling
         /// </summary>
         /// <param name="path">Path to check</param>
-        /// <returns>true if a path is a known WSL path</returns>
-        public static bool IsWslPath(string path)
+        /// <returns><see langword="true"/> if a path is a known WSL path; otherwise, <see langword="false"/>.</returns>
+        public static bool IsWslPath(string? path)
         {
             return !string.IsNullOrWhiteSpace(path)
-                && (IsWslPrefixPath(path)
-                    || path.ToLower().StartsWith(@"\\wsl.localhost\"));
+                && (IsWslPrefixPath(path) || IsWslLocalhostPrefixPath(path));
         }
+
+        /// <summary>
+        ///  Check if the path starts with '\\wsl.localhost\'.
+        /// </summary>
+        /// <param name="path">Path to check</param>
+        /// <returns><see langword="true"/> if the path starts with '\\wsl.localhost\'; otherwise, <see langword="false"/>.</returns>
+        private static bool IsWslLocalhostPrefixPath(string path) => path.StartsWith(WslLocalhostPrefix, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Check if the path is has handled specially for WSL
         /// </summary>
         /// <param name="path">Path to check</param>
-        /// <returns>true if the path is a WSL path with internal handling</returns>
-        private static bool IsWslPrefixPath(string path)
-        {
-            return path.ToLower().StartsWith(WslPrefix);
-        }
+        /// <returns><see langword="true"/> if the path is a WSL path with internal handling; otherwise, <see langword="false"/>.</returns>
+        private static bool IsWslPrefixPath(string path) => path.StartsWith(WslPrefix, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Get the name of the distribution (like "Ubuntu-20.04") for WSL2 paths.
@@ -536,6 +557,7 @@ namespace GitCommands
 
         internal readonly struct TestAccessor
         {
+            public static bool IsWslLocalhostPrefixPath(string path) => PathUtil.IsWslLocalhostPrefixPath(path);
             public static bool IsWslPrefixPath(string path) => PathUtil.IsWslPrefixPath(path);
         }
     }
