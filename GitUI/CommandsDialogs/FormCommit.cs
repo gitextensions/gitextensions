@@ -962,6 +962,8 @@ namespace GitUI.CommandsDialogs
             var currentBranch = Module.GetRefs(RefsFilter.Heads).FirstOrDefault(r => r.LocalName == currentBranchName);
             if (currentBranch is null)
             {
+                await this.SwitchToMainThreadAsync();
+
                 branchNameLabel.Text = currentBranchName;
                 remoteNameLabel.Text = string.Empty;
                 return;
