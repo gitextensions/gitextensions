@@ -34,6 +34,12 @@ namespace GitExtensions
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
 
+            if (ThisAssembly.Git.IsDirty)
+            {
+                // In non official builds force to fail for cross-thread operations so we can fix those.
+                Control.CheckForIllegalCrossThreadCalls = true;
+            }
+
             // If an error happens before we had a chance to init the environment information
             // the call to GetInformation() from BugReporter.ShowNBug() will fail.
             // There's no perf hit calling Initialise() multiple times.
