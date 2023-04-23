@@ -34,11 +34,18 @@ namespace GitExtensions
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
 
+            bool checkForIllegalCrossThreadCalls = false;
+#if !DEBUG
             if (ThisAssembly.Git.IsDirty)
+#endif
             {
+#pragma warning disable CS0162 // Unreachable code detected: if there are no pending changes the compiler thinks so...
                 // In non official builds force to fail for cross-thread operations so we can fix those.
-                Control.CheckForIllegalCrossThreadCalls = true;
+                checkForIllegalCrossThreadCalls = true;
+#pragma warning restore CS0162 // Unreachable code detected
             }
+
+            Control.CheckForIllegalCrossThreadCalls = checkForIllegalCrossThreadCalls;
 
             // If an error happens before we had a chance to init the environment information
             // the call to GetInformation() from BugReporter.ShowNBug() will fail.
