@@ -461,6 +461,10 @@ namespace GitUI.UserControls.RevisionGrid
                 CreateBoolViewSettingItem(AppSettings.StraightenGraphDiagonals, GetLabel, reloadRevisions: true),
                 CreateBoolViewSettingItem(AppSettings.DebugGraphCurves, GetLabel),
                 CreateBoolViewSettingItem(AppSettings.DebugGraphPoints, GetLabel),
+                CreateBoolViewSettingItem(AppSettings.DrawGraphLanesEntire, GetLabel),
+                CreateBoolViewSettingItem(AppSettings.DrawGraphLanesDifferentStart, GetLabel),
+                CreateBoolViewSettingItem(AppSettings.DrawGraphLanesDifferentEnd, GetLabel),
+                CreateBoolViewSettingItem(AppSettings.DrawGraphLanesPrimary, GetLabel),
                 MenuCommand.CreateSeparator(),
 
                 MenuCommand.CreateGroupHeader("Settings"),

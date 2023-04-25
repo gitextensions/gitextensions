@@ -153,9 +153,17 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
             SegmentLanes lanes = new() { StartLane = _noLane, EndLane = _noLane, IsTheRevisionLane = true };
 
             Lane currentLane = currentRow.GetLaneForSegment(revisionGraphSegment);
+            BoolViewSetting drawSetting = currentLane.Sharing switch
+            {
+                LaneSharing.ExclusiveOrPrimary => AppSettings.DrawGraphLanesPrimary,
+                LaneSharing.DifferentStart => AppSettings.DrawGraphLanesDifferentStart,
+                LaneSharing.DifferentEnd => AppSettings.DrawGraphLanesDifferentEnd,
+                LaneSharing.Entire => AppSettings.DrawGraphLanesEntire,
+                _ => throw new InvalidOperationException(currentLane.Sharing.ToString())
+            };
 
             // Avoid drawing the same curve twice (caused aliasing artefacts, particularly in different colors)
-            if (currentLane.Sharing == LaneSharing.Entire)
+            if (!drawSetting.Value)
             {
                 lanes.DrawFromStart = false;
                 lanes.DrawToEnd = false;
@@ -324,7 +332,7 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
             if (currentLaneFlags.DrawFromStart)
             {
                 SegmentLaneFlags previous = previousLaneFlags.Value;
-                Debug.Assert(previous.DrawToEnd || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(previous.DrawToEnd));
+                ////Debug.Assert(previous.DrawToEnd || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(previous.DrawToEnd));
                 int startX = p.Start.X + previous.HorizontalOffset;
                 if (previous.DrawCenterToEndPerpendicularly)
                 {
@@ -380,7 +388,7 @@ namespace GitUI.UserControls.RevisionGrid.GraphDrawer
             if (currentLaneFlags.DrawToEnd)
             {
                 SegmentLaneFlags next = nextLaneFlags.Value;
-                Debug.Assert(next.DrawFromStart || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(next.DrawFromStart));
+                ////Debug.Assert(next.DrawFromStart || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(next.DrawFromStart));
                 int endX = p.End.X + next.HorizontalOffset;
                 if (next.DrawCenterToStartPerpendicularly)
                 {

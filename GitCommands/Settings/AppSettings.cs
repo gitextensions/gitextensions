@@ -1521,6 +1521,14 @@ namespace GitCommands
 
         public static readonly BoolViewSetting DebugGraphPoints = new(nameof(DebugGraphPoints), false);
 
+        public static readonly BoolViewSetting DrawGraphLanesDifferentEnd = new(nameof(DrawGraphLanesDifferentEnd), true);
+
+        public static readonly BoolViewSetting DrawGraphLanesDifferentStart = new(nameof(DrawGraphLanesDifferentStart), true);
+
+        public static readonly BoolViewSetting DrawGraphLanesEntire = new(nameof(DrawGraphLanesEntire), false);
+
+        public static readonly BoolViewSetting DrawGraphLanesPrimary = new(nameof(DrawGraphLanesPrimary), true);
+
         public static readonly BoolViewSetting DrawGraphWithDiagonals = new(nameof(DrawGraphWithDiagonals), true);
 
         public static readonly BoolViewSetting MergeGraphLanesHavingCommonParent = new(nameof(MergeGraphLanesHavingCommonParent), true);
