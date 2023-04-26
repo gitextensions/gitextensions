@@ -284,7 +284,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public RevisionGraphSegment FirstParentOrSelf(RevisionGraphSegment segment)
         {
             if (segment.Parent != Revision
-                || GetLaneForSegment(segment).Sharing != LaneSharing.ExclusiveOrPrimary)
+                || !AppSettings.StraightenOverCommits.Value
+                || (!AppSettings.StraightenOverSecondaryCommits.Value && GetLaneForSegment(segment).Sharing != LaneSharing.ExclusiveOrPrimary))
             {
                 return segment;
             }
