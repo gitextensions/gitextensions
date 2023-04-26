@@ -310,7 +310,10 @@ namespace GitCommands
             if (repositoryUrl is not null)
             {
                 const string standardRepositorySuffix = ".git";
-                string path = repositoryUrl.TrimEnd('\\', '/');
+                string path = (Uri.IsWellFormedUriString(repositoryUrl, UriKind.Absolute) || repositoryUrl.StartsWith("git@", StringComparison.OrdinalIgnoreCase)
+                    ? System.Net.WebUtility.UrlDecode(repositoryUrl)
+                    : repositoryUrl)
+                    .TrimEnd('\\', '/');
 
                 if (path.EndsWith(standardRepositorySuffix))
                 {

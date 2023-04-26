@@ -161,17 +161,23 @@ namespace GitCommandsTests.Helpers
             Assert.AreEqual(PathUtil.GetRepositoryName("ssh://john-abraham.doe@mygitserver/git/MyAwesomeRepo.git"), "MyAwesomeRepo");
             Assert.AreEqual(PathUtil.GetRepositoryName("git@anotherserver.mysubnet.com:project/somerepo.git"), "somerepo");
             Assert.AreEqual(PathUtil.GetRepositoryName("http://anotherserver.mysubnet.com/project/somerepo.git"), "somerepo");
+            Assert.AreEqual(PathUtil.GetRepositoryName("http://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            Assert.AreEqual(PathUtil.GetRepositoryName("ssh://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            Assert.AreEqual(PathUtil.GetRepositoryName("git://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            Assert.AreEqual(PathUtil.GetRepositoryName("git@anotherserver.mysubnet.com:project/Hello+G%C3%BCnter.git"), "Hello Günter");
 
             Assert.AreEqual(PathUtil.GetRepositoryName(""), "");
             Assert.AreEqual(PathUtil.GetRepositoryName(null), "");
             if (Path.DirectorySeparatorChar == '\\')
             {
                 Assert.AreEqual(PathUtil.GetRepositoryName(@"C:\dev\my_repo"), "my_repo");
+                Assert.AreEqual(PathUtil.GetRepositoryName(@"C:\dev\Hello+G%C3%BCnter"), "Hello+G%C3%BCnter");
                 Assert.AreEqual(PathUtil.GetRepositoryName(@"\\networkshare\folder1\folder2\gitextensions"), "gitextensions");
             }
             else
             {
                 Assert.AreEqual(PathUtil.GetRepositoryName(@"/dev/my_repo"), "my_repo");
+                Assert.AreEqual(PathUtil.GetRepositoryName(@"/dev/Hello+G%C3%BCnter"), "Hello+G%C3%BCnter");
                 Assert.AreEqual(PathUtil.GetRepositoryName(@"//networkshare/folder1/folder2/gitextensions"), "gitextensions");
             }
         }
