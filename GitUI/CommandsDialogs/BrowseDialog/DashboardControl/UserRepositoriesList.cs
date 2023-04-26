@@ -315,10 +315,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             void BindRepositories(IReadOnlyList<RecentRepoInfo> repos, bool isFavourite)
             {
-                var repoValidityArray = repos.AsParallel().Select(r => !_controller.IsValidGitWorkingDir(r.Repo.Path)).ToArray();
-
-                _hasInvalidRepos = repoValidityArray.Any();
-
                 for (var index = 0; index < repos.Count; index++)
                 {
                     RecentRepoInfo recent = repos[index];
@@ -327,7 +323,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         ForeColor = ForeColor,
                         Font = AppSettings.Font,
                         Group = isFavourite ? GetTileGroup(recent.Repo) : _lvgRecentRepositories,
-                        ImageIndex = repoValidityArray[index] ? 1 : 0,
+                        ImageIndex = 0,
                         UseItemStyleForSubItems = false,
                         Tag = recent.Repo,
                         ToolTipText = recent.Repo.Path
@@ -337,10 +333,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await TaskScheduler.Default;
-                        string branchName = _controller.GetCurrentBranchName(recent.Repo.Path);
+                        bool isValidGitDir = _controller.IsValidGitWorkingDir(recent.Repo.Path);
+                        string branchName = isValidGitDir ? _controller.GetCurrentBranchName(recent.Repo.Path) : "";
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                        item.SubItems.Add(new ListViewSubItem(item, branchName, BranchNameColor, BackColor, _secondaryFont));
-                        //// NB: we can add a 3rd row as well: { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
+                        if (isValidGitDir)
+                        {
+                            item.SubItems.Add(new ListViewSubItem(item, branchName, BranchNameColor, BackColor, _secondaryFont));
+                            //// NB: we can add a 3rd row as well: { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
+                        }
+                        else
+                        {
+                            item.ImageIndex = 1;
+                            _hasInvalidRepos = true;
+                        }
                     }).FileAndForget();
                 }
             }
@@ -594,17 +599,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             PointF pointPath = new(textPadding.X + textOffset, textPadding.Y);
             var pathBounds = DrawText(e.Graphics, e.Item.Text, AppSettings.Font, _foreColorBrush, textWidth, pointPath, spacing4 * 2);
 
-            // render branch
-            PointF pointBranch = new(pointPath.X, pointPath.Y + pathBounds.Height + spacing1);
-            var branchBounds = DrawText(e.Graphics, e.Item.SubItems[1].Text, _secondaryFont, _branchNameColorBrush, textWidth, pointBranch, spacing4 * 2);
-
-            // render category
-            if (e.Item.SubItems.Count > 2 && !string.IsNullOrWhiteSpace(e.Item.SubItems[2].Text))
+            if (e.Item.SubItems.Count > 1)
             {
-                var pointCategory = string.IsNullOrWhiteSpace(e.Item.SubItems[1].Text) ?
-                                    pointBranch :
-                                    new PointF(pointBranch.X, pointBranch.Y + branchBounds.Height + spacing1);
-                DrawText(e.Graphics, e.Item.SubItems[2].Text, _secondaryFont, SystemBrushes.GrayText, textWidth, pointCategory, spacing4 * 2);
+                // render branch
+                PointF pointBranch = new(pointPath.X, pointPath.Y + pathBounds.Height + spacing1);
+                RectangleF branchBounds = DrawText(e.Graphics, e.Item.SubItems[1].Text, _secondaryFont, _branchNameColorBrush, textWidth, pointBranch, spacing4 * 2);
+
+                // render category
+                if (e.Item.SubItems.Count > 2 && !string.IsNullOrWhiteSpace(e.Item.SubItems[2].Text))
+                {
+                    PointF pointCategory = string.IsNullOrWhiteSpace(e.Item.SubItems[1].Text)
+                                        ? pointBranch
+                                        : new PointF(pointBranch.X, pointBranch.Y + branchBounds.Height + spacing1);
+                    DrawText(e.Graphics, e.Item.SubItems[2].Text, _secondaryFont, SystemBrushes.GrayText, textWidth, pointCategory, spacing4 * 2);
+                }
             }
 
             RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
