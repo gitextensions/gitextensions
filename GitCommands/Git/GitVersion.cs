@@ -15,7 +15,7 @@ namespace GitCommands
         /// The recommended Git version (normally latest official before a GE release).
         /// This and later versions are green in the settings check.
         /// </summary>
-        public static readonly GitVersion LastRecommendedVersion = new("2.40.0");
+        public static readonly GitVersion LastRecommendedVersion = new("2.40.1");
 
         /// <summary>
         /// The oldest version with reasonable reliable support in GE.
