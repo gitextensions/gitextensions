@@ -34,6 +34,8 @@ namespace GitUI.CommandsDialogs.Menus
         private StartToolStripMenuItem _startToolStripMenuItem = null!;
         private ToolStripMenuItem _closeToolStripMenuItem = null!;
 
+        private bool _moveMouseWhenFiltering;
+
         public WorkingDirectoryToolStripSplitButton()
         {
             Name = nameof(WorkingDirectoryToolStripSplitButton);
@@ -54,6 +56,11 @@ namespace GitUI.CommandsDialogs.Menus
             filterTextbox.PlaceholderText = _repositorySearchPlaceholder.Text;
             filterTextbox.TextChanged += (s, e) =>
             {
+                if (Owner is not { } owner)
+                {
+                    return;
+                }
+
                 if (_txtFilter.GetCurrentParent() is null)
                 {
                     // We are clearing the textbox while opening the dropdown
@@ -75,24 +82,39 @@ namespace GitUI.CommandsDialogs.Menus
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(filterTextbox.Text))
+                try
                 {
+                    if (_moveMouseWhenFiltering)
+                    {
+                        Cursor.Position = owner.RectangleToScreen(DropDownButtonBounds).Location;
+                        _moveMouseWhenFiltering = false;
+                    }
+
+                    DropDown.SuspendLayout();
+
+                    if (string.IsNullOrWhiteSpace(filterTextbox.Text))
+                    {
+                        foreach (ToolStripItem item in DropDown.Items)
+                        {
+                            item.Visible = true;
+                        }
+
+                        return;
+                    }
+
                     foreach (ToolStripItem item in DropDown.Items)
                     {
-                        item.Visible = true;
-                    }
+                        if (item is ToolStripSeparator || item.Tag == _excludeFromFilterMarker)
+                        {
+                            continue;
+                        }
 
-                    return;
+                        item.Visible = item.Text?.Contains(filterTextbox.Text, StringComparison.CurrentCultureIgnoreCase) ?? false;
+                    }
                 }
-
-                foreach (ToolStripItem item in DropDown.Items)
+                finally
                 {
-                    if (item is ToolStripSeparator || item.Tag == _excludeFromFilterMarker)
-                    {
-                        continue;
-                    }
-
-                    item.Visible = item.Text.Contains(filterTextbox.Text, StringComparison.CurrentCultureIgnoreCase);
+                    DropDown.ResumeLayout();
                 }
             };
         }
@@ -174,6 +196,23 @@ namespace GitUI.CommandsDialogs.Menus
         {
             base.OnButtonClick(e);
             ShowDropDown();
+        }
+
+        protected override void OnDropDownOpened(EventArgs e)
+        {
+            base.OnDropDownOpened(e);
+
+            if (Owner is not { } owner)
+            {
+                return;
+            }
+
+            // HACK: if there are too many items in the dropdown, and the DropDown is shown next to the button (and not beneath it!)
+            //       then set the flag that we need to move the mouse when the user starts filtering the dropdown, so that
+            //       when the DropDown is repositioned by the Windows Forms we didn't end up with the mouse hovering over other
+            //       toolbar items as that would cause the DropDown to be closed immediately.
+            Rectangle rect = owner.RectangleToScreen(DropDownButtonBounds);
+            _moveMouseWhenFiltering = (rect.Top + rect.Height) > DropDown.Top;
         }
 
         protected override void OnDropDownShow(EventArgs e)
