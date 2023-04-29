@@ -130,7 +130,14 @@ namespace GitCommands
 
                 SettingsChanged();
 
-                _byNameMap.AddOrUpdate(name, value, (key, oldValue) => value);
+                if (string.IsNullOrEmpty(value))
+                {
+                    _byNameMap.TryRemove(name, out _);
+                }
+                else
+                {
+                    _byNameMap.AddOrUpdate(name, value, (key, oldValue) => value);
+                }
             });
         }
 
