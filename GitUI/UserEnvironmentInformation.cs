@@ -44,6 +44,7 @@ namespace GitUI
             sb.AppendLine($"- {Environment.OSVersion}");
             sb.AppendLine($"- {RuntimeInformation.FrameworkDescription}");
             sb.AppendLine($"- DPI {DpiUtil.DpiX}dpi ({(DpiUtil.ScaleX == 1 ? "no" : $"{Math.Round(DpiUtil.ScaleX * 100)}%")} scaling)");
+            sb.AppendLine($"- Portable: {AppSettings.IsPortable()}");
 
             return sb.ToString();
         }
