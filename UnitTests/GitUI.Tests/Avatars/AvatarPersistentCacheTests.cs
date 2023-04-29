@@ -31,7 +31,7 @@ namespace GitUITests.Avatars
             _fileInfo = Substitute.For<FileInfoBase>();
             _fileInfo.Exists.Returns(true);
             _fileInfoFactory = Substitute.For<IFileInfoFactory>();
-            _fileInfoFactory.FromFileName(Arg.Any<string>()).Returns(_fileInfo);
+            _fileInfoFactory.New(Arg.Any<string>()).Returns(_fileInfo);
             _fileSystem.FileInfo.Returns(_fileInfoFactory);
 
             AppSettings.AvatarProvider = AvatarProvider.Default;
@@ -71,7 +71,7 @@ namespace GitUITests.Avatars
         {
             _fileInfo.Exists.Returns(true);
             _fileInfo.LastWriteTime.Returns(new DateTime(2010, 1, 1));
-            _fileSystem.File.OpenWrite(Arg.Any<string>()).Returns(_ => new MemoryStream());
+            _fileSystem.File.OpenWrite(Arg.Any<string>()).Returns(_ => (Stream)new MemoryStream());
             _fileSystem.File.Delete(Arg.Any<string>());
 
             await MissAsync(_email1, _name1);

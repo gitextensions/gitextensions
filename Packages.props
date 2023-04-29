@@ -25,7 +25,7 @@
     <PackageReference Update="SmartFormat" Version="3.0.0" />
     <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.321" />
     <PackageReference Update="System.Collections.Immutable" Version="6.0.0" /> <!-- Required by GitExtensions.Plugins.AutoCompileSubmodules -->
-    <PackageReference Update="System.IO.Abstractions" Version="16.1.10" />
+    <PackageReference Update="System.IO.Abstractions" Version="19.2.18" />
     <PackageReference Update="System.Reactive" Version="5.0.0" />
     <PackageReference Update="System.Reactive.Linq" Version="5.0.0" />
     <PackageReference Update="System.Reactive.Interfaces" Version="5.0.0" />
@@ -46,7 +46,7 @@
     <PackageReference Update="NUnit.ConsoleRunner" Version="3.12.0" />
     <PackageReference Update="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Update="NUnit" Version="3.13.2" />
-    <PackageReference Update="System.IO.Abstractions.TestingHelpers" Version="16.1.10" />
+    <PackageReference Update="System.IO.Abstractions.TestingHelpers" Version="19.2.18" />
     <PackageReference Update="YamlDotNet" Version="11.2.1" />
 
   </ItemGroup>
