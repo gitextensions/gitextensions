@@ -1050,9 +1050,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
-            var lastSelection = _currentFilesList is not null
-                ? _currentSelection ?? Array.Empty<GitItemStatus>()
-                : Array.Empty<GitItemStatus>();
+            IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
             List<GitItemStatus> unstagedFiles = new();
             List<GitItemStatus> stagedFiles = new();
@@ -1581,11 +1579,7 @@ namespace GitUI.CommandsDialogs
 
         private void UnstageAllFiles()
         {
-            var lastSelection = _currentFilesList is not null
-                ? _currentSelection
-                : Array.Empty<GitItemStatus>();
-
-            Validates.NotNull(lastSelection);
+            IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
             OnStageAreaLoaded += StageAreaLoaded;
 
@@ -1766,10 +1760,6 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(false);
                 try
                 {
-                    var lastSelection = _currentFilesList is not null
-                        ? _currentSelection
-                        : Array.Empty<GitItemStatus>();
-
                     toolStripProgressBar1.Visible = true;
                     toolStripProgressBar1.Value = 0;
 
@@ -1846,8 +1836,9 @@ namespace GitUI.CommandsDialogs
 
                     if (Staged.IsEmpty)
                     {
+                        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+
                         _currentFilesList = Unstaged;
-                        Validates.NotNull(lastSelection);
                         RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
                         Unstaged.Focus();
                     }
@@ -1978,9 +1969,7 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(false);
                 try
                 {
-                    var lastSelection = _currentFilesList is not null
-                        ? _currentSelection
-                        : Array.Empty<GitItemStatus>();
+                    IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
                     Unstaged.StoreNextIndexToSelect();
                     toolStripProgressBar1.Visible = true;
