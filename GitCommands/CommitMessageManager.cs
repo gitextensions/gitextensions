@@ -228,7 +228,7 @@ namespace GitCommands
 
                 return await _fileSystem.File.ReadAllTextAsync(filePath, encoding ?? Encoding.Default, cancellationToken);
             }
-            catch (Exception ex) when (ex is not OperationCanceledException && ex is not ObjectDisposedException)
+            catch (Exception ex) when (ex is not (OperationCanceledException or ObjectDisposedException))
             {
                 await _owner.SwitchToMainThreadAsync();
                 MessageBox.Show(_owner, string.Format(CannotAccessFile, ex.Message, filePath), errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
