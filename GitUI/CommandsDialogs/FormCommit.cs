@@ -1378,7 +1378,7 @@ namespace GitUI.CommandsDialogs
                     {
                         // Save last commit message in settings. This way it can be used in multiple repositories.
                         AppSettings.LastCommitMessage = Message.Text;
-                        ThreadHelper.JoinableTaskFactory.RunAsync(
+                        ThreadHelper.JoinableTaskFactory.Run(
                             () => _commitMessageManager.WriteCommitMessageToFileAsync(Message.Text, CommitMessageType.Normal,
                                                                                       usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate),
                                                                                       ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty));
