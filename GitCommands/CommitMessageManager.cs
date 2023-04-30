@@ -255,7 +255,7 @@ namespace GitCommands
                 await _owner.SwitchToMainThreadAsync();
 
                 // No need to cancel the other operations in FormCommit - just let the user know that something went wrong
-                MessageBox.Show(null, string.Format(CannotAccessFile, ex.Message, filePath), errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(_owner, string.Format(CannotAccessFile, ex.Message, filePath), errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
     }
