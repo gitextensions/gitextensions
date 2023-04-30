@@ -250,7 +250,7 @@ namespace GitCommands
             {
                 await _fileSystem.File.WriteAllTextAsync(filePath, content, encoding ?? Encoding.Default, cancellationToken);
             }
-            catch (Exception ex) when (ex is not OperationCanceledException && ex is not ObjectDisposedException)
+            catch (Exception ex) when (ex is not (OperationCanceledException or ObjectDisposedException))
             {
                 await _owner.SwitchToMainThreadAsync();
 
