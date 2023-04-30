@@ -16,15 +16,12 @@ $submodules | ForEach-Object {
     popd
 }
 
+& git update-index --skip-worktree Externals/NetSpell.SpellChecker/Properties/AssemblyInfo.cs
 & git update-index --skip-worktree GitUI/CommandsDialogs/FormBrowse.cs
 & git update-index --skip-worktree CommonAssemblyInfo.cs
 & git update-index --skip-worktree CommonAssemblyInfoExternals.cs
 & git update-index --skip-worktree GitExtSshAskPass/SshAskPass.rc2
 & git update-index --skip-worktree GitExtensionsShellEx/GitExtensionsShellEx.rc
-
-cd GitExtensionsDoc
-& git update-index --skip-worktree source/conf.py
-cd ..\
 
 & git status
 & git submodule foreach --recursive git status

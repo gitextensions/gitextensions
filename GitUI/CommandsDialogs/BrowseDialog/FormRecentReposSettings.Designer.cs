@@ -299,18 +299,19 @@
             this.chdrRepository1});
             this.AllRecentLB.ContextMenuStrip = this.contextMenuStrip1;
             this.AllRecentLB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AllRecentLB.FullRowSelect = true;
             this.AllRecentLB.GridLines = true;
             this.AllRecentLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.AllRecentLB.HideSelection = false;
             this.AllRecentLB.LabelWrap = false;
             this.AllRecentLB.Location = new System.Drawing.Point(0, 162);
-            this.AllRecentLB.MultiSelect = false;
             this.AllRecentLB.Name = "AllRecentLB";
-            this.AllRecentLB.OwnerDraw = true;
+            this.AllRecentLB.ShowItemToolTips = true;
             this.AllRecentLB.Size = new System.Drawing.Size(354, 165);
             this.AllRecentLB.TabIndex = 2;
             this.AllRecentLB.UseCompatibleStateImageBehavior = false;
             this.AllRecentLB.View = System.Windows.Forms.View.Details;
+            this.AllRecentLB.DoubleClick += AllRecentLB_DoubleClick;
             this.AllRecentLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
             // 
             // chdrRepository1
@@ -381,18 +382,19 @@
             this.chdrRepository});
             this.PinnedLB.ContextMenuStrip = this.contextMenuStrip1;
             this.PinnedLB.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PinnedLB.FullRowSelect = true;
             this.PinnedLB.GridLines = true;
             this.PinnedLB.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.PinnedLB.HideSelection = false;
             this.PinnedLB.LabelWrap = false;
             this.PinnedLB.Location = new System.Drawing.Point(0, 19);
-            this.PinnedLB.MultiSelect = false;
             this.PinnedLB.Name = "PinnedLB";
-            this.PinnedLB.OwnerDraw = true;
+            this.PinnedLB.ShowItemToolTips = true;
             this.PinnedLB.Size = new System.Drawing.Size(354, 121);
             this.PinnedLB.TabIndex = 0;
             this.PinnedLB.UseCompatibleStateImageBehavior = false;
             this.PinnedLB.View = System.Windows.Forms.View.Details;
+            this.PinnedLB.DoubleClick += PinnedLB_DoubleClick;
             this.PinnedLB.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
             // 
             // chdrRepository

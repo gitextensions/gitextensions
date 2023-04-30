@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image2 = Properties.Images.HelpCommandMergeFastForward.AdaptLightness();
             InitializeComplete();
 
-            _commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding);
+            _commitMessageManager = new CommitMessageManager(this, Module.WorkingDirGitDir, Module.CommitEncoding);
 
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
@@ -87,8 +87,7 @@ namespace GitUI.CommandsDialogs
 
         private void OkClick(object sender, EventArgs e)
         {
-            IDetachedSettings detachedSettings = Module.GetEffectiveSettings()
-                .Detached();
+            IDetachedSettings detachedSettings = Module.GetEffectiveSettings().Detached();
 
             detachedSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
@@ -104,9 +103,10 @@ namespace GitUI.CommandsDialogs
             {
                 // [!] Do not reset the last commit message stored in AppSettings.LastCommitMessage
 
-                _commitMessageManager.WriteCommitMessageToFile(mergeMessage.Text, CommitMessageType.Merge,
-                                                               usingCommitTemplate: false,
-                                                               ensureCommitMessageSecondLineEmpty: false);
+                ThreadHelper.JoinableTaskFactory.Run(
+                    () => _commitMessageManager.WriteCommitMessageToFileAsync(mergeMessage.Text, CommitMessageType.Merge,
+                                                                              usingCommitTemplate: false,
+                                                                              ensureCommitMessageSecondLineEmpty: false));
                 mergeMessagePath = _commitMessageManager.MergeMessagePath;
             }
 
