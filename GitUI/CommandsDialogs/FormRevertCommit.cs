@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git.Commands;
+using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -65,7 +66,7 @@ namespace GitUI.CommandsDialogs
 
         private void Revert_Click(object sender, EventArgs e)
         {
-            var parentIndex = 0;
+            int parentIndex = 0;
             if (_isMerge)
             {
                 if (ParentsList.SelectedItems.Count != 1)
@@ -79,11 +80,11 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            var commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding);
+            CommitMessageManager commitMessageManager = new(this, Module.WorkingDirGitDir, Module.CommitEncoding);
 
-            string existingCommitMessage = commitMessageManager.MergeOrCommitMessage;
+            string existingCommitMessage = ThreadHelper.JoinableTaskFactory.Run(async () => await commitMessageManager.GetMergeOrCommitMessageAsync());
 
-            var command = GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex);
+            ArgumentString command = GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex);
 
             // Don't verify whether the command is successful.
             // If it fails, likely there is a conflict that needs to be resolved.
@@ -91,14 +92,19 @@ namespace GitUI.CommandsDialogs
 
             if (!string.IsNullOrWhiteSpace(existingCommitMessage))
             {
-                try
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    string newCommitMessageContent = $"{existingCommitMessage}\n\n{commitMessageManager.MergeOrCommitMessage}";
-                    commitMessageManager.WriteCommitMessageToFile(newCommitMessageContent, CommitMessageType.Merge, usingCommitTemplate: false,  ensureCommitMessageSecondLineEmpty: false);
-                }
-                catch (Exception)
-                {
-                }
+                    try
+                    {
+                        string message = await commitMessageManager.GetMergeOrCommitMessageAsync();
+                        string newCommitMessageContent = $"{existingCommitMessage}\n\n{message}";
+                        await commitMessageManager.WriteCommitMessageToFileAsync(newCommitMessageContent, CommitMessageType.Merge,
+                                                                                 usingCommitTemplate: false, ensureCommitMessageSecondLineEmpty: false);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                });
             }
 
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);

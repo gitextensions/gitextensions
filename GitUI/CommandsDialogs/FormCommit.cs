@@ -227,7 +227,7 @@ namespace GitUI.CommandsDialogs
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
 
-            _commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding, commitMessage);
+            _commitMessageManager = new CommitMessageManager(this, Module.WorkingDirGitDir, Module.CommitEncoding, commitMessage);
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
@@ -477,8 +477,11 @@ namespace GitUI.CommandsDialogs
                 // a special meaning, and can be dangerous if used inappropriately.
                 if (CommitKind is (CommitKind.Normal or CommitKind.Amend))
                 {
-                    _commitMessageManager.MergeOrCommitMessage = Message.Text;
-                    _commitMessageManager.AmendState = Amend.Checked;
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        await _commitMessageManager.SetMergeOrCommitMessageAsync(Message.Text);
+                        await _commitMessageManager.SetAmendStateAsync(Amend.Checked);
+                    });
                 }
 
                 _splitterManager.SaveSplitters();
@@ -534,8 +537,14 @@ namespace GitUI.CommandsDialogs
                     message = $"{TryAddPrefix(_editedCommit.Subject)}{Environment.NewLine}{Environment.NewLine}{_editedCommit.Body}";
                     break;
                 default:
-                    message = _commitMessageManager.MergeOrCommitMessage;
-                    Amend.Checked = !_commitMessageManager.IsMergeCommit && _commitMessageManager.AmendState;
+                    (string retrievedMessage, bool retrievedAmendState) = ThreadHelper.JoinableTaskFactory.Run(async () =>
+                    {
+                        string m = await _commitMessageManager.GetMergeOrCommitMessageAsync();
+                        bool a = await _commitMessageManager.GetAmendStateAsync();
+                        return (m, a);
+                    });
+                    message = retrievedMessage;
+                    Amend.Checked = !_commitMessageManager.IsMergeCommit && retrievedAmendState;
                     break;
             }
 
@@ -1369,10 +1378,10 @@ namespace GitUI.CommandsDialogs
                     {
                         // Save last commit message in settings. This way it can be used in multiple repositories.
                         AppSettings.LastCommitMessage = Message.Text;
-
-                        _commitMessageManager.WriteCommitMessageToFile(Message.Text, CommitMessageType.Normal,
-                                                                       usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate),
-                                                                       ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty);
+                        ThreadHelper.JoinableTaskFactory.RunAsync(
+                            () => _commitMessageManager.WriteCommitMessageToFileAsync(Message.Text, CommitMessageType.Normal,
+                                                                                      usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate),
+                                                                                      ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty));
                     }
 
                     bool success = ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
@@ -1405,7 +1414,8 @@ namespace GitUI.CommandsDialogs
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
                     // Message.Text has been used and stored
-                    _commitMessageManager.ResetCommitMessage();
+                    ThreadHelper.JoinableTaskFactory.Run(_commitMessageManager.ResetCommitMessageAsync);
+
                     CommitKind = CommitKind.Normal;
                     bool pushCompleted = true;
                     try

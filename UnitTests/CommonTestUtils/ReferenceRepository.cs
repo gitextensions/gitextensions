@@ -178,7 +178,11 @@ namespace CommonTestUtils
                 repository.Config.Set(SettingKeyString.UserEmail, "author@mail.com");
             }
 
-            new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding).ResetCommitMessage();
+            // We don't expect any failures so that we won't be switching to the main thread or showing messages
+            CommitMessageManager commitMessageManager = new(owner: null!, Module.WorkingDirGitDir, Module.CommitEncoding);
+#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+            commitMessageManager.ResetCommitMessageAsync().GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
         public void Stash(string stashMessage, string content = null)
