@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
             {
                 // [!] Do not reset the last commit message stored in AppSettings.LastCommitMessage
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(
+                ThreadHelper.JoinableTaskFactory.Run(
                     () => _commitMessageManager.WriteCommitMessageToFileAsync(mergeMessage.Text, CommitMessageType.Merge,
                                                                               usingCommitTemplate: false,
                                                                               ensureCommitMessageSecondLineEmpty: false));
