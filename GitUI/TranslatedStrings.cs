@@ -29,6 +29,7 @@ namespace GitUI
         private readonly TranslationString _containedInTagsText = new("Contained in tags:");
         private readonly TranslationString _containedInNoTagText = new("Contained in no tag");
         private readonly TranslationString _invisibleCommitText = new("'{0}' is not currently visible");
+        private readonly TranslationString _addUpstreamRemote = new("Add upstream remote");
         private readonly TranslationString _viewPullRequest = new("View pull requests");
         private readonly TranslationString _createPullRequest = new("Create pull request");
         private readonly TranslationString _forkCloneRepo = new("Fork or clone a repository");
@@ -107,8 +108,6 @@ the last selected commit.");
         private readonly TranslationString _reportBugText = new("If you think this was caused by Git Extensions, you can report a bug for the team to investigate.");
 
         private readonly TranslationString _filterFileInGrid = new("Filter file in &grid");
-        private readonly TranslationString _openInVisualStudioFailureText = new("Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.");
-        private readonly TranslationString _openInVisualStudioFailureCaption = new("Unable to open file");
 
         private readonly TranslationString _remoteInError = new("{0}\n\nRemote: {1}");
 
@@ -210,6 +209,7 @@ following command.
         public static string CreatePullRequest => _instance.Value._createPullRequest.Text;
         public static string ForkCloneRepo => _instance.Value._forkCloneRepo.Text;
         public static string ViewPullRequest => _instance.Value._viewPullRequest.Text;
+        public static string AddUpstreamRemote => _instance.Value._addUpstreamRemote.Text;
 
         public static string Branch => _instance.Value._branchText.Text;
         public static string Branches => _instance.Value._branchesText.Text;
@@ -285,8 +285,6 @@ following command.
         public static string WorkingDirectory => _instance.Value._workingDirectoryText.Text;
         public static string ReportBug => _instance.Value._reportBugText.Text;
 
-        public static string OpenInVisualStudioFailureText => _instance.Value._openInVisualStudioFailureText.Text;
-        public static string OpenInVisualStudioFailureCaption => _instance.Value._openInVisualStudioFailureCaption.Text;
         public static string RemoteInError => _instance.Value._remoteInError.Text;
         public static string NoChanges => _instance.Value._noChanges.Text;
 

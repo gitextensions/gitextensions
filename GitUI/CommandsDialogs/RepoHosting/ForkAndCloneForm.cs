@@ -387,9 +387,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             GitUICommands uiCommands = new(new GitModule(null));
 
-            string repoSrc = PathUtil.IsLocalFile(repo.CloneReadWriteUrl)
-                ? uiCommands.Module.GetGitExecPath(repo.CloneReadWriteUrl)
-                : repo.CloneReadWriteUrl;
+            string repoSrc = PathUtil.IsLocalFile(repo.CloneUrl)
+                ? uiCommands.Module.GetGitExecPath(repo.CloneUrl)
+                : repo.CloneUrl;
 
             var cmd = GitCommandHelpers.CloneCmd(repoSrc, uiCommands.Module.GetGitExecPath(targetDir), depth: GetDepth());
 
@@ -407,9 +407,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             GitModule module = new(targetDir);
 
-            if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
+            if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentUrl))
             {
-                var error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentReadOnlyUrl);
+                var error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -503,11 +503,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             if (tabControl.SelectedTab == searchReposPage)
             {
-                cloneInfoText.Text = string.Format(_strWillCloneInfo.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
+                cloneInfoText.Text = string.Format(_strWillCloneInfo.Text, repo.CloneUrl, GetTargetDir(), moreInfo);
             }
             else if (tabControl.SelectedTab == myReposPage)
             {
-                cloneInfoText.Text = string.Format(_strWillCloneWithPushAccess.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
+                cloneInfoText.Text = string.Format(_strWillCloneWithPushAccess.Text, repo.CloneUrl, GetTargetDir(), moreInfo);
             }
         }
 

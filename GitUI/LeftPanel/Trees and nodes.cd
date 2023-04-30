@@ -1,0 +1,326 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="GitUI.LeftPanel.RepoObjectsTree" Collapsed="true">
+    <Position X="4.5" Y="6.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="_rootNodes" Type="GitUI.LeftPanel.Tree">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.015" Y="2.178" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="_branchesTree" Type="GitUI.LeftPanel.BranchTree" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4.5" Y="6.438" />
+        <Point X="3.312" Y="6.438" />
+        <Point X="3.312" Y="5.502" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_remotesTree" Type="GitUI.LeftPanel.RemoteBranchTree" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.75" Y="6.687" />
+        <Point X="7.875" Y="6.687" />
+        <Point X="7.875" Y="5.502" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="_submoduleTree" Type="GitUI.LeftPanel.SubmoduleTree" FixedToPoint="true">
+      <Path>
+        <Point X="6.188" Y="6.25" />
+        <Point X="6.188" Y="4.441" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>RKCwBv01QSH8CZyICeuYgACCQrQ6UICEcKDr+602mIM=</HashCode>
+      <FileName>LeftPanel\RepoObjectsTree.Command.cs</FileName>
+      <NewMemberFileName>LeftPanel\BaseBranchNode.cs</NewMemberFileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_branchesTree" />
+      <Field Name="_remotesTree" />
+      <Field Name="_tagTree" />
+      <Field Name="_submoduleTree" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="_rootNodes" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GitUI.LeftPanel.BaseBranchLeafNode">
+    <Position X="4.25" Y="11" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QQAAAAAAAAAAAAAAAAAYAAAAAAAAABBAAAAAAAAAAAA=</HashCode>
+      <FileName>LeftPanel\BaseBranchLeafNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.BaseBranchNode">
+    <Position X="7.25" Y="7.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>CAABAAAAAAAABCAAggAAAQQAAACAQIBJAAAAAAIAAAA=</HashCode>
+      <FileName>LeftPanel\BaseBranchNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.BasePathNode" Collapsed="true">
+    <Position X="8" Y="11" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>LeftPanel\BasePathNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.BranchPathNode" Collapsed="true">
+    <Position X="8" Y="12.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAAAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LeftPanel\BranchPathNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.BranchTree">
+    <Position X="2.75" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gAAAAQAAQABAAAAAAAAAAAAAAAAAAAAAAABACAgAEAA=</HashCode>
+      <FileName>LeftPanel\BranchTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.LocalBranchNode">
+    <Position X="3.25" Y="13.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="GitUI.LeftPanel.BaseBranchLeafNode" FixedToPoint="true">
+      <Path>
+        <Point X="5.125" Y="12.944" />
+        <Point X="5.125" Y="13.375" />
+        <Point X="4.562" Y="13.375" />
+        <Point X="4.562" Y="13.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAEAARAAAoAAAAAAAAAEAAYABAAAAAgAAgAA=</HashCode>
+      <FileName>LeftPanel\LocalBranchNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GitUI.LeftPanel.Nodes">
+    <Position X="10" Y="1.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="LastNode" Type="GitUI.LeftPanel.Node" FixedFromPoint="true">
+      <Path>
+        <Point X="10.75" Y="3.122" />
+        <Point X="10.75" Y="4.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ECAAAAAAAACAABAAAACACAQEAAAAAAAAAAABAAFIAAA=</HashCode>
+      <FileName>LeftPanel\Nodes.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Tree" />
+      <Property Name="LastNode" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GitUI.LeftPanel.Tree">
+    <Position X="3.75" Y="0.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>oAAAgAAAUCJAAAAAAACOCAAEAAgAAQAAAAAACQgAAgA=</HashCode>
+      <FileName>LeftPanel\Tree.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GitUI.LeftPanel.Node">
+    <Position X="10.75" Y="4.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="GitUI.LeftPanel.NodeBase" FixedToPoint="true">
+      <Path>
+        <Point X="13.25" Y="2.824" />
+        <Point X="13.25" Y="5.057" />
+        <Point X="12.25" Y="5.057" />
+      </Path>
+    </InheritanceLine>
+    <AssociationLine Name="Tree" Type="GitUI.LeftPanel.Tree" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.75" Y="5.211" />
+        <Point X="9.416" Y="5.211" />
+        <Point X="9.416" Y="2.75" />
+        <Point X="6" Y="2.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAECAkAAAogAIAAACEQAAAAABAAEAAQAAAAE=</HashCode>
+      <FileName>LeftPanel\Node.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Tree" />
+      <Property Name="TreeViewNode" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GitUI.LeftPanel.SubmoduleFolderNode" Collapsed="true">
+    <Position X="3.5" Y="7.75" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAABIAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAgAAAAA=</HashCode>
+      <FileName>LeftPanel\SubmoduleFolderNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.SubmoduleNode">
+    <Position X="1.25" Y="7.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAhAAIAAAAAYAAAgAAAAAEgAGAAAIDFAAAQAkAAAAE=</HashCode>
+      <FileName>LeftPanel\SubmoduleNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.DummyNode" Collapsed="true">
+    <Position X="10.25" Y="7.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LeftPanel\DummyNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.SubmoduleTree" Collapsed="true">
+    <Position X="5" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAIAgAgAIAIAagAAAAAAAAgQgAAEAIAEAAIACAwAAhA=</HashCode>
+      <FileName>LeftPanel\SubmoduleTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.TagNode">
+    <Position X="1.75" Y="11" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="GitUI.LeftPanel.BaseBranchNode" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="8" Y="10.271" />
+        <Point X="8" Y="10.757" />
+        <Point X="3.125" Y="10.757" />
+        <Point X="3.125" Y="11" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>YAAAAAAAAAAABAAAoAAAAAAAAAEAAQBBAAAAAAAAAAA=</HashCode>
+      <FileName>LeftPanel\TagNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GitUI.LeftPanel.TagTree">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gAAAAAAEAABAAAAAAAAAAAAAAAAAAAAEAAAACAgAEAA=</HashCode>
+      <FileName>LeftPanel\TagTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.RemoteBranchNode" Collapsed="true">
+    <Position X="5.5" Y="14" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="GitUI.LeftPanel.BaseBranchLeafNode" FixedToPoint="true">
+      <Path>
+        <Point X="5.125" Y="12.944" />
+        <Point X="5.125" Y="13.375" />
+        <Point X="7" Y="13.375" />
+        <Point X="7" Y="14" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAABAQAoAMCACAAAAEAAQABAAAAEAAAAAA=</HashCode>
+      <FileName>LeftPanel\RemoteBranchNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GitUI.LeftPanel.RemoteBranchTree">
+    <Position X="7.25" Y="3.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAABAAAAAAAAAAAAAAAIBAEAAIABACAgAEAA=</HashCode>
+      <FileName>LeftPanel\RemoteBranchTree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.RemoteRepoFolderNode">
+    <Position X="10.25" Y="11" Width="2" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>LeftPanel\RemoteRepoFolderNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.RemoteRepoNode">
+    <Position X="13" Y="11" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAIAAAAEACAAEAAAAAEBBAAAjAAQQAAA=</HashCode>
+      <FileName>LeftPanel\RemoteRepoNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GitUI.LeftPanel.NodeBase">
+    <Position X="12.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAggAAAAAAAEAAAAAAAAACAAAAAAABAAAEAQgAAAAA=</HashCode>
+      <FileName>LeftPanel\NodeBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Nodes" />
+      <Property Name="TreeViewNode" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="System.Windows.Forms.TreeNode" Collapsed="true">
+    <Position X="11.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

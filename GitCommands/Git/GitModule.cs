@@ -67,7 +67,7 @@ namespace GitCommands
 
         public GitModule(string? workingDir)
         {
-            WorkingDir = (workingDir ?? "").NormalizePath().EnsureTrailingPathSeparator();
+            WorkingDir = (workingDir ?? "").NormalizePath().NormalizeWslPath().EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);

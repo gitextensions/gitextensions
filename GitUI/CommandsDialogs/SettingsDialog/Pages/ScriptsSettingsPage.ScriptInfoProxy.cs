@@ -13,8 +13,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private class ScriptInfoProxy
         {
             private const string ScriptCategory = "Script";
-            private const string ScriptBehaviourCategory = "Script Behaviour";
-            private const string ScriptContextCategory = "Script Context";
+            private const string ScriptBehaviourCategory = "Script behaviour";
+            private const string ScriptContextCategory = "Script context";
 
             // Needed for the ImageKeyConverter to work
             [Browsable(false)]

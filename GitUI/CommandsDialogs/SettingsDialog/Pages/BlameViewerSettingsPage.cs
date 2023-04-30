@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public BlameViewerSettingsPage()
         {
             InitializeComponent();
-            Text = "Blame Viewer";
+            Text = "Blame viewer";
             InitializeComplete();
         }
 

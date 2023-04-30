@@ -126,6 +126,11 @@ on_failure:
         Push-AppveyorArtifact "$_"
     }
 - ps: |
+    Get-ChildItem -recurse artifacts\Release\TestsResults\*.trx -ErrorAction SilentlyContinue `
+    | ForEach-Object {
+        Push-AppveyorArtifact "$_"
+    }
+- ps: |
     Get-ChildItem -recurse artifacts\Release\TestsResults\*.trx | `
         ForEach-Object {
             $file = $_.FullName.Replace('[', '``[').Replace(']', '``]')

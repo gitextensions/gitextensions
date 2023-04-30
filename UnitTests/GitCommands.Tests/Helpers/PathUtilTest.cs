@@ -183,16 +183,10 @@ namespace GitCommandsTests.Helpers
         }
 
         [Platform(Include = "Win")]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
-        [TestCase("c:")]
-        public void NormalizePath(string path)
-        {
-            PathUtil.NormalizePath(path).Should().BeEmpty();
-        }
-
-        [Platform(Include = "Win")]
+        [TestCase(null, "")]
+        [TestCase("", "")]
+        [TestCase(" ", "")]
+        [TestCase("c:", "")]
         [TestCase("C:\\", "C:\\")]
         [TestCase("a:\\folder\\filename.txt", "a:\\folder\\filename.txt")]
         [TestCase("a:\\folder\\..\\filename.txt", "a:\\filename.txt")]
@@ -210,6 +204,19 @@ namespace GitCommandsTests.Helpers
         public void NormalizePath(string path, string expected)
         {
             PathUtil.NormalizePath(path).Should().Be(expected);
+        }
+
+        [Platform(Include = "Win")]
+        [TestCase("", "")]
+        [TestCase(" ", " ")]
+        [TestCase("c:", "c:")]
+        [TestCase("C:\\", "C:\\")]
+        [TestCase(@"\\wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        [TestCase(@"\\Wsl.LoCALhosT\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        [TestCase(@"\\wsl.localhost\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        public void NormalizeWslPath(string path, string expected)
+        {
+            PathUtil.NormalizeWslPath(path).Should().Be(expected);
         }
 
         [TestCase(@"C:\WORK\GitExtensions\", @"C:\WORK\GitExtensions\")]
@@ -259,6 +266,15 @@ namespace GitCommandsTests.Helpers
         public void ResolveWsl(string input, Type expectedException)
         {
             Assert.Throws(expectedException, () => PathUtil.ResolveWsl(input));
+        }
+
+        [TestCase(@"C:\work\..\GitExtensions\", false)]
+        [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", false)]
+        [TestCase(@"\\wsl.localhost\Ubuntu\work\..\GitExtensions\", true)]
+        [TestCase(@"\\wsl.localhost/Ubuntu\work\..\GitExtensions\", false)]
+        public void IsWslLocalhostPath(string path, bool expected)
+        {
+            PathUtil.TestAccessor.IsWslLocalhostPrefixPath(path).Should().Be(expected);
         }
 
         [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", true, true)]

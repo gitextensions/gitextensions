@@ -536,10 +536,18 @@ namespace GitUI.CommandsDialogs
                     foreach (ObjectId parentId in selectedItems.FirstIds())
                     {
                         List<string> itemsToCheckout = selectedItems
-                            .Where(item => !item.Item.IsNew && item.FirstRevision?.ObjectId == parentId)
+                            .Where(item => !item.Item.IsNew && !(item.Item.IsConflict && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
                         Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
+
+                        // Special handling for conflicted files, shown in worktree (with the raw diff).
+                        // Must be reset to HEAD as Index is just a status marker.
+                        List<string> conflictsToCheckout = selectedItems
+                            .Where(item => item.Item.IsConflict && parentId == ObjectId.IndexId)
+                            .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
+                            .ToList();
+                        Module.CheckoutFiles(conflictsToCheckout, _revisionGrid.CurrentCheckout, force: false);
                     }
                 }
             }
@@ -1452,6 +1460,11 @@ namespace GitUI.CommandsDialogs
         }
 
         private static bool RenamedIndexItem(FileStatusItem item) => item.Item.IsRenamed && item.Item.Staged == StagedStatus.Index;
+
+        internal void RegisterGitHostingPluginInBlameControl()
+        {
+            BlameControl.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
+        }
 
         internal TestAccessor GetTestAccessor()
             => new(this);

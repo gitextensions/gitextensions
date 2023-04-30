@@ -962,6 +962,8 @@ namespace GitUI.CommandsDialogs
             var currentBranch = Module.GetRefs(RefsFilter.Heads).FirstOrDefault(r => r.LocalName == currentBranchName);
             if (currentBranch is null)
             {
+                await this.SwitchToMainThreadAsync();
+
                 branchNameLabel.Text = currentBranchName;
                 remoteNameLabel.Text = string.Empty;
                 return;
@@ -1048,9 +1050,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
-            var lastSelection = _currentFilesList is not null
-                ? _currentSelection ?? Array.Empty<GitItemStatus>()
-                : Array.Empty<GitItemStatus>();
+            IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
             List<GitItemStatus> unstagedFiles = new();
             List<GitItemStatus> stagedFiles = new();
@@ -1579,11 +1579,7 @@ namespace GitUI.CommandsDialogs
 
         private void UnstageAllFiles()
         {
-            var lastSelection = _currentFilesList is not null
-                ? _currentSelection
-                : Array.Empty<GitItemStatus>();
-
-            Validates.NotNull(lastSelection);
+            IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
             OnStageAreaLoaded += StageAreaLoaded;
 
@@ -1764,10 +1760,6 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(false);
                 try
                 {
-                    var lastSelection = _currentFilesList is not null
-                        ? _currentSelection
-                        : Array.Empty<GitItemStatus>();
-
                     toolStripProgressBar1.Visible = true;
                     toolStripProgressBar1.Value = 0;
 
@@ -1844,8 +1836,9 @@ namespace GitUI.CommandsDialogs
 
                     if (Staged.IsEmpty)
                     {
+                        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+
                         _currentFilesList = Unstaged;
-                        Validates.NotNull(lastSelection);
                         RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
                         Unstaged.Focus();
                     }
@@ -1976,9 +1969,7 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(false);
                 try
                 {
-                    var lastSelection = _currentFilesList is not null
-                        ? _currentSelection
-                        : Array.Empty<GitItemStatus>();
+                    IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
                     Unstaged.StoreNextIndexToSelect();
                     toolStripProgressBar1.Visible = true;
@@ -2129,6 +2120,7 @@ namespace GitUI.CommandsDialogs
                 bool deleteNewFiles = _currentFilesList.SelectedItems.Any(item => DeletableItem(item)) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 List<string> filesInUse = new();
                 List<string> filesToReset = new();
+                List<string> conflictsToReset = new();
                 StringBuilder output = new();
                 foreach (var item in _currentFilesList.SelectedItems)
                 {
@@ -2162,6 +2154,10 @@ namespace GitUI.CommandsDialogs
                     {
                         filesToReset.Add(item.Item.OldName);
                     }
+                    else if (item.Item.IsConflict)
+                    {
+                        conflictsToReset.Add(item.Item.Name);
+                    }
                     else if (!item.Item.IsNew)
                     {
                         filesToReset.Add(item.Item.Name);
@@ -2169,6 +2165,14 @@ namespace GitUI.CommandsDialogs
                 }
 
                 output.Append(Module.ResetFiles(filesToReset));
+                if (conflictsToReset.Count > 0)
+                {
+                    // Special handling for conflicted files, shown in worktree (with the raw diff).
+                    // Must be reset to HEAD as Index is just a status marker.
+                    ObjectId headId = Module.RevParse("HEAD");
+                    Module.CheckoutFiles(conflictsToReset, headId, force: false);
+                }
+
                 toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
                 toolStripProgressBar1.Visible = false;
 

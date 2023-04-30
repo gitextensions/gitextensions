@@ -309,7 +309,7 @@ Click this info icon for more details.</source>
   <file datatype="plaintext" original="BlameViewerSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Blame Viewer</source>
+        <source>Blame viewer</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
@@ -1326,7 +1326,7 @@ Please make sure that Git for Windows is installed or set the correct command ma
   <file datatype="plaintext" original="DiffViewerSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Diff Viewer</source>
+        <source>Diff viewer</source>
         <target />
       </trans-unit>
       <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
@@ -2771,7 +2771,7 @@ Do you want to continue?</source>
         <source>Create &amp;tag...</source>
         <target />
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
         <target />
       </trans-unit>
@@ -7575,7 +7575,7 @@ Context menu for additional operations</source>
         <target />
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistory.Text">
-        <source>Follow renames in file history (experimental)</source>
+        <source>Follow renames in file history</source>
         <target />
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
@@ -9673,7 +9673,7 @@ Current Branch:
         <target />
       </trans-unit>
       <trans-unit id="gbCascadingMenu.Text">
-        <source>Cascaded Context Menu</source>
+        <source>Cascaded context menu</source>
         <target />
       </trans-unit>
       <trans-unit id="gbExplorerIntegration.Text">
@@ -9853,6 +9853,10 @@ When OpenSSH is used, command line dialogs are shown!
   </file>
   <file datatype="plaintext" original="TranslatedStrings" source-language="en">
     <body>
+      <trans-unit id="_addUpstreamRemote.Text">
+        <source>Add upstream remote</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_areYouSure.Text">
         <source>Are you sure you want to drop the stash? This action cannot be undone.</source>
         <target />
@@ -10247,14 +10251,6 @@ following command.
       </trans-unit>
       <trans-unit id="_openInVisualStudio.Text">
         <source>Open in &amp;Visual Studio</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_openInVisualStudioFailureCaption.Text">
-        <source>Unable to open file</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_openInVisualStudioFailureText.Text">
-        <source>Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.</source>
         <target />
       </trans-unit>
       <trans-unit id="_openReport.Text">

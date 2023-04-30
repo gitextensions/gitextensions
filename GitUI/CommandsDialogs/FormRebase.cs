@@ -88,6 +88,7 @@ namespace GitUI.CommandsDialogs
             chkInteractive.Checked = interactive;
             chkAutosquash.Enabled = interactive;
             _startRebaseImmediately = startRebaseImmediately;
+            chkSpecificRange.Checked = !string.IsNullOrEmpty(from);
         }
 
         protected override void OnShown(EventArgs e)
@@ -381,10 +382,14 @@ namespace GitUI.CommandsDialogs
             bool previousValueBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool previousValueShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool previousValueShowReflogReferences = AppSettings.ShowReflogReferences;
+            bool previousValueShowStashes = AppSettings.ShowStashes;
 
             try
             {
-                using FormChooseCommit chooseForm = new(UICommands, txtFrom.Text, showCurrentBranchOnly: true);
+                AppSettings.ShowStashes = false;
+                ObjectId firstParent = UICommands.GitModule.RevParse("HEAD~");
+                string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent?.ToString() ?? string.Empty;
+                using FormChooseCommit chooseForm = new(UICommands, preSelectedCommit, showCurrentBranchOnly: true);
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
@@ -392,6 +397,7 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
+                AppSettings.ShowStashes = previousValueShowStashes;
                 AppSettings.BranchFilterEnabled = previousValueBranchFilterEnabled;
                 AppSettings.ShowCurrentBranchOnly = previousValueShowCurrentBranchOnly;
                 AppSettings.ShowReflogReferences = previousValueShowReflogReferences;

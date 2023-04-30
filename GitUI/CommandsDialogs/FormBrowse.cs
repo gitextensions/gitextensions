@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 using System.Globalization;
-using System.Text;
 using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Config;
@@ -16,13 +15,13 @@ using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
-using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Infrastructure.Telemetry;
+using GitUI.LeftPanel;
 using GitUI.NBugReports;
 using GitUI.Properties;
 using GitUI.Script;
@@ -222,7 +221,7 @@ namespace GitUI.CommandsDialogs
         private ConEmuControl? _terminal;
         private Dashboard? _dashboard;
         private bool _isFileBlameHistory;
-        private bool _fileBlameHistorySidePanelStartupState;
+        private bool _fileBlameHistoryLeftPanelStartupState;
 
         private TabPage? _consoleTabPage;
 
@@ -278,6 +277,8 @@ namespace GitUI.CommandsDialogs
                 PluginRegistry.Initialize();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 RegisterPlugins();
+                revisionDiff.RegisterGitHostingPluginInBlameControl();
+                fileTree.RegisterGitHostingPluginInBlameControl();
             }).FileAndForget();
 
             InitCountArtificial(out _gitStatusMonitor);
@@ -515,7 +516,7 @@ namespace GitUI.CommandsDialogs
             // Restore state at startup if file history mode, ignore the forced setting
             if (_isFileBlameHistory)
             {
-                MainSplitContainer.Panel1Collapsed = _fileBlameHistorySidePanelStartupState;
+                MainSplitContainer.Panel1Collapsed = _fileBlameHistoryLeftPanelStartupState;
             }
 
             _splitterManager.SaveSplitters();
@@ -959,7 +960,7 @@ namespace GitUI.CommandsDialogs
 
                     _formBrowseMenus.InsertRevisionGridMainMenuItems(repositoryToolStripMenuItem);
 
-                    // Request all branches if side panel is shown
+                    // Request all branches if left panel is shown
                     var aheadBehindData = _aheadBehindDataProvider?.GetData(MainSplitContainer.Panel1Collapsed ? RevisionGrid.CurrentBranch.Value : "");
                     toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, RevisionGrid.CurrentBranch.Value);
 
@@ -1523,24 +1524,13 @@ namespace GitUI.CommandsDialogs
 
             if (revisions.Count == 2)
             {
-                string? to = null;
-                string? from = null;
+                // Set defaults in rebase form to rebase commits defined by the range *from* first selected commit *to* HEAD
+                // *onto* 2nd selected commit
+                string? from = revisions[1].ObjectId.ToShortString(); // 1st selected commit (excluded from rebase)
+                string? to = RevisionGrid.CurrentBranch.Value; // current branch checked out (HEAD)
+                string? onto = revisions[0].ObjectId.ToString(); // 2nd selected commit
 
-                string currentBranch = RevisionGrid.CurrentBranch.Value;
-                var currentCheckout = RevisionGrid.CurrentCheckout;
-
-                if (revisions[0].ObjectId == currentCheckout)
-                {
-                    from = revisions[1].ObjectId.ToShortString();
-                    to = currentBranch;
-                }
-                else if (revisions[1].ObjectId == currentCheckout)
-                {
-                    from = revisions[0].ObjectId.ToShortString();
-                    to = currentBranch;
-                }
-
-                UICommands.StartRebaseDialog(this, from, to, null, interactive: false, startRebaseImmediately: false);
+                UICommands.StartRebaseDialog(this, from, to, onto, interactive: false, startRebaseImmediately: false);
             }
             else
             {
@@ -1823,7 +1813,7 @@ namespace GitUI.CommandsDialogs
 
         private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetRepositoryHost(out var repoHost))
+            if (!TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
             {
                 return;
             }
@@ -1833,7 +1823,7 @@ namespace GitUI.CommandsDialogs
 
         private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!TryGetRepositoryHost(out var repoHost))
+            if (!TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
             {
                 return;
             }
@@ -1843,19 +1833,12 @@ namespace GitUI.CommandsDialogs
 
         private void _addUpstreamRemoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            if (!TryGetRepositoryHost(out IRepositoryHostPlugin? repoHost))
             {
-                if (!TryGetRepositoryHost(out var repoHost))
-                {
-                    return;
-                }
+                return;
+            }
 
-                var remoteName = await repoHost.AddUpstreamRemoteAsync();
-                if (!string.IsNullOrEmpty(remoteName))
-                {
-                    UICommands.StartPullDialogAndPullImmediately(this, null, remoteName, AppSettings.PullAction.Fetch);
-                }
-            }).FileAndForget();
+            UICommands.AddUpstreamRemote(this, repoHost);
         }
 
         private bool TryGetRepositoryHost([NotNullWhen(returnValue: true)] out IRepositoryHostPlugin? repoHost)
@@ -1883,7 +1866,7 @@ namespace GitUI.CommandsDialogs
             FocusFileTree = 6,
             FocusFilter = 18,
             ToggleLeftPanel = 21,
-            FocusBranchTree = 25,
+            FocusLeftPanel = 25,
             FocusGpgInfo = 26,
             FocusGitConsole = 29,
             FocusBuildServerStatus = 30,
@@ -1968,6 +1951,14 @@ namespace GitUI.CommandsDialogs
 
         private void FindFileInSelectedCommit()
         {
+            IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
+            if (selectedRevisions.Count > 1 || (selectedRevisions.Count == 1 && selectedRevisions[0].IsArtificial))
+            {
+                GitRevision potentialRevision = selectedRevisions[0];
+                ObjectId? targetCommit = potentialRevision.IsArtificial ? RevisionGrid.CurrentCheckout : potentialRevision.ObjectId;
+                RevisionGrid.SetSelectedRevision(targetCommit);
+            }
+
             CommitInfoTabControl.SelectedTab = TreeTabPage;
 
             AppSettings.ShowSplitViewLayout = true;
@@ -2028,7 +2019,7 @@ namespace GitUI.CommandsDialogs
                 case Command.GitBash: userShell.PerformButtonClick(); break;
                 case Command.GitGui: Module.RunGui(); break;
                 case Command.GitGitK: Module.RunGitK(); break;
-                case Command.FocusBranchTree: FocusBranchTree(); break;
+                case Command.FocusLeftPanel: FocusLeftPanel(); break;
                 case Command.FocusRevisionGrid: RevisionGrid.Focus(); break;
                 case Command.FocusCommitInfo: FocusCommitInfo(); break;
                 case Command.FocusDiff: FocusTabOf(revisionDiff, (c, alreadyContainedFocus) => c.SwitchFocus(alreadyContainedFocus)); break;
@@ -2056,7 +2047,7 @@ namespace GitUI.CommandsDialogs
                 case Command.OpenWithDifftoolFirstToLocal: OpenWithDifftoolFirstToLocal(); break;
                 case Command.OpenWithDifftoolSelectedToLocal: OpenWithDifftoolSelectedToLocal(); break;
                 case Command.OpenSettings: EditSettings.PerformClick(); break;
-                case Command.ToggleLeftPanel: toggleBranchTreePanel.PerformClick(); break;
+                case Command.ToggleLeftPanel: toggleLeftPanel.PerformClick(); break;
                 case Command.EditFile: EditFile(); break;
                 case Command.OpenAsTempFile when fileTree.Visible: fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenAsTempFile); break;
                 case Command.OpenAsTempFileWith when fileTree.Visible: fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenAsTempFileWith); break;
@@ -2076,7 +2067,7 @@ namespace GitUI.CommandsDialogs
 
             return true;
 
-            void FocusBranchTree()
+            void FocusLeftPanel()
             {
                 if (!MainSplitContainer.Panel1Collapsed)
                 {
@@ -2220,7 +2211,7 @@ namespace GitUI.CommandsDialogs
             RefreshLayoutToggleButtonStates();
             if (_isFileBlameHistory)
             {
-                _fileBlameHistorySidePanelStartupState = MainSplitContainer.Panel1Collapsed;
+                _fileBlameHistoryLeftPanelStartupState = MainSplitContainer.Panel1Collapsed;
                 MainSplitContainer.Panel1Collapsed = true;
             }
 
@@ -2246,12 +2237,13 @@ namespace GitUI.CommandsDialogs
             branchToolStripMenuItem.Enabled =
             deleteBranchToolStripMenuItem.Enabled =
             mergeBranchToolStripMenuItem.Enabled =
-            rebaseToolStripMenuItem.Enabled =
             checkoutBranchToolStripMenuItem.Enabled =
             cherryPickToolStripMenuItem.Enabled =
             checkoutToolStripMenuItem.Enabled =
             bisectToolStripMenuItem.Enabled =
                 singleNormalCommit && !Module.IsBareRepository();
+
+            rebaseToolStripMenuItem.Enabled = selectedRevisions.Count is (1 or 2) && selectedRevisions.All(r => !r.IsArtificial) && !Module.IsBareRepository();
 
             tagToolStripMenuItem.Enabled =
             deleteTagToolStripMenuItem.Enabled =
@@ -2737,7 +2729,7 @@ namespace GitUI.CommandsDialogs
             RefreshSplitViewLayout();
         }
 
-        private void toggleBranchTreePanel_Click(object sender, EventArgs e)
+        private void toggleLeftPanel_Click(object sender, EventArgs e)
         {
             MainSplitContainer.Panel1Collapsed = !MainSplitContainer.Panel1Collapsed;
             DiagnosticsClient.TrackEvent("Layout change",
@@ -2747,7 +2739,7 @@ namespace GitUI.CommandsDialogs
 
             if (!MainSplitContainer.Panel1Collapsed)
             {
-                // Refresh the side panel, update visibility of objects separately
+                // Refresh the left panel, update visibility of objects separately
                 // Get the "main" stash commit, including the reflog selector
                 Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
                     !AppSettings.ShowStashes
@@ -2799,13 +2791,13 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshLayoutToggleButtonStates()
         {
-            toggleBranchTreePanel.Checked = !MainSplitContainer.Panel1Collapsed;
+            toggleLeftPanel.Checked = !MainSplitContainer.Panel1Collapsed;
             toggleSplitViewLayout.Checked = AppSettings.ShowSplitViewLayout;
 
             int commitInfoPositionNumber = (int)AppSettings.CommitInfoPosition;
             var selectedMenuItem = menuCommitInfoPosition.DropDownItems[commitInfoPositionNumber];
             menuCommitInfoPosition.Image = selectedMenuItem.Image;
-            menuCommitInfoPosition.ToolTipText = selectedMenuItem.Text;
+            menuCommitInfoPosition.ToolTipText = selectedMenuItem.Text?.Replace("&", string.Empty);
         }
 
         private void LayoutRevisionInfo()
