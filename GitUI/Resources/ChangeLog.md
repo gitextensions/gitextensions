@@ -4,13 +4,39 @@ Changelog
 ### Version 4.1 (01 May 2023)
 
 #### Changes:
+* [#10928] Current selection can be null, if the dialog is empty
+* [#10925] Portable information in EnvironmentInfo
+* [#10924] Remove SettingsCache entry when setting empty value
+* [#10923] Remove DotnetRuntimeBootstrapper
+* [#10922] Git 2.40.1
+* [#10920] Decode url-encoded repository folder's name
+* [#10918] Do not delay Dashboard start for invalid Git repos
+* [#10910] Update UI elements on the UI thread
+* [#10908] Intercept and convert \\wsl.localhost\ to \\wsl$\ paths
+* [#10891] Fix lost "Open github from blame" feature
+* [#10887] FileStatusList: Avoid blocking check for Visual Studio
+* [#10886] Ignore exceptions from cancelled loading of submodule details for left panel
+* [#10885] Reenable lost rebase onto feature from revision grid
+* [#10884] Improve commit selection for 'Find file' feature
+* [#10881] Fixup SortingSettingsPage layout
+* [#10880] No async when minimized
+* [#10879] Improve rebase onto commit selection
+* [#10878] Perf (and bugfix) avatars handling
+* [#10877] Revert version update
+* [#10871] Remove use of git:// protocol in GitHub plugin
+* [#10870] Refactoring: Rename to LeftPanel
+* [#10869] GitHub: Check that PAT is filled before trying to add upsteam remote
+* [#10868] Settings: Adjust to sentence case
 * [#10863] Filter toolbar: Show reflog first and default
 * [#10858] Git 2.40.0
 * [#10857] Rename to "LeftPanel" in hotkeys
+* [#10854] Reset conflicted files
 * [#10853] Reset renamed index files
+* [#10852] Merge conflicts: Only list files in worktree
 * [#10850] Fixup submodule reference of ICSharpCode.TextEditor
 * [#10849] IScriptHostControl.CurrentBranch() to decrease overhead
 * [#10847] Restore from minimized: Configurable avoid async Git
+* [#10846] Improve avatar handling
 * [#10843] FormCommit: Read committer info using git
 * [#10842] Refactor and fixup graph loading
 * [#10840] Improve blame performance
@@ -59,6 +85,7 @@ Changelog
 * [#10613] Conemu: fix switch of repo folder in console tab
 * [#10587] FormCommit: Clearer button labels
 * [#10538] Add support for SourceLink
+* [#10515] ﻿test: being able to run integration tests from Resharper
 * [#10512] Explorer integration hide menuitems
 * [#10452] Test for pullAction failed if defaults were changed
 * [#10445] Do not store the default value of a NumberSetting
@@ -92,13 +119,39 @@ Changelog
 * [#9925] Blame: open current diff/view line
 
 
+[#10928]:https://github.com/gitextensions/gitextensions/pull/10928
+[#10925]:https://github.com/gitextensions/gitextensions/pull/10925
+[#10924]:https://github.com/gitextensions/gitextensions/pull/10924
+[#10923]:https://github.com/gitextensions/gitextensions/pull/10923
+[#10922]:https://github.com/gitextensions/gitextensions/pull/10922
+[#10920]:https://github.com/gitextensions/gitextensions/pull/10920
+[#10918]:https://github.com/gitextensions/gitextensions/pull/10918
+[#10910]:https://github.com/gitextensions/gitextensions/pull/10910
+[#10908]:https://github.com/gitextensions/gitextensions/pull/10908
+[#10891]:https://github.com/gitextensions/gitextensions/pull/10891
+[#10887]:https://github.com/gitextensions/gitextensions/pull/10887
+[#10886]:https://github.com/gitextensions/gitextensions/pull/10886
+[#10885]:https://github.com/gitextensions/gitextensions/pull/10885
+[#10884]:https://github.com/gitextensions/gitextensions/pull/10884
+[#10881]:https://github.com/gitextensions/gitextensions/pull/10881
+[#10880]:https://github.com/gitextensions/gitextensions/pull/10880
+[#10879]:https://github.com/gitextensions/gitextensions/pull/10879
+[#10878]:https://github.com/gitextensions/gitextensions/pull/10878
+[#10877]:https://github.com/gitextensions/gitextensions/pull/10877
+[#10871]:https://github.com/gitextensions/gitextensions/pull/10871
+[#10870]:https://github.com/gitextensions/gitextensions/pull/10870
+[#10869]:https://github.com/gitextensions/gitextensions/pull/10869
+[#10868]:https://github.com/gitextensions/gitextensions/pull/10868
 [#10863]:https://github.com/gitextensions/gitextensions/pull/10863
 [#10858]:https://github.com/gitextensions/gitextensions/pull/10858
 [#10857]:https://github.com/gitextensions/gitextensions/pull/10857
+[#10854]:https://github.com/gitextensions/gitextensions/pull/10854
 [#10853]:https://github.com/gitextensions/gitextensions/pull/10853
+[#10852]:https://github.com/gitextensions/gitextensions/pull/10852
 [#10850]:https://github.com/gitextensions/gitextensions/pull/10850
 [#10849]:https://github.com/gitextensions/gitextensions/pull/10849
 [#10847]:https://github.com/gitextensions/gitextensions/pull/10847
+[#10846]:https://github.com/gitextensions/gitextensions/pull/10846
 [#10843]:https://github.com/gitextensions/gitextensions/pull/10843
 [#10842]:https://github.com/gitextensions/gitextensions/pull/10842
 [#10840]:https://github.com/gitextensions/gitextensions/pull/10840
@@ -147,6 +200,7 @@ Changelog
 [#10613]:https://github.com/gitextensions/gitextensions/pull/10613
 [#10587]:https://github.com/gitextensions/gitextensions/pull/10587
 [#10538]:https://github.com/gitextensions/gitextensions/pull/10538
+[#10515]:https://github.com/gitextensions/gitextensions/pull/10515
 [#10512]:https://github.com/gitextensions/gitextensions/pull/10512
 [#10452]:https://github.com/gitextensions/gitextensions/pull/10452
 [#10445]:https://github.com/gitextensions/gitextensions/pull/10445
@@ -178,6 +232,7 @@ Changelog
 [#10140]:https://github.com/gitextensions/gitextensions/pull/10140
 [#10128]:https://github.com/gitextensions/gitextensions/pull/10128
 [#9925]:https://github.com/gitextensions/gitextensions/pull/9925
+
 
 
 ### Version 4.0.2 (15 Jan 2023)
