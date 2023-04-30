@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
+<?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -10,9 +10,8 @@
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
-        <source>Auto compile SubModules</source>
-        <target>Alt modüllerin otomatik olarak derlenmesi</target>
+      <trans-unit id="Description.Text">
+        <source>Auto compile submodules</source>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -48,7 +47,7 @@
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
         <target>Periyodik arka plan getirmesi</target>
         
@@ -97,7 +96,7 @@
         <target>Bitbucket Kullanıcı adı</target>
         
       </trans-unit>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Bitbucket Server</source>
         <target>Bitbucket Sunucusu</target>
         
@@ -296,7 +295,7 @@
   </file>
   <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
         <target>Yerel izleme dalları oluştur</target>
         
@@ -458,7 +457,7 @@ Devam etmek istediğine emin misin?</target>
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
         <target>Eski dalları sil</target>
         
@@ -581,7 +580,7 @@ Devam etmek istediğine emin misin?</target>
   </file>
   <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Find large files</source>
         <target>Büyük dosyaları bul</target>
         
@@ -589,241 +588,6 @@ Devam etmek istediğine emin misin?</target>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
         <target>(Mb)'tan büyük dosyaları bul</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Change Submitted</source>
-        <target>Değişiklik Gönderildi</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Kapat</target>
-        
-      </trans-unit>
-      <trans-unit id="labelSubmitted.Text">
-        <source>Your change has been submitted for review at the following location:</source>
-        <target>Değişikliğiniz aşağıdaki konumda incelenmek üzere gönderildi:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Download Gerrit Change</source>
-        <target>Gerrit Değişikliğini (Change'i) İndir</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>Uzak depoları yönet</target>
-        
-      </trans-unit>
-      <trans-unit id="Download.Text">
-        <source>&amp;Download</source>
-        <target>&amp;İndir</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotGetChangeDetails.Text">
-        <source>Could not retrieve the change details</source>
-        <target>Değişikliğin ayrıntıları alınamadı</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadCaption.Text">
-        <source>Download change {0}</source>
-        <target>{0} değişikliğini indir</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadGerritChangeCaption.Text">
-        <source>Download Gerrit Change</source>
-        <target>Gerrit Değişikliğini (Change'i) İndir</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectChange.Text">
-        <source>Please enter a change</source>
-        <target>Lütfen bir değişiklik girin</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>Lütfen uzak bir depo seçin</target>
-        
-      </trans-unit>
-      <trans-unit id="labelChange.Text">
-        <source>Change:</source>
-        <target>Değişiklik:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelEnterChangeIdOrNumber.Text">
-        <source>Enter the Change-Id or the number from the Gerrit URL</source>
-        <target>Gerrit URL'sinden Change-Id veya numarasını girin</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>Uzak Depo:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopicBranch.Text">
-        <source>Topic branch:</source>
-        <target>Konu dalı:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Gerrit Değişikliğini (Change) Yayınla</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>Uzak depoları yönet</target>
-        
-      </trans-unit>
-      <trans-unit id="Publish.Text">
-        <source>&amp;Publish</source>
-        <target>&amp;Yayınla</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishCaption.Text">
-        <source>Publish change</source>
-        <target>Değişikliği yayınla</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChangeCaption.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Gerrit Değişikliğini (Change) Yayınla</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectBranch.Text">
-        <source>Please enter a branch</source>
-        <target>Lütfen bir dal girin</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>Lütfen uzak bir depo seçin</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBranch.Text">
-        <source>Branch:</source>
-        <target>Dal:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelCc.Text">
-        <source>CC:</source>
-        <target>CC (Kime):</target>
-        
-      </trans-unit>
-      <trans-unit id="labelHashtag.Text">
-        <source>Hashtag:</source>
-        <target>Karma etiketi:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelPublishType.Text">
-        <source>Publish Type:</source>
-        <target>Yayın Türü:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>Uzak Depo:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelReviewers.Text">
-        <source>Reviewer(s):</source>
-        <target>Gözden Geçiren:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopic.Text">
-        <source>Topic:</source>
-        <target>Konu:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Edit .gitreview</source>
-        <target>.gitreview düzenle</target>
-        
-      </trans-unit>
-      <trans-unit id="Save.Text">
-        <source>Save</source>
-        <target>Kaydet</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreview.Text">
-        <source>Failed to save .gitreview.
-Check if file is accessible.</source>
-        <target>.gitreview kaydedilemedi
-Dosyanın erişilebilir olup olmadığını kontrol edin.</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreviewCaption.Text">
-        <source>Failed to save .gitreview</source>
-        <target>.gitreview kaydedilemedi</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
-        <source>.gitreview is only supported when there is a working directory.</source>
-        <target>.gitreview yalnızca bir çalışma dizini olduğunda desteklenir.</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
-        <source>No working directory</source>
-        <target>Çalışma dizini yok</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestion.Text">
-        <source>Save changes to .gitreview?</source>
-        <target>.gitreview'de yapılan değişiklikler kaydedilsin mi?</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestionCaption.Text">
-        <source>Save changes?</source>
-        <target>Değişiklikler kaydedilsin mi?</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Provide the configuration for
-.gitreview to setup Gerrit.
-
-Example configuration:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</source>
-        <target>Gerrit'i kurmak için
-.gitreview yapılandırın.
-
-Örnek yapılandırma:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitReviewHelp.Text">
-        <source>GitHub page for git-review</source>
-        <target>git-review için GitHub sayfası</target>
         
       </trans-unit>
     </body>
@@ -981,141 +745,6 @@ defaultrebase=0</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Gerrit Plugin</source>
-        <target>Gerrit Eklentisi</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Kapat</target>
-        
-      </trans-unit>
-      <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
-
-To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>Gerrit eklentisi, Git Extensions ile Gerrit arasında entegrasyon sağlar. Bu eklenti, git-review (inceleme) aracına dayanmaktadır.
-
-Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası oluşturulmalıdır. Bunu, Depo menüsündeki .gitreview düzenle içerisinde yapılabilirsiniz. .gitreview dosyası ve git-review aracı hakkında daha fazla bilgi için aşağıdaki bağlantıya bakabilirsiniz.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="_publishTypeDraft.Text">
-        <source>Draft</source>
-        <target>Taslak</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishTypePrivate.Text">
-        <source>Private</source>
-        <target>Gizli</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishTypeReview.Text">
-        <source>For Review</source>
-        <target>İnceleme için</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishTypeWip.Text">
-        <source>Work-in-Progress</source>
-        <target>Devam Eden işlemler</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Name.Text">
-        <source>Gerrit Code Review</source>
-        <target>Gerrit Kod İncelemesi</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadGerritChange.Text">
-        <source>Download Gerrit Change</source>
-        <target>Gerrit Değişikliğini (Change'i) İndir</target>
-        
-      </trans-unit>
-      <trans-unit id="_editGitReview.Text">
-        <source>Edit .gitreview</source>
-        <target>.gitreview düzenle</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHook.Text">
-        <source>Install Hook</source>
-        <target>Kanca'yı (hook) Yükle</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
-        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>Commit-msg dosyası indirilemedi. Lütfen, commit-msg kancasını (hook) manuel olarak yükleyin.</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
-        <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
-        <target>Hooks (kancalar) klasörü oluşturulamadı. Lütfen, klasörü manuel olarak oluşturun ve tekrar deneyin.</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookMessage.Text">
-        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit'i kullanmak için commit-msg kancasına (hook) ihtiyacın var. Commit-msg kancasını (hook), depona yüklemek istiyor musun?</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookShortText.Text">
-        <source>Install commit-msg hook</source>
-        <target>Commit-msg kancasını (hook) yükle</target>
-        
-      </trans-unit>
-      <trans-unit id="_predefinedGerritVersion.Caption">
-        <source>Treat Gerrit as having version</source>
-        <target>Gerrit, bu sürümü varmış gibi davran:</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChange.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Gerrit Değişikliğini (Change) Yayınla</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="_settingsError.Text">
-        <source>Error loading .gitreview file.</source>
-        <target>.gitreview dosyası yüklenirken hata oluştu.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
-        <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        <target>.gitreview dosyasında &quot;defaultremote&quot; parametresinde belirtilen &quot;{0}&quot; uzak deposu, yapılandırılmış bir uzak depoya başvurmuyor. Bu deponun, uzak bağlantısını oluşturun veya .gitreview dosyası içerisindeki ayarı değiştirin.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorFileNotFound.Text">
-        <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        <target>Çalışma dizininde &quot;.gitreview&quot; dosyası bulunamıyor.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorHostNotEntered.Text">
-        <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
-        <target>.gitreview dosyasındaki &quot;ana bilgisayar (host)&quot; ayarı zorunludur.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorPortNotNumeric.Text">
-        <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
-        <target>.gitreview dosyasında belirtilen &quot;bağlantı noktası (port)&quot; yalnızca rakam-basamak içeremelidir.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorProjectNotEntered.Text">
-        <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        <target>.gitreview dosyasındaki &quot;proje&quot; ayarı zorunludur.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
@@ -1223,7 +852,7 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixDescription.Text">
+      <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
         <target>[önek]/</target>
         
@@ -1231,6 +860,11 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
         <target>GitFlow Hakkında</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkGitFlow.ttGitFlow">
+        <source>A good branch model for your project with Git...</source>
+        <target>Git ile projeniz için iyi bir dal modeli...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -1242,7 +876,7 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
   </file>
   <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>GitFlow</source>
         <target>GitFlow (GitAkışı)</target>
         
@@ -1251,7 +885,7 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
   </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>GitHub</source>
         <target>GitHub</target>
         
@@ -1261,14 +895,33 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
         <target>GitHub (Enterprise/Kurumsal) ana bilgisayar adı (hostname)</target>
         
       </trans-unit>
-      <trans-unit id="OAuthToken.Caption">
-        <source>OAuth Token</source>
-        <target>OAuth Jetonu (Token)</target>
+      <trans-unit id="PersonalAccessToken.Caption">
+        <source>Personal Access Token</source>
+        <target>Kişisel Erişim Jetonu (Personal Access Token)</target>
+        
+      </trans-unit>
+      <trans-unit id="_generateToken.Text">
+        <source>Generate a GitHub personal access token</source>
+        <target>GitHub kişisel erişim jetonunu (GitHub personal access token) oluştur</target>
+        
+      </trans-unit>
+      <trans-unit id="_manageToken.Text">
+        <source>Manage GitHub personal access token</source>
+        <target>GitHub kişisel erişim jetonunu (GitHub personal access token) yönet</target>
+        
+      </trans-unit>
+      <trans-unit id="_noteRestartNeeded.Text">
+        <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        
+      </trans-unit>
+      <trans-unit id="_openLinkFailed.Text">
+        <source>Fail to open the link. Reason: </source>
+        <target>Bağlantı açılamadı. Sebep: </target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
-        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
-        <target>Zaten bir tane OAuth jetonun var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar'ı içerisinden eski jetonu sil.</target>
+        <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
+        <target>Zaten bir tane kişisel erişim jetonun (personal access token) var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar'ı içerisinden eski jetonu (token'u) sil.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -1280,7 +933,7 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Impact Graph</source>
         <target>Katkı Grafiği</target>
         
@@ -1289,7 +942,7 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Statistics</source>
         <target>İstatistikler</target>
         
@@ -1313,7 +966,7 @@ Bir depo için Gerrit desteğini etkinleştirmek için bir .gitreview dosyası o
   </file>
   <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Gource</source>
         <target>Gource</target>
         
@@ -1461,7 +1114,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
   </file>
   <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Jira Commit Hint</source>
         <target>Jira Teslim İpucu</target>
         
@@ -1570,7 +1223,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
         <target>Yapılandırılmış bir vekiili (proxy'si) yok. Lütfen, eklenti ayarlarında vekil (proxy) ana bilgisayarını ayarlayın.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginName.Text">
+      <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
         <target>Vekil (Proxy) Değiştiricisi</target>
         
@@ -1579,7 +1232,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
   </file>
   <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
         <target>Vekil (Proxy) Değiştiricisi</target>
         
@@ -1736,7 +1389,7 @@ teslim ifadeleri olabilir)</target>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
         <target>Sürüm Notları Oluşturucu</target>
         
@@ -1855,15 +1508,6 @@ Lütfen, sunucu URL'sini doğrulayın.</target>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
         <target>Panoya kopyalanan derleme url'sinden verileri çıkar</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'Derleme tanımlama adı' düzenli ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
     </body>

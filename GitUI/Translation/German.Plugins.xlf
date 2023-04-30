@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
+<?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="de">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -10,9 +10,8 @@
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
-        <source>Auto compile SubModules</source>
-        <target>Untermodule automatisch kompilieren</target>
+      <trans-unit id="Description.Text">
+        <source>Auto compile submodules</source>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -48,7 +47,7 @@
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
         <target>Periodischer fetch im Hintergrund</target>
         
@@ -97,7 +96,7 @@
         <target>Bitbucket Benutzername</target>
         
       </trans-unit>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Bitbucket Server</source>
         <target>Bitbucket Server</target>
         
@@ -296,7 +295,7 @@
   </file>
   <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
         <target>Erzeuge lokale Branches zur Verfolgung</target>
         
@@ -458,7 +457,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
         <target>Obsolete Branches löschen</target>
         
@@ -581,7 +580,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
   </file>
   <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Find large files</source>
         <target>Finde große Dateien</target>
         
@@ -589,242 +588,6 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
         <target>Finde Dateien größer als (MB)</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Change Submitted</source>
-        <target>Änderung übermittelt</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Schließen</target>
-        
-      </trans-unit>
-      <trans-unit id="labelSubmitted.Text">
-        <source>Your change has been submitted for review at the following location:</source>
-        <target>Ihre Änderung wurde für eine Review an folgende Adresse geschickt:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Download Gerrit Change</source>
-        <target>Gerrit Änderung herunterladen</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>Remotes verwalten</target>
-        
-      </trans-unit>
-      <trans-unit id="Download.Text">
-        <source>&amp;Download</source>
-        <target>&amp;Herunterladen</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotGetChangeDetails.Text">
-        <source>Could not retrieve the change details</source>
-        <target>Konnte die Details zur Änderung nicht abrufen</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadCaption.Text">
-        <source>Download change {0}</source>
-        <target>Download der Änderung {0}</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadGerritChangeCaption.Text">
-        <source>Download Gerrit Change</source>
-        <target>Gerrit Änderung herunterladen</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectChange.Text">
-        <source>Please enter a change</source>
-        <target>Bitte geben Sie eine Änderung an</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>Bitte wählen Sie ein Remote Repository aus</target>
-        
-      </trans-unit>
-      <trans-unit id="labelChange.Text">
-        <source>Change:</source>
-        <target>Änderung:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelEnterChangeIdOrNumber.Text">
-        <source>Enter the Change-Id or the number from the Gerrit URL</source>
-        <target>Geben Sie die Change-ID oder die aktuelle Nummer aus der Gerrit URL an</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>Remote:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopicBranch.Text">
-        <source>Topic branch:</source>
-        <target>Topic Branch:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Gerrit Änderung veröffentlichen</target>
-        
-      </trans-unit>
-      <trans-unit id="AddRemote.Text">
-        <source>Manage remotes</source>
-        <target>Remotes verwalten</target>
-        
-      </trans-unit>
-      <trans-unit id="Publish.Text">
-        <source>&amp;Publish</source>
-        <target>&amp;Veröffentlichen</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishCaption.Text">
-        <source>Publish change</source>
-        <target>Änderung veröffentlichen</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChangeCaption.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Gerrit Änderung veröffentlichen</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectBranch.Text">
-        <source>Please enter a branch</source>
-        <target>Bitte Branch angeben</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectRemote.Text">
-        <source>Please select a remote repository</source>
-        <target>Bitte wählen Sie ein Remote Repository aus</target>
-        
-      </trans-unit>
-      <trans-unit id="labelBranch.Text">
-        <source>Branch:</source>
-        <target>Branch:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelCc.Text">
-        <source>CC:</source>
-        <target>CC:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelHashtag.Text">
-        <source>Hashtag:</source>
-        <target>Hashtag:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelPublishType.Text">
-        <source>Publish Type:</source>
-        <target>Veröffentlichungs-Typ:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRemote.Text">
-        <source>Remote:</source>
-        <target>Remote:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelReviewers.Text">
-        <source>Reviewer(s):</source>
-        <target>Reviewer:</target>
-        
-      </trans-unit>
-      <trans-unit id="labelTopic.Text">
-        <source>Topic:</source>
-        <target>Topic:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Edit .gitreview</source>
-        <target>Editiere .gitreview</target>
-        
-      </trans-unit>
-      <trans-unit id="Save.Text">
-        <source>Save</source>
-        <target>Speichern</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreview.Text">
-        <source>Failed to save .gitreview.
-Check if file is accessible.</source>
-        <target>Fehler beim Speichern von .gitreview.
-Stellen Sie sicher dass Zugriff auf die Datei möglich ist.</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotAccessGitreviewCaption.Text">
-        <source>Failed to save .gitreview</source>
-        <target>Fehler beim Speichern von .gitreview.</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
-        <source>.gitreview is only supported when there is a working directory.</source>
-        <target>.gitreview wird nur unterstützt, wenn ein Arbeitsverzeichnis existiert.</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
-        <source>No working directory</source>
-        <target>Kein Arbeitsverzeichnis</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestion.Text">
-        <source>Save changes to .gitreview?</source>
-        <target>Änderungen an .gitreview speichern?</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileQuestionCaption.Text">
-        <source>Save changes?</source>
-        <target>Änderungen speichern?</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Provide the configuration for
-.gitreview to setup Gerrit.
-
-Example configuration:
-
-[gerrit]
-host=review.example.com
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</source>
-        <target>Erstellen Sie die Konfiguration für 
-.gitreview, um Gerrit einzurichten.
-
-Beispiel Konfiguration:
-
-
-[gerrit]
-host=review.beispiel.de
-port=29418
-project=department/project.git
-defaultbranch=master
-defaultremote=review
-defaultrebase=0</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitReviewHelp.Text">
-        <source>GitHub page for git-review</source>
-        <target>GitHub Seite für git-review</target>
         
       </trans-unit>
     </body>
@@ -982,141 +745,6 @@ defaultrebase=0</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Gerrit Plugin</source>
-        <target>Gerrit Plugin</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Schließen</target>
-        
-      </trans-unit>
-      <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
-
-To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>Das Gerrit Plugin für Git Extensions bringt die Unterstützung integriert Gerrit in Git Extensions. Dieses Plugin basiert auf dem git-review Tool.
-
-Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitreview Datei erstellt werden. Das kann über die Menüoption Repository | Bearbeite .gitreview erledigt werden. Besuchen Sie den Link unten, um mehr Informationen über die .gitreview Datei und das git-review Tool zu bekommen.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="_publishTypeDraft.Text">
-        <source>Draft</source>
-        <target>Entwurf</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishTypePrivate.Text">
-        <source>Private</source>
-        <target>Privat</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishTypeReview.Text">
-        <source>For Review</source>
-        <target>Zur Review</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishTypeWip.Text">
-        <source>Work-in-Progress</source>
-        <target>In Arbeit</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="Name.Text">
-        <source>Gerrit Code Review</source>
-        <target>Gerrit Code Review</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadGerritChange.Text">
-        <source>Download Gerrit Change</source>
-        <target>Gerrit Änderung herunterladen</target>
-        
-      </trans-unit>
-      <trans-unit id="_editGitReview.Text">
-        <source>Edit .gitreview</source>
-        <target>Editiere .gitreview</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHook.Text">
-        <source>Install Hook</source>
-        <target>Hook installieren</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
-        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
-        <target>Konnte die commit-msg Datei nicht herunterladen. Bitte installieren Sie den commit-msg Hook manuell.</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
-        <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
-        <target>Konnte den hooks Ordner nicht erstellen. Bitte erstellen sie den Ordner manuell und versuchen Sie es erneut.</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookMessage.Text">
-        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
-        <target>Gerrit benötigt einen installierten commit-msg Hook. Wollen Sie den commit-msg Hook nun in Ihrem Repository installieren?</target>
-        
-      </trans-unit>
-      <trans-unit id="_installCommitMsgHookShortText.Text">
-        <source>Install commit-msg hook</source>
-        <target>commit-msg Hook installieren</target>
-        
-      </trans-unit>
-      <trans-unit id="_predefinedGerritVersion.Caption">
-        <source>Treat Gerrit as having version</source>
-        <target>Behandle Gerrit wie eine Version</target>
-        
-      </trans-unit>
-      <trans-unit id="_publishGerritChange.Text">
-        <source>Publish Gerrit Change</source>
-        <target>Gerrit Änderung veröffentlichen</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="_settingsError.Text">
-        <source>Error loading .gitreview file.</source>
-        <target>Fehler beim Laden der .gitreview Datei.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
-        <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
-        <target>Die Rremote &quot;{0}&quot; die mit dem &quot;defaultremote&quot; Eintrag in der .gitreview Datei angegeben ist referenziert keine konfigurierte Remote. Erzeugen Sie diese Remote oder ändern Sie den Wert in der .gitreview Datei.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorFileNotFound.Text">
-        <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
-        <target>Kann die &quot;.gitreview&quot; im aktuellen Arbeitsverzeichnis nicht finden.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorHostNotEntered.Text">
-        <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
-        <target>Der &quot;host&quot; Eintrag in der .gitreview Datei fehlt wird aber benötigt.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorPortNotNumeric.Text">
-        <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
-        <target>Der &quot;port&quot; in der .gitreview Datei darf nur aus Zahlen bestehen.</target>
-        
-      </trans-unit>
-      <trans-unit id="_settingsErrorProjectNotEntered.Text">
-        <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
-        <target>Der &quot;project&quot; Eintrag in der .gitreview Datei fehlt wird aber benötigt.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="de">
     <body>
       <trans-unit id="$this.Text">
@@ -1224,7 +852,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixDescription.Text">
+      <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
         <target>[prefix]/</target>
         
@@ -1232,6 +860,10 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
         <target>Über GitFlow</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkGitFlow.ttGitFlow">
+        <source>A good branch model for your project with Git...</source>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -1243,7 +875,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>GitFlow</source>
         <target>GitFlow</target>
         
@@ -1252,7 +884,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>GitHub</source>
         <target>GitHub</target>
         
@@ -1262,14 +894,32 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
         <target>GitHub (Enterprise) Hostname</target>
         
       </trans-unit>
-      <trans-unit id="OAuthToken.Caption">
-        <source>OAuth Token</source>
-        <target>OAuth Token</target>
+      <trans-unit id="PersonalAccessToken.Caption">
+        <source>Personal Access Token</source>
+        <target>Persönlicher Zugriffstoken</target>
+        
+      </trans-unit>
+      <trans-unit id="_generateToken.Text">
+        <source>Generate a GitHub personal access token</source>
+        <target>Erzeuge einen persönlichen GitHub Zugriffstoken</target>
+        
+      </trans-unit>
+      <trans-unit id="_manageToken.Text">
+        <source>Manage GitHub personal access token</source>
+        <target>Verwalte persönlichen GitHub-Zugriffstoken</target>
+        
+      </trans-unit>
+      <trans-unit id="_noteRestartNeeded.Text">
+        <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        
+      </trans-unit>
+      <trans-unit id="_openLinkFailed.Text">
+        <source>Fail to open the link. Reason: </source>
+        <target>Öffnen der Verknüpfung fehlgeschlagen. Begründung:</target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
-        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
-        <target>Sie haben schon ein OAuth Token. Um ein neues anzufordern, löschen Sie das alte zuerst unter Plugins &gt; Einstellungen.</target>
+        <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -1281,7 +931,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Impact Graph</source>
         <target>Darstellung der Abhängigkeiten</target>
         
@@ -1290,7 +940,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Statistics</source>
         <target>Statistiken</target>
         
@@ -1314,7 +964,7 @@ Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitre
   </file>
   <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Gource</source>
         <target>Gource</target>
         
@@ -1462,7 +1112,7 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
   </file>
   <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Jira Commit Hint</source>
         <target>JIRA Commit Hinweis</target>
         
@@ -1571,7 +1221,7 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
         <target>Es ist kein Proxy konfiguriert. Bitte setzen Sie den Proxy-Host in den Plugin Einstellungen.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginName.Text">
+      <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
         <target>Proxy Wechsler</target>
         
@@ -1580,7 +1230,7 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
   </file>
   <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
         <target>Proxy Wechsler</target>
         
@@ -1737,7 +1387,7 @@ Branchnamen oder Tag-Namen sein.)</target>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="Name.Text">
+      <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
         <target>Release Notes Generator</target>
         
@@ -1856,15 +1506,6 @@ Bitte die Server-URL überprüfen.</target>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
         <target>Extrahiere die Daten aus der Build URL die sich in der Zwischenablage befindet</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>Der reguläre Ausdruck &quot;Builddefinition-Name&quot; ist ungültig und wird nicht gespeichert!</target>
         
       </trans-unit>
     </body>

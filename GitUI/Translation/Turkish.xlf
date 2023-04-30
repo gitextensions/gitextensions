@@ -109,6 +109,10 @@ Bu eylem, daldan çıkış yapılırken, uyarı yapılmadan gerçekleştirilecek
         <target>Yazı Tipleri</target>
         
       </trans-unit>
+      <trans-unit id="ShowEolMarkerAsGlyph.Text">
+        <source>Show end-of-line markers as glyph instead of &quot;\r\n&quot; etc.</source>
+        
+      </trans-unit>
       <trans-unit id="applicationFontChangeButton.Text">
         <source>font name</source>
         <target>yazı tipini adı</target>
@@ -125,8 +129,8 @@ Bu eylem, daldan çıkış yapılırken, uyarı yapılmadan gerçekleştirilecek
         
       </trans-unit>
       <trans-unit id="gbFonts.Text">
-        <source>Fonts</source>
-        <target>Yazı Tipleri</target>
+        <source>Fonts (restart required)</source>
+        <target>Yazı Tipleri (yeniden başlatılmalı)</target>
         
       </trans-unit>
       <trans-unit id="label26.Text">
@@ -217,11 +221,6 @@ Click this info icon for more details.</source>
 Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
         
       </trans-unit>
-      <trans-unit id="_revisionSortWarningTooltip.Text">
-        <source>Sorting revisions may delay rendering of the revision graph.</source>
-        <target>Revizyonların sıralanması, revizyon grafiğinin oluşturulmasını geciktirebilir.</target>
-        
-      </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
         <source>Auto scale user interface when high DPI is used</source>
         <target>Yüksek DPI kullanıldığında kullanıcı arabirimini otomatik ölçeklendir</target>
@@ -272,16 +271,6 @@ Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
         <target>Avatar sağlayıcısı</target>
         
       </trans-unit>
-      <trans-unit id="lblBranchesOrder.Text">
-        <source>Order branches</source>
-        <target>Dalları sırala</target>
-        
-      </trans-unit>
-      <trans-unit id="lblBranchesSortBy.Text">
-        <source>Sort branches by</source>
-        <target>Dalları Sırala</target>
-        
-      </trans-unit>
       <trans-unit id="lblCacheDays.Text">
         <source>Cache images (days)</source>
         <target>Önbellek resimleri (gün)</target>
@@ -300,11 +289,6 @@ Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
       <trans-unit id="lblNoImageService.Text">
         <source>Fallback generated avatar style</source>
         <target>Alternatif avatar stili</target>
-        
-      </trans-unit>
-      <trans-unit id="lblRevisionsSortBy.Text">
-        <source>Sort revisions by</source>
-        <target>Revizyonları sırala</target>
         
       </trans-unit>
       <trans-unit id="lblSpellingDictionary.Text">
@@ -339,53 +323,6 @@ Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="cbLoadTestResults.Text">
-        <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>Her derleme sonucu için derleme durumunun özetinde test sonuçlarını görüntüle (ağ yoğun!)</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Auto compile SubModules</source>
-        <target>Alt modüllerin otomatik olarak derlenmesi</target>
-        
-      </trans-unit>
-      <trans-unit id="_doYouWantBuild.Text">
-        <source>Do you want to build {0}?
-
-{1}</source>
-        <target>{0} derlemek istiyor musun?
-
-{1}</target>
-        
-      </trans-unit>
-      <trans-unit id="_enterCorrectMsBuildPath.Text">
-        <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Eklenti Ayarları iletişim kutusuna doğru MSBuild yolunu girin ve tekrar deneyin.</target>
-        
-      </trans-unit>
-      <trans-unit id="_msBuildArguments.Caption">
-        <source>msbuild.exe arguments</source>
-        <target>msbuild.exe bağımsız değişkenleri</target>
-        
-      </trans-unit>
-      <trans-unit id="_msBuildEnabled.Caption">
-        <source>Enabled</source>
-        <target>Etkin</target>
-        
-      </trans-unit>
-      <trans-unit id="_msBuildPath.Caption">
-        <source>Path to msbuild.exe</source>
-        <target>msbuild.exe dosyasının yolu</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="AvatarControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="avatarProviderToolStripMenuItem.Text">
@@ -406,235 +343,6 @@ Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
       <trans-unit id="registerGravatarToolStripMenuItem.Text">
         <source>Register at gravatar.com</source>
         <target>Gravatar.com'a kayıt ol</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Periodic background fetch</source>
-        <target>Periyodik arka plan getirmesi</target>
-        
-      </trans-unit>
-      <trans-unit id="_autoRefresh.Caption">
-        <source>Refresh view after fetch</source>
-        <target>Getirdikten sonra görünümü yenile</target>
-        
-      </trans-unit>
-      <trans-unit id="_fetchAllSubmodules.Caption">
-        <source>Fetch all submodules</source>
-        <target>Tüm alt modülleri getir</target>
-        
-      </trans-unit>
-      <trans-unit id="_fetchInterval.Caption">
-        <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>Her şeyi getir (saniye) - devre dışı bırakmak için 0 yap</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitCommand.Caption">
-        <source>Arguments of git command to run</source>
-        <target>Çalıştırılacak git komutunun bağımsız değişkenleri</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="BitbucketBaseUrl.Caption">
-        <source>Specify the base URL to Bitbucket</source>
-        <target>Bitbucket için temel URL'yi belirtin</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketDisableSsl.Caption">
-        <source>Disable SSL verification</source>
-        <target>SSL doğrulamasını devre dışı bırak</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketPassword.Caption">
-        <source>Bitbucket Password</source>
-        <target>Bitbucket Şifresi</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketUsername.Caption">
-        <source>Bitbucket Username</source>
-        <target>Bitbucket Kullanıcı adı</target>
-        
-      </trans-unit>
-      <trans-unit id="Description.Text">
-        <source>Bitbucket Server</source>
-        <target>Bitbucket Sunucusu</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
-        <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>Deponuz, BitBucket Sunucusunda barındırılmıyor.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Bitbucket Server</source>
-        <target>Bitbucket Sunucusu</target>
-        
-      </trans-unit>
-      <trans-unit id="_committed.Text">
-        <source>{0} committed
-{1}</source>
-        <target>{0} teslim edildi
-{1}</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Hata</target>
-        
-      </trans-unit>
-      <trans-unit id="_linkLabelToolTip.Text">
-        <source>Right-click to copy link</source>
-        <target>Bağlantıyı kopyalamak için sağ tıklayın</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>Başarı</target>
-        
-      </trans-unit>
-      <trans-unit id="btnApprove.Text">
-        <source>Approve</source>
-        <target>Onayla</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreate.Text">
-        <source>Create</source>
-        <target>Oluştur</target>
-        
-      </trans-unit>
-      <trans-unit id="btnMerge.Text">
-        <source>Merge</source>
-        <target>Birleştir</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCreatePullRequest.Text">
-        <source>Pull Request Info</source>
-        <target>Çekme İsteği Bilgileri</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxInformation.Text">
-        <source>Information</source>
-        <target>Bilgi</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxPullRequestInfo.Text">
-        <source>Pull Request Info</source>
-        <target>Çekme İsteği Bilgileri</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSource.Text">
-        <source>Source</source>
-        <target>Kaynak</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSourceRepoView.Text">
-        <source>Source</source>
-        <target>Kaynak</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTarget.Text">
-        <source>Target</source>
-        <target>Hedef</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTargetRepoView.Text">
-        <source>Target</source>
-        <target>Hedef</target>
-        
-      </trans-unit>
-      <trans-unit id="lblAuthor.Text">
-        <source>Author</source>
-        <target>Yazar</target>
-        
-      </trans-unit>
-      <trans-unit id="lblBranchView.Text">
-        <source>Branch</source>
-        <target>Dal</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescription.Text">
-        <source>Description</source>
-        <target>Açıklama</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescriptionView.Text">
-        <source>Description</source>
-        <target>Açıklama</target>
-        
-      </trans-unit>
-      <trans-unit id="lblRepositoryView.Text">
-        <source>Repository</source>
-        <target>Depo</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewerView.Text">
-        <source>Reviewer (approved)</source>
-        <target>Gözden Geçiren (onaylı)</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceBranch.Text">
-        <source>Branch</source>
-        <target>Dal</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepoView.Text">
-        <source>Repository</source>
-        <target>Depo</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepository.Text">
-        <source>Repository</source>
-        <target>Depo</target>
-        
-      </trans-unit>
-      <trans-unit id="lblState.Text">
-        <source>State</source>
-        <target>Durum</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetBranch.Text">
-        <source>Branch</source>
-        <target>Dal</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepoView.Text">
-        <source>Branch</source>
-        <target>Dal</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepository.Text">
-        <source>Repository</source>
-        <target>Depo</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitle.Text">
-        <source>Title</source>
-        <target>Başlık</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitleView.Text">
-        <source>Title</source>
-        <target>Başlık</target>
-        
-      </trans-unit>
-      <trans-unit id="tabCreate.Text">
-        <source>Create Pull Request</source>
-        <target>Çekme İsteği Oluştur</target>
-        
-      </trans-unit>
-      <trans-unit id="tabView.Text">
-        <source>View Pull Requests</source>
-        <target>Çekme İsteklerini Görüntüle</target>
         
       </trans-unit>
     </body>
@@ -681,8 +389,7 @@ Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
   <file datatype="plaintext" original="BlameViewerSettingsPage" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
-        <source>Blame Viewer</source>
-        <target>İzleme (Suçlama) Görüntüleyicisi</target>
+        <source>Blame viewer</source>
         
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
@@ -758,6 +465,11 @@ Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
   </file>
   <file datatype="plaintext" original="BranchMenuItemsStrings" source-language="en" target-language="tr">
     <body>
+      <trans-unit id="Checkout.Text">
+        <source>Chec&amp;kout branch...</source>
+        <target>Daldan &amp;çık...</target>
+        
+      </trans-unit>
       <trans-unit id="CheckoutTooltip.Text">
         <source>Checkout this branch</source>
         <target>Bu daldan çık</target>
@@ -768,14 +480,23 @@ Daha fazla ayrıntı için bu bilgi simgesine tıklayın.</target>
         <target>Bu uzak daldan bir yerel dal oluşturun</target>
         
       </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>&amp;Delete branch...</source>
+        <target>&amp;Dalı sil...</target>
+        
+      </trans-unit>
       <trans-unit id="MergeTooltip.Text">
         <source>Merge this branch into current branch</source>
         <target>Geçerli dalla bu dalı birleştir</target>
         
       </trans-unit>
+      <trans-unit id="Rebase.Text">
+        <source>&amp;Rebase current branch on this branch...</source>
+        
+      </trans-unit>
       <trans-unit id="RebaseTooltip.Text">
-        <source>Rebase current branch to this branch</source>
-        <target>Bu dalla geçerli dalı yeniden temellendir</target>
+        <source>Rebase current branch on this branch</source>
+        <target>Bu dalda geçerli dalı yeniden temellendir</target>
         
       </trans-unit>
       <trans-unit id="RenameTooltip.Text">
@@ -866,6 +587,10 @@ Geçerli bir GitHub hesabı gereklidir</target>
         <target>&amp;Kopyala</target>
         
       </trans-unit>
+      <trans-unit id="btnCopy.toolTip">
+        <source>Copy the issue details into clipboard</source>
+        
+      </trans-unit>
       <trans-unit id="contentsLabel.Text">
         <source>Double-click an item to open it with the associated program.</source>
         <target>İlişkili programla açmak için bir öğeyi çift tıklayın.</target>
@@ -916,6 +641,11 @@ Geçerli bir GitHub hesabı gereklidir</target>
         <target>&amp;Çık</target>
         
       </trans-unit>
+      <trans-unit id="quitButton.toolTip">
+        <source>Quit application without reporting the issue</source>
+        <target>Sorunu bildirmeden uygulamadan çık</target>
+        
+      </trans-unit>
       <trans-unit id="reportContentsTabPage.Text">
         <source>Report Contents</source>
         <target>İçeriği bildir</target>
@@ -924,6 +654,11 @@ Geçerli bir GitHub hesabı gereklidir</target>
       <trans-unit id="sendAndQuitButton.Text">
         <source>&amp;Send and Quit</source>
         <target>&amp;Gönder ve Çık</target>
+        
+      </trans-unit>
+      <trans-unit id="sendAndQuitButton.toolTip">
+        <source>Report the issue to GitHub and quit application.
+A valid GitHub account is required</source>
         
       </trans-unit>
       <trans-unit id="sizeColumnHeader.Text">
@@ -1729,34 +1464,6 @@ Lütfen, Windows için Git'in yüklü olduğuna emin ol veya doğru komutu elle 
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Create local tracking branches</source>
-        <target>Yerel izleme dalları oluştur</target>
-        
-      </trans-unit>
-      <trans-unit id="button1.Text">
-        <source>Create local tracking branches</source>
-        <target>Yerel izleme dalları oluştur</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Remote to create tracking branches for</source>
-        <target>İzleme dalları oluşturmak için uzak depo:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Create local tracking branches</source>
-        <target>Yerel izleme dalları oluştur</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="CreatePullRequestForm" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
@@ -1885,213 +1592,6 @@ Lütfen, Windows için Git'in yüklü olduğuna emin ol veya doğru komutu elle 
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Delete obsolete branches</source>
-        <target>Eski dalları sil</target>
-        
-      </trans-unit>
-      <trans-unit id="Author.HeaderText">
-        <source>Last author</source>
-        <target>Son yazar</target>
-        
-      </trans-unit>
-      <trans-unit id="Cancel.Text">
-        <source>Close</source>
-        <target>Kapat</target>
-        
-      </trans-unit>
-      <trans-unit id="Delete.Text">
-        <source>Delete</source>
-        <target>Sil</target>
-        
-      </trans-unit>
-      <trans-unit id="IncludeRemoteBranches.Text">
-        <source>Delete remote branches from</source>
-        <target>Uzak depodaki dalları sil:</target>
-        
-      </trans-unit>
-      <trans-unit id="Message.HeaderText">
-        <source>Last message</source>
-        <target>Son mesaj</target>
-        
-      </trans-unit>
-      <trans-unit id="RefreshBtn.Text">
-        <source>Search branches</source>
-        <target>Dalları ara</target>
-        
-      </trans-unit>
-      <trans-unit id="_areYouSureToDelete.Text">
-        <source>Are you sure to delete {0} selected branches?</source>
-        <target>Seçili {0} dalı silmek istediğinize emin misiniz?</target>
-        
-      </trans-unit>
-      <trans-unit id="_branchesSelected.Text">
-        <source>{0}/{1} branches selected.</source>
-        <target>{0}/{1} dal seçildi.</target>
-        
-      </trans-unit>
-      <trans-unit id="_cancel.Text">
-        <source>Cancel</source>
-        <target>İptal</target>
-        
-      </trans-unit>
-      <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>Silmek için dalları seçin. Yalnızca '{0} ' ile tamamen birleştirilen dallar silinebilir.</target>
-        
-      </trans-unit>
-      <trans-unit id="_dangerousAction.Text">
-        <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
-Are you sure you want to continue?</source>
-        <target>TEHLİKELİ EYLEM!
-'{0}' uzak deposu üzerindeki dallar silinecektir. Bu işlem geri alınamaz.
-Devam etmek istediğine emin misin?</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteCaption.Text">
-        <source>Delete</source>
-        <target>Sil</target>
-        
-      </trans-unit>
-      <trans-unit id="_deletingBranches.Text">
-        <source>Deleting branches...</source>
-        <target>Dallar siliniyor...</target>
-        
-      </trans-unit>
-      <trans-unit id="_deletingUnmergedBranches.Text">
-        <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>Birleştirilmemiş dalların silinmesi, teslimlerin sarkmasına neden olur. Dikkatli kullanın!</target>
-        
-      </trans-unit>
-      <trans-unit id="_loading.Text">
-        <source>Loading...</source>
-        <target>Yükleniyor...</target>
-        
-      </trans-unit>
-      <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>Silinecek dalları aramak için '{0}' düğmesine basın.</target>
-        
-      </trans-unit>
-      <trans-unit id="_searchBranches.Text">
-        <source>Search branches</source>
-        <target>Dalları ara</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' sütunundaki onay kutularını kullanarak, silmek istediğiniz dalları seçin.</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonSettings.Text">
-        <source>Settings</source>
-        <target>Ayarlar</target>
-        
-      </trans-unit>
-      <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
-        <source>Last activity</source>
-        <target>Son eylem</target>
-        
-      </trans-unit>
-      <trans-unit id="includeUnmergedBranches.Text">
-        <source>Include unmerged branches</source>
-        <target>Birleştirilmemiş dalları dahil et</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Delete branches older than x days</source>
-        <target>Günden daha eski dalları sil:</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Delete branches fully merged into branch</source>
-        <target>Bu dalla, tamamen birleştirilen dalları sil</target>
-        
-      </trans-unit>
-      <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
-        <source>Name</source>
-        <target>Adı</target>
-        
-      </trans-unit>
-      <trans-unit id="regexDoesNotMatch.Text">
-        <source>Does not match</source>
-        <target>Eşleşmiyor</target>
-        
-      </trans-unit>
-      <trans-unit id="regexFilter.Text">
-        <source>/(feature|develop)/</source>
-        <target>/(feature|develop)/</target>
-        
-      </trans-unit>
-      <trans-unit id="useRegexCaseInsensitive.Text">
-        <source>Case insensitive</source>
-        <target>Büyük-küçük harfe duyarlı</target>
-        
-      </trans-unit>
-      <trans-unit id="useRegexFilter.Text">
-        <source>Use regex to filter branches</source>
-        <target>Dalları filtrelemek için regex'i (düzenli/kurallı ifadeleri) kullan</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Delete obsolete branches</source>
-        <target>Eski dalları sil</target>
-        
-      </trans-unit>
-      <trans-unit id="_daysOlderThan.Caption">
-        <source>Delete obsolete branches older than (days)</source>
-        <target>Daha eski kullanılmayan dalları sil (gün)</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
-        <source>Delete obsolete branches from remote</source>
-        <target>Uzaktaki depodan eski dalları sil</target>
-        
-      </trans-unit>
-      <trans-unit id="_includeUnmergedBranchesFlag.Caption">
-        <source>Delete unmerged branches</source>
-        <target>Birleştirilmemiş dalları sil</target>
-        
-      </trans-unit>
-      <trans-unit id="_mergedInBranch.Caption">
-        <source>Branch where all branches should be merged in</source>
-        <target>Tüm dalların birleştirilmesi gereken dal</target>
-        
-      </trans-unit>
-      <trans-unit id="_regexCaseInsensitiveFlag.Caption">
-        <source>Is regex filter case insensitive?</source>
-        <target>Regex (düzenli/kurallı ifade) filtresi, büyük/küçük harf duyarlı mı?</target>
-        
-      </trans-unit>
-      <trans-unit id="_regexFilter.Caption">
-        <source>Regex to filter branches to delete</source>
-        <target>Silinecek dalları filtrelemek için regex (düzenli/kurallı ifadesi)</target>
-        
-      </trans-unit>
-      <trans-unit id="_regexInvertedFlag.Caption">
-        <source>Search branches that does not match regex</source>
-        <target> Regex (düzenli/kurallı ifadesi) ile eşleşmeyen dalları ara</target>
-        
-      </trans-unit>
-      <trans-unit id="_remoteName.Caption">
-        <source>Remote name obsoleted branches should be deleted from</source>
-        <target>Eski dalları silmek için uzak depo adı:</target>
-        
-      </trans-unit>
-      <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
-        <source>Use regex to filter branches to delete</source>
-        <target>Silinecek dalları filtrelemek için regex'i (düzenli/kurallı ifadeleri) kullan</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="DetailedSettingsPage" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
@@ -2144,8 +1644,7 @@ Devam etmek istediğine emin misin?</target>
   <file datatype="plaintext" original="DiffViewerSettingsPage" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
-        <source>Diff Viewer</source>
-        <target>Fark Görüntüleyicisi</target>
+        <source>Diff viewer</source>
         
       </trans-unit>
       <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
@@ -2324,6 +1823,10 @@ Simgeler ve aralık farkları hakkında daha fazla bilgi için belgelere bakın.
   </file>
   <file datatype="plaintext" original="FileStatusList" source-language="en" target-language="tr">
     <body>
+      <trans-unit id="FilterToolTip.ToolTipTitle">
+        <source>RegEx</source>
+        
+      </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
         <source>Filter files using a regular expression...</source>
         <target>Düzenli(kurallı) bir ifade kullanarak dosyaları filtreleme...</target>
@@ -2619,20 +2122,6 @@ Simgeler ve aralık farkları hakkında daha fazla bilgi için belgelere bakın.
       <trans-unit id="lblReplaceWith.Text">
         <source>Re&amp;place with:</source>
         <target>&amp;Değiştir:</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Find large files</source>
-        <target>Büyük dosyaları bul</target>
-        
-      </trans-unit>
-      <trans-unit id="_sizeLargeFile.Caption">
-        <source>Find large files bigger than (Mb)</source>
-        <target>(Mb)'tan büyük dosyaları bul</target>
         
       </trans-unit>
     </body>
@@ -3298,6 +2787,10 @@ düzeltmeyi seçin:</target>
         <target>Ayarlar</target>
         
       </trans-unit>
+      <trans-unit id="FilterToolTip.ToolTipTitle">
+        <source>RegEx</source>
+        
+      </trans-unit>
       <trans-unit id="GpgInfoTabPage.Text">
         <source>GPG</source>
         <target>GPG (GNU Privacy Guard - Gizlilik Koruması)</target>
@@ -3341,6 +2834,10 @@ düzeltmeyi seçin:</target>
       <trans-unit id="_buildReportTabCaption.Text">
         <source>Build Report</source>
         <target>Derleme Raporu</target>
+        
+      </trans-unit>
+      <trans-unit id="_closeAll.Text">
+        <source>Close all windows</source>
         
       </trans-unit>
       <trans-unit id="_commitButtonText.Text">
@@ -3577,6 +3074,26 @@ Devam etmek istiyor musun?</target>
         <target>Git veri tabanını &amp;sıkıştır</target>
         
       </trans-unit>
+      <trans-unit id="copyFullPathsCygwinToolStripMenuItem.Text">
+        <source>Copy full path(s) - &amp;Cygwin</source>
+        
+      </trans-unit>
+      <trans-unit id="copyFullPathsNativeToolStripMenuItem.Text">
+        <source>Copy &amp;full path(s) - native</source>
+        
+      </trans-unit>
+      <trans-unit id="copyFullPathsWslToolStripMenuItem.Text">
+        <source>Copy full path(s) - &amp;WSL</source>
+        
+      </trans-unit>
+      <trans-unit id="copyRelativePathsNativeToolStripMenuItem.Text">
+        <source>Copy relative path(s) - &amp;native</source>
+        
+      </trans-unit>
+      <trans-unit id="copyRelativePathsPosixToolStripMenuItem.Text">
+        <source>Copy relative path(s) - &amp;POSIX</source>
+        
+      </trans-unit>
       <trans-unit id="createAStashToolStripMenuItem.Text">
         <source>&amp;Create a stash...</source>
         <target>Bir zula &amp;oluştur...</target>
@@ -3744,6 +3261,7 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="manageWorktreeToolStripMenuItem.Text">
         <source>Manage &amp;worktrees...</source>
+        <target>&amp;Çalışma ağaçlarını yönet...</target>
         
       </trans-unit>
       <trans-unit id="menuCommitInfoPosition.ToolTipText">
@@ -3916,9 +3434,8 @@ Devam etmek istiyor musun?</target>
         <target>&amp;Etiket oluştur...</target>
         
       </trans-unit>
-      <trans-unit id="toggleBranchTreePanel.ToolTipText">
+      <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
-        <target>Sol paneli aç/kapat</target>
         
       </trans-unit>
       <trans-unit id="toggleSplitViewLayout.ToolTipText">
@@ -3947,8 +3464,8 @@ Devam etmek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="toolStripFileExplorer.ToolTipText">
-        <source>File E&amp;xplorer</source>
-        <target>&amp;Dosya Gezgini</target>
+        <source>File Explorer</source>
+        <target>Dosya Gezgini</target>
         
       </trans-unit>
       <trans-unit id="toolStripLabel1.Text">
@@ -3988,6 +3505,7 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="tsbShowReflog.ToolTipText">
         <source>Show all reflog references</source>
+        <target>Reflog (Referans günlüğü) referanslarını göster</target>
         
       </trans-unit>
       <trans-unit id="tsbtnAdvancedFilter.ToolTipText">
@@ -4042,6 +3560,7 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="tsmiCommitFilter.Text">
         <source>Commit &amp;message</source>
+        <target>Teslim &amp;mesaji</target>
         
       </trans-unit>
       <trans-unit id="tsmiCommitterFilter.Text">
@@ -4111,14 +3630,7 @@ Devam etmek istiyor musun?</target>
       </trans-unit>
       <trans-unit id="tsmiShowOnlyFirstParent.ToolTipText">
         <source>Show only first parent</source>
-        
-      </trans-unit>
-      <trans-unit id="tsmiShowReflog.Text">
-        <source>&amp;Reflog</source>
-        
-      </trans-unit>
-      <trans-unit id="tsmiShowReflog.ToolTipText">
-        <source>Show all reflog references</source>
+        <target>Yalnızca ilk ebeveyni göster</target>
         
       </trans-unit>
       <trans-unit id="tsmiTelemetryEnabled.Text">
@@ -4152,8 +3664,8 @@ Devam etmek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="userShell.ToolTipText">
-        <source>Git &amp;bash</source>
-        <target>Git &amp;bash</target>
+        <source>Git bash</source>
+        <target>Git bash</target>
         
       </trans-unit>
       <trans-unit id="viewToolStripMenuItem.Text">
@@ -4680,6 +4192,13 @@ Yeni &quot;{0}&quot; deposunu şimdi açmak istiyor musun?</target>
         <target>Tüm &amp;geçmişi indir</target>
         
       </trans-unit>
+      <trans-unit id="cbDownloadFullHistory.ttHints">
+        <source>The default Git behavior is to download all historical revisions.
+If you turn this off, we'll only download the latest revision for all branches.
+
+Actual command line (if unchecked): --depth 1 --no-single-branch</source>
+        
+      </trans-unit>
       <trans-unit id="cbIntializeAllSubmodules.Text">
         <source>Initialize all submodules</source>
         <target>Tüm alt modülleri başlat</target>
@@ -4731,7 +4250,7 @@ komut satırı bağımsız değişkenleri (GitExtensions.exe ile aynı klasörde
         
       </trans-unit>
       <trans-unit id="Amend.Text">
-        <source>&amp;Amend Commit</source>
+        <source>&amp;Amend commit</source>
         <target>Teslimi D&amp;üzenle</target>
         
       </trans-unit>
@@ -4756,8 +4275,17 @@ komut satırı bağımsız değişkenleri (GitExtensions.exe ile aynı klasörde
         
       </trans-unit>
       <trans-unit id="ResetAuthor.Text">
-        <source>R&amp;eset Author</source>
+        <source>R&amp;eset author</source>
         <target>&amp;Yazarı Sıfırla</target>
+        
+      </trans-unit>
+      <trans-unit id="ResetSoft.Text">
+        <source>Reset so&amp;ft</source>
+        <target>Yumu&amp;şak sıfırla</target>
+        
+      </trans-unit>
+      <trans-unit id="ResetSoft.fileTooltip">
+        <source>Perform a soft reset to the previous commit; leaves working directory and index untouched</source>
         
       </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
@@ -4782,9 +4310,12 @@ komut satırı bağımsız değişkenleri (GitExtensions.exe ile aynı klasörde
         <target>&amp;Süper projede sahnele</target>
         
       </trans-unit>
+      <trans-unit id="StageInSuperproject.fileTooltip">
+        <source>Stage current submodule in superproject after commit</source>
+        
+      </trans-unit>
       <trans-unit id="StashStaged.Text">
-        <source>S&amp;tash staged changes</source>
-        <target>S.lenmiş d. &amp;zulala</target>
+        <source>Stas&amp;h staged changes</source>
         
       </trans-unit>
       <trans-unit id="_addSelectionToCommitMessage.Text">
@@ -4794,13 +4325,9 @@ komut satırı bağımsız değişkenleri (GitExtensions.exe ile aynı klasörde
       </trans-unit>
       <trans-unit id="_amendCommit.Text">
         <source>You are about to rewrite history.
-Only use amend if the commit is not published yet!
+Only use Amend if the commit has not been published yet!
 
 Do you want to continue?</source>
-        <target>Geçmişi, yeniden yazmak üzeresin.
-Henüz teslim yayınlanmadıysa, sadece teslim düzenlemeyi kullan!
-
-Devam etmek istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="_amendCommitCaption.Text">
@@ -4808,11 +4335,23 @@ Devam etmek istiyor musun?</target>
         <target>Teslimi düzenle</target>
         
       </trans-unit>
+      <trans-unit id="_amendResetSoft.Text">
+        <source>You are about to rewrite history by Soft Reset to the previous commit.
+Only use Amend / Reset if the commit has not been published yet!
+
+Do you want to continue?</source>
+        
+      </trans-unit>
       <trans-unit id="_assumeUnchangedToolTip.Text">
         <source>Tell git to not check the status of this file for performance benefits.
 Use this feature when a file is big and never change.
 Git will never check if the file has changed that will improve status check performance.</source>
         <target>Dosya büyük olduğunda ve değişmediğinde bu özelliği kullanın. Daha iyi bir performans için bu dosya(nın/ların) durumunu kontrol etmeyin. Git, bu durumda dosya değişikliklerini kontrol etmez, bu da sürüm kontrolünün performansını artırır. </target>
+        
+      </trans-unit>
+      <trans-unit id="_commitAndForcePush.Text">
+        <source>Commit &amp;&amp; force &amp;push</source>
+        <target>Teslim Et &amp;&amp; zorla &amp;it</target>
         
       </trans-unit>
       <trans-unit id="_commitAndPush.Text">
@@ -5567,6 +5106,10 @@ You can unset the template:
         <target>Çalışma dizinini ve dizinini &amp;temizle</target>
         
       </trans-unit>
+      <trans-unit id="ClearOrphan.toolTip">
+        <source>Remove files from the working directory and from the index</source>
+        
+      </trans-unit>
       <trans-unit id="Ok.Text">
         <source>&amp;Create branch</source>
         <target>&amp;Dal oluştur</target>
@@ -5575,6 +5118,10 @@ You can unset the template:
       <trans-unit id="Orphan.Text">
         <source>Create or&amp;phan</source>
         <target>&amp;Yetim oluştur</target>
+        
+      </trans-unit>
+      <trans-unit id="Orphan.toolTip">
+        <source>New branch will have NO parents</source>
         
       </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
@@ -5926,9 +5473,8 @@ Bir dalı silmek, teslimlerin de silinmesine neden olabilir!</target>
         <target>&amp;Dizini, fark aracını kullanarak farkını aç</target>
         
       </trans-unit>
-      <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
-        <source>Copy full path(s)</source>
-        <target>Tam yol(u/ları) kopyala</target>
+      <trans-unit id="copyPathsToolStripMenuItem.Text">
+        <source>Copy &amp;path(s)</source>
         
       </trans-unit>
       <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
@@ -5970,6 +5516,7 @@ Bir dalı silmek, teslimlerin de silinmesine neden olabilir!</target>
       </trans-unit>
       <trans-unit id="secondCommitGroup.Text">
         <source>Compare</source>
+        <target>Karşılaştır</target>
         
       </trans-unit>
       <trans-unit id="selectedToLocalToolStripMenuItem.Text">
@@ -6686,135 +6233,6 @@ _ReSharper*/</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Statistics</source>
-        <target>İstatistikler</target>
-        
-      </trans-unit>
-      <trans-unit id="CommitStatistics.Text">
-        <source>Loading..</source>
-        <target>Yükleniyor..</target>
-        
-      </trans-unit>
-      <trans-unit id="LinesOfCodePerLanguageText.Text">
-        <source>Loading...</source>
-        <target>Yükleniyor...</target>
-        
-      </trans-unit>
-      <trans-unit id="LinesOfCodePerTypeText.Text">
-        <source>Loading...</source>
-        <target>Yükleniyor...</target>
-        
-      </trans-unit>
-      <trans-unit id="LoadingLabel.Text">
-        <source>Loading...</source>
-        <target>Yükleniyor...</target>
-        
-      </trans-unit>
-      <trans-unit id="TestCodeText.Text">
-        <source>Loading...</source>
-        <target>Yükleniyor...</target>
-        
-      </trans-unit>
-      <trans-unit id="TotalCommits.Text">
-        <source>Total commits</source>
-        <target>Toplam teslim sayısı</target>
-        
-      </trans-unit>
-      <trans-unit id="TotalLinesOfCode.Text">
-        <source>Total lines of code</source>
-        <target>Toplam kod satırı</target>
-        
-      </trans-unit>
-      <trans-unit id="TotalLinesOfCode2.Text">
-        <source>Total lines of code</source>
-        <target>Toplam kod satırı</target>
-        
-      </trans-unit>
-      <trans-unit id="TotalLinesOfTestCode.Text">
-        <source>Total lines of code</source>
-        <target>Toplam kod satırı</target>
-        
-      </trans-unit>
-      <trans-unit id="_blankLinesP.Text">
-        <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>Boş satır sayısı: {0:N0}. ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_commentLinesP.Text">
-        <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>Yorum satır sayısı: {0:N0}. ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_commits.Text">
-        <source>{0:N0} Commits</source>
-        <target>Toplam Teslim Sayısı: {0:N0}</target>
-        
-      </trans-unit>
-      <trans-unit id="_commitsBy.Text">
-        <source>{0:N0} Commits by {1}</source>
-        <target>{1} tarafından {0:N0} adet teslim yapıldı</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfCode.Text">
-        <source>{0:N0} Lines of code</source>
-        <target>Toplam kod satırı: {0:N0}</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfCodeInFiles.Text">
-        <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>Toplam kod satırı: {0:N0} {1} dosyası. ({2:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfCodeP.Text">
-        <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>Toplam kod satırı: {0:N0}. ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfDesignerFilesP.Text">
-        <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>Tasarımcı dosyalarındaki satır sayısı: {0:N0}. ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfProductionCodeP.Text">
-        <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>Üretim kod satır sayısı: {0:N0}. ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfTestCode.Text">
-        <source>{0:N0} Lines of test code</source>
-        <target>Toplam test kod satır sayısı: {0:N0}</target>
-        
-      </trans-unit>
-      <trans-unit id="_linesOfTestCodeP.Text">
-        <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>Toplam test kod satır sayısı: {0:N0}. ({1:P1})</target>
-        
-      </trans-unit>
-      <trans-unit id="tabPage1.Text">
-        <source>Lines of code per language</source>
-        <target>Dil başına kod satırları</target>
-        
-      </trans-unit>
-      <trans-unit id="tabPage2.Text">
-        <source>Commits per contributor</source>
-        <target>Katılımcı başına teslim sayısı</target>
-        
-      </trans-unit>
-      <trans-unit id="tabPage3.Text">
-        <source>Lines of code per type</source>
-        <target>Tür başına kod satır sayısı</target>
-        
-      </trans-unit>
-      <trans-unit id="tabPage4.Text">
-        <source>Lines of test code</source>
-        <target>Test kod satır sayısı</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="FormGoToCommit" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
@@ -6887,30 +6305,6 @@ _ReSharper*/</target>
       <trans-unit id="okBtn.Text">
         <source>OK</source>
         <target>Tamam</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Impact</source>
-        <target>Katkı Grafiği</target>
-        
-      </trans-unit>
-      <trans-unit id="_authorCommits.Text">
-        <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} ({1} Adet Teslim, {2} Adet Değişmiş Satır)</target>
-        
-      </trans-unit>
-      <trans-unit id="cbIncludingSubmodules.Text">
-        <source>Including submodules</source>
-        <target>Alt modüller dahil</target>
-        
-      </trans-unit>
-      <trans-unit id="lblAuthor.Text">
-        <source>Author</source>
-        <target>Yazar</target>
         
       </trans-unit>
     </body>
@@ -7278,9 +6672,18 @@ Daha fazla bilgi için,
         <target>&amp;Gözat...</target>
         
       </trans-unit>
+      <trans-unit id="folderGoUpButton.toolTip1">
+        <source>Go to parent directory...</source>
+        
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Directory:</source>
         <target>&amp;Dizin:</target>
+        
+      </trans-unit>
+      <trans-unit id="toolTip1.ToolTipTitle">
+        <source>Help</source>
+        <target>Yardım</target>
         
       </trans-unit>
     </body>
@@ -7352,9 +6755,20 @@ Daha fazla bilgi için,
         <target>Uzak dalları bud&amp;a</target>
         
       </trans-unit>
+      <trans-unit id="Prune.Tooltip">
+        <source>Removes remote tracking branches that no longer exist on the remote (e.g. if someone else deleted them).
+
+Actual command line (if checked): --prune --force
+</source>
+        
+      </trans-unit>
       <trans-unit id="PruneTags.Text">
         <source>Prune remote branches an&amp;d tags</source>
         <target>Uzak dalları ve &amp;etiketleri buda</target>
+        
+      </trans-unit>
+      <trans-unit id="PruneTags.Tooltip">
+        <source>Before fetching, remove any local tags that no longer exist on the remote if --prune is enabled.</source>
         
       </trans-unit>
       <trans-unit id="Pull.Text">
@@ -7367,9 +6781,17 @@ Daha fazla bilgi için,
         <target>&amp;Uzak Depo</target>
         
       </trans-unit>
+      <trans-unit id="PullFromRemote.Tooltip">
+        <source>Remote repository to pull from</source>
+        
+      </trans-unit>
       <trans-unit id="PullFromUrl.Text">
         <source>&amp;URL</source>
         <target>U&amp;RL</target>
+        
+      </trans-unit>
+      <trans-unit id="PullFromUrl.Tooltip">
+        <source>Url to pull from</source>
         
       </trans-unit>
       <trans-unit id="ReachableTags.Text">
@@ -7561,9 +6983,17 @@ Tekrarlanan, bu tüm alt modülleri başlatacak ve güncelleyecektir.</target>
         <target>Yere&amp;l dal</target>
         
       </trans-unit>
+      <trans-unit id="lblLocalBranch.Tooltip">
+        <source>Local branch to create or reset to the remote branch selected.</source>
+        
+      </trans-unit>
       <trans-unit id="lblRemoteBranch.Text">
         <source>Rem&amp;ote branch</source>
         <target>Uza&amp;k dal</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRemoteBranch.Tooltip">
+        <source>Remote branch to pull. Leave empty to pull all branches.</source>
         
       </trans-unit>
     </body>
@@ -7645,9 +7075,17 @@ Tekrarlanan, bu tüm alt modülleri başlatacak ve güncelleyecektir.</target>
         <target>&amp;Uzak Depo</target>
         
       </trans-unit>
+      <trans-unit id="PushToRemote.toolTip1">
+        <source>Remote repository to push to</source>
+        
+      </trans-unit>
       <trans-unit id="PushToUrl.Text">
         <source>U&amp;rl</source>
         <target>U&amp;rl</target>
+        
+      </trans-unit>
+      <trans-unit id="PushToUrl.toolTip1">
+        <source>Url to push to</source>
         
       </trans-unit>
       <trans-unit id="RecursiveSubmodules.Item0">
@@ -7717,6 +7155,10 @@ Bunu şimdi yapmak ister misiniz?</target>
       <trans-unit id="_forceWithLeaseTooltips.Text">
         <source>Force with lease is a safer way to force push. It ensures you only overwrite work that you have seen in your local repository</source>
         <target>Kira ile zorlamak, itmeyi zorlamaktan daha güvenli bir yoldur. Bu, yalnızca yerel depon da gördüğün çalışmaların üzerine yazmanı sağlar</target>
+        
+      </trans-unit>
+      <trans-unit id="_noCurrentBranch.Text">
+        <source>No branch is selected, cannot push.</source>
         
       </trans-unit>
       <trans-unit id="_pullActionFetch.Text">
@@ -7951,53 +7393,6 @@ Bunu şimdi yapmak ister misiniz?</target>
         <target>Yeniden temellendir</target>
         
       </trans-unit>
-      <trans-unit id="Abort.Text">
-        <source>A&amp;bort</source>
-        <target>Du&amp;rdur</target>
-        
-      </trans-unit>
-      <trans-unit id="AddFiles.Text">
-        <source>&amp;Add files</source>
-        <target>&amp;Dosyaları ekle</target>
-        
-      </trans-unit>
-      <trans-unit id="Commit.Text">
-        <source>C&amp;ommit...</source>
-        <target>&amp;Teslim Et...</target>
-        
-      </trans-unit>
-      <trans-unit id="Mergetool.Text">
-        <source>&amp;Solve conflicts</source>
-        <target>&amp;Çatışmaları çöz</target>
-        
-      </trans-unit>
-      <trans-unit id="Ok.Text">
-        <source>Rebase</source>
-        <target>Yeniden temellendir</target>
-        
-      </trans-unit>
-      <trans-unit id="Resolved.Text">
-        <source>&amp;Continue rebase</source>
-        <target>&amp;Y. temellendirmeye d. et</target>
-        
-      </trans-unit>
-      <trans-unit id="ShowOptions.Text">
-        <source>Show options</source>
-        <target>Seçenekleri göster</target>
-        
-      </trans-unit>
-      <trans-unit id="Skip.Text">
-        <source>S&amp;kip currently applying commit</source>
-        <target>Ş&amp;uan ki teslim işlemini atla</target>
-        
-      </trans-unit>
-      <trans-unit id="SolveMergeconflicts.Text">
-        <source>There are unresolved merge conflicts
-</source>
-        <target>Çözülmemiş birleştirme çatışmaları var
-</target>
-        
-      </trans-unit>
       <trans-unit id="_branchUpToDateCaption.Text">
         <source>Rebase</source>
         <target>Yeniden temellendir</target>
@@ -8040,6 +7435,46 @@ Yeniden temellendirilecek bir şey yok.</target>
         <target>&gt;&amp;Çatışmaları çöz&lt;</target>
         
       </trans-unit>
+      <trans-unit id="btnAbort.Text">
+        <source>A&amp;bort</source>
+        <target>Du&amp;rdur</target>
+        
+      </trans-unit>
+      <trans-unit id="btnAddFiles.Text">
+        <source>&amp;Add files</source>
+        <target>&amp;Dosyaları ekle</target>
+        
+      </trans-unit>
+      <trans-unit id="btnCommit.Text">
+        <source>C&amp;ommit...</source>
+        <target>&amp;Teslim Et...</target>
+        
+      </trans-unit>
+      <trans-unit id="btnContinueRebase.Text">
+        <source>&amp;Continue rebase</source>
+        
+      </trans-unit>
+      <trans-unit id="btnEditTodo.Text">
+        <source>&amp;Edit todo...</source>
+        
+      </trans-unit>
+      <trans-unit id="btnRebase.Text">
+        <source>Rebase</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSkip.Text">
+        <source>S&amp;kip currently applying commit</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSolveConflicts.Text">
+        <source>&amp;Solve conflicts</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSolveMergeconflicts.Text">
+        <source>There are unresolved merge conflicts
+</source>
+        
+      </trans-unit>
       <trans-unit id="chkAutosquash.Text">
         <source>Autos&amp;quash</source>
         <target>Otomatik ezme (autos&amp;quash)</target>
@@ -8050,9 +7485,19 @@ Yeniden temellendirilecek bir şey yok.</target>
         <target>Teslim edenin tari&amp;hi, yazar tarihidir</target>
         
       </trans-unit>
+      <trans-unit id="chkCommitterDateIsAuthorDate.toolTip1">
+        <source>Sets the commit date to the original author date
+(instead of the current date).</source>
+        
+      </trans-unit>
       <trans-unit id="chkIgnoreDate.Text">
         <source>Ignore &amp;date</source>
         <target>&amp;Tarihi yoksay</target>
+        
+      </trans-unit>
+      <trans-unit id="chkIgnoreDate.toolTip1">
+        <source>Sets the author date to the current date (same as
+commit date), ignoring the original author date.</source>
         
       </trans-unit>
       <trans-unit id="chkInteractive.Text">
@@ -8066,8 +7511,7 @@ Yeniden temellendirilecek bir şey yok.</target>
         
       </trans-unit>
       <trans-unit id="chkSpecificRange.Text">
-        <source>Sp&amp;ecific range</source>
-        <target>Belirli bir &amp;aralık</target>
+        <source>Specific ra&amp;nge</source>
         
       </trans-unit>
       <trans-unit id="chkStash.Text">
@@ -8103,6 +7547,11 @@ Yeniden temellendirilecek bir şey yok.</target>
       <trans-unit id="lblRebase.Text">
         <source>Rebase current branch on top of another branch</source>
         <target>Başka bir dalın üstünde geçerli dallı yeniden temelledir</target>
+        
+      </trans-unit>
+      <trans-unit id="llblShowOptions.Text">
+        <source>Show options</source>
+        <target>Seçenekleri göster</target>
         
       </trans-unit>
     </body>
@@ -8347,6 +7796,10 @@ Ana bilgisayarın parmak izini kaydetmek ve işlemi yeniden başlatmak ister mis
         <target>Yerel dal adı</target>
         
       </trans-unit>
+      <trans-unit id="Delete.toolTip1">
+        <source>Delete the selected remote</source>
+        
+      </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
         <source>Load SSH key</source>
         <target>Güvenli Kabuk (SSH) Anahtarını Yükle</target>
@@ -8355,6 +7808,10 @@ Ana bilgisayarın parmak izini kaydetmek ve işlemi yeniden başlatmak ister mis
       <trans-unit id="MergeWith.HeaderText">
         <source>Default merge with</source>
         <target>Varsayılan birleştirme</target>
+        
+      </trans-unit>
+      <trans-unit id="New.toolTip1">
+        <source>Add new remote</source>
         
       </trans-unit>
       <trans-unit id="RemoteCombo.HeaderText">
@@ -8484,6 +7941,10 @@ Value has been reset to empty value.</source>
       <trans-unit id="_sshKeyOpenFilter.Text">
         <source>Private key (*.ppk)</source>
         <target>Özel anahtar (*.ppk)</target>
+        
+      </trans-unit>
+      <trans-unit id="btnToggleState.toolTip1">
+        <source>Enable or disable the selected remote</source>
         
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
@@ -9347,6 +8808,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="_message.Text">
         <source>&amp;Message</source>
+        <target>&amp;Mesaj</target>
         
       </trans-unit>
       <trans-unit id="_pathFilter.Text">
@@ -9355,10 +8817,12 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="_since.Text">
         <source>&amp;Since</source>
+        <target>&amp;Beri</target>
         
       </trans-unit>
       <trans-unit id="_until.Text">
         <source>&amp;Until</source>
+        <target>&amp;Kadar</target>
         
       </trans-unit>
     </body>
@@ -9446,9 +8910,17 @@ Bu nedenle İptal düğmesi yapılan değişiklikleri GERİ ALAMAZ.</target>
         <target>Seçili zulayı &amp;uygula</target>
         
       </trans-unit>
+      <trans-unit id="Apply.toolTip">
+        <source>Apply the selected stash on top of the current working directory state</source>
+        
+      </trans-unit>
       <trans-unit id="Clear.Text">
         <source>&amp;Drop Selected Stash</source>
         <target>Seçili Zulayı &amp;At</target>
+        
+      </trans-unit>
+      <trans-unit id="Clear.toolTip">
+        <source>Remove the selected stash from the list</source>
         
       </trans-unit>
       <trans-unit id="Stash.Text">
@@ -9456,14 +8928,26 @@ Bu nedenle İptal düğmesi yapılan değişiklikleri GERİ ALAMAZ.</target>
         <target>Tüm değişiklikleri &amp;zulala</target>
         
       </trans-unit>
+      <trans-unit id="Stash.toolTip">
+        <source>Save local changes to a new stash, then revert local changes</source>
+        
+      </trans-unit>
       <trans-unit id="StashKeepIndex.Text">
         <source>&amp;Keep index</source>
         <target>&amp;Dizini koru</target>
         
       </trans-unit>
+      <trans-unit id="StashKeepIndex.toolTip">
+        <source>All changes already added to the index are left intact</source>
+        
+      </trans-unit>
       <trans-unit id="StashSelectedFiles.Text">
         <source>Stash &amp;selected changes</source>
         <target>&amp;Seçili değişiklikleri zulala</target>
+        
+      </trans-unit>
+      <trans-unit id="StashSelectedFiles.toolTip">
+        <source>Stash changes for the selected files, then revert them to the original state</source>
         
       </trans-unit>
       <trans-unit id="Stashes.ToolTipText">
@@ -9489,6 +8973,10 @@ Bu nedenle İptal düğmesi yapılan değişiklikleri GERİ ALAMAZ.</target>
       <trans-unit id="chkIncludeUntrackedFiles.Text">
         <source>&amp;Include untracked files</source>
         <target>&amp;İzlenmeyen dosyaları dahil et</target>
+        
+      </trans-unit>
+      <trans-unit id="chkIncludeUntrackedFiles.toolTip">
+        <source>All untracked files are also stashed and then cleaned</source>
         
       </trans-unit>
       <trans-unit id="messageLabel.Text">
@@ -9947,8 +9435,7 @@ Kurtar düğmesine Bağlam menüsüne bas</target>
         
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistory.Text">
-        <source>Follow renames in file history (experimental)</source>
-        <target>Dosya geçmişindeki yeniden adlandırmaları takip et (deneysel)</target>
+        <source>Follow renames in file history</source>
         
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
@@ -10254,59 +9741,6 @@ ayarlamanız gerekiyor.
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitFlow</source>
-        <target>GitFlow (GitAkışı)</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitHub</source>
-        <target>GitHub</target>
-        
-      </trans-unit>
-      <trans-unit id="GitHubHost.Caption">
-        <source>GitHub (Enterprise) hostname</source>
-        <target>GitHub (Enterprise/Kurumsal) ana bilgisayar adı (hostname)</target>
-        
-      </trans-unit>
-      <trans-unit id="PersonalAccessToken.Caption">
-        <source>Personal Access Token</source>
-        <target>Kişisel Erişim Jetonu (Personal Access Token)</target>
-        
-      </trans-unit>
-      <trans-unit id="_generateToken.Text">
-        <source>Generate a GitHub personal access token</source>
-        <target>GitHub kişisel erişim jetonunu (GitHub personal access token) oluştur</target>
-        
-      </trans-unit>
-      <trans-unit id="_manageToken.Text">
-        <source>Manage GitHub personal access token</source>
-        <target>GitHub kişisel erişim jetonunu (GitHub personal access token) yönet</target>
-        
-      </trans-unit>
-      <trans-unit id="_openLinkFailed.Text">
-        <source>Fail to open the link. Reason: </source>
-        <target>Bağlantı açılamadı. Sebep: </target>
-        
-      </trans-unit>
-      <trans-unit id="_tokenAlreadyExist.Text">
-        <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>Zaten bir tane kişisel erişim jetonun (personal access token) var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar'ı içerisinden eski jetonu (token'u) sil.</target>
-        
-      </trans-unit>
-      <trans-unit id="_viewInWebSite.Text">
-        <source>View in {0}</source>
-        <target>{0} içerisinde görüntüle</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="GitIgnoreModel" source-language="en" target-language="tr">
     <body>
       <trans-unit id="_cannotAccessGitignore.Text">
@@ -10334,15 +9768,6 @@ Dosyanın erişilebilir olup olmadığını kontrol edin.</target>
       <trans-unit id="_saveFileQuestion.Text">
         <source>Save changes to .gitignore?</source>
         <target>.gitignore'da yapılan değişiklikler kaydedilsin mi?</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Impact Graph</source>
-        <target>Katkı Grafiği</target>
         
       </trans-unit>
     </body>
@@ -10468,30 +9893,6 @@ Varsayılan davranışı, yalnızca sorunlarla karşılaşırsanız değiştirin
       <trans-unit id="lblShPath.Text">
         <source>Path to linux tools (sh). Leave empty when it is in the path.</source>
         <target>Linux araçlarının (sh) yolu. Zaten yolda ise boş bırakın.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Statistics</source>
-        <target>İstatistikler</target>
-        
-      </trans-unit>
-      <trans-unit id="_codeFiles.Caption">
-        <source>Code files</source>
-        <target>Kod dosyaları</target>
-        
-      </trans-unit>
-      <trans-unit id="_ignoreDirectories.Caption">
-        <source>Directories to ignore (EndsWith)</source>
-        <target>Yok sayılacak dizin (sonun bitenlerle)</target>
-        
-      </trans-unit>
-      <trans-unit id="_ignoreSubmodules.Caption">
-        <source>Ignore submodules</source>
-        <target>Alt modülleri yoksay</target>
         
       </trans-unit>
     </body>
@@ -10640,86 +10041,6 @@ Onları kaydetmek ister misin?</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Gource</source>
-        <target>Gource</target>
-        
-      </trans-unit>
-      <trans-unit id="_bytesDownloaded.Text">
-        <source>{0} bytes downloaded.</source>
-        <target>{0} bayt indirildi.</target>
-        
-      </trans-unit>
-      <trans-unit id="_cannotFindGource.Text">
-        <source>Cannot find Gource.
-Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Gource bulunamıyor.
-Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlayın.</target>
-        
-      </trans-unit>
-      <trans-unit id="_currentDirectoryIsNotValidGit.Text">
-        <source>The current directory is not a valid git repository.
-
-Gource can be only be started from a valid git repository.</source>
-        <target>Geçerli dizin geçerli bir git deposu değil.
-
-Gource yalnızca geçerli bir git deposundan başlatılabilir. </target>
-        
-      </trans-unit>
-      <trans-unit id="_doYouWantDownloadGource.Text">
-        <source>There is no path to Gource configured.
-
-Do you want to automatically download Gource?</source>
-        <target>Yapılandırılmış Gource için bir yol yok.
-
-Gource'u otomatik olarak indirmek ister misin?</target>
-        
-      </trans-unit>
-      <trans-unit id="_download.Text">
-        <source>Download</source>
-        <target>İndir</target>
-        
-      </trans-unit>
-      <trans-unit id="_downloadingFailed.Text">
-        <source>Downloading failed.
-Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>İndirme başarısız oldu.
-Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlayın.</target>
-        
-      </trans-unit>
-      <trans-unit id="_gource.Text">
-        <source>Gource</source>
-        <target>Gource</target>
-        
-      </trans-unit>
-      <trans-unit id="_gourceArguments.Caption">
-        <source>Arguments</source>
-        <target>Bağımsız değişkenler</target>
-        
-      </trans-unit>
-      <trans-unit id="_gourceDownloadedAndUnzipped.Text">
-        <source>Gource has been downloaded and unzipped.</source>
-        <target>Gource indirildi ve sıkıştırması açıldı.</target>
-        
-      </trans-unit>
-      <trans-unit id="_gourcePath.Caption">
-        <source>Path to Gource</source>
-        <target>Gource'sun Yolu</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetConfigPath.Text">
-        <source>Cannot find Gource in the configured path: {0}.
-
-Do you want to reset the configured path?</source>
-        <target>Yapılandırılmış yolda Gource bulunamıyor: {0}.
-
-Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="HelpImageDisplayUserControl" source-language="en" target-language="tr">
     <body>
       <trans-unit id="linkLabelHide.Text">
@@ -10804,25 +10125,6 @@ göster</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="lblIgnoreBuildBranch.Text">
-        <source>Ignore build for branch</source>
-        <target>Dal için derlemeyi yoksay</target>
-        
-      </trans-unit>
-      <trans-unit id="lblJenkinsServerUrl.Text">
-        <source>Jenkins server URL</source>
-        <target>Jenkins sunucusunun URL'si</target>
-        
-      </trans-unit>
-      <trans-unit id="lblProjectName.Text">
-        <source>Project name</source>
-        <target>Proje Adı</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="LocalBranchMenuItemsStrings" source-language="en" target-language="tr">
     <body>
       <trans-unit id="DeleteTooltip.Text">
@@ -10834,29 +10136,13 @@ göster</target>
   </file>
   <file datatype="plaintext" original="MenuItemsStrings" source-language="en" target-language="tr">
     <body>
-      <trans-unit id="Checkout.Text">
-        <source>Chec&amp;kout branch...</source>
-        <target>Daldan &amp;çık...</target>
-        
-      </trans-unit>
       <trans-unit id="CreateBranch.Text">
         <source>Create &amp;branch...</source>
         <target>&amp;Dal oluştur...</target>
         
       </trans-unit>
-      <trans-unit id="Delete.Text">
-        <source>&amp;Delete branch...</source>
-        <target>Dalı &amp;sil...</target>
-        
-      </trans-unit>
       <trans-unit id="Merge.Text">
-        <source>&amp;Merge branches...</source>
-        <target>Dalları &amp;birleştir...</target>
-        
-      </trans-unit>
-      <trans-unit id="Rebase.Text">
-        <source>&amp;Rebase...</source>
-        <target>&amp;Yeniden temellendir...</target>
+        <source>&amp;Merge into current branch...</source>
         
       </trans-unit>
       <trans-unit id="Rename.Text">
@@ -10947,11 +10233,6 @@ göster</target>
         <target>Seçimi hatırla</target>
         
       </trans-unit>
-      <trans-unit id="_resetChangesCaption.Text">
-        <source>Reset changes</source>
-        <target>Değişiklikleri sıfırla</target>
-        
-      </trans-unit>
       <trans-unit id="_selectOnlyOneOrTwoRevisions.Text">
         <source>Select only one or two revisions. Abort.</source>
         <target>Yalnızca bir veya iki düzeltmeyi (revizyonu) seçin. İptal.</target>
@@ -11013,6 +10294,15 @@ Bu, yalnızca alt modül içerisinde bulunan ve süper proje tarafından belirle
   </file>
   <file datatype="plaintext" original="PatchGrid" source-language="en" target-language="tr">
     <body>
+      <trans-unit id="Action.HeaderText">
+        <source>Action</source>
+        <target>Eylem</target>
+        
+      </trans-unit>
+      <trans-unit id="CommitHash.HeaderText">
+        <source>Commit hash</source>
+        
+      </trans-unit>
       <trans-unit id="FileName.HeaderText">
         <source>Name</source>
         <target>Adı</target>
@@ -11077,221 +10367,23 @@ Bu, yalnızca alt modül içerisinde bulunan ve süper proje tarafından belirle
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Proxy Switcher</source>
-        <target>Vekil (Proxy) Değiştiricisi</target>
-        
-      </trans-unit>
-      <trans-unit id="ApplyGlobally_CheckBox.Text">
-        <source>Apply globally</source>
-        <target>Global (Genel/küresel) olarak uygula</target>
-        
-      </trans-unit>
-      <trans-unit id="GlobalHttpProxy_Label.Text">
-        <source>Global http.proxy:</source>
-        <target>Küresel(Global/Genel) http.proxy:</target>
-        
-      </trans-unit>
-      <trans-unit id="LocalHttpProxy_Label.Text">
-        <source>Local http.proxy:</source>
-        <target>Yerel http.proxy:</target>
-        
-      </trans-unit>
-      <trans-unit id="SetProxy_Button.Text">
-        <source>Set proxy</source>
-        <target>Vekili (proxy'yi) ayarla</target>
-        
-      </trans-unit>
-      <trans-unit id="UnsetProxy_Button.Text">
-        <source>Unset proxy</source>
-        <target>Vekil (proxy) ayarını kaldır</target>
-        
-      </trans-unit>
-      <trans-unit id="_pleaseSetProxy.Text">
-        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>Yapılandırılmış bir vekiili (proxy'si) yok. Lütfen, eklenti ayarlarında vekil (proxy) ana bilgisayarını ayarlayın.</target>
-        
-      </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
-        <source>Proxy Switcher</source>
-        <target>Vekil (Proxy) Değiştiricisi</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Proxy Switcher</source>
-        <target>Vekil (Proxy) Değiştiricisi</target>
-        
-      </trans-unit>
-      <trans-unit id="HttpProxy.Caption">
-        <source>HTTP proxy</source>
-        <target>HTTP vekili (proxy'si)</target>
-        
-      </trans-unit>
-      <trans-unit id="HttpProxyPort.Caption">
-        <source>HTTP proxy port</source>
-        <target>HTTP vekili (proxy'si) bağlantı noktası (port)</target>
-        
-      </trans-unit>
-      <trans-unit id="Password.Caption">
-        <source>Password</source>
-        <target>Şifre</target>
-        
-      </trans-unit>
-      <trans-unit id="Username.Caption">
-        <source>Username</source>
-        <target>Kullanıcı adı</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Release Notes Generator</source>
-        <target>Sürüm Notları Oluşturucu</target>
-        
-      </trans-unit>
-      <trans-unit id="_caption.Text">
-        <source>Invalid input</source>
-        <target>Geçersiz giriş</target>
-        
-      </trans-unit>
-      <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Teslim günlüğü '{0}' ile '{1}' ({2}) arasında:</target>
-        
-      </trans-unit>
-      <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
-        <target>'Başlangıç' teslimi belirtilmelidir</target>
-        
-      </trans-unit>
-      <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>'Son' teslimi belirtilmelidir</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonCopyAsHtml.Text">
-        <source>as HTML table</source>
-        <target>HTML tablosu olarak</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonCopyAsTextTableSpace.Text">
-        <source>as text table (spaces)</source>
-        <target>metin tablosu olarak (boşluklar)</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonCopyAsTextTableTab.Text">
-        <source>as text table (tabs)</source>
-        <target>metin tablosu olarak (sekmeler)</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonCopyOrigOutput.Text">
-        <source>original output</source>
-        <target>orijinal çıktı</target>
-        
-      </trans-unit>
-      <trans-unit id="buttonGenerate.Text">
-        <source>Generate</source>
-        <target>Oluştur</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Result</source>
-        <target>Sonuç</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCopy.Text">
-        <source>Copy to clipboard</source>
-        <target>Panoya kopyala</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Commit expression &quot;To&quot; (including):</source>
-        <target>Teslim ifadesi &quot;Kime&quot; (dahil):</target>
-        
-      </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>separate columns with spaces</source>
-        <target>sütunları boşluklarla ayır</target>
-        
-      </trans-unit>
-      <trans-unit id="label11.Text">
-        <source>Clipboard will contain HTML code (plain text) and HTML format
-which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>HTML kodu (düz metin) ve HTML formatında panoya kopyalanıp,
-MS Word veya LibreOffice Writer gibi programlara yapıştırılabilir.</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>Teslim ifadesi &quot;Kimden&quot; (hariç):</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>git log arguments:</source>
-        <target>git günlük değişkenleri:</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>{0} = from; {1} = to</source>
-        <target>{0} = kimden; {1} = kime</target>
-        
-      </trans-unit>
-      <trans-unit id="label5.Text">
-        <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>Sıralama: En son revizyonlar en üstte listelenir.</target>
-        
-      </trans-unit>
-      <trans-unit id="label6.Text">
-        <source>Revisions count = </source>
-        <target>Düzeltme(revizyon) sayısı = </target>
-        
-      </trans-unit>
-      <trans-unit id="label7.Text">
-        <source>(Commit expressions can be commit hashes,
-branch names, tag names)</source>
-        <target>(Teslim karmaları, dal adları ve etiket adları 
-teslim ifadeleri olabilir)</target>
-        
-      </trans-unit>
-      <trans-unit id="label8.Text">
-        <source>as is</source>
-        <target>olduğu gibi</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>separate columns with tabs</source>
-        <target>sütunları sekmelerle ayır</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRevCount.Text">
-        <source>n/a</source>
-        <target>Uygulanabilir değil</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Release Notes Generator</source>
-        <target>Sürüm Notları Oluşturucu</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="RemoteBranchMenuItemsStrings" source-language="en" target-language="tr">
     <body>
+      <trans-unit id="Checkout.Text">
+        <source>Chec&amp;kout remote branch...</source>
+        
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>&amp;Delete remote branch...</source>
+        
+      </trans-unit>
       <trans-unit id="DeleteTooltip.Text">
         <source>Delete the branch from the remote</source>
         <target>Uzak depodaki dalı sil</target>
+        
+      </trans-unit>
+      <trans-unit id="Rebase.Text">
+        <source>&amp;Rebase current branch on this remote branch...</source>
         
       </trans-unit>
     </body>
@@ -11311,6 +10403,11 @@ teslim ifadeleri olabilir)</target>
       <trans-unit id="_sortOrderContextMenuItem.Text">
         <source>&amp;Sort order...</source>
         <target>&amp;Sıralama...</target>
+        
+      </trans-unit>
+      <trans-unit id="btnSearch.toolTip">
+        <source>Search</source>
+        <target>Ara</target>
         
       </trans-unit>
       <trans-unit id="copyContextMenuItem.Text">
@@ -11407,8 +10504,7 @@ Reset the filter via View &gt; Show all branches.</source>
         
       </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.ToolTipText">
-        <source>Delete all child branchs, which must all be fully merged in its upstream branch or in HEAD</source>
-        <target>Yukarı akış (upstream) dalında veya HEAD'de tamamen birleştirilmiş olan çocuk dallarını sil</target>
+        <source>Delete all child branches, which must all be fully merged in its upstream branch or in HEAD</source>
         
       </trans-unit>
       <trans-unit id="mnubtnDisableRemote.Text">
@@ -11466,8 +10562,7 @@ Reset the filter via View &gt; Show all branches.</source>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchOneBranch.ToolTipText">
-        <source>Fetch the new remote branch</source>
-        <target>Yeni uzak dalı getir</target>
+        <source>Fetch this remote branch</source>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.Text">
@@ -11476,8 +10571,7 @@ Reset the filter via View &gt; Show all branches.</source>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.ToolTipText">
-        <source>Fetch &amp; Rebase current branch to this branch</source>
-        <target>Bu dallı getir &amp; bu dalla geçerli dalı yeniden temellendir (rebase)</target>
+        <source>Fetch then rebase current branch on this remote branch</source>
         
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
@@ -11570,14 +10664,17 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Getir &amp;&amp; Birleştir (&amp;Çek)</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnPullFromRemoteBranch.ToolTipText">
+        <source>Fetch then merge this remote branch into current branch</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.Text">
         <source>&amp;Fetch &amp;&amp; Checkout</source>
         <target>&amp;Getir &amp;&amp; Daldan Çık</target>
         
       </trans-unit>
       <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.ToolTipText">
-        <source>Checkout this branch</source>
-        <target>Bu daldan çık</target>
+        <source>Fetch then checkout this remote branch</source>
         
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.Text">
@@ -11748,9 +10845,8 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Değişiklikleri, iyi bir kiraz olarak seç ve topla (&amp;cherry-pick)</target>
         
       </trans-unit>
-      <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
-        <source>Copy full &amp;path(s)</source>
-        <target>Tam &amp;yol(u/ları) kopyala</target>
+      <trans-unit id="copyPathsToolStripMenuItem.Text">
+        <source>Copy &amp;path(s)</source>
         
       </trans-unit>
       <trans-unit id="diffCommitSubmoduleChanges.Text">
@@ -11988,9 +11084,8 @@ Teslim formundaki değişikliklere bakın.</target>
         <target>Tümünü Daralt</target>
         
       </trans-unit>
-      <trans-unit id="copyFilenameToClipboardToolStripMenuItem.Text">
-        <source>Copy full path</source>
-        <target>Tam yolu kopyala</target>
+      <trans-unit id="copyPathsToolStripMenuItem.Text">
+        <source>Copy &amp;path(s)</source>
         
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
@@ -12246,6 +11341,7 @@ Teslim formundaki değişikliklere bakın.</target>
       </trans-unit>
       <trans-unit id="SortingToolStripMenuItem.Text">
         <source>Sorting</source>
+        <target>Sıralama</target>
         
       </trans-unit>
       <trans-unit id="ToggleBetweenArtificialAndHeadCommits.Text">
@@ -12398,6 +11494,10 @@ Teslim formundaki değişikliklere bakın.</target>
       <trans-unit id="_strLoading.Text">
         <source>Loading</source>
         <target>Yükleniyor</target>
+        
+      </trans-unit>
+      <trans-unit id="amendCommitToolStripMenuItem.Text">
+        <source>Create an &amp;amend commit...</source>
         
       </trans-unit>
       <trans-unit id="applyStashToolStripMenuItem.Text">
@@ -12903,75 +12003,6 @@ Geçerli Dal:
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="ExtractLink.Text">
-        <source>Extract data from a build result url copied in the clipboard</source>
-        <target>Panoya kopyalanan bir derleme sonucu url'sinden verileri çıkar</target>
-        
-      </trans-unit>
-      <trans-unit id="TokenManagementLink.Text">
-        <source>Go to token management page</source>
-        <target>Jeton (token) yönetim sayfasına git</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
-        <source>Could not extract data</source>
-        <target>Veriler çıkarılamadı</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
-
-Please copy the url of the build into the clipboard before retrying.
-(Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>Pano, geçerli bir derleme url'si içermiyor.
-
-Lütfen, yeniden denemeden önce, derleme url'sini panoya kopyalayın.
-(En azından, &quot;buildId&quot; parametresini içermeli)</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
-        <source>Error while trying to retrieve build definition information from url.
-
-Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>Url'den derleme tanım bilgisi alınmaya çalışılırken hata oluştu.
-
-Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bilgilerine erişiminizin olduğuna emin olun.</target>
-        
-      </trans-unit>
-      <trans-unit id="_infoNoApiTokenMessage.Text">
-        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
-        <target>Derleme tanım bilgileri, API jeton (token) olmadan alınamaz. Alan boş bırakılacaktır.</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Examples:
- - https://dev.azure.com/yourorganization/projectname/
- - https://yourhost:8080/tfs/collectionname/projectname/
- - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>Örnekler:
- - https://dev.azure.com/sizinorganizasyonunuz/projeadi/
- - https://sizinsunucunuz:8080/tfs/koleksiyonadi/projeadi/
- - https://sizinorganizasyonunuz.visualstudio.com/projeadi/</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        <target>Aşağıdaki kapsamlara sahip bir jeton (token) oluşturmanız gerekiyor:
- - 'Build (read)' Derle (oku)
- - 'Project and team (read)' Proje ve takım (oku)</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'Derleme tanımlama adı' düzenli(kurallı) ifadesi geçerli değil ve kaydedilmeyecek!</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ShellExtensionSettingsPage" source-language="en" target-language="tr">
     <body>
       <trans-unit id="$this.Text">
@@ -12987,13 +12018,23 @@ Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bi
         <source>&amp;Disable shell extension</source>
         
       </trans-unit>
+      <trans-unit id="_menuHelp.Text">
+        <source>* Checked: at top level for direct access
+* Intermediate: in a cascaded context menu
+* Unchecked: not added to the menu</source>
+        
+      </trans-unit>
+      <trans-unit id="_noItems.Text">
+        <source>no items</source>
+        
+      </trans-unit>
       <trans-unit id="cbAlwaysShowAllCommands.Text">
         <source>Always show all commands</source>
         <target>Her zaman tüm komutları göster</target>
         
       </trans-unit>
       <trans-unit id="gbCascadingMenu.Text">
-        <source>Cascaded Context Menu</source>
+        <source>Cascaded context menu</source>
         
       </trans-unit>
       <trans-unit id="gbExplorerIntegration.Text">
@@ -13006,10 +12047,64 @@ Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bi
         
       </trans-unit>
       <trans-unit id="lblMenuEntries.Text">
-        <source>Select items to be shown in the cascaded context menu.
-(Unchecked items will be shown top level for direct access.)</source>
-        <target>Basamaklı bağlam menüsünde gösterilecek olan öğeleri seç.
-(İşaretlenmemiş öğeler, doğrudan erişim için en üst düzeyde gösterilecektir.)</target>
+        <source>Configuration of items in the context menu</source>
+        
+      </trans-unit>
+      <trans-unit id="menuHelp.toolTip1">
+        <source>* Checked: at top level for direct access
+* Intermediate: in a cascaded context menu
+* Unchecked: not added to the menu</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="SortingSettingsPage" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Sorting</source>
+        <target>Sıralama</target>
+        
+      </trans-unit>
+      <trans-unit id="_prioBranchNamesTooltip.Text">
+        <source>Regex to prioritize branch names in the left panel and commit info.
+The branches matching the pattern will be shown before the others.
+Separate the priorities with ';'.</source>
+        
+      </trans-unit>
+      <trans-unit id="_prioRemoteNamesTooltip.Text">
+        <source>Regex to prioritize remote names in the left panel and commit info.
+The remotes matching the pattern will be shown before the others.
+Separate the priorities with ';'.</source>
+        
+      </trans-unit>
+      <trans-unit id="_revisionSortWarningTooltip.Text">
+        <source>Sorting revisions may delay rendering of the revision graph.</source>
+        <target>Revizyonların sıralanması, revizyon grafiğinin oluşturulmasını geciktirebilir.</target>
+        
+      </trans-unit>
+      <trans-unit id="gbGeneral.Text">
+        <source>Sorting</source>
+        <target>Sıralama</target>
+        
+      </trans-unit>
+      <trans-unit id="lblBranchesOrder.Text">
+        <source>Order branches</source>
+        
+      </trans-unit>
+      <trans-unit id="lblBranchesSortBy.Text">
+        <source>Sort branches by</source>
+        
+      </trans-unit>
+      <trans-unit id="lblPrioBranchNames.Text">
+        <source>Prioritized branches</source>
+        
+      </trans-unit>
+      <trans-unit id="lblPrioRemoteNames.Text">
+        <source>Prioritized remotes</source>
+        
+      </trans-unit>
+      <trans-unit id="lblRevisionsSortBy.Text">
+        <source>Sort revisions by</source>
         
       </trans-unit>
     </body>
@@ -13101,14 +12196,22 @@ OpenSSH kullanıldığında, komut satırı iletişim kutuları gösterilir!
   </file>
   <file datatype="plaintext" original="TagMenuItemsStrings" source-language="en" target-language="tr">
     <body>
+      <trans-unit id="Checkout.Text">
+        <source>Chec&amp;kout tag revision...</source>
+        
+      </trans-unit>
       <trans-unit id="CheckoutTooltip.Text">
-        <source>Checkout this tag</source>
-        <target>Bu etiketten çık</target>
+        <source>Checkout this tag revision</source>
         
       </trans-unit>
       <trans-unit id="CreateTooltip.Text">
         <source>Create a local branch from this tag</source>
         <target>Bu etiketten yerel bir dal oluşturun</target>
+        
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>&amp;Delete tag...</source>
+        <target>Etiketi si&amp;l...</target>
         
       </trans-unit>
       <trans-unit id="DeleteTooltip.Text">
@@ -13121,9 +12224,12 @@ OpenSSH kullanıldığında, komut satırı iletişim kutuları gösterilir!
         <target>Geçerli dalla bu etiketi birleştir</target>
         
       </trans-unit>
+      <trans-unit id="Rebase.Text">
+        <source>&amp;Rebase current branch on this tag revision...</source>
+        
+      </trans-unit>
       <trans-unit id="RebaseTooltip.Text">
-        <source>Rebase current branch to this tag</source>
-        <target>Bu etiketle geçerli dalı yeniden temellendir (rebase)</target>
+        <source>Rebase current branch on this tag</source>
         
       </trans-unit>
       <trans-unit id="ResetTooltip.Text">
@@ -13133,55 +12239,12 @@ OpenSSH kullanıldığında, komut satırı iletişim kutuları gösterilir!
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="tr">
-    <body>
-      <trans-unit id="CheckBoxLogAsGuest.Text">
-        <source>Log as guest to display the build report</source>
-        <target>Derleme raporunu görüntülemek için misafir olarak günlüğe kaydet</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
-        <source>Build url not valid</source>
-        <target>Derleme url'si geçerli değil</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
-
-Please copy in the clipboard the url of the build before retrying.
-(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>Pano, geçerli bir derleme url'si içermiyor.
-
-Lütfen, yeniden denemeden önce, derleme url'sini panoya kopyalayın.
-(En azından, &quot;buildTypeId&quot; parametresini içermeli)</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToLoadProjectCaption.Text">
-        <source>Error when loading the projects and build list</source>
-        <target>Projeler ve derleme listesi yüklenirken hata oluştu</target>
-        
-      </trans-unit>
-      <trans-unit id="_failToLoadProjectMessage.Text">
-        <source>Failed to load the projects and build list.
-Please verify the server url.</source>
-        <target>Projeler ve derleme listesi yüklenemedi.
-Lütfen, sunucu URL'sini doğrulayın.</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>&quot;Derleme Kimliği Filtresi (Build Id Filter)&quot; düzenli(kurallı) ifadesi geçerli değil ve kaydedilmeyecek!</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
-        <source>Extract the data from the build url copied in the clipboard</source>
-        <target>Panoya kopyalanan derleme url'sinden verileri çıkar</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="TranslatedStrings" source-language="en" target-language="tr">
     <body>
+      <trans-unit id="_addUpstreamRemote.Text">
+        <source>Add upstream remote</source>
+        
+      </trans-unit>
       <trans-unit id="_areYouSure.Text">
         <source>Are you sure you want to drop the stash? This action cannot be undone.</source>
         
@@ -13388,6 +12451,7 @@ Tam mesajı doldurmak için bu teslimi seç.</target>
       </trans-unit>
       <trans-unit id="_diffContent.Text">
         <source>Diff contains</source>
+        <target>Fark içerir</target>
         
       </trans-unit>
       <trans-unit id="_diffRange.Text">
@@ -13553,6 +12617,10 @@ following command.
         <target>{0} {1:saat|saat} önce</target>
         
       </trans-unit>
+      <trans-unit id="_ignoringReference.Text">
+        <source>&quot;{0}&quot; is not a Git revision and will be ignored.</source>
+        
+      </trans-unit>
       <trans-unit id="_indexText.Text">
         <source>Commit index</source>
         <target>Teslim dizini</target>
@@ -13638,6 +12706,10 @@ following command.
         <target>Hiç bir düzeltme(revizyon) yok</target>
         
       </trans-unit>
+      <trans-unit id="_nonexistingGitRevision.Text">
+        <source>Git revision does not exist</source>
+        
+      </trans-unit>
       <trans-unit id="_okText.Text">
         <source>OK</source>
         <target>Tamam</target>
@@ -13651,16 +12723,6 @@ following command.
       <trans-unit id="_openInVisualStudio.Text">
         <source>Open in &amp;Visual Studio</source>
         <target>&amp;Visual Studio'da aç</target>
-        
-      </trans-unit>
-      <trans-unit id="_openInVisualStudioFailureCaption.Text">
-        <source>Unable to open file</source>
-        <target>Dosya açılamıyor</target>
-        
-      </trans-unit>
-      <trans-unit id="_openInVisualStudioFailureText.Text">
-        <source>Could not find this file in any open solution. Ensure you have a project containing this file open before trying again.</source>
-        <target>Bu dosya, herhangi bir açık çözümde bulunamadı. Yeniden denemeden önce, bu dosyayı içeren bir projenin açık olduğuna emin olun.</target>
         
       </trans-unit>
       <trans-unit id="_openReport.Text">
@@ -13784,6 +12846,7 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_showCurrentBranchOnly.Text">
         <source>Show current branch only</source>
+        <target>Yalnızca geçerli dalı göster</target>
         
       </trans-unit>
       <trans-unit id="_showDiffForAllParentsText.Text">
@@ -13815,6 +12878,7 @@ Simgeler ve aralık farkları hakkında daha fazla bilgi için belgelere bakın.
       </trans-unit>
       <trans-unit id="_showOnlyFirstParent.Text">
         <source>Show only first parent</source>
+        <target>Yalnızca ilk ebeveyni göster</target>
         
       </trans-unit>
       <trans-unit id="_showReflog.Text">

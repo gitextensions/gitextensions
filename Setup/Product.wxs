@@ -481,15 +481,6 @@
       <Component Id="Korean.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.Plugins.xlf" />
       </Component>
-      <Component Id="Polish.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.gif" />
-      </Component>
-      <Component Id="Polish.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.xlf" />
-      </Component>
-      <Component Id="Polish.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Polish.Plugins.xlf" />
-      </Component>
       <Component Id="Russian.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.gif" />
       </Component>
@@ -820,11 +811,6 @@
           <ComponentRef Id="Korean.xlf" />
           <ComponentRef Id="Korean.Plugins.xlf" />
           <ComponentRef Id="Korean.gif" />
-        </Feature>
-        <Feature Id="Polish" Title="Polish" Level="1">
-          <ComponentRef Id="Polish.xlf" />
-          <ComponentRef Id="Polish.Plugins.xlf" />
-          <ComponentRef Id="Polish.gif" />
         </Feature>
         <Feature Id="Russian" Title="Russian" Level="1">
           <ComponentRef Id="Russian.xlf" />
