@@ -97,43 +97,54 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             Validates.NotNull(_repositoryHistory);
 
-            PinnedLB.Items.Clear();
-            AllRecentLB.Items.Clear();
-
-            List<RecentRepoInfo> pinnedRepos = new();
-            List<RecentRepoInfo> allRecentRepos = new();
-
-            RecentRepoSplitter splitter = new()
-            {
-                MaxPinnedRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value,
-                ShorteningStrategy = GetShorteningStrategy(),
-                SortAllRecentRepos = sortAllRecentRepos.Checked,
-                SortPinnedRepos = sortPinnedRepos.Checked,
-                RecentReposComboMinWidth = (int)comboMinWidthEdit.Value,
-                MeasureFont = PinnedLB.Font,
-                Graphics = PinnedLB.CreateGraphics()
-            };
-
             try
             {
-                splitter.SplitRecentRepos(_repositoryHistory, pinnedRepos, allRecentRepos);
+                PinnedLB.BeginUpdate();
+                AllRecentLB.BeginUpdate();
+
+                PinnedLB.Items.Clear();
+                AllRecentLB.Items.Clear();
+
+                List<RecentRepoInfo> pinnedRepos = new();
+                List<RecentRepoInfo> allRecentRepos = new();
+
+                RecentRepoSplitter splitter = new()
+                {
+                    MaxPinnedRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value,
+                    ShorteningStrategy = GetShorteningStrategy(),
+                    SortAllRecentRepos = sortAllRecentRepos.Checked,
+                    SortPinnedRepos = sortPinnedRepos.Checked,
+                    RecentReposComboMinWidth = (int)comboMinWidthEdit.Value,
+                    MeasureFont = PinnedLB.Font,
+                    Graphics = PinnedLB.CreateGraphics()
+                };
+
+                try
+                {
+                    splitter.SplitRecentRepos(_repositoryHistory, pinnedRepos, allRecentRepos);
+                }
+                finally
+                {
+                    splitter.Graphics.Dispose();
+                }
+
+                foreach (var repo in pinnedRepos)
+                {
+                    PinnedLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.Pinned));
+                }
+
+                foreach (var repo in allRecentRepos)
+                {
+                    AllRecentLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.AllRecent));
+                }
+
+                SetComboWidth();
             }
             finally
             {
-                splitter.Graphics.Dispose();
+                PinnedLB.EndUpdate();
+                AllRecentLB.EndUpdate();
             }
-
-            foreach (var repo in pinnedRepos)
-            {
-                PinnedLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.Pinned));
-            }
-
-            foreach (var repo in allRecentRepos)
-            {
-                AllRecentLB.Items.Add(GetRepositoryListViewItem(repo, repo.Repo.Anchor == Repository.RepositoryAnchor.AllRecent));
-            }
-
-            SetComboWidth();
         }
 
         private ListViewItem GetRepositoryListViewItem(RecentRepoInfo repo, bool anchored)
@@ -175,18 +186,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void comboMinWidthEdit_ValueChanged(object sender, EventArgs e)
         {
-            try
-            {
-                PinnedLB.BeginUpdate();
-                AllRecentLB.BeginUpdate();
-
-                SetComboWidth();
-            }
-            finally
-            {
-                PinnedLB.EndUpdate();
-                AllRecentLB.EndUpdate();
-            }
+            SetComboWidth();
         }
 
         private void Ok_Click(object sender, EventArgs e)
