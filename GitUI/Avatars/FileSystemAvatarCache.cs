@@ -95,7 +95,7 @@ namespace GitUI.Avatars
 
                 bool HasExpired()
                 {
-                    IFileInfo info = _fileSystem.FileInfo.FromFileName(path);
+                    IFileInfo info = _fileSystem.FileInfo.New(path);
 
                     if (!info.Exists)
                     {
