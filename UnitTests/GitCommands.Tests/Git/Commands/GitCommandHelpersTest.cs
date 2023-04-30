@@ -2,6 +2,7 @@
 using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
 using ResourceManager;
@@ -167,29 +168,36 @@ namespace GitCommandsTests.Git.Commands
         [Test]
         public void SubmoduleSyncCmd()
         {
-            Assert.AreEqual("submodule sync \"foo\"", GitCommandHelpers.SubmoduleSyncCmd("foo").Arguments);
-            Assert.AreEqual("submodule sync", GitCommandHelpers.SubmoduleSyncCmd("").Arguments);
-            Assert.AreEqual("submodule sync", GitCommandHelpers.SubmoduleSyncCmd(null).Arguments);
+            string config = "";
+            Assert.AreEqual($"{config}submodule sync \"foo\"", GitCommandHelpers.SubmoduleSyncCmd("foo").Arguments);
+            Assert.AreEqual($"{config}submodule sync", GitCommandHelpers.SubmoduleSyncCmd("").Arguments);
+            Assert.AreEqual($"{config}submodule sync", GitCommandHelpers.SubmoduleSyncCmd(null).Arguments);
         }
 
-        [Test]
-        public void AddSubmoduleCmd()
+        private static IEnumerable<TestCaseData> AddSubmoduleTestCases()
+        {
+            yield return new TestCaseData("", null);
+            yield return new TestCaseData("-c protocol.file.allow=always ", GitCommandHelpers.GetAllowFileConfig());
+        }
+
+        [Test, TestCaseSource(nameof(AddSubmoduleTestCases))]
+        public void AddSubmoduleCmd(string config, IEnumerable<GitConfigItem> configs)
         {
             Assert.AreEqual(
-                "submodule add -b \"branch\" \"remotepath\" \"localpath\"",
-                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", "branch", force: false).Arguments);
+                $"{config}submodule add -b \"branch\" \"remotepath\" \"localpath\"",
+                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", "branch", force: false, configs).Arguments);
 
             Assert.AreEqual(
-                "submodule add \"remotepath\" \"localpath\"",
-                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", branch: null, force: false).Arguments);
+                $"{config}submodule add \"remotepath\" \"localpath\"",
+                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", branch: null, force: false, configs).Arguments);
 
             Assert.AreEqual(
-                "submodule add -f -b \"branch\" \"remotepath\" \"localpath\"",
-                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", "branch", force: true).Arguments);
+                $"{config}submodule add -f -b \"branch\" \"remotepath\" \"localpath\"",
+                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", "branch", force: true, configs).Arguments);
 
             Assert.AreEqual(
-                "submodule add -f -b \"branch\" \"remote/path\" \"local/path\"",
-                GitCommandHelpers.AddSubmoduleCmd("remote\\path", "local\\path", "branch", force: true).Arguments);
+                $"{config}submodule add -f -b \"branch\" \"remote/path\" \"local/path\"",
+                GitCommandHelpers.AddSubmoduleCmd("remote\\path", "local\\path", "branch", force: true, configs).Arguments);
         }
 
         [Test]

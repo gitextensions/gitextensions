@@ -93,9 +93,9 @@ namespace ResourceManager
                 if (m.Msg == NativeMethods.WM_ACTIVATEAPP && m.WParam != IntPtr.Zero)
                 {
                     OnApplicationActivated();
-                    if (WindowState == FormWindowState.Minimized && Owner is null && AppSettings.WorkaroundRestoreFromMinimize)
+                    if (WindowState == FormWindowState.Minimized && Owner is null && AppSettings.WorkaroundActivateFromMinimize)
                     {
-                        // Changed behavior from .NET4 to .NET5, application occasionally requires explicit "restore" in Taskbar.
+                        // Application occasionally requires explicit "restore" in Taskbar.
                         // See https://github.com/gitextensions/gitextensions/pull/10119.
                         Trace.WriteLine("WindowState is unexpectedly Minimized in OnApplicationActivated(), restoring.");
                         WindowState = FormWindowState.Normal;

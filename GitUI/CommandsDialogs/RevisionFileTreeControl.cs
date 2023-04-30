@@ -7,6 +7,7 @@ using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
 using ResourceManager;
@@ -62,6 +63,8 @@ See the changes in the commit form.");
                                                                          new FileAssociatedIconProvider());
             BlameControl.HideCommitInfo();
             filterFileInGridToolStripMenuItem.Text = TranslatedStrings.FilterFileInGrid;
+
+            copyPathsToolStripMenuItem.Initialize(() => UICommands, () => new string[] { (tvGitTree.SelectedNode?.Tag as GitItem)?.FileName });
         }
 
         public void Bind(RevisionGridControl revisionGrid, Action? refreshGitStatus, bool isBlame)
@@ -432,7 +435,7 @@ See the changes in the commit form.");
                     {
                         if (!blameToolStripMenuItem1.Checked)
                         {
-                            return ViewGitItemAsync(gitItem);
+                            return ViewGitItemAsync(gitItem, line);
                         }
 
                         FileText.Visible = false;
@@ -442,14 +445,14 @@ See the changes in the commit form.");
 
                 case GitObjectType.Commit:
                     {
-                        return ViewGitItemAsync(gitItem);
+                        return ViewGitItemAsync(gitItem, line: null);
                     }
 
                 default:
                     return ClearOutputAsync();
             }
 
-            Task ViewGitItemAsync(GitItem gitItem)
+            Task ViewGitItemAsync(GitItem gitItem, int? line)
             {
                 GitItemStatus file = new(name: gitItem.FileName)
                 {
@@ -460,7 +463,7 @@ See the changes in the commit form.");
 
                 BlameControl.Visible = false;
                 FileText.Visible = true;
-                return FileText.ViewGitItemAsync(file, gitItem.ObjectId);
+                return FileText.ViewGitItemAsync(file, gitItem.ObjectId, line: line);
             }
         }
 
@@ -524,22 +527,10 @@ See the changes in the commit form.");
                 return;
             }
 
+            int? line = FileText.Visible ? FileText.CurrentFileLine : BlameControl.CurrentFileLine;
             blameToolStripMenuItem1.Checked = !blameToolStripMenuItem1.Checked;
-            int? line = FileText.Visible ? FileText.CurrentFileLine : null;
 
             ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem, line));
-        }
-
-        private void copyFilenameToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
-            {
-                var fileName = _fullPathResolver.Resolve(gitItem.FileName);
-                if (fileName is not null)
-                {
-                    ClipboardUtil.TrySetText(fileName.ToNativePath());
-                }
-            }
         }
 
         private bool TryGetSelectedName([NotNullWhen(returnValue: true)] out string? name)
@@ -563,7 +554,7 @@ See the changes in the commit form.");
         {
             if (TryGetSelectedName(out string name))
             {
-                (FindForm() as FormBrowse)?.SetPathFilter(name.ToPosixPath());
+                (FindForm() as FormBrowse)?.SetPathFilter(name.ToPosixPath().QuoteNE());
             }
         }
 
@@ -660,16 +651,18 @@ See the changes in the commit form.");
 
         private void FileTreeContextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
-            var itemSelected = gitItem is not null;
-            var isFile = gitItem?.ObjectType == GitObjectType.Blob;
-            var isFolder = gitItem?.ObjectType == GitObjectType.Tree;
-            var isFileOrFolder = isFile || isFolder;
+            GitItem? gitItem = tvGitTree.SelectedNode?.Tag as GitItem;
+            bool itemSelected = gitItem is not null;
+            bool isFile = gitItem?.ObjectType == GitObjectType.Blob;
+            bool isFolder = gitItem?.ObjectType == GitObjectType.Tree;
+            bool isFileOrFolder = isFile || isFolder;
 
             // Many items does not make sense if a local file does not exist, why this is used for Enabled
-            var isExistingFileOrDirectory = gitItem is not null && FormBrowseUtil.IsFileOrDirectory(_fullPathResolver.Resolve(gitItem.FileName));
+            bool isExistingFileOrDirectory = gitItem is not null && FormBrowseUtil.IsFileOrDirectory(_fullPathResolver.Resolve(gitItem.FileName));
 
-            var openSubVisible = gitItem?.ObjectType == GitObjectType.Commit && isExistingFileOrDirectory;
+            filterFileInGridToolStripMenuItem.Enabled = itemSelected;
+
+            bool openSubVisible = gitItem?.ObjectType == GitObjectType.Commit && isExistingFileOrDirectory;
             openSubmoduleMenuItem.Visible = openSubVisible;
             if (openSubVisible)
             {
@@ -700,8 +693,8 @@ See the changes in the commit form.");
             openWithDifftoolToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Enabled = isExistingFileOrDirectory;
-            Validates.NotNull(_revision);
-            var fsi = _rememberFileContextMenuController.CreateFileStatusItem(gitItem?.FileName ?? "", _revision);
+            FileStatusItem fsi = _revision is null ? null
+                : _rememberFileContextMenuController.CreateFileStatusItem(gitItem?.FileName ?? "", _revision);
             diffWithRememberedFileToolStripMenuItem.Visible = _rememberFileContextMenuController.RememberedDiffFileItem is not null;
             diffWithRememberedFileToolStripMenuItem.Enabled = isFile && fsi != _rememberFileContextMenuController.RememberedDiffFileItem
                                                                          && _rememberFileContextMenuController.ShouldEnableSecondItemDiff(fsi);
@@ -720,7 +713,7 @@ See the changes in the commit form.");
             editCheckedOutFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             toolStripSeparatorFileSystemActions.Visible = isFile;
 
-            copyFilenameToClipboardToolStripMenuItem.Visible = itemSelected;
+            copyPathsToolStripMenuItem.Visible = itemSelected;
             fileTreeOpenContainingFolderToolStripMenuItem.Visible = itemSelected;
             fileTreeOpenContainingFolderToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             toolStripSeparatorFileNameActions.Visible = itemSelected;
@@ -965,6 +958,11 @@ See the changes in the commit form.");
             }
 
             return _revisionFileTreeController.SelectFileOrFolder(tvGitTree, filePath.Substring(Module.WorkingDir.Length));
+        }
+
+        internal void RegisterGitHostingPluginInBlameControl()
+        {
+            BlameControl.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
         }
 
         internal TestAccessor GetTestAccessor()

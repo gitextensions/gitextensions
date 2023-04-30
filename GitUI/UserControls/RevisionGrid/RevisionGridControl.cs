@@ -488,19 +488,7 @@ namespace GitUI
 
         public void SetAndApplyBranchFilter(string filter)
         {
-            // TODO: clean up and move all internals to FilterInfo
-
-            _filterInfo.ShowCurrentBranchOnly = false;
-
-            // Set filtered branches if there is a filter, handled as all branches otherwise
-            string newFilter = filter?.Trim() ?? string.Empty;
-            _filterInfo.ByBranchFilter = !string.IsNullOrWhiteSpace(newFilter);
-            _filterInfo.BranchFilter = newFilter;
-            if (_filterInfo.ByBranchFilter)
-            {
-                _filterInfo.ShowReflogReferences = false;
-            }
-
+            _filterInfo.SetBranchFilter(filter);
             PerformRefreshRevisions();
         }
 
@@ -1048,7 +1036,7 @@ namespace GitUI
                     cancellationToken.ThrowIfCancellationRequested();
                     reader.GetLog(
                         observeRevisions,
-                        _filterInfo.GetRevisionFilter(),
+                        _filterInfo.GetRevisionFilter(CurrentBranch),
                         pathFilter,
                         cancellationToken);
                 }).FileAndForget(
@@ -1058,7 +1046,7 @@ namespace GitUI
                         return false;
                     });
 
-                // Initiate update side panel
+                // Initiate update left panel
                 RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
             }
             catch
@@ -1778,8 +1766,6 @@ namespace GitUI
                 return;
             }
 
-            // Do not unset ByBranchFilter or ShowCurrentBranchOnly,
-            // see FilterInfo.ShowReflogReferences.
             _filterInfo.ShowReflogReferences = true;
 
             PerformRefreshRevisions();
@@ -1794,7 +1780,6 @@ namespace GitUI
 
             _filterInfo.ByBranchFilter = false;
             _filterInfo.ShowCurrentBranchOnly = false;
-            _filterInfo.ShowReflogReferences = false;
 
             PerformRefreshRevisions();
         }
@@ -1809,7 +1794,6 @@ namespace GitUI
             // Must be able to set ByBranchFilter without a filter to edit it
             _filterInfo.ByBranchFilter = true;
             _filterInfo.ShowCurrentBranchOnly = false;
-            _filterInfo.ShowReflogReferences = false;
 
             PerformRefreshRevisions();
         }
@@ -1823,7 +1807,6 @@ namespace GitUI
 
             _filterInfo.ByBranchFilter = false;
             _filterInfo.ShowCurrentBranchOnly = true;
-            _filterInfo.ShowReflogReferences = false;
 
             PerformRefreshRevisions();
         }
@@ -1996,6 +1979,7 @@ namespace GitUI
             SetEnabled(revertCommitToolStripMenuItem, !bareRepositoryOrArtificial);
             SetEnabled(cherryPickCommitToolStripMenuItem, !bareRepositoryOrArtificial);
             SetEnabled(manipulateCommitToolStripMenuItem, !bareRepositoryOrArtificial);
+            SetEnabled(amendCommitToolStripMenuItem, !bareRepositoryOrArtificial && Module.GitVersion.SupportAmendCommits);
 
             SetEnabled(copyToClipboardToolStripMenuItem, !revision.IsArtificial);
             SetEnabled(createNewBranchToolStripMenuItem, !bareRepositoryOrArtificial);
@@ -2067,6 +2051,17 @@ namespace GitUI
             return _ambiguousRefs.Value.Contains(gitRef.Name)
                 ? gitRef.CompleteName
                 : gitRef.Name;
+        }
+
+        private void RebaseOnToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
+            rebaseToolStripMenuItem.Enabled
+                = rebaseInteractivelyToolStripMenuItem.Enabled
+                = _rebaseOnTopOf is not null && selectedRevisions.Count == 1;
+            rebaseWithAdvOptionsToolStripMenuItem.Enabled = _rebaseOnTopOf is not null
+                && (selectedRevisions.Count == 1
+                    || (selectedRevisions.Count == 2 && selectedRevisions.All(r => !r.IsArtificial)));
         }
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
@@ -2153,7 +2148,19 @@ namespace GitUI
         {
             if (_rebaseOnTopOf is not null)
             {
-                UICommands.StartRebaseDialogWithAdvOptions(ParentForm, _rebaseOnTopOf);
+                IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
+                string from;
+                if (selectedRevisions.Count == 2)
+                {
+                    // Rebase onto: define the lower boundary of commits range that will be rebased
+                    from = selectedRevisions[1].ObjectId.ToShortString();
+                }
+                else
+                {
+                    from = string.Empty;
+                }
+
+                UICommands.StartRebaseDialogWithAdvOptions(ParentForm, _rebaseOnTopOf, from);
             }
         }
 
@@ -2344,6 +2351,16 @@ namespace GitUI
             }
 
             UICommands.StartSquashCommitDialog(ParentForm, LatestSelectedRevision);
+        }
+
+        private void AmendCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (LatestSelectedRevision is null)
+            {
+                return;
+            }
+
+            UICommands.StartAmendCommitDialog(ParentForm, LatestSelectedRevision);
         }
 
         internal void ToggleShowRelativeDate(EventArgs e)
@@ -2747,6 +2764,8 @@ namespace GitUI
         internal void SetShortcutKeys()
         {
             SetShortcutString(fixupCommitToolStripMenuItem, Command.CreateFixupCommit);
+            SetShortcutString(squashCommitToolStripMenuItem, Command.CreateSquashCommit);
+            SetShortcutString(amendCommitToolStripMenuItem, Command.CreateAmendCommit);
             SetShortcutString(selectAsBaseToolStripMenuItem, Command.SelectAsBaseToCompare);
             SetShortcutString(openCommitsWithDiffToolMenuItem, Command.OpenCommitsWithDifftool);
             SetShortcutString(compareToBaseToolStripMenuItem, Command.CompareToBase);
@@ -3029,6 +3048,8 @@ namespace GitUI
                 case Command.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CompareToBase: compareToBaseToolStripMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CreateFixupCommit: FixupCommitToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.CreateSquashCommit: SquashCommitToolStripMenuItemClick(this, EventArgs.Empty); break;
+                case Command.CreateAmendCommit: AmendCommitToolStripMenuItemClick(this, EventArgs.Empty); break;
                 case Command.OpenCommitsWithDifftool: DiffSelectedCommitsWithDifftool(); break;
                 case Command.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(this, EventArgs.Empty); break;
                 case Command.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;
@@ -3066,6 +3087,7 @@ namespace GitUI
         Point IScriptHostControl.GetQuickItemSelectorLocation()
             => GetQuickItemSelectorLocation();
 
+        string IScriptHostControl.GetCurrentBranch() => CurrentBranch.Value;
         #endregion
 
         bool ICheckRefs.Contains(ObjectId objectId) => _gridView.Contains(objectId);

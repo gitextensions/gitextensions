@@ -7,14 +7,15 @@ namespace GitCommands
     {
         private static readonly GitVersion v2_19_0 = new("2.19.0");
         private static readonly GitVersion v2_20_0 = new("2.20.0");
+        private static readonly GitVersion v2_32_0 = new("2.32.0");
         private static readonly GitVersion v2_35_0 = new("2.35.0");
         private static readonly GitVersion v2_38_0 = new("2.38.0");
 
         /// <summary>
-        /// The recommonded Git version (normally latest official before a GE release).
+        /// The recommended Git version (normally latest official before a GE release).
         /// This and later versions are green in the settings check.
         /// </summary>
-        public static readonly GitVersion LastRecommendedVersion = new("2.38.1");
+        public static readonly GitVersion LastRecommendedVersion = new("2.40.1");
 
         /// <summary>
         /// The oldest version with reasonable reliable support in GE.
@@ -121,6 +122,8 @@ namespace GitCommands
         public bool SupportRangeDiffTool => this >= v2_19_0;
         public bool SupportStashStaged => this >= v2_35_0;
         public bool SupportUpdateRefs => this >= v2_38_0;
+        public bool SupportRangeDiffPath => this >= v2_38_0;
+        public bool SupportAmendCommits => this >= v2_32_0;
 
         public bool IsUnknown => _a == 0 && _b == 0 && _c == 0 && _d == 0;
 
@@ -171,11 +174,7 @@ namespace GitCommands
 
         public override string ToString()
         {
-            return Full
-                .Replace(".windows.0", "")
-                .Replace(".windows.1", "")
-                .Replace(".windows.2", "")
-                .Replace(".windows.3", "");
+            return Full;
         }
     }
 }

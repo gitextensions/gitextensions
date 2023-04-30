@@ -30,19 +30,25 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormCommit : GitModuleForm
     {
-        private const string fixupPrefix = "fixup!";
-        private const string squashPrefix = "squash!";
-
         #region Translation
 
-        private readonly TranslationString _amendCommit =
-            new("You are about to rewrite history." + Environment.NewLine +
-                                  "Only use amend if the commit is not published yet!" + Environment.NewLine +
-                                  Environment.NewLine + "Do you want to continue?");
+        private readonly TranslationString _amendCommit
+            = new("You are about to rewrite history." + Environment.NewLine
+                + "Only use Amend if the commit has not been published yet!" + Environment.NewLine
+                + Environment.NewLine
+                + "Do you want to continue?");
+
+        private readonly TranslationString _amendResetSoft
+            = new("You are about to rewrite history by Soft Reset to the previous commit." + Environment.NewLine
+                + "Only use Amend / Reset if the commit has not been published yet!" + Environment.NewLine
+                + Environment.NewLine
+                + "Do you want to continue?");
 
         private readonly TranslationString _amendCommitCaption = new("Amend commit");
 
         private readonly TranslationString _commitAndPush = new("Commit && &push");
+
+        private readonly TranslationString _commitAndForcePush = new("Commit && force &push");
 
         private readonly TranslationString _deleteFailed = new("Delete file failed");
 
@@ -186,13 +192,19 @@ namespace GitUI.CommandsDialogs
             {
                 _commitKind = value;
 
-                modifyCommitMessageButton.Visible = _useFormCommitMessage && CommitKind != CommitKind.Normal;
-                bool messageCanBeChanged = _useFormCommitMessage && CommitKind == CommitKind.Normal;
+                modifyCommitMessageButton.Visible = _useFormCommitMessage && CommitKind is not (CommitKind.Normal or CommitKind.Amend);
+                bool messageCanBeChanged = _useFormCommitMessage && CommitKind is (CommitKind.Normal or CommitKind.Amend);
                 Message.Enabled = messageCanBeChanged;
                 commitMessageToolStripMenuItem.Enabled = messageCanBeChanged;
                 commitTemplatesToolStripMenuItem.Enabled = messageCanBeChanged;
             }
         }
+
+        /// <summary>
+        /// Flag whether the push needs to be forced, i.e. after amending a commit or after soft reset to the previous commit.
+        /// </summary>
+        /// The Amend checkbox is disabled after soft reset.
+        private bool PushForced => (Amend.Checked || !Amend.Enabled) && AppSettings.CommitAndPushForcedWhenAmend;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -318,6 +330,12 @@ namespace GitUI.CommandsDialogs
 
             SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
             SolveMergeconflicts.SetForeColorForBackColor();
+
+            if (AppSettings.DontConfirmAmend)
+            {
+                ResetSoft.BackColor = OtherColors.AmendButtonForcedColor;
+                ResetSoft.SetForeColorForBackColor();
+            }
 
             toolStripStatusBranchIcon.AdaptImageLightness();
 
@@ -457,7 +475,7 @@ namespace GitUI.CommandsDialogs
             {
                 // Do not remember commit message of fixup or squash commits, since they have
                 // a special meaning, and can be dangerous if used inappropriately.
-                if (CommitKind == CommitKind.Normal)
+                if (CommitKind is (CommitKind.Normal or CommitKind.Amend))
                 {
                     _commitMessageManager.MergeOrCommitMessage = Message.Text;
                     _commitMessageManager.AmendState = Amend.Checked;
@@ -505,11 +523,15 @@ namespace GitUI.CommandsDialogs
             {
                 case CommitKind.Fixup:
                     Validates.NotNull(_editedCommit);
-                    message = TryAddPrefix(fixupPrefix, _editedCommit.Subject);
+                    message = TryAddPrefix(_editedCommit.Subject);
                     break;
                 case CommitKind.Squash:
                     Validates.NotNull(_editedCommit);
-                    message = TryAddPrefix(squashPrefix, _editedCommit.Subject);
+                    message = TryAddPrefix(_editedCommit.Subject);
+                    break;
+                case CommitKind.Amend:
+                    Validates.NotNull(_editedCommit);
+                    message = $"{TryAddPrefix(_editedCommit.Subject)}{Environment.NewLine}{Environment.NewLine}{_editedCommit.Body}";
                     break;
                 default:
                     message = _commitMessageManager.MergeOrCommitMessage;
@@ -530,8 +552,10 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            string TryAddPrefix(string prefix, string suffix)
+            string TryAddPrefix(string suffix)
             {
+                string prefix = CommitKind.GetPrefix();
+
                 return suffix.StartsWith(prefix) ? suffix : $"{prefix} {suffix}";
             }
 
@@ -758,7 +782,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            ResetSoftClick(this, EventArgs.Empty);
+            ResetFilesClick(this, EventArgs.Empty);
             return true;
         }
 
@@ -861,7 +885,7 @@ namespace GitUI.CommandsDialogs
                 case Command.Refresh: RescanChanges(); return true;
                 case Command.SelectNext:
                 case Command.SelectNext_AlternativeHotkey1:
-                case Command.SelectNext_AlternativeHotkey2: MoveSelection(1);  return true;
+                case Command.SelectNext_AlternativeHotkey2: MoveSelection(1); return true;
                 case Command.SelectPrevious:
                 case Command.SelectPrevious_AlternativeHotkey1:
                 case Command.SelectPrevious_AlternativeHotkey2: MoveSelection(-1); return true;
@@ -938,6 +962,8 @@ namespace GitUI.CommandsDialogs
             var currentBranch = Module.GetRefs(RefsFilter.Heads).FirstOrDefault(r => r.LocalName == currentBranchName);
             if (currentBranch is null)
             {
+                await this.SwitchToMainThreadAsync();
+
                 branchNameLabel.Text = currentBranchName;
                 remoteNameLabel.Text = string.Empty;
                 return;
@@ -987,7 +1013,6 @@ namespace GitUI.CommandsDialogs
 
                     Commit.Enabled = false;
                     CommitAndPush.Enabled = false;
-                    Amend.Enabled = false;
                     Reset.Enabled = false;
                     ResetUnStaged.Enabled = false;
                     EnableStageButtons(false);
@@ -1014,6 +1039,8 @@ namespace GitUI.CommandsDialogs
                 var (headRev, indexRev, _) = GetHeadRevisions();
                 Staged.SetDiffs(headRev, indexRev, Module.GetIndexFilesWithSubmodulesStatus());
             }
+
+            UpdateButtonStates();
         }
 
         /// <summary>
@@ -1023,9 +1050,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
-            var lastSelection = _currentFilesList is not null
-                ? _currentSelection ?? Array.Empty<GitItemStatus>()
-                : Array.Empty<GitItemStatus>();
+            IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
             List<GitItemStatus> unstagedFiles = new();
             List<GitItemStatus> stagedFiles = new();
@@ -1047,16 +1072,12 @@ namespace GitUI.CommandsDialogs
             Unstaged.SetDiffs(indexRev, workTreeRev, unstagedFiles);
             Staged.SetDiffs(headRev, indexRev, stagedFiles);
 
-            var doChangesExist = Unstaged.AllItems.Any() || Staged.AllItems.Any();
-
             Loading.Visible = false;
             Loading.IsAnimating = false;
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
-            Amend.Enabled = true;
-            Reset.Enabled = doChangesExist;
-            SetCommitAndPushText();
+            UpdateButtonStates();
 
             EnableStageButtons(true);
             workingToolStripMenuItem.Enabled = true;
@@ -1179,8 +1200,12 @@ namespace GitUI.CommandsDialogs
             ExecuteCommitCommand();
         }
 
-        private void CheckForStagedAndCommit(bool amend, bool push, bool resetAuthor)
+        private void CheckForStagedAndCommit(bool push)
         {
+            bool createAmendCommit = Amend.Checked;
+            bool resetAuthor = Amend.Checked && ResetAuthor.Checked;
+            bool pushForced = PushForced;
+
             BypassFormActivatedEventHandler(() =>
             {
                 if (ConfirmOrStageCommit())
@@ -1191,7 +1216,7 @@ namespace GitUI.CommandsDialogs
 
             bool ConfirmOrStageCommit()
             {
-                if (amend)
+                if (createAmendCommit)
                 {
                     return ConfirmAmendCommit();
                 }
@@ -1358,7 +1383,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     var commitCmd = Module.CommitCmd(
-                        amend,
+                        createAmendCommit,
                         signOffToolStripMenuItem.Checked,
                         toolAuthor.Text,
                         _useFormCommitMessage,
@@ -1387,13 +1412,13 @@ namespace GitUI.CommandsDialogs
                     {
                         if (push)
                         {
-                            bool pushForced = AppSettings.CommitAndPushForcedWhenAmend && amend;
-                            UICommands.StartPushDialog(this, true, pushForced, out pushCompleted);
+                            UICommands.StartPushDialog(owner: this, pushOnShow: true, forceWithLease: pushForced, out pushCompleted);
                         }
                     }
                     finally
                     {
                         Message.Text = string.Empty;
+                        Amend.Enabled = true;
                         Amend.Checked = false;
                         noVerifyToolStripMenuItem.Checked = false;
                     }
@@ -1473,9 +1498,9 @@ namespace GitUI.CommandsDialogs
                     {
                         try
                         {
-                            if (!Message.Text.StartsWith(fixupPrefix) &&
-                                !Message.Text.StartsWith(squashPrefix) &&
-                                !Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx) &&
+                            if (!Message.Text.StartsWith(CommitKind.Fixup.GetPrefix()) &&
+                                !Message.Text.StartsWith(CommitKind.Squash.GetPrefix()) &&
+                                !Regex.IsMatch(GetTextToValidate(Message.Text), AppSettings.CommitValidationRegEx) &&
                                 MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                             {
                                 return false;
@@ -1487,6 +1512,17 @@ namespace GitUI.CommandsDialogs
                     }
 
                     return true;
+                }
+
+                static string GetTextToValidate(string text)
+                {
+                    string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    if (text.StartsWith(CommitKind.Amend.GetPrefix()) && lines.Length > 2 && lines[1].Length == 0)
+                    {
+                        return string.Join(Environment.NewLine, lines.Skip(2));
+                    }
+
+                    return text;
                 }
             }
         }
@@ -1543,11 +1579,7 @@ namespace GitUI.CommandsDialogs
 
         private void UnstageAllFiles()
         {
-            var lastSelection = _currentFilesList is not null
-                ? _currentSelection
-                : Array.Empty<GitItemStatus>();
-
-            Validates.NotNull(lastSelection);
+            IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
             OnStageAreaLoaded += StageAreaLoaded;
 
@@ -1728,10 +1760,6 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(false);
                 try
                 {
-                    var lastSelection = _currentFilesList is not null
-                        ? _currentSelection
-                        : Array.Empty<GitItemStatus>();
-
                     toolStripProgressBar1.Visible = true;
                     toolStripProgressBar1.Value = 0;
 
@@ -1808,8 +1836,9 @@ namespace GitUI.CommandsDialogs
 
                     if (Staged.IsEmpty)
                     {
+                        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+
                         _currentFilesList = Unstaged;
-                        Validates.NotNull(lastSelection);
                         RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
                         Unstaged.Focus();
                     }
@@ -1940,9 +1969,7 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(false);
                 try
                 {
-                    var lastSelection = _currentFilesList is not null
-                        ? _currentSelection
-                        : Array.Empty<GitItemStatus>();
+                    IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
 
                     Unstaged.StoreNextIndexToSelect();
                     toolStripProgressBar1.Visible = true;
@@ -2052,7 +2079,6 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(true);
 
                 Commit.Enabled = true;
-                Amend.Enabled = true;
             }
 
             if (AppSettings.RevisionGraphShowArtificialCommits)
@@ -2061,7 +2087,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void ResetSoftClick(object sender, EventArgs e)
+        private void ResetFilesClick(object sender, EventArgs e)
         {
             _shouldRescanChanges = false;
             try
@@ -2072,14 +2098,14 @@ namespace GitUI.CommandsDialogs
                 }
 
                 // Show a form asking the user if they want to reset the changes.
-                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, _currentFilesList.SelectedItems.Any(item => !item.Item.IsNew), _currentFilesList.SelectedItems.Any(item => item.Item.IsNew));
+                FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(this, _currentFilesList.SelectedItems.Any(item => !DeletableItem(item)), _currentFilesList.SelectedItems.Any(item => DeletableItem(item)));
                 if (resetType == FormResetChanges.ActionEnum.Cancel)
                 {
                     return;
                 }
 
                 // Unstage file first, then reset
-                var selectedFiles = Staged.SelectedItems.Items().ToList();
+                List<GitItemStatus> selectedFiles = Staged.SelectedItems.Items().ToList();
                 toolStripProgressBar1.Visible = true;
                 toolStripProgressBar1.Maximum = selectedFiles.Count;
                 toolStripProgressBar1.Value = 0;
@@ -2091,13 +2117,14 @@ namespace GitUI.CommandsDialogs
                 // remember max selected index
                 _currentFilesList.StoreNextIndexToSelect();
 
-                var deleteNewFiles = _currentFilesList.SelectedItems.Any(item => item.Item.IsNew) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
+                bool deleteNewFiles = _currentFilesList.SelectedItems.Any(item => DeletableItem(item)) && (resetType == FormResetChanges.ActionEnum.ResetAndDelete);
                 List<string> filesInUse = new();
                 List<string> filesToReset = new();
+                List<string> conflictsToReset = new();
                 StringBuilder output = new();
                 foreach (var item in _currentFilesList.SelectedItems)
                 {
-                    if (item.Item.IsNew)
+                    if (DeletableItem(item))
                     {
                         if (deleteNewFiles)
                         {
@@ -2122,13 +2149,30 @@ namespace GitUI.CommandsDialogs
                             }
                         }
                     }
-                    else
+
+                    if (item.Item.IsRenamed)
+                    {
+                        filesToReset.Add(item.Item.OldName);
+                    }
+                    else if (item.Item.IsConflict)
+                    {
+                        conflictsToReset.Add(item.Item.Name);
+                    }
+                    else if (!item.Item.IsNew)
                     {
                         filesToReset.Add(item.Item.Name);
                     }
                 }
 
                 output.Append(Module.ResetFiles(filesToReset));
+                if (conflictsToReset.Count > 0)
+                {
+                    // Special handling for conflicted files, shown in worktree (with the raw diff).
+                    // Must be reset to HEAD as Index is just a status marker.
+                    ObjectId headId = Module.RevParse("HEAD");
+                    Module.CheckoutFiles(conflictsToReset, headId, force: false);
+                }
+
                 toolStripProgressBar1.Value = toolStripProgressBar1.Maximum;
                 toolStripProgressBar1.Visible = false;
 
@@ -2153,6 +2197,35 @@ namespace GitUI.CommandsDialogs
             }
 
             Initialize();
+
+            return;
+
+            static bool DeletableItem(FileStatusItem item) => item.Item.IsNew || item.Item.IsRenamed;
+        }
+
+        private void ResetSoftClick(object sender, EventArgs e)
+        {
+            if (!AppSettings.DontConfirmAmend)
+            {
+                if (MessageBox.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
+
+            try
+            {
+                ArgumentString cmd = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
+                Module.GitExecutable.RunCommand(cmd);
+                Amend.Enabled = false;
+                Amend.Checked = false;
+                Message.Focus();
+            }
+            finally
+            {
+                UICommands.RepoChangedNotifier.Notify();
+                Initialize();
+            }
         }
 
         private void DeleteFileToolStripMenuItemClick(object sender, EventArgs e)
@@ -2749,23 +2822,31 @@ namespace GitUI.CommandsDialogs
         {
             if (CommitAndPush.Text == TranslatedStrings.ButtonPush)
             {
-                UICommands.StartPushDialog(this, pushOnShow: true);
+                bool pushForced = CommitAndPush.BackColor == OtherColors.AmendButtonForcedColor;
+                UICommands.StartPushDialog(owner: this, pushOnShow: true, forceWithLease: pushForced, out _);
                 return;
             }
 
-            CheckForStagedAndCommit(amend: Amend.Checked, push: true, resetAuthor: Amend.Checked && ResetAuthor.Checked);
+            CheckForStagedAndCommit(push: true);
         }
 
         private void UpdateAuthorInfo()
         {
-            var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
-            var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    await TaskScheduler.Default;
 
-            var committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
+                    // Do not cache results in order to update the info on FormActivate
+                    string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false);
+                    string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false);
+                    string committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
 
-            commitAuthorStatus.Text = string.IsNullOrEmpty(toolAuthor.Text?.Trim())
-                ? committer
-                : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
+                    await this.SwitchToMainThreadAsync();
+                    commitAuthorStatus.Text = string.IsNullOrWhiteSpace(toolAuthor.Text)
+                        ? committer
+                        : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
+                });
         }
 
         private bool SenderToFileStatusList(object sender, [NotNullWhen(returnValue: true)] out FileStatusList? list)
@@ -2802,26 +2883,16 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Message_KeyUp(object sender, KeyEventArgs e)
-        {
-            // Ctrl + Enter = Commit
-            if (e.Control && e.KeyCode == Keys.Enter)
-            {
-                ExecuteCommitCommand();
-                e.Handled = true;
-            }
-        }
-
         private void ExecuteCommitCommand()
         {
-            CheckForStagedAndCommit(amend: Amend.Checked, push: false, resetAuthor: Amend.Checked && ResetAuthor.Checked);
+            CheckForStagedAndCommit(push: false);
         }
 
         private void Message_KeyDown(object sender, KeyEventArgs e)
         {
-            // Prevent adding a line break when all we want is to commit
             if (e.Control && e.KeyCode == Keys.Enter)
             {
+                ExecuteCommitCommand();
                 e.Handled = true;
             }
         }
@@ -3270,7 +3341,7 @@ namespace GitUI.CommandsDialogs
 
         private void Amend_CheckedChanged(object sender, EventArgs e)
         {
-            ResetAuthor.Visible = Amend.Checked;
+            AmendPanel.Visible = Amend.Checked;
 
             if (!Amend.Checked && ResetAuthor.Checked)
             {
@@ -3284,14 +3355,16 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.CommitAndPushForcedWhenAmend)
             {
-                CommitAndPush.BackColor = Amend.Checked
+                CommitAndPush.BackColor = PushForced
                     ? OtherColors.AmendButtonForcedColor
                     : SystemColors.ButtonFace.AdaptBackColor();
 
                 CommitAndPush.SetForeColorForBackColor();
             }
 
-            SetCommitAndPushText();
+            UpdateButtonStates();
+
+            ViewFirstStagedFile();
         }
 
         private void StageInSuperproject_CheckedChanged(object sender, EventArgs e)
@@ -3324,6 +3397,11 @@ namespace GitUI.CommandsDialogs
         }
 
         private void Message_Enter(object sender, EventArgs e)
+        {
+            ViewFirstStagedFile();
+        }
+
+        private void ViewFirstStagedFile()
         {
             if (Staged.AllItemsCount != 0 && !Staged.SelectedItems.Any())
             {
@@ -3358,9 +3436,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void SetCommitAndPushText()
+        private void UpdateButtonStates()
         {
-            CommitAndPush.Text = Reset.Enabled || Amend.Checked ? _commitAndPush.Text : TranslatedStrings.ButtonPush;
+            Reset.Enabled = Unstaged.AllItems.Any() || Staged.AllItems.Any();
+            CommitAndPush.Text = PushForced ? _commitAndForcePush.Text
+                : Reset.Enabled || Amend.Checked ? _commitAndPush.Text
+                : TranslatedStrings.ButtonPush;
         }
 
         internal TestAccessor GetTestAccessor()
@@ -3405,6 +3486,14 @@ namespace GitUI.CommandsDialogs
 
             internal CheckBox Amend => _formCommit.Amend;
 
+            internal Button Commit => _formCommit.Commit;
+
+            internal Button CommitAndPush => _formCommit.CommitAndPush;
+
+            internal string CommitAndForcePushText => _formCommit._commitAndForcePush.Text;
+
+            internal Button ResetSoft => _formCommit.ResetSoft;
+
             internal void RescanChanges() => _formCommit.RescanChanges();
         }
     }
@@ -3416,6 +3505,20 @@ namespace GitUI.CommandsDialogs
     {
         Normal,
         Fixup,
-        Squash
+        Squash,
+        Amend,
+    }
+
+    public static class CommitKindExtensions
+    {
+        public static string GetPrefix(this CommitKind commitKind)
+            => commitKind switch
+            {
+                CommitKind.Fixup => "fixup!",
+                CommitKind.Squash => "squash!",
+                CommitKind.Amend => "amend!",
+                CommitKind.Normal => string.Empty,
+                _ => throw new System.ComponentModel.InvalidEnumArgumentException(nameof(commitKind), (int)commitKind, typeof(CommitKind)),
+            };
     }
 }

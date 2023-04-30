@@ -34,6 +34,7 @@ namespace CommonTestUtils
                 catch (LibGit2Sharp.LockedFileException)
                 {
                     // the index is locked; this might be due to a concurrent or crashed process
+                    refRepo.Dispose();
                     refRepo = new ReferenceRepository();
                     Trace.WriteLine("Repo is locked, creating new");
                 }
@@ -46,12 +47,19 @@ namespace CommonTestUtils
 
         private const string _fileName = "A.txt";
 
+        private void IndexAdd(Repository repository, string fileName)
+        {
+            repository.Index.Add(fileName);
+            repository.Index.Write();
+        }
+
         private string Commit(Repository repository, string commitMessage)
         {
             LibGit2Sharp.Signature author = new("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
             var committer = author;
             LibGit2Sharp.CommitOptions options = new() { PrettifyMessage = false };
             var commit = repository.Commit(commitMessage, author, committer, options);
+            repository.Index.Write();
             return commit.Id.Sha;
         }
 
@@ -66,7 +74,7 @@ namespace CommonTestUtils
         {
             using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
             _moduleTestHelper.CreateRepoFile(_fileName, content ?? commitMessage);
-            repository.Index.Add(_fileName);
+            IndexAdd(repository, _fileName);
 
             CommitHash = Commit(repository, commitMessage);
             Console.WriteLine($"Created commit: {CommitHash}, message: {commitMessage}");
@@ -77,11 +85,11 @@ namespace CommonTestUtils
         {
             using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
             _moduleTestHelper.CreateRepoFile(fileName1, content1);
-            repository.Index.Add(fileName1);
+            IndexAdd(repository, fileName1);
             if (content2 != null && fileName2 != null)
             {
                 _moduleTestHelper.CreateRepoFile(fileName2, content2);
-                repository.Index.Add(fileName2);
+                IndexAdd(repository, fileName2);
             }
 
             CommitHash = Commit(repository, commitMessage);
@@ -95,7 +103,7 @@ namespace CommonTestUtils
         {
             using Repository repository = new(_moduleTestHelper.Module.WorkingDir);
             _moduleTestHelper.CreateRepoFile(fileRelativePath, fileName, content ?? commitMessage);
-            repository.Index.Add(Path.Combine(fileRelativePath, fileName));
+            IndexAdd(repository, Path.Combine(fileRelativePath, fileName));
 
             CommitHash = Commit(repository, commitMessage);
             Console.WriteLine($"Created commit: {CommitHash}, message: {commitMessage}");
@@ -177,7 +185,7 @@ namespace CommonTestUtils
         {
             using LibGit2Sharp.Repository repository = new(_moduleTestHelper.Module.WorkingDir);
             _moduleTestHelper.CreateRepoFile(_fileName, content ?? stashMessage);
-            repository.Index.Add(_fileName);
+            IndexAdd(repository, _fileName);
 
             LibGit2Sharp.Signature author = new("GitUITests", "unittests@gitextensions.com", DateTimeOffset.Now);
             Stash stash = repository.Stashes.Add(author, stashMessage);

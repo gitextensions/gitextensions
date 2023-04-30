@@ -41,11 +41,11 @@ namespace GitUI.CommandsDialogs
         /// <param name="isSecondRevision">true if second revision can be used as the first item.</param>
         /// <returns>If the item can be used.</returns>
         [Pure]
-        public bool ShouldEnableFirstItemDiff(FileStatusItem item, bool isSecondRevision)
+        public bool ShouldEnableFirstItemDiff(FileStatusItem? item, bool isSecondRevision)
         {
             // First item must be a git reference existing in the revision, i.e. other than work tree
             return ShouldEnableSecondItemDiff(item, isSecondRevision: isSecondRevision)
-                   && (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId != ObjectId.WorkTreeId;
+                   && (isSecondRevision ? item?.SecondRevision : item?.FirstRevision)?.ObjectId != ObjectId.WorkTreeId;
         }
 
         [Pure]

@@ -318,16 +318,13 @@ namespace GitCommands
             }
 #endif
 
-            // Wait for the process to exit (or be cancelled)
-            await process.WaitForProcessExitAsync(cancellationToken);
-
-            // Await the output and exit status
-            var exitTask = process.WaitForExitAsync();
+            // Wait for the process to exit (or be cancelled) and for the output
+            Task<int> exitTask = process.WaitForExitAsync(cancellationToken);
             await Task.WhenAll(outputTask, errorTask, exitTask);
 
             var output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
             var error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
-            var exitCode = await process.WaitForExitAsync();
+            int exitCode = await exitTask;
 
             if (cache is not null && exitCode == 0)
             {

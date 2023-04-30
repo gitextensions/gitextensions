@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Reactive.Linq;
@@ -299,8 +301,6 @@ namespace GitUI.CommitInfo
             _tags = null;
             _annotatedTagsMessages = null;
 
-            UpdateCommitMessage();
-
             _annotatedTagsInfo = "";
             _linksInfo = "";
             _branchInfo = "";
@@ -313,20 +313,26 @@ namespace GitUI.CommitInfo
             }
             else
             {
+                rtbxCommitMessage.SetXHTMLText(GetFixCommitMessage());
                 RevisionInfo.Clear();
             }
 
             return;
 
-            void UpdateCommitMessage()
+            string GetFixCommitMessage()
             {
                 if (_revision is null)
                 {
-                    rtbxCommitMessage.SetXHTMLText(string.Empty);
-                    return;
+                    return string.Empty;
                 }
 
-                var data = _commitDataManager.CreateFromRevision(_revision, _children);
+                CommitData data = _commitDataManager.CreateFromRevision(_revision, _children);
+                return _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: false);
+            }
+
+            async Task UpdateCommitMessageAsync()
+            {
+                CommitData data = _commitDataManager.CreateFromRevision(_revision, _children);
 
                 if (_revision.Body is null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
                 {
@@ -335,7 +341,9 @@ namespace GitUI.CommitInfo
                     _revision.HasNotes = true;
                 }
 
-                var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
+                string commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
+
+                await this.SwitchToMainThreadAsync();
                 rtbxCommitMessage.SetXHTMLText(commitMessage);
             }
 
@@ -347,6 +355,8 @@ namespace GitUI.CommitInfo
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     List<Task> tasks = new();
+
+                    tasks.Add(UpdateCommitMessageAsync());
 
                     tasks.Add(LoadLinksForRevisionAsync(initialRevision, settings));
 
@@ -443,7 +453,7 @@ namespace GitUI.CommitInfo
 
                         Dictionary<string, string> result = new();
 
-                        foreach (var gitRef in refs)
+                        foreach (IGitRef gitRef in refs)
                         {
                             #region Note on annotated tags
                             // Notice that for the annotated tags, gitRef's come in pairs because they're produced
@@ -472,8 +482,7 @@ namespace GitUI.CommitInfo
 
                             if (gitRef.IsTag && gitRef.IsDereference)
                             {
-                                string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
-
+                                string? content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
                                 if (content is not null)
                                 {
                                     result.Add(gitRef.LocalName, content);
@@ -579,7 +588,7 @@ namespace GitUI.CommitInfo
 
             if (_branches is not null && string.IsNullOrEmpty(_branchInfo))
             {
-                _branches.Sort(new BranchComparer(Module.GetSelectedBranch()));
+                _branches.Sort(new BranchComparer(_branches, Module.GetSelectedBranch()));
                 _branchInfo = _refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
             }
 
@@ -648,7 +657,7 @@ namespace GitUI.CommitInfo
 
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var commitInfo = $"{commitInfoHeader.GetPlainText()}{Environment.NewLine}{Environment.NewLine}{rtbxCommitMessage.GetPlainText()}{Environment.NewLine}{RevisionInfo.GetPlainText()}";
+            string commitInfo = $"{commitInfoHeader.GetPlainText()}{Environment.NewLine}{Environment.NewLine}{rtbxCommitMessage.GetPlainText()}";
             ClipboardUtil.TrySetText(commitInfo);
         }
 
@@ -792,42 +801,122 @@ namespace GitUI.CommitInfo
 
         internal sealed class BranchComparer : IComparer<string>
         {
-            private const string RemoteBranchPrefix = "remotes/";
-
-            private static readonly Regex _importantRepoRegex = new($"^{RemoteBranchPrefix}(origin|upstream)/",
-                RegexOptions.Compiled | RegexOptions.CultureInvariant);
-            private static readonly Regex _remoteMasterRegex = new($"^{RemoteBranchPrefix}.*/(main|master)[^/]*$",
-                RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
+            private const string _remoteBranchPrefix = "remotes/";
             private readonly string _currentBranch;
+            private readonly bool _isDetachedHead;
+            private readonly Dictionary<string, int> _orderByBranch = new();
 
-            public BranchComparer(string currentBranch)
+            public BranchComparer(List<string> branches, string currentBranch)
             {
                 _currentBranch = currentBranch;
+                _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);
+                string[] branchRegexes = AppSettings.PrioritizedBranchNames.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                string[] localBranchRegexes = branchRegexes.Select(regex => $"^({regex})$").ToArray();
+                string[] remoteBranchRegexes = branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$").ToArray();
+                string[] remoteRegexes = AppSettings.PrioritizedRemoteNames.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Select(regex => $"^{_remoteBranchPrefix}({regex})/").ToArray();
+
+                foreach (string branch in branches)
+                {
+                    _orderByBranch[branch] = GetBranchOrder(branch);
+                }
+
+                return;
+
+                // Get the order for each branch.
+                // Add max possible order value to next "level" to sort properly with the order for each regex.
+                int GetBranchOrder(string branch)
+                {
+                    int order = 0;
+                    if (_isDetachedHead ? DetachedHeadParser.IsDetachedHead(branch) : branch == _currentBranch)
+                    {
+                        return order;
+                    }
+
+                    // length of "current branch" group
+                    order += 1;
+
+                    if (IsLocalBranch())
+                    {
+                        if (!TryGetOrder(branch, localBranchRegexes, out int localBranchOrder))
+                        {
+                            // Non prioritized local branches added after prioritized remote branches
+                            // localBranchOrder==localBranchRegexes.Length, an extra priority level
+                            order += prioritizedRemoteBranchesLength();
+                        }
+
+                        // Order by branch priority
+                        order += localBranchOrder;
+
+                        return order;
+                    }
+
+                    // Remote branches after local prioritized branches
+                    order += localBranchRegexes.Length;
+
+                    if (!TryGetOrder(branch, remoteBranchRegexes, out int remoteBranchOrder))
+                    {
+                        // after non priority local branches (that are inserted after remote prioritzed branches)
+                        const int localNonprioritizedBranchesLength = 1;
+                        order += localNonprioritizedBranchesLength;
+                    }
+
+                    // Group by branch priority then order by remote
+                    order += (remoteBranchOrder * remotesGroupLength()) + GetOrder(branch, remoteRegexes);
+
+                    return order;
+
+                    bool IsLocalBranch() => !branch.StartsWith(_remoteBranchPrefix);
+
+                    // The groups for a prioritized remote branch adds the unprioritized remotes to the regexes
+                    int remotesGroupLength() => remoteRegexes.Length + 1;
+
+                    // Length of the block of all prioritized remote branches (non prioritized branches separate)
+                    int prioritizedRemoteBranchesLength() => remoteBranchRegexes.Length * remotesGroupLength();
+
+                    // Get the index of the match for prioritized sorting,
+                    // set order to regexes.Length at no match
+                    bool TryGetOrder(string branch, string[] regexes, out int order)
+                    {
+                        int currentOrder = 0;
+                        foreach (string regex in regexes)
+                        {
+                            if (Regex.IsMatch(branch, regex, RegexOptions.ExplicitCapture))
+                            {
+                                order = currentOrder;
+                                return true;
+                            }
+
+                            currentOrder++;
+                        }
+
+                        order = currentOrder;
+                        return false;
+                    }
+
+                    int GetOrder(string branch, string[] regexes)
+                    {
+                        TryGetOrder(branch, regexes, out int order);
+                        return order;
+                    }
+                }
             }
 
-            public int Compare(string a, string b)
+            public int Compare(string? a, string? b)
             {
-                int priorityA = GetBranchPriority(a);
-                int priorityB = GetBranchPriority(b);
-                return priorityA == priorityB ? StringComparer.Ordinal.Compare(a, b)
-                    : priorityA - priorityB;
-            }
+                if (b is null)
+                {
+                    return -1;
+                }
 
-            private int GetBranchPriority(string branch)
-            {
-                return branch == _currentBranch ? 0
-                    : IsImportantLocalBranch() ? 1
-                    : IsImportantRemoteBranch() ? IsImportantRepo() ? 2 : 3
-                    : IsLocalBranch() ? 4
-                    : IsImportantRepo() ? 5
-                    : 6;
+                if (a is null)
+                {
+                    return 1;
+                }
 
-                // Note: This assumes that branches starting with "master" are important branches, this is not configurable.
-                bool IsImportantLocalBranch() => branch.StartsWith("master") || branch.StartsWith("main");
-                bool IsImportantRemoteBranch() => _remoteMasterRegex.IsMatch(branch);
-                bool IsImportantRepo() => _importantRepoRegex.IsMatch(branch);
-                bool IsLocalBranch() => !branch.StartsWith(RemoteBranchPrefix);
+                int priorityA = _orderByBranch[a];
+                int priorityB = _orderByBranch[b];
+                return priorityA == priorityB ? StringComparer.Ordinal.Compare(a, b) : priorityA - priorityB;
             }
         }
 
@@ -842,9 +931,9 @@ namespace GitUI.CommitInfo
                 _prefix = prefix;
             }
 
-            public int Compare(string a, string b)
+            public int Compare(string? a, string? b)
             {
-                return IndexOf(a) - IndexOf(b);
+                return b is null ? -1 : a is null ? 1 : IndexOf(a) - IndexOf(b);
 
                 int IndexOf(string s)
                 {

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Text;
+using GitCommands;
 using GitCommands.Git;
 using GitExtUtils;
 using GitUI;
@@ -423,7 +424,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 }
                 else
                 {
-                    System.Diagnostics.Process.Start(link);
+                    OsShellUtil.OpenUrlInDefaultBrowser(link);
                 }
             }
             catch

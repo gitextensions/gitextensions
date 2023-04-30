@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using GitCommands;
 using GitExtUtils.GitUI.Theming;
 
 namespace GitUI

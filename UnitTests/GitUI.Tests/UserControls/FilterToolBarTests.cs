@@ -62,7 +62,7 @@ namespace GitUITests.UserControls
         {
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.Count.Should().Be(0);
 
-            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter();
+            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter(checkBranch: true);
 
             _revisionGridFilter.Received().SetAndApplyBranchFilter(string.Empty);
             _filterToolBar.GetTestAccessor()._isApplyingFilter.Should().BeFalse();
@@ -74,7 +74,7 @@ namespace GitUITests.UserControls
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.AddRange(new[] { "one", "two" });
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Text = TranslatedStrings.NoResultsFound;
 
-            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter();
+            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter(checkBranch: true);
 
             _revisionGridFilter.Received().SetAndApplyBranchFilter(string.Empty);
             _filterToolBar.GetTestAccessor()._isApplyingFilter.Should().BeFalse();
@@ -85,10 +85,69 @@ namespace GitUITests.UserControls
         {
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.AddRange(new[] { "one", "two" });
             _filterToolBar.GetTestAccessor().tscboBranchFilter.Text = "on";
+            _filterToolBar.GetTestAccessor().RefreshRevisionFunction((x) =>
+            new List<IGitRef>
+            {
+                new GitRef(_filterToolBar.GetTestAccessor().GetModule(),
+                ObjectId.Random(),
+                GitRefName.GetFullBranchName(_filterToolBar.GetTestAccessor().tscboBranchFilter.Text))
+            });
 
-            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter();
+            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter(checkBranch: true);
 
             _revisionGridFilter.Received().SetAndApplyBranchFilter("on");
+            _filterToolBar.GetTestAccessor()._isApplyingFilter.Should().BeFalse();
+        }
+
+        [Test]
+        public void ApplyBranchFilter_should_allow_multiple_branches()
+        {
+            _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.AddRange(new[] { "one", "two" });
+            _filterToolBar.GetTestAccessor().tscboBranchFilter.Text = "one two";
+            _filterToolBar.GetTestAccessor().RefreshRevisionFunction((x) =>
+            new List<IGitRef>
+            {
+                new GitRef(_filterToolBar.GetTestAccessor().GetModule(),
+                ObjectId.Random(),
+                GitRefName.GetFullBranchName("one")),
+                new GitRef(_filterToolBar.GetTestAccessor().GetModule(),
+                ObjectId.Random(),
+                GitRefName.GetFullBranchName("two"))
+            });
+
+            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter(checkBranch: true);
+
+            _revisionGridFilter.Received().SetAndApplyBranchFilter("one two");
+            _filterToolBar.GetTestAccessor()._isApplyingFilter.Should().BeFalse();
+        }
+
+        [Test]
+        public void ApplyBranchFilter_should_allow_git_option()
+        {
+            _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.AddRange(new[] { "one", "two" });
+            _filterToolBar.GetTestAccessor().tscboBranchFilter.Text = "--some_option";
+
+            // Empty git ref list
+            _filterToolBar.GetTestAccessor().RefreshRevisionFunction((x) => new List<IGitRef>());
+
+            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter(checkBranch: true);
+
+            _revisionGridFilter.Received().SetAndApplyBranchFilter("--some_option");
+            _filterToolBar.GetTestAccessor()._isApplyingFilter.Should().BeFalse();
+        }
+
+        [Test]
+        public void ApplyBranchFilter_should_allow_wildcard_branch()
+        {
+            _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.AddRange(new[] { "one", "two" });
+            _filterToolBar.GetTestAccessor().tscboBranchFilter.Text = "wildcard*";
+
+            // Empty git ref list
+            _filterToolBar.GetTestAccessor().RefreshRevisionFunction((x) => new List<IGitRef>());
+
+            _filterToolBar.GetTestAccessor().ApplyCustomBranchFilter(checkBranch: true);
+
+            _revisionGridFilter.Received().SetAndApplyBranchFilter("wildcard*");
             _filterToolBar.GetTestAccessor()._isApplyingFilter.Should().BeFalse();
         }
 
@@ -216,13 +275,6 @@ namespace GitUITests.UserControls
         {
             _filterToolBar.GetTestAccessor().tsbShowReflog.PerformClick();
             _revisionGridFilter.Received(1).ToggleShowReflogReferences();
-        }
-
-        [Test]
-        public void ShowBranches_Reflog_should_invoke_ToggleShowReflogReferences()
-        {
-            _filterToolBar.GetTestAccessor().tsmiShowReflog.PerformClick();
-            _revisionGridFilter.Received(1).ShowReflog();
         }
 
         [Test]

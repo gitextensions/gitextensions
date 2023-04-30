@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -10,7 +10,7 @@
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Auto compile SubModules</source>
         <target>自动编译子模块</target>
         
@@ -19,7 +19,7 @@
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>你要构建 {0}吗?
+        <target>你要构建 {0} 吗?
 
 {1}</target>
         
@@ -31,24 +31,25 @@
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe 参数</target>
+        <target>msbuild.exe 引數
+</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>已启用</target>
+        <target>啟用</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>msbuild.exe 路径</target>
+        <target>msbuild.exe 的路径</target>
         
       </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Periodic background fetch</source>
         <target>周期性背景提取</target>
         
@@ -84,27 +85,30 @@
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
         <source>Disable SSL verification</source>
-        <target>禁用 SSL 验证</target>
+        <target>禁用SSL驗證
+</target>
         
       </trans-unit>
       <trans-unit id="BitbucketPassword.Caption">
         <source>Bitbucket Password</source>
-        <target>Bitbucket 密码</target>
+        <target>Bitbucket 密碼</target>
         
       </trans-unit>
       <trans-unit id="BitbucketUsername.Caption">
         <source>Bitbucket Username</source>
-        <target>Bitbucket 用户名</target>
+        <target>Bitbucket 使用名稱
+</target>
         
       </trans-unit>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Bitbucket Server</source>
-        <target>Bitbucket 服务器</target>
+        <target>Bitbucket 伺服器</target>
         
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>您的版本库没有托管在 Bitbucket 上。</target>
+        <target>你的檔案庫未被Bitbucket 伺服器託管
+</target>
         
       </trans-unit>
     </body>
@@ -113,24 +117,24 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Bitbucket Server</source>
-        <target>Bitbucket 服务器</target>
+        <target>Bitbucket 伺服器</target>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
-        <target>{0} 提交
-{1}</target>
+        <target>提交</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>错误</target>
+        <target>錯誤</target>
         
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
-        <target>右键复制链接</target>
+        <target>右鍵複製連結
+</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -145,12 +149,12 @@
       </trans-unit>
       <trans-unit id="btnCreate.Text">
         <source>Create</source>
-        <target>创建</target>
+        <target>建立</target>
         
       </trans-unit>
       <trans-unit id="btnMerge.Text">
         <source>Merge</source>
-        <target>合并</target>
+        <target>合併</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
@@ -170,22 +174,22 @@
       </trans-unit>
       <trans-unit id="groupBoxSource.Text">
         <source>Source</source>
-        <target>源</target>
+        <target>來源</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSourceRepoView.Text">
         <source>Source</source>
-        <target>源</target>
+        <target>來源</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTarget.Text">
         <source>Target</source>
-        <target>目标</target>
+        <target>目標</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTargetRepoView.Text">
         <source>Target</source>
-        <target>目标</target>
+        <target>目標</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -200,22 +204,23 @@
       </trans-unit>
       <trans-unit id="lblDescription.Text">
         <source>Description</source>
-        <target>描述</target>
+        <target>說明</target>
         
       </trans-unit>
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
-        <target>描述</target>
+        <target>說明</target>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>版本库</target>
+        <target>檔案庫
+</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
         <source>Reviewer (approved)</source>
-        <target>审阅者(核准)</target>
+        <target>檢視者(核准)</target>
         
       </trans-unit>
       <trans-unit id="lblSourceBranch.Text">
@@ -225,17 +230,19 @@
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>版本库</target>
+        <target>檔案庫
+</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>版本库</target>
+        <target>檔案庫
+</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
         <source>State</source>
-        <target>状态</target>
+        <target>狀態</target>
         
       </trans-unit>
       <trans-unit id="lblTargetBranch.Text">
@@ -250,27 +257,28 @@
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
-        <target>版本库</target>
+        <target>檔案庫
+</target>
         
       </trans-unit>
       <trans-unit id="lblTitle.Text">
         <source>Title</source>
-        <target>标题</target>
+        <target>標題</target>
         
       </trans-unit>
       <trans-unit id="lblTitleView.Text">
         <source>Title</source>
-        <target>标题</target>
+        <target>標題</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>创建拉取请求</target>
+        <target>建立拉取請求</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>查看推送请求</target>
+        <target>檢視拉取請求</target>
         
       </trans-unit>
     </body>
@@ -296,7 +304,7 @@
   </file>
   <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Create local tracking branches</source>
         <target>创建本地跟踪分支</target>
         
@@ -317,12 +325,12 @@
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>关闭</target>
+        <target>關閉</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>删除</target>
+        <target>刪除</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -371,7 +379,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>删除</target>
+        <target>刪除</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
@@ -386,7 +394,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
@@ -406,7 +414,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>设置</target>
+        <target>設定</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
@@ -431,7 +439,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>名称</target>
+        <target>名稱</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
@@ -458,7 +466,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Delete obsolete branches</source>
         <target>删除废弃的分支</target>
         
@@ -581,7 +589,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Find large files</source>
         <target>查找大文件</target>
         
@@ -589,6 +597,240 @@ Are you sure you want to continue?</source>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
         <target>查找大于多少（Mb）的大文件</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Change Submitted</source>
+        <target>變更已發送</target>
+        
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target>關閉</target>
+        
+      </trans-unit>
+      <trans-unit id="labelSubmitted.Text">
+        <source>Your change has been submitted for review at the following location:</source>
+        <target>已發送您的變更以進行review, 在這個位置:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Download Gerrit Change</source>
+        <target>下載Gerrit變更</target>
+        
+      </trans-unit>
+      <trans-unit id="AddRemote.Text">
+        <source>Manage remotes</source>
+        <target>管理遠端</target>
+        
+      </trans-unit>
+      <trans-unit id="Download.Text">
+        <source>&amp;Download</source>
+        <target>下載(&amp;D)</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotGetChangeDetails.Text">
+        <source>Could not retrieve the change details</source>
+        <target>無法取得變更細節</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadCaption.Text">
+        <source>Download change {0}</source>
+        <target>下載變更 {0}</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadGerritChangeCaption.Text">
+        <source>Download Gerrit Change</source>
+        <target>下載Gerrit變更</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectChange.Text">
+        <source>Please enter a change</source>
+        <target>請輸入變更</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectRemote.Text">
+        <source>Please select a remote repository</source>
+        <target>請選擇遠端repository</target>
+        
+      </trans-unit>
+      <trans-unit id="labelChange.Text">
+        <source>Change:</source>
+        <target>變更:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelEnterChangeIdOrNumber.Text">
+        <source>Enter the Change-Id or the number from the Gerrit URL</source>
+        <target>輸入Change ID或Gerrit URL上的數字</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRemote.Text">
+        <source>Remote:</source>
+        <target>遠端:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelTopicBranch.Text">
+        <source>Topic branch:</source>
+        <target>主題branch:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Publish Gerrit Change</source>
+        <target>發布Gerrit變更</target>
+        
+      </trans-unit>
+      <trans-unit id="AddRemote.Text">
+        <source>Manage remotes</source>
+        <target>管理遠端</target>
+        
+      </trans-unit>
+      <trans-unit id="Publish.Text">
+        <source>&amp;Publish</source>
+        <target>發布(&amp;P)</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishCaption.Text">
+        <source>Publish change</source>
+        <target>發布變更</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishGerritChangeCaption.Text">
+        <source>Publish Gerrit Change</source>
+        <target>發布Gerrit變更</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectBranch.Text">
+        <source>Please enter a branch</source>
+        <target>請輸入branch</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectRemote.Text">
+        <source>Please select a remote repository</source>
+        <target>請選擇遠端repository</target>
+        
+      </trans-unit>
+      <trans-unit id="labelBranch.Text">
+        <source>Branch:</source>
+        <target>分支：</target>
+        
+      </trans-unit>
+      <trans-unit id="labelCc.Text">
+        <source>CC:</source>
+        <target>CC：</target>
+        
+      </trans-unit>
+      <trans-unit id="labelHashtag.Text">
+        <source>Hashtag:</source>
+        <target># 标签：</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type:</source>
+        <target>发布类型：</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRemote.Text">
+        <source>Remote:</source>
+        <target>遠端:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelReviewers.Text">
+        <source>Reviewer(s):</source>
+        <target>审核者：</target>
+        
+      </trans-unit>
+      <trans-unit id="labelTopic.Text">
+        <source>Topic:</source>
+        <target>主題:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Edit .gitreview</source>
+        <target>邊輯.gitreview</target>
+        
+      </trans-unit>
+      <trans-unit id="Save.Text">
+        <source>Save</source>
+        <target>儲存</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotAccessGitreview.Text">
+        <source>Failed to save .gitreview.
+Check if file is accessible.</source>
+        <target>儲存.gitreview失敗!請檢查檔案存取權限.</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotAccessGitreviewCaption.Text">
+        <source>Failed to save .gitreview</source>
+        <target>儲存.gitreview失敗</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
+        <source>.gitreview is only supported when there is a working directory.</source>
+        <target>.gitreview只支援有工作目錄的個人repository.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
+        <source>No working directory</source>
+        <target>無工作目錄</target>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileQuestion.Text">
+        <source>Save changes to .gitreview?</source>
+        <target>儲存變更到.gitreview?</target>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileQuestionCaption.Text">
+        <source>Save changes?</source>
+        <target>儲存變更</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Provide the configuration for
+.gitreview to setup Gerrit.
+
+Example configuration:
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</source>
+        <target>提供配置.gitreview示例
+来设置Gerrit。
+
+配置示例：
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkGitReviewHelp.Text">
+        <source>GitHub page for git-review</source>
+        <target>git-review的GitHub頁面</target>
         
       </trans-unit>
     </body>
@@ -607,22 +849,22 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
@@ -746,6 +988,141 @@ Are you sure you want to continue?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Gerrit Plugin</source>
+        <target>Gerrit 插件</target>
+        
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target>關閉</target>
+        
+      </trans-unit>
+      <trans-unit id="informationLabel.Text">
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
+
+To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target>用于Git Extensions的Gerrit插件提供了与用于Git Extensions的Gerrit的集成。 该插件基于git-review工具。
+
+要启用对版本库的Gerrit支持，必须创建.gitreview文件。 可以通过版本库 | 编辑.gitreview菜单选项。 有关.gitreview文件和git-review工具的更多信息，请参见下面的链接。</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="_publishTypeDraft.Text">
+        <source>Draft</source>
+        <target>草稿</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>私有</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        <target>待审查</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        <target>尚未完工</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="Name.Text">
+        <source>Gerrit Code Review</source>
+        <target>Gerrit代码审查</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadGerritChange.Text">
+        <source>Download Gerrit Change</source>
+        <target>下載Gerrit變更</target>
+        
+      </trans-unit>
+      <trans-unit id="_editGitReview.Text">
+        <source>Edit .gitreview</source>
+        <target>邊輯.gitreview</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHook.Text">
+        <source>Install Hook</source>
+        <target>安裝Hook</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
+        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
+        <target>無法下載commit-msg檔案. 請手動安裝commit-msg hook.</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
+        <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
+        <target>无法创建钩子文件夹。请手动创建文件夹，然后再试一次。</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookMessage.Text">
+        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
+        <target>Gerrit需要安裝commit-msg hook. 您要安裝commit-msg hook到你的repository嗎?</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookShortText.Text">
+        <source>Install commit-msg hook</source>
+        <target>安裝commit-msg hook</target>
+        
+      </trans-unit>
+      <trans-unit id="_predefinedGerritVersion.Caption">
+        <source>Treat Gerrit as having version</source>
+        <target>将视Gerrit为已有版本</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishGerritChange.Text">
+        <source>Publish Gerrit Change</source>
+        <target>發布Gerrit變更</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="_settingsError.Text">
+        <source>Error loading .gitreview file.</source>
+        <target>載入.gitreview檔案發生錯誤</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
+        <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
+        <target>远程档案库 &quot;{0}&quot;指定了&quot;defaultremote&quot;设置,.gitreview文件没有找到与之匹配的远程档案库。创建远程档案库或者更改.gitreview文件来完善配置。</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorFileNotFound.Text">
+        <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
+        <target>工作目錄找不到&quot;.gitreview&quot;這個檔案</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorHostNotEntered.Text">
+        <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
+        <target>.gitreview檔案中&quot;host&quot;設定必填</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorPortNotNumeric.Text">
+        <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
+        <target>.gitreview檔案中&quot;port&quot;設定只能為數字.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorProjectNotEntered.Text">
+        <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
+        <target>.gitreview檔案中&quot;project&quot;設定必填</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
@@ -853,7 +1230,7 @@ Are you sure you want to continue?</source>
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target>[前缀]/</target>
         
@@ -872,7 +1249,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitFlow</source>
         <target>GitFlow</target>
         
@@ -881,7 +1258,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitHub</source>
         <target>GitHub</target>
         
@@ -891,24 +1268,14 @@ Are you sure you want to continue?</source>
         <target>GitHub (Enterprise) 主机名</target>
         
       </trans-unit>
-      <trans-unit id="PersonalAccessToken.Caption">
-        <source>Personal Access Token</source>
-        
-      </trans-unit>
-      <trans-unit id="_generateToken.Text">
-        <source>Generate a GitHub personal access token</source>
-        
-      </trans-unit>
-      <trans-unit id="_manageToken.Text">
-        <source>Manage GitHub personal access token</source>
-        
-      </trans-unit>
-      <trans-unit id="_openLinkFailed.Text">
-        <source>Fail to open the link. Reason: </source>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        <target>授权令牌</target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
-        <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
+        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        <target>你已经有一个OAuth令牌.获取一个新的,在插件&gt;设置中删除老的令牌.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -920,7 +1287,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Impact Graph</source>
         <target>影响图形</target>
         
@@ -929,7 +1296,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Statistics</source>
         <target>统计</target>
         
@@ -953,7 +1320,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Gource</source>
         <target>Gource</target>
         
@@ -974,9 +1341,9 @@ Please download Gource and set the path in the plugins settings dialog.</source>
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>当前目录不是有效的git档案库。
+        <target>当前目录不是有效的 git 档案库。
 
-Gource只能从有效的git档案库启动。</target>
+Gource 只能从有效的 git 档案库启动。</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
@@ -1045,12 +1412,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>流覽</target>
+        <target>瀏覽</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>流覽</target>
+        <target>瀏覽</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
@@ -1090,19 +1457,19 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>Jenkins服务器地址</target>
+        <target>Jenkins伺服器位址</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>工程名</target>
+        <target>專案名稱</target>
         
       </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Jira Commit Hint</source>
         <target>Jira Commit 提示</target>
         
@@ -1183,7 +1550,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>应用于全局</target>
+        <target>套用到全域</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
@@ -1208,10 +1575,10 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>没有代理配置。请在插件设置中设置代理服务器。</target>
+        <target>沒有設定proxy. 請在插件中設定proxy host.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target>代理切换</target>
         
@@ -1220,7 +1587,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Proxy Switcher</source>
         <target>代理切换</target>
         
@@ -1242,7 +1609,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>用户名</target>
+        <target>使用者</target>
         
       </trans-unit>
     </body>
@@ -1306,7 +1673,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>复制到剪贴板</target>
+        <target>複製到剪貼簿</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1377,7 +1744,7 @@ branch names, tag names)</source>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="zh-Hant">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Release Notes Generator</source>
         <target>发行注记</target>
         
@@ -1496,6 +1863,15 @@ Please verify the server url.</source>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
         <target>从剪贴板中复制的生成 url 中提取数据</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>&quot;生成定义名称&quot; 正则表达式无效, 无法保存!</target>
         
       </trans-unit>
     </body>

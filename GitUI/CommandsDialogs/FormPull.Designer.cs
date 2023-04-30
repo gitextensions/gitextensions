@@ -127,7 +127,7 @@
             this.lblLocalBranch.Size = new System.Drawing.Size(75, 15);
             this.lblLocalBranch.TabIndex = 11;
             this.lblLocalBranch.Text = "&Local branch";
-            this.Tooltip.SetToolTip(this.lblLocalBranch, "Remote branch to pull. Leave empty to pull all branches.");
+            this.Tooltip.SetToolTip(this.lblLocalBranch, "Local branch to create or reset to the remote branch selected.");
             // 
             // lblRemoteBranch
             // 

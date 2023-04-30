@@ -11,7 +11,7 @@
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">
-        <source>Auto compile SubModules</source>
+        <source>Auto compile submodules</source>
         <target />
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -699,6 +699,10 @@ Are you sure you want to continue?</source>
         <source>About GitFlow</source>
         <target />
       </trans-unit>
+      <trans-unit id="lnkGitFlow.ttGitFlow">
+        <source>A good branch model for your project with Git...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
         <target />
@@ -733,6 +737,10 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_noteRestartNeeded.Text">
+        <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
         <target />
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">

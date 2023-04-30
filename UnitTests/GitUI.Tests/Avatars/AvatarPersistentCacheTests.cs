@@ -34,6 +34,8 @@ namespace GitUITests.Avatars
             _fileInfoFactory.FromFileName(Arg.Any<string>()).Returns(_fileInfo);
             _fileSystem.FileInfo.Returns(_fileInfoFactory);
 
+            AppSettings.AvatarProvider = AvatarProvider.Default;
+
             _folderPath = AppSettings.AvatarImageCachePath;
 
             _cache = new FileSystemAvatarCache(_inner, _fileSystem);

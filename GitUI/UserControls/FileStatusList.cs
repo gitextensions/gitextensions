@@ -102,6 +102,8 @@ namespace GitUI
 
             base.Enter += FileStatusList_Enter;
 
+            VisualStudioIntegration.Init();
+
             return;
 
             ImageList CreateImageList()
@@ -199,14 +201,10 @@ namespace GitUI
                 };
                 item.Click += (_, _) =>
                 {
-                    var itemName = SelectedItemAbsolutePath;
-                    if (itemName != null && !VisualStudioIntegration.TryOpenFile(itemName))
+                    string? itemName = SelectedItemAbsolutePath;
+                    if (itemName is not null)
                     {
-                        MessageBox.Show(
-                            TranslatedStrings.OpenInVisualStudioFailureText,
-                            TranslatedStrings.OpenInVisualStudioFailureCaption,
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning);
+                        VisualStudioIntegration.OpenFile(itemName);
                     }
                 };
                 return item;
@@ -1027,23 +1025,18 @@ namespace GitUI
             List<ListViewItem> list = new();
             foreach (var i in GitItemStatusesWithDescription)
             {
-                ListViewGroup? group = null;
-                if (i.FirstRev is not null)
+                string name = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
+                    ? i.Summary
+                    : $"({i.Statuses.Count}) {i.Summary}";
+                ListViewGroup group = new(name)
                 {
-                    string name = i.Statuses.Count == 1 && i.Statuses[0].IsRangeDiff
-                        ? i.Summary
-                        : $"({i.Statuses.Count}) {i.Summary}";
-                    group = new ListViewGroup(name)
-                    {
-                        // Collapse some groups for diffs with common BASE
-                        CollapsedState = i.Statuses.Count <= 7 || GitItemStatusesWithDescription.Count < 3 || i == GitItemStatusesWithDescription[0]
-                            ? ListViewGroupCollapsedState.Expanded
-                            : ListViewGroupCollapsedState.Collapsed,
-                        Tag = i.FirstRev
-                    };
-
-                    FileStatusListView.Groups.Add(group);
-                }
+                    // Collapse some groups for diffs with common BASE
+                    CollapsedState = i.Statuses.Count <= 7 || GitItemStatusesWithDescription.Count < 3 || i == GitItemStatusesWithDescription[0]
+                        ? ListViewGroupCollapsedState.Expanded
+                        : ListViewGroupCollapsedState.Collapsed,
+                    Tag = i.FirstRev
+                };
+                FileStatusListView.Groups.Add(group);
 
                 IReadOnlyList<GitItemStatus> itemStatuses;
                 if (hasChanges && i.Statuses.Count == 0)
@@ -1414,8 +1407,10 @@ namespace GitUI
                 cm.Items.Add(_NO_TRANSLATE_openInVisualStudioMenuItem);
             }
 
-            _NO_TRANSLATE_openInVisualStudioMenuItem.Visible = _openInVisualStudioSeparator.Visible = VisualStudioIntegration.IsVisualStudioRunning;
-            _NO_TRANSLATE_openInVisualStudioMenuItem.Enabled = File.Exists(SelectedItemAbsolutePath);
+            bool canOpenInVisualStudio = File.Exists(SelectedItemAbsolutePath) && VisualStudioIntegration.IsVisualStudioInstalled;
+            _NO_TRANSLATE_openInVisualStudioMenuItem.Enabled = canOpenInVisualStudio;
+            _NO_TRANSLATE_openInVisualStudioMenuItem.Visible = canOpenInVisualStudio;
+            _openInVisualStudioSeparator.Visible = canOpenInVisualStudio;
 
             if (!cm.Items.Find(_sortByContextMenu.Name, true).Any())
             {

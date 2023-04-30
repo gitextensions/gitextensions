@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using GitCommands.Config;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitUIPluginInterfaces;
@@ -17,26 +18,36 @@ namespace GitCommands.Git.Commands
             };
         }
 
-        public static ArgumentString SubmoduleUpdateCmd(string? name)
+        public static ArgumentString SubmoduleUpdateCmd(string? name, IEnumerable<GitConfigItem>? configs = null)
         {
-            return SubmoduleUpdateCommand((name ?? "").Trim().QuoteNE());
+            return SubmoduleUpdateCommand((name ?? "").Trim().QuoteNE(), configs);
         }
 
-        public static ArgumentString SubmoduleUpdateCmd(IEnumerable<string> submodules)
+        public static ArgumentString SubmoduleUpdateCmd(IEnumerable<string> submodules, IEnumerable<GitConfigItem>? configs = null)
         {
             string submodulesQuoted = string.Join(" ", submodules.Select(s => s.Trim().QuoteNE()));
-            return SubmoduleUpdateCommand(submodulesQuoted);
+            return SubmoduleUpdateCommand(submodulesQuoted, configs);
         }
 
-        private static ArgumentString SubmoduleUpdateCommand(string name)
+        private static ArgumentString SubmoduleUpdateCommand(string name, IEnumerable<GitConfigItem>? configs)
         {
-            return new GitArgumentBuilder("submodule")
+            GitArgumentBuilder args = new("submodule")
             {
                 "update",
                 "--init",
                 "--recursive",
                 name
             };
+
+            if (configs is not null)
+            {
+                foreach (GitConfigItem cfg in configs)
+                {
+                    args.Add(cfg);
+                }
+            }
+
+            return args;
         }
 
         public static ArgumentString SubmoduleSyncCmd(string? name)
@@ -48,9 +59,9 @@ namespace GitCommands.Git.Commands
             };
         }
 
-        public static ArgumentString AddSubmoduleCmd(string remotePath, string localPath, string branch, bool force)
+        public static ArgumentString AddSubmoduleCmd(string remotePath, string localPath, string branch, bool force, IEnumerable<GitConfigItem> configs = null)
         {
-            return new GitArgumentBuilder("submodule")
+            GitArgumentBuilder argsBuilder = new("submodule")
             {
                 "add",
                 { force, "-f" },
@@ -58,6 +69,26 @@ namespace GitCommands.Git.Commands
                 remotePath.ToPosixPath().Quote(),
                 localPath.ToPosixPath().Quote()
             };
+
+            if (configs is not null)
+            {
+                foreach (GitConfigItem cfg in configs)
+                {
+                    argsBuilder.Add(cfg);
+                }
+            }
+
+            return argsBuilder;
+        }
+
+        /// <summary>
+        /// Gets <see cref="GitConfigItem"/> that sets 'protocol.file.allow' to always.
+        /// </summary>
+        /// <remarks>IEnumerable to allow future concat with other needed configs.</remarks>
+        /// <returns>Config with 'protocol.file.allow set to always</returns>
+        public static IEnumerable<GitConfigItem> GetAllowFileConfig()
+        {
+            yield return new GitConfigItem(SettingKeyString.AllowFileProtocol, "always");
         }
 
         public static ArgumentString GetCurrentChangesCmd(string? fileName, string? oldFileName, bool staged,
@@ -434,6 +465,11 @@ namespace GitCommands.Git.Commands
         public static ArgumentString AbortRebaseCmd()
         {
             return new GitArgumentBuilder("rebase") { "--abort" };
+        }
+
+        public static ArgumentString EditTodoRebaseCmd()
+        {
+            return new GitArgumentBuilder("rebase") { "--edit-todo" };
         }
 
         public static ArgumentString ResolvedCmd()

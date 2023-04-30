@@ -17,7 +17,7 @@ namespace GitExtensions.Plugins.AutoCompileSubmodules
         public AutoCompileSubModulesPlugin() : base(true)
         {
             Id = new Guid("D4D1ACB7-0B6B-4A3C-B0DB-A25056A277D9");
-            Name = "Auto compile SubModules";
+            Name = "Auto compile submodules";
             Translate();
             Icon = Resources.IconAutoCompileSubmodules;
         }

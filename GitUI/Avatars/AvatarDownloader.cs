@@ -14,6 +14,7 @@ namespace GitUI.Avatars
 
         private static readonly SemaphoreSlim _downloadSemaphore = new(initialCount: _maxConcurrentDownloads);
         private static readonly ConcurrentDictionary<Uri, (DateTime, Task<Image?>)> _downloads = new();
+        private static readonly HttpClient _client = new(new HttpClientHandler() { UseProxy = true });
 
         public async Task<Image?> DownloadImageAsync(Uri? imageUrl)
         {
@@ -55,9 +56,6 @@ namespace GitUI.Avatars
 
         private static async Task<Image?> DownloadAsync(Uri imageUrl)
         {
-            // WebClient.OpenReadTaskAsync can block before returning a task, so make sure we
-            // make such calls on the thread pool, and limit the number of concurrent requests.
-
             // Get onto background thread
             await TaskScheduler.Default;
 
@@ -66,12 +64,8 @@ namespace GitUI.Avatars
 
             try
             {
-#pragma warning disable SYSLIB0014 // 'WebClient' is obsolete
-                using WebClient webClient = new() { Proxy = WebRequest.DefaultWebProxy };
-#pragma warning restore SYSLIB0014 // 'WebClient' is obsolete
-                webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
-
-                using var imageStream = await webClient.OpenReadTaskAsync(imageUrl);
+                using HttpResponseMessage response = await _client.GetAsync(imageUrl);
+                using Stream imageStream = await response.Content.ReadAsStreamAsync();
                 return Image.FromStream(imageStream);
             }
             catch (Exception ex)

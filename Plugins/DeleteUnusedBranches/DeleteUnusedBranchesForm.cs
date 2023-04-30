@@ -4,6 +4,7 @@ using GitExtensions.Plugins.DeleteUnusedBranches.Properties;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
+using GitUI.NBugReports;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -33,6 +34,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
         private readonly IGitPlugin _gitPlugin;
         private readonly GitBranchOutputCommandParser _commandOutputParser;
         private CancellationTokenSource? _refreshCancellation;
+        public bool HasDeletedBranch { get; internal set; }
 
         public DeleteUnusedBranchesForm(DeleteUnusedBranchesFormSettings settings, IGitModule gitCommands, IGitUICommands? gitUiCommands, IGitPlugin gitPlugin)
         {
@@ -62,8 +64,6 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             {
                 return;
             }
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }
 
         protected override void OnLoad(EventArgs e)
@@ -82,6 +82,8 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
             checkBoxHeaderCell.CheckBoxClicked += CheckBoxHeader_OnCheckBoxClicked;
             _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText = string.Empty;
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
 
             BranchesGrid.DataSource = _branches;
         }
@@ -126,8 +128,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             {
                  "--list",
                  { context.IncludeRemotes, "-r" },
-                 { !context.IncludeUnmerged, "--merged" },
-                 context.ReferenceBranch
+                 { !context.IncludeUnmerged, $"--merged {context.ReferenceBranch}" }
             };
 
             var result = context.Commands.GitExecutable.Execute(args, throwOnErrorExit: false);
@@ -174,37 +175,45 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                 }
             }
 
+            HasDeletedBranch = true;
+
             var localBranches = selectedBranches.Except(remoteBranches).ToList();
-            tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = false;
-            imgLoading.Visible = true;
+            SetWorkingState(isWorking: true);
             lblStatus.Text = _deletingBranches.Text;
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                foreach (var remoteBranch in remoteBranches)
+                try
                 {
-                    // Delete branches one by one, because it is possible one fails
-                    var remoteBranchNameOffset = remoteBranchPrefix.Length;
-                    GitArgumentBuilder args = new("push")
+                    foreach (var remoteBranch in remoteBranches)
                     {
-                        remoteName,
-                        $":{remoteBranch.Name.Substring(remoteBranchNameOffset)}"
-                    };
-                    _gitCommands.GitExecutable.GetOutput(args);
+                        // Delete branches one by one, because it is possible one fails
+                        var remoteBranchNameOffset = remoteBranchPrefix.Length;
+                        GitArgumentBuilder args = new("push")
+                        {
+                            remoteName,
+                            $":{remoteBranch.Name.Substring(remoteBranchNameOffset)}"
+                        };
+                        _gitCommands.GitExecutable.GetOutput(args);
+                    }
+
+                    foreach (var localBranch in localBranches)
+                    {
+                        GitArgumentBuilder args = new("branch")
+                        {
+                            "-d",
+                            localBranch.Name
+                        };
+
+                        // Delete branches one by one, because it is possible one fails
+                        _gitCommands.GitExecutable.GetOutput(args);
+                    }
                 }
-
-                foreach (var localBranch in localBranches)
+                catch (Exception ex)
                 {
-                    GitArgumentBuilder args = new("branch")
-                    {
-                        "-d",
-                        localBranch.Name
-                    };
-                    _gitCommands.GitExecutable.GetOutput(args);
-
-                    // Delete branches one by one, because it is possible one fails
-                    _gitCommands.GitExecutable.GetOutput(args);
+                    await this.SwitchToMainThreadAsync();
+                    BugReportInvoker.Report(ex, isTerminating: false);
                 }
 
                 Validates.NotNull(_gitUiCommands);
@@ -212,9 +221,15 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
                 await this.SwitchToMainThreadAsync();
 
-                tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = true;
+                SetWorkingState(isWorking: false);
                 await RefreshObsoleteBranchesAsync().ConfigureAwait(false);
             });
+        }
+
+        private void SetWorkingState(bool isWorking)
+        {
+            imgLoading.Visible = isWorking;
+            tableLayoutPanel2.Enabled = tableLayoutPanel3.Enabled = !isWorking;
         }
 
         private void buttonSettings_Click(object sender, EventArgs e)

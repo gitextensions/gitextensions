@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Plugins.GitFlow.Properties;
@@ -393,7 +392,7 @@ namespace GitExtensions.Plugins.GitFlow
 
         private void lnkGitFlow_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/nvie/gitflow");
+            OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/nvie/gitflow");
         }
 
         private void DisplayHead()

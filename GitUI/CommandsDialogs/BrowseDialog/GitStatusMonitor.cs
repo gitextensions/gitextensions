@@ -36,10 +36,24 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private const int PeriodicUpdateIntervalWSL = 60 * 1000;
 
+        /// <summary>
+        /// The number how often an update must fail in a row until the monitoring is stopped.
+        /// </summary>
+        private const int _maxConsecutiveErrors = 3;
+
+        /// <summary>
+        /// git-status command is running and no cancellation has been requested
+        /// </summary>
+        private bool _commandIsRunningAndNotCancelled;
+
+        /// <summary>
+        /// The number of consecutive update failures.
+        /// </summary>
+        private int _consecutiveErrorCount;
+
         private readonly FileSystemWatcher _workTreeWatcher = new();
         private readonly FileSystemWatcher _gitDirWatcher = new();
         private readonly System.Windows.Forms.Timer _timerRefresh;
-        private bool _commandIsRunning;
         private bool _isFirstPostRepoChanged;
         private string? _gitPath;
         private string? _submodulesPath;
@@ -50,10 +64,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         // Timestamps to schedule status updates, limit the update interval dynamically
         // Note that TickCount wraps after 25 days uptime, always compare diff
 
-        // Next scheduled update time
+        /// <summary>
+        /// Next scheduled update time
+        /// </summary>
         private int _nextUpdateTime;
 
-        // Earliest time for an scheduled update (interactive requests bypasses this)
+        /// <summary>
+        /// Earliest time for an scheduled update (interactive requests bypasses this)
+        /// </summary>
         private int _nextEarliestTime;
 
         private GitStatusMonitorState _currentStatus;
@@ -200,7 +218,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             get { return _currentStatus; }
             set
             {
-                var prevStatus = _currentStatus;
+                ThreadHelper.AssertOnUIThread();
+
+                GitStatusMonitorState prevStatus = _currentStatus;
                 _currentStatus = value;
                 switch (_currentStatus)
                 {
@@ -209,6 +229,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             _timerRefresh.Stop();
                             _workTreeWatcher.EnableRaisingEvents = false;
                             _gitDirWatcher.EnableRaisingEvents = false;
+                            _consecutiveErrorCount = 0;
+
+                            if (_currentStatus != prevStatus)
+                            {
+                                lock (_statusSequence)
+                                {
+                                    if (_commandIsRunningAndNotCancelled)
+                                    {
+                                        _statusSequence.CancelCurrent();
+                                        _commandIsRunningAndNotCancelled = false;
+                                    }
+                                }
+
+                                InvalidateGitWorkingDirectoryStatus();
+                            }
                         }
 
                         break;
@@ -224,7 +259,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                     case GitStatusMonitorState.Inactive:
                         {
-                            if (prevStatus != GitStatusMonitorState.Inactive)
+                            if (_currentStatus != prevStatus)
                             {
                                 InvalidateGitWorkingDirectoryStatus();
                             }
@@ -239,7 +274,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                 // Timer is already running, schedule a new command only if a command is not running,
                                 // to avoid that many commands are started (and cancelled) if quickly switching Inactive/Running
                                 // If data has changed when Inactive it should be updated by normal means
-                                if (!_commandIsRunning)
+                                if (!_commandIsRunningAndNotCancelled)
                                 {
                                     ScheduleNextInteractiveTime();
                                 }
@@ -393,7 +428,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             lock (_statusSequence)
             {
-                if (_commandIsRunning)
+                if (_commandIsRunningAndNotCancelled)
                 {
                     return;
                 }
@@ -408,15 +443,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                 // capture a consistent state in the main thread
                 module = Module;
-                cancelToken = _statusSequence.Next();
                 noLocks = !_isFirstPostRepoChanged;
+                cancelToken = _statusSequence.Next();
+                _commandIsRunningAndNotCancelled = true;
 
                 // Schedule periodic update, even if we don't know that anything changed
                 _nextUpdateTime = commandStartTime
                     + (PathUtil.IsWslPath(_workTreeWatcher.Path) ? PeriodicUpdateIntervalWSL : PeriodicUpdateInterval);
                 _nextEarliestTime = commandStartTime + MinUpdateInterval;
                 _isFirstPostRepoChanged = false;
-                _commandIsRunning = true;
             }
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
@@ -424,8 +459,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     {
                         try
                         {
-                            GitExtUtils.ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: noLocks);
-                            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, cancellationToken: cancelToken).ConfigureAwait(false);
+                            GitExtUtils.ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, noLocks: noLocks);
+                            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, cancellationToken: cancelToken).ConfigureAwait(continueOnCapturedContext: false);
 
                             if (result.ExitedSuccessfully && !ModuleHasChanged())
                             {
@@ -436,11 +471,24 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                                 GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(changedFiles));
                             }
+
+                            _consecutiveErrorCount = 0;
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            // No action
                         }
                         catch
                         {
                             try
                             {
+                                if (++_consecutiveErrorCount < _maxConsecutiveErrors)
+                                {
+                                    // Try again
+                                    ScheduleNextInteractiveTime();
+                                    return;
+                                }
+
                                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
                                 // Avoid possible popups on every file changes
@@ -455,23 +503,22 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         {
                             lock (_statusSequence)
                             {
-                                if (_commandIsRunning && !ModuleHasChanged() && !cancelToken.IsCancellationRequested)
-                                {
-                                    // Adjust the min time to next update
-                                    int endTime = Environment.TickCount;
-                                    int commandTime = endTime - commandStartTime;
-                                    int minDelay = Math.Max(MinUpdateInterval, 2 * commandTime);
-                                    _nextEarliestTime = endTime + minDelay;
-                                    if (_nextUpdateTime - commandStartTime < _nextEarliestTime - commandStartTime)
-                                    {
-                                        // Postpone the requested update
-                                        _nextUpdateTime = _nextEarliestTime;
-                                    }
-                                }
-
                                 if (!cancelToken.IsCancellationRequested)
                                 {
-                                    _commandIsRunning = false;
+                                    _commandIsRunningAndNotCancelled = false;
+                                    if (!ModuleHasChanged())
+                                    {
+                                        // Adjust the min time to next update
+                                        int endTime = Environment.TickCount;
+                                        int commandTime = endTime - commandStartTime;
+                                        int minDelay = Math.Max(MinUpdateInterval, 2 * commandTime);
+                                        _nextEarliestTime = endTime + minDelay;
+                                        if (_nextUpdateTime - commandStartTime < _nextEarliestTime - commandStartTime)
+                                        {
+                                            // Postpone the requested update
+                                            _nextUpdateTime = _nextEarliestTime;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -518,8 +565,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // Start commands, also if running already
             lock (_statusSequence)
             {
-                _commandIsRunning = false;
                 _statusSequence.CancelCurrent();
+                _commandIsRunningAndNotCancelled = false;
 
                 int ticks = Environment.TickCount;
                 _nextEarliestTime = ticks + MinUpdateInterval;

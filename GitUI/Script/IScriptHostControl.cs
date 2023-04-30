@@ -8,5 +8,6 @@ namespace GitUI.Script
         GitRevision? GetLatestSelectedRevision();
         IReadOnlyList<GitRevision> GetSelectedRevisions();
         Point GetQuickItemSelectorLocation();
+        string GetCurrentBranch();
     }
 }

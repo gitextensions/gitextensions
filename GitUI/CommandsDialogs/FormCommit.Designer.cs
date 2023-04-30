@@ -119,10 +119,12 @@ namespace GitUI.CommandsDialogs
             this.Message = new GitUI.SpellChecker.EditNetSpell();
             this.modifyCommitMessageButton = new System.Windows.Forms.Button();
             this.flowCommitButtons = new System.Windows.Forms.FlowLayoutPanel();
+            this.AmendPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.Commit = new System.Windows.Forms.Button();
             this.CommitAndPush = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.CheckBox();
             this.ResetAuthor = new System.Windows.Forms.CheckBox();
+            this.ResetSoft = new System.Windows.Forms.Button();
             this.StashStaged = new System.Windows.Forms.Button();
             this.Reset = new System.Windows.Forms.Button();
             this.ResetUnStaged = new System.Windows.Forms.Button();
@@ -183,6 +185,7 @@ namespace GitUI.CommandsDialogs
             this.splitRight.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowCommitButtons.SuspendLayout();
+            this.AmendPanel.SuspendLayout();
             this.toolbarCommit.SuspendLayout();
             this.commitStatusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -223,7 +226,7 @@ namespace GitUI.CommandsDialogs
             this.resetChanges.Name = "resetChanges";
             this.resetChanges.Size = new System.Drawing.Size(232, 22);
             this.resetChanges.Text = "Reset file or directory changes";
-            this.resetChanges.Click += new System.EventHandler(this.ResetSoftClick);
+            this.resetChanges.Click += new System.EventHandler(this.ResetFilesClick);
             // 
             // resetPartOfFileToolStripMenuItem
             // 
@@ -382,7 +385,7 @@ namespace GitUI.CommandsDialogs
             this.StageInSuperproject.Margin = new System.Windows.Forms.Padding(0, 9, 0, 3);
             this.StageInSuperproject.Name = "StageInSuperproject";
             this.StageInSuperproject.Size = new System.Drawing.Size(130, 17);
-            this.StageInSuperproject.TabIndex = 13;
+            this.StageInSuperproject.TabIndex = 103;
             this.StageInSuperproject.Text = "Stage &in Superproject";
             this.fileTooltip.SetToolTip(this.StageInSuperproject, "Stage current submodule in superproject after commit");
             this.StageInSuperproject.UseVisualStyleBackColor = true;
@@ -413,7 +416,7 @@ namespace GitUI.CommandsDialogs
             this.stagedResetChanges.Name = "stagedResetChanges";
             this.stagedResetChanges.Size = new System.Drawing.Size(232, 22);
             this.stagedResetChanges.Text = "Reset file or directory changes";
-            this.stagedResetChanges.Click += new System.EventHandler(this.ResetSoftClick);
+            this.stagedResetChanges.Click += new System.EventHandler(this.ResetFilesClick);
             // 
             // stagedFileHistoryToolStripMenuItem6
             //
@@ -1104,7 +1107,21 @@ namespace GitUI.CommandsDialogs
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
             this.Message.Enter += new System.EventHandler(this.Message_Enter);
             this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);
-            this.Message.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Message_KeyUp);
+            // 
+            // AmendPanel
+            // 
+            this.AmendPanel.AutoSize = true;
+            this.AmendPanel.Controls.Add(this.ResetAuthor);
+            this.AmendPanel.Controls.Add(this.ResetSoft);
+            this.AmendPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AmendPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.AmendPanel.Location = new System.Drawing.Point(12, 117);
+            this.AmendPanel.Margin = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.AmendPanel.Name = "AmendPanel";
+            this.AmendPanel.Size = new System.Drawing.Size(159, 57);
+            this.AmendPanel.TabIndex = 105;
+            this.AmendPanel.Visible = false;
+            this.AmendPanel.WrapContents = false;
             // 
             // flowCommitButtons
             // 
@@ -1113,9 +1130,7 @@ namespace GitUI.CommandsDialogs
             this.flowCommitButtons.Controls.Add(this.CommitAndPush);
             this.flowCommitButtons.Controls.Add(this.StageInSuperproject);
             this.flowCommitButtons.Controls.Add(this.Amend);
-            var resetAuthorPanel = new Panel{ AutoSize = false, Size = this.ResetAuthor.Size, Margin = new Padding(0) };
-            resetAuthorPanel.Controls.Add(this.ResetAuthor);
-            this.flowCommitButtons.Controls.Add(resetAuthorPanel);
+            this.flowCommitButtons.Controls.Add(this.AmendPanel);
             this.flowCommitButtons.Controls.Add(this.StashStaged);
             this.flowCommitButtons.Controls.Add(this.Reset);
             this.flowCommitButtons.Controls.Add(this.ResetUnStaged);
@@ -1126,7 +1141,7 @@ namespace GitUI.CommandsDialogs
             this.flowCommitButtons.Name = "flowCommitButtons";
             this.tableLayoutPanel1.SetRowSpan(this.flowCommitButtons, 2);
             this.flowCommitButtons.Size = new System.Drawing.Size(171, 192);
-            this.flowCommitButtons.TabIndex = 1;
+            this.flowCommitButtons.TabIndex = 100;
             this.flowCommitButtons.WrapContents = false;
             // 
             // Commit
@@ -1137,8 +1152,7 @@ namespace GitUI.CommandsDialogs
             this.Commit.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.Commit.Name = "Commit";
             this.Commit.Size = new System.Drawing.Size(171, 26);
-            this.Commit.TabIndex = 1;
-            this.Commit.TabStop = false;
+            this.Commit.TabIndex = 101;
             this.Commit.Text = "&Commit";
             this.Commit.UseVisualStyleBackColor = true;
             this.Commit.Click += new System.EventHandler(this.CommitClick);
@@ -1151,8 +1165,7 @@ namespace GitUI.CommandsDialogs
             this.CommitAndPush.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.CommitAndPush.Name = "CommitAndPush";
             this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
-            this.CommitAndPush.TabIndex = 9;
-            this.CommitAndPush.TabStop = false;
+            this.CommitAndPush.TabIndex = 102;
             this.CommitAndPush.UseVisualStyleBackColor = true;
             this.CommitAndPush.Click += new System.EventHandler(this.CommitAndPush_Click);
             // 
@@ -1163,8 +1176,8 @@ namespace GitUI.CommandsDialogs
             this.Amend.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.Amend.Name = "Amend";
             this.Amend.Size = new System.Drawing.Size(97, 17);
-            this.Amend.TabIndex = 0;
-            this.Amend.Text = "&Amend Commit";
+            this.Amend.TabIndex = 104;
+            this.Amend.Text = "&Amend commit";
             this.Amend.UseVisualStyleBackColor = true;
             this.Amend.CheckedChanged += new System.EventHandler(this.Amend_CheckedChanged);
             // 
@@ -1175,10 +1188,23 @@ namespace GitUI.CommandsDialogs
             this.ResetAuthor.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ResetAuthor.Name = "ResetAuthor";
             this.ResetAuthor.Size = new System.Drawing.Size(97, 17);
-            this.ResetAuthor.TabIndex = 0;
-            this.ResetAuthor.Text = "R&eset Author";
+            this.ResetAuthor.TabIndex = 105;
+            this.ResetAuthor.Text = "R&eset author";
             this.ResetAuthor.UseVisualStyleBackColor = true;
-            this.ResetAuthor.Visible = false;
+            // 
+            // ResetSoft
+            // 
+            this.ResetSoft.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
+            this.ResetSoft.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ResetSoft.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.ResetSoft.Name = "ResetSoft";
+            this.ResetSoft.Size = new System.Drawing.Size(159, 26);
+            this.ResetSoft.TabIndex = 106;
+            this.ResetSoft.Text = "Reset so&ft";
+            this.fileTooltip.SetToolTip(this.ResetSoft, "Perform a soft reset to the previous commit; leaves working directory and index u" +
+        "ntouched");
+            this.ResetSoft.UseVisualStyleBackColor = true;
+            this.ResetSoft.Click += new System.EventHandler(this.ResetSoftClick);
             // 
             // StashStaged
             // 
@@ -1188,9 +1214,8 @@ namespace GitUI.CommandsDialogs
             this.StashStaged.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.StashStaged.Name = "StashStaged";
             this.StashStaged.Size = new System.Drawing.Size(171, 26);
-            this.StashStaged.TabIndex = 14;
-            this.StashStaged.TabStop = false;
-            this.StashStaged.Text = "S&tash staged changes";
+            this.StashStaged.TabIndex = 107;
+            this.StashStaged.Text = "Stas&h staged changes";
             this.StashStaged.UseVisualStyleBackColor = true;
             this.StashStaged.Click += new System.EventHandler(this.StashStagedClick);
             // 
@@ -1202,8 +1227,7 @@ namespace GitUI.CommandsDialogs
             this.Reset.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(171, 26);
-            this.Reset.TabIndex = 11;
-            this.Reset.TabStop = false;
+            this.Reset.TabIndex = 108;
             this.Reset.Text = "&Reset all changes";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.ResetClick);
@@ -1216,8 +1240,7 @@ namespace GitUI.CommandsDialogs
             this.ResetUnStaged.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ResetUnStaged.Name = "ResetUnStaged";
             this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
-            this.ResetUnStaged.TabIndex = 14;
-            this.ResetUnStaged.TabStop = false;
+            this.ResetUnStaged.TabIndex = 109;
             this.ResetUnStaged.Text = "Reset u&nstaged changes";
             this.ResetUnStaged.UseVisualStyleBackColor = true;
             this.ResetUnStaged.Click += new System.EventHandler(this.ResetUnStagedClick);
@@ -1240,7 +1263,7 @@ namespace GitUI.CommandsDialogs
             this.toolbarCommit.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolbarCommit.Size = new System.Drawing.Size(340, 28);
             this.toolbarCommit.Stretch = true;
-            this.toolbarCommit.TabIndex = 5;
+            this.toolbarCommit.TabIndex = 110;
             // 
             // commitMessageToolStripMenuItem
             // 
@@ -1564,6 +1587,8 @@ namespace GitUI.CommandsDialogs
             this.splitRight.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.AmendPanel.ResumeLayout();
+            this.AmendPanel.PerformLayout();
             this.flowCommitButtons.ResumeLayout(false);
             this.flowCommitButtons.PerformLayout();
             this.toolbarCommit.ResumeLayout(false);
@@ -1692,9 +1717,11 @@ namespace GitUI.CommandsDialogs
         private ToolStripStatusLabel commitCursorColumn;
         private ToolStripStatusLabel commitEndPadding;
         private EditNetSpell Message;
+        private FlowLayoutPanel AmendPanel;
         private FlowLayoutPanel flowCommitButtons;
         private Button Commit;
         private Button CommitAndPush;
+        private Button ResetSoft;
         private Button StashStaged;
         private Button Reset;
         private CheckBox Amend;

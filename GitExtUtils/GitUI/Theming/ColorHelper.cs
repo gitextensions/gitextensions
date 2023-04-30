@@ -339,10 +339,29 @@
             }
         }
 
+        /// <summary>
+        /// Get contrast color (Black or White) of a background color to use as a foreground color (not using the theme settings).
+        /// </summary>
+        /// <param name="backgroundColor">the background color</param>
+        /// <param name="luminanceThreshold">a custom luminance threshold to let the caller determine the boundary.</param>
+        /// <returns>the black or white color to use as foreground</returns>
+        public static Color GetContrastColor(this Color backgroundColor, float luminanceThreshold = 0.5f)
+        {
+            // (Loosely) Based on https://stackoverflow.com/a/3943023
+            // Calculate the luminance of the background color
+            double luminance = ((0.2126 * backgroundColor.R) + (0.7152 * backgroundColor.G) + (0.0722 * backgroundColor.B)) / 255;
+
+            // Use the threshold value to determine whether to use black or white as the foreground color
+            return (luminance > luminanceThreshold) ? Color.Black : Color.White;
+        }
+
         internal static class TestAccessor
         {
             public static double Transform(double orig, double exampleOrig, double oppositeOrig, double example, double opposite) =>
                 ColorHelper.Transform(orig, exampleOrig, oppositeOrig, example, opposite);
+
+            public static Color GetContrastColor(Color backgroundColor, float luminanceThreshold = 0.5f) =>
+                ColorHelper.GetContrastColor(backgroundColor, luminanceThreshold);
         }
     }
 }

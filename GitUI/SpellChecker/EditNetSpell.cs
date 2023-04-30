@@ -3,6 +3,7 @@ using System.Diagnostics;
 using GitCommands;
 using GitCommands.Settings;
 using GitUI.AutoCompletion;
+using GitUI.UserControls;
 using GitUIPluginInterfaces.Settings;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -66,6 +67,8 @@ namespace GitUI.SpellChecker
             AutoComplete.DisplayMember = nameof(AutoCompleteWord.Word);
 
             _wordAtCursorExtractor = new WordAtCursorExtractor();
+
+            _ = new TextBoxSilencer(TextBox);
         }
 
         public override string Text

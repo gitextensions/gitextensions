@@ -48,6 +48,8 @@
             this.Patches.AllowUserToDeleteRows = false;
             this.Patches.AutoGenerateColumns = false;
             this.Patches.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.Patches.BackgroundColor = System.Drawing.SystemColors.ControlLight;
+            this.Patches.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Patches.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Patches.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Status,
@@ -84,7 +86,6 @@
             // Action
             // 
             this.Action.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Action.DataPropertyName = "Action";
             this.Action.HeaderText = "Action";
             this.Action.Name = "Action";
             this.Action.ReadOnly = true;
@@ -93,7 +94,6 @@
             // CommitHash
             // 
             this.CommitHash.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.CommitHash.DataPropertyName = "ObjectId";
             this.CommitHash.HeaderText = "Commit hash";
             this.CommitHash.Name = "CommitHash";
             this.CommitHash.ReadOnly = true;

@@ -2,6 +2,7 @@
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI.Theming;
+using GitUI.CommandsDialogs.Menus;
 using GitUI.HelperDialogs;
 using GitUI.Theming;
 using GitUI.UserControls;
@@ -98,6 +99,8 @@ namespace GitUI.CommandsDialogs
             DiffText.TopScrollReached += FileViewer_TopScrollReached;
             DiffText.BottomScrollReached += FileViewer_BottomScrollReached;
             Load += delegate { PopulateDiffFiles(); };
+
+            copyPathsToolStripMenuItem.Initialize(() => UICommands, () => DiffFiles.SelectedItems.Select(fsi => fsi.Item.Name));
         }
 
         /// <summary>
@@ -219,11 +222,6 @@ namespace GitUI.CommandsDialogs
                     return RevisionDiffKind.DiffAB;
                 }
             }
-        }
-
-        private void copyFilenameToClipboardToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            FormBrowse.CopyFullPathToClipboard(DiffFiles, Module);
         }
 
         private void openContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)

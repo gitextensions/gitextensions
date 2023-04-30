@@ -21,7 +21,7 @@ namespace GitExtensions.Plugins.GitHub3
         public int Forks => _repo.Forks;
         public string Homepage => _repo.Homepage;
 
-        public string? ParentReadOnlyUrl
+        public string? ParentUrl
         {
             get
             {
@@ -40,7 +40,7 @@ namespace GitExtensions.Plugins.GitHub3
                     _repo = GitHub3Plugin.GitHub.getRepository(Owner, Name);
                 }
 
-                return CloneProtocol == GitProtocol.Ssh ? _repo.Parent?.GitUrl : _repo.Parent?.CloneUrl;
+                return CloneProtocol == GitProtocol.Ssh ? _repo.Parent?.SshUrl : _repo.Parent?.CloneUrl;
             }
         }
 
@@ -67,9 +67,7 @@ namespace GitExtensions.Plugins.GitHub3
             }
         }
 
-        public string CloneReadWriteUrl => CloneProtocol == GitProtocol.Ssh ? _repo.SshUrl : _repo.CloneUrl;
-
-        public string CloneReadOnlyUrl => CloneProtocol == GitProtocol.Ssh ? _repo.GitUrl : _repo.CloneUrl;
+        public string CloneUrl => CloneProtocol == GitProtocol.Ssh ? _repo.SshUrl : _repo.CloneUrl;
 
         public IReadOnlyList<IHostedBranch> GetBranches()
         {

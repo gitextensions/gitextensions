@@ -399,10 +399,10 @@ namespace GitUI.Editor
             }
         }
 
-        public bool ShowEOLMarkers
+        public EolMarkerStyle EolMarkerStyle
         {
-            get => TextEditor.ShowEOLMarkers;
-            set => TextEditor.ShowEOLMarkers = value;
+            get => TextEditor.EolMarkerStyle;
+            set => TextEditor.EolMarkerStyle = value;
         }
 
         public bool ShowSpaces

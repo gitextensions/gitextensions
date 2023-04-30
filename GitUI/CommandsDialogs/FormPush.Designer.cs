@@ -373,8 +373,6 @@
             // 
             this.BranchGrid.AllowUserToAddRows = false;
             this.BranchGrid.AllowUserToDeleteRows = false;
-            this.BranchGrid.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.BranchGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.BranchGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.BranchGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.LocalColumn,

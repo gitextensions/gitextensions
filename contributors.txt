@@ -184,3 +184,10 @@ YYYY/MM/DD, github id, Full name, email
 2022/11/07, Dub1shu, Kazuki Watanabe, dubian1shu(at)gmail.com
 2022/11/29, orgads, Orgad Shaneh, orgads(at)gmail.com
 2022/11/30, SaumyaBhushan, Saumya, saumya@knoldus.com
+2022/12/15, siyavash1984,Siyavash Khojasteh, khojasteh(at)outlook.com
+2023/01/27, MaxKoll, Maximilian Koll, maximiliankoll(at)web(dot)de
+2023/02/24, RauulDev, Raul Molina, remolina7@gmail.com
+2023/03/03, pedrolamas, Pedro Lamas, pedrolamas@gmail.com
+2023/03/07, o-kloster, Oddvar Kloster, okloster(at)gmail.com
+2023/03/08, RemiGaudin, Rémi Gaudin, remi.gaudin(at)gmail.com
+2023/04/27, montoner0, Alex Bogush, inmate66+gitext(@t)gmail.com

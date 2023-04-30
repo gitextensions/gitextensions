@@ -112,6 +112,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void OkClick(object sender, EventArgs e)
         {
+            // Note: There is no validation that information (like branch filters) are valid
+
             _filterInfo.ByDateFrom = SinceCheck.Checked;
             _filterInfo.DateFrom = Since.Value;
             _filterInfo.ByDateTo = CheckUntil.Checked;

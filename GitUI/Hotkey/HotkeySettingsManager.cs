@@ -1,9 +1,9 @@
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
-using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.LeftPanel;
 using GitUI.Script;
 using Microsoft;
 using ResourceManager;
@@ -262,7 +262,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.CreateTag, Keys.Control | Keys.T),
                     Hk(FormBrowse.Command.EditFile, EditFileHotkey),
                     Hk(FormBrowse.Command.FindFileInSelectedCommit, Keys.Control | Keys.Shift | Keys.F),
-                    Hk(FormBrowse.Command.FocusBranchTree, Keys.Control | Keys.D0),
+                    Hk(FormBrowse.Command.FocusLeftPanel, Keys.Control | Keys.D0),
                     Hk(FormBrowse.Command.FocusRevisionGrid, Keys.Control | Keys.D1),
                     Hk(FormBrowse.Command.FocusCommitInfo, Keys.Control | Keys.D2),
                     Hk(FormBrowse.Command.FocusDiff, Keys.Control | Keys.D3),
@@ -299,7 +299,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.StashPop, Keys.Control | Keys.Alt | Keys.Down),
                     Hk(FormBrowse.Command.StashStaged, Keys.Control | Keys.Shift | Keys.Alt | Keys.Up),
                     Hk(FormBrowse.Command.ToggleBetweenArtificialAndHeadCommits, Keys.Control | Keys.OemBackslash),
-                    Hk(FormBrowse.Command.ToggleBranchTreePanel, Keys.Control | Keys.Alt | Keys.C)),
+                    Hk(FormBrowse.Command.ToggleLeftPanel, Keys.Control | Keys.Alt | Keys.C)),
                 new HotkeySettings(
                     RepoObjectsTree.HotkeySettingsName,
                     Hk(RepoObjectsTree.Command.Delete, Keys.Delete),
@@ -314,7 +314,9 @@ namespace GitUI.Hotkey
                     Hk(RevisionGridControl.Command.CompareToBranch, Keys.None),
                     Hk(RevisionGridControl.Command.CompareToCurrentBranch, Keys.None),
                     Hk(RevisionGridControl.Command.CompareToWorkingDirectory, Keys.Control | Keys.D),
+                    Hk(RevisionGridControl.Command.CreateAmendCommit, Keys.None),
                     Hk(RevisionGridControl.Command.CreateFixupCommit, Keys.Control | Keys.X),
+                    Hk(RevisionGridControl.Command.CreateSquashCommit, Keys.None),
                     Hk(RevisionGridControl.Command.DeleteRef, Keys.Delete),
                     Hk(RevisionGridControl.Command.GoToChild, Keys.Control | Keys.N),
                     Hk(RevisionGridControl.Command.GoToCommit, Keys.Control | Keys.Shift | Keys.G),

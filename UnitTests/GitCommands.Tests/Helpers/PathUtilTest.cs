@@ -41,6 +41,42 @@ namespace GitCommandsTests.Helpers
         }
 
         [Test]
+        public void ToWslPathTest()
+        {
+            Assert.AreEqual(PathUtil.ToWslPath(null), null);
+            Assert.AreEqual(@"C:/Work/GitExtensions/".ToWslPath(), "/mnt/c/Work/GitExtensions/");
+            Assert.AreEqual(@"C:\Work\GitExtensions\".ToWslPath(), "/mnt/c/Work/GitExtensions/");
+            Assert.AreEqual(@"/var/tmp/".ToWslPath(), "/var/tmp/");
+        }
+
+        [Test]
+        public void ToCygwinPathTest()
+        {
+            Assert.AreEqual(PathUtil.ToCygwinPath(null), null);
+            Assert.AreEqual(@"C:/Work/GitExtensions/".ToCygwinPath(), "/cygdrive/c/Work/GitExtensions/");
+            Assert.AreEqual(@"C:\Work\GitExtensions\".ToCygwinPath(), "/cygdrive/c/Work/GitExtensions/");
+            Assert.AreEqual(@"/var/tmp/".ToCygwinPath(), "/var/tmp/");
+        }
+
+        [Test]
+        public void ToMountPathTest()
+        {
+            const string prefix = "PrEfiX";
+            Assert.AreEqual(PathUtil.ToMountPath(null, prefix), null);
+            Assert.AreEqual(@"".ToMountPath(prefix), "");
+            Assert.AreEqual(@"C".ToMountPath(prefix), "C");
+            Assert.AreEqual(@".:".ToMountPath(prefix), $".:");
+            Assert.AreEqual(@"C:".ToMountPath(prefix), $"{prefix}c");
+            Assert.AreEqual(@"C:_".ToMountPath(prefix), $"{prefix}c_");
+            Assert.AreEqual(@"C:\".ToMountPath(prefix), $"{prefix}c/");
+            Assert.AreEqual(@"C:/".ToMountPath(prefix), $"{prefix}c/");
+            Assert.AreEqual(@"C:\folder".ToMountPath(prefix), $"{prefix}c/folder");
+            Assert.AreEqual(@"C:/Work/GitExtensions/".ToMountPath(prefix), $"{prefix}c/Work/GitExtensions/");
+            Assert.AreEqual(@"C:\Work\GitExtensions\".ToMountPath(prefix), $"{prefix}c/Work/GitExtensions/");
+            Assert.AreEqual(@"/var/tmp/".ToMountPath(prefix), "/var/tmp/");
+        }
+
+        [Test]
         public void EnsureTrailingPathSeparatorTest()
         {
             Assert.IsNull(((string)null).EnsureTrailingPathSeparator());
@@ -125,32 +161,32 @@ namespace GitCommandsTests.Helpers
             Assert.AreEqual(PathUtil.GetRepositoryName("ssh://john-abraham.doe@mygitserver/git/MyAwesomeRepo.git"), "MyAwesomeRepo");
             Assert.AreEqual(PathUtil.GetRepositoryName("git@anotherserver.mysubnet.com:project/somerepo.git"), "somerepo");
             Assert.AreEqual(PathUtil.GetRepositoryName("http://anotherserver.mysubnet.com/project/somerepo.git"), "somerepo");
+            Assert.AreEqual(PathUtil.GetRepositoryName("http://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            Assert.AreEqual(PathUtil.GetRepositoryName("ssh://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            Assert.AreEqual(PathUtil.GetRepositoryName("git://anotherserver.mysubnet.com/project/Hello+G%C3%BCnter.git"), "Hello Günter");
+            Assert.AreEqual(PathUtil.GetRepositoryName("git@anotherserver.mysubnet.com:project/Hello+G%C3%BCnter.git"), "Hello Günter");
 
             Assert.AreEqual(PathUtil.GetRepositoryName(""), "");
             Assert.AreEqual(PathUtil.GetRepositoryName(null), "");
             if (Path.DirectorySeparatorChar == '\\')
             {
                 Assert.AreEqual(PathUtil.GetRepositoryName(@"C:\dev\my_repo"), "my_repo");
+                Assert.AreEqual(PathUtil.GetRepositoryName(@"C:\dev\Hello+G%C3%BCnter"), "Hello+G%C3%BCnter");
                 Assert.AreEqual(PathUtil.GetRepositoryName(@"\\networkshare\folder1\folder2\gitextensions"), "gitextensions");
             }
             else
             {
                 Assert.AreEqual(PathUtil.GetRepositoryName(@"/dev/my_repo"), "my_repo");
+                Assert.AreEqual(PathUtil.GetRepositoryName(@"/dev/Hello+G%C3%BCnter"), "Hello+G%C3%BCnter");
                 Assert.AreEqual(PathUtil.GetRepositoryName(@"//networkshare/folder1/folder2/gitextensions"), "gitextensions");
             }
         }
 
         [Platform(Include = "Win")]
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase(" ")]
-        [TestCase("c:")]
-        public void NormalizePath(string path)
-        {
-            PathUtil.NormalizePath(path).Should().BeEmpty();
-        }
-
-        [Platform(Include = "Win")]
+        [TestCase(null, "")]
+        [TestCase("", "")]
+        [TestCase(" ", "")]
+        [TestCase("c:", "")]
         [TestCase("C:\\", "C:\\")]
         [TestCase("a:\\folder\\filename.txt", "a:\\folder\\filename.txt")]
         [TestCase("a:\\folder\\..\\filename.txt", "a:\\filename.txt")]
@@ -168,6 +204,19 @@ namespace GitCommandsTests.Helpers
         public void NormalizePath(string path, string expected)
         {
             PathUtil.NormalizePath(path).Should().Be(expected);
+        }
+
+        [Platform(Include = "Win")]
+        [TestCase("", "")]
+        [TestCase(" ", " ")]
+        [TestCase("c:", "c:")]
+        [TestCase("C:\\", "C:\\")]
+        [TestCase(@"\\wsl$\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        [TestCase(@"\\Wsl.LoCALhosT\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        [TestCase(@"\\wsl.localhost\Ubuntu\home\jack\work\", @"\\wsl$\Ubuntu\home\jack\work\")]
+        public void NormalizeWslPath(string path, string expected)
+        {
+            PathUtil.NormalizeWslPath(path).Should().Be(expected);
         }
 
         [TestCase(@"C:\WORK\GitExtensions\", @"C:\WORK\GitExtensions\")]
@@ -217,6 +266,15 @@ namespace GitCommandsTests.Helpers
         public void ResolveWsl(string input, Type expectedException)
         {
             Assert.Throws(expectedException, () => PathUtil.ResolveWsl(input));
+        }
+
+        [TestCase(@"C:\work\..\GitExtensions\", false)]
+        [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", false)]
+        [TestCase(@"\\wsl.localhost\Ubuntu\work\..\GitExtensions\", true)]
+        [TestCase(@"\\wsl.localhost/Ubuntu\work\..\GitExtensions\", false)]
+        public void IsWslLocalhostPath(string path, bool expected)
+        {
+            PathUtil.TestAccessor.IsWslLocalhostPrefixPath(path).Should().Be(expected);
         }
 
         [TestCase(@"\\Wsl$\Ubuntu\work\..\GitExtensions\", true, true)]

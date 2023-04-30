@@ -124,6 +124,7 @@ namespace GitUI.CommandsDialogs
             // >> Appearance
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceSettingsPage>(this), gitExtPageRef, Images.Appearance);
             var appearanceSettingsPage = AppearanceSettingsPage.GetPageReference();
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<SortingSettingsPage>(this), appearanceSettingsPage, Images.SortBy);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this), appearanceSettingsPage, Images.Colors);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceFontsSettingsPage>(this), appearanceSettingsPage, Images.Font.AdaptLightness());
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConsoleStyleSettingsPage>(this), appearanceSettingsPage, Images.Console);
@@ -282,6 +283,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 settingsTreeView.GotoPage(_initialPage);
+
+                settingsTreeView.Focus();
             }
         }
 

@@ -17,15 +17,15 @@ namespace GitUI.Editor
         d, drop = remove commit
         */
 
-        private static readonly Dictionary<char, (string longForm, HighlightColor color)> _commandByFirstChar = new()
+        private static readonly Dictionary<char, (string longForm, HighlightColor color, string[] options)> _commandByFirstChar = new()
         {
-            { 'p', ("pick", new HighlightColor(Color.Black, bold: true, italic: false)) },
-            { 'r', ("reword", new HighlightColor(Color.Purple, bold: true, italic: false)) },
-            { 'e', ("edit", new HighlightColor(Color.Black, bold: true, italic: false)) },
-            { 's', ("squash", new HighlightColor(Color.DarkBlue, bold: true, italic: false)) },
-            { 'f', ("fixup", new HighlightColor(Color.LightCoral, bold: true, italic: false)) },
-            { 'x', ("exec", new HighlightColor(Color.Black, bold: true, italic: false)) },
-            { 'd', ("drop", new HighlightColor(Color.Red, bold: true, italic: false)) }
+            { 'p', ("pick", new HighlightColor(Color.Black, bold: true, italic: false), Array.Empty<string>()) },
+            { 'r', ("reword", new HighlightColor(Color.Purple, bold: true, italic: false), Array.Empty<string>()) },
+            { 'e', ("edit", new HighlightColor(Color.Black, bold: true, italic: false), Array.Empty<string>()) },
+            { 's', ("squash", new HighlightColor(Color.DarkBlue, bold: true, italic: false), Array.Empty<string>()) },
+            { 'f', ("fixup", new HighlightColor(Color.LightCoral, bold: true, italic: false), new[] { "-C", "-c" }) },
+            { 'x', ("exec", new HighlightColor(Color.Black, bold: true, italic: false), Array.Empty<string>()) },
+            { 'd', ("drop", new HighlightColor(Color.Red, bold: true, italic: false), Array.Empty<string>()) }
         };
 
         public RebaseTodoHighlightingStrategy(GitModule module)
@@ -98,6 +98,17 @@ namespace GitUI.Editor
                         else if (index >= cmd.longForm.Length || c != cmd.longForm[index])
                         {
                             return false;
+                        }
+
+                        if (state == State.SpacesAfterCommand)
+                        {
+                            string? option = cmd.options.FirstOrDefault(o => index + 1 + o.Length < line.Length && document.GetText(line.Offset + index + 1, o.Length) == o);
+                            if (option is not null)
+                            {
+                                index += option.Length + 1;
+
+                                continue;
+                            }
                         }
 
                         break;

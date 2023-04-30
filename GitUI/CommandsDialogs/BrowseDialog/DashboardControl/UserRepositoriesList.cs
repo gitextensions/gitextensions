@@ -291,7 +291,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 _hasInvalidRepos = false;
 
-                var groups = Enumerable.Repeat(_lvgRecentRepositories, 1)
+                var groups = new[] { _lvgRecentRepositories }
                     .Concat(recentRepositories.Concat(favouriteRepositories)
                         .Select(repo => repo.Repo.Category)
                         .Where(c => !string.IsNullOrWhiteSpace(c))
@@ -315,10 +315,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             void BindRepositories(IReadOnlyList<RecentRepoInfo> repos, bool isFavourite)
             {
-                var repoValidityArray = repos.AsParallel().Select(r => !_controller.IsValidGitWorkingDir(r.Repo.Path)).ToArray();
-
-                _hasInvalidRepos = repoValidityArray.Any();
-
                 for (var index = 0; index < repos.Count; index++)
                 {
                     RecentRepoInfo recent = repos[index];
@@ -327,7 +323,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         ForeColor = ForeColor,
                         Font = AppSettings.Font,
                         Group = isFavourite ? GetTileGroup(recent.Repo) : _lvgRecentRepositories,
-                        ImageIndex = repoValidityArray[index] ? 1 : 0,
+                        ImageIndex = 0,
                         UseItemStyleForSubItems = false,
                         Tag = recent.Repo,
                         ToolTipText = recent.Repo.Path
@@ -337,10 +333,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await TaskScheduler.Default;
-                        string branchName = _controller.GetCurrentBranchName(recent.Repo.Path);
+                        bool isValidGitDir = _controller.IsValidGitWorkingDir(recent.Repo.Path);
+                        string branchName = isValidGitDir ? _controller.GetCurrentBranchName(recent.Repo.Path) : "";
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                        item.SubItems.Add(new ListViewSubItem(item, branchName, BranchNameColor, BackColor, _secondaryFont));
-                        //// NB: we can add a 3rd row as well: { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
+                        if (isValidGitDir)
+                        {
+                            item.SubItems.Add(new ListViewSubItem(item, branchName, BranchNameColor, BackColor, _secondaryFont));
+                            //// NB: we can add a 3rd row as well: { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
+                        }
+                        else
+                        {
+                            item.ImageIndex = 1;
+                            _hasInvalidRepos = true;
+                        }
                     }).FileAndForget();
                 }
             }
@@ -388,7 +393,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             return listView1.Items.Cast<ListViewItem>()
                 .Select(lvi => (Repository)lvi.Tag)
-                .Where(_ => _ is not null);
+                .Where(r => r is not null);
         }
 
         private static SelectedRepositoryItem? GetSelectedRepositoryItem(ToolStripItem? menuItem)
@@ -594,17 +599,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             PointF pointPath = new(textPadding.X + textOffset, textPadding.Y);
             var pathBounds = DrawText(e.Graphics, e.Item.Text, AppSettings.Font, _foreColorBrush, textWidth, pointPath, spacing4 * 2);
 
-            // render branch
-            PointF pointBranch = new(pointPath.X, pointPath.Y + pathBounds.Height + spacing1);
-            var branchBounds = DrawText(e.Graphics, e.Item.SubItems[1].Text, _secondaryFont, _branchNameColorBrush, textWidth, pointBranch, spacing4 * 2);
-
-            // render category
-            if (e.Item.SubItems.Count > 2 && !string.IsNullOrWhiteSpace(e.Item.SubItems[2].Text))
+            if (e.Item.SubItems.Count > 1)
             {
-                var pointCategory = string.IsNullOrWhiteSpace(e.Item.SubItems[1].Text) ?
-                                    pointBranch :
-                                    new PointF(pointBranch.X, pointBranch.Y + branchBounds.Height + spacing1);
-                DrawText(e.Graphics, e.Item.SubItems[2].Text, _secondaryFont, SystemBrushes.GrayText, textWidth, pointCategory, spacing4 * 2);
+                // render branch
+                PointF pointBranch = new(pointPath.X, pointPath.Y + pathBounds.Height + spacing1);
+                RectangleF branchBounds = DrawText(e.Graphics, e.Item.SubItems[1].Text, _secondaryFont, _branchNameColorBrush, textWidth, pointBranch, spacing4 * 2);
+
+                // render category
+                if (e.Item.SubItems.Count > 2 && !string.IsNullOrWhiteSpace(e.Item.SubItems[2].Text))
+                {
+                    PointF pointCategory = string.IsNullOrWhiteSpace(e.Item.SubItems[1].Text)
+                                        ? pointBranch
+                                        : new PointF(pointBranch.X, pointBranch.Y + branchBounds.Height + spacing1);
+                    DrawText(e.Graphics, e.Item.SubItems[2].Text, _secondaryFont, SystemBrushes.GrayText, textWidth, pointCategory, spacing4 * 2);
+                }
             }
 
             RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
@@ -665,6 +673,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 TryOpenRepository(items[0].Tag as Repository);
             }
+            else if (e.KeyCode == Keys.Down)
+            {
+                listView1.Focus();
+            }
         }
 
         private void listView1_MouseMove(object sender, MouseEventArgs e)
@@ -675,6 +687,29 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void listView1_MouseLeave(object sender, EventArgs e)
         {
             HoveredItem = null;
+        }
+
+        private void listView1_GotFocus(object sender, EventArgs e)
+        {
+            if (listView1.Items.Count > 0 && listView1.SelectedItems.Count == 0)
+            {
+                listView1.Items[0].Selected = true;
+            }
+        }
+
+        private void listView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up && listView1.SelectedItems.Count > 0)
+            {
+                // Compare current item to the very first item to see if it's at the top
+                ListViewItem selectedItem = listView1.SelectedItems[0];
+                if (selectedItem.Bounds.Y == listView1.Items[0].Bounds.Y)
+                {
+                    textBoxSearch.Focus();
+                    selectedItem.Selected = true;
+                    e.Handled = true;
+                }
+            }
         }
 
         private void mnuConfigure_Click(object sender, EventArgs e)

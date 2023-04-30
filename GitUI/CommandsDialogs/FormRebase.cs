@@ -8,7 +8,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormRebase : GitModuleForm
+    public partial class FormRebase : GitExtensionsDialog
     {
         #region Mnemonics
         // Available: GHJLNVWXYZ
@@ -59,14 +59,16 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormRebase(GitUICommands commands, string? defaultBranch)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             _defaultBranch = defaultBranch;
+
             InitializeComponent();
-            SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
-            SolveMergeconflicts.SetForeColorForBackColor();
+
+            btnSolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
+            btnSolveMergeconflicts.SetForeColorForBackColor();
             PanelLeftImage.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
-            InitializeComplete();
+
             PanelLeftImage.Visible = !AppSettings.DontShowHelpImages;
             PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
             PatchGrid.SetSkipped(Skipped);
@@ -75,14 +77,7 @@ namespace GitUI.CommandsDialogs
                 ShowOptions_LinkClicked(this, null!);
             }
 
-            Currentbranch.Font = new Font(Currentbranch.Font.FontFamily, Currentbranch.Font.Size, FontStyle.Bold);
-
-            Shown += FormRebase_Shown;
-        }
-
-        private void FormRebase_Shown(object sender, EventArgs e)
-        {
-            PatchGrid.SelectCurrentlyApplyingPatch();
+            InitializeComplete();
         }
 
         public FormRebase(GitUICommands commands, string? from, string? to, string? defaultBranch, bool interactive = false, bool startRebaseImmediately = true)
@@ -93,11 +88,19 @@ namespace GitUI.CommandsDialogs
             chkInteractive.Checked = interactive;
             chkAutosquash.Enabled = interactive;
             _startRebaseImmediately = startRebaseImmediately;
+            chkSpecificRange.Checked = !string.IsNullOrEmpty(from);
         }
 
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
+
+            if (IsDesignMode)
+            {
+                return;
+            }
+
+            PatchGrid.SelectCurrentlyApplyingPatch();
 
             var selectedHead = Module.GetSelectedBranch();
             Currentbranch.Text = selectedHead;
@@ -106,15 +109,15 @@ namespace GitUI.CommandsDialogs
             List<GitRef> refs = _startRebaseImmediately
                 ? new()
                 : Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags).OfType<GitRef>().ToList();
-            Branches.DataSource = refs;
-            Branches.DisplayMember = nameof(GitRef.Name);
+            cboBranches.DataSource = refs;
+            cboBranches.DisplayMember = nameof(GitRef.Name);
 
             if (_defaultBranch is not null)
             {
-                Branches.Text = _defaultBranch;
+                cboBranches.Text = _defaultBranch;
             }
 
-            Branches.Select();
+            cboBranches.Select();
 
             refs = refs.Where(h => h.IsHead).ToList();
             cboTo.DataSource = refs;
@@ -142,6 +145,7 @@ namespace GitUI.CommandsDialogs
 
         private void EnableButtons()
         {
+            bool conflictedMerge = Module.InTheMiddleOfConflictedMerge();
             if (Module.InTheMiddleOfRebase())
             {
                 if (Height < 200)
@@ -149,54 +153,54 @@ namespace GitUI.CommandsDialogs
                     Height = 500;
                 }
 
-                Branches.Enabled = false;
-                Ok.Enabled = false;
+                cboBranches.Enabled = false;
+                btnRebase.Visible = false;
                 chkStash.Enabled = false;
 
-                AddFiles.Enabled = true;
-                Commit.Enabled = true;
-                Resolved.Enabled = !Module.InTheMiddleOfConflictedMerge();
-                Mergetool.Enabled = Module.InTheMiddleOfConflictedMerge();
-                Skip.Enabled = true;
-                Abort.Enabled = true;
+                btnAddFiles.Visible = true;
+                btnCommit.Visible = true;
+                btnEditTodo.Visible = true;
+                btnContinueRebase.Visible = !conflictedMerge;
+                btnSolveConflicts.Visible = conflictedMerge;
+                btnSkip.Visible = true;
+                btnAbort.Visible = true;
             }
             else
             {
-                Branches.Enabled = true;
-                Ok.Enabled = true;
-                AddFiles.Enabled = false;
-                Commit.Enabled = false;
-                Resolved.Enabled = false;
-                Mergetool.Enabled = false;
-                Skip.Enabled = false;
-                Abort.Enabled = false;
+                cboBranches.Enabled = true;
+                btnRebase.Visible = true;
+                btnAddFiles.Visible = false;
+                btnCommit.Visible = false;
+                btnEditTodo.Visible = false;
+                btnContinueRebase.Visible = false;
+                btnSolveConflicts.Visible = false;
+                btnSkip.Visible = false;
+                btnAbort.Visible = false;
                 chkStash.Enabled = Module.IsDirtyDir();
             }
 
-            SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
+            btnSolveMergeconflicts.Visible = conflictedMerge;
 
-            Resolved.Text = _continueRebaseText.Text;
-            Mergetool.Text = _solveConflictsText.Text;
-            Resolved.ForeColor = SystemColors.ControlText;
-            Mergetool.ForeColor = SystemColors.ControlText;
-            ContinuePanel.BackColor = Color.Transparent;
+            btnContinueRebase.Text = _continueRebaseText.Text;
+            btnSolveConflicts.Text = _solveConflictsText.Text;
+            btnContinueRebase.ForeColor = SystemColors.ControlText;
+            btnSolveConflicts.ForeColor = SystemColors.ControlText;
             MergeToolPanel.BackColor = Color.Transparent;
 
             var highlightColor = Color.Yellow.AdaptBackColor();
 
-            if (Module.InTheMiddleOfConflictedMerge())
+            if (conflictedMerge)
             {
-                AcceptButton = Mergetool;
-                Mergetool.Focus();
-                Mergetool.Text = _solveConflictsText2.Text;
+                AcceptButton = btnSolveConflicts;
+                btnSolveConflicts.Focus();
+                btnSolveConflicts.Text = _solveConflictsText2.Text;
                 MergeToolPanel.BackColor = highlightColor;
             }
             else if (Module.InTheMiddleOfRebase())
             {
-                AcceptButton = Resolved;
-                Resolved.Focus();
-                Resolved.Text = _continueRebaseText2.Text;
-                ContinuePanel.BackColor = highlightColor;
+                AcceptButton = btnContinueRebase;
+                btnContinueRebase.Focus();
+                btnContinueRebase.Text = _continueRebaseText2.Text;
             }
         }
 
@@ -292,11 +296,28 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void EditTodoClick(object sender, EventArgs e)
+        {
+            using (WaitCursorScope.Enter())
+            {
+                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.EditTodoRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+
+                if (!Module.InTheMiddleOfRebase())
+                {
+                    Skipped.Clear();
+                    Close();
+                }
+
+                EnableButtons();
+                PatchGrid.Initialize();
+            }
+        }
+
         private void OkClick(object sender, EventArgs e)
         {
             using (WaitCursorScope.Enter())
             {
-                if (string.IsNullOrEmpty(Branches.Text))
+                if (string.IsNullOrEmpty(cboBranches.Text))
                 {
                     MessageBox.Show(this, _noBranchSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -311,12 +332,12 @@ namespace GitUI.CommandsDialogs
                 {
                     rebaseCmd = GitCommandHelpers.RebaseCmd(
                         cboTo.Text, chkInteractive.Checked, chkPreserveMerges.Checked,
-                        chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked, txtFrom.Text, Branches.Text);
+                        chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked, txtFrom.Text, cboBranches.Text);
                 }
                 else
                 {
                     rebaseCmd = GitCommandHelpers.RebaseCmd(
-                        Branches.Text, chkInteractive.Checked,
+                        cboBranches.Text, chkInteractive.Checked,
                         chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked);
                 }
 
@@ -344,8 +365,9 @@ namespace GitUI.CommandsDialogs
 
         private void ShowOptions_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ShowOptions.Visible = false;
-            OptionsPanel.Visible = true;
+            llblShowOptions.Visible = false;
+            flpnlOptionsPanelTop.Visible = true;
+            flpnlOptionsPanelBottom.Visible = true;
         }
 
         private void chkUseFromOnto_CheckedChanged(object sender, EventArgs e)
@@ -360,10 +382,14 @@ namespace GitUI.CommandsDialogs
             bool previousValueBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool previousValueShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
             bool previousValueShowReflogReferences = AppSettings.ShowReflogReferences;
+            bool previousValueShowStashes = AppSettings.ShowStashes;
 
             try
             {
-                using FormChooseCommit chooseForm = new(UICommands, txtFrom.Text, showCurrentBranchOnly: true);
+                AppSettings.ShowStashes = false;
+                ObjectId firstParent = UICommands.GitModule.RevParse("HEAD~");
+                string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent?.ToString() ?? string.Empty;
+                using FormChooseCommit chooseForm = new(UICommands, preSelectedCommit, showCurrentBranchOnly: true);
                 if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
                 {
                     txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
@@ -371,6 +397,7 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
+                AppSettings.ShowStashes = previousValueShowStashes;
                 AppSettings.BranchFilterEnabled = previousValueBranchFilterEnabled;
                 AppSettings.ShowCurrentBranchOnly = previousValueShowCurrentBranchOnly;
                 AppSettings.ShowReflogReferences = previousValueShowReflogReferences;

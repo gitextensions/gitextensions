@@ -192,9 +192,9 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)], false, false, false);
                 yield return (properties[nameof(AppSettings.CommitInfoShowContainedInTags)], true, false, false);
                 yield return (properties[nameof(AppSettings.CommitInfoShowTagThisCommitDerivesFrom)], true, false, false);
-                yield return (properties[nameof(AppSettings.AvatarImageCacheDays)], 5, false, false);
+                yield return (properties[nameof(AppSettings.AvatarImageCacheDays)], 13, false, false);
                 yield return (properties[nameof(AppSettings.ShowAuthorAvatarInCommitInfo)], true, false, false);
-                yield return (properties[nameof(AppSettings.AvatarProvider)], AvatarProvider.Default, false, false);
+                yield return (properties[nameof(AppSettings.AvatarProvider)], AvatarProvider.None, false, false);
                 yield return (properties[nameof(AppSettings.Translation)], string.Empty, true, false);
                 yield return (properties[nameof(AppSettings.UserProfileHomeDir)], false, false, false);
                 yield return (properties[nameof(AppSettings.CustomHomeDir)], string.Empty, true, false);

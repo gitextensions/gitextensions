@@ -46,6 +46,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _branchNewForRemote =
             new("The branch you are about to push seems to be a new branch for the remote." +
                                   Environment.NewLine + "Are you sure you want to push this branch?");
+        private readonly TranslationString _noCurrentBranch =
+            new("No branch is selected, cannot push.");
 
         private readonly TranslationString _pushCaption = new("Push");
 
@@ -278,6 +280,15 @@ namespace GitUI.CommandsDialogs
             if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text))
             {
                 MessageBox.Show(owner, _selectTag.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_Branch.Text)
+                || _NO_TRANSLATE_Branch.Text == DetachedHeadParser.DetachedBranch
+                || string.IsNullOrWhiteSpace(RemoteBranch.Text)
+                || RemoteBranch.Text == DetachedHeadParser.DetachedBranch)
+            {
+                MessageBox.Show(owner, _noCurrentBranch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 

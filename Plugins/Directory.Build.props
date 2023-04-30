@@ -14,6 +14,11 @@
       Direct plugins artifacts to be placed under Plugins folder
     -->
   <PropertyGroup Condition=" '$(MSBuildProjectName)' != 'GitUIPluginInterfaces'">
+    <!-- for dev versions only load .dll prefixed with 'GitExtensions.' -->
+    <_AssemblyRename>false</_AssemblyRename>
+    <_AssemblyRename Condition="!$(MSBuildProjectName.StartsWith('GitExtensions.'))">true</_AssemblyRename>
+    <AssemblyName Condition="$(_AssemblyRename) == true">GitExtensions.$(MSBuildProjectName)</AssemblyName>
+
     <!-- we don't want to have folder with too long names - drop 'GitExtensions.Plugins.' from folder names -->
     <_ProjectRename>false</_ProjectRename>
     <_ProjectRename Condition="$(MSBuildProjectName.StartsWith('GitExtensions.Plugins.'))">true</_ProjectRename>

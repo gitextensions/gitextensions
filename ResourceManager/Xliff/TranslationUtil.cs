@@ -141,6 +141,31 @@ namespace ResourceManager.Xliff
         {
             foreach (var (itemName, itemObj) in items)
             {
+                if (itemObj is ToolTip tooltip)
+                {
+                    string toolTipTitle = tooltip.ToolTipTitle;
+
+                    if (!string.IsNullOrEmpty(toolTipTitle))
+                    {
+                        translation.AddTranslationItem(category, itemName, "ToolTipTitle", toolTipTitle);
+                    }
+
+                    foreach (var (itemNameForTooltip, itemObjForTooltip) in items)
+                    {
+                        if (itemObjForTooltip is Control control)
+                        {
+                            string tooltipString = tooltip.GetToolTip(control);
+                            if (!string.IsNullOrEmpty(tooltipString))
+                            {
+                                // Will add an entry in the xlf file with id `NameOfControl.NameOfTooltipControl` ex: "PushToRemote.toolTip1"
+                                translation.AddTranslationItem(category, itemNameForTooltip, itemName, tooltipString);
+                            }
+                        }
+                    }
+
+                    continue;
+                }
+
                 foreach (var property in GetItemPropertiesEnumerator(itemName, itemObj))
                 {
                     var value = property.GetValue(itemObj, null);
@@ -187,6 +212,33 @@ namespace ResourceManager.Xliff
                 if (itemName == "$this" && itemObj.GetType().Name != category)
                 {
                     Debug.WriteLine($"TRANSLATION: [{category}]: Skip '$this' for {itemObj.GetType().Name}");
+                    continue;
+                }
+
+                if (itemObj is ToolTip tooltip)
+                {
+                    static string ProvideDefaultValue() => null;
+
+                    string? toolTipTitle = translation.TranslateItem(category, itemName, "ToolTipTitle", ProvideDefaultValue);
+
+                    if (!string.IsNullOrEmpty(toolTipTitle))
+                    {
+                        tooltip.ToolTipTitle = toolTipTitle;
+                    }
+
+                    foreach (var (itemNameForTooltip, itemObjForTooltip) in items)
+                    {
+                        if (itemObjForTooltip is Control control)
+                        {
+                            string? tooltipString = translation.TranslateItem(category, itemNameForTooltip, itemName, ProvideDefaultValue);
+
+                            if (!string.IsNullOrEmpty(tooltipString))
+                            {
+                                tooltip.SetToolTip(control, tooltipString);
+                            }
+                        }
+                    }
+
                     continue;
                 }
 

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using GitCommands;
 using NUnit.Framework;
 
 namespace GitUITests.UserControls.CommitInfo
@@ -8,25 +9,40 @@ namespace GitUITests.UserControls.CommitInfo
         [SetCulture("en-US")]
         [SetUICulture("en-US")]
         [Test]
-        public void BranchComparer([Values(null, "current")] string currentBranch)
+        public void BranchComparer([Values(null, "", "current", "(no branch)")] string? currentBranch)
         {
+            AppSettings.PrioritizedBranchNames = "master;dummy;main[^/]*|master[^/]*;release/.*";
+            AppSettings.PrioritizedRemoteNames = "zzz;origin|upstream";
+
             List<string> expectedBranches = new()
             {
                 currentBranch,
 
-                // local important
+                // local branch important
+                // order 0
                 "master",
+                // order 2
                 "master2",
+                // order 3
+                "release/v1.0",
 
-                // remote important, important repos
+                // remote branch important, group by branch priority order
+                // order 0
+                "remotes/zzz/master",
                 "remotes/origin/master",
                 "remotes/upstream/master",
-
-                // remote important, other repos
+                "remotes/123AAA/master",
+                "remotes/AAA/master",
                 "remotes/myrepo/master",
-                "remotes/myrepo/master2",
                 "remotes/other/master",
                 "remotes/z_other/master",
+                // order 2
+                "remotes/myrepo/master2",
+                // order 3
+                "remotes/upstream/release/v1.0",
+                "remotes/upstream/release/v1.1",
+                "remotes/123AAA/release/tmp",
+                "remotes/myrepo/release/v1.1",
 
                 // local branches
                 "1234_issue",
@@ -38,12 +54,14 @@ namespace GitUITests.UserControls.CommitInfo
                 "repro/issue",
 
                 // important repos
+                "remotes/zzz/b1",
                 "remotes/origin/b1",
                 "remotes/origin/b2",
                 "remotes/upstream/b1",
                 "remotes/upstream/b2",
 
                 // other repos
+                "remotes/123AAA/123",
                 "remotes/myrepo/b1",
                 "remotes/myrepo/b2",
                 "remotes/other/b1",
@@ -73,7 +91,7 @@ namespace GitUITests.UserControls.CommitInfo
 
             void SortAndCheckListsForEquality()
             {
-                branches.Sort(new GitUI.CommitInfo.CommitInfo.BranchComparer(currentBranch));
+                branches.Sort(new GitUI.CommitInfo.CommitInfo.BranchComparer(branches, currentBranch ?? ""));
 
                 branches.Count.Should().Be(expectedBranches.Count);
                 for (int index = 0; index < branches.Count; ++index)

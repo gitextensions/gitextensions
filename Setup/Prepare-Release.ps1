@@ -50,7 +50,7 @@ function Generate-Changelog {
         }
 
         $issues += $issue;
-        $issueLinks += "[$($issue.number)]:$($issue.html_url)"
+        $issueLinks += "[#$($issue.number)]:$($issue.html_url)"
     }
 
     "### Version $milestoneTitle ($milestoneDue)" | Out-File $changelogFile -Encoding utf8
@@ -107,7 +107,7 @@ function Update-Contributors {
     }
 }
 
-pushd $PSScriptRoot
+Push-Location $PSScriptRoot
 
 try {
 
@@ -134,4 +134,7 @@ try {
 catch {
     Write-Error $_;
     Exit -1;
+}
+finally {
+    Pop-Location
 }

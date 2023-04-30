@@ -334,6 +334,8 @@
             this.listView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseClick);
             this.listView1.MouseLeave += new System.EventHandler(this.listView1_MouseLeave);
             this.listView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseMove);
+            this.listView1.GotFocus += new System.EventHandler(this.listView1_GotFocus);
+            this.listView1.KeyDown += listView1_KeyDown;
             // 
             // clmhdrPath
             // 

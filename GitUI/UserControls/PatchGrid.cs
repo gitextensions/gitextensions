@@ -33,6 +33,8 @@ namespace GitUI
             InitializeComponent();
             InitializeComplete();
             FileName.DataPropertyName = nameof(PatchFile.Name);
+            Action.DataPropertyName = nameof(PatchFile.Action);
+            CommitHash.DataPropertyName = nameof(PatchFile.ObjectId);
             subjectDataGridViewTextBoxColumn.DataPropertyName = nameof(PatchFile.Subject);
             authorDataGridViewTextBoxColumn.DataPropertyName = nameof(PatchFile.Author);
             dateDataGridViewTextBoxColumn.DataPropertyName = nameof(PatchFile.Date);
@@ -43,7 +45,6 @@ namespace GitUI
             CommitHash.Width = DpiUtil.Scale(55);
             authorDataGridViewTextBoxColumn.Width = DpiUtil.Scale(140);
             Patches.RowTemplate.MinimumHeight = Patches.ColumnHeadersHeight;
-            UpdateState(IsManagingRebase);
         }
 
         private void UpdateState(bool isManagingRebase)
@@ -114,6 +115,7 @@ namespace GitUI
                 return;
             }
 
+            UpdateState(IsManagingRebase);
             DisplayPatches(GetPatches());
         }
 

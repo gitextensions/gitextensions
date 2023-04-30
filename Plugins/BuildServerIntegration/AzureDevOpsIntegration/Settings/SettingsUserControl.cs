@@ -1,5 +1,5 @@
 using System.ComponentModel.Composition;
-using System.Diagnostics;
+using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -123,7 +123,7 @@ namespace AzureDevOpsIntegration.Settings
 
         private void RestApiTokenLink_Click(object sender, EventArgs e)
         {
-            Process.Start(TokenManagementUrl);
+            OsShellUtil.OpenUrlInDefaultBrowser(TokenManagementUrl);
         }
 
         private void ExtractLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

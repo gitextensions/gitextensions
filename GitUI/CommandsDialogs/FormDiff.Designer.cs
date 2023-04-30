@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using GitUI.CommandsDialogs.Menus;
 
 namespace GitUI.CommandsDialogs
 {
@@ -44,7 +45,7 @@ namespace GitUI.CommandsDialogs
             this.firstToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectedToLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator32 = new System.Windows.Forms.ToolStripSeparator();
-            this.copyFilenameToClipboardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyPathsToolStripMenuItem = new CopyPathsToolStripMenuItem();
             this.openContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator33 = new System.Windows.Forms.ToolStripSeparator();
             this.fileHistoryDiffToolstripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -333,7 +334,7 @@ namespace GitUI.CommandsDialogs
             this.DiffContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openWithDifftoolToolStripMenuItem,
             this.toolStripSeparator32,
-            this.copyFilenameToClipboardToolStripMenuItem1,
+            this.copyPathsToolStripMenuItem,
             this.openContainingFolderToolStripMenuItem,
             this.toolStripSeparator33,
             this.fileHistoryDiffToolstripMenuItem,
@@ -382,14 +383,9 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator32.Name = "toolStripSeparator32";
             this.toolStripSeparator32.Size = new System.Drawing.Size(207, 6);
             // 
-            // copyFilenameToClipboardToolStripMenuItem1
+            // copyPathsToolStripMenuItem
             // 
-            this.copyFilenameToClipboardToolStripMenuItem1.Image = global::GitUI.Properties.Images.CopyToClipboard;
-            this.copyFilenameToClipboardToolStripMenuItem1.Name = "copyFilenameToClipboardToolStripMenuItem1";
-            this.copyFilenameToClipboardToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyFilenameToClipboardToolStripMenuItem1.Size = new System.Drawing.Size(210, 22);
-            this.copyFilenameToClipboardToolStripMenuItem1.Text = "Copy full path(s)";
-            this.copyFilenameToClipboardToolStripMenuItem1.Click += new System.EventHandler(this.copyFilenameToClipboardToolStripMenuItem1_Click);
+            this.copyPathsToolStripMenuItem.Name = "copyPathsToolStripMenuItem";
             // 
             // openContainingFolderToolStripMenuItem
             // 
@@ -478,7 +474,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem firstToLocalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectedToLocalToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator32;
-        private System.Windows.Forms.ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem1;
+        private CopyPathsToolStripMenuItem copyPathsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openContainingFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator33;
         private System.Windows.Forms.ToolStripMenuItem fileHistoryDiffToolstripMenuItem;

@@ -9,7 +9,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         private readonly AsyncLoader _branchesLoader = new();
         private readonly char[] _invalidCharsInPath = Path.GetInvalidFileNameChars();
 
-        private string? _initialDirectoryPath;
+        private readonly string? _initialDirectoryPath;
 
         public string WorktreeDirectory => newWorktreeDirectory.Text;
         public bool OpenWorktree => openWorktreeCheckBox.Checked;
@@ -22,22 +22,19 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             InitializeComponent();
         }
 
-        public FormCreateWorktree(GitUICommands commands)
+        public FormCreateWorktree(GitUICommands commands, string? path)
             : base(commands)
         {
             InitializeComponent();
             InitializeComplete();
+            _initialDirectoryPath = path;
         }
 
         private void FormCreateWorktree_Load(object sender, EventArgs e)
         {
-            _initialDirectoryPath = GetWorktreeDirectory();
             LoadBranchesAsync();
 
-            string GetWorktreeDirectory()
-            {
-                return UICommands.GitModule.WorkingDir.TrimEnd('\\', '/');
-            }
+            UpdateWorktreePathAndValidateWorktreeOptions();
 
             void LoadBranchesAsync()
             {
@@ -111,8 +108,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 }
             };
 
-            UICommands.StartGitCommandProcessDialog(this, args);
-            DialogResult = DialogResult.OK;
+            DialogResult = UICommands.StartGitCommandProcessDialog(this, args) ? DialogResult.OK : DialogResult.None;
         }
 
         private void ValidateWorktreeOptions()
@@ -161,6 +157,9 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         }
 
         private void UpdateWorktreePathAndValidateWorktreeOptions(object sender, EventArgs e)
+            => UpdateWorktreePathAndValidateWorktreeOptions();
+
+        private void UpdateWorktreePathAndValidateWorktreeOptions()
         {
             UpdateWorktreePath();
 
@@ -171,15 +170,12 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             void UpdateWorktreePath()
             {
                 var branchNameNormalized = NormalizeBranchName(radioButtonCheckoutExistingBranch.Checked
-                    ? ((IGitRef)comboBoxBranches.SelectedItem).Name
+                    ? ((IGitRef)comboBoxBranches.SelectedItem)?.Name ?? string.Empty
                     : textBoxNewBranchName.Text);
                 newWorktreeDirectory.Text = $"{_initialDirectoryPath}_{branchNameNormalized}";
             }
 
-            string NormalizeBranchName(string branchName)
-            {
-                return string.Join("_", branchName.Split(_invalidCharsInPath, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
-            }
+            string NormalizeBranchName(string branchName) => string.Join("_", branchName.Split(_invalidCharsInPath, StringSplitOptions.RemoveEmptyEntries)).TrimEnd('.');
         }
     }
 }

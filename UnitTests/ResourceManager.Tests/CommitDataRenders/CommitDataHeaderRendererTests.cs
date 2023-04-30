@@ -337,5 +337,42 @@ namespace ResourceManagerTests.CommitDataRenders
             _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Date, Arg.Any<int>());
             _labelFormatter.DidNotReceive().FormatLabel(TranslatedStrings.Committer, Arg.Any<int>());
         }
+
+        [Test]
+        public void GetPlainText_should_repace_multiple_spaces_and_tabs()
+        {
+            string header = "label 1:  value 1\nlabel 2:\tvalue 2\nlabel 3:\t value 3\nlabel 4: value 4";
+            string expected = "label 1: value 1\nlabel 2: value 2\nlabel 3: value 3\nlabel 4: value 4";
+            _renderer.GetPlainText(header).Should().Be(expected);
+        }
+
+        [Test]
+        public void GetPlainText_should_remove_relative_time([Values("1 minute", "3 years")] string relativeTime)
+        {
+            string header = $"\ndate: {relativeTime} ago (time)\nlabel 2: value 2";
+            string expected = "\ndate: time\nlabel 2: value 2";
+            _renderer.GetPlainText(header).Should().Be(expected);
+        }
+
+        [Test]
+        public void GetPlainText_should_not_remove_ago_from_author([Values("mago@x.y", "x@blagoq.org", "ago <x@y.z>")] string author)
+        {
+            string header = $"\nAuthor: {author}\nlabel 2: value 2";
+            _renderer.GetPlainText(header).Should().Be(header);
+        }
+
+        [Test]
+        public void GetPlainText_should_remove_child_and_parent_commits([Values(
+            "Child: 123bcdef",
+            "Children: 123bcdef, 234abcd",
+            "Parent: 123bcdef",
+            "Parents: 123bcdef, 234abcd",
+            "Children: 123bcdef, 234abcd\nParent: 345bcdef")]
+            string relatives)
+        {
+            string header = $"label 1: value 1\n{relatives}\nlabel 3: value 3";
+            string expected = $"label 1: value 1\nlabel 3: value 3";
+            _renderer.GetPlainText(header).Should().Be(expected);
+        }
     }
 }

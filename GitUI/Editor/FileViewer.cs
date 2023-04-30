@@ -425,9 +425,10 @@ namespace GitUI.Editor
         /// </summary>
         /// <param name="item">The gitItem to present.</param>
         /// <param name="text">The patch text.</param>
+        /// <param name="line">The line to display.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
-        public Task ViewPatchAsync(FileStatusItem item, string text, Action? openWithDifftool)
-            => ViewPrivateAsync(item, item?.Item?.Name, text, openWithDifftool, ViewMode.Diff);
+        public Task ViewPatchAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.Diff);
 
         /// <summary>
         /// Present the text as a patch in the file viewer, for GitHub.
@@ -436,7 +437,7 @@ namespace GitUI.Editor
         /// <param name="text">The patch text.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
         public Task ViewFixedPatchAsync(string fileName, string text, Action? openWithDifftool = null)
-            => ViewPrivateAsync(item: null, fileName, text, openWithDifftool, ViewMode.FixedDiff);
+            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool, ViewMode.FixedDiff);
 
         public void ViewFixedPatch(string? fileName,
             string text,
@@ -447,7 +448,7 @@ namespace GitUI.Editor
         }
 
         public Task ViewRangeDiffAsync(string fileName, string text)
-            => ViewPrivateAsync(item: null, fileName, text, openWithDifftool: null, ViewMode.RangeDiff);
+            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff);
 
         public void ViewText(string? fileName,
             string text,
@@ -462,11 +463,13 @@ namespace GitUI.Editor
         /// </summary>
         /// <param name="fileName">The fileName to present.</param>
         /// <param name="text">The patch text.</param>
+        /// <param name="line">The line to display.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
         /// <param name="checkGitAttributes">Check Git attributes to check for binary files.</param>
         public Task ViewTextAsync(string? fileName,
             string text,
             FileStatusItem? item = null,
+            int? line = null,
             Action? openWithDifftool = null,
             bool checkGitAttributes = false)
         {
@@ -505,6 +508,10 @@ namespace GitUI.Editor
                     else
                     {
                         internalFileViewer.SetText(text, openWithDifftool);
+                        if (line is not null)
+                        {
+                            GoToLine(line.Value);
+                        }
                     }
 
                     TextLoaded?.Invoke(this, null);
@@ -512,14 +519,14 @@ namespace GitUI.Editor
                 });
         }
 
-        public Task ViewGitItemAsync(FileStatusItem item, Action? openWithDifftool = null)
+        public Task ViewGitItemAsync(FileStatusItem item, int? line, Action? openWithDifftool)
         {
-            return ViewGitItemAsync(item.Item, item.SecondRevision.ObjectId, item, openWithDifftool);
+            return ViewGitItemAsync(item.Item, item.SecondRevision.ObjectId, item, line, openWithDifftool);
         }
 
-        public Task ViewGitItemAsync(GitItemStatus file, ObjectId objectId, Action? openWithDifftool = null)
+        public Task ViewGitItemAsync(GitItemStatus file, ObjectId objectId, int? line = null, Action? openWithDifftool = null)
         {
-            return ViewGitItemAsync(file, objectId, null, openWithDifftool);
+            return ViewGitItemAsync(file, objectId, item: null, line, openWithDifftool);
         }
 
         /// <summary>
@@ -528,14 +535,15 @@ namespace GitUI.Editor
         /// <param name="file">GitItem file, with TreeGuid.</param>
         /// <param name="objectId">Revision to present. Can be null if file.TreeGuid is set.</param>
         /// <param name="item">Metadata for line patching and presentation.</param>
+        /// <param name="line">The line to display.</param>
         /// <param name="openWithDifftool">difftool command</param>
         /// <returns>Task to view the item</returns>
-        private Task ViewGitItemAsync(GitItemStatus file, ObjectId? objectId, FileStatusItem? item, Action? openWithDifftool)
+        private Task ViewGitItemAsync(GitItemStatus file, ObjectId? objectId, FileStatusItem? item, int? line, Action? openWithDifftool)
         {
             if (objectId == ObjectId.WorkTreeId || file.Staged == StagedStatus.WorkTree)
             {
                 // No blob exists for worktree, present contents from file system
-                return ViewFileAsync(file.Name, file.IsSubmodule, item, openWithDifftool);
+                return ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool);
             }
 
             file.TreeGuid ??= Module.GetFileBlobHash(file.Name, objectId);
@@ -566,6 +574,7 @@ namespace GitUI.Editor
                 getFileText: GetFileTextIfBlobExists,
                 getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha, cache: true),
                 item: item,
+                line: line,
                 openWithDifftool: openWithDifftool);
 
             string GetFileTextIfBlobExists()
@@ -598,9 +607,10 @@ namespace GitUI.Editor
         /// <param name="fileName">The file/submodule path.</param>
         /// <param name="isSubmodule">If submodule.</param>
         /// <param name="item">Metadata for line patching and presentation.</param>
+        /// <param name="line">The line to display.</param>
         /// <param name="openWithDifftool">Diff action.</param>
         /// <returns>Task.</returns>
-        public Task ViewFileAsync(string fileName, bool isSubmodule = false, FileStatusItem? item = null, Action? openWithDifftool = null)
+        public Task ViewFileAsync(string fileName, bool isSubmodule = false, FileStatusItem? item = null, int? line = null, Action? openWithDifftool = null)
         {
             string? fullPath = _fullPathResolver.Resolve(fileName);
             Validates.NotNull(fullPath);
@@ -636,6 +646,7 @@ namespace GitUI.Editor
                     getFileText: GetFileText,
                     getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), "", cache: false),
                     item: item,
+                    line: line,
                     openWithDifftool));
 
             Image? GetImage()
@@ -750,7 +761,7 @@ namespace GitUI.Editor
             return viewMode is (ViewMode.Diff or ViewMode.FixedDiff or ViewMode.RangeDiff);
         }
 
-        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, Action? openWithDifftool, ViewMode viewMode = ViewMode.Diff)
+        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode)
         {
             return ShowOrDeferAsync(
                 text.Length,
@@ -758,6 +769,10 @@ namespace GitUI.Editor
                 {
                     ResetView(viewMode, fileName, item: item, text: text);
                     internalFileViewer.SetText(text, openWithDifftool, isDiff: IsDiffView(_viewMode), isRangeDiff: _viewMode == ViewMode.RangeDiff);
+                    if (line is not null)
+                    {
+                        GoToLine(line.Value);
+                    }
 
                     TextLoaded?.Invoke(this, null);
                     return Task.CompletedTask;
@@ -1037,7 +1052,7 @@ namespace GitUI.Editor
             }
         }
 
-        private Task ViewItemAsync(string fileName, bool isSubmodule, Func<Image?> getImage, Func<string> getFileText, Func<string> getSubmoduleText, FileStatusItem? item, Action? openWithDifftool)
+        private Task ViewItemAsync(string fileName, bool isSubmodule, Func<Image?> getImage, Func<string> getFileText, Func<string> getSubmoduleText, FileStatusItem? item, int? line, Action? openWithDifftool)
         {
             FilePreamble = null;
 
@@ -1047,7 +1062,7 @@ namespace GitUI.Editor
                     getSubmoduleText,
                     text =>
                     {
-                        ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, item, openWithDifftool));
+                        ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, item, line: null, openWithDifftool));
                     });
             }
             else if (FileHelper.IsImage(fileName))
@@ -1091,7 +1106,7 @@ namespace GitUI.Editor
                 return _async.LoadAsync(
                     getFileText,
                     text => ThreadHelper.JoinableTaskFactory.Run(
-                        () => ViewTextAsync(fileName, text, item, openWithDifftool, checkGitAttributes: true)));
+                        () => ViewTextAsync(fileName, text, item, line, openWithDifftool, checkGitAttributes: true)));
             }
         }
 
@@ -1191,7 +1206,11 @@ namespace GitUI.Editor
 
         private void ToggleNonPrintingChars(bool show)
         {
-            internalFileViewer.ShowEOLMarkers = show;
+            internalFileViewer.EolMarkerStyle = show
+                ? AppSettings.ShowEolMarkerAsGlyph
+                    ? ICSharpCode.TextEditor.Document.EolMarkerStyle.Glyph
+                    : ICSharpCode.TextEditor.Document.EolMarkerStyle.Text
+                : ICSharpCode.TextEditor.Document.EolMarkerStyle.None;
             internalFileViewer.ShowSpaces = show;
             internalFileViewer.ShowTabs = show;
         }
@@ -2024,7 +2043,7 @@ namespace GitUI.Editor
                     new GitItemStatus(name: fileName ?? ""));
                 var fileViewer = _fileViewer;
                 ThreadHelper.JoinableTaskFactory.Run(
-                    () => fileViewer.ViewPatchAsync(f, text, openWithDifftool));
+                    () => fileViewer.ViewPatchAsync(f, text, line: null, openWithDifftool));
             }
         }
     }

@@ -156,6 +156,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{472B
 		scripts\Download-PluginManager.ps1 = scripts\Download-PluginManager.ps1
 		scripts\Mark-RepoClean.ps1 = scripts\Mark-RepoClean.ps1
 		scripts\stylecop.json = scripts\stylecop.json
+		update-loc.cmd = update-loc.cmd
 		scripts\vs-threading.MainThreadAssertingMethods.txt = scripts\vs-threading.MainThreadAssertingMethods.txt
 		scripts\vs-threading.MainThreadSwitchingMethods.txt = scripts\vs-threading.MainThreadSwitchingMethods.txt
 		scripts\vs-threading.TypesRequiringMainThread.txt = scripts\vs-threading.TypesRequiringMainThread.txt

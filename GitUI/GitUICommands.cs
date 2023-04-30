@@ -124,14 +124,14 @@ namespace GitUI
             return success;
         }
 
-        public void StartCommandLineProcessDialog(IWin32Window? owner, string? command, ArgumentString arguments)
+        public bool StartCommandLineProcessDialog(IWin32Window? owner, string? command, ArgumentString arguments)
         {
-            FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true, process: command);
+            return FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true, process: command);
         }
 
-        public void StartGitCommandProcessDialog(IWin32Window? owner, ArgumentString arguments)
+        public bool StartGitCommandProcessDialog(IWin32Window? owner, ArgumentString arguments)
         {
-            FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+            return FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
         public bool StartDeleteBranchDialog(IWin32Window? owner, string branch)
@@ -491,6 +491,18 @@ namespace GitUI
             bool Action()
             {
                 using FormCommit form = new(this, CommitKind.Fixup, revision);
+                form.ShowDialog(owner);
+                return true;
+            }
+
+            return DoActionOnRepo(Action);
+        }
+
+        public bool StartAmendCommitDialog(IWin32Window? owner, GitRevision revision)
+        {
+            bool Action()
+            {
+                using FormCommit form = new(this, CommitKind.Amend, revision);
                 form.ShowDialog(owner);
                 return true;
             }
@@ -1027,9 +1039,9 @@ namespace GitUI
                 interactive: true, startRebaseImmediately: true);
         }
 
-        public bool StartRebaseDialogWithAdvOptions(IWin32Window? owner, string onto)
+        public bool StartRebaseDialogWithAdvOptions(IWin32Window? owner, string onto, string from = "")
         {
-            return StartRebaseDialog(owner, from: "", to: null, onto, interactive: false, startRebaseImmediately: false);
+            return StartRebaseDialog(owner, from: from, to: null, onto, interactive: false, startRebaseImmediately: false);
         }
 
         public bool StartRebaseDialog(IWin32Window? owner, string? onto)
@@ -1323,6 +1335,22 @@ namespace GitUI
                                 {
                                     ViewPullRequestsForm frm = new(this, gitHoster) { ShowInTaskbar = true };
                                     frm.Show(owner);
+                                });
+        }
+
+        internal void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster)
+        {
+            WrapRepoHostingCall(TranslatedStrings.AddUpstreamRemote, gitHoster,
+                                gh =>
+                                {
+                                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                                    {
+                                        string remoteName = await gh.AddUpstreamRemoteAsync();
+                                        if (!string.IsNullOrEmpty(remoteName))
+                                        {
+                                            StartPullDialogAndPullImmediately(owner, remoteBranch: null, remoteName, AppSettings.PullAction.Fetch);
+                                        }
+                                    }).FileAndForget();
                                 });
         }
 

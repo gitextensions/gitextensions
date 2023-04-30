@@ -135,7 +135,7 @@
             // 
             // _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn
             // 
-            this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
             this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.Name = "_NO_TRANSLATE_deleteDataGridViewCheckBoxColumn";
             this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderCell = checkBoxHeaderCell;
@@ -153,7 +153,7 @@
             // 
             // dateDataGridViewTextBoxColumn
             // 
-            this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.dateDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.dateDataGridViewTextBoxColumn.FillWeight = 300F;
             this.dateDataGridViewTextBoxColumn.HeaderText = "Last activity";
             this.dateDataGridViewTextBoxColumn.Name = "dateDataGridViewTextBoxColumn";
@@ -420,7 +420,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.Cancel;
-            this.ClientSize = new System.Drawing.Size(760, 421);
+            this.ClientSize = new System.Drawing.Size(760, 500);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(statusStrip1);
             this.MinimumSize = new System.Drawing.Size(600, 400);

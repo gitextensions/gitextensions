@@ -28,6 +28,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         [SetUp]
         public void SetUp()
         {
+            AppSettings.ShowGitNotes = false;
             ReferenceRepository.ResetRepo(ref _referenceRepository);
             _commands = new GitUICommands(_referenceRepository.Module);
 

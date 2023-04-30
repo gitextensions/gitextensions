@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
-using System.Diagnostics;
 using Git.hub;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitExtensions.Plugins.GitHub3.Properties;
@@ -71,6 +71,7 @@ namespace GitExtensions.Plugins.GitHub3
         private readonly TranslationString _generateToken = new("Generate a GitHub personal access token");
         private readonly TranslationString _manageToken = new("Manage GitHub personal access token");
         private readonly TranslationString _openLinkFailed = new("Fail to open the link. Reason: ");
+        private readonly TranslationString _noteRestartNeeded = new("Note: Git Extensions need to be restarted so that the token is taken into account.");
 
         public static string GitHubAuthorizationRelativeUrl = "authorizations";
         public static string UpstreamConventionName = "upstream";
@@ -108,6 +109,8 @@ namespace GitExtensions.Plugins.GitHub3
             LinkLabel manageTokenLink = new() { Text = _manageToken.Text };
             manageTokenLink.Click += ManageTokenLink_Click;
             yield return new PseudoSetting(manageTokenLink);
+
+            yield return new PseudoSetting(_noteRestartNeeded.Text);
         }
 
         private void GenerateTokenLink_Click(object sender, EventArgs e)
@@ -124,13 +127,7 @@ namespace GitExtensions.Plugins.GitHub3
         {
             try
             {
-                ProcessStartInfo psi = new(url)
-                {
-                    UseShellExecute = true,
-                    Verb = "open"
-                };
-
-                Process.Start(psi);
+                OsShellUtil.OpenUrlInDefaultBrowser(url);
             }
             catch (Exception ex)
             {
@@ -204,12 +201,12 @@ namespace GitExtensions.Plugins.GitHub3
                 return null;
             }
 
-            if ((await gitModule.GetRemotesAsync()).Any(r => r.Name == UpstreamConventionName || r.FetchUrl == hostedRepository.ParentReadOnlyUrl))
+            if ((await gitModule.GetRemotesAsync()).Any(r => r.Name == UpstreamConventionName || r.FetchUrl == hostedRepository.ParentUrl))
             {
                 return null;
             }
 
-            gitModule.AddRemote(UpstreamConventionName, hostedRepository.ParentReadOnlyUrl);
+            gitModule.AddRemote(UpstreamConventionName, hostedRepository.ParentUrl);
             return UpstreamConventionName;
         }
 
@@ -267,7 +264,6 @@ namespace GitExtensions.Plugins.GitHub3
 
             ToolStripMenuItem toolStripMenuItem = new(string.Format(_viewInWebSite.Text, Name), Icon);
             contextMenu.Items.Add(toolStripMenuItem);
-            toolStripMenuItem.Click += (s, e) => Process.Start(_hostedRemotesForModule.First().Data);
 
             foreach (IHostedRemote hostedRemote in _hostedRemotesForModule.OrderBy(r => r.Data))
             {
@@ -276,8 +272,7 @@ namespace GitExtensions.Plugins.GitHub3
                 {
                     if (contextMenu.Tag is GitBlameContext blameContext)
                     {
-                        Process.Start(
-                            hostedRemote.GetBlameUrl(
+                        OsShellUtil.OpenUrlInDefaultBrowser(hostedRemote.GetBlameUrl(
                                 blameContext.BlameId.ToString(),
                                 blameContext.FileName,
                                 blameContext.LineIndex + 1));

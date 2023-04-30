@@ -2,7 +2,7 @@
 <Project>
   <PropertyGroup>
     <UseWindowsForms>true</UseWindowsForms>
-    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 
     <_SuppressSdkImports>true</_SuppressSdkImports>
     <DeterministicSourcePaths>false</DeterministicSourcePaths>

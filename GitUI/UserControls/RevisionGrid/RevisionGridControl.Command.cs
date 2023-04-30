@@ -47,6 +47,8 @@
             NavigateForward_AlternativeHotkey = 40,
             DeleteRef = 41,
             RenameRef = 42,
+            CreateSquashCommit = 43,
+            CreateAmendCommit = 44,
         }
     }
 }

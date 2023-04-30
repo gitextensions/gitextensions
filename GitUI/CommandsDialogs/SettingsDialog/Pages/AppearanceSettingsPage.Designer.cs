@@ -58,18 +58,11 @@
             this.lblNoImageService = new System.Windows.Forms.Label();
             this.lblCustomAvatarTemplate = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
-            this.RevisionSortOrderHelp = new System.Windows.Forms.PictureBox();
             this.pictureAvatarHelp = new System.Windows.Forms.PictureBox();
             this.avatarProviderHelp = new System.Windows.Forms.PictureBox();
             this.fixedWidthFontDialog = new System.Windows.Forms.FontDialog();
             this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.commitFontDialog = new System.Windows.Forms.FontDialog();
-            this.lblRevisionsSortBy = new System.Windows.Forms.Label();
-            this.lblBranchesSortBy = new System.Windows.Forms.Label();
-            this.lblBranchesOrder = new System.Windows.Forms.Label();
-            this._NO_TRANSLATE_cmbRevisionsSortBy = new System.Windows.Forms.ComboBox();
-            this._NO_TRANSLATE_cmbBranchesSortBy = new System.Windows.Forms.ComboBox();
-            this._NO_TRANSLATE_cmbBranchesOrder = new System.Windows.Forms.ComboBox();
             tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
             tlpnlMain.SuspendLayout();
             this.gbGeneral.SuspendLayout();
@@ -79,7 +72,6 @@
             this.gbAuthorImages.SuspendLayout();
             this.tlpnlAuthor.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_DaysToCacheImages)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RevisionSortOrderHelp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureAvatarHelp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.avatarProviderHelp)).BeginInit();
             this.SuspendLayout();
@@ -125,13 +117,6 @@
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlGeneral.Controls.Add(this._NO_TRANSLATE_cmbBranchesOrder, 0, 6);
-            this.tlpnlGeneral.Controls.Add(this._NO_TRANSLATE_cmbBranchesSortBy, 0, 5);
-            this.tlpnlGeneral.Controls.Add(this._NO_TRANSLATE_cmbRevisionsSortBy, 0, 4);
-            this.tlpnlGeneral.Controls.Add(this.RevisionSortOrderHelp, 1, 4);
-            this.tlpnlGeneral.Controls.Add(this.lblBranchesOrder, 0, 6);
-            this.tlpnlGeneral.Controls.Add(this.lblBranchesSortBy, 0, 5);
-            this.tlpnlGeneral.Controls.Add(this.lblRevisionsSortBy, 0, 4);
             this.tlpnlGeneral.Controls.Add(this.chkShowRelativeDate, 0, 0);
             this.tlpnlGeneral.Controls.Add(this.chkShowRepoCurrentBranch, 0, 1);
             this.tlpnlGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio, 0, 2);
@@ -501,17 +486,6 @@
             this._NO_TRANSLATE_DaysToCacheImages.TabIndex = 2;
             this._NO_TRANSLATE_DaysToCacheImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // RevisionSortOrderHelp
-            // 
-            this.RevisionSortOrderHelp.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.RevisionSortOrderHelp.Image = global::GitUI.Properties.Resources.information;
-            this.RevisionSortOrderHelp.Location = new System.Drawing.Point(353, 104);
-            this.RevisionSortOrderHelp.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
-            this.RevisionSortOrderHelp.Name = "RevisionSortOrderHelp";
-            this.RevisionSortOrderHelp.Size = new System.Drawing.Size(16, 16);
-            this.RevisionSortOrderHelp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.RevisionSortOrderHelp.TabStop = false;
-            // 
             // customAvatarHelp
             // 
             this.avatarProviderHelp.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -553,83 +527,6 @@
             this.commitFontDialog.AllowVerticalFonts = false;
             this.commitFontDialog.Color = System.Drawing.SystemColors.ControlText;
             // 
-            // lblRevisionsSortBy
-            // 
-            this.lblRevisionsSortBy.AutoSize = true;
-            this.lblRevisionsSortBy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblRevisionsSortBy.Location = new System.Drawing.Point(3, 115);
-            this.lblRevisionsSortBy.Name = "lblRevisionsSortBy";
-            this.lblRevisionsSortBy.Size = new System.Drawing.Size(120, 27);
-            this.lblRevisionsSortBy.TabIndex = 3;
-            this.lblRevisionsSortBy.Text = "Sort revisions by";
-            this.lblRevisionsSortBy.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblBranchesSortBy
-            // 
-            this.lblBranchesSortBy.AutoSize = true;
-            this.lblBranchesSortBy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblBranchesSortBy.Location = new System.Drawing.Point(3, 115);
-            this.lblBranchesSortBy.Name = "lblBranchesSortBy";
-            this.lblBranchesSortBy.Size = new System.Drawing.Size(120, 27);
-            this.lblBranchesSortBy.TabIndex = 6;
-            this.lblBranchesSortBy.Text = "Sort branches by";
-            this.lblBranchesSortBy.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblBranchesOrder
-            // 
-            this.lblBranchesOrder.AutoSize = true;
-            this.lblBranchesOrder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblBranchesOrder.Location = new System.Drawing.Point(3, 142);
-            this.lblBranchesOrder.Name = "lblBranchesOrder";
-            this.lblBranchesOrder.Size = new System.Drawing.Size(120, 27);
-            this.lblBranchesOrder.TabIndex = 7;
-            this.lblBranchesOrder.Text = "Order branches";
-            this.lblBranchesOrder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _NO_TRANSLATE_cmbRevisionsSortBy
-            // 
-            this._NO_TRANSLATE_cmbRevisionsSortBy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._NO_TRANSLATE_cmbRevisionsSortBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._NO_TRANSLATE_cmbRevisionsSortBy.FormattingEnabled = true;
-            this._NO_TRANSLATE_cmbRevisionsSortBy.Items.AddRange(new object[] {
-            "Git Default",
-            "Author Date",
-            "Topo (Ancestor)"});
-            this._NO_TRANSLATE_cmbRevisionsSortBy.Location = new System.Drawing.Point(129, 118);
-            this._NO_TRANSLATE_cmbRevisionsSortBy.Name = "_NO_TRANSLATE_cmbRevisionsSortBy";
-            this._NO_TRANSLATE_cmbRevisionsSortBy.Size = new System.Drawing.Size(322, 21);
-            this._NO_TRANSLATE_cmbRevisionsSortBy.TabIndex = 3;
-            // 
-            // _NO_TRANSLATE_cmbBranchesSortBy
-            // 
-            this._NO_TRANSLATE_cmbBranchesSortBy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._NO_TRANSLATE_cmbBranchesSortBy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._NO_TRANSLATE_cmbBranchesSortBy.FormattingEnabled = true;
-            this._NO_TRANSLATE_cmbBranchesSortBy.Items.AddRange(new object[] {
-            "None",
-            "Compact",
-            "Trim start",
-            "Filename only"});
-            this._NO_TRANSLATE_cmbBranchesSortBy.Location = new System.Drawing.Point(129, 118);
-            this._NO_TRANSLATE_cmbBranchesSortBy.Name = "_NO_TRANSLATE_cmbBranchesSortBy";
-            this._NO_TRANSLATE_cmbBranchesSortBy.Size = new System.Drawing.Size(322, 21);
-            this._NO_TRANSLATE_cmbBranchesSortBy.TabIndex = 8;
-            // 
-            // _NO_TRANSLATE_cmbBranchesOrder
-            // 
-            this._NO_TRANSLATE_cmbBranchesOrder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._NO_TRANSLATE_cmbBranchesOrder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._NO_TRANSLATE_cmbBranchesOrder.FormattingEnabled = true;
-            this._NO_TRANSLATE_cmbBranchesOrder.Items.AddRange(new object[] {
-            "None",
-            "Compact",
-            "Trim start",
-            "Filename only"});
-            this._NO_TRANSLATE_cmbBranchesOrder.Location = new System.Drawing.Point(129, 145);
-            this._NO_TRANSLATE_cmbBranchesOrder.Name = "_NO_TRANSLATE_cmbBranchesOrder";
-            this._NO_TRANSLATE_cmbBranchesOrder.Size = new System.Drawing.Size(322, 21);
-            this._NO_TRANSLATE_cmbBranchesOrder.TabIndex = 9;
-            // 
             // AppearanceSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -654,7 +551,6 @@
             this.tlpnlAuthor.ResumeLayout(false);
             this.tlpnlAuthor.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_DaysToCacheImages)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.RevisionSortOrderHelp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureAvatarHelp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.avatarProviderHelp)).EndInit();
             this.ResumeLayout(false);
@@ -693,16 +589,9 @@
         private System.Windows.Forms.TableLayoutPanel tlpnlGeneral;
         private System.Windows.Forms.TableLayoutPanel tlpnlAuthor;
         private System.Windows.Forms.CheckBox ShowAuthorAvatarInCommitGraph;
-        private System.Windows.Forms.PictureBox RevisionSortOrderHelp;
         private System.Windows.Forms.PictureBox pictureAvatarHelp;
         private System.Windows.Forms.PictureBox avatarProviderHelp;
         private System.Windows.Forms.Label lblAvatarProvider;
         private System.Windows.Forms.ComboBox AvatarProvider;
-        private System.Windows.Forms.Label lblRevisionsSortBy;
-        private System.Windows.Forms.Label lblBranchesSortBy;
-        private System.Windows.Forms.Label lblBranchesOrder;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cmbRevisionsSortBy;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cmbBranchesSortBy;
-        private System.Windows.Forms.ComboBox _NO_TRANSLATE_cmbBranchesOrder;
     }
 }

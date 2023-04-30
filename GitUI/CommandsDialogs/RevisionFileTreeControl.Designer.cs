@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using GitUI.CommandsDialogs.Menus;
+
+namespace GitUI.CommandsDialogs
 {
     partial class RevisionFileTreeControl
     {
@@ -26,7 +28,7 @@
             this.resetToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorFileSystemActions = new System.Windows.Forms.ToolStripSeparator();
             this.openSubmoduleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyFilenameToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyPathsToolStripMenuItem = new CopyPathsToolStripMenuItem();
             this.fileTreeOpenContainingFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileTreeArchiveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileTreeCleanWorkingTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -109,7 +111,7 @@
             this.saveAsToolStripMenuItem,
             this.editCheckedOutFileToolStripMenuItem,
             this.toolStripSeparatorFileSystemActions,
-            this.copyFilenameToClipboardToolStripMenuItem,
+            this.copyPathsToolStripMenuItem,
             this.fileTreeOpenContainingFolderToolStripMenuItem,
             this.toolStripSeparatorFileNameActions,
             this.filterFileInGridToolStripMenuItem,
@@ -178,14 +180,9 @@
             this.openSubmoduleMenuItem.Text = TranslatedStrings.OpenWithGitExtensions;
             this.openSubmoduleMenuItem.Click += new System.EventHandler(this.openSubmoduleMenuItem_Click);
             // 
-            // copyFilenameToClipboardToolStripMenuItem
+            // copyPathsToolStripMenuItem
             // 
-            this.copyFilenameToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Images.CopyToClipboard;
-            this.copyFilenameToClipboardToolStripMenuItem.Name = "copyFilenameToClipboardToolStripMenuItem";
-            this.copyFilenameToClipboardToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyFilenameToClipboardToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
-            this.copyFilenameToClipboardToolStripMenuItem.Text = "Copy full path";
-            this.copyFilenameToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyFilenameToClipboardToolStripMenuItem_Click);
+            this.copyPathsToolStripMenuItem.Name = "copyPathsToolStripMenuItem";
             // 
             // fileTreeOpenContainingFolderToolStripMenuItem
             // 
@@ -374,7 +371,7 @@
         private System.Windows.Forms.ToolStripMenuItem resetToThisRevisionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFileSystemActions;
         private System.Windows.Forms.ToolStripMenuItem openSubmoduleMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyFilenameToClipboardToolStripMenuItem;
+        private CopyPathsToolStripMenuItem copyPathsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileTreeOpenContainingFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileTreeArchiveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileTreeCleanWorkingTreeToolStripMenuItem;

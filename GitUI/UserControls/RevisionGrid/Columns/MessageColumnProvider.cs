@@ -3,6 +3,7 @@ using System.Text;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.Theming;
 using GitUIPluginInterfaces;
@@ -423,7 +424,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             var commitTitle = lines[0];
 
             // Draw markers for fixup! and squash! commits
-            if (commitTitle.StartsWith("fixup!") || commitTitle.StartsWith("squash!"))
+            if (commitTitle.StartsWith(CommitKind.Fixup.GetPrefix()) || commitTitle.StartsWith(CommitKind.Squash.GetPrefix()) || commitTitle.StartsWith(CommitKind.Amend.GetPrefix()))
             {
                 DrawImage(e, _fixupAndSquashImage, messageBounds, ref offset);
             }

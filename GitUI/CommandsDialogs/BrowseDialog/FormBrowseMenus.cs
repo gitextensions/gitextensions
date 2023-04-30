@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            bool IsVisibleByDefault(string buttonKey) => !buttonKey.Contains(FilterToolBar.ReflogButtonName);
+            bool IsVisibleByDefault(string buttonKey) => !buttonKey.Contains(FormBrowse.FetchPullToolbarShortcutsPrefix);
             static void SaveVisibilitySetting(string key, bool visible, bool defaultValue = true)
                 => AppSettings.SetBool(toolbarSettingsPrefix + key, visible == defaultValue ? null : visible);
             static bool LoadVisibilitySetting(string key, bool defaultValue = true)

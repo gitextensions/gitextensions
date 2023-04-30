@@ -17,14 +17,18 @@ namespace GitUI
         /// </summary>
         /// <param name="fileViewer">Current FileViewer.</param>
         /// <param name="item">The FileStatusItem to present changes for.</param>
+        /// <param name="line">The line to display.</param>
         /// <param name="defaultText">default text if no diff is possible.</param>
         /// <param name="openWithDiffTool">The difftool command to open with.</param>
+        /// <param name="additionalCommandInfo">If the diff is range-diff, this contains the current path filter.</param>
         /// <returns>Task to view.</returns>
         public static async Task ViewChangesAsync(this FileViewer fileViewer,
             FileStatusItem? item,
             CancellationToken cancellationToken,
+            int? line = null,
             string defaultText = "",
-            Action? openWithDiffTool = null)
+            Action? openWithDiffTool = null,
+            string additionalCommandInfo = null)
         {
             if (item?.Item.IsStatusOnly ?? false)
             {
@@ -52,7 +56,7 @@ namespace GitUI
             if (item.Item.IsNew || firstId is null || (!item.Item.IsDeleted && FileHelper.IsImage(item.Item.Name)))
             {
                 // View blob guid from revision, or file for worktree
-                await fileViewer.ViewGitItemAsync(item, openWithDiffTool);
+                await fileViewer.ViewGitItemAsync(item, line, openWithDiffTool);
                 return;
             }
 
@@ -63,8 +67,7 @@ namespace GitUI
                 string range = item.BaseA is null || item.BaseB is null
                     ? $"{firstId}...{item.SecondRevision.ObjectId}"
                     : $"{item.BaseA}..{firstId} {item.BaseB}..{item.SecondRevision.ObjectId}";
-
-                await fileViewer.ViewTextAsync("git-range-diff.sh", $"git range-diff {range}");
+                await fileViewer.ViewTextAsync("git-range-diff.sh", $"git range-diff {range} -- {additionalCommandInfo}");
 
                 string output = await fileViewer.Module.GetRangeDiffAsync(
                         firstId,
@@ -72,6 +75,7 @@ namespace GitUI
                         item.BaseA,
                         item.BaseB,
                         fileViewer.GetExtraDiffArguments(isRangeDiff: true),
+                        additionalCommandInfo,
                         cancellationToken);
 
                 // Try set highlighting from first found filename
@@ -95,7 +99,7 @@ namespace GitUI
             }
             else
             {
-                await fileViewer.ViewPatchAsync(item, text: selectedPatch, openWithDifftool: openWithDiffTool);
+                await fileViewer.ViewPatchAsync(item, text: selectedPatch, line: line, openWithDifftool: openWithDiffTool);
             }
 
             return;

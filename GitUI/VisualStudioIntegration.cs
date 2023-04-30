@@ -1,15 +1,60 @@
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
 using EnvDTE;
+using GitCommands;
+using GitExtUtils;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI
 {
     internal static class VisualStudioIntegration
     {
-        public static bool TryOpenFile(string filePath)
+        static VisualStudioIntegration()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default;
 
+                string vswhere = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}\Microsoft Visual Studio\Installer\vswhere.exe";
+                if (!File.Exists(vswhere))
+                {
+                    return;
+                }
+
+                Executable executable = new(vswhere);
+                ArgumentBuilder arguments = new()
+                {
+                    "-latest",
+                    "-property productPath"
+                };
+                _devEnvPath = await executable.GetOutputAsync(arguments);
+            }).FileAndForget();
+        }
+
+        public static void Init()
+        {
+            // just create the static instance
+        }
+
+        public static void OpenFile(string filePath)
+        {
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default;
+                if (!await TryOpenFileInRunningInstanceAsync(filePath))
+                {
+                    if (_devEnvPath is not null)
+                    {
+                        using IProcess process = new Executable(_devEnvPath).Start(filePath);
+                    }
+                }
+            }).FileAndForget();
+        }
+
+        public static async Task<bool> TryOpenFileInRunningInstanceAsync(string filePath)
+        {
             if (!File.Exists(filePath))
             {
                 // When opening the context menu, we disable this item if the file does not exist.
@@ -17,11 +62,13 @@ namespace GitUI
                 return false;
             }
 
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             foreach (DTE dte in GetVisualStudioInstances())
             {
                 ProjectItem projectItem = dte.Solution.FindProjectItem(filePath);
 
-                if (projectItem != null)
+                if (projectItem is not null)
                 {
                     // Open the file
                     dte.ExecuteCommand("File.OpenFile", filePath);
@@ -36,10 +83,15 @@ namespace GitUI
             return false;
         }
 
-        public static bool IsVisualStudioRunning => GetVisualStudioInstances().Any();
+        public static bool IsVisualStudioInstalled => _devEnvPath is not null;
+
+        private static string? _devEnvPath;
 
         private static IEnumerable<DTE> GetVisualStudioInstances()
         {
+            // The DTE object must be retrieved from the main thread. Otherwise it denies to get DTE.MainWindow.HWnd sometimes.
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             int retVal = NativeMethods.GetRunningObjectTable(0, out IRunningObjectTable rot);
 
             if (retVal != 0)
@@ -51,17 +103,17 @@ namespace GitUI
 
             const int count = 1;
 
-            var moniker = new IMoniker[count];
+            IMoniker[] moniker = new IMoniker[count];
 
             while (enumMoniker.Next(count, moniker, pceltFetched: IntPtr.Zero) == 0)
             {
-                NativeMethods.CreateBindCtx(0, out IBindCtx bindCtx);
+                NativeMethods.CreateBindCtx(reserved: 0, out IBindCtx bindCtx);
 
                 string? displayName = null;
 
                 try
                 {
-                    moniker[0].GetDisplayName(bindCtx, null, out displayName);
+                    moniker[0].GetDisplayName(bindCtx, pmkToLeft: null, out displayName);
                 }
                 catch (UnauthorizedAccessException)
                 {

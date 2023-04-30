@@ -414,7 +414,7 @@ namespace GitUI.Editor
             this.internalFileViewer.Margin = new System.Windows.Forms.Padding(0);
             this.internalFileViewer.Name = "internalFileViewer";
             this.internalFileViewer.VScrollPosition = 0;
-            this.internalFileViewer.ShowEOLMarkers = false;
+            this.internalFileViewer.EolMarkerStyle = ICSharpCode.TextEditor.Document.EolMarkerStyle.None;
             this.internalFileViewer.ShowSpaces = false;
             this.internalFileViewer.ShowTabs = false;
             this.internalFileViewer.Size = new System.Drawing.Size(757, 518);

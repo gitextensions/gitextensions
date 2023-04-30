@@ -435,7 +435,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}",
-                _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, _currentPullRequestInfo.FetchBranch);
+                _currentPullRequestInfo.HeadRepo.CloneUrl, _currentPullRequestInfo.HeadRef, _currentPullRequestInfo.FetchBranch);
             var success = FormProcess.ShowDialog(this, arguments: cmd, Module.WorkingDir, input: null, useDialogSettings: true);
             if (!success)
             {
@@ -458,7 +458,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             try
             {
                 var remoteName = _currentPullRequestInfo.Owner;
-                var remoteUrl = _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl;
+                var remoteUrl = _currentPullRequestInfo.HeadRepo.CloneUrl;
                 var remoteRef = _currentPullRequestInfo.HeadRef;
 
                 var existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
@@ -466,9 +466,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 {
                     var hostedRepository = existingRepo.GetHostedRepository();
                     hostedRepository.CloneProtocol = _cloneGitProtocol;
-                    if (hostedRepository.CloneReadOnlyUrl != remoteUrl)
+                    if (hostedRepository.CloneUrl != remoteUrl)
                     {
-                        MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text, remoteName, hostedRepository.CloneReadOnlyUrl, remoteUrl),
+                        MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text, remoteName, hostedRepository.CloneUrl, remoteUrl),
                             TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }

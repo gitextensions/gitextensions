@@ -34,6 +34,7 @@
             this.monospaceFontChangeButton = new System.Windows.Forms.Button();
             this.commitFontChangeButton = new System.Windows.Forms.Button();
             this.diffFontChangeButton = new System.Windows.Forms.Button();
+            this.ShowEolMarkerAsGlyph = new System.Windows.Forms.CheckBox();
             this.applicationFontChangeButton = new System.Windows.Forms.Button();
             this.label36 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
@@ -58,7 +59,7 @@
             this.gbFonts.Size = new System.Drawing.Size(2132, 117);
             this.gbFonts.TabIndex = 2;
             this.gbFonts.TabStop = false;
-            this.gbFonts.Text = "Fonts";
+            this.gbFonts.Text = "Fonts (restart required)";
             // 
             // tableLayoutPanel1
             // 
@@ -69,13 +70,14 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.label56, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.monospaceFontChangeButton, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.commitFontChangeButton, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.diffFontChangeButton, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.applicationFontChangeButton, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label36, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label34, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.ShowEolMarkerAsGlyph, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.label26, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.applicationFontChangeButton, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label34, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.commitFontChangeButton, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.label36, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.monospaceFontChangeButton, 1, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(8, 22);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -122,6 +124,18 @@
             this.diffFontChangeButton.Text = "font name";
             this.diffFontChangeButton.UseVisualStyleBackColor = true;
             this.diffFontChangeButton.Click += new System.EventHandler(this.diffFontChangeButton_Click);
+            // 
+            // ShowEolMarkersAsGlyph
+            // 
+            this.ShowEolMarkerAsGlyph.AutoSize = true;
+            this.ShowEolMarkerAsGlyph.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ShowEolMarkerAsGlyph.Location = new System.Drawing.Point(181, 3);
+            this.ShowEolMarkerAsGlyph.Name = "ShowEolMarkerAsGlyph";
+            this.ShowEolMarkerAsGlyph.Padding = new System.Windows.Forms.Padding(8, 2, 0, 0);
+            this.ShowEolMarkerAsGlyph.Size = new System.Drawing.Size(1336, 25);
+            this.ShowEolMarkerAsGlyph.TabIndex = 5;
+            this.ShowEolMarkerAsGlyph.Text = "Show end-of-line markers as glyph instead of \"\\r\\n\" etc.";
+            this.ShowEolMarkerAsGlyph.UseVisualStyleBackColor = true;
             // 
             // applicationFontChangeButton
             // 
@@ -236,5 +250,6 @@
         private System.Windows.Forms.FontDialog monospaceFontDialog;
         private System.Windows.Forms.FontDialog commitFontDialog;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private CheckBox ShowEolMarkerAsGlyph;
     }
 }

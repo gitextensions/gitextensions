@@ -749,9 +749,9 @@ namespace GitUITests.UserControls
                 filterInfo.HasFilter.Should().BeFalse();
 
                 // showCurrentBranchOnly dominates byBranchFilter
-                filterInfo.IsShowAllBranchesChecked.Should().Be(!byBranchFilter && !showCurrentBranchOnly && !showReflog);
-                filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly && !showReflog);
-                filterInfo.IsShowFilteredBranchesChecked.Should().Be(byBranchFilter && !showCurrentBranchOnly && !showReflog);
+                filterInfo.IsShowAllBranchesChecked.Should().Be(!byBranchFilter && !showCurrentBranchOnly);
+                filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly);
+                filterInfo.IsShowFilteredBranchesChecked.Should().Be(byBranchFilter && !showCurrentBranchOnly);
 
                 filterInfo.ByBranchFilter.Should().Be(byBranchFilter);
                 AppSettings.BranchFilterEnabled.Should().Be(byBranchFilter);
@@ -904,7 +904,7 @@ namespace GitUITests.UserControls
             filterInfo.ByPathFilter.Should().BeFalse();
             filterInfo.ByBranchFilter.Should().BeFalse();
 
-            filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly && !showReflogReferences);
+            filterInfo.IsShowCurrentBranchOnlyChecked.Should().Be(showCurrentBranchOnly);
             filterInfo.ShowReflogReferences.Should().Be(showReflogReferences);
         }
 
@@ -941,7 +941,7 @@ namespace GitUITests.UserControls
             };
 
             filterInfo.GetSummary().Should().Be(expectedSummary);
-            filterInfo.GetRevisionFilter().ToString().Should().Be(expectedArgs);
+            filterInfo.GetRevisionFilter(new Lazy<string>(() => "currentBranch")).ToString().Should().Be(expectedArgs);
         }
 
         [TestCase(false, false, "branchFilter")]
@@ -962,7 +962,7 @@ namespace GitUITests.UserControls
                 BranchFilter = branchFilter
             };
 
-            string args = filterInfo.GetRevisionFilter();
+            string args = filterInfo.GetRevisionFilter(new Lazy<string>(() => "currentBranch"));
 
             if (showRefLog)
             {
@@ -999,7 +999,7 @@ namespace GitUITests.UserControls
                 BranchFilter = branchFilter
             };
 
-            string args = filterInfo.GetRevisionFilter();
+            string args = filterInfo.GetRevisionFilter(new Lazy<string>(() => "currentBranch"));
 
             if (expectBranches)
             {
@@ -1021,7 +1021,7 @@ namespace GitUITests.UserControls
                 CommitsLimit = maxCount,
                 ByCommitsLimit = true
             };
-            string args = filterInfo.GetRevisionFilter();
+            string args = filterInfo.GetRevisionFilter(new Lazy<string>(() => "currentBranch"));
 
             if (expected)
             {
@@ -1042,7 +1042,7 @@ namespace GitUITests.UserControls
                 ShowOnlyFirstParent = expected
             };
 
-            string args = filterInfo.GetRevisionFilter();
+            string args = filterInfo.GetRevisionFilter(new Lazy<string>(() => "currentBranch"));
 
             if (expected)
             {
@@ -1063,7 +1063,7 @@ namespace GitUITests.UserControls
                 ShowMergeCommits = expected
             };
 
-            string args = filterInfo.GetRevisionFilter();
+            string args = filterInfo.GetRevisionFilter(new Lazy<string>(() => "currentBranch"));
 
             if (!expected)
             {
@@ -1089,7 +1089,10 @@ namespace GitUITests.UserControls
                             {
                                 foreach (string branchFilter in new[] { "branch1", "", null })
                                 {
-                                    yield return new TestCaseData(showNotes, showStash, showReflog, showCurrentBranchOnly, branchFilter);
+                                    foreach (string currentBranch in new[] { "currentBranch", "" })
+                                    {
+                                        yield return new TestCaseData(showNotes, showStash, showReflog, showCurrentBranchOnly, branchFilter, currentBranch);
+                                    }
                                 }
                             }
                         }
@@ -1099,7 +1102,7 @@ namespace GitUITests.UserControls
         }
 
         [TestCaseSource(nameof(FilterInfo_NotesStash))]
-        public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showReflog, bool showCurrentBranchOnly, string branchFilter)
+        public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showReflog, bool showCurrentBranchOnly, string branchFilter, string currentBranch)
         {
             bool originalShowGitNotes = AppSettings.ShowGitNotes;
             AppSettings.ShowGitNotes = showGitNotes;
@@ -1112,10 +1115,11 @@ namespace GitUITests.UserControls
                 ByBranchFilter = true,
                 BranchFilter = branchFilter
             };
-            string args = filterInfo.GetRevisionFilter();
-            bool showAll = !showReflog && !showCurrentBranchOnly && string.IsNullOrWhiteSpace(branchFilter);
-            bool showCurrent = !showReflog && showCurrentBranchOnly;
-            bool showFiltredOrCurrent = !showReflog && (showCurrentBranchOnly || !string.IsNullOrWhiteSpace(branchFilter));
+            string args = filterInfo.GetRevisionFilter(new Lazy<string>(() => currentBranch));
+            bool showAll = (!showCurrentBranchOnly && string.IsNullOrWhiteSpace(branchFilter))
+                || (showCurrentBranchOnly && string.IsNullOrWhiteSpace(currentBranch));
+            bool showCurrent = showCurrentBranchOnly && !string.IsNullOrWhiteSpace(currentBranch);
+            bool showFiltredOrCurrent = showCurrent || (!showCurrentBranchOnly && !string.IsNullOrWhiteSpace(branchFilter));
 
             try
             {
@@ -1137,16 +1141,17 @@ namespace GitUITests.UserControls
                     args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/stash($|\s)");
                 }
 
-                if (showCurrent && showStash)
+                string branch = Regex.Escape($"--branches={GetFilterRefName(currentBranch)}");
+                if (showCurrent)
                 {
-                    args.ToString().Should().MatchRegex(@"(^|\s)HEAD($|\s)");
+                    args.ToString().Should().MatchRegex(@$"(^|\s){branch}($|\s)");
                 }
-                else
+                else if (!string.IsNullOrWhiteSpace(branch))
                 {
-                    args.ToString().Should().NotMatchRegex(@"(^|\s)HEAD($|\s)");
+                    args.ToString().Should().NotMatchRegex(@$"(^|\s){branch}($|\s)");
                 }
 
-                string stash = Regex.Escape("--glob=refs/stas[h]");
+                string stash = Regex.Escape($"--glob={"refs/stas[h]"}");
                 if (showFiltredOrCurrent && showStash)
                 {
                     args.ToString().Should().MatchRegex(@$"(^|\s){stash}($|\s)");
@@ -1160,6 +1165,19 @@ namespace GitUITests.UserControls
             {
                 AppSettings.ShowGitNotes = originalShowGitNotes;
                 AppSettings.ShowStashes = originalShowStash;
+            }
+
+            return;
+
+            // return a refname that matches the name but that is not expanded with a a "/*"
+            string GetFilterRefName(string gitRef)
+            {
+                if (string.IsNullOrWhiteSpace(gitRef))
+                {
+                    return "";
+                }
+
+                return $"{gitRef.Substring(0, gitRef.Length - 1)}[{gitRef[^1]}]";
             }
         }
 
@@ -1179,7 +1197,7 @@ namespace GitUITests.UserControls
                 Message = message,
                 ByMessage = true
             };
-            string args = filterInfo.GetRevisionFilter();
+            string args = filterInfo.GetRevisionFilter(new Lazy<string>(() => "currentBranch"));
             string summary = filterInfo.GetSummary();
 
             if (expectGrep)

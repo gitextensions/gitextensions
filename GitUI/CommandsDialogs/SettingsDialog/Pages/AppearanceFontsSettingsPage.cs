@@ -24,6 +24,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SetCurrentCommitFont(AppSettings.CommitFont);
             SetCurrentMonospaceFont(AppSettings.MonospaceFont);
 
+            ShowEolMarkerAsGlyph.Checked = AppSettings.ShowEolMarkerAsGlyph;
+
             base.SettingsToPage();
         }
 
@@ -38,6 +40,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.Font = _applicationFont;
             AppSettings.CommitFont = _commitFont;
             AppSettings.MonospaceFont = _monospaceFont;
+
+            AppSettings.ShowEolMarkerAsGlyph = ShowEolMarkerAsGlyph.Checked;
 
             base.PageToSettings();
         }

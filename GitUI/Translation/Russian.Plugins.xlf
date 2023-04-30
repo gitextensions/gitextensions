@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
+<?xml version="1.0" ?><xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" GitExVersion="" version="1.0">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="ru">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
@@ -10,7 +10,7 @@
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Auto compile SubModules</source>
         <target>Автоматическая сборка субмодулей</target>
         
@@ -48,7 +48,7 @@
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Periodic background fetch</source>
         <target>Периодически забирать в фоне</target>
         
@@ -97,7 +97,7 @@
         <target>Bitbucket имя пользователя</target>
         
       </trans-unit>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Bitbucket Server</source>
         <target>Сервер Bitbucket</target>
         
@@ -296,7 +296,7 @@
   </file>
   <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Create local tracking branches</source>
         <target>Создать локальные отслеживающие ветки</target>
         
@@ -416,7 +416,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Включить неслитые ветки</target>
+        <target>Включить не слитые ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -458,7 +458,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Delete obsolete branches</source>
         <target>Удалить устаревшие ветки</target>
         
@@ -544,7 +544,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>Кол-во комитов</target>
+        <target>Количество коммитов</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
@@ -581,7 +581,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Find large files</source>
         <target>Найти большие файлы</target>
         
@@ -589,6 +589,241 @@ Are you sure you want to continue?</source>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
         <target>Найти большие файлы больше чем (Мб)</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritChangeSubmitted" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Change Submitted</source>
+        <target>Изменения отправлены</target>
+        
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target>Закрыть</target>
+        
+      </trans-unit>
+      <trans-unit id="labelSubmitted.Text">
+        <source>Your change has been submitted for review at the following location:</source>
+        <target>Ваши изменения были отправлены на рецензирование по следующему адресу:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritDownload" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Download Gerrit Change</source>
+        <target>Загрузить изменения из Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="AddRemote.Text">
+        <source>Manage remotes</source>
+        <target>Репозитории</target>
+        
+      </trans-unit>
+      <trans-unit id="Download.Text">
+        <source>&amp;Download</source>
+        <target>&amp;Загрузить</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotGetChangeDetails.Text">
+        <source>Could not retrieve the change details</source>
+        <target>Не удалось получить подробности об изменении</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadCaption.Text">
+        <source>Download change {0}</source>
+        <target>Скачать изменения {0}</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadGerritChangeCaption.Text">
+        <source>Download Gerrit Change</source>
+        <target>Загрузить изменения из Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectChange.Text">
+        <source>Please enter a change</source>
+        <target>Пожалуйста, введите изменения</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectRemote.Text">
+        <source>Please select a remote repository</source>
+        <target>Пожалуйста, выберите внешний репозиторий</target>
+        
+      </trans-unit>
+      <trans-unit id="labelChange.Text">
+        <source>Change:</source>
+        <target>Измения:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelEnterChangeIdOrNumber.Text">
+        <source>Enter the Change-Id or the number from the Gerrit URL</source>
+        <target>Введите Change-Id или число из Gerrit URL</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRemote.Text">
+        <source>Remote:</source>
+        <target>Внешний репозиторий:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelTopicBranch.Text">
+        <source>Topic branch:</source>
+        <target>Ветка-тема:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGerritPublish" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Publish Gerrit Change</source>
+        <target>Опубликовать изменения в Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="AddRemote.Text">
+        <source>Manage remotes</source>
+        <target>Репозитории</target>
+        
+      </trans-unit>
+      <trans-unit id="Publish.Text">
+        <source>&amp;Publish</source>
+        <target>&amp;Опубликовать</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishCaption.Text">
+        <source>Publish change</source>
+        <target>Опубликовать изменения</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishGerritChangeCaption.Text">
+        <source>Publish Gerrit Change</source>
+        <target>Опубликовать изменения в Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectBranch.Text">
+        <source>Please enter a branch</source>
+        <target>Пожалуйста, введите ветку</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectRemote.Text">
+        <source>Please select a remote repository</source>
+        <target>Пожалуйста, выберите внешний репозиторий</target>
+        
+      </trans-unit>
+      <trans-unit id="labelBranch.Text">
+        <source>Branch:</source>
+        <target>Ветка:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelCc.Text">
+        <source>CC:</source>
+        <target>Копия:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelHashtag.Text">
+        <source>Hashtag:</source>
+        <target>Хештег:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelPublishType.Text">
+        <source>Publish Type:</source>
+        <target>Тип публикации:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRemote.Text">
+        <source>Remote:</source>
+        <target>Внешний репозиторий:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelReviewers.Text">
+        <source>Reviewer(s):</source>
+        <target>Рецензент(ы):</target>
+        
+      </trans-unit>
+      <trans-unit id="labelTopic.Text">
+        <source>Topic:</source>
+        <target>Тема:</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGitReview" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Edit .gitreview</source>
+        <target>Редактировать .gitreview</target>
+        
+      </trans-unit>
+      <trans-unit id="Save.Text">
+        <source>Save</source>
+        <target>Сохранить</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotAccessGitreview.Text">
+        <source>Failed to save .gitreview.
+Check if file is accessible.</source>
+        <target>Не удалось сохранить .gitreview.
+Проверьте, что файл доступен.</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotAccessGitreviewCaption.Text">
+        <source>Failed to save .gitreview</source>
+        <target>Не удалось сохранить .gitreview</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitreviewOnlyInWorkingDirSupported.Text">
+        <source>.gitreview is only supported when there is a working directory.</source>
+        <target>.gitreview поддерживается только в рабочем каталоге.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitreviewOnlyInWorkingDirSupportedCaption.Text">
+        <source>No working directory</source>
+        <target>Нет рабочего каталога</target>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileQuestion.Text">
+        <source>Save changes to .gitreview?</source>
+        <target>Сохранить изменения в .gitreview?</target>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileQuestionCaption.Text">
+        <source>Save changes?</source>
+        <target>Сохранить изменения?</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Provide the configuration for
+.gitreview to setup Gerrit.
+
+Example configuration:
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</source>
+        <target>Предоставьте конфигурацию для
+.gitreview чтобы настроить Gerrit.
+
+Пример конфигурации:
+
+[gerrit]
+host=review.example.com
+port=29418
+project=department/project.git
+defaultbranch=master
+defaultremote=review
+defaultrebase=0</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkGitReviewHelp.Text">
+        <source>GitHub page for git-review</source>
+        <target>Страница GitHub для git-review</target>
         
       </trans-unit>
     </body>
@@ -746,6 +981,141 @@ Are you sure you want to continue?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormPluginInformation" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Gerrit Plugin</source>
+        <target>Gerrit Плагин</target>
+        
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target>Закрыть</target>
+        
+      </trans-unit>
+      <trans-unit id="informationLabel.Text">
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
+
+To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
+        <target>Gerrit плагин для Git Extensions обеспечивает интеграцию с Gerrit для Git Extensions. Этот плагин был основан на утилите git-review.
+
+Чтобы включить поддержку Gerrit для репозитория, файл .gitreview должен быть создан. Это можно сделать через меню Репозиторий | Редактировать .gitreview. Смотрите ссылку ниже для получения дополнительной информации о файле .gitreview файла и утилите git-review.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritCapabilities" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="_publishTypeDraft.Text">
+        <source>Draft</source>
+        <target>Черновик</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypePrivate.Text">
+        <source>Private</source>
+        <target>Частный</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeReview.Text">
+        <source>For Review</source>
+        <target>Для рассмотрения</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishTypeWip.Text">
+        <source>Work-in-Progress</source>
+        <target>Незаконченная работа</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritPlugin" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="Name.Text">
+        <source>Gerrit Code Review</source>
+        <target>Рецензирование кода в Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadGerritChange.Text">
+        <source>Download Gerrit Change</source>
+        <target>Загрузить изменения из Gerrit</target>
+        
+      </trans-unit>
+      <trans-unit id="_editGitReview.Text">
+        <source>Edit .gitreview</source>
+        <target>Редактировать .gitreview</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHook.Text">
+        <source>Install Hook</source>
+        <target>Установить Хук</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
+        <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
+        <target>Не удалось скачать файл commit-msg. Пожалуйста, установите хук commit-msg вручную.</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
+        <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
+        <target>Не удалось создать папку &quot;hooks&quot;. Создайте её вручную и попробуйте снова.</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookMessage.Text">
+        <source>Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?</source>
+        <target>Gerrit требует, чтобы хук commit-msg был установлен. Хотите установить commit-msg хук в вашем репозитории?</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookShortText.Text">
+        <source>Install commit-msg hook</source>
+        <target>Установить commit-msg хук</target>
+        
+      </trans-unit>
+      <trans-unit id="_predefinedGerritVersion.Caption">
+        <source>Treat Gerrit as having version</source>
+        <target>Рассматривать Gerrit, как имеющий версию</target>
+        
+      </trans-unit>
+      <trans-unit id="_publishGerritChange.Text">
+        <source>Publish Gerrit Change</source>
+        <target>Опубликовать изменения в Gerrit</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GerritSettings" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="_settingsError.Text">
+        <source>Error loading .gitreview file.</source>
+        <target>Ошибка при загрузке .gitreview файла.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorDefaultRemoteNotPresent.Text">
+        <source>The remote &quot;{0}&quot; specified with the &quot;defaultremote&quot; setting in the .gitreview file does not refer to a configured remote. Either create this remote or change the setting in the .gitreview file.</source>
+        <target>Внешний репозиторий &quot;{0}&quot; указанный с &quot;defaultremote&quot; в настройках файла .gitreview не относится к настроенными внешним репозиториям. Либо создайте это внешнее репозиторий или измените настройки в файле .gitreview.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorFileNotFound.Text">
+        <source>Cannot find the &quot;.gitreview&quot; file in the working directory.</source>
+        <target>Не удается найти &quot;.gitreview&quot; файл в рабочем каталоге.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorHostNotEntered.Text">
+        <source>The &quot;host&quot; setting in the .gitreview file is mandatory.</source>
+        <target>&quot;host&quot; настройка в файле .gitreview является обязательной.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorPortNotNumeric.Text">
+        <source>The &quot;port&quot; specified in the .gitreview file may only contain digits.</source>
+        <target>&quot;port&quot; указанный в файле .gitreview может содержать только цифры.</target>
+        
+      </trans-unit>
+      <trans-unit id="_settingsErrorProjectNotEntered.Text">
+        <source>The &quot;project&quot; setting in the .gitreview file is mandatory.</source>
+        <target>&quot;host&quot; настройка в файле .gitreview является обязательной.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
@@ -805,12 +1175,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
-        <target>Отправить после завершения</target>
+        <target>Отправить после окончания</target>
         
       </trans-unit>
       <trans-unit id="cbSquash.Text">
         <source>Squash</source>
-        <target>Squash</target>
+        <target>Объединить</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
@@ -820,7 +1190,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
-        <target>Начать ветку:</target>
+        <target>Начальная ветка:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -853,7 +1223,7 @@ Are you sure you want to continue?</source>
         <target>ref/...</target>
         
       </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
+      <trans-unit id="lblPrefixDescription.Text">
         <source>[prefix]/</source>
         <target>[префикс]/</target>
         
@@ -865,14 +1235,14 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
-        <target>Результат выполнения команды git flow</target>
+        <target>Результат запуска команды git flow</target>
         
       </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitFlow</source>
         <target>GitFlow</target>
         
@@ -881,7 +1251,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>GitHub</source>
         <target>GitHub</target>
         
@@ -891,29 +1261,14 @@ Are you sure you want to continue?</source>
         <target>Имя хоста GitHub (Enterprise)</target>
         
       </trans-unit>
-      <trans-unit id="PersonalAccessToken.Caption">
-        <source>Personal Access Token</source>
-        <target>Персональный токен доступа</target>
-        
-      </trans-unit>
-      <trans-unit id="_generateToken.Text">
-        <source>Generate a GitHub personal access token</source>
-        <target>Создание личного токена доступа GitHub</target>
-        
-      </trans-unit>
-      <trans-unit id="_manageToken.Text">
-        <source>Manage GitHub personal access token</source>
-        <target>Управление личным токеном доступа GitHub</target>
-        
-      </trans-unit>
-      <trans-unit id="_openLinkFailed.Text">
-        <source>Fail to open the link. Reason: </source>
-        <target>Не удалось открыть ссылку. Причина:</target>
+      <trans-unit id="OAuthToken.Caption">
+        <source>OAuth Token</source>
+        <target>OAuth токен</target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
-        <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>У вас уже есть личный токен доступа. Чтобы получить новый, удалите старый в Плагины &gt; Настройки.</target>
+        <source>You already have an OAuth token. To get a new one, delete your old one in Plugins &gt; Settings first.</source>
+        <target>У вас уже есть токен OAuth. Чтобы получить новый, удалите старый в Плагинах &gt; Настройках.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -925,7 +1280,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Impact Graph</source>
         <target>Граф воздействия</target>
         
@@ -934,7 +1289,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Statistics</source>
         <target>Статистика</target>
         
@@ -958,7 +1313,7 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Gource</source>
         <target>Gource</target>
         
@@ -971,8 +1326,8 @@ Are you sure you want to continue?</source>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Не могу найти Gource.
-Пожалуйста загрузите Gource и установите путь в окне настроек плагинов.</target>
+        <target>Не удаётся найти Gource.
+Пожалуйста, загрузите Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1002,7 +1357,7 @@ Do you want to automatically download Gource?</source>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Скачивание не удалось.
-Пожалуйста скачайте Gource и установите путь в окне настроек плагинов.</target>
+Пожалуйста, скачайте Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1075,7 +1430,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>Проект Gource</target>
+        <target>Gource проект</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
@@ -1106,7 +1461,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Jira Commit Hint</source>
         <target>Подсказка коммита Jira</target>
         
@@ -1123,12 +1478,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
         <source>Invalid Jira url</source>
-        <target>Неправильный адрес Jira</target>
+        <target>Неверная ссылка Jira</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
         <source>A valid url is required to launch the Jira query helper</source>
-        <target>Корректный адрес требуется для запуска помощника по запросам Jira</target>
+        <target>Требуется действительная ссылка для запуска помощника запросов Jira</target>
         
       </trans-unit>
       <trans-unit id="JiraFieldsLabel.Text">
@@ -1143,12 +1498,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="QueryHelperLinkText.Text">
         <source>Open the query helper inside Jira</source>
-        <target>Открыть помощник запросов Jira</target>
+        <target>Открыть помощник запросов с помощью Jira</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
-        <target>Невозможно открыть помощник запросов Jira</target>
+        <target>Не удалось открыть помощник запросов Jira</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
@@ -1158,12 +1513,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
-        <target>Плагин Jira hint включен</target>
+        <target>Плагин подсказок Jira включён</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
-        <target>JQL запрос</target>
+        <target>JQL Query</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
@@ -1173,7 +1528,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
-        <target>Jira URL</target>
+        <target>Ссылка на Jira</target>
         
       </trans-unit>
     </body>
@@ -1215,7 +1570,7 @@ Do you want to reset the configured path?</source>
         <target>Прокси не настроен. Пожалуйста, установите сервер прокси в настройках плагина.</target>
         
       </trans-unit>
-      <trans-unit id="_pluginDescription.Text">
+      <trans-unit id="_pluginName.Text">
         <source>Proxy Switcher</source>
         <target>Переключение прокси</target>
         
@@ -1224,7 +1579,7 @@ Do you want to reset the configured path?</source>
   </file>
   <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Proxy Switcher</source>
         <target>Переключение прокси</target>
         
@@ -1380,7 +1735,7 @@ branch names, tag names)</source>
   </file>
   <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="Description.Text">
+      <trans-unit id="Name.Text">
         <source>Release Notes Generator</source>
         <target>Генератор примечаний к выпуску</target>
         
@@ -1474,10 +1829,10 @@ l.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>Буфер не содержит валидного адреса сборки.
+        <target>Буфер обмена не содержит допустимого адреса сборки.
 
-Пожалуйста скопируйте адрес сборки перед очередной попыткой.
-(Должен содержать &quot;buildTypeId&quot; параметр)</target>
+Пожалуйста, скопируйте адрес сборки перед очередной попыткой.
+(Как минимум должен содержаться параметр &quot;buildTypeId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1489,7 +1844,7 @@ Please copy in the clipboard the url of the build before retrying.
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
         <target>Неудачная загрузка проектов и списка сборки.
-Пожалуйста проверьте url сервера.</target>
+Пожалуйста, проверьте адрес сервера.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
@@ -1500,6 +1855,15 @@ Please verify the server url.</source>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
         <target>Извлечь данные из адреса сборки скопированного в буфер.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>Регулярное выражение &quot;Build definition name&quot; недопустимо и не будет сохранено!</target>
         
       </trans-unit>
     </body>

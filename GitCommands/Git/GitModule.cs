@@ -67,7 +67,7 @@ namespace GitCommands
 
         public GitModule(string? workingDir)
         {
-            WorkingDir = (workingDir ?? "").NormalizePath().EnsureTrailingPathSeparator();
+            WorkingDir = (workingDir ?? "").NormalizePath().NormalizeWslPath().EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
@@ -78,7 +78,7 @@ namespace GitCommands
             _wslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(WorkingDir) : "";
             if (!string.IsNullOrEmpty(_wslDistro))
             {
-                _gitExecutable = new Executable(() => AppSettings.WslGitCommand, WorkingDir, $"-d {_wslDistro} git ");
+                _gitExecutable = new Executable(() => AppSettings.WslGitCommand, WorkingDir, $"-d {_wslDistro} {AppSettings.WslGitPath} ");
                 _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
             }
             else
@@ -2318,6 +2318,12 @@ namespace GitCommands
             return EffectiveConfigFile.GetValue(setting);
         }
 
+        public string GetEffectiveGitSetting(string setting, bool cache = true)
+        {
+            GitArgumentBuilder args = new("config") { "--includes", "--get", setting };
+            return GitExecutable.GetOutput(args, cache: cache ? GitCommandCache : null).Trim();
+        }
+
         public void UnsetSetting(string setting)
         {
             SetSetting(setting, null);
@@ -2408,6 +2414,7 @@ namespace GitCommands
             ObjectId? firstBase,
             ObjectId? secondBase,
             string extraDiffArguments,
+            string? pathFilter,
             CancellationToken cancellationToken)
         {
             // range-diff is not possible for artificial commits, use HEAD
@@ -2426,7 +2433,9 @@ namespace GitCommands
                 "--find-copies",
                 { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
                 extraDiffArguments,
-                { firstBase is null || secondBase is null,  $"{first}...{second}", $"{firstBase}..{first} {secondBase}..{second}" }
+                { firstBase is null || secondBase is null,  $"{first}...{second}", $"{firstBase}..{first} {secondBase}..{second}" },
+                { GitVersion.SupportRangeDiffPath && !string.IsNullOrWhiteSpace(pathFilter), "--" },
+                { GitVersion.SupportRangeDiffPath && !string.IsNullOrWhiteSpace(pathFilter), pathFilter }
             };
 
             ExecutionResult result = await _gitExecutable.ExecuteAsync(
@@ -3138,12 +3147,18 @@ namespace GitCommands
                 return Array.Empty<string>();
             }
 
-            var result = exec.StandardOutput.Split(new[] { '\r', '\n', '*', '+' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] result = exec.StandardOutput.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Remove symlink targets as in "origin/HEAD -> origin/master"
-            for (var i = 0; i < result.Length; i++)
+            for (int i = 0; i < result.Length; i++)
             {
-                var item = result[i].Trim();
+                string item = result[i];
+
+                // remove prepended branch state "* ", "+ ", "  "
+                if (item.Length >= 2 && item[1] == ' ' && item[0] is (' ' or '*' or '+'))
+                {
+                    item = item[2..];
+                }
 
                 if (getRemote)
                 {
@@ -3369,7 +3384,10 @@ namespace GitCommands
             // is a blank line, and third is an introductory paragraph about the project.
 
             Dictionary<ObjectId, GitBlameCommit> commitByObjectId = new();
-            List<GitBlameLine> lines = new(capacity: 256);
+
+            // Pre-allocate the list with a capacity estimated from the approximate git blame length to describe a file line
+            const int GitBlameLengthPerLineHeuristicValue = 120;
+            List<GitBlameLine> lines = new(capacity: Math.Min(Math.Max(256, output.Length / GitBlameLengthPerLineHeuristicValue), 5000));
 
             bool hasCommitHeader;
             ObjectId? objectId;
@@ -3408,7 +3426,7 @@ namespace GitCommands
                     {
                         // TODO quite a few nullable suppressions here (via ! character) which should be addressed as they hint at a design flaw
 
-                        if (!commitByObjectId.ContainsKey(objectId!))
+                        if (!commitByObjectId.TryGetValue(objectId!, out GitBlameCommit? commitData))
                         {
                             commit = new GitBlameCommit(
                                 objectId!,
@@ -3426,7 +3444,6 @@ namespace GitCommands
                         }
                         else
                         {
-                            var commitData = commitByObjectId[objectId!];
                             if (filename == commitData.FileName)
                             {
                                 commit = commitData;

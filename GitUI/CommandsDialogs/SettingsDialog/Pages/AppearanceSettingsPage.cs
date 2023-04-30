@@ -2,7 +2,6 @@
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
-using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -17,7 +16,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _noDictFile = new("None");
         private readonly TranslationString _noDictFilesFound = new("No dictionary files found in: {0}");
         private readonly TranslationString _noImageServiceTooltip = new($"A default image, if the provider has no image for the email address.\r\n\r\nClick this info icon for more details.");
-        private readonly TranslationString _revisionSortWarningTooltip = new("Sorting revisions may delay rendering of the revision graph.");
         private readonly TranslationString _avatarProviderTooltip = new($"The avatar provider defines the source for user-defined avatar images.\r\nThe \"Default\" provider uses GitHub and Gravatar,\r\nthe \"Custom\" provider allows you to set custom provider URLs and\r\n\"None\" disables user-defined avatars.\r\n\r\nClick this info icon for more details.");
 
         public AppearanceSettingsPage()
@@ -26,9 +24,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Text = "Appearance";
             InitializeComplete();
 
-            FillComboBoxWithEnumValues<RevisionSortOrder>(_NO_TRANSLATE_cmbRevisionsSortBy);
-            FillComboBoxWithEnumValues<GitRefsSortOrder>(_NO_TRANSLATE_cmbBranchesOrder);
-            FillComboBoxWithEnumValues<GitRefsSortBy>(_NO_TRANSLATE_cmbBranchesSortBy);
             FillComboBoxWithEnumValues<AvatarProvider>(AvatarProvider);
             FillComboBoxWithEnumValues<AvatarFallbackType>(_NO_TRANSLATE_NoImageService);
         }
@@ -47,24 +42,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.OnRuntimeLoad();
 
             ToolTip.SetToolTip(_NO_TRANSLATE_NoImageService, _noImageServiceTooltip.Text);
-            ToolTip.SetToolTip(RevisionSortOrderHelp, _revisionSortWarningTooltip.Text);
             ToolTip.SetToolTip(pictureAvatarHelp, _noImageServiceTooltip.Text);
             ToolTip.SetToolTip(avatarProviderHelp, _avatarProviderTooltip.Text);
-            RevisionSortOrderHelp.Size = DpiUtil.Scale(RevisionSortOrderHelp.Size);
             pictureAvatarHelp.Size = DpiUtil.Scale(pictureAvatarHelp.Size);
             avatarProviderHelp.Size = DpiUtil.Scale(avatarProviderHelp.Size);
 
             // align 1st columns across all tables
-            tlpnlGeneral.AdjustWidthToSize(0, lblBranchesSortBy, lblBranchesOrder, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
-            tlpnlAuthor.AdjustWidthToSize(0, lblBranchesSortBy, lblBranchesOrder, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
-            tlpnlLanguage.AdjustWidthToSize(0, lblBranchesSortBy, lblBranchesOrder, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlAuthor.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
 
             // align 2nd columns across all tables
             truncatePathMethod.AdjustWidthToFitContent();
             Language.AdjustWidthToFitContent();
-            tlpnlGeneral.AdjustWidthToSize(1, _NO_TRANSLATE_cmbBranchesSortBy, _NO_TRANSLATE_cmbBranchesOrder, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
-            tlpnlAuthor.AdjustWidthToSize(1, _NO_TRANSLATE_cmbBranchesSortBy, _NO_TRANSLATE_cmbBranchesOrder, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
-            tlpnlLanguage.AdjustWidthToSize(1, _NO_TRANSLATE_cmbBranchesSortBy, _NO_TRANSLATE_cmbBranchesOrder, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlAuthor.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlLanguage.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
         }
 
         public static SettingsPageReference GetPageReference()
@@ -81,7 +74,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
             ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
-            _NO_TRANSLATE_cmbRevisionsSortBy.SelectedIndex = (int)AppSettings.RevisionSortOrder;
             AvatarProvider.SelectedValue = AppSettings.AvatarProvider;
             _NO_TRANSLATE_NoImageService.SelectedValue = AppSettings.AvatarFallbackType;
             txtCustomAvatarTemplate.Text = AppSettings.CustomAvatarTemplate;
@@ -93,8 +85,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Language.Text = AppSettings.Translation;
 
             truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
-            _NO_TRANSLATE_cmbBranchesOrder.SelectedIndex = (int)AppSettings.RefsSortOrder;
-            _NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex = (int)AppSettings.RefsSortBy;
 
             Dictionary.Items.Clear();
             Dictionary.Items.Add(_noDictFile.Text);
@@ -148,9 +138,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
             AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
             AppSettings.CustomAvatarTemplate = txtCustomAvatarTemplate.Text;
-            AppSettings.RevisionSortOrder = (RevisionSortOrder)_NO_TRANSLATE_cmbRevisionsSortBy.SelectedIndex;
-            AppSettings.RefsSortOrder = (GitRefsSortOrder)_NO_TRANSLATE_cmbBranchesOrder.SelectedIndex;
-            AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
 
             AppSettings.Translation = Language.Text;
             ResourceManager.TranslatedStrings.Reinitialize();

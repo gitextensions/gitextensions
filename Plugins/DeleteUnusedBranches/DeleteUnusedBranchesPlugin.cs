@@ -55,7 +55,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             using DeleteUnusedBranchesForm frm = new(settings, args.GitModule, args.GitUICommands, this);
             frm.ShowDialog(args.OwnerForm);
 
-            return true;
+            return frm.HasDeletedBranch;
         }
     }
 }
