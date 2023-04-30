@@ -477,7 +477,7 @@ namespace GitUI.CommandsDialogs
                 // a special meaning, and can be dangerous if used inappropriately.
                 if (CommitKind is (CommitKind.Normal or CommitKind.Amend))
                 {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
                         await _commitMessageManager.SetMergeOrCommitMessageAsync(Message.Text);
                         await _commitMessageManager.SetAmendStateAsync(Amend.Checked);
