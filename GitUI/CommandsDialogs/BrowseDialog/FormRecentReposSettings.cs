@@ -8,7 +8,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormRecentReposSettings : GitExtensionsForm
     {
+        private const int MinComboWidthAllowed = 30;
         private IList<Repository>? _repositoryHistory;
+        private decimal _previousValue;
 
         public FormRecentReposSettings()
             : base(true)
@@ -34,6 +36,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
             SetNumericUpDownValue(_NO_TRANSLATE_maxRecentRepositories, AppSettings.MaxPinnedRepositories);
             SetNumericUpDownValue(_NO_TRANSLATE_RecentRepositoriesHistorySize, AppSettings.RecentRepositoriesHistorySize);
+
+            _previousValue = comboMinWidthEdit.Value;
+
+            return;
 
             void SetNumericUpDownValue(NumericUpDown control, int value)
             {
@@ -173,7 +179,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             else
             {
-                int width = Math.Max(30, (int)comboMinWidthEdit.Value);
+                int width = Math.Max(MinComboWidthAllowed, (int)comboMinWidthEdit.Value);
                 PinnedLB.Columns[0].Width = width;
                 AllRecentLB.Columns[0].Width = width;
             }
@@ -186,6 +192,27 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void comboMinWidthEdit_ValueChanged(object sender, EventArgs e)
         {
+            if (comboMinWidthEdit.Value == _previousValue)
+            {
+                return;
+            }
+
+            if (comboMinWidthEdit.Value < _previousValue)
+            {
+                if (comboMinWidthEdit.Value < MinComboWidthAllowed)
+                {
+                    comboMinWidthEdit.Value = 0;
+                }
+            }
+            else
+            {
+                if (comboMinWidthEdit.Value < MinComboWidthAllowed)
+                {
+                    comboMinWidthEdit.Value = MinComboWidthAllowed;
+                }
+            }
+
+            _previousValue = comboMinWidthEdit.Value;
             SetComboWidth();
         }
 
