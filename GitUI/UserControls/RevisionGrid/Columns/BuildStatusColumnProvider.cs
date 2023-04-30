@@ -19,6 +19,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         // Increase contrast to selected rows
         private readonly Color _lightBlue = Color.FromArgb(130, 180, 240);
+        private Font? _fontWithUnicodeCache = null;
 
         public BuildStatusColumnProvider(RevisionGridControl grid, RevisionDataGridView gridView, Func<IGitModule> module)
             : base("Build Status")
@@ -81,7 +82,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             string text = (AppSettings.ShowBuildStatusIconColumn ? revision.BuildStatus.StatusSymbol : string.Empty)
                 + (AppSettings.ShowBuildStatusTextColumn ? (string)e.FormattedValue : string.Empty);
 
-            _grid.DrawColumnText(e, text, style.NormalFont, GetColor(style.ForeColor), bounds: e.CellBounds);
+            if (_fontWithUnicodeCache?.Size != style.NormalFont.Size)
+            {
+                _fontWithUnicodeCache = new Font(FontFamily.GenericMonospace, style.NormalFont.Size);
+            }
+
+            _grid.DrawColumnText(e, text, _fontWithUnicodeCache, GetColor(style.ForeColor), bounds: e.CellBounds);
 
             Color GetColor(Color foreColor)
             {
