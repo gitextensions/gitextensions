@@ -30,7 +30,20 @@ namespace GitUI.AutoCompletion
 
             IGitModule module = GetModule();
             ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
-            var output = await module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
+            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, throwOnErrorExit: false);
+            if (!result.ExitedSuccessfully)
+            {
+                // Try again
+                result = await module.GitExecutable.ExecuteAsync(cmd, throwOnErrorExit: false);
+            }
+
+            if (!result.ExitedSuccessfully)
+            {
+                // Failed after retry, do not bother
+                return Enumerable.Empty<AutoCompleteWord>();
+            }
+
+            string output = result.StandardOutput;
             IReadOnlyList<GitItemStatus> changedFiles = _getAllChangedFilesOutputParser.Parse(output);
             foreach (var file in changedFiles)
             {
