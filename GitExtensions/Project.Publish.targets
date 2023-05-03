@@ -116,7 +116,7 @@
   
       <Exec Command="powershell.exe $(RepoRoot)\scripts\Patch-RuntimeConfigJsonFiles.ps1 '@(RuntimeConfigJsonFiles)'" />
     </Target>
-  
+
   <!--
     ============================================================
                        _EnsureBundleContent
@@ -209,6 +209,23 @@
 
   <!--
     ============================================================
+                       _CheckBundlesConsistent
+
+    Checks whether all files that are present in $(PublishDir) are delcared in Setup/Product.wxs.
+    ============================================================
+    -->
+  <Target Name="_CheckBundlesConsistent" AfterTargets="Publish" DependsOnTargets="_PublishTranslations;_DownloadPluginManager;_EnsureBundleContent;_CleanupBeforePack">
+    <Exec
+        Command="powershell.exe .\Setup\Check-BundlesConsistent.ps1 '$(PublishDir)'"
+        WorkingDirectory="$(RepoRoot)"
+        EchoOff="true"
+        ConsoleToMsBuild="true"
+        StandardOutputImportance="High">
+    </Exec>
+  </Target>
+
+  <!--
+    ============================================================
                        CreatePortable
 
     Creates a portable archive.
@@ -219,7 +236,7 @@
     -->
   <Target Name="CreatePortable"
           AfterTargets="Publish"
-          DependsOnTargets="_RetrieveCurrentBuildVersion;_PublishTranslations;_DownloadPluginManager;_EnsureBundleContent;_CleanupBeforePack;_PatchRuntimeConfigJson">
+          DependsOnTargets="_RetrieveCurrentBuildVersion;_PatchRuntimeConfigJson;_CheckBundlesConsistent">
     <PropertyGroup>
       <_TargetAppConfig>@(AppConfigFileDestination)</_TargetAppConfig>
 
