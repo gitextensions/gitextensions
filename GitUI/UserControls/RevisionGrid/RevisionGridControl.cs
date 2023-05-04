@@ -27,6 +27,7 @@ using Microsoft;
 using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using TaskDialog = System.Windows.Forms.TaskDialog;
 using TaskDialogButton = System.Windows.Forms.TaskDialogButton;
 
@@ -927,25 +928,28 @@ namespace GitUI
 
                 cancellationToken.ThrowIfCancellationRequested();
 
+                Lazy<IGitRef?> headRef = new(() =>
+                    !string.IsNullOrEmpty(CurrentBranch.Value)
+                    ? getUnfilteredRefs.Value.FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{CurrentBranch.Value}")
+                    : null);
+
+                Lazy<ObjectId?> currentCheckout = new(() =>
+                    headRef.Value?.ObjectId ?? capturedModule.GetCurrentCheckout());
+
                 // Evaluate GitRefs and current commit
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await TaskScheduler.Default;
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    IGitRef? headRef = !string.IsNullOrEmpty(CurrentBranch.Value)
-                        ? getUnfilteredRefs.Value.FirstOrDefault(i => i.CompleteName == $"{GitRefName.RefsHeadsPrefix}{CurrentBranch.Value}")
-                        : null;
-                    ObjectId? newCurrentCheckout = headRef?.ObjectId ?? capturedModule.GetCurrentCheckout();
-
                     // If the current checkout (HEAD) is changed, don't get the currently selected rows,
                     // select the new current checkout instead.
-                    if (newCurrentCheckout != CurrentCheckout && newCurrentCheckout is not null)
+                    if (currentCheckout.Value != CurrentCheckout && currentCheckout.Value is not null)
                     {
-                        currentlySelectedObjectIds = new List<ObjectId> { newCurrentCheckout };
+                        currentlySelectedObjectIds = new List<ObjectId> { currentCheckout.Value };
                     }
 
-                    CurrentCheckout = newCurrentCheckout;
+                    CurrentCheckout = currentCheckout.Value;
 
                     // Exclude the 'stash' ref, it is specially handled when stashes are shown
                     refsByObjectId = (AppSettings.ShowStashes
@@ -953,8 +957,8 @@ namespace GitUI
                         : getUnfilteredRefs.Value)
                         .ToLookup(gitRef => gitRef.ObjectId);
                     ResetNavigationHistory();
-                    UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef);
-                    _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(newCurrentCheckout, currentlySelectedObjectIds);
+                    UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef.Value);
+                    _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(currentCheckout.Value, currentlySelectedObjectIds);
 
                     _gridView._revisionGraph.OnlyFirstParent = _filterInfo.ShowOnlyFirstParent;
                     _gridView._revisionGraph.HeadId = CurrentCheckout;
@@ -1036,7 +1040,7 @@ namespace GitUI
                     cancellationToken.ThrowIfCancellationRequested();
                     reader.GetLog(
                         observeRevisions,
-                        _filterInfo.GetRevisionFilter(CurrentBranch),
+                        _filterInfo.GetRevisionFilter(currentCheckout),
                         pathFilter,
                         cancellationToken);
                 }).FileAndForget(
