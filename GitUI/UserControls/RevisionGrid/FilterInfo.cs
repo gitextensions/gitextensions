@@ -19,12 +19,6 @@ namespace GitUI.UserControls.RevisionGrid
         private int _commitsLimit = -1;
 
         /// <summary>
-        /// Prefix to "Message" filters that forces the text to be interpreted as Git options.
-        /// This enables use of options not available in the GUI.
-        /// </summary>
-        private readonly string[] _messageAsGitOptions = new[] { "--not ", "--exclude=" };
-
-        /// <summary>
         ///  Gets whether all properties will unconditionally return the underlying data.
         ///  Otherwise return values will depend on the respective filter, e.g. "get => ByXyz ? Xyz : default".
         /// </summary>
@@ -388,8 +382,9 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (ByMessage && !string.IsNullOrWhiteSpace(Message))
             {
-                if (Message.StartsWithAny(_messageAsGitOptions))
+                if (Message.StartsWith("--"))
                 {
+                    // Add as git-log options
                     filter.Add(Message);
                 }
                 else
@@ -560,7 +555,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (ByMessage && !string.IsNullOrEmpty(Message))
             {
-                if (Message.StartsWithAny(_messageAsGitOptions))
+                if (Message.StartsWith("--"))
                 {
                     filter.AppendLine(Message);
                 }
