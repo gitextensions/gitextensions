@@ -1116,10 +1116,7 @@ namespace GitUITests.UserControls
                 BranchFilter = branchFilter
             };
             string args = filterInfo.GetRevisionFilter(new Lazy<string>(() => currentBranch));
-            bool showAll = (!showCurrentBranchOnly && string.IsNullOrWhiteSpace(branchFilter))
-                || (showCurrentBranchOnly && string.IsNullOrWhiteSpace(currentBranch));
-            bool showCurrent = showCurrentBranchOnly && !string.IsNullOrWhiteSpace(currentBranch);
-            bool showFiltredOrCurrent = showCurrent || (!showCurrentBranchOnly && !string.IsNullOrWhiteSpace(branchFilter));
+            bool showAll = !showCurrentBranchOnly && string.IsNullOrWhiteSpace(branchFilter);
 
             try
             {
@@ -1142,17 +1139,18 @@ namespace GitUITests.UserControls
                 }
 
                 string branch = Regex.Escape($"--branches={GetFilterRefName(currentBranch)}");
-                if (showCurrent)
+                if (showCurrentBranchOnly && !string.IsNullOrWhiteSpace(currentBranch))
                 {
                     args.ToString().Should().MatchRegex(@$"(^|\s){branch}($|\s)");
                 }
-                else if (!string.IsNullOrWhiteSpace(branch))
+                else
                 {
                     args.ToString().Should().NotMatchRegex(@$"(^|\s){branch}($|\s)");
                 }
 
                 string stash = Regex.Escape($"--glob={"refs/stas[h]"}");
-                if (showFiltredOrCurrent && showStash)
+                if (showStash && ((showCurrentBranchOnly && !string.IsNullOrWhiteSpace(currentBranch))
+                    || (!showCurrentBranchOnly && !string.IsNullOrWhiteSpace(branchFilter))))
                 {
                     args.ToString().Should().MatchRegex(@$"(^|\s){stash}($|\s)");
                 }
