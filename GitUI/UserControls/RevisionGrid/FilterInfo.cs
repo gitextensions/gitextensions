@@ -430,15 +430,23 @@ namespace GitUI.UserControls.RevisionGrid
                 filter.Add("--reflog");
             }
 
-            if (IsShowCurrentBranchOnlyChecked && !string.IsNullOrWhiteSpace(currentBranch.Value))
+            if (IsShowCurrentBranchOnlyChecked)
             {
                 // Git default, no option by default (stashes is special).
 
                 AddFirstStashRef();
 
-                // Add as filter (even if Git default is current branch) as the branch (ref) must exist
-                // and the repo must contain commits, otherwise Git will exit with errors.
-                filter.Add($"--branches={GetFilterRefName(currentBranch.Value)}");
+                if (!string.IsNullOrWhiteSpace(currentBranch.Value))
+                {
+                    // Add as filter (even if Git default is current branch) as the branch (ref) must exist
+                    // and the repo must contain commits, otherwise Git will exit with errors.
+                    filter.Add($"--branches={GetFilterRefName(currentBranch.Value)}");
+                }
+                else
+                {
+                    // Headless branch
+                    filter.Add("HEAD");
+                }
             }
             else if (IsShowFilteredBranchesChecked && !string.IsNullOrWhiteSpace(BranchFilter))
             {
