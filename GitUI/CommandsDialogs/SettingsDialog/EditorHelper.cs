@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private static string GetVsCode()
         {
-            return GetEditorCommandLine("Visual Studio Code", "code.exe", " --wait", "Microsoft VS Code");
+            return GetEditorCommandLine("Visual Studio Code", "code.exe", " --new-window --wait", "Microsoft VS Code");
         }
 
         private static string GetAtom()
