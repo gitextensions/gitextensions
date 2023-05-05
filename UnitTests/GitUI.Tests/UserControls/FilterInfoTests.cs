@@ -1088,11 +1088,14 @@ namespace GitUITests.UserControls
                         {
                             foreach (bool showCurrentBranchOnly in new[] { false, true })
                             {
-                                foreach (string branchFilter in new[] { "branch1", "", null })
+                                foreach (bool isValidCheckout in new[] { false, true })
                                 {
-                                    foreach (bool isValidCheckout in new[] { false, true })
+                                    foreach (bool showFilteredBranches in new[] { false, true })
                                     {
-                                        yield return new TestCaseData(showNotes, showStash, showReflog, showCurrentBranchOnly, branchFilter, isValidCheckout);
+                                        foreach (string branchFilter in new[] { "branch1", "", null })
+                                        {
+                                            yield return new TestCaseData(showNotes, showStash, showReflog, showCurrentBranchOnly, isValidCheckout, showFilteredBranches, branchFilter);
+                                        }
                                     }
                                 }
                             }
@@ -1103,7 +1106,7 @@ namespace GitUITests.UserControls
         }
 
         [TestCaseSource(nameof(FilterInfo_NotesStash))]
-        public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showReflog, bool showCurrentBranchOnly, string branchFilter, bool isValidCheckout)
+        public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showReflog, bool showCurrentBranchOnly, bool isValidCheckout, bool showFilteredBranches, string branchFilter)
         {
             bool originalShowGitNotes = AppSettings.ShowGitNotes;
             AppSettings.ShowGitNotes = showGitNotes;
@@ -1113,12 +1116,13 @@ namespace GitUITests.UserControls
             {
                 ShowReflogReferences = showReflog,
                 ShowCurrentBranchOnly = showCurrentBranchOnly,
-                ByBranchFilter = true,
+                ByBranchFilter = showFilteredBranches,
                 BranchFilter = branchFilter
             };
             ObjectId? objectId = isValidCheckout ? ObjectId.Random() : null;
             string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => objectId));
-            bool showAll = !showCurrentBranchOnly && string.IsNullOrWhiteSpace(branchFilter);
+            bool showAll = !(showCurrentBranchOnly && objectId is not null)
+                && !(!showCurrentBranchOnly && showFilteredBranches && !string.IsNullOrWhiteSpace(branchFilter));
 
             try
             {
@@ -1140,19 +1144,15 @@ namespace GitUITests.UserControls
                     args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/stash($|\s)");
                 }
 
-                string head = Regex.Escape(objectId.ToString());
                 if (showCurrentBranchOnly && objectId is not null)
                 {
+                    string head = Regex.Escape(objectId?.ToString());
                     args.ToString().Should().MatchRegex(@$"(^|\s){head}($|\s)");
-                }
-                else
-                {
-                    args.ToString().Should().NotMatchRegex(@$"(^|\s){head}($|\s)");
                 }
 
                 string stash = Regex.Escape($"--glob={"refs/stas[h]"}");
                 if (showStash && ((showCurrentBranchOnly && objectId is not null)
-                    || (!showCurrentBranchOnly && !string.IsNullOrWhiteSpace(branchFilter))))
+                    || (!showCurrentBranchOnly && showFilteredBranches && !string.IsNullOrWhiteSpace(branchFilter))))
                 {
                     args.ToString().Should().MatchRegex(@$"(^|\s){stash}($|\s)");
                 }
