@@ -19,12 +19,6 @@ namespace GitUI.UserControls.RevisionGrid
         private int _commitsLimit = -1;
 
         /// <summary>
-        /// Prefix to "Message" filters that forces the text to be interpreted as Git options.
-        /// This enables use of options not available in the GUI.
-        /// </summary>
-        private readonly string[] _messageAsGitOptions = new[] { "--not ", "--exclude=" };
-
-        /// <summary>
         ///  Gets whether all properties will unconditionally return the underlying data.
         ///  Otherwise return values will depend on the respective filter, e.g. "get => ByXyz ? Xyz : default".
         /// </summary>
@@ -297,7 +291,7 @@ namespace GitUI.UserControls.RevisionGrid
             return searchParametersChanged;
         }
 
-        public ArgumentString GetRevisionFilter(Lazy<string> currentBranch)
+        public ArgumentString GetRevisionFilter(Lazy<ObjectId?> currentCheckout)
         {
             if (IsRaw)
             {
@@ -309,7 +303,7 @@ namespace GitUI.UserControls.RevisionGrid
             // Separate the filters in groups
             GetCommitRevisionFilter(filter);
             GetLimitingRevisionFilter(filter);
-            GetBranchRevisionFilter(filter, currentBranch);
+            GetBranchRevisionFilter(filter, currentCheckout);
 
             return filter;
         }
@@ -388,8 +382,9 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (ByMessage && !string.IsNullOrWhiteSpace(Message))
             {
-                if (Message.StartsWithAny(_messageAsGitOptions))
+                if (Message.StartsWith("--"))
                 {
+                    // Add as git-log options
                     filter.Add(Message);
                 }
                 else
@@ -417,7 +412,8 @@ namespace GitUI.UserControls.RevisionGrid
         /// Branch revision filters, not affecting parent rewriting.
         /// </summary>
         /// <param name="filter">ArgumentBuilder arg</param>
-        private void GetBranchRevisionFilter(ArgumentBuilder filter, Lazy<string> currentBranch)
+        /// <param name="currentCheckout">Commit currently checked out</param>
+        private void GetBranchRevisionFilter(ArgumentBuilder filter, Lazy<ObjectId?> currentCheckout)
         {
             if (ShowOnlyFirstParent)
             {
@@ -430,15 +426,15 @@ namespace GitUI.UserControls.RevisionGrid
                 filter.Add("--reflog");
             }
 
-            if (IsShowCurrentBranchOnlyChecked && !string.IsNullOrWhiteSpace(currentBranch.Value))
+            if (IsShowCurrentBranchOnlyChecked && currentCheckout.Value is not null)
             {
-                // Git default, no option by default (stashes is special).
+                // Git default with no options
 
                 AddFirstStashRef();
 
-                // Add as filter (even if Git default is current branch) as the branch (ref) must exist
-                // and the repo must contain commits, otherwise Git will exit with errors.
-                filter.Add($"--branches={GetFilterRefName(currentBranch.Value)}");
+                // Add as filter or --all (even if Git default is current branch)
+                // as Git will exit with errors if there are no commits.
+                filter.Add(currentCheckout.Value);
             }
             else if (IsShowFilteredBranchesChecked && !string.IsNullOrWhiteSpace(BranchFilter))
             {
@@ -560,7 +556,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (ByMessage && !string.IsNullOrEmpty(Message))
             {
-                if (Message.StartsWithAny(_messageAsGitOptions))
+                if (Message.StartsWith("--"))
                 {
                     filter.AppendLine(Message);
                 }

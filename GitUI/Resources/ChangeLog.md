@@ -4,15 +4,17 @@ Changelog
 ### Version 4.1 (01 May 2023)
 
 #### Changes:
+* [#10945] Open VS Code in a new window
+* [#10943] Handle all message filters starting with -- as git-log options
+* [#10938] Bugfix: Always convert ConEmu font size to integer
+* [#10934] CommitAutoComplete: Retry if first attempt fail
 * [#10930] Replace sync CommitMessageManager API with async
 * [#10928] Current selection can be null, if the dialog is empty
 * [#10925] Portable information in EnvironmentInfo
 * [#10924] Remove SettingsCache entry when setting empty value
-* [#10923] Remove DotnetRuntimeBootstrapper
 * [#10922] Git 2.40.1
 * [#10920] Decode url-encoded repository folder's name
 * [#10918] Do not delay Dashboard start for invalid Git repos
-* [#10910] Update UI elements on the UI thread
 * [#10908] Intercept and convert \\wsl.localhost\ to \\wsl$\ paths
 * [#10903] Some recent repositories settings improvements
 * [#10891] Fix lost "Open github from blame" feature
@@ -20,17 +22,14 @@ Changelog
 * [#10886] Ignore exceptions from cancelled loading of submodule details for left panel
 * [#10885] Reenable lost rebase onto feature from revision grid
 * [#10884] Improve commit selection for 'Find file' feature
-* [#10881] Fixup SortingSettingsPage layout
 * [#10880] No async when minimized
 * [#10879] Improve rebase onto commit selection
 * [#10878] Perf (and bugfix) avatars handling
-* [#10877] Revert version update
 * [#10871] Remove use of git:// protocol in GitHub plugin
 * [#10870] Refactoring: Rename to LeftPanel
 * [#10869] GitHub: Check that PAT is filled before trying to add upsteam remote
 * [#10868] Settings: Adjust to sentence case
 * [#10863] Filter toolbar: Show reflog first and default
-* [#10858] Git 2.40.0
 * [#10857] Rename to "LeftPanel" in hotkeys
 * [#10854] Reset conflicted files
 * [#10853] Reset renamed index files
@@ -52,7 +51,6 @@ Changelog
 * [#10831] Decouple reflog from other branch filters
 * [#10829] SidePanel: Disallow copy context for not visible stashes
 * [#10828] Prioritize branches and remotes in SidePanel and CommitInfo
-* [#10825] Make tooltips set by using `.SetToolTip()` in designers translatable
 * [#10802] Replace IProcess.WaitForProcessExitAsync with WaitForExitAsync
 * [#10799] RefreshGrid without revisions
 * [#10796] Improve Taskbar integration (Close [all], status)
@@ -86,8 +84,6 @@ Changelog
 * [#10647] Encapsulate several top-level menus
 * [#10613] Conemu: fix switch of repo folder in console tab
 * [#10587] FormCommit: Clearer button labels
-* [#10538] Add support for SourceLink
-* [#10515] ﻿test: being able to run integration tests from Resharper
 * [#10512] Explorer integration hide menuitems
 * [#10452] Test for pullAction failed if defaults were changed
 * [#10445] Do not store the default value of a NumberSetting
@@ -96,7 +92,6 @@ Changelog
 * [#10400] Improve recent repository list keyboard navigation
 * [#10389] Add config to allow file protocol to be used-Tests
 * [#10380] Keep recent repositories in the same order when filtering
-* [#10378] Get installed dotnet runtimes
 * [#10353] Add support for amend! commits
 * [#10335] Fixed an issue that caused an exception when switching languages.(#10332)
 * [#10303] RevDiff: Allow path filter for several files
@@ -115,21 +110,20 @@ Changelog
 * [#10210] Suggest Markdown Preview Enhanced extension
 * [#10199] Improve deletion of local branches
 * [#10197] working around context menu strip being positioned incorrectly on first open
-* [#10168] Set branchfilter from sidepanel without checking dropdown
-* [#10140] Branch filter dropdown shown too often
-* [#10128] Dashboard: Capture variable in RunAsync
 * [#9925] Blame: open current diff/view line
 
 
+[#10945]:https://github.com/gitextensions/gitextensions/pull/10945
+[#10943]:https://github.com/gitextensions/gitextensions/pull/10943
+[#10938]:https://github.com/gitextensions/gitextensions/pull/10938
+[#10934]:https://github.com/gitextensions/gitextensions/pull/10934
 [#10930]:https://github.com/gitextensions/gitextensions/pull/10930
 [#10928]:https://github.com/gitextensions/gitextensions/pull/10928
 [#10925]:https://github.com/gitextensions/gitextensions/pull/10925
 [#10924]:https://github.com/gitextensions/gitextensions/pull/10924
-[#10923]:https://github.com/gitextensions/gitextensions/pull/10923
 [#10922]:https://github.com/gitextensions/gitextensions/pull/10922
 [#10920]:https://github.com/gitextensions/gitextensions/pull/10920
 [#10918]:https://github.com/gitextensions/gitextensions/pull/10918
-[#10910]:https://github.com/gitextensions/gitextensions/pull/10910
 [#10908]:https://github.com/gitextensions/gitextensions/pull/10908
 [#10903]:https://github.com/gitextensions/gitextensions/pull/10903
 [#10891]:https://github.com/gitextensions/gitextensions/pull/10891
@@ -137,17 +131,14 @@ Changelog
 [#10886]:https://github.com/gitextensions/gitextensions/pull/10886
 [#10885]:https://github.com/gitextensions/gitextensions/pull/10885
 [#10884]:https://github.com/gitextensions/gitextensions/pull/10884
-[#10881]:https://github.com/gitextensions/gitextensions/pull/10881
 [#10880]:https://github.com/gitextensions/gitextensions/pull/10880
 [#10879]:https://github.com/gitextensions/gitextensions/pull/10879
 [#10878]:https://github.com/gitextensions/gitextensions/pull/10878
-[#10877]:https://github.com/gitextensions/gitextensions/pull/10877
 [#10871]:https://github.com/gitextensions/gitextensions/pull/10871
 [#10870]:https://github.com/gitextensions/gitextensions/pull/10870
 [#10869]:https://github.com/gitextensions/gitextensions/pull/10869
 [#10868]:https://github.com/gitextensions/gitextensions/pull/10868
 [#10863]:https://github.com/gitextensions/gitextensions/pull/10863
-[#10858]:https://github.com/gitextensions/gitextensions/pull/10858
 [#10857]:https://github.com/gitextensions/gitextensions/pull/10857
 [#10854]:https://github.com/gitextensions/gitextensions/pull/10854
 [#10853]:https://github.com/gitextensions/gitextensions/pull/10853
@@ -169,7 +160,6 @@ Changelog
 [#10831]:https://github.com/gitextensions/gitextensions/pull/10831
 [#10829]:https://github.com/gitextensions/gitextensions/pull/10829
 [#10828]:https://github.com/gitextensions/gitextensions/pull/10828
-[#10825]:https://github.com/gitextensions/gitextensions/pull/10825
 [#10802]:https://github.com/gitextensions/gitextensions/pull/10802
 [#10799]:https://github.com/gitextensions/gitextensions/pull/10799
 [#10796]:https://github.com/gitextensions/gitextensions/pull/10796
@@ -203,8 +193,6 @@ Changelog
 [#10647]:https://github.com/gitextensions/gitextensions/pull/10647
 [#10613]:https://github.com/gitextensions/gitextensions/pull/10613
 [#10587]:https://github.com/gitextensions/gitextensions/pull/10587
-[#10538]:https://github.com/gitextensions/gitextensions/pull/10538
-[#10515]:https://github.com/gitextensions/gitextensions/pull/10515
 [#10512]:https://github.com/gitextensions/gitextensions/pull/10512
 [#10452]:https://github.com/gitextensions/gitextensions/pull/10452
 [#10445]:https://github.com/gitextensions/gitextensions/pull/10445
@@ -213,7 +201,6 @@ Changelog
 [#10400]:https://github.com/gitextensions/gitextensions/pull/10400
 [#10389]:https://github.com/gitextensions/gitextensions/pull/10389
 [#10380]:https://github.com/gitextensions/gitextensions/pull/10380
-[#10378]:https://github.com/gitextensions/gitextensions/pull/10378
 [#10353]:https://github.com/gitextensions/gitextensions/pull/10353
 [#10335]:https://github.com/gitextensions/gitextensions/pull/10335
 [#10303]:https://github.com/gitextensions/gitextensions/pull/10303
@@ -232,7 +219,7 @@ Changelog
 [#10210]:https://github.com/gitextensions/gitextensions/pull/10210
 [#10199]:https://github.com/gitextensions/gitextensions/pull/10199
 [#10197]:https://github.com/gitextensions/gitextensions/pull/10197
-
+[#9925]:https://github.com/gitextensions/gitextensions/pull/9925
 
 
 ### Version 4.0.0 (31 Oct 2022)

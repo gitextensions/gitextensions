@@ -12,6 +12,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Auto compile submodules</source>
+        <target>サブモジュールの自動コンパイル</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -911,6 +912,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>注意: トークンが考慮されるようにするため、Git Extensionsを再起動する必要があります。</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">

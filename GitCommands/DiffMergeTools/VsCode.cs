@@ -5,13 +5,13 @@ namespace GitCommands.DiffMergeTools
         private static readonly string[] Folders = GetFolders();
 
         /// <inheritdoc />
-        public override string DiffCommand => "--wait --diff \"$LOCAL\" \"$REMOTE\"";
+        public override string DiffCommand => "--new-window --wait --diff \"$LOCAL\" \"$REMOTE\"";
 
         /// <inheritdoc />
         public override string ExeFileName => "Code.exe";
 
         /// <inheritdoc />
-        public override string MergeCommand => "--wait --merge \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
+        public override string MergeCommand => "--new-window --wait --merge \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
 
         /// <inheritdoc />
         public override string Name => "vscode";
