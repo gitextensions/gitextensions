@@ -3,6 +3,7 @@ using GitCommands.Git.Commands;
 using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -96,6 +97,8 @@ namespace GitUI.CommandsDialogs
                 {
                     try
                     {
+                        await TaskScheduler.Default;
+
                         string message = await commitMessageManager.GetMergeOrCommitMessageAsync();
                         string newCommitMessageContent = $"{existingCommitMessage}\n\n{message}";
                         await commitMessageManager.WriteCommitMessageToFileAsync(newCommitMessageContent, CommitMessageType.Merge,

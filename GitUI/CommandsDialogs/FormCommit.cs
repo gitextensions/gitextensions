@@ -473,18 +473,24 @@ namespace GitUI.CommandsDialogs
             // Do not attempt to store again if the form has already been closed. Unfortunately, OnFormClosed is always called by Close.
             if (Visible)
             {
+                _splitterManager.SaveSplitters();
+
                 // Do not remember commit message of fixup or squash commits, since they have
                 // a special meaning, and can be dangerous if used inappropriately.
                 if (CommitKind is (CommitKind.Normal or CommitKind.Amend))
                 {
-                    ThreadHelper.JoinableTaskFactory.Run(async () =>
+                    // Run async as we're closing the form
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
-                        await _commitMessageManager.SetMergeOrCommitMessageAsync(Message.Text);
-                        await _commitMessageManager.SetAmendStateAsync(Amend.Checked);
-                    });
-                }
+                        string message = Message.Text;
+                        bool isAmend = Amend.Checked;
 
-                _splitterManager.SaveSplitters();
+                        await TaskScheduler.Default;
+
+                        await _commitMessageManager.SetMergeOrCommitMessageAsync(message);
+                        await _commitMessageManager.SetAmendStateAsync(isAmend);
+                    }).FileAndForget();
+                }
             }
 
             base.OnFormClosed(e);
