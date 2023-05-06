@@ -1183,10 +1183,10 @@ namespace GitUITests.UserControls
 
         [TestCase("message1", true)]
         [TestCase("message1 --not", true)]
-        [TestCase("--not=message1", true)]
+        [TestCase("--not=message1", false)]
         [TestCase("--not message1", false)]
         [TestCase(" --not message1", true)]
-        [TestCase("--exclude message1", true)]
+        [TestCase("--exclude message1", false)]
         [TestCase("--exclude= message1", false)]
         [TestCase("--exclude= message1 ", false)]
         [TestCase("\t--exclude= message1", true)]
