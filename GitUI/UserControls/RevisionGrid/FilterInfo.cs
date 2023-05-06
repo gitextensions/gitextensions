@@ -291,7 +291,7 @@ namespace GitUI.UserControls.RevisionGrid
             return searchParametersChanged;
         }
 
-        public ArgumentString GetRevisionFilter(Lazy<string> currentBranch)
+        public ArgumentString GetRevisionFilter(Lazy<ObjectId?> currentCheckout)
         {
             if (IsRaw)
             {
@@ -303,7 +303,7 @@ namespace GitUI.UserControls.RevisionGrid
             // Separate the filters in groups
             GetCommitRevisionFilter(filter);
             GetLimitingRevisionFilter(filter);
-            GetBranchRevisionFilter(filter, currentBranch);
+            GetBranchRevisionFilter(filter, currentCheckout);
 
             return filter;
         }
@@ -412,7 +412,8 @@ namespace GitUI.UserControls.RevisionGrid
         /// Branch revision filters, not affecting parent rewriting.
         /// </summary>
         /// <param name="filter">ArgumentBuilder arg</param>
-        private void GetBranchRevisionFilter(ArgumentBuilder filter, Lazy<string> currentBranch)
+        /// <param name="currentCheckout">Commit currently checked out</param>
+        private void GetBranchRevisionFilter(ArgumentBuilder filter, Lazy<ObjectId?> currentCheckout)
         {
             if (ShowOnlyFirstParent)
             {
@@ -425,15 +426,15 @@ namespace GitUI.UserControls.RevisionGrid
                 filter.Add("--reflog");
             }
 
-            if (IsShowCurrentBranchOnlyChecked && !string.IsNullOrWhiteSpace(currentBranch.Value))
+            if (IsShowCurrentBranchOnlyChecked && currentCheckout.Value is not null)
             {
-                // Git default, no option by default (stashes is special).
+                // Git default with no options
 
                 AddFirstStashRef();
 
-                // Add as filter (even if Git default is current branch) as the branch (ref) must exist
-                // and the repo must contain commits, otherwise Git will exit with errors.
-                filter.Add($"--branches={GetFilterRefName(currentBranch.Value)}");
+                // Add as filter or --all (even if Git default is current branch)
+                // as Git will exit with errors if there are no commits.
+                filter.Add(currentCheckout.Value);
             }
             else if (IsShowFilteredBranchesChecked && !string.IsNullOrWhiteSpace(BranchFilter))
             {
