@@ -936,6 +936,8 @@ namespace GitUI
                 Lazy<ObjectId?> currentCheckout = new(() =>
                     headRef.Value?.ObjectId ?? capturedModule.GetCurrentCheckout());
 
+                ObjectId? previousCheckout = CurrentCheckout;
+
                 // Evaluate GitRefs and current commit
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
@@ -944,12 +946,11 @@ namespace GitUI
 
                     // If the current checkout (HEAD) is changed, don't get the currently selected rows,
                     // select the new current checkout instead.
-                    if (currentCheckout.Value != CurrentCheckout && currentCheckout.Value is not null)
-                    {
-                        currentlySelectedObjectIds = new List<ObjectId> { currentCheckout.Value };
-                    }
-
                     CurrentCheckout = currentCheckout.Value;
+                    if (CurrentCheckout != previousCheckout && CurrentCheckout is not null)
+                    {
+                        currentlySelectedObjectIds = new List<ObjectId> { CurrentCheckout };
+                    }
 
                     // Exclude the 'stash' ref, it is specially handled when stashes are shown
                     refsByObjectId = (AppSettings.ShowStashes
@@ -958,7 +959,7 @@ namespace GitUI
                         .ToLookup(gitRef => gitRef.ObjectId);
                     ResetNavigationHistory();
                     UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef.Value);
-                    _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(currentCheckout.Value, currentlySelectedObjectIds);
+                    _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(CurrentCheckout, currentlySelectedObjectIds);
 
                     _gridView._revisionGraph.OnlyFirstParent = _filterInfo.ShowOnlyFirstParent;
                     _gridView._revisionGraph.HeadId = CurrentCheckout;
