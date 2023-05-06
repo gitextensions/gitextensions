@@ -24,7 +24,7 @@
             ],
             "problemMatcher": "$msCompile",
             "group": {
-                "kind": "build",
+                "kind": "build"
             }
         },
         {
@@ -51,7 +51,10 @@
             "group": {
                 "kind": "build"
             },
-            "dependsOn": ["build", "build-vc"]
+            "dependsOn": [
+                "build",
+                "build-vc"
+            ]
         },
         {
             "label": "watch",
@@ -78,6 +81,13 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "type": "markdownlint",
+            "problemMatcher": [
+                "$markdownlint"
+            ],
+            "label": "markdownlint: Lint all Markdown files in the workspace with markdownlint"
         }
     ]
 }

@@ -1,11 +1,11 @@
-![Git Extensions logo](https://cdn.rawgit.com/gitextensions/gitextensions/master/Logo/git-extensions-logo.svg)
+![Git Extensions logo][def]
 
 # Git Extensions
 
 Git Extensions is a standalone UI tool for managing git repositories.
 It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017/2019).
 
-Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) or send us a tweet [![@git_extensions](https://img.shields.io/badge/twitter-%40git__extensions-blue)](https://twitter.com/git_extensions)
+Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)][def2] or send us a tweet [![@git_extensions](https://img.shields.io/badge/twitter-%40git__extensions-blue)](https://twitter.com/git_extensions)
 
 ## Current Status
 
@@ -35,6 +35,8 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
     </td>
   </tr>
   <tr>
+  
+
     <td>
       Current dev status
     </td>
@@ -94,7 +96,6 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 
 </details>
 
-
 ### Version 2.5x
 
 <details>
@@ -139,7 +140,8 @@ For more details please refer to [versions comparison](https://github.com/gitext
       Current dev status
     </td>
     <td colspan=2>
-      <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/release/2.51"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/release/2.51?svg=true" style="max-width:100%;"></a>
+      <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/release/2.51"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/
+      yo5kw7sl6da8danr/branch/release/2.51?svg=true" style="max-width:100%;"></a>
     </td>
   </tr>
   <tr>
@@ -292,7 +294,6 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/gitextensions/sponsor/8/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/gitextensions/sponsor/9/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/9/avatar.svg"></a>
 
-
 # Useful Links
 
 * Website: [gitextensions.github.io](https://gitextensions.github.io/) [Git repo](https://github.com/gitextensions/gitextensions.github.io)
@@ -300,5 +301,8 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 * Online manual: [git-extensions-documentation.readthedocs.org](https://git-extensions-documentation.readthedocs.org/) [Git repo](https://github.com/gitextensions/GitExtensionsDoc)
 * Issue tracker: [github.com/gitextensions/gitextensions/issues](https://github.com/gitextensions/gitextensions/issues)
 * Wiki: [github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
-* Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+* Gitter chat: [gitter.im/gitextensions/gitextensions][def2]
 * [How to visualize Git repository's history](/gource%20video.md)
+
+[def]: https://cdn.rawgit.com/gitextensions/gitextensions/master/Logo/git-extensions-logo.svg
+[def2]: https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
