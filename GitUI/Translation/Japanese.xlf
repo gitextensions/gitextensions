@@ -391,6 +391,7 @@ Click this info icon for more details.</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Blame viewer</source>
+        <target>追及ビューアー</target>
         
       </trans-unit>
       <trans-unit id="cbDetectMoveAndCopyInAllFiles.Text">
@@ -1650,6 +1651,7 @@ Git for Windowsがインストールされているか確認し、正しいコ�
     <body>
       <trans-unit id="$this.Text">
         <source>Diff viewer</source>
+        <target>Diffビューア</target>
         
       </trans-unit>
       <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
@@ -3450,6 +3452,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="toggleLeftPanel.ToolTipText">
         <source>Toggle left panel</source>
+        <target>左のパネルを切り替え</target>
         
       </trans-unit>
       <trans-unit id="toggleSplitViewLayout.ToolTipText">
@@ -9525,6 +9528,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistory.Text">
         <source>Follow renames in file history</source>
+        <target>ファイルの履歴で名前変更も追跡する (実験的)</target>
         
       </trans-unit>
       <trans-unit id="chkFollowRenamesInFileHistoryExact.Text">
@@ -12167,6 +12171,7 @@ Current Branch:
       </trans-unit>
       <trans-unit id="gbCascadingMenu.Text">
         <source>Cascaded context menu</source>
+        <target>カスケードコンテキストメニュー</target>
         
       </trans-unit>
       <trans-unit id="gbExplorerIntegration.Text">
@@ -12395,6 +12400,7 @@ OpenSSHを使う場合、コマンドラインダイアログが表示されま�
     <body>
       <trans-unit id="_addUpstreamRemote.Text">
         <source>Add upstream remote</source>
+        <target>アップストリームリモートを追加</target>
         
       </trans-unit>
       <trans-unit id="_areYouSure.Text">
