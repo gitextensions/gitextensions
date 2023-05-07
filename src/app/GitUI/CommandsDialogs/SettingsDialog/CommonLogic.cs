@@ -54,13 +54,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 distributedGlobalSettings);
 
             IExecutable gitExecutable = module.GitExecutable;
+            GitConfigSettings systemGitConfigSettings = new(gitExecutable, GitSettingLevel.SystemWide);
             GitConfigSettings globalGitConfigSettings = new(gitExecutable, GitSettingLevel.Global);
             GitConfigSettings localGitConfigSettings = new(gitExecutable, GitSettingLevel.Local);
             EffectiveGitConfigSettings effectiveGitConfigSettings = new(gitExecutable);
             GitConfigSettingsSet = new GitConfigSettingsSet(
                 new SettingsSource<IConfigValueStore>(effectiveGitConfigSettings),
                 new SettingsSource<IPersistentConfigValueStore>(localGitConfigSettings),
-                new SettingsSource<IPersistentConfigValueStore>(globalGitConfigSettings));
+                new SettingsSource<IPersistentConfigValueStore>(globalGitConfigSettings),
+                new SettingsSource<IConfigValueStore>(systemGitConfigSettings));
         }
 
         /// <summary>

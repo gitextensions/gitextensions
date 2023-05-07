@@ -10020,6 +10020,10 @@ Diff selection:
         <source>Local for current repository</source>
         <target />
       </trans-unit>
+      <trans-unit id="SystemRB.Text">
+        <source>System</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Settings source:</source>
         <target />
