@@ -3990,7 +3990,7 @@ namespace GitCommands
             }
 
             // Get processes by "ps" command.
-            var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
+            string cmd = Path.Combine(AppSettings.LinuxToolsDir, "ps");
             string[] lines = new Executable(cmd).GetOutput("x").Split(Delimiters.LineFeed);
 
             if (lines.Length <= 2)

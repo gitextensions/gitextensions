@@ -200,8 +200,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            MessageBox.Show(this, string.Format(_shCanBeRun.Text, AppSettings.GitBinDir), _shCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
-            ////GitBinPath.Text = Settings.GitBinDir;
+            MessageBox.Show(this, string.Format(_shCanBeRun.Text, AppSettings.LinuxToolsDir), _shCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
             SaveAndRescan_Click(this, EventArgs.Empty);
         }
@@ -396,7 +395,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private bool CheckGitExe()
         {
-            return RenderSettingSetUnset(() => !File.Exists(AppSettings.GitBinDir + "sh.exe") && !File.Exists(AppSettings.GitBinDir + "sh") &&
+            return RenderSettingSetUnset(() => !File.Exists(AppSettings.LinuxToolsDir + "sh.exe") && !File.Exists(AppSettings.LinuxToolsDir + "sh") &&
                                          !CheckSettingsLogic.CheckIfFileIsInPath("sh.exe") && !CheckSettingsLogic.CheckIfFileIsInPath("sh"),
                                    GitBinFound, GitBinFound_Fix,
                                    _linuxToolsSshNotFound.Text, _linuxToolsSshFound.Text);

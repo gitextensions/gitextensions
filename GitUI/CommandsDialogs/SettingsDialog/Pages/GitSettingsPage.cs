@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public override void OnPageShown()
         {
             GitPath.Text = AppSettings.GitCommandValue;
-            GitBinPath.Text = AppSettings.GitBinDir;
+            GitBinPath.Text = AppSettings.LinuxToolsDir;
         }
 
         protected override void SettingsToPage()
@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", EnvironmentConfiguration.GetHomeDir());
 
             GitPath.Text = AppSettings.GitCommandValue;
-            GitBinPath.Text = AppSettings.GitBinDir;
+            GitBinPath.Text = AppSettings.LinuxToolsDir;
 
             base.SettingsToPage();
         }
@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             AppSettings.GitCommandValue = GitPath.Text;
-            AppSettings.GitBinDir = GitBinPath.Text;
+            AppSettings.LinuxToolsDir = GitBinPath.Text;
 
             base.PageToSettings();
         }
@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             CheckSettingsLogic.SolveLinuxToolsDir(GitBinPath.Text.Trim());
 
-            var userSelectedPath = OsShellUtil.PickFolder(this, AppSettings.GitBinDir);
+            string? userSelectedPath = OsShellUtil.PickFolder(this, AppSettings.LinuxToolsDir);
 
             if (userSelectedPath is not null)
             {

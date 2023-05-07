@@ -21,18 +21,18 @@ namespace GitCommands
         {
             // PATH variable
 
-            if (!string.IsNullOrEmpty(AppSettings.GitBinDir))
+            if (!string.IsNullOrEmpty(AppSettings.LinuxToolsDir))
             {
-                // Ensure the git binary dir is on the path
+                // Ensure the GNU/Linux tools dir is on the path
                 string? path = Env.GetEnvironmentVariable("PATH");
 
                 if (path is null)
                 {
-                    Env.SetEnvironmentVariable("PATH", AppSettings.GitBinDir);
+                    Env.SetEnvironmentVariable("PATH", AppSettings.LinuxToolsDir);
                 }
-                else if (!path.Contains(AppSettings.GitBinDir))
+                else if (!path.Contains(AppSettings.LinuxToolsDir))
                 {
-                    Env.SetEnvironmentVariable("PATH", $"{path}{Path.PathSeparator}{AppSettings.GitBinDir}");
+                    Env.SetEnvironmentVariable("PATH", $"{path}{Path.PathSeparator}{AppSettings.LinuxToolsDir}");
                 }
             }
 
