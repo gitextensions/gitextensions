@@ -43,6 +43,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             GlobalRB = new RadioButton();
             EffectiveRB = new RadioButton();
             arrowLocal = new Label();
+            arrowSystem = new Label();
+            SystemRB = new RadioButton();
             settingsPagePanel = new Panel();
             HeaderPanel.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -114,7 +116,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             tableLayoutPanel1.Anchor = AnchorStyles.None;
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 7;
+            tableLayoutPanel1.ColumnCount = 9;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
@@ -129,13 +133,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             tableLayoutPanel1.Controls.Add(DistributedRB, 4, 0);
             tableLayoutPanel1.Controls.Add(arrowGlobal, 5, 0);
             tableLayoutPanel1.Controls.Add(GlobalRB, 6, 0);
+            tableLayoutPanel1.Controls.Add(arrowSystem, 7, 0);
+            tableLayoutPanel1.Controls.Add(SystemRB, 8, 0);
             tableLayoutPanel1.Location = new Point(99, 4);
             tableLayoutPanel1.Margin = new Padding(3, 4, 3, 4);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tableLayoutPanel1.Size = new Size(711, 27);
+            tableLayoutPanel1.Size = new Size(751, 27);
             // 
             // DistributedRB
             // 
@@ -211,6 +217,27 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             arrowLocal.Size = new Size(23, 15);
             arrowLocal.Text = "<<";
             // 
+            // arrowSystem
+            // 
+            arrowSystem.Anchor = AnchorStyles.Left;
+            arrowSystem.AutoSize = true;
+            arrowSystem.Location = new Point(714, 6);
+            arrowSystem.Name = "arrowSystem";
+            arrowSystem.Size = new Size(23, 15);
+            arrowSystem.TabIndex = 7;
+            arrowSystem.Text = "<<";
+            // 
+            // SystemRB
+            // 
+            SystemRB.Anchor = AnchorStyles.Left;
+            SystemRB.AutoSize = true;
+            SystemRB.Location = new Point(743, 4);
+            SystemRB.Margin = new Padding(3, 4, 3, 4);
+            SystemRB.Name = "SystemRB";
+            SystemRB.Size = new Size(63, 19);
+            SystemRB.Text = "System";
+            SystemRB.UseVisualStyleBackColor = true;
+            // 
             // settingsPagePanel
             // 
             settingsPagePanel.Dock = DockStyle.Fill;
@@ -256,5 +283,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private RadioButton GlobalRB;
         private RadioButton EffectiveRB;
         private Label arrowLocal;
+        private Label arrowSystem;
+        private RadioButton SystemRB;
     }
 }
