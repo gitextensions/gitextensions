@@ -46,9 +46,9 @@
                 EffectiveRB.Visible = false;
                 DistributedRB.Visible = false;
                 LocalRB.Visible = false;
-                arrows1.Visible = false;
-                arrows2.Visible = false;
-                arrow3.Visible = false;
+                arrowLocal.Visible = false;
+                arrowDistributed.Visible = false;
+                arrowGlobal.Visible = false;
                 tableLayoutPanel2.RowStyles[2].Height = 0;
             }
             else
@@ -65,16 +65,16 @@
                 {
                     if (EffectiveRB.Checked)
                     {
-                        arrows1.ForeColor = EffectiveRB.ForeColor;
+                        arrowLocal.ForeColor = EffectiveRB.ForeColor;
                         localSettingsPage.SetEffectiveSettings();
                     }
                     else
                     {
-                        arrows1.ForeColor = arrows1.BackColor;
+                        arrowLocal.ForeColor = arrowLocal.BackColor;
                     }
 
-                    arrows2.ForeColor = arrows1.ForeColor;
-                    arrow3.ForeColor = arrows1.ForeColor;
+                    arrowDistributed.ForeColor = arrowLocal.ForeColor;
+                    arrowGlobal.ForeColor = arrowLocal.ForeColor;
                 };
 
                 EffectiveRB.Checked = true;
@@ -82,7 +82,7 @@
                 if (!(localSettingsPage is IDistributedSettingsPage distributedSettingsPage))
                 {
                     DistributedRB.Visible = false;
-                    arrow3.Visible = false;
+                    arrowDistributed.Visible = false;
                 }
                 else
                 {

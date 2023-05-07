@@ -30,230 +30,214 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         /// </summary>
         private void InitializeComponent()
         {
-            this.HeaderPanel = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.linePanel = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.DistributedRB = new System.Windows.Forms.RadioButton();
-            this.arrow3 = new System.Windows.Forms.Label();
-            this.arrows2 = new System.Windows.Forms.Label();
-            this.LocalRB = new System.Windows.Forms.RadioButton();
-            this.GlobalRB = new System.Windows.Forms.RadioButton();
-            this.EffectiveRB = new System.Windows.Forms.RadioButton();
-            this.arrows1 = new System.Windows.Forms.Label();
-            this.settingsPagePanel = new System.Windows.Forms.Panel();
-            this.HeaderPanel.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            HeaderPanel = new Panel();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            linePanel = new Panel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            label1 = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            DistributedRB = new RadioButton();
+            arrowGlobal = new Label();
+            arrowDistributed = new Label();
+            LocalRB = new RadioButton();
+            GlobalRB = new RadioButton();
+            EffectiveRB = new RadioButton();
+            arrowLocal = new Label();
+            settingsPagePanel = new Panel();
+            HeaderPanel.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // HeaderPanel
             // 
-            this.HeaderPanel.AutoSize = true;
-            this.HeaderPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.HeaderPanel.Controls.Add(this.tableLayoutPanel2);
-            this.HeaderPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.HeaderPanel.Location = new System.Drawing.Point(0, 4);
-            this.HeaderPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.HeaderPanel.Name = "HeaderPanel";
-            this.HeaderPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 7);
-            this.HeaderPanel.Size = new System.Drawing.Size(930, 73);
-            this.HeaderPanel.TabIndex = 0;
+            HeaderPanel.AutoSize = true;
+            HeaderPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            HeaderPanel.Controls.Add(tableLayoutPanel2);
+            HeaderPanel.Dock = DockStyle.Top;
+            HeaderPanel.Location = new Point(0, 4);
+            HeaderPanel.Margin = new Padding(3, 4, 3, 4);
+            HeaderPanel.Name = "HeaderPanel";
+            HeaderPanel.Padding = new Padding(0, 0, 0, 7);
+            HeaderPanel.Size = new Size(930, 71);
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.linePanel, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(930, 66);
-            this.tableLayoutPanel2.TabIndex = 1;
+            tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.ColumnCount = 1;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Controls.Add(linePanel, 0, 1);
+            tableLayoutPanel2.Controls.Add(flowLayoutPanel1, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(0, 0);
+            tableLayoutPanel2.Margin = new Padding(3, 4, 3, 4);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 3;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 13F));
+            tableLayoutPanel2.Size = new Size(930, 64);
             // 
             // linePanel
             // 
-            this.linePanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.linePanel.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.linePanel.Location = new System.Drawing.Point(3, 45);
-            this.linePanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.linePanel.Name = "linePanel";
-            this.linePanel.Size = new System.Drawing.Size(924, 4);
-            this.linePanel.TabIndex = 10;
+            linePanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            linePanel.BackColor = SystemColors.ControlDarkDark;
+            linePanel.Location = new Point(3, 43);
+            linePanel.Margin = new Padding(3, 4, 3, 4);
+            linePanel.Name = "linePanel";
+            linePanel.Size = new Size(924, 4);
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.label1);
-            this.flowLayoutPanel1.Controls.Add(this.tableLayoutPanel1);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 4);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(924, 37);
-            this.flowLayoutPanel1.TabIndex = 5;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(label1);
+            flowLayoutPanel1.Controls.Add(tableLayoutPanel1);
+            flowLayoutPanel1.Dock = DockStyle.Top;
+            flowLayoutPanel1.Location = new Point(3, 4);
+            flowLayoutPanel1.Margin = new Padding(3, 4, 3, 0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(924, 35);
             // 
             // label1
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(98, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Settings source:";
+            label1.Anchor = AnchorStyles.None;
+            label1.AutoSize = true;
+            label1.Location = new Point(3, 10);
+            label1.Name = "label1";
+            label1.Size = new Size(90, 15);
+            label1.Text = "Settings source:";
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 7;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.DistributedRB, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.arrow3, 5, 0);
-            this.tableLayoutPanel1.Controls.Add(this.arrows2, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.LocalRB, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.GlobalRB, 6, 0);
-            this.tableLayoutPanel1.Controls.Add(this.EffectiveRB, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.arrows1, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(107, 4);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(782, 29);
-            this.tableLayoutPanel1.TabIndex = 8;
+            tableLayoutPanel1.Anchor = AnchorStyles.None;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 7;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(EffectiveRB, 0, 0);
+            tableLayoutPanel1.Controls.Add(arrowLocal, 1, 0);
+            tableLayoutPanel1.Controls.Add(LocalRB, 2, 0);
+            tableLayoutPanel1.Controls.Add(arrowDistributed, 3, 0);
+            tableLayoutPanel1.Controls.Add(DistributedRB, 4, 0);
+            tableLayoutPanel1.Controls.Add(arrowGlobal, 5, 0);
+            tableLayoutPanel1.Controls.Add(GlobalRB, 6, 0);
+            tableLayoutPanel1.Location = new Point(99, 4);
+            tableLayoutPanel1.Margin = new Padding(3, 4, 3, 4);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tableLayoutPanel1.Size = new Size(711, 27);
             // 
             // DistributedRB
             // 
-            this.DistributedRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.DistributedRB.AutoSize = true;
-            this.DistributedRB.Location = new System.Drawing.Point(339, 4);
-            this.DistributedRB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.DistributedRB.Name = "DistributedRB";
-            this.DistributedRB.Size = new System.Drawing.Size(226, 21);
-            this.DistributedRB.TabIndex = 12;
-            this.DistributedRB.Text = "Distributed with current repository";
-            this.DistributedRB.UseVisualStyleBackColor = true;
+            DistributedRB.Anchor = AnchorStyles.Left;
+            DistributedRB.AutoSize = true;
+            DistributedRB.Location = new Point(311, 4);
+            DistributedRB.Margin = new Padding(3, 4, 3, 4);
+            DistributedRB.Name = "DistributedRB";
+            DistributedRB.Size = new Size(206, 19);
+            DistributedRB.Text = "Distributed with current repository";
+            DistributedRB.UseVisualStyleBackColor = true;
             // 
-            // arrow3
+            // arrowGlobal
             // 
-            this.arrow3.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.arrow3.AutoSize = true;
-            this.arrow3.Location = new System.Drawing.Point(571, 6);
-            this.arrow3.Name = "arrow3";
-            this.arrow3.Size = new System.Drawing.Size(26, 17);
-            this.arrow3.TabIndex = 11;
-            this.arrow3.Text = "<<";
+            arrowGlobal.Anchor = AnchorStyles.Left;
+            arrowGlobal.AutoSize = true;
+            arrowGlobal.Location = new Point(523, 6);
+            arrowGlobal.Name = "arrowGlobal";
+            arrowGlobal.Size = new Size(23, 15);
+            arrowGlobal.Text = "<<";
             // 
-            // arrows2
+            // arrowDistributed
             // 
-            this.arrows2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.arrows2.AutoSize = true;
-            this.arrows2.Location = new System.Drawing.Point(307, 6);
-            this.arrows2.Name = "arrows2";
-            this.arrows2.Size = new System.Drawing.Size(26, 17);
-            this.arrows2.TabIndex = 10;
-            this.arrows2.Text = "<<";
+            arrowDistributed.Anchor = AnchorStyles.Left;
+            arrowDistributed.AutoSize = true;
+            arrowDistributed.Location = new Point(282, 6);
+            arrowDistributed.Name = "arrowDistributed";
+            arrowDistributed.Size = new Size(23, 15);
+            arrowDistributed.Text = "<<";
             // 
             // LocalRB
             // 
-            this.LocalRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.LocalRB.AutoSize = true;
-            this.LocalRB.Location = new System.Drawing.Point(115, 4);
-            this.LocalRB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.LocalRB.Name = "LocalRB";
-            this.LocalRB.Size = new System.Drawing.Size(186, 21);
-            this.LocalRB.TabIndex = 9;
-            this.LocalRB.Text = "Local for current repository";
-            this.LocalRB.UseVisualStyleBackColor = true;
+            LocalRB.Anchor = AnchorStyles.Left;
+            LocalRB.AutoSize = true;
+            LocalRB.Location = new Point(108, 4);
+            LocalRB.Margin = new Padding(3, 4, 3, 4);
+            LocalRB.Name = "LocalRB";
+            LocalRB.Size = new Size(168, 19);
+            LocalRB.Text = "Local for current repository";
+            LocalRB.UseVisualStyleBackColor = true;
             // 
             // GlobalRB
             // 
-            this.GlobalRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.GlobalRB.AutoSize = true;
-            this.GlobalRB.Location = new System.Drawing.Point(603, 4);
-            this.GlobalRB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.GlobalRB.Name = "GlobalRB";
-            this.GlobalRB.Size = new System.Drawing.Size(176, 21);
-            this.GlobalRB.TabIndex = 8;
-            this.GlobalRB.Text = "Global for all repositories";
-            this.GlobalRB.UseVisualStyleBackColor = true;
-            this.GlobalRB.CheckedChanged += new System.EventHandler(this.GlobalRB_CheckedChanged);
+            GlobalRB.Anchor = AnchorStyles.Left;
+            GlobalRB.AutoSize = true;
+            GlobalRB.Location = new Point(552, 4);
+            GlobalRB.Margin = new Padding(3, 4, 3, 4);
+            GlobalRB.Name = "GlobalRB";
+            GlobalRB.Size = new Size(156, 19);
+            GlobalRB.Text = "Global for all repositories";
+            GlobalRB.UseVisualStyleBackColor = true;
+            GlobalRB.CheckedChanged += GlobalRB_CheckedChanged;
             // 
             // EffectiveRB
             // 
-            this.EffectiveRB.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.EffectiveRB.AutoSize = true;
-            this.EffectiveRB.Checked = true;
-            this.EffectiveRB.Location = new System.Drawing.Point(3, 4);
-            this.EffectiveRB.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.EffectiveRB.Name = "EffectiveRB";
-            this.EffectiveRB.Size = new System.Drawing.Size(74, 21);
-            this.EffectiveRB.TabIndex = 1;
-            this.EffectiveRB.TabStop = true;
-            this.EffectiveRB.Text = "Effective";
-            this.EffectiveRB.UseVisualStyleBackColor = true;
+            EffectiveRB.Anchor = AnchorStyles.Left;
+            EffectiveRB.AutoSize = true;
+            EffectiveRB.Checked = true;
+            EffectiveRB.Location = new Point(3, 4);
+            EffectiveRB.Margin = new Padding(3, 4, 3, 4);
+            EffectiveRB.Name = "EffectiveRB";
+            EffectiveRB.Size = new Size(70, 19);
+            EffectiveRB.TabStop = true;
+            EffectiveRB.Text = "Effective";
+            EffectiveRB.UseVisualStyleBackColor = true;
             // 
-            // arrows1
+            // arrowLocal
             // 
-            this.arrows1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.arrows1.AutoSize = true;
-            this.arrows1.Location = new System.Drawing.Point(83, 6);
-            this.arrows1.Name = "arrows1";
-            this.arrows1.Size = new System.Drawing.Size(26, 17);
-            this.arrows1.TabIndex = 3;
-            this.arrows1.Text = "<<";
+            arrowLocal.Anchor = AnchorStyles.Left;
+            arrowLocal.AutoSize = true;
+            arrowLocal.Location = new Point(79, 6);
+            arrowLocal.Name = "arrowLocal";
+            arrowLocal.Size = new Size(23, 15);
+            arrowLocal.Text = "<<";
             // 
             // settingsPagePanel
             // 
-            this.settingsPagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.settingsPagePanel.Location = new System.Drawing.Point(0, 77);
-            this.settingsPagePanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.settingsPagePanel.Name = "settingsPagePanel";
-            this.settingsPagePanel.Size = new System.Drawing.Size(930, 488);
-            this.settingsPagePanel.TabIndex = 3;
+            settingsPagePanel.Dock = DockStyle.Fill;
+            settingsPagePanel.Location = new Point(0, 75);
+            settingsPagePanel.Margin = new Padding(3, 4, 3, 4);
+            settingsPagePanel.Name = "settingsPagePanel";
+            settingsPagePanel.Size = new Size(930, 490);
             // 
             // SettingsPageHeader
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.settingsPagePanel);
-            this.Controls.Add(this.HeaderPanel);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.Name = "SettingsPageHeader";
-            this.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.Size = new System.Drawing.Size(930, 565);
-            this.HeaderPanel.ResumeLayout(false);
-            this.HeaderPanel.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleMode = AutoScaleMode.Inherit;
+            Controls.Add(settingsPagePanel);
+            Controls.Add(HeaderPanel);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "SettingsPageHeader";
+            Padding = new Padding(0, 4, 0, 0);
+            Size = new Size(930, 565);
+            HeaderPanel.ResumeLayout(false);
+            HeaderPanel.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -266,11 +250,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.RadioButton DistributedRB;
-        private System.Windows.Forms.Label arrow3;
-        private System.Windows.Forms.Label arrows2;
+        private System.Windows.Forms.Label arrowGlobal;
+        private System.Windows.Forms.Label arrowDistributed;
         private System.Windows.Forms.RadioButton LocalRB;
         private System.Windows.Forms.RadioButton GlobalRB;
         private System.Windows.Forms.RadioButton EffectiveRB;
-        private System.Windows.Forms.Label arrows1;
+        private System.Windows.Forms.Label arrowLocal;
     }
 }
