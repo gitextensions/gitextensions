@@ -9,7 +9,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog;
 public readonly record struct GitConfigSettingsSet(
     SettingsSource<IConfigValueStore> EffectiveSettings,
     SettingsSource<IPersistentConfigValueStore> LocalSettings,
-    SettingsSource<IPersistentConfigValueStore> GlobalSettings)
+    SettingsSource<IPersistentConfigValueStore> GlobalSettings,
+    SettingsSource SystemSettings)
 {
     public void Save()
     {

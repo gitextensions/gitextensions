@@ -52,13 +52,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 distributedPulledSettings,
                 distributedGlobalSettings);
 
+            GitConfigSettings systemGitConfigSettings = new(module, GitSettingLevel.SystemWide);
             GitConfigSettings globalGitConfigSettings = new(module, GitSettingLevel.Global);
             GitConfigSettings localGitConfigSettings = new(module, GitSettingLevel.Local);
             GitConfigSettings effectiveGitConfigSettings = new(module, GitSettingLevel.Effective);
             GitConfigSettingsSet = new GitConfigSettingsSet(
                 new SettingsSource<IConfigValueStore>(effectiveGitConfigSettings),
                 new SettingsSource<IPersistentConfigValueStore>(localGitConfigSettings),
-                new SettingsSource<IPersistentConfigValueStore>(globalGitConfigSettings));
+                new SettingsSource<IPersistentConfigValueStore>(globalGitConfigSettings),
+                new SettingsSource<IConfigValueStore>(systemGitConfigSettings));
         }
 
         /// <summary>
