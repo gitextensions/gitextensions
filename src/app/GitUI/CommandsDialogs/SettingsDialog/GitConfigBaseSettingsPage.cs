@@ -5,7 +5,7 @@ using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public partial class GitConfigBaseSettingsPage : SettingsPageWithHeader, ILocalSettingsPage
+    public partial class GitConfigBaseSettingsPage : SettingsPageWithHeader, IGitConfigSettingsPage
     {
         public GitConfigBaseSettingsPage(IServiceProvider serviceProvider)
             : base(serviceProvider)
@@ -47,6 +47,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public override void SetGlobalSettings()
         {
             SetCurrentSettings(GitConfigSettingsSet.GlobalSettings);
+        }
+
+        public void SetSystemSettings()
+        {
+            SetCurrentSettings(GitConfigSettingsSet.SystemSettings);
         }
 
         private void SetCurrentSettings(SettingsSource settings)
