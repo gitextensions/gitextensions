@@ -39,8 +39,8 @@
             this.downloadGitForWindows = new System.Windows.Forms.LinkLabel();
             this.lblGitCommand = new System.Windows.Forms.Label();
             this.lblShPath = new System.Windows.Forms.Label();
-            this.BrowseGitBinPath = new System.Windows.Forms.Button();
-            this.GitBinPath = new System.Windows.Forms.TextBox();
+            this.BrowseLinuxToolsDir = new System.Windows.Forms.Button();
+            this.LinuxToolsDir = new System.Windows.Forms.TextBox();
             this.GitPath = new System.Windows.Forms.TextBox();
             this.BrowseGitPath = new System.Windows.Forms.Button();
             this.gbEnvironment = new System.Windows.Forms.GroupBox();
@@ -118,8 +118,8 @@
             tlpnlGitPaths.Controls.Add(this.downloadGitForWindows, 0, 3);
             tlpnlGitPaths.Controls.Add(this.lblGitCommand, 0, 1);
             tlpnlGitPaths.Controls.Add(this.lblShPath, 0, 2);
-            tlpnlGitPaths.Controls.Add(this.BrowseGitBinPath, 2, 2);
-            tlpnlGitPaths.Controls.Add(this.GitBinPath, 1, 2);
+            tlpnlGitPaths.Controls.Add(this.BrowseLinuxToolsDir, 2, 2);
+            tlpnlGitPaths.Controls.Add(this.LinuxToolsDir, 1, 2);
             tlpnlGitPaths.Controls.Add(this.GitPath, 1, 1);
             tlpnlGitPaths.Controls.Add(this.BrowseGitPath, 2, 1);
             tlpnlGitPaths.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -180,28 +180,28 @@
             this.lblShPath.Text = "Path to linux tools (sh). Leave empty when it is in the path.";
             this.lblShPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // BrowseGitBinPath
+            // BrowseLinuxToolsDir
             // 
-            this.BrowseGitBinPath.AutoSize = true;
-            this.BrowseGitBinPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BrowseGitBinPath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BrowseGitBinPath.Location = new System.Drawing.Point(554, 45);
-            this.BrowseGitBinPath.Name = "BrowseGitBinPath";
-            this.BrowseGitBinPath.Size = new System.Drawing.Size(52, 23);
-            this.BrowseGitBinPath.TabIndex = 6;
-            this.BrowseGitBinPath.Text = "Browse";
-            this.BrowseGitBinPath.UseVisualStyleBackColor = true;
-            this.BrowseGitBinPath.Click += new System.EventHandler(this.BrowseGitBinPath_Click);
+            this.BrowseLinuxToolsDir.AutoSize = true;
+            this.BrowseLinuxToolsDir.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.BrowseLinuxToolsDir.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BrowseLinuxToolsDir.Location = new System.Drawing.Point(554, 45);
+            this.BrowseLinuxToolsDir.Name = "BrowseLinuxToolsDir";
+            this.BrowseLinuxToolsDir.Size = new System.Drawing.Size(52, 23);
+            this.BrowseLinuxToolsDir.TabIndex = 6;
+            this.BrowseLinuxToolsDir.Text = "Browse";
+            this.BrowseLinuxToolsDir.UseVisualStyleBackColor = true;
+            this.BrowseLinuxToolsDir.Click += new System.EventHandler(this.BrowseLinuxToolsDir_Click);
             // 
-            // GitBinPath
+            // LinuxToolsDir
             // 
-            this.GitBinPath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GitBinPath.Location = new System.Drawing.Point(300, 45);
-            this.GitBinPath.MaxLength = 300;
-            this.GitBinPath.Name = "GitBinPath";
-            this.GitBinPath.Size = new System.Drawing.Size(248, 21);
-            this.GitBinPath.TabIndex = 5;
-            this.GitBinPath.TextChanged += new System.EventHandler(this.GitBinPath_TextChanged);
+            this.LinuxToolsDir.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LinuxToolsDir.Location = new System.Drawing.Point(300, 45);
+            this.LinuxToolsDir.MaxLength = 300;
+            this.LinuxToolsDir.Name = "LinuxToolsDir";
+            this.LinuxToolsDir.Size = new System.Drawing.Size(248, 21);
+            this.LinuxToolsDir.TabIndex = 5;
+            this.LinuxToolsDir.TextChanged += new System.EventHandler(this.LinuxToolsDir_TextChanged);
             // 
             // GitPath
             // 
@@ -299,10 +299,10 @@
         private System.Windows.Forms.Button ChangeHomeButton;
         private System.Windows.Forms.GroupBox gbPaths;
         private System.Windows.Forms.LinkLabel downloadGitForWindows;
-        private System.Windows.Forms.Button BrowseGitBinPath;
+        private System.Windows.Forms.Button BrowseLinuxToolsDir;
         private System.Windows.Forms.TextBox GitPath;
         private System.Windows.Forms.Button BrowseGitPath;
-        private System.Windows.Forms.TextBox GitBinPath;
+        private System.Windows.Forms.TextBox LinuxToolsDir;
         private System.Windows.Forms.Label lblGlobalConfigPath;
         private System.Windows.Forms.Label lblGitCommand;
         private System.Windows.Forms.Label label50;
