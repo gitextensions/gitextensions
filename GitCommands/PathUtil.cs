@@ -394,7 +394,7 @@ namespace GitCommands
                     return true;
                 }
 
-                shellPath = Path.Combine(AppSettings.GitBinDir, shell);
+                shellPath = Path.Combine(AppSettings.LinuxToolsDir, shell);
                 if (File.Exists(shellPath))
                 {
                     return true;
