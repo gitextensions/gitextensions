@@ -1309,15 +1309,7 @@ namespace GitUI.CommandsDialogs
             foreach (var name in submodules)
             {
                 GitModule module = Module.GetSubmodule(name);
-
-                // Reset all changes.
-                module.Reset(ResetMode.Hard);
-
-                // Also delete new files, if requested.
-                if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
-                {
-                    module.Clean(CleanMode.OnlyNonIgnored, directories: true);
-                }
+                module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
             }
 
             RequestRefresh();
@@ -1449,13 +1441,13 @@ namespace GitUI.CommandsDialogs
                 : $"{_firstRevision.Text}{DescribeRevision(items.FirstRevs().ToList())}";
             string confirmationMessage = string.Format(_resetSelectedChangesText.Text, revDescription);
 
-            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(ParentForm, hasExistingFiles, hasNewFiles, confirmationMessage);
-            if (resetAction == FormResetChanges.ActionEnum.Cancel)
+            FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(ParentForm, hasExistingFiles, hasNewFiles, confirmationMessage);
+            if (resetType == FormResetChanges.ActionEnum.Cancel)
             {
                 return;
             }
 
-            bool deleteUncommittedAddedItems = resetAction == FormResetChanges.ActionEnum.ResetAndDelete;
+            bool deleteUncommittedAddedItems = resetType == FormResetChanges.ActionEnum.ResetAndDelete;
             ResetSelectedItemsTo(resetToSelected, deleteUncommittedAddedItems);
         }
 

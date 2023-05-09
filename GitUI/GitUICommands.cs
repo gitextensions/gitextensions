@@ -701,56 +701,30 @@ namespace GitUI
             return DoActionOnRepo(owner, Action, changesRepo: false);
         }
 
-        public bool StartResetChangesDialog(IWin32Window? owner = null)
-        {
-            var workTreeFiles = Module.GetWorkTreeFiles();
-            return StartResetChangesDialog(owner, workTreeFiles, false);
-        }
-
         public bool StartResetChangesDialog(IWin32Window? owner, IReadOnlyCollection<GitItemStatus> workTreeFiles, bool onlyWorkTree)
         {
             // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(owner, workTreeFiles.Any(item => !item.IsNew), workTreeFiles.Any(item => item.IsNew));
+            FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(owner, hasExistingFiles: workTreeFiles.Any(item => !item.IsNew), hasNewFiles: workTreeFiles.Any(item => item.IsNew));
 
-            if (resetAction == FormResetChanges.ActionEnum.Cancel)
+            if (resetType == FormResetChanges.ActionEnum.Cancel)
             {
                 return false;
             }
 
+            return DoActionOnRepo(owner, Action);
+
             bool Action()
             {
-                if (onlyWorkTree)
-                {
-                    GitArgumentBuilder args = new("checkout")
-                    {
-                        "--",
-                        "."
-                    };
-                    Module.GitExecutable.GetOutput(args);
-                }
-                else
-                {
-                    // Reset all changes.
-                    Module.Reset(ResetMode.Hard);
-                }
-
-                if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
-                {
-                    Module.Clean(CleanMode.OnlyNonIgnored, directories: true);
-                }
-
-                return true;
+                return Module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete, onlyWorkTree);
             }
-
-            return DoActionOnRepo(owner, Action);
         }
 
         private bool StartResetChangesDialog(string fileName)
         {
             // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(null, true, false);
+            FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(null, hasExistingFiles: true, hasNewFiles: false);
 
-            if (resetAction == FormResetChanges.ActionEnum.Cancel)
+            if (resetType == FormResetChanges.ActionEnum.Cancel)
             {
                 return false;
             }
@@ -761,7 +735,7 @@ namespace GitUI
                 Module.ResetFile(fileName);
 
                 // Also delete new files, if requested.
-                if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
+                if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
                     string? errorCaption = null;
                     string? errorMessage = null;

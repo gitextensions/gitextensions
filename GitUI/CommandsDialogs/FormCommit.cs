@@ -3123,15 +3123,7 @@ namespace GitUI.CommandsDialogs
             foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
                 GitModule module = Module.GetSubmodule(item.Name);
-
-                // Reset all changes.
-                module.Reset(ResetMode.Hard);
-
-                // Also delete new files, if requested.
-                if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
-                {
-                    module.Clean(CleanMode.OnlyNonIgnored, directories: true);
-                }
+                module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
             }
 
             Initialize();

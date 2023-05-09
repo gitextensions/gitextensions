@@ -1334,9 +1334,40 @@ namespace GitCommands
             return _gitExecutable.GetOutput(args);
         }
 
+        /// <summary>
+        /// Reset all changes to HEAD
+        /// </summary>
+        /// <param name="clean">Clean non ignored files.</param>
+        /// <param name="onlyWorkTree">Reset only WorkTree files.</param>
+        /// <returns><see langword="true"/> if executed.</returns>
+        public bool ResetAllChanges(bool clean, bool onlyWorkTree = false)
+        {
+            if (onlyWorkTree)
+            {
+                GitArgumentBuilder args = new("checkout")
+                    {
+                        "--",
+                        "."
+                    };
+                GitExecutable.GetOutput(args);
+            }
+            else
+            {
+                // Reset all changes.
+                Reset(ResetMode.Hard);
+            }
+
+            if (clean)
+            {
+                Clean(CleanMode.OnlyNonIgnored, directories: true);
+            }
+
+            return true;
+        }
+
         public void Reset(ResetMode mode, string? file = null)
         {
-            _gitExecutable.RunCommand(GitCommandHelpers.ResetCmd(mode, null, file));
+            _gitExecutable.RunCommand(GitCommandHelpers.ResetCmd(mode, commit: null, file));
         }
 
         public string ResetFile(string file)
