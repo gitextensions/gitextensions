@@ -5,7 +5,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\GitCommands\GitCommands.csproj" />
-    <ProjectReference Include="..\..\..\..\Plugins\BuildServerIntegration\AppVeyorIntegration\AppVeyorIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\Plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj" />
     <ProjectReference Include="..\..\..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
     <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
   </ItemGroup>

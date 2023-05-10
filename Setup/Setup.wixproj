@@ -23,6 +23,11 @@
     <DefineConstants>Version=$(Version);NumericVersion=$(Version);ArtifactsBinPath=$(ArtifactsBinPath);ArtifactsPublishPath=$(ArtifactsPublishPath);PluginManagerSourceDir=$(PluginManagerSourceDir)\GitExtensions.PluginManager\Output</DefineConstants>
     <DefineConstants Condition=" '$(Configuration)' == 'Debug' ">Debug;$(DefineConstants)</DefineConstants>
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
+
+    <!-- Suppress: light.exe : error LGHT1105: Validation could not run due to system policy. To eliminate this warning, run the process as admin or suppress ICE validation. -->
+    <RunWixToolsOutOfProc>true</RunWixToolsOutOfProc>
+    <SuppressValidation>true</SuppressValidation>
+
     <!-- Disable build acceleration for WIX projects -->
     <AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
   </PropertyGroup>

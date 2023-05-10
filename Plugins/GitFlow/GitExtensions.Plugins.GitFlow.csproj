@@ -20,15 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\..\GitUI\Resources\Icons\error.png">
-      <Link>Properties\error.png</Link>
-    </Content>
-    <Content Include="..\..\GitUI\Resources\Icons\StatusHourglass.png">
-      <Link>Properties\StatusHourglass.png</Link>
-    </Content>
-    <Content Include="..\..\GitUI\Resources\Icons\success.png">
-      <Link>Properties\success.png</Link>
-    </Content>
+    <None Include="..\..\GitUI\Resources\Icons\StatusBadgeError.png" Link="Resources\error.png" />
+    <None Include="..\..\GitUI\Resources\Icons\StatusBadgeWaiting.png" Link="Resources\StatusHourglass.png" />
+    <None Include="..\..\GitUI\Resources\Icons\StatusBadgeSuccess.png" Link="Resources\success.png" />
     <None Include="Resources\IconGitFlow.png" />
   </ItemGroup>
 
