@@ -2288,55 +2288,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void DeleteSelectedFilesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
-                DialogResult.Yes)
-            {
-                return;
-            }
-
-            try
-            {
-                foreach (var gitItemStatus in Unstaged.SelectedItems)
-                {
-                    File.Delete(_fullPathResolver.Resolve(gitItemStatus.Item.Name));
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            Initialize();
-        }
-
-        private void ResetSelectedFilesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(this, _resetSelectedChangesText.Text, TranslatedStrings.ResetChangesCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Question) !=
-                DialogResult.Yes)
-            {
-                return;
-            }
-
-            foreach (var gitItemStatus in Unstaged.SelectedItems)
-            {
-                Module.ResetFile(gitItemStatus.Item.Name);
-            }
-
-            Initialize();
-        }
-
-        private void ResetAllTrackedChangesToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            ResetClick(this, EventArgs.Empty);
-        }
-
-        private void resetUnstagedChangesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ResetUnStagedClick(this, EventArgs.Empty);
-        }
-
         private void EditGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartEditGitIgnoreDialog(this, localExcludes: false);

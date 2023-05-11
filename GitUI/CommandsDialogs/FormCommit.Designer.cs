@@ -87,11 +87,6 @@ namespace GitUI.CommandsDialogs
             this.showSkipWorktreeFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAssumeUnchangedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showUntrackedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.deleteSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetUnstagedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetAllTrackedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.editGitIgnoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editLocallyIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -745,11 +740,6 @@ namespace GitUI.CommandsDialogs
             this.showSkipWorktreeFilesToolStripMenuItem,
             this.showAssumeUnchangedFilesToolStripMenuItem,
             this.showUntrackedFilesToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.deleteSelectedFilesToolStripMenuItem,
-            this.resetSelectedFilesToolStripMenuItem,
-            this.resetUnstagedChangesToolStripMenuItem,
-            this.resetAllTrackedChangesToolStripMenuItem,
             this.toolStripSeparator1,
             this.editGitIgnoreToolStripMenuItem,
             this.editLocallyIgnoredFilesToolStripMenuItem,
@@ -790,41 +780,6 @@ namespace GitUI.CommandsDialogs
             this.showUntrackedFilesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.showUntrackedFilesToolStripMenuItem.Text = "Show untracked files";
             this.showUntrackedFilesToolStripMenuItem.Click += new System.EventHandler(this.ShowUntrackedFilesToolStripMenuItemClick);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(239, 6);
-            // 
-            // deleteSelectedFilesToolStripMenuItem
-            // 
-            this.deleteSelectedFilesToolStripMenuItem.Name = "deleteSelectedFilesToolStripMenuItem";
-            this.deleteSelectedFilesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.deleteSelectedFilesToolStripMenuItem.Text = "Delete selected files";
-            this.deleteSelectedFilesToolStripMenuItem.Click += new System.EventHandler(this.DeleteSelectedFilesToolStripMenuItemClick);
-            // 
-            // resetSelectedFilesToolStripMenuItem
-            // 
-            this.resetSelectedFilesToolStripMenuItem.Name = "resetSelectedFilesToolStripMenuItem";
-            this.resetSelectedFilesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.resetSelectedFilesToolStripMenuItem.Text = "Reset selected files";
-            this.resetSelectedFilesToolStripMenuItem.Click += new System.EventHandler(this.ResetSelectedFilesToolStripMenuItemClick);
-            // 
-            // resetUnstagedChangesToolStripMenuItem
-            // 
-            this.resetUnstagedChangesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
-            this.resetUnstagedChangesToolStripMenuItem.Name = "resetUnstagedChangesToolStripMenuItem";
-            this.resetUnstagedChangesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.resetUnstagedChangesToolStripMenuItem.Text = "Reset unstaged changes";
-            this.resetUnstagedChangesToolStripMenuItem.Click += new System.EventHandler(this.resetUnstagedChangesToolStripMenuItem_Click);
-            // 
-            // resetAllTrackedChangesToolStripMenuItem
-            // 
-            this.resetAllTrackedChangesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
-            this.resetAllTrackedChangesToolStripMenuItem.Name = "resetAllTrackedChangesToolStripMenuItem";
-            this.resetAllTrackedChangesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.resetAllTrackedChangesToolStripMenuItem.Text = "Reset all (tracked) changes";
-            this.resetAllTrackedChangesToolStripMenuItem.Click += new System.EventHandler(this.ResetAllTrackedChangesToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
@@ -1643,10 +1598,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem showAssumeUnchangedFilesToolStripMenuItem;
         private ToolStripMenuItem showSkipWorktreeFilesToolStripMenuItem;
         private ToolStripMenuItem showUntrackedFilesToolStripMenuItem;
-        private ToolStripSeparator toolStripSeparator3;
-        private ToolStripMenuItem deleteSelectedFilesToolStripMenuItem;
-        private ToolStripMenuItem resetSelectedFilesToolStripMenuItem;
-        private ToolStripMenuItem resetAllTrackedChangesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem editGitIgnoreToolStripMenuItem;
         private ToolStripMenuItem editLocallyIgnoredFilesToolStripMenuItem;
@@ -1728,7 +1679,6 @@ namespace GitUI.CommandsDialogs
         private CheckBox ResetAuthor;
         private CheckBox StageInSuperproject;
         private Button ResetUnStaged;
-        private ToolStripMenuItem resetUnstagedChangesToolStripMenuItem;
         private ToolStripMenuItem noVerifyToolStripMenuItem;
         private ToolStripButton createBranchToolStripButton;
         private ToolStripStatusLabel toolStripStatusBranchIcon;
