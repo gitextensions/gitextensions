@@ -732,36 +732,22 @@ namespace GitUI
             using (WaitCursorScope.Enter())
             {
                 // Reset all changes.
-                Module.ResetFile(fileName);
-
-                // Also delete new files, if requested.
-                if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
+                if (string.IsNullOrWhiteSpace(fileName))
                 {
-                    string? errorCaption = null;
-                    string? errorMessage = null;
-                    string? path = _fullPathResolver.Resolve(fileName);
-                    if (File.Exists(path))
-                    {
-                        try
-                        {
-                            File.Delete(path);
-                        }
-                        catch (Exception ex)
-                        {
-                            errorCaption = TranslatedStrings.ErrorCaptionFailedDeleteFile;
-                            errorMessage = ex.Message;
-                        }
-                    }
-                    else
-                    {
-                        errorCaption = TranslatedStrings.ErrorCaptionFailedDeleteFolder;
-                        path.TryDeleteDirectory(out errorMessage);
-                    }
+                    return Module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
+                }
 
-                    if (errorMessage is not null)
-                    {
-                        MessageBox.Show(null, errorMessage, errorCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                string filePath = Path.GetRelativePath(Module.WorkingDir, fileName).ToPosixPath();
+                List<GitItemStatus> selectedItems = Module.GetAllChangedFilesWithSubmodulesStatus().Where(item => item.Name == filePath).ToList();
+                if (selectedItems.Count < 1)
+                {
+                    return false;
+                }
+
+                Module.ResetChanges(selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out List<string> filesInUse, out StringBuilder output);
+                if (output.Length > 0)
+                {
+                    MessageBox.Show(null, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 

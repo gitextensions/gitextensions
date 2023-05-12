@@ -1370,18 +1370,6 @@ namespace GitCommands
             _gitExecutable.RunCommand(GitCommandHelpers.ResetCmd(mode, commit: null, file));
         }
 
-        public string ResetFile(string file)
-        {
-            return _gitExecutable.GetOutput(
-                new GitArgumentBuilder("checkout-index")
-            {
-                "--index",
-                "--force",
-                "--",
-                file.ToPosixPath().Quote()
-            });
-        }
-
         public string ResetFiles(IReadOnlyList<string> files)
         {
             if (files is null || files.Count == 0)
