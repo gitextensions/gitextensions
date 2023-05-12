@@ -80,7 +80,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.AutoC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.GitFlow", "Plugins\GitFlow\GitExtensions.Plugins.GitFlow.csproj", "{D4628A13-CD53-401F-A645-CB16FD15ABBB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamCityIntegration", "Plugins\BuildServerIntegration\TeamCityIntegration\TeamCityIntegration.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.TeamCityIntegration", "Plugins\BuildServerIntegration\TeamCityIntegration\GitExtensions.Plugins.TeamCityIntegration.csproj", "{121965D1-4399-4538-B8BF-403EB5B847C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildServerIntegration", "BuildServerIntegration", "{F1B97F5D-CA42-4280-94A1-CE412BEA20DF}"
 	ProjectSection(SolutionItems) = preProject
@@ -97,13 +97,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Git.hub", "Externals\Git.hu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.Bitbucket", "Plugins\Bitbucket\GitExtensions.Plugins.Bitbucket.csproj", "{50AEAB6C-83C4-45F8-AA01-90E1405C48AF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JenkinsIntegration", "Plugins\BuildServerIntegration\JenkinsIntegration\JenkinsIntegration.csproj", "{E6AAC693-815B-4D1A-83D7-F4DE36072793}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.JenkinsIntegration", "Plugins\BuildServerIntegration\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.csproj", "{E6AAC693-815B-4D1A-83D7-F4DE36072793}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtUtils", "GitExtUtils\GitExtUtils.csproj", "{0F1F1168-A4B2-4FA2-B17B-735140D17F39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConEmuWinForms", "Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj", "{1DC7D403-484B-43B4-B017-1356397A32CB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppVeyorIntegration", "Plugins\BuildServerIntegration\AppVeyorIntegration\AppVeyorIntegration.csproj", "{39228D7F-9239-4A2D-8A6F-4D0F7DEB9178}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.AppVeyorIntegration", "Plugins\BuildServerIntegration\AppVeyorIntegration\GitExtensions.Plugins.AppVeyorIntegration.csproj", "{39228D7F-9239-4A2D-8A6F-4D0F7DEB9178}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{020F800B-9170-4BB3-83C9-FCF83596D83C}"
 	ProjectSection(SolutionItems) = preProject
@@ -124,7 +124,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.JiraC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTestUtils", "UnitTests\CommonTestUtils\CommonTestUtils.csproj", "{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzureDevOpsIntegration", "Plugins\BuildServerIntegration\AzureDevOpsIntegration\AzureDevOpsIntegration.csproj", "{92615565-CF33-4539-A0E6-610CE0734B8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.AzureDevOpsIntegration", "Plugins\BuildServerIntegration\AzureDevOpsIntegration\GitExtensions.Plugins.AzureDevOpsIntegration.csproj", "{92615565-CF33-4539-A0E6-610CE0734B8C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5855184-8571-4AD0-A373-B98215BA56CA}"
 	ProjectSection(SolutionItems) = preProject
