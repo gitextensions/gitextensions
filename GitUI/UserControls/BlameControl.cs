@@ -109,8 +109,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            int line = _clickedBlameLine is not null && _clickedBlameLine.Commit.ObjectId == objectId
-                ? _clickedBlameLine.OriginLineNumber
+            int line = _clickedBlameLine is not null ? _clickedBlameLine.OriginLineNumber
                 : initialLine ?? (fileName == _fileName ? BlameFile.CurrentFileLine : 1);
             _revGrid = revGrid;
             _fileName = fileName;
@@ -314,7 +313,7 @@ namespace GitUI.Blame
                 () => BlameFile.ViewTextAsync(_fileName, body));
             cancellationToken.ThrowIfCancellationRequested();
 
-            BlameFile.GoToLine(lineNumber);
+            BlameFile.GoToLine(Math.Min(lineNumber, _blame.Lines.Count));
             _clickedBlameLine = null;
 
             _blameId = revision.ObjectId;
@@ -643,6 +642,7 @@ namespace GitUI.Blame
             // Try get actual parent revision, get popup if it does not exist.
             // (The menu should be disabled if previous is not in grid).
             GitRevision? revision = _revGrid?.GetActualRevision(blameInfo.selectedRevision);
+            _clickedBlameLine = _lastBlameLine;
             BlameRevision(revision?.FirstParentId, blameInfo.filename);
         }
 
