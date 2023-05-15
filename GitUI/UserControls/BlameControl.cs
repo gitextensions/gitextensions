@@ -628,6 +628,8 @@ namespace GitUI.Blame
                 return;
             }
 
+            _clickedBlameLine = _lastBlameLine;
+
             BlameRevision(blameInfo.selectedRevision.ObjectId, blameInfo.filename);
         }
 
