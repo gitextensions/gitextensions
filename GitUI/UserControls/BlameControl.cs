@@ -9,6 +9,7 @@ using GitUI.CommandDialogs;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using Microsoft;
@@ -43,7 +44,8 @@ namespace GitUI.Blame
         private bool _changingScrollPosition;
         private IRepositoryHostPlugin? _gitHoster;
         private static readonly IList<Color> AgeBucketGradientColors = GetAgeBucketGradientColors();
-        private IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
+        private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
+        private readonly IGitBlameParser _gitBlameParser;
 
         // Relative path of the file to blame when blaming a new revision
         public string? PathToBlame { get; private set; }
@@ -74,6 +76,7 @@ namespace GitUI.Blame
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
 
             _gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
+            _gitBlameParser = new GitBlameParser(() => UICommands.Module);
         }
 
         public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin? gitHoster)
@@ -640,9 +643,14 @@ namespace GitUI.Blame
 
             // Try get actual parent revision, get popup if it does not exist.
             // (The menu should be disabled if previous is not in grid).
-            GitRevision? revision = _revisionGridInfo?.GetActualRevision(blameInfo.selectedRevision);
-            _clickedBlameLine = _lastBlameLine;
-            BlameRevision(revision?.FirstParentId, blameInfo.filename);
+            GitRevision selectedRevision = _revisionGridInfo!.GetActualRevision(blameInfo.selectedRevision);
+
+            // Origin line of commit selected is final line of the previous blame commit
+            int finalLineNumberOfPreviousBlame = _lastBlameLine!.OriginLineNumber;
+            int originalLineNumberOfPreviousBlame = _gitBlameParser.GetOriginalLineInPreviousCommit(selectedRevision, blameInfo.filename, finalLineNumberOfPreviousBlame);
+
+            _clickedBlameLine = new GitBlameLine(_lastBlameLine.Commit, finalLineNumberOfPreviousBlame, originalLineNumberOfPreviousBlame, "Dummy Git blame line used only to store the good 'originLineNumber' value to display and select it");
+            BlameRevision(selectedRevision.FirstParentId, blameInfo.filename);
         }
 
         /// <summary>
