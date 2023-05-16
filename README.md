@@ -266,9 +266,9 @@ For more information see our [code of conduct](CODE_OF_CONDUCT.md).
   <a href="https://www.transifex.com/" target="_blank"><img src="./GitUI/Resources/Icons/originals/transifex.svg"></a>
 * We thank [SemanticMerge](https://www.semanticmerge.com) for licenses<br />
   <a href="https://www.semanticmerge.com" target="_blank"><img src="./GitUI/Resources/Icons/originals/semanticmerge-logo.svg"></a>
-* We thank [SignPath.io](https://signpath.io/) for the free code signing<br />
-  <a href="https://signpath.io/" target="_blank"><img src="./GitUI/Resources/Icons/originals/signpath_logo.png"></a>
-* We thank [SignPath Foundation](https://signpath.org/) for the signing certificate
+* We thank [SignPath.io](https://signpath.io/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension) for the free code signing<br />
+  <a href="https://signpath.io/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension" target="_blank"><img src="./GitUI/Resources/Icons/originals/signpath_logo.png"></a>
+* We thank [SignPath Foundation](https://signpath.org/?utm_source=foundation&utm_medium=github&utm_campaign=gitextension) for the signing certificate
 * We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/))
 
 ## Backers
