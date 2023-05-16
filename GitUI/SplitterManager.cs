@@ -100,8 +100,9 @@ namespace GitUI
                     }
                 }
 
-                _splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: false);
-                _splitter.Panel2Collapsed = settings.GetBool(Panel2CollapsedSettingsKey, defaultValue: false);
+                // Keep the collapsed states as in the designer if not stored yet
+                _splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: _splitter.Panel1Collapsed);
+                _splitter.Panel2Collapsed = settings.GetBool(Panel2CollapsedSettingsKey, defaultValue: _splitter.Panel2Collapsed);
 
                 _splitter.ResumeLayout();
                 _splitter.EndInit();
