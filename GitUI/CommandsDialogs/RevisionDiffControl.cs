@@ -512,7 +512,10 @@ namespace GitUI.CommandsDialogs
                             .Where(item => !item.Item.IsDeleted && item.SecondRevision.ObjectId == childId)
                             .Select(item => item.Item.Name)
                             .ToList();
-                        Module.CheckoutFiles(itemsToCheckout, childId, force: false);
+
+                        // Reset to head for artificial items
+                        ObjectId? resetId = childId.IsArtificial ? _revisionGrid.CurrentCheckout : childId;
+                        Module.CheckoutFiles(itemsToCheckout, resetId, force: false);
                     }
                 }
                 else
@@ -535,11 +538,13 @@ namespace GitUI.CommandsDialogs
 
                     foreach (ObjectId parentId in selectedItems.FirstIds())
                     {
+                        // Reset to head for artificial items
+                        ObjectId? resetId = parentId.IsArtificial ? _revisionGrid.CurrentCheckout : parentId;
                         List<string> itemsToCheckout = selectedItems
                             .Where(item => !item.Item.IsNew && !(item.Item.IsConflict && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
-                        Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
+                        Module.CheckoutFiles(itemsToCheckout, resetId, force: false);
 
                         // Special handling for conflicted files, shown in worktree (with the raw diff).
                         // Must be reset to HEAD as Index is just a status marker.
@@ -1163,10 +1168,16 @@ namespace GitUI.CommandsDialogs
 
         private void InitResetFileToToolStripMenuItem()
         {
-            var items = DiffFiles.SelectedItems;
+            IEnumerable<FileStatusItem> items = DiffFiles.SelectedItems;
 
-            var selectedIds = items.SecondIds().ToList();
-            if (selectedIds.Count == 0 || selectedIds.Any(id => !CanResetToRevision(id)))
+            List<ObjectId> selectedIds = DiffFiles.SelectedItems.SecondIds().ToList();
+            List<ObjectId> parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
+
+            // if an artificial revision is selected, reset to the current checkout
+            // Only show one menu item if all selectedIds are artificial or head
+            ObjectId selectedId = (selectedIds.FirstOrDefault()?.IsArtificial ?? true) == true ? _revisionGrid.CurrentCheckout : selectedIds.FirstOrDefault();
+            ObjectId parentId = (parentIds.FirstOrDefault()?.IsArtificial ?? true) == true ? _revisionGrid.CurrentCheckout : parentIds.FirstOrDefault();
+            if (selectedIds.Count == 0 || selectedId == parentId)
             {
                 resetFileToSelectedToolStripMenuItem.Enabled = false;
                 resetFileToSelectedToolStripMenuItem.Visible = false;
@@ -1176,11 +1187,10 @@ namespace GitUI.CommandsDialogs
                 resetFileToSelectedToolStripMenuItem.Enabled = true;
                 resetFileToSelectedToolStripMenuItem.Visible = true;
                 resetFileToSelectedToolStripMenuItem.Text =
-                    _selectedRevision + DescribeRevision(selectedIds.FirstOrDefault(), 50);
+                    _selectedRevision + DescribeRevision(selectedId, 50);
             }
 
-            var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
-            if (parentIds.Count == 0 || parentIds.Any(id => !CanResetToRevision(id)))
+            if (parentIds.Count == 0)
             {
                 resetFileToParentToolStripMenuItem.Enabled = false;
                 resetFileToParentToolStripMenuItem.Visible = false;
@@ -1190,7 +1200,7 @@ namespace GitUI.CommandsDialogs
                 resetFileToParentToolStripMenuItem.Enabled = true;
                 resetFileToParentToolStripMenuItem.Visible = true;
                 resetFileToParentToolStripMenuItem.Text =
-                    _firstRevision + DescribeRevision(parentIds.FirstOrDefault(), 50);
+                    _firstRevision + DescribeRevision(parentId, 50);
             }
         }
 
