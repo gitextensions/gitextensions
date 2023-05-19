@@ -42,7 +42,9 @@ namespace GitUI.CommandsDialogs.Menus
 
         private void CopyFullPathsNativeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            GetCurrentParent().Hide();
+            // The command can be invoked via the keyboard, and the parent is null
+            GetCurrentParent()?.Hide();
+
             CopyPathsToClipboard(Module.WorkingDir, PathUtil.ToNativePath);
         }
 
