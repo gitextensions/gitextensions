@@ -49,10 +49,8 @@ namespace GitUIPluginInterfaces
             string defaultPluginsPath = Path.Combine(new FileInfo(Application.ExecutablePath).Directory.FullName, "Plugins");
             string? userPluginsPath = UserPluginsPath;
 
-            IEnumerable<FileInfo> pluginFiles = PluginsPathScanner.GetFiles(defaultPluginsPath, userPluginsPath);
-#if !CI_BUILD
-            pluginFiles = pluginFiles.Where(f => f.Name.StartsWith("GitExtensions."));
-#endif
+            IEnumerable<FileInfo> pluginFiles = PluginsPathScanner.GetFiles(defaultPluginsPath, userPluginsPath)
+                .Where(f => f.Name.StartsWith("GitExtensions.Plugins."));
 
             string cacheFile = Path.Combine(applicationDataFolder ?? "ignored", "Plugins", "composition.cache");
             IExportProviderFactory exportProviderFactory;
