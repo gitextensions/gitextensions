@@ -49,8 +49,11 @@ namespace GitUIPluginInterfaces
             string defaultPluginsPath = Path.Combine(new FileInfo(Application.ExecutablePath).Directory.FullName, "Plugins");
             string? userPluginsPath = UserPluginsPath;
 
-            IEnumerable<FileInfo> pluginFiles = PluginsPathScanner.GetFiles(defaultPluginsPath, userPluginsPath)
-                .Where(f => f.Name.StartsWith("GitExtensions.Plugins."));
+            // The plugins that are bundled up with the app must follow this naming convention: GitExtensions.Plugins.*.dll
+            IEnumerable<FileInfo> pluginFiles = PluginsPathScanner.GetFiles(defaultPluginsPath).Where(f => f.Name.StartsWith("GitExtensions.Plugins."));
+
+            // Custom plugins must follow this naming convention: GitExtensions.*.dll
+            IEnumerable<FileInfo> userPluginFiles = PluginsPathScanner.GetFiles(userPluginsPath).Where(f => f.Name.StartsWith("GitExtensions."));
 
             string cacheFile = Path.Combine(applicationDataFolder ?? "ignored", "Plugins", "composition.cache");
             IExportProviderFactory exportProviderFactory;
@@ -61,7 +64,10 @@ namespace GitUIPluginInterfaces
             }
             else
             {
-                Assembly[] assemblies = pluginFiles.Select(assemblyFile => TryLoadAssembly(assemblyFile)).WhereNotNull().ToArray();
+                Assembly[] assemblies = pluginFiles.Union(userPluginFiles)
+                                                   .Select(assemblyFile => TryLoadAssembly(assemblyFile))
+                                                   .WhereNotNull()
+                                                   .ToArray();
 
                 PartDiscovery? discovery = PartDiscovery.Combine(
                     new AttributedPartDiscoveryV1(Resolver.DefaultInstance),
