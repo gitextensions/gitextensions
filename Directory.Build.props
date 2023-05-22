@@ -22,12 +22,14 @@
     <!-- TODO once all project migrated to SDK-style, remove this and move properties to Directory.Build.props -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
-    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
-
     <IsPublishable>false</IsPublishable>
+
+    <!-- Set this manually whenever build ARM64-->
+    <Arm64Build>false</Arm64Build>
 
     <!-- Opt in to build acceleration in VS (from 17.5 onwards): https://github.com/dotnet/project-system/blob/main/docs/build-acceleration.md -->
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
   </PropertyGroup>
 
   <PropertyGroup>

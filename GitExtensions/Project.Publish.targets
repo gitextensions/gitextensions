@@ -285,7 +285,7 @@
     Creates an MSI.
     ============================================================
     -->
-  <Target Name="CreateMsi" AfterTargets="CreatePortable">
+  <Target Name="CreateMsi" Condition="'$(Arm64Build)' != 'true'" AfterTargets="CreatePortable">
     <PropertyGroup>
       <_AppVeyorSuffix>$(ARTIFACT_BUILD_SUFFIX)</_AppVeyorSuffix>
       <_PublishMsiVersionSuffix>-$(CurrentBuildVersion.ToString())$(_AppVeyorSuffix)</_PublishMsiVersionSuffix>
