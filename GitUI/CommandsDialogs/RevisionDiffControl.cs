@@ -513,9 +513,7 @@ namespace GitUI.CommandsDialogs
                             .Select(item => item.Item.Name)
                             .ToList();
 
-                        // Reset to head for artificial items
-                        ObjectId? resetId = childId.IsArtificial ? _revisionGrid.CurrentCheckout : childId;
-                        Module.CheckoutFiles(itemsToCheckout, resetId, force: false);
+                        Module.CheckoutFiles(itemsToCheckout, GetResetId(childId, _revisionGrid.CurrentCheckout), force: false);
                     }
                 }
                 else
@@ -536,10 +534,13 @@ namespace GitUI.CommandsDialogs
                         Module.RemoveFiles(addedItems.Select(item => item.Item.Name).ToList(), force: false);
                     }
 
+                    // Artificial is to be handled as HEAD, except for Index->WorkTree
+                    bool isIndex = IsParentIndex(selectedItems);
+
                     foreach (ObjectId parentId in selectedItems.FirstIds())
                     {
-                        // Reset to head for artificial items
-                        ObjectId? resetId = parentId.IsArtificial ? _revisionGrid.CurrentCheckout : parentId;
+                        ObjectId? resetId = isIndex ? ObjectId.IndexId : GetResetId(parentId, _revisionGrid.CurrentCheckout);
+
                         List<string> itemsToCheckout = selectedItems
                             .Where(item => !item.Item.IsNew && !(item.Item.IsConflict && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
@@ -560,6 +561,28 @@ namespace GitUI.CommandsDialogs
             {
                 RequestRefresh();
             }
+        }
+
+        /// <summary>
+        /// It is generally not possible to reset to an artificial commit, use HEAD instead.
+        /// </summary>
+        /// <param name="resetId">The selected commit it.</param>
+        /// <param name="headId">The current HEAD id.</param>
+        /// <returns>The id to reset to.</returns>
+        private ObjectId GetResetId(ObjectId? resetId, ObjectId headId)
+        {
+            return (resetId?.IsArtificial ?? true) ? headId : resetId;
+        }
+
+        /// <summary>
+        /// Return if this is a Index->WorkTree selection and reset to parent should be handled as Index
+        /// (artificial commits are normally handled as HEAD).
+        /// </summary>
+        /// <param name="selectedItems">The selected items.</param>
+        /// <returns><see langword="true"/> if this is a Index->WorkTree selection.</returns>
+        private bool IsParentIndex(IEnumerable<FileStatusItem> selectedItems)
+        {
+            return selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId) && selectedItems.FirstIds().All(i => i == ObjectId.IndexId);
         }
 
         /// <summary>
@@ -1154,30 +1177,27 @@ namespace GitUI.CommandsDialogs
             InitResetFileToToolStripMenuItem();
         }
 
-        /// <summary>
-        /// Checks if it is possible to reset to the revision.
-        /// For artificial is Index is possible but not WorkTree or Combined.
-        /// </summary>
-        /// <param name="guid">The Git objectId.</param>
-        /// <returns>If it is possible to reset to the revisions.</returns>
-        private bool CanResetToRevision(ObjectId guid)
-        {
-            return guid != ObjectId.WorkTreeId
-                   && guid != ObjectId.CombinedDiffId;
-        }
-
         private void InitResetFileToToolStripMenuItem()
         {
-            IEnumerable<FileStatusItem> items = DiffFiles.SelectedItems;
-
             List<ObjectId> selectedIds = DiffFiles.SelectedItems.SecondIds().ToList();
             List<ObjectId> parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
 
-            // if an artificial revision is selected, reset to the current checkout
-            // Only show one menu item if all selectedIds are artificial or head
-            ObjectId selectedId = (selectedIds.FirstOrDefault()?.IsArtificial ?? true) == true ? _revisionGrid.CurrentCheckout : selectedIds.FirstOrDefault();
-            ObjectId parentId = (parentIds.FirstOrDefault()?.IsArtificial ?? true) == true ? _revisionGrid.CurrentCheckout : parentIds.FirstOrDefault();
-            if (selectedIds.Count == 0 || selectedId == parentId)
+            // If an artificial revision is selected, reset to the current checkout
+            ObjectId? selectedId = GetResetId(selectedIds.FirstOrDefault(), _revisionGrid.CurrentCheckout);
+            ObjectId? parentId = GetResetId(parentIds.FirstOrDefault(), _revisionGrid.CurrentCheckout);
+            if (IsParentIndex(DiffFiles.SelectedItems))
+            {
+                // Special handling, First as Index (it is the "parent"), but Second as HEAD
+                parentId = ObjectId.IndexId;
+            }
+            else if (selectedId == parentId && selectedIds.All(i => i == _revisionGrid.CurrentCheckout))
+            {
+                // "Reverse click": Use the 'selected' menu item (True HEAD) instead of the parent
+                parentId = null;
+            }
+
+            // Only show HEAD menu item for parent
+            if (selectedId is null || selectedId == parentId)
             {
                 resetFileToSelectedToolStripMenuItem.Enabled = false;
                 resetFileToSelectedToolStripMenuItem.Visible = false;
@@ -1190,7 +1210,7 @@ namespace GitUI.CommandsDialogs
                     _selectedRevision + DescribeRevision(selectedId, 50);
             }
 
-            if (parentIds.Count == 0)
+            if (parentId is null)
             {
                 resetFileToParentToolStripMenuItem.Enabled = false;
                 resetFileToParentToolStripMenuItem.Visible = false;
