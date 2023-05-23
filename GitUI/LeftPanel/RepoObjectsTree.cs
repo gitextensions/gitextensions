@@ -12,6 +12,7 @@ using GitUI.Script;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.LeftPanel
@@ -304,6 +305,7 @@ namespace GitUI.LeftPanel
                     : selectedRevision.Guid;
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                await TaskScheduler.Default;
                 cancellationToken.ThrowIfCancellationRequested();
                 HashSet<string> mergedBranches = selectedGuid is null
                     ? new HashSet<string>()
