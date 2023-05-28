@@ -508,12 +508,18 @@ namespace GitUI.CommandsDialogs
 
                     foreach (ObjectId childId in selectedItems.SecondIds())
                     {
+                        ObjectId? resetId = GetResetId(childId);
+                        if (resetId is null)
+                        {
+                            continue;
+                        }
+
                         List<string> itemsToCheckout = selectedItems
                             .Where(item => !item.Item.IsDeleted && item.SecondRevision.ObjectId == childId)
                             .Select(item => item.Item.Name)
                             .ToList();
 
-                        Module.CheckoutFiles(itemsToCheckout, GetResetId(childId, _revisionGrid.CurrentCheckout), force: false);
+                        Module.CheckoutFiles(itemsToCheckout, resetId, force: false);
                     }
                 }
                 else
@@ -539,7 +545,11 @@ namespace GitUI.CommandsDialogs
 
                     foreach (ObjectId parentId in selectedItems.FirstIds())
                     {
-                        ObjectId? resetId = isIndex ? ObjectId.IndexId : GetResetId(parentId, _revisionGrid.CurrentCheckout);
+                        ObjectId? resetId = isIndex ? parentId : GetResetId(parentId);
+                        if (resetId is null)
+                        {
+                            continue;
+                        }
 
                         List<string> itemsToCheckout = selectedItems
                             .Where(item => !item.Item.IsNew && !(item.Item.IsConflict && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
@@ -550,7 +560,7 @@ namespace GitUI.CommandsDialogs
                         // Special handling for conflicted files, shown in worktree (with the raw diff).
                         // Must be reset to HEAD as Index is just a status marker.
                         List<string> conflictsToCheckout = selectedItems
-                            .Where(item => item.Item.IsConflict && parentId == ObjectId.IndexId)
+                            .Where(item => item.Item.IsConflict && resetId == ObjectId.IndexId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
                         Module.CheckoutFiles(conflictsToCheckout, _revisionGrid.CurrentCheckout, force: false);
@@ -564,14 +574,13 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// It is generally not possible to reset to an artificial commit, use HEAD instead.
+        /// It is generally not possible to reset to an artificial commit.
         /// </summary>
         /// <param name="resetId">The selected commit it.</param>
-        /// <param name="headId">The current HEAD id.</param>
-        /// <returns>The id to reset to.</returns>
-        private ObjectId GetResetId(ObjectId? resetId, ObjectId headId)
+        /// <returns><see langword="null"/> if not possible to reset to this revision.</returns>
+        private ObjectId? GetResetId(ObjectId? resetId)
         {
-            return (resetId?.IsArtificial ?? true) ? headId : resetId;
+            return (resetId?.IsArtificial ?? true) ? null : resetId;
         }
 
         /// <summary>
@@ -1179,25 +1188,12 @@ namespace GitUI.CommandsDialogs
 
         private void InitResetFileToToolStripMenuItem()
         {
-            List<ObjectId> selectedIds = DiffFiles.SelectedItems.SecondIds().ToList();
-            List<ObjectId> parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
+            // Multiple parent/child can be selected, only the the first is shown.
+            // The only artificial commit that can be reset to is Index<-WorkTree
+            ObjectId? selectedId = GetResetId(DiffFiles.SelectedItems.SecondIds().FirstOrDefault());
+            ObjectId? parentId = IsParentIndex(DiffFiles.SelectedItems) ? ObjectId.IndexId : GetResetId(DiffFiles.SelectedItems.FirstIds().FirstOrDefault());
 
-            // If an artificial revision is selected, reset to the current checkout
-            ObjectId? selectedId = GetResetId(selectedIds.FirstOrDefault(), _revisionGrid.CurrentCheckout);
-            ObjectId? parentId = GetResetId(parentIds.FirstOrDefault(), _revisionGrid.CurrentCheckout);
-            if (IsParentIndex(DiffFiles.SelectedItems))
-            {
-                // Special handling, First as Index (it is the "parent"), but Second as HEAD
-                parentId = ObjectId.IndexId;
-            }
-            else if (selectedId == parentId && selectedIds.All(i => i == _revisionGrid.CurrentCheckout))
-            {
-                // "Reverse click": Use the 'selected' menu item (True HEAD) instead of the parent
-                parentId = null;
-            }
-
-            // Only show HEAD menu item for parent
-            if (selectedId is null || selectedId == parentId)
+            if (selectedId is null)
             {
                 resetFileToSelectedToolStripMenuItem.Enabled = false;
                 resetFileToSelectedToolStripMenuItem.Visible = false;
