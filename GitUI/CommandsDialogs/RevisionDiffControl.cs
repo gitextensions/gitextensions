@@ -580,12 +580,11 @@ namespace GitUI.CommandsDialogs
         /// <returns><see langword="null"/> if not possible to reset to this revision.</returns>
         private ObjectId? GetResetId(ObjectId? resetId)
         {
-            return (resetId?.IsArtificial ?? true) ? null : resetId;
+            return (resetId?.IsArtificial is false) ? resetId : null;
         }
 
         /// <summary>
-        /// Return if this is a Index->WorkTree selection and reset to parent should be handled as Index
-        /// (artificial commits are normally handled as HEAD).
+        /// Return whether this is a Index->WorkTree selection and reset to parent should be handled as Index.
         /// </summary>
         /// <param name="selectedItems">The selected items.</param>
         /// <returns><see langword="true"/> if this is a Index->WorkTree selection.</returns>
