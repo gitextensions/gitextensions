@@ -1,15 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
-using ApprovalTests;
-using ApprovalTests.Namers;
-using ApprovalTests.Reporters;
-using ApprovalTests.Reporters.ContinuousIntegration;
 using FluentAssertions;
 using GitCommands;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using Newtonsoft.Json;
-using NUnit.Framework;
 
 namespace GitCommandsTests
 {
@@ -50,7 +45,6 @@ namespace GitCommandsTests
         // Avoid launching the difftool at differences
         // APPVEYOR should be detected automatically, this forces the setting (also in local tests)
         // The popup will hang the tests without failure information
-        [UseReporter(typeof(AppVeyorReporter))]
         [Test]
         [TestCase("bad_parentid", false)]
         [TestCase("bad_parentid_length", false)]
@@ -65,38 +59,36 @@ namespace GitCommandsTests
         [TestCase("subject_no_body", true)]
         [TestCase("empty_commit", true)]
         [TestCase("reflogselector", true, true)]
-        public void TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false, bool serialThrows = false)
+        public async Task TryParseRevision_test(string testName, bool expectedReturn, bool hasReflogSelector = false, bool serialThrows = false)
         {
-            using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
+            string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
+            ArraySegment<byte> chunk = File.ReadAllBytes(path);
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), hasReflogSelector, _logOutputEncoding, _sixMonths);
+
+            // Set to a high value so Debug.Assert do not raise exceptions
+            reader.GetTestAccessor().NoOfParseError = 100;
+            reader.GetTestAccessor().TryParseRevision(chunk, out GitRevision rev)
+                .Should().Be(expectedReturn);
+            if (hasReflogSelector)
             {
-                string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
-                ArraySegment<byte> chunk = File.ReadAllBytes(path);
-                RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), hasReflogSelector, _logOutputEncoding, _sixMonths);
+                rev.ReflogSelector.Should().NotBeNull();
+            }
 
-                // Set to a high value so Debug.Assert do not raise exceptions
-                reader.GetTestAccessor().NoOfParseError = 100;
-                reader.GetTestAccessor().TryParseRevision(chunk, out GitRevision rev)
-                    .Should().Be(expectedReturn);
-                if (hasReflogSelector)
-                {
-                    rev.ReflogSelector.Should().NotBeNull();
-                }
+            // No LocalTime for the time stamps
+            JsonSerializerSettings timeZoneSettings = new()
+            {
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            };
 
-                // No LocalTime for the time stamps
-                JsonSerializerSettings timeZoneSettings = new()
-                {
-                    DateTimeZoneHandling = DateTimeZoneHandling.Utc
-                };
-
-                if (serialThrows)
-                {
-                    Action act = () => JsonConvert.SerializeObject(rev);
-                    act.Should().Throw<JsonSerializationException>();
-                }
-                else if (expectedReturn)
-                {
-                    Approvals.VerifyJson(JsonConvert.SerializeObject(rev, timeZoneSettings));
-                }
+            if (serialThrows)
+            {
+                Action act = () => JsonConvert.SerializeObject(rev);
+                act.Should().Throw<JsonSerializationException>();
+            }
+            else if (expectedReturn)
+            {
+                await Verifier.VerifyJson(JsonConvert.SerializeObject(rev, timeZoneSettings))
+                    .UseParameters(testName);
             }
         }
     }

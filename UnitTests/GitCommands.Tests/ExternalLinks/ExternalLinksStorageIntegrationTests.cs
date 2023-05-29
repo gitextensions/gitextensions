@@ -1,11 +1,9 @@
 ﻿using System.Reflection;
-using ApprovalTests;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitCommandsTests.ExternalLinks
 {
@@ -37,7 +35,7 @@ namespace GitCommandsTests.ExternalLinks
         }
 
         [Test]
-        public void Can_save_settings()
+        public async Task Can_save_settings()
         {
             using GitModuleTestHelper testHelper = new();
             string settingsFile = testHelper.CreateRepoFile(".git", "GitExtensions.settings", "﻿<dictionary />");
@@ -58,7 +56,7 @@ namespace GitCommandsTests.ExternalLinks
 
             settings.Save();
 
-            Approvals.VerifyXml(File.ReadAllText(settingsFile));
+            await Verifier.VerifyXml(File.ReadAllText(settingsFile));
         }
     }
 }

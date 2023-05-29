@@ -1,13 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
-using ApprovalTests;
 using AppVeyorIntegration;
 using CommonTestUtils;
 using FluentAssertions;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using NSubstitute;
-using NUnit.Framework;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
@@ -29,16 +27,16 @@ namespace AppVeyorIntegrationTests
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
-        public void Should_return_a_build_Info_When_Json_content_is_the_one_of_a_pull_request_build()
+        public async Task Should_return_a_build_Info_When_Json_content_is_the_one_of_a_pull_request_build()
         {
-            Approvals.Verify(BuildBuildInfoForFile("AppVeyorResult_pull_request_build.json"));
+            await Verifier.Verify(BuildBuildInfoForFile("AppVeyorResult_pull_request_build.json")).UseDirectory("ApprovedFiles");
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
-        public void Should_return_a_build_Info_When_Json_content_is_the_one_of_a_master_build()
+        public async Task Should_return_a_build_Info_When_Json_content_is_the_one_of_a_master_build()
         {
-            Approvals.Verify(BuildBuildInfoForFile("AppVeyorResult_master.json"));
+            await Verifier.Verify(BuildBuildInfoForFile("AppVeyorResult_master.json")).UseDirectory("ApprovedFiles");
         }
 
         private string BuildBuildInfoForFile(string filename)
