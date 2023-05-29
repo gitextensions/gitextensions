@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-
-namespace GitUITests
+﻿namespace GitUITests
 {
     [TestFixture]
     public sealed class LinqExtensionsTests

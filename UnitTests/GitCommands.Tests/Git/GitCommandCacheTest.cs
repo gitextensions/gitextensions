@@ -1,5 +1,4 @@
 using GitCommands;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Git
 {

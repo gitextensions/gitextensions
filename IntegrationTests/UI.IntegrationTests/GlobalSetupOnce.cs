@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-
-[SetUpFixture]
+﻿[SetUpFixture]
 public class GlobalSetupOnce
 {
     [OneTimeSetUp]

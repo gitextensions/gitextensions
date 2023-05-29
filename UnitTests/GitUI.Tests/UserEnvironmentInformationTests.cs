@@ -1,6 +1,5 @@
 ﻿using GitCommands;
 using GitUI;
-using NUnit.Framework;
 
 namespace GitUITests
 {

@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitExtensions.Plugins.ReleaseNotesGenerator;
-using NUnit.Framework;
 
 namespace ReleaseNotesGeneratorTests
 {

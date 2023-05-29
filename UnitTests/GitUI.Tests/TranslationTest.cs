@@ -2,7 +2,6 @@
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;
-using NUnit.Framework;
 using ResourceManager;
 using ResourceManager.Xliff;
 

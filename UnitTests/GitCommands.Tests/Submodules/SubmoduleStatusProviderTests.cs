@@ -6,7 +6,6 @@ using GitCommands.Git;
 using GitCommands.Git.Commands;
 using GitCommands.Submodules;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Submodules
 {

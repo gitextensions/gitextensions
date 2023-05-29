@@ -9,7 +9,6 @@ using GitUI.Blame;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;
 using NSubstitute;
-using NUnit.Framework;
 using ResourceManager;
 
 namespace GitUITests.UserControls

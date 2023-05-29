@@ -3,7 +3,6 @@ using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs
 {

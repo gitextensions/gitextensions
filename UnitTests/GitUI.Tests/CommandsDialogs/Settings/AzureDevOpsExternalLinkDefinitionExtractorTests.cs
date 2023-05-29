@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
-using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs.Settings
 {

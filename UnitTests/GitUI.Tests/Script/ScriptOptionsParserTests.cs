@@ -8,7 +8,6 @@ using GitUI.Script;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.Script
 {

@@ -3,7 +3,6 @@ using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
-using NUnit.Framework;
 using IRepositoryStorage = GitCommands.UserRepositoryHistory.IRepositoryStorage;
 using Repository = GitCommands.UserRepositoryHistory.Repository;
 

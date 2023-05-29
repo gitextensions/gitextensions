@@ -2,7 +2,6 @@
 using GitCommands;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 

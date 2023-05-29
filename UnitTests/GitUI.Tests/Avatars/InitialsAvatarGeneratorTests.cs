@@ -1,5 +1,4 @@
 ﻿using GitUI.Avatars;
-using NUnit.Framework;
 
 namespace GitUITests.Avatars
 {

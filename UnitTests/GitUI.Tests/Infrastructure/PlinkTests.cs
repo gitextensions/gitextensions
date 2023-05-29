@@ -1,5 +1,4 @@
 ﻿using GitUI.Infrastructure;
-using NUnit.Framework;
 
 namespace GitUITests.Infrastructure
 {

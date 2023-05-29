@@ -5,7 +5,6 @@ using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
-using NUnit.Framework;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {

@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-
-namespace GitUITests.Avatars
+﻿namespace GitUITests.Avatars
 {
     public abstract class AvatarCacheTestBase : AvatarTestBase
     {

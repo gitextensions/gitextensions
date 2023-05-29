@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Net;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.Avatars

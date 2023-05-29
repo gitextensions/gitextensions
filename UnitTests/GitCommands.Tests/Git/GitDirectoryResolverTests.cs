@@ -4,7 +4,6 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Git
 {

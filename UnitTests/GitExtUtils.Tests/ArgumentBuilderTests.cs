@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitExtUtils;
-using NUnit.Framework;
 
 namespace GitExtUtilsTests
 {

@@ -2,7 +2,6 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests.UserRepositoryHistory
 {

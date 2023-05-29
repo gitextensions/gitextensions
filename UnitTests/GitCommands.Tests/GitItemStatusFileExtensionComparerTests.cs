@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using GitCommands;
 using GitCommands.Git;
-using NUnit.Framework;
 
 namespace GitCommandsTests
 {

@@ -8,7 +8,6 @@ using GitUI.NBugReports;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitExtensions.UITests.Script
 {

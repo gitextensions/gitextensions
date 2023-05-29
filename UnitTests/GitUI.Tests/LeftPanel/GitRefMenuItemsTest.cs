@@ -2,7 +2,6 @@
 using GitUI.LeftPanel.ContextMenu;
 using GitUI.LeftPanel.Interfaces;
 using NSubstitute;
-using NUnit.Framework;
 using ResourceManager;
 
 namespace GitUITests.LeftPanel
