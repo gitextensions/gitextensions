@@ -1334,21 +1334,40 @@ namespace GitCommands
             return _gitExecutable.GetOutput(args);
         }
 
-        public void Reset(ResetMode mode, string? file = null)
+        /// <summary>
+        /// Reset all changes to HEAD
+        /// </summary>
+        /// <param name="clean">Clean non ignored files.</param>
+        /// <param name="onlyWorkTree">Reset only WorkTree files.</param>
+        /// <returns><see langword="true"/> if executed.</returns>
+        public bool ResetAllChanges(bool clean, bool onlyWorkTree = false)
         {
-            _gitExecutable.RunCommand(GitCommandHelpers.ResetCmd(mode, null, file));
+            if (onlyWorkTree)
+            {
+                GitArgumentBuilder args = new("checkout")
+                    {
+                        "--",
+                        "."
+                    };
+                GitExecutable.GetOutput(args);
+            }
+            else
+            {
+                // Reset all changes.
+                Reset(ResetMode.Hard);
+            }
+
+            if (clean)
+            {
+                Clean(CleanMode.OnlyNonIgnored, directories: true);
+            }
+
+            return true;
         }
 
-        public string ResetFile(string file)
+        public void Reset(ResetMode mode, string? file = null)
         {
-            return _gitExecutable.GetOutput(
-                new GitArgumentBuilder("checkout-index")
-            {
-                "--index",
-                "--force",
-                "--",
-                file.ToPosixPath().Quote()
-            });
+            _gitExecutable.RunCommand(GitCommandHelpers.ResetCmd(mode, commit: null, file));
         }
 
         public string ResetFiles(IReadOnlyList<string> files)
@@ -1365,6 +1384,75 @@ namespace GitCommands
                     "--"
                 }
                 .BuildBatchArgumentsForFiles(files));
+        }
+
+        /// <summary>
+        /// Reset changes to the selected files.
+        /// </summary>
+        /// <param name="selectedItems">Items to reset, with Staged status set.</param>
+        /// <param name="resetAndDelete">Delete new (and renamed) files.</param>
+        /// <param name="fullPathResolver"><see cref="IFullPathResolver"/></param>
+        /// <param name="filesInUse">Out put listing files in use, that cannot be deleted.</param>
+        /// <param name="output">Error messages from the reset.</param>
+        /// <param name="progressAction">Action when unstaging files (to update a progress bar).</param>
+        /// <returns><see langword="true"/> if successfully executed</returns>
+        public bool ResetChanges(IEnumerable<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out List<string> filesInUse, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction = null)
+        {
+            // If Staged was selected, unstage file first
+            IEnumerable<GitItemStatus> stagedFiles = selectedItems.Where(item => item.Staged == StagedStatus.Index);
+            BatchUnstageFiles(stagedFiles, progressAction);
+
+            filesInUse = new();
+            List<string> filesToReset = new();
+            List<string> conflictsToReset = new();
+            output = new();
+            foreach (GitItemStatus item in selectedItems)
+            {
+                if (resetAndDelete && DeletableItem(item))
+                {
+                    try
+                    {
+                        string? path = fullPathResolver.Resolve(item.Name);
+                        if (File.Exists(path))
+                        {
+                            File.Delete(path);
+                        }
+                        else if (Directory.Exists(path))
+                        {
+                            Directory.Delete(path, recursive: true);
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        filesInUse.Add(item.Name);
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                    }
+                }
+
+                if (item.IsConflict)
+                {
+                    conflictsToReset.Add(item.Name);
+                }
+                else if (!item.IsNew)
+                {
+                    filesToReset.Add(item.IsRenamed ? item.OldName : item.Name);
+                }
+            }
+
+            output.Append(ResetFiles(filesToReset));
+            if (conflictsToReset.Count > 0)
+            {
+                // Special handling for conflicted files, shown in worktree (with the raw diff).
+                // Must be reset to HEAD as Index is just a status marker.
+                ObjectId headId = RevParse("HEAD");
+                CheckoutFiles(conflictsToReset, headId, force: false);
+            }
+
+            return true;
+
+            static bool DeletableItem(GitItemStatus item) => item.IsNew || item.IsRenamed;
         }
 
         /// <summary>

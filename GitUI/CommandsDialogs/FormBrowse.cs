@@ -1352,7 +1352,7 @@ namespace GitUI.CommandsDialogs
 
         private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UICommands.StartResetChangesDialog(this);
+            UICommands.StartResetChangesDialog(this, Module.GetWorkTreeFiles(), onlyWorkTree: false);
             RefreshGitStatusMonitor();
             revisionDiff.RefreshArtificial();
         }
