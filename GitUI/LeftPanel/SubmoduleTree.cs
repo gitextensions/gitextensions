@@ -376,15 +376,7 @@ namespace GitUI.LeftPanel
             }
 
             GitModule module = new(node.Info.Path);
-
-            // Reset all changes.
-            module.Reset(ResetMode.Hard);
-
-            // Also delete new files, if requested.
-            if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
-            {
-                module.Clean(CleanMode.OnlyNonIgnored, directories: true);
-            }
+            module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
         }
 
         public void StashSubmodule(IWin32Window owner, SubmoduleNode node)
