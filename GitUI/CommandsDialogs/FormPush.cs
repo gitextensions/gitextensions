@@ -283,10 +283,11 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_Branch.Text)
-                || _NO_TRANSLATE_Branch.Text == DetachedHeadParser.DetachedBranch
-                || string.IsNullOrWhiteSpace(RemoteBranch.Text)
-                || RemoteBranch.Text == DetachedHeadParser.DetachedBranch)
+            if (_NO_TRANSLATE_Branch.Text != AllRefs
+                && (string.IsNullOrWhiteSpace(_NO_TRANSLATE_Branch.Text)
+                    || _NO_TRANSLATE_Branch.Text == DetachedHeadParser.DetachedBranch
+                    || string.IsNullOrWhiteSpace(RemoteBranch.Text)
+                    || RemoteBranch.Text == DetachedHeadParser.DetachedBranch))
             {
                 MessageBox.Show(owner, _noCurrentBranch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
