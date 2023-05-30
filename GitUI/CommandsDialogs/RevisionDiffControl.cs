@@ -508,8 +508,7 @@ namespace GitUI.CommandsDialogs
 
                     foreach (ObjectId childId in selectedItems.SecondIds())
                     {
-                        ObjectId? resetId = GetResetId(childId);
-                        if (resetId is null)
+                        if (!CanResetToSecond(childId))
                         {
                             continue;
                         }
@@ -519,7 +518,7 @@ namespace GitUI.CommandsDialogs
                             .Select(item => item.Item.Name)
                             .ToList();
 
-                        Module.CheckoutFiles(itemsToCheckout, resetId, force: false);
+                        Module.CheckoutFiles(itemsToCheckout, childId, force: false);
                     }
                 }
                 else
@@ -540,13 +539,9 @@ namespace GitUI.CommandsDialogs
                         Module.RemoveFiles(addedItems.Select(item => item.Item.Name).ToList(), force: false);
                     }
 
-                    // Artificial is to be handled as HEAD, except for Index->WorkTree
-                    bool isIndex = IsParentIndex(selectedItems);
-
                     foreach (ObjectId parentId in selectedItems.FirstIds())
                     {
-                        ObjectId? resetId = isIndex ? parentId : GetResetId(parentId);
-                        if (resetId is null)
+                        if (!CanResetToFirst(parentId, selectedItems))
                         {
                             continue;
                         }
@@ -555,12 +550,12 @@ namespace GitUI.CommandsDialogs
                             .Where(item => !item.Item.IsNew && !(item.Item.IsConflict && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
-                        Module.CheckoutFiles(itemsToCheckout, resetId, force: false);
+                        Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
 
                         // Special handling for conflicted files, shown in worktree (with the raw diff).
                         // Must be reset to HEAD as Index is just a status marker.
                         List<string> conflictsToCheckout = selectedItems
-                            .Where(item => item.Item.IsConflict && resetId == ObjectId.IndexId)
+                            .Where(item => item.Item.IsConflict && parentId == ObjectId.IndexId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
                         Module.CheckoutFiles(conflictsToCheckout, _revisionGrid.CurrentCheckout, force: false);
@@ -574,24 +569,22 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// It is generally not possible to reset to an artificial commit.
+        /// Return if it is possible to reset to the commit, selected second.
         /// </summary>
         /// <param name="resetId">The selected commit it.</param>
-        /// <returns><see langword="null"/> if not possible to reset to this revision.</returns>
-        private ObjectId? GetResetId(ObjectId? resetId)
+        /// <param name="selectedItems">The selected items.</param>
+        /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
+        private bool CanResetToFirst(ObjectId? resetId, IEnumerable<FileStatusItem> selectedItems)
         {
-            return (resetId?.IsArtificial is false) ? resetId : null;
+            return CanResetToSecond(resetId) || (selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId) && selectedItems.FirstIds().All(i => i == ObjectId.IndexId));
         }
 
         /// <summary>
-        /// Return whether this is a Index->WorkTree selection and reset to parent should be handled as Index.
+        /// Return if it is possible to reset to the commit, selected first.
         /// </summary>
-        /// <param name="selectedItems">The selected items.</param>
-        /// <returns><see langword="true"/> if this is a Index->WorkTree selection.</returns>
-        private bool IsParentIndex(IEnumerable<FileStatusItem> selectedItems)
-        {
-            return selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId) && selectedItems.FirstIds().All(i => i == ObjectId.IndexId);
-        }
+        /// <param name="resetId">The selected commit it.</param>
+        /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
+        private bool CanResetToSecond(ObjectId? resetId) => resetId?.IsArtificial is false;
 
         /// <summary>
         /// Show the file in the BlameViewer if Blame is visible.
@@ -1189,10 +1182,10 @@ namespace GitUI.CommandsDialogs
         {
             // Multiple parent/child can be selected, only the the first is shown.
             // The only artificial commit that can be reset to is Index<-WorkTree
-            ObjectId? selectedId = GetResetId(DiffFiles.SelectedItems.SecondIds().FirstOrDefault());
-            ObjectId? parentId = IsParentIndex(DiffFiles.SelectedItems) ? ObjectId.IndexId : GetResetId(DiffFiles.SelectedItems.FirstIds().FirstOrDefault());
+            ObjectId? selectedId = DiffFiles.SelectedItems.SecondIds().FirstOrDefault();
+            ObjectId? parentId = DiffFiles.SelectedItems.FirstIds().FirstOrDefault();
 
-            if (selectedId is null)
+            if (!CanResetToSecond(selectedId))
             {
                 resetFileToSelectedToolStripMenuItem.Enabled = false;
                 resetFileToSelectedToolStripMenuItem.Visible = false;
@@ -1205,7 +1198,7 @@ namespace GitUI.CommandsDialogs
                     _selectedRevision + DescribeRevision(selectedId, 50);
             }
 
-            if (parentId is null)
+            if (!CanResetToFirst(parentId, DiffFiles.SelectedItems))
             {
                 resetFileToParentToolStripMenuItem.Enabled = false;
                 resetFileToParentToolStripMenuItem.Visible = false;
