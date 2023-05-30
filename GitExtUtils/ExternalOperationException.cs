@@ -42,7 +42,7 @@
         /// <summary>
         /// The working directory.
         /// </summary>
-        public string WorkingDirectory { get; }
+        public string? WorkingDirectory { get; }
 
         /// <summary>
         /// The exit code of an executed process.
