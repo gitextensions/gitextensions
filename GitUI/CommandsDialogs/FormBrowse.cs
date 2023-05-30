@@ -2567,9 +2567,9 @@ namespace GitUI.CommandsDialogs
                     continue;
                 }
 
-                if (infos.ContainsKey(path))
+                if (infos.TryGetValue(path, out SubmoduleInfo? info))
                 {
-                    UpdateSubmoduleMenuItemStatus(item, infos[path]);
+                    UpdateSubmoduleMenuItemStatus(item, info);
                 }
                 else
                 {

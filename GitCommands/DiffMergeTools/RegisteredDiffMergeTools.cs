@@ -42,9 +42,9 @@
 
         internal static DiffMergeTool? Get(string toolName)
         {
-            if (RegisteredTools.ContainsKey(toolName))
+            if (RegisteredTools.TryGetValue(toolName, out DiffMergeTool? tool))
             {
-                return RegisteredTools[toolName];
+                return tool;
             }
 
             return null;

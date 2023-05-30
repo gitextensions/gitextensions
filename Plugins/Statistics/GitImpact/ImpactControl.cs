@@ -215,17 +215,17 @@ namespace GitExtensions.Plugins.GitImpact
                 // Default: person with least number of changed lines first, others on top
                 foreach (var author in _authorStack)
                 {
-                    if (_brushes.ContainsKey(author) && _paths.ContainsKey(author))
+                    if (_brushes.ContainsKey(author) && _paths.TryGetValue(author, out GraphicsPath? authorPath))
                     {
-                        e.Graphics.FillPath(_brushes[author], _paths[author]);
+                        e.Graphics.FillPath(_brushes[author], authorPath);
                     }
                 }
 
                 // Draw black border around selected author
                 string selectedAuthor = _authorStack[_authorStack.Count - 1];
-                if (_brushes.ContainsKey(selectedAuthor) && _paths.ContainsKey(selectedAuthor))
+                if (_brushes.ContainsKey(selectedAuthor) && _paths.TryGetValue(selectedAuthor, out GraphicsPath? selectedAuthorPath))
                 {
-                    e.Graphics.DrawPath(new Pen(SystemColors.WindowText, 2), _paths[selectedAuthor]);
+                    e.Graphics.DrawPath(new Pen(SystemColors.WindowText, 2), selectedAuthorPath);
                 }
 
                 foreach (var author in _authorStack)
@@ -507,9 +507,9 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                if (_brushes.ContainsKey(author))
+                if (_brushes.TryGetValue(author, out SolidBrush? brush))
                 {
-                    return _brushes[author].Color;
+                    return brush.Color;
                 }
             }
 
@@ -532,9 +532,9 @@ namespace GitExtensions.Plugins.GitImpact
         {
             lock (_dataLock)
             {
-                if (_authors.ContainsKey(author))
+                if (_authors.TryGetValue(author, out ImpactLoader.DataPoint info))
                 {
-                    return _authors[author];
+                    return info;
                 }
 
                 return new ImpactLoader.DataPoint(0, 0, 0);

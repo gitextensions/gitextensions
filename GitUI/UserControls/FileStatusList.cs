@@ -1124,8 +1124,8 @@ namespace GitUI
             int GetItemImageIndex(GitItemStatus gitItemStatus)
             {
                 var imageKey = GetItemImageKey(gitItemStatus);
-                return _stateImageIndexDict.ContainsKey(imageKey)
-                    ? _stateImageIndexDict[imageKey]
+                return _stateImageIndexDict.TryGetValue(imageKey, out int value)
+                    ? value
                     : _stateImageIndexDict[nameof(Images.FileStatusUnknown)];
             }
 
