@@ -569,20 +569,20 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// Return if it is possible to reset to the commit, selected second.
+        /// Return if it is possible to reset to the first commit.
         /// </summary>
-        /// <param name="resetId">The selected commit it.</param>
-        /// <param name="selectedItems">The selected items.</param>
+        /// <param name="parentId">The parent commit id.</param>
+        /// <param name="selectedItems">The selected file status items.</param>
         /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
-        private bool CanResetToFirst(ObjectId? resetId, IEnumerable<FileStatusItem> selectedItems)
+        private bool CanResetToFirst(ObjectId? parentId, IEnumerable<FileStatusItem> selectedItems)
         {
-            return CanResetToSecond(resetId) || (selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId) && selectedItems.FirstIds().All(i => i == ObjectId.IndexId));
+            return CanResetToSecond(parentId) || (parentId == ObjectId.IndexId && selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId));
         }
 
         /// <summary>
-        /// Return if it is possible to reset to the commit, selected first.
+        /// Return if it is possible to reset to the second (selected) commit.
         /// </summary>
-        /// <param name="resetId">The selected commit it.</param>
+        /// <param name="resetId">The selected commit id.</param>
         /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
         private bool CanResetToSecond(ObjectId? resetId) => resetId?.IsArtificial is false;
 
