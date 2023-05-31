@@ -14,7 +14,7 @@
     "IsIgnored": false,
     "IsRenamed": false,
     "IsCopied": false,
-    "IsConflict": true,
+    "IsUnmerged": true,
     "IsAssumeUnchanged": false,
     "IsSkipWorktree": false,
     "IsSubmodule": false,

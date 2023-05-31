@@ -33,7 +33,7 @@
                 IsCopied = x is CopiedStatus,
                 IsTracked = !(x is UntrackedStatus or IgnoredStatus or UnmodifiedStatus_v1) || !isNew,
                 IsIgnored = x is IgnoredStatus,
-                IsConflict = x is UnmergedStatus,
+                IsUnmerged = x is UnmergedStatus,
                 Staged = staged
             };
         }
