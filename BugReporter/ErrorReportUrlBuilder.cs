@@ -5,13 +5,13 @@ namespace BugReporter
 {
     public interface IErrorReportUrlBuilder
     {
-        string Build(SerializableException exception, string exceptionInfo, string? environmentInfo, string? additionalInfo);
-        string CopyText(SerializableException exception, string exceptionInfo, string? environmentInfo, string? additionalInfo);
+        string Build(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo);
+        string CopyText(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo);
     }
 
     public sealed class ErrorReportUrlBuilder : IErrorReportUrlBuilder
     {
-        public string Build(SerializableException exception, string exceptionInfo, string? environmentInfo, string? additionalInfo)
+        public string Build(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo)
         {
             if (exception is null)
             {
@@ -28,7 +28,7 @@ namespace BugReporter
             return sb.ToString();
         }
 
-        public string CopyText(SerializableException exception, string exceptionInfo, string? environmentInfo, string? additionalInfo)
+        public string CopyText(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo)
         {
             if (exception is null)
             {
