@@ -122,7 +122,7 @@ namespace ResourceManager
             process.Start();
         }
 
-        private bool ParseInternalScheme(Uri? uri, [NotNullWhen(returnValue: true)] out CommandEventArgs? commandEventArgs)
+        private static bool ParseInternalScheme(Uri? uri, [NotNullWhen(returnValue: true)] out CommandEventArgs? commandEventArgs)
         {
             if (uri?.Scheme == InternalScheme)
             {
@@ -134,7 +134,7 @@ namespace ResourceManager
             return false;
         }
 
-        private bool TryParseLink(string? linkUri, [NotNullWhen(returnValue: true)] out Uri? uri)
+        private static bool TryParseLink(string? linkUri, [NotNullWhen(returnValue: true)] out Uri? uri)
         {
             if (string.IsNullOrWhiteSpace(linkUri))
             {
@@ -174,10 +174,10 @@ namespace ResourceManager
             }
 
             public bool ParseInternalScheme(Uri uri, [NotNullWhen(returnValue: true)] out CommandEventArgs? commandEventArgs)
-                => _linkFactory.ParseInternalScheme(uri, out commandEventArgs);
+                => LinkFactory.ParseInternalScheme(uri, out commandEventArgs);
 
             public bool TryParseLink(string? linkUri, [NotNullWhen(returnValue: true)] out Uri? uri)
-                => _linkFactory.TryParseLink(linkUri, out uri);
+                => LinkFactory.TryParseLink(linkUri, out uri);
         }
     }
 }

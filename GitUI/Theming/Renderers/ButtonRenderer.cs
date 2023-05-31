@@ -34,12 +34,12 @@ namespace GitUI.Theming
             return Handled;
         }
 
-        private void RenderGroupBox(Context ctx, Rectangle prect)
+        private static void RenderGroupBox(Context ctx, Rectangle prect)
         {
             ctx.Graphics.DrawRectangle(SystemPens.ControlDark, prect.Inclusive());
         }
 
-        private void RenderPushButton(Context ctx, State.Push stateid, Rectangle prect)
+        private static void RenderPushButton(Context ctx, State.Push stateid, Rectangle prect)
         {
             var border = prect.Inclusive();
             switch (stateid)
@@ -78,7 +78,7 @@ namespace GitUI.Theming
             }
         }
 
-        private int RenderCheckBox(Context ctx, State.CheckBox stateid, Rectangle prect)
+        private static int RenderCheckBox(Context ctx, State.CheckBox stateid, Rectangle prect)
         {
             Brush backBrush;
             Color foreColor;
@@ -171,7 +171,7 @@ namespace GitUI.Theming
             return Handled;
         }
 
-        private void RenderRadio(Context ctx, State.Radio stateid, Rectangle prect)
+        private static void RenderRadio(Context ctx, State.Radio stateid, Rectangle prect)
         {
             Brush backBrush;
             Color foreColor;

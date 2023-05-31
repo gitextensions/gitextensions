@@ -143,7 +143,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private Remote FindRemoteByPreference(IList<Remote> remotes)
+        private static Remote FindRemoteByPreference(IList<Remote> remotes)
         {
             if (remotes is null)
             {

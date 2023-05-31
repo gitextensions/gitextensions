@@ -270,7 +270,7 @@
             }
         }
 
-        private Color GetParentBackColor(TabControl tabs)
+        private static Color GetParentBackColor(TabControl tabs)
         {
             var parent = tabs.Parent;
             while (parent is not null)
@@ -299,7 +299,7 @@
                 : BrushScope.ForSystemBrush(SystemBrushes.Control);
         }
 
-        private Pen CreateBorderPen() =>
+        private static Pen CreateBorderPen() =>
             new(Color.LightGray.AdaptBackColor(), BorderWidth);
     }
 }

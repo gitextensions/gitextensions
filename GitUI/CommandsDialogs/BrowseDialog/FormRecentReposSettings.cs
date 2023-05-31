@@ -153,7 +153,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        private ListViewItem GetRepositoryListViewItem(RecentRepoInfo repo, bool anchored)
+        private static ListViewItem GetRepositoryListViewItem(RecentRepoInfo repo, bool anchored)
         {
             ListViewItem item = new(repo.Caption) { Tag = repo, ToolTipText = repo.Repo.Path };
 

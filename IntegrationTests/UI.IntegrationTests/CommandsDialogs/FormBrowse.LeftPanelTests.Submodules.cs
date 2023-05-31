@@ -122,7 +122,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 });
         }
 
-        private TreeNode GetSubmoduleNode(FormBrowse form)
+        private static TreeNode GetSubmoduleNode(FormBrowse form)
         {
             var treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
             var remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Submodules);

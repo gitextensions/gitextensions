@@ -130,7 +130,7 @@ namespace GitCommandsTests.Git
             Assert.IsInstanceOf<Win32Exception>(ex.InnerException);
         }
 
-        private string GenerateStringByLength(int length)
+        private static string GenerateStringByLength(int length)
         {
             StringBuilder sb = new(length);
 

@@ -105,7 +105,7 @@ namespace GitUITests.LeftPanel
             Assert.AreEqual(caption, _testNode.CallStatck.Pop());
         }
 
-        private MenuItemsGenerator<TestBranchNode> CreateGenerator(IMenuItemFactory factory)
+        private static MenuItemsGenerator<TestBranchNode> CreateGenerator(IMenuItemFactory factory)
         {
             return new MenuItemsGenerator<TestBranchNode>(factory);
         }

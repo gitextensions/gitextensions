@@ -137,7 +137,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private const int ResizeOnContent = -1;
         private const int ResizeOnHeader = -2;
 
-        private void ResizeColumnToFitContent(ColumnHeader column)
+        private static void ResizeColumnToFitContent(ColumnHeader column)
         {
             var resizeStrategy = column.ListView.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
             column.Width = resizeStrategy;

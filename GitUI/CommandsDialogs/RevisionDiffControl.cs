@@ -1155,7 +1155,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         /// <param name="guid">The Git objectId.</param>
         /// <returns>If it is possible to reset to the revisions.</returns>
-        private bool CanResetToRevision(ObjectId guid)
+        private static bool CanResetToRevision(ObjectId guid)
         {
             return guid != ObjectId.WorkTreeId
                    && guid != ObjectId.CombinedDiffId;

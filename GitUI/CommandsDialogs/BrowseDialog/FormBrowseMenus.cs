@@ -449,7 +449,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RefreshToolbarsMenuItemCheckedState(ToolStripItemCollection toolStripItems)
+        private static void RefreshToolbarsMenuItemCheckedState(ToolStripItemCollection toolStripItems)
         {
             foreach (ToolStripMenuItem item in toolStripItems)
             {

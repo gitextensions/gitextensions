@@ -114,7 +114,7 @@ namespace GitUI.LeftPanel.ContextMenu
             return Strings.Tooltips[key];
         }
 
-        private bool Implements<TInterface>()
+        private static bool Implements<TInterface>()
         {
             return typeof(TInterface).IsAssignableFrom(typeof(TNode));
         }

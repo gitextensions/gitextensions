@@ -204,7 +204,7 @@ namespace GitExtensions.UITests.Script
             });
         }
 
-        private CommandStatus ExecuteRunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
+        private static CommandStatus ExecuteRunScript(IWin32Window owner, IGitModule module, string scriptKey, IGitUICommands uiCommands,
             RevisionGridControl revisionGrid)
         {
             try

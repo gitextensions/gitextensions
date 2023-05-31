@@ -27,7 +27,7 @@
             DiffListSorting = GetSettingValueOrDefault();
         }
 
-        private DiffListSortType GetSettingValueOrDefault()
+        private static DiffListSortType GetSettingValueOrDefault()
         {
             return AppSettings.DiffListSorting;
         }

@@ -372,7 +372,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             return -1;
         }
 
-        private void DrawSegment(Graphics g, Brush laneBrush, int x0, int y0, int x1, int y1)
+        private static void DrawSegment(Graphics g, Brush laneBrush, int x0, int y0, int x1, int y1)
         {
             Point p0 = new(x0, y0);
             Point p1 = new(x1, y1);

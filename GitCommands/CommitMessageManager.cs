@@ -62,11 +62,11 @@ namespace GitCommands
 
     public sealed class CommitMessageManager : ICommitMessageManager
     {
-        private string CannotReadCommitMessage => "Cannot read commit message";
-        private string CannotSaveCommitMessage => "Cannot save commit message";
-        private string CannotReadAmendState => "Cannot read amend state";
-        private string CannotSaveAmendState => "Cannot save amend state";
-        private string CannotAccessFile => "Exception: \"{0}\" when accessing {1}";
+        private static string CannotReadCommitMessage => "Cannot read commit message";
+        private static string CannotSaveCommitMessage => "Cannot save commit message";
+        private static string CannotReadAmendState => "Cannot read amend state";
+        private static string CannotSaveAmendState => "Cannot save amend state";
+        private static string CannotAccessFile => "Exception: \"{0}\" when accessing {1}";
 
         private readonly string _amendSaveStatePath;
 

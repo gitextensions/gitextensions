@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             EnableSshOptions();
         }
 
-        private IEnumerable<string> GetPuttyLocations()
+        private static IEnumerable<string> GetPuttyLocations()
         {
             string envVariable = Environment.GetEnvironmentVariable("GITEXT_PUTTY");
             if (!string.IsNullOrEmpty(envVariable))

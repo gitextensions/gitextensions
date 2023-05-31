@@ -25,7 +25,7 @@ namespace BugReporterTests
                 .Should().Throw<ArgumentNullException>();
         }
 
-        private (SerializableException exception, string? exceptionInfo, string environmentInfo, string additionalInfo) BuildData()
+        private static (SerializableException exception, string? exceptionInfo, string environmentInfo, string additionalInfo) BuildData()
         {
             SerializableException exception = new(new Exception("OPPS!", new ApplicationException("BAM!", new DivideByZeroException("BOOM!"))));
             string environmentInfo = @"Git Extensions 3.4.3.9999

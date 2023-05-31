@@ -238,7 +238,7 @@ namespace GitUI.LeftPanel
                 modulePaths.Find(path => submodulePath != path && submodulePath.Contains(path));
         }
 
-        private string GetNodeRelativePath(GitModule topModule, SubmoduleNode node)
+        private static string GetNodeRelativePath(GitModule topModule, SubmoduleNode node)
         {
             return node.SuperPath.SubstringAfter(topModule.WorkingDir).ToPosixPath() + node.LocalPath;
         }

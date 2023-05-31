@@ -910,7 +910,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
         }
 
-        private void OnDragEnter(object sender, DragEventArgs e)
+        private static void OnDragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
             {

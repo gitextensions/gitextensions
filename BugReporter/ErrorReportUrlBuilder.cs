@@ -42,7 +42,7 @@ namespace BugReporter
             return sb.ToString();
         }
 
-        private StringBuilder GetExceptionDetails(SerializableException exception, string exceptionInfo, string? additionalInfo)
+        private static StringBuilder GetExceptionDetails(SerializableException exception, string exceptionInfo, string? additionalInfo)
         {
             StringBuilder exceptionDetails = new();
             if (!string.IsNullOrEmpty(exceptionInfo))

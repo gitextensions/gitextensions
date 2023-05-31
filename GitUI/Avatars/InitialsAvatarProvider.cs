@@ -33,7 +33,7 @@ namespace GitUI.Avatars
         /// </summary>
         /// <param name="str">The string to calculate a hash for.</param>
         /// <returns>The calculated hash.</returns>
-        private int GetDeterministicHashCode(string str)
+        private static int GetDeterministicHashCode(string str)
         {
             unchecked
             {

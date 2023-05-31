@@ -348,7 +348,7 @@ namespace AppVeyorIntegration
             }
         }
 
-        private void UpdateDisplay(IObserver<BuildInfo> observer, AppVeyorBuildInfo build)
+        private static void UpdateDisplay(IObserver<BuildInfo> observer, AppVeyorBuildInfo build)
         {
             build.UpdateDescription();
             observer.OnNext(build);
@@ -389,7 +389,7 @@ namespace AppVeyorIntegration
             }
         }
 
-        private long GetBuildDuration(JToken buildData)
+        private static long GetBuildDuration(JToken buildData)
         {
             var startTime = (buildData["started"] ?? buildData["created"])?.ToObject<DateTime>();
             var updateTime = buildData["updated"]?.ToObject<DateTime>();

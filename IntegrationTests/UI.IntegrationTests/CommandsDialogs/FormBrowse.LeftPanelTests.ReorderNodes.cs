@@ -197,7 +197,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             Assert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
         }
 
-        private void ValidateOrder(List<TreeNode> initialNodes, TreeNodeCollection currNodes, params int[] expectedOrder)
+        private static void ValidateOrder(List<TreeNode> initialNodes, TreeNodeCollection currNodes, params int[] expectedOrder)
         {
             AssertListCount(currNodes, expectedOrder.Length);
             AssertListCount(initialNodes, expectedOrder.Length);
