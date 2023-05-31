@@ -138,22 +138,6 @@ namespace GitUI.Theming
                 DNS_PRESSED = 3,
                 DNS_DISABLED = 4,
             }
-
-            public enum UpHorizontal
-            {
-                UPHZS_NORMAL = 1,
-                UPHZS_HOT = 2,
-                UPHZS_PRESSED = 3,
-                UPHZS_DISABLED = 4,
-            }
-
-            public enum DownHorizontal
-            {
-                DNHZS_NORMAL = 1,
-                DNHZS_HOT = 2,
-                DNHZS_PRESSED = 3,
-                DNHZS_DISABLED = 4,
-            }
         }
     }
 }

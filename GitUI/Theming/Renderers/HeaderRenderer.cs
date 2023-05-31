@@ -173,40 +173,6 @@ namespace GitUI.Theming
                 HIS_ICONSORTEDPRESSED = 12,
             }
 
-            public enum ItemLeft
-            {
-                HILS_NORMAL = 1,
-                HILS_HOT = 2,
-                HILS_PRESSED = 3
-            }
-
-            public enum ItemRight
-            {
-                HIRS_NORMAL = 1,
-                HIRS_HOT = 2,
-                HIRS_PRESSED = 3
-            }
-
-            public enum ItemOverflow
-            {
-                HOFS_NORMAL = 1,
-                HOFS_HOT = 2,
-            }
-
-            public enum DropDown
-            {
-                HDDS_NORMAL = 1,
-                HDDS_SOFTHOT = 2,
-                HDDS_HOT = 3
-            }
-
-            public enum DropDownFilter
-            {
-                HDDFS_NORMAL = 1,
-                HDDFS_SOFTHOT = 2,
-                HDDFS_HOT = 3
-            }
-
             public enum SortArrow
             {
                 HSAS_SORTEDUP = 1,

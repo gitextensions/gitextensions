@@ -280,21 +280,6 @@ namespace GitUI.Theming
                 CBS_EXCLUDEDPRESSED = 19,
                 CBS_EXCLUDEDDISABLED = 20,
             }
-
-            public enum GroupBox
-            {
-                GBS_NORMAL = 1,
-                GBS_DISABLED = 2,
-            }
-
-            public enum CommandLink
-            {
-                CMDLGS_NORMAL = 1,
-                CMDLGS_HOT = 2,
-                CMDLGS_PRESSED = 3,
-                CMDLGS_DISABLED = 4,
-                CMDLGS_DEFAULTED = 5,
-            }
         }
     }
 }

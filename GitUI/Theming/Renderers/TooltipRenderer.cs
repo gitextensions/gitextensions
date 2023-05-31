@@ -54,44 +54,5 @@ namespace GitUI.Theming
             TTP_BALLOONSTEM = 6,
             TTP_WRENCH = 7,
         }
-
-        private class State
-        {
-            public enum Close
-            {
-                TTCS_NORMAL = 1,
-                TTCS_HOT = 2,
-                TTCS_PRESSED = 3,
-            }
-
-            public enum Standard
-            {
-                TTSS_NORMAL = 1,
-                TTSS_LINK = 2,
-            }
-
-            public enum Baloon
-            {
-                TTBS_NORMAL = 1,
-                TTBS_LINK = 2,
-            }
-
-            public enum BaloonStem
-            {
-                TTBSS_POINTINGUPLEFTWALL = 1,
-                TTBSS_POINTINGUPCENTERED = 2,
-                TTBSS_POINTINGUPRIGHTWALL = 3,
-                TTBSS_POINTINGDOWNRIGHTWALL = 4,
-                TTBSS_POINTINGDOWNCENTERED = 5,
-                TTBSS_POINTINGDOWNLEFTWALL = 6,
-            }
-
-            public enum Wrench
-            {
-                TTWS_NORMAL = 1,
-                TTWS_HOT = 2,
-                TTWS_PRESSED = 3,
-            }
-        }
     }
 }

@@ -250,46 +250,6 @@ namespace GitUI.Theming
                 LVEB_PUSHED = 3,
             }
 
-            public enum GroupHeader
-            {
-                LVGH_OPEN = 1,
-                LVGH_OPENHOT = 2,
-                LVGH_OPENSELECTED = 3,
-                LVGH_OPENSELECTEDHOT = 4,
-                LVGH_OPENSELECTEDNOTFOCUSED = 5,
-                LVGH_OPENSELECTEDNOTFOCUSEDHOT = 6,
-                LVGH_OPENMIXEDSELECTION = 7,
-                LVGH_OPENMIXEDSELECTIONHOT = 8,
-                LVGH_CLOSE = 9,
-                LVGH_CLOSEHOT = 10,
-                LVGH_CLOSESELECTED = 11,
-                LVGH_CLOSESELECTEDHOT = 12,
-                LVGH_CLOSESELECTEDNOTFOCUSED = 13,
-                LVGH_CLOSESELECTEDNOTFOCUSEDHOT = 14,
-                LVGH_CLOSEMIXEDSELECTION = 15,
-                LVGH_CLOSEMIXEDSELECTIONHOT = 16,
-            }
-
-            public enum GroupHeaderLine
-            {
-                LVGHL_OPEN = 1,
-                LVGHL_OPENHOT = 2,
-                LVGHL_OPENSELECTED = 3,
-                LVGHL_OPENSELECTEDHOT = 4,
-                LVGHL_OPENSELECTEDNOTFOCUSED = 5,
-                LVGHL_OPENSELECTEDNOTFOCUSEDHOT = 6,
-                LVGHL_OPENMIXEDSELECTION = 7,
-                LVGHL_OPENMIXEDSELECTIONHOT = 8,
-                LVGHL_CLOSE = 9,
-                LVGHL_CLOSEHOT = 10,
-                LVGHL_CLOSESELECTED = 11,
-                LVGHL_CLOSESELECTEDHOT = 12,
-                LVGHL_CLOSESELECTEDNOTFOCUSED = 13,
-                LVGHL_CLOSESELECTEDNOTFOCUSEDHOT = 14,
-                LVGHL_CLOSEMIXEDSELECTION = 15,
-                LVGHL_CLOSEMIXEDSELECTIONHOT = 16,
-            }
-
             public enum ListItem
             {
                 LISS_NORMAL = 1,
