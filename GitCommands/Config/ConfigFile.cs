@@ -68,7 +68,7 @@ namespace GitCommands.Config
         {
             try
             {
-                FileInfoExtensions.MakeFileTemporaryWritable(fileName, x => File.WriteAllText(fileName, GetAsString(), GetEncoding()));
+                FileInfoExtensions.MakeFileTemporaryWritable(fileName, file => File.WriteAllText(file, GetAsString(), GetEncoding()));
             }
             catch (Exception ex)
             {
