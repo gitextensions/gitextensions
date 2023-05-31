@@ -201,8 +201,8 @@ namespace GitUI
             typeof(Control).GetMethod("EndUpdateInternal",
                 BindingFlags.Instance | BindingFlags.NonPublic,
                 binder: null,
-                types: new Type[0],
-                modifiers: new ParameterModifier[0]);
+                types: Type.EmptyTypes,
+                modifiers: Array.Empty<ParameterModifier>());
 
         private static readonly MethodInfo _setSelectedTextInternalMethod =
             typeof(TextBoxBase).GetMethod("SetSelectedTextInternal",
