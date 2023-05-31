@@ -114,18 +114,6 @@ namespace GitCommands
             set => SetFlag(value, Flags.IsConflict);
         }
 
-        public bool IsAssumeUnchanged
-        {
-            get => HasFlag(Flags.IsAssumeUnchanged);
-            set => SetFlag(value, Flags.IsAssumeUnchanged);
-        }
-
-        public bool IsSkipWorktree
-        {
-            get => HasFlag(Flags.IsSkipWorktree);
-            set => SetFlag(value, Flags.IsSkipWorktree);
-        }
-
         public bool IsSubmodule
         {
             get => HasFlag(Flags.IsSubmodule);
@@ -140,6 +128,20 @@ namespace GitCommands
         {
             get => HasFlag(Flags.IsDirty);
             set => SetFlag(value, Flags.IsDirty);
+        }
+
+        // Flags below are not set from git-status parsing, but from other sources
+
+        public bool IsAssumeUnchanged
+        {
+            get => HasFlag(Flags.IsAssumeUnchanged);
+            set => SetFlag(value, Flags.IsAssumeUnchanged);
+        }
+
+        public bool IsSkipWorktree
+        {
+            get => HasFlag(Flags.IsSkipWorktree);
+            set => SetFlag(value, Flags.IsSkipWorktree);
         }
 
         /// <remarks>
