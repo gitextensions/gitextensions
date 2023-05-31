@@ -23,7 +23,7 @@ namespace GitUITests
         [Test]
         public void AsReadOnlyList_returns_object_unchanged_when_has_required_interface()
         {
-            Test(new int[0]);
+            Test(Array.Empty<int>());
             Test(new int[1]);
             Test(new List<int>());
             Test(new List<int> { 1, 2, 3 });

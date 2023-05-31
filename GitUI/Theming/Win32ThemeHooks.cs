@@ -183,7 +183,7 @@ namespace GitUI.Theming
 
             try
             {
-                hook.ThreadACL.SetExclusiveACL(new int[0]);
+                hook.ThreadACL.SetExclusiveACL(Array.Empty<int>());
             }
             catch
             {
