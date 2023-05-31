@@ -108,7 +108,7 @@ namespace GitCommands.Config
 
         public IReadOnlyList<string> GetValues(string key)
         {
-            return _configKeys.ContainsKey(key) ? _configKeys[key] : new List<string>();
+            return _configKeys.TryGetValue(key, out List<string>? configKey) ? configKey : Array.Empty<string>();
         }
 
         public override string ToString()

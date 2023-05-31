@@ -95,7 +95,7 @@ namespace GitUI.AutoCompletion
 
         private static Regex? GetRegexForExtension(string extension)
         {
-            return _regexes.Value.ContainsKey(extension) ? _regexes.Value[extension] : null;
+            return _regexes.Value.TryGetValue(extension, out Regex? value) ? value : null;
         }
 
         private static IEnumerable<string> ReadOrInitializeAutoCompleteRegexes()

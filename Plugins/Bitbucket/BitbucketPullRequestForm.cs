@@ -177,9 +177,9 @@ namespace GitExtensions.Plugins.Bitbucket
         {
             lock (_branches)
             {
-                if (_branches.ContainsKey(selectedRepo))
+                if (_branches.TryGetValue(selectedRepo, out IEnumerable<string>? selectedBranches))
                 {
-                    return _branches[selectedRepo];
+                    return selectedBranches;
                 }
             }
 
