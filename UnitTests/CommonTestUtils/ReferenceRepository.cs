@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.Config;
 using LibGit2Sharp;
@@ -19,7 +20,7 @@ namespace CommonTestUtils
         /// Reset the repo if possible, if it is null or reset throws create a new.
         /// </summary>
         /// <param name="refRepo">The repo to reset, possibly null.</param>
-        public static void ResetRepo(ref ReferenceRepository? refRepo)
+        public static void ResetRepo([NotNull] ref ReferenceRepository? refRepo)
         {
             if (refRepo is null)
             {
