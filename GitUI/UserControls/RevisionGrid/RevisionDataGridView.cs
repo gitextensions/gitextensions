@@ -334,7 +334,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     foreach (var parentId in parents)
                     {
-                        if (_revisionGraph.TryGetNode(parentId, out RevisionGraphRevision parentRev))
+                        if (_revisionGraph.TryGetNode(parentId, out var parentRev))
                         {
                             insertScore = parentRev.Score;
                             break;

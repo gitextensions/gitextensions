@@ -82,7 +82,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public CommitData? GetCommitData(string commitId, out string? error, bool cache = false)
+        public CommitData? GetCommitData(string commitId, [NotNullWhen(true)] out string? error, bool cache = false)
         {
             return TryGetCommitLog(commitId, cache ? CommitDataFormat : CommitDataWithNotesFormat, out error, out var info, cache)
                 ? CreateFromFormattedData(info)
