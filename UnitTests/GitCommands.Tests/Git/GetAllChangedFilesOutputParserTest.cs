@@ -1,5 +1,7 @@
-﻿using GitCommands;
+﻿using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Git;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Newtonsoft.Json;
 
 namespace GitCommandsTests.Git.Commands
@@ -34,6 +36,15 @@ namespace GitCommandsTests.Git.Commands
             IReadOnlyList<GitItemStatus> statuses = getAllChangedFilesOutputParser.Parse(statusString);
             await Verifier.VerifyJson(JsonConvert.SerializeObject(statuses))
                 .UseParameters(testName);
+        }
+
+        [Test]
+        public async Task GitStatusDefault()
+        {
+            GitItemStatus item = GitItemStatus.Default("filename.txt");
+
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(item))
+                .UseParameters("GitStatusDefault");
         }
     }
 }
