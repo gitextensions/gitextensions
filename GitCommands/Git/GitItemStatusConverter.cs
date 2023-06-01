@@ -2,7 +2,8 @@
 {
     public static class GitItemStatusConverter
     {
-        // git-status const instead of static readonly:
+        // https://git-scm.com/docs/git-status#_short_format
+        // const instead of static readonly:
         // These are external constants not expected to be changed or be used as a standalone library
         public const char AddedStatus = 'A';
         public const char CopiedStatus = 'C';
@@ -30,7 +31,7 @@
                 IsDeleted = x is DeletedStatus,
                 IsRenamed = x is RenamedStatus,
                 IsCopied = x is CopiedStatus,
-                IsTracked = (x is not UntrackedStatus or IgnoredStatus or UnmodifiedStatus_v1) || !isNew,
+                IsTracked = !(x is UntrackedStatus or IgnoredStatus or UnmodifiedStatus_v1) || !isNew,
                 IsIgnored = x is IgnoredStatus,
                 IsConflict = x is UnmergedStatus,
                 Staged = staged
