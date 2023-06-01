@@ -6,7 +6,6 @@ using GitUI.CommandsDialogs;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs
 {

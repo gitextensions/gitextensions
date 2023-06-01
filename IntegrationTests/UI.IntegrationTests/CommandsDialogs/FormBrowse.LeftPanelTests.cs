@@ -7,7 +7,6 @@ using GitUI.CommandsDialogs;
 using GitUI.LeftPanel;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;
-using NUnit.Framework;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {

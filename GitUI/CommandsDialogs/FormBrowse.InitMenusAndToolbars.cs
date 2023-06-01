@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using GitUI.Shells;

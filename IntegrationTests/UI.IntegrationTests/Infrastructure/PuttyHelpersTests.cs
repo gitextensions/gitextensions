@@ -5,7 +5,6 @@ using GitUI;
 using GitUI.Infrastructure;
 using GitUI.NBugReports;
 using Microsoft.VisualStudio.Threading;
-using NUnit.Framework;
 
 namespace GitUITests.Infrastructure
 {

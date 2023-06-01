@@ -1,11 +1,9 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
-using ApprovalTests;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.UserRepositoryHistory.Legacy;
-using NUnit.Framework;
 using Current = GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory.Legacy
@@ -64,7 +62,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
-        public void Verify_backwards_compatibility_of_object_graph()
+        public async Task Verify_backwards_compatibility_of_object_graph()
         {
             List<RepositoryCategory> surrogate = new()
             {
@@ -99,7 +97,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
             serializer.Serialize(sw, surrogate, ns);
             xml = sw.ToString();
 
-            Approvals.VerifyXml(xml);
+            await Verifier.VerifyXml(xml);
         }
     }
 }

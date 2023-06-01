@@ -5,7 +5,6 @@ using GitUI.Editor;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.Editor
 {

@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitUI.CommitInfo;
-using NUnit.Framework;
 using ResourceManager;
 
 namespace GitUITests.UserControls.CommitInfo

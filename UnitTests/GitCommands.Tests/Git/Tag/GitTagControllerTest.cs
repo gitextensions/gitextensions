@@ -3,7 +3,6 @@ using GitCommands.Git.Commands;
 using GitCommands.Git.Tag;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Git.Tag
 {

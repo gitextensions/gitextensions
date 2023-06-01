@@ -3,7 +3,6 @@ using System.Text;
 using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
-using GitUI.Infrastructure;
 using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.UserControls

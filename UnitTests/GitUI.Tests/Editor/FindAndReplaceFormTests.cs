@@ -1,7 +1,6 @@
 ﻿using GitUI;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
-using NUnit.Framework;
 
 namespace GitUITests.Editor
 {

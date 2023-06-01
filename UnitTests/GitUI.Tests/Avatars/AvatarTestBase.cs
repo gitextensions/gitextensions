@@ -1,7 +1,6 @@
 ﻿using System.Drawing.Imaging;
 using GitUI.Avatars;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.Avatars
 {

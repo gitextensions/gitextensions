@@ -1,6 +1,5 @@
 ﻿using BugReporter;
 using BugReporter.Serialization;
-using NUnit.Framework;
 
 namespace GitExtensions.UITests.NBugReports
 {

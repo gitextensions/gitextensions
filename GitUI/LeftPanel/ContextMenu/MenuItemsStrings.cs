@@ -1,6 +1,5 @@
 ﻿using GitCommands;
 using GitUI.LeftPanel.Interfaces;
-using ICSharpCode.TextEditor.Actions;
 using ResourceManager;
 
 namespace GitUI.LeftPanel.ContextMenu

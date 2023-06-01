@@ -6,7 +6,6 @@ using System.Resources;
 using System.Text;
 using FluentAssertions;
 using GitUI.Properties;
-using NUnit.Framework;
 
 namespace GitUITests
 {

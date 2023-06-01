@@ -1,10 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
-using ApprovalTests;
-using ApprovalTests.Namers;
 using BugReporter.Serialization;
-using NUnit.Framework;
 
 namespace BugReporterTests
 {
@@ -13,47 +9,40 @@ namespace BugReporterTests
     [SetUICulture("en-US")]
     public sealed class SerializableExceptionTests
     {
-        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test, TestCaseSource(nameof(TestCases))]
-        public void ToString(string testName, Action action)
+        public async Task ToString(string testName, Action action)
         {
-            using (ApprovalResults.ForScenario(testName))
+            string message = string.Empty;
+            try
             {
-                string message = string.Empty;
-                try
-                {
-                    action();
-                }
-                catch (Exception ex)
-                {
-                    message = new SerializableException(ex).ToString();
-                }
-
-                Approvals.Verify(Sanitize(message));
+                action();
             }
+            catch (Exception ex)
+            {
+                message = new SerializableException(ex).ToString();
+            }
+
+            await Verifier.Verify(Sanitize(message))
+                .UseParameters(testName);
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test, TestCaseSource(nameof(TestCases))]
-        public void ToString_should_be_same_from_round_trip(string testName, Action action)
+        public async Task ToString_should_be_same_from_round_trip(string testName, Action action)
         {
-            using (ApprovalResults.ForScenario(testName))
+            string xml = string.Empty;
+            try
             {
-                string message = string.Empty;
-                string xml = string.Empty;
-                try
-                {
-                    action();
-                }
-                catch (Exception ex)
-                {
-                    xml = new SerializableException(ex).ToXmlString();
-                }
-
-                SerializableException exception = SerializableException.FromXmlString(xml);
-
-                Approvals.Verify(Sanitize(exception.ToString()));
+                action();
             }
+            catch (Exception ex)
+            {
+                xml = new SerializableException(ex).ToXmlString();
+            }
+
+            SerializableException exception = SerializableException.FromXmlString(xml);
+
+            await Verifier.Verify(Sanitize(exception.ToString()))
+                .UseParameters(testName);
         }
 
         public static IEnumerable<TestCaseData> TestCases

@@ -1,6 +1,5 @@
 ﻿using GitUI;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitUITests.Helpers
 {

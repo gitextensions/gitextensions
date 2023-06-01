@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitCommands.DiffMergeTools;
-using NUnit.Framework;
 
 namespace GitCommandsTests.DiffMergeTools
 {

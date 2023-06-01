@@ -3,7 +3,6 @@ using FluentAssertions;
 using GitCommands;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using NUnit.Framework;
 
 namespace GitCommandsTests
 {

@@ -1,6 +1,5 @@
 ﻿using CommonTestUtils;
 using GitExtUtils;
-using NUnit.Framework;
 
 namespace GitExtUtilsTests
 {

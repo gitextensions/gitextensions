@@ -1,5 +1,4 @@
 ﻿using GitUI.SpellChecker;
-using NUnit.Framework;
 
 namespace GitUITests.SpellChecker
 {

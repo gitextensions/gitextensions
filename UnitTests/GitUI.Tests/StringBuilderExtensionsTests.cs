@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using GitExtUtils;
-using NUnit.Framework;
 
 namespace GitUITests
 {

@@ -1,8 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using ApprovalTests;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
-using NUnit.Framework;
 
 namespace GitCommandsTests.UserRepositoryHistory
 {
@@ -23,9 +20,8 @@ namespace GitCommandsTests.UserRepositoryHistory
             ((Action)(() => _repositoryXmlSerialiser.Deserialize(null))).Should().Throw<ArgumentException>();
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
-        public void Deserialize_remote_repositories_with_ns()
+        public async Task Deserialize_remote_repositories_with_ns()
         {
             const string settingHistoryValue = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <RepositoryHistory xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
@@ -55,14 +51,13 @@ namespace GitCommandsTests.UserRepositoryHistory
   <CategoryType>Repositories</CategoryType>
 </RepositoryHistory>";
 
-            var repositories = _repositoryXmlSerialiser.Deserialize(settingHistoryValue);
+            IReadOnlyList<Repository> repositories = _repositoryXmlSerialiser.Deserialize(settingHistoryValue);
 
-            Approvals.VerifyAll(repositories, "path");
+            await Verifier.Verify(repositories);
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
-        public void Deserialize_remote_repositories_without_ns()
+        public async Task Deserialize_remote_repositories_without_ns()
         {
             const string settingHistoryValue = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <RepositoryHistory>
@@ -92,9 +87,9 @@ namespace GitCommandsTests.UserRepositoryHistory
   <CategoryType>Repositories</CategoryType>
 </RepositoryHistory>";
 
-            var repositories = _repositoryXmlSerialiser.Deserialize(settingHistoryValue);
+            IReadOnlyList<Repository> repositories = _repositoryXmlSerialiser.Deserialize(settingHistoryValue);
 
-            Approvals.VerifyAll(repositories, "path");
+            await Verifier.Verify(repositories);
         }
 
         [Test]
@@ -103,9 +98,8 @@ namespace GitCommandsTests.UserRepositoryHistory
             ((Action)(() => _repositoryXmlSerialiser.Serialize(null))).Should().Throw<ArgumentNullException>();
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
         [Test]
-        public void Serialize_recent_repositories()
+        public async Task Serialize_recent_repositories()
         {
             List<Repository> history = new()
             {
@@ -120,8 +114,8 @@ namespace GitCommandsTests.UserRepositoryHistory
                 }
             };
 
-            var xml = _repositoryXmlSerialiser.Serialize(history);
-            Approvals.VerifyXml(xml);
+            string xml = _repositoryXmlSerialiser.Serialize(history);
+            await Verifier.VerifyXml(xml);
         }
     }
 }

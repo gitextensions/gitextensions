@@ -6,7 +6,6 @@ using GitCommands;
 using GitCommands.Settings;
 using GitExtUtils;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Git
 {

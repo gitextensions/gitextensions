@@ -1,10 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
-using ApprovalTests;
-using ApprovalTests.Namers;
 using CommonTestUtils;
 using GitCommands;
-using NUnit.Framework;
 
 namespace GitCommandsTests
 {
@@ -29,14 +26,11 @@ namespace GitCommandsTests
         [Test]
         [TestCase("Too_many_lines")]
         [TestCase("Too_long_lines")]
-        public void Should_do_ellipsis(string testName)
+        public async Task Should_do_ellipsis(string testName)
         {
-            var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.{testName}.txt");
+            string content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.{testName}.txt");
 
-            using (ApprovalResults.ForScenario(testName))
-            {
-                Approvals.Verify(new GitRevisionSummaryBuilder().BuildSummary(content));
-            }
+            await Verifier.Verify(new GitRevisionSummaryBuilder().BuildSummary(content));
         }
     }
 }

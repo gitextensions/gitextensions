@@ -1,0 +1,34 @@
+﻿{
+  "ObjectId": {
+    "IsArtificial": false
+  },
+  "Guid": "0c350e248500e4e893e6d17dcc61591cc1cd64e7",
+  "ParentIds": [
+    {
+      "IsArtificial": false
+    }
+  ],
+  "TreeGuid": {
+    "IsArtificial": false
+  },
+  "Author": "Gerhard Olsson",
+  "AuthorEmail": "gerhardol@users.noreply.github.com",
+  "AuthorUnixTime": 1624479586,
+  "AuthorDate": "DateTimeOffset_1",
+  "Committer": "Gerhard Olsson",
+  "CommitterEmail": "gerhardol@users.noreply.github.com",
+  "CommitUnixTime": 1624479586,
+  "CommitDate": "DateTimeOffset_1",
+  "BuildStatus": null,
+  "Subject": "wip tests",
+  "Body": "wip tests",
+  "HasMultiLineMessage": false,
+  "HasNotes": false,
+  "IsArtificial": false,
+  "IsStash": false,
+  "ReflogSelector": null,
+  "HasParent": true,
+  "FirstParentId": {
+    "IsArtificial": false
+  }
+}

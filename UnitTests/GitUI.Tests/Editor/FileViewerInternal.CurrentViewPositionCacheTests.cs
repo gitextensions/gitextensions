@@ -2,7 +2,6 @@
 using GitUI.Editor;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
-using NUnit.Framework;
 
 namespace GitUITests.Editor
 {

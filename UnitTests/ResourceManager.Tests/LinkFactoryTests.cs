@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using ResourceManager;
+﻿using ResourceManager;
 
 namespace ResourceManagerTests
 {

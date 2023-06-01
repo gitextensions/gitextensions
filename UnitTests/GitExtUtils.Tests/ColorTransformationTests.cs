@@ -1,5 +1,4 @@
 ﻿using GitExtUtils.GitUI.Theming;
-using NUnit.Framework;
 
 namespace GitExtUtilsTests
 {

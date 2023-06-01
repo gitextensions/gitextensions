@@ -1,11 +1,9 @@
 ﻿using System.Text.RegularExpressions;
-using ApprovalTests;
 using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitUITests.UserControls
 {
@@ -27,7 +25,7 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void FilterInfo_ctor_expected()
+        public async Task FilterInfo_ctor_expected()
         {
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
@@ -40,7 +38,7 @@ namespace GitUITests.UserControls
             try
             {
                 FilterInfo filterInfo = new();
-                Approvals.Verify(filterInfo);
+                await Verifier.Verify(filterInfo);
             }
             finally
             {
@@ -51,7 +49,7 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void FilterInfo_ctor_with_Raw_expected()
+        public async Task FilterInfo_ctor_with_Raw_expected()
         {
             bool originalBranchFilterEnabled = AppSettings.BranchFilterEnabled;
             bool originalShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
@@ -64,7 +62,7 @@ namespace GitUITests.UserControls
             try
             {
                 FilterInfo filterInfo = new() { IsRaw = true };
-                Approvals.Verify(filterInfo);
+                await Verifier.Verify(filterInfo);
             }
             finally
             {
