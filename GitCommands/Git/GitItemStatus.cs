@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -49,6 +50,16 @@ namespace GitCommands
         {
             Requires.NotNull(name, nameof(name));
             Name = name;
+        }
+
+        /// <summary>
+        /// Get a default object for an item unchanged in the WorkTree.
+        /// </summary>
+        /// <param name="name">The file name for the item.</param>
+        /// <returns>The default GitItemStatus object.</returns>
+        public static GitItemStatus Default(string name)
+        {
+            return GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, name, GitItemStatusConverter.UnusedCharacter);
         }
 
         public string Name { get; set; }

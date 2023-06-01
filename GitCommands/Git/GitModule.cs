@@ -2761,7 +2761,7 @@ namespace GitCommands
 
                 // Get a default status object, then set AssumeUnchanged
                 string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, fileName, GitItemStatusConverter.UnusedCharacter);
+                GitItemStatus gitItemStatus = GitItemStatus.Default(fileName);
                 gitItemStatus.IsAssumeUnchanged = true;
                 result.Add(gitItemStatus);
             }
@@ -2785,7 +2785,7 @@ namespace GitCommands
 
                 // Get a default status object, then set SkipWorktree
                 string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, fileName, GitItemStatusConverter.UnusedCharacter);
+                GitItemStatus gitItemStatus = GitItemStatus.Default(fileName);
                 gitItemStatus.IsSkipWorktree = true;
                 result.Add(gitItemStatus);
             }
