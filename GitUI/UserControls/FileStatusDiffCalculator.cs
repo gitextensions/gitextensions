@@ -126,15 +126,12 @@ namespace GitUI
             {
                 // Check whether the middle commit is base to the first/second
                 // Allow commits earlier to the actual base commit
-                GitRevision middleRev = revisions[1];
-                if (!middleRev.IsArtificial)
+                ObjectId middleId = revisions[1].ObjectId;
+                if (!middleId.IsArtificial
+                    && GetMergeBase(firstRevHead, middleId) == middleId
+                    && GetMergeBase(selectedRevHead, middleId) == middleId)
                 {
-                    ObjectId middleId = middleRev.ObjectId;
-                    if (GetMergeBase(firstRevHead, middleId) == middleId
-                        && GetMergeBase(selectedRevHead, middleId) == middleId)
-                    {
-                        baseRevId = middleId;
-                    }
+                    baseRevId = middleId;
                 }
             }
 
