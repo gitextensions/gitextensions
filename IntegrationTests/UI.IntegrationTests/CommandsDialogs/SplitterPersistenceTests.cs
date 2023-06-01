@@ -2,9 +2,12 @@
 using CommonTestUtils;
 using CommonTestUtils.MEF;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Composition;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {
@@ -32,6 +35,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 .AddParts(typeof(MockWindowsJumpListManager))
                 .AddParts(typeof(MockRepositoryDescriptionProvider))
                 .AddParts(typeof(MockAppTitleGenerator));
+            ExportProvider mefExportProvider = _composition.ExportProviderFactory.CreateExportProvider();
+            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
 
         [OneTimeTearDown]
@@ -53,18 +58,18 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.SetBool("FormBrowse.MainSplitContainer_Panel1Collapsed", leftPanelVisible);
             AppSettings.SetString("Detailed.CommitInfoPosition", "RightwardFromList");
 
-            const int LeftPanelWidth = 123;
+            const int LeftPanelWidth = 123 * 2; // must be >= MinWidth
             const int CommitInfoWidth = 124;
             const int RevisionGridHeight = 125;
             const int FileListWidth = 126;
             const int FileTreeWidth = 127;
 
             RunFormTest(
-                form =>
+                async form =>
                 {
                     FormBrowse.TestAccessor ta = form.GetTestAccessor();
 
-                    WaitForRevisionsToBeLoaded(ta.RevisionGrid);
+                    await WaitForRevisionsToBeLoadedAsync(ta.RevisionGrid);
 
                     form.MainSplitContainer.SplitterDistance = LeftPanelWidth;
                     ta.RevisionsSplitContainer.SplitterDistance = ta.RevisionsSplitContainer.Width - CommitInfoWidth;
@@ -74,19 +79,21 @@ namespace GitExtensions.UITests.CommandsDialogs
                 });
             AppSettings.SaveSettings();
             RunFormTest(
-                form =>
+                async form =>
                 {
                     FormBrowse.TestAccessor ta = form.GetTestAccessor();
 
-                    WaitForRevisionsToBeLoaded(ta.RevisionGrid);
-                    Thread.Sleep(1000);
+                    await WaitForRevisionsToBeLoadedAsync(ta.RevisionGrid);
 
-                    form.MainSplitContainer.Panel1Collapsed.Should().Be(leftPanelVisible);
-                    //// does not work: form.MainSplitContainer.SplitterDistance.Should().Be(LeftPanelWidth);
-                    ta.RevisionsSplitContainer.SplitterDistance.Should().Be(ta.RevisionsSplitContainer.Width - CommitInfoWidth);
-                    ta.RightSplitContainer.SplitterDistance.Should().Be(RevisionGridHeight);
-                    ta.RevisionDiffControl.GetTestAccessor().DiffSplitContainer.SplitterDistance.Should().Be(FileListWidth);
-                    ta.RevisionFileTreeControl.GetTestAccessor().FileTreeSplitContainer.SplitterDistance.Should().Be(FileTreeWidth);
+                    using (new AssertionScope())
+                    {
+                        form.MainSplitContainer.Panel1Collapsed.Should().Be(leftPanelVisible);
+                        form.MainSplitContainer.SplitterDistance.Should().Be(LeftPanelWidth);
+                        ta.RevisionsSplitContainer.SplitterDistance.Should().Be(ta.RevisionsSplitContainer.Width - CommitInfoWidth);
+                        ta.RightSplitContainer.SplitterDistance.Should().Be(RevisionGridHeight);
+                        ta.RevisionDiffControl.GetTestAccessor().DiffSplitContainer.SplitterDistance.Should().Be(FileListWidth);
+                        ta.RevisionFileTreeControl.GetTestAccessor().FileTreeSplitContainer.SplitterDistance.Should().Be(FileTreeWidth);
+                    }
                 });
         }
 
@@ -107,28 +114,17 @@ namespace GitExtensions.UITests.CommandsDialogs
                 testDriverAsync);
         }
 
-        private static void ProcessUntil<T>(Func<T> getCurrent, T expected, int maxIterations = 100) where T : IEquatable<T>
-        {
-            T current = default(T);
-            for (int iteration = 0; iteration < maxIterations; ++iteration)
-            {
-                current = getCurrent();
-                if (current.Equals(expected))
-                {
-                    Debug.WriteLine($"{nameof(ProcessUntil)} '{expected}' in iteration {iteration}");
-                    return;
-                }
-
-                Application.DoEvents();
-                Thread.Sleep(5);
-            }
-
-            Assert.Fail($"{current} != {expected} in {maxIterations} iterations");
-        }
-
-        private static void WaitForRevisionsToBeLoaded(RevisionGridControl revisionGridControl)
+        private static async Task WaitForRevisionsToBeLoadedAsync(RevisionGridControl revisionGridControl)
         {
             UITest.ProcessUntil("Loading Revisions", () => revisionGridControl.GetTestAccessor().IsDataLoadComplete);
+            try
+            {
+                await AsyncTestHelper.JoinPendingOperationsAsync(TimeSpan.FromSeconds(5));
+            }
+            catch
+            {
+                // ignore the timeout and continue
+            }
         }
     }
 }
