@@ -898,7 +898,7 @@ namespace GitUI
         private static string AppendItemSubmoduleStatus(string text, GitItemStatus item)
         {
             if (item.IsSubmodule
-                && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> { IsCompleted: true } task 
+                && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> { IsCompleted: true } task
                 && task.CompletedResult() is not null)
             {
                 text += task.CompletedResult()!.AddedAndRemovedString();
