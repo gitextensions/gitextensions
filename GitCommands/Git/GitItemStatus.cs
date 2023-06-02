@@ -57,7 +57,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="name">The file name for the item.</param>
         /// <returns>The default GitItemStatus object.</returns>
-        public static GitItemStatus Default(string name)
+        public static GitItemStatus GetDefaultStatus(string name)
         {
             return GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, name, GitItemStatusConverter.UnusedCharacter);
         }

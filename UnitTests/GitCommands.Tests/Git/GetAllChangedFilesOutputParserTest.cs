@@ -1,5 +1,4 @@
-﻿using System.Windows.Forms;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Newtonsoft.Json;
@@ -23,7 +22,7 @@ namespace GitCommandsTests.Git.Commands
         [TestCase("deleted_by_them", "u UD N... 100644 100644 000000 100644 f7f9ab7c975ab68e9bd8bda93b8bb717987947ea bf42fd75847fdc76d4f4a2b89d92a1b289b2e4ea 0000000000000000000000000000000000000000 GitUI/CommandsDialogs/FormFormatPatch.Designer.cs")]
         [TestCase("deleted_by_us", "u DU N... 100644 000000 100644 100644 dc7a0a8364df7cb022b3e29a48ecd84992af4613 0000000000000000000000000000000000000000 bf42fd75847fdc76d4f4a2b89d92a1b289b2e4ea GitUI/CommandsDialogs/FormFormatPatch.Designer.cs")]
 
-        // Note that it is not expected that fatal: is mixed with proper info, but parsing should handle
+        // Note that it is not expected that fatal: (stderr) is mixed with proper info (stdout), but parsing should handle this
         [TestCase("fatal_error",
     "? unknown info\0fatal: bad config line 1 in file F:/dev/gc/gitextensions/.git/modules/GitExtensionsDoc/config\nfatal: 'git status --porcelain=2' failed in submodule GitExtensionsDoc\n1 MM N... 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\0")]
         public async Task TestGetStatusChangedFilesFromString(string testName, string statusString)
@@ -39,12 +38,11 @@ namespace GitCommandsTests.Git.Commands
         }
 
         [Test]
-        public async Task GitStatusDefault()
+        public async Task TestGetDefaultStatus()
         {
-            GitItemStatus item = GitItemStatus.Default("filename.txt");
+            GitItemStatus item = GitItemStatus.GetDefaultStatus("filename.txt");
 
-            await Verifier.VerifyJson(JsonConvert.SerializeObject(item))
-                .UseParameters("GitStatusDefault");
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(item));
         }
     }
 }
