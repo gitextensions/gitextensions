@@ -204,7 +204,7 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         private readonly uint _closeAllMessage = NativeMethods.RegisterWindowMessageW("Global.GitExtensions.CloseAllInstances");
-        private readonly SplitterManager _splitterManager = new(new AppSettingsPath("FormBrowse"));
+        private readonly SplitterManager _splitterManager;
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFormBrowseController _controller;
@@ -246,8 +246,18 @@ namespace GitUI.CommandsDialogs
         /// <param name="commands">The commands in the current form.</param>
         /// <param name="args">The start up arguments.</param>
         public FormBrowse(GitUICommands commands, BrowseArguments args)
+#pragma warning disable CS0618 // Type or member is obsolete
+            : this(commands, args, new AppSettingsPath("FormBrowse"))
+#pragma warning restore CS0618 // Type or member is obsolete
+        {
+        }
+
+        [Obsolete("Test only!")]
+        internal FormBrowse(GitUICommands commands, BrowseArguments args, ISettingsSource settingsSource)
             : base(commands)
         {
+            _splitterManager = new(settingsSource);
+
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
 
             _isFileBlameHistory = args.IsFileBlameHistory;
@@ -2906,6 +2916,7 @@ namespace GitUI.CommandsDialogs
             public RevisionGridControl RevisionGrid => _form.RevisionGridControl;
             public SplitContainer RevisionsSplitContainer => _form.RevisionsSplitContainer;
             public SplitContainer RightSplitContainer => _form.RightSplitContainer;
+            public SplitterManager SplitterManager => _form._splitterManager;
             public TabPage TreeTabPage => _form.TreeTabPage;
             public FilterToolBar ToolStripFilters => _form.ToolStripFilters;
         }

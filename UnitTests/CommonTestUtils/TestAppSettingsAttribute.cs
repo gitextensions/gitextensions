@@ -11,6 +11,8 @@ namespace CommonTestUtils
 
         public void BeforeTest(ITest test)
         {
+            File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
+
             AppSettings.CheckForUpdates = false;
             AppSettings.ShowAvailableDiffTools = false;
         }

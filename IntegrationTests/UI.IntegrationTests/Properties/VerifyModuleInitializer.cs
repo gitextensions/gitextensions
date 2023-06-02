@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace GitCommandsTests.Properties
+namespace UI.IntegrationTests.Properties
 {
     internal class VerifyModuleInitializer
     {

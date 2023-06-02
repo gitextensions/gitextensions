@@ -38,7 +38,7 @@ namespace GitUI
             }
         }
 
-        private sealed class SplitterData
+        internal sealed class SplitterData
         {
             private readonly SplitContainer _splitter;
             private readonly string _settingName;
@@ -54,12 +54,12 @@ namespace GitUI
             }
 
             private int SplitterSize => _splitter.Orientation == Orientation.Horizontal ? _splitter.Height : _splitter.Width;
-            private string SizeSettingsKey => _settingName + "_Size";
-            private string DpiSettingsKey => _settingName + "_Dpi";
-            private string DistanceSettingsKey => _settingName + "_Distance";
-            private string FontSizeSettingsKey => _settingName + "_FontSize";
-            private string Panel1CollapsedSettingsKey => _settingName + "_Panel1Collapsed";
-            private string Panel2CollapsedSettingsKey => _settingName + "_Panel2Collapsed";
+            internal string SizeSettingsKey => _settingName + "_Size";
+            internal string DpiSettingsKey => _settingName + "_Dpi";
+            internal string DistanceSettingsKey => _settingName + "_Distance";
+            internal string FontSizeSettingsKey => _settingName + "_FontSize";
+            internal string Panel1CollapsedSettingsKey => _settingName + "_Panel1Collapsed";
+            internal string Panel2CollapsedSettingsKey => _settingName + "_Panel2Collapsed";
 
             public void RestoreFromSettings(ISettingsSource settings)
             {
@@ -144,6 +144,21 @@ namespace GitUI
                            d < SplitterSize - _splitter.Panel2MinSize;
                 }
             }
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly SplitterManager _manager;
+
+            public TestAccessor(SplitterManager manager)
+            {
+                _manager = manager;
+            }
+
+            public List<SplitterData> Splitters => _manager._splitters;
         }
     }
 }
