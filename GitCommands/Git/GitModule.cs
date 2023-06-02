@@ -1458,10 +1458,12 @@ namespace GitCommands
 
                 if (resetId == ObjectId.IndexId)
                 {
-                    if (NotUnmergedIndex(item, postUnstageStatus))
+                    if (UnmergedIndex(item, postUnstageStatus))
                     {
-                        filesToCheckout.Add(item.IsRenamed ? item.OldName : item.Name);
+                        continue;
                     }
+
+                    filesToCheckout.Add(item.IsRenamed ? item.OldName : item.Name);
                 }
                 else if (!item.IsNew && !postUnstageStatus.Value.Any(i => i.IsNew && i.Name == item.Name))
                 {
@@ -1490,8 +1492,8 @@ namespace GitCommands
 
             // 'git-checkout --' must be used for Index (git-reset will copy HEAD to Index, git-restore from 2.25 could be used).
             // However, Unmerged (Conflict) files cannot be checked out to Index.
-            static bool NotUnmergedIndex(GitItemStatus item, Lazy<List<GitItemStatus>> status)
-                => status.Value.Any(i => !i.IsUnmerged && !i.IsNew && i.Name == item.Name);
+            static bool UnmergedIndex(GitItemStatus item, Lazy<List<GitItemStatus>> status)
+                => status.Value.Any(i => (i.IsUnmerged || i.IsNew) && i.Name == item.Name);
         }
 
         /// <summary>
