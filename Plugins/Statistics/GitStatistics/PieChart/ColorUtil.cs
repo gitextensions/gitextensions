@@ -33,7 +33,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </returns>
         public static Color CreateColorWithCorrectedLightness(Color color, float correctionFactor)
         {
-            Debug.Assert(correctionFactor <= 1 && correctionFactor >= -1, "correctionFactor <= 1 && correctionFactor >= -1");
+            Debug.Assert(correctionFactor is >= -1 and <= 1, "correctionFactor is expected to be in [-1, 1] range");
             if (correctionFactor == 0)
             {
                 return color;

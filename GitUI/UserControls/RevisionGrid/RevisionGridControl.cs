@@ -1376,7 +1376,7 @@ namespace GitUI
                         {
                             parents = headParents;
                         }
-                        else if (headParents is not null && headParents.ToList().IndexOf(notSelectedId) is int index && index >= 0)
+                        else if (headParents is not null && headParents.ToList().IndexOf(notSelectedId) is int index and >= 0)
                         {
                             parents = headParents.Skip(index + 1).ToList();
                         }
