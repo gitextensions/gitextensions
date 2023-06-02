@@ -11,6 +11,7 @@ using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
+using SmartFormat.Core.Output;
 using static GitUI.CommandsDialogs.FormBrowse;
 
 namespace GitUI
@@ -744,7 +745,7 @@ namespace GitUI
                     return false;
                 }
 
-                Module.ResetChanges(selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out List<string> filesInUse, out StringBuilder output);
+                Module.ResetChanges(resetId: null, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out List<string> filesInUse, out StringBuilder output);
                 if (output.Length > 0)
                 {
                     MessageBox.Show(null, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);

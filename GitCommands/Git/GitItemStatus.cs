@@ -237,6 +237,30 @@ namespace GitCommands
             _submoduleStatus = status;
         }
 
+        /// <summary>
+        /// Return an object with the status as if the item was created
+        /// with first and second commit reverse selected.
+        /// </summary>
+        /// <returns>An inverted copy.</returns>
+        public GitItemStatus ReverseSelection()
+        {
+            GitItemStatus gitItemStatus = new(Name)
+            {
+                Name = IsRenamed ? OldName : Name,
+                OldName = IsRenamed ? Name : OldName,
+                ErrorMessage = ErrorMessage,
+                TreeGuid = TreeGuid,
+                RenameCopyPercentage = RenameCopyPercentage,
+                Staged = Staged,
+                DiffStatus = DiffStatus,
+                _flags = _flags,
+                IsNew = IsDeleted,
+                IsDeleted = IsNew
+            };
+
+            return gitItemStatus;
+        }
+
         public int CompareName(GitItemStatus other)
         {
             int value = StringComparer.InvariantCulture.Compare(Name, other.Name);
