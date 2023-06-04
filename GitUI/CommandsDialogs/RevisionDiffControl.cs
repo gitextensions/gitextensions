@@ -2,6 +2,7 @@ using System.ComponentModel;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
@@ -29,7 +30,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetSelectedChangesText =
             new("Are you sure you want to reset all selected files to {0}?");
 
-        private RevisionGridControl? _revisionGrid;
+        private IRevisionGridInfo? _revisionGridInfo;
+        private IRevisionGridUpdate? _revisionGridUpdate;
+        private FilterInfo? _filterInfo;
         private RevisionFileTreeControl? _revisionFileTree;
         private readonly IRevisionDiffController _revisionDiffController = new RevisionDiffController();
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
@@ -89,8 +92,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Validates.NotNull(_revisionGrid);
-            var revisions = _revisionGrid.GetSelectedRevisions();
+            Validates.NotNull(_revisionGridInfo);
+            var revisions = _revisionGridInfo.GetSelectedRevisions();
             if (!revisions.Any(r => r.IsArtificial))
             {
                 return;
@@ -263,7 +266,7 @@ namespace GitUI.CommandsDialogs
 
         private async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions)
         {
-            Validates.NotNull(_revisionGrid);
+            Validates.NotNull(_revisionGridInfo);
             CancellationToken cancellationToken = _setDiffSequence.Next();
 
             _viewChangesSequence.CancelCurrent();
@@ -272,7 +275,7 @@ namespace GitUI.CommandsDialogs
 
             FileStatusItem prevSelectedItem = DiffFiles.SelectedItem;
             FileStatusItem prevDiffItem = DiffFiles.FirstGroupItems.Contains(prevSelectedItem) ? prevSelectedItem : null;
-            await DiffFiles.SetDiffsAsync(revisions, _revisionGrid.CurrentCheckout, cancellationToken);
+            await DiffFiles.SetDiffsAsync(revisions, _revisionGridInfo.CurrentCheckout, cancellationToken);
             await this.SwitchToMainThreadAsync(cancellationToken);
 
             _isImplicitListSelection = true;
@@ -301,12 +304,14 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void Bind(RevisionGridControl revisionGrid, RevisionFileTreeControl revisionFileTree, Action? refreshGitStatus)
+        public void Bind(IRevisionGridInfo revisionGridInfo, IRevisionGridUpdate revisionGridUpdate, RevisionFileTreeControl revisionFileTree, FilterInfo filterInfo, Action? refreshGitStatus)
         {
-            _revisionGrid = revisionGrid;
+            _revisionGridInfo = revisionGridInfo;
+            _revisionGridUpdate = revisionGridUpdate;
             _revisionFileTree = revisionFileTree;
+            _filterInfo = filterInfo;
             _refreshGitStatus = refreshGitStatus;
-            DiffFiles.Bind(objectId => DescribeRevision(objectId), _revisionGrid.GetActualRevision);
+            DiffFiles.Bind(objectId => DescribeRevision(objectId), _revisionGridInfo.GetActualRevision);
         }
 
         public void InitSplitterManager(SplitterManager splitterManager)
@@ -349,16 +354,16 @@ namespace GitUI.CommandsDialogs
                 return ResourceManager.TranslatedStrings.Workspace;
             }
 
-            Validates.NotNull(_revisionGrid);
+            Validates.NotNull(_revisionGridInfo);
 
-            var revision = _revisionGrid.GetRevision(objectId);
+            var revision = _revisionGridInfo.GetRevision(objectId);
 
             if (revision is null)
             {
                 return objectId.ToShortString();
             }
 
-            return _revisionGrid.DescribeRevision(revision, maxLength);
+            return _revisionGridInfo.DescribeRevision(revision, maxLength);
         }
 
         /// <summary>
@@ -557,9 +562,9 @@ namespace GitUI.CommandsDialogs
             }
 
             GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
-                ? _revisionGrid.GetActualRevision(_revisionGrid.CurrentCheckout)
+                ? _revisionGridInfo.GetActualRevision(_revisionGridInfo.CurrentCheckout)
                 : DiffFiles.SelectedItem.SecondRevision;
-            await BlameControl.LoadBlameAsync(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGrid,
+            await BlameControl.LoadBlameAsync(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGridInfo, _revisionGridUpdate,
                 controlToMask: null, DiffText.Encoding, line, cancellationToken: _viewChangesSequence.Next());
         }
 
@@ -582,7 +587,7 @@ namespace GitUI.CommandsDialogs
             await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
                 line: line,
                 openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick(),
-                additionalCommandInfo: (DiffFiles.SelectedItem?.Item?.IsRangeDiff is true) && Module.GitVersion.SupportRangeDiffPath ? _revisionGrid.CurrentFilter.PathFilter : "",
+                additionalCommandInfo: (DiffFiles.SelectedItem?.Item?.IsRangeDiff is true) && Module.GitVersion.SupportRangeDiffPath ? _filterInfo.PathFilter : "",
                 cancellationToken: _viewChangesSequence.Next());
         }
 

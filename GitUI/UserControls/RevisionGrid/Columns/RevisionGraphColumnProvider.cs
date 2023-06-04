@@ -20,17 +20,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private static readonly int NodeDimension = DpiUtil.Scale(10);
 
         private readonly LaneInfoProvider _laneInfoProvider;
-        private readonly RevisionGridControl _grid;
         private readonly RevisionGraph _revisionGraph;
         private readonly GraphCache _graphCache = new();
 
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
 
-        public RevisionGraphColumnProvider(RevisionGridControl grid, RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
+        public RevisionGraphColumnProvider(RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
             : base("Graph")
         {
-            _grid = grid;
             _revisionGraph = revisionGraph;
             _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(_revisionGraph), gitRevisionSummaryBuilder);
 

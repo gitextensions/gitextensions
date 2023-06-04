@@ -1,5 +1,6 @@
 ﻿using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitUI.CommandDialogs;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -12,7 +13,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly TranslationString _bisectStart =
             new("Mark selected revisions as start bisect range?");
 
-        private readonly RevisionGridControl _revisionGrid;
+        private readonly IRevisionGridInfo _revisionGridInfo;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -25,7 +26,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public FormBisect(RevisionGridControl revisionGrid)
             : base(revisionGrid.UICommands)
         {
-            _revisionGrid = revisionGrid;
+            _revisionGridInfo = revisionGrid;
             InitializeComponent();
             InitializeComplete();
             UpdateButtonsState();
@@ -47,7 +48,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             UpdateButtonsState();
 
-            var revisions = _revisionGrid.GetSelectedRevisions();
+            var revisions = _revisionGridInfo.GetSelectedRevisions();
             if (revisions.Count > 1)
             {
                 if (MessageBox.Show(this, _bisectStart.Text, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
