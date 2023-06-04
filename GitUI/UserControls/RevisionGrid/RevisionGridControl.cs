@@ -13,6 +13,7 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;
 using GitUI.BuildServerIntegration;
+using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
@@ -52,7 +53,7 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRunScript, IRevisionGridFilter
+    public sealed partial class RevisionGridControl : GitModuleControl, IScriptHostControl, ICheckRefs, IRunScript, IRevisionGridFilter, IRevisionGridInfo
     {
         public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
         public event EventHandler<FilterChangedEventArgs>? FilterChanged;
@@ -3074,12 +3075,10 @@ namespace GitUI
 
             return true;
         }
+
         #endregion
 
         #region IScriptHostControl
-
-        GitRevision IScriptHostControl.GetCurrentRevision()
-            => GetActualRevision(CurrentCheckout);
 
         GitRevision? IScriptHostControl.GetLatestSelectedRevision()
             => LatestSelectedRevision;
@@ -3090,7 +3089,16 @@ namespace GitUI
         Point IScriptHostControl.GetQuickItemSelectorLocation()
             => GetQuickItemSelectorLocation();
 
-        string IScriptHostControl.GetCurrentBranch() => CurrentBranch.Value;
+        #endregion
+
+        #region IRevisionGridInfo
+
+        IReadOnlyList<GitRevision> IRevisionGridInfo.GetSelectedRevisions()
+            => GetSelectedRevisions();
+
+
+        string IRevisionGridInfo.GetCurrentBranch() => CurrentBranch.Value;
+
         #endregion
 
         bool ICheckRefs.Contains(ObjectId objectId) => _gridView.Contains(objectId);

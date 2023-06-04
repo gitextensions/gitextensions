@@ -122,7 +122,7 @@ namespace GitUI.LeftPanel
 
         private void RegisterContextActions()
         {
-            copyContextMenuItem.SetRevisionFunc(() => _scriptHost.GetSelectedRevisions());
+            copyContextMenuItem.SetRevisionFunc(() => _revisionGridInfo.GetSelectedRevisions());
 
             // Filter for selected
             filterForSelectedRefsMenuItem.ToolTipText = "Filter the revision grid to show selected (underlined) refs (branches and tags) only." +
