@@ -13,7 +13,7 @@ namespace GitUITests.UserControls.RevisionGrid
         {
             _revisionGraph = new RevisionGraph();
 
-            foreach (var revision in Revisions)
+            foreach (GitRevision revision in Revisions)
             {
                 // Mark the first revision as the current checkout
                 if (_revisionGraph.Count == 0)
@@ -134,10 +134,208 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.Add(commit1);
             _revisionGraph.Add(commit2);
             _revisionGraph.Add(commit3);
+            _revisionGraph.LoadingCompleted();
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
 
             Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetCurrentRevisionLane());
+
+            AssertGraphLayout(_revisionGraph, @"
+                *
+                |
+                | *
+                |
+                *
+            ");
+        }
+
+        [Test]
+        public void SegmentsAreStraightened()
+        {
+            RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:4  6:5  7:5,6  8:7,2 ");
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\
+                * |
+                |\ \
+                | * |
+                |/  |
+                *   |
+                |   |
+                *   |
+                |\  |
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
+        }
+
+        [Test]
+        public void SegmentsWithCommitsAreStraightened()
+        {
+            RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:5  7:4  8:4,7  9:8,6 ");
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\
+                * |
+                |\ \
+                | * |
+                |/  |
+                |   *
+                |   |
+                |   *
+                |   |
+                *   |
+                |\  |
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
+        }
+
+        [Test]
+        public void SegmentsWithOutgoingSecondaryMergesAreNotStraightened()
+        {
+            RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:4,5  7:6  8:6,7  9:8,5 ");
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\
+                * |
+                |\ \
+                | * |
+                |/ /
+                * |
+                |\|
+                | *
+                | |
+                * |
+                |\ \
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
+        }
+
+        [Test]
+        public void SegmentsWithIncomingMergesAreStraightened()
+        {
+            RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2,4  6:4  7:4,6  8:7,5 ");
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\
+                * |
+                |\ \
+                | * |
+                |/  |
+                |   *
+                |--/|
+                *   |
+                |\  |
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
+        }
+
+        [Test]
+        public void SegmentsAreStraightenedAlthoughThisCausesWidthIncrease()
+        {
+            RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1  5:1,4  6:2  7:2,6  8:5  9:5,8,3,7 ");
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\----\
+                | * | |
+                |/  | |
+                |   | *
+                |   | |\
+                |   | | *
+                |   | |/
+                *   | |
+                |\  | |
+                | * | |
+                |/ / /
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
+        }
+
+        [Test]
+        public void SegmentsWithOutgoingPrimaryMergesAreStraightened()
+        {
+            RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  6:1  7:1,6  8:3,2  9:7  10:7,9,8 ");
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\--\
+                | * |
+                |/  |
+                |   *
+                |   |\
+                *   | |
+                |\  | |
+                | * | |
+                |/ / /
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
+        }
+
+        [Test]
+        public void SegmentsAreNotStraightenedIfThisCausesAShiftForPrimarySegment()
+        {
+            RevisionGraph revisionGraph = CreateGraph(" 1  a:1  b:1  2:1  3:1  4:1  5:4,1  6:3  7:5,6  8:7,2,6  c:8  d:8  e:8  9:8,e,d,c,b,a ");
+
+            // Two segments cross at the 'X'. The one going '/' could be straightened,
+            // but then it would shift the parent node causing an unwanted gap.
+
+            AssertGraphLayout(revisionGraph, @"
+                *
+                |\--------\
+                | * | | | |
+                |/ / /  | |
+                | * |   | |
+                |/ /    | |
+                | *     | |
+                |/      | |
+                *       | |
+                |\--\   | |
+                * | |   | |
+                |\ X    | |
+                | * |   | |
+                | | |   | |
+                * | |   | |
+                |\ \ \  | |
+                * | | | | |
+                |/ / / / /
+                | * | | |
+                |/ / / /
+                | * | |
+                |/ / /
+                | * |
+                |/ /
+                | *
+                |/
+                *
+            ");
         }
 
         private const int LookAhead = 20 * 2;
@@ -193,6 +391,191 @@ namespace GitUITests.UserControls.RevisionGrid
                 prevCommit.ParentIds = new ObjectId[] { };
                 yield return prevCommit;
             }
+        }
+
+        /// <summary>
+        /// Creates a revision graph from a text description that lists commits, space separated, from oldest to newest.
+        /// Each commit spec is {id}:{parent1 id},{parent2 id},...
+        /// or just {id} if it has no parent.
+        ///
+        /// E.g.: " 1   2:1   3:1   4:2,3 "
+        /// </summary>
+        private static RevisionGraph CreateGraph(string commitSpecs)
+        {
+            List<GitRevision> commits = new();
+            Dictionary<string, GitRevision> commitsById = new();
+
+            // Parse and create commits
+            foreach (string spec in commitSpecs.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                string[] parts = spec.Split(':');
+                string id = parts[0];
+
+                GitRevision commit = new(ObjectId.Random());
+                commits.Add(commit);
+                commitsById.Add(id, commit);
+
+                if (parts.Length > 1)
+                {
+                    string[] parentIds = parts[1].Split(',');
+                    commit.ParentIds = parentIds.Select(id => commitsById[id].ObjectId).ToList();
+                }
+            }
+
+            // Add commits to graph from newest to oldest
+            RevisionGraph graph = new();
+            commits.Reverse();
+
+            foreach (GitRevision commit in commits)
+            {
+                graph.Add(commit);
+            }
+
+            graph.LoadingCompleted();
+
+            int lastRowIndex = graph.Count - 1;
+            graph.CacheTo(lastRowIndex, lastRowIndex);
+
+            return graph;
+        }
+
+        /// <summary>
+        /// Asserts that the ascii graph of <paramref name="revisionGraph"/> matches <paramref name="expectedLayout"/>.
+        /// For examples of how to specify <paramref name="expectedLayout"/>, see existing usage in tests.
+        /// </summary>
+        private static void AssertGraphLayout(RevisionGraph revisionGraph, string expectedLayout)
+        {
+            string expectedGraph = expectedLayout.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Join("\n");
+            string actualGraph = AsciiGraphFor(revisionGraph).Join("\n");
+            try
+            {
+                Assert.AreEqual(expectedGraph, actualGraph);
+            }
+            catch
+            {
+                Console.WriteLine(actualGraph);
+            }
+        }
+
+        /// <summary>
+        /// Creates an ascii art representation of the <paramref name="revisionGraph"/> with the same layout
+        /// as the actual GE GUI.
+        /// </summary>
+        private static List<string> AsciiGraphFor(RevisionGraph revisionGraph)
+        {
+            List<string> graph = new();
+
+            int rowIndex = 0;
+            while (true)
+            {
+                // Create a line for commit
+
+                IRevisionGraphRow row = revisionGraph.GetSegmentsForRow(rowIndex);
+                char[] line = Enumerable.Repeat(' ', (row.GetLaneCount() * 2) + 1).ToArray();
+
+                // Show '|' in lanes passing through
+                foreach (RevisionGraphSegment segment in row.Segments)
+                {
+                    line[row.GetLaneForSegment(segment).Index * 2] = '|';
+                }
+
+                // Show '*' in lane of actual commit
+                line[row.GetCurrentRevisionLane() * 2] = '*';
+
+                graph.Add(new string(line).Trim());
+
+                IRevisionGraphRow nextRow = revisionGraph.GetSegmentsForRow(rowIndex + 1);
+                if (nextRow == null)
+                {
+                    break;
+                }
+
+                // Create a line between commits
+
+                line = Enumerable.Repeat(' ', (Math.Max(row.GetLaneCount(), nextRow.GetLaneCount()) * 2) + 1).ToArray();
+
+                // These drawing actions are done last, to appear on top
+                List<Action> actions = new();
+
+                foreach (RevisionGraphSegment segment in row.Segments)
+                {
+                    int fromPos = row.GetLaneForSegment(segment).Index * 2;
+                    int toPos = nextRow.GetLaneForSegment(segment).Index * 2;
+                    if (toPos == -2)
+                    {
+                        // Segment does not continue to next commit
+                        continue;
+                    }
+
+                    if (toPos == fromPos)
+                    {
+                        // Segment stays in lane
+                        actions.Add(() => line[fromPos] = '|');
+                    }
+                    else if (toPos == fromPos + 2)
+                    {
+                        // Segment shifts one lane to the right
+                        actions.Add(() =>
+                        {
+                            if (line[fromPos + 1] == '/')
+                            {
+                                // , crossing another shifting left
+                                line[fromPos + 1] = 'X';
+                            }
+                            else
+                            {
+                                line[fromPos + 1] = '\\';
+                            }
+                        });
+                    }
+                    else if (toPos == fromPos - 2)
+                    {
+                        // Segment shifts one lane to the left
+                        actions.Add(() =>
+                        {
+                            if (line[fromPos - 1] == '\\')
+                            {
+                                // , crossing another shifting right
+                                line[fromPos - 1] = 'X';
+                            }
+                            else
+                            {
+                                line[fromPos - 1] = '/';
+                            }
+                        });
+                    }
+                    else if (toPos > fromPos)
+                    {
+                        // Segment shifts multiple lanes to the right
+                        line[fromPos + 1] = '\\';
+                        line[toPos] = '\\';
+                        for (int pos = fromPos + 2; pos < toPos; ++pos)
+                        {
+                            line[pos] = '-';
+                        }
+                    }
+                    else if (toPos < fromPos)
+                    {
+                        // Segment shifts multiple lanes to the left
+                        line[fromPos - 1] = '/';
+                        line[toPos] = '/';
+                        for (int pos = toPos + 1; pos < fromPos - 1; ++pos)
+                        {
+                            line[pos] = '-';
+                        }
+                    }
+                }
+
+                foreach (Action action in actions)
+                {
+                    action();
+                }
+
+                graph.Add(new string(line).Trim());
+                ++rowIndex;
+            }
+
+            return graph;
         }
     }
 }

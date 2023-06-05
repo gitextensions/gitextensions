@@ -266,5 +266,20 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 ++_segmentLanes[segment].Index;
             }
         }
+
+        /// <summary>
+        /// If this row is the parent row of <paramref name="segment"/>, returns the segment leading
+        /// to this row's first parent (if any). Otherwise, returns <paramref name="segment"/>.
+        /// </summary>
+        public RevisionGraphSegment FirstParentOrSelf(RevisionGraphSegment segment)
+        {
+            if (segment.Parent != Revision
+                || GetLaneForSegment(segment).Sharing != LaneSharing.ExclusiveOrPrimary)
+            {
+                return segment;
+            }
+
+            return Segments.FirstOrDefault(s => s.Child == Revision, defaultValue: segment);
+        }
     }
 }
