@@ -120,6 +120,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             currentRowIndex += 2 * _straightenLanesLookAhead;
             lastToCacheRowIndex += 2 * _straightenLanesLookAhead;
 
+            if (_loadingCompleted)
+            {
+                int maxRowIndex = Count - 1;
+                currentRowIndex = Math.Min(currentRowIndex, maxRowIndex);
+                lastToCacheRowIndex = Math.Min(lastToCacheRowIndex, maxRowIndex);
+            }
+
             RevisionGraphRevision[] orderedNodesCache = BuildOrderedNodesCache(currentRowIndex);
 
             BuildOrderedRowCache(orderedNodesCache, currentRowIndex, lastToCacheRowIndex);
