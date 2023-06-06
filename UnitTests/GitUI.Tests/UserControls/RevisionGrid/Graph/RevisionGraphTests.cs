@@ -14,6 +14,7 @@ namespace GitUITests.UserControls.RevisionGrid
         public void Setup()
         {
             AppSettings.MergeGraphLanesHavingCommonParent.Value = true;
+            AppSettings.ReduceGraphCrossings.Value = false;
             AppSettings.StraightenGraphDiagonals.Value = false;
 
             _revisionGraph = new RevisionGraph();
