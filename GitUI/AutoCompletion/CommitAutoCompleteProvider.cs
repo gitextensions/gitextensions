@@ -158,7 +158,7 @@ namespace GitUI.AutoCompletion
         {
             if (file.IsTracked)
             {
-                var changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000")
+                GitCommands.Patches.Patch changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000", noLocks: true)
                 .ConfigureAwait(false);
 
                 if (changes is not null)
@@ -166,7 +166,7 @@ namespace GitUI.AutoCompletion
                     return changes.Text;
                 }
 
-                var content = await module.GetFileContentsAsync(file).ConfigureAwaitRunInline();
+                string? content = await module.GetFileContentsAsync(file).ConfigureAwaitRunInline();
                 if (content is not null)
                 {
                     return content;
