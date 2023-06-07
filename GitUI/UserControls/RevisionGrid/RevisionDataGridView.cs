@@ -73,7 +73,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             InitFonts();
 
-            _backgroundUpdater = new BackgroundUpdater(UpdateVisibleRowRangeInternalAsync, BackgroundThreadUpdatePeriod);
+            _backgroundUpdater = new BackgroundUpdater(UpdateVisibleRowRangeInternalAsync, cooldownMilliseconds: 0);
 
             InitializeComponent();
             DoubleBuffered = true;
