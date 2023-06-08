@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition;
 using Atlassian.Jira;
+using Atlassian.Jira.Remote;
 using GitCommands;
 using GitExtensions.Plugins.JiraCommitHintPlugin.Properties;
 using GitExtUtils.GitUI;
@@ -9,6 +10,7 @@ using GitUIPluginInterfaces.UserControls;
 using Microsoft;
 using NString;
 using ResourceManager;
+using RestSharp.Authenticators;
 
 namespace GitExtensions.Plugins.JiraCommitHintPlugin
 {
@@ -25,11 +27,14 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
         private static readonly TranslationString EmptyQueryResultCaption = new("First Task Preview");
 
         private const string DefaultFormat = "{Key} {Summary}";
+        private const string BASIC = "Basic";
+        private const string JWT = "JWT";
         private Jira? _jira;
         private string? _query;
         private string _stringTemplate = DefaultFormat;
         private readonly BoolSetting _enabledSettings = new("Jira hint plugin enabled", false);
         private readonly StringSetting _urlSettings = new("Jira URL", @"https://jira.atlassian.com");
+        private readonly ChoiceSetting _authTypeSettings = new("Auth type", new List<string> { BASIC, JWT });
         private readonly CredentialsSetting _credentialsSettings;
 
         // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
@@ -80,6 +85,8 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
             _urlSettings.CustomControl = new TextBox();
             yield return _urlSettings;
+
+            yield return _authTypeSettings;
 
             _credentialsSettings.CustomControl = new CredentialsControl();
             yield return _credentialsSettings;
@@ -139,14 +146,14 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             try
             {
                 Validates.NotNull(_urlSettings.CustomControl);
+                Validates.NotNull(_authTypeSettings.CustomControl);
                 Validates.NotNull(_credentialsSettings.CustomControl);
                 Validates.NotNull(_jqlQuerySettings.CustomControl);
                 Validates.NotNull(_stringTemplateSetting.CustomControl);
 
                 _btnPreview.Enabled = false;
 
-                var localJira = Jira.CreateRestClient(_urlSettings.CustomControl.Text, _credentialsSettings.CustomControl.UserName,
-                    _credentialsSettings.CustomControl.Password);
+                var localJira = createJiraClient(_urlSettings.CustomControl.Text, _credentialsSettings.CustomControl.UserName, _credentialsSettings.CustomControl.Password, _authTypeSettings.CustomControl.SelectedItem.ToString());
                 var localQuery = _jqlQuerySettings.CustomControl.Text;
                 var localStringTemplate = _stringTemplateSetting.CustomControl.Text;
 
@@ -189,13 +196,14 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
             var url = _urlSettings.ValueOrDefault(Settings);
             var credentials = _credentialsSettings.GetValueOrDefault(Settings);
+            var authType = _authTypeSettings.ValueOrDefault(Settings);
 
             if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(credentials.UserName))
             {
                 return;
             }
 
-            _jira = Jira.CreateRestClient(url, credentials.UserName, credentials.Password);
+            _jira = createJiraClient(url, credentials.UserName, credentials.Password, authType);
             _query = _jqlQuerySettings.ValueOrDefault(Settings);
             _stringTemplate = _stringTemplateSetting.ValueOrDefault(Settings);
             if (_btnPreview is null)
@@ -282,6 +290,17 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             }
         }
 
+        private Jira createJiraClient(string url, string username, string password, string authType)
+        {
+            if (JWT.Equals(authType))
+            {
+                JiraRestClientSettings settings = new();
+                return Jira.CreateRestClient(new JiraJWTRestClient(url, password), settings.Cache);
+            }
+
+            return Jira.CreateRestClient(url, username, password);
+        }
+
         private class JiraTaskDTO
         {
             public string Title { get; }
@@ -291,6 +310,13 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             {
                 Title = title;
                 Text = text;
+            }
+        }
+
+        private class JiraJWTRestClient : JiraRestClient
+        {
+            public JiraJWTRestClient(string url, string accessToken) : base(url, new JwtAuthenticator(accessToken))
+            {
             }
         }
     }
