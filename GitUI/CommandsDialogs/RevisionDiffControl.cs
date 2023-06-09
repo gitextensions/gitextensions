@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs
 
         private IRevisionGridInfo? _revisionGridInfo;
         private IRevisionGridUpdate? _revisionGridUpdate;
-        private FilterInfo? _filterInfo;
+        private Func<string>? _pathFilter;
         private RevisionFileTreeControl? _revisionFileTree;
         private readonly IRevisionDiffController _revisionDiffController = new RevisionDiffController();
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
@@ -304,12 +304,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void Bind(IRevisionGridInfo revisionGridInfo, IRevisionGridUpdate revisionGridUpdate, RevisionFileTreeControl revisionFileTree, FilterInfo filterInfo, Action? refreshGitStatus)
+        public void Bind(IRevisionGridInfo revisionGridInfo, IRevisionGridUpdate revisionGridUpdate, RevisionFileTreeControl revisionFileTree, Func<string>? pathFilter, Action? refreshGitStatus)
         {
             _revisionGridInfo = revisionGridInfo;
             _revisionGridUpdate = revisionGridUpdate;
             _revisionFileTree = revisionFileTree;
-            _filterInfo = filterInfo;
+            _pathFilter = pathFilter;
             _refreshGitStatus = refreshGitStatus;
             DiffFiles.Bind(objectId => DescribeRevision(objectId), _revisionGridInfo.GetActualRevision);
         }
@@ -587,7 +587,7 @@ namespace GitUI.CommandsDialogs
             await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
                 line: line,
                 openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick(),
-                additionalCommandInfo: (DiffFiles.SelectedItem?.Item?.IsRangeDiff is true) && Module.GitVersion.SupportRangeDiffPath ? _filterInfo.PathFilter : "",
+                additionalCommandInfo: (DiffFiles.SelectedItem?.Item?.IsRangeDiff is true) && Module.GitVersion.SupportRangeDiffPath ? _pathFilter() : "",
                 cancellationToken: _viewChangesSequence.Next());
         }
 

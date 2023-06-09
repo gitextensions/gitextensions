@@ -12,6 +12,5 @@ namespace GitUI.CommandDialogs
         IReadOnlyList<GitRevision> GetSelectedRevisions();
         string DescribeRevision(GitRevision revision, int maxLength = 0);
         string GetCurrentBranch();
-        ////FilterInfo CurrentFilter { get; }
     }
 }
