@@ -1431,7 +1431,7 @@ namespace GitCommands
                     }
                 }
 
-                if (item.IsConflict)
+                if (item.IsUnmerged)
                 {
                     conflictsToReset.Add(item.Name);
                 }

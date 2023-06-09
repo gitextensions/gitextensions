@@ -547,7 +547,7 @@ namespace GitUI.CommandsDialogs
                         }
 
                         List<string> itemsToCheckout = selectedItems
-                            .Where(item => !item.Item.IsNew && !(item.Item.IsConflict && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
+                            .Where(item => !item.Item.IsNew && !(item.Item.IsUnmerged && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
                         Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
@@ -555,7 +555,7 @@ namespace GitUI.CommandsDialogs
                         // Special handling for conflicted files, shown in worktree (with the raw diff).
                         // Must be reset to HEAD as Index is just a status marker.
                         List<string> conflictsToCheckout = selectedItems
-                            .Where(item => item.Item.IsConflict && parentId == ObjectId.IndexId)
+                            .Where(item => item.Item.IsUnmerged && parentId == ObjectId.IndexId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
                         Module.CheckoutFiles(conflictsToCheckout, _revisionGrid.CurrentCheckout, force: false);
