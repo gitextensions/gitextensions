@@ -575,6 +575,8 @@ namespace GitUI.CommandsDialogs
         /// <returns>a task</returns>
         private async Task ShowSelectedFileDiffAsync(bool ensureNoSwitchToFilter, int? line)
         {
+            Validates.NotNull(_pathFilter);
+
             BlameControl.Visible = false;
             DiffText.Visible = true;
 
