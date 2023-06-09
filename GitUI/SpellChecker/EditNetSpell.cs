@@ -729,13 +729,23 @@ namespace GitUI.SpellChecker
                 return;
             }
 
+            // handle vertical tab (Shift + Enter)
+            if (e.Shift && e.KeyCode == Keys.Enter)
+            {
+                AddNewLine();
+                e.Handled = true;
+                return;
+            }
+
             OnKeyDown(e);
         }
 
         private void PasteTextFromClipboard()
         {
-            // insert only text
-            TextBox.Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
+            // insert only text with replace vertical tab to line feed
+            string clipboardText = Clipboard.GetText().Replace('\v', '\n');
+
+            TextBox.SelectedText = clipboardText;
         }
 
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
@@ -950,6 +960,11 @@ namespace GitUI.SpellChecker
             TextBox.Select(TextBox.SelectionStart - word.Length, word.Length);
             TextBox.SelectedText = completionWord.Word;
             CloseAutoComplete();
+        }
+
+        private void AddNewLine()
+        {
+            TextBox.SelectedText = "\n";
         }
 
         private void UpdateOrShowAutoComplete(bool calledByUser)

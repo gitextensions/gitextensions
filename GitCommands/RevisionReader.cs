@@ -317,7 +317,9 @@ namespace GitCommands
             #region Encoded string values (names, emails, subject, body)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
-            ReadOnlySpan<char> s = _logOutputEncoding.GetString(array[offset..]).AsSpan();
+            // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
+            // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
+            ReadOnlySpan<char> s = _logOutputEncoding.GetString(array[offset..]).Replace('\v', '\n').AsSpan();
             StringLineReader reader = new(in s);
 
             var author = reader.ReadLine();
