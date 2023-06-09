@@ -318,6 +318,7 @@ namespace GitCommands
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
             // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
+            // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
             ReadOnlySpan<char> s = _logOutputEncoding.GetString(array[offset..]).Replace('\v', '\n').AsSpan();
             StringLineReader reader = new(in s);
 
