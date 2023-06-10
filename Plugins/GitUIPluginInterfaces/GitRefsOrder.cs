@@ -2,7 +2,8 @@
 
 namespace GitUIPluginInterfaces
 {
-    // NB: The values are fed directly into git commands, casing is important!
+    // NB: The values are fed directly into 'git for-each-ref --sort==', casing is important!
+    // Special handling for Default and Version.
     public enum GitRefsSortBy
     {
         [Description("Git default")]
@@ -22,6 +23,10 @@ namespace GitUIPluginInterfaces
 
         [Description("Alpha-numeric")]
         refname,
+
+        // NB: sort key is version:refname
+        [Description("Version")]
+        versionRefname,
 
         [Description("Object size")]
         objectsize,
