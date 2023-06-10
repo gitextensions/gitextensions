@@ -9058,10 +9058,6 @@ See the changes in the commit form.</source>
         <source>Highlight selected branch (until refresh)</source>
         <target />
       </trans-unit>
-      <trans-unit id="MergeGraphLanesHavingCommonParent.Text">
-        <source>&amp;0: MergeGraphLanesHavingCommonParent</source>
-        <target />
-      </trans-unit>
       <trans-unit id="NavigateBackward.Text">
         <source>Navigate &amp;backward</source>
         <target />

@@ -484,7 +484,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             return new MenuCommand
             {
-                Name = viewSetting.Name,
+                Name = $"_NO_TRANSLATE_{viewSetting.Name}",
                 Text = getLabelFromName(viewSetting.Name),
                 ExecuteAction = () =>
                 {
