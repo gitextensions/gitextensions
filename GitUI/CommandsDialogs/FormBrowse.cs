@@ -287,8 +287,17 @@ namespace GitUI.CommandsDialogs
                 PluginRegistry.Initialize();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 RegisterPlugins();
-                revisionDiff.RegisterGitHostingPluginInBlameControl();
-                fileTree.RegisterGitHostingPluginInBlameControl();
+                try
+                {
+                    revisionDiff.RegisterGitHostingPluginInBlameControl();
+                    fileTree.RegisterGitHostingPluginInBlameControl();
+                }
+                catch (Exception)
+                {
+                    // Swallow crash due to potential ownership security issues
+                    // on a early git command that doesn't capture command output
+                    // and so let a subsequent git call crash
+                }
             }).FileAndForget();
 
             InitCountArtificial(out _gitStatusMonitor);
