@@ -490,7 +490,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             if (straightenDiagonalsLookAhead > 0)
             {
                 int straightenDiagonalsStartIndex = Math.Max(1, startIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead);
-                int straightenDiagonalsLastIndex = loadingCompleted ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead;
+                int straightenDiagonalsLastIndex = loadingCompleted && lastToCacheRowIndex == lastOrderedNodeIndex ? lastToCacheRowIndex - 1 : lastToCacheRowIndex - _straightenLanesLookAhead - straightenDiagonalsLookAhead;
                 StraightenDiagonals(straightenDiagonalsStartIndex, straightenDiagonalsLastIndex, lastLookaheadIndex: lastToCacheRowIndex, straightenDiagonalsLookAhead, localOrderedRowCache);
             }
 
