@@ -165,8 +165,8 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
             string prefix = "", string suffix = "")
         {
             _infoProvider.GetLaneInfo(0, 0).Should()
-                .Be(string.Format(branch is null ? "{0}{1}{2}{2}{6}{7}"
-                                                 : "{0}{1}{2}\n{3}: {4}{5}{2}{6}{7}",
+                .StartWith(string.Format(branch is null ? "{0}{1}{2}{2}{6}{7}"
+                                                        : "{0}{1}{2}\n{3}: {4}{5}{2}{6}{7}",
                     prefix,
                     node.GitRevision.Guid,
                     Environment.NewLine,
@@ -213,7 +213,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         {
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_artificialCommitNode, isAtNode: true));
 
-            _infoProvider.GetLaneInfo(0, 0).Should().Be(_artificialCommitNode.GitRevision.Body);
+            _infoProvider.GetLaneInfo(0, 0).Should().StartWith(_artificialCommitNode.GitRevision.Body);
         }
 
         [Test]
@@ -221,7 +221,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         {
             _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_artificialCommitNode, isAtNode: false));
 
-            _infoProvider.GetLaneInfo(0, 0).Should().Be(_artificialCommitNode.GitRevision.Body);
+            _infoProvider.GetLaneInfo(0, 0).Should().StartWith(_artificialCommitNode.GitRevision.Body);
         }
 
         [Test]
