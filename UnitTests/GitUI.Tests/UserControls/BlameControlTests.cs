@@ -182,7 +182,7 @@ namespace GitUITests.UserControls
             }
         }
 
-        private IEnumerable<GitBlameLine> CreateBlameLine(params DateTime[] lineDates)
+        private static IEnumerable<GitBlameLine> CreateBlameLine(params DateTime[] lineDates)
         {
             for (var index = 0; index < lineDates.Length; index++)
             {

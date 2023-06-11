@@ -85,7 +85,7 @@ namespace GitUIPluginInterfaces
                 }
             }
 
-            private bool SettingLevelSupported(SettingLevel settingLevel)
+            private static bool SettingLevelSupported(SettingLevel settingLevel)
             {
                 switch (settingLevel)
                 {

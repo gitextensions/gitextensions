@@ -268,7 +268,7 @@ Detail of the error:");
             }
         }
 
-        private IEnumerable<Build> FilterRunningBuilds(IList<Build> runningBuilds)
+        private static IEnumerable<Build> FilterRunningBuilds(IList<Build> runningBuilds)
         {
             if (runningBuilds.Count < 2)
             {

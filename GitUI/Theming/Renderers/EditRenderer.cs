@@ -38,7 +38,7 @@ namespace GitUI.Theming
             return Unhandled;
         }
 
-        private int RenderEditText(Context ctx, int stateid, Rectangle prect)
+        private static int RenderEditText(Context ctx, int stateid, Rectangle prect)
         {
             Brush backBrush;
             switch ((State.Text)stateid)
@@ -91,7 +91,7 @@ namespace GitUI.Theming
             return Handled;
         }
 
-        private int RenderProperBackground(Context ctx, int stateid, Rectangle prect)
+        private static int RenderProperBackground(Context ctx, int stateid, Rectangle prect)
         {
             Brush backBrush;
             switch ((State.Background)stateid)

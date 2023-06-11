@@ -51,7 +51,7 @@ namespace GitUI.Theming
             };
         }
 
-        private int RenderColumnDetail(Context ctx, Rectangle prect)
+        private static int RenderColumnDetail(Context ctx, Rectangle prect)
         {
             int width = Math.Max(1, prect.Width / 2);
             using SolidBrush brush = new(Color.FromArgb(32, SystemColors.HotTrack));

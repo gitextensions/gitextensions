@@ -587,7 +587,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private bool NeedsGitStatusMonitor()
+        private static bool NeedsGitStatusMonitor()
         {
             return AppSettings.ShowGitStatusInBrowseToolbar || (AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowArtificialCommits);
         }
@@ -2413,7 +2413,7 @@ namespace GitUI.CommandsDialogs
             return item;
         }
 
-        private void UpdateSubmoduleMenuItemStatus(ToolStripItem item, SubmoduleInfo info, string textFormat = "{0}")
+        private static void UpdateSubmoduleMenuItemStatus(ToolStripItem item, SubmoduleInfo info, string textFormat = "{0}")
         {
             if (info.Detailed is not null)
             {
@@ -2958,7 +2958,7 @@ namespace GitUI.CommandsDialogs
             bool IsFileExistingInRepo([NotNullWhen(returnValue: true)] string? path) => IsPathExists(path) && path.StartsWith(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        private void FormBrowse_DragEnter(object sender, DragEventArgs e)
+        private static void FormBrowse_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop)
                 || e.Data.GetDataPresent(DataFormats.Text)

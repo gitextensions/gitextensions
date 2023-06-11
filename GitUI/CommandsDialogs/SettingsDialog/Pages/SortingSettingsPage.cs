@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             FillComboBoxWithEnumValues<GitRefsSortBy>(_NO_TRANSLATE_cmbBranchesSortBy);
         }
 
-        private void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : Enum
+        private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : Enum
         {
             comboBox.DisplayMember = nameof(ComboBoxItem<T>.Text);
             comboBox.ValueMember = nameof(ComboBoxItem<T>.Value);

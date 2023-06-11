@@ -939,7 +939,7 @@ namespace GitCommandsTests
         /// <param name="path">Path to the module</param>
         /// <param name="executable">The mock executable</param>
         /// <returns>The GitModule</returns>
-        private GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
+        private static GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
         {
             module ??= new GitModule(path);
 

@@ -182,7 +182,7 @@ namespace GitCommands.DiffMergeTools
             fileSettings.SetValue(toolKey, "");
         }
 
-        private (string toolKey, string prefix) GetInfo(DiffMergeToolType toolType)
+        private static (string toolKey, string prefix) GetInfo(DiffMergeToolType toolType)
         {
             return toolType switch
             {
@@ -235,7 +235,7 @@ namespace GitCommands.DiffMergeTools
             }
 
             public (string toolKey, string prefix) GetInfo(DiffMergeToolType toolType)
-                => _manager.GetInfo(toolType);
+                => DiffMergeToolConfigurationManager.GetInfo(toolType);
 
             public string? GetToolSetting(string? toolName, DiffMergeToolType toolType, string settingSuffix)
                 => _manager.GetToolSetting(toolName, toolType, settingSuffix);

@@ -51,7 +51,7 @@ namespace AppVeyorIntegrationTests
             return YamlSerialize(buildInfo);
         }
 
-        private string YamlSerialize(List<AppVeyorBuildInfo> buildInfo)
+        private static string YamlSerialize(List<AppVeyorBuildInfo> buildInfo)
         {
             var serializer = new SerializerBuilder()
                 .WithTypeConverter(new CommitsYamlTypeConverter())
