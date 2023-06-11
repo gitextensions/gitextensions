@@ -27,14 +27,17 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
         private static readonly TranslationString EmptyQueryResultCaption = new("First Task Preview");
 
         private const string DefaultFormat = "{Key} {Summary}";
-        private const string BASIC = "Basic";
-        private const string JWT = "JWT";
+        private const string AuthTypeBasic = "User name & Password";
+        private const string AuthTypeJwt = "Personal access token";
+
+        // It not a good idea use this user name for Personal access token, but credentials required.
+        private const string AuthTypeJwtUserName = "#Jira.Commit.Hint:access.token$";
         private Jira? _jira;
         private string? _query;
         private string _stringTemplate = DefaultFormat;
         private readonly BoolSetting _enabledSettings = new("Jira hint plugin enabled", false);
         private readonly StringSetting _urlSettings = new("Jira URL", @"https://jira.atlassian.com");
-        private readonly ChoiceSetting _authTypeSettings = new("Auth type", new List<string> { BASIC, JWT });
+        private readonly ChoiceSetting _authTypeSettings = new("Auth type", new List<string> { AuthTypeBasic, AuthTypeJwt });
         private readonly CredentialsSetting _credentialsSettings;
 
         // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
@@ -86,6 +89,9 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             _urlSettings.CustomControl = new TextBox();
             yield return _urlSettings;
 
+            _authTypeSettings.CustomControl = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
+            _authTypeSettings.CustomControl.Items.AddRange(_authTypeSettings.Values.ToArray());
+            _authTypeSettings.CustomControl.SelectedIndexChanged += AuthTypeSelectedChange;
             yield return _authTypeSettings;
 
             _credentialsSettings.CustomControl = new CredentialsControl();
@@ -153,7 +159,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
                 _btnPreview.Enabled = false;
 
-                var localJira = createJiraClient(_urlSettings.CustomControl.Text, _credentialsSettings.CustomControl.UserName, _credentialsSettings.CustomControl.Password, _authTypeSettings.CustomControl.SelectedItem.ToString());
+                var localJira = CreateJiraClient(_urlSettings.CustomControl.Text, _credentialsSettings.CustomControl.UserName, _credentialsSettings.CustomControl.Password, _authTypeSettings.CustomControl.SelectedItem.ToString());
                 var localQuery = _jqlQuerySettings.CustomControl.Text;
                 var localStringTemplate = _stringTemplateSetting.CustomControl.Text;
 
@@ -173,6 +179,43 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             {
                 MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _btnPreview.Enabled = true;
+            }
+        }
+
+        private void AuthTypeSelectedChange(object sender, EventArgs e)
+        {
+            if ((sender is ComboBox comboBox) && _credentialsSettings.CustomControl != null)
+            {
+                var credentials = _credentialsSettings.GetValueOrDefault(Settings);
+                var authType = _authTypeSettings.ValueOrDefault(Settings);
+
+                if (comboBox.SelectedItem.ToString() == AuthTypeJwt)
+                {
+                    _credentialsSettings.CustomControl.ChangeUIMode(false, "Personal access token");
+                    _credentialsSettings.CustomControl.UserName = AuthTypeJwtUserName;
+                    if (authType == AuthTypeJwt)
+                    {
+                        _credentialsSettings.CustomControl.Password = credentials.Password;
+                    }
+                    else
+                    {
+                        _credentialsSettings.CustomControl.Password = "";
+                    }
+                }
+                else
+                {
+                    _credentialsSettings.CustomControl.ChangeUIMode(true, "Password");
+                    if (authType != AuthTypeJwt && credentials.UserName != AuthTypeJwtUserName)
+                    {
+                        _credentialsSettings.CustomControl.UserName = credentials.UserName;
+                        _credentialsSettings.CustomControl.Password = credentials.Password;
+                    }
+                    else
+                    {
+                        _credentialsSettings.CustomControl.UserName = "";
+                        _credentialsSettings.CustomControl.Password = "";
+                    }
+                }
             }
         }
 
@@ -198,12 +241,12 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             var credentials = _credentialsSettings.GetValueOrDefault(Settings);
             var authType = _authTypeSettings.ValueOrDefault(Settings);
 
-            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(credentials.UserName))
+            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(credentials.UserName) || string.IsNullOrWhiteSpace(credentials.Password))
             {
                 return;
             }
 
-            _jira = createJiraClient(url, credentials.UserName, credentials.Password, authType);
+            _jira = CreateJiraClient(url, credentials.UserName, credentials.Password, authType);
             _query = _jqlQuerySettings.ValueOrDefault(Settings);
             _stringTemplate = _stringTemplateSetting.ValueOrDefault(Settings);
             if (_btnPreview is null)
@@ -213,6 +256,12 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
             _btnPreview.Click -= btnPreviewClick;
             _btnPreview = null;
+
+            if (_authTypeSettings.CustomControl != null)
+            {
+                _authTypeSettings.CustomControl.SelectedIndexChanged -= AuthTypeSelectedChange;
+                _authTypeSettings.CustomControl = null;
+            }
         }
 
         private void gitUiCommands_PostSettings(object sender, GitUIPostActionEventArgs e)
@@ -290,12 +339,12 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             }
         }
 
-        private Jira createJiraClient(string url, string username, string password, string authType)
+        private Jira CreateJiraClient(string url, string username, string password, string authType)
         {
-            if (JWT.Equals(authType))
+            if (authType == AuthTypeJwt)
             {
                 JiraRestClientSettings settings = new();
-                return Jira.CreateRestClient(new JiraJWTRestClient(url, password), settings.Cache);
+                return Jira.CreateRestClient(new JiraJwtRestClient(url, password), settings.Cache);
             }
 
             return Jira.CreateRestClient(url, username, password);
@@ -313,9 +362,9 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             }
         }
 
-        private class JiraJWTRestClient : JiraRestClient
+        private class JiraJwtRestClient : JiraRestClient
         {
-            public JiraJWTRestClient(string url, string accessToken) : base(url, new JwtAuthenticator(accessToken))
+            public JiraJwtRestClient(string url, string accessToken) : base(url, new JwtAuthenticator(accessToken))
             {
             }
         }
