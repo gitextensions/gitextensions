@@ -1399,8 +1399,9 @@ namespace GitUI.CommandsDialogs
         {
             IEnumerable<FileStatusItem> items = DiffFiles.SelectedItems;
 
-            // new could be changed when restting, allow user to add to checkbox
-            bool hasNewFiles = true;
+            // The "new" state could change when resetting, allow user to tick the checkbox.
+            // If there are only changed files, it is safe to disable the checkboc (also for restting to selected).
+            bool hasNewFiles = !items.All(item => item.Item.IsChanged);
             bool hasExistingFiles = items.Any(item => !(item.Item.IsUncommittedAdded || RenamedIndexItem(item)));
 
             string revDescription = resetToParent
