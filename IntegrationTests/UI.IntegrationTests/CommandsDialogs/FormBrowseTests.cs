@@ -2,12 +2,10 @@
 using CommonTestUtils.MEF;
 using FluentAssertions;
 using GitCommands;
-using GitCommands.UserRepositoryHistory;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;
-using NUnit.Framework;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {

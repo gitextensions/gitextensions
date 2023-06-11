@@ -2,7 +2,6 @@
 using GitCommands;
 using GitCommands.Utils;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests
 {

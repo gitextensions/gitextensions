@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitExtensions.Plugins.DeleteUnusedBranches;
-using NUnit.Framework;
 
 namespace DeleteUnusedBranchesTests
 {

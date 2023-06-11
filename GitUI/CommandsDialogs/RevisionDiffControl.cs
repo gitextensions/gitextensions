@@ -508,10 +508,16 @@ namespace GitUI.CommandsDialogs
 
                     foreach (ObjectId childId in selectedItems.SecondIds())
                     {
+                        if (!CanResetToSecond(childId))
+                        {
+                            continue;
+                        }
+
                         List<string> itemsToCheckout = selectedItems
                             .Where(item => !item.Item.IsDeleted && item.SecondRevision.ObjectId == childId)
                             .Select(item => item.Item.Name)
                             .ToList();
+
                         Module.CheckoutFiles(itemsToCheckout, childId, force: false);
                     }
                 }
@@ -535,8 +541,13 @@ namespace GitUI.CommandsDialogs
 
                     foreach (ObjectId parentId in selectedItems.FirstIds())
                     {
+                        if (!CanResetToFirst(parentId, selectedItems))
+                        {
+                            continue;
+                        }
+
                         List<string> itemsToCheckout = selectedItems
-                            .Where(item => !item.Item.IsNew && !(item.Item.IsConflict && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
+                            .Where(item => !item.Item.IsNew && !(item.Item.IsUnmerged && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
                         Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
@@ -544,7 +555,7 @@ namespace GitUI.CommandsDialogs
                         // Special handling for conflicted files, shown in worktree (with the raw diff).
                         // Must be reset to HEAD as Index is just a status marker.
                         List<string> conflictsToCheckout = selectedItems
-                            .Where(item => item.Item.IsConflict && parentId == ObjectId.IndexId)
+                            .Where(item => item.Item.IsUnmerged && parentId == ObjectId.IndexId)
                             .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
                             .ToList();
                         Module.CheckoutFiles(conflictsToCheckout, _revisionGrid.CurrentCheckout, force: false);
@@ -556,6 +567,24 @@ namespace GitUI.CommandsDialogs
                 RequestRefresh();
             }
         }
+
+        /// <summary>
+        /// Return if it is possible to reset to the first commit.
+        /// </summary>
+        /// <param name="parentId">The parent commit id.</param>
+        /// <param name="selectedItems">The selected file status items.</param>
+        /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
+        private bool CanResetToFirst(ObjectId? parentId, IEnumerable<FileStatusItem> selectedItems)
+        {
+            return CanResetToSecond(parentId) || (parentId == ObjectId.IndexId && selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId));
+        }
+
+        /// <summary>
+        /// Return if it is possible to reset to the second (selected) commit.
+        /// </summary>
+        /// <param name="resetId">The selected commit id.</param>
+        /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
+        private bool CanResetToSecond(ObjectId? resetId) => resetId?.IsArtificial is false;
 
         /// <summary>
         /// Show the file in the BlameViewer if Blame is visible.
@@ -1149,24 +1178,14 @@ namespace GitUI.CommandsDialogs
             InitResetFileToToolStripMenuItem();
         }
 
-        /// <summary>
-        /// Checks if it is possible to reset to the revision.
-        /// For artificial is Index is possible but not WorkTree or Combined.
-        /// </summary>
-        /// <param name="guid">The Git objectId.</param>
-        /// <returns>If it is possible to reset to the revisions.</returns>
-        private bool CanResetToRevision(ObjectId guid)
-        {
-            return guid != ObjectId.WorkTreeId
-                   && guid != ObjectId.CombinedDiffId;
-        }
-
         private void InitResetFileToToolStripMenuItem()
         {
-            var items = DiffFiles.SelectedItems;
+            // Multiple parent/child can be selected, only the the first is shown.
+            // The only artificial commit that can be reset to is Index<-WorkTree
+            ObjectId? selectedId = DiffFiles.SelectedItems.SecondIds().FirstOrDefault();
+            ObjectId? parentId = DiffFiles.SelectedItems.FirstIds().FirstOrDefault();
 
-            var selectedIds = items.SecondIds().ToList();
-            if (selectedIds.Count == 0 || selectedIds.Any(id => !CanResetToRevision(id)))
+            if (!CanResetToSecond(selectedId))
             {
                 resetFileToSelectedToolStripMenuItem.Enabled = false;
                 resetFileToSelectedToolStripMenuItem.Visible = false;
@@ -1176,11 +1195,10 @@ namespace GitUI.CommandsDialogs
                 resetFileToSelectedToolStripMenuItem.Enabled = true;
                 resetFileToSelectedToolStripMenuItem.Visible = true;
                 resetFileToSelectedToolStripMenuItem.Text =
-                    _selectedRevision + DescribeRevision(selectedIds.FirstOrDefault(), 50);
+                    _selectedRevision + DescribeRevision(selectedId, 50);
             }
 
-            var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
-            if (parentIds.Count == 0 || parentIds.Any(id => !CanResetToRevision(id)))
+            if (!CanResetToFirst(parentId, DiffFiles.SelectedItems))
             {
                 resetFileToParentToolStripMenuItem.Enabled = false;
                 resetFileToParentToolStripMenuItem.Visible = false;
@@ -1190,7 +1208,7 @@ namespace GitUI.CommandsDialogs
                 resetFileToParentToolStripMenuItem.Enabled = true;
                 resetFileToParentToolStripMenuItem.Visible = true;
                 resetFileToParentToolStripMenuItem.Text =
-                    _firstRevision + DescribeRevision(parentIds.FirstOrDefault(), 50);
+                    _firstRevision + DescribeRevision(parentId, 50);
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitUIPluginInterfaces.RepositoryHosts;
-using NUnit.Framework;
 
 namespace GitUIPluginInterfacesTests
 {

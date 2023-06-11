@@ -4,7 +4,6 @@ using FluentAssertions;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Settings
 {

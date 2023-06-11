@@ -2,7 +2,6 @@
 using System.Text;
 using FluentAssertions;
 using GitUI.Editor.RichTextBoxExtension;
-using NUnit.Framework;
 using ResourceManager;
 
 namespace GitUITests.Editor

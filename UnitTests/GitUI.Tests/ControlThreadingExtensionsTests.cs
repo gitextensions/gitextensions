@@ -1,7 +1,6 @@
 ﻿using CommonTestUtils;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
-using NUnit.Framework;
 
 // This diagnostic is unnecessarily noisy when testing async patterns
 

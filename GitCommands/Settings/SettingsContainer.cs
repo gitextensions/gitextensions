@@ -1,4 +1,5 @@
-﻿using GitUIPluginInterfaces;
+﻿using System.Diagnostics.CodeAnalysis;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Settings
 {
@@ -58,7 +59,7 @@ namespace GitCommands.Settings
             }
         }
 
-        public virtual bool TryGetValue(string name, out string? value)
+        public virtual bool TryGetValue(string name, [NotNullWhen(true)] out string? value)
         {
             if (SettingsCache.TryGetValue(name, out value))
             {

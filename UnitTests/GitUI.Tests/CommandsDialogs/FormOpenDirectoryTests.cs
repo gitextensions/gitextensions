@@ -3,7 +3,6 @@ using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
 using GitUI.CommandsDialogs.BrowseDialog;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs
 {

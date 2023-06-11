@@ -3,7 +3,6 @@ using GitCommands.Utils;
 using GitUI.LeftPanel.ContextMenu;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.UserControls
 {

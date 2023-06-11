@@ -4,7 +4,6 @@ using GitCommands.Git;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Git
 {

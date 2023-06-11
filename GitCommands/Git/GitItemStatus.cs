@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
@@ -30,7 +31,7 @@ namespace GitCommands
             IsIgnored = 1 << 5,
             IsRenamed = 1 << 6,
             IsCopied = 1 << 7,
-            IsConflict = 1 << 8,
+            IsUnmerged = 1 << 8,
             IsAssumeUnchanged = 1 << 9,
             IsSkipWorktree = 1 << 10,
             IsSubmodule = 1 << 11,
@@ -49,6 +50,16 @@ namespace GitCommands
         {
             Requires.NotNull(name, nameof(name));
             Name = name;
+        }
+
+        /// <summary>
+        /// Get a default object for an item unchanged in the WorkTree.
+        /// </summary>
+        /// <param name="name">The file name for the item.</param>
+        /// <returns>The default GitItemStatus object.</returns>
+        public static GitItemStatus GetDefaultStatus(string name)
+        {
+            return GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, name, GitItemStatusConverter.UnusedCharacter);
         }
 
         public string Name { get; set; }
@@ -108,11 +119,14 @@ namespace GitCommands
             set => SetFlag(value, Flags.IsCopied);
         }
 
-        public bool IsConflict
+        public bool IsUnmerged
         {
-            get => HasFlag(Flags.IsConflict);
-            set => SetFlag(value, Flags.IsConflict);
+            get => HasFlag(Flags.IsUnmerged);
+            set => SetFlag(value, Flags.IsUnmerged);
         }
+
+        // Flags below are not set from git-status parsing, but from other sources
+        // (IsSubmodule and IsDirty can be parsed in git-status porcelain=2 mode)
 
         public bool IsAssumeUnchanged
         {
@@ -257,9 +271,9 @@ namespace GitCommands
                 str.Append(Name);
             }
 
-            if (IsConflict)
+            if (IsUnmerged)
             {
-                str.Append(" (Conflict)");
+                str.Append(" (Unmerged)");
             }
 
             if (Staged is not (StagedStatus.None or StagedStatus.Unset))

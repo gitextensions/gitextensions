@@ -2,7 +2,6 @@
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Git
 {

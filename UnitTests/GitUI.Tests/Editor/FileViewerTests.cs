@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using GitCommands.Settings;
 using GitUI.Editor;
-using NUnit.Framework;
 
 namespace GitUITests.Editor
 {

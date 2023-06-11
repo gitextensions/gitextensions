@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using AdysTech.CredentialManager;
 using Microsoft;
@@ -96,7 +97,7 @@ namespace GitUIPluginInterfaces
                 return $"{TargetPrefix}{rawTarget}";
             }
 
-            public static bool TryGetCredentials(string target, out NetworkCredential credentials)
+            public static bool TryGetCredentials(string target, [NotNullWhen(true)] out NetworkCredential? credentials)
             {
                 credentials = CredentialManager.GetCredentials(GetTarget(target));
                 return credentials is not null;

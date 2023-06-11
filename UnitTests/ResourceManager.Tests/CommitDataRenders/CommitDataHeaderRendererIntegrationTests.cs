@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using GitCommands;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 

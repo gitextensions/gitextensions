@@ -4,7 +4,6 @@ using GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph
 {

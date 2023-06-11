@@ -1126,7 +1126,7 @@ namespace GitUI.CommandsDialogs
             // 
             // runMergetoolToolStripMenuItem
             // 
-            this.runMergetoolToolStripMenuItem.Image = global::GitUI.Properties.Images.Conflict;
+            this.runMergetoolToolStripMenuItem.Image = global::GitUI.Properties.Images.Unmerged;
             this.runMergetoolToolStripMenuItem.Name = "runMergetoolToolStripMenuItem";
             this.runMergetoolToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.runMergetoolToolStripMenuItem.Text = "&Solve merge conflicts...";

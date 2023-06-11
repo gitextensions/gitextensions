@@ -61,20 +61,20 @@ namespace GitCommands
             return $"{pathName}{description} ({branchName}) - {AppSettings.ApplicationName}";
 #endif
 
-            string? GetFileName(string? path)
+            static string? GetFileName(string? path)
             {
-                if (string.IsNullOrWhiteSpace(pathName))
+                if (string.IsNullOrWhiteSpace(path))
                 {
                     return null;
                 }
 
-                string filePart = Path.GetFileName(pathName.Trim('"')).QuoteNE();
+                string filePart = Path.GetFileName(path.Trim('"')).QuoteNE();
                 if (string.IsNullOrWhiteSpace(filePart))
                 {
                     // No file, just quote the pathFilter
-                    filePart = pathName.StartsWith(@"""") && pathName.EndsWith(@"""")
-                        ? pathName
-                        : $"{pathName.Quote()}";
+                    filePart = path.StartsWith(@"""") && path.EndsWith(@"""")
+                        ? path
+                        : $"{path.Quote()}";
                 }
 
                 return $"{filePart} ";

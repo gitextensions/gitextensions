@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using GitCommands;
+﻿using GitCommands;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 

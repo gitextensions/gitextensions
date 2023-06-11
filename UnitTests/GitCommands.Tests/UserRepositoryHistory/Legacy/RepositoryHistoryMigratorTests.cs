@@ -3,7 +3,6 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
-using NUnit.Framework;
 using Current = GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory.Legacy

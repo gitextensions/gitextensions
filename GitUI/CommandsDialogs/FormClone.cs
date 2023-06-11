@@ -5,7 +5,6 @@ using GitCommands.Git.Commands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
-using GitUI.Infrastructure;
 using GitUIPluginInterfaces;
 using ResourceManager;
 

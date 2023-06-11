@@ -2,7 +2,6 @@
 using GitExtUtils.GitUI;
 using GitUI;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests
 {

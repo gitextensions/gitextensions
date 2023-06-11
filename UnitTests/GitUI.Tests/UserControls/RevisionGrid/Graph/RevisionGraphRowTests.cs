@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph
 {

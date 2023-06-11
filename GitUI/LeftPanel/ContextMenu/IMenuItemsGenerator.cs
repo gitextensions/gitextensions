@@ -1,4 +1,5 @@
-﻿using GitUI.LeftPanel.Interfaces;
+﻿using System.Diagnostics.CodeAnalysis;
+using GitUI.LeftPanel.Interfaces;
 
 namespace GitUI.LeftPanel.ContextMenu
 {
@@ -8,7 +9,7 @@ namespace GitUI.LeftPanel.ContextMenu
     public interface IMenuItemsGenerator<TNode> : IEnumerable<ToolStripItemWithKey>
         where TNode : class, INode
     {
-        bool TryGetMenuItem(MenuItemKey key, out ToolStripItem item);
+        bool TryGetMenuItem(MenuItemKey key, [NotNullWhen(true)] out ToolStripItem? item);
     }
 
     public class ToolStripItemWithKey

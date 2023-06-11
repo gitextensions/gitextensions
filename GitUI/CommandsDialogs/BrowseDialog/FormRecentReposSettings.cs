@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        private bool GetSelectedRepos(object? sender, [NotNullWhen(returnValue: true)] out List<RecentRepoInfo?> repos)
+        private bool GetSelectedRepos(object? sender, [NotNullWhen(returnValue: true)] out List<RecentRepoInfo?>? repos)
         {
             if (sender is ContextMenuStrip strip)
             {

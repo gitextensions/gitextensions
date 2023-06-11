@@ -8,7 +8,6 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft.VisualStudio.Composition;
-using NUnit.Framework;
 
 namespace UITests.CommandsDialogs.SettingsDialog.Pages
 {

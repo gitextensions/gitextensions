@@ -4,7 +4,6 @@ using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitCommandsTests.ExternalLinks
 {

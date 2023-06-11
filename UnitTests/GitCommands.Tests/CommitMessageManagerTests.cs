@@ -5,7 +5,6 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests
 {

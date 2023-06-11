@@ -76,7 +76,7 @@ namespace GitUI.LeftPanel.ContextMenu
             // hide the last visible separator that above look-behind loop may have left over
             var lastVisible = items.LastOrDefault(i => i.Visible);
 
-            if (lastVisible != null && lastVisible is ToolStripSeparator)
+            if (lastVisible is ToolStripSeparator)
             {
                 lastVisible.Enable(false);
             }

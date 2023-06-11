@@ -1431,7 +1431,7 @@ namespace GitCommands
                     }
                 }
 
-                if (item.IsConflict)
+                if (item.IsUnmerged)
                 {
                     conflictsToReset.Add(item.Name);
                 }
@@ -2755,11 +2755,13 @@ namespace GitCommands
                 char statusCharacter = line[0];
                 if (char.IsUpper(statusCharacter))
                 {
+                    // git-ls-files -v will return lowercase status characters for assume unchanged files
                     continue;
                 }
 
+                // Get a default status object, then set AssumeUnchanged
                 string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
+                GitItemStatus gitItemStatus = GitItemStatus.GetDefaultStatus(fileName);
                 gitItemStatus.IsAssumeUnchanged = true;
                 result.Add(gitItemStatus);
             }
@@ -2774,13 +2776,18 @@ namespace GitCommands
             foreach (string line in lsString.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries))
             {
                 char statusCharacter = line[0];
-
-                string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatusConverter.FromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
-                if (gitItemStatus.IsSkipWorktree)
+                const char SkippedStatus = 'S';
+                const char SkippedStatusAssumeUnchanged = 's';
+                if (statusCharacter is not SkippedStatus or SkippedStatusAssumeUnchanged)
                 {
-                    result.Add(gitItemStatus);
+                    continue;
                 }
+
+                // Get a default status object, then set SkipWorktree
+                string fileName = line.SubstringAfter(' ');
+                GitItemStatus gitItemStatus = GitItemStatus.GetDefaultStatus(fileName);
+                gitItemStatus.IsSkipWorktree = true;
+                result.Add(gitItemStatus);
             }
 
             return result;
@@ -3990,7 +3997,7 @@ namespace GitCommands
             }
 
             // Get processes by "ps" command.
-            var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
+            string cmd = Path.Combine(AppSettings.LinuxToolsDir, "ps");
             string[] lines = new Executable(cmd).GetOutput("x").Split(Delimiters.LineFeed);
 
             if (lines.Length <= 2)

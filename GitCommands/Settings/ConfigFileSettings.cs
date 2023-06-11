@@ -56,7 +56,7 @@ namespace GitCommands.Settings
             if (!File.Exists(configPath))
             {
                 // Git 1.xx
-                configPath = Path.Combine(AppSettings.GitBinDir, "..", "etc", "gitconfig");
+                configPath = Path.Combine(AppSettings.GitCommand, "..", "..", "etc", "gitconfig");
                 if (!File.Exists(configPath))
                 {
                     return null;

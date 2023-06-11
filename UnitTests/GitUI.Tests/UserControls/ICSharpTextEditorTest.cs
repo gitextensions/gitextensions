@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Xml.Linq;
-using NUnit.Framework;
 
 namespace GitUITests.UserControls
 {

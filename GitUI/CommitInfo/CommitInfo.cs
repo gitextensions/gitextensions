@@ -480,7 +480,7 @@ namespace GitUI.CommitInfo
                             // of 2nd type in GitRevision.Refs collection, i.e. the one that has IsDereference==true.
                             #endregion
 
-                            if (gitRef.IsTag && gitRef.IsDereference)
+                            if (gitRef is { IsTag: true, IsDereference: true })
                             {
                                 string? content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
                                 if (content is not null)

@@ -1,7 +1,6 @@
 ﻿using GitCommands;
 using GitUI.UserControls;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.UserControls
 {

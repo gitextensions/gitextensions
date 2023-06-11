@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-
-namespace GitCommandsTests
+﻿namespace GitCommandsTests
 {
     [TestFixture]
     public sealed class StringExtensionTests

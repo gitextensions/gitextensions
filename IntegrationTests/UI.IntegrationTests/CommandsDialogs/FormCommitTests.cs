@@ -9,7 +9,6 @@ using GitUI.Editor;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
-using NUnit.Framework;
 
 namespace GitExtensions.UITests.CommandsDialogs
 {

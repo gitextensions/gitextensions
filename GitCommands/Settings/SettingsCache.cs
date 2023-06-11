@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 
 namespace GitCommands
 {
@@ -144,7 +145,7 @@ namespace GitCommands
         // This method will attempt to get the value from cache first. If the setting is not cached, it will call GetValue.
         // GetValue will not look in the cache. This method doesn't require a lock. A lock is only required when GetValue is
         // called. GetValue will set the lock.
-        public bool TryGetValue(string name, out string? value)
+        public bool TryGetValue(string name, [NotNullWhen(true)] out string? value)
         {
             value = default;
 
