@@ -47,7 +47,7 @@ install:
       }
 # generate gpg key
 - cmd: |-
-       gpg --batch --generate-key .\scripts\gen-gpg.dat
+       gpg --batch --generate-key .\scripts\wsb\gen-gpg.dat
        gpg  -K --with-colons | awk -F: '/^sec:/ { print $5 }' > gpgkey.txt
 # set git config global user.signingKey to the key that was generated above
 - ps:  |-

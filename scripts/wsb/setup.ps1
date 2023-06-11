@@ -42,9 +42,39 @@ $paths += 'C:\Users\WDAGUtilityAccount\Desktop\artifacts\Debug\bin\GitExtensions
 [Environment]::SetEnvironmentVariable('Path', $paths -join ';', [EnvironmentVariableTarget]::User)
 Update-SessionEnvironment
 
+#setup a new gpg key
+gpg --batch --generate-key .\wsb\gen-gpg.dat 2>&1
+#just generate same key info but another key so we can see default vs non default key
+gpg --batch --generate-key .\wsb\gen-gpg.dat 2>&1
+
+#Setup soon to expire key.  Show how the key will disapear when seleccting keys an dyou will get an expired key message in gpg tab if you use the key
+$dtExpire = ([System.DateTimeOffset]::UTCNow.Add([System.Timespan]::FromMinutes(2))).ToString('yyyyMMddTHHmmss')
+$expired = Get-Content .\wsb\gen-gpg.dat 
+$expired = $expired -replace 'Expire-Date.*', $('Expire-Date: {0}' -f $dtExpire)
+$expired = $expired -replace 'Name-Real.*', 'Name-Real: GitExtensions Tester Should Expire Soon'
+$expired | Set-Content -Path $env:USERPROFILE\Desktop\Expired.dat
+gpg --batch --generate-key $env:USERPROFILE\Desktop\Expired.dat 2>&1
+
+$keyLines = gpg -K --with-colons | awk -F: '/^sec:/ { print $5 }'
+
+Set-Variable -Name 'keys' -Scope 'script' -Value @{
+    DefaultKey = $keyLines[0]
+    OtherKey   = $keyLines[1]
+    ExpiredKey = $keyLines[2]
+}
+
+$keys
+
+
+
+gpg --armor --export --export-options export-backup > "$TestResults\Keys.pgp"
+#gpg --armor --export-secret-keys --export-options export-backup >> "$TestResults\Keys.pgp"
+gpg --export-ownertrust >"$TestResults\gpgTrust.txt"
+
 #configure git
 git config --global user.name 'Tester'
 git config --global user.email 'Test@test.com'
+git config --global user.signingKey "$($keys.DefaultKey)"
 git config --global rebase.autosquash 'true'
 git config --global rebase.autostash 'true'
 git config --global rebase.updaterefs 'true'

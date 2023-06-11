@@ -8,9 +8,17 @@
 #Define how to generate initial commit history before opening Git Extensions
 function CreateCommits() {
     [Guid]::NewGuid() | Out-File -FilePath .\initial.txt
+    # -S signs with default gpg key
+    # -S1234 signs with key with id 1234 gpg key
+    $signingKey = $null
     git add .
-    git commit -m "Initial commit"
     
+
+    git commit "-S$signingKey" -m "Initial commit"
+    $signingKey = $keys.ExpiredKey
+    git commit "-S$signingKey" --allow-empty -m "Expired key test empty commit"
+    $signingKey = $null
+
 
 }
 git init .\Repo
@@ -50,4 +58,5 @@ git --no-pager diff $initialSha -- GitConfig.txt > "$TestResults\gitconfig.patch
 $bundlePath = '{0}\{1}.bundle' -f $TestResults, $testID
 git bundle create $bundlePath --all
 
+git --no-pager diff
 Pop-Location

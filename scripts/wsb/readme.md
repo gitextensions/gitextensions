@@ -67,3 +67,4 @@ Debug in dev environment.  This environment is for testing the current build as 
 - Full log from setup script
 - A gitconfig.patch file that is a diff of initial git config to what the config is after closing Git Extensions
 - A copy of GitExtensions.settings file
+- The public keys that were generated and the trust db entries that were generated when creating gpg keys in setup
