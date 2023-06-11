@@ -5,7 +5,6 @@ using GitCommands.Remotes;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Remote
 {

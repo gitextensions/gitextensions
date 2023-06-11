@@ -4,7 +4,6 @@ using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 using ResourceManager;
 
 namespace GitCommandsTests.Git.Commands

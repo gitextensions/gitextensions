@@ -134,7 +134,7 @@ namespace GitUI
                     (nameof(Images.FileStatusRemovedOnlyB), ScaleHeight(Images.FileStatusRemovedOnlyB)),
                     (nameof(Images.FileStatusRemovedSame), ScaleHeight(Images.FileStatusRemovedSame)),
                     (nameof(Images.FileStatusRemovedUnequal), ScaleHeight(Images.FileStatusRemovedUnequal)),
-                    (nameof(Images.Conflict), ScaleHeight(Images.Conflict)),
+                    (nameof(Images.Unmerged), ScaleHeight(Images.Unmerged)),
                     (nameof(Images.FileStatusRenamed), ScaleHeight(Images.FileStatusRenamed.AdaptLightness())),
                     (nameof(Images.FileStatusRenamedOnlyA), ScaleHeight(Images.FileStatusRenamedOnlyA)),
                     (nameof(Images.FileStatusRenamedOnlyB), ScaleHeight(Images.FileStatusRenamedOnlyB)),
@@ -898,9 +898,7 @@ namespace GitUI
         private static string AppendItemSubmoduleStatus(string text, GitItemStatus item)
         {
             if (item.IsSubmodule
-                && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> task
-                && task is not null
-                && task.IsCompleted
+                && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> { IsCompleted: true } task
                 && task.CompletedResult() is not null)
             {
                 text += task.CompletedResult()!.AddedAndRemovedString();
@@ -1067,8 +1065,7 @@ namespace GitUI
                     }
 
                     if (item.IsSubmodule
-                        && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> task
-                        && task is not null)
+                        && item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus> task)
                     {
                         var capturedItem = item;
 
@@ -1160,9 +1157,9 @@ namespace GitUI
                     };
                 }
 
-                if (gitItemStatus.IsConflict)
+                if (gitItemStatus.IsUnmerged)
                 {
-                    return nameof(Images.Conflict);
+                    return nameof(Images.Unmerged);
                 }
 
                 if (gitItemStatus.IsSubmodule)

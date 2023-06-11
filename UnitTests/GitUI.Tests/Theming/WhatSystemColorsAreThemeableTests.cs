@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitExtUtils.GitUI.Theming;
-using NUnit.Framework;
 
 namespace GitUITests.Theming
 {

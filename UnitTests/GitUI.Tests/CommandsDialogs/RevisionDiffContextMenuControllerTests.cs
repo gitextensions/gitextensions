@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs
 {

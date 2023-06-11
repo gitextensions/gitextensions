@@ -4,7 +4,6 @@ using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests.DiffMergeTools
 {

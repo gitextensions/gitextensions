@@ -40,7 +40,7 @@ namespace GitUI
 
         private static void SplitButton_DropDownOpening(object? sender, EventArgs e)
         {
-            if (sender is ToolStripDropDownItem item && item.Owner is Control control)
+            if (sender is ToolStripDropDownItem { Owner: Control control })
             {
                 // Suspends the control's rendering process.
                 NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.FALSE, IntPtr.Zero);
@@ -49,7 +49,7 @@ namespace GitUI
 
         private static void SplitButton_DropDownClosed(object? sender, EventArgs e)
         {
-            if (sender is ToolStripDropDownItem item && item.Owner is Control control)
+            if (sender is ToolStripDropDownItem { Owner: Control control })
             {
                 // Resumes the control's rendering process and trigger a redraw.
                 NativeMethods.SendMessageW(control.Handle, NativeMethods.WM_SETREDRAW, NativeMethods.TRUE, IntPtr.Zero);

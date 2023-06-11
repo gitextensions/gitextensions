@@ -54,15 +54,4 @@
     <None Remove="Settings\MockData\level2_repodist_GitExtensions.settings.xml" />
     <None Remove="Settings\MockData\level3_roaming_GitExtensions.settings.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="**\*.approved.*">
-      <DependentUpon>$(
-        [System.String]::Copy('%(FileName)')
-            .SubString(
-              0,
-              $([System.String]::Copy('%(FileName)').IndexOf('.'))
-            )
-        )$(ProjectExt.Replace('proj', ''))</DependentUpon>
-    </None>
-  </ItemGroup>
 </Project>

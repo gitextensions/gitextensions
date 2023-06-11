@@ -2,7 +2,6 @@
 using FluentAssertions;
 using GitExtUtils;
 using GitUI.CommandsDialogs.SubmodulesDialog;
-using NUnit.Framework;
 
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter (doesn't understand discards)
 

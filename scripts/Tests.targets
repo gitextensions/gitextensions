@@ -18,11 +18,11 @@
 
     <PackageReference Include="Microsoft.NET.Test.Sdk" IsImplicitlyDefined="true" />
 
-    <PackageReference Include="ApprovalTests" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
     <PackageReference Include="FluentAssertions" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NSubstitute" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NUnit" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NUnit3TestAdapter" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="Verify.NUnit" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
 
     <PackageReference Include="Appveyor.TestLogger" IsImplicitlyDefined="true" PrivateAssets="all" Publish="true" />
 

@@ -1,6 +1,5 @@
 ﻿using BugReporter;
 using FluentAssertions;
-using NUnit.Framework;
 
 namespace GitUITests
 {

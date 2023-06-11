@@ -7,7 +7,6 @@ using GitCommands.Remotes;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests.ExternalLinks
 {

@@ -1,5 +1,4 @@
 ﻿using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitCommandsTests
 {

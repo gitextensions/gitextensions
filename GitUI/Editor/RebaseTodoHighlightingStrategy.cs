@@ -164,7 +164,7 @@ namespace GitUI.Editor
 
             return false;
 
-            bool IsHexChar() => char.IsDigit(c) || (c >= 'a' && c <= 'f');
+            bool IsHexChar() => char.IsDigit(c) || c is >= 'a' and <= 'f';
         }
     }
 }

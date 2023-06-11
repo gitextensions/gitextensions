@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public override void OnPageShown()
         {
             GitPath.Text = AppSettings.GitCommandValue;
-            GitBinPath.Text = AppSettings.GitBinDir;
+            LinuxToolsDir.Text = AppSettings.LinuxToolsDir;
         }
 
         protected override void SettingsToPage()
@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", EnvironmentConfiguration.GetHomeDir());
 
             GitPath.Text = AppSettings.GitCommandValue;
-            GitBinPath.Text = AppSettings.GitBinDir;
+            LinuxToolsDir.Text = AppSettings.LinuxToolsDir;
 
             base.SettingsToPage();
         }
@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             AppSettings.GitCommandValue = GitPath.Text;
-            AppSettings.GitBinDir = GitBinPath.Text;
+            AppSettings.LinuxToolsDir = LinuxToolsDir.Text;
 
             base.PageToSettings();
         }
@@ -59,15 +59,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
-        private void BrowseGitBinPath_Click(object sender, EventArgs e)
+        private void BrowseLinuxToolsDir_Click(object sender, EventArgs e)
         {
-            CheckSettingsLogic.SolveLinuxToolsDir(GitBinPath.Text.Trim());
+            CheckSettingsLogic.SolveLinuxToolsDir(LinuxToolsDir.Text.Trim());
 
-            var userSelectedPath = OsShellUtil.PickFolder(this, AppSettings.GitBinDir);
+            string? userSelectedPath = OsShellUtil.PickFolder(this, AppSettings.LinuxToolsDir);
 
             if (userSelectedPath is not null)
             {
-                GitBinPath.Text = userSelectedPath;
+                LinuxToolsDir.Text = userSelectedPath;
             }
         }
 
@@ -77,10 +77,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CheckSettingsLogic.SolveGitCommand(GitPath.Text.Trim());
         }
 
-        private void GitBinPath_TextChanged(object sender, EventArgs e)
+        private void LinuxToolsDir_TextChanged(object sender, EventArgs e)
         {
             // If user pastes text or types in the box be sure to validate and save in the settings.
-            CheckSettingsLogic.SolveLinuxToolsDir(GitBinPath.Text.Trim());
+            CheckSettingsLogic.SolveLinuxToolsDir(LinuxToolsDir.Text.Trim());
         }
 
         private void downloadGitForWindows_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

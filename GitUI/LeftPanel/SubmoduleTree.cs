@@ -2,7 +2,6 @@
 using GitCommands;
 using GitCommands.Submodules;
 using GitUI.CommandsDialogs;
-using GitUIPluginInterfaces;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 

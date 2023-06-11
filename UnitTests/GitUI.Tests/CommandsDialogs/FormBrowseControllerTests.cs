@@ -1,7 +1,6 @@
 ﻿using GitCommands.Gpg;
 using GitUI.CommandsDialogs;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs
 {

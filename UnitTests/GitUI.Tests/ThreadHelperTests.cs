@@ -3,7 +3,6 @@ using CommonTestUtils;
 using GitUI;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using NUnit.Framework;
 
 namespace GitUITests
 {

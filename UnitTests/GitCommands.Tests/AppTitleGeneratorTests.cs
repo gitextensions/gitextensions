@@ -4,7 +4,6 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using Microsoft.VisualStudio.Composition;
-using NUnit.Framework;
 using ExportAttribute = System.ComponentModel.Composition.ExportAttribute;
 using PartNotDiscoverableAttribute = System.ComponentModel.Composition.PartNotDiscoverableAttribute;
 

@@ -696,7 +696,7 @@ namespace GitCommands
             if (!string.IsNullOrEmpty(ssh))
             {
                 // OpenSSH uses empty path, compatibility with path set in 3.4
-                string path = new SshPathLocator().GetSshFromGitDir(GitBinDir);
+                string path = new SshPathLocator().GetSshFromGitDir(LinuxToolsDir);
                 if (path == ssh)
                 {
                     AppSettings.SshPath = "";
@@ -1313,22 +1313,15 @@ namespace GitCommands
             set => SetBool("ShowCommitBodyInRevisionGrid", value);
         }
 
-        /// <summary>Gets or sets the path to the git application executable.</summary>
-        public static string GitBinDir
+        /// <summary>Gets or sets the path to the GNU/Linux tools (bash, ps, sh, ssh, etc.), e.g. "C:\Program Files\Git\usr\bin\"</summary>
+        public static string LinuxToolsDir
         {
-            get => GetString("gitbindir", "");
+            // Migrate the setting value from the from the former "gitbindir"
+            get => GetString(nameof(LinuxToolsDir), defaultValue: null) ?? GetString("gitbindir", "");
             set
             {
-                var temp = value.EnsureTrailingPathSeparator();
-                SetString("gitbindir", temp);
-
-                ////if (string.IsNullOrEmpty(_gitBinDir))
-                ////   return;
-                ////
-                ////var path =
-                ////   Environment.GetEnvironmentVariable("path", EnvironmentVariableTarget.Process) + ";" +
-                ////   _gitBinDir;
-                ////Environment.SetEnvironmentVariable("path", path, EnvironmentVariableTarget.Process);
+                string linuxToolsDir = value.EnsureTrailingPathSeparator();
+                SetString(nameof(LinuxToolsDir), linuxToolsDir);
             }
         }
 

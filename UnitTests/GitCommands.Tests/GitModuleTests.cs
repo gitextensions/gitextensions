@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
 using System.Text;
-using ApprovalTests;
-using ApprovalTests.Namers;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -12,7 +10,6 @@ using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
 using Newtonsoft.Json;
-using NUnit.Framework;
 
 namespace GitCommandsTests
 {
@@ -406,7 +403,7 @@ namespace GitCommandsTests
             "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0")]
         [TestCase("WorkTree4", StagedStatus.Index,
             "M\0testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n")]
-        [TestCase("fatal error", StagedStatus.None,
+        [TestCase("fatal_error", StagedStatus.None,
             "M\0testfile.txt\0fatal: bad config line 1 in file F:/dev/gc/gitextensions/.git/modules/GitExtensionsDoc/config\nfatal: 'git status --porcelain=2' failed in submodule GitExtensionsDoc\nM\0testfile2.txt\0")]
 
         [TestCase("Ignore_unmerged_in_conflict_if_revision_is_work_tree", StagedStatus.WorkTree,
@@ -418,27 +415,26 @@ namespace GitCommandsTests
         [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree2", StagedStatus.None,
             "M\0testfile.txt\0U\0testfile2.txt\0")]
 
-        [TestCase("Check that spaces are not trimmed in file names", StagedStatus.None,
+        [TestCase("Check_that_spaces_are_not_trimmed_in_file_names", StagedStatus.None,
             "M\0 no trim space0 \0U\0 no trim space1 \0A\0 no trim space2 \0")]
         [TestCase("Rename_with_spaces", StagedStatus.None,
             "R100\0CONTRIBUTING.md\0 CONTRIBUTI NG.md\0C70\0apa.md\0 apa.md\0A\0 co decov.yml\0D\0CODE_OF_CONDUCT.md\0")]
 #if !DEBUG && false
-            // This test is for documentation, but as the throw is in a called function, it will not test cleanly
-                // Check that the staged status is None if not Index/WorkTree
-                // Assertion in Debug, throws in Release
+        // This test is for documentation, but as the throw is in a called function, it will not test cleanly
+        // Check that the staged status is None if not Index/WorkTree
+        // Assertion in Debug, throws in Release
         [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree3", StagedStatus.None,
             "M\0testfile.txt\0U\0testfile2.txt\0")]
 #endif
-        public void GetDiffChangedFilesFromString(string testName, StagedStatus stagedStatus, string statusString)
+        public async Task GetDiffChangedFilesFromString(string testName, StagedStatus stagedStatus, string statusString)
         {
             // TODO produce a valid working directory
             GitModule module = new(Path.GetTempPath());
-            using (ApprovalResults.ForScenario(testName.Replace(' ', '_')))
-            {
-                // git diff --find-renames --find-copies -z --name-status
-                var statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
-                Approvals.VerifyJson(JsonConvert.SerializeObject(statuses));
-            }
+            // git diff --find-renames --find-copies -z --name-status
+            var statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
+
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(statuses))
+                .UseParameters(testName);
         }
 
         [TestCase("fatal: not a git repository:")]

@@ -3,7 +3,6 @@ using System.Text;
 using FluentAssertions;
 using GitExtUtils;
 using GitUI.NBugReports;
-using NUnit.Framework;
 
 namespace GitUITests.NBugReports
 {

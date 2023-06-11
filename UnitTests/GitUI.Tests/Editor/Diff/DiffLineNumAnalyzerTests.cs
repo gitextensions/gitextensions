@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitUI.Editor.Diff;
-using NUnit.Framework;
 
 namespace GitUITests.Editor.Diff
 {

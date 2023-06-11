@@ -1,6 +1,5 @@
 ﻿using CommonTestUtils;
 using GitUI.CommandsDialogs;
-using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs
 {

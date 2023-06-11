@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
@@ -140,7 +141,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return false;
         }
 
-        public bool TryGetNode(ObjectId objectId, out RevisionGraphRevision revision)
+        public bool TryGetNode(ObjectId objectId, [NotNullWhen(true)] out RevisionGraphRevision? revision)
         {
             return _nodeByObjectId.TryGetValue(objectId, out revision);
         }

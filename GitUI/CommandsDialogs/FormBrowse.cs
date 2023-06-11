@@ -548,7 +548,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void WndProc(ref Message m)
         {
-            if (m.Msg == _closeAllMessage || (m.Msg == NativeMethods.WM_SYSCOMMAND && m.WParam == NativeMethods.SC_CLOSE))
+            if (m.Msg == _closeAllMessage || m is { Msg: NativeMethods.WM_SYSCOMMAND, WParam: NativeMethods.SC_CLOSE })
             {
                 // Application close is requested, e.g. using the Taskbar context menu.
                 // This request is directed to the main form also if a modal form like FormCommit is on top.

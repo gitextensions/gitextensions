@@ -126,12 +126,12 @@ namespace GitUIPluginInterfaces
 
             int HexCharToInt(char c)
             {
-                if (c >= '0' && c <= '9')
+                if (c is >= '0' and <= '9')
                 {
                     return c - 48;
                 }
 
-                if (c >= 'a' && c <= 'f')
+                if (c is >= 'a' and <= 'f')
                 {
                     return c - 87;
                 }

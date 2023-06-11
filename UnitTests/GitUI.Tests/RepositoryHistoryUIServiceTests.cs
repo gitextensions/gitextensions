@@ -1,10 +1,8 @@
-﻿using System.Windows.Forms;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
 using GitUI;
 using GitUI.CommandsDialogs;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests
 {

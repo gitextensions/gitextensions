@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using ApprovalTests;
 using CommonTestUtils;
 using CommonTestUtils.MEF;
 using FluentAssertions;
@@ -10,7 +9,6 @@ using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;
 using NSubstitute;
-using NUnit.Framework;
 using ResourceManager;
 
 namespace GitExtensions.UITests.UserControls.CommitInfo
@@ -196,7 +194,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 // Wait for pending operations so the Control is loaded completely before testing it
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
+                await Verifier.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
             });
         }
 
@@ -296,7 +294,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 ta.LinkClicked(ta.RevisionInfo, new("not important", linkStart: 423, linkLength: 0));
                 mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/branches");
 
-                Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
+                await Verifier.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
             });
         }
 
@@ -341,7 +339,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
                 ta.LinkClicked(ta.RevisionInfo, new("not important", linkStart: 774, linkLength: 0));
                 mockLinkFactory.LastExecutedLinkUri.Should().Be("gitext://showall/tags");
 
-                Approvals.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
+                await Verifier.Verify(commitInfo.GetTestAccessor().RevisionInfo.Text);
             });
         }
 

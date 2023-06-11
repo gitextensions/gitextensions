@@ -1283,7 +1283,7 @@ namespace GitUI
         {
             WrapRepoHostingCall(TranslatedStrings.ForkCloneRepo, gitHoster, gh =>
             {
-                using ForkAndCloneForm frm = new(gitHoster, gitModuleChanged);
+                using ForkAndCloneForm frm = new(gh, gitModuleChanged);
                 frm.ShowDialog(owner);
             });
         }
@@ -1293,7 +1293,7 @@ namespace GitUI
             WrapRepoHostingCall(TranslatedStrings.ViewPullRequest, gitHoster,
                                 gh =>
                                 {
-                                    ViewPullRequestsForm frm = new(this, gitHoster) { ShowInTaskbar = true };
+                                    ViewPullRequestsForm frm = new(this, gh) { ShowInTaskbar = true };
                                     frm.Show(owner);
                                 });
         }
@@ -1340,7 +1340,7 @@ namespace GitUI
                 gitHoster,
                 gh =>
                 {
-                    CreatePullRequestForm form = new(this, gitHoster, chooseRemote, chooseBranch)
+                    CreatePullRequestForm form = new(this, gh, chooseRemote, chooseBranch)
                     {
                         ShowInTaskbar = true
                     };

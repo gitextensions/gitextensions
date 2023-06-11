@@ -5,7 +5,6 @@ using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitUITests.UserControls
 {

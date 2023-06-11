@@ -24,10 +24,8 @@ using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using Microsoft;
-using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using TaskDialog = System.Windows.Forms.TaskDialog;
 using TaskDialogButton = System.Windows.Forms.TaskDialogButton;
 
@@ -1378,7 +1376,7 @@ namespace GitUI
                         {
                             parents = headParents;
                         }
-                        else if (headParents is not null && headParents.ToList().IndexOf(notSelectedId) is int index && index >= 0)
+                        else if (headParents is not null && headParents.ToList().IndexOf(notSelectedId) is int index and >= 0)
                         {
                             parents = headParents.Skip(index + 1).ToList();
                         }

@@ -1,8 +1,6 @@
-﻿using ApprovalTests;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitUI.Hotkey;
-using NUnit.Framework;
 using ResourceManager;
 
 namespace GitUITests.Hotkey
@@ -73,7 +71,7 @@ namespace GitUITests.Hotkey
         }
 
         [Test]
-        public void Can_save_settings()
+        public async Task Can_save_settings()
         {
             string originalHotkeys = AppSettings.SerializedHotkeys;
 
@@ -82,7 +80,7 @@ namespace GitUITests.Hotkey
                 HotkeySettingsManager.SaveSettings(CreateHotkeySettings(2));
 
                 // Verify as a string, as the xml verifier ignores line breaks.
-                Approvals.Verify(AppSettings.SerializedHotkeys);
+                await Verifier.Verify(AppSettings.SerializedHotkeys);
             }
             finally
             {

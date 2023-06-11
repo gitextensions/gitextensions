@@ -2,7 +2,6 @@
 using CommonTestUtils;
 using GitUI;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitExtensions.UITests
 {

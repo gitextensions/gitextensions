@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
-using NUnit.Framework;
 
 namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
 {

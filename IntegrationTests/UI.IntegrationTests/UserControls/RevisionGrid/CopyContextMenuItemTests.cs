@@ -3,7 +3,6 @@ using GitCommands;
 using GitUI;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
-using NUnit.Framework;
 
 namespace GitExtensions.UITests.UserControls.RevisionGrid
 {

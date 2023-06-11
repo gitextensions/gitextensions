@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitCommands.Git;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Git
 {

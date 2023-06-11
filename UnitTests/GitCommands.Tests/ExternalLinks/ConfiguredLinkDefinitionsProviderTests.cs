@@ -5,7 +5,6 @@ using GitCommands.ExternalLinks;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
 using NSubstitute;
-using NUnit.Framework;
 
 namespace GitCommandsTests.ExternalLinks
 {

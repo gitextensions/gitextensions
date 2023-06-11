@@ -2,7 +2,6 @@
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI.Theming;
-using GitUI.CommandsDialogs.Menus;
 using GitUI.HelperDialogs;
 using GitUI.Theming;
 using GitUI.UserControls;

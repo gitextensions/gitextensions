@@ -1,7 +1,6 @@
 ﻿using ConEmu.WinForms;
 using GitCommands;
 using GitUI.UserControls;
-using NUnit.Framework;
 
 namespace GitUITests.UserControls
 {

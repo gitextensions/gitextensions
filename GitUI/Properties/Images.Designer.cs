@@ -583,16 +583,6 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap Conflict {
-            get {
-                object obj = ResourceManager.GetObject("Conflict", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap Console {
             get {
                 object obj = ResourceManager.GetObject("Console", resourceCulture);
@@ -2556,6 +2546,16 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap UiScrollBar {
             get {
                 object obj = ResourceManager.GetObject("UiScrollBar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Unmerged {
+            get {
+                object obj = ResourceManager.GetObject("Unmerged", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

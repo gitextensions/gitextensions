@@ -1,6 +1,5 @@
 ﻿using BugReporter;
 using GitCommands;
-using NUnit.Framework;
 
 namespace BugReporterTests
 {

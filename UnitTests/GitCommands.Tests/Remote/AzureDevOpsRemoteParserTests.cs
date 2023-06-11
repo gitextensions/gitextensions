@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitCommands.Remotes;
-using NUnit.Framework;
 
 namespace GitCommandsTests.Remote
 {
