@@ -445,86 +445,14 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="TranslationsDir">
-      <Component Id="English.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\English.gif" />
+      <Component Id="Turkish.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.gif" />
       </Component>
-      <Component Id="English.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\English.xlf" />
+      <Component Id="Turkish.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.xlf" />
       </Component>
-      <Component Id="English.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\English.Plugins.xlf" />
-      </Component>
-      <Component Id="French.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\French.gif" />
-      </Component>
-      <Component Id="French.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\French.xlf" />
-      </Component>
-      <Component Id="French.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\French.Plugins.xlf" />
-      </Component>
-      <Component Id="German.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\German.gif" />
-      </Component>
-      <Component Id="German.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\German.xlf" />
-      </Component>
-      <Component Id="German.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\German.Plugins.xlf" />
-      </Component>
-      <Component Id="Japanese.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.gif" />
-      </Component>
-      <Component Id="Japanese.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.xlf" />
-      </Component>
-      <Component Id="Japanese.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.Plugins.xlf" />
-      </Component>
-      <Component Id="Korean.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.gif" />
-      </Component>
-      <Component Id="Korean.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.xlf" />
-      </Component>
-      <Component Id="Korean.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.Plugins.xlf" />
-      </Component>
-      <Component Id="Russian.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.gif" />
-      </Component>
-      <Component Id="Russian.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.xlf" />
-      </Component>
-      <Component Id="Russian.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.Plugins.xlf" />
-      </Component>
-      <Component Id="SimplifiedChinese.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.gif" />
-      </Component>
-      <Component Id="SimplifiedChinese.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.xlf" />
-      </Component>
-      <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.Plugins.xlf" />
-      </Component>
-      <Component Id="Spanish_Argentina.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).gif" />
-      </Component>
-      <Component Id="Spanish_Argentina.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).xlf" />
-      </Component>
-      <Component Id="Spanish_Argentina.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).Plugins.xlf" />
-      </Component>
-      <Component Id="Spanish.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.gif" />
-      </Component>
-      <Component Id="Spanish.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.xlf" />
-      </Component>
-      <Component Id="Spanish.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.Plugins.xlf" />
+      <Component Id="Turkish.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.Plugins.xlf" />
       </Component>
       <Component Id="TraditionalChinese.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Traditional Chinese.gif" />
@@ -535,14 +463,95 @@
       <Component Id="TraditionalChinese.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Traditional Chinese.Plugins.xlf" />
       </Component>
-      <Component Id="Turkish.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.gif" />
+      <Component Id="Japanese.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.gif" />
       </Component>
-      <Component Id="Turkish.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.xlf" />
+      <Component Id="Japanese.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.xlf" />
       </Component>
-      <Component Id="Turkish.Plugins.xlf" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Turkish.Plugins.xlf" />
+      <Component Id="Japanese.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.Plugins.xlf" />
+      </Component>
+      <Component Id="German.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\German.gif" />
+      </Component>
+      <Component Id="German.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\German.xlf" />
+      </Component>
+      <Component Id="German.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\German.Plugins.xlf" />
+      </Component>
+      <Component Id="Tamil.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Tamil.gif" />
+      </Component>
+      <Component Id="Tamil.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Tamil.xlf" />
+      </Component>
+      <Component Id="Tamil.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Tamil.Plugins.xlf" />
+      </Component>
+      <Component Id="French.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\French.gif" />
+      </Component>
+      <Component Id="French.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\French.xlf" />
+      </Component>
+      <Component Id="French.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\French.Plugins.xlf" />
+      </Component>
+      <Component Id="Russian.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.gif" />
+      </Component>
+      <Component Id="Russian.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.xlf" />
+      </Component>
+      <Component Id="Russian.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.Plugins.xlf" />
+      </Component>
+      <Component Id="English.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\English.gif" />
+      </Component>
+      <Component Id="English.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\English.xlf" />
+      </Component>
+      <Component Id="English.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\English.Plugins.xlf" />
+      </Component>
+      <Component Id="Spanish_Argentina.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).gif" />
+      </Component>
+      <Component Id="Spanish_Argentina.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).xlf" />
+      </Component>
+      <Component Id="Spanish_Argentina.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).Plugins.xlf" />
+      </Component>
+      <Component Id="Korean.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.gif" />
+      </Component>
+      <Component Id="Korean.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.xlf" />
+      </Component>
+      <Component Id="Korean.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Korean.Plugins.xlf" />
+      </Component>
+      <Component Id="SimplifiedChinese.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.gif" />
+      </Component>
+      <Component Id="SimplifiedChinese.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.xlf" />
+      </Component>
+      <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.Plugins.xlf" />
+      </Component>
+      <Component Id="Spanish.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.gif" />
+      </Component>
+      <Component Id="Spanish.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.xlf" />
+      </Component>
+      <Component Id="Spanish.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.Plugins.xlf" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="DirConEmu">
@@ -804,55 +813,60 @@
         </Feature>
       </Feature>
       <Feature Id="Translation" Title="Translations" Level="1">
-        <Feature Id="French" Title="French" Level="1">
-          <ComponentRef Id="French.xlf" />
-          <ComponentRef Id="French.Plugins.xlf" />
-          <ComponentRef Id="French.gif" />
-        </Feature>
-        <Feature Id="German" Title="German" Level="1">
-          <ComponentRef Id="German.xlf" />
-          <ComponentRef Id="German.Plugins.xlf" />
-          <ComponentRef Id="German.gif" />
-        </Feature>
-        <Feature Id="Japanese" Title="Japanese" Level="1">
-          <ComponentRef Id="Japanese.xlf" />
-          <ComponentRef Id="Japanese.Plugins.xlf" />
-          <ComponentRef Id="Japanese.gif" />
-        </Feature>
-        <Feature Id="Korean" Title="Korean" Level="1">
-          <ComponentRef Id="Korean.xlf" />
-          <ComponentRef Id="Korean.Plugins.xlf" />
-          <ComponentRef Id="Korean.gif" />
-        </Feature>
-        <Feature Id="Russian" Title="Russian" Level="1">
-          <ComponentRef Id="Russian.xlf" />
-          <ComponentRef Id="Russian.Plugins.xlf" />
-          <ComponentRef Id="Russian.gif" />
-        </Feature>
-        <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
-          <ComponentRef Id="SimplifiedChinese.xlf" />
-          <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
-          <ComponentRef Id="SimplifiedChinese.gif" />
-        </Feature>
-        <Feature Id="Spanish_Argentina" Title="Spanish (Argentina)" Level="1">
-          <ComponentRef Id="Spanish_Argentina.xlf" />
-          <ComponentRef Id="Spanish_Argentina.Plugins.xlf" />
-          <ComponentRef Id="Spanish_Argentina.gif" />
-        </Feature>
-        <Feature Id="Spanish" Title="Spanish" Level="1">
-          <ComponentRef Id="Spanish.xlf" />
-          <ComponentRef Id="Spanish.Plugins.xlf" />
-          <ComponentRef Id="Spanish.gif" />
+        <Feature Id="Turkish" Title="Turkish" Level="1">
+          <ComponentRef Id="Turkish.xlf" />
+          <ComponentRef Id="Turkish.Plugins.xlf" />
+          <ComponentRef Id="Turkish.gif" />
         </Feature>
         <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
           <ComponentRef Id="TraditionalChinese.xlf" />
           <ComponentRef Id="TraditionalChinese.Plugins.xlf" />
           <ComponentRef Id="TraditionalChinese.gif" />
         </Feature>
-        <Feature Id="Turkish" Title="Turkish" Level="1">
-          <ComponentRef Id="Turkish.xlf" />
-          <ComponentRef Id="Turkish.Plugins.xlf" />
-          <ComponentRef Id="Turkish.gif" />
+        <Feature Id="Japanese" Title="Japanese" Level="1">
+          <ComponentRef Id="Japanese.xlf" />
+          <ComponentRef Id="Japanese.Plugins.xlf" />
+          <ComponentRef Id="Japanese.gif" />
+        </Feature>
+        <Feature Id="German" Title="German" Level="1">
+          <ComponentRef Id="German.xlf" />
+          <ComponentRef Id="German.Plugins.xlf" />
+          <ComponentRef Id="German.gif" />
+        </Feature>
+        <Feature Id="Tamil" Title="Tamil" Level="1">
+          <ComponentRef Id="Tamil.xlf" />
+          <ComponentRef Id="Tamil.Plugins.xlf" />
+          <ComponentRef Id="Tamil.gif" />
+        </Feature>
+        <Feature Id="French" Title="French" Level="1">
+          <ComponentRef Id="French.xlf" />
+          <ComponentRef Id="French.Plugins.xlf" />
+          <ComponentRef Id="French.gif" />
+        </Feature>
+        <Feature Id="Russian" Title="Russian" Level="1">
+          <ComponentRef Id="Russian.xlf" />
+          <ComponentRef Id="Russian.Plugins.xlf" />
+          <ComponentRef Id="Russian.gif" />
+        </Feature>
+        <Feature Id="Spanish_Argentina" Title="Spanish (Argentina)" Level="1">
+          <ComponentRef Id="Spanish_Argentina.xlf" />
+          <ComponentRef Id="Spanish_Argentina.Plugins.xlf" />
+          <ComponentRef Id="Spanish_Argentina.gif" />
+        </Feature>
+        <Feature Id="Korean" Title="Korean" Level="1">
+          <ComponentRef Id="Korean.xlf" />
+          <ComponentRef Id="Korean.Plugins.xlf" />
+          <ComponentRef Id="Korean.gif" />
+        </Feature>
+        <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
+          <ComponentRef Id="SimplifiedChinese.xlf" />
+          <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
+          <ComponentRef Id="SimplifiedChinese.gif" />
+        </Feature>
+        <Feature Id="Spanish" Title="Spanish" Level="1">
+          <ComponentRef Id="Spanish.xlf" />
+          <ComponentRef Id="Spanish.Plugins.xlf" />
+          <ComponentRef Id="Spanish.gif" />
         </Feature>
       </Feature>
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
