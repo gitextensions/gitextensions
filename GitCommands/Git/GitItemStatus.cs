@@ -241,8 +241,8 @@ namespace GitCommands
         /// Return an object with the status as if the item was created
         /// with first and second commit reverse selected.
         /// </summary>
-        /// <returns>An inverted copy.</returns>
-        public GitItemStatus ReverseSelection()
+        /// <returns>An inverted copy of the status.</returns>
+        public GitItemStatus InvertStatus()
         {
             GitItemStatus gitItemStatus = new(Name)
             {

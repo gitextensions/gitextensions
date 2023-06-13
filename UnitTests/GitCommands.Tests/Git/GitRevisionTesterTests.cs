@@ -156,37 +156,37 @@ namespace GitCommandsTests.Git
         [Test]
         public async Task ReverseSelection_expected_changes_none()
         {
-            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1").ReverseSelection()));
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1").InvertStatus()));
         }
 
         [Test]
         public async Task ReverseSelection_expected_changes_renamed()
         {
-            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsRenamed = true, OldName = "file2" }.ReverseSelection()));
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsRenamed = true, OldName = "file2" }.InvertStatus()));
         }
 
         [Test]
         public async Task ReverseSelection_expected_changes_new()
         {
-            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsNew = true }.ReverseSelection()));
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsNew = true }.InvertStatus()));
         }
 
         [Test]
         public async Task ReverseSelection_expected_changes_deleted()
         {
-            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsDeleted = true }.ReverseSelection()));
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsDeleted = true }.InvertStatus()));
         }
 
         [Test]
         public async Task ReverseSelection_expected_changes_unmerged()
         {
-            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsUnmerged = true }.ReverseSelection()));
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsUnmerged = true }.InvertStatus()));
         }
 
         [Test]
         public async Task ReverseSelection_expected_changes_getdefaults()
         {
-            await Verifier.VerifyJson(JsonConvert.SerializeObject(GitItemStatus.GetDefaultStatus("file1").ReverseSelection()));
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(GitItemStatus.GetDefaultStatus("file1").InvertStatus()));
         }
     }
 }

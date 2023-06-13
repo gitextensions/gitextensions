@@ -506,7 +506,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     IReadOnlyList<GitItemStatus> resetItems = (resetToParent ? selectedItems.Items()
-                        : selectedItems.Items().Select(item => item.ReverseSelection())).ToList();
+                        : selectedItems.Items().Select(item => item.InvertStatus())).ToList();
                     Module.ResetChanges(id, resetItems, resetAndDelete: resetAndDelete, _fullPathResolver, filesInUse: out _, output: out _);
                 }
             }

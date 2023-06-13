@@ -1370,6 +1370,11 @@ namespace GitCommands
             _gitExecutable.RunCommand(GitCommandHelpers.ResetCmd(mode, commit: null, file));
         }
 
+        /// <summary>
+        /// checkout-index ("reset"), copy files from the index overwrite the working tree.
+        /// </summary>
+        /// <param name="files">List with (relative path) filenames.</param>
+        /// <returns>stdout from Git.</returns>
         public string CheckoutIndexFiles(IReadOnlyList<string> files)
         {
             if (files is null || files.Count == 0)
