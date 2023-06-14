@@ -499,9 +499,6 @@
       <Component Id="Russian.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Russian.Plugins.xlf" />
       </Component>
-      <Component Id="Spanish_Argentina.gif" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).gif" />
-      </Component>
       <Component Id="SimplifiedChinese.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.gif" />
       </Component>
@@ -510,6 +507,9 @@
       </Component>
       <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Simplified Chinese.Plugins.xlf" />
+      </Component>
+      <Component Id="Spanish_Argentina.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).gif" />
       </Component>
       <Component Id="Spanish_Argentina.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish (Argentina).xlf" />
@@ -813,60 +813,60 @@
         </Feature>
       </Feature>
       <Feature Id="Translation" Title="Translations" Level="1">
-        <Feature Id="Turkish" Title="Turkish" Level="1">
-          <ComponentRef Id="Turkish.xlf" />
-          <ComponentRef Id="Turkish.Plugins.xlf" />
-          <ComponentRef Id="Turkish.gif" />
-        </Feature>
-        <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
-          <ComponentRef Id="TraditionalChinese.xlf" />
-          <ComponentRef Id="TraditionalChinese.Plugins.xlf" />
-          <ComponentRef Id="TraditionalChinese.gif" />
-        </Feature>
-        <Feature Id="Japanese" Title="Japanese" Level="1">
-          <ComponentRef Id="Japanese.xlf" />
-          <ComponentRef Id="Japanese.Plugins.xlf" />
-          <ComponentRef Id="Japanese.gif" />
+        <Feature Id="French" Title="French" Level="1">
+          <ComponentRef Id="French.xlf" />
+          <ComponentRef Id="French.Plugins.xlf" />
+          <ComponentRef Id="French.gif" />
         </Feature>
         <Feature Id="German" Title="German" Level="1">
           <ComponentRef Id="German.xlf" />
           <ComponentRef Id="German.Plugins.xlf" />
           <ComponentRef Id="German.gif" />
         </Feature>
-        <Feature Id="Tamil" Title="Tamil" Level="1">
-          <ComponentRef Id="Tamil.xlf" />
-          <ComponentRef Id="Tamil.Plugins.xlf" />
-          <ComponentRef Id="Tamil.gif" />
-        </Feature>
-        <Feature Id="French" Title="French" Level="1">
-          <ComponentRef Id="French.xlf" />
-          <ComponentRef Id="French.Plugins.xlf" />
-          <ComponentRef Id="French.gif" />
-        </Feature>
-        <Feature Id="Russian" Title="Russian" Level="1">
-          <ComponentRef Id="Russian.xlf" />
-          <ComponentRef Id="Russian.Plugins.xlf" />
-          <ComponentRef Id="Russian.gif" />
-        </Feature>
-        <Feature Id="Spanish_Argentina" Title="Spanish (Argentina)" Level="1">
-          <ComponentRef Id="Spanish_Argentina.xlf" />
-          <ComponentRef Id="Spanish_Argentina.Plugins.xlf" />
-          <ComponentRef Id="Spanish_Argentina.gif" />
+        <Feature Id="Japanese" Title="Japanese" Level="1">
+          <ComponentRef Id="Japanese.xlf" />
+          <ComponentRef Id="Japanese.Plugins.xlf" />
+          <ComponentRef Id="Japanese.gif" />
         </Feature>
         <Feature Id="Korean" Title="Korean" Level="1">
           <ComponentRef Id="Korean.xlf" />
           <ComponentRef Id="Korean.Plugins.xlf" />
           <ComponentRef Id="Korean.gif" />
         </Feature>
+        <Feature Id="Russian" Title="Russian" Level="1">
+          <ComponentRef Id="Russian.xlf" />
+          <ComponentRef Id="Russian.Plugins.xlf" />
+          <ComponentRef Id="Russian.gif" />
+        </Feature>
         <Feature Id="SimplifiedChinese" Title="Simplified Chinese" Level="1">
           <ComponentRef Id="SimplifiedChinese.xlf" />
           <ComponentRef Id="SimplifiedChinese.Plugins.xlf" />
           <ComponentRef Id="SimplifiedChinese.gif" />
         </Feature>
+        <Feature Id="Spanish_Argentina" Title="Spanish (Argentina)" Level="1">
+          <ComponentRef Id="Spanish_Argentina.xlf" />
+          <ComponentRef Id="Spanish_Argentina.Plugins.xlf" />
+          <ComponentRef Id="Spanish_Argentina.gif" />
+        </Feature>
         <Feature Id="Spanish" Title="Spanish" Level="1">
           <ComponentRef Id="Spanish.xlf" />
           <ComponentRef Id="Spanish.Plugins.xlf" />
           <ComponentRef Id="Spanish.gif" />
+        </Feature>
+        <Feature Id="Tamil" Title="Tamil" Level="1">
+          <ComponentRef Id="Tamil.xlf" />
+          <ComponentRef Id="Tamil.Plugins.xlf" />
+          <ComponentRef Id="Tamil.gif" />
+        </Feature>
+        <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
+          <ComponentRef Id="TraditionalChinese.xlf" />
+          <ComponentRef Id="TraditionalChinese.Plugins.xlf" />
+          <ComponentRef Id="TraditionalChinese.gif" />
+        </Feature>
+        <Feature Id="Turkish" Title="Turkish" Level="1">
+          <ComponentRef Id="Turkish.xlf" />
+          <ComponentRef Id="Turkish.Plugins.xlf" />
+          <ComponentRef Id="Turkish.gif" />
         </Feature>
       </Feature>
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
