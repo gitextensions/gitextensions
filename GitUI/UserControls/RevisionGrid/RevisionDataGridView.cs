@@ -23,9 +23,6 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly SolidBrush _authoredHighlightBrush;
 
         private readonly BackgroundUpdater _backgroundUpdater;
-        private readonly Stopwatch _lastRepaint = Stopwatch.StartNew();
-        private readonly Stopwatch _lastScroll = Stopwatch.StartNew();
-        private readonly Stopwatch _consecutiveScroll = Stopwatch.StartNew();
         private readonly List<ColumnProvider> _columnProviders = new();
 
         internal RevisionGraph _revisionGraph = new();
@@ -92,11 +89,10 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             };
 
-            Scroll += (_, _) => OnScroll();
+            Scroll += (_, _) => UpdateVisibleRowRange();
             Resize += (_, _) => UpdateVisibleRowRange();
             GotFocus += (_, _) => InvalidateSelectedRows();
             LostFocus += (_, _) => InvalidateSelectedRows();
-            RowPrePaint += (_, _) => _lastRepaint.Restart();
 
             CellPainting += OnCellPainting;
             CellFormatting += (_, e) =>
@@ -273,8 +269,6 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void OnCellPainting(object? sender, DataGridViewCellPaintingEventArgs e)
         {
-            _lastRepaint.Restart();
-
             Debug.Assert(_rowHeight != 0, "_rowHeight != 0");
 
             var revision = GetRevision(e.RowIndex);
@@ -623,31 +617,6 @@ namespace GitUI.UserControls.RevisionGrid
             SelectRowsIfReady(rowCount);
         }
 
-        private void OnScroll()
-        {
-            UpdateVisibleRowRange();
-
-            // When scrolling many rows within a short time, the message pump is
-            // flooded with WM_CTLCOLORSCROLLBAR messages and the DataGridView
-            // is not repainted. This happens for example when the mouse wheel
-            // is spinning fast (with free-spinning mouse wheels) or while dragging
-            // the scroll bar fast. In such cases, force a repaint to make the GUI
-            // feel more responsive.
-            if (_lastScroll.ElapsedMilliseconds > 100)
-            {
-                _consecutiveScroll.Restart();
-            }
-
-            if (_consecutiveScroll.ElapsedMilliseconds > 50
-                && _lastRepaint.ElapsedMilliseconds > 50)
-            {
-                Update();
-                _lastRepaint.Restart();
-            }
-
-            _lastScroll.Restart();
-        }
-
         private void UpdateVisibleRowRange()
         {
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
@@ -706,6 +675,8 @@ namespace GitUI.UserControls.RevisionGrid
                     await this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged);
                 }
             }
+
+            await this.InvokeAsync(Update);
 
             return;
 
