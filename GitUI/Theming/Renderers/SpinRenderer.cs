@@ -140,7 +140,7 @@ namespace GitUI.Theming
             }
 
  #if SUPPORT_THEME_HOOKS
-           public enum UpHorizontal
+            public enum UpHorizontal
             {
                 UPHZS_NORMAL = 1,
                 UPHZS_HOT = 2,
