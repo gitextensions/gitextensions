@@ -1371,7 +1371,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// checkout-index ("reset"), copy files from the index overwrite the working tree.
+        /// Executes <c>checkout-index</c> ("reset") command which copies files from the index overwriting the working tree.
         /// </summary>
         /// <param name="files">List with (relative path) filenames.</param>
         /// <returns>stdout from Git.</returns>
