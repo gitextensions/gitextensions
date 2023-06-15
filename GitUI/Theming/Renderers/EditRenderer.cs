@@ -186,7 +186,7 @@ namespace GitUI.Theming
             }
 
  #if SUPPORT_THEME_HOOKS
-           public enum BackgroundWithBorder
+            public enum BackgroundWithBorder
             {
                 EBWBS_NORMAL = 1,
                 EBWBS_HOT = 2,
