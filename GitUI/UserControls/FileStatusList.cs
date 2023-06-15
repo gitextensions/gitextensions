@@ -992,7 +992,8 @@ namespace GitUI
 
         private void UpdateFileStatusListView(bool updateCausedByFilter = false)
         {
-            if (!GitItemStatuses.Any())
+            bool hasChangesOrMultipleGroups = GitItemStatusesWithDescription.Count > 1 || GitItemStatusesWithDescription.Any(x => x.Statuses.Count > 0);
+            if (!hasChangesOrMultipleGroups)
             {
                 HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: false);
             }
@@ -1018,8 +1019,6 @@ namespace GitUI
             FileStatusListView.Groups.Clear();
             FileStatusListView.Items.Clear();
 
-            bool hasChanges = GitItemStatusesWithDescription.Any(x => x.Statuses.Count > 0);
-
             List<ListViewItem> list = new();
             foreach (var i in GitItemStatusesWithDescription)
             {
@@ -1037,7 +1036,7 @@ namespace GitUI
                 FileStatusListView.Groups.Add(group);
 
                 IReadOnlyList<GitItemStatus> itemStatuses;
-                if (hasChanges && i.Statuses.Count == 0)
+                if (hasChangesOrMultipleGroups && i.Statuses.Count == 0)
                 {
                     itemStatuses = _noItemStatuses;
                     if (group is not null)
