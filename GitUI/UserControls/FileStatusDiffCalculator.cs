@@ -65,12 +65,12 @@ namespace GitUI
                 else
                 {
                     // Get the parents for the selected revision
-                    // Exclude the group with the diff to the orphan commit containing the untracked files of a stash
+                    // Exclude the optional third group with the diff to the orphan commit containing the untracked files of a stash
                     int multipleParents = actualRev.ParentIds is null ? 0 : AppSettings.ShowDiffForAllParents ? actualRev.ParentIds.Count : 1;
                     fileStatusDescs.AddRange(actualRev
                         .ParentIds
                         .Take(multipleParents)
-                        .Where(parentId => DescribeRevision is null || !DescribeRevision(parentId).Contains(": untracked files on "))
+                        .Where(parentId => !(multipleParents == 3 && DescribeRevision?.Invoke(parentId).Contains(": untracked files on ") is true))
                         .Select(parentId =>
                             new FileStatusWithDescription(
                                 firstRev: new GitRevision(parentId),
