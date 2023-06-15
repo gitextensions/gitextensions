@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs
                 {
                     DiffFiles.SelectStoredNextIndex();
                 }
-            });
+            }).FileAndForget();
         }
 
         #region Hotkey commands
@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs
                 {
                     DiffFiles.SelectFirstVisibleItem();
                 }
-            });
+            }).FileAndForget();
         }
 
         /// <summary>
