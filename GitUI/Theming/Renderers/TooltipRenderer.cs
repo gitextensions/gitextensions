@@ -55,6 +55,7 @@ namespace GitUI.Theming
             TTP_WRENCH = 7,
         }
 
+#if SUPPORT_THEME_HOOKS
         private class State
         {
             public enum Close
@@ -93,5 +94,6 @@ namespace GitUI.Theming
                 TTWS_PRESSED = 3,
             }
         }
+#endif
     }
 }

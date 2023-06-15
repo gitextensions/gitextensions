@@ -281,7 +281,8 @@ namespace GitUI.Theming
                 CBS_EXCLUDEDDISABLED = 20,
             }
 
-            public enum GroupBox
+ #if SUPPORT_THEME_HOOKS
+           public enum GroupBox
             {
                 GBS_NORMAL = 1,
                 GBS_DISABLED = 2,
@@ -295,6 +296,7 @@ namespace GitUI.Theming
                 CMDLGS_DISABLED = 4,
                 CMDLGS_DEFAULTED = 5,
             }
+#endif
         }
     }
 }

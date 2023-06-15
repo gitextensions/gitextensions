@@ -2,6 +2,7 @@
 
 namespace System
 {
+#if SUPPORT_THEME_HOOKS
     internal static partial class NativeMethods
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -19,4 +20,5 @@ namespace System
             public LVGA uAlign;
         }
     }
+#endif
 }

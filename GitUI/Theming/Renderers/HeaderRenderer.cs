@@ -173,6 +173,7 @@ namespace GitUI.Theming
                 HIS_ICONSORTEDPRESSED = 12,
             }
 
+#if SUPPORT_THEME_HOOKS
             public enum ItemLeft
             {
                 HILS_NORMAL = 1,
@@ -206,6 +207,7 @@ namespace GitUI.Theming
                 HDDFS_SOFTHOT = 2,
                 HDDFS_HOT = 3
             }
+#endif
 
             public enum SortArrow
             {
