@@ -282,7 +282,7 @@ namespace GitUI.Theming
             }
 
  #if SUPPORT_THEME_HOOKS
-           public enum GroupBox
+            public enum GroupBox
             {
                 GBS_NORMAL = 1,
                 GBS_DISABLED = 2,
