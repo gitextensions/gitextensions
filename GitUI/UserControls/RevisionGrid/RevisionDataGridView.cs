@@ -889,13 +889,17 @@ namespace GitUI.UserControls.RevisionGrid
                     int consumedWheelDelta = _mouseWheelDelta - (_mouseWheelDelta % wheelDeltaPerRow);
                     _mouseWheelDelta -= consumedWheelDelta;
                     int rowDelta = -consumedWheelDelta / wheelDeltaPerRow;
-                    if (_revisionGraph.Count > 0)
-                    {
-                        int toRowIndex = Math.Clamp(FirstDisplayedScrollingRowIndex + rowDelta, 0, _revisionGraph.Count - 1);
 
-                        // This will raise the Scroll event.
-                        FirstDisplayedScrollingRowIndex = toRowIndex;
+                    int maxRowIndex = _revisionGraph.Count - 1;
+                    if (maxRowIndex < 0)
+                    {
+                        return;
                     }
+
+                    int toRowIndex = Math.Clamp(FirstDisplayedScrollingRowIndex + rowDelta, 0, maxRowIndex);
+
+                    // This will raise the Scroll event.
+                    FirstDisplayedScrollingRowIndex = toRowIndex;
                 }
 
                 _lastMouseWheel.Restart();
