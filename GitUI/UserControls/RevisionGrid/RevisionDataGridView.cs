@@ -867,6 +867,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
             else
             {
+                // Reset unconsumed wheel delta when the mouse wheel is idle.
                 if (_lastMouseWheel.ElapsedMilliseconds > 1500)
                 {
                     _mouseWheelDeltaRemainder = 0;
@@ -885,6 +886,8 @@ namespace GitUI.UserControls.RevisionGrid
 
                 if (Math.Abs(totalWheelDelta) >= wheelDeltaPerRow)
                 {
+                    // The total wheel delta is consumed in multiples of wheelDeltaPerRow.
+                    // Save the remainder and credit it to the total wheel delta during the next MouseWheel event.
                     _mouseWheelDeltaRemainder = totalWheelDelta % wheelDeltaPerRow;
                     int rowDelta = -(totalWheelDelta - _mouseWheelDeltaRemainder) / wheelDeltaPerRow;
 
