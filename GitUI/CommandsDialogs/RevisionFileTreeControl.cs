@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
@@ -49,7 +50,8 @@ See the changes in the commit form.");
         private readonly RememberFileContextMenuController _rememberFileContextMenuController
             = RememberFileContextMenuController.Default;
         private Action? _refreshGitStatus;
-        private RevisionGridControl? _revisionGrid;
+        private IRevisionGridInfo? _revisionGridInfo;
+        private IRevisionGridUpdate? _revisionGridUpdate;
         private readonly CancellationTokenSequence _viewBlameSequence = new();
 
         public RevisionFileTreeControl()
@@ -67,9 +69,10 @@ See the changes in the commit form.");
             copyPathsToolStripMenuItem.Initialize(() => UICommands, () => new string[] { (tvGitTree.SelectedNode?.Tag as GitItem)?.FileName });
         }
 
-        public void Bind(RevisionGridControl revisionGrid, Action? refreshGitStatus, bool isBlame)
+        public void Bind(IRevisionGridInfo revisionGridInfo, IRevisionGridUpdate revisionGridUpdate, Action? refreshGitStatus, bool isBlame)
         {
-            _revisionGrid = revisionGrid;
+            _revisionGridInfo = revisionGridInfo;
+            _revisionGridUpdate = revisionGridUpdate;
             _refreshGitStatus = refreshGitStatus;
             blameToolStripMenuItem1.Checked = isBlame;
         }
@@ -440,7 +443,7 @@ See the changes in the commit form.");
 
                         FileText.Visible = false;
                         BlameControl.Visible = true;
-                        return BlameControl.LoadBlameAsync(_revision, children: null, gitItem.FileName, _revisionGrid, controlToMask: null, FileText.Encoding, line, cancellationToken: _viewBlameSequence.Next());
+                        return BlameControl.LoadBlameAsync(_revision, children: null, gitItem.FileName, _revisionGridInfo, _revisionGridUpdate, controlToMask: null, FileText.Encoding, line, cancellationToken: _viewBlameSequence.Next());
                     }
 
                 case GitObjectType.Commit:
