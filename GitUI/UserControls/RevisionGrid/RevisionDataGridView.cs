@@ -881,8 +881,7 @@ namespace GitUI.UserControls.RevisionGrid
                 };
 
                 int totalWheelDelta = (scrollLines * e.Delta) + _mouseWheelDeltaRemainder;
-
-                const int wheelDeltaPerRow = 120;
+                int wheelDeltaPerRow = SystemInformation.MouseWheelScrollDelta;
 
                 if (Math.Abs(totalWheelDelta) >= wheelDeltaPerRow)
                 {
