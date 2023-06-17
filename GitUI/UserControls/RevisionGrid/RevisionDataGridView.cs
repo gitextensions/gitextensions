@@ -890,13 +890,12 @@ namespace GitUI.UserControls.RevisionGrid
                 int totalWheelDelta = (scrollLines * e.Delta) + _mouseWheelDeltaRemainder;
                 int wheelDeltaPerRow = SystemInformation.MouseWheelScrollDelta;
 
-                if (Math.Abs(totalWheelDelta) >= wheelDeltaPerRow)
+                // The total wheel delta is consumed in multiples of wheelDeltaPerRow.
+                // Save the remainder and credit it to the total wheel delta during the next MouseWheel event.
+                _mouseWheelDeltaRemainder = totalWheelDelta % wheelDeltaPerRow;
+                int rowDelta = -(totalWheelDelta - _mouseWheelDeltaRemainder) / wheelDeltaPerRow;
+                if (rowDelta != 0)
                 {
-                    // The total wheel delta is consumed in multiples of wheelDeltaPerRow.
-                    // Save the remainder and credit it to the total wheel delta during the next MouseWheel event.
-                    _mouseWheelDeltaRemainder = totalWheelDelta % wheelDeltaPerRow;
-                    int rowDelta = -(totalWheelDelta - _mouseWheelDeltaRemainder) / wheelDeltaPerRow;
-
                     int toRowIndex = Math.Clamp(FirstDisplayedScrollingRowIndex + rowDelta, 0, maxRowIndex);
 
                     // This will raise the Scroll event.
