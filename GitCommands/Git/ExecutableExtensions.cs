@@ -180,26 +180,28 @@ namespace GitCommands
         /// </remarks>
         /// <param name="executable">The executable from which to launch processes.</param>
         /// <param name="batchArguments">The array of batch arguments to pass to the executable.</param>
-        /// <param name="input">Bytes to be written to each process's standard input stream, or <c>null</c> if no input is required.</param>
-        /// <param name="createWindow">A flag indicating whether a console window should be created and bound to each process.</param>
-        /// <returns><c>true</c> if all process exit codes were zero, otherwise <c>false</c>.</returns>
+        /// <param name="writeInput">A callback that writes bytes to the process's standard input stream, or <c>null</c> if no input is required.</param>
+        /// <returns>An <see cref="ExecutionResult"/> object that gives access to exit code, standard output and standard error values.</returns>
         [MustUseReturnValue("Callers should verify that " + nameof(RunBatchCommand) + " returned true")]
-        public static bool RunBatchCommand(
+        public static ExecutionResult? RunBatchCommand(
             this IExecutable executable,
             ICollection<BatchArgumentItem> batchArguments,
             Action<BatchProgressEventArgs>? action = null,
-            byte[]? input = null,
-            bool createWindow = false)
+            Action<StreamWriter>? writeInput = null)
         {
             int total = batchArguments.Sum(item => item.BatchItemsCount);
-            var result = true;
+            ExecutionResult? result = null;
 
-            foreach (var item in batchArguments)
+            foreach (BatchArgumentItem item in batchArguments)
             {
-                result &= executable.RunCommand(item.Argument, input, createWindow);
+                ExecutionResult itemResult = executable.Execute(item.Argument, writeInput);
+                result = result is null ? itemResult : new ExecutionResult(
+                    result?.StandardOutput + itemResult.StandardOutput,
+                    result?.StandardError + itemResult.StandardError,
+                    result?.ExitCode > 0 ? result?.ExitCode : itemResult.ExitCode);
 
                 // Invoke batch progress callback
-                action?.Invoke(new BatchProgressEventArgs(item.BatchItemsCount, result));
+                action?.Invoke(new BatchProgressEventArgs(item.BatchItemsCount, result?.ExitedSuccessfully ?? false));
             }
 
             return result;
