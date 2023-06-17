@@ -12,11 +12,9 @@ namespace GitCommands.Config
         private readonly List<IConfigSection> _configSections = new();
 
         public string FileName { get; }
-        public bool Local { get; }
 
-        public ConfigFile(string fileName, bool local)
+        public ConfigFile(string fileName)
         {
-            Local = local;
             FileName = fileName;
 
             try

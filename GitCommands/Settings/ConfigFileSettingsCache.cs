@@ -9,29 +9,29 @@ namespace GitCommands.Settings
     {
         private Lazy<ConfigFile> _configFile;
 
-        public ConfigFileSettingsCache(string configFileName, bool autoSave, bool isLocal)
+        public ConfigFileSettingsCache(string configFileName, bool autoSave)
             : base(configFileName, autoSave)
         {
-            _configFile = new Lazy<ConfigFile>(() => new ConfigFile(SettingsFilePath, isLocal));
+            _configFile = new Lazy<ConfigFile>(() => new ConfigFile(SettingsFilePath));
         }
 
-        public static ConfigFileSettingsCache FromCache(string settingsFilePath, bool isLocal)
+        public static ConfigFileSettingsCache FromCache(string settingsFilePath)
         {
             Lazy<ConfigFileSettingsCache> createSettingsCache = new(
-                () => new ConfigFileSettingsCache(settingsFilePath, true, isLocal));
+                () => new ConfigFileSettingsCache(settingsFilePath, true));
 
             return FromCache(settingsFilePath, createSettingsCache);
         }
 
-        public static ConfigFileSettingsCache Create(string settingsFilePath, bool isLocal, bool allowCache = true)
+        public static ConfigFileSettingsCache Create(string settingsFilePath, bool allowCache = true)
         {
             if (allowCache)
             {
-                return FromCache(settingsFilePath, isLocal);
+                return FromCache(settingsFilePath);
             }
             else
             {
-                return new ConfigFileSettingsCache(settingsFilePath, false, isLocal);
+                return new ConfigFileSettingsCache(settingsFilePath, false);
             }
         }
 
@@ -52,9 +52,7 @@ namespace GitCommands.Settings
                 return;
             }
 
-            bool local = _configFile.Value.Local;
-
-            _configFile = new Lazy<ConfigFile>(() => new ConfigFile(fileName, local));
+            _configFile = new Lazy<ConfigFile>(() => new ConfigFile(fileName));
         }
 
         protected override void SetValueImpl(string key, string? value)

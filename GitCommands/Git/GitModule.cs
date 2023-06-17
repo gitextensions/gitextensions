@@ -135,7 +135,7 @@ namespace GitCommands
                 if (!string.IsNullOrEmpty(superprojectPath) && currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
                 {
                     var submodulePath = currentPath.Substring(superprojectPath.Length).ToPosixPath();
-                    ConfigFile configFile = new(Path.Combine(superprojectPath, ".gitmodules"), local: true);
+                    ConfigFile configFile = new(Path.Combine(superprojectPath, ".gitmodules"));
 
                     foreach (var configSection in configFile.ConfigSections)
                     {
@@ -1191,7 +1191,7 @@ namespace GitCommands
         }
 
         public ConfigFile GetSubmoduleConfigFile()
-            => new(WorkingDir + ".gitmodules", true);
+            => new(WorkingDir + ".gitmodules");
 
         public string? GetCurrentSubmoduleLocalPath()
         {
