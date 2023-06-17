@@ -27,17 +27,17 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
         private static readonly TranslationString EmptyQueryResultCaption = new("First Task Preview");
 
         private const string DefaultFormat = "{Key} {Summary}";
-        private const string AuthTypeBasic = "User name & Password";
-        private const string AuthTypeJwt = "Personal access token";
+        private const string AuthTypeUsernamePassword = "User name and password";
+        private const string AuthTypePersonalAccessToken = "Personal access token";
 
         // It not a good idea use this user name for Personal access token, but credentials required.
-        private const string AuthTypeJwtUserName = "#Jira.Commit.Hint:access.token$";
+        private const string AuthTypePersonalAccessTokenUserName = "#GitExtensions/jira.commit.hint:b0128e39-d312-47da-b18a-43f5ca726d7d/access.token$";
         private Jira? _jira;
         private string? _query;
         private string _stringTemplate = DefaultFormat;
         private readonly BoolSetting _enabledSettings = new("Jira hint plugin enabled", false);
         private readonly StringSetting _urlSettings = new("Jira URL", @"https://jira.atlassian.com");
-        private readonly ChoiceSetting _authTypeSettings = new("Auth type", new List<string> { AuthTypeBasic, AuthTypeJwt });
+        private readonly ChoiceSetting _authTypeSettings = new("Auth type", new List<string> { AuthTypeUsernamePassword, AuthTypePersonalAccessToken });
         private readonly CredentialsSetting _credentialsSettings;
 
         // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
@@ -90,8 +90,8 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             yield return _urlSettings;
 
             _authTypeSettings.CustomControl = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
-            _authTypeSettings.CustomControl.Items.AddRange(_authTypeSettings.Values.ToArray());
-            _authTypeSettings.CustomControl.SelectedIndexChanged += AuthTypeSelectedChange;
+            _authTypeSettings.Values.ForEach(value => _authTypeSettings.CustomControl.Items.Add(value));
+            _authTypeSettings.CustomControl.SelectedIndexChanged += authTypeSetting_SelectedIndexChanged;
             yield return _authTypeSettings;
 
             _credentialsSettings.CustomControl = new CredentialsControl();
@@ -182,39 +182,44 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             }
         }
 
-        private void AuthTypeSelectedChange(object sender, EventArgs e)
+        private void authTypeSetting_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((sender is ComboBox comboBox) && _credentialsSettings.CustomControl != null)
+            ComboBox comboBox = sender as ComboBox;
+            if (comboBox is null || _credentialsSettings.CustomControl is null)
             {
-                var credentials = _credentialsSettings.GetValueOrDefault(Settings);
-                var authType = _authTypeSettings.ValueOrDefault(Settings);
+                return;
+            }
 
-                if (comboBox.SelectedItem.ToString() == AuthTypeJwt)
+            // Saved value last time, or default value.
+            var credentials = _credentialsSettings.GetValueOrDefault(Settings);
+
+            if (comboBox.SelectedIndex == _authTypeSettings.Values.IndexOf(AuthTypePersonalAccessToken))
+            {
+                // If auth type PAT selected, we should change ui to PAT mode.
+                _credentialsSettings.CustomControl.ChangeUIMode(showUserName: false, passwordLabelText: "Personal access token");
+                _credentialsSettings.CustomControl.UserName = AuthTypePersonalAccessTokenUserName;
+                if (credentials.UserName == AuthTypePersonalAccessTokenUserName)
                 {
-                    _credentialsSettings.CustomControl.ChangeUIMode(false, "Personal access token");
-                    _credentialsSettings.CustomControl.UserName = AuthTypeJwtUserName;
-                    if (authType == AuthTypeJwt)
-                    {
-                        _credentialsSettings.CustomControl.Password = credentials.Password;
-                    }
-                    else
-                    {
-                        _credentialsSettings.CustomControl.Password = "";
-                    }
+                    _credentialsSettings.CustomControl.Password = credentials.Password;
                 }
                 else
                 {
-                    _credentialsSettings.CustomControl.ChangeUIMode(true, "Password");
-                    if (authType != AuthTypeJwt && credentials.UserName != AuthTypeJwtUserName)
-                    {
-                        _credentialsSettings.CustomControl.UserName = credentials.UserName;
-                        _credentialsSettings.CustomControl.Password = credentials.Password;
-                    }
-                    else
-                    {
-                        _credentialsSettings.CustomControl.UserName = "";
-                        _credentialsSettings.CustomControl.Password = "";
-                    }
+                    _credentialsSettings.CustomControl.Password = "";
+                }
+            }
+            else
+            {
+                // If auth type not PAT, we think it was PWD
+                _credentialsSettings.CustomControl.ChangeUIMode(showUserName: true, passwordLabelText: "Password");
+                if (credentials.UserName != AuthTypePersonalAccessTokenUserName)
+                {
+                    _credentialsSettings.CustomControl.UserName = credentials.UserName;
+                    _credentialsSettings.CustomControl.Password = credentials.Password;
+                }
+                else
+                {
+                    _credentialsSettings.CustomControl.UserName = "";
+                    _credentialsSettings.CustomControl.Password = "";
                 }
             }
         }
@@ -257,9 +262,9 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
             _btnPreview.Click -= btnPreviewClick;
             _btnPreview = null;
 
-            if (_authTypeSettings.CustomControl != null)
+            if (_authTypeSettings.CustomControl is not null)
             {
-                _authTypeSettings.CustomControl.SelectedIndexChanged -= AuthTypeSelectedChange;
+                _authTypeSettings.CustomControl.SelectedIndexChanged -= authTypeSetting_SelectedIndexChanged;
                 _authTypeSettings.CustomControl = null;
             }
         }
@@ -341,7 +346,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
 
         private Jira CreateJiraClient(string url, string username, string password, string authType)
         {
-            if (authType == AuthTypeJwt)
+            if (authType == AuthTypePersonalAccessToken)
             {
                 JiraRestClientSettings settings = new();
                 return Jira.CreateRestClient(new JiraJwtRestClient(url, password), settings.Cache);

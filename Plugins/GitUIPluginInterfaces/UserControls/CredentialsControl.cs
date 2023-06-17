@@ -26,14 +26,14 @@
         /// <summary>
         /// Change UI Mode
         /// </summary>
-        /// <param name="isShowUserName">Is show the `User name` text box</param>
+        /// <param name="showUserName">Is show the `User name` text box</param>
         /// <param name="passwordLabelText">The `Password` lable's text</param>
         /// <param name="userNameLabelText">The `User name` lable's text</param>
-        public void ChangeUIMode(bool isShowUserName, string? passwordLabelText = null, string? userNameLabelText = null)
+        public void ChangeUIMode(bool showUserName, string? passwordLabelText = null, string? userNameLabelText = null)
         {
             ChangeLabelText(userNameLabelText, passwordLabelText);
 
-            if (isShowUserName)
+            if (showUserName)
             {
                 userNameLabel.Show();
                 userNameTextBox.Show();
