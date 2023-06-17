@@ -271,7 +271,7 @@ namespace GitUI.Theming
             }
 
  #if SUPPORT_THEME_HOOKS
-           public enum CueBanner
+            public enum CueBanner
             {
                 CBCB_NORMAL = 1,
                 CBCB_HOT = 2,
