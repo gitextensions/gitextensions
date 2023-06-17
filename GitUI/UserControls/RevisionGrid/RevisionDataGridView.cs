@@ -37,7 +37,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private int _backgroundScrollTo;
         private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
-        private int _mouseWheelDelta;
+        private int _mouseWheelDeltaRemainder; // Corresponds to unconsumed scroll distance while scrolling via mouse wheel, see OnMouseWheel().
 
         private VisibleRowRange _visibleRowRange;
 
@@ -869,7 +869,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 if (_lastMouseWheel.ElapsedMilliseconds > 1500)
                 {
-                    _mouseWheelDelta = 0;
+                    _mouseWheelDeltaRemainder = 0;
                 }
 
                 int scrollLines = SystemInformation.MouseWheelScrollLines switch
@@ -880,15 +880,14 @@ namespace GitUI.UserControls.RevisionGrid
                     _ => 1
                 };
 
-                _mouseWheelDelta += scrollLines * e.Delta;
+                int totalWheelDelta = (scrollLines * e.Delta) + _mouseWheelDeltaRemainder;
 
                 const int wheelDeltaPerRow = 120;
 
-                if (Math.Abs(_mouseWheelDelta) >= wheelDeltaPerRow)
+                if (Math.Abs(totalWheelDelta) >= wheelDeltaPerRow)
                 {
-                    int consumedWheelDelta = _mouseWheelDelta - (_mouseWheelDelta % wheelDeltaPerRow);
-                    _mouseWheelDelta -= consumedWheelDelta;
-                    int rowDelta = -consumedWheelDelta / wheelDeltaPerRow;
+                    _mouseWheelDeltaRemainder = totalWheelDelta % wheelDeltaPerRow;
+                    int rowDelta = -(totalWheelDelta - _mouseWheelDeltaRemainder) / wheelDeltaPerRow;
 
                     int maxRowIndex = _revisionGraph.Count - 1;
                     if (maxRowIndex < 0)
