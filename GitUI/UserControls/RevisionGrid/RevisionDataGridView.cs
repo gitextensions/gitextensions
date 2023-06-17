@@ -853,6 +853,12 @@ namespace GitUI.UserControls.RevisionGrid
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
+            int maxRowIndex = _revisionGraph.Count - 1;
+            if (maxRowIndex < 0)
+            {
+                return;
+            }
+
             if (ModifierKeys.HasFlag(Keys.Shift))
             {
                 int currentIndex = HorizontalScrollingOffset;
@@ -890,12 +896,6 @@ namespace GitUI.UserControls.RevisionGrid
                     // Save the remainder and credit it to the total wheel delta during the next MouseWheel event.
                     _mouseWheelDeltaRemainder = totalWheelDelta % wheelDeltaPerRow;
                     int rowDelta = -(totalWheelDelta - _mouseWheelDeltaRemainder) / wheelDeltaPerRow;
-
-                    int maxRowIndex = _revisionGraph.Count - 1;
-                    if (maxRowIndex < 0)
-                    {
-                        return;
-                    }
 
                     int toRowIndex = Math.Clamp(FirstDisplayedScrollingRowIndex + rowDelta, 0, maxRowIndex);
 
