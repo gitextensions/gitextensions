@@ -515,7 +515,7 @@ namespace GitUI.CommandsDialogs
                         : selectedItems.Items().Select(item => item.InvertStatus())).ToList();
                     Module.ResetChanges(id, resetItems, resetAndDelete: resetAndDelete, _fullPathResolver, out StringBuilder output);
 
-                    if (!string.IsNullOrEmpty(output.ToString()))
+                    if (output.Length > 0)
                     {
                         MessageBox.Show(this, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }

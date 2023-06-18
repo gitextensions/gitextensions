@@ -195,10 +195,12 @@ namespace GitCommands
             foreach (BatchArgumentItem item in batchArguments)
             {
                 ExecutionResult itemResult = executable.Execute(item.Argument, writeInput);
-                result = result is null ? itemResult : new ExecutionResult(
-                    result?.StandardOutput + itemResult.StandardOutput,
-                    result?.StandardError + itemResult.StandardError,
-                    result?.ExitCode > 0 ? result?.ExitCode : itemResult.ExitCode);
+                result = result is null
+                    ? itemResult
+                    : new ExecutionResult(
+                        result?.StandardOutput + itemResult.StandardOutput,
+                        result?.StandardError + itemResult.StandardError,
+                        result?.ExitCode > 0 ? result?.ExitCode : itemResult.ExitCode);
 
                 // Invoke batch progress callback
                 action?.Invoke(new BatchProgressEventArgs(item.BatchItemsCount, result?.ExitedSuccessfully ?? false));
