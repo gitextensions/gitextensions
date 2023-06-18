@@ -104,6 +104,8 @@ namespace GitCommandsTests.Git
             }, appLength, maxLength);
 
             Assert.AreEqual(argCount, args.Count);
+
+            // The reset command runs in the GE repo dir, so the result depends on workTree contents
             int index = 0;
             ExecutionResult? result = _gitExecutable.RunBatchCommand(args, (eventArgs) =>
             {
@@ -111,8 +113,6 @@ namespace GitCommandsTests.Git
                 Assert.AreEqual(expectedProcessedCounts[index], eventArgs.ProcessedCount);
                 index++;
             });
-            Assert.AreEqual(result.Value.ExitCode, 0);
-            Assert.IsTrue(result.Value.StandardOutput.StartsWith("Unstaged changes after reset:"));
         }
 
         [TestCase(32766 - 8, 32766 - 8, int.MaxValue)]
