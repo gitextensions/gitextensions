@@ -364,7 +364,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             if (row is not null)
             {
-                return row.GetLaneIndexForSegment(revisionGraphRevision);
+                return row.GetLaneForSegment(revisionGraphRevision).Index;
             }
 
             return -1;
