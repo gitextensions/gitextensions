@@ -23,7 +23,7 @@
     <PackageReference Update="NString" Version="2.1.1" />
     <PackageReference Update="RestSharp" Version="106.12.0" />
     <PackageReference Update="SmartFormat" Version="3.0.0" />
-    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.321" />
+    <PackageReference Update="StyleCop.Analyzers" Version="1.2.0-beta.435" />
     <PackageReference Update="System.Collections.Immutable" Version="6.0.0" /> <!-- Required by GitExtensions.Plugins.AutoCompileSubmodules -->
     <PackageReference Update="System.IO.Abstractions" Version="19.2.18" />
     <PackageReference Update="System.Reactive" Version="5.0.0" />
