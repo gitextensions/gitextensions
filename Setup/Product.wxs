@@ -526,6 +526,15 @@
       <Component Id="Spanish.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Spanish.Plugins.xlf" />
       </Component>
+      <Component Id="Tamil.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Tamil.gif" />
+      </Component>
+      <Component Id="Tamil.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Tamil.xlf" />
+      </Component>
+      <Component Id="Tamil.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Tamil.Plugins.xlf" />
+      </Component>
       <Component Id="TraditionalChinese.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Traditional Chinese.gif" />
       </Component>
@@ -843,6 +852,11 @@
           <ComponentRef Id="Spanish.xlf" />
           <ComponentRef Id="Spanish.Plugins.xlf" />
           <ComponentRef Id="Spanish.gif" />
+        </Feature>
+        <Feature Id="Tamil" Title="Tamil" Level="1">
+          <ComponentRef Id="Tamil.xlf" />
+          <ComponentRef Id="Tamil.Plugins.xlf" />
+          <ComponentRef Id="Tamil.gif" />
         </Feature>
         <Feature Id="TraditionalChinese" Title="Traditional Chinese" Level="1">
           <ComponentRef Id="TraditionalChinese.xlf" />

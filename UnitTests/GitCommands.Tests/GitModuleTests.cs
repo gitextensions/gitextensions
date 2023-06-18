@@ -850,7 +850,7 @@ namespace GitCommandsTests
         [TestCase(new string[] { }, "")]
         public void ResetFiles_should_handle_empty_list(string[] files, string expectedOutput)
         {
-            Assert.AreEqual(expectedOutput, _gitModule.ResetFiles(files?.ToList()));
+            Assert.AreEqual(expectedOutput, _gitModule.CheckoutIndexFiles(files?.ToList()));
         }
 
         [TestCase(new string[] { "abc", "def" }, "checkout-index --index --force -- \"abc\" \"def\"")]
@@ -861,7 +861,7 @@ namespace GitCommandsTests
             var gitModule = GetGitModuleWithExecutable(_executable, module: moduleTestHelper.Module);
             string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
             _executable.StageOutput(args, dummyCommandOutput);
-            var result = gitModule.ResetFiles(files.ToList());
+            var result = gitModule.CheckoutIndexFiles(files.ToList());
             Assert.AreEqual(dummyCommandOutput, result);
         }
 
@@ -939,7 +939,7 @@ namespace GitCommandsTests
         /// <param name="path">Path to the module</param>
         /// <param name="executable">The mock executable</param>
         /// <returns>The GitModule</returns>
-        private GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
+        private static GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
         {
             module ??= new GitModule(path);
 

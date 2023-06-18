@@ -86,12 +86,12 @@ namespace GitUITests.UserControls.CommitInfo
                              + GetShowAllLink("tags"));
         }
 
-        private string FormatRef(string r, string type, bool showAsLinks)
+        private static string FormatRef(string r, string type, bool showAsLinks)
         {
             return showAsLinks ? $"<a href='gitext://goto{type}/{r}'>{r}</a>" : r;
         }
 
-        private string GetShowAllLink(string type)
+        private static string GetShowAllLink(string type)
         {
             return $"{Environment.NewLine}<a href='gitext://showall/{type}'>[ {TranslatedStrings.ShowAll} ]</a>";
         }

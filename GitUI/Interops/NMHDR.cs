@@ -1,5 +1,6 @@
 ﻿namespace System
 {
+#if SUPPORT_THEME_HOOKS
     internal static partial class NativeMethods
     {
         public struct NMHDR
@@ -9,4 +10,5 @@
             public int code;
         }
     }
+ #endif
 }

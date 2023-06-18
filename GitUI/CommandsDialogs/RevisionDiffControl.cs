@@ -2,6 +2,7 @@ using System.ComponentModel;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
+using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
@@ -29,7 +30,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetSelectedChangesText =
             new("Are you sure you want to reset all selected files to {0}?");
 
-        private RevisionGridControl? _revisionGrid;
+        private IRevisionGridInfo? _revisionGridInfo;
+        private IRevisionGridUpdate? _revisionGridUpdate;
+        private Func<string>? _pathFilter;
         private RevisionFileTreeControl? _revisionFileTree;
         private readonly IRevisionDiffController _revisionDiffController = new RevisionDiffController();
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
@@ -89,8 +92,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            Validates.NotNull(_revisionGrid);
-            var revisions = _revisionGrid.GetSelectedRevisions();
+            Validates.NotNull(_revisionGridInfo);
+            var revisions = _revisionGridInfo.GetSelectedRevisions();
             if (!revisions.Any(r => r.IsArtificial))
             {
                 return;
@@ -104,7 +107,7 @@ namespace GitUI.CommandsDialogs
                 {
                     DiffFiles.SelectStoredNextIndex();
                 }
-            });
+            }).FileAndForget();
         }
 
         #region Hotkey commands
@@ -243,7 +246,7 @@ namespace GitUI.CommandsDialogs
                 {
                     DiffFiles.SelectFirstVisibleItem();
                 }
-            });
+            }).FileAndForget();
         }
 
         /// <summary>
@@ -263,7 +266,7 @@ namespace GitUI.CommandsDialogs
 
         private async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions)
         {
-            Validates.NotNull(_revisionGrid);
+            Validates.NotNull(_revisionGridInfo);
             CancellationToken cancellationToken = _setDiffSequence.Next();
 
             _viewChangesSequence.CancelCurrent();
@@ -272,7 +275,7 @@ namespace GitUI.CommandsDialogs
 
             FileStatusItem prevSelectedItem = DiffFiles.SelectedItem;
             FileStatusItem prevDiffItem = DiffFiles.FirstGroupItems.Contains(prevSelectedItem) ? prevSelectedItem : null;
-            await DiffFiles.SetDiffsAsync(revisions, _revisionGrid.CurrentCheckout, cancellationToken);
+            await DiffFiles.SetDiffsAsync(revisions, _revisionGridInfo.CurrentCheckout, cancellationToken);
             await this.SwitchToMainThreadAsync(cancellationToken);
 
             _isImplicitListSelection = true;
@@ -301,12 +304,14 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void Bind(RevisionGridControl revisionGrid, RevisionFileTreeControl revisionFileTree, Action? refreshGitStatus)
+        public void Bind(IRevisionGridInfo revisionGridInfo, IRevisionGridUpdate revisionGridUpdate, RevisionFileTreeControl revisionFileTree, Func<string>? pathFilter, Action? refreshGitStatus)
         {
-            _revisionGrid = revisionGrid;
+            _revisionGridInfo = revisionGridInfo;
+            _revisionGridUpdate = revisionGridUpdate;
             _revisionFileTree = revisionFileTree;
+            _pathFilter = pathFilter;
             _refreshGitStatus = refreshGitStatus;
-            DiffFiles.Bind(objectId => DescribeRevision(objectId), _revisionGrid.GetActualRevision);
+            DiffFiles.Bind(objectId => DescribeRevision(objectId), _revisionGridInfo.GetActualRevision);
         }
 
         public void InitSplitterManager(SplitterManager splitterManager)
@@ -349,16 +354,16 @@ namespace GitUI.CommandsDialogs
                 return ResourceManager.TranslatedStrings.Workspace;
             }
 
-            Validates.NotNull(_revisionGrid);
+            Validates.NotNull(_revisionGridInfo);
 
-            var revision = _revisionGrid.GetRevision(objectId);
+            var revision = _revisionGridInfo.GetRevision(objectId);
 
             if (revision is null)
             {
                 return objectId.ToShortString();
             }
 
-            return _revisionGrid.DescribeRevision(revision, maxLength);
+            return _revisionGridInfo.DescribeRevision(revision, maxLength);
         }
 
         /// <summary>
@@ -486,9 +491,10 @@ namespace GitUI.CommandsDialogs
             RefreshArtificial();
         }
 
-        private void ResetSelectedItemsTo(bool actsAsChild, bool deleteUncommittedAddedItems)
+        private void ResetSelectedItemsTo(bool resetToParent, bool resetAndDelete)
         {
-            var selectedItems = DiffFiles.SelectedItems.ToList();
+            IReadOnlyList<FileStatusItem> selectedItems = DiffFiles.SelectedItems.ToList();
+
             if (!selectedItems.Any())
             {
                 return;
@@ -496,70 +502,17 @@ namespace GitUI.CommandsDialogs
 
             try
             {
-                if (actsAsChild)
+                foreach (ObjectId id in resetToParent ? selectedItems.FirstIds() : selectedItems.SecondIds())
                 {
-                    // Reset to selected revision
-
-                    List<string> deletedItems = selectedItems
-                        .Where(item => item.Item.IsDeleted)
-                        .Select(item => item.Item.Name)
-                        .ToList();
-                    Module.RemoveFiles(deletedItems, false);
-
-                    foreach (ObjectId childId in selectedItems.SecondIds())
+                    if (resetToParent ? !CanResetToFirst(id, selectedItems) : !CanResetToSecond(id))
                     {
-                        if (!CanResetToSecond(childId))
-                        {
-                            continue;
-                        }
-
-                        List<string> itemsToCheckout = selectedItems
-                            .Where(item => !item.Item.IsDeleted && item.SecondRevision.ObjectId == childId)
-                            .Select(item => item.Item.Name)
-                            .ToList();
-
-                        Module.CheckoutFiles(itemsToCheckout, childId, force: false);
-                    }
-                }
-                else
-                {
-                    // Reset to parent revision
-
-                    // If file is new to the parent or is copied, it has to be deleted or removed if un/committed, respectively
-                    IEnumerable<FileStatusItem> addedItems = selectedItems.Where(item => item.Item.IsAdded || RenamedIndexItem(item));
-                    if (selectedItems.First().Item.IsUncommitted)
-                    {
-                        if (deleteUncommittedAddedItems)
-                        {
-                            DeleteFromFilesystem(addedItems);
-                        }
-                    }
-                    else
-                    {
-                        Module.RemoveFiles(addedItems.Select(item => item.Item.Name).ToList(), force: false);
+                        // Cannot reset to artificial commit, may be included in multi selections
+                        continue;
                     }
 
-                    foreach (ObjectId parentId in selectedItems.FirstIds())
-                    {
-                        if (!CanResetToFirst(parentId, selectedItems))
-                        {
-                            continue;
-                        }
-
-                        List<string> itemsToCheckout = selectedItems
-                            .Where(item => !item.Item.IsNew && !(item.Item.IsConflict && parentId == ObjectId.IndexId) && item.FirstRevision?.ObjectId == parentId)
-                            .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
-                            .ToList();
-                        Module.CheckoutFiles(itemsToCheckout, parentId, force: false);
-
-                        // Special handling for conflicted files, shown in worktree (with the raw diff).
-                        // Must be reset to HEAD as Index is just a status marker.
-                        List<string> conflictsToCheckout = selectedItems
-                            .Where(item => item.Item.IsConflict && parentId == ObjectId.IndexId)
-                            .Select(item => RenamedIndexItem(item) ? item.Item.OldName : item.Item.Name)
-                            .ToList();
-                        Module.CheckoutFiles(conflictsToCheckout, _revisionGrid.CurrentCheckout, force: false);
-                    }
+                    IReadOnlyList<GitItemStatus> resetItems = (resetToParent ? selectedItems.Items()
+                        : selectedItems.Items().Select(item => item.InvertStatus())).ToList();
+                    Module.ResetChanges(id, resetItems, resetAndDelete: resetAndDelete, _fullPathResolver, filesInUse: out _, output: out _);
                 }
             }
             finally
@@ -574,7 +527,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="parentId">The parent commit id.</param>
         /// <param name="selectedItems">The selected file status items.</param>
         /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
-        private bool CanResetToFirst(ObjectId? parentId, IEnumerable<FileStatusItem> selectedItems)
+        private static bool CanResetToFirst(ObjectId? parentId, IEnumerable<FileStatusItem> selectedItems)
         {
             return CanResetToSecond(parentId) || (parentId == ObjectId.IndexId && selectedItems.SecondIds().All(i => i == ObjectId.WorkTreeId));
         }
@@ -584,7 +537,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         /// <param name="resetId">The selected commit id.</param>
         /// <returns><see langword="true"/> if it is possible to reset to first id.</returns>
-        private bool CanResetToSecond(ObjectId? resetId) => resetId?.IsArtificial is false;
+        private static bool CanResetToSecond(ObjectId? resetId) => resetId?.IsArtificial is false;
 
         /// <summary>
         /// Show the file in the BlameViewer if Blame is visible.
@@ -609,9 +562,9 @@ namespace GitUI.CommandsDialogs
             }
 
             GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
-                ? _revisionGrid.GetActualRevision(_revisionGrid.CurrentCheckout)
+                ? _revisionGridInfo.GetActualRevision(_revisionGridInfo.CurrentCheckout)
                 : DiffFiles.SelectedItem.SecondRevision;
-            await BlameControl.LoadBlameAsync(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGrid,
+            await BlameControl.LoadBlameAsync(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGridInfo, _revisionGridUpdate,
                 controlToMask: null, DiffText.Encoding, line, cancellationToken: _viewChangesSequence.Next());
         }
 
@@ -622,6 +575,8 @@ namespace GitUI.CommandsDialogs
         /// <returns>a task</returns>
         private async Task ShowSelectedFileDiffAsync(bool ensureNoSwitchToFilter, int? line)
         {
+            Validates.NotNull(_pathFilter);
+
             BlameControl.Visible = false;
             DiffText.Visible = true;
 
@@ -634,7 +589,7 @@ namespace GitUI.CommandsDialogs
             await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
                 line: line,
                 openWithDiffTool: () => firstToSelectedToolStripMenuItem.PerformClick(),
-                additionalCommandInfo: (DiffFiles.SelectedItem?.Item?.IsRangeDiff is true) && Module.GitVersion.SupportRangeDiffPath ? _revisionGrid.CurrentFilter.PathFilter : "",
+                additionalCommandInfo: (DiffFiles.SelectedItem?.Item?.IsRangeDiff is true) && Module.GitVersion.SupportRangeDiffPath ? _pathFilter() : "",
                 cancellationToken: _viewChangesSequence.Next());
         }
 
@@ -1170,7 +1125,7 @@ namespace GitUI.CommandsDialogs
 
         private void resetFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ResetSelectedItemsWithConfirmation(resetToSelected: sender == resetFileToSelectedToolStripMenuItem);
+            ResetSelectedItemsWithConfirmation(resetToParent: sender == resetFileToParentToolStripMenuItem);
         }
 
         private void resetFileToToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -1443,20 +1398,22 @@ namespace GitUI.CommandsDialogs
             }
 
             // Reset to first (parent)
-            ResetSelectedItemsWithConfirmation(resetToSelected: false);
+            ResetSelectedItemsWithConfirmation(resetToParent: true);
             return true;
         }
 
-        private void ResetSelectedItemsWithConfirmation(bool resetToSelected)
+        private void ResetSelectedItemsWithConfirmation(bool resetToParent)
         {
             IEnumerable<FileStatusItem> items = DiffFiles.SelectedItems;
 
+            // The "new" state could change when resetting, allow user to tick the checkbox.
+            // If there are only changed files, it is safe to disable the checkboc (also for restting to selected).
+            bool hasNewFiles = !items.All(item => item.Item.IsChanged);
             bool hasExistingFiles = items.Any(item => !(item.Item.IsUncommittedAdded || RenamedIndexItem(item)));
-            bool hasNewFiles = items.Any(item => item.Item.IsUncommittedAdded || RenamedIndexItem(item));
 
-            string revDescription = resetToSelected
-                ? $"{_selectedRevision.Text}{DescribeRevision(items.SecondRevs().ToList())}"
-                : $"{_firstRevision.Text}{DescribeRevision(items.FirstRevs().ToList())}";
+            string revDescription = resetToParent
+                ? $"{_firstRevision.Text}{DescribeRevision(items.FirstRevs().ToList())}"
+                : $"{_selectedRevision.Text}{DescribeRevision(items.SecondRevs().ToList())}";
             string confirmationMessage = string.Format(_resetSelectedChangesText.Text, revDescription);
 
             FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(ParentForm, hasExistingFiles, hasNewFiles, confirmationMessage);
@@ -1465,8 +1422,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            bool deleteUncommittedAddedItems = resetType == FormResetChanges.ActionEnum.ResetAndDelete;
-            ResetSelectedItemsTo(resetToSelected, deleteUncommittedAddedItems);
+            bool resetAndDelete = resetType == FormResetChanges.ActionEnum.ResetAndDelete;
+            ResetSelectedItemsTo(resetToParent, resetAndDelete);
         }
 
         private static bool RenamedIndexItem(FileStatusItem item) => item.Item.IsRenamed && item.Item.Staged == StagedStatus.Index;

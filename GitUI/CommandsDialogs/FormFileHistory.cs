@@ -333,7 +333,7 @@ namespace GitUI.CommandsDialogs
 
             if (tabControl1.SelectedTab == BlameTab)
             {
-                _ = Blame.LoadBlameAsync(revision, children, fileName, RevisionGrid, BlameTab, Diff.Encoding, force: force, cancellationToken: _viewChangesSequence.Next());
+                _ = Blame.LoadBlameAsync(revision, children, fileName, revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, controlToMask: BlameTab, Diff.Encoding, force: force, cancellationToken: _viewChangesSequence.Next());
             }
             else if (tabControl1.SelectedTab == ViewTab)
             {

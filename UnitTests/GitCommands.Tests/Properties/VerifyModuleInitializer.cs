@@ -6,6 +6,6 @@ namespace GitCommandsTests.Properties
     {
         [ModuleInitializer]
         public static void Init() =>
-          VerifierSettings.UseStrictJson();
+            VerifierSettings.UseStrictJson();
     }
 }

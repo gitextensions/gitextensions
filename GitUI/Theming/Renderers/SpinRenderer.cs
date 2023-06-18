@@ -139,6 +139,7 @@ namespace GitUI.Theming
                 DNS_DISABLED = 4,
             }
 
+ #if SUPPORT_THEME_HOOKS
             public enum UpHorizontal
             {
                 UPHZS_NORMAL = 1,
@@ -154,6 +155,7 @@ namespace GitUI.Theming
                 DNHZS_PRESSED = 3,
                 DNHZS_DISABLED = 4,
             }
+#endif
         }
     }
 }

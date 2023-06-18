@@ -101,7 +101,7 @@ namespace GitUI.LeftPanel
         /// <param name="keySelector">Function in T to get the sorter.</param>
         /// <param name="setting">String with regexes with priorities separated by semicolon.</param>
         /// <returns>The resorted references.</returns>
-        private IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string setting)
+        private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string setting)
         {
             // Sort prio branches first (if set) with the compile cache (no need to instantiate)
             string[] regexes = setting.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)

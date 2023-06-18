@@ -129,7 +129,7 @@ namespace AzureDevOpsIntegration
         }
 
         // Api doc: https://docs.microsoft.com/en-us/rest/api/azure/devops/build/builds/list?view=azure-devops-rest-4.1
-        private string QueryForBuildStatus(string buildDefinitionsToQuery, string statusFilter)
+        private static string QueryForBuildStatus(string buildDefinitionsToQuery, string statusFilter)
             => $"build/builds?{Properties}&definitions={buildDefinitionsToQuery}&statusFilter={statusFilter}";
 
         public void Dispose()

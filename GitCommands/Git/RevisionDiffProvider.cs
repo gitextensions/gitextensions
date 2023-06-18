@@ -56,7 +56,7 @@ namespace GitCommands.Git
             return GetInternal(firstRevision, secondRevision, fileName, oldFileName, isTracked);
         }
 
-        private ArgumentString GetInternal(string? firstRevision, string? secondRevision, string? fileName = null, string? oldFileName = null, bool isTracked = true)
+        private static ArgumentString GetInternal(string? firstRevision, string? secondRevision, string? fileName = null, string? oldFileName = null, bool isTracked = true)
         {
             // Combined Diff artificial commit should not be included in diffs
             if (firstRevision == GitRevision.CombinedDiffGuid || secondRevision == GitRevision.CombinedDiffGuid)

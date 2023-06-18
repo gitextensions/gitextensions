@@ -197,7 +197,7 @@ namespace GitUITests.CommandsDialogs
             _imageList.Images.Count.Should().Be(1);
         }
 
-        private void PopulateTreeView(NativeTreeView treeView, string filePathToAdd)
+        private static void PopulateTreeView(NativeTreeView treeView, string filePathToAdd)
         {
             var parts = filePathToAdd.Split(Path.DirectorySeparatorChar);
             var folders = parts.Take(parts.Length - 1);

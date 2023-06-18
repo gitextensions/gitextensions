@@ -38,7 +38,7 @@ namespace GitUI.Theming
             return Unhandled;
         }
 
-        private int RenderEditText(Context ctx, int stateid, Rectangle prect)
+        private static int RenderEditText(Context ctx, int stateid, Rectangle prect)
         {
             Brush backBrush;
             switch ((State.Text)stateid)
@@ -91,7 +91,7 @@ namespace GitUI.Theming
             return Handled;
         }
 
-        private int RenderProperBackground(Context ctx, int stateid, Rectangle prect)
+        private static int RenderProperBackground(Context ctx, int stateid, Rectangle prect)
         {
             Brush backBrush;
             switch ((State.Background)stateid)
@@ -185,6 +185,7 @@ namespace GitUI.Theming
                 EBS_ASSIST = 6,
             }
 
+ #if SUPPORT_THEME_HOOKS
             public enum BackgroundWithBorder
             {
                 EBWBS_NORMAL = 1,
@@ -192,6 +193,7 @@ namespace GitUI.Theming
                 EBWBS_DISABLED = 3,
                 EBWBS_FOCUSED = 4,
             }
+#endif
 
             public enum BorderNoScroll
             {
@@ -201,6 +203,7 @@ namespace GitUI.Theming
                 EPSN_DISABLED = 4,
             }
 
+#if SUPPORT_THEME_HOOKS
             public enum BorderHScroll
             {
                 EPSH_NORMAL = 1,
@@ -224,6 +227,7 @@ namespace GitUI.Theming
                 EPSHV_FOCUSED = 3,
                 EPSHV_DISABLED = 4,
             }
+#endif
         }
     }
 }

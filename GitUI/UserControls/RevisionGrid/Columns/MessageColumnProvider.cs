@@ -259,7 +259,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
         }
 
-        private void DrawSuperprojectRefs(
+        private static void DrawSuperprojectRefs(
             DataGridViewCellPaintingEventArgs e,
             List<IGitRef> superprojectRefs,
             CellStyle style,
@@ -292,7 +292,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
         }
 
-        private void DrawSuperprojectInfo(
+        private static void DrawSuperprojectInfo(
             DataGridViewCellPaintingEventArgs e,
             SuperProjectInfo spi,
             GitRevision revision,
@@ -392,7 +392,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 fill: AppSettings.FillRefLabels);
         }
 
-        private void DrawImage(
+        private static void DrawImage(
             DataGridViewCellPaintingEventArgs e,
             Image image,
             Rectangle messageBounds,
@@ -456,7 +456,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             indicator.Render();
         }
 
-        private bool FilterRef(IGitRef gitRef)
+        private static bool FilterRef(IGitRef gitRef)
         {
             if (gitRef.IsTag)
             {

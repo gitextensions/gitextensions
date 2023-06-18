@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             FillComboBoxWithEnumValues<AvatarFallbackType>(_NO_TRANSLATE_NoImageService);
         }
 
-        private void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : Enum
+        private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : Enum
         {
             comboBox.DisplayMember = nameof(ComboBoxItem<T>.Text);
             comboBox.ValueMember = nameof(ComboBoxItem<T>.Value);

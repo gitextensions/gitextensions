@@ -30,11 +30,11 @@ namespace GitUI.AutoCompletion
 
             IGitModule module = GetModule();
             ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
-            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, throwOnErrorExit: false);
+            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, throwOnErrorExit: false, cancellationToken: cancellationToken);
             if (!result.ExitedSuccessfully)
             {
                 // Try again
-                result = await module.GitExecutable.ExecuteAsync(cmd, throwOnErrorExit: false);
+                result = await module.GitExecutable.ExecuteAsync(cmd, throwOnErrorExit: false, cancellationToken: cancellationToken);
             }
 
             if (!result.ExitedSuccessfully)
@@ -158,8 +158,16 @@ namespace GitUI.AutoCompletion
         {
             if (file.IsTracked)
             {
-                GitCommands.Patches.Patch changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000", noLocks: true)
-                .ConfigureAwait(false);
+                GitCommands.Patches.Patch? changes = null;
+                try
+                {
+                    changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000", noLocks: true)
+                        .ConfigureAwait(false);
+                }
+                catch
+                {
+                    // Ignore errors, this can be very repetitive
+                }
 
                 if (changes is not null)
                 {

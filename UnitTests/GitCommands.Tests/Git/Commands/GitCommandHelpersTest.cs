@@ -676,9 +676,13 @@ namespace GitCommandsTests.Git.Commands
                         }
                         else
                         {
-                            string prefix = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
-                            sortCondition = $@" --sort=""{prefix}{sortBy}""";
-                            sortConditionRef = $@" --sort=""{prefix}*{sortBy}""";
+                            const string gitRefsSortByVersion = "version:refname";
+                            string sortKey = sortBy == GitRefsSortBy.versionRefname ? gitRefsSortByVersion : sortBy.ToString();
+                            string derefSortKey = (sortBy == GitRefsSortBy.versionRefname ? GitRefsSortBy.refname : sortBy).ToString();
+
+                            string order = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
+                            sortCondition = $@" --sort=""{order}{sortKey}""";
+                            sortConditionRef = $@" --sort=""{order}*{derefSortKey}""";
                         }
 
                         yield return new TestCaseData(RefsFilter.Tags | RefsFilter.Heads | RefsFilter.Remotes, /* noLocks */ false, sortBy, sortOrder, 0,

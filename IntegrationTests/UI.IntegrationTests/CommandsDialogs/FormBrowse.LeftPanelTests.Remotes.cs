@@ -181,7 +181,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _remotesManager.ToggleRemoteState(nodeText, true);
         }
 
-        private TreeNode GetRemoteNode(FormBrowse form)
+        private static TreeNode GetRemoteNode(FormBrowse form)
         {
             Assert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
 

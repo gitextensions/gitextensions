@@ -182,7 +182,7 @@ namespace GitUITests.UserControls
             }
         }
 
-        private IEnumerable<GitBlameLine> CreateBlameLine(params DateTime[] lineDates)
+        private static IEnumerable<GitBlameLine> CreateBlameLine(params DateTime[] lineDates)
         {
             for (var index = 0; index < lineDates.Length; index++)
             {
@@ -289,27 +289,27 @@ namespace GitUITests.UserControls
             GitRevision rev3 = new(ObjectId.Parse(_commit3));
             GitRevision rev2 = new(ObjectId.Parse(_commit2));
 
-            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
 
             _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
-            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
 
             _blameControl.GetTestAccessor().BlameFile.GoToLine(2);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(2);
-            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, Encoding.UTF8);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null, Encoding.UTF8);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(2);
 
             _blameControl.GetTestAccessor().BlameFile.GoToLine(4);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(4);
-            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(4);
 
             _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
-            await _blameControl.LoadBlameAsync(rev2, null, _fileName1, null, null, null);
+            await _blameControl.LoadBlameAsync(rev2, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
         }
 
@@ -319,27 +319,27 @@ namespace GitUITests.UserControls
             GitRevision rev3 = new(ObjectId.Parse(_commit3));
             GitRevision rev2 = new(ObjectId.Parse(_commit2));
 
-            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
 
             _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
-            await _blameControl.LoadBlameAsync(rev3, null, _fileName2, null, null, null);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName2, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
 
             _blameControl.GetTestAccessor().BlameFile.GoToLine(2);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(2);
-            await _blameControl.LoadBlameAsync(rev3, null, _fileName2, null, null, Encoding.UTF8);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName2, null, null, null, Encoding.UTF8);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(2);
 
             _blameControl.GetTestAccessor().BlameFile.GoToLine(4);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(4);
-            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null);
+            await _blameControl.LoadBlameAsync(rev3, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
 
             _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
-            await _blameControl.LoadBlameAsync(rev2, null, _fileName1, null, null, null);
+            await _blameControl.LoadBlameAsync(rev2, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
         }
 
@@ -348,12 +348,12 @@ namespace GitUITests.UserControls
         {
             GitRevision rev1 = new(ObjectId.Parse(_referenceRepository.CommitHash));
 
-            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null);
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(1);
 
             _blameControl.GetTestAccessor().BlameFile.GoToLine(3);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
-            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null);
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, null);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(3);
         }
 
@@ -362,13 +362,13 @@ namespace GitUITests.UserControls
         {
             GitRevision rev1 = new(ObjectId.Parse(_referenceRepository.CommitHash));
 
-            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, initialLine: 4);
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, null, initialLine: 4);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(4);
 
-            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, initialLine: 7);
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName1, null, null, null, null, initialLine: 7);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(7);
 
-            await _blameControl.LoadBlameAsync(rev1, null, _fileName2, null, null, null, initialLine: 5);
+            await _blameControl.LoadBlameAsync(rev1, null, _fileName2, null, null, null, null, initialLine: 5);
             _blameControl.GetTestAccessor().BlameFile.CurrentFileLine.Should().Be(5);
         }
     }

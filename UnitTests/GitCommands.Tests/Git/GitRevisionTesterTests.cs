@@ -3,6 +3,8 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using Newtonsoft.Json;
 using NSubstitute;
 
 namespace GitCommandsTests.Git
@@ -149,6 +151,42 @@ namespace GitCommandsTests.Git
             GitRevision revision = new(ObjectId.Parse("0011223344556677889900112233445566778899")) { Refs = new[] { gitRef } };
 
             _tester.Matches(revision, criteria).Should().Be(expected);
+        }
+
+        [Test]
+        public async Task ReverseSelection_expected_changes_none()
+        {
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1").InvertStatus()));
+        }
+
+        [Test]
+        public async Task ReverseSelection_expected_changes_renamed()
+        {
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsRenamed = true, OldName = "file2" }.InvertStatus()));
+        }
+
+        [Test]
+        public async Task ReverseSelection_expected_changes_new()
+        {
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsNew = true }.InvertStatus()));
+        }
+
+        [Test]
+        public async Task ReverseSelection_expected_changes_deleted()
+        {
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsDeleted = true }.InvertStatus()));
+        }
+
+        [Test]
+        public async Task ReverseSelection_expected_changes_unmerged()
+        {
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsUnmerged = true }.InvertStatus()));
+        }
+
+        [Test]
+        public async Task ReverseSelection_expected_changes_getdefaults()
+        {
+            await Verifier.VerifyJson(JsonConvert.SerializeObject(GitItemStatus.GetDefaultStatus("file1").InvertStatus()));
         }
     }
 }

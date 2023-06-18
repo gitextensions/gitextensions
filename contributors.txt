@@ -192,5 +192,6 @@ YYYY/MM/DD, github id, Full name, email
 2023/03/07, o-kloster, Oddvar Kloster, okloster(at)gmail.com
 2023/03/08, RemiGaudin, Rémi Gaudin, remi.gaudin(at)gmail.com
 2023/04/27, montoner0, Alex Bogush, inmate66+gitext(@t)gmail.com
+2023/05/02, michalkress, Michał Kress, michal.kress@gmail.com
 2023/05/31, SimonCropp, Simon Cropp, simon.cropp@gmail.com
 2023/06/09, beiifeng, YiFei Wang, beiifeng@hotmail.com

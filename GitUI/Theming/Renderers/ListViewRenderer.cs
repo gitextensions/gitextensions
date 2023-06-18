@@ -51,7 +51,7 @@ namespace GitUI.Theming
             };
         }
 
-        private int RenderColumnDetail(Context ctx, Rectangle prect)
+        private static int RenderColumnDetail(Context ctx, Rectangle prect)
         {
             int width = Math.Max(1, prect.Width / 2);
             using SolidBrush brush = new(Color.FromArgb(32, SystemColors.HotTrack));
@@ -250,6 +250,7 @@ namespace GitUI.Theming
                 LVEB_PUSHED = 3,
             }
 
+#if SUPPORT_THEME_HOOKS
             public enum GroupHeader
             {
                 LVGH_OPEN = 1,
@@ -289,6 +290,7 @@ namespace GitUI.Theming
                 LVGHL_CLOSEMIXEDSELECTION = 15,
                 LVGHL_CLOSEMIXEDSELECTIONHOT = 16,
             }
+#endif
 
             public enum ListItem
             {

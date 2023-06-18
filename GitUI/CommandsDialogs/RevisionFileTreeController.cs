@@ -155,7 +155,7 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
-        private TreeNode? FindSubNode(TreeNodeCollection nodes, Queue<string> pathParts)
+        private static TreeNode? FindSubNode(TreeNodeCollection nodes, Queue<string> pathParts)
         {
             while (true)
             {

@@ -178,7 +178,7 @@ namespace GitCommands.Submodules
         /// </summary>
         /// <param name="currentModule">The current module.</param>
         /// <param name="noBranchText">text with no branches.</param>
-        private SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(GitModule currentModule, string noBranchText)
+        private static SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(GitModule currentModule, string noBranchText)
         {
             SubmoduleInfoResult result = new() { Module = currentModule, CurrentSubmoduleStatus = null };
 
@@ -197,7 +197,7 @@ namespace GitCommands.Submodules
             return result;
         }
 
-        private void SetTopProjectSubmoduleInfo(SubmoduleInfoResult result,
+        private static void SetTopProjectSubmoduleInfo(SubmoduleInfoResult result,
             string noBranchText,
             IGitModule topProject,
             bool isCurrentTopProject)
@@ -208,7 +208,7 @@ namespace GitCommands.Submodules
             result.TopProject = new SubmoduleInfo(text: name, path, bold: isCurrentTopProject);
         }
 
-        private void SetSubmoduleData(GitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
+        private static void SetSubmoduleData(GitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
         {
             var submodules = topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
             if (!submodules.Any())
@@ -260,7 +260,7 @@ namespace GitCommands.Submodules
             }
         }
 
-        private string GetBranchNameSuffix(string repositoryPath, string noBranchText)
+        private static string GetBranchNameSuffix(string repositoryPath, string noBranchText)
         {
             if (AppSettings.ShowRepoCurrentBranch && !GitModule.IsBareRepository(repositoryPath))
             {

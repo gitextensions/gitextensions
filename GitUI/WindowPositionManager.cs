@@ -112,7 +112,7 @@ namespace GitUI
             {
                 _windowPositionList ??= WindowPositionList.Load();
 
-                var pos = _windowPositionList?.Get(form.GetType().Name);
+                WindowPosition pos = _windowPositionList?.Get(form.GetType().Name);
                 if (pos is not null && !pos.Rect.IsEmpty)
                 {
                     return pos;
@@ -135,11 +135,11 @@ namespace GitUI
         {
             try
             {
-                var rectangle = form.WindowState == FormWindowState.Normal
+                Rectangle rectangle = form.WindowState == FormWindowState.Normal
                     ? form.DesktopBounds
                     : form.RestoreBounds;
 
-                var formWindowState = form.WindowState == FormWindowState.Maximized
+                FormWindowState formWindowState = form.WindowState == FormWindowState.Maximized
                     ? FormWindowState.Maximized
                     : FormWindowState.Normal;
 
@@ -152,10 +152,10 @@ namespace GitUI
                     }
                 }
 
-                var name = form.GetType().Name;
+                string name = form.GetType().Name;
 
                 WindowPosition? windowPosition = _windowPositionList.Get(name);
-                var windowCentred = form.StartPosition == FormStartPosition.CenterParent;
+                bool windowCentred = form.StartPosition == FormStartPosition.CenterParent;
 
                 // Don't save location when we center modal form
                 if (windowPosition is not null && form.Owner is not null && windowCentred)

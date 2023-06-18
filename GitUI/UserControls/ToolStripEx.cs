@@ -38,7 +38,7 @@ namespace GitUI
             }
         }
 
-        private void SplitButton_DropDownOpening(object? sender, EventArgs e)
+        private static void SplitButton_DropDownOpening(object? sender, EventArgs e)
         {
             if (sender is ToolStripDropDownItem { Owner: Control control })
             {
@@ -47,7 +47,7 @@ namespace GitUI
             }
         }
 
-        private void SplitButton_DropDownClosed(object? sender, EventArgs e)
+        private static void SplitButton_DropDownClosed(object? sender, EventArgs e)
         {
             if (sender is ToolStripDropDownItem { Owner: Control control })
             {

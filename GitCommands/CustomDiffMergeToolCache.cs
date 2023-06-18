@@ -90,7 +90,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="output">The output string.</param>
         /// <returns>list with tool names.</returns>
-        private IEnumerable<string> ParseCustomDiffMergeTool(string output, string defaultTool)
+        private static IEnumerable<string> ParseCustomDiffMergeTool(string output, string defaultTool)
         {
             List<string> tools = new();
 
@@ -147,7 +147,7 @@ namespace GitCommands
             }
 
             public IEnumerable<string> ParseCustomDiffMergeTool(string output, string defaultTool)
-                => _cache.ParseCustomDiffMergeTool(output, defaultTool);
+                => CustomDiffMergeToolCache.ParseCustomDiffMergeTool(output, defaultTool);
         }
     }
 }

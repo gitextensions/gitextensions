@@ -134,7 +134,7 @@ namespace CommonTestUtils
         /// Set dummy user and email locally for the module along with specific tests configs, no global setting in AppVeyor
         /// Must also be set on the submodule, local settings are not included when adding it
         /// </summary>
-        private void SetRepoConfig(GitModule module)
+        private static void SetRepoConfig(GitModule module)
         {
             module.LocalConfigFile.SetString(SettingKeyString.UserName, "author");
             module.LocalConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");

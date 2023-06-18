@@ -5,6 +5,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
@@ -37,7 +38,7 @@ namespace GitUI.LeftPanel
         private IAheadBehindDataProvider? _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
         private ICheckRefs _refsSource;
-        private IScriptHostControl _scriptHost;
+        private IRevisionGridInfo _revisionGridInfo;
         private IRunScript _scriptRunner;
 
         public RepoObjectsTree()
@@ -222,12 +223,12 @@ namespace GitUI.LeftPanel
         }
 
         public void Initialize(IAheadBehindDataProvider? aheadBehindDataProvider, Action<string?> filterRevisionGridBySpaceSeparatedRefs,
-            ICheckRefs refsSource, IScriptHostControl scriptHost, IRunScript scriptRunner)
+            ICheckRefs refsSource, IRevisionGridInfo revisionGridInfo, IRunScript scriptRunner)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterRevisionGridBySpaceSeparatedRefs = filterRevisionGridBySpaceSeparatedRefs;
             _refsSource = refsSource;
-            _scriptHost = scriptHost;
+            _revisionGridInfo = revisionGridInfo;
             _scriptRunner = scriptRunner;
 
             // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
@@ -366,7 +367,7 @@ namespace GitUI.LeftPanel
                 SelectedImageKey = nameof(Images.BranchLocalRoot)
             };
 
-            _branchesTree = new LocalBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource, _scriptHost);
+            _branchesTree = new LocalBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource, _revisionGridInfo);
         }
 
         private void CreateRemotes()

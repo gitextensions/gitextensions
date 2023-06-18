@@ -5,6 +5,7 @@ using GitCommands;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Avatars;
+using GitUI.CommandDialogs;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
@@ -31,7 +32,8 @@ namespace GitUI.Blame
         private GitBlameLine? _clickedBlameLine;
         private GitBlameCommit? _highlightedCommit;
         private GitBlame? _blame;
-        private RevisionGridControl? _revGrid;
+        private IRevisionGridInfo? _revisionGridInfo;
+        private IRevisionGridUpdate? _revisionGridUpdate;
         private ObjectId? _blameId;
         private string? _fileName;
         private Encoding? _encoding;
@@ -94,12 +96,12 @@ namespace GitUI.Blame
             CommitInfo.CommandClicked -= commitInfo_CommandClicked;
         }
 
-        public async Task LoadBlameAsync(GitRevision revision, IReadOnlyList<ObjectId>? children, string fileName, RevisionGridControl? revGrid, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
+        public async Task LoadBlameAsync(GitRevision revision, IReadOnlyList<ObjectId>? children, string fileName, IRevisionGridInfo? revisionGridInfo, IRevisionGridUpdate? revisionGridUpdate, Control? controlToMask, Encoding encoding, int? initialLine = null, bool force = false, CancellationToken cancellationToken = default)
         {
             ObjectId objectId = revision.ObjectId;
 
             // refresh only when something changed
-            if (!force && objectId == _blameId && fileName == _fileName && revGrid == _revGrid && encoding == _encoding)
+            if (!force && objectId == _blameId && fileName == _fileName && revisionGridInfo == _revisionGridInfo && _revisionGridUpdate == revisionGridUpdate && encoding == _encoding)
             {
                 if (initialLine is not null)
                 {
@@ -111,7 +113,8 @@ namespace GitUI.Blame
 
             int line = _clickedBlameLine is not null ? _clickedBlameLine.OriginLineNumber
                 : initialLine ?? (fileName == _fileName ? BlameFile.CurrentFileLine : 1);
-            _revGrid = revGrid;
+            _revisionGridInfo = revisionGridInfo;
+            _revisionGridUpdate = revisionGridUpdate;
             _fileName = fileName;
             _encoding = encoding;
 
@@ -257,7 +260,7 @@ namespace GitUI.Blame
 
             _lastBlameLine = newBlameLine;
             ObjectId objectId = _lastBlameLine.Commit.ObjectId;
-            CommitInfo.Revision = _revGrid is null ? Module.GetRevision(objectId) : _revGrid.GetActualRevision(objectId);
+            CommitInfo.Revision = _revisionGridInfo is null ? Module.GetRevision(objectId) : _revisionGridInfo.GetActualRevision(objectId);
         }
 
         private void BlameAuthor_HScrollPositionChanged(object sender, EventArgs e)
@@ -416,7 +419,7 @@ namespace GitUI.Blame
             return (gutter.ToString(), body.ToString(), gitBlameDisplays);
         }
 
-        private string BuildAuthorLine(GitBlameLine line, StringBuilder authorLineBuilder, int lineLength, string dateTimeFormat,
+        private static string BuildAuthorLine(GitBlameLine line, StringBuilder authorLineBuilder, int lineLength, string dateTimeFormat,
             string? filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
         {
             if (showAuthor && displayAuthorFirst)
@@ -507,7 +510,7 @@ namespace GitUI.Blame
             }
 
             ObjectId selectedId = _lastBlameLine.Commit.ObjectId;
-            if (_revGrid is null)
+            if (_revisionGridUpdate is null)
             {
                 using FormCommitDiff frm = new(UICommands, selectedId);
                 frm.ShowDialog(this);
@@ -515,7 +518,7 @@ namespace GitUI.Blame
             }
 
             _clickedBlameLine = _lastBlameLine;
-            if (!_revGrid.SetSelectedRevision(selectedId))
+            if (!_revisionGridUpdate.SetSelectedRevision(selectedId))
             {
                 MessageBoxes.RevisionFilteredInGrid(this, selectedId);
             }
@@ -562,8 +565,8 @@ namespace GitUI.Blame
             // The menu will be slightly slower in this situation.
             bool RevisionHasParent(GitRevision? selectedRevision)
             {
-                GitRevision actualRevision = _revGrid?.GetActualRevision(selectedRevision);
-                return (actualRevision?.HasParent ?? false) && (_revGrid?.GetRevision(actualRevision?.FirstParentId) is not null);
+                GitRevision actualRevision = _revisionGridInfo?.GetActualRevision(selectedRevision);
+                return (actualRevision?.HasParent ?? false) && (_revisionGridInfo?.GetRevision(actualRevision?.FirstParentId) is not null);
             }
         }
 
@@ -616,7 +619,7 @@ namespace GitUI.Blame
                 return false;
             }
 
-            blameInfo = (_revGrid?.GetRevision(blameCommit.ObjectId), blameCommit.FileName);
+            blameInfo = (_revisionGridInfo?.GetRevision(blameCommit.ObjectId), blameCommit.FileName);
             return blameInfo.selectedRevision is not null;
         }
 
@@ -641,7 +644,7 @@ namespace GitUI.Blame
 
             // Try get actual parent revision, get popup if it does not exist.
             // (The menu should be disabled if previous is not in grid).
-            GitRevision? revision = _revGrid?.GetActualRevision(blameInfo.selectedRevision);
+            GitRevision? revision = _revisionGridInfo?.GetActualRevision(blameInfo.selectedRevision);
             _clickedBlameLine = _lastBlameLine;
             BlameRevision(revision?.FirstParentId, blameInfo.filename);
         }
@@ -653,10 +656,10 @@ namespace GitUI.Blame
         /// <param name="filename">the relative path of the file to blame in this commit (because it could have been renamed)</param>
         private void BlameRevision(ObjectId? revisionId, string filename)
         {
-            if (_revGrid is not null)
+            if (_revisionGridUpdate is not null)
             {
                 PathToBlame = filename;
-                if (!_revGrid.SetSelectedRevision(revisionId))
+                if (!_revisionGridUpdate.SetSelectedRevision(revisionId))
                 {
                     MessageBoxes.RevisionFilteredInGrid(this, revisionId);
                 }
@@ -715,7 +718,7 @@ namespace GitUI.Blame
             public DateTime ArtificialOldBoundary => _control.ArtificialOldBoundary;
 
             public void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, int lineLength, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
-                => _control.BuildAuthorLine(line, lineBuilder, lineLength, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
+                => BlameControl.BuildAuthorLine(line, lineBuilder, lineLength, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
 
             public (string gutter, string body, List<GitBlameEntry> avatars) BuildBlameContents(string filename) => _control.BuildBlameContents(filename, avatarSize: 10);
 

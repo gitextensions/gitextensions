@@ -663,7 +663,7 @@ namespace GitUI.UserControls.RevisionGrid
         private async Task UpdateVisibleRowRangeInternalAsync()
         {
             int fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
-            int visibleRowCount = _rowHeight <= 0 ? 0 : (Height / _rowHeight) + 2 /*Add 2 for rounding*/;
+            int visibleRowCount = _rowHeight <= 0 ? 0 : (Height + _rowHeight - 1) / _rowHeight; // Rounding up integer division: (a+b-1)/b = ceil(a/b)
 
             visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
 

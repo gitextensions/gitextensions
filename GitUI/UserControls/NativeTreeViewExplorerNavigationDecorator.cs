@@ -32,7 +32,7 @@
         {
         }
 
-        private void OnKeyDown(object sender, KeyEventArgs e)
+        private static void OnKeyDown(object sender, KeyEventArgs e)
         {
             // Suppress the "ding" when Enter is pressed
             if (e.KeyCode == Keys.Enter)

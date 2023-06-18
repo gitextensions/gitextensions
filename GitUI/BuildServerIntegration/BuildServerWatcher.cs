@@ -9,6 +9,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.Settings;
+using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
@@ -28,6 +29,7 @@ namespace GitUI.BuildServerIntegration
         private readonly object _buildServerCredentialsLock = new();
         private readonly RevisionGridControl _revisionGrid;
         private readonly RevisionDataGridView _revisionGridView;
+        private readonly IRevisionGridInfo _revisionGridInfo;
         private readonly Func<GitModule> _module;
         private readonly IRepoNameExtractor _repoNameExtractor;
         private IDisposable? _buildStatusCancellationToken;
@@ -36,10 +38,11 @@ namespace GitUI.BuildServerIntegration
 
         internal BuildStatusColumnProvider ColumnProvider { get; }
 
-        public BuildServerWatcher(RevisionGridControl revisionGrid, RevisionDataGridView revisionGridView, Func<GitModule> module)
+        public BuildServerWatcher(RevisionGridControl revisionGrid, RevisionDataGridView revisionGridView, IRevisionGridInfo revisionGridInfo, Func<GitModule> module)
         {
             _revisionGrid = revisionGrid;
             _revisionGridView = revisionGridView;
+            _revisionGridInfo = revisionGridInfo;
             _module = module;
 
             _repoNameExtractor = new RepoNameExtractor(_module);
@@ -350,7 +353,7 @@ namespace GitUI.BuildServerIntegration
                             {
                                 _revisionGrid.UICommands.StartSettingsDialog(typeof(BuildServerIntegrationSettingsPage));
                             }));
-                        }, objectId => _revisionGrid.GetRevision(objectId) is not null);
+                        }, objectId => _revisionGridInfo.GetRevision(objectId) is not null);
                     return buildServerAdapter;
                 }
                 catch (InvalidOperationException ex)

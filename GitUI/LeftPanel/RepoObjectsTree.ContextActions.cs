@@ -28,7 +28,7 @@ namespace GitUI.LeftPanel
         /// </summary>
         private MenuItemsGenerator<TagNode> _tagNodeMenuItems;
 
-        private void EnableMenuItems(bool enabled, params ToolStripItem[] items)
+        private static void EnableMenuItems(bool enabled, params ToolStripItem[] items)
         {
             foreach (ToolStripItem item in items)
             {
@@ -36,7 +36,7 @@ namespace GitUI.LeftPanel
             }
         }
 
-        private void EnableMenuItems<TNode>(MenuItemsGenerator<TNode> generator, Func<ToolStripItemWithKey, bool> isEnabled) where TNode : class, INode
+        private static void EnableMenuItems<TNode>(MenuItemsGenerator<TNode> generator, Func<ToolStripItemWithKey, bool> isEnabled) where TNode : class, INode
         {
             foreach (ToolStripItemWithKey item in generator)
             {
@@ -122,7 +122,7 @@ namespace GitUI.LeftPanel
 
         private void RegisterContextActions()
         {
-            copyContextMenuItem.SetRevisionFunc(() => _scriptHost.GetSelectedRevisions());
+            copyContextMenuItem.SetRevisionFunc(() => _revisionGridInfo.GetSelectedRevisions());
 
             // Filter for selected
             filterForSelectedRefsMenuItem.ToolTipText = "Filter the revision grid to show selected (underlined) refs (branches and tags) only." +

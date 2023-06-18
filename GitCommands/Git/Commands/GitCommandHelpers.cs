@@ -129,10 +129,14 @@ namespace GitCommands.Git.Commands
                     return string.Empty;
                 }
 
+                // special handling for GitRefsSortBy.versionRefname as enum string is not the same as git sort key
+                // also, colon cannot be included in the deref sort key at all
+                const string gitRefsSortByVersion = "version:refname";
+                string sortKey = sortBy == GitRefsSortBy.versionRefname ? gitRefsSortByVersion : sortBy.ToString();
                 string order = sortOrder == GitRefsSortOrder.Ascending ? string.Empty : "-";
                 if (!needTags)
                 {
-                    return $@"--sort=""{order}{sortBy}""";
+                    return $@"--sort=""{order}{sortKey}""";
                 }
 
                 // Sort by dereferenced data
@@ -144,7 +148,8 @@ namespace GitCommands.Git.Commands
                 // ref ordering (i.e. local and remote branches), and this is generally a significantly
                 // greater of two evils.
                 // Refer to https://github.com/gitextensions/gitextensions/issues/8621 for more info.
-                return $@"--sort=""{order}*{sortBy}"" --sort=""{order}{sortBy}""";
+                string derefSortKey = (sortBy == GitRefsSortBy.versionRefname ? GitRefsSortBy.refname : sortBy).ToString();
+                return $@"--sort=""{order}*{derefSortKey}"" --sort=""{order}{sortKey}""";
             }
 
             static ArgumentString GitRefsFormat(bool needTags)

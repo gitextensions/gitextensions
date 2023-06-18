@@ -2,6 +2,7 @@ namespace System
 {
     internal static partial class NativeMethods
     {
+#if SUPPORT_THEME_HOOKS
         public enum ListViewGroupMask : uint
         {
             None = 0x00000,
@@ -20,5 +21,6 @@ namespace System
             Subset = 0x08000,
             SubsetItems = 0x10000
         }
+#endif
     }
 }
