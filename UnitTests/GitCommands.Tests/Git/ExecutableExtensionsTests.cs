@@ -111,7 +111,7 @@ namespace GitCommandsTests.Git
                 Assert.AreEqual(expectedProcessedCounts[index], eventArgs.ProcessedCount);
                 index++;
             });
-            Assert.IsTrue(result.Value.ExitedSuccessfully);
+            Assert.AreEqual(result.Value.ExitCode, 0);
             Assert.IsTrue(result.Value.StandardOutput.StartsWith("Unstaged changes after reset:"));
         }
 
