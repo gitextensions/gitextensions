@@ -94,7 +94,6 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 
 </details>
 
-
 ### Version 2.5x
 
 <details>
@@ -292,7 +291,6 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/gitextensions/sponsor/8/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/gitextensions/sponsor/9/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/9/avatar.svg"></a>
 
-
 # Useful Links
 
 * Website: [gitextensions.github.io](https://gitextensions.github.io/) [Git repo](https://github.com/gitextensions/gitextensions.github.io)
@@ -302,3 +300,4 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 * Wiki: [github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
 * Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 * [How to visualize Git repository's history](/gource%20video.md)
+* [Windows Sandbox Testing](/scripts/wsb/readme.md) Helps with clean machine testing of local build
