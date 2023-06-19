@@ -12,6 +12,7 @@ namespace GitCommands
     /// </summary>
     public static class ExecutableExtensions
     {
+        public const string DubiousOwnershipSecurityConfigString = "config --global --add safe.directory";
         private static readonly Regex _ansiCodePattern = new(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Lazy<Encoding> _defaultOutputEncoding = new(() => GitModule.SystemEncoding, false);
 
@@ -320,7 +321,29 @@ namespace GitCommands
 
             // Wait for the process to exit (or be cancelled) and for the output
             Task<int> exitTask = process.WaitForExitAsync(cancellationToken);
-            await Task.WhenAll(outputTask, errorTask, exitTask);
+            try
+            {
+                await Task.WhenAll(outputTask, errorTask, exitTask);
+            }
+            catch (ExternalOperationException ex)
+            {
+                string errorTxt = null;
+                try
+                {
+                    errorTxt = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
+                }
+                catch (Exception)
+                {
+                    // We want to ensure that this action won't crash
+                }
+
+                if (errorTxt?.Contains(DubiousOwnershipSecurityConfigString) is true)
+                {
+                    throw new ExternalOperationException(ex.Command, ex.Arguments, ex.WorkingDirectory, ex.ExitCode, new Exception(errorTxt));
+                }
+
+                throw;
+            }
 
             var output = outputEncoding.GetString(outputBuffer.GetBuffer(), 0, (int)outputBuffer.Length);
             var error = outputEncoding.GetString(errorBuffer.GetBuffer(), 0, (int)errorBuffer.Length);
