@@ -890,12 +890,14 @@ namespace GitUI.UserControls.RevisionGrid
 
                 _lastMouseWheelTickCount = currentTickCount;
 
+                int visibleCompleteRowsCount = _rowHeight > 0 ? Height / _rowHeight : 0;
+
                 // The wheel might be configured to scroll more than one row at once.
                 // Respect this by scaling MouseEventArgs.Delta accordingly.
                 int scrollLines = SystemInformation.MouseWheelScrollLines switch
                 {
                     // Value of -1 indicates the "One screen at a time" mouse option.
-                    -1 => _rowHeight > 0 ? (Height / _rowHeight) : 1,
+                    -1 => visibleCompleteRowsCount > 0 ? visibleCompleteRowsCount : 1,
                     > 0 => SystemInformation.MouseWheelScrollLines,
                     _ => 1
                 };
@@ -914,6 +916,13 @@ namespace GitUI.UserControls.RevisionGrid
                 if (rowDelta != 0)
                 {
                     int toRowIndex = Math.Clamp(FirstDisplayedScrollingRowIndex + rowDelta, 0, maxRowIndex);
+
+                    // Drop unconsumed wheel delta when reaching the upper or lower bound of the grid
+                    // to prevent the grid being stuck there for a moment.
+                    if (toRowIndex == 0 || toRowIndex >= maxRowIndex - visibleCompleteRowsCount + 1)
+                    {
+                        _mouseWheelDeltaRemainder = 0;
+                    }
 
                     // This will raise the Scroll event.
                     FirstDisplayedScrollingRowIndex = toRowIndex;
