@@ -17,6 +17,7 @@ namespace GitUI.UserControls.RevisionGrid
     public sealed partial class RevisionDataGridView : DataGridView
     {
         private const int BackgroundThreadUpdatePeriod = 25;
+        private const int MouseWheelDeltaTimeout = 1500; // Mouse wheel idle time in milliseconds after which unconsumed wheel delta will be dropped.
         private static readonly AccessibleDataGridViewTextBoxCell _accessibleDataGridViewTextBoxCell = new();
 
         private readonly SolidBrush _alternatingRowBackgroundBrush;
@@ -880,7 +881,7 @@ namespace GitUI.UserControls.RevisionGrid
                 //   for scrolling one row is never reached on the first wheel rotation.
                 // - When using a precision scrolling device, the unconsumed delta will offset the first scroll,
                 //   which makes the user experience a subtle "lag" or "leap" at beginning of a scroll.
-                if (_lastMouseWheel.ElapsedMilliseconds > 1500)
+                if (_lastMouseWheel.ElapsedMilliseconds > MouseWheelDeltaTimeout)
                 {
                     _mouseWheelDeltaRemainder = 0;
                 }
