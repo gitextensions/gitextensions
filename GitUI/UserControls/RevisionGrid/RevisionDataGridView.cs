@@ -854,7 +854,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
-            int maxRowIndex = _revisionGraph.Count - 1;
+            int maxRowIndex = RowCount - 1;
             if (maxRowIndex < 0)
             {
                 return;
@@ -925,8 +925,15 @@ namespace GitUI.UserControls.RevisionGrid
                         _mouseWheelDeltaRemainder = 0;
                     }
 
-                    // This will raise the Scroll event.
-                    FirstDisplayedScrollingRowIndex = toRowIndex;
+                    try
+                    {
+                        // This will raise the Scroll event.
+                        FirstDisplayedScrollingRowIndex = toRowIndex;
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        // Tried to scroll to nonexistant row.
+                    }
                 }
             }
         }
