@@ -254,8 +254,18 @@ namespace GitExtensions.Plugins.GitHub3
             }
         }
 
+        private const string HostedRemoteMenuItem = "HostedRemoteMenuItem";
         public void ConfigureContextMenu(ContextMenuStrip contextMenu)
         {
+            for (int i = contextMenu.Items.Count - 1; i >= 0; i--)
+            {
+                ToolStripItem item = contextMenu.Items[i];
+                if (item is ToolStripMenuItem tsmi && (string)tsmi.Tag == HostedRemoteMenuItem)
+                {
+                    contextMenu.Items.RemoveAt(i);
+                }
+            }
+
             _hostedRemotesForModule = GetHostedRemotesForModule();
             if (_hostedRemotesForModule.Count == 0)
             {
@@ -263,6 +273,7 @@ namespace GitExtensions.Plugins.GitHub3
             }
 
             ToolStripMenuItem toolStripMenuItem = new(string.Format(_viewInWebSite.Text, Name), Icon);
+            toolStripMenuItem.Tag = HostedRemoteMenuItem;
             contextMenu.Items.Add(toolStripMenuItem);
 
             foreach (IHostedRemote hostedRemote in _hostedRemotesForModule.OrderBy(r => r.Data))
