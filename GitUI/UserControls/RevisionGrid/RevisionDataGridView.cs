@@ -27,7 +27,6 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly Stopwatch _lastRepaint = Stopwatch.StartNew();
         private readonly Stopwatch _lastScroll = Stopwatch.StartNew();
         private readonly Stopwatch _consecutiveScroll = Stopwatch.StartNew();
-        private readonly Stopwatch _lastMouseWheel = Stopwatch.StartNew();
         private readonly List<ColumnProvider> _columnProviders = new();
 
         internal RevisionGraph _revisionGraph = new();
@@ -39,6 +38,8 @@ namespace GitUI.UserControls.RevisionGrid
         private int _backgroundScrollTo;
         private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
         private int _mouseWheelDeltaRemainder; // Corresponds to unconsumed scroll distance while scrolling via mouse wheel, see OnMouseWheel().
+
+        private long _lastMouseWheelTickCount; // Timestamp of the last vertical scroll via mouse wheel.
 
         private VisibleRowRange _visibleRowRange;
 
@@ -881,10 +882,13 @@ namespace GitUI.UserControls.RevisionGrid
                 //   for scrolling one row is never reached on the first wheel rotation.
                 // - When using a precision scrolling device, the unconsumed delta will offset the first scroll,
                 //   which makes the user experience a subtle "lag" or "leap" at beginning of a scroll.
-                if (_lastMouseWheel.ElapsedMilliseconds > MouseWheelDeltaTimeout)
+                long currentTickCount = Environment.TickCount64;
+                if (currentTickCount - _lastMouseWheelTickCount > MouseWheelDeltaTimeout)
                 {
                     _mouseWheelDeltaRemainder = 0;
                 }
+
+                _lastMouseWheelTickCount = currentTickCount;
 
                 // The wheel might be configured to scroll more than one row at once.
                 // Respect this by scaling MouseEventArgs.Delta accordingly.
@@ -914,8 +918,6 @@ namespace GitUI.UserControls.RevisionGrid
                     // This will raise the Scroll event.
                     FirstDisplayedScrollingRowIndex = toRowIndex;
                 }
-
-                _lastMouseWheel.Restart();
             }
         }
 
