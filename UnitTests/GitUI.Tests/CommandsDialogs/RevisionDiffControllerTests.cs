@@ -109,29 +109,66 @@ namespace GitUITests.CommandsDialogs
             _module.Received(0).SaveBlobAs(Arg.Any<string>(), Arg.Any<string>());
         }
 
-        [Test]
-        public void SaveFiles_should_save_multi_files_same_folder()
+        [TestCase("c:\\temp")]
+        [TestCase("c:\\temp\\")]
+        public void SaveFiles_should_save_multi_files_same_folder(string targetFolder)
         {
             FileStatusItem item1 = new(default, new(ObjectId.Random()), new("item1"));
             FileStatusItem item2 = new(default, new(ObjectId.Random()), new("item2"));
+            FileStatusItem item3 = new(default, new(ObjectId.Random()), new("item3"));
             List<FileStatusItem> files = new()
             {
                 item1,
-                item2
+                item2,
+                item3,
             };
 
             _fullPathResolver.Resolve(item1.Item.Name).Returns(x => "c:\\temp\\item1.txt");
-            _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\item2.txt");
+            _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\folder1\\item2.txt");
+            _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\folder1\\folder2\\item3.txt");
 
-            Func<string, string?> userSelection = (_) => "c:\\temp";
+            Func<string, string?> userSelection = (_) => targetFolder;
 
             _controller.SaveFiles(files, userSelection);
 
             _fullPathResolver.Received(2).Resolve(item1.Item.Name);
             _fullPathResolver.Received(1).Resolve(item2.Item.Name);
+            _fullPathResolver.Received(1).Resolve(item3.Item.Name);
             _module.ReceivedWithAnyArgs(2).SaveBlobAs(default, default);
             _module.Received(1).SaveBlobAs("c:\\temp\\item1.txt", Arg.Any<string>());
-            _module.Received(1).SaveBlobAs("c:\\temp\\item2.txt", Arg.Any<string>());
+            _module.Received(1).SaveBlobAs("c:\\temp\\folder1\\item2.txt", Arg.Any<string>());
+            _module.Received(1).SaveBlobAs("c:\\temp\\folder1\\folder2\\item3.txt", Arg.Any<string>());
+        }
+
+        [TestCase("c:\\myproject\\src")]
+        [TestCase("c:\\myproject\\src\\")]
+        public void SaveFiles_should_save_multi_files_different_folder(string targetFolder)
+        {
+            FileStatusItem item1 = new(default, new(ObjectId.Random()), new("item1"));
+            FileStatusItem item2 = new(default, new(ObjectId.Random()), new("item2"));
+            FileStatusItem item3 = new(default, new(ObjectId.Random()), new("item3"));
+            List<FileStatusItem> files = new()
+            {
+                item1,
+                item2,
+                item3,
+            };
+
+            _fullPathResolver.Resolve(item1.Item.Name).Returns(x => "c:\\temp\\item1.txt");
+            _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\folder1\\item2.txt");
+            _fullPathResolver.Resolve(item3.Item.Name).Returns(x => "c:\\temp\\folder1\\folder2\\item3.txt");
+
+            Func<string, string?> userSelection = (_) => targetFolder;
+
+            _controller.SaveFiles(files, userSelection);
+
+            _fullPathResolver.Received(2).Resolve(item1.Item.Name);
+            _fullPathResolver.Received(1).Resolve(item2.Item.Name);
+            _fullPathResolver.Received(1).Resolve(item3.Item.Name);
+            _module.ReceivedWithAnyArgs(2).SaveBlobAs(default, default);
+            _module.Received(1).SaveBlobAs("c:\\myproject\\src\\item1.txt", Arg.Any<string>());
+            _module.Received(1).SaveBlobAs("c:\\myproject\\src\\folder1\\item2.txt", Arg.Any<string>());
+            _module.Received(1).SaveBlobAs("c:\\myproject\\src\\folder1\\folder2\\item3.txt", Arg.Any<string>());
         }
 
         private static ContextMenuSelectionInfo CreateContextMenuSelectionInfo(GitRevision selectedRevision = null,

@@ -1177,12 +1177,12 @@ namespace GitUI.CommandsDialogs
                 userSelection = (fullName) =>
                 {
                     using SaveFileDialog dialog = new()
-                        {
-                            InitialDirectory = Path.GetDirectoryName(fullName),
-                            FileName = Path.GetFileName(fullName),
-                            DefaultExt = Path.GetExtension(fullName),
-                            AddExtension = true
-                        };
+                    {
+                        InitialDirectory = Path.GetDirectoryName(fullName),
+                        FileName = Path.GetFileName(fullName),
+                        DefaultExt = Path.GetExtension(fullName),
+                        AddExtension = true
+                    };
                     dialog.Filter = $"{_saveFileFilterCurrentFormat.Text}(*.{dialog.DefaultExt})|*.{dialog.DefaultExt}|{_saveFileFilterAllFiles.Text}(*.*)|*.*";
 
                     if (dialog.ShowDialog(this) == DialogResult.OK)
@@ -1198,10 +1198,10 @@ namespace GitUI.CommandsDialogs
                 userSelection = (baseSourceDirectory) =>
                 {
                     using FolderBrowserDialog dialog = new()
-                        {
-                            InitialDirectory = baseSourceDirectory,
-                            ShowNewFolderButton = true,
-                        };
+                    {
+                        InitialDirectory = baseSourceDirectory,
+                        ShowNewFolderButton = true,
+                    };
 
                     if (dialog.ShowDialog(this) == DialogResult.OK)
                     {

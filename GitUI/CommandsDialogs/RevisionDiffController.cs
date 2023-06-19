@@ -147,7 +147,7 @@ namespace GitUI.CommandsDialogs
                     // TODO: check target file exists.
                     // TODO: allow cancel the whole sequence
 
-                    string targetFileName = Path.Combine(targetDirectory, Path.GetFileName(selectedItemFullName));
+                    string targetFileName = Path.Combine(targetDirectory, Path.GetFileName(selectedItemFullName)).ToNativePath();
                     Debug.WriteLine($"Saving {selectedItemFullName} --> {targetFileName}");
 
                     GetModule().SaveBlobAs(targetFileName, $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"");
