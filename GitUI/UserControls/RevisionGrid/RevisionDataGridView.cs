@@ -36,10 +36,9 @@ namespace GitUI.UserControls.RevisionGrid
         private int _loadedToBeSelectedRevisionsCount = 0;
 
         private int _backgroundScrollTo;
-        private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
-        private int _mouseWheelDeltaRemainder; // Corresponds to unconsumed scroll distance while scrolling via mouse wheel, see OnMouseWheel().
-
         private long _lastMouseWheelTickCount; // Timestamp of the last vertical scroll via mouse wheel.
+        private int _mouseWheelDeltaRemainder; // Corresponds to unconsumed scroll distance while scrolling via mouse wheel, see OnMouseWheel().
+        private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
 
         private VisibleRowRange _visibleRowRange;
 
