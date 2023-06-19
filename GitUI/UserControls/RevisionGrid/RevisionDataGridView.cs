@@ -894,13 +894,15 @@ namespace GitUI.UserControls.RevisionGrid
 
                 // The wheel might be configured to scroll more than one row at once.
                 // Respect this by scaling MouseEventArgs.Delta accordingly.
-                int scrollLines = SystemInformation.MouseWheelScrollLines switch
+                int scrollLines = SystemInformation.MouseWheelScrollLines;
+
+                // Value of -1 indicates the "One screen at a time" mouse option.
+                if (scrollLines == -1)
                 {
-                    // Value of -1 indicates the "One screen at a time" mouse option.
-                    -1 => visibleCompleteRowsCount > 0 ? visibleCompleteRowsCount : 1,
-                    > 0 => SystemInformation.MouseWheelScrollLines,
-                    _ => 1
-                };
+                    scrollLines = visibleCompleteRowsCount;
+                }
+
+                scrollLines = Math.Max(1, scrollLines);
 
                 // Calculate the total wheel delta, which corresponds to the intended scrolling distance, from
                 // MouseEventArgs.Delta, which is usually a multiple of SystemInformation.MouseWheelScrollDelta
