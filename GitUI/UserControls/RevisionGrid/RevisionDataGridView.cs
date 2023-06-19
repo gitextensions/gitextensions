@@ -921,7 +921,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     // Drop unconsumed wheel delta when reaching the upper or lower bound of the grid
                     // to prevent the grid being stuck there for a moment.
-                    if (toRowIndex == 0 || toRowIndex >= maxRowIndex - visibleCompleteRowsCount + 1)
+                    if (toRowIndex == 0 || toRowIndex + visibleCompleteRowsCount > maxRowIndex)
                     {
                         _mouseWheelDeltaRemainder = 0;
                     }
