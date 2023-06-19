@@ -873,12 +873,20 @@ namespace GitUI.UserControls.RevisionGrid
             }
             else
             {
-                // Reset unconsumed wheel delta when the mouse wheel is idle.
+                // Reset unconsumed wheel delta when the mouse wheel is idle, because there are at least
+                // two situations in which unconsumed wheel delta causes an issue:
+                // - When switching back to a notched mouse wheel. Whenever the scroll direction is changed,
+                //   unconsumed delta will reduce the absolute value of the total delta so that the threshold
+                //   for scrolling one row is never reached on the first wheel rotation.
+                // - When using a precision scrolling device, the unconsumed delta will offset the first scroll,
+                //   which makes the user experience a subtle "lag" or "leap" at beginning of a scroll.
                 if (_lastMouseWheel.ElapsedMilliseconds > 1500)
                 {
                     _mouseWheelDeltaRemainder = 0;
                 }
 
+                // The wheel might be configured to scroll more than one row at once.
+                // Respect this by scaling MouseEventArgs.Delta accordingly.
                 int scrollLines = SystemInformation.MouseWheelScrollLines switch
                 {
                     // Value of -1 indicates the "One screen at a time" mouse option.
@@ -887,11 +895,15 @@ namespace GitUI.UserControls.RevisionGrid
                     _ => 1
                 };
 
+                // Calculate the total wheel delta, which corresponds to the intended scrolling distance, from
+                // MouseEventArgs.Delta, which is usually a multiple of SystemInformation.MouseWheelScrollDelta
+                // for notched mouse wheels, but can be an arbitrary number in the case of precision scrolling
+                // devices like free-spinning mouse wheels or touchpads.
+                // Consume the total wheel delta in multiples of SystemInformation.MouseWheelScrollDelta, which
+                // is the wheel delta threshold for scrolling one row, and save the remainder for consumption
+                // during the next MouseWheel event.
                 int totalWheelDelta = (scrollLines * e.Delta) + _mouseWheelDeltaRemainder;
                 int wheelDeltaPerRow = SystemInformation.MouseWheelScrollDelta;
-
-                // The total wheel delta is consumed in multiples of wheelDeltaPerRow.
-                // Save the remainder and credit it to the total wheel delta during the next MouseWheel event.
                 _mouseWheelDeltaRemainder = totalWheelDelta % wheelDeltaPerRow;
                 int rowDelta = -(totalWheelDelta - _mouseWheelDeltaRemainder) / wheelDeltaPerRow;
                 if (rowDelta != 0)
