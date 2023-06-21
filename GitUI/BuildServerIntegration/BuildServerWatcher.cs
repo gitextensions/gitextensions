@@ -155,7 +155,7 @@ namespace GitUI.BuildServerIntegration
                             byte[] unprotectedData = ProtectedData.Unprotect(protectedData, null,
                                 DataProtectionScope.CurrentUser);
                             using MemoryStream memoryStream = new(unprotectedData);
-                            ConfigFile credentialsConfig = new("");
+                            ConfigFile credentialsConfig = new(fileName: "");
 
                             using (StreamReader textReader = new(memoryStream, Encoding.UTF8))
                             {
@@ -213,7 +213,7 @@ namespace GitUI.BuildServerIntegration
 
                     if (buildServerCredentials is not null)
                     {
-                        ConfigFile credentialsConfig = new("");
+                        ConfigFile credentialsConfig = new(fileName: "");
 
                         var section = credentialsConfig.FindOrCreateConfigSection(CredentialsConfigName);
 

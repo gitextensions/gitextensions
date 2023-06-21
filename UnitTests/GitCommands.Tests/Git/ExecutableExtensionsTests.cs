@@ -26,7 +26,7 @@ namespace GitCommandsTests.Git
             // We need to correct it to %APPDATA%\GitExtensions\GitExtensions for v3 at least
             var userAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             var settingPath = Path.Combine(userAppDataPath, "GitExtensions\\GitExtensions\\GitExtensions.settings");
-            DistributedSettings settingContainer = new(null, GitExtSettingsCache.FromCache(settingPath), SettingLevel.Unknown);
+            DistributedSettings settingContainer = new(lowerPriority: null, GitExtSettingsCache.FromCache(settingPath), SettingLevel.Unknown);
             _appPath = settingContainer.GetString("gitcommand", "git.exe");
 
             // Execute process in GitExtension working directory, so that git will return success exit-code

@@ -34,18 +34,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             Module = module;
 
-            var distributedGlobalSettings = DistributedSettings.CreateGlobal(false);
-            var distributedPulledSettings = DistributedSettings.CreateDistributed(module, false);
-            var distributedLocalSettings = DistributedSettings.CreateLocal(module, false);
+            DistributedSettings distributedGlobalSettings = DistributedSettings.CreateGlobal(useSharedCache: false);
+            DistributedSettings distributedPulledSettings = DistributedSettings.CreateDistributed(module, useSharedCache: false);
+            DistributedSettings distributedLocalSettings = DistributedSettings.CreateLocal(module, useSharedCache: false);
             DistributedSettings distributedEffectiveSettings = new(
                 new DistributedSettings(distributedGlobalSettings, distributedPulledSettings.SettingsCache, SettingLevel.Distributed),
                 distributedLocalSettings.SettingsCache,
                 SettingLevel.Effective);
 
-            var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-            var configFileLocalSettings = ConfigFileSettings.CreateLocal(module, false);
+            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(useSharedCache: false);
+            ConfigFileSettings configFileLocalSettings = ConfigFileSettings.CreateLocal(module, useSharedCache: false);
             ConfigFileSettings configFileEffectiveSettings = new(
-                configFileGlobalSettings, configFileLocalSettings.SettingsCache, SettingLevel.Effective);
+                configFileGlobalSettings,
+                configFileLocalSettings.SettingsCache,
+                SettingLevel.Effective);
 
             DistributedSettingsSet = new DistributedSettingsSet(
                 distributedEffectiveSettings,
@@ -71,7 +73,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             string? value = null;
             try
             {
-                var registryKey = root.OpenSubKey(subkey, writable: false);
+                RegistryKey? registryKey = root.OpenSubKey(subkey, writable: false);
 
                 if (registryKey is not null)
                 {
@@ -113,7 +115,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : prev;
         }
 
-        public void FillEncodings(ComboBox combo)
+        public static void FillEncodings(ComboBox combo)
         {
             combo.Items.AddRange(AppSettings.AvailableEncodings.Values.ToArray<object>());
             combo.DisplayMember = nameof(Encoding.EncodingName);

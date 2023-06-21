@@ -74,7 +74,7 @@ namespace GitCommands
 
             bool newFile = CreateEmptySettingsFileIfMissing();
 
-            SettingsContainer = new DistributedSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath), SettingLevel.Unknown);
+            SettingsContainer = new DistributedSettings(lowerPriority: null, GitExtSettingsCache.FromCache(SettingsFilePath), SettingLevel.Unknown);
 
             if (newFile || !File.Exists(SettingsFilePath))
             {

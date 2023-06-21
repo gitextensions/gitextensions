@@ -224,7 +224,7 @@ namespace GitCommands
                 {
                     lock (_lock)
                     {
-                        _effectiveSettings ??= DistributedSettings.CreateEffective(this);
+                        _effectiveSettings ??= DistributedSettings.CreateEffective(module: this);
                     }
                 }
 
@@ -247,7 +247,7 @@ namespace GitCommands
                 {
                     lock (_lock)
                     {
-                        _localSettings ??= new DistributedSettings(null, EffectiveSettings.SettingsCache, SettingLevel.Local);
+                        _localSettings ??= new DistributedSettings(lowerPriority: null, EffectiveSettings.SettingsCache, SettingLevel.Local);
                     }
                 }
 
@@ -265,7 +265,7 @@ namespace GitCommands
                 {
                     lock (_lock)
                     {
-                        _effectiveConfigFile ??= ConfigFileSettings.CreateEffective(this);
+                        _effectiveConfigFile ??= ConfigFileSettings.CreateEffective(module: this);
                     }
                 }
 
@@ -273,7 +273,7 @@ namespace GitCommands
             }
         }
 
-        public ConfigFileSettings LocalConfigFile => new(null, EffectiveConfigFile.SettingsCache, SettingLevel.Local);
+        public ConfigFileSettings LocalConfigFile => new(lowerPriority: null, EffectiveConfigFile.SettingsCache, SettingLevel.Local);
 
         IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;
 

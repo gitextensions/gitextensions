@@ -33,9 +33,9 @@ namespace GitCommandsTests.ExternalLinks
             content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level3_roaming_GitExtensions.settings.xml");
             _userRoamingConfigFilePath = _testHelper.CreateRepoFile("GitExtensions.settings", content);
 
-            _userRoaming = new DistributedSettings(null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
-            _repoDistributed = new DistributedSettings(_userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
-            _repoLocal = new DistributedSettings(_repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
+            _userRoaming = new DistributedSettings(lowerPriority: null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
+            _repoDistributed = new DistributedSettings(lowerPriority: _userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
+            _repoLocal = new DistributedSettings(lowerPriority: _repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
 
             _externalLinksStorage = Substitute.For<IExternalLinksStorage>();
 

@@ -31,8 +31,7 @@ namespace GitCommands.Settings
             return CreateLocal(module, CreateDistributed(module, CreateGlobal()), SettingLevel.Effective);
         }
 
-        private static DistributedSettings CreateLocal(GitModule module, DistributedSettings? lowerPriority,
-            SettingLevel settingLevel, bool useSharedCache = true)
+        private static DistributedSettings CreateLocal(GitModule module, DistributedSettings? lowerPriority, SettingLevel settingLevel, bool useSharedCache = true)
         {
             return new DistributedSettings(lowerPriority,
                 GitExtSettingsCache.Create(Path.Combine(module.GitCommonDirectory, AppSettings.SettingsFileName), useSharedCache),
@@ -41,7 +40,7 @@ namespace GitCommands.Settings
 
         public static DistributedSettings CreateLocal(GitModule module, bool useSharedCache = true)
         {
-            return CreateLocal(module, null, SettingLevel.Local, useSharedCache);
+            return CreateLocal(module, lowerPriority: null, SettingLevel.Local, useSharedCache);
         }
 
         private static DistributedSettings CreateDistributed(GitModule module, DistributedSettings? lowerPriority, bool useSharedCache = true)
@@ -53,12 +52,13 @@ namespace GitCommands.Settings
 
         public static DistributedSettings CreateDistributed(GitModule module, bool useSharedCache = true)
         {
-            return CreateDistributed(module, null, useSharedCache);
+            return CreateDistributed(module, lowerPriority: null, useSharedCache);
         }
 
         public static DistributedSettings CreateGlobal(bool useSharedCache = true)
         {
-            return new DistributedSettings(null, GitExtSettingsCache.Create(AppSettings.SettingsFilePath, useSharedCache),
+            return new DistributedSettings(lowerPriority: null,
+                GitExtSettingsCache.Create(AppSettings.SettingsFilePath, useSharedCache),
                 SettingLevel.Global);
         }
 

@@ -264,7 +264,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public static IEnumerable<ReleaseVersion> Parse(string versionsStr)
         {
-            ConfigFile cfg = new("");
+            ConfigFile cfg = new(fileName: "");
             cfg.LoadFromString(versionsStr);
             var sections = cfg.GetConfigSections("Version");
             sections = sections.Concat(cfg.GetConfigSections("RCVersion"));

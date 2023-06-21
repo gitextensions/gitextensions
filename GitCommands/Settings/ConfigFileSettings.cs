@@ -8,8 +8,7 @@ namespace GitCommands.Settings
     [DebuggerDisplay("{" + nameof(SettingLevel) + "}: {" + nameof(SettingsCache) + "} << {" + nameof(LowerPriority) + "}")]
     public sealed class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings, IConfigValueStore
     {
-        public ConfigFileSettings(ConfigFileSettings? lowerPriority, ConfigFileSettingsCache settingsCache,
-            SettingLevel settingLevel)
+        public ConfigFileSettings(ConfigFileSettings? lowerPriority, ConfigFileSettingsCache settingsCache, SettingLevel settingLevel)
             : base(lowerPriority, settingsCache)
         {
             SettingLevel = settingLevel;
@@ -17,16 +16,17 @@ namespace GitCommands.Settings
 
         public static ConfigFileSettings CreateEffective(GitModule module)
         {
-            return CreateLocal(module, CreateGlobal(CreateSystemWide()), SettingLevel.Effective);
+            return CreateLocal(module,
+                CreateGlobal(CreateSystemWide()),
+                SettingLevel.Effective);
         }
 
         public static ConfigFileSettings CreateLocal(GitModule module, bool useSharedCache = true)
         {
-            return CreateLocal(module, null, SettingLevel.Local, useSharedCache);
+            return CreateLocal(module, lowerPriority: null, SettingLevel.Local, useSharedCache);
         }
 
-        private static ConfigFileSettings CreateLocal(GitModule module, ConfigFileSettings? lowerPriority,
-            SettingLevel settingLevel, bool useSharedCache = true)
+        private static ConfigFileSettings CreateLocal(GitModule module, ConfigFileSettings? lowerPriority, SettingLevel settingLevel, bool useSharedCache = true)
         {
             return new ConfigFileSettings(lowerPriority,
                 ConfigFileSettingsCache.Create(Path.Combine(module.GitCommonDirectory, "config"), useSharedCache),
@@ -35,7 +35,7 @@ namespace GitCommands.Settings
 
         public static ConfigFileSettings CreateGlobal(bool useSharedCache = true)
         {
-            return CreateGlobal(null, useSharedCache);
+            return CreateGlobal(lowerPriority: null, useSharedCache);
         }
 
         public static ConfigFileSettings CreateGlobal(ConfigFileSettings? lowerPriority, bool useSharedCache = true)
@@ -46,7 +46,8 @@ namespace GitCommands.Settings
                 configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".gitconfig");
             }
 
-            return new ConfigFileSettings(lowerPriority, ConfigFileSettingsCache.Create(configPath, useSharedCache),
+            return new ConfigFileSettings(lowerPriority,
+                ConfigFileSettingsCache.Create(configPath, useSharedCache),
                 SettingLevel.Global);
         }
 
@@ -64,8 +65,9 @@ namespace GitCommands.Settings
                 }
             }
 
-            return new ConfigFileSettings(null,
-                ConfigFileSettingsCache.Create(configPath, useSharedCache), SettingLevel.SystemWide);
+            return new ConfigFileSettings(lowerPriority: null,
+                ConfigFileSettingsCache.Create(configPath, useSharedCache),
+                SettingLevel.SystemWide);
         }
 
         public new string GetValue(string setting)

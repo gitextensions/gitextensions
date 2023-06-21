@@ -84,7 +84,7 @@ namespace GitCommandsTests.Config
         {
             try
             {
-                ConfigFile file = new(null);
+                ConfigFile file = new(fileName: null);
                 file.GetValue("nonexistentSetting", string.Empty);
             }
             catch (Exception e)

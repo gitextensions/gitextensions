@@ -9,7 +9,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
     {
         private static string GetReleasesConfigFileText()
         {
-            ConfigFile configFile = new("");
+            ConfigFile configFile = new(fileName: "");
             configFile.SetValue("Version \"2.47\".ReleaseType", "Major");
             configFile.SetValue("Version \"2.48\".ReleaseType", "Major");
             configFile.SetValue("Version \"2.49\".ReleaseType", "ReleaseCandidate");

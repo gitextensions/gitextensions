@@ -18,7 +18,7 @@ namespace GitCommands.Settings
         public static ConfigFileSettingsCache FromCache(string settingsFilePath)
         {
             Lazy<ConfigFileSettingsCache> createSettingsCache = new(
-                () => new ConfigFileSettingsCache(settingsFilePath, true));
+                () => new ConfigFileSettingsCache(settingsFilePath, autoSave: true));
 
             return FromCache(settingsFilePath, createSettingsCache);
         }
@@ -31,7 +31,7 @@ namespace GitCommands.Settings
             }
             else
             {
-                return new ConfigFileSettingsCache(settingsFilePath, false);
+                return new ConfigFileSettingsCache(settingsFilePath, autoSave: false);
             }
         }
 

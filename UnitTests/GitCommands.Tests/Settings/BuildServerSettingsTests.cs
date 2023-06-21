@@ -31,10 +31,10 @@ namespace GitCommandsTests.Settings
             content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level1_repogit_GitExtensions.settings.xml");
             _repoLocalConfigFilePath = _testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
 
-            _userRoaming = new DistributedSettings(null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
-            _repoDistributed = new DistributedSettings(_userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
-            _repoLocal = new DistributedSettings(_repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
-            _effective = new DistributedSettings(_repoLocal, new GitExtSettingsCache(null), SettingLevel.Effective);
+            _userRoaming = new DistributedSettings(lowerPriority: null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
+            _repoDistributed = new DistributedSettings(lowerPriority: _userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
+            _repoLocal = new DistributedSettings(lowerPriority: _repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
+            _effective = new DistributedSettings(lowerPriority: _repoLocal, new GitExtSettingsCache(settingsFilePath: null), SettingLevel.Effective);
         }
 
         [TearDown]
