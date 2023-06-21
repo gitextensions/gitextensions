@@ -287,8 +287,6 @@ namespace GitUI.CommandsDialogs
                 PluginRegistry.Initialize();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 RegisterPlugins();
-                revisionDiff.RegisterGitHostingPluginInBlameControl();
-                fileTree.RegisterGitHostingPluginInBlameControl();
             }).FileAndForget();
 
             InitCountArtificial(out _gitStatusMonitor);
@@ -1720,6 +1718,9 @@ namespace GitUI.CommandsDialogs
             }
 
             RegisterPlugins();
+
+            revisionDiff.RegisterGitHostingPluginInBlameControl();
+            fileTree.RegisterGitHostingPluginInBlameControl();
         }
 
         private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
