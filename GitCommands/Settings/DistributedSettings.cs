@@ -32,33 +32,33 @@ namespace GitCommands.Settings
         }
 
         private static DistributedSettings CreateLocal(GitModule module, DistributedSettings? lowerPriority,
-            SettingLevel settingLevel, bool allowCache = true)
+            SettingLevel settingLevel, bool useSharedCache = true)
         {
             return new DistributedSettings(lowerPriority,
-                GitExtSettingsCache.Create(Path.Combine(module.GitCommonDirectory, AppSettings.SettingsFileName), allowCache),
+                GitExtSettingsCache.Create(Path.Combine(module.GitCommonDirectory, AppSettings.SettingsFileName), useSharedCache),
                 settingLevel);
         }
 
-        public static DistributedSettings CreateLocal(GitModule module, bool allowCache = true)
+        public static DistributedSettings CreateLocal(GitModule module, bool useSharedCache = true)
         {
-            return CreateLocal(module, null, SettingLevel.Local, allowCache);
+            return CreateLocal(module, null, SettingLevel.Local, useSharedCache);
         }
 
-        private static DistributedSettings CreateDistributed(GitModule module, DistributedSettings? lowerPriority, bool allowCache = true)
+        private static DistributedSettings CreateDistributed(GitModule module, DistributedSettings? lowerPriority, bool useSharedCache = true)
         {
             return new DistributedSettings(lowerPriority,
-                GitExtSettingsCache.Create(Path.Combine(module.WorkingDir, AppSettings.SettingsFileName), allowCache),
+                GitExtSettingsCache.Create(Path.Combine(module.WorkingDir, AppSettings.SettingsFileName), useSharedCache),
                 SettingLevel.Distributed);
         }
 
-        public static DistributedSettings CreateDistributed(GitModule module, bool allowCache = true)
+        public static DistributedSettings CreateDistributed(GitModule module, bool useSharedCache = true)
         {
-            return CreateDistributed(module, null, allowCache);
+            return CreateDistributed(module, null, useSharedCache);
         }
 
-        public static DistributedSettings CreateGlobal(bool allowCache = true)
+        public static DistributedSettings CreateGlobal(bool useSharedCache = true)
         {
-            return new DistributedSettings(null, GitExtSettingsCache.Create(AppSettings.SettingsFilePath, allowCache),
+            return new DistributedSettings(null, GitExtSettingsCache.Create(AppSettings.SettingsFilePath, useSharedCache),
                 SettingLevel.Global);
         }
 

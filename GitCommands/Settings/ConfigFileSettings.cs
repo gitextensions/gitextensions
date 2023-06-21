@@ -20,25 +20,25 @@ namespace GitCommands.Settings
             return CreateLocal(module, CreateGlobal(CreateSystemWide()), SettingLevel.Effective);
         }
 
-        public static ConfigFileSettings CreateLocal(GitModule module, bool allowCache = true)
+        public static ConfigFileSettings CreateLocal(GitModule module, bool useSharedCache = true)
         {
-            return CreateLocal(module, null, SettingLevel.Local, allowCache);
+            return CreateLocal(module, null, SettingLevel.Local, useSharedCache);
         }
 
         private static ConfigFileSettings CreateLocal(GitModule module, ConfigFileSettings? lowerPriority,
-            SettingLevel settingLevel, bool allowCache = true)
+            SettingLevel settingLevel, bool useSharedCache = true)
         {
             return new ConfigFileSettings(lowerPriority,
-                ConfigFileSettingsCache.Create(Path.Combine(module.GitCommonDirectory, "config"), allowCache),
+                ConfigFileSettingsCache.Create(Path.Combine(module.GitCommonDirectory, "config"), useSharedCache),
                 settingLevel);
         }
 
-        public static ConfigFileSettings CreateGlobal(bool allowCache = true)
+        public static ConfigFileSettings CreateGlobal(bool useSharedCache = true)
         {
-            return CreateGlobal(null, allowCache);
+            return CreateGlobal(null, useSharedCache);
         }
 
-        public static ConfigFileSettings CreateGlobal(ConfigFileSettings? lowerPriority, bool allowCache = true)
+        public static ConfigFileSettings CreateGlobal(ConfigFileSettings? lowerPriority, bool useSharedCache = true)
         {
             string configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".config", "git", "config");
             if (!File.Exists(configPath))
@@ -46,11 +46,11 @@ namespace GitCommands.Settings
                 configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".gitconfig");
             }
 
-            return new ConfigFileSettings(lowerPriority, ConfigFileSettingsCache.Create(configPath, allowCache),
+            return new ConfigFileSettings(lowerPriority, ConfigFileSettingsCache.Create(configPath, useSharedCache),
                 SettingLevel.Global);
         }
 
-        public static ConfigFileSettings? CreateSystemWide(bool allowCache = true)
+        public static ConfigFileSettings? CreateSystemWide(bool useSharedCache = true)
         {
             // Git 2.xx
             string configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Git", "config");
@@ -65,7 +65,7 @@ namespace GitCommands.Settings
             }
 
             return new ConfigFileSettings(null,
-                ConfigFileSettingsCache.Create(configPath, allowCache), SettingLevel.SystemWide);
+                ConfigFileSettingsCache.Create(configPath, useSharedCache), SettingLevel.SystemWide);
         }
 
         public new string GetValue(string setting)

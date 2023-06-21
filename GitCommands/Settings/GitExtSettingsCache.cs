@@ -22,9 +22,9 @@ namespace GitCommands.Settings
             return FromCache(settingsFilePath, createSettingsCache);
         }
 
-        public static GitExtSettingsCache Create(string settingsFilePath, bool allowCache = true)
+        public static GitExtSettingsCache Create(string settingsFilePath, bool useSharedCache = true)
         {
-            if (allowCache)
+            if (useSharedCache)
             {
                 return FromCache(settingsFilePath);
             }
