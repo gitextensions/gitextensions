@@ -932,7 +932,7 @@ namespace GitUI.UserControls.RevisionGrid
                     }
                     catch (ArgumentOutOfRangeException)
                     {
-                        // Tried to scroll to nonexistant row.
+                        // Tried to scroll to nonexistent row.
                     }
                 }
             }
