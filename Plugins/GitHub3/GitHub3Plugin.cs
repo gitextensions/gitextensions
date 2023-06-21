@@ -254,9 +254,10 @@ namespace GitExtensions.Plugins.GitHub3
             }
         }
 
-        private const string HostedRemoteMenuItem = "HostedRemoteMenuItem";
         public void ConfigureContextMenu(ContextMenuStrip contextMenu)
         {
+            const string HostedRemoteMenuItem = "HostedRemoteMenuItem";
+
             for (int i = contextMenu.Items.Count - 1; i >= 0; i--)
             {
                 ToolStripItem item = contextMenu.Items[i];
