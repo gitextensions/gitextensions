@@ -24,8 +24,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             // For translation only
             Module = null!;
-            DistributedSettingsSet = null!;
-            ConfigFileSettingsSet = null!;
         }
 
         public CommonLogic(GitModule module)

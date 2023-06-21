@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void SetEffectiveSettings()
         {
-            if (ConfigFileSettingsSet is not null)
+            if (ConfigFileSettingsSet.EffectiveSettings is not null)
             {
                 SetCurrentSettings(ConfigFileSettingsSet.EffectiveSettings);
             }
@@ -32,7 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void SetLocalSettings()
         {
-            if (ConfigFileSettingsSet is not null)
+            if (ConfigFileSettingsSet.LocalSettings is not null)
             {
                 SetCurrentSettings(ConfigFileSettingsSet.LocalSettings);
             }
@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public override void SetGlobalSettings()
         {
-            if (ConfigFileSettingsSet is not null)
+            if (ConfigFileSettingsSet.GlobalSettings is not null)
             {
                 SetCurrentSettings(ConfigFileSettingsSet.GlobalSettings);
             }

@@ -6,14 +6,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public class DistributedSettingsPage : SettingsPageWithHeader, IDistributedSettingsPage
     {
-        protected DistributedSettingsSet? DistributedSettingsSet => CommonLogic.DistributedSettingsSet;
+        protected DistributedSettingsSet DistributedSettingsSet => CommonLogic.DistributedSettingsSet;
         protected DistributedSettings? CurrentSettings { get; private set; }
 
         protected override void Init(ISettingsPageHost pageHost)
         {
             base.Init(pageHost);
 
-            CurrentSettings = DistributedSettingsSet?.EffectiveSettings;
+            CurrentSettings = DistributedSettingsSet.EffectiveSettings;
         }
 
         protected override ISettingsSource GetCurrentSettings()
@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void SetEffectiveSettings()
         {
-            if (DistributedSettingsSet is not null)
+            if (DistributedSettingsSet.EffectiveSettings is not null)
             {
                 SetCurrentSettings(DistributedSettingsSet.EffectiveSettings);
             }
@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void SetLocalSettings()
         {
-            if (DistributedSettingsSet is not null)
+            if (DistributedSettingsSet.LocalSettings is not null)
             {
                 SetCurrentSettings(DistributedSettingsSet.LocalSettings);
             }
@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void SetDistributedSettings()
         {
-            if (DistributedSettingsSet is not null)
+            if (DistributedSettingsSet.DistributedSettings is not null)
             {
                 SetCurrentSettings(DistributedSettingsSet.DistributedSettings);
             }
@@ -49,7 +49,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public override void SetGlobalSettings()
         {
-            if (DistributedSettingsSet is not null)
+            if (DistributedSettingsSet.GlobalSettings is not null)
             {
                 SetCurrentSettings(DistributedSettingsSet.GlobalSettings);
             }
