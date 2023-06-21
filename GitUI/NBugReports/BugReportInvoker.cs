@@ -12,8 +12,6 @@ namespace GitUI.NBugReports
 {
     public static class BugReportInvoker
     {
-        private const string _dubiousOwnershipSecurityConfigString = "config --global --add safe.directory";
-
         private static Form? OwnerForm
             => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
 
@@ -105,7 +103,7 @@ namespace GitUI.NBugReports
 
             ExternalOperationException externalOperationException = exception as ExternalOperationException;
 
-            if (externalOperationException?.InnerException?.Message?.Contains(_dubiousOwnershipSecurityConfigString) is true)
+            if (externalOperationException?.InnerException?.Message?.Contains(ExecutableExtensions.DubiousOwnershipSecurityConfigString) is true)
             {
                 ReportDubiousOwnership(externalOperationException.InnerException);
                 return;
@@ -202,9 +200,9 @@ namespace GitUI.NBugReports
                 AllowCancel = true,
                 SizeToContent = true,
             };
-            int startIndex = error.IndexOf(_dubiousOwnershipSecurityConfigString);
+            int startIndex = error.IndexOf(ExecutableExtensions.DubiousOwnershipSecurityConfigString);
             string gitConfigTrustRepoCommand = error[startIndex..];
-            string folderPath = error[(startIndex + _dubiousOwnershipSecurityConfigString.Length + 1)..];
+            string folderPath = error[(startIndex + ExecutableExtensions.DubiousOwnershipSecurityConfigString.Length + 1)..];
 
             TaskDialogCommandLinkButton openExplorerButton = new(TranslatedStrings.GitDubiousOwnershipOpenRepositoryFolder, allowCloseDialog: false);
             openExplorerButton.Click += (_, _) => OsShellUtil.OpenWithFileExplorer(PathUtil.ToNativePath(folderPath));
@@ -258,13 +256,13 @@ namespace GitUI.NBugReports
             {
                 TaskDialogCommandLinkButton button = new(buttonText, allowCloseDialog: false)
                 {
-                    DescriptionText = $"git {_dubiousOwnershipSecurityConfigString} *",
+                    DescriptionText = $"git {ExecutableExtensions.DubiousOwnershipSecurityConfigString} *",
                 };
 
                 button.Click += (_, _) =>
                 {
                     string tempFile = Path.GetTempFileName();
-                    File.WriteAllText(tempFile, $"{TranslatedStrings.GitDubiousOwnershipTrustAllInstruction}\r\n\r\ngit {_dubiousOwnershipSecurityConfigString} \"*\"");
+                    File.WriteAllText(tempFile, $"{TranslatedStrings.GitDubiousOwnershipTrustAllInstruction}\r\n\r\ngit {ExecutableExtensions.DubiousOwnershipSecurityConfigString} \"*\"");
 
                     using FormEditor formEditor = new(new GitUICommands(new GitModule(null)), tempFile, showWarning: false, readOnly: true);
                     formEditor.ShowDialog();
