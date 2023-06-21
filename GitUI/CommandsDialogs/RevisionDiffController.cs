@@ -1,9 +1,13 @@
-﻿using GitUIPluginInterfaces;
+﻿using System.Diagnostics;
+using GitCommands;
+using GitUI.UserControls;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs
 {
     public interface IRevisionDiffController
     {
+        void SaveFiles(List<FileStatusItem> files, Func<string, string?> userSelection);
         bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuEditWorkingDirectoryFile(ContextMenuSelectionInfo selectionInfo);
@@ -74,6 +78,96 @@ namespace GitUI.CommandsDialogs
 
     public sealed class RevisionDiffController : IRevisionDiffController
     {
+        private readonly Func<IGitModule> _getModule;
+        private readonly IFullPathResolver _fullPathResolver;
+
+        public RevisionDiffController(Func<IGitModule> getModule, IFullPathResolver fullPathResolver)
+        {
+            _getModule = getModule;
+            _fullPathResolver = fullPathResolver;
+        }
+
+        public void SaveFiles(List<FileStatusItem> files, Func<string, string?> userSelection)
+        {
+            if (files is null)
+            {
+                throw new ArgumentNullException(nameof(files));
+            }
+
+            if (files.Count == 0)
+            {
+                return;
+            }
+
+            if (userSelection is null)
+            {
+                throw new ArgumentNullException(nameof(userSelection));
+            }
+
+            if (files.Count > 1)
+            {
+                SaveMultipleFiles(files);
+                return;
+            }
+
+            SaveSingleFile(files[0]);
+            return;
+
+            void SaveMultipleFiles(List<FileStatusItem> selectedFiles)
+            {
+                // Derive the folder from the first selected file.
+                string firstItemFullName = _fullPathResolver.Resolve(selectedFiles.First().Item.Name);
+                string baseSourceDirectory = Path.GetDirectoryName(firstItemFullName).EnsureTrailingPathSeparator();
+
+                string selectedPath = userSelection(baseSourceDirectory);
+                if (selectedPath is null)
+                {
+                    // User has cancelled the selection
+                    return;
+                }
+
+                Uri baseSourceDirectoryUri = new(baseSourceDirectory);
+
+                foreach (FileStatusItem item in selectedFiles)
+                {
+                    string selectedItemFullName = _fullPathResolver.Resolve(item.Item.Name);
+                    string selectedItemSourceDirectory = Path.GetDirectoryName(selectedItemFullName).EnsureTrailingPathSeparator();
+
+                    string targetDirectory;
+                    if (selectedItemSourceDirectory == baseSourceDirectory)
+                    {
+                        targetDirectory = selectedPath;
+                    }
+                    else
+                    {
+                        Uri selectedItemUri = new(selectedItemSourceDirectory);
+                        targetDirectory = Path.Combine(selectedPath, baseSourceDirectoryUri.MakeRelativeUri(selectedItemUri).OriginalString);
+                    }
+
+                    // TODO: check target file exists.
+                    // TODO: allow cancel the whole sequence
+
+                    string targetFileName = Path.Combine(targetDirectory, Path.GetFileName(selectedItemFullName)).ToNativePath();
+                    Debug.WriteLine($"Saving {selectedItemFullName} --> {targetFileName}");
+
+                    GetModule().SaveBlobAs(targetFileName, $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"");
+                }
+            }
+
+            void SaveSingleFile(FileStatusItem item)
+            {
+                string fullName = _fullPathResolver.Resolve(item.Item.Name);
+                string selectedFileName = userSelection(fullName);
+                if (selectedFileName is null)
+                {
+                    // User has cancelled the selection
+                    return;
+                }
+
+                GetModule().SaveBlobAs(selectedFileName, $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"");
+            }
+        }
+
         // The enabling of menu items is related to how the actions have been implemented
 
         public bool ShouldShowDifftoolMenus(ContextMenuSelectionInfo selectionInfo)
@@ -92,7 +186,7 @@ namespace GitUI.CommandsDialogs
         #region Main menu items
         public bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.SelectedGitItemCount == 1 && !selectionInfo.IsAnySubmodule
+            return selectionInfo.SelectedGitItemCount > 0 && !selectionInfo.IsAnySubmodule
                 && !(selectionInfo.SelectedRevision?.IsArtificial ?? false)
                 && !selectionInfo.IsDisplayOnlyDiff;
         }
@@ -164,5 +258,10 @@ namespace GitUI.CommandsDialogs
             return ShouldShowMenuFileHistory(selectionInfo) && !selectionInfo.IsAnySubmodule;
         }
         #endregion
+
+        private IGitModule GetModule()
+        {
+            return _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+        }
     }
 }

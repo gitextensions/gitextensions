@@ -636,7 +636,7 @@ namespace GitCommands
                 }
             }
 
-            using var stream = File.Create(saveAs);
+            using FileStream stream = File.Create(saveAs);
             stream.Write(blobData, 0, blobData.Length);
         }
 

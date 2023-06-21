@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
         private IRevisionGridUpdate? _revisionGridUpdate;
         private Func<string>? _pathFilter;
         private RevisionFileTreeControl? _revisionFileTree;
-        private readonly IRevisionDiffController _revisionDiffController = new RevisionDiffController();
+        private readonly IRevisionDiffController _revisionDiffController;
         private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
@@ -57,6 +57,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _revisionDiffController = new RevisionDiffController(() => Module, _fullPathResolver);
             _findFilePredicateProvider = new FindFilePredicateProvider();
             _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
@@ -710,7 +711,6 @@ namespace GitUI.CommandsDialogs
             diffOpenRevisionFileWithToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
             diffOpenRevisionFileWithToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
             saveAsToolStripMenuItem1.Visible = _revisionDiffController.ShouldShowMenuSaveAs(selectionInfo);
-            saveAsToolStripMenuItem1.Enabled = _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
             openContainingFolderToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuShowInFolder(selectionInfo);
             diffEditWorkingDirectoryFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
             diffDeleteFileToolStripMenuItem.Text = ResourceManager.TranslatedStrings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
@@ -1169,31 +1169,50 @@ namespace GitUI.CommandsDialogs
 
         private void saveAsToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            FileStatusItem? item = DiffFiles.SelectedItem;
-            if (item is null)
-            {
-                return;
-            }
+            List<FileStatusItem> files = DiffFiles.SelectedItems.ToList();
 
-            var fullName = _fullPathResolver.Resolve(item.Item.Name);
-            using SaveFileDialog fileDialog =
-                new()
+            Func<string, string?> userSelection = default;
+            if (files.Count == 1)
+            {
+                userSelection = (fullName) =>
                 {
-                    InitialDirectory = Path.GetDirectoryName(fullName),
-                    FileName = Path.GetFileName(fullName),
-                    DefaultExt = Path.GetExtension(fullName),
-                    AddExtension = true
-                };
-            fileDialog.Filter =
-                _saveFileFilterCurrentFormat.Text + " (*." +
-                fileDialog.DefaultExt + ")|*." +
-                fileDialog.DefaultExt +
-                "|" + _saveFileFilterAllFiles.Text + " (*.*)|*.*";
+                    using SaveFileDialog dialog = new()
+                    {
+                        InitialDirectory = Path.GetDirectoryName(fullName),
+                        FileName = Path.GetFileName(fullName),
+                        DefaultExt = Path.GetExtension(fullName),
+                        AddExtension = true
+                    };
+                    dialog.Filter = $"{_saveFileFilterCurrentFormat.Text}(*.{dialog.DefaultExt})|*.{dialog.DefaultExt}|{_saveFileFilterAllFiles.Text}(*.*)|*.*";
 
-            if (fileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                Module.SaveBlobAs(fileDialog.FileName, $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"");
+                    if (dialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        return dialog.FileName;
+                    }
+
+                    return null;
+                };
             }
+            else if (files.Count > 1)
+            {
+                userSelection = (baseSourceDirectory) =>
+                {
+                    using FolderBrowserDialog dialog = new()
+                    {
+                        InitialDirectory = baseSourceDirectory,
+                        ShowNewFolderButton = true,
+                    };
+
+                    if (dialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        return dialog.SelectedPath;
+                    }
+
+                    return null;
+                };
+            }
+
+            _revisionDiffController.SaveFiles(files, userSelection);
         }
 
         private bool DeleteSelectedFiles()
@@ -1286,7 +1305,7 @@ namespace GitUI.CommandsDialogs
             }
 
             RequestRefresh();
-       }
+        }
 
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
