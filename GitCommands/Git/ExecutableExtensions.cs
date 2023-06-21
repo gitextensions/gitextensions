@@ -200,7 +200,7 @@ namespace GitCommands
                     : new ExecutionResult(
                         result?.StandardOutput + itemResult.StandardOutput,
                         result?.StandardError + itemResult.StandardError,
-                        result?.ExitCode > 0 ? result?.ExitCode : itemResult.ExitCode);
+                        result?.ExitCode is (> 0 or < 0) ? result?.ExitCode : itemResult.ExitCode);
 
                 // Invoke batch progress callback
                 action?.Invoke(new BatchProgressEventArgs(item.BatchItemsCount, result?.ExitedSuccessfully ?? false));

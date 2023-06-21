@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -1487,14 +1488,18 @@ namespace GitCommands
 
             output.Append(CheckoutIndexFiles(filesToReset));
             output.Append(CheckoutFiles(filesToCheckout, resetId, force: false));
+
+            const char bullet = '\u2022';
+            const char noBreakSpace = '\u00a0';
+            string separator = $"{Environment.NewLine}{bullet}{noBreakSpace}";
             if (filesInUse.Count > 0)
             {
-                output.Append($"The following files are currently in use and will not be reset: {Environment.NewLine}\u2022 " + string.Join($"{Environment.NewLine}\u2022 ", filesInUse));
+                output.Append($"The following files are currently in use and will not be reset:{separator}{string.Join(separator, filesInUse)}");
             }
 
             if (filesCannotCheckout.Count > 0)
             {
-                output.Append($"The following files are unmerged and will not be reset: {Environment.NewLine}\u2022 " + string.Join($"{Environment.NewLine}\u2022 ", filesCannotCheckout));
+                output.Append($"The following files are unmerged and will not be reset:{separator}{string.Join(separator, filesCannotCheckout)}");
             }
 
             return true;
@@ -1562,7 +1567,8 @@ namespace GitCommands
                     revStr,
                     "--"
                 }
-                .BuildBatchArgumentsForFiles(files))?.StandardOutput ?? "";
+                .BuildBatchArgumentsForFiles(files))
+                ?.StandardOutput ?? "";
         }
 
         public string RemoveFiles(IReadOnlyList<string> files, bool force)
