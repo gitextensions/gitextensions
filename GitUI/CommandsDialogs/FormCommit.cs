@@ -2128,7 +2128,7 @@ namespace GitUI.CommandsDialogs
                 toolStripProgressBar1.Maximum = selectedItems.Count(item => item.Staged == StagedStatus.Index);
                 toolStripProgressBar1.Value = 0;
 
-                Module.ResetChanges(resetId: null, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out List<string> filesInUse, out StringBuilder output, progressAction: (eventArgs) =>
+                Module.ResetChanges(resetId: null, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: (eventArgs) =>
                 {
                     toolStripProgressBar1.Value = Math.Max(0, Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + eventArgs.ProcessedCount));
                 });
@@ -2139,11 +2139,6 @@ namespace GitUI.CommandsDialogs
                 if (AppSettings.RevisionGraphShowArtificialCommits)
                 {
                     UICommands.RepoChangedNotifier.Notify();
-                }
-
-                if (filesInUse.Count > 0)
-                {
-                    MessageBox.Show(this, "The following files are currently in use and will not be reset:" + Environment.NewLine + "\u2022 " + string.Join(Environment.NewLine + "\u2022 ", filesInUse), "Files In Use", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 if (!string.IsNullOrEmpty(output.ToString()))
