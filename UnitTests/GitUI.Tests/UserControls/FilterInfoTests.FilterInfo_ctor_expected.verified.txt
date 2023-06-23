@@ -26,7 +26,7 @@
   ShowOnlyFirstParent: false,
   ShowReflogReferences: false,
   ShowSimplifyByDecoration: false,
-  ShowMergeCommits: true,
+  NoMergeCommits: false,
   ShowFullHistory: false,
   ShowSimplifyMerges: false,
   HasFilter: false,

@@ -205,7 +205,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.FollowRenamesInFileHistory)], true, false, false);
                 yield return (properties[nameof(AppSettings.FollowRenamesInFileHistoryExactOnly)], false, false, false);
                 yield return (properties[nameof(AppSettings.FullHistoryInFileHistory)], false, false, false);
-                yield return (properties[nameof(AppSettings.SimplifyMergesInFileHistory)], true, false, false);
+                yield return (properties[nameof(AppSettings.SimplifyMergesInFileHistory)], false, false, false);
                 yield return (properties[nameof(AppSettings.LoadFileHistoryOnShow)], true, false, false);
                 yield return (properties[nameof(AppSettings.LoadBlameOnShow)], true, false, false);
                 yield return (properties[nameof(AppSettings.DetectCopyInFileOnBlame)], true, false, false);
@@ -257,7 +257,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RelativeDate)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowGitNotes)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowAnnotatedTagsMessages)], true, false, false);
-                yield return (properties[nameof(AppSettings.ShowMergeCommits)], true, false, false);
+                yield return (properties[nameof(AppSettings.NoMergeCommits)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowTags)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowRevisionGridGraphColumn)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowAuthorAvatarColumn)], true, false, false);

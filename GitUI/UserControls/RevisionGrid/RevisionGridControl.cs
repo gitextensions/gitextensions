@@ -2463,9 +2463,9 @@ namespace GitUI
             PerformRefreshRevisions();
         }
 
-        internal void ToggleShowMergeCommits()
+        internal void ToggleNoMergeCommits()
         {
-            AppSettings.ShowMergeCommits = !AppSettings.ShowMergeCommits;
+            AppSettings.NoMergeCommits = !AppSettings.NoMergeCommits;
             PerformRefreshRevisions();
         }
 
@@ -3021,7 +3021,7 @@ namespace GitUI
                 case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(EventArgs.Empty); break;
                 case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
                 case Command.ToggleShowGitNotes: ToggleShowGitNotes(); break;
-                case Command.ToggleShowMergeCommits: ToggleShowMergeCommits(); break;
+                case Command.ToggleNoMergeCommits: ToggleNoMergeCommits(); break;
                 case Command.ToggleShowTags: ToggleShowTags(); break;
                 case Command.ShowAllBranches: ShowAllBranches(); break;
                 case Command.ShowCurrentBranchOnly: ShowCurrentBranchOnly(); break;

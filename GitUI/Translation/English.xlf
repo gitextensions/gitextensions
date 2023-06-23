@@ -7005,8 +7005,8 @@ Do you want to use this custom merge script?</source>
         <source>&amp;Ignore case</source>
         <target />
       </trans-unit>
-      <trans-unit id="MergeCommitsCheck.Text">
-        <source>Merge commi&amp;ts</source>
+      <trans-unit id="NoMergeCommitsCheck.Text">
+        <source>No merge commi&amp;ts</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">

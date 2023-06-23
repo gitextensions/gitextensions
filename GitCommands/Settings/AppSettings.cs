@@ -833,7 +833,7 @@ namespace GitCommands
 
         public static bool SimplifyMergesInFileHistory
         {
-            get => GetBool("simplifymergesinfileHistory", true);
+            get => GetBool("simplifymergesinfileHistory", false);
             set => SetBool("simplifymergesinfileHistory", value);
         }
 
@@ -1189,10 +1189,11 @@ namespace GitCommands
             set => SetBool("showannotatedtagsmessages", value);
         }
 
-        public static bool ShowMergeCommits
+        // Note: The meaning of this value is changed in the GUI, setting name is kept for compatibility
+        public static bool NoMergeCommits
         {
-            get => GetBool("showmergecommits", true);
-            set => SetBool("showmergecommits", value);
+            get => !GetBool("showmergecommits", true);
+            set => SetBool("showmergecommits", !value);
         }
 
         public static bool ShowTags
