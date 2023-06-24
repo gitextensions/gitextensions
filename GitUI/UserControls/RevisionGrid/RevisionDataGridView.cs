@@ -17,6 +17,7 @@ namespace GitUI.UserControls.RevisionGrid
     public sealed partial class RevisionDataGridView : DataGridView
     {
         private const int BackgroundThreadUpdatePeriod = 25;
+        private const int MouseWheelDeltaTimeout = 1500; // Mouse wheel idle time in milliseconds after which unconsumed wheel delta will be dropped.
         private static readonly AccessibleDataGridViewTextBoxCell _accessibleDataGridViewTextBoxCell = new();
 
         private readonly SolidBrush _alternatingRowBackgroundBrush;
@@ -35,6 +36,8 @@ namespace GitUI.UserControls.RevisionGrid
         private int _loadedToBeSelectedRevisionsCount = 0;
 
         private int _backgroundScrollTo;
+        private long _lastMouseWheelTickCount; // Timestamp of the last vertical scroll via mouse wheel.
+        private int _mouseWheelDeltaRemainder; // Corresponds to unconsumed scroll distance while scrolling via mouse wheel, see OnMouseWheel().
         private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
 
         private VisibleRowRange _visibleRowRange;
@@ -851,6 +854,12 @@ namespace GitUI.UserControls.RevisionGrid
 
         protected override void OnMouseWheel(MouseEventArgs e)
         {
+            int maxRowIndex = RowCount - 1;
+            if (maxRowIndex < 0)
+            {
+                return;
+            }
+
             if (ModifierKeys.HasFlag(Keys.Shift))
             {
                 int currentIndex = HorizontalScrollingOffset;
@@ -865,7 +874,67 @@ namespace GitUI.UserControls.RevisionGrid
             }
             else
             {
-                base.OnMouseWheel(e);
+                // Reset unconsumed wheel delta when the mouse wheel is idle, because there are at least
+                // two situations in which unconsumed wheel delta causes an issue:
+                // - When switching back to a notched mouse wheel. Whenever the scroll direction is changed,
+                //   unconsumed delta will reduce the absolute value of the total delta so that the threshold
+                //   for scrolling one row is never reached on the first wheel rotation.
+                // - When using a precision scrolling device, the unconsumed delta will offset the first scroll,
+                //   which makes the user experience a subtle "lag" or "leap" at beginning of a scroll.
+                long currentTickCount = Environment.TickCount64;
+                if (currentTickCount - _lastMouseWheelTickCount > MouseWheelDeltaTimeout)
+                {
+                    _mouseWheelDeltaRemainder = 0;
+                }
+
+                _lastMouseWheelTickCount = currentTickCount;
+
+                int visibleCompleteRowsCount = _rowHeight > 0 ? Height / _rowHeight : 0;
+
+                // The wheel might be configured to scroll more than one row at once.
+                // Respect this by scaling MouseEventArgs.Delta accordingly.
+                int scrollLines = SystemInformation.MouseWheelScrollLines;
+
+                // Value of -1 indicates the "One screen at a time" mouse option.
+                if (scrollLines == -1)
+                {
+                    scrollLines = visibleCompleteRowsCount;
+                }
+
+                scrollLines = Math.Max(1, scrollLines);
+
+                // Calculate the total wheel delta, which corresponds to the intended scrolling distance, from
+                // MouseEventArgs.Delta, which is usually a multiple of SystemInformation.MouseWheelScrollDelta
+                // for notched mouse wheels, but can be an arbitrary number in the case of precision scrolling
+                // devices like free-spinning mouse wheels or touchpads.
+                // Consume the total wheel delta in multiples of SystemInformation.MouseWheelScrollDelta, which
+                // is the wheel delta threshold for scrolling one row, and save the remainder for consumption
+                // during the next MouseWheel event.
+                int totalWheelDelta = (scrollLines * e.Delta) + _mouseWheelDeltaRemainder;
+                int wheelDeltaPerRow = SystemInformation.MouseWheelScrollDelta;
+                _mouseWheelDeltaRemainder = totalWheelDelta % wheelDeltaPerRow;
+                int rowDelta = -(totalWheelDelta - _mouseWheelDeltaRemainder) / wheelDeltaPerRow;
+                if (rowDelta != 0)
+                {
+                    int toRowIndex = Math.Clamp(FirstDisplayedScrollingRowIndex + rowDelta, 0, maxRowIndex);
+
+                    // Drop unconsumed wheel delta when reaching the upper or lower bound of the grid
+                    // to prevent the grid being stuck there for a moment.
+                    if (toRowIndex == 0 || toRowIndex + visibleCompleteRowsCount > maxRowIndex)
+                    {
+                        _mouseWheelDeltaRemainder = 0;
+                    }
+
+                    try
+                    {
+                        // This will raise the Scroll event.
+                        FirstDisplayedScrollingRowIndex = toRowIndex;
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        // Tried to scroll to nonexistent row.
+                    }
+                }
             }
         }
 
