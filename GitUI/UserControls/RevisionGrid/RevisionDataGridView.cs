@@ -428,12 +428,18 @@ namespace GitUI.UserControls.RevisionGrid
                 _loadedToBeSelectedRevisionsCount = ToBeSelectedObjectIds.Count;
             }
 
-            if (_loadedToBeSelectedRevisionsCount > 0 && _revisionGraph.Count > 0)
+            if (_revisionGraph.Count == 0)
+            {
+                MarkAsDataLoadingComplete();
+            }
+            else
             {
                 // Rows have not been selected yet
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
                     await this.SwitchToMainThreadAsync();
+
+                    SetRowCountAndSelectRowsIfReady();
 
                     if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
                     {
@@ -463,11 +469,6 @@ namespace GitUI.UserControls.RevisionGrid
                             }
                         }
                     }
-                    else
-                    {
-                        // Rows already selected once, reselect and refresh
-                        SelectRowsIfReady(RowCount);
-                    }
 
                     // Scroll to first selected only if selection is not changed
                     if (firstGraphIndex >= 0 && firstGraphIndex < Rows.Count && Rows[firstGraphIndex].Selected)
@@ -478,10 +479,6 @@ namespace GitUI.UserControls.RevisionGrid
                     MarkAsDataLoadingComplete();
                 })
                 .FileAndForget();
-            }
-            else
-            {
-                MarkAsDataLoadingComplete();
             }
 
             foreach (ColumnProvider columnProvider in _columnProviders)
@@ -620,10 +617,14 @@ namespace GitUI.UserControls.RevisionGrid
             ClearToBeSelected();
         }
 
-        private void SetRowCountAndSelectRowsIfReady(int rowCount)
+        private void SetRowCountAndSelectRowsIfReady()
         {
-            SetRowCount(rowCount);
-            SelectRowsIfReady(rowCount);
+            int rowCount = _revisionGraph.Count;
+            if (RowCount < rowCount)
+            {
+                SetRowCount(rowCount);
+                SelectRowsIfReady(rowCount);
+            }
         }
 
         private void OnScroll()
@@ -719,11 +720,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                int rowCount = _revisionGraph.Count;
-                if (RowCount < rowCount)
-                {
-                    SetRowCountAndSelectRowsIfReady(rowCount);
-                }
+                SetRowCountAndSelectRowsIfReady();
             }
         }
 
