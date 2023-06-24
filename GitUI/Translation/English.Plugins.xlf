@@ -939,6 +939,10 @@ Do you want to reset the configured path?</source>
         <source>Unable to open Jira query helper</source>
         <target />
       </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
         <target />
