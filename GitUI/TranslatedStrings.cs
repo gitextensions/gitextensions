@@ -165,6 +165,16 @@ following command.
 
 !!! THIS CAN BE DANGEROUS !!!");
 
+        private readonly TranslationString _seeErrorMessage = new("See error message...");
+        private readonly TranslationString _hideErrorMessage = new("Hide error message...");
+        private readonly TranslationString _reportTheIssue = new("Report the issue");
+        private readonly TranslationString _restartGitExtensions = new("Restart " + AppSettings.ApplicationName);
+        private readonly TranslationString _failedToLoadAnAssembly = new("Failed to load an assembly");
+        private readonly TranslationString _failedToLoadAnAssemblyHeader = new(AppSettings.ApplicationName + " encountered a problem while trying to load an assembly.");
+        private readonly TranslationString _failedToLoadAnAssemblyExplanation = new(@"The error is believed to be caused by Windows Update and restarting the application should solve the issue.
+
+If it is not the first time it happens, and you can consistently reproduce the issue, please report it.");
+
         // public only because of FormTranslate
         public TranslatedStrings()
         {
@@ -336,5 +346,13 @@ following command.
         public static string GitDubiousOwnershipSeeGitCommandOutput => _instance.Value._gitDubiousOwnershipSeeGitCommandOutput.Text;
         public static string GitDubiousOwnershipHideGitCommandOutput => _instance.Value._gitDubiousOwnershipHideGitCommandOutput.Text;
         public static string GitDubiousOwnershipTrustAllInstruction => _instance.Value._gitDubiousOwnershipTrustAllInstruction.Text;
+
+        public static string SeeErrorMessage => _instance.Value._seeErrorMessage.Text;
+        public static string HideErrorMessage => _instance.Value._hideErrorMessage.Text;
+        public static string ReportTheIssue => _instance.Value._reportTheIssue.Text;
+        public static string RelaunchGitExtensions => _instance.Value._restartGitExtensions.Text;
+        public static string FailedToLoadAnAssembly => _instance.Value._failedToLoadAnAssembly.Text;
+        public static string FailedToLoadAnAssemblyHeader => _instance.Value._failedToLoadAnAssemblyHeader.Text;
+        public static string FailedToLoadAnAssemblyExplanation => _instance.Value._failedToLoadAnAssemblyExplanation.Text;
     }
 }

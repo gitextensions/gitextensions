@@ -10076,6 +10076,20 @@ Select this commit to populate the full message.</source>
         <source>Exit code</source>
         <target />
       </trans-unit>
+      <trans-unit id="_failedToLoadAnAssembly.Text">
+        <source>Failed to load an assembly</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failedToLoadAnAssemblyExplanation.Text">
+        <source>The error is believed to be caused by Windows Update and restarting the application should solve the issue.
+
+If it is not the first time it happens, and you can consistently reproduce the issue, please report it.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failedToLoadAnAssemblyHeader.Text">
+        <source>Git Extensions encountered a problem while trying to load an assembly.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_filterFileInGrid.Text">
         <source>Filter file in &amp;grid</source>
         <target />
@@ -10147,6 +10161,10 @@ following command.
       </trans-unit>
       <trans-unit id="_gitSecurityError.Text">
         <source>Git security error</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_hideErrorMessage.Text">
+        <source>Hide error message...</source>
         <target />
       </trans-unit>
       <trans-unit id="_hoursAgo.Text">
@@ -10283,6 +10301,10 @@ Remote: {1}</source>
         <source>If you think this was caused by Git Extensions, you can report a bug for the team to investigate.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_reportTheIssue.Text">
+        <source>Report the issue</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
         <source>Reset changes</source>
         <target />
@@ -10293,6 +10315,10 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_resetSelectedLinesConfirmation.Text">
         <source>Are you sure you want to reset the changes to the selected lines?</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_restartGitExtensions.Text">
+        <source>Restart Git Extensions</source>
         <target />
       </trans-unit>
       <trans-unit id="_rotInactive.Text">
@@ -10329,6 +10355,10 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_secondsAgo.Text">
         <source>{0} {1:second|seconds} ago</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_seeErrorMessage.Text">
+        <source>See error message...</source>
         <target />
       </trans-unit>
       <trans-unit id="_settingsTypeToFind.Text">
