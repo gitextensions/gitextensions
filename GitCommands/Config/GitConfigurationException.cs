@@ -1,5 +1,8 @@
-﻿namespace GitCommands.Config
+﻿using System.Runtime.Serialization;
+
+namespace GitCommands.Config
 {
+    [Serializable]
     public class GitConfigurationException : Exception
     {
         public GitConfigurationException(string configPath, Exception? innerException)
@@ -16,6 +19,11 @@
             }
 
             ConfigPath = configPath;
+        }
+
+        protected GitConfigurationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
 
         public string ConfigPath { get; }

@@ -1,9 +1,12 @@
-﻿namespace GitExtUtils
+﻿using System.Runtime.Serialization;
+
+namespace GitExtUtils
 {
     /// <summary>
     /// Represents errors that occur during execution of an external operation,
     /// e.g. running a git operation or launching an external process.
     /// </summary>
+    [Serializable]
     public class ExternalOperationException : Exception
     {
         /// <summary>
@@ -27,6 +30,11 @@
             Arguments = arguments;
             WorkingDirectory = workingDirectory;
             ExitCode = exitCode;
+        }
+
+        protected ExternalOperationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
 
         /// <summary>

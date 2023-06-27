@@ -1,10 +1,12 @@
-﻿using GitExtUtils;
+﻿using System.Runtime.Serialization;
+using GitExtUtils;
 
 namespace GitUI.NBugReports
 {
     /// <summary>
     /// Represents errors that occur during execution of user-configured operation, e.g. a script.
     /// </summary>
+    [Serializable]
     public class UserExternalOperationException : ExternalOperationException
     {
         /// <summary>
@@ -26,6 +28,11 @@ namespace GitUI.NBugReports
         /// <param name="innerException">The exception that is the cause of the current exception.</param>
         public UserExternalOperationException(Exception innerException)
             : base(innerException: innerException)
+        {
+        }
+
+        protected UserExternalOperationException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
 
