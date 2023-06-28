@@ -45,6 +45,13 @@ namespace GitUI.UserControls.RevisionGrid
             _filterInfo = filterInfo;
         }
 
+        private void CheckIfChanged()
+        {
+            FilterInfo tempFilter = new();
+            UpdateFilterInfoFromUI(tempFilter);
+            btnResetDefault.Visible = tempFilter.HasFilter;
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -82,17 +89,6 @@ namespace GitUI.UserControls.RevisionGrid
             UpdateFilters();
         }
 
-        private void option_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateFilters();
-
-            // If CommitsLimitCheck was changed, the displayed value may need to be updated too
-            if (sender == CommitsLimitCheck && !CommitsLimitCheck.Checked)
-            {
-                _NO_TRANSLATE_CommitsLimit.Value = _filterInfo.CommitsLimitDefault;
-            }
-        }
-
         private void UpdateFilters()
         {
             Since.Enabled = SinceCheck.Checked;
@@ -110,36 +106,56 @@ namespace GitUI.UserControls.RevisionGrid
             BranchFilter.Enabled = BranchFilterCheck.Checked;
         }
 
-        private void OkClick(object sender, EventArgs e)
+        private void UpdateFilterInfoFromUI(FilterInfo filterInfo)
         {
             // Note: There is no validation that information (like branch filters) are valid
 
-            _filterInfo.ByDateFrom = SinceCheck.Checked;
-            _filterInfo.DateFrom = Since.Value;
-            _filterInfo.ByDateTo = CheckUntil.Checked;
-            _filterInfo.DateTo = Until.Value;
-            _filterInfo.ByAuthor = AuthorCheck.Checked;
-            _filterInfo.Author = Author.Text.Trim();
-            _filterInfo.ByCommitter = CommitterCheck.Checked;
-            _filterInfo.Committer = Committer.Text.Trim();
-            _filterInfo.ByMessage = MessageCheck.Checked;
-            _filterInfo.Message = Message.Text.Trim();
-            _filterInfo.ByDiffContent = DiffContentCheck.Checked;
-            _filterInfo.DiffContent = DiffContent.Text.Trim();
-            _filterInfo.IgnoreCase = IgnoreCase.Checked;
-            _filterInfo.ByCommitsLimit = CommitsLimitCheck.Checked;
-            _filterInfo.CommitsLimit = (int)_NO_TRANSLATE_CommitsLimit.Value;
-            _filterInfo.ByPathFilter = PathFilterCheck.Checked;
-            _filterInfo.PathFilter = PathFilter.Text;
-            _filterInfo.ByBranchFilter = BranchFilterCheck.Checked;
-            _filterInfo.BranchFilter = BranchFilter.Text;
-            _filterInfo.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
-            _filterInfo.ShowReflogReferences = ReflogCheck.Checked;
-            _filterInfo.ShowOnlyFirstParent = OnlyFirstParentCheck.Checked;
-            _filterInfo.NoMergeCommits = NoMergeCommitsCheck.Checked;
-            _filterInfo.ShowSimplifyByDecoration = SimplifyByDecorationCheck.Checked;
-            _filterInfo.ShowFullHistory = FullHistoryCheck.Checked;
-            _filterInfo.ShowSimplifyMerges = SimplifyMergesCheck.Checked;
+            filterInfo.ByDateFrom = SinceCheck.Checked;
+            filterInfo.DateFrom = Since.Value;
+            filterInfo.ByDateTo = CheckUntil.Checked;
+            filterInfo.DateTo = Until.Value;
+            filterInfo.ByAuthor = AuthorCheck.Checked;
+            filterInfo.Author = Author.Text.Trim();
+            filterInfo.ByCommitter = CommitterCheck.Checked;
+            filterInfo.Committer = Committer.Text.Trim();
+            filterInfo.ByMessage = MessageCheck.Checked;
+            filterInfo.Message = Message.Text.Trim();
+            filterInfo.ByDiffContent = DiffContentCheck.Checked;
+            filterInfo.DiffContent = DiffContent.Text.Trim();
+            filterInfo.IgnoreCase = IgnoreCase.Checked;
+            filterInfo.ByCommitsLimit = CommitsLimitCheck.Checked;
+            filterInfo.CommitsLimit = (int)_NO_TRANSLATE_CommitsLimit.Value;
+            filterInfo.ByPathFilter = PathFilterCheck.Checked;
+            filterInfo.PathFilter = PathFilter.Text;
+            filterInfo.ByBranchFilter = BranchFilterCheck.Checked;
+            filterInfo.BranchFilter = BranchFilter.Text;
+            filterInfo.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
+            filterInfo.ShowReflogReferences = ReflogCheck.Checked;
+            filterInfo.ShowOnlyFirstParent = OnlyFirstParentCheck.Checked;
+            filterInfo.NoMergeCommits = NoMergeCommitsCheck.Checked;
+            filterInfo.ShowSimplifyByDecoration = SimplifyByDecorationCheck.Checked;
+            filterInfo.ShowFullHistory = FullHistoryCheck.Checked;
+            filterInfo.ShowSimplifyMerges = SimplifyMergesCheck.Checked;
+        }
+
+        private void btnOk_Click(object sender, EventArgs e)
+        {
+            // Note: There is no validation that information (like branch filters) are valid
+
+            UpdateFilterInfoFromUI(_filterInfo);
+        }
+
+        private void option_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFilters();
+
+            // If CommitsLimitCheck was changed, the displayed value may need to be updated too
+            if (sender == CommitsLimitCheck && !CommitsLimitCheck.Checked)
+            {
+                _NO_TRANSLATE_CommitsLimit.Value = _filterInfo.CommitsLimitDefault;
+            }
+
+            CheckIfChanged();
         }
     }
 }

@@ -108,16 +108,6 @@ namespace GitUI.UserControls.RevisionGrid
             set => _branchFilter = value ?? string.Empty;
         }
 
-        public void SetBranchFilter(string filter)
-        {
-            // Set filtered branches if there is a filter, handled as all branches otherwise
-            ShowCurrentBranchOnly = false;
-
-            string newFilter = filter?.Trim() ?? string.Empty;
-            ByBranchFilter = !string.IsNullOrWhiteSpace(newFilter);
-            BranchFilter = newFilter;
-        }
-
         public bool IsShowAllBranchesChecked => !ByBranchFilter && !ShowCurrentBranchOnly;
 
         public bool IsShowCurrentBranchOnlyChecked => ShowCurrentBranchOnly;
@@ -178,7 +168,12 @@ namespace GitUI.UserControls.RevisionGrid
                 || ByDateFrom
                 || ByDateTo
                 || ShowOnlyFirstParent
-                || !string.IsNullOrWhiteSpace(BranchFilter);
+                || !string.IsNullOrWhiteSpace(BranchFilter)
+                || ByCommitsLimit
+                || ShowCurrentBranchOnly
+                || ShowReflogReferences
+                || ShowFullHistory
+                || ShowSimplifyMerges;
         }
 
         /// <summary>
@@ -607,6 +602,16 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             return condition ? valueTrue : valueFalse;
+        }
+
+        public void SetBranchFilter(string filter)
+        {
+            // Set filtered branches if there is a filter, handled as all branches otherwise
+            ShowCurrentBranchOnly = false;
+
+            string newFilter = filter?.Trim() ?? string.Empty;
+            ByBranchFilter = !string.IsNullOrWhiteSpace(newFilter);
+            BranchFilter = newFilter;
         }
     }
 }

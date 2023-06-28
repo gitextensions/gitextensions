@@ -29,7 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.Ok = new System.Windows.Forms.Button();
+            this.btnOk = new System.Windows.Forms.Button();
+            this.btnResetDefault = new System.Windows.Forms.Button();
             this._NO_TRANSLATE_lblSince = new System.Windows.Forms.Label();
             this.Since = new System.Windows.Forms.DateTimePicker();
             this.SinceCheck = new System.Windows.Forms.CheckBox();
@@ -80,20 +81,34 @@
             // 
             // ControlsPanel
             // 
-            this.ControlsPanel.Controls.Add(this.Ok);
+            this.ControlsPanel.Controls.Add(this.btnOk);
             this.ControlsPanel.Location = new System.Drawing.Point(0, 483);
             this.ControlsPanel.Size = new System.Drawing.Size(408, 39);
+            this.ControlsPanel.Controls.Add(this.btnResetDefault);
             // 
-            // Ok
+            // btnOk
             // 
-            this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Location = new System.Drawing.Point(320, 8);
-            this.Ok.Name = "Ok";
-            this.Ok.Size = new System.Drawing.Size(75, 23);
-            this.Ok.TabIndex = 0;
-            this.Ok.Text = "OK";
-            this.Ok.UseVisualStyleBackColor = true;
-            this.Ok.Click += new System.EventHandler(this.OkClick);
+            this.btnOk.AutoSize = true;
+            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOk.Location = new System.Drawing.Point(320, 8);
+            this.btnOk.MinimumSize = new System.Drawing.Size(75, 25);
+            this.btnOk.Name = "Ok";
+            this.btnOk.Size = new System.Drawing.Size(75, 25);
+            this.btnOk.TabIndex = 0;
+            this.btnOk.Text = "OK";
+            this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
+            // 
+            // btnResetDefault
+            // 
+            this.btnResetDefault.AutoSize = true;
+            this.btnResetDefault.Location = new Point(210, 8);
+            this.btnResetDefault.Name = "btnResetDefault";
+            this.btnResetDefault.Size = new Size(104, 25);
+            this.btnResetDefault.TabIndex = 1;
+            this.btnResetDefault.Text = "Reset to &defaults";
+            this.btnResetDefault.UseVisualStyleBackColor = true;
+            this.btnResetDefault.Visible = false;
             // 
             // _NO_TRANSLATE_lblSince
             // 
@@ -548,7 +563,7 @@
             // 
             // FormRevisionFilter
             // 
-            this.AcceptButton = this.Ok;
+            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(408, 527);
@@ -570,7 +585,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button Ok;
+        private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label _NO_TRANSLATE_lblSince;
         private System.Windows.Forms.CheckBox SinceCheck;
@@ -608,5 +623,6 @@
         private System.Windows.Forms.CheckBox FullHistoryCheck;
         private System.Windows.Forms.CheckBox SimplifyMergesCheck;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.Button btnResetDefault;
     }
 }
