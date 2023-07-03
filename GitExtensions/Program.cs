@@ -161,10 +161,10 @@ namespace GitExtensions
                         }
                     }
 
+                    GitUICommands uiCommands = new("");
+                    CommonLogic commonLogic = new(uiCommands.Module);
                     if (AppSettings.CheckSettings)
                     {
-                        GitUICommands uiCommands = new("");
-                        CommonLogic commonLogic = new(uiCommands.Module);
                         CheckSettingsLogic checkSettingsLogic = new(commonLogic);
                         SettingsPageHostMock fakePageHost = new(checkSettingsLogic);
                         using var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost);
@@ -175,6 +175,10 @@ namespace GitExtensions
                                 uiCommands.StartSettingsDialog();
                             }
                         }
+                    }
+                    else
+                    {
+                        CheckSettingsLogic.SolveEditor(commonLogic);
                     }
                 }
             }

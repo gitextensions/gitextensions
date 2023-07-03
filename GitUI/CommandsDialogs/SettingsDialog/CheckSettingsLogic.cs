@@ -1,5 +1,4 @@
 ﻿using GitCommands;
-using GitCommands.Settings;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using Microsoft.Win32;
@@ -10,7 +9,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     {
         public readonly CommonLogic CommonLogic;
         private GitModule? Module => CommonLogic.Module;
-        private ConfigFileSettings GlobalConfigFileSettings => CommonLogic.ConfigFileSettingsSet.GlobalSettings;
 
         public CheckSettingsLogic(CommonLogic commonLogic)
         {
@@ -27,7 +25,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             bool valid = SolveGitCommand();
             valid = SolveLinuxToolsDir() && valid;
             valid = SolveGitExtensionsDir() && valid;
-            valid = SolveEditor() && valid;
+            valid = SolveEditor(CommonLogic) && valid;
 
             CommonLogic.ConfigFileSettingsSet.EffectiveSettings.Save();
             CommonLogic.DistributedSettingsSet.EffectiveSettings.Save();
@@ -35,13 +33,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return valid;
         }
 
-        private bool SolveEditor()
+        public static bool SolveEditor(CommonLogic commonLogic)
         {
-            string? editor = CommonLogic.GetGlobalEditor();
+            string? editor = commonLogic.GetGlobalEditor();
 
             if (string.IsNullOrEmpty(editor))
             {
-                GlobalConfigFileSettings.SetPathValue("core.editor", EditorHelper.FileEditorCommand);
+                Environment.SetEnvironmentVariable(CommonLogic.AmbientGitEditorEnvVariableName, EditorHelper.FileEditorCommand);
             }
 
             return true;

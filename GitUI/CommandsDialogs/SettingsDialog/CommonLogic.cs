@@ -10,6 +10,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public sealed class CommonLogic : Translate
     {
+        internal const string PresetGitEditorEnvVariableName = "GIT_EDITOR";
+        internal const string AmbientGitEditorEnvVariableName = "EDITOR";
+
         private static readonly TranslationString _cantReadRegistry =
             new("Git Extensions has insufficient permissions to check the registry.");
 
@@ -95,10 +98,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             IEnumerable<string> GetEditorOptions()
             {
-                yield return Environment.GetEnvironmentVariable("GIT_EDITOR");
+                yield return Environment.GetEnvironmentVariable(PresetGitEditorEnvVariableName);
                 yield return ConfigFileSettingsSet.GlobalSettings.GetValue("core.editor");
                 yield return Environment.GetEnvironmentVariable("VISUAL");
-                yield return Environment.GetEnvironmentVariable("EDITOR");
+                yield return Environment.GetEnvironmentVariable(AmbientGitEditorEnvVariableName);
             }
         }
 
