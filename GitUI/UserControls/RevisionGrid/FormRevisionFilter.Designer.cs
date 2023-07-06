@@ -61,7 +61,7 @@
             this.CurrentBranchOnlyCheck = new System.Windows.Forms.CheckBox();
             this.ReflogCheck = new System.Windows.Forms.CheckBox();
             this.OnlyFirstParentCheck = new System.Windows.Forms.CheckBox();
-            this.NoMergeCommitsCheck = new System.Windows.Forms.CheckBox();
+            this.HideMergeCommitsCheck = new System.Windows.Forms.CheckBox();
             this.SimplifyByDecorationCheck = new System.Windows.Forms.CheckBox();
             this.FullHistoryCheck = new System.Windows.Forms.CheckBox();
             this.SimplifyMergesCheck = new System.Windows.Forms.CheckBox();
@@ -430,16 +430,16 @@
             // 
             // MergeCommitsCheck
             // 
-            this.NoMergeCommitsCheck.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.NoMergeCommitsCheck, 2);
-            this.NoMergeCommitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NoMergeCommitsCheck.Location = new System.Drawing.Point(76, 359);
-            this.NoMergeCommitsCheck.Name = "MergeCommitsCheck";
-            this.NoMergeCommitsCheck.Size = new System.Drawing.Size(305, 19);
-            this.NoMergeCommitsCheck.TabIndex = 31;
-            this.NoMergeCommitsCheck.Text = "No merge commi&ts";
-            this.NoMergeCommitsCheck.UseVisualStyleBackColor = true;
-            this.NoMergeCommitsCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
+            this.HideMergeCommitsCheck.AutoSize = true;
+            this.tableLayoutPanel1.SetColumnSpan(this.HideMergeCommitsCheck, 2);
+            this.HideMergeCommitsCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.HideMergeCommitsCheck.Location = new System.Drawing.Point(76, 359);
+            this.HideMergeCommitsCheck.Name = "MergeCommitsCheck";
+            this.HideMergeCommitsCheck.Size = new System.Drawing.Size(305, 19);
+            this.HideMergeCommitsCheck.TabIndex = 31;
+            this.HideMergeCommitsCheck.Text = "Hide merge commi&ts";
+            this.HideMergeCommitsCheck.UseVisualStyleBackColor = true;
+            this.HideMergeCommitsCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 
             // SimplifyByDecorationCheck
             // 
@@ -517,7 +517,7 @@
             this.tableLayoutPanel1.Controls.Add(this.CurrentBranchOnlyCheck, 1, 10);
             this.tableLayoutPanel1.Controls.Add(this.ReflogCheck, 1, 11);
             this.tableLayoutPanel1.Controls.Add(this.OnlyFirstParentCheck, 1, 12);
-            this.tableLayoutPanel1.Controls.Add(this.NoMergeCommitsCheck, 1, 13);
+            this.tableLayoutPanel1.Controls.Add(this.HideMergeCommitsCheck, 1, 13);
             this.tableLayoutPanel1.Controls.Add(this.SimplifyByDecorationCheck, 1, 14);
             this.tableLayoutPanel1.Controls.Add(this.FullHistoryCheck, 1, 15);
             this.tableLayoutPanel1.Controls.Add(this.SimplifyMergesCheck, 1, 16);
@@ -603,7 +603,7 @@
         private System.Windows.Forms.CheckBox CurrentBranchOnlyCheck;
         private System.Windows.Forms.CheckBox ReflogCheck;
         private System.Windows.Forms.CheckBox OnlyFirstParentCheck;
-        private System.Windows.Forms.CheckBox NoMergeCommitsCheck;
+        private System.Windows.Forms.CheckBox HideMergeCommitsCheck;
         private System.Windows.Forms.CheckBox SimplifyByDecorationCheck;
         private System.Windows.Forms.CheckBox FullHistoryCheck;
         private System.Windows.Forms.CheckBox SimplifyMergesCheck;

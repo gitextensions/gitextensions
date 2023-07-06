@@ -257,7 +257,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RelativeDate)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowGitNotes)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowAnnotatedTagsMessages)], true, false, false);
-                yield return (properties[nameof(AppSettings.NoMergeCommits)], false, false, false);
+                yield return (properties[nameof(AppSettings.HideMergeCommits)], false, false, false);
                 yield return (properties[nameof(AppSettings.ShowTags)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowRevisionGridGraphColumn)], true, false, false);
                 yield return (properties[nameof(AppSettings.ShowAuthorAvatarColumn)], true, false, false);

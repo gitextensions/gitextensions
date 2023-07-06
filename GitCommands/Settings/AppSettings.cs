@@ -1190,7 +1190,7 @@ namespace GitCommands
         }
 
         // Note: The meaning of this value is changed in the GUI, setting name is kept for compatibility
-        public static bool NoMergeCommits
+        public static bool HideMergeCommits
         {
             get => !GetBool("showmergecommits", true);
             set => SetBool("showmergecommits", !value);
