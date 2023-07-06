@@ -424,7 +424,7 @@
             this.OnlyFirstParentCheck.Name = "OnlyFirstParentCheck";
             this.OnlyFirstParentCheck.Size = new System.Drawing.Size(305, 19);
             this.OnlyFirstParentCheck.TabIndex = 30;
-            this.OnlyFirstParentCheck.Text = "Only &first parent";
+            this.OnlyFirstParentCheck.Text = "Show only &first parent";
             this.OnlyFirstParentCheck.UseVisualStyleBackColor = true;
             this.OnlyFirstParentCheck.CheckedChanged += new System.EventHandler(this.option_CheckedChanged);
             // 

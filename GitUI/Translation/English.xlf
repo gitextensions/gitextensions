@@ -7001,12 +7001,12 @@ Do you want to use this custom merge script?</source>
         <source>Full &amp;history</source>
         <target />
       </trans-unit>
-      <trans-unit id="IgnoreCase.Text">
-        <source>&amp;Ignore case</source>
-        <target />
-      </trans-unit>
       <trans-unit id="HideMergeCommitsCheck.Text">
         <source>Hide merge commi&amp;ts</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="IgnoreCase.Text">
+        <source>&amp;Ignore case</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -7014,7 +7014,7 @@ Do you want to use this custom merge script?</source>
         <target />
       </trans-unit>
       <trans-unit id="OnlyFirstParentCheck.Text">
-        <source>Only &amp;first parent</source>
+        <source>Show only &amp;first parent</source>
         <target />
       </trans-unit>
       <trans-unit id="ReflogCheck.Text">
@@ -9210,6 +9210,10 @@ See the changes in the commit form.</source>
         <source>For you own protection dropping more than 10 patch files at once is blocked!</source>
         <target />
       </trans-unit>
+      <trans-unit id="_hideMergeBaseCommit.Text">
+        <source>There is no common ancestor for the selected commits.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_invalidDiffContainsFilter.Text">
         <source>Filter text '{0}' not valid for "Diff contains" filter.</source>
         <target />
@@ -9220,10 +9224,6 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_maximizedColumn.HeaderText">
         <source>Message</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_hideMergeBaseCommit.Text">
-        <source>There is no common ancestor for the selected commits.</source>
         <target />
       </trans-unit>
       <trans-unit id="_noRevisionFoundError.Text">
