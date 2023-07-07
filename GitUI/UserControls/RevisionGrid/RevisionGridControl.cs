@@ -86,7 +86,7 @@ namespace GitUI
         private readonly TranslationString _rebaseBranchInteractive = new("Rebase branch interactively.");
         private readonly TranslationString _areYouSureRebase = new("Are you sure you want to rebase? This action will rewrite commit history.");
         private readonly TranslationString _dontShowAgain = new("Don't show me this message again.");
-        private readonly TranslationString _hideMergeBaseCommit = new("There is no common ancestor for the selected commits.");
+        private readonly TranslationString _noMergeBaseCommit = new("There is no common ancestor for the selected commits.");
         private readonly TranslationString _invalidDiffContainsFilter = new("Filter text '{0}' not valid for \"Diff contains\" filter.");
 
         private readonly FilterInfo _filterInfo = new();
@@ -2705,7 +2705,7 @@ namespace GitUI
             var mergeBaseCommitId = UICommands.GitModule.GitExecutable.GetOutput(args).TrimEnd('\n');
             if (string.IsNullOrWhiteSpace(mergeBaseCommitId))
             {
-                MessageBox.Show(_hideMergeBaseCommit.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_noMergeBaseCommit.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
