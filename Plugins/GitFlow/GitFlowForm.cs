@@ -397,13 +397,21 @@ namespace GitExtensions.Plugins.GitFlow
 
         private void DisplayHead()
         {
-            GitArgumentBuilder args = new("symbolic-ref") { "HEAD" };
-            var head = _gitUiCommands.GitModule.GitExecutable.GetOutput(args).Trim('*', ' ', '\n', '\r');
+            GitArgumentBuilder args = new("symbolic-ref")
+            {
+                "--quiet",
+                "HEAD"
+            };
+            ExecutionResult result = _gitUiCommands.GitModule.GitExecutable.Execute(args, throwOnErrorExit: false);
+
+            string head = result.ExitedSuccessfully
+                ? result.StandardOutput.Trim('*', ' ', '\n', '\r')
+                : "";
+
             lblHead.Text = head;
+            string currentRef = head.RemovePrefix(GitRefName.RefsHeadsPrefix);
 
-            var currentRef = head.RemovePrefix(GitRefName.RefsHeadsPrefix);
-
-            if (TryExtractBranchFromHead(currentRef, out var branchTypes, out var branchName))
+            if (TryExtractBranchFromHead(currentRef, out string branchTypes, out string branchName))
             {
                 cbManageType.SelectedItem = branchTypes;
                 CurrentBranch = branchName;
