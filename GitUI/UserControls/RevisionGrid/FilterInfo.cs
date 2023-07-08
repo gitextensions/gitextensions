@@ -149,10 +149,10 @@ namespace GitUI.UserControls.RevisionGrid
             set => AppSettings.ShowSimplifyByDecoration = value;
         }
 
-        public bool ShowMergeCommits
+        public bool HideMergeCommits
         {
-            get => AppSettings.ShowMergeCommits;
-            set => AppSettings.ShowMergeCommits = value;
+            get => AppSettings.HideMergeCommits;
+            set => AppSettings.HideMergeCommits = value;
         }
 
         public bool ShowFullHistory
@@ -191,7 +191,7 @@ namespace GitUI.UserControls.RevisionGrid
                 || ByMessage
                 || ByDiffContent
                 || !string.IsNullOrWhiteSpace(PathFilter)
-                || !ShowMergeCommits
+                || HideMergeCommits
                 || ShowSimplifyByDecoration;
         }
 
@@ -211,7 +211,7 @@ namespace GitUI.UserControls.RevisionGrid
             ByPathFilter = false;
             ByBranchFilter = false;
             ShowOnlyFirstParent = false;
-            ShowMergeCommits = true;
+            HideMergeCommits = false;
             ShowSimplifyByDecoration = false;
         }
 
@@ -349,7 +349,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// <param name="filter">ArgumentBuilder arg</param>
         private void GetLimitingRevisionFilter(ArgumentBuilder filter)
         {
-            if (!ShowMergeCommits)
+            if (HideMergeCommits)
             {
                 filter.Add("--no-merges");
             }
@@ -532,7 +532,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// <param name="filter">StringBuilder arg</param>
         private void GetLimitingFilterSummary(StringBuilder filter)
         {
-            // Ignore IgnoreCase, ShowMergeCommits, FullHistoryInFileHistory/SimplifyMergesInFileHistory (when history filtered)
+            // Ignore IgnoreCase, HideMergeCommits, FullHistoryInFileHistory/SimplifyMergesInFileHistory (when history filtered)
 
             if (ByPathFilter)
             {

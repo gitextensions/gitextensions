@@ -12,7 +12,7 @@
             ToggleDrawNonRelativesGray = 5,
             ToggleShowGitNotes = 6,
             //// <snip>
-            ToggleShowMergeCommits = 8,
+            ToggleHideMergeCommits = 8,
             ShowAllBranches = 9,
             ShowCurrentBranchOnly = 10,
             ShowFilteredBranches = 11,

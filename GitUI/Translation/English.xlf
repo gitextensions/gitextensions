@@ -7001,12 +7001,12 @@ Do you want to use this custom merge script?</source>
         <source>Full &amp;history</source>
         <target />
       </trans-unit>
-      <trans-unit id="IgnoreCase.Text">
-        <source>&amp;Ignore case</source>
+      <trans-unit id="HideMergeCommitsCheck.Text">
+        <source>Hide merge commi&amp;ts</source>
         <target />
       </trans-unit>
-      <trans-unit id="MergeCommitsCheck.Text">
-        <source>Merge commi&amp;ts</source>
+      <trans-unit id="IgnoreCase.Text">
+        <source>&amp;Ignore case</source>
         <target />
       </trans-unit>
       <trans-unit id="Ok.Text">
@@ -7014,7 +7014,7 @@ Do you want to use this custom merge script?</source>
         <target />
       </trans-unit>
       <trans-unit id="OnlyFirstParentCheck.Text">
-        <source>Only &amp;first parent</source>
+        <source>Show only &amp;first parent</source>
         <target />
       </trans-unit>
       <trans-unit id="ReflogCheck.Text">

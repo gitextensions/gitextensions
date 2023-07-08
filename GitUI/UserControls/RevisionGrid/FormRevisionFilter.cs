@@ -74,7 +74,7 @@ namespace GitUI.UserControls.RevisionGrid
             CurrentBranchOnlyCheck.Checked = rawFilterInfo.ShowCurrentBranchOnly;
             ReflogCheck.Checked = rawFilterInfo.ShowReflogReferences;
             OnlyFirstParentCheck.Checked = rawFilterInfo.ShowOnlyFirstParent;
-            MergeCommitsCheck.Checked = rawFilterInfo.ShowMergeCommits;
+            HideMergeCommitsCheck.Checked = rawFilterInfo.HideMergeCommits;
             SimplifyByDecorationCheck.Checked = rawFilterInfo.ShowSimplifyByDecoration;
             FullHistoryCheck.Checked = rawFilterInfo.ShowFullHistory;
             SimplifyMergesCheck.Checked = rawFilterInfo.ShowSimplifyMerges;
@@ -136,7 +136,7 @@ namespace GitUI.UserControls.RevisionGrid
             _filterInfo.ShowCurrentBranchOnly = CurrentBranchOnlyCheck.Checked;
             _filterInfo.ShowReflogReferences = ReflogCheck.Checked;
             _filterInfo.ShowOnlyFirstParent = OnlyFirstParentCheck.Checked;
-            _filterInfo.ShowMergeCommits = MergeCommitsCheck.Checked;
+            _filterInfo.HideMergeCommits = HideMergeCommitsCheck.Checked;
             _filterInfo.ShowSimplifyByDecoration = SimplifyByDecorationCheck.Checked;
             _filterInfo.ShowFullHistory = FullHistoryCheck.Checked;
             _filterInfo.ShowSimplifyMerges = SimplifyMergesCheck.Checked;
