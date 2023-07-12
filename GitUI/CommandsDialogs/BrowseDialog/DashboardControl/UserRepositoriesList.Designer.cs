@@ -35,15 +35,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Pinned", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Recent", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Other", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "C:\\Users\\russkie\\AppData\\Roaming\\GitExtensions\\GitExtensions",
             "refs/heads/master",
             "Favourite"}, 0);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserRepositoriesList));
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Default", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Default", System.Windows.Forms.HorizontalAlignment.Left);
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "C:\\Users\\russkie\\AppData\\Roaming\\GitExtensions\\GitExtensions",
             "refs/heads/master",
@@ -69,7 +66,7 @@
             this.tsmiRemoveMissingReposFromList = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListLarge = new System.Windows.Forms.ImageList(this.components);
             this.imageListSmall = new System.Windows.Forms.ImageList(this.components);
-            this.listViewAllRepositories = new GitUI.UserControls.NativeListView();
+            this.listViewFavouriteRepositories = new GitUI.UserControls.NativeListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
             this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
@@ -137,6 +134,8 @@
             this.textBoxSearch.Name = "textBoxSearch";
             this.textBoxSearch.Size = new System.Drawing.Size(188, 23);
             this.textBoxSearch.TabIndex = 0;
+            this.textBoxSearch.TextChanged += new System.EventHandler(this.TextBoxSearch_TextChanged);
+            this.textBoxSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSearch_KeyDown);
             // 
             // lblRecentRepositories
             // 
@@ -166,7 +165,7 @@
             // 
             this.flowLayoutPanel.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.flowLayoutPanel.Controls.Add(this.listViewRecentRepositories);
-            this.flowLayoutPanel.Controls.Add(this.listViewAllRepositories);
+            this.flowLayoutPanel.Controls.Add(this.listViewFavouriteRepositories);
             this.flowLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel.Location = new System.Drawing.Point(20, 18);
             this.flowLayoutPanel.Name = "flowLayoutPanel";
@@ -184,16 +183,6 @@
             this.clmhdrCategory});
             this.listViewRecentRepositories.ContextMenuStrip = this.contextMenuStripRepository;
             this.listViewRecentRepositories.FullRowSelect = true;
-            listViewGroup1.Header = "Pinned";
-            listViewGroup1.Name = "lvgPinned";
-            listViewGroup2.Header = "Recent";
-            listViewGroup2.Name = "lvgAllRecent";
-            listViewGroup3.Header = "Other";
-            listViewGroup3.Name = "lvgOther";
-            this.listViewRecentRepositories.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3});
             this.listViewRecentRepositories.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.listViewRecentRepositories.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
@@ -211,11 +200,11 @@
             this.listViewRecentRepositories.TileSize = new System.Drawing.Size(350, 50);
             this.listViewRecentRepositories.UseCompatibleStateImageBehavior = false;
             this.listViewRecentRepositories.View = System.Windows.Forms.View.Tile;
-            this.listViewRecentRepositories.GroupTaskLinkClick += new System.EventHandler<System.Windows.Forms.ListViewGroupEventArgs>(this.ListView1_GroupTaskLinkClick);
-            this.listViewRecentRepositories.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView1_DrawItem);
-            this.listViewRecentRepositories.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseClick);
-            this.listViewRecentRepositories.MouseLeave += new System.EventHandler(this.listView1_MouseLeave);
-            this.listViewRecentRepositories.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseMove);
+            this.listViewRecentRepositories.GroupTaskLinkClick += new System.EventHandler<System.Windows.Forms.ListViewGroupEventArgs>(this.ListViewRecentRepositories_GroupTaskLinkClick);
+            this.listViewRecentRepositories.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
+            this.listViewRecentRepositories.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewRecentRepositories_MouseClick);
+            this.listViewRecentRepositories.MouseLeave += new System.EventHandler(this.ListView_MouseLeave);
+            this.listViewRecentRepositories.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ListView_MouseMove);
             // 
             // clmhdrPath
             // 
@@ -304,37 +293,42 @@
             this.imageListSmall.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListSmall.Images.SetKeyName(0, "source_code.png");
             // 
-            // listViewAllRepositories
+            // listViewFavouriteRepositories
             // 
-            this.listViewAllRepositories.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.listViewAllRepositories.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listViewAllRepositories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.listViewFavouriteRepositories.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.listViewFavouriteRepositories.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listViewFavouriteRepositories.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
             this.columnHeader3});
-            this.listViewAllRepositories.ContextMenuStrip = this.contextMenuStripRepository;
-            this.listViewAllRepositories.FullRowSelect = true;
-            listViewGroup4.Header = "Default";
-            listViewGroup4.Name = "lvgDefaultGroup";
-            this.listViewAllRepositories.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup4});
-            this.listViewAllRepositories.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listViewAllRepositories.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            this.listViewFavouriteRepositories.ContextMenuStrip = this.contextMenuStripRepository;
+            this.listViewFavouriteRepositories.FullRowSelect = true;
+            listViewGroup1.Header = "Default";
+            listViewGroup1.Name = "lvgDefaultGroup";
+            this.listViewFavouriteRepositories.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1});
+            this.listViewFavouriteRepositories.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewFavouriteRepositories.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem2});
-            this.listViewAllRepositories.LargeImageList = this.imageListLarge;
-            this.listViewAllRepositories.Location = new System.Drawing.Point(0, 129);
-            this.listViewAllRepositories.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.listViewAllRepositories.MinimumSize = new System.Drawing.Size(500, 120);
-            this.listViewAllRepositories.MultiSelect = false;
-            this.listViewAllRepositories.Name = "listViewAllRepositories";
-            this.listViewAllRepositories.OwnerDraw = true;
-            this.listViewAllRepositories.ShowItemToolTips = true;
-            this.listViewAllRepositories.Size = new System.Drawing.Size(500, 120);
-            this.listViewAllRepositories.SmallImageList = this.imageListSmall;
-            this.listViewAllRepositories.TabIndex = 2;
-            this.listViewAllRepositories.TileSize = new System.Drawing.Size(350, 50);
-            this.listViewAllRepositories.UseCompatibleStateImageBehavior = false;
-            this.listViewAllRepositories.View = System.Windows.Forms.View.Tile;
+            this.listViewFavouriteRepositories.LargeImageList = this.imageListLarge;
+            this.listViewFavouriteRepositories.Location = new System.Drawing.Point(0, 129);
+            this.listViewFavouriteRepositories.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.listViewFavouriteRepositories.MinimumSize = new System.Drawing.Size(500, 120);
+            this.listViewFavouriteRepositories.MultiSelect = false;
+            this.listViewFavouriteRepositories.Name = "listViewFavouriteRepositories";
+            this.listViewFavouriteRepositories.OwnerDraw = true;
+            this.listViewFavouriteRepositories.ShowItemToolTips = true;
+            this.listViewFavouriteRepositories.Size = new System.Drawing.Size(500, 120);
+            this.listViewFavouriteRepositories.SmallImageList = this.imageListSmall;
+            this.listViewFavouriteRepositories.TabIndex = 2;
+            this.listViewFavouriteRepositories.TileSize = new System.Drawing.Size(350, 50);
+            this.listViewFavouriteRepositories.UseCompatibleStateImageBehavior = false;
+            this.listViewFavouriteRepositories.View = System.Windows.Forms.View.Tile;
+            this.listViewFavouriteRepositories.GroupTaskLinkClick += new System.EventHandler<System.Windows.Forms.ListViewGroupEventArgs>(this.ListViewFavouriteRepositories_GroupTaskLinkClick);
+            this.listViewFavouriteRepositories.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView_DrawItem);
+            this.listViewFavouriteRepositories.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewAllRepositories_MouseClick);
+            this.listViewFavouriteRepositories.MouseLeave += new System.EventHandler(this.ListView_MouseLeave);
+            this.listViewFavouriteRepositories.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ListView_MouseMove);
             // 
             // columnHeader1
             // 
@@ -462,7 +456,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuTop;
         private System.Windows.Forms.ToolStripMenuItem mnuConfigure;
         private System.Windows.Forms.TextBox textBoxSearch;
-        private UserControls.NativeListView listViewAllRepositories;
+        private UserControls.NativeListView listViewFavouriteRepositories;
         private ColumnHeader columnHeader1;
         private ColumnHeader columnHeader2;
         private ColumnHeader columnHeader3;
