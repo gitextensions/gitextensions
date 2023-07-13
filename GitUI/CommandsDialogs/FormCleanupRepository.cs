@@ -52,9 +52,19 @@ namespace GitUI.CommandsDialogs
         {
             if (MessageBox.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                var cleanUpCmd = GitCommandHelpers.CleanCmd(GetCleanMode(), dryRun: false, directories: RemoveDirectories.Checked, paths: GetPathArgumentFromGui());
+                string pathArgument = GetPathArgumentFromGui();
+                CleanMode mode = GetCleanMode();
+                var cleanUpCmd = GitCommandHelpers.CleanCmd(mode, dryRun: false, directories: RemoveDirectories.Checked, paths: pathArgument);
+
                 string cmdOutput = FormProcess.ReadDialog(this, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 PreviewOutput.Text = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
+
+                if (CleanSubmodules.Checked)
+                {
+                    var cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun: false, directories: RemoveDirectories.Checked, paths: pathArgument);
+                    cmdOutput = FormProcess.ReadDialog(this, arguments: cleanSubmodulesCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                    PreviewOutput.Text += EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
+                }
             }
         }
 

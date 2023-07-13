@@ -542,6 +542,25 @@ namespace GitCommands.Git.Commands
             };
         }
 
+        /// <summary>
+        /// Arguments for cleaning submodules.
+        /// </summary>
+        /// <param name="mode">The cleanup mode what to delete.</param>
+        /// <param name="dryRun">Only show what would be deleted.</param>
+        /// <param name="directories">Delete untracked directories too.</param>
+        /// <param name="paths">Limit to specific paths.</param>
+        public static ArgumentString CleanSubmodules(CleanMode mode, bool dryRun, bool directories, string? paths = null)
+        {
+            return new GitArgumentBuilder("submodule")
+            {
+                "foreach --recursive git clean",
+                mode,
+                { directories, "-d" },
+                { dryRun, "--dry-run", "-f" },
+                paths
+            };
+        }
+
         public static ArgumentString GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
             GitArgumentBuilder args = new("status", gitOptions: noLocks ? (ArgumentString)"--no-optional-locks" : default)

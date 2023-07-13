@@ -510,6 +510,18 @@ namespace GitCommandsTests.Git.Commands
             Assert.AreEqual(expected, GitCommandHelpers.CleanCmd(mode, dryRun, directories, paths).Arguments);
         }
 
+        [TestCase(CleanMode.OnlyNonIgnored, true, false, null, "clean --dry-run")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "clean -f")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, true, null, "clean -d -f")]
+        [TestCase(CleanMode.OnlyNonIgnored, false, false, "paths", "clean -f paths")]
+        [TestCase(CleanMode.OnlyIgnored, false, false, null, "clean -X -f")]
+        [TestCase(CleanMode.All, false, false, null, "clean -x -f")]
+        public void CleanupSubmoduleCommand(CleanMode mode, bool dryRun, bool directories, string paths, string expected)
+        {
+            string subExpected = "submodule foreach --recursive git " + expected;
+            Assert.AreEqual(subExpected, GitCommandHelpers.CleanSubmodules(mode, dryRun, directories, paths).Arguments);
+        }
+
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]
