@@ -759,6 +759,9 @@
         <Feature Id="AzureDevOpsIntegration" Title="Azure DevOps and TFS &gt;= 2015 integration" Level="1">
           <ComponentRef Id="AzureDevOpsIntegration.dll" />
         </Feature>
+        <Feature Id="GitlabIntegration" Title="Gitlab integration" Level="1">
+          <ComponentRef Id="GitlabIntegration.dll" />
+        </Feature>
         <Feature Id="JiraCommitHintPlugin" Title="Jira Commit Hint Plugin" Level="1">
           <ComponentRef Id="JiraCommitHintPlugin.dll" />
           <ComponentRef Id="Atlassian.Jira.dll" />
