@@ -209,6 +209,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugReporter.Tests", "UnitTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugReporter.IntegrationTests", "IntegrationTests\BugReporter.IntegrationTests\BugReporter.IntegrationTests.csproj", "{7695AF7E-99B3-4B3A-8588-AC9ABD378293}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitExtensions.Plugins.GitlabIntegration", "Plugins\BuildServerIntegration\GitlabIntegration\GitExtensions.Plugins.GitlabIntegration.csproj", "{B12E0ABB-4E0D-47B4-BFF2-30EEDA4E279B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -389,6 +391,10 @@ Global
 		{7695AF7E-99B3-4B3A-8588-AC9ABD378293}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7695AF7E-99B3-4B3A-8588-AC9ABD378293}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7695AF7E-99B3-4B3A-8588-AC9ABD378293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B12E0ABB-4E0D-47B4-BFF2-30EEDA4E279B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B12E0ABB-4E0D-47B4-BFF2-30EEDA4E279B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B12E0ABB-4E0D-47B4-BFF2-30EEDA4E279B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B12E0ABB-4E0D-47B4-BFF2-30EEDA4E279B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -449,6 +455,7 @@ Global
 		{BDBBD17E-5637-4E48-A44D-E2FE8486EA7C} = {34B9B39D-2C8D-42AF-B4B7-FA4F054D2721}
 		{CE7729AF-FEE6-4EAA-B9DB-70358A1A4EF2} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{7695AF7E-99B3-4B3A-8588-AC9ABD378293} = {958D7C09-1FA5-4438-A6A0-B3E8BD96E291}
+		{B12E0ABB-4E0D-47B4-BFF2-30EEDA4E279B} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
