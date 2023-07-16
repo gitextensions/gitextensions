@@ -15,7 +15,7 @@ namespace GitExtensions.Plugins.GitlabIntegration
     public class GitlabAdapter : IBuildServerAdapter
     {
         public const string PluginName = "Gitlab";
-        private readonly Dictionary<string, int> _loadedItems = new();
+        private readonly Dictionary<string, DateTime> _loadedItems = new();
 
         private readonly IGitlabApiClientFactory _apiClientFactory;
         private IGitlabApiClient? _apiClient;
@@ -93,9 +93,9 @@ namespace GitExtensions.Plugins.GitlabIntegration
 
         private void ProcessLoadedBuild(GitlabPipeline item, IObserver<BuildInfo> observer)
         {
-            if (_loadedItems.ContainsKey(item.sha) == false || _loadedItems[item.sha] < item.id)
+            if (_loadedItems.ContainsKey(item.sha) == false || _loadedItems[item.sha] < item.updated_at)
             {
-                _loadedItems[item.sha] = item.id;
+                _loadedItems[item.sha] = item.updated_at;
                 observer.OnNext(item.ToBuildInfo());
             }
         }

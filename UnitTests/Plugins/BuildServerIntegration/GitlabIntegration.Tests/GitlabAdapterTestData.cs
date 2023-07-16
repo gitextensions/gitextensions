@@ -94,20 +94,40 @@ namespace GitlabIntegrationTests
                         sha = "2b2fb529ba9f24646e5a3a6daf1c42a27940ac26"
                     }));
 
+            Builds.Add(-7,
+                new Tuple<BuildInfo, GitlabPipeline>(
+                    new BuildInfo
+                    {
+                        Id = "7",
+                        CommitHashList = new[] { ObjectId.Parse("cd4090d807d75f165a3cf0000a1773422fdf56ca") },
+                        Duration = 600000000,
+                        Status = BuildInfo.BuildStatus.InProgress,
+                    },
+                    new GitlabPipeline
+                    {
+                        id = 7,
+                        sha = "cd4090d807d75f165a3cf0000a1773422fdf56ca",
+                        status = "running",
+                        created_at = new DateTime(2023, 7, 16, 13, 0, 0),
+                        updated_at = new DateTime(2023, 7, 16, 13, 1, 0)
+                    }));
+
             Builds.Add(7,
                 new Tuple<BuildInfo, GitlabPipeline>(
                     new BuildInfo
                     {
                         Id = "7",
                         CommitHashList = new[] { ObjectId.Parse("cd4090d807d75f165a3cf0000a1773422fdf56ca") },
-                        Duration = 0,
-                        Status = BuildInfo.BuildStatus.InProgress
+                        Duration = 900000000,
+                        Status = BuildInfo.BuildStatus.Success
                     },
                     new GitlabPipeline
                     {
                         id = 7,
                         sha = "cd4090d807d75f165a3cf0000a1773422fdf56ca",
-                        status = "running"
+                        status = "success",
+                        created_at = new DateTime(2023, 7, 16, 13, 0, 0),
+                        updated_at = new DateTime(2023, 7, 16, 13, 1, 30)
                     }));
         }
 
