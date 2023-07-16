@@ -1,75 +1,51 @@
-﻿using System.Net;
+﻿using System.Collections.Specialized;
+using System.Web;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
-using Microsoft;
-using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
 {
-    internal class GitlabApiClient
+    public interface IGitlabApiClient : IDisposable
     {
-        private readonly HttpClient _httpClient;
-        protected readonly string InstanceUrl;
+        Task<PagedResponse<GitlabPipeline>> GetPipelinesAsync(DateTime? sinceDate, bool running, int pageNumber);
+        string InstanceUrl { get; }
+    }
 
-        public GitlabApiClient(string instanceUrl, string apiToken)
+    public class GitlabApiClient : GitlabApiClientBase, IGitlabApiClient
+    {
+        private const int _pageSize = 100;
+        private readonly int _projectId;
+
+        public GitlabApiClient(string instanceUrl, string apiToken, int projectId)
+            : base(instanceUrl, apiToken)
         {
-            InstanceUrl = instanceUrl;
-            _httpClient = InitClient(instanceUrl, apiToken);
+            _projectId = projectId;
         }
 
-        private HttpClient InitClient(string instanceUrl, string apiToken)
+        public async Task<PagedResponse<GitlabPipeline>> GetPipelinesAsync(DateTime? sinceDate, bool running, int pageNumber)
         {
-            HttpClient? client = new()
-            {
-                BaseAddress = new Uri(instanceUrl)
-            };
-            client.DefaultRequestHeaders.Add("PRIVATE-TOKEN", apiToken);
+            UriBuilder pipelinesUriBuilder = new($"{InstanceUrl}/api/v4/projects/{_projectId}/pipelines");
+            NameValueCollection query = HttpUtility.ParseQueryString(pipelinesUriBuilder.Query);
 
-            return client;
-        }
-
-        private async Task<HttpResponseMessage> HttpGetAsync(Uri url)
-        {
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            if (sinceDate != null)
             {
-                throw new UnauthorizedAccessException();
+                query["updated_after"] = sinceDate.Value.ToString("u");
             }
 
-            response.EnsureSuccessStatusCode();
-            return response;
-        }
-
-        private int GetIntHeader(HttpResponseMessage response, string key)
-        {
-            if (response.Headers.TryGetValues(key, out IEnumerable<string>? values))
+            if (running)
             {
-                if (int.TryParse(values.First(), out int result))
-                {
-                    return result;
-                }
+                query["scope"] = "running";
+            }
+            else
+            {
+                query["scope"] = "finished";
             }
 
-            throw new HttpRequestException($"Unable to extract header with key {key}");
-        }
+            query["page"] = pageNumber.ToString();
+            query["per_page"] = _pageSize.ToString();
 
-        protected async Task<PagedResponse<TItem>> LoadListAsync<TItem>(Uri url)
-        {
-            using HttpResponseMessage response = await HttpGetAsync(url);
-            Validates.NotNull(response);
+            pipelinesUriBuilder.Query = query.ToString() ?? string.Empty;
 
-            string json = await response.Content.ReadAsStringAsync();
-
-            IEnumerable<TItem>? list = JsonConvert.DeserializeObject<IEnumerable<TItem>>(json);
-
-            PagedResponse<TItem> result = new()
-            {
-                Total = GetIntHeader(response, "X-Total"),
-                TotalPages = GetIntHeader(response, "X-Total-Pages"),
-                PageNumber = GetIntHeader(response, "X-Page"),
-                PageSize = GetIntHeader(response, "X-Per-Page"), Items = list
-            };
-
-            return result;
+            return await LoadListAsync<GitlabPipeline>(pipelinesUriBuilder.Uri);
         }
     }
 }

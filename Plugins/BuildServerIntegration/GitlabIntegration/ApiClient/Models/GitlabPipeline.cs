@@ -3,9 +3,9 @@ using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models
 {
-    internal class GitlabPipeline
+    public class GitlabPipeline
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string status { get; set; }
         public string sha { get; set; }
 
@@ -17,10 +17,11 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models
 
         public BuildInfo ToBuildInfo()
         {
-            BuildInfo result = new();
-
-            result.Id = id;
-            result.CommitHashList = new List<ObjectId> { ObjectId.Parse(sha) };
+            BuildInfo result = new()
+            {
+                Id = id.ToString(),
+                CommitHashList = new List<ObjectId> { ObjectId.Parse(sha) }
+            };
 
             switch (status)
             {

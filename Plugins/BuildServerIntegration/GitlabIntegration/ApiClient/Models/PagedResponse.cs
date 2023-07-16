@@ -1,6 +1,6 @@
 ﻿namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models
 {
-    internal class PagedResponse<TItem>
+    public class PagedResponse<TItem>
     {
         public int Total { get; set; }
         public int PageSize { get; set; }
