@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient;
@@ -20,7 +21,10 @@ namespace GitExtensions.Plugins.GitlabIntegration
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
         {
-            _apiClient = new ProjectGitlabApiClient("", "", 0);
+             _apiClient = new ProjectGitlabApiClient(
+                 config.GetString("InstanceUrl", string.Empty),
+                 config.GetString("ApiToken", string.Empty),
+                 config.GetInt("ProjectId", 0));
         }
 
         public string UniqueKey { get; }
@@ -37,6 +41,11 @@ namespace GitExtensions.Plugins.GitlabIntegration
 
         private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool running = false)
         {
+            if (running)
+            {
+                return Observable.Empty<BuildInfo>();
+            }
+
             return Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
         }
 
@@ -57,6 +66,8 @@ namespace GitExtensions.Plugins.GitlabIntegration
                     TaskScheduler.Current);
             }
 
+            firstPage.Items.ForEach(item => observer.OnNext(item.ToBuildInfo()));
+
             await Task.Factory.ContinueWhenAll(pagesTasks, t =>
             {
                 observer.OnCompleted();
@@ -65,7 +76,6 @@ namespace GitExtensions.Plugins.GitlabIntegration
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
     }
 }

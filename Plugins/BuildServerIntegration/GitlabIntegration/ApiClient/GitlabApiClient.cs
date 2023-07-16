@@ -20,14 +20,14 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
             {
                 BaseAddress = new Uri(instanceUrl)
             };
-            _httpClient.DefaultRequestHeaders.Add("PRIVATE-TOKEN", apiToken);
+            client.DefaultRequestHeaders.Add("PRIVATE-TOKEN", apiToken);
 
             return client;
         }
 
         private async Task<HttpResponseMessage> HttpGetAsync(Uri url)
         {
-            using HttpResponseMessage response = await _httpClient.GetAsync(url);
+            HttpResponseMessage response = await _httpClient.GetAsync(url);
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 throw new UnauthorizedAccessException();
@@ -52,20 +52,14 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
 
         protected async Task<PagedResponse<TItem>> LoadListAsync<TItem>(Uri url)
         {
-            HttpResponseMessage response = await HttpGetAsync(url);
+            using HttpResponseMessage response = await HttpGetAsync(url);
             Validates.NotNull(response);
 
             string json = await response.Content.ReadAsStringAsync();
 
             IEnumerable<TItem>? list = JsonConvert.DeserializeObject<IEnumerable<TItem>>(json);
 
-            PagedResponse<TItem> result = new()
-            {
-                Total = GetIntHeader(response, "X-Total"),
-                PageNumber = GetIntHeader(response, "X-Page"),
-                PageSize = GetIntHeader(response, "X-Per-Page"),
-                Items = list
-            };
+            PagedResponse<TItem> result = new() { Total = GetIntHeader(response, "X-Total"), PageNumber = GetIntHeader(response, "X-Page"), PageSize = GetIntHeader(response, "X-Per-Page"), Items = list };
 
             return result;
         }

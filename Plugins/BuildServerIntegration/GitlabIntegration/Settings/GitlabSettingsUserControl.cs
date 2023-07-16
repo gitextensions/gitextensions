@@ -1,20 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.ComponentModel.Composition;
+using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.BuildServerIntegration;
+using ResourceManager;
 
 namespace GitExtensions.Plugins.GitlabIntegration.Settings
 {
-    public partial class GitlabSettingsUserControl : UserControl
+    [Export(typeof(IBuildServerSettingsUserControl))]
+    [BuildServerSettingsUserControlMetadata(GitlabAdapter.PluginName)]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
+    public partial class GitlabSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
         public GitlabSettingsUserControl()
         {
             InitializeComponent();
+        }
+
+        public void Initialize(string defaultProjectName, IEnumerable<string?> remotes)
+        {
+        }
+
+        public void LoadSettings(ISettingsSource buildServerConfig)
+        {
+            InstanceUrlTextBox.Text = buildServerConfig.GetString("InstanceUrl", null);
+            ProjectIdTextBox.Text = buildServerConfig.GetInt("ProjectId", 0).ToString();
+            ApiTokenTextBox.Text = buildServerConfig.GetString("ApiToken", null);
+        }
+
+        public void SaveSettings(ISettingsSource buildServerConfig)
+        {
+            buildServerConfig.SetString("InstanceUrl", InstanceUrlTextBox.Text.NullIfEmpty());
+            if (int.TryParse(ProjectIdTextBox.Text, out int projectId))
+            {
+                buildServerConfig.SetInt("ProjectId", projectId);
+            }
+
+            buildServerConfig.SetString("ApiToken", ApiTokenTextBox.Text.NullIfEmpty());
         }
     }
 }
