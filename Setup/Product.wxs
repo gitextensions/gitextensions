@@ -378,6 +378,9 @@
       <Component Id="AzureDevOpsIntegration.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.AzureDevOpsIntegration.dll" />
       </Component>
+      <Component Id="GitlabIntegration.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitlabIntegration.dll" />
+      </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginManagerDir">
       <Component Id="GitExtensions.PluginManager.dll" Guid="*">
