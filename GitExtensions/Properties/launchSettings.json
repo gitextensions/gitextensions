@@ -1,7 +1,8 @@
 {
   "profiles": {
     "GitExtensions": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "browse \"$(MSBuildThisFileDirectory)..\""
     },
     "Dashboard": {
       "commandName": "Project"
