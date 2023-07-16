@@ -8,9 +8,11 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
     internal class GitlabApiClient
     {
         private readonly HttpClient _httpClient;
+        protected readonly string InstanceUrl;
 
         public GitlabApiClient(string instanceUrl, string apiToken)
         {
+            InstanceUrl = instanceUrl;
             _httpClient = InitClient(instanceUrl, apiToken);
         }
 
@@ -59,7 +61,13 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
 
             IEnumerable<TItem>? list = JsonConvert.DeserializeObject<IEnumerable<TItem>>(json);
 
-            PagedResponse<TItem> result = new() { Total = GetIntHeader(response, "X-Total"), PageNumber = GetIntHeader(response, "X-Page"), PageSize = GetIntHeader(response, "X-Per-Page"), Items = list };
+            PagedResponse<TItem> result = new()
+            {
+                Total = GetIntHeader(response, "X-Total"),
+                TotalPages = GetIntHeader(response, "X-Total-Pages"),
+                PageNumber = GetIntHeader(response, "X-Page"),
+                PageSize = GetIntHeader(response, "X-Per-Page"), Items = list
+            };
 
             return result;
         }

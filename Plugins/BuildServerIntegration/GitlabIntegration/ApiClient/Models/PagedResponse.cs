@@ -7,5 +7,6 @@
         public int PageNumber { get; set; }
 
         public IEnumerable<TItem> Items { get; set; }
+        public int TotalPages { get; set; }
     }
 }

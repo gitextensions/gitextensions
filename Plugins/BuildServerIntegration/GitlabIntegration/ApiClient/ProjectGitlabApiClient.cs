@@ -1,4 +1,6 @@
-﻿using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
+﻿using System.Collections.Specialized;
+using System.Web;
+using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 
 namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
 {
@@ -14,9 +16,29 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
 
         public async Task<PagedResponse<GitlabPipeline>> GetPipelinesAsync(DateTime? sinceDate, bool running, int pageNumber, int pageSize)
         {
-            Uri pipelinesUri = new($"api/v4/projects/{_projectId}/pipelines", UriKind.Relative);
+            UriBuilder pipelinesUriBuilder = new($"{InstanceUrl}/api/v4/projects/{_projectId}/pipelines");
+            NameValueCollection? query = HttpUtility.ParseQueryString(pipelinesUriBuilder.Query);
 
-            return await LoadListAsync<GitlabPipeline>(pipelinesUri);
+            if (sinceDate != null)
+            {
+                query["updated_after"] = sinceDate.Value.ToString("u");
+            }
+
+            if (running)
+            {
+                query["scope"] = "running";
+            }
+            else
+            {
+                query["scope"] = "finished";
+            }
+
+            query["page"] = pageNumber.ToString();
+            query["per_page"] = pageSize.ToString();
+
+            pipelinesUriBuilder.Query = query.ToString() ?? string.Empty;
+
+            return await LoadListAsync<GitlabPipeline>(pipelinesUriBuilder.Uri);
         }
     }
 }

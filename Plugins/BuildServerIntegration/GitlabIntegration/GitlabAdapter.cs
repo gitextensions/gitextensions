@@ -16,6 +16,7 @@ namespace GitExtensions.Plugins.GitlabIntegration
     {
         private const int _pageSize = 100;
         public const string PluginName = "Gitlab";
+        private readonly Dictionary<string, DateTime> _loadedItems = new();
 
         private ProjectGitlabApiClient _apiClient;
 
@@ -41,41 +42,48 @@ namespace GitExtensions.Plugins.GitlabIntegration
 
         private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool running = false)
         {
-            if (running)
-            {
-                return Observable.Empty<BuildInfo>();
-            }
-
             return Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
         }
 
         private async Task ObserveBuildsAsync(DateTime? sinceDate, bool running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
-            PagedResponse<GitlabPipeline> firstPage = await _apiClient.GetPipelinesAsync(sinceDate, running, 0, _pageSize);
+            PagedResponse<GitlabPipeline> firstPage = await _apiClient.GetPipelinesAsync(sinceDate, running, 1, _pageSize);
+            firstPage.Items.ForEach(item => ProcessLoadedBuild(item, observer));
 
-            Task[] pagesTasks = new Task[firstPage.Total / firstPage.PageSize];
-            for (int i = 1; i < firstPage.Total / firstPage.PageSize; i++)
+            if (firstPage.TotalPages > 1)
             {
-                Task<PagedResponse<GitlabPipeline>> pageTask = _apiClient.GetPipelinesAsync(sinceDate, running, i, _pageSize);
-                pagesTasks[i - 1] = pageTask.ContinueWith(x =>
-                    {
-                        x.Result.Items.ForEach(item => observer.OnNext(item.ToBuildInfo()));
-                    },
-                    cancellationToken,
-                    TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted,
-                    TaskScheduler.Current);
+                Task[] pagesTasks = new Task[firstPage.TotalPages - 1];
+                for (int i = 2; i <= firstPage.TotalPages; i++)
+                {
+                    Task<PagedResponse<GitlabPipeline>> pageTask = _apiClient.GetPipelinesAsync(sinceDate, running, i, _pageSize);
+                    pagesTasks[i - 2] = pageTask.ContinueWith(x =>
+                        {
+                            x.Result.Items.ForEach(item => ProcessLoadedBuild(item, observer));
+                        },
+                        cancellationToken,
+                        TaskContinuationOptions.None,
+                        TaskScheduler.Current);
+                }
+
+                await Task.Factory.ContinueWhenAll(pagesTasks, t =>
+                {
+                    observer.OnCompleted();
+                }, cancellationToken);
             }
+        }
 
-            firstPage.Items.ForEach(item => observer.OnNext(item.ToBuildInfo()));
-
-            await Task.Factory.ContinueWhenAll(pagesTasks, t =>
+        private void ProcessLoadedBuild(GitlabPipeline item, IObserver<BuildInfo> observer)
+        {
+            if (_loadedItems.ContainsKey(item.sha) == false || _loadedItems[item.sha] < item.updated_at)
             {
-                observer.OnCompleted();
-            }, cancellationToken);
+                _loadedItems[item.sha] = item.updated_at;
+                observer.OnNext(item.ToBuildInfo());
+            }
         }
 
         public void Dispose()
         {
+            // _apiClient.Dispose();
         }
     }
 }
