@@ -13,6 +13,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
         public GitlabSettingsUserControl()
         {
             InitializeComponent();
+            InitializeComplete();
         }
 
         public void Initialize(string defaultProjectName, IEnumerable<string?> remotes)
