@@ -2,6 +2,7 @@
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitUI.HelperDialogs;
+using GitUI.LeftPanel;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -43,9 +44,18 @@ namespace GitUI.CommandsDialogs
 
         private void Preview_Click(object sender, EventArgs e)
         {
-            var cleanUpCmd = GitCommandHelpers.CleanCmd(GetCleanMode(), dryRun: true, directories: RemoveDirectories.Checked, paths: GetPathArgumentFromGui());
+            string pathArgument = GetPathArgumentFromGui();
+            CleanMode mode = GetCleanMode();
+            var cleanUpCmd = GitCommandHelpers.CleanCmd(mode, dryRun: true, directories: RemoveDirectories.Checked, paths: pathArgument);
             string cmdOutput = FormProcess.ReadDialog(this, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
             PreviewOutput.Text = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
+
+            if (CleanSubmodules.Checked)
+            {
+                var cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun: true, directories: RemoveDirectories.Checked, paths: pathArgument);
+                cmdOutput = FormProcess.ReadDialog(this, arguments: cleanSubmodulesCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                PreviewOutput.Text += EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
+            }
         }
 
         private void Cleanup_Click(object sender, EventArgs e)
