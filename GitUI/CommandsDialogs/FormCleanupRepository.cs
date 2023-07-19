@@ -2,7 +2,6 @@
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitUI.HelperDialogs;
-using GitUI.LeftPanel;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
