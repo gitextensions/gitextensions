@@ -3244,6 +3244,10 @@ revision:</source>
         <source>Add a path...</source>
         <target />
       </trans-unit>
+      <trans-unit id="CleanSubmodules.Text">
+        <source>Clean submodules recursively</source>
+        <target />
+      </trans-unit>
       <trans-unit id="Cleanup.Text">
         <source>Cleanup</source>
         <target />
