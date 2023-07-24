@@ -1525,7 +1525,7 @@ namespace GitUI.CommandsDialogs
         {
             var revisions = RevisionGrid.GetSelectedRevisions();
 
-            if (revisions.Count == 0)
+            if (revisions.Count == 0 || revisions[0].IsArtificial)
             {
                 return;
             }
@@ -2069,28 +2069,10 @@ namespace GitUI.CommandsDialogs
                 case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
                 case Command.PullOrFetch: DoPull(pullAction: AppSettings.FormPullAction, isSilent: false); break;
                 case Command.Push: UICommands.StartPushDialog(this, pushOnShow: ModifierKeys.HasFlag(Keys.Shift)); break;
-                case Command.CreateBranch:
-                    if (!Module.IsBareRepository() && RevisionGrid.GetSelectedRevisions().Count == 1 && !RevisionGrid.GetSelectedRevisions()[0].IsArtificial)
-                    {
-                        UICommands.StartCreateBranchDialog(this, RevisionGrid.LatestSelectedRevision?.ObjectId);
-                    }
-
-                    break;
+                case Command.CreateBranch: UICommands.StartCreateBranchDialog(this, RevisionGrid.LatestSelectedRevision?.ObjectId); break;
                 case Command.MergeBranches: UICommands.StartMergeBranchDialog(this, null); break;
-                case Command.CreateTag:
-                    if (RevisionGrid.GetSelectedRevisions().Count == 1 && !RevisionGrid.GetSelectedRevisions()[0].IsArtificial)
-                    {
-                        UICommands.StartCreateTagDialog(this, RevisionGrid.LatestSelectedRevision);
-                    }
-
-                    break;
-                case Command.Rebase:
-                    if (!RevisionGrid.GetSelectedRevisions()[0].IsArtificial)
-                    {
-                        rebaseToolStripMenuItem.PerformClick();
-                    }
-
-                    break;
+                case Command.CreateTag: UICommands.StartCreateTagDialog(this, RevisionGrid.LatestSelectedRevision); break;
+                case Command.Rebase: rebaseToolStripMenuItem.PerformClick(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 

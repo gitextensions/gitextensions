@@ -440,6 +440,11 @@ namespace GitUI
 
         public bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId? objectId = null, string? newBranchNamePrefix = null)
         {
+            if (Module.IsBareRepository() || (objectId is not null && objectId.IsArtificial))
+            {
+                return false;
+            }
+
             bool Action()
             {
                 using FormCreateBranch form = new(this, objectId, newBranchNamePrefix);
@@ -853,6 +858,11 @@ namespace GitUI
 
         public bool StartCreateTagDialog(IWin32Window? owner = null, GitRevision? revision = null)
         {
+            if (revision is not null && revision.IsArtificial)
+            {
+                 return false;
+            }
+
             bool Action()
             {
                 using FormCreateTag form = new(this, revision?.ObjectId);
