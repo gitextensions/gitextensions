@@ -202,7 +202,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     var row = _revisionGraph.GetNodeForRow(SelectedRows[i].Index);
 
-                    if (row is not null && row.GitRevision is not null)
+                    if (row?.GitRevision is not null)
                     {
                         // NOTE returned collection has reverse order of SelectedRows
                         data[SelectedRows.Count - 1 - i] = row.GitRevision.ObjectId;
@@ -811,7 +811,7 @@ namespace GitUI.UserControls.RevisionGrid
                     break;
                 case Keys.Control | Keys.C:
                     var selectedRevisions = SelectedObjectIds;
-                    if (selectedRevisions is not null && selectedRevisions.Count != 0)
+                    if (selectedRevisions?.Count is > 0)
                     {
                         ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedRevisions));
                     }

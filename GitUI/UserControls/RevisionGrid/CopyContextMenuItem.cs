@@ -78,7 +78,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             var gitRevisions = _revisionFunc?.Invoke();
-            if (gitRevisions is null || gitRevisions.Count == 0)
+            if (gitRevisions?.Count is not > 0)
             {
                 return null;
             }
@@ -89,7 +89,7 @@ namespace GitUI.UserControls.RevisionGrid
         private void OnDropDownOpening(object sender, EventArgs e)
         {
             var revisions = _revisionFunc?.Invoke();
-            if (revisions is null || revisions.Count == 0)
+            if (revisions?.Count is not > 0)
             {
                 HideDropDown();
                 return;

@@ -350,7 +350,7 @@ namespace GitUI.SpellChecker
         private void LoadDictionary()
         {
             // Don`t load a dictionary in Design-time
-            if (Site is not null && Site.DesignMode)
+            if (Site?.DesignMode is true)
             {
                 return;
             }
@@ -374,7 +374,7 @@ namespace GitUI.SpellChecker
 
         private void ToggleAutoCompletion()
         {
-            if (!AppSettings.ProvideAutocompletion || (Site is not null && Site.DesignMode))
+            if (!AppSettings.ProvideAutocompletion || Site?.DesignMode is true)
             {
                 CloseAutoComplete();
                 CancelAutoComplete();

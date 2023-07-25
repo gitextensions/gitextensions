@@ -270,7 +270,7 @@ namespace GitUI.Theming
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer is not null && renderer.GetThemeColor(ipartid, istateid, ipropid, out pcolor) == ThemeRenderer.Handled)
+                if (renderer?.GetThemeColor(ipartid, istateid, ipropid, out pcolor) is ThemeRenderer.Handled)
                 {
                     return ThemeRenderer.Handled;
                 }
@@ -288,7 +288,7 @@ namespace GitUI.Theming
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer is not null && renderer.ForceUseRenderTextEx)
+                if (renderer?.ForceUseRenderTextEx is true)
                 {
                     NativeMethods.DTTOPTS poptions = new()
                     {
@@ -320,12 +320,12 @@ namespace GitUI.Theming
             if (!BypassThemeRenderers)
             {
                 var renderer = _renderers.FirstOrDefault(_ => _.Supports(htheme));
-                if (renderer is not null && renderer.RenderTextEx(
+                if (renderer?.RenderTextEx(
                     htheme, hdc,
                     partid, stateid,
                     psztext, cchtext,
                     dwtextflags,
-                    prect, ref poptions) == ThemeRenderer.Handled)
+                    prect, ref poptions) is ThemeRenderer.Handled)
                 {
                     return ThemeRenderer.Handled;
                 }

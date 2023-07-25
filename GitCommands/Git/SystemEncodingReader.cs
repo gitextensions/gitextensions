@@ -49,7 +49,7 @@ namespace GitCommands.Git
 
                 ExecutionResult result = _module.GitExecutable.Execute(arguments, outputEncoding: Encoding.UTF8, throwOnErrorExit: false);
                 string? s = result.StandardError;
-                systemEncoding = s is not null && s.IndexOf(controlStr) != -1
+                systemEncoding = s?.IndexOf(controlStr) is >= 0
                     ? new UTF8Encoding(false)
                     : Encoding.Default;
 

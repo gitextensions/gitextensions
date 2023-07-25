@@ -420,7 +420,7 @@ namespace GitUI.CommandsDialogs
 
         private void mnuLostObjects_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Warnings is not null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
+            if (Warnings?.SelectedRows.Count is > 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
                 var isCommit = lostObject.ObjectType == LostObjectType.Commit;
@@ -445,7 +445,7 @@ namespace GitUI.CommandsDialogs
 
         private void copyHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Warnings is not null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
+            if (Warnings?.SelectedRows.Count is > 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
                 ClipboardUtil.TrySetText(lostObject.ObjectId.ToString());
@@ -454,7 +454,7 @@ namespace GitUI.CommandsDialogs
 
         private void copyParentHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Warnings is not null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
+            if (Warnings?.SelectedRows.Count is > 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
                 ObjectId? parent = lostObject.Parent;
@@ -468,7 +468,7 @@ namespace GitUI.CommandsDialogs
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Warnings is null || Warnings.SelectedRows.Count == 0 || Warnings.SelectedRows[0].DataBoundItem is null)
+            if (Warnings?.SelectedRows.Count is not > 0 || Warnings.SelectedRows[0].DataBoundItem is null)
             {
                 return;
             }

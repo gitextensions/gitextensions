@@ -405,7 +405,7 @@ namespace GitUI
 
         private void InitiateRefAction(IReadOnlyList<IGitRef>? gitRefs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
-            if (gitRefs is null || gitRefs.Count < 1)
+            if (gitRefs?.Count is not > 0)
             {
                 return;
             }
@@ -719,13 +719,16 @@ namespace GitUI
                 .ToList();
         }
 
-        private (ObjectId? firstId, GitRevision? selectedRev) getFirstAndSelected()
+        private (ObjectId? firstId, GitRevision? selectedRev) GetFirstAndSelected()
         {
-            var revisions = GetSelectedRevisions();
-            var selectedRev = revisions?.FirstOrDefault();
-            var firstId = revisions is not null && revisions.Count > 1 ? revisions.LastOrDefault().ObjectId : selectedRev?.FirstParentId;
+            IReadOnlyList<GitRevision> revisions = GetSelectedRevisions();
 
-            return (firstId, selectedRev);
+            return revisions.Count switch
+            {
+                0 => (null, null),
+                1 => (firstId: revisions[0].FirstParentId, selectedRev: revisions[0]),
+                _ => (firstId: revisions[^1].ObjectId, selectedRev: revisions[0])
+            };
         }
 
         public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
@@ -1377,7 +1380,7 @@ namespace GitUI
                         {
                             parents = headParents;
                         }
-                        else if (headParents is not null && headParents.ToList().IndexOf(notSelectedId) is int index and >= 0)
+                        else if (headParents?.ToList().IndexOf(notSelectedId) is int index and >= 0)
                         {
                             parents = headParents.Skip(index + 1).ToList();
                         }
@@ -1485,12 +1488,11 @@ namespace GitUI
                     return toBeSelectedObjectIds;
                 }
 
-                if (currentlySelectedObjectIds is null || currentlySelectedObjectIds.Count == 0)
-                {
-                    return currentCheckout is null ? Array.Empty<ObjectId>() : new ObjectId[] { currentCheckout };
-                }
-
-                return currentlySelectedObjectIds;
+                return currentlySelectedObjectIds?.Count is > 0
+                    ? currentlySelectedObjectIds
+                    : currentCheckout is null
+                        ? Array.Empty<ObjectId>()
+                        : new ObjectId[] { currentCheckout };
             }
 
             static IEnumerable<ObjectId> TryGetParents(GitModule module, FilterInfo filterInfo, ObjectId objectId)
@@ -1539,7 +1541,7 @@ namespace GitUI
             _selectionTimer.Stop();
             _selectionTimer.Start();
 
-            var (first, selected) = getFirstAndSelected();
+            var (first, selected) = GetFirstAndSelected();
 
             compareToWorkingDirectoryMenuItem.Enabled = selected is not null && selected.ObjectId != ObjectId.WorkTreeId;
             compareWithCurrentBranchToolStripMenuItem.Enabled = !string.IsNullOrWhiteSpace(CurrentBranch.Value);
@@ -2865,15 +2867,12 @@ namespace GitUI
 
         private void compareSelectedCommitsMenuItem_Click(object sender, EventArgs e)
         {
-            var (first, selected) = getFirstAndSelected();
+            (ObjectId firstId, GitRevision selected) = GetFirstAndSelected();
 
-            if (selected is not null && first is not null)
+            if (selected is not null && firstId is not null)
             {
-                var firstRev = GetRevision(first);
-                if (firstRev is not null)
-                {
-                    UICommands.ShowFormDiff(first, selected.ObjectId, firstRev.Subject, selected.Subject);
-                }
+                string firstSubject = GetRevision(firstId)?.Subject ?? "";
+                UICommands.ShowFormDiff(firstId, selected.ObjectId, firstSubject, selected.Subject);
             }
             else
             {
@@ -2896,7 +2895,7 @@ namespace GitUI
 
         public void DiffSelectedCommitsWithDifftool(string? customTool = null)
         {
-            var (first, selected) = getFirstAndSelected();
+            var (first, selected) = GetFirstAndSelected();
             if (selected is not null)
             {
                 Module.OpenWithDifftoolDirDiff(first?.ToString(), selected.ObjectId.ToString(), customTool: customTool);

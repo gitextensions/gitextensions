@@ -450,7 +450,7 @@ namespace GitUI.LeftPanel
         {
             _txtBranchCriterion.CloseDropdown();
 
-            if (_searchCriteriaChanged && _searchResult is not null && _searchResult.Any())
+            if (_searchCriteriaChanged && _searchResult?.Any() is true)
             {
                 _searchCriteriaChanged = false;
                 foreach (var coloredNode in _searchResult)

@@ -32,7 +32,11 @@ namespace GitCommands.ExternalLinks
                 throw new ArgumentNullException(nameof(definition));
             }
 
-            if (_lowerPriority is null || _lowerPriority.Contains(definition.Name))
+            if (_lowerPriority?.Contains(definition.Name) is false)
+            {
+                _lowerPriority.Add(definition);
+            }
+            else
             {
                 if (!Contains(definition.Name))
                 {
@@ -40,10 +44,6 @@ namespace GitCommands.ExternalLinks
                 }
 
                 // TODO: else notify the user?
-            }
-            else
-            {
-                _lowerPriority.Add(definition);
             }
         }
 

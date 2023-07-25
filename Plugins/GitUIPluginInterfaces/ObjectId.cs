@@ -66,7 +66,7 @@ namespace GitUIPluginInterfaces
         /// <returns><c>true</c> if parsing was successful, otherwise <c>false</c>.</returns>
         public static bool TryParse(string? s, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
         {
-            if (s is null || s.Length != Sha1CharCount)
+            if (s?.Length is not Sha1CharCount)
             {
                 objectId = default;
                 return false;
@@ -155,7 +155,7 @@ namespace GitUIPluginInterfaces
         [MustUseReturnValue]
         public static ObjectId Parse(string s)
         {
-            if (s is null || s.Length != Sha1CharCount || !TryParse(s, 0, out var id))
+            if (s?.Length is not Sha1CharCount || !TryParse(s, 0, out var id))
             {
                 throw new FormatException($"Unable to parse object ID \"{s}\".");
             }
@@ -358,7 +358,7 @@ namespace GitUIPluginInterfaces
         [MustUseReturnValue]
         public static ObjectId Parse(string s, Capture capture)
         {
-            if (s is null || capture is null || capture.Length != Sha1CharCount || !TryParse(s, capture.Index, out var id))
+            if (s is null || capture?.Length is not Sha1CharCount || !TryParse(s, capture.Index, out var id))
             {
                 throw new FormatException($"Unable to parse object ID \"{s}\".");
             }
@@ -519,7 +519,7 @@ namespace GitUIPluginInterfaces
         /// </remarks>
         public bool Equals(string? other)
         {
-            if (other is null || other.Length != Sha1CharCount)
+            if (other?.Length is not Sha1CharCount)
             {
                 return false;
             }

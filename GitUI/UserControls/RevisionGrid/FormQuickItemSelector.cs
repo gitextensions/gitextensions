@@ -23,7 +23,7 @@
             btnAction.Text = buttonText;
 
             lbxRefs.Items.Clear();
-            if (items is null || items.Count < 1)
+            if (items?.Count is not > 0)
             {
                 DialogResult = DialogResult.Cancel;
                 Close();

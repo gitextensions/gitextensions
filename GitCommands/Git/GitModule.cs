@@ -1378,7 +1378,7 @@ namespace GitCommands
         /// <returns>stdout from Git.</returns>
         public string CheckoutIndexFiles(IReadOnlyList<string> files)
         {
-            if (files is null || files.Count == 0)
+            if (files?.Count is not > 0)
             {
                 return string.Empty;
             }

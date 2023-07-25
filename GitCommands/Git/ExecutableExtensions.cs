@@ -95,7 +95,7 @@ namespace GitCommands
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            if (cache is not null && cache.TryGet(arguments, out var output, out var error))
+            if (cache?.TryGet(arguments, out var output, out var error) is true)
             {
                 return ComposeOutput();
             }
@@ -288,7 +288,7 @@ namespace GitCommands
         {
             outputEncoding ??= _defaultOutputEncoding.Value;
 
-            if (cache is not null && cache.TryGet(arguments, out byte[]? cachedOutput, out byte[]? cachedError))
+            if (cache?.TryGet(arguments, out byte[]? cachedOutput, out byte[]? cachedError) is true)
             {
                 return new ExecutionResult(
                     CleanString(stripAnsiEscapeCodes, EncodingHelper.DecodeString(cachedOutput, error: null, ref outputEncoding)),

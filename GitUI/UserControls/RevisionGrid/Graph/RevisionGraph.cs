@@ -133,20 +133,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
         public bool IsRowRelative(int row)
-        {
-            var node = GetNodeForRow(row);
-            return node is not null && node.IsRelative;
-        }
+            => GetNodeForRow(row)?.IsRelative is true;
 
         public bool IsRevisionRelative(ObjectId objectId)
-        {
-            if (_nodeByObjectId.TryGetValue(objectId, out RevisionGraphRevision revision))
-            {
-                return revision.IsRelative;
-            }
-
-            return false;
-        }
+            => _nodeByObjectId.TryGetValue(objectId, out RevisionGraphRevision revision) && revision.IsRelative;
 
         public bool TryGetNode(ObjectId objectId, [NotNullWhen(true)] out RevisionGraphRevision? revision)
         {

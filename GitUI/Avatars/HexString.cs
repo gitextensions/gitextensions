@@ -9,7 +9,7 @@ namespace GitUI.Avatars
         /// </summary>
         public static string FromByteArray(byte[] data)
         {
-            if (data is null || data.Length == 0)
+            if (data?.Length is not > 0)
             {
                 return string.Empty;
             }

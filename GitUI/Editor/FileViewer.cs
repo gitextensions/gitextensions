@@ -1481,7 +1481,7 @@ namespace GitUI.Editor
                     _viewItem.Item.IsRenamed);
             }
 
-            if (patch is null || patch.Length == 0)
+            if (patch?.Length is not > 0)
             {
                 return;
             }
@@ -1553,7 +1553,7 @@ namespace GitUI.Editor
                     Encoding);
             }
 
-            if (patch is null || patch.Length == 0)
+            if (patch?.Length is not > 0)
             {
                 return;
             }
@@ -1626,7 +1626,7 @@ namespace GitUI.Editor
                     Encoding);
             }
 
-            if (patch is null || patch.Length == 0)
+            if (patch?.Length is not > 0)
             {
                 return;
             }

@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             if (_isFirstLoad)
             {
-                if (infos is not null && infos.Count == 0 && _hostedRemotes is not null && _hostedRemotes.Count > 0)
+                if (infos?.Count is 0 && _hostedRemotes?.Count is > 0)
                 {
                     SelectNextHostedRepository();
                     return;
@@ -302,7 +302,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             _currentPullRequestInfo = _pullRequestsList.SelectedItems[0].Tag as IPullRequestInformation;
-            if (prevPri is not null && prevPri.Equals(_currentPullRequestInfo))
+            if (prevPri?.Equals(_currentPullRequestInfo) is true)
             {
                 return;
             }
@@ -389,7 +389,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             _diffCache = new Dictionary<string, string>();
 
-            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el is not null && el.Trim().Length > 10).ToList();
+            var fileParts = Regex.Split(diffData, @"(?:\n|^)diff --git ").Where(el => el?.Trim().Length is > 10).ToList();
             List<GitItemStatus> giss = new();
 
             // baseSha is the sha of the merge to ("master") sha, the commit to be firstId

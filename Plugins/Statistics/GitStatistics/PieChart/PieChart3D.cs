@@ -418,7 +418,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
         /// </param>
         public void Draw(Graphics graphics)
         {
-            Debug.Assert(Values is not null && Values.Length > 0, "Values is not null && Values.Length > 0");
+            Debug.Assert(Values?.Length is > 0, "Values?.Length is > 0");
             InitializePieSlices();
             if (FitToBoundingRectangle)
             {

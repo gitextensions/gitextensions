@@ -60,18 +60,6 @@ namespace GitCommands.Settings
         }
 
         public virtual bool TryGetValue(string name, [NotNullWhen(true)] out string? value)
-        {
-            if (SettingsCache.TryGetValue(name, out value))
-            {
-                return true;
-            }
-
-            if (LowerPriority is not null && LowerPriority.TryGetValue(name, out value))
-            {
-                return true;
-            }
-
-            return false;
-        }
+            => SettingsCache.TryGetValue(name, out value) || LowerPriority?.TryGetValue(name, out value) is true;
     }
 }
