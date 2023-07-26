@@ -26,7 +26,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
             UriBuilder pipelinesUriBuilder = new($"{InstanceUrl}/api/v4/projects/{_projectId}/pipelines");
             NameValueCollection query = HttpUtility.ParseQueryString(pipelinesUriBuilder.Query);
 
-            if (sinceDate != null)
+            if (sinceDate is not null)
             {
                 query["updated_after"] = sinceDate.Value.ToString("u");
             }
