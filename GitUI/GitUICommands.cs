@@ -440,7 +440,7 @@ namespace GitUI
 
         public bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId? objectId = null, string? newBranchNamePrefix = null)
         {
-            if (Module.IsBareRepository() || (objectId is not null && objectId.IsArtificial))
+            if (Module.IsBareRepository() || objectId?.IsArtificial is true)
             {
                 return false;
             }
@@ -858,7 +858,7 @@ namespace GitUI
 
         public bool StartCreateTagDialog(IWin32Window? owner = null, GitRevision? revision = null)
         {
-            if (revision is not null && revision.IsArtificial)
+            if (revision?.IsArtificial is true)
             {
                  return false;
             }
