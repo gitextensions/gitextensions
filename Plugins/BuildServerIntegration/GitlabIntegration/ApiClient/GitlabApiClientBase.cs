@@ -40,7 +40,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
             return response;
         }
 
-        private int GetIntHeader(HttpResponseMessage response, string key)
+        private static int? GetIntHeader(HttpResponseMessage response, string key)
         {
             if (response.Headers.TryGetValues(key, out IEnumerable<string>? values))
             {
@@ -50,7 +50,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
                 }
             }
 
-            throw new HttpRequestException($"Unable to extract header with key {key}");
+            return null;
         }
 
         protected async Task<PagedResponse<TItem>> LoadListAsync<TItem>(Uri url)
@@ -67,7 +67,9 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
                 Total = GetIntHeader(response, "X-Total"),
                 TotalPages = GetIntHeader(response, "X-Total-Pages"),
                 PageNumber = GetIntHeader(response, "X-Page"),
-                PageSize = GetIntHeader(response, "X-Per-Page"), Items = list
+                PageSize = GetIntHeader(response, "X-Per-Page"),
+                NextPage = GetIntHeader(response, "X-Next-Page"),
+                Items = list
             };
 
             return result;

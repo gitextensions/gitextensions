@@ -69,9 +69,9 @@ namespace GitExtensions.Plugins.GitlabIntegration
             PagedResponse<GitlabPipeline> firstPage = await _apiClient.GetPipelinesAsync(sinceDate, running, 1);
             firstPage.Items.ForEach(item => ProcessLoadedBuild(item, observer));
 
-            if (firstPage.TotalPages > 1)
+            if (firstPage.TotalPages is > 1)
             {
-                Task[] pagesTasks = new Task[firstPage.TotalPages - 1];
+                Task[] pagesTasks = new Task[firstPage.TotalPages.Value - 1];
                 for (int i = 2; i <= firstPage.TotalPages; i++)
                 {
                     Task<PagedResponse<GitlabPipeline>> pageTask = _apiClient.GetPipelinesAsync(sinceDate, running, i);
@@ -88,6 +88,18 @@ namespace GitExtensions.Plugins.GitlabIntegration
                 {
                     observer.OnCompleted();
                 }, cancellationToken);
+            }
+            else
+            {
+                PagedResponse<GitlabPipeline> currentPage = firstPage;
+
+                while (currentPage.NextPage.HasValue)
+                {
+                    currentPage = await _apiClient.GetPipelinesAsync(sinceDate, running, currentPage.NextPage.Value);
+                    currentPage.Items.ForEach(item => ProcessLoadedBuild(item, observer));
+                }
+
+                observer.OnCompleted();
             }
         }
 
