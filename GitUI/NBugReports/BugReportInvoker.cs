@@ -117,6 +117,11 @@ namespace GitUI.NBugReports
                 Process.Start(pi);
                 Environment.Exit(0);
             }
+            else
+            {
+                ShowNBug(OwnerForm, exception, false, isTerminating);
+                return;
+            }
 
             ExternalOperationException externalOperationException = exception as ExternalOperationException;
 
