@@ -67,7 +67,7 @@ namespace GitExtensions.Plugins.GitlabIntegration
             Validates.NotNull(_apiClient);
 
             PagedResponse<GitlabPipeline> firstPage = await _apiClient.GetPipelinesAsync(sinceDate, running, 1);
-            firstPage.Items.ForEach(item => ProcessLoadedBuild(item, observer));
+            ProcessLoadedBuilds(firstPage.Items, observer);
 
             if (firstPage.TotalPages is > 1)
             {
@@ -77,7 +77,7 @@ namespace GitExtensions.Plugins.GitlabIntegration
                     Task<PagedResponse<GitlabPipeline>> pageTask = _apiClient.GetPipelinesAsync(sinceDate, running, i);
                     pagesTasks[i - 2] = pageTask.ContinueWith(x =>
                         {
-                            x.Result.Items.ForEach(item => ProcessLoadedBuild(item, observer));
+                            ProcessLoadedBuilds(x.Result.Items, observer);
                         },
                         cancellationToken,
                         TaskContinuationOptions.None,
@@ -96,19 +96,22 @@ namespace GitExtensions.Plugins.GitlabIntegration
                 while (currentPage.NextPage.HasValue)
                 {
                     currentPage = await _apiClient.GetPipelinesAsync(sinceDate, running, currentPage.NextPage.Value);
-                    currentPage.Items.ForEach(item => ProcessLoadedBuild(item, observer));
+                    ProcessLoadedBuilds(currentPage.Items, observer);
                 }
 
                 observer.OnCompleted();
             }
         }
 
-        private void ProcessLoadedBuild(GitlabPipeline item, IObserver<BuildInfo> observer)
+        private void ProcessLoadedBuilds(IEnumerable<GitlabPipeline> items, IObserver<BuildInfo> observer)
         {
-            if (_loadedItems.ContainsKey(item.sha) == false || _loadedItems[item.sha] < item.updated_at)
+            foreach (var item in items)
             {
-                _loadedItems[item.sha] = item.updated_at;
-                observer.OnNext(item.ToBuildInfo());
+                if (_loadedItems.ContainsKey(item.Sha) == false || _loadedItems[item.Sha] < item.UpdatedAt)
+                {
+                    _loadedItems[item.Sha] = item.UpdatedAt;
+                    observer.OnNext(item.ToBuildInfo());
+                }
             }
         }
 

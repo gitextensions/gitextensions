@@ -51,7 +51,7 @@
             tableLayoutPanel1.Controls.Add(InstanceUrlTextBox, 1, 0);
             tableLayoutPanel1.Controls.Add(label2, 0, 1);
             tableLayoutPanel1.Controls.Add(ApiTokenTextBox, 1, 1);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Dock = DockStyle.Top;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 3;

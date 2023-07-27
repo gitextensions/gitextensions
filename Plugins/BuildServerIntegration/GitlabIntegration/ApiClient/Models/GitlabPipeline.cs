@@ -1,29 +1,33 @@
 ﻿using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models
 {
     public class GitlabPipeline
     {
-        public int id { get; set; }
-        public string status { get; set; }
-        public string sha { get; set; }
-
-        public string web_url { get; set; }
-
-        public DateTime created_at { get; set; }
-
-        public DateTime updated_at { get; set; }
+        [JsonProperty("id")]
+        public int Id { get; set; }
+        [JsonProperty("status")]
+        public string Status { get; set; }
+        [JsonProperty("sha")]
+        public string Sha { get; set; }
+        [JsonProperty("web_url")]
+        public string WebUrl { get; set; }
+        [JsonProperty("created_at")]
+        public DateTime CreatedAt { get; set; }
+        [JsonProperty("updated_at")]
+        public DateTime UpdatedAt { get; set; }
 
         public BuildInfo ToBuildInfo()
         {
             BuildInfo result = new()
             {
-                Id = id.ToString(),
-                CommitHashList = new List<ObjectId> { ObjectId.Parse(sha) }
+                Id = Id.ToString(),
+                CommitHashList = new List<ObjectId> { ObjectId.Parse(Sha) }
             };
 
-            switch (status)
+            switch (Status)
             {
                 case "running":
                     result.Status = BuildInfo.BuildStatus.InProgress;
@@ -42,8 +46,8 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models
                     break;
             }
 
-            result.Url = web_url;
-            result.Duration = (updated_at - created_at).Ticks;
+            result.Url = WebUrl;
+            result.Duration = (UpdatedAt - CreatedAt).Ticks;
             result.ShowInBuildReportTab = true;
 
             return result;
