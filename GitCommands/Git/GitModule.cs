@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -2414,10 +2413,14 @@ namespace GitCommands
             return EffectiveConfigFile.GetValue(setting);
         }
 
-        public string GetEffectiveGitSetting(string setting, bool cache = true)
+        public EffectiveGitSetting GetEffectiveGitSetting(string setting, bool cache = true)
         {
             GitArgumentBuilder args = new("config") { "--includes", "--get", setting };
-            return GitExecutable.GetOutput(args, cache: cache ? GitCommandCache : null).Trim();
+            ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false);
+
+            int resultCode = result.ExitCode ?? 0;
+
+            return (Enum.IsDefined(typeof(GitConfigStatus), resultCode) ? (GitConfigStatus)resultCode : null, result.StandardOutput?.Trim() ?? "");
         }
 
         public void UnsetSetting(string setting)
