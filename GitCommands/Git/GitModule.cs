@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -2470,10 +2469,49 @@ namespace GitCommands
             return EffectiveConfigFile.GetValue(setting);
         }
 
-        public string GetEffectiveGitSetting(string setting, bool cache = true)
+        public GitConfigGetResult GetEffectiveGitSetting(string setting, bool cache = true)
         {
-            GitArgumentBuilder args = new("config") { "--includes", "--get", setting };
-            return GitExecutable.GetOutput(args, cache: cache ? GitCommandCache : null).Trim();
+            GitArgumentBuilder args = new("config")
+            {
+                "--includes",
+                "--get",
+                "-z",
+                "--show-scope",
+                "--show-origin",
+                setting
+            };
+            ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false); // Result codes are handled below
+
+            if (!result.ExitCode.HasValue)
+            {
+                // unlikely , but possible and allows for use of ExitCode.Value since we know HasValue is true
+                throw new ExternalOperationException("git config", args.ToString(), WorkingDir, result.ExitCode, new InvalidOperationException("Exit code had no value"));
+            }
+
+            string value = result.StandardOutput?.Trim() ?? "" + Delimiters.Null;
+
+            // Scope, file, value split by null.
+            string[] values = value.Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
+
+            int resultCode = result.ExitCode.Value;
+
+            GitConfigGetResult output = (
+                Enum.IsDefined(typeof(GitConfigStatus), resultCode) ? (GitConfigStatus)resultCode : (GitConfigStatus?)null,
+                setting,
+                values.Length == 3 ? values[2] : "",
+                DateTimeOffset.Now,
+                values.Length == 3 ? values[0] : "",
+                values.Length == 3 ? values[1]?.Replace("file:", "").ToNativePath() : "",
+                result.StandardError?.Trim() ?? "");
+
+            switch (output.Status)
+            {
+                case GitConfigStatus.Success:
+                case GitConfigStatus.ConfigKeyInvalidOrNotSet:
+                    return output;
+                default:
+                    throw new ExternalOperationException("git config", args.ToString(), WorkingDir, result.ExitCode, new InvalidOperationException(output.ErrorMessage));
+            }
         }
 
         public void UnsetSetting(string setting)

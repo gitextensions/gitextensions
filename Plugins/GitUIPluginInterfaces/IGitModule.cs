@@ -125,7 +125,7 @@ namespace GitUIPluginInterfaces
 
         string GetSetting(string setting);
         string GetEffectiveSetting(string setting);
-        string GetEffectiveGitSetting(string setting, bool cache = true);
+        GitConfigGetResult GetEffectiveGitSetting(string setting, bool cache = true);
 
         /// <summary>Gets the current branch; or "(no branch)" if HEAD is detached.</summary>
         string GetSelectedBranch();

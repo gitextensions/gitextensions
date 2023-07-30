@@ -4,6 +4,7 @@ using FluentAssertions;
 using GitCommands;
 using GitExtensions.UITests;
 using GitExtensions.UITests.CommandsDialogs;
+using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUIPluginInterfaces;
@@ -17,7 +18,7 @@ namespace GitUITests.GitUICommandsTests
     {
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;
-
+        private string[] _allConfigs;
         // Created once for each test
         private GitUICommands _commands;
 
@@ -35,6 +36,12 @@ namespace GitUITests.GitUICommandsTests
                 _referenceRepository.Module.GitExecutable.RunCommand("config --local diff.guitool cmd").Should().BeTrue();
                 _referenceRepository.Module.GitExecutable.RunCommand("config --local merge.guitool cmd").Should().BeTrue();
 
+                ExecutionResult getAllComfigsResult = _referenceRepository.Module.GitExecutable.Execute(new GitArgumentBuilder("help", gitOptions: (ArgumentString)"--no-pager") { "--config" });
+                _allConfigs = getAllComfigsResult.StandardOutput
+                    .Split('\n')
+                    .Where(cfg => !string.IsNullOrWhiteSpace(cfg) && !cfg.Contains("git help config"))
+                    .Concat(new string[] { "a.a.C", "$#@@#$%&#@", "1234", "~x.Y", "  test", "test.", "." })
+                    .ToArray();
                 AppSettings.UseConsoleEmulatorForCommands = false;
                 AppSettings.CloseProcessDialog = true;
                 AppSettings.UseBrowseForFileHistory.Value = false;
@@ -359,6 +366,25 @@ namespace GitUITests.GitUICommandsTests
 
                     return Task.CompletedTask;
                 });
+        }
+
+        [Test]
+        [Description("Makes sure getting a git config value does not raise an exception and even if config value is not set it will just return a blank value")]
+        public void ValidateAllConfigOptionsWork()
+        {
+            var settings = _allConfigs.Select(cfg => _referenceRepository.Module.GetEffectiveGitSetting(cfg, false))
+                .OrderBy(s => s.Name)
+                .ToArray();
+            settings.Should().NotContainNulls();
+
+            foreach (var g in settings.GroupBy(s => s.Status))
+            {
+                Console.WriteLine(g.Key?.ToString() ?? "NULL");
+                foreach (var s in g)
+                {
+                    Console.WriteLine($"\t{s}");
+                }
+            }
         }
 
         private static void ClickButton(Form form, string buttonName)

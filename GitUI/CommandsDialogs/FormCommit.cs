@@ -2744,8 +2744,8 @@ namespace GitUI.CommandsDialogs
                     await TaskScheduler.Default;
 
                     // Do not cache results in order to update the info on FormActivate
-                    string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false);
-                    string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false);
+                    string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false).Value;
+                    string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false).Value;
                     string committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
 
                     await this.SwitchToMainThreadAsync();
