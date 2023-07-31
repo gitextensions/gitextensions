@@ -193,5 +193,12 @@ namespace GitUI.CommandsDialogs
 
             detailedSettings.MergeLogMessagesCount = Convert.ToInt32(nbMessages.Value);
         }
+
+        private void squash_CheckedChanged(object sender, EventArgs e)
+        {
+            fastForward.Enabled = !fastForward.Enabled;
+            noFastForward.Enabled = !noFastForward.Enabled;
+            fastForward.Checked = true;
+        }
     }
 }

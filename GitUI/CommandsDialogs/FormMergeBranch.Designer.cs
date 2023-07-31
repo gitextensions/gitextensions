@@ -198,6 +198,7 @@
             this.squash.TabIndex = 2;
             this.squash.Text = "Squash commits";
             this.squash.UseVisualStyleBackColor = true;
+            this.squash.CheckedChanged += new System.EventHandler(this.squash_CheckedChanged);
             // 
             // NonDefaultMergeStrategy
             // 
