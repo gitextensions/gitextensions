@@ -32,7 +32,7 @@ using TaskDialogButton = System.Windows.Forms.TaskDialogButton;
 
 namespace GitUI
 {
-    public enum RevisionGraphDrawStyleEnum
+    public enum RevisionGraphDrawStyle
     {
         Normal,
         DrawNonRelativesGray,
@@ -665,7 +665,7 @@ namespace GitUI
 
         private void HighlightBranch(ObjectId id)
         {
-            _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
+            _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyle.HighlightSelected;
             _revisionGraphColumnProvider.HighlightBranch(id);
             _gridView.Update();
         }
@@ -888,7 +888,8 @@ namespace GitUI
 
             try
             {
-                _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                _revisionGraphColumnProvider.RevisionGraphDrawStyle
+                    = AppSettings.RevisionGraphDrawNonRelativesGray ? RevisionGraphDrawStyle.DrawNonRelativesGray : RevisionGraphDrawStyle.Normal;
 
                 // Apply checkboxes changes also to FormBrowse main menu
                 MenuCommands.TriggerMenuChanged();

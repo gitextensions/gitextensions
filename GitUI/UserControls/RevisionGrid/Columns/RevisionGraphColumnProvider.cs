@@ -17,9 +17,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private readonly RevisionGraph _revisionGraph;
         private readonly GraphCache _graphCache = new();
 
-        private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
-        private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
-
         public RevisionGraphColumnProvider(RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
             : base("Graph")
         {
@@ -38,24 +35,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
-        {
-            get
-            {
-                if (_revisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
-                {
-                    return RevisionGraphDrawStyleEnum.HighlightSelected;
-                }
-
-                if (AppSettings.RevisionGraphDrawNonRelativesGray)
-                {
-                    return RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
-                }
-
-                return RevisionGraphDrawStyleEnum.Normal;
-            }
-            set { _revisionGraphDrawStyle = value; }
-        }
+        public RevisionGraphDrawStyle RevisionGraphDrawStyle { get; set; }
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
@@ -166,9 +146,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 void DrawVisibleGraph()
                 {
-                    // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
-                    _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
-
                     for (int index = start; index < end; index++)
                     {
                         // Get the x,y value of the current item's upper left in the cache
@@ -208,7 +185,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 void DrawItem(int index)
                 {
-                    GraphRenderer.DrawItem(_graphCache.GraphBitmapGraphics, index, width, rowHeight, _revisionGraph.GetSegmentsForRow, _revisionGraphDrawStyleCache, _revisionGraph.HeadId);
+                    GraphRenderer.DrawItem(_graphCache.GraphBitmapGraphics, index, width, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId);
                 }
             }
         }

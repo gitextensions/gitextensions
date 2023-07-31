@@ -17,7 +17,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
 
         public static void DrawItem(Graphics g, int index, int width, int rowHeight,
             Func<int, IRevisionGraphRow?> getSegmentsForRow,
-            RevisionGraphDrawStyleEnum revisionGraphDrawStyle,
+            RevisionGraphDrawStyle revisionGraphDrawStyle,
             ObjectId headId)
         {
             SmoothingMode oldSmoothingMode = g.SmoothingMode;
@@ -202,11 +202,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
             }
         }
 
-        private static Brush GetBrushForLaneInfo(LaneInfo? laneInfo, bool isRelative, RevisionGraphDrawStyleEnum revisionGraphDrawStyle)
+        private static Brush GetBrushForLaneInfo(LaneInfo? laneInfo, bool isRelative, RevisionGraphDrawStyle revisionGraphDrawStyle)
         {
             // laneInfo can be null for revisions without parents and children, especially when filtering, draw them gray, too
             if (laneInfo is null
-                || (!isRelative && (revisionGraphDrawStyle is RevisionGraphDrawStyleEnum.DrawNonRelativesGray or RevisionGraphDrawStyleEnum.HighlightSelected)))
+                || (!isRelative && (revisionGraphDrawStyle is RevisionGraphDrawStyle.DrawNonRelativesGray or RevisionGraphDrawStyle.HighlightSelected)))
             {
                 return RevisionGraphLaneColor.NonRelativeBrush;
             }
