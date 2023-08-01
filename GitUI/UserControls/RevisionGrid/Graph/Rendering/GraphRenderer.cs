@@ -58,7 +58,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
 
                 foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Reverse().OrderBy(s => s.Child.IsRelative))
                 {
-                    SegmentLanesInfo lanes = GetLanesInfo(revisionGraphSegment, previousRow, currentRow, nextRow, li => currentRowRevisionLaneInfo = li);
+                    bool skipSecondarySharedSegments = revisionGraphDrawStyle is not (RevisionGraphDrawStyle.DrawNonRelativesGray or RevisionGraphDrawStyle.HighlightSelected);
+                    SegmentLanesInfo lanes = GetLanesInfo(revisionGraphSegment, previousRow, currentRow, nextRow, li => currentRowRevisionLaneInfo = li, skipSecondarySharedSegments);
                     if (!lanes.DrawFromStart && !lanes.DrawToEnd)
                     {
                         continue;
@@ -118,11 +119,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
             }
         }
 
-        public static SegmentLanesInfo GetLanesInfo(RevisionGraphSegment revisionGraphSegment,
+        private static SegmentLanesInfo GetLanesInfo(RevisionGraphSegment revisionGraphSegment,
             IRevisionGraphRow? previousRow,
             IRevisionGraphRow currentRow,
             IRevisionGraphRow? nextRow,
-            Action<LaneInfo?>? setLaneInfo)
+            Action<LaneInfo?>? setLaneInfo,
+            bool skipSecondarySharedSegments)
         {
             Lane currentLane = currentRow.GetLaneForSegment(revisionGraphSegment);
 
@@ -131,7 +133,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
             int endLane = _noLane;
 
             // Avoid drawing the same curve twice (caused aliasing artifacts, particularly when in different colors)
-            if (currentLane.Sharing == LaneSharing.Entire)
+            if (skipSecondarySharedSegments && currentLane.Sharing == LaneSharing.Entire)
             {
                 return new SegmentLanesInfo(startLane, centerLane, endLane, drawFromStart: false, drawToEnd: false);
             }
@@ -164,7 +166,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
                 case LaneSharing.DifferentStart:
                     if (AppSettings.ShowRevisionGridGraphColumn)
                     {
-                        endLane = _noLane;
+                        if (skipSecondarySharedSegments)
+                        {
+                            endLane = _noLane;
+                        }
                     }
                     else if (endLane != _noLane)
                     {
