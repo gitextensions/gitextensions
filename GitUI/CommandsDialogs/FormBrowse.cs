@@ -1525,7 +1525,7 @@ namespace GitUI.CommandsDialogs
         {
             var revisions = RevisionGrid.GetSelectedRevisions();
 
-            if (revisions.Count == 0)
+            if (revisions.Count == 0 || revisions[0].IsArtificial)
             {
                 return;
             }
