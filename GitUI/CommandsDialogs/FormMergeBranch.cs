@@ -169,6 +169,12 @@ namespace GitUI.CommandsDialogs
         private void noFastForward_CheckedChanged(object sender, EventArgs e)
         {
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            squash.Enabled = !noFastForward.Checked;
+
+            if (noFastForward.Checked)
+            {
+                squash.Checked = false;
+            }
         }
 
         private void addMessages_CheckedChanged(object sender, EventArgs e)
@@ -192,13 +198,6 @@ namespace GitUI.CommandsDialogs
                 .Detailed();
 
             detailedSettings.MergeLogMessagesCount = Convert.ToInt32(nbMessages.Value);
-        }
-
-        private void squash_CheckedChanged(object sender, EventArgs e)
-        {
-            fastForward.Enabled = !fastForward.Enabled;
-            noFastForward.Enabled = !noFastForward.Enabled;
-            fastForward.Checked = true;
         }
     }
 }
