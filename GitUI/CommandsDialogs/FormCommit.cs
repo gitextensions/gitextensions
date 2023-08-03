@@ -495,7 +495,7 @@ namespace GitUI.CommandsDialogs
             //
             // The problem is likely caused by 'splitRight.FixedPanel = FixedPanel.Panel2' fact, but other forms
             // have the same setting, and don't appear to suffer from the same bug.
-            splitRight.SplitterDistance -= 6;
+            splitRight.SplitterDistance -= DpiUtil.Scale(6);
         }
 
         protected override void OnShown(EventArgs e)
