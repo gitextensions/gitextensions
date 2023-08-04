@@ -169,6 +169,12 @@ namespace GitUI.CommandsDialogs
         private void noFastForward_CheckedChanged(object sender, EventArgs e)
         {
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
+            squash.Enabled = !noFastForward.Checked;
+
+            if (noFastForward.Checked)
+            {
+                squash.Checked = false;
+            }
         }
 
         private void addMessages_CheckedChanged(object sender, EventArgs e)
