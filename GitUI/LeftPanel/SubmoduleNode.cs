@@ -85,7 +85,7 @@ namespace GitUI.LeftPanel
                 // Get the current (most likely) selections from the grid
                 IReadOnlyList<GitRevision>? revs = UICommands.GetSelectedRevisions() ?? new List<GitRevision>();
                 selected = revs.Count > 0 ? revs[0].ObjectId : null;
-                first = revs.Count > 1 ? revs[revs.Count - 1].ObjectId : null;
+                first = revs.Count > 1 ? revs[^1].ObjectId : null;
             }
             else
             {

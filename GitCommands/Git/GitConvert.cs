@@ -163,7 +163,7 @@ namespace GitCommands
 
                 if (buf.Length >= 1)
                 {
-                    if (buf[buf.Length - 1] == 0x1A)
+                    if (buf[^1] == 0x1A)
                     {
                         cntNonPrintable--;
                     }

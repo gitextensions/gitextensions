@@ -186,7 +186,7 @@ namespace GitUI.UserControls
 
             string[] outputLines = Regex.Split(output, @"(?<=[\n\r])");
             int lineCount = outputLines.Length;
-            if (string.IsNullOrEmpty(outputLines[lineCount - 1]))
+            if (string.IsNullOrEmpty(outputLines[^1]))
             {
                 lineCount--;
             }
@@ -198,8 +198,8 @@ namespace GitUI.UserControls
                 if (isTheLastLine)
                 {
                     bool isLineCompleted = outputLine.Length > 0 &&
-                        ((outputLine[outputLine.Length - 1] == '\n') ||
-                        outputLine[outputLine.Length - 1] == '\r');
+                        ((outputLine[^1] == '\n') ||
+                        outputLine[^1] == '\r');
                     if (!isLineCompleted)
                     {
                         _lineChunk = outputLine;

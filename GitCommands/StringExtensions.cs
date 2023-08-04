@@ -219,7 +219,7 @@ namespace System
                 return value;
             }
 
-            if (value[value.Length - 1] == '\n')
+            if (value[^1] == '\n')
             {
                 value = value.Substring(0, value.Length - 1);
             }

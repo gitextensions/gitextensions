@@ -2658,7 +2658,7 @@ namespace GitUI
                 return;
             }
 
-            GitRevision revision = revisions[revisions.Count - 1];
+            GitRevision revision = revisions[^1];
             while (revision.IsArtificial)
             {
                 revision = GetRevision(revision.FirstParentId);

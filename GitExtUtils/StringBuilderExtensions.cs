@@ -33,7 +33,7 @@ namespace GitExtUtils
                     return false;
                 }
 
-                if (s.Length > 1 && s[0] == '"' && s[s.Length - 1] == '"')
+                if (s.Length > 1 && s[0] == '"' && s[^1] == '"')
                 {
                     // String is already quoted
                     return false;

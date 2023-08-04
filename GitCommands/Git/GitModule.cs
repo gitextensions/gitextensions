@@ -2415,12 +2415,12 @@ namespace GitCommands
 
                     if (remoteMatch.Groups["direction"].Value == "push")
                     {
-                        if (remotes.Count <= 0 || name != remotes[remotes.Count - 1].Name)
+                        if (remotes.Count <= 0 || name != remotes[^1].Name)
                         {
                             throw new Exception("Unable to update remote pushurl for command output: " + remoteLine);
                         }
 
-                        remotes[remotes.Count - 1].PushUrls.Add(remoteUrl);
+                        remotes[^1].PushUrls.Add(remoteUrl);
                         continue;
                     }
 
@@ -2610,7 +2610,7 @@ namespace GitCommands
             }
 
             return patches.Count != 0
-                ? patches[patches.Count - 1]
+                ? patches[^1]
                 : null;
         }
 

@@ -20,7 +20,7 @@ namespace GitUI.LeftPanel
             }
 
             string[] dirs = fullPath.Split(PathSeparator);
-            Name = dirs[dirs.Length - 1];
+            Name = dirs[^1];
             ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator.ToString());
             Visible = visible;
         }

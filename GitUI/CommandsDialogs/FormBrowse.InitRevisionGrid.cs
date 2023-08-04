@@ -32,9 +32,9 @@ namespace GitUI.CommandsDialogs
                 // PathFilter is a free text field and may contain wildcards, quoting is optional.
                 // This is will adjust the string at least for paths added from context menus.
                 string? path = e.PathFilter;
-                if (path?.Length is > 1 && path[0] == '"' && path[path.Length - 1] == '"')
+                if (path?.Length is > 1 && path[0] == '"' && path[^1] == '"')
                 {
-                    path = path[1..(path.Length - 1)];
+                    path = path[1..^1];
                 }
 
                 revisionDiff.FallbackFollowedFile = path;

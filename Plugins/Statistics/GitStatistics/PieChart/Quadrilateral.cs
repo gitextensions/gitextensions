@@ -126,7 +126,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                 }
             }
 
-            if (DoesIntersects(point, cornerPoints[cornerPoints.Length - 1], cornerPoints[0]))
+            if (DoesIntersects(point, cornerPoints[^1], cornerPoints[0]))
             {
                 ++intersections;
             }

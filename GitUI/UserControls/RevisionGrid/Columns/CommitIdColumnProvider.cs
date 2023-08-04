@@ -44,7 +44,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 var i = Array.FindIndex(widthByLength, w => w > Column.Width);
 
-                if (i == -1 && Column.Width > widthByLength[widthByLength.Length - 1])
+                if (i == -1 && Column.Width > widthByLength[^1])
                 {
                     _grid.DrawColumnText(e, revision.ObjectId.ToString(), monospaceFont, style.ForeColor, e.CellBounds, useEllipsis: false);
                 }

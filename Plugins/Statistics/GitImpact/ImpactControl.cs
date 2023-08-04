@@ -222,7 +222,7 @@ namespace GitExtensions.Plugins.GitImpact
                 }
 
                 // Draw black border around selected author
-                string selectedAuthor = _authorStack[_authorStack.Count - 1];
+                string selectedAuthor = _authorStack[^1];
                 if (_brushes.ContainsKey(selectedAuthor) && _paths.TryGetValue(selectedAuthor, out GraphicsPath? selectedAuthorPath))
                 {
                     e.Graphics.DrawPath(new Pen(SystemColors.WindowText, 2), selectedAuthorPath);
@@ -406,7 +406,7 @@ namespace GitExtensions.Plugins.GitImpact
                         }
                     }
 
-                    var (lastRect, _) = points[points.Count - 1];
+                    var (lastRect, _) = points[^1];
 
                     // Right border
                     _paths[author].AddLine(lastRect.Right,

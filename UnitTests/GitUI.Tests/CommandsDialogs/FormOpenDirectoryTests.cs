@@ -40,7 +40,7 @@ namespace GitUITests.CommandsDialogs
         {
             // Path.GetTempPath returns a path with the trailing slash
             string path = Path.GetTempPath();
-            path[path.Length - 1].Should().Be(Path.DirectorySeparatorChar);
+            path[^1].Should().Be(Path.DirectorySeparatorChar);
 
             FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager).Should().BeNull();
             _localRepositoryManager.DidNotReceive().AddAsMostRecentAsync(Arg.Any<string>());
@@ -51,7 +51,7 @@ namespace GitUITests.CommandsDialogs
         {
             // Path.GetTempPath returns a path with the trailing slash
             string path = Path.GetTempPath();
-            path[path.Length - 1].Should().Be(Path.DirectorySeparatorChar);
+            path[^1].Should().Be(Path.DirectorySeparatorChar);
 
             // ensure absence of the trailing slash isn't a problem
             path = path.Substring(0, path.Length - 1);
@@ -63,7 +63,7 @@ namespace GitUITests.CommandsDialogs
         {
             // Path.GetTempPath returns a path with the trailing slash
             string path = Path.GetTempPath();
-            path[path.Length - 1].Should().Be(Path.DirectorySeparatorChar);
+            path[^1].Should().Be(Path.DirectorySeparatorChar);
 
             var module = FormOpenDirectory.TestAccessor.OpenGitRepository(_referenceRepository.Module.WorkingDir, _localRepositoryManager);
 
