@@ -21,7 +21,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
         {
             HttpClient? client = new()
             {
-                BaseAddress = new Uri(instanceUrl)
+                BaseAddress = new Uri(instanceUrl, UriKind.RelativeOrAbsolute)
             };
             client.DefaultRequestHeaders.Add("PRIVATE-TOKEN", apiToken);
 
@@ -31,13 +31,15 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
         private async Task<HttpResponseMessage> HttpGetAsync(Uri url)
         {
             HttpResponseMessage response = await _httpClient.GetAsync(url);
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            switch (response.StatusCode)
             {
-                throw new UnauthorizedAccessException();
+                case HttpStatusCode.Unauthorized:
+                case HttpStatusCode.NotFound:
+                    throw new UnauthorizedAccessException();
+                default:
+                    response.EnsureSuccessStatusCode();
+                    return response;
             }
-
-            response.EnsureSuccessStatusCode();
-            return response;
         }
 
         private static int? GetIntHeader(HttpResponseMessage response, string key)
@@ -73,6 +75,18 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
             };
 
             return result;
+        }
+
+        protected async Task<TItem?> LoadItemAsync<TItem>(Uri url)
+        {
+            using HttpResponseMessage response = await HttpGetAsync(url);
+            Validates.NotNull(response);
+
+            string json = await response.Content.ReadAsStringAsync();
+
+            TItem? item = JsonConvert.DeserializeObject<TItem>(json);
+
+            return item;
         }
 
         public void Dispose()

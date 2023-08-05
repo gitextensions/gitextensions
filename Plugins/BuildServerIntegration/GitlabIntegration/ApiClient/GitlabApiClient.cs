@@ -15,7 +15,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
         private const int _pageSize = 100;
         private readonly int _projectId;
 
-        public GitlabApiClient(string instanceUrl, string apiToken, int projectId)
+        public GitlabApiClient(string instanceUrl, string apiToken, int projectId = 0)
             : base(instanceUrl, apiToken)
         {
             _projectId = projectId;
@@ -46,6 +46,13 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient
             pipelinesUriBuilder.Query = query.ToString() ?? string.Empty;
 
             return await LoadListAsync<GitlabPipeline>(pipelinesUriBuilder.Uri);
+        }
+
+        public async Task<GitlabProject?> GetProjectAsync(string projectNamespace, string projectName)
+        {
+            UriBuilder projectUriBuilder = new($"{InstanceUrl}/api/v4/projects/{projectNamespace}%2F{projectName}");
+
+            return await LoadItemAsync<GitlabProject?>(projectUriBuilder.Uri);
         }
     }
 }

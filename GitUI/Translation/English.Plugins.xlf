@@ -767,6 +767,18 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en">
     <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
         <target />
