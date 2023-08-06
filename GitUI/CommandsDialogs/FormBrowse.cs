@@ -1479,7 +1479,7 @@ namespace GitUI.CommandsDialogs
         private void ArchiveToolStripMenuItemClick(object sender, EventArgs e)
         {
             var revisions = RevisionGrid.GetSelectedRevisions();
-            if (revisions.Count < 1 || revisions.Count > 2)
+            if (revisions.Count is (< 1 or > 2))
             {
                 MessageBoxes.SelectOnlyOneOrTwoRevisions(this);
                 return;
