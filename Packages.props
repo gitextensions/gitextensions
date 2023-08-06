@@ -30,6 +30,7 @@
     <PackageReference Update="System.Reactive.Linq" Version="5.0.0" />
     <PackageReference Update="System.Reactive.Interfaces" Version="5.0.0" />
     <PackageReference Update="System.ValueTuple" Version="4.5.0" /> <!-- Required by GitExtensions.Plugins.AutoCompileSubmodules -->
+    <PackageReference Update="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
 
     <!-- Analyzers -->
     <PackageReference Update="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0-beta1.23364.2" PrivateAssets="all" />

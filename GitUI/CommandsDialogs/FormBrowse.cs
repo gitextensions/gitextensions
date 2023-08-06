@@ -1695,6 +1695,9 @@ namespace GitUI.CommandsDialogs
                 RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
                 RevisionGrid.ResumeRefreshRevisions();
 
+                // Force keys to be fetched again
+                GitGpgController.ClearKeyCache();
+
                 RefreshRevisions();
             }
             else

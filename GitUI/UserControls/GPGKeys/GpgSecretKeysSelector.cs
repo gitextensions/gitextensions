@@ -166,6 +166,7 @@ namespace GitUI.UserControls.GPGKeys
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            GitGpgController.ClearKeyCache();
             LoadKeysAsync().FileAndForget();
         }
 
