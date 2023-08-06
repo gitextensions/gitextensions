@@ -34,16 +34,14 @@ namespace GitUI
             _fileStatusDiffCalculatorInfo.HeadId = headId;
             _fileStatusDiffCalculatorInfo.AllowMultiDiff = allowMultiDiff;
 
-            var selectedRev = revisions.FirstOrDefault();
-            if (selectedRev is null)
+            if (revisions?.Count is not > 0 || revisions[0] is not GitRevision selectedRev)
             {
                 return Array.Empty<FileStatusWithDescription>();
             }
 
             GitModule module = GetModule();
-
             List<FileStatusWithDescription> fileStatusDescs = new();
-            if (revisions!.Count == 1)
+            if (revisions.Count == 1)
             {
                 // If the grid is filtered, parents may be rewritten
                 GitRevision actualRev = GetActualRevisionForRevision(selectedRev);
@@ -103,7 +101,7 @@ namespace GitUI
             // the first item is therefore the second selected
             var firstRev = AppSettings.ShowDiffForAllParents && revisions.Count == maxMultiCompare
                 ? revisions[2]
-                : revisions.Last();
+                : revisions[^1];
 
             fileStatusDescs.Add(new FileStatusWithDescription(
                 firstRev: firstRev,

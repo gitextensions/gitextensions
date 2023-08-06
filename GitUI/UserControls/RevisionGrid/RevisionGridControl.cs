@@ -2182,18 +2182,14 @@ namespace GitUI
         private void ArchiveRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Count > 2)
+            if (selectedRevisions.Count is > 2)
             {
                 MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            GitRevision mainRevision = selectedRevisions.FirstOrDefault();
-            GitRevision? diffRevision = null;
-            if (selectedRevisions.Count == 2)
-            {
-                diffRevision = selectedRevisions.Last();
-            }
+            GitRevision? mainRevision = selectedRevisions.Count > 0 ? selectedRevisions[0] : null;
+            GitRevision? diffRevision = selectedRevisions.Count == 2 ? selectedRevisions[1] : null;
 
             UICommands.StartArchiveDialog(ParentForm, mainRevision, diffRevision);
         }

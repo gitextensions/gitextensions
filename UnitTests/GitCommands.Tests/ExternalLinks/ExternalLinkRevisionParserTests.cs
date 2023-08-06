@@ -21,7 +21,7 @@ namespace GitCommandsTests.ExternalLinks
         [SetUp]
         public void Setup()
         {
-            _linkDef = Parse(GetGitHubIssuesXmlDef()).First();
+            _linkDef = Parse(GetGitHubIssuesXmlDef())[0];
 
             _revision = new GitRevision(ObjectId.Random());
 
@@ -93,7 +93,7 @@ namespace GitCommandsTests.ExternalLinks
         [Test]
         public void ParseLinkWithEmptyRemotePart()
         {
-            _linkDef = Parse(GetEmptyRemotePartXmlDef()).First();
+            _linkDef = Parse(GetEmptyRemotePartXmlDef())[0];
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
             var expectedLinks = new[]
             {

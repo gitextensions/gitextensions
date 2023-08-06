@@ -65,7 +65,7 @@ namespace GitUITests.LeftPanel
             // Act
             var menuItems = group.ToArray();
             Assert.IsEmpty(_factoryQueue);
-            Assert.AreEqual(menuItems.Count(), expectedTotal);
+            Assert.AreEqual(menuItems.Length, expectedTotal);
             int testIndex = 0;
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Checkout));
             AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Merge));
@@ -87,7 +87,7 @@ namespace GitUITests.LeftPanel
             const int expectedEnabled = 2; // create branch, rename
             int expectedDisabled = expectedTotal - expectedEnabled;
             var disabledItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
-            Assert.AreEqual(disabledItems.Count(), expectedDisabled);
+            Assert.AreEqual(disabledItems.Length, expectedDisabled);
             int testIndex = 0;
             AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Checkout));
             AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Merge));

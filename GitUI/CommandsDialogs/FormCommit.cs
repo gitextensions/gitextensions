@@ -1710,7 +1710,7 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Unstaged;
                 _skipUpdate = false;
-                if (!e.ByMouse && Unstaged.AllItems.Count() != 0 && Unstaged.SelectedIndex == -1)
+                if (!e.ByMouse && Unstaged.AllItems.Any() && Unstaged.SelectedIndex == -1)
                 {
                     Unstaged.SelectedIndex = 0;
                 }
@@ -1969,7 +1969,7 @@ namespace GitUI.CommandsDialogs
             {
                 _currentFilesList = Staged;
                 _skipUpdate = false;
-                if (!e.ByMouse && Staged.AllItems.Count() != 0 && Staged.SelectedIndex == -1)
+                if (!e.ByMouse && Staged.AllItems.Any() && Staged.SelectedIndex == -1)
                 {
                     Staged.SelectedIndex = 0;
                 }

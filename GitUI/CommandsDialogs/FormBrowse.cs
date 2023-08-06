@@ -1485,12 +1485,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            GitRevision mainRevision = revisions.First();
-            GitRevision? diffRevision = null;
-            if (revisions.Count == 2)
-            {
-                diffRevision = revisions.Last();
-            }
+            GitRevision mainRevision = revisions[0];
+            GitRevision? diffRevision = revisions.Count == 2 ? revisions[1] : null;
 
             UICommands.StartArchiveDialog(this, mainRevision, diffRevision);
         }
@@ -1530,19 +1526,19 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            string onto = revisions[0].ObjectId.ToString(); // 2nd selected commit
             if (revisions.Count == 2)
             {
                 // Set defaults in rebase form to rebase commits defined by the range *from* first selected commit *to* HEAD
                 // *onto* 2nd selected commit
-                string? from = revisions[1].ObjectId.ToShortString(); // 1st selected commit (excluded from rebase)
-                string? to = RevisionGrid.CurrentBranch.Value; // current branch checked out (HEAD)
-                string? onto = revisions[0].ObjectId.ToString(); // 2nd selected commit
+                string from = revisions[1].ObjectId.ToShortString(); // 1st selected commit (excluded from rebase)
+                string to = RevisionGrid.CurrentBranch.Value; // current branch checked out (HEAD)
 
                 UICommands.StartRebaseDialog(this, from, to, onto, interactive: false, startRebaseImmediately: false);
             }
             else
             {
-                UICommands.StartRebaseDialog(this, revisions.First().Guid);
+                UICommands.StartRebaseDialog(this, onto);
             }
         }
 

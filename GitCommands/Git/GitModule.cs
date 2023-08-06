@@ -1420,7 +1420,7 @@ namespace GitCommands
                     {
                         filesToUnstage.Add(item);
                     }
-                    else if (initialStatus.Value.Where(i => i.Name == item.Name && i.Staged == StagedStatus.Index).FirstOrDefault() is GitItemStatus gitStatus)
+                    else if (initialStatus.Value.FirstOrDefault(i => i.Name == item.Name && i.Staged == StagedStatus.Index) is GitItemStatus gitStatus)
                     {
                         filesToUnstage.Add(gitStatus);
                     }

@@ -454,7 +454,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                 if (multipleProtocols && updateProtocols)
                 {
-                    var currentSelection = (GitProtocol)(ProtocolDropdownList.SelectedItem ?? repo.SupportedCloneProtocols.First());
+                    GitProtocol currentSelection = (GitProtocol)(ProtocolDropdownList.SelectedItem ?? repo.SupportedCloneProtocols[0]);
                     ProtocolDropdownList.DataSource = repo.SupportedCloneProtocols;
                     if (repo.SupportedCloneProtocols.Contains(currentSelection))
                     {
