@@ -156,7 +156,7 @@ namespace GitCommandsTests.ExternalLinks
             // 1 comes from the local
             effective.Count.Should().Be(5);
 
-            manager.Remove(effective.Last());
+            manager.Remove(effective[^1]);
 
             manager.Save();
 

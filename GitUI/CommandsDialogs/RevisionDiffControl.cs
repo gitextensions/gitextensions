@@ -428,7 +428,7 @@ namespace GitUI.CommandsDialogs
             // Combined diff, range diff etc are for display only, no manipulations
             bool isStatusOnly = selectedItems.Any(item => item.Item.IsRangeDiff || item.Item.IsStatusOnly);
             bool isDisplayOnlyDiff = parentIds.Contains(ObjectId.CombinedDiffId) || isStatusOnly;
-            int selectedGitItemCount = selectedItems.Count();
+            int selectedGitItemCount = selectedItems.Count;
 
             // No changes to files in bare repos
             bool isBareRepository = Module.IsBareRepository();
@@ -1053,10 +1053,10 @@ namespace GitUI.CommandsDialogs
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
         {
             // Some items are not supported if more than one revision is selected
-            var revisions = DiffFiles.SelectedItems.SecondRevs().ToList();
-            var selectedRev = revisions.Count() != 1 ? null : revisions.FirstOrDefault();
+            List<GitRevision> revisions = DiffFiles.SelectedItems.SecondRevs().ToList();
+            GitRevision? selectedRev = revisions.Count == 1 ? revisions[0] : null;
 
-            var parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
+            List<ObjectId> parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
             bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(parentIds, selectedRev);
             bool localExists = _gitRevisionTester.AnyLocalFileExists(DiffFiles.SelectedItems.Select(i => i.Item));
 

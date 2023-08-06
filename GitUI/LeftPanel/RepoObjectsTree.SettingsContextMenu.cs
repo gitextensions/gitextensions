@@ -60,7 +60,7 @@ namespace GitUI.LeftPanel
                 swapIndex = up ? swapIndex - 1 : swapIndex + 1;
 
                 // If there are no visible nodes to swap with, we're done
-                if (swapIndex < 0 || swapIndex >= treeToIndex.Count())
+                if (swapIndex < 0 || swapIndex >= treeToIndex.Count)
                 {
                     return;
                 }

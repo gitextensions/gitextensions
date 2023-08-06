@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 if (MessageBox.Show(this, _bisectStart.Text, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    BisectRange(revisions.First().ObjectId, revisions.Last().ObjectId);
+                    BisectRange(revisions[0].ObjectId, revisions[^1].ObjectId);
                     Close();
                 }
             }

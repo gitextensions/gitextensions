@@ -37,7 +37,7 @@
             }
 
             var segmentsForLane = row.GetSegmentsForIndex(lane);
-            if (segmentsForLane.Count() > 0)
+            if (segmentsForLane.Any())
             {
                 var firstParent = segmentsForLane.First().Parent;
 #if DEBUG
