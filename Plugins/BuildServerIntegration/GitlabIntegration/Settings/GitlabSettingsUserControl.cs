@@ -56,16 +56,23 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
             InstanceUrlTextBox.Text = host;
             ApiTokenTextBox.Text = apiToken;
 
-            if (projectId == null && host != null)
+            if (projectId is not null)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                ProjectIdTextBox.Text = projectId.ToString();
+            }
+            else
+            {
+                if (host is not null)
                 {
-                    projectId = await UpdateProjectIdAsync(host, apiToken);
-                    if (projectId is > 0)
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
-                        ProjectIdTextBox.Text = projectId.ToString();
-                    }
-                }).FileAndForget();
+                        projectId = await UpdateProjectIdAsync(host, apiToken);
+                        if (projectId is > 0)
+                        {
+                            ProjectIdTextBox.Text = projectId.ToString();
+                        }
+                    }).FileAndForget();
+                }
             }
         }
 
