@@ -354,8 +354,9 @@ namespace GitUI.CommandsDialogs
                     IsTracked = true,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
-                var revisions = RevisionGrid.GetSelectedRevisions();
-                FileStatusItem item = new(firstRev: revisions.Skip(1).LastOrDefault(), secondRev: revisions.FirstOrDefault(), file);
+                FileStatusItem item = new(firstRev: selectedRevisions.Count > 1 ? selectedRevisions[^1] : null,
+                    secondRev: selectedRevisions.Count > 0 ? selectedRevisions[0] : null,
+                    file);
                 _ = Diff.ViewChangesAsync(item, defaultText: TranslatedStrings.NoChanges,
                     cancellationToken: _viewChangesSequence.Next());
             }
@@ -405,35 +406,36 @@ namespace GitUI.CommandsDialogs
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRows = RevisionGrid.GetSelectedRevisions();
-
-            if (selectedRows.Count > 0)
+            GitRevision? selectedRev = RevisionGrid.GetSelectedRevisionOrDefault();
+            if (selectedRev is null)
             {
-                string? orgFileName = GetFileNameForRevision(selectedRows[0]) ?? FileName;
+                return;
+            }
 
-                string? fullName = _fullPathResolver.Resolve(orgFileName);
-                if (string.IsNullOrWhiteSpace(fullName))
-                {
-                    return;
-                }
+            string? orgFileName = GetFileNameForRevision(selectedRev) ?? FileName;
 
-                fullName = fullName.ToNativePath();
-                using SaveFileDialog fileDialog = new()
-                {
-                    InitialDirectory = Path.GetDirectoryName(fullName),
-                    FileName = Path.GetFileName(fullName),
-                    DefaultExt = Path.GetExtension(fullName),
-                    AddExtension = true
-                };
-                fileDialog.Filter =
-                    "Current format (*." +
-                    fileDialog.DefaultExt + ")|*." +
-                    fileDialog.DefaultExt +
-                    "|All files (*.*)|*.*";
-                if (fileDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    Module.SaveBlobAs(fileDialog.FileName, selectedRows[0].Guid + ":\"" + orgFileName + "\"");
-                }
+            string? fullName = _fullPathResolver.Resolve(orgFileName);
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                return;
+            }
+
+            fullName = fullName.ToNativePath();
+            using SaveFileDialog fileDialog = new()
+            {
+                InitialDirectory = Path.GetDirectoryName(fullName),
+                FileName = Path.GetFileName(fullName),
+                DefaultExt = Path.GetExtension(fullName),
+                AddExtension = true
+            };
+            fileDialog.Filter =
+                "Current format (*." +
+                fileDialog.DefaultExt + ")|*." +
+                fileDialog.DefaultExt +
+                "|All files (*.*)|*.*";
+            if (fileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                Module.SaveBlobAs(fileDialog.FileName, $"{selectedRev.Guid}:\"{orgFileName}\"");
             }
         }
 

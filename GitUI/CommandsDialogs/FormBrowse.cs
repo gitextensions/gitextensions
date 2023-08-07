@@ -662,7 +662,7 @@ namespace GitUI.CommandsDialogs
         private void RefreshSelection()
         {
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
-            var selectedRevision = selectedRevisions.FirstOrDefault();
+            GitRevision? selectedRevision = selectedRevisions.Count > 0 ? selectedRevisions[0] : null;
 
             FillFileTree(selectedRevision);
             FillDiff(selectedRevisions);
@@ -1944,13 +1944,12 @@ namespace GitUI.CommandsDialogs
 
         private void AddNotes()
         {
-            IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
-            if (selectedRevisions.Count == 0 || selectedRevisions[0].ObjectId.IsArtificial)
+            GitRevision? revision = RevisionGrid.GetSelectedRevisionOrDefault();
+            if (revision?.IsArtificial is not false)
             {
                 return;
             }
 
-            GitRevision revision = selectedRevisions[0];
             Module.EditNotes(revision.ObjectId);
             FillCommitInfo(revision);
         }

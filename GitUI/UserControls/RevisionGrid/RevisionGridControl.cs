@@ -695,6 +695,25 @@ namespace GitUI
         }
 
         /// <summary>
+        /// Get the (last) selected revision in the grid.
+        /// </summary>
+        /// <returns>The selected revisions or <see langword="null"/> if none selected.</returns>
+        public GitRevision? GetSelectedRevisionOrDefault()
+        {
+            int rowCount = _gridView.RowCount;
+            foreach (DataGridViewRow row in _gridView.SelectedRows)
+            {
+                if (row.Index < rowCount
+                    && GetRevision(row.Index) is GitRevision revision)
+                {
+                    return revision;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Get the selected revisions in the grid.
         /// Note that the parents may be rewritten if a filter is applied.
         /// </summary>
@@ -1647,7 +1666,7 @@ namespace GitUI
                 return;
             }
 
-            DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(GetSelectedRevisions().FirstOrDefault()));
+            DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(GetSelectedRevisionOrDefault()));
 
             if (!DoubleClickDoesNotOpenCommitInfo)
             {
@@ -2601,7 +2620,7 @@ namespace GitUI
 
         private void HighlightSelectedBranch()
         {
-            GitRevision revision = GetSelectedRevisions().FirstOrDefault();
+            GitRevision? revision = GetSelectedRevisionOrDefault();
             if (revision is null)
             {
                 return;
@@ -2789,7 +2808,7 @@ namespace GitUI
 
         private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var headCommit = GetSelectedRevisions().FirstOrDefault();
+            GitRevision? headCommit = GetSelectedRevisionOrDefault();
             if (headCommit is null)
             {
                 return;
@@ -2813,7 +2832,7 @@ namespace GitUI
                 return;
             }
 
-            var baseCommit = GetSelectedRevisions().FirstOrDefault();
+            GitRevision? baseCommit = GetSelectedRevisionOrDefault();
             if (baseCommit is null)
             {
                 return;
@@ -2824,7 +2843,7 @@ namespace GitUI
 
         private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _baseCommitToCompare = GetSelectedRevisions().FirstOrDefault();
+            _baseCommitToCompare = GetSelectedRevisionOrDefault();
             compareToBaseToolStripMenuItem.Enabled = _baseCommitToCompare is not null;
         }
 
@@ -2836,7 +2855,7 @@ namespace GitUI
                 return;
             }
 
-            var headCommit = GetSelectedRevisions().FirstOrDefault();
+            GitRevision? headCommit = GetSelectedRevisionOrDefault();
             if (headCommit is null)
             {
                 return;
@@ -2847,7 +2866,7 @@ namespace GitUI
 
         private void compareToWorkingDirectoryMenuItem_Click(object sender, EventArgs e)
         {
-            var baseCommit = GetSelectedRevisions().FirstOrDefault();
+            GitRevision? baseCommit = GetSelectedRevisionOrDefault();
             if (baseCommit is null)
             {
                 return;
@@ -2907,22 +2926,24 @@ namespace GitUI
 
         private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var revision = GetSelectedRevisions().FirstOrDefault();
-
-            if (revision is not null && !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
+            GitRevision? revision = GetSelectedRevisionOrDefault();
+            if (string.IsNullOrWhiteSpace(revision?.BuildStatus?.Url))
             {
-                OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.Url);
+                return;
             }
+
+            OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.Url);
         }
 
         private void openPullRequestPageStripMenuItem_Click(object sender, EventArgs e)
         {
-            var revision = GetSelectedRevisions().FirstOrDefault();
-
-            if (revision is not null && !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
+            GitRevision? revision = GetSelectedRevisionOrDefault();
+            if (string.IsNullOrWhiteSpace(revision?.BuildStatus?.PullRequestUrl))
             {
-                OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.PullRequestUrl);
+                return;
             }
+
+            OsShellUtil.OpenUrlInDefaultBrowser(revision.BuildStatus.PullRequestUrl);
         }
 
         private void editCommitToolStripMenuItem_Click(object sender, EventArgs e)
