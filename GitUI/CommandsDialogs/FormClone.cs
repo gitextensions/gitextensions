@@ -122,7 +122,7 @@ namespace GitUI.CommandsDialogs
                         }
                         else
                         {
-                            currentBranchRemote = remotes.FirstOrDefault();
+                            currentBranchRemote = remotes.Count > 0 ? remotes[0] : null;
                         }
                     }
 

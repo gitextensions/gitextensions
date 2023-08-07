@@ -145,7 +145,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private static Remote FindRemoteByPreference(IList<Remote> remotes)
         {
-            if (remotes is null)
+            if (remotes?.Count is not > 0)
             {
                 return default;
             }
@@ -160,7 +160,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
             }
 
-            return remotes.FirstOrDefault();
+            return remotes[0];
         }
 
         private void ExtractExternalLinkDefinitions(ICloudProviderExternalLinkDefinitionExtractor externalLinkDefinitionExtractor)

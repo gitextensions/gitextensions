@@ -376,7 +376,7 @@ namespace GitUI.CommandsDialogs
         {
             return parents.Count switch
             {
-                1 => DescribeRevision(parents.FirstOrDefault()?.ObjectId, 50),
+                1 => DescribeRevision(parents[0]?.ObjectId, 50),
                 > 1 => _multipleDescription.Text,
                 _ => null
             };
@@ -420,7 +420,7 @@ namespace GitUI.CommandsDialogs
 
             // Some items are not supported if more than one revision is selected
             var revisions = selectedItems.SecondRevs().ToList();
-            var selectedRev = revisions.Count != 1 ? null : revisions.FirstOrDefault();
+            GitRevision? selectedRev = revisions.Count == 1 ? revisions[0] : null;
 
             // First (A) is parent if one revision selected or if parent, then selected
             var parentIds = selectedItems.FirstIds().ToList();

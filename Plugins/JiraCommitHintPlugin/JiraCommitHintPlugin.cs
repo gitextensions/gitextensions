@@ -166,11 +166,11 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
                 ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
                     {
-                        var message = await GetMessageToCommitAsync(localJira, localQuery, localStringTemplate);
+                        JiraTaskDTO[] message = await GetMessageToCommitAsync(localJira, localQuery, localStringTemplate);
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                        var preview = message.FirstOrDefault();
+                        string previewText = message.Length > 0 ? message[0].Text : EmptyQueryResultMessage.Text;
 
-                        MessageBox.Show(null, preview is null ? EmptyQueryResultMessage.Text : preview.Text, EmptyQueryResultCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(null, previewText, EmptyQueryResultCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         _btnPreview.Enabled = true;
                     });

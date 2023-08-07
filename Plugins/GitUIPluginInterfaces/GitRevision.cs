@@ -117,7 +117,7 @@ namespace GitUIPluginInterfaces
 
         public bool HasParent => ParentIds?.Count > 0;
 
-        public ObjectId? FirstParentId => ParentIds?.FirstOrDefault();
+        public ObjectId? FirstParentId => HasParent ? ParentIds[0] : null;
 
         #region INotifyPropertyChanged
 

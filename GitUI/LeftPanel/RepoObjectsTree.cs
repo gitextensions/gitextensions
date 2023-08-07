@@ -296,12 +296,19 @@ namespace GitUI.LeftPanel
 
             var cancellationToken = _selectionCancellationTokenSequence.Next();
 
-            GitRevision selectedRevision = selectedRevisions.FirstOrDefault();
-            string? selectedGuid = selectedRevision is null
-                ? null
-                : selectedRevision.IsArtificial
-                    ? "HEAD"
-                    : selectedRevision.Guid;
+            GitRevision? selectedRevision;
+            string? selectedGuid;
+            if (selectedRevisions.Count == 0)
+            {
+                selectedRevision = null;
+                selectedGuid = null;
+            }
+            else
+            {
+                selectedRevision = selectedRevisions[0];
+                selectedGuid = selectedRevision.IsArtificial ? "HEAD" : selectedRevision.Guid;
+            }
+
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -488,14 +495,12 @@ namespace GitUI.LeftPanel
 
             TreeNode? GetNextSearchResult()
             {
-                var first = _searchResult?.FirstOrDefault();
-
-                if (first is null)
+                if (_searchResult?.Count is not > 0 || _searchResult[0] is not TreeNode first)
                 {
                     return null;
                 }
 
-                _searchResult!.RemoveAt(0);
+                _searchResult.RemoveAt(0);
                 _searchResult.Add(first);
                 return first;
             }
