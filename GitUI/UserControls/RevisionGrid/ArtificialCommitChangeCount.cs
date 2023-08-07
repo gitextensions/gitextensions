@@ -84,7 +84,7 @@ namespace GitUI
 
             void Append(IReadOnlyList<GitItemStatus> items, string singular)
             {
-                if (items is null || items.Count == 0)
+                if (items?.Count is not > 0)
                 {
                     return;
                 }

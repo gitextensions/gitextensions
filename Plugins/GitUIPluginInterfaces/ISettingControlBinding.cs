@@ -42,7 +42,7 @@
         {
             get
             {
-                if (_control is null || _control.IsDisposed)
+                if (_control?.IsDisposed is not false)
                 {
                     _control = CreateControl();
                 }

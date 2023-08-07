@@ -122,7 +122,7 @@ namespace GitUI
         private void DisplayPatches(IReadOnlyList<PatchFile> patchFiles)
         {
             PatchFiles = patchFiles;
-            SortablePatchFilesList patchFilesList = new SortablePatchFilesList();
+            SortablePatchFilesList patchFilesList = new();
             patchFilesList.AddRange(patchFiles);
             Patches.DataSource = patchFilesList;
 
@@ -143,10 +143,11 @@ namespace GitUI
                 return;
             }
 
-            var patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
+            PatchFile patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
 
-            if (patchFile.ObjectId is not null && !patchFile.ObjectId.IsArtificial)
+            if (patchFile?.ObjectId?.IsArtificial is false)
             {
+                // Normal commit selected
                 UICommands.StartFormCommitDiff(patchFile.ObjectId);
                 return;
             }
@@ -162,7 +163,7 @@ namespace GitUI
 
         public void SelectCurrentlyApplyingPatch()
         {
-            if (PatchFiles is null || !PatchFiles.Any())
+            if (PatchFiles?.Count is not > 0)
             {
                 return;
             }

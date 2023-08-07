@@ -298,7 +298,7 @@ namespace GitCommands.Submodules
             // For the current module git-status has information to set and clear the IsDirty flag
             // but cannot evaluate or change the ahead/behind information
             // The top module can only be dirty, but a submodule will only update the tree below current module
-            if (gitStatus is not null && gitStatus.Count > 0)
+            if (gitStatus?.Count is > 0)
             {
                 // If changes this and all super projects are at least dirty
                 // (changed commit can be missed, but top module can only be dirty)
@@ -433,7 +433,7 @@ namespace GitCommands.Submodules
 
             // Recursively update submodules
             GitModule module = new(path);
-            if (submoduleStatus is not null && submoduleStatus.IsDirty)
+            if (submoduleStatus?.IsDirty is true)
             {
                 await GetSubmoduleDetailedStatusAsync(module, cancelToken);
                 return;

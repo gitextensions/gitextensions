@@ -219,7 +219,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
             }
 
             _pieChart?.Dispose();
-            if (_colors is not null && _colors.Length > 0)
+            if (_colors?.Length is > 0)
             {
                 _pieChart = new PieChart3D(_leftMargin, _topMargin, width, height, _values, _colors,
                                            _sliceRelativeHeight);

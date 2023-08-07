@@ -18,18 +18,18 @@ namespace GitCommands
 
             StringBuilder sb = new();
 
-            if (output is not null && output.Length > 0)
+            if (output?.Length is > 0)
             {
                 sb.Append(encoding.GetString(output));
             }
 
-            if (error is not null && error.Length > 0 && output is not null && output.Length > 0)
+            if (error?.Length is > 0)
             {
-                sb.AppendLine();
-            }
+                if (sb.Length > 0)
+                {
+                    sb.AppendLine();
+                }
 
-            if (error is not null && error.Length > 0)
-            {
                 sb.Append(encoding.GetString(error));
             }
 
@@ -53,56 +53,35 @@ namespace GitCommands
             }
 
             string outputString = "";
-            if (output is not null && output.Length > 0)
+            if (output?.Length is > 0)
             {
-                Stream? ms = null;
-                try
-                {
-                    ms = new MemoryStream(output);
-                    using StreamReader reader = new(ms, encoding);
-                    ms = null;
-                    reader.Peek();
-                    encoding = reader.CurrentEncoding;
-                    outputString = reader.ReadToEnd();
-                    if (error is null || error.Length == 0)
-                    {
-                        return outputString;
-                    }
-                }
-                finally
-                {
-                    ms?.Dispose();
-                }
-
-                outputString = outputString + Environment.NewLine;
+                using Stream ms = new MemoryStream(output);
+                using StreamReader reader = new(ms, encoding);
+                reader.Peek();
+                encoding = reader.CurrentEncoding;
+                outputString = reader.ReadToEnd();
             }
 
-            string? errorString = null;
-            if (error is not null && error.Length > 0)
+            if (error?.Length is > 0)
             {
-                Stream? ms = null;
-                try
-                {
-                    ms = new MemoryStream(error);
-                    using StreamReader reader = new(ms, encoding);
-                    ms = null;
-                    reader.Peek();
+                using Stream ms = new MemoryStream(error);
+                using StreamReader reader = new(ms, encoding);
+                reader.Peek();
 
+                if (outputString.Length > 0)
+                {
+                    outputString += Environment.NewLine;
+                }
+                else
+                {
                     // .Net automatically detect Unicode encoding in StreamReader
                     encoding = reader.CurrentEncoding;
-                    errorString = reader.ReadToEnd();
-                    if (output is null || output.Length == 0)
-                    {
-                        return errorString;
-                    }
                 }
-                finally
-                {
-                    ms?.Dispose();
-                }
+
+                outputString += reader.ReadToEnd();
             }
 
-            return outputString + errorString;
+            return outputString;
         }
     }
 }

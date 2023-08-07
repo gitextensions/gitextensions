@@ -63,7 +63,7 @@ namespace GitUI.LeftPanel
 
                 LocalBranchNode localBranchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, visible: true);
 
-                if (aheadBehindData is not null && aheadBehindData.TryGetValue(localBranchNode.FullPath, out AheadBehindData aheadBehind))
+                if (aheadBehindData?.TryGetValue(localBranchNode.FullPath, out AheadBehindData aheadBehind) is true)
                 {
                     localBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), aheadBehind.RemoteRef);
                 }

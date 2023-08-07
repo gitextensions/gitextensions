@@ -951,7 +951,7 @@ namespace GitUI.CommandsDialogs
             DeleteColumn.DataPropertyName = DeleteColumnName;
             BranchGrid.DataSource = new BindingSource { DataSource = _branchTable };
 
-            if (_selectedRemote is null || _selectedRemote.Name is null)
+            if (_selectedRemote?.Name is null)
             {
                 return;
             }

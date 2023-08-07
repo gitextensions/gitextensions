@@ -955,7 +955,7 @@ See the changes in the commit form.");
 
         public bool SelectFileOrFolder(string filePath)
         {
-            if (filePath is null || filePath.IndexOf(Module.WorkingDir) != 0)
+            if (filePath?.StartsWith(Module.WorkingDir) is not true)
             {
                 return false;
             }

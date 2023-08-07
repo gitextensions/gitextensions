@@ -67,7 +67,7 @@ namespace GitUI.Hotkey
             var str = key.ToCultureSpecificString();
 
             // Strip the leading 'D' if it's a Decimal Key (D1, D2, ...)
-            if (str is not null && str.Length == 2 && str[0] == 'D')
+            if (str?.Length is 2 && str[0] == 'D')
             {
                 str = str[1].ToString();
             }

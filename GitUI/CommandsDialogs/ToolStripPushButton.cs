@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (aheadBehindData is null || aheadBehindData.Count < 1 || !aheadBehindData.ContainsKey(branchName))
+            if (aheadBehindData?.ContainsKey(branchName) is not true)
             {
                 return;
             }

@@ -1147,7 +1147,7 @@ namespace GitUI.CommandsDialogs
 
         private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> stagedFiles, IReadOnlyList<GitItemStatus>? lastSelection)
         {
-            if (_currentFilesList is null || _currentFilesList.IsEmpty)
+            if (_currentFilesList?.IsEmpty is not false)
             {
                 SelectStoredNextIndex();
                 return;

@@ -91,7 +91,7 @@ namespace GitCommands.Utils
                         using (registryKey)
                         {
                             var v = registryKey.GetValue("Install");
-                            return v is not null && v.ToString() == "1";
+                            return v?.ToString() is "1";
                         }
                     }
                 }

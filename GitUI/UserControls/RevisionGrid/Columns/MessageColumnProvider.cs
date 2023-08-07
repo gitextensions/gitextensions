@@ -231,7 +231,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 Rectangle messageBounds,
                 ref int offset)
             {
-                if (items is not null && items.Count == 0)
+                if (items?.Count is 0)
                 {
                     return;
                 }

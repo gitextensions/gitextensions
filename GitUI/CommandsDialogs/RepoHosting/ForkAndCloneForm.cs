@@ -148,7 +148,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _searchBtn_Click(object sender, EventArgs e)
         {
             var search = searchTB.Text;
-            if (search is null || search.Trim().Length == 0)
+            if (search?.Trim().Length is not > 0)
             {
                 return;
             }
@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void _getFromUserBtn_Click(object sender, EventArgs e)
         {
             var search = searchTB.Text;
-            if (search is null || search.Trim().Length == 0)
+            if (search?.Trim().Length is not > 0)
             {
                 return;
             }

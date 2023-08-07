@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
 
             groupBox1.AutoSize = true;
 
-            if (objectId is not null && objectId.IsArtificial)
+            if (objectId?.IsArtificial is true)
             {
                 objectId = null;
             }

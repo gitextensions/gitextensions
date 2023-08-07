@@ -47,7 +47,7 @@ namespace GitUI.Avatars
             // GitHub are never scaled and always 420 x 420 - even if a different size was requested.
 
             // We exploit that fact to filter out identicons.
-            var isIdenticon = imageSize != 420 && image is not null && image.Size.Width == 420;
+            var isIdenticon = imageSize != 420 && image?.Size.Width is 420;
 
             if (isIdenticon)
             {

@@ -105,7 +105,7 @@ namespace GitExtensions.Plugins.GitHub3
         {
             var pullRequest = _repo.CreatePullRequest(GitHubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
 
-            if (pullRequest is null || pullRequest.Number == 0)
+            if (pullRequest?.Number is not > 0)
             {
                 throw new Exception("Failed to create pull request.");
             }

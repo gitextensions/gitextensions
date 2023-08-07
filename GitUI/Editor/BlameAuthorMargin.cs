@@ -56,14 +56,14 @@ namespace GitUI.Editor
 
         public override void Paint(Graphics g, Rectangle rect)
         {
-            if (rect.Width <= 0 || rect.Height <= 0 || _blameLines is null || _blameLines.Count == 0)
+            if (rect.Width <= 0 || rect.Height <= 0 || _blameLines?.Count is not > 0)
             {
                 return;
             }
 
             g.Clear(_backgroundColor);
 
-            if (_avatars is null || _avatars.Count == 0)
+            if (_avatars?.Count is not > 0)
             {
                 return;
             }

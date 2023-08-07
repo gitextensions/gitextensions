@@ -184,7 +184,7 @@ namespace TeamCityIntegration
 
         public IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool? running = null)
         {
-            if (_httpClient is null || _httpClient.BaseAddress is null || ProjectNames == null || ProjectNames.Length == 0)
+            if (_httpClient?.BaseAddress is null || ProjectNames == null || ProjectNames.Length == 0)
             {
                 return Observable.Empty<BuildInfo>(scheduler);
             }

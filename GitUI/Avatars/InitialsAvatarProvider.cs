@@ -83,7 +83,7 @@ namespace GitUI.Avatars
             names = names?.Where(s => !string.IsNullOrWhiteSpace(s) && char.IsLetter(s[0])).ToArray();
 
             // if no valid name-elements are found, return null
-            if (names is null || names.Length == 0)
+            if (names?.Length is not > 0)
             {
                 return null;
             }
