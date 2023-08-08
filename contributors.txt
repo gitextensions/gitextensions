@@ -196,4 +196,5 @@ YYYY/MM/DD, github id, Full name, email
 2023/05/31, SimonCropp, Simon Cropp, simon.cropp@gmail.com
 2023/06/09, beiifeng, YiFei Wang, beiifeng@hotmail.com
 2023/07/05, NatRavenhill, Nat Ravenhill, natalie.ravenhill(at)gmail.com
+2023/07/13, Scott Sumrall, ssumrall, snsumrall(at)gmail.com
 2023/08/01, IlijaQ, Ilija Kujovic, ilijaqnet{at]gmail.com

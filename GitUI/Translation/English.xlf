@@ -3240,7 +3240,11 @@ revision:</source>
         <source>Clean working directory</source>
         <target />
       </trans-unit>
-      <trans-unit id="AddPath.Text">
+      <trans-unit id="AddExclusivePath.Text">
+        <source>Add a path...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="AddInclusivePath.Text">
         <source>Add a path...</source>
         <target />
       </trans-unit>
@@ -3280,8 +3284,12 @@ revision:</source>
         <source>Cleanup</source>
         <target />
       </trans-unit>
-      <trans-unit id="checkBoxPathFilter.Text">
-        <source>Affect the following path(s) only:</source>
+      <trans-unit id="checkBoxExcludePathFilter.Text">
+        <source>Exclude the following file path(s):</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="checkBoxIncludePathFilter.Text">
+        <source>Affect the following directory path(s) only:</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -3292,7 +3300,11 @@ revision:</source>
         <source>Log:</source>
         <target />
       </trans-unit>
-      <trans-unit id="labelPathHint.Text">
+      <trans-unit id="labelPathHintExclude.Text">
+        <source>(one path per line)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelPathHintInclude.Text">
         <source>(one path per line)</source>
         <target />
       </trans-unit>
