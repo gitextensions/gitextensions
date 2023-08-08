@@ -48,7 +48,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models
 
             result.Url = WebUrl;
             result.Duration = (UpdatedAt - CreatedAt).Ticks;
-            result.ShowInBuildReportTab = true;
+            result.ShowInBuildReportTab = false;
 
             return result;
         }
