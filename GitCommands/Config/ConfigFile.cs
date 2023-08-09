@@ -364,7 +364,7 @@ namespace GitCommands.Config
                 {
                     case '\n':
                         // check for line continuation
-                        if (_token.Length > 0 && _token[_token.Length - 1] == '\\')
+                        if (_token.Length > 0 && _token[^1] == '\\')
                         {
                             _token.Remove(_token.Length - 1, 1);
                             return ReadComment;

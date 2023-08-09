@@ -115,7 +115,7 @@ namespace GitUI.Avatars
                 char[] upperChars = name.Where(char.IsUpper).ToArray();
                 if (upperChars.Length > 1)
                 {
-                    return $"{upperChars[0]}{upperChars[upperChars.Length - 1]}";
+                    return $"{upperChars[0]}{upperChars[^1]}";
                 }
 
                 // return first letter upper-case and second letter original/lower case.
@@ -123,7 +123,7 @@ namespace GitUI.Avatars
             }
 
             // Return initials from first and last name-element as uppercase
-            return $"{name[0]}{names[names.Length - 1][0]}".ToUpper();
+            return $"{name[0]}{names[^1][0]}".ToUpper();
         }
 
         private readonly Graphics _graphics = Graphics.FromImage(new Bitmap(1, 1));

@@ -73,8 +73,8 @@ namespace GitCommands
         public static string? RemoveTrailingPathSeparator(this string? dirPath)
         {
             if (dirPath?.Length > 0 &&
-                (dirPath[dirPath.Length - 1] == NativeDirectorySeparatorChar ||
-                 dirPath[dirPath.Length - 1] == PosixDirectorySeparatorChar))
+                (dirPath[^1] == NativeDirectorySeparatorChar ||
+                 dirPath[^1] == PosixDirectorySeparatorChar))
             {
                 return dirPath.Substring(0, dirPath.Length - 1);
             }
@@ -92,8 +92,8 @@ namespace GitCommands
         public static string? EnsureTrailingPathSeparator(this string? dirPath)
         {
             if (!string.IsNullOrEmpty(dirPath) &&
-                dirPath[dirPath.Length - 1] != NativeDirectorySeparatorChar &&
-                dirPath[dirPath.Length - 1] != PosixDirectorySeparatorChar)
+                dirPath[^1] != NativeDirectorySeparatorChar &&
+                dirPath[^1] != PosixDirectorySeparatorChar)
             {
                 dirPath += NativeDirectorySeparatorChar;
             }

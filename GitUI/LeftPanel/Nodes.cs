@@ -106,6 +106,6 @@
 
         public int Count => _nodesList.Count;
 
-        public Node? LastNode => _nodesList.Count > 0 ? _nodesList[_nodesList.Count - 1] : null;
+        public Node? LastNode => _nodesList.Count > 0 ? _nodesList[^1] : null;
     }
 }

@@ -51,7 +51,7 @@ namespace GitUI
                 return null;
             }
 
-            return listView.SelectedItems[listView.SelectedItems.Count - 1];
+            return listView.SelectedItems[^1];
         }
 
         /// <summary>

@@ -201,7 +201,7 @@ namespace GitUITests.CommandsDialogs
         {
             var parts = filePathToAdd.Split(Path.DirectorySeparatorChar);
             var folders = parts.Take(parts.Length - 1);
-            var fileName = parts[parts.Length - 1];
+            var fileName = parts[^1];
             var nodes = treeView.Nodes;
             foreach (var folder in folders)
             {

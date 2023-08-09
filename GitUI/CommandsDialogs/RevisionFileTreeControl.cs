@@ -598,7 +598,7 @@ See the changes in the commit form.");
                 nodes = selectedNode.Nodes;
             }
 
-            var lastItem = _revisionFileTreeController.Find(nodes, items[items.Length - 1]);
+            var lastItem = _revisionFileTreeController.Find(nodes, items[^1]);
             if (lastItem is not null)
             {
                 tvGitTree.SelectedNode = lastItem;

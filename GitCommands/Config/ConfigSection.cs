@@ -99,7 +99,7 @@ namespace GitCommands.Config
             {
                 if (list.Count > 0)
                 {
-                    return list[list.Count - 1];
+                    return list[^1];
                 }
             }
 
