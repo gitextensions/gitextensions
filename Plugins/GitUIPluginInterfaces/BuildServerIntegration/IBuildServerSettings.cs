@@ -3,7 +3,7 @@
     public interface IBuildServerSettings
     {
         private const bool IntegrationEnabledDefault = false;
-        private const bool ShowBuildResultPageDefault = true;
+        private const bool ShowBuildResultPageDefault = false;
 
         /// <summary>
         ///  Gets or sets the type of the build server (e.g. AppVeyor, TeamCity, etc.).
@@ -26,7 +26,7 @@
         bool? ShowBuildResultPage { get; set; }
 
         /// <summary>
-        ///  If <see cref="ShowBuildResultPage"/> is configured - the configured value; otherwise the default <see langword="true"/>.
+        ///  If <see cref="ShowBuildResultPage"/> is configured - the configured value; otherwise the default <see langword="false"/>.
         /// </summary>
         bool ShowBuildResultPageOrDefault => ShowBuildResultPage.GetValueOrDefault(defaultValue: ShowBuildResultPageDefault);
 
