@@ -247,11 +247,10 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                ThreadHelper.JoinableTaskFactory.Run(() =>
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    RepositoryHistoryManager.Remotes.AddAsMostRecentAsync(sourceRepo);
-                    RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dirTo);
-                    return Task.CompletedTask;
+                    await RepositoryHistoryManager.Remotes.AddAsMostRecentAsync(sourceRepo);
+                    await RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dirTo);
                 });
 
                 if (!string.IsNullOrEmpty(_puttySshKey))
