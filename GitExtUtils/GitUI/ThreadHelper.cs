@@ -59,9 +59,27 @@ namespace GitUI
             }
         }
 
+        /// <summary>
+        /// Asynchronously run <paramref name="asyncAction"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
+        public static void FileAndForget(Func<Task> asyncAction)
+            => _taskManager.FileAndForget(asyncAction);
+
+        /// <summary>
+        /// Asynchronously run <paramref name="action"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
+        public static void FileAndForget(Action action)
+            => _taskManager.FileAndForget(action);
+
+        /// <summary>
+        /// Asynchronously run <paramref name="joinableTask"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
         public static void FileAndForget(this JoinableTask joinableTask)
             => _taskManager.FileAndForget(joinableTask.Task);
 
+        /// <summary>
+        /// Asynchronously run <paramref name="task"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
         public static void FileAndForget(this Task task)
             => _taskManager.FileAndForget(task);
 

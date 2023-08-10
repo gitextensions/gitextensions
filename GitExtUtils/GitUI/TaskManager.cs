@@ -19,6 +19,25 @@ namespace GitUI
         public JoinableTaskFactory JoinableTaskFactory { get; init; }
 
         /// <summary>
+        /// Handle all exceptions from asynchronous execution of <paramref name="asyncAction"/> by calling <paramref name="handleExceptionAsync"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
+        internal static async Task HandleExceptionsAsync(Func<Task> asyncAction, Func<Exception, Task> handleExceptionAsync)
+        {
+            try
+            {
+                await asyncAction();
+            }
+            catch (OperationCanceledException)
+            {
+                // Do not rethrow these
+            }
+            catch (Exception ex)
+            {
+                await handleExceptionAsync(ex);
+            }
+        }
+
+        /// <summary>
         /// Handle all exceptions from synchronous execution of <paramref name="action"/> by calling <paramref name="handleException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
         public static void HandleExceptions(Action action, Action<Exception> handleException)
@@ -37,41 +56,38 @@ namespace GitUI
             }
         }
 
-        public void FileAndForget(Task task)
+        /// <summary>
+        /// Asynchronously run <paramref name="asyncAction"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
+        public void FileAndForget(Func<Task> asyncAction)
         {
-            JoinableTaskFactory.RunAsync(
-                async () =>
+            JoinableTaskFactory.RunAsync(async () =>
                 {
-                    try
-                    {
-#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
-                        await task.ConfigureAwait(false);
-#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        // Do not rethrow these
-                    }
-                    catch (Exception ex)
-                    {
-                        await JoinableTaskFactory.SwitchToMainThreadAsync();
-                        Application.OnThreadException(ex.Demystify());
-                    }
+                    await TaskScheduler.Default;
+                    await HandleExceptionsAsync(asyncAction, ReportExceptionOnMainThreadAsync);
                 });
         }
 
-        public void RunAsyncAndForget(Func<Task> asyncAction)
+        /// <summary>
+        /// Asynchronously run <paramref name="action"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
+        public void FileAndForget(Action action)
         {
-            FileAndForget(JoinableTaskFactory.RunAsync(asyncAction).Task);
-        }
-
-        public void RunAsyncAndForget(Action action)
-        {
-            RunAsyncAndForget(() =>
+            FileAndForget(() =>
                 {
                     action();
                     return Task.CompletedTask;
                 });
+        }
+
+        /// <summary>
+        /// Asynchronously run <paramref name="task"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
+        public void FileAndForget(Task task)
+        {
+#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
+            FileAndForget(async () => await task);
+#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
         }
 
         public async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
@@ -84,6 +100,16 @@ namespace GitUI
             // Note that JoinableTaskContext.Factory must be used to bypass the default behavior of JoinableTaskFactory
             // since the latter adds new tasks to the collection and would therefore never complete.
             JoinableTaskContext.Factory.Run(_joinableTaskCollection.JoinTillEmptyAsync);
+        }
+
+        /// <summary>
+        /// Forward the exception <paramref name="ex"/> to <see cref="Application.OnThreadException"/> on the main thread.
+        /// </summary>
+        /// The readability of the callstack is improved by calling <see cref="ExceptionExtensions.Demystify"/>.
+        internal async Task ReportExceptionOnMainThreadAsync(Exception ex)
+        {
+            await JoinableTaskFactory.SwitchToMainThreadAsync();
+            Application.OnThreadException(ex.Demystify());
         }
     }
 }
