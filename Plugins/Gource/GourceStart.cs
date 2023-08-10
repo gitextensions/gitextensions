@@ -58,29 +58,24 @@ namespace GitExtensions.Plugins.Gource
 
         private void Button1Click(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (!File.Exists(GourcePath.Text))
             {
                 MessageBox.Show(this, "Cannot find Gource.\nPlease download Gource and set the correct path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.Run(
-                async () =>
-                {
-                    GourceArguments = Arguments.Text;
-                    var gourceAvatarsDir = GourceArguments.Contains("$(AVATARS)")
-                        ? await LoadAvatarsAsync()
-                        : "";
-                    var arguments = GourceArguments.Replace("$(AVATARS)", gourceAvatarsDir);
-                    PathToGource = GourcePath.Text;
-                    GitWorkingDir = WorkingDir.Text;
+            GourceArguments = Arguments.Text;
+            string gourceAvatarsDir = GourceArguments.Contains("$(AVATARS)")
+                ? ThreadHelper.JoinableTaskFactory.Run(LoadAvatarsAsync)
+                : "";
+            string arguments = GourceArguments.Replace("$(AVATARS)", gourceAvatarsDir);
+            PathToGource = GourcePath.Text;
+            GitWorkingDir = WorkingDir.Text;
 
-                    RunRealCmdDetached(GourcePath.Text, arguments);
-
-                    await this.SwitchToMainThreadAsync();
-
-                    Close();
-                });
+            RunRealCmdDetached(GourcePath.Text, arguments);
+            Close();
         }
 
         private async Task<string> LoadAvatarsAsync()

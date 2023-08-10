@@ -811,19 +811,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             RepositoryContextAction(sender as ToolStripMenuItem, selectedRepositoryItem =>
             {
                 ThreadHelper.JoinableTaskFactory.Run(() =>
-                {
-                    Task task;
-                    if (selectedRepositoryItem.IsFavourite)
-                    {
-                        task = RepositoryHistoryManager.Locals.RemoveFavouriteAsync(selectedRepositoryItem.Repository.Path);
-                    }
-                    else
-                    {
-                        task = RepositoryHistoryManager.Locals.RemoveRecentAsync(selectedRepositoryItem.Repository.Path);
-                    }
-
-                    return task;
-                });
+                    selectedRepositoryItem.IsFavourite
+                        ? RepositoryHistoryManager.Locals.RemoveFavouriteAsync(selectedRepositoryItem.Repository.Path)
+                        : RepositoryHistoryManager.Locals.RemoveRecentAsync(selectedRepositoryItem.Repository.Path));
                 ShowRecentRepositories();
             });
         }

@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
         /// <inheritdoc/>
         public bool ShowDeleteInvalidRepositoryDialog(string repositoryPath)
         {
-            int invalidPathCount = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync())
+            int invalidPathCount = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync)
                                                                    .Count(repo => !GitModule.IsValidGitWorkingDir(repo.Path));
 
             TaskDialogPage page = new()

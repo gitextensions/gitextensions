@@ -980,6 +980,8 @@ namespace GitUI.CommandsDialogs
 
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (!PullFromUrl.Checked)
             {
                 return;
@@ -996,16 +998,11 @@ namespace GitUI.CommandsDialogs
             Merge.Enabled = true;
             Rebase.Enabled = true;
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();
-
-                await this.SwitchToMainThreadAsync();
-                string prevUrl = comboBoxPullSource.Text;
-                comboBoxPullSource.DataSource = repositoryHistory;
-                comboBoxPullSource.DisplayMember = nameof(Repository.Path);
-                comboBoxPullSource.Text = prevUrl;
-            });
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync);
+            string prevUrl = comboBoxPullSource.Text;
+            comboBoxPullSource.DataSource = repositoryHistory;
+            comboBoxPullSource.DisplayMember = nameof(Repository.Path);
+            comboBoxPullSource.Text = prevUrl;
         }
 
         private void AddRemoteClick(object sender, EventArgs e)

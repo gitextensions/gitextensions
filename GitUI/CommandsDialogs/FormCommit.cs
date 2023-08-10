@@ -2058,9 +2058,7 @@ namespace GitUI.CommandsDialogs
                             }
 
                             GitSubmoduleStatus? gitSubmoduleStatus = ThreadHelper.JoinableTaskFactory.Run(() =>
-                            {
-                                return item.GetSubmoduleStatusAsync() ?? Task.FromResult<GitSubmoduleStatus?>(null);
-                            });
+                                item.GetSubmoduleStatusAsync() ?? Task.FromResult<GitSubmoduleStatus?>(null));
 
                             if (gitSubmoduleStatus is null || !gitSubmoduleStatus.IsDirty)
                             {

@@ -13,19 +13,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public FormOpenDirectory(GitModule? currentModule)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             InitializeComponent();
             InitializeComplete();
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
-
-                await this.SwitchToMainThreadAsync();
-                _NO_TRANSLATE_Directory.DataSource = GetDirectories(currentModule, repositoryHistory);
-                Load.Select();
-                _NO_TRANSLATE_Directory.Focus();
-                _NO_TRANSLATE_Directory.Select();
-            });
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+            _NO_TRANSLATE_Directory.DataSource = GetDirectories(currentModule, repositoryHistory);
+            Load.Select();
+            _NO_TRANSLATE_Directory.Focus();
+            _NO_TRANSLATE_Directory.Select();
         }
 
         protected override void OnRuntimeLoad(EventArgs e)

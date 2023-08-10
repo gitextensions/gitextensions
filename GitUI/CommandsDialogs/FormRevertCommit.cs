@@ -83,7 +83,7 @@ namespace GitUI.CommandsDialogs
 
             CommitMessageManager commitMessageManager = new(this, Module.WorkingDirGitDir, Module.CommitEncoding);
 
-            string existingCommitMessage = ThreadHelper.JoinableTaskFactory.Run(async () => await commitMessageManager.GetMergeOrCommitMessageAsync());
+            string existingCommitMessage = ThreadHelper.JoinableTaskFactory.Run(() => commitMessageManager.GetMergeOrCommitMessageAsync());
 
             ArgumentString command = GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex);
 

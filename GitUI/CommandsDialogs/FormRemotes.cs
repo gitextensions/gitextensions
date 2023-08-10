@@ -237,46 +237,42 @@ Inactive remote is completely invisible to git.");
 
         private void InitialiseTabRemotes(string? preselectRemote = null)
         {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            ThreadHelper.ThrowIfNotOnUIThread();
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync);
+            try
             {
-                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();
+                // because the binding the same BindingList to multiple controls,
+                // and changes in one of the bound control automatically get reflected
+                // in the other control, which causes rather frustrating UX.
+                // to address that, re-create binding lists for each individual control
 
-                await this.SwitchToMainThreadAsync();
-                try
+                // to stop the flicker binding the lists and
+                // when the selected remote is getting reset and then selected again
+                Url.BeginUpdate();
+                comboBoxPushUrl.BeginUpdate();
+                Remotes.BeginUpdate();
+
+                Url.DataSource = repositoryHistory.ToList();
+                Url.DisplayMember = nameof(Repository.Path);
+                Url.SelectedItem = null;
+
+                comboBoxPushUrl.DataSource = repositoryHistory.ToList();
+                comboBoxPushUrl.DisplayMember = nameof(Repository.Path);
+                comboBoxPushUrl.SelectedItem = null;
+
+                BindRemotes(preselectRemote);
+            }
+            finally
+            {
+                Remotes.EndUpdate();
+                if (Remotes.SelectedIndices.Count > 0)
                 {
-                    // because the binding the same BindingList to multiple controls,
-                    // and changes in one of the bound control automatically get reflected
-                    // in the other control, which causes rather frustrating UX.
-                    // to address that, re-create binding lists for each individual control
-
-                    // to stop the flicker binding the lists and
-                    // when the selected remote is getting reset and then selected again
-                    Url.BeginUpdate();
-                    comboBoxPushUrl.BeginUpdate();
-                    Remotes.BeginUpdate();
-
-                    Url.DataSource = repositoryHistory.ToList();
-                    Url.DisplayMember = nameof(Repository.Path);
-                    Url.SelectedItem = null;
-
-                    comboBoxPushUrl.DataSource = repositoryHistory.ToList();
-                    comboBoxPushUrl.DisplayMember = nameof(Repository.Path);
-                    comboBoxPushUrl.SelectedItem = null;
-
-                    BindRemotes(preselectRemote);
+                    Remotes.EnsureVisible(Remotes.SelectedIndices[0]);
                 }
-                finally
-                {
-                    Remotes.EndUpdate();
-                    if (Remotes.SelectedIndices.Count > 0)
-                    {
-                        Remotes.EnsureVisible(Remotes.SelectedIndices[0]);
-                    }
 
-                    Url.EndUpdate();
-                    comboBoxPushUrl.EndUpdate();
-                }
-            });
+                Url.EndUpdate();
+                comboBoxPushUrl.EndUpdate();
+            }
         }
 
         private void InitialiseTabDefaultPullBehaviors(string? preselectLocal = null)

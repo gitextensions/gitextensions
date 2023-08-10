@@ -24,20 +24,16 @@ namespace GitUI.CommandsDialogs
         public FormInit(string dir, EventHandler<GitModuleEventArgs>? gitModuleChanged)
             : base(commands: null, enablePositionRestore: true)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
 
             InitializeComplete();
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
-
-                await this.SwitchToMainThreadAsync();
-                _NO_TRANSLATE_Directory.DataSource = repositoryHistory;
-                _NO_TRANSLATE_Directory.DisplayMember = nameof(Repository.Path);
-            });
-
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+            _NO_TRANSLATE_Directory.DataSource = repositoryHistory;
+            _NO_TRANSLATE_Directory.DisplayMember = nameof(Repository.Path);
             _NO_TRANSLATE_Directory.SelectedIndex = -1;
             _NO_TRANSLATE_Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
         }

@@ -80,7 +80,7 @@ namespace GitUI
 
         public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container)
         {
-            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync());
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
             if (repositoryHistory.Count < 1)
             {
                 return;
@@ -138,7 +138,7 @@ namespace GitUI
             List<RecentRepoInfo> pinnedRepos = new();
             List<RecentRepoInfo> allRecentRepos = new();
 
-            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
             if (repositoryHistory.Count < 1)
             {
                 return;

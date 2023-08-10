@@ -118,7 +118,7 @@ namespace CommonTestUtils
 
             public int WaitForExit()
             {
-                return ThreadHelper.JoinableTaskFactory.Run(() => WaitForExitAsync());
+                return ThreadHelper.JoinableTaskFactory.Run(WaitForExitAsync);
             }
 
             public Task<int> WaitForExitAsync()

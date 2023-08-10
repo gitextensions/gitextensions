@@ -26,7 +26,7 @@ namespace GitUI.LeftPanel
             IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData()?.DistinctBy(r => r.Value.RemoteRef).ToDictionary(r => r.Value.RemoteRef, r => r.Value);
 
             List<RemoteRepoNode> enabledRemoteRepoNodes = new();
-            Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(async () => (await Module.GetRemotesAsync()).ToDictionary(r => r.Name));
+            Dictionary<string, Remote> remoteByName = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToDictionary(r => r.Name);
 
             ConfigFileRemoteSettingsManager remotesManager = new(() => Module);
 

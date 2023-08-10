@@ -230,10 +230,7 @@ namespace GitCommands
             public Task<int> WaitForExitAsync(CancellationToken token) => WaitForExitAsync().WithCancellation(token);
 
             /// <inheritdoc />
-            public int WaitForExit()
-            {
-                return ThreadHelper.JoinableTaskFactory.Run(() => WaitForExitAsync());
-            }
+            public int WaitForExit() => ThreadHelper.JoinableTaskFactory.Run(WaitForExitAsync);
 
             /// <inheritdoc />
             public void Dispose()

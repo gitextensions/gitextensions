@@ -51,28 +51,21 @@ namespace GitUI.CommandsDialogs
             _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
             _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
-
-                await this.SwitchToMainThreadAsync();
-                _NO_TRANSLATE_To.DataSource = repositoryHistory;
-                _NO_TRANSLATE_To.DisplayMember = nameof(Repository.Path);
-            });
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+            ThreadHelper.AssertOnUIThread();
+            _NO_TRANSLATE_To.DataSource = repositoryHistory;
+            _NO_TRANSLATE_To.DisplayMember = nameof(Repository.Path);
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             base.OnRuntimeLoad(e);
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();
-
-                await this.SwitchToMainThreadAsync();
-                _NO_TRANSLATE_From.DataSource = repositoryHistory;
-                _NO_TRANSLATE_From.DisplayMember = nameof(Repository.Path);
-            });
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync);
+            _NO_TRANSLATE_From.DataSource = repositoryHistory;
+            _NO_TRANSLATE_From.DisplayMember = nameof(Repository.Path);
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 

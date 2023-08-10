@@ -61,24 +61,20 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void Init()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             if (!string.IsNullOrEmpty(AppSettings.DefaultCloneDestinationPath))
             {
                 destinationTB.Text = AppSettings.DefaultCloneDestinationPath;
             }
             else
             {
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+                Repository? lastRepo = repositoryHistory.Count > 0 ? repositoryHistory[0] : null;
+                if (!string.IsNullOrEmpty(lastRepo?.Path))
                 {
-                    var repositoryHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
-
-                    await this.SwitchToMainThreadAsync();
-                    Repository? lastRepo = repositoryHistory.Count > 0 ? repositoryHistory[0] : null;
-                    if (!string.IsNullOrEmpty(lastRepo?.Path))
-                    {
-                        string p = lastRepo.Path.Trim('/', '\\');
-                        destinationTB.Text = Path.GetDirectoryName(p);
-                    }
-                });
+                    string p = lastRepo.Path.Trim('/', '\\');
+                    destinationTB.Text = Path.GetDirectoryName(p);
+                }
             }
 
             Text = $"{_gitHoster.Name}: {Text}";

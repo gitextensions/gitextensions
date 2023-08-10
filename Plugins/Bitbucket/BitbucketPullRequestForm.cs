@@ -135,41 +135,37 @@ namespace GitExtensions.Plugins.Bitbucket
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            if (ddlBranchSource.SelectedValue is null ||
+                ddlBranchTarget.SelectedValue is null ||
+                ddlRepositorySource.SelectedValue is null ||
+                ddlRepositoryTarget.SelectedValue is null)
             {
-                if (ddlBranchSource.SelectedValue is null ||
-                    ddlBranchTarget.SelectedValue is null ||
-                    ddlRepositorySource.SelectedValue is null ||
-                    ddlRepositoryTarget.SelectedValue is null)
-                {
-                    return;
-                }
+                return;
+            }
 
-                PullRequestInfo info = new()
-                {
-                    Title = txtTitle.Text,
-                    Description = txtDescription.Text,
-                    SourceBranch = ddlBranchSource.SelectedValue.ToString(),
-                    TargetBranch = ddlBranchTarget.SelectedValue.ToString(),
-                    SourceRepo = (Repository)ddlRepositorySource.SelectedValue,
-                    TargetRepo = (Repository)ddlRepositoryTarget.SelectedValue,
-                    Reviewers = _reviewers
-                };
-                Validates.NotNull(_settings);
-                CreatePullRequestRequest pullRequest = new(_settings, info);
-                var response = await pullRequest.SendAsync();
-                await this.SwitchToMainThreadAsync();
-                if (response.Success)
-                {
-                    MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ReloadPullRequests();
-                }
-                else
-                {
-                    MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
-                        _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            });
+            PullRequestInfo info = new()
+            {
+                Title = txtTitle.Text,
+                Description = txtDescription.Text,
+                SourceBranch = ddlBranchSource.SelectedValue.ToString(),
+                TargetBranch = ddlBranchTarget.SelectedValue.ToString(),
+                SourceRepo = (Repository)ddlRepositorySource.SelectedValue,
+                TargetRepo = (Repository)ddlRepositoryTarget.SelectedValue,
+                Reviewers = _reviewers
+            };
+            Validates.NotNull(_settings);
+            CreatePullRequestRequest pullRequest = new(_settings, info);
+            BitbucketResponse<Newtonsoft.Json.Linq.JObject> response = ThreadHelper.JoinableTaskFactory.Run(pullRequest.SendAsync);
+            if (response.Success)
+            {
+                MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                ReloadPullRequests();
+            }
+            else
+            {
+                MessageBox.Show(string.Join(Environment.NewLine, response.Messages),
+                    _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private readonly Dictionary<Repository, IEnumerable<string>> _branches = new();
@@ -397,7 +393,7 @@ namespace GitExtensions.Plugins.Bitbucket
 
                 // Approve
                 ApprovePullRequest approveRequest = new(_settings, mergeInfo);
-                var response = ThreadHelper.JoinableTaskFactory.Run(() => approveRequest.SendAsync());
+                BitbucketResponse<Newtonsoft.Json.Linq.JObject> response = ThreadHelper.JoinableTaskFactory.Run(approveRequest.SendAsync);
                 if (response.Success)
                 {
                     MessageBox.Show(_success.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);

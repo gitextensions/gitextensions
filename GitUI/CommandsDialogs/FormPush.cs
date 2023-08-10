@@ -821,6 +821,7 @@ namespace GitUI.CommandsDialogs
 
         private void PushToUrlCheckedChanged(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             PushDestination.Enabled = PushToUrl.Checked;
             folderBrowserButton1.Enabled = PushToUrl.Checked;
             _NO_TRANSLATE_Remotes.Enabled = PushToRemote.Checked;
@@ -828,18 +829,13 @@ namespace GitUI.CommandsDialogs
 
             if (PushToUrl.Checked)
             {
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
-                {
-                    var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();
+                IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync);
+                string prevUrl = PushDestination.Text;
+                PushDestination.DataSource = repositoryHistory;
+                PushDestination.DisplayMember = nameof(Repository.Path);
+                PushDestination.Text = prevUrl;
 
-                    await this.SwitchToMainThreadAsync();
-                    string prevUrl = PushDestination.Text;
-                    PushDestination.DataSource = repositoryHistory;
-                    PushDestination.DisplayMember = nameof(Repository.Path);
-                    PushDestination.Text = prevUrl;
-
-                    BranchSelectedValueChanged(this, EventArgs.Empty);
-                });
+                BranchSelectedValueChanged(this, EventArgs.Empty);
             }
             else
             {

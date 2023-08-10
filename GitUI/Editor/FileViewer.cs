@@ -678,7 +678,7 @@ namespace GitUI.Editor
 
         public void Clear()
         {
-            ThreadHelper.JoinableTaskFactory.Run(() => ClearAsync());
+            ThreadHelper.JoinableTaskFactory.Run(ClearAsync);
         }
 
         /// <summary>
@@ -1060,10 +1060,7 @@ namespace GitUI.Editor
             {
                 return _async.LoadAsync(
                     getSubmoduleText,
-                    text =>
-                    {
-                        ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, item, line: null, openWithDifftool));
-                    });
+                    text => ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, item, line: null, openWithDifftool)));
             }
             else if (FileHelper.IsImage(fileName))
             {
@@ -1105,8 +1102,7 @@ namespace GitUI.Editor
             {
                 return _async.LoadAsync(
                     getFileText,
-                    text => ThreadHelper.JoinableTaskFactory.Run(
-                        () => ViewTextAsync(fileName, text, item, line, openWithDifftool, checkGitAttributes: true)));
+                    text => ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, item, line, openWithDifftool, checkGitAttributes: true)));
             }
         }
 

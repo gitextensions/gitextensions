@@ -23,19 +23,16 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
         public FormAddSubmodule(GitUICommands commands)
             : base(commands)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             InitializeComponent();
             InitializeComplete();
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();
-
-                await this.SwitchToMainThreadAsync();
-                Directory.DataSource = repositoryHistory;
-                Directory.DisplayMember = nameof(Repository.Path);
-                Directory.Text = "";
-                LocalPath.Text = "";
-            });
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync);
+            Directory.DataSource = repositoryHistory;
+            Directory.DisplayMember = nameof(Repository.Path);
+            Directory.Text = "";
+            LocalPath.Text = "";
         }
 
         private void BrowseClick(object sender, EventArgs e)

@@ -168,10 +168,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(Module);
             Validates.NotNull(_externalLinksManager);
 
-            var remotes = ThreadHelper.JoinableTaskFactory.Run(async () => await Module.GetRemotesAsync()).ToList();
-            var selectedRemote = FindRemoteByPreference(remotes.Where(r => externalLinkDefinitionExtractor.IsValidRemoteUrl(r.FetchUrl)).ToList());
+            IReadOnlyList<Remote> remotes = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToList();
+            Remote selectedRemote = FindRemoteByPreference(remotes.Where(r => externalLinkDefinitionExtractor.IsValidRemoteUrl(r.FetchUrl)).ToList());
 
-            var externalLinkDefinitions = externalLinkDefinitionExtractor.GetDefinitions(selectedRemote.FetchUrl);
+            IList<ExternalLinkDefinition> externalLinkDefinitions = externalLinkDefinitionExtractor.GetDefinitions(selectedRemote.FetchUrl);
             _externalLinksManager.AddRange(externalLinkDefinitions);
 
             ReloadCategories();

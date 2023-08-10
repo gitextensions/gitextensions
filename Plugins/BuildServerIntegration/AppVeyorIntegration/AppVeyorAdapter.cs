@@ -93,31 +93,25 @@ namespace AppVeyorIntegration
                 }
 
                 // No settings, query projects for this account
-                ThreadHelper.JoinableTaskFactory.Run(
-                    async () =>
+
+                // v2 tokens requires a separate prefix
+                // (Documentation specifies that this is applicable for all requests, not the case though)
+                string apiBaseUrl = !string.IsNullOrWhiteSpace(accountName) && !string.IsNullOrWhiteSpace(accountToken) && accountToken.StartsWith("v2.")
+                    ? $"{WebSiteUrl}/api/account/{accountName}/projects/"
+                    : ApiBaseUrl;
+
+                // get the project ids for this account - no possibility to check if they are for the current repo
+                string result = ThreadHelper.JoinableTaskFactory.Run(() => GetResponseAsync(_httpClientAppVeyor, apiBaseUrl, CancellationToken.None));
+                if (!string.IsNullOrWhiteSpace(result))
+                {
+                    foreach (JToken project in JArray.Parse(result))
                     {
-                        // v2 tokens requires a separate prefix
-                        // (Documentation specifies that this is applicable for all requests, not the case though)
-                        string apiBaseUrl = !string.IsNullOrWhiteSpace(accountName) && !string.IsNullOrWhiteSpace(accountToken) && accountToken.StartsWith("v2.")
-                            ? $"{WebSiteUrl}/api/account/{accountName}/projects/"
-                            : ApiBaseUrl;
-
-                        // get the project ids for this account - no possibility to check if they are for the current repo
-                        var result = await GetResponseAsync(_httpClientAppVeyor, apiBaseUrl, CancellationToken.None).ConfigureAwait(false);
-
-                        if (string.IsNullOrWhiteSpace(result))
-                        {
-                            return;
-                        }
-
-                        foreach (var project in JArray.Parse(result))
-                        {
-                            // "slug" and "name" are normally the same
-                            var repoName = project["slug"].ToString();
-                            var projectId = accountName.Combine("/", repoName)!;
-                            projectNames.Add(projectId);
-                        }
-                    });
+                        // "slug" and "name" are normally the same
+                        string repoName = project["slug"].ToString();
+                        string projectId = accountName.Combine("/", repoName)!;
+                        projectNames.Add(projectId);
+                    }
+                }
             }
 
             _allBuilds = FilterBuilds(projectNames.SelectMany(project => QueryBuildsResults(project)));
@@ -162,14 +156,9 @@ namespace AppVeyorIntegration
             try
             {
                 Validates.NotNull(_httpClientAppVeyor);
-                return ThreadHelper.JoinableTaskFactory.Run(
-                    async () =>
-                    {
-                        string queryUrl = $"{ApiBaseUrl}{projectId}/history?recordsNumber={ProjectsToRetrieveCount}";
-                        var result = await GetResponseAsync(_httpClientAppVeyor, queryUrl, CancellationToken.None).ConfigureAwait(false);
-
-                        return ExtractBuildInfo(projectId, result);
-                    });
+                string queryUrl = $"{ApiBaseUrl}{projectId}/history?recordsNumber={ProjectsToRetrieveCount}";
+                string result = ThreadHelper.JoinableTaskFactory.Run(() => GetResponseAsync(_httpClientAppVeyor, queryUrl, CancellationToken.None));
+                return ExtractBuildInfo(projectId, result);
             }
             catch
             {

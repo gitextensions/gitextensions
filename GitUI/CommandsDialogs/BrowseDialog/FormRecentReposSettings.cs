@@ -15,17 +15,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public FormRecentReposSettings()
             : base(true)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             InitializeComponent();
             InitializeComplete();
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                _repositoryHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
-
-                await this.SwitchToMainThreadAsync();
-                LoadSettings();
-                RefreshRepos();
-            });
+            _repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+            LoadSettings();
+            RefreshRepos();
         }
 
         private void LoadSettings()
@@ -343,6 +340,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void removeRecentToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (!GetSelectedRepos(sender, out List<RecentRepoInfo?> repos))
             {
                 return;
@@ -354,10 +353,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 {
                     _repositoryHistory = await RepositoryHistoryManager.Locals.RemoveRecentAsync(repo.Repo.Path);
                 }
-
-                await this.SwitchToMainThreadAsync();
-                RefreshRepos();
             });
+            RefreshRepos();
         }
 
         private void listView_DrawItem(object sender, DrawListViewItemEventArgs e)

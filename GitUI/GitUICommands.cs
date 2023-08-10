@@ -525,6 +525,8 @@ namespace GitUI
 
             bool Action()
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
+
                 // Commit dialog can be opened on its own without the main form
                 // If it is opened by itself, we need to ensure plugins are loaded because some of them
                 // may have hooks into the commit flow
@@ -537,12 +539,8 @@ namespace GitUI
                     // if the dialog is loaded on its own, plugins need to be loaded before we load the form
                     if (!werePluginsRegistered)
                     {
-                        ThreadHelper.JoinableTaskFactory.Run(async () =>
-                        {
-                            PluginRegistry.Initialize();
-                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                            PluginRegistry.Register(this);
-                        });
+                        PluginRegistry.Initialize();
+                        PluginRegistry.Register(this);
                     }
 
                     using FormCommit form = new(this, commitMessage: commitMessage);

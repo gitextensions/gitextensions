@@ -16,6 +16,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public GeneralSettingsPage()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             InitializeComponent();
             Text = "General";
             InitializeComplete();
@@ -25,17 +27,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
-
-                await this.SwitchToMainThreadAsync();
-                var historicPaths = repositoryHistory.Select(GetParentPath())
-                                                     .Where(x => !string.IsNullOrEmpty(x))
-                                                     .Distinct(StringComparer.CurrentCultureIgnoreCase)
-                                                     .ToArray();
-                cbDefaultCloneDestination.Items.AddRange(historicPaths);
-            });
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+            string[] historicPaths = repositoryHistory.Select(GetParentPath())
+                                                      .Where(x => !string.IsNullOrEmpty(x))
+                                                      .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                                                      .ToArray();
+            cbDefaultCloneDestination.Items.AddRange(historicPaths);
 
             var pullActions = new[]
             {

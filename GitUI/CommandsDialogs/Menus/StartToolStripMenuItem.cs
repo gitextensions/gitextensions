@@ -101,14 +101,9 @@ namespace GitUI.CommandsDialogs.Menus
 
         private void tsmiRecentRepositoriesClear_Click(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.Run(async () =>
-            {
-                var repositoryHistory = Array.Empty<Repository>();
-                await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(repositoryHistory);
-
-                await this.SwitchToMainThreadAsync();
-                RecentRepositoriesCleared?.Invoke(sender, e);
-            });
+            ThreadHelper.ThrowIfNotOnUIThread();
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(Array.Empty<Repository>()));
+            RecentRepositoriesCleared?.Invoke(sender, e);
         }
     }
 }
