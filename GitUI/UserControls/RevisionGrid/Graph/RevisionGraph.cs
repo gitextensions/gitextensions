@@ -129,7 +129,135 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             RevisionGraphRevision[] orderedNodesCache = BuildOrderedNodesCache(currentRowIndex);
 
-            BuildOrderedRowCache(orderedNodesCache, currentRowIndex, lastToCacheRowIndex);
+            try
+            {
+                BuildOrderedRowCache(orderedNodesCache, currentRowIndex, lastToCacheRowIndex);
+            }
+            catch
+            {
+                foreach (string line in AsciiGraphFor(this))
+                {
+                    Console.WriteLine(line);
+                }
+            }
+        }
+
+        private static List<string> AsciiGraphFor(RevisionGraph revisionGraph)
+        {
+            List<string> graph = new();
+
+            int rowIndex = 0;
+            while (true)
+            {
+                // Create a line for commit
+
+                IRevisionGraphRow row = revisionGraph.GetSegmentsForRow(rowIndex);
+                char[] line = Enumerable.Repeat(' ', (row.GetLaneCount() * 2) + 1).ToArray();
+
+                // Show '|' in lanes passing through
+                foreach (RevisionGraphSegment segment in row.Segments)
+                {
+                    line[row.GetLaneForSegment(segment).Index * 2] = '|';
+                }
+
+                // Show '*' in lane of actual commit
+                string? subject = row.Revision.GitRevision.Subject;
+                line[row.GetCurrentRevisionLane() * 2] = subject?.Length is 1 ? subject[0] : '*';
+
+                graph.Add(new string(line).Trim());
+
+                IRevisionGraphRow nextRow = revisionGraph.GetSegmentsForRow(rowIndex + 1);
+                if (nextRow == null)
+                {
+                    break;
+                }
+
+                // Create a line between commits
+
+                line = Enumerable.Repeat(' ', (Math.Max(row.GetLaneCount(), nextRow.GetLaneCount()) * 2) + 1).ToArray();
+
+                // These drawing actions are done last, to appear on top
+                List<Action> actions = new();
+
+                foreach (RevisionGraphSegment segment in row.Segments)
+                {
+                    int fromPos = row.GetLaneForSegment(segment).Index * 2;
+                    int toPos = nextRow.GetLaneForSegment(segment).Index * 2;
+                    if (toPos == -2)
+                    {
+                        // Segment does not continue to next commit
+                        continue;
+                    }
+
+                    if (toPos == fromPos)
+                    {
+                        // Segment stays in lane
+                        actions.Add(() => line[fromPos] = '|');
+                    }
+                    else if (toPos == fromPos + 2)
+                    {
+                        // Segment shifts one lane to the right
+                        actions.Add(() =>
+                        {
+                            if (line[fromPos + 1] == '/')
+                            {
+                                // , crossing another shifting left
+                                line[fromPos + 1] = 'X';
+                            }
+                            else
+                            {
+                                line[fromPos + 1] = '\\';
+                            }
+                        });
+                    }
+                    else if (toPos == fromPos - 2)
+                    {
+                        // Segment shifts one lane to the left
+                        actions.Add(() =>
+                        {
+                            if (line[fromPos - 1] == '\\')
+                            {
+                                // , crossing another shifting right
+                                line[fromPos - 1] = 'X';
+                            }
+                            else
+                            {
+                                line[fromPos - 1] = '/';
+                            }
+                        });
+                    }
+                    else if (toPos > fromPos)
+                    {
+                        // Segment shifts multiple lanes to the right
+                        line[fromPos + 1] = '`';
+                        line[toPos] = 'ˎ';
+                        for (int pos = fromPos + 2; pos < toPos; ++pos)
+                        {
+                            line[pos] = '-';
+                        }
+                    }
+                    else if (toPos < fromPos)
+                    {
+                        // Segment shifts multiple lanes to the left
+                        line[fromPos - 1] = '´';
+                        line[toPos] = ',';
+                        for (int pos = toPos + 1; pos < fromPos - 1; ++pos)
+                        {
+                            line[pos] = '-';
+                        }
+                    }
+                }
+
+                foreach (Action action in actions)
+                {
+                    action();
+                }
+
+                graph.Add(new string(line).Trim());
+                ++rowIndex;
+            }
+
+            return graph;
         }
 
         public bool IsRowRelative(int row)

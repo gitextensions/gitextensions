@@ -77,7 +77,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     return;
                 }
 
-                _segmentLanes = new(capacity: Segments.Count);
+                int count = Segments.Count;
+                _segmentLanes = new(capacity: count);
                 _laneCount = 0;
                 _revisionLane = -1;
                 bool hasStart = false;
@@ -85,7 +86,19 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 foreach (RevisionGraphSegment segment in Segments)
                 {
-                    _segmentLanes.Add(segment, CreateOrReuseLane(segment));
+                    try
+                    {
+                        _segmentLanes.Add(segment, CreateOrReuseLane(segment));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        Console.WriteLine($"Revision: {Revision?.Objectid} {Revision?.GitRevision?.Subject} has {count} or {Segments.Count} segments");
+                        foreach (RevisionGraphSegment seg in Segments)
+                        {
+                            Console.WriteLine($"Child: {seg?.Child?.Objectid} - Parent: {seg?.Parent?.Objectid}");
+                        }
+                    }
                 }
 
                 if (_revisionLane < 0)
