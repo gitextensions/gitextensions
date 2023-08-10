@@ -59,13 +59,11 @@ namespace GitUI
             }
         }
 
-        public static void FileAndForget(this JoinableTask joinableTask, Func<Exception, bool>? fileOnlyIf = null)
-        {
-            joinableTask.Task.FileAndForget(fileOnlyIf);
-        }
+        public static void FileAndForget(this JoinableTask joinableTask)
+            => _taskManager.FileAndForget(joinableTask.Task);
 
-        public static void FileAndForget(this Task task, Func<Exception, bool>? fileOnlyIf = null)
-            => _taskManager.FileAndForget(task, fileOnlyIf);
+        public static void FileAndForget(this Task task)
+            => _taskManager.FileAndForget(task);
 
         public static async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
             => await _taskManager.JoinPendingOperationsAsync(cancellationToken);

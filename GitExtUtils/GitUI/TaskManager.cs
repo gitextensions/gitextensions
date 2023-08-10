@@ -18,7 +18,26 @@ namespace GitUI
 
         public JoinableTaskFactory JoinableTaskFactory { get; init; }
 
-        public void FileAndForget(Task task, Func<Exception, bool>? fileOnlyIf = null)
+        /// <summary>
+        /// Handle all exceptions from synchronous execution of <paramref name="action"/> by calling <paramref name="handleException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
+        public static void HandleExceptions(Action action, Action<Exception> handleException)
+        {
+            try
+            {
+                action();
+            }
+            catch (OperationCanceledException)
+            {
+                // Do not rethrow these
+            }
+            catch (Exception ex)
+            {
+                handleException(ex);
+            }
+        }
+
+        public void FileAndForget(Task task)
         {
             JoinableTaskFactory.RunAsync(
                 async () =>
@@ -33,7 +52,7 @@ namespace GitUI
                     {
                         // Do not rethrow these
                     }
-                    catch (Exception ex) when (fileOnlyIf?.Invoke(ex) ?? true)
+                    catch (Exception ex)
                     {
                         await JoinableTaskFactory.SwitchToMainThreadAsync();
                         Application.OnThreadException(ex.Demystify());
@@ -41,19 +60,18 @@ namespace GitUI
                 });
         }
 
-        public void RunAsyncAndForget(Func<Task> asyncAction, Func<Exception, bool>? fileOnlyIf = null)
+        public void RunAsyncAndForget(Func<Task> asyncAction)
         {
-            FileAndForget(JoinableTaskFactory.RunAsync(asyncAction).Task, fileOnlyIf);
+            FileAndForget(JoinableTaskFactory.RunAsync(asyncAction).Task);
         }
 
-        public void RunAsyncAndForget(Action action, Func<Exception, bool>? fileOnlyIf = null)
+        public void RunAsyncAndForget(Action action)
         {
             RunAsyncAndForget(() =>
                 {
                     action();
                     return Task.CompletedTask;
-                },
-                fileOnlyIf);
+                });
         }
 
         public async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)

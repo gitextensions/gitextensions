@@ -22,7 +22,6 @@ namespace GitUITests
         }
 
         [Test]
-        [Ignore("Hangs")]
         public async Task FileAndForgetReportsThreadException()
         {
             using ThreadExceptionHelper helper = new();
@@ -42,45 +41,6 @@ namespace GitUITests
             form.Dispose();
 
             YieldOntoControlMainThreadAsync(form).FileAndForget();
-
-            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-            Assert.Null(helper.Exception, helper.Message);
-        }
-
-        [Test]
-        [Ignore("Hangs")]
-        public async Task FileAndForgetFilterCanAllowExceptions()
-        {
-            using ThreadExceptionHelper helper = new();
-            Exception ex = new();
-
-            ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e == ex);
-
-            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-            Assert.AreSame(ex, helper.Exception);
-        }
-
-        [Test]
-        [Ignore("Hangs")]
-        public async Task FileAndForgetFilterCanIgnoreExceptions()
-        {
-            using ThreadExceptionHelper helper = new();
-            Exception ex = new();
-
-            ThrowExceptionAsync(ex).FileAndForget(fileOnlyIf: e => e != ex);
-
-            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-            Assert.Null(helper.Exception, helper.Message);
-        }
-
-        [Test]
-        public async Task FileAndForgetFilterIgnoresCancellationExceptions()
-        {
-            using ThreadExceptionHelper helper = new();
-            Form form = new();
-            form.Dispose();
-
-            YieldOntoControlMainThreadAsync(form).FileAndForget(fileOnlyIf: ex => true);
 
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
             Assert.Null(helper.Exception, helper.Message);

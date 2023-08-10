@@ -1056,22 +1056,21 @@ namespace GitUI
                 {
                     await TaskScheduler.Default;
 
-                    RevisionReader reader = new(capturedModule, hasReflogSelector: false);
-                    string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
-                    ParentsAreRewritten = _filterInfo.HasRevisionFilter;
-
-                    cancellationToken.ThrowIfCancellationRequested();
-                    reader.GetLog(
-                        observeRevisions,
-                        _filterInfo.GetRevisionFilter(currentCheckout),
-                        pathFilter,
-                        cancellationToken);
-                }).FileAndForget(
-                    ex =>
+                    TaskManager.HandleExceptions(() =>
                     {
-                        observeRevisions.OnError(ex);
-                        return false;
-                    });
+                        RevisionReader reader = new(capturedModule, hasReflogSelector: false);
+                        string pathFilter = BuildPathFilter(_filterInfo.PathFilter);
+                        ParentsAreRewritten = _filterInfo.HasRevisionFilter;
+
+                        cancellationToken.ThrowIfCancellationRequested();
+                        reader.GetLog(
+                            observeRevisions,
+                            _filterInfo.GetRevisionFilter(currentCheckout),
+                            pathFilter,
+                            cancellationToken);
+                    },
+                    ex => observeRevisions.OnError(ex));
+                });
 
                 // Initiate update left panel
                 RevisionsLoading?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
