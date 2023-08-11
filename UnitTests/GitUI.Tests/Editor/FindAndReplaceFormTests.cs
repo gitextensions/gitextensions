@@ -193,7 +193,7 @@ namespace GitUITests.Editor
                 return true;
             }
 
-            Arrange(texts.First(), searchPhrase, scanRegion: scanRegion, fileLoader: FileLoader);
+            Arrange(texts[0], searchPhrase, scanRegion: scanRegion, fileLoader: FileLoader);
 
             foreach (TextRange expectedRange in expectedRanges)
             {

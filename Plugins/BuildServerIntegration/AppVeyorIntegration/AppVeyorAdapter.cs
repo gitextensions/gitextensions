@@ -363,7 +363,7 @@ namespace AppVeyorIntegration
             }
 
             var buildData = buildDetailsParsed["build"];
-            var buildDescription = buildData["jobs"].Last();
+            var buildDescription = buildData["jobs"][^1];
 
             var status = buildDescription["status"].ToObject<string>();
             buildDetails.Status = ParseBuildStatus(status);
