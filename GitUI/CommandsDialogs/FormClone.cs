@@ -50,11 +50,6 @@ namespace GitUI.CommandsDialogs
             _url = url;
             _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
             _NO_TRANSLATE_Branches.DataSource = _defaultBranchItems;
-
-            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-            ThreadHelper.AssertOnUIThread();
-            _NO_TRANSLATE_To.DataSource = repositoryHistory;
-            _NO_TRANSLATE_To.DisplayMember = nameof(Repository.Path);
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
