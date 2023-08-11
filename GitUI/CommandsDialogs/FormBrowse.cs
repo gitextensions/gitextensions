@@ -608,7 +608,11 @@ namespace GitUI.CommandsDialogs
             // It can also be called from background tasks, e.g. from BackgroundFetchPlugin.
             if (!ThreadHelper.JoinableTaskContext.IsOnMainThread)
             {
-                Invoke(() => RefreshRevisions(e.GetRefs));
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                    {
+                        await this.SwitchToMainThreadAsync();
+                        RefreshRevisions(e.GetRefs);
+                    });
                 return;
             }
 

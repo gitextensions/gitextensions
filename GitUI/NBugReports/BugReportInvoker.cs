@@ -342,7 +342,11 @@ namespace GitUI.NBugReports
             {
                 if (ownerForm is FormBrowse formBrowse)
                 {
-                    formBrowse.Invoke(() => formBrowse.SetWorkingDir(workingDir));
+                    ThreadHelper.JoinableTaskFactory.Run(async () =>
+                        {
+                            await formBrowse.SwitchToMainThreadAsync();
+                            formBrowse.SetWorkingDir(workingDir);
+                        });
                 }
             }
         }

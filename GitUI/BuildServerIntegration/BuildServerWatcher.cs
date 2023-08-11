@@ -349,11 +349,13 @@ namespace GitUI.BuildServerIntegration
                         () =>
                         {
                             // To run the `StartSettingsDialog()` in the UI Thread
-                            _revisionGrid.Invoke((Action)(() =>
-                            {
-                                _revisionGrid.UICommands.StartSettingsDialog(typeof(BuildServerIntegrationSettingsPage));
-                            }));
-                        }, objectId => _revisionGridInfo.GetRevision(objectId) is not null);
+                            ThreadHelper.JoinableTaskFactory.Run(async () =>
+                                {
+                                    await _revisionGrid.SwitchToMainThreadAsync();
+                                    _revisionGrid.UICommands.StartSettingsDialog(typeof(BuildServerIntegrationSettingsPage));
+                                });
+                        },
+                        objectId => _revisionGridInfo.GetRevision(objectId) is not null);
                     return buildServerAdapter;
                 }
                 catch (InvalidOperationException ex)
