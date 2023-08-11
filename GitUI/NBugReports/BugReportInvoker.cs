@@ -217,16 +217,18 @@ namespace GitUI.NBugReports
             {
                 Icon = TaskDialogIcon.Error,
                 Caption = TranslatedStrings.FailedToLoadAnAssembly,
-                Heading = TranslatedStrings.FailedToLoadAnAssemblyHeader,
-                Text = TranslatedStrings.FailedToLoadAnAssemblyExplanation,
+                Heading = string.Format(TranslatedStrings.FailedToLoadFileOrAssemblyFormat, exception.FileName),
+                Text = TranslatedStrings.FailedToLoadFileOrAssemblyText,
                 AllowCancel = false,
                 SizeToContent = true,
             };
 
-            TaskDialogCommandLinkButton relaunchButton = new(TranslatedStrings.RelaunchGitExtensions);
+            TaskDialogCommandLinkButton relaunchButton = new(TranslatedStrings.RestartApplication);
+            relaunchButton.DescriptionText = TranslatedStrings.RestartApplicationDescription;
             pageFailToLoadAssembly.Buttons.Add(relaunchButton);
 
-            TaskDialogCommandLinkButton reportButton = new(TranslatedStrings.ReportTheIssue);
+            TaskDialogCommandLinkButton reportButton = new(TranslatedStrings.ReportIssue);
+            reportButton.DescriptionText = TranslatedStrings.ReportIssueDescription;
             pageFailToLoadAssembly.Buttons.Add(reportButton);
 
             pageFailToLoadAssembly.Expander = new TaskDialogExpander

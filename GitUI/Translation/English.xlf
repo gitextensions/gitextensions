@@ -10080,14 +10080,12 @@ Select this commit to populate the full message.</source>
         <source>Failed to load an assembly</source>
         <target />
       </trans-unit>
-      <trans-unit id="_failedToLoadAnAssemblyExplanation.Text">
-        <source>The error is believed to be caused by Windows Update and restarting the application should solve the issue.
-
-If it is not the first time it happens, and you can consistently reproduce the issue, please report it.</source>
+      <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
+        <source>Could not load file or assembly '{0}'</source>
         <target />
       </trans-unit>
-      <trans-unit id="_failedToLoadAnAssemblyHeader.Text">
-        <source>Git Extensions encountered a problem while trying to load an assembly.</source>
+      <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
+        <source>Most of the times the error is temporary, likely caused by Windows Update.</source>
         <target />
       </trans-unit>
       <trans-unit id="_filterFileInGrid.Text">
@@ -10301,8 +10299,12 @@ Remote: {1}</source>
         <source>If you think this was caused by Git Extensions, you can report a bug for the team to investigate.</source>
         <target />
       </trans-unit>
-      <trans-unit id="_reportTheIssue.Text">
+      <trans-unit id="_reportIssue.Text">
         <source>Report the issue</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_reportIssueDescription.Text">
+        <source>If you can consistently reproduce the issue, please report it.</source>
         <target />
       </trans-unit>
       <trans-unit id="_resetChangesCaption.Text">
@@ -10317,8 +10319,13 @@ Remote: {1}</source>
         <source>Are you sure you want to reset the changes to the selected lines?</source>
         <target />
       </trans-unit>
-      <trans-unit id="_restartGitExtensions.Text">
+      <trans-unit id="_restartApplication.Text">
         <source>Restart Git Extensions</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_restartApplicationDescription.Text">
+        <source>Usually restarting the application solves the issue.
+Sometimes Windows may need to be restarted too.</source>
         <target />
       </trans-unit>
       <trans-unit id="_rotInactive.Text">

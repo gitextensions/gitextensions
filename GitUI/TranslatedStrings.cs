@@ -167,13 +167,13 @@ following command.
 
         private readonly TranslationString _seeErrorMessage = new("See error message...");
         private readonly TranslationString _hideErrorMessage = new("Hide error message...");
-        private readonly TranslationString _reportTheIssue = new("Report the issue");
-        private readonly TranslationString _restartGitExtensions = new("Restart " + AppSettings.ApplicationName);
+        private readonly TranslationString _reportIssue = new("Report the issue");
+        private readonly TranslationString _reportIssueDescription = new("If you can consistently reproduce the issue, please report it.");
+        private readonly TranslationString _restartApplication = new($"Restart {AppSettings.ApplicationName}");
+        private readonly TranslationString _restartApplicationDescription = new("Usually restarting the application solves the issue.\r\nSometimes Windows may need to be restarted too.");
         private readonly TranslationString _failedToLoadAnAssembly = new("Failed to load an assembly");
-        private readonly TranslationString _failedToLoadAnAssemblyHeader = new(AppSettings.ApplicationName + " encountered a problem while trying to load an assembly.");
-        private readonly TranslationString _failedToLoadAnAssemblyExplanation = new(@"The error is believed to be caused by Windows Update and restarting the application should solve the issue.
-
-If it is not the first time it happens, and you can consistently reproduce the issue, please report it.");
+        private readonly TranslationString _failedToLoadFileOrAssemblyFormat = new("Could not load file or assembly '{0}'");
+        private readonly TranslationString _failedToLoadFileOrAssemblyText = new("Most of the times the error is temporary, likely caused by Windows Update.");
 
         // public only because of FormTranslate
         public TranslatedStrings()
@@ -349,10 +349,12 @@ If it is not the first time it happens, and you can consistently reproduce the i
 
         public static string SeeErrorMessage => _instance.Value._seeErrorMessage.Text;
         public static string HideErrorMessage => _instance.Value._hideErrorMessage.Text;
-        public static string ReportTheIssue => _instance.Value._reportTheIssue.Text;
-        public static string RelaunchGitExtensions => _instance.Value._restartGitExtensions.Text;
+        public static string ReportIssue => _instance.Value._reportIssue.Text;
+        public static string ReportIssueDescription => _instance.Value._reportIssueDescription.Text;
+        public static string RestartApplication => _instance.Value._restartApplication.Text;
+        public static string RestartApplicationDescription => _instance.Value._restartApplicationDescription.Text;
         public static string FailedToLoadAnAssembly => _instance.Value._failedToLoadAnAssembly.Text;
-        public static string FailedToLoadAnAssemblyHeader => _instance.Value._failedToLoadAnAssemblyHeader.Text;
-        public static string FailedToLoadAnAssemblyExplanation => _instance.Value._failedToLoadAnAssemblyExplanation.Text;
+        public static string FailedToLoadFileOrAssemblyFormat => _instance.Value._failedToLoadFileOrAssemblyFormat.Text;
+        public static string FailedToLoadFileOrAssemblyText => _instance.Value._failedToLoadFileOrAssemblyText.Text;
     }
 }
