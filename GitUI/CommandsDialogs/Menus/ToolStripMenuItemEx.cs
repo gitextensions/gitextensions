@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.Menus
         ///  Gets the current instance of the UI commands.
         /// </summary>
         protected GitUICommands UICommands
-            => (_getUICommands ?? throw new InvalidOperationException("The button is not initialized")).Invoke();
+            => (_getUICommands ?? throw new InvalidOperationException("The button is not initialized"))();
 
         /// <summary>
         ///  Gets the current instance of the git module.

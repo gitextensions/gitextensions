@@ -242,7 +242,7 @@ Detail of the error:");
                     {
                         _projectOnErrorKey = null;
                         Validates.NotNull(_openSettings);
-                        _openSettings.Invoke();
+                        _openSettings();
                     }
                 }
             }

@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs.Menus
         private void CopyPathsToClipboard(string prefixDir, Func<string, string> convertPath)
         {
             IEnumerable<string?> selectedFilePaths
-                = (_getSelectedFilePaths ?? throw new InvalidOperationException("The menu is not initialized.")).Invoke();
+                = (_getSelectedFilePaths ?? throw new InvalidOperationException("The menu is not initialized."))();
             string filePaths = GetFilePaths(selectedFilePaths, prefixDir, convertPath);
             if (!string.IsNullOrWhiteSpace(filePaths))
             {

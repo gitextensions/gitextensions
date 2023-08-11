@@ -193,7 +193,7 @@ namespace GitUI.Editor
         {
             if (searchForwardOrOpenWithDifftool && OpenWithDifftool is not null && string.IsNullOrEmpty(_findAndReplaceForm.LookFor))
             {
-                OpenWithDifftool.Invoke();
+                OpenWithDifftool();
                 return;
             }
 
