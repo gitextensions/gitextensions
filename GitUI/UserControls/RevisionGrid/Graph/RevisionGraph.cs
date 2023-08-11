@@ -133,12 +133,29 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 BuildOrderedRowCache(orderedNodesCache, currentRowIndex, lastToCacheRowIndex);
             }
-            catch
+            catch (Exception ex)
             {
-                foreach (string line in AsciiGraphFor(this))
-                {
-                    Console.WriteLine(line);
-                }
+                Console.WriteLine($"{nameof(CacheTo)}({currentRowIndex}, {lastToCacheRowIndex}) {ex}");
+                Print(orderedNodesCache);
+                PrintGraph();
+            }
+        }
+
+        private static void Print(RevisionGraphRevision[] nodes)
+        {
+            foreach (RevisionGraphRevision node in nodes)
+            {
+                Console.WriteLine($"Revision: {node.Score} {node.Objectid.ToShortString()} {node.GitRevision?.Subject}");
+                Console.WriteLine($"  Parents: {node.Parents.Select(parent => parent.Objectid.ToShortString()).Join(" ")}");
+                Console.WriteLine($"  Children: {node.Children.Select(child => child.Objectid.ToShortString()).Join(" ")}");
+            }
+        }
+
+        private void PrintGraph()
+        {
+            foreach (string line in AsciiGraphFor(this))
+            {
+                Console.WriteLine(line);
             }
         }
 
@@ -669,6 +686,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // So if Sort() complains in this case, try again.
             while (true)
             {
+                RevisionGraphRevision[] localOrderedNodesCache = Array.Empty<RevisionGraphRevision>();
                 try
                 {
                     // Reset the reorder flag and the orderedUntilScore. This makes sure it isn't marked dirty before we even got to
@@ -677,7 +695,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     _reorder = false;
 
                     // Use a local variable, because the cached list can be reset.
-                    RevisionGraphRevision[] localOrderedNodesCache = _nodes.ToArray();
+                    localOrderedNodesCache = _nodes.ToArray();
                     Array.Sort(localOrderedNodesCache, (x, y) => x.Score.CompareTo(y.Score));
                     _orderedNodesCache = localOrderedNodesCache;
                     if (localOrderedNodesCache.Length > 0)
@@ -690,6 +708,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 catch (ArgumentException ex) when (_reorder && ex.Message.Contains("IComparer.Compare()"))
                 {
                     // ignore and try again
+
+                    Console.WriteLine($"{nameof(BuildOrderedNodesCache)}({currentRowIndex}) {_reorder}, {ex}");
+                    Print(localOrderedNodesCache);
+                    PrintGraph();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{nameof(BuildOrderedNodesCache)}({currentRowIndex}) {_reorder}, {ex}");
+                    Print(localOrderedNodesCache);
+                    PrintGraph();
+
+                    throw;
                 }
             }
         }
