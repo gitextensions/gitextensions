@@ -28,7 +28,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         {
             AppSettings.ShowGitNotes = false;
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            _commands = new GitUICommands(_referenceRepository.Module);
+            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
 
             // mock git executable
             _gitExecutable = new MockExecutable();

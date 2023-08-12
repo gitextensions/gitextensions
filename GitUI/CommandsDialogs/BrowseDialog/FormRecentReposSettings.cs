@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private decimal _previousValue;
 
         public FormRecentReposSettings()
-            : base(true)
+            : base(enablePositionRestore: true)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 

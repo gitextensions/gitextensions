@@ -1,4 +1,5 @@
-﻿using System.Text;
+using System.ComponentModel.Design;
+using System.Text;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Commands;
@@ -11,7 +12,6 @@ using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
-using SmartFormat.Core.Output;
 using static GitUI.CommandsDialogs.FormBrowse;
 
 namespace GitUI
@@ -25,16 +25,22 @@ namespace GitUI
         private const string FilterByRevisionArg = "--filter-by-revision";
         private const string PathFilterArg = "--pathFilter";
 
+        private readonly IServiceProvider _serviceProvider;
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
+
+        public static IServiceProvider EmptyServiceProvider = new ServiceContainer();
 
         public GitModule Module { get; private set; }
         public ILockableNotifier RepoChangedNotifier { get; }
         public IBrowseRepo? BrowseRepo { get; set; }
 
-        public GitUICommands(GitModule module)
+        public GitUICommands(IServiceProvider serviceProvider, GitModule module)
         {
+            ArgumentNullException.ThrowIfNull(serviceProvider);
+            _serviceProvider = serviceProvider;
+
             Module = module ?? throw new ArgumentNullException(nameof(module));
 
             _commitTemplateManager = new CommitTemplateManager(() => module);
@@ -43,11 +49,6 @@ namespace GitUI
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
-        }
-
-        public GitUICommands(string? workingDir)
-            : this(new GitModule(workingDir))
-        {
         }
 
         public IGitModule GitModule => Module;
@@ -80,6 +81,8 @@ namespace GitUI
 
         #endregion
 
+        public object? GetService(Type serviceType) => _serviceProvider.GetService(serviceType);
+
         private bool RequiresValidWorkingDir(object? owner)
         {
             if (!Module.IsValidGitWorkingDir())
@@ -103,7 +106,7 @@ namespace GitUI
                     writer.Write(batchFile);
                 }
 
-                FormProcess.ShowDialog(null, arguments: $"/C \"{tempFile}\"", Module.WorkingDir, input: null, useDialogSettings: true, process: "cmd.exe");
+                FormProcess.ShowDialog(owner: null, this, arguments: $"/C \"{tempFile}\"", Module.WorkingDir, input: null, useDialogSettings: true, process: "cmd.exe");
             }
             finally
             {
@@ -115,7 +118,7 @@ namespace GitUI
         {
             bool success = command.AccessesRemote
                 ? FormRemoteProcess.ShowDialog(owner, this, command.Arguments)
-                : FormProcess.ShowDialog(owner, arguments: command.Arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+                : FormProcess.ShowDialog(owner, this, arguments: command.Arguments, Module.WorkingDir, input: null, useDialogSettings: true);
 
             if (success && command.ChangesRepoState)
             {
@@ -127,12 +130,12 @@ namespace GitUI
 
         public bool StartCommandLineProcessDialog(IWin32Window? owner, string? command, ArgumentString arguments)
         {
-            return FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true, process: command);
+            return FormProcess.ShowDialog(owner, this, arguments, Module.WorkingDir, input: null, useDialogSettings: true, process: command);
         }
 
         public bool StartGitCommandProcessDialog(IWin32Window? owner, ArgumentString arguments)
         {
-            return FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+            return FormProcess.ShowDialog(owner, this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
         public bool StartDeleteBranchDialog(IWin32Window? owner, string branch)
@@ -188,7 +191,7 @@ namespace GitUI
             bool Action()
             {
                 var arguments = GitCommandHelpers.StashSaveCmd(includeUntrackedFiles, keepIndex, message, selectedFiles);
-                FormProcess.ShowDialog(owner, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
                 return true;
@@ -201,7 +204,7 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, arguments: "stash --staged", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, this, arguments: "stash --staged", Module.WorkingDir, input: null, useDialogSettings: true);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
                 return true;
@@ -214,7 +217,7 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, arguments: $"stash pop {stashName.QuoteNE()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, this, arguments: $"stash pop {stashName.QuoteNE()}", Module.WorkingDir, input: null, useDialogSettings: true);
                 MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
@@ -228,7 +231,7 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, arguments: $"stash drop {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, this, arguments: $"stash drop {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
                 return true;
@@ -241,7 +244,7 @@ namespace GitUI
         {
             bool Action()
             {
-                FormProcess.ShowDialog(owner, arguments: $"stash apply {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(owner, this, arguments: $"stash apply {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
                 MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
 
                 // git-stash may have changed commits also if aborted, the grid must be refreshed
@@ -858,7 +861,7 @@ namespace GitUI
         {
             if (revision?.IsArtificial is true)
             {
-                 return false;
+                return false;
             }
 
             bool Action()
@@ -1057,7 +1060,7 @@ namespace GitUI
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), Module.WorkingDir, input: null, useDialogSettings: true);
+                return FormProcess.ShowDialog(owner, this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, Action, postEvent: PostUpdateSubmodules);
@@ -1068,7 +1071,7 @@ namespace GitUI
             bool Action()
             {
                 // Execute the submodule update comment from the submodule's parent directory
-                return FormProcess.ShowDialog(owner, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), submoduleParentPath, null, true);
+                return FormProcess.ShowDialog(owner, this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), submoduleParentPath, null, true);
             }
 
             return DoActionOnRepo(owner, Action, postEvent: PostUpdateSubmodules);
@@ -1078,7 +1081,7 @@ namespace GitUI
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, arguments: GitCommandHelpers.SubmoduleSyncCmd(""), Module.WorkingDir, input: null, useDialogSettings: true);
+                return FormProcess.ShowDialog(owner, this, arguments: GitCommandHelpers.SubmoduleSyncCmd(""), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             return DoActionOnRepo(owner, Action);
@@ -1656,7 +1659,7 @@ namespace GitUI
                     string? path = File.ReadAllText(args[2]).Trim().LazySplit('\n').FirstOrDefault();
                     if (Directory.Exists(path))
                     {
-                        c = new GitUICommands(path);
+                        c = WithWorkingDirectory(path);
                     }
                 }
             }
@@ -1761,7 +1764,7 @@ namespace GitUI
                 // NOTE: fileHistoryFileName must be quoted.
 
                 ShowModelessForm(owner: null, requiresValidWorkingDir: true, preEvent: null, postEvent: null,
-                                 () => new FormFileHistory(commands: this, fileHistoryFileName.QuoteNE(), revision, filterByRevision, showBlame));
+                                 () => new FormFileHistory(this, fileHistoryFileName.QuoteNE(), revision, filterByRevision, showBlame));
             }
 
             return true;
@@ -1915,6 +1918,20 @@ namespace GitUI
         {
             return new GitRemoteCommand(this);
         }
+
+        /// <summary>
+        ///  Creates a new instance of <see cref="GitUICommands"/> for a git repository specified by <paramref name="module"/>.
+        /// </summary>
+        /// <param name="module">The git repository.</param>
+        /// <returns>A new instance of <see cref="GitUICommands"/>.</returns>
+        public GitUICommands WithGitModule(GitModule module) => new(_serviceProvider, module);
+
+        /// <summary>
+        ///  Creates a new instance of <see cref="GitUICommands"/> for a git repository specified by <paramref name="workingDirectory"/>.
+        /// </summary>
+        /// <param name="workingDirectory">The git repository working directory.</param>
+        /// <returns>A new instance of <see cref="GitUICommands"/>.</returns>
+        public GitUICommands WithWorkingDirectory(string? workingDirectory) => new(_serviceProvider, new GitModule(workingDirectory));
 
         #region Nested class: GitRemoteCommand
 

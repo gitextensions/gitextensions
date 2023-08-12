@@ -73,7 +73,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             // Use the singleton provider, which is also used by the left panel, so we can synchronize on updates
             _provider = SubmoduleStatusProvider.Default;
 
-            _commands = new GitUICommands(_repo1Module);
+            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _repo1Module);
 
             var composition = TestComposition.Empty
                 .AddParts(typeof(MockLinkFactory))

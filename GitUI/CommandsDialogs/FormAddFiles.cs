@@ -21,13 +21,13 @@ namespace GitUI.CommandsDialogs
         private void ShowFilesClick(object sender, EventArgs e)
         {
             string arguments = string.Format("add --dry-run{0} \"{1}\"", force.Checked ? " -f" : "", Filter.Text);
-            FormProcess.ShowDialog(this, arguments, Module.WorkingDir, input: null, useDialogSettings: false);
+            FormProcess.ShowDialog(this, UICommands, arguments, Module.WorkingDir, input: null, useDialogSettings: false);
         }
 
         private void AddFilesClick(object sender, EventArgs e)
         {
             string arguments = string.Format("add{0} \"{1}\"", force.Checked ? " -f" : "", Filter.Text);
-            if (FormProcess.ShowDialog(this, arguments, Module.WorkingDir, input: null, useDialogSettings: false))
+            if (FormProcess.ShowDialog(this, UICommands, arguments, Module.WorkingDir, input: null, useDialogSettings: false))
             {
                 Close();
             }

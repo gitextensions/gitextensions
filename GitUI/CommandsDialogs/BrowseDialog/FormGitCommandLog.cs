@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     public sealed partial class FormGitCommandLog : GitExtensionsForm
     {
         private FormGitCommandLog()
-            : base(true)
+            : base(enablePositionRestore: true)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 

@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
             using (WaitCursorScope.Enter())
             {
                 var command = GitCommandHelpers.AddSubmoduleCmd(Directory.Text, LocalPath.Text, Branch.Text, chkForce.Checked);
-                FormProcess.ShowDialog(this, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
                 Close();
             }
         }

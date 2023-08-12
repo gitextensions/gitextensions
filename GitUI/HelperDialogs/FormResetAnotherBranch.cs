@@ -13,8 +13,8 @@ namespace GitUI.HelperDialogs
         private readonly GitRevision _revision;
         private readonly TranslationString _localRefInvalid = new("The entered value '{0}' is not the name of an existing local branch.");
 
-        public static FormResetAnotherBranch Create(GitUICommands gitUiCommands, GitRevision revision)
-            => new(gitUiCommands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision));
+        public static FormResetAnotherBranch Create(GitUICommands commands, GitRevision revision)
+            => new(commands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision));
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -24,8 +24,8 @@ namespace GitUI.HelperDialogs
             InitializeComponent();
         }
 
-        private FormResetAnotherBranch(GitUICommands gitUiCommands, GitRevision revision)
-            : base(gitUiCommands)
+        private FormResetAnotherBranch(GitUICommands commands, GitRevision revision)
+            : base(commands)
         {
             _revision = revision;
 
@@ -91,7 +91,7 @@ namespace GitUI.HelperDialogs
             }
 
             var command = GitCommandHelpers.PushLocalCmd(gitRefToReset.CompleteName, _revision.ObjectId, Module.GetGitExecPath(Module.WorkingDir), ForceReset.Checked);
-            bool success = FormProcess.ShowDialog(this, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+            bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (success)
             {
                 UICommands.RepoChangedNotifier.Notify();

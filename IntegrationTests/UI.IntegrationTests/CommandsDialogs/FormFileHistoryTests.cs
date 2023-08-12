@@ -34,7 +34,7 @@ public class FormFileHistoryTests
     public void File_history_should_behave_as_expected(string fileRelativePath, string fileName)
     {
         using ReferenceRepository referenceRepository = new();
-        GitUICommands commands = new(referenceRepository.Module);
+        GitUICommands commands = new(GitUICommands.EmptyServiceProvider, referenceRepository.Module);
 
         string revision1 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Create '{fileName}' in directory '{fileRelativePath}'");
         string revision2 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Update '{fileName}' in directory '{fileRelativePath}'");

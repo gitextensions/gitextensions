@@ -1486,7 +1486,7 @@ namespace GitUI.CommandsDialogs
             }
 
             string text = string.Format(_stageFilename.Text, filename);
-            FormStatus.ShowErrorDialog(this, text, text, output);
+            FormStatus.ShowErrorDialog(this, UICommands, text, text, output);
         }
 
         private void merge_Click(object sender, EventArgs e)

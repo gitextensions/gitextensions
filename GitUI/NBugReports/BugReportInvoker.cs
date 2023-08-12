@@ -322,7 +322,8 @@ namespace GitUI.NBugReports
                     string tempFile = Path.GetTempFileName();
                     File.WriteAllText(tempFile, $"{TranslatedStrings.GitDubiousOwnershipTrustAllInstruction}\r\n\r\ngit {ExecutableExtensions.DubiousOwnershipSecurityConfigString} \"*\"");
 
-                    using FormEditor formEditor = new(new GitUICommands(new GitModule(null)), tempFile, showWarning: false, readOnly: true);
+                    // TODO: if FormEditor ever changed to use the DI, we'll need to configure the container
+                    using FormEditor formEditor = new(new GitUICommands(GitUICommands.EmptyServiceProvider, new GitModule(null)), tempFile, showWarning: false, readOnly: true);
                     formEditor.ShowDialog();
 
                     try

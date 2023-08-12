@@ -1286,7 +1286,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var name in submodules)
             {
-                GitUICommands submodulCommands = new(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
+                GitUICommands submodulCommands = UICommands.WithWorkingDirectory(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                 submodulCommands.StartCommitDialog(this);
             }
 
@@ -1317,7 +1317,7 @@ namespace GitUI.CommandsDialogs
         {
             var submodules = DiffFiles.SelectedItems.Where(it => it.Item.IsSubmodule).Select(it => it.Item.Name).Distinct().ToList();
 
-            FormProcess.ShowDialog(FindForm() as FormBrowse, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodules), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(FindForm() as FormBrowse, UICommands, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodules), Module.WorkingDir, input: null, useDialogSettings: true);
             RequestRefresh();
         }
 
@@ -1327,7 +1327,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var name in submodules)
             {
-                GitUICommands uiCmds = new(Module.GetSubmodule(name));
+                GitUICommands uiCmds = UICommands.WithGitModule(Module.GetSubmodule(name));
                 uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
 

@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.ContinueRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.ContinueRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -266,7 +266,7 @@ namespace GitUI.CommandsDialogs
                     Skipped.Add(applyingPatch);
                 }
 
-                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SkipRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.SkipRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -283,7 +283,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.AbortRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.AbortRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -300,7 +300,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.EditTodoRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.EditTodoRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
 
                 if (!Module.InTheMiddleOfRebase())
                 {
@@ -341,7 +341,7 @@ namespace GitUI.CommandsDialogs
                         chkPreserveMerges.Checked, chkAutosquash.Checked, chkStash.Checked, chkIgnoreDate.Checked, chkCommitterDateIsAuthorDate.Checked);
                 }
 
-                string cmdOutput = FormProcess.ReadDialog(this, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                string cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 if (cmdOutput.Trim() == "Current branch a is up to date.")
                 {
                     MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);

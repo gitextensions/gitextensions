@@ -105,9 +105,9 @@ namespace GitUI.HelperDialogs
             ProcessCallback?.Invoke(this);
         }
 
-        public static void ShowErrorDialog(IWin32Window owner, string text, params string[] output)
+        public static void ShowErrorDialog(IWin32Window owner, GitUICommands commands, string text, params string[] output)
         {
-            using FormStatus form = new(commands: null, new EditboxBasedConsoleOutputControl(), useDialogSettings: true);
+            using FormStatus form = new(commands, consoleOutput: new EditboxBasedConsoleOutputControl(), useDialogSettings: true);
             form.Text = text;
             if (output?.Length > 0)
             {

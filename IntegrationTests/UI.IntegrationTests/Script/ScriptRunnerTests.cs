@@ -37,7 +37,7 @@ namespace GitExtensions.UITests.Script
         public void Setup()
         {
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            _uiCommands = new GitUICommands(_referenceRepository.Module);
+            _uiCommands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
 
             _module = Substitute.For<IGitModule>();
             _module.GetCurrentRemote().ReturnsForAnyArgs("origin");

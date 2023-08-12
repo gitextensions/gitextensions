@@ -5,7 +5,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
     public partial class FormChangeLog : GitExtensionsForm
     {
         public FormChangeLog()
-            : base(true)
+            : base(enablePositionRestore: true)
         {
             InitializeComponent();
             InitializeComplete();
