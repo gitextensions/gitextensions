@@ -120,7 +120,7 @@ namespace GitUI.CommandsDialogs
             // 1. get all lines from text box which are not empty
             // 2. wrap lines with ""
             // 3. join together with space as separator
-            return string.Join(" ", textBoxIncludePaths.Lines.Where(p => !string.IsNullOrEmpty(p)).Select(p => string.Format("\"{0}\"", p)));
+            return string.Join(" ", textBoxIncludePaths.Lines.Where(p => !string.IsNullOrEmpty(p)).Select(p => $"\"{p}\""));
         }
 
         private string? GetExclusivePathArgumentFromGui()
@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs
             // 2. Prepend lines with '--exclude='
             // 3. Replace whitespace with '?' and convert to POSIX path
             // 4. join together with space as separator
-            return string.Join(" ", textBoxExcludePaths.Lines.Where(p => !string.IsNullOrEmpty(p)).Select(p => string.Format("--exclude={0}", p.Replace(" ", "?")).ToPosixPath()));
+            return string.Join(" ", textBoxExcludePaths.Lines.Where(p => !string.IsNullOrEmpty(p)).Select(p => $"--exclude={p.Replace(" ", "?")}".ToPosixPath()));
         }
 
         private void Close_Click(object sender, EventArgs e)
