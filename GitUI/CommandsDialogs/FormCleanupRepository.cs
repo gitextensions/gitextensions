@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs
             string includePathArgument = GetInclusivePathArgumentFromGui();
             string excludePathArguments = GetExclusivePathArgumentFromGui();
             CleanMode mode = GetCleanMode();
-            var cleanUpCmd = GitCommandHelpers.CleanCmd(mode, dryRun: false, directories: RemoveDirectories.Checked,
+            var cleanUpCmd = GitCommandHelpers.CleanCmd(mode, dryRun: true, directories: RemoveDirectories.Checked,
                 paths: includePathArgument, excludes: excludePathArguments);
 
             string cmdOutput = FormProcess.ReadDialog(this, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
