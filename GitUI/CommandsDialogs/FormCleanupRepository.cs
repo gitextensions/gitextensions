@@ -133,8 +133,7 @@ namespace GitUI.CommandsDialogs
             // 1. get all lines from text box which are not empty
             // 2. Prepend lines with '--exclude='
             // 3. Replace whitespace with '?' and convert to POSIX path
-            // 3. join together with space as separator
-
+            // 4. join together with space as separator
             return string.Join(" ", textBoxExcludePaths.Lines.Where(p => !string.IsNullOrEmpty(p)).Select(p => string.Format("--exclude={0}", p.Replace(" ", "?")).ToPosixPath()));
         }
 
