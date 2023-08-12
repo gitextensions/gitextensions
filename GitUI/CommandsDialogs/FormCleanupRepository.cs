@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUI.HelperDialogs;
 using ResourceManager;
 
@@ -49,12 +50,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Preview_Click(object sender, EventArgs e)
+        private void CleanUp(bool dryRun)
         {
             string includePathArgument = GetInclusivePathArgumentFromGui();
             string excludePathArguments = GetExclusivePathArgumentFromGui();
             CleanMode mode = GetCleanMode();
-            var cleanUpCmd = GitCommandHelpers.CleanCmd(mode, dryRun: true, directories: RemoveDirectories.Checked,
+            ArgumentString cleanUpCmd = GitCommandHelpers.CleanCmd(mode, dryRun, directories: RemoveDirectories.Checked,
                 paths: includePathArgument, excludes: excludePathArguments);
 
             string cmdOutput = FormProcess.ReadDialog(this, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
@@ -62,31 +63,22 @@ namespace GitUI.CommandsDialogs
 
             if (CleanSubmodules.Checked)
             {
-                var cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun: true, directories: RemoveDirectories.Checked, paths: includePathArgument);
+                ArgumentString cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun, directories: RemoveDirectories.Checked, paths: includePathArgument);
                 cmdOutput = FormProcess.ReadDialog(this, arguments: cleanSubmodulesCmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 PreviewOutput.Text += EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
             }
+        }
+
+        private void Preview_Click(object sender, EventArgs e)
+        {
+            CleanUp(dryRun: true);
         }
 
         private void Cleanup_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                string includePathArgument = GetInclusivePathArgumentFromGui();
-                string excludePathArguments = GetExclusivePathArgumentFromGui();
-                CleanMode mode = GetCleanMode();
-                var cleanUpCmd = GitCommandHelpers.CleanCmd(mode, dryRun: false, directories: RemoveDirectories.Checked,
-                    paths: includePathArgument, excludes: excludePathArguments);
-
-                string cmdOutput = FormProcess.ReadDialog(this, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
-                PreviewOutput.Text = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
-
-                if (CleanSubmodules.Checked)
-                {
-                    var cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun: false, directories: RemoveDirectories.Checked, paths: includePathArgument);
-                    cmdOutput = FormProcess.ReadDialog(this, arguments: cleanSubmodulesCmd, Module.WorkingDir, input: null, useDialogSettings: true);
-                    PreviewOutput.Text += EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
-                }
+                CleanUp(dryRun: false);
             }
         }
 
