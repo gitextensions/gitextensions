@@ -29,7 +29,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         public void SetUp()
         {
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            _commands = new GitUICommands(_referenceRepository.Module);
+            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
         }
 
         [OneTimeSetUp]

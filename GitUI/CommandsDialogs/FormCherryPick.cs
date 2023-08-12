@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs
 
                 // Don't verify whether the command is successful.
                 // If it fails, likely there is a conflict that needs to be resolved.
-                FormProcess.ShowDialog(this, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
 
                 MergeConflictHandler.HandleMergeConflicts(UICommands, this, cbxAutoCommit.Checked);
                 DialogResult = DialogResult.OK;

@@ -189,13 +189,13 @@ namespace GitUI.UserControls
             switch (_action)
             {
                 case GitAction.Rebase:
-                    FormProcess.ShowDialog(Form, arguments: GitCommandHelpers.ContinueRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(Form, UICommands, arguments: GitCommandHelpers.ContinueRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 case GitAction.Merge:
-                    FormProcess.ShowDialog(Form, arguments: GitCommandHelpers.ContinueMergeCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(Form, UICommands, arguments: GitCommandHelpers.ContinueMergeCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 case GitAction.Patch:
-                    FormProcess.ShowDialog(Form, arguments: GitCommandHelpers.ResolvedCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(Form, UICommands, arguments: GitCommandHelpers.ResolvedCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 default:
                     return;
@@ -214,13 +214,13 @@ namespace GitUI.UserControls
             switch (_action)
             {
                 case GitAction.Rebase:
-                    FormProcess.ShowDialog(Form, arguments: GitCommandHelpers.AbortRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(Form, UICommands, arguments: GitCommandHelpers.AbortRebaseCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 case GitAction.Merge:
-                    FormProcess.ShowDialog(Form, arguments: GitCommandHelpers.AbortMergeCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(Form, UICommands, arguments: GitCommandHelpers.AbortMergeCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 case GitAction.Patch:
-                    FormProcess.ShowDialog(Form, arguments: GitCommandHelpers.AbortCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(Form, UICommands, arguments: GitCommandHelpers.AbortCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                     break;
                 default:
                     return;

@@ -2,7 +2,7 @@
 
 namespace GitUIPluginInterfaces
 {
-    public interface IGitUICommands
+    public interface IGitUICommands : IServiceProvider
     {
         event EventHandler<GitUIPostActionEventArgs> PostCommit;
         event EventHandler<GitUIEventArgs> PostRepositoryChanged;

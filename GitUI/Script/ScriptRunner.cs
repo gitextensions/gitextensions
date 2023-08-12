@@ -12,14 +12,14 @@ namespace GitUI.Script
         /// <summary>Tries to run scripts identified by a <paramref name="command"/>.</summary>
         public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, IGitUICommands uiCommands, RevisionGridControl? revisionGrid)
         {
-            var anyScriptExecuted = false;
-            var needsGridRefresh = false;
+            bool anyScriptExecuted = false;
+            bool needsGridRefresh = false;
 
             foreach (var script in ScriptManager.GetScripts())
             {
                 if (script.HotkeyCommandIdentifier == command)
                 {
-                    var result = RunScript(owner, module, script.Name, uiCommands, revisionGrid);
+                    CommandStatus result = RunScript(owner, module, script.Name, uiCommands, revisionGrid);
                     anyScriptExecuted = true;
                     needsGridRefresh |= result.NeedsGridRefresh;
                 }
@@ -142,7 +142,7 @@ namespace GitUI.Script
 
             if (!scriptInfo.RunInBackground)
             {
-                bool success = FormProcess.ShowDialog(owner, argument, module.WorkingDir, null, true, process: command);
+                bool success = FormProcess.ShowDialog(owner, commands: null, argument, module.WorkingDir, null, true, process: command);
                 if (!success)
                 {
                     return false;

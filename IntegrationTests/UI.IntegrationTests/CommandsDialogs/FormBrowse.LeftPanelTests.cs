@@ -64,7 +64,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.Module.AddRemote(RemoteName, _remoteReferenceRepository.Module.WorkingDir);
             _referenceRepository.Fetch(RemoteName);
 
-            _commands = new GitUICommands(_referenceRepository.Module);
+            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
 
             _referenceRepository.CreateCommit("Commit1", "Commit1");
             _referenceRepository.CreateBranch("Branch1", _referenceRepository.CommitHash);

@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.Configuration;
 using System.Diagnostics;
 using GitCommands;
@@ -16,6 +17,8 @@ namespace GitExtensions
 {
     internal static class Program
     {
+        private static readonly ServiceContainer _serviceContainer = new();
+
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern bool SetProcessDPIAware();
 
@@ -161,7 +164,7 @@ namespace GitExtensions
                         }
                     }
 
-                    GitUICommands uiCommands = new("");
+                    GitUICommands uiCommands = new(_serviceContainer, new GitModule(""));
                     CommonLogic commonLogic = new(uiCommands.Module);
                     if (AppSettings.CheckSettings)
                     {
@@ -192,7 +195,7 @@ namespace GitExtensions
                 MouseWheelRedirector.Active = true;
             }
 
-            GitUICommands commands = new(GetWorkingDir(args));
+            GitUICommands commands = new(_serviceContainer, new GitModule(GetWorkingDir(args)));
 
             if (args.Length <= 1)
             {

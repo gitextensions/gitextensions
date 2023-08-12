@@ -369,7 +369,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            GitUICommands uiCommands = new(new GitModule(null));
+            GitUICommands uiCommands = new(GitUICommands.EmptyServiceProvider, new GitModule(null));
 
             string repoSrc = PathUtil.IsLocalFile(repo.CloneUrl)
                 ? uiCommands.Module.GetGitExecPath(repo.CloneUrl)

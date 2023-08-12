@@ -1395,7 +1395,7 @@ namespace GitUI.CommandsDialogs
                         Staged.IsEmpty,
                         resetAuthor);
 
-                    success = FormProcess.ShowDialog(this, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+                    success = FormProcess.ShowDialog(this, UICommands, arguments: commitCmd, Module.WorkingDir, input: null, useDialogSettings: true);
 
                     UICommands.RepoChangedNotifier.Notify();
 
@@ -1991,7 +1991,7 @@ namespace GitUI.CommandsDialogs
                     bool wereErrors = !Module.StageFiles(files, out string output);
                     if (wereErrors && AppSettings.ShowErrorsWhenStagingFiles)
                     {
-                        FormStatus.ShowErrorDialog(this, _stageDetails.Text, string.Format(_stageFiles.Text + "\n", files.Count), output);
+                        FormStatus.ShowErrorDialog(this, UICommands, _stageDetails.Text, string.Format(_stageFiles.Text + "\n", files.Count), output);
                     }
 
                     if (wereErrors)
@@ -2236,7 +2236,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            FormProcess.ShowDialog(this, arguments: "clean -f", Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(this, UICommands, arguments: "clean -f", Module.WorkingDir, input: null, useDialogSettings: true);
             Initialize();
         }
 
@@ -3017,7 +3017,7 @@ namespace GitUI.CommandsDialogs
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
             Validates.NotNull(_currentItem);
-            GitUICommands submoduleCommands = new(_fullPathResolver.Resolve(_currentItem.Item.Name.EnsureTrailingPathSeparator()));
+            GitUICommands submoduleCommands = UICommands.WithWorkingDirectory(_fullPathResolver.Resolve(_currentItem.Item.Name.EnsureTrailingPathSeparator()));
             submoduleCommands.StartCommitDialog(this);
             Initialize();
         }
@@ -3056,7 +3056,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
-                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(item.Name), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.SubmoduleUpdateCmd(item.Name), Module.WorkingDir, input: null, useDialogSettings: true);
             }
 
             Initialize();
@@ -3072,7 +3072,7 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
-                GitUICommands commands = new(Module.GetSubmodule(item.Name));
+                GitUICommands commands = UICommands.WithGitModule(Module.GetSubmodule(item.Name));
                 commands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
 

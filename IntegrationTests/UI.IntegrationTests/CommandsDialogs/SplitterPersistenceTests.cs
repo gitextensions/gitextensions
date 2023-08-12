@@ -58,7 +58,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _windowPositionManager = Substitute.For<IWindowPositionManager>();
 
             ReferenceRepository.ResetRepo(ref _referenceRepository);
-            _commands = new GitUICommands(_referenceRepository.Module);
+            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
         }
 
         [TearDown]

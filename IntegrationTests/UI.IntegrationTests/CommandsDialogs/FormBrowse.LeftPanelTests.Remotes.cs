@@ -58,7 +58,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 _referenceRepository.Module.AddRemote(name, $"http://localhost/remotes/{name}.git");
             }
 
-            _commands = new GitUICommands(_referenceRepository.Module);
+            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
             _remotesManager = new ConfigFileRemoteSettingsManager(() => _referenceRepository.Module);
 
             var composition = TestComposition.Empty

@@ -40,7 +40,7 @@ namespace GitUITests.GitUICommandsTests
                 AppSettings.UseBrowseForFileHistory.Value = false;
             }
 
-            _commands = new GitUICommands(_referenceRepository.Module);
+            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
 
             var composition = TestComposition.Empty
                 .AddParts(typeof(MockLinkFactory))

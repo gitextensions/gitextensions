@@ -88,7 +88,7 @@ namespace GitUITests.UserControls
                 "1\nb\nc\nd\ne\n6\n7\n8\n", _fileName2);
 
             IGitUICommandsSource uiCommandsSource = Substitute.For<IGitUICommandsSource>();
-            GitUICommands uiCommands = new(_referenceRepository.Module);
+            GitUICommands uiCommands = new(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
             uiCommandsSource.UICommands.Returns(x => uiCommands);
             _blameControl.UICommandsSource = uiCommandsSource;
         }

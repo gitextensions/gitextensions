@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs
                         ? GitCommandHelpers.ApplyDiffPatchCmd(ignoreWhiteSpace, gitPatch)
                         : GitCommandHelpers.ApplyMailboxPatchCmd(signOff, ignoreWhiteSpace, gitPatch);
 
-                    FormProcess.ShowDialog(this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+                    FormProcess.ShowDialog(this, UICommands, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
                 }
                 else
                 {
@@ -251,7 +251,7 @@ namespace GitUI.CommandsDialogs
                     Skipped.Add(applyingPatch);
                 }
 
-                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SkipCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.SkipCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                 EnableButtons();
             }
         }
@@ -260,7 +260,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.ResolvedCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.ResolvedCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                 EnableButtons();
             }
         }
@@ -269,7 +269,7 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.AbortCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.AbortCmd(), Module.WorkingDir, input: null, useDialogSettings: true);
                 Skipped.Clear();
                 EnableButtons();
             }

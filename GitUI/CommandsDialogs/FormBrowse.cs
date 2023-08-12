@@ -1503,7 +1503,7 @@ namespace GitUI.CommandsDialogs
 
         private void CompressGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FormProcess.ReadDialog(this, arguments: "gc", Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ReadDialog(this, UICommands, arguments: "gc", Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
         private void recoverLostObjectsToolStripMenuItemClick(object sender, EventArgs e)
@@ -1573,7 +1573,7 @@ namespace GitUI.CommandsDialogs
             {
                 var submodule = toolStripMenuItem.Tag as string;
                 Validates.NotNull(Module.SuperprojectModule);
-                FormProcess.ShowDialog(this, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodule), Module.SuperprojectModule.WorkingDir, input: null, useDialogSettings: true);
+                FormProcess.ShowDialog(this, UICommands, arguments: GitCommandHelpers.SubmoduleUpdateCmd(submodule), Module.SuperprojectModule.WorkingDir, input: null, useDialogSettings: true);
             }
 
             RefreshRevisions();
@@ -1658,14 +1658,13 @@ namespace GitUI.CommandsDialogs
         {
             string originalWorkingDir = Module.WorkingDir;
 
-            var module = e.GitModule;
             HideVariableMainMenuItems();
             PluginRegistry.Unregister(UICommands);
             RevisionGrid.OnRepositoryChanged();
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
 
-            UICommands = new GitUICommands(module);
+            UICommands = UICommands.WithGitModule(e.GitModule);
             if (Module.IsValidGitWorkingDir())
             {
                 RevisionGrid.SuspendRefreshRevisions();
@@ -1980,7 +1979,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            success = FormProcess.ShowDialog(this, arguments: Module.FetchCmd(string.Empty, string.Empty, string.Empty), Module.WorkingDir, input: null, useDialogSettings: true);
+            success = FormProcess.ShowDialog(this, UICommands, arguments: Module.FetchCmd(string.Empty, string.Empty, string.Empty), Module.WorkingDir, input: null, useDialogSettings: true);
             if (!success)
             {
                 return;

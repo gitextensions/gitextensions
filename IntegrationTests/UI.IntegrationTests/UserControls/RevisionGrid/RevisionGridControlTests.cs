@@ -48,7 +48,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _referenceRepository.CreateCommit("head commit");
             _headCommit = _referenceRepository.CommitHash;
 
-            _commands = new GitUICommands(_referenceRepository.Module);
+            _commands = new GitUICommands(GitUICommands.EmptyServiceProvider, _referenceRepository.Module);
 
             AppSettings.RevisionGraphShowArtificialCommits = true;
 
