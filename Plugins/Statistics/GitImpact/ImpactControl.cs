@@ -493,7 +493,7 @@ namespace GitExtensions.Plugins.GitImpact
 
             lock (_dataLock)
             {
-                return _authorStack.Last();
+                return _authorStack[^1];
             }
         }
 

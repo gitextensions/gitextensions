@@ -15,7 +15,7 @@
             Values = values;
             if (DefaultValue is null && values.Any())
             {
-                DefaultValue = values.First();
+                DefaultValue = values[0];
             }
         }
 

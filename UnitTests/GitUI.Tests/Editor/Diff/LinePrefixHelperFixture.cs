@@ -117,8 +117,8 @@ namespace GitUITests.Editor.Diff
                 }
                 else
                 {
-                    var lastSeg = lineSegments.Last();
-                    seg.Offset = lastSeg.Offset + lastSeg.Length + 1;
+                    ISegment lastSegment = lineSegments[^1];
+                    seg.Offset = lastSegment.Offset + lastSegment.Length + 1;
                 }
 
                 lineSegments.Add(seg);

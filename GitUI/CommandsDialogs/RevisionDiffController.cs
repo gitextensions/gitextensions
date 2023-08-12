@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
             void SaveMultipleFiles(List<FileStatusItem> selectedFiles)
             {
                 // Derive the folder from the first selected file.
-                string firstItemFullName = _fullPathResolver.Resolve(selectedFiles.First().Item.Name);
+                string firstItemFullName = _fullPathResolver.Resolve(selectedFiles[0].Item.Name);
                 string baseSourceDirectory = Path.GetDirectoryName(firstItemFullName).EnsureTrailingPathSeparator();
 
                 string selectedPath = userSelection(baseSourceDirectory);

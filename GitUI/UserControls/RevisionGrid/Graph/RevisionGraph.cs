@@ -550,7 +550,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     _orderedNodesCache = localOrderedNodesCache;
                     if (localOrderedNodesCache.Length > 0)
                     {
-                        _orderedUntilScore = localOrderedNodesCache.Last().Score;
+                        _orderedUntilScore = localOrderedNodesCache[^1].Score;
                     }
 
                     return localOrderedNodesCache;

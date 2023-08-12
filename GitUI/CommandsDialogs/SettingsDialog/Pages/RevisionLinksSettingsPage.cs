@@ -175,7 +175,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _externalLinksManager.AddRange(externalLinkDefinitions);
 
             ReloadCategories();
-            _NO_TRANSLATE_Categories.SelectedItem = externalLinkDefinitions.First();
+            _NO_TRANSLATE_Categories.SelectedItem = externalLinkDefinitions[0];
             CategoryChanged();
         }
 

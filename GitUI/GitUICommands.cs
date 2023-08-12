@@ -1336,7 +1336,7 @@ namespace GitUI
             }
             else if (relevantHosts.Count == 1)
             {
-                StartCreatePullRequest(owner, relevantHosts.First());
+                StartCreatePullRequest(owner, relevantHosts[0]);
             }
             else
             {
