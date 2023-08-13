@@ -102,8 +102,6 @@ namespace GitUI
 
             base.Enter += FileStatusList_Enter;
 
-            VisualStudioIntegration.Init();
-
             return;
 
             ImageList CreateImageList()
@@ -209,6 +207,12 @@ namespace GitUI
                 };
                 return item;
             }
+        }
+
+        protected override void OnRuntimeLoad()
+        {
+            base.OnRuntimeLoad();
+            VisualStudioIntegration.Init();
         }
 
         public void Bind(Func<ObjectId, string> describeRevision, Func<GitRevision, GitRevision> getActualRevision)
