@@ -140,19 +140,19 @@ namespace GitCommands
         {
 #if DEBUG
             int revisionCount = 0;
-            var sw = Stopwatch.StartNew();
+            Stopwatch sw = Stopwatch.StartNew();
 #endif
             ArgumentBuilder arguments = BuildArguments(revisionFilter, pathFilter);
-            using (var process = _module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
+            using (IProcess process = _module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
 #if DEBUG
                 Debug.WriteLine($"git {arguments}");
 #endif
                 cancellationToken.ThrowIfCancellationRequested();
 
-                var buffer = new byte[4096];
+                byte[] buffer = new byte[4096];
 
-                foreach (var chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
+                foreach (ArraySegment<byte> chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -218,15 +218,15 @@ namespace GitCommands
             ReadOnlySpan<byte> array = chunk.AsSpan();
 
             // The first 40 bytes are the revision ID and the tree ID back to back
-            if (!ObjectId.TryParseAsciiHexReadOnlySpan(array[..ObjectId.Sha1CharCount], out var objectId) ||
-                !ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out var treeId))
+            if (!ObjectId.TryParseAsciiHexReadOnlySpan(array[..ObjectId.Sha1CharCount], out ObjectId? objectId) ||
+                !ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out ObjectId? treeId))
             {
                 ParseAssert($"Log parse error, object id: {chunk.Count}({array[..ObjectId.Sha1CharCount].ToString()}");
                 revision = default;
                 return false;
             }
 
-            var offset = ObjectId.Sha1CharCount * 2;
+            int offset = ObjectId.Sha1CharCount * 2;
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
             int noParents = CountParents(in array, offset);
@@ -264,7 +264,7 @@ namespace GitCommands
                 return count;
             }
 
-            var parentIds = new ObjectId[noParents];
+            ObjectId[] parentIds = new ObjectId[noParents];
 
             if (noParents == 0)
             {
@@ -290,26 +290,28 @@ namespace GitCommands
 
             #region Timestamps
 
-            // Lines 2 and 3 are timestamps, as decimal ASCII seconds since the unix epoch, each terminated by `\n`
-            var authorUnixTime = ParseUnixDateTime(in array);
-            var commitUnixTime = ParseUnixDateTime(in array);
+            // Decimal ASCII seconds since the unix epoch, each terminated by `\n`
+            long authorUnixTime = ParseUnixDateTime(in array);
+            long commitUnixTime = ParseUnixDateTime(in array);
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             long ParseUnixDateTime(in ReadOnlySpan<byte> array)
             {
                 long unixTime = 0;
 
-                while (true)
+                while (offset < array.Length)
                 {
                     int c = array[offset++];
 
                     if (c == '\n')
                     {
-                        return unixTime;
+                        break;
                     }
 
                     unixTime = (unixTime * 10) + (c - '0');
                 }
+
+                return unixTime;
             }
 
             #endregion
@@ -317,25 +319,21 @@ namespace GitCommands
             #region Encoded string values (names, emails, subject, body)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
-            // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
-            // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
-            ReadOnlySpan<char> s = _logOutputEncoding.GetString(array[offset..]).Replace('\v', '\n').AsSpan();
+            ReadOnlySpan<char> s = _logOutputEncoding.GetString(array[offset..]).AsSpan();
             StringLineReader reader = new(in s);
 
-            var author = reader.ReadLine();
-            var authorEmail = reader.ReadLine();
-            var committer = reader.ReadLine();
-            var committerEmail = reader.ReadLine();
-            var reflogSelector = _hasReflogSelector ? reader.ReadLine() : null;
-
-            bool skipBody = _sixMonths > authorUnixTime;
-            (string? subject, string? body, bool hasMultiLineMessage) = reader.PeekSubjectBody(skipBody);
+            string author = reader.ReadLine();
+            string authorEmail = reader.ReadLine();
+            string committer = reader.ReadLine();
+            string committerEmail = reader.ReadLine();
+            string reflogSelector = _hasReflogSelector ? reader.ReadLine(useStringPool: false) : null;
 
             // We keep a full multiline message body within the last six months.
             // Note also that if body and subject are identical (single line), the body never need to be stored
-            skipBody = skipBody || !hasMultiLineMessage;
+            bool keepBody = authorUnixTime >= _sixMonths;
+            reader.PeekSubjectBody(out string? subject, out string? body, out bool hasMultiLineMessage, in keepBody);
 
-            if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null || (skipBody != (body is null)))
+            if (author is null || authorEmail is null || committer is null || committerEmail is null || subject is null || (keepBody && hasMultiLineMessage && body is null))
             {
                 ParseAssert($"Log parse error, decoded fields ({subject}::{body}) for {objectId}");
                 revision = default;
@@ -379,15 +377,15 @@ namespace GitCommands
         internal ref struct StringLineReader
         {
             private readonly ReadOnlySpan<char> _s;
-            private int _index;
+            private int _index = 0;
 
             public StringLineReader(in ReadOnlySpan<char> s)
             {
                 _s = s;
-                _index = 0;
             }
 
-            public string? ReadLine()
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public string? ReadLine(in bool useStringPool = true)
             {
                 if (_index >= _s.Length)
                 {
@@ -403,34 +401,42 @@ namespace GitCommands
 
                 int startIndex = _index;
                 _index += lineLength + 1;
-                return StringPool.Shared.GetOrAdd(_s.Slice(startIndex, lineLength));
+
+                // Authors etc are limited, use a shared string pool
+                ReadOnlySpan<char> s = _s.Slice(startIndex, lineLength);
+                return useStringPool ? StringPool.Shared.GetOrAdd(s) : s.ToString();
             }
 
-            public (string? subject, string? body, bool hasMultiLineMessage) PeekSubjectBody(bool skipBody)
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public readonly void PeekSubjectBody(out string? subject, out string? body, out bool hasMultiLineMessage, in bool keepBody)
             {
                 // Empty subject is allowed
                 if (_index > _s.Length)
                 {
-                    return (null, null, false);
+                    subject = body = null;
+                    hasMultiLineMessage = false;
+                    return;
                 }
 
                 ReadOnlySpan<char> bodySlice = _s[_index..].Trim();
 
                 // Subject can also be defined as the contents before empty line (%s for --pretty),
                 // this uses the alternative definition of first line in body.
-                int lengthSubject = bodySlice.IndexOf('\n');
-                bool hasMultiLineMessage = lengthSubject >= 0;
-                string subject = hasMultiLineMessage
-                    ? bodySlice[..lengthSubject].TrimEnd().ToString()
-                    : bodySlice.ToString();
+                // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
+                int lengthSubject = bodySlice.IndexOfAny('\n', '\v');
+                hasMultiLineMessage = lengthSubject >= 0;
+                subject = (hasMultiLineMessage
+                    ? bodySlice[..lengthSubject].TrimEnd()
+                    : bodySlice)
+                    .ToString();
 
                 // See caller for reasoning when message body can be omitted
                 // (String interning makes hasMultiLineMessage check only for clarity)
-                string? body = skipBody || !hasMultiLineMessage
-                    ? null
-                    : bodySlice.ToString();
+                body = keepBody && hasMultiLineMessage
+                    ? bodySlice.ToString().Replace('\v', '\n')
+                    : null;
 
-                return (subject, body, hasMultiLineMessage);
+                return;
             }
         }
 
