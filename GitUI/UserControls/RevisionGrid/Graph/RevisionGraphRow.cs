@@ -7,6 +7,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         RevisionGraphRevision Revision { get; }
         IReadOnlyList<RevisionGraphSegment> Segments { get; }
 
+        RevisionGraphSegment FirstParentOrSelf(RevisionGraphSegment segment);
         int GetCurrentRevisionLane();
         int GetLaneCount();
         Lane GetLaneForSegment(RevisionGraphSegment revisionGraphRevision);
@@ -272,6 +273,24 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 Lane lane = _segmentLanes[segment];
                 _segmentLanes[segment] = new Lane(lane.Index + 1, lane.Sharing);
             }
+        }
+
+        /// <summary>
+        /// Determines the segment leading to the row's first parent.
+        /// </summary>
+        /// <returns>
+        /// The segment leading to this row's first parent (if any) if this row is the parent row of <paramref name="segment"/>;
+        /// otherwise, the supplied <paramref name="segment"/>.
+        /// </returns>
+        public RevisionGraphSegment FirstParentOrSelf(RevisionGraphSegment segment)
+        {
+            if (segment.Parent != Revision
+                || GetLaneForSegment(segment).Sharing != LaneSharing.ExclusiveOrPrimary)
+            {
+                return segment;
+            }
+
+            return Segments.FirstOrDefault(s => s.Child == Revision, defaultValue: segment);
         }
     }
 }
