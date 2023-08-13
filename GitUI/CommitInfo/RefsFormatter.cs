@@ -86,7 +86,7 @@ namespace GitUI.CommitInfo
                     branchIsLocal = !branch.StartsWith(remotesPrefix);
                     if (!branchIsLocal)
                     {
-                        noPrefixBranch = branch.Substring(remotesPrefix.Length);
+                        noPrefixBranch = branch[remotesPrefix.Length..];
                     }
                 }
                 else

@@ -54,7 +54,7 @@ namespace GitUITests.CommandsDialogs
             path[^1].Should().Be(Path.DirectorySeparatorChar);
 
             // ensure absence of the trailing slash isn't a problem
-            path = path.Substring(0, path.Length - 1);
+            path = path[..^1];
             Assert.DoesNotThrow(() => FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager));
         }
 

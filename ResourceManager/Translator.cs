@@ -25,7 +25,7 @@ namespace ResourceManager
                     var result = Directory.EnumerateFiles(translationsDir, translationName + "*.xlf");
                     foreach (var file in result)
                     {
-                        var name = Path.GetFileNameWithoutExtension(file).Substring(translationName.Length);
+                        var name = Path.GetFileNameWithoutExtension(file)[translationName.Length..];
                         var t = TranslationSerializer.Deserialize(file) ??
                                 new TranslationFile();
                         t.SourceLanguage = t.TranslationCategories.FirstOrDefault()?.SourceLanguage;

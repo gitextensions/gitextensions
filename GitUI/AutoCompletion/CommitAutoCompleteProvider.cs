@@ -139,8 +139,8 @@ namespace GitUI.AutoCompletion
             foreach (var line in autoCompleteRegexes)
             {
                 var i = line.IndexOf('=');
-                var extensionStr = line.Substring(0, i);
-                var regexStr = line.Substring(i + 1).Trim();
+                var extensionStr = line[..i];
+                var regexStr = line[(i + 1)..].Trim();
 
                 var extensions = extensionStr.LazySplit(',').Select(s => s.Trim()).Distinct();
                 Regex regex = new(regexStr, RegexOptions.Compiled);

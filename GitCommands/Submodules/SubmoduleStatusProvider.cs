@@ -218,7 +218,7 @@ namespace GitCommands.Submodules
 
             var superWorkDir = currentModule.SuperprojectModule?.WorkingDir;
             var currentWorkDir = currentModule.WorkingDir;
-            var localPath = currentWorkDir.Substring(topProject.WorkingDir.Length);
+            var localPath = currentWorkDir[topProject.WorkingDir.Length..];
             if (string.IsNullOrWhiteSpace(localPath))
             {
                 localPath = ".";

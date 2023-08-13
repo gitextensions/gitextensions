@@ -163,7 +163,7 @@ namespace GitExtensions.Plugins.GitImpact
                 }
 
                 // Strip "--- "
-                line = line.Substring(4);
+                line = line[4..];
 
                 // Split date and author
                 string[] header = line.Split(new[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);

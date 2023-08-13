@@ -569,7 +569,7 @@ namespace TeamCityIntegration
         private static DateTime DecodeJsonDateTime(string dateTimeString)
         {
             var dateTime = new DateTime(
-                    int.Parse(dateTimeString.Substring(0, 4)),
+                    int.Parse(dateTimeString[..4]),
                     int.Parse(dateTimeString.Substring(4, 2)),
                     int.Parse(dateTimeString.Substring(6, 2)),
                     int.Parse(dateTimeString.Substring(9, 2)),

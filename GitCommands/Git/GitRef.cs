@@ -123,7 +123,7 @@ namespace GitCommands
 
         public bool IsOther => !IsHead && !IsRemote && !IsTag;
 
-        public string LocalName => IsRemote && Name.StartsWith($"{Remote}/") ? Name.Substring(Remote.Length + 1) : Name;
+        public string LocalName => IsRemote && Name.StartsWith($"{Remote}/") ? Name[(Remote.Length + 1)..] : Name;
 
         public string Remote { get; }
 

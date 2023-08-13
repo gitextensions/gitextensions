@@ -41,7 +41,7 @@ namespace GitUI.LeftPanel
         private RemoteBranchInfo GetRemoteBranchInfo()
         {
             var remote = FullPath.LazySplit('/').First();
-            var branch = FullPath.Substring(remote.Length + 1);
+            var branch = FullPath[(remote.Length + 1)..];
             return new RemoteBranchInfo(remote, branch);
         }
 

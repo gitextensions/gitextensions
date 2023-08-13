@@ -61,7 +61,7 @@ namespace GitUI
                 // backspace
                 RestartQuickSearchTimer();
 
-                _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length - 1);
+                _quickSearchString = _quickSearchString[..^1];
 
                 FindNextMatch(curIndex, _quickSearchString, false);
                 _lastQuickSearchString = _quickSearchString;

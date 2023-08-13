@@ -582,7 +582,7 @@ namespace NetSpell.SpellChecker.Dictionary
                         {
                             if (rule.ReplaceMode)
                             {
-                                tempWord = rule.ReplaceString + tempWord.Substring(rule.ConditionCount - rule.ConsumeCount);
+                                tempWord = rule.ReplaceString + tempWord[(rule.ConditionCount - rule.ConsumeCount)..];
                             }
                             else
                             {
@@ -591,7 +591,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                     code.Append(rule.ReplaceString);
                                 }
 
-                                tempWord = tempWord.Substring(rule.ConditionCount - rule.ConsumeCount);
+                                tempWord = tempWord[(rule.ConditionCount - rule.ConsumeCount)..];
                             }
 
                             break;
@@ -602,7 +602,7 @@ namespace NetSpell.SpellChecker.Dictionary
                 // if no match consume one char
                 if (prevWord.Length == tempWord.Length)
                 {
-                    tempWord = tempWord.Substring(1);
+                    tempWord = tempWord[1..];
                 }
             }
 

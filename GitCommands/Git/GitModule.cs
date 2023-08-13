@@ -117,11 +117,11 @@ namespace GitCommands
 
                         if (line.StartsWith(gitdir))
                         {
-                            string gitPath = line.Substring(gitdir.Length).Trim();
+                            string gitPath = line[gitdir.Length..].Trim();
                             int pos = gitPath.IndexOf("/.git/modules/", StringComparison.Ordinal);
                             if (pos != -1)
                             {
-                                gitPath = gitPath.Substring(0, pos + 1).Replace('/', '\\');
+                                gitPath = gitPath[..(pos + 1)].Replace('/', '\\');
                                 gitPath = Path.GetFullPath(Path.Combine(WorkingDir, gitPath));
                                 if (HasGitModulesFile(gitPath))
                                 {
@@ -134,7 +134,7 @@ namespace GitCommands
 
                 if (!string.IsNullOrEmpty(superprojectPath) && currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
                 {
-                    var submodulePath = currentPath.Substring(superprojectPath.Length).ToPosixPath();
+                    var submodulePath = currentPath[superprojectPath.Length..].ToPosixPath();
                     ConfigFile configFile = new(Path.Combine(superprojectPath, ".gitmodules"));
 
                     foreach (var configSection in configFile.ConfigSections)
@@ -750,16 +750,16 @@ namespace GitCommands
             foreach (var line in unmerged)
             {
                 int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
-                string fileStage = findSecondWhitespace >= 0 ? line.Substring(findSecondWhitespace).Trim() : "";
+                string fileStage = findSecondWhitespace >= 0 ? line[findSecondWhitespace..].Trim() : "";
 
                 findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
 
-                string hash = findSecondWhitespace >= 0 ? fileStage.Substring(0, findSecondWhitespace).Trim() : "";
-                fileStage = findSecondWhitespace >= 0 ? fileStage.Substring(findSecondWhitespace).Trim() : "";
+                string hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
+                fileStage = findSecondWhitespace >= 0 ? fileStage[findSecondWhitespace..].Trim() : "";
 
                 if (fileStage.Length > 2 && int.TryParse(fileStage[0].ToString(), out var stage) && stage is (>= 1 and <= 3))
                 {
-                    var itemName = fileStage.Substring(2);
+                    var itemName = fileStage[2..];
                     if (prevItemName != itemName && prevItemName is not null)
                     {
                         list.Add(new ConflictData(item[0], item[1], item[2]));
@@ -1013,7 +1013,7 @@ namespace GitCommands
                 ReadOnlySpan<char> span = (body ?? "").AsSpan();
                 int endSubjectIndex = span.IndexOf('\n');
                 revision.Subject = endSubjectIndex >= 0
-                    ? span.Slice(0, endSubjectIndex).TrimEnd().ToString()
+                    ? span[..endSubjectIndex].TrimEnd().ToString()
                     : body ?? "";
             }
 
@@ -1203,7 +1203,7 @@ namespace GitCommands
             Debug.Assert(WorkingDir.StartsWith(SuperprojectModule.WorkingDir), "Submodule working dir should start with super-project's working dir");
 
             return Path.GetDirectoryName(
-                WorkingDir.Substring(SuperprojectModule.WorkingDir.Length)).ToPosixPath();
+                WorkingDir[SuperprojectModule.WorkingDir.Length..]).ToPosixPath();
         }
 
         public string GetSubmoduleFullPath(string? localPath)
@@ -2239,7 +2239,7 @@ namespace GitCommands
                                     if (value.IndexOf('<') > 0 && value.IndexOf('<') < value.Length)
                                     {
                                         var author = RFC2047Decoder.Parse(value);
-                                        patchFile.Author = author.Substring(0, author.IndexOf('<')).Trim();
+                                        patchFile.Author = author[..author.IndexOf('<')].Trim();
                                     }
                                     else
                                     {
@@ -2250,7 +2250,7 @@ namespace GitCommands
                                 case "Date":
                                     if (value.IndexOf('+') > 0 && value.IndexOf('<') < value.Length)
                                     {
-                                        patchFile.Date = value.Substring(0, value.IndexOf('+')).Trim();
+                                        patchFile.Date = value[..value.IndexOf('+')].Trim();
                                     }
                                     else
                                     {
@@ -2299,7 +2299,7 @@ namespace GitCommands
                 }
 
                 Debug.Assert(m1.Groups[1].Value == m2.Groups[1].Value, "m1.Groups[1].Value == m2.Groups[1].Value");
-                return str1.Substring(0, str1.Length - 2) + m2.Groups[2].Value + "?=";
+                return str1[..^2] + m2.Groups[2].Value + "?=";
             }
         }
 
@@ -3081,7 +3081,7 @@ namespace GitCommands
                 return string.Empty;
             }
 
-            return headFileContents.Substring(prefix.Length).TrimEnd();
+            return headFileContents[prefix.Length..].TrimEnd();
         }
 
         /// <summary>
@@ -3324,7 +3324,7 @@ namespace GitCommands
                     int idx = item.IndexOf(" ->", StringComparison.Ordinal);
                     if (idx >= 0)
                     {
-                        item = item.Substring(0, idx);
+                        item = item[..idx];
                     }
                 }
 
@@ -3578,7 +3578,7 @@ namespace GitCommands
                 else if (line.StartsWith("\t"))
                 {
                     // The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
-                    var text = ReEncodeStringFromLossless(line.Substring(1), encoding);
+                    var text = ReEncodeStringFromLossless(line[1..], encoding);
 
                     GitBlameCommit commit;
                     if (hasCommitHeader)
@@ -3636,52 +3636,52 @@ namespace GitCommands
                 }
                 else if (line.StartsWith("author "))
                 {
-                    author = ReEncodeStringFromLossless(line.Substring("author ".Length));
+                    author = ReEncodeStringFromLossless(line["author ".Length..]);
                     hasCommitHeader = true;
                 }
                 else if (line.StartsWith("author-mail "))
                 {
-                    authorMail = ReEncodeStringFromLossless(line.Substring("author-mail ".Length));
+                    authorMail = ReEncodeStringFromLossless(line["author-mail ".Length..]);
                     hasCommitHeader = true;
                 }
                 else if (line.StartsWith("author-time "))
                 {
-                    authorTime = DateTimeUtils.ParseUnixTime(line.Substring("author-time ".Length));
+                    authorTime = DateTimeUtils.ParseUnixTime(line["author-time ".Length..]);
                     hasCommitHeader = true;
                 }
                 else if (line.StartsWith("author-tz "))
                 {
-                    authorTimeZone = line.Substring("author-tz ".Length);
+                    authorTimeZone = line["author-tz ".Length..];
                     hasCommitHeader = true;
                 }
                 else if (line.StartsWith("committer "))
                 {
-                    committer = ReEncodeStringFromLossless(line.Substring("committer ".Length));
+                    committer = ReEncodeStringFromLossless(line["committer ".Length..]);
                     hasCommitHeader = true;
                 }
                 else if (line.StartsWith("committer-mail "))
                 {
-                    committerMail = line.Substring("committer-mail ".Length);
+                    committerMail = line["committer-mail ".Length..];
                     hasCommitHeader = true;
                 }
                 else if (line.StartsWith("committer-time "))
                 {
-                    committerTime = DateTimeUtils.ParseUnixTime(line.Substring("committer-time ".Length));
+                    committerTime = DateTimeUtils.ParseUnixTime(line["committer-time ".Length..]);
                     hasCommitHeader = true;
                 }
                 else if (line.StartsWith("committer-tz "))
                 {
-                    committerTimeZone = line.Substring("committer-tz ".Length);
+                    committerTimeZone = line["committer-tz ".Length..];
                     hasCommitHeader = true;
                 }
                 else if (line.StartsWith("summary "))
                 {
-                    summary = ReEncodeStringFromLossless(line.Substring("summary ".Length));
+                    summary = ReEncodeStringFromLossless(line["summary ".Length..]);
                     hasCommitHeader = true;
                 }
                 else if (line.StartsWith("filename "))
                 {
-                    filename = ReEncodeFileNameFromLossless(line.Substring("filename ".Length));
+                    filename = ReEncodeFileNameFromLossless(line["filename ".Length..]);
                     hasCommitHeader = true;
                 }
             }
@@ -4195,8 +4195,8 @@ namespace GitCommands
             string diff;
             if (p > 0)
             {
-                header = s.Substring(0, p);
-                diff = s.Substring(p);
+                header = s[..p];
+                diff = s[p..];
             }
             else
             {
@@ -4207,8 +4207,8 @@ namespace GitCommands
             p = diff.IndexOf("@@");
             if (p > 0)
             {
-                diffHeader = diff.Substring(0, p);
-                diffContent = diff.Substring(p);
+                diffHeader = diff[..p];
+                diffContent = diff[p..];
             }
             else
             {
@@ -4229,7 +4229,7 @@ namespace GitCommands
 
         public string? GetLocalTrackingBranchName(string remoteName, string branch)
         {
-            var branchName = remoteName.Length > 0 ? branch.Substring(remoteName.Length + 1) : branch;
+            var branchName = remoteName.Length > 0 ? branch[(remoteName.Length + 1)..] : branch;
             foreach (var section in LocalConfigFile.GetConfigSections())
             {
                 if (section.SectionName == "branch" && section.GetValue("remote") == remoteName)

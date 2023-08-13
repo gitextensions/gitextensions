@@ -153,7 +153,7 @@
             // if there is no short name for a repo, then try to find unique caption extending short directory path
             if (shortenPath && repoInfo.DirInfo is not null)
             {
-                string s = repoInfo.DirName.Substring(repoInfo.DirInfo.FullName.Length);
+                string s = repoInfo.DirName[repoInfo.DirInfo.FullName.Length..];
                 if (!string.IsNullOrEmpty(s))
                 {
                     s = s.Trim(Path.DirectorySeparatorChar);
@@ -279,12 +279,12 @@
 
                     if (company?.Length > skipCount)
                     {
-                        c = company.Substring(0, company.Length - skipCount);
+                        c = company[..^skipCount];
                     }
 
                     if (repository?.Length > skipCount)
                     {
-                        r = repository.Substring(skipCount, repository.Length - skipCount);
+                        r = repository[skipCount..];
                     }
 
                     repoInfo.Caption = MakePath(root, c!);
@@ -315,7 +315,7 @@
                         }
                         else
                         {
-                            repoInfo.Caption = path.Substring(0, leftEnd) + ".." + path.Substring(rightStart, path.Length - rightStart);
+                            repoInfo.Caption = path[..leftEnd] + ".." + path[rightStart..];
                         }
 
                         return true;

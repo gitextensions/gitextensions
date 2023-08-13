@@ -76,7 +76,7 @@ namespace GitCommands
                 (dirPath[^1] == NativeDirectorySeparatorChar ||
                  dirPath[^1] == PosixDirectorySeparatorChar))
             {
-                return dirPath.Substring(0, dirPath.Length - 1);
+                return dirPath[..^1];
             }
 
             return dirPath;
@@ -124,7 +124,7 @@ namespace GitCommands
             var pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
             {
-                fileName = fileName.Substring(pos + 1);
+                fileName = fileName[(pos + 1)..];
             }
 
             return fileName;
@@ -338,12 +338,12 @@ namespace GitCommands
 
                 if (path.EndsWith(standardRepositorySuffix))
                 {
-                    path = path.Substring(0, path.Length - standardRepositorySuffix.Length);
+                    path = path[..^standardRepositorySuffix.Length];
                 }
 
                 if (path.Contains("\\") || path.Contains("/"))
                 {
-                    name = path.Substring(path.LastIndexOfAny(new[] { '\\', '/' }) + 1);
+                    name = path[(path.LastIndexOfAny(new[] { '\\', '/' }) + 1)..];
                 }
             }
 

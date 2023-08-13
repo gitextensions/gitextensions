@@ -87,7 +87,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     e.State.HasFlag(DataGridViewElementStates.Selected),
                     style.NormalFont,
                     ref offset,
-                    revision.ReflogSelector.Substring(5),
+                    revision.ReflogSelector[5..],
                     AppColor.OtherTag.GetThemeColor(),
                     RefArrowType.None,
                     messageBounds,

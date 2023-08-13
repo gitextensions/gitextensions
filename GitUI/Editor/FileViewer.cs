@@ -809,7 +809,7 @@ namespace GitUI.Editor
                 if (hpos <= pos)
                 {
                     char[] specials = { ' ', '-', '+' };
-                    lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s.Substring(1) : s);
+                    lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s[1..] : s);
                 }
 
                 code = string.Join("\n", lines);
@@ -1727,7 +1727,7 @@ namespace GitUI.Editor
 
                 foreach (var special in specials.Where(line.StartsWith))
                 {
-                    return line.Substring(special.Length);
+                    return line[special.Length..];
                 }
 
                 return line;

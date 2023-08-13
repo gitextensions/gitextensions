@@ -60,7 +60,7 @@ namespace GitExtUtils
 
                     if (delimiterIndex == -1)
                     {
-                        Current = _input.Substring(_index);
+                        Current = _input[_index..];
                         _index = _input.Length + 1;
                         return true;
                     }

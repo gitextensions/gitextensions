@@ -118,9 +118,7 @@ namespace GitUI.Theming
                 throw StyleRuleThemeException(rule, themeFileName);
             }
 
-            return selectorText
-                .Substring(ClassSelector.Length)
-                .Split(new[] { ClassSelector }, StringSplitOptions.RemoveEmptyEntries);
+            return selectorText[ClassSelector.Length..].Split(new[] { ClassSelector }, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static Color GetColor(string themeFileName, StyleRule rule)

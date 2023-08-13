@@ -218,10 +218,10 @@ namespace GitCommands
             ReadOnlySpan<byte> array = chunk.AsSpan();
 
             // The first 40 bytes are the revision ID and the tree ID back to back
-            if (!ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(0, ObjectId.Sha1CharCount), out var objectId) ||
+            if (!ObjectId.TryParseAsciiHexReadOnlySpan(array[..ObjectId.Sha1CharCount], out var objectId) ||
                 !ObjectId.TryParseAsciiHexReadOnlySpan(array.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount), out var treeId))
             {
-                ParseAssert($"Log parse error, object id: {chunk.Count}({array.Slice(0, ObjectId.Sha1CharCount).ToString()}");
+                ParseAssert($"Log parse error, object id: {chunk.Count}({array[..ObjectId.Sha1CharCount].ToString()}");
                 revision = default;
                 return false;
             }
@@ -421,7 +421,7 @@ namespace GitCommands
                 int lengthSubject = bodySlice.IndexOf('\n');
                 bool hasMultiLineMessage = lengthSubject >= 0;
                 string subject = hasMultiLineMessage
-                    ? bodySlice.Slice(0, lengthSubject).TrimEnd().ToString()
+                    ? bodySlice[..lengthSubject].TrimEnd().ToString()
                     : bodySlice.ToString();
 
                 // See caller for reasoning when message body can be omitted

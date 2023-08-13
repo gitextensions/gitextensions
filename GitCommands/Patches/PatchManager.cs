@@ -67,7 +67,7 @@ namespace GitCommands.Patches
             {
                 if (line.StartsWith("+++"))
                 {
-                    pppLine = "---" + line.Substring(3);
+                    pppLine = "---" + line[3..];
                 }
             }
 
@@ -219,8 +219,8 @@ namespace GitCommands.Patches
                 return null;
             }
 
-            header = text.Substring(0, patchPos);
-            string diff = text.Substring(patchPos - 1);
+            header = text[..patchPos];
+            string diff = text[(patchPos - 1)..];
 
             string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
             List<Chunk> selectedChunks = new();
@@ -318,7 +318,7 @@ namespace GitCommands.Patches
 
         public void SetOperation(string operationMark)
         {
-            Text = operationMark + Text.Substring(1);
+            Text = operationMark + Text[1..];
         }
     }
 
@@ -363,11 +363,11 @@ namespace GitCommands.Patches
                 {
                     if (inPostPart)
                     {
-                        removePart = removePart.Combine("\n", " " + removedLine.Text.Substring(1));
+                        removePart = removePart.Combine("\n", " " + removedLine.Text[1..]);
                     }
                     else
                     {
-                        prePart = prePart.Combine("\n", " " + removedLine.Text.Substring(1));
+                        prePart = prePart.Combine("\n", " " + removedLine.Text[1..]);
                     }
 
                     addedCount++;
@@ -389,11 +389,11 @@ namespace GitCommands.Patches
                 {
                     if (inPostPart)
                     {
-                        postPart = postPart.Combine("\n", " " + addedLine.Text.Substring(1));
+                        postPart = postPart.Combine("\n", " " + addedLine.Text[1..]);
                     }
                     else
                     {
-                        prePart = prePart.Combine("\n", " " + addedLine.Text.Substring(1));
+                        prePart = prePart.Combine("\n", " " + addedLine.Text[1..]);
                     }
 
                     addedCount++;
@@ -449,7 +449,7 @@ namespace GitCommands.Patches
                 {
                     wereSelectedLines = true;
                     inPostPart = true;
-                    addPart = addPart.Combine("\n", "+" + removedLine.Text.Substring(1));
+                    addPart = addPart.Combine("\n", "+" + removedLine.Text[1..]);
                     addedCount++;
                 }
             }
@@ -460,18 +460,18 @@ namespace GitCommands.Patches
                 {
                     wereSelectedLines = true;
                     inPostPart = true;
-                    removePart = removePart.Combine("\n", "-" + addedLine.Text.Substring(1));
+                    removePart = removePart.Combine("\n", "-" + addedLine.Text[1..]);
                     removedCount++;
                 }
                 else
                 {
                     if (inPostPart)
                     {
-                        postPart = postPart.Combine("\n", " " + addedLine.Text.Substring(1));
+                        postPart = postPart.Combine("\n", " " + addedLine.Text[1..]);
                     }
                     else
                     {
-                        prePart = prePart.Combine("\n", " " + addedLine.Text.Substring(1));
+                        prePart = prePart.Combine("\n", " " + addedLine.Text[1..]);
                     }
 
                     addedCount++;

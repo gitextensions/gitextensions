@@ -89,7 +89,7 @@ namespace GitCommands
 
                 if (version.StartsWith(Prefix))
                 {
-                    return version.Substring(Prefix.Length).Trim();
+                    return version[Prefix.Length..].Trim();
                 }
 
                 return version.Trim();

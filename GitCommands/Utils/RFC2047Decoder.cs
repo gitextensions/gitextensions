@@ -86,7 +86,7 @@ namespace GitCommands
             }
 
             // Get the name of the encoding but skip the leading =?
-            string encodingName = input.Substring(2, input.IndexOf("?", 2, StringComparison.Ordinal) - 2);
+            string encodingName = input[2..input.IndexOf("?", 2, StringComparison.Ordinal)];
             Encoding enc = Encoding.ASCII;
             if (!string.IsNullOrEmpty(encodingName))
             {

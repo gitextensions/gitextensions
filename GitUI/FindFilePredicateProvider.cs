@@ -30,7 +30,7 @@ namespace GitUI
 
             if (pattern.StartsWith(dir, StringComparison.OrdinalIgnoreCase))
             {
-                pattern = pattern.Substring(dir.Length).TrimStart('/');
+                pattern = pattern[dir.Length..].TrimStart('/');
                 return fileName => fileName?.StartsWith(pattern, StringComparison.OrdinalIgnoreCase) is true;
             }
 

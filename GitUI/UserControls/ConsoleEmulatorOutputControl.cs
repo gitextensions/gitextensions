@@ -158,7 +158,7 @@ namespace GitUI.UserControls
                     return null;
                 }
 
-                string rest = outputChunk.Substring(_commandLineCharsInOutput);
+                string rest = outputChunk[_commandLineCharsInOutput..];
                 _commandLineCharsInOutput = 0;
                 return rest;
             }

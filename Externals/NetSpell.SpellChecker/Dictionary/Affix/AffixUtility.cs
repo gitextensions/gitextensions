@@ -44,7 +44,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
 
                     if (passCount == entry.ConditionCount)
                     {
-                        string tempWord = word.Substring(entry.StripCharacters.Length);
+                        string tempWord = word[entry.StripCharacters.Length..];
                         tempWord = entry.AddCharacters + tempWord;
                         return tempWord;
                     }
@@ -94,7 +94,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                     if (passCount == entry.ConditionCount)
                     {
                         int tempLen = word.Length - entry.StripCharacters.Length;
-                        string tempWord = word.Substring(0, tempLen);
+                        string tempWord = word[..tempLen];
                         tempWord += entry.AddCharacters;
                         return tempWord;
                     }
@@ -253,7 +253,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 && word.StartsWith(entry.AddCharacters))
             {
                 // word with out affix
-                string tempWord = word.Substring(entry.AddCharacters.Length);
+                string tempWord = word[entry.AddCharacters.Length..];
 
                 // add back strip chars
                 tempWord = entry.StripCharacters + tempWord;
@@ -305,7 +305,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                 && word.EndsWith(entry.AddCharacters))
             {
                 // word with out affix
-                string tempWord = word.Substring(0, tempLength);
+                string tempWord = word[..tempLength];
 
                 // add back strip chars
                 tempWord += entry.StripCharacters;

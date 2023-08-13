@@ -46,7 +46,7 @@ namespace BugReporter
             if (subject.Length > 69)
             {
                 // if the subject is longer than 70 characters, trim it
-                subject = subject.Substring(0, 66) + "...";
+                subject = subject[..66] + "...";
             }
 
             string urlEncodedError = _errorReportUrlBuilder.Build(exception, exceptionInfo, environmentInfo, additionalInfo);

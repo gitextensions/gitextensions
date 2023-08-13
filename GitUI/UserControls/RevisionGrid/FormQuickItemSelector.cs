@@ -43,7 +43,7 @@
 
                     // assume that the branch names or tags are never longer than MaxRefLength symbols long
                     // if they are (sanity!) - don't resize past beyond certain limit
-                    var label = item.Label.Length > MaxRefLength ? item.Label.Substring(0, MaxRefLength) : item.Label;
+                    var label = item.Label.Length > MaxRefLength ? item.Label[..MaxRefLength] : item.Label;
                     longestItemWidth = Math.Max(longestItemWidth, graphics.MeasureString(label, lbxRefs.Font).Width);
                 }
             }

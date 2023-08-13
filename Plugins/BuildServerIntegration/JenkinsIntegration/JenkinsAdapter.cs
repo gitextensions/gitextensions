@@ -587,7 +587,7 @@ namespace JenkinsIntegration
                     buildTree = post;
                 }
 
-                restServicePath = restServicePath.Substring(0, postIndex);
+                restServicePath = restServicePath[..postIndex];
             }
             else
             {

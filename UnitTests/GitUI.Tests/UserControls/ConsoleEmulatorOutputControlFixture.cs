@@ -21,8 +21,8 @@ namespace GitUITests.UserControls
 
             ConsoleCommandLineOutputProcessor filter = new(cmd.Length, FireDataReceived);
 
-            string chunk1 = cmd.Substring(0, 10);
-            string chunk2 = cmd.Substring(10, cmd.Length - 10) + Environment.NewLine + outputData;
+            string chunk1 = cmd[..10];
+            string chunk2 = cmd[10..] + Environment.NewLine + outputData;
             filter.AnsiStreamChunkReceived(null, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk1)));
             filter.AnsiStreamChunkReceived(null, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk2)));
 
@@ -43,8 +43,8 @@ namespace GitUITests.UserControls
 
             ConsoleCommandLineOutputProcessor filter = new(cmd.Length, FireDataReceived);
 
-            string chunk1 = cmd.Substring(0, 10);
-            string chunk2 = cmd.Substring(10, cmd.Length - 10) + Environment.NewLine + outputData;
+            string chunk1 = cmd[..10];
+            string chunk2 = cmd[10..] + Environment.NewLine + outputData;
             filter.AnsiStreamChunkReceived(null, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk1)));
             filter.AnsiStreamChunkReceived(null, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk2)));
             filter.Flush();

@@ -460,7 +460,7 @@ namespace GitUI.CommandsDialogs
             {
                 _remoteName = GitRefName.GetRemoteName(branch, Module.GetRemoteNames());
                 _localBranchName = Module.GetLocalTrackingBranchName(_remoteName, branch) ?? "";
-                var remoteBranchName = _remoteName.Length > 0 ? branch.Substring(_remoteName.Length + 1) : branch;
+                var remoteBranchName = _remoteName.Length > 0 ? branch[(_remoteName.Length + 1)..] : branch;
                 _newLocalBranchName = string.Concat(_remoteName, "_", remoteBranchName);
                 int i = 2;
                 while (LocalBranchExists(_newLocalBranchName))

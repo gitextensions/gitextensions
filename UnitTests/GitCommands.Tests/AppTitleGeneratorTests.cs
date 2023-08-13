@@ -109,7 +109,7 @@ namespace GitCommandsTests
             AppTitleGenerator.Initialise(buildSha, buildBranch);
             string title = _appTitleGenerator.Generate("a", true, null, defaultBranchName: _defaultBranchName);
 
-            title.Should().Be($"{MockRepositoryDescriptionProvider.ShortName} ({_defaultBranchName}) - {AppSettings.ApplicationName} {buildSha.Substring(0, 8)} ({buildBranch})");
+            title.Should().Be($"{MockRepositoryDescriptionProvider.ShortName} ({_defaultBranchName}) - {AppSettings.ApplicationName} {buildSha[..8]} ({buildBranch})");
         }
 #endif
     }

@@ -223,11 +223,11 @@ namespace GitCommands
             int len = debugPath.Length;
             if (gitExtDir.Length > len)
             {
-                var path = gitExtDir.Substring(gitExtDir.Length - len);
+                var path = gitExtDir[^len..];
 
                 if (debugPath.ToPosixPath() == path.ToPosixPath())
                 {
-                    string projectPath = gitExtDir.Substring(0, gitExtDir.Length - len);
+                    string projectPath = gitExtDir[..^len];
                     return Path.Combine(projectPath, "Bin");
                 }
             }
