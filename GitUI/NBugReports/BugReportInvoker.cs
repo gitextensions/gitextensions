@@ -18,6 +18,12 @@ namespace GitUI.NBugReports
         private static IntPtr OwnerFormHandle
             => OwnerForm?.Handle ?? IntPtr.Zero;
 
+        private enum UserAction
+        {
+            ReportIssue,
+            RestartApplication
+        }
+
         /// <summary>
         /// Gets the root error.
         /// </summary>
@@ -99,6 +105,22 @@ namespace GitUI.NBugReports
             if (AppSettings.WriteErrorLog)
             {
                 LogError(exception, isTerminating);
+            }
+
+            if (exception is FileNotFoundException fileNotFoundException
+                && ReportFailToLoadAnAssembly(fileNotFoundException) == UserAction.RestartApplication)
+            {
+                // Skipping the 1st parameter that, starting from .net core, contains the path to application dll (instead of exe)
+                string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
+                ProcessStartInfo pi = new(Environment.ProcessPath, arguments);
+                pi.WorkingDirectory = Environment.CurrentDirectory;
+                Process.Start(pi);
+                Environment.Exit(0);
+            }
+            else
+            {
+                ShowNBug(OwnerForm, exception, false, isTerminating);
+                return;
             }
 
             ExternalOperationException externalOperationException = exception as ExternalOperationException;
@@ -186,6 +208,40 @@ namespace GitUI.NBugReports
                 TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText);
                 page.Buttons.Add(taskDialogCommandLink);
             }
+        }
+
+        private static UserAction ReportFailToLoadAnAssembly(FileNotFoundException exception)
+        {
+            string error = exception.Message;
+            TaskDialogPage pageFailToLoadAssembly = new()
+            {
+                Icon = TaskDialogIcon.Error,
+                Caption = TranslatedStrings.FailedToLoadAnAssembly,
+                Heading = string.Format(TranslatedStrings.FailedToLoadFileOrAssemblyFormat, exception.FileName),
+                Text = TranslatedStrings.FailedToLoadFileOrAssemblyText,
+                AllowCancel = false,
+                SizeToContent = true,
+            };
+
+            TaskDialogCommandLinkButton relaunchButton = new(TranslatedStrings.RestartApplication);
+            relaunchButton.DescriptionText = TranslatedStrings.RestartApplicationDescription;
+            pageFailToLoadAssembly.Buttons.Add(relaunchButton);
+
+            TaskDialogCommandLinkButton reportButton = new(TranslatedStrings.ReportIssue);
+            reportButton.DescriptionText = TranslatedStrings.ReportIssueDescription;
+            pageFailToLoadAssembly.Buttons.Add(reportButton);
+
+            pageFailToLoadAssembly.Expander = new TaskDialogExpander
+            {
+                CollapsedButtonText = TranslatedStrings.SeeErrorMessage,
+                ExpandedButtonText = TranslatedStrings.HideErrorMessage,
+                Position = TaskDialogExpanderPosition.AfterFootnote,
+                Text = error,
+            };
+
+            return TaskDialog.ShowDialog(OwnerFormHandle, pageFailToLoadAssembly) == relaunchButton
+                ? UserAction.RestartApplication
+                : UserAction.ReportIssue;
         }
 
         private static void ReportDubiousOwnership(Exception exception)
