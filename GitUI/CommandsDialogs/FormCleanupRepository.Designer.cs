@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             Preview = new Button();
-            AddPath = new Button();
+            AddInclusivePath = new Button();
             Cleanup = new Button();
             _NO_TRANSLATE_Close = new Button();
             groupBox1 = new GroupBox();
@@ -39,9 +39,13 @@
             RemoveDirectories = new CheckBox();
             PreviewOutput = new TextBox();
             label1 = new Label();
-            textBoxPaths = new TextBox();
-            checkBoxPathFilter = new CheckBox();
-            labelPathHint = new Label();
+            textBoxIncludePaths = new TextBox();
+            checkBoxIncludePathFilter = new CheckBox();
+            textBoxExcludePaths = new TextBox();
+            checkBoxExcludePathFilter = new CheckBox();
+            AddExclusivePath = new Button();
+            labelPathHintExclude = new Label();
+            labelPathHintInclude = new Label();
             CleanSubmodules = new CheckBox();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -51,35 +55,38 @@
             Preview.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Preview.Image = Properties.Images.Preview;
             Preview.ImageAlign = ContentAlignment.MiddleLeft;
-            Preview.Location = new Point(50, 300);
+            Preview.Location = new Point(60, 529);
+            Preview.Margin = new Padding(4);
             Preview.Name = "Preview";
-            Preview.Size = new Size(120, 25);
-            Preview.TabIndex = 0;
+            Preview.Size = new Size(150, 31);
+            Preview.TabIndex = 10;
             Preview.Text = "Preview";
             Preview.UseVisualStyleBackColor = true;
             Preview.Click += Preview_Click;
             // 
-            // AddPath
+            // AddInclusivePath
             // 
-            AddPath.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            AddPath.ImageAlign = ContentAlignment.MiddleLeft;
-            AddPath.Location = new Point(302, 164);
-            AddPath.Name = "AddPath";
-            AddPath.Size = new Size(120, 25);
-            AddPath.TabIndex = 0;
-            AddPath.Text = "Add a path...";
-            AddPath.UseVisualStyleBackColor = true;
-            AddPath.Click += AddPath_Click;
+            AddInclusivePath.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AddInclusivePath.ImageAlign = ContentAlignment.MiddleLeft;
+            AddInclusivePath.Location = new Point(378, 203);
+            AddInclusivePath.Margin = new Padding(4);
+            AddInclusivePath.Name = "AddInclusivePath";
+            AddInclusivePath.Size = new Size(150, 31);
+            AddInclusivePath.TabIndex = 3;
+            AddInclusivePath.Text = "Add a path...";
+            AddInclusivePath.UseVisualStyleBackColor = true;
+            AddInclusivePath.Click += AddIncludePath_Click;
             // 
             // Cleanup
             // 
             Cleanup.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Cleanup.Image = Properties.Images.CleanupRepo;
             Cleanup.ImageAlign = ContentAlignment.MiddleLeft;
-            Cleanup.Location = new Point(176, 300);
+            Cleanup.Location = new Point(218, 529);
+            Cleanup.Margin = new Padding(4);
             Cleanup.Name = "Cleanup";
-            Cleanup.Size = new Size(120, 25);
-            Cleanup.TabIndex = 1;
+            Cleanup.Size = new Size(150, 31);
+            Cleanup.TabIndex = 11;
             Cleanup.Text = "Cleanup";
             Cleanup.UseVisualStyleBackColor = true;
             Cleanup.Click += Cleanup_Click;
@@ -88,11 +95,12 @@
             // 
             _NO_TRANSLATE_Close.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             _NO_TRANSLATE_Close.DialogResult = DialogResult.OK;
-            _NO_TRANSLATE_Close.Location = new Point(302, 300);
+            _NO_TRANSLATE_Close.Location = new Point(376, 529);
+            _NO_TRANSLATE_Close.Margin = new Padding(4);
             _NO_TRANSLATE_Close.Name = "_NO_TRANSLATE_Close";
-            _NO_TRANSLATE_Close.Size = new Size(120, 25);
-            _NO_TRANSLATE_Close.TabIndex = 2;
-            _NO_TRANSLATE_Close.Text = TranslatedStrings.Close;
+            _NO_TRANSLATE_Close.Size = new Size(150, 31);
+            _NO_TRANSLATE_Close.TabIndex = 12;
+            _NO_TRANSLATE_Close.Text = "Close";
             _NO_TRANSLATE_Close.UseVisualStyleBackColor = true;
             _NO_TRANSLATE_Close.Click += Close_Click;
             // 
@@ -102,19 +110,22 @@
             groupBox1.Controls.Add(RemoveIgnored);
             groupBox1.Controls.Add(RemoveNonIgnored);
             groupBox1.Controls.Add(RemoveAll);
-            groupBox1.Location = new Point(12, 12);
+            groupBox1.Location = new Point(15, 15);
+            groupBox1.Margin = new Padding(4);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(410, 100);
-            groupBox1.TabIndex = 3;
+            groupBox1.Padding = new Padding(4);
+            groupBox1.Size = new Size(512, 125);
+            groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Remove untracked files from working directory";
             // 
             // RemoveIgnored
             // 
             RemoveIgnored.AutoSize = true;
-            RemoveIgnored.Location = new Point(7, 67);
+            RemoveIgnored.Location = new Point(9, 84);
+            RemoveIgnored.Margin = new Padding(4);
             RemoveIgnored.Name = "RemoveIgnored";
-            RemoveIgnored.Size = new Size(197, 17);
+            RemoveIgnored.Size = new Size(272, 24);
             RemoveIgnored.TabIndex = 2;
             RemoveIgnored.Text = "Remove only ignored untracked files";
             RemoveIgnored.UseVisualStyleBackColor = true;
@@ -122,9 +133,10 @@
             // RemoveNonIgnored
             // 
             RemoveNonIgnored.AutoSize = true;
-            RemoveNonIgnored.Location = new Point(7, 43);
+            RemoveNonIgnored.Location = new Point(9, 54);
+            RemoveNonIgnored.Margin = new Padding(4);
             RemoveNonIgnored.Name = "RemoveNonIgnored";
-            RemoveNonIgnored.Size = new Size(218, 17);
+            RemoveNonIgnored.Size = new Size(303, 24);
             RemoveNonIgnored.TabIndex = 1;
             RemoveNonIgnored.Text = "Remove only non-ignored untracked files";
             RemoveNonIgnored.UseVisualStyleBackColor = true;
@@ -133,9 +145,10 @@
             // 
             RemoveAll.AutoSize = true;
             RemoveAll.Checked = true;
-            RemoveAll.Location = new Point(7, 20);
+            RemoveAll.Location = new Point(9, 25);
+            RemoveAll.Margin = new Padding(4);
             RemoveAll.Name = "RemoveAll";
-            RemoveAll.Size = new Size(150, 17);
+            RemoveAll.Size = new Size(204, 24);
             RemoveAll.TabIndex = 0;
             RemoveAll.TabStop = true;
             RemoveAll.Text = "Remove all untracked files";
@@ -146,84 +159,139 @@
             RemoveDirectories.AutoSize = true;
             RemoveDirectories.Checked = true;
             RemoveDirectories.CheckState = CheckState.Checked;
-            RemoveDirectories.Location = new Point(19, 119);
+            RemoveDirectories.Location = new Point(24, 148);
+            RemoveDirectories.Margin = new Padding(4);
             RemoveDirectories.Name = "RemoveDirectories";
-            RemoveDirectories.Size = new Size(168, 17);
-            RemoveDirectories.TabIndex = 4;
+            RemoveDirectories.Size = new Size(228, 24);
+            RemoveDirectories.TabIndex = 1;
             RemoveDirectories.Text = "Remove untracked directories";
             RemoveDirectories.UseVisualStyleBackColor = true;
             // 
             // PreviewOutput
             // 
             PreviewOutput.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            PreviewOutput.Location = new Point(12, 353);
+            PreviewOutput.Location = new Point(17, 597);
+            PreviewOutput.Margin = new Padding(4);
             PreviewOutput.Multiline = true;
             PreviewOutput.Name = "PreviewOutput";
             PreviewOutput.ScrollBars = ScrollBars.Both;
-            PreviewOutput.Size = new Size(410, 87);
-            PreviewOutput.TabIndex = 5;
+            PreviewOutput.Size = new Size(512, 117);
+            PreviewOutput.TabIndex = 14;
             PreviewOutput.WordWrap = false;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(9, 335);
+            label1.Location = new Point(17, 573);
+            label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
-            label1.Size = new Size(28, 13);
-            label1.TabIndex = 6;
+            label1.Size = new Size(37, 20);
+            label1.TabIndex = 13;
             label1.Text = "Log:";
             // 
-            // textBoxPaths
+            // textBoxIncludePaths
             // 
-            textBoxPaths.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textBoxPaths.Location = new Point(48, 194);
-            textBoxPaths.Multiline = true;
-            textBoxPaths.Name = "textBoxPaths";
-            textBoxPaths.ScrollBars = ScrollBars.Vertical;
-            textBoxPaths.Size = new Size(374, 63);
-            textBoxPaths.TabIndex = 1;
+            textBoxIncludePaths.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            textBoxIncludePaths.Location = new Point(60, 240);
+            textBoxIncludePaths.Margin = new Padding(4);
+            textBoxIncludePaths.Multiline = true;
+            textBoxIncludePaths.Name = "textBoxIncludePaths";
+            textBoxIncludePaths.ScrollBars = ScrollBars.Vertical;
+            textBoxIncludePaths.Size = new Size(466, 78);
+            textBoxIncludePaths.TabIndex = 4;
             // 
-            // checkBoxPathFilter
+            // checkBoxIncludePathFilter
             // 
-            checkBoxPathFilter.AutoSize = true;
-            checkBoxPathFilter.Location = new Point(19, 169);
-            checkBoxPathFilter.Name = "checkBoxPathFilter";
-            checkBoxPathFilter.Size = new Size(176, 17);
-            checkBoxPathFilter.TabIndex = 0;
-            checkBoxPathFilter.Text = "Affect the following path(s) only:";
-            checkBoxPathFilter.UseVisualStyleBackColor = true;
-            checkBoxPathFilter.CheckedChanged += checkBoxPathFilter_CheckedChanged;
+            checkBoxIncludePathFilter.AutoSize = true;
+            checkBoxIncludePathFilter.Location = new Point(24, 209);
+            checkBoxIncludePathFilter.Margin = new Padding(4);
+            checkBoxIncludePathFilter.Name = "checkBoxIncludePathFilter";
+            checkBoxIncludePathFilter.Size = new Size(311, 24);
+            checkBoxIncludePathFilter.TabIndex = 2;
+            checkBoxIncludePathFilter.Text = "Affect the following directory path(s) only:";
+            checkBoxIncludePathFilter.UseVisualStyleBackColor = true;
+            checkBoxIncludePathFilter.CheckedChanged += checkBoxPathFilter_CheckedChanged;
             // 
-            // labelPathHint
+            // textBoxExcludePaths
             // 
-            labelPathHint.AutoSize = true;
-            labelPathHint.Location = new Point(50, 261);
-            labelPathHint.Name = "labelPathHint";
-            labelPathHint.Size = new Size(92, 13);
-            labelPathHint.TabIndex = 7;
-            labelPathHint.Text = "(one path per line)";
+            textBoxExcludePaths.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            textBoxExcludePaths.Location = new Point(60, 391);
+            textBoxExcludePaths.Margin = new Padding(4);
+            textBoxExcludePaths.Multiline = true;
+            textBoxExcludePaths.Name = "textBoxExcludePaths";
+            textBoxExcludePaths.ScrollBars = ScrollBars.Vertical;
+            textBoxExcludePaths.Size = new Size(466, 78);
+            textBoxExcludePaths.TabIndex = 8;
+            // 
+            // checkBoxExcludePathFilter
+            // 
+            checkBoxExcludePathFilter.AutoSize = true;
+            checkBoxExcludePathFilter.Location = new Point(24, 360);
+            checkBoxExcludePathFilter.Margin = new Padding(4);
+            checkBoxExcludePathFilter.Name = "checkBoxExcludePathFilter";
+            checkBoxExcludePathFilter.Size = new Size(252, 24);
+            checkBoxExcludePathFilter.TabIndex = 6;
+            checkBoxExcludePathFilter.Text = "Exclude the following file path(s):";
+            checkBoxExcludePathFilter.UseVisualStyleBackColor = true;
+            checkBoxExcludePathFilter.CheckedChanged += checkBoxExcludePathFilter_CheckedChanged;
+            // 
+            // AddExclusivePath
+            // 
+            AddExclusivePath.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            AddExclusivePath.ImageAlign = ContentAlignment.MiddleLeft;
+            AddExclusivePath.Location = new Point(378, 354);
+            AddExclusivePath.Margin = new Padding(4);
+            AddExclusivePath.Name = "AddExclusivePath";
+            AddExclusivePath.Size = new Size(150, 31);
+            AddExclusivePath.TabIndex = 7;
+            AddExclusivePath.Text = "Add a path...";
+            AddExclusivePath.UseVisualStyleBackColor = true;
+            AddExclusivePath.Click += AddExcludePath_Click;
+            // 
+            // labelPathHintExclude
+            // 
+            labelPathHintExclude.AutoSize = true;
+            labelPathHintExclude.Location = new Point(62, 475);
+            labelPathHintExclude.Margin = new Padding(4, 0, 4, 0);
+            labelPathHintExclude.Name = "labelPathHintExclude";
+            labelPathHintExclude.Size = new Size(132, 20);
+            labelPathHintExclude.TabIndex = 9;
+            labelPathHintExclude.Text = "(one path per line)";
+            // 
+            // labelPathHintInclude
+            // 
+            labelPathHintInclude.AutoSize = true;
+            labelPathHintInclude.Location = new Point(62, 323);
+            labelPathHintInclude.Margin = new Padding(4, 0, 4, 0);
+            labelPathHintInclude.Name = "labelPathHintInclude";
+            labelPathHintInclude.Size = new Size(132, 20);
+            labelPathHintInclude.TabIndex = 5;
+            labelPathHintInclude.Text = "(one path per line)";
             // 
             // CleanSubmodules
             // 
             CleanSubmodules.AutoSize = true;
-            CleanSubmodules.Location = new Point(19, 144);
+            CleanSubmodules.Location = new Point(24, 178);
             CleanSubmodules.Name = "CleanSubmodules";
-            CleanSubmodules.Size = new Size(183, 19);
+            CleanSubmodules.Size = new Size(225, 24);
             CleanSubmodules.TabIndex = 8;
             CleanSubmodules.Text = "Clean submodules recursively";
             CleanSubmodules.UseVisualStyleBackColor = true;
             // 
             // FormCleanupRepository
             // 
-            AcceptButton = AddPath;
-            AutoScaleDimensions = new SizeF(96F, 96F);
+            AcceptButton = AddInclusivePath;
+            AutoScaleDimensions = new SizeF(120F, 120F);
             AutoScaleMode = AutoScaleMode.Dpi;
             CancelButton = _NO_TRANSLATE_Close;
-            ClientSize = new Size(434, 462);
-            Controls.Add(CleanSubmodules);
-            Controls.Add(labelPathHint);
-            Controls.Add(textBoxPaths);
-            Controls.Add(checkBoxPathFilter);
+            ClientSize = new Size(542, 727);
+            Controls.Add(labelPathHintInclude);
+            Controls.Add(labelPathHintExclude);
+            Controls.Add(textBoxExcludePaths);
+            Controls.Add(checkBoxExcludePathFilter);
+            Controls.Add(AddExclusivePath);
+            Controls.Add(textBoxIncludePaths);
+            Controls.Add(checkBoxIncludePathFilter);
             Controls.Add(label1);
             Controls.Add(PreviewOutput);
             Controls.Add(RemoveDirectories);
@@ -231,10 +299,12 @@
             Controls.Add(_NO_TRANSLATE_Close);
             Controls.Add(Cleanup);
             Controls.Add(Preview);
-            Controls.Add(AddPath);
+            Controls.Add(AddInclusivePath);
+            Controls.Add(CleanSubmodules);
+            Margin = new Padding(4);
             MaximizeBox = false;
             MinimizeBox = false;
-            MinimumSize = new Size(450, 500);
+            MinimumSize = new Size(558, 738);
             Name = "FormCleanupRepository";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Clean working directory";
@@ -247,7 +317,7 @@
         #endregion
 
         private Button Preview;
-        private Button AddPath;
+        private Button AddInclusivePath;
         private Button Cleanup;
         private Button _NO_TRANSLATE_Close;
         private GroupBox groupBox1;
@@ -257,9 +327,13 @@
         private CheckBox RemoveDirectories;
         private TextBox PreviewOutput;
         private Label label1;
-        private TextBox textBoxPaths;
-        private CheckBox checkBoxPathFilter;
-        private Label labelPathHint;
+        private TextBox textBoxIncludePaths;
+        private CheckBox checkBoxIncludePathFilter;
+        private TextBox textBoxExcludePaths;
+        private CheckBox checkBoxExcludePathFilter;
+        private Button AddExclusivePath;
+        private Label labelPathHintExclude;
+        private Label labelPathHintInclude;
         private CheckBox CleanSubmodules;
     }
 }

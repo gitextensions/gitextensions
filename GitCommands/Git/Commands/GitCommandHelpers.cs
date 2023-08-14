@@ -531,14 +531,16 @@ namespace GitCommands.Git.Commands
         /// <param name="dryRun">Only show what would be deleted.</param>
         /// <param name="directories">Delete untracked directories too.</param>
         /// <param name="paths">Limit to specific paths.</param>
-        public static ArgumentString CleanCmd(CleanMode mode, bool dryRun, bool directories, string? paths = null)
+        /// <param name="excludes">Exclude certain files.</param>
+        public static ArgumentString CleanCmd(CleanMode mode, bool dryRun, bool directories, string? paths = null, string? excludes = null)
         {
             return new GitArgumentBuilder("clean")
             {
                 mode,
                 { directories, "-d" },
                 { dryRun, "--dry-run", "-f" },
-                paths
+                paths,
+                { !string.IsNullOrEmpty(excludes), excludes }
             };
         }
 
