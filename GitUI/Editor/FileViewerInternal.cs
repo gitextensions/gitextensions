@@ -231,6 +231,8 @@ namespace GitUI.Editor
 
         public void SetText(string text, Action? openWithDifftool, bool isDiff, bool isRangeDiff)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             _currentViewPositionCache.Capture();
 
             OpenWithDifftool = openWithDifftool;

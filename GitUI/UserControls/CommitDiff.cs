@@ -82,24 +82,17 @@ namespace GitUI.UserControls
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ViewSelectedDiffAsync();
-            }).FileAndForget();
+            ViewSelectedDiff();
         }
 
         private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ViewSelectedDiffAsync();
-            }).FileAndForget();
+            ViewSelectedDiff();
         }
 
-        private async Task ViewSelectedDiffAsync()
+        private void ViewSelectedDiff()
         {
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
-                cancellationToken: _viewChangesSequence.Next());
+            DiffText.InvokeAndForget(() => DiffText.ViewChangesAsync(DiffFiles.SelectedItem, cancellationToken: _viewChangesSequence.Next()));
         }
     }
 }

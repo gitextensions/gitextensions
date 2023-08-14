@@ -997,6 +997,8 @@ namespace GitUI.Editor
         /// <param name="text">Metadata for linepatching.</param>
         private void ResetView(ViewMode viewMode, string? fileName, FileStatusItem? item = null, string? text = null)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             _viewMode = viewMode;
             _viewItem = item;
             if (_viewMode == ViewMode.Text
@@ -1232,11 +1234,7 @@ namespace GitUI.Editor
 
         private void UICommands_PostSettings(object sender, GitUIPostActionEventArgs? e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await internalFileViewer.SwitchToMainThreadAsync();
-                internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition;
-            }).FileAndForget();
+            internalFileViewer.InvokeAndForget(() => internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition);
         }
 
         private void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1959,8 +1957,8 @@ namespace GitUI.Editor
             switch (command)
             {
                 case Command.Find: internalFileViewer.Find(); break;
-                case Command.FindNextOrOpenWithDifftool: ThreadHelper.JoinableTaskFactory.RunAsync(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: true)); break;
-                case Command.FindPrevious: ThreadHelper.JoinableTaskFactory.RunAsync(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: false)); break;
+                case Command.FindNextOrOpenWithDifftool: internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: true)); break;
+                case Command.FindPrevious: internalFileViewer.InvokeAndForget(() => internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: false)); break;
                 case Command.GoToLine: goToLineToolStripMenuItem.PerformClick(); break;
                 case Command.IncreaseNumberOfVisibleLines: increaseNumberOfLinesToolStripMenuItem.PerformClick(); break;
                 case Command.DecreaseNumberOfVisibleLines: decreaseNumberOfLinesToolStripMenuItem.PerformClick(); break;

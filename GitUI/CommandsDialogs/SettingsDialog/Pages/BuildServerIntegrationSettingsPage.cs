@@ -54,8 +54,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
                     Validates.NotNull(_populateBuildServerTypeTask);
 

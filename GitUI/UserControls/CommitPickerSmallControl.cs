@@ -52,11 +52,8 @@ namespace GitUI.UserControls
             else
             {
                 textBoxCommitHash.Text = SelectedObjectId.ToShortString();
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
+                ThreadHelper.FileAndForget(async () =>
                     {
-                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
                         var currentCheckout = Module.GetCurrentCheckout();
 
                         Validates.NotNull(currentCheckout);

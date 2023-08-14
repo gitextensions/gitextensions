@@ -36,7 +36,7 @@ namespace GitUI.LeftPanel
 
         private void OnStatusUpdated(SubmoduleStatusEventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            TreeViewNode.TreeView.InvokeAndForget(async () =>
             {
                 CancellationTokenSource? cts = null;
                 Task<Nodes>? loadNodesTask = null;
@@ -111,7 +111,7 @@ namespace GitUI.LeftPanel
                 }
 
                 Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
-            }).FileAndForget();
+            });
         }
 
         private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)

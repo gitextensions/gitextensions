@@ -281,10 +281,8 @@ namespace GitUI.UserControls
             }
 
             Enabled = true;
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
-                await TaskScheduler.Default;
-
                 if (_getRefs is null)
                 {
                     Debug.Fail("getRefs is unexpectedly null");
@@ -297,7 +295,7 @@ namespace GitUI.UserControls
 
                 await this.SwitchToMainThreadAsync();
                 BindBranches(branches);
-            }).FileAndForget();
+            });
 
             return;
 

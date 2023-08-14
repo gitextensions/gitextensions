@@ -232,20 +232,15 @@ namespace GitUI.CommandsDialogs
 
             _previewedItem = CurrentItem;
 
-            var content = Module.ShowObject(_previewedItem.ObjectId) ?? "";
+            string content = Module.ShowObject(_previewedItem.ObjectId) ?? "";
             if (_previewedItem.ObjectType == LostObjectType.Commit)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
-                    fileViewer.ViewFixedPatchAsync("commit.patch", content, null))
-                .FileAndForget();
+                fileViewer.InvokeAndForget(() => fileViewer.ViewFixedPatchAsync("commit.patch", content, openWithDifftool: null));
             }
             else
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    var filename = GuessFileTypeWithContent(content);
-                    await fileViewer.ViewTextAsync(filename, content, null);
-                }).FileAndForget();
+                string filename = GuessFileTypeWithContent(content);
+                fileViewer.InvokeAndForget(() => fileViewer.ViewTextAsync(filename, content, openWithDifftool: null));
             }
         }
 

@@ -482,11 +482,8 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
+                ThreadHelper.FileAndForget(async () =>
                     {
-                        await TaskScheduler.Default;
-
                         var currentCheckout = Module.GetCurrentCheckout();
 
                         Validates.NotNull(currentCheckout);

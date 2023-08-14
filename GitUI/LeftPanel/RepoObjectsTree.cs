@@ -309,7 +309,7 @@ namespace GitUI.LeftPanel
                 selectedGuid = selectedRevision.IsArtificial ? "HEAD" : selectedRevision.Guid;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 HashSet<string> mergedBranches = selectedGuid is null
@@ -318,7 +318,7 @@ namespace GitUI.LeftPanel
 
                 selectedRevision?.Refs.ForEach(gitRef => mergedBranches.Remove(gitRef.CompleteName));
 
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+                await treeMain.SwitchToMainThreadAsync(cancellationToken);
 
                 try
                 {
@@ -332,7 +332,7 @@ namespace GitUI.LeftPanel
                 {
                     treeMain.EndUpdate();
                 }
-            }).FileAndForget();
+            });
 
             static ObjectId? GetSelectedNodeObjectId(TreeNode treeNode)
             {

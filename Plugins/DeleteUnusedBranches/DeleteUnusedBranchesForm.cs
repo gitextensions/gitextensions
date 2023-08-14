@@ -83,7 +83,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             checkBoxHeaderCell.CheckBoxClicked += CheckBoxHeader_OnCheckBoxClicked;
             _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText = string.Empty;
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
+            this.InvokeAndForget(RefreshObsoleteBranchesAsync);
 
             BranchesGrid.DataSource = _branches;
         }
@@ -181,9 +181,8 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             SetWorkingState(isWorking: true);
             lblStatus.Text = _deletingBranches.Text;
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
-                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                 try
                 {
                     foreach (var remoteBranch in remoteBranches)
@@ -260,7 +259,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
 
         private void Refresh_Click(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
+            this.InvokeAndForget(RefreshObsoleteBranchesAsync);
         }
 
         private void CheckBoxHeader_OnCheckBoxClicked(object sender, CheckBoxHeaderCellEventArgs e)

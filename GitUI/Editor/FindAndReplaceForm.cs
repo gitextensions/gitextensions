@@ -119,18 +119,14 @@ namespace GitUI
 
         private void btnFindPrevious_Click(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await FindNextAsync(false, true, _textNotFoundString.Text);
-            }).FileAndForget();
+            Validates.NotNull(_editor);
+            _editor.InvokeAndForget(() => FindNextAsync(viaF3: false, searchBackward: true, _textNotFoundString.Text));
         }
 
         private void btnFindNext_Click(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await FindNextAsync(false, false, _textNotFoundString.Text);
-            }).FileAndForget();
+            Validates.NotNull(_editor);
+            _editor.InvokeAndForget(() => FindNextAsync(viaF3: false, searchBackward: false, _textNotFoundString.Text));
         }
 
         public async Task<TextRange?> FindNextAsync(bool viaF3, bool searchBackward, string? messageIfNotFound)
@@ -307,7 +303,7 @@ namespace GitUI
         {
             Validates.NotNull(_editor);
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            _editor.InvokeAndForget(async () =>
             {
                 SelectionManager sm = _editor.ActiveTextAreaControl.SelectionManager;
                 if (string.Equals(sm.SelectedText, txtLookFor.Text, StringComparison.OrdinalIgnoreCase))
@@ -316,7 +312,7 @@ namespace GitUI
                 }
 
                 await FindNextAsync(false, _lastSearchWasBackward, _textNotFoundString.Text);
-            }).FileAndForget();
+            });
         }
 
         private void btnReplaceAll_Click(object sender, EventArgs e)

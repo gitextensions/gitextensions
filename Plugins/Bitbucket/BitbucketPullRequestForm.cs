@@ -67,9 +67,8 @@ namespace GitExtensions.Plugins.Bitbucket
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
-                await TaskScheduler.Default;
                 var repositories = await GetRepositoriesAsync();
 
                 await this.SwitchToMainThreadAsync();
@@ -77,7 +76,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 ddlRepositoryTarget.DataSource = repositories.ToList();
                 ddlRepositorySource.Enabled = true;
                 ddlRepositoryTarget.Enabled = true;
-            }).FileAndForget();
+            });
 
             async Task<List<Repository>> GetRepositoriesAsync()
             {
@@ -104,15 +103,14 @@ namespace GitExtensions.Plugins.Bitbucket
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
-                await TaskScheduler.Default;
                 var pullRequests = await GetPullRequestsAsync();
 
                 await this.SwitchToMainThreadAsync();
                 lbxPullRequests.DataSource = pullRequests;
                 lbxPullRequests.DisplayMember = nameof(PullRequest.DisplayName);
-            }).FileAndForget();
+            });
 
             async Task<List<PullRequest>> GetPullRequestsAsync()
             {

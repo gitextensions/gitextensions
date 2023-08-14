@@ -46,13 +46,12 @@ namespace GitUI
                 item.ToolTipText = repo.Path;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
-                await TaskScheduler.Default;
                 string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 item.ShortcutKeyDisplayString = branchName;
-            }).FileAndForget();
+            });
         }
 
         private void ChangeWorkingDir(string path)

@@ -92,11 +92,8 @@ namespace GitExtensions.Plugins.GitStatistics
 
         private void InitializeCommitCount()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
                     var (totalCommits, commitsPerUser) = _module.GetCommitsByContributor();
 
                     await this.SwitchToMainThreadAsync();
@@ -217,11 +214,7 @@ namespace GitExtensions.Plugins.GitStatistics
             }
 
             // Sync rest to UI thread
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await this.SwitchToMainThreadAsync();
-                UpdateUI(_lineCounter, linesOfCodePerLanguageText.ToString(), extensionValues, extensionLabels);
-            }).FileAndForget();
+            this.InvokeAndForget(() => UpdateUI(_lineCounter, linesOfCodePerLanguageText.ToString(), extensionValues, extensionLabels));
         }
 
         private void UpdateUI(LineCounter lineCounter, string linesOfCodePerLanguageText, decimal[] extensionValues,

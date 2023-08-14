@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.Gpg;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.CommandsDialogs
 {
@@ -25,12 +26,13 @@ namespace GitUI.CommandsDialogs
                 return null;
             }
 
-            var getCommitSignature = _gitGpgController.GetRevisionCommitSignatureStatusAsync(revision);
-            var getTagSignature = _gitGpgController.GetRevisionTagSignatureStatusAsync(revision);
+            await TaskScheduler.Default;
+            Task<CommitStatus> getCommitSignature = _gitGpgController.GetRevisionCommitSignatureStatusAsync(revision);
+            Task<TagStatus> getTagSignature = _gitGpgController.GetRevisionTagSignatureStatusAsync(revision);
             await Task.WhenAll(getCommitSignature, getTagSignature);
 
-            var commitStatus = await getCommitSignature;
-            var tagStatus = await getTagSignature;
+            CommitStatus commitStatus = getCommitSignature.CompletedResult();
+            TagStatus tagStatus = getTagSignature.CompletedResult();
 
             // Absence of Commit sign and Tag sign
             if (commitStatus == CommitStatus.NoSignature && tagStatus == TagStatus.NoTag)

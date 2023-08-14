@@ -78,7 +78,7 @@ namespace GitExtensions.Plugins.GitImpact
 
             var tasks = GetTasks(token);
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
                 try
                 {

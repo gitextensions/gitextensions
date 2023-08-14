@@ -131,11 +131,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void PopulateBranchesComboAndEnableCreateButton(IHostedRemote remote, ComboBox comboBox)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
+            ThreadHelper.FileAndForget(async () =>
                     {
-                        await TaskScheduler.Default;
-
                         try
                         {
                             IHostedRepository hostedRepository = remote.GetHostedRepository();
@@ -175,8 +172,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                     SizeToContent = true
                                 });
                         }
-                    })
-                .FileAndForget();
+                    });
         }
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)

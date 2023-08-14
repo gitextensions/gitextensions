@@ -309,11 +309,9 @@ namespace GitUI.Blame
 
             Validates.NotNull(_fileName);
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                () => BlameAuthor.ViewTextAsync("committer.txt", gutter));
+            BlameAuthor.InvokeAndForget(() => BlameAuthor.ViewTextAsync("committer.txt", gutter));
             cancellationToken.ThrowIfCancellationRequested();
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                () => BlameFile.ViewTextAsync(_fileName, body));
+            BlameFile.InvokeAndForget(() => BlameFile.ViewTextAsync(_fileName, body));
             cancellationToken.ThrowIfCancellationRequested();
 
             BlameFile.GoToLine(Math.Min(lineNumber, _blame.Lines.Count));

@@ -102,14 +102,14 @@ namespace GitUI.CommandsDialogs
             }
 
             DiffFiles.StoreNextIndexToSelect();
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            DiffFiles.InvokeAndForget(async () =>
             {
                 await SetDiffsAsync(revisions);
                 if (DiffFiles.SelectedItem is null)
                 {
                     DiffFiles.SelectStoredNextIndex();
                 }
-            }).FileAndForget();
+            });
         }
 
         #region Hotkey commands
@@ -239,7 +239,7 @@ namespace GitUI.CommandsDialogs
 
         public void DisplayDiffTab(IReadOnlyList<GitRevision> revisions)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            DiffFiles.InvokeAndForget(async () =>
             {
                 await SetDiffsAsync(revisions);
 
@@ -248,7 +248,7 @@ namespace GitUI.CommandsDialogs
                 {
                     DiffFiles.SelectFirstVisibleItem();
                 }
-            }).FileAndForget();
+            });
         }
 
         /// <summary>
@@ -603,12 +603,13 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Show selected item as diff or blame
         /// </summary>
-        private void ShowSelectedFile(bool ensureNoSwitchToFilter = false, int? line = null) =>
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                await (!blameToolStripMenuItem.Checked
-                    ? ShowSelectedFileDiffAsync(ensureNoSwitchToFilter, line)
-                    : ShowSelectedFileBlameAsync(ensureNoSwitchToFilter, line)))
-            .FileAndForget();
+        private void ShowSelectedFile(bool ensureNoSwitchToFilter = false, int? line = null)
+        {
+            DiffText.InvokeAndForget(() =>
+                blameToolStripMenuItem.Checked
+                    ? ShowSelectedFileBlameAsync(ensureNoSwitchToFilter, line)
+                    : ShowSelectedFileDiffAsync(ensureNoSwitchToFilter, line));
+        }
 
         private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -641,7 +642,7 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.OpenSubmoduleDiffInSeparateWindow && item.Item.IsSubmodule)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(DiffFiles.OpenSubmoduleAsync);
+                DiffFiles.InvokeAndForget(DiffFiles.OpenSubmoduleAsync);
             }
             else
             {
@@ -1032,23 +1033,21 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(() =>
             {
-                await TaskScheduler.Default;
-
-                var blob = Module.GetFileBlobHash(item.Item.Name, item.SecondRevision.ObjectId);
+                ObjectId blob = Module.GetFileBlobHash(item.Item.Name, item.SecondRevision.ObjectId);
 
                 if (blob is null)
                 {
                     return;
                 }
 
-                var fileName = PathUtil.GetFileName(item.Item.Name);
+                string fileName = PathUtil.GetFileName(item.Item.Name);
                 fileName = (Path.GetTempPath() + fileName).ToNativePath();
                 Module.SaveBlobAs(fileName, blob.ToString());
 
                 onSaved(fileName);
-            }).FileAndForget();
+            });
         }
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()

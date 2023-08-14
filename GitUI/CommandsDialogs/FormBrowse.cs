@@ -281,13 +281,12 @@ namespace GitUI.CommandsDialogs
             MainSplitContainer.Visible = false;
             MainSplitContainer.SplitterDistance = DpiUtil.Scale(260);
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
-                await TaskScheduler.Default;
                 PluginRegistry.Initialize();
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await this.SwitchToMainThreadAsync();
                 RegisterPlugins();
-            }).FileAndForget();
+            });
 
             InitCountArtificial(out _gitStatusMonitor);
 
@@ -382,11 +381,10 @@ namespace GitUI.CommandsDialogs
                         {
                             Validates.NotNull(_submoduleStatusProvider);
 
-                            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                            ThreadHelper.FileAndForget(async () =>
                             {
                                 try
                                 {
-                                    await TaskScheduler.Default;
                                     await _submoduleStatusProvider.UpdateSubmodulesStatusAsync(Module.WorkingDir, status);
                                 }
                                 catch (GitConfigurationException ex)
@@ -680,7 +678,7 @@ namespace GitUI.CommandsDialogs
                 RevisionGrid.Refresh();
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync(selectedRevision));
+            revisionGpgInfo1.InvokeAndForget(() => FillGpgInfoAsync(selectedRevision));
             FillBuildReport(selectedRevision);
             repoObjectsTree.SelectionChanged(selectedRevisions);
         }
@@ -1080,10 +1078,9 @@ namespace GitUI.CommandsDialogs
         {
             if (AppSettings.ShowStashCount)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                ThreadHelper.FileAndForget(async () =>
                 {
                     // Add a delay to not interfere with GUI updates when switching repository
-                    await TaskScheduler.Default;
                     await Task.Delay(500);
 
                     var result = Module.GetStashes(noLocks: true).Count;
@@ -1091,7 +1088,7 @@ namespace GitUI.CommandsDialogs
                     await this.SwitchToMainThreadAsync();
 
                     toolStripSplitStash.Text = $"({result})";
-                }).FileAndForget();
+                });
             }
             else
             {
@@ -1276,7 +1273,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var info = await _controller.LoadGpgInfoAsync(revision);
+            GpgInfo info = await _controller.LoadGpgInfoAsync(revision);
             revisionGpgInfo1.DisplayGpgInfo(info);
         }
 
@@ -1437,11 +1434,8 @@ namespace GitUI.CommandsDialogs
             SetShortcutKeyDisplayStringsFromHotkeySettings();
 
             // Clear the separate caches for diff/merge tools
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await new CustomDiffMergeToolProvider().ClearAsync(isDiff: false);
-            }).FileAndForget();
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(() => new CustomDiffMergeToolProvider().ClearAsync(isDiff: false));
+            ThreadHelper.FileAndForget(async () =>
             {
                 revisionDiff.CancelLoadCustomDifftools();
                 RevisionGrid.CancelLoadCustomDifftools();
@@ -1449,9 +1443,10 @@ namespace GitUI.CommandsDialogs
                 await new CustomDiffMergeToolProvider().ClearAsync(isDiff: true);
 
                 // The tool lists are created when the forms are init, must be redone after clearing the cache
+                await this.SwitchToMainThreadAsync();
                 revisionDiff.LoadCustomDifftools();
                 RevisionGrid.LoadCustomDifftools();
-            }).FileAndForget();
+            });
 
             _dashboard?.RefreshContent();
 
@@ -2458,11 +2453,10 @@ namespace GitUI.CommandsDialogs
 
             toolStripButtonLevelUp.ToolTipText = "";
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
                 try
                 {
-                    await TaskScheduler.Default;
                     await _submoduleStatusProvider.UpdateSubmodulesStructureAsync(Module.WorkingDir, TranslatedStrings.NoBranch, updateStatus);
                 }
                 catch (GitConfigurationException ex)
@@ -2475,32 +2469,30 @@ namespace GitUI.CommandsDialogs
 
         private void SubmoduleStatusProvider_StatusUpdating(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            this.InvokeAndForget(() =>
             {
-                await this.SwitchToMainThreadAsync();
                 RemoveSubmoduleButtons();
                 toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
-            }).FileAndForget();
+            });
         }
 
         private void SubmoduleStatusProvider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            this.InvokeAndForget(() =>
             {
                 if (e.StructureUpdated || _currentSubmoduleMenuItems is null)
                 {
-                    _currentSubmoduleMenuItems = await PopulateToolbarAsync(e.Info, e.Token);
+                    _currentSubmoduleMenuItems = PopulateToolbar(e.Info);
                 }
 
-                await UpdateSubmoduleMenuStatusAsync(e.Info, e.Token);
-            }).FileAndForget();
+                UpdateSubmoduleMenuStatus(e.Info);
+            },
+            cancellationToken: e.Token);
         }
 
-        private async Task<List<ToolStripItem>> PopulateToolbarAsync(SubmoduleInfoResult result, CancellationToken cancelToken)
+        private List<ToolStripItem> PopulateToolbar(SubmoduleInfoResult result)
         {
             // Second task: Populate submodule toolbar menu on UI thread.
-            await this.SwitchToMainThreadAsync(cancelToken);
-
             // Suspend before clearing dropdowns to show loading text until updated
             toolStripButtonLevelUp.DropDown.SuspendLayout();
             RemoveSubmoduleButtons();
@@ -2555,14 +2547,12 @@ namespace GitUI.CommandsDialogs
             return newItems;
         }
 
-        private async Task UpdateSubmoduleMenuStatusAsync(SubmoduleInfoResult result, CancellationToken cancelToken)
+        private void UpdateSubmoduleMenuStatus(SubmoduleInfoResult result)
         {
             if (_currentSubmoduleMenuItems is null)
             {
                 return;
             }
-
-            await this.SwitchToMainThreadAsync(cancelToken);
 
             Validates.NotNull(result.TopProject);
             var infos = result.AllSubmodules.ToDictionary(info => info.Path, info => info);

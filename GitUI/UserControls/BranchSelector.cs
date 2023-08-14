@@ -118,10 +118,8 @@ namespace GitUI.UserControls
                     return;
                 }
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
+                ThreadHelper.FileAndForget(async () =>
                     {
-                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
                         var text = Module.GetCommitCountString(currentCheckout.ToString(), branchName);
                         await this.SwitchToMainThreadAsync();
                         lbChanges.Text = text;

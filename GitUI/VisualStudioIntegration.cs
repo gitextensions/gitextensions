@@ -12,10 +12,8 @@ namespace GitUI
     {
         static VisualStudioIntegration()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
-                await TaskScheduler.Default;
-
                 string vswhere = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}\Microsoft Visual Studio\Installer\vswhere.exe";
                 if (!File.Exists(vswhere))
                 {
@@ -29,7 +27,7 @@ namespace GitUI
                     "-property productPath"
                 };
                 _devEnvPath = await executable.GetOutputAsync(arguments);
-            }).FileAndForget();
+            });
         }
 
         public static void Init()
@@ -39,9 +37,8 @@ namespace GitUI
 
         public static void OpenFile(string filePath)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
-                await TaskScheduler.Default;
                 if (!await TryOpenFileInRunningInstanceAsync(filePath))
                 {
                     if (_devEnvPath is not null)
@@ -49,7 +46,7 @@ namespace GitUI
                         using IProcess process = new Executable(_devEnvPath).Start(filePath);
                     }
                 }
-            }).FileAndForget();
+            });
         }
 
         public static async Task<bool> TryOpenFileInRunningInstanceAsync(string filePath)

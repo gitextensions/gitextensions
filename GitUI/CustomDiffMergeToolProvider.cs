@@ -44,7 +44,7 @@ namespace GitUI
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
                 // get the tools, possibly with a delay as requesting requires considerable time
                 // cache is shared
@@ -103,7 +103,7 @@ namespace GitUI
                         menu.MenuItem.DropDown.Items.Add(disableItem);
                     }
                 }
-            }).FileAndForget();
+            });
             return;
 
             static void InitMenus(IList<CustomDiffMergeTool> menus)

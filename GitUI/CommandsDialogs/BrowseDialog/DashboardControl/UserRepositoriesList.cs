@@ -330,9 +330,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     };
                     listView1.Items.Add(item);
 
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    ThreadHelper.FileAndForget(async () =>
                     {
-                        await TaskScheduler.Default;
                         bool isValidGitDir = _controller.IsValidGitWorkingDir(recent.Repo.Path);
                         string branchName = isValidGitDir ? _controller.GetCurrentBranchName(recent.Repo.Path) : "";
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -346,7 +345,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                             item.ImageIndex = 1;
                             _hasInvalidRepos = true;
                         }
-                    }).FileAndForget();
+                    });
                 }
             }
         }

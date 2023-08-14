@@ -130,13 +130,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
                     try
                     {
-                        await TaskScheduler.Default;
-
                         var pullRequests = hostedRepo.GetPullRequests();
 
                         await this.SwitchToMainThreadAsync();
@@ -148,8 +145,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                })
-                .FileAndForget();
+                });
+
+            return;
 
             void SelectNextHostedRepositoryIfFirstLoad()
             {
@@ -324,13 +322,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiscussion()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
                     try
                     {
-                        await TaskScheduler.Default;
-
                         // TODO make this operation async (requires change to Git.hub submodule)
                         Validates.NotNull(_currentPullRequestInfo);
                         var discussion = _currentPullRequestInfo.GetDiscussion();
@@ -344,8 +339,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         LoadDiscussion(null);
                     }
-                })
-                .FileAndForget();
+                });
         }
 
         private void LoadDiscussion(IPullRequestDiscussion? discussion)
@@ -366,8 +360,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void LoadDiffPatch()
         {
             Validates.NotNull(_currentPullRequestInfo);
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
                     try
                     {
@@ -381,8 +374,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                })
-                .FileAndForget();
+                });
         }
 
         private void SplitAndLoadDiff(string diffData, string baseSha, string secondSha)

@@ -471,13 +471,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _isFirstPostRepoChanged = false;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
+            ThreadHelper.FileAndForget(async () =>
                     {
                         try
                         {
                             GitExtUtils.ArgumentString cmd = GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, noLocks: noLocks);
-                            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, cancellationToken: cancelToken).ConfigureAwait(continueOnCapturedContext: false);
+                            ExecutionResult result = await module.GitExecutable.ExecuteAsync(cmd, cancellationToken: cancelToken);
 
                             if (result.ExitedSuccessfully && !ModuleHasChanged())
                             {
@@ -539,8 +538,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                                 }
                             }
                         }
-                    })
-                .FileAndForget();
+                    });
 
             return;
 

@@ -435,10 +435,8 @@ namespace GitUI.UserControls.RevisionGrid
             else
             {
                 // Rows have not been selected yet
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                this.InvokeAndForget(async () =>
                 {
-                    await this.SwitchToMainThreadAsync();
-
                     SetRowCountAndSelectRowsIfReady();
 
                     if (_toBeSelectedGraphIndexesCache.Value.Count == 0)
@@ -477,8 +475,7 @@ namespace GitUI.UserControls.RevisionGrid
                     }
 
                     MarkAsDataLoadingComplete();
-                })
-                .FileAndForget();
+                });
             }
 
             foreach (ColumnProvider columnProvider in _columnProviders)

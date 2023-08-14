@@ -515,11 +515,8 @@ Inactive remote is completely invisible to git.");
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
-            var url = Url.Text;
-
-            ThreadHelper.JoinableTaskFactory
-                .RunAsync(() => new Plink().ConnectAsync(url))
-                .FileAndForget();
+            string url = Url.Text;
+            ThreadHelper.FileAndForget(() => new Plink().ConnectAsync(url));
         }
 
         private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)

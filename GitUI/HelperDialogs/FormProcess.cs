@@ -197,7 +197,7 @@ namespace GitUI.HelperDialogs
         {
             if (e.Text.Contains("%") || e.Text.Contains("remote: Counting objects"))
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => SetProgressAsync(e.Text)).FileAndForget();
+                this.InvokeAndForget(() => SetProgressAsync(e.Text));
             }
             else
             {

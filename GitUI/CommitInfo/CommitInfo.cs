@@ -168,10 +168,7 @@ namespace GitUI.CommitInfo
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await LoadSortedTagsAsync();
-            }).FileAndForget();
+            ThreadHelper.FileAndForget(LoadSortedTagsAsync);
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -265,13 +262,9 @@ namespace GitUI.CommitInfo
 
         private async Task LoadSortedTagsAsync()
         {
-            ThreadHelper.AssertOnUIThread();
-            _tagsOrderDict = null;
-
-            await TaskScheduler.Default.SwitchTo();
             try
             {
-                var tagsOrderDict = GetSortedTags();
+                IDictionary<string, int> tagsOrderDict = GetSortedTags();
 
                 await this.SwitchToMainThreadAsync();
                 _tagsOrderDict = tagsOrderDict;
@@ -282,8 +275,6 @@ namespace GitUI.CommitInfo
                 await this.SwitchToMainThreadAsync();
                 MessageBox.Show(this, string.Format("{0}{1}{1}{2}", _brokenRefs.Text, Environment.NewLine, ex.Message), _repoFailure.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            return;
         }
 
         private void ReloadCommitInfo()
@@ -352,41 +343,33 @@ namespace GitUI.CommitInfo
                 var cancellationToken = _asyncLoadCancellation.Next();
                 var initialRevision = _revision;
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                ThreadHelper.FileAndForget(async () =>
                 {
-                    List<Task> tasks = new();
-
-                    tasks.Add(UpdateCommitMessageAsync());
-
-                    tasks.Add(LoadLinksForRevisionAsync(initialRevision, settings));
+                    List<Task> tasks = new()
+                    {
+                        UpdateCommitMessageAsync().WithCancellation(cancellationToken),
+                        LoadLinksForRevisionAsync(initialRevision, settings).WithCancellation(cancellationToken)
+                    };
 
                     // No branch/tag data for artificial commands
                     if (AppSettings.CommitInfoShowContainedInBranches)
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        tasks.Add(LoadBranchInfoAsync(initialRevision.ObjectId));
+                        tasks.Add(LoadBranchInfoAsync(initialRevision.ObjectId).WithCancellation(cancellationToken));
                     }
 
                     if (AppSettings.ShowAnnotatedTagsMessages)
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        tasks.Add(LoadAnnotatedTagInfoAsync(initialRevision.Refs));
+                        tasks.Add(LoadAnnotatedTagInfoAsync(initialRevision.Refs).WithCancellation(cancellationToken));
                     }
 
                     if (AppSettings.CommitInfoShowContainedInTags)
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        tasks.Add(LoadTagInfoAsync(initialRevision.ObjectId));
+                        tasks.Add(LoadTagInfoAsync(initialRevision.ObjectId).WithCancellation(cancellationToken));
                     }
 
                     if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        tasks.Add(LoadDescribeInfoAsync(initialRevision.ObjectId));
+                        tasks.Add(LoadDescribeInfoAsync(initialRevision.ObjectId).WithCancellation(cancellationToken));
                     }
 
                     cancellationToken.ThrowIfCancellationRequested();
@@ -395,7 +378,7 @@ namespace GitUI.CommitInfo
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     UpdateRevisionInfo();
-                }).FileAndForget();
+                });
 
                 return;
 

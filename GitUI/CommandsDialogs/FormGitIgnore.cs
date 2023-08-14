@@ -211,13 +211,14 @@ namespace GitUI.CommandsDialogs
 
             // workaround to prevent GitIgnoreFileLoaded event handling (it causes wrong _originalGitIgnoreFileContent update)
             // TODO: implement in FileViewer separate events for loading text from file and for setting text directly via ViewText
-            _NO_TRANSLATE_GitIgnoreEdit.TextLoaded -= GitIgnoreFileLoaded;
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                () => _NO_TRANSLATE_GitIgnoreEdit.ViewTextAsync(
-                    ExcludeFile,
-                    currentFileContent + Environment.NewLine +
-                    string.Join(Environment.NewLine, patternsToAdd) + Environment.NewLine + string.Empty));
-            _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
+            _NO_TRANSLATE_GitIgnoreEdit.InvokeAndForget(async () =>
+                {
+                    _NO_TRANSLATE_GitIgnoreEdit.TextLoaded -= GitIgnoreFileLoaded;
+                    await _NO_TRANSLATE_GitIgnoreEdit.ViewTextAsync(
+                        ExcludeFile,
+                        $"{currentFileContent}{Environment.NewLine}{string.Join(Environment.NewLine, patternsToAdd)}{Environment.NewLine}");
+                    _NO_TRANSLATE_GitIgnoreEdit.TextLoaded += GitIgnoreFileLoaded;
+                });
         }
 
         private void AddPattern_Click(object sender, EventArgs e)

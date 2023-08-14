@@ -71,8 +71,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
                 return false;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
                     var message = await GetMessageToCommitAsync(_jira, _query, _stringTemplate);
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -163,11 +162,10 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
                 var localQuery = _jqlQuerySettings.CustomControl.Text;
                 var localStringTemplate = _stringTemplateSetting.CustomControl.Text;
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
+                ThreadHelper.FileAndForget(async () =>
                     {
                         JiraTaskDTO[] message = await GetMessageToCommitAsync(localJira, localQuery, localStringTemplate);
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        await _btnPreview.SwitchToMainThreadAsync();
                         string previewText = message.Length > 0 ? message[0].Text : EmptyQueryResultMessage.Text;
 
                         MessageBox.Show(null, previewText, EmptyQueryResultCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -295,7 +293,7 @@ namespace GitExtensions.Plugins.JiraCommitHintPlugin
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.FileAndForget(async () =>
             {
                 var currentMessages = await GetMessageToCommitAsync(_jira, _query, _stringTemplate);
 

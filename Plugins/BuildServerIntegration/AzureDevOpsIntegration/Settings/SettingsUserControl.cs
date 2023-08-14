@@ -128,7 +128,7 @@ namespace AzureDevOpsIntegration.Settings
 
         private void ExtractLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            this.InvokeAndForget(async () =>
             {
                 var buildUrl = Clipboard.ContainsText() ? Clipboard.GetText() : "";
                 var (success, projectUrl, buildId) = ProjectUrlHelper.TryParseBuildUrl(buildUrl);
@@ -164,7 +164,7 @@ namespace AzureDevOpsIntegration.Settings
                 {
                     MessageBox.Show(_failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }).FileAndForget();
+            });
         }
     }
 }

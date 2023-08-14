@@ -961,9 +961,8 @@ namespace GitUI
                 ObjectId? previousCheckout = CurrentCheckout;
 
                 // Evaluate GitRefs and current commit
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                ThreadHelper.FileAndForget(async () =>
                 {
-                    await TaskScheduler.Default;
                     cancellationToken.ThrowIfCancellationRequested();
 
                     // If the current checkout (HEAD) is changed, don't get the currently selected rows,
@@ -996,17 +995,15 @@ namespace GitUI
                         await this.SwitchToMainThreadAsync(cancellationToken);
                         Refresh();
                     }
-                }).FileAndForget();
+                });
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                ThreadHelper.FileAndForget(() =>
                 {
                     if (!AppSettings.ShowStashes)
                     {
                         semaphoreUpdateGrid.Release();
                         return;
                     }
-
-                    await TaskScheduler.Default;
 
                     stashesById = getStashRevs.Value.ToDictionary(r => r.ObjectId);
 
@@ -1049,13 +1046,11 @@ namespace GitUI
 
                     // Allow add revisions to the grid
                     semaphoreUpdateGrid.Release();
-                }).FileAndForget();
+                });
 
                 // Get info about all Git commits, update the grid
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                ThreadHelper.FileAndForget(() =>
                 {
-                    await TaskScheduler.Default;
-
                     TaskManager.HandleExceptions(() =>
                     {
                         RevisionReader reader = new(capturedModule, hasReflogSelector: false);
@@ -1335,10 +1330,8 @@ namespace GitUI
             {
                 if (!firstRevisionReceived && !FilterIsApplied())
                 {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    ThreadHelper.FileAndForget(async () =>
                     {
-                        await TaskScheduler.Default;
-
                         // No revisions at all received without any filter
                         await semaphoreUpdateGrid.WaitAsync(cancellationToken);
 
@@ -1358,13 +1351,12 @@ namespace GitUI
 
                         _isRefreshingRevisions = false;
                         RevisionsLoaded?.Invoke(this, new RevisionLoadEventArgs(this, UICommands, getUnfilteredRefs, getStashRevs, forceRefresh));
-                    }).FileAndForget();
+                    });
                     return;
                 }
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                ThreadHelper.FileAndForget(async () =>
                 {
-                    await TaskScheduler.Default;
                     if (!firstRevisionReceived)
                     {
                         await semaphoreUpdateGrid.WaitAsync(cancellationToken);
@@ -1440,7 +1432,7 @@ namespace GitUI
                     {
                         await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
                     }
-                }).FileAndForget();
+                });
             }
 
             static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(GitModule gitModule, bool noLocks = false)

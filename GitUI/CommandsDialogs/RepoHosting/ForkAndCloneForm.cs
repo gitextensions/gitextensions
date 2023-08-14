@@ -88,13 +88,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             myReposLV.Items.Clear();
             myReposLV.Items.Add(new ListViewItem { Text = _strLoading.Text });
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
                     try
                     {
-                        await TaskScheduler.Default;
-
                         var repos = _gitHoster.GetMyRepos();
 
                         await this.SwitchToMainThreadAsync();
@@ -126,8 +123,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Name) +
                                             "\r\n\r\nException: " + ex.Message + "\r\n\r\n" + helpTextLbl.Text;
                     }
-                })
-                .FileAndForget();
+                });
         }
 
         private const int ResizeOnContent = -1;
@@ -151,13 +147,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             PrepareSearch(sender, e);
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
                     try
                     {
-                        await TaskScheduler.Default;
-
                         var repositories = _gitHoster.SearchForRepository(search);
 
                         await this.SwitchToMainThreadAsync();
@@ -171,8 +164,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         searchBtn.Enabled = true;
                     }
-                })
-                .FileAndForget();
+                });
         }
 
         private void _getFromUserBtn_Click(object sender, EventArgs e)
@@ -185,13 +177,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             PrepareSearch(sender, e);
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
                     try
                     {
-                        await TaskScheduler.Default;
-
                         var repositories = _gitHoster.GetRepositoriesOfUser(search.Trim());
 
                         await this.SwitchToMainThreadAsync();
@@ -214,8 +203,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         searchBtn.Enabled = true;
                     }
-                })
-                .FileAndForget();
+                });
         }
 
         private void PrepareSearch(object sender, EventArgs e)

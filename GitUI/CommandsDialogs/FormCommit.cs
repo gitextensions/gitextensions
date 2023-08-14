@@ -480,16 +480,13 @@ namespace GitUI.CommandsDialogs
                 if (CommitKind is (CommitKind.Normal or CommitKind.Amend))
                 {
                     // Run async as we're closing the form
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    string message = Message.Text;
+                    bool isAmend = Amend.Checked;
+                    ThreadHelper.FileAndForget(async () =>
                     {
-                        string message = Message.Text;
-                        bool isAmend = Amend.Checked;
-
-                        await TaskScheduler.Default;
-
                         await _commitMessageManager.SetMergeOrCommitMessageAsync(message);
                         await _commitMessageManager.SetAmendStateAsync(isAmend);
-                    }).FileAndForget();
+                    });
                 }
             }
 
@@ -923,10 +920,7 @@ namespace GitUI.CommandsDialogs
 
             if (doAsync)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() =>
-                {
-                    return _unstagedLoader.LoadAsync(GetAllChangedFilesWithSubmodulesStatus, onComputed);
-                });
+                ThreadHelper.FileAndForget(() => _unstagedLoader.LoadAsync(GetAllChangedFilesWithSubmodulesStatus, onComputed));
             }
             else
             {
@@ -966,8 +960,6 @@ namespace GitUI.CommandsDialogs
 
         private async Task UpdateBranchNameDisplayAsync()
         {
-            await TaskScheduler.Default;
-
             var currentBranchName = Module.GetSelectedBranch();
             if (_branchNameLabelOnClick is not null)
             {
@@ -1003,9 +995,10 @@ namespace GitUI.CommandsDialogs
             branchNameLabel.Text = $"{currentBranchName} {char.ConvertFromUtf32(0x2192)}";
             remoteNameLabel.Text = pushTo;
 
-            _branchNameLabelOnClick = (object sender, EventArgs e) => ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            _branchNameLabelOnClick = (object sender, EventArgs e) => this.InvokeAndForget(async () =>
             {
                 UICommands.StartRemotesDialog(this, null, currentBranchName);
+                await TaskScheduler.Default;
                 await UpdateBranchNameDisplayAsync();
             });
             remoteNameLabel.Click += _branchNameLabelOnClick;
@@ -1016,7 +1009,7 @@ namespace GitUI.CommandsDialogs
         {
             _initialized = true;
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync());
+            ThreadHelper.FileAndForget(UpdateBranchNameDisplayAsync);
 
             using (WaitCursorScope.Enter())
             {
@@ -1193,13 +1186,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await SelectedDiff.ViewChangesAsync(item, openWithDiffTool: () => OpenWithDiffTool(),
-                    cancellationToken: _viewChangesSequence.Next());
-            }).FileAndForget();
-
-            return;
+            SelectedDiff.InvokeAndForget(() => SelectedDiff.ViewChangesAsync(item, openWithDiffTool: OpenWithDiffTool, cancellationToken: _viewChangesSequence.Next()));
         }
 
         private void ClearDiffViewIfNoFilesLeft()
@@ -2645,15 +2632,12 @@ namespace GitUI.CommandsDialogs
 
             var item = items.Single();
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
+            ThreadHelper.FileAndForget(async () =>
                     {
-                        await TaskScheduler.Default;
                         await Module.ResetInteractiveAsync(item);
                         await this.SwitchToMainThreadAsync();
                         Initialize();
-                    })
-                .FileAndForget();
+                    });
         }
 
         private void ResetClick(object sender, EventArgs e)
@@ -2735,11 +2719,8 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateAuthorInfo()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
-                    await TaskScheduler.Default;
-
                     // Do not cache results in order to update the info on FormActivate
                     string userName = Module.GetEffectiveGitSetting(SettingKeyString.UserName, cache: false);
                     string userEmail = Module.GetEffectiveGitSetting(SettingKeyString.UserEmail, cache: false);
@@ -3223,15 +3204,12 @@ namespace GitUI.CommandsDialogs
 
             var token = _interactiveAddSequence.Next();
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
+            ThreadHelper.FileAndForget(async () =>
                 {
-                    await TaskScheduler.Default;
                     await Module.AddInteractiveAsync(item);
                     await this.SwitchToMainThreadAsync(token);
                     RescanChanges();
-                })
-                .FileAndForget();
+                });
         }
 
         private void Amend_CheckedChanged(object sender, EventArgs e)
@@ -3288,7 +3266,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync());
+            ThreadHelper.FileAndForget(UpdateBranchNameDisplayAsync);
         }
 
         private void Message_Enter(object sender, EventArgs e)

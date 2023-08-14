@@ -185,7 +185,7 @@ namespace GitUI
                     Text = TranslatedStrings.OpenWithGitExtensions,
                     Image = Images.GitExtensionsLogo16
                 };
-                item.Click += (_, _) => { ThreadHelper.JoinableTaskFactory.RunAsync(OpenSubmoduleAsync); };
+                item.Click += (_, _) => this.InvokeAndForget(OpenSubmoduleAsync);
                 return item;
             }
 
@@ -1072,7 +1072,7 @@ namespace GitUI
                     {
                         var capturedItem = item;
 
-                        ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                        ThreadHelper.FileAndForget(async () =>
                         {
 #pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
                             await task;
@@ -1443,9 +1443,8 @@ namespace GitUI
                 {
                     AppSettings.ShowDiffForAllParents = showAllDiferencesItem.Checked;
                     FileStatusListLoading();
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    ThreadHelper.FileAndForget(async () =>
                     {
-                        await TaskScheduler.Default;
                         IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Reload();
 
                         await this.SwitchToMainThreadAsync();
@@ -1478,7 +1477,7 @@ namespace GitUI
 
                 if (AppSettings.OpenSubmoduleDiffInSeparateWindow && SelectedItem.Item.IsSubmodule)
                 {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(OpenSubmoduleAsync);
+                    this.InvokeAndForget(OpenSubmoduleAsync);
                 }
                 else
                 {

@@ -56,12 +56,21 @@ namespace GitUI
             }
         }
 
+        internal static Func<Task> AsyncAction(Action action)
+        {
+            return () =>
+                {
+                    action();
+                    return Task.CompletedTask;
+                };
+        }
+
         /// <summary>
         /// Asynchronously run <paramref name="asyncAction"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
         public void FileAndForget(Func<Task> asyncAction)
         {
-            JoinableTaskFactory.RunAsync(async () =>
+            _ = JoinableTaskFactory.RunAsync(async () =>
                 {
                     await TaskScheduler.Default;
                     await HandleExceptionsAsync(asyncAction, ReportExceptionOnMainThreadAsync);
@@ -73,11 +82,7 @@ namespace GitUI
         /// </summary>
         public void FileAndForget(Action action)
         {
-            FileAndForget(() =>
-                {
-                    action();
-                    return Task.CompletedTask;
-                });
+            FileAndForget(AsyncAction(action));
         }
 
         /// <summary>
@@ -87,6 +92,32 @@ namespace GitUI
         {
             TimeSpan infiniteTimeout = new(-TimeSpan.TicksPerMillisecond);
             FileAndForget(() => task.WaitAsync(infiniteTimeout));
+        }
+
+        /// <summary>
+        /// Asynchronously run <paramref name="asyncAction"/> on the UI thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
+        public void InvokeAndForget(Control control, Func<Task> asyncAction, CancellationToken cancellationToken = default)
+        {
+            _ = JoinableTaskFactory.RunAsync(() =>
+                HandleExceptionsAsync(async () =>
+                    {
+                        if (!JoinableTaskContext.IsOnMainThread)
+                        {
+                            await control.SwitchToMainThreadAsync(cancellationToken);
+                        }
+
+                        await asyncAction();
+                    },
+                    ReportExceptionOnMainThreadAsync));
+        }
+
+        /// <summary>
+        /// Asynchronously run <paramref name="action"/> on the UI thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
+        /// </summary>
+        public void InvokeAndForget(Control control, Action action, CancellationToken cancellationToken = default)
+        {
+            InvokeAndForget(control, AsyncAction(action), cancellationToken);
         }
 
         public async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)
@@ -107,8 +138,28 @@ namespace GitUI
         /// The readability of the callstack is improved by calling <see cref="ExceptionExtensions.Demystify"/>.
         internal async Task ReportExceptionOnMainThreadAsync(Exception ex)
         {
-            await JoinableTaskFactory.SwitchToMainThreadAsync();
-            Application.OnThreadException(ex.Demystify());
+            try
+            {
+                if (!JoinableTaskContext.IsOnMainThread)
+                {
+                    await JoinableTaskFactory.SwitchToMainThreadAsync();
+                }
+
+                Application.OnThreadException(ex.Demystify());
+            }
+            catch (Exception exceptionWhileReporting)
+            {
+                try
+                {
+                    Trace.TraceError(exceptionWhileReporting.ToString());
+                    Trace.TraceError(ex.ToString());
+                    Trace.TraceError(ex.StackTrace);
+                }
+                catch
+                {
+                    // Give up
+                }
+            }
         }
     }
 }

@@ -50,22 +50,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void OnGitCommandLogChanged()
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
-                    {
-                        await this.SwitchToMainThreadAsync();
-                        RefreshLogItems();
-                    });
+                this.InvokeAndForget(RefreshLogItems);
             }
 
             void OnCachedCommandsLogChanged(object sender, EventArgs e)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
-                    {
-                        await this.SwitchToMainThreadAsync();
-                        RefreshCommandCacheItems();
-                    });
+                this.InvokeAndForget(RefreshCommandCacheItems);
             }
         }
 

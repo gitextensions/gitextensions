@@ -154,10 +154,7 @@ namespace GitUI.CommandsDialogs
                 revisions = new[] { _secondRevision, _firstRevision };
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await DiffFiles.SetDiffsAsync(revisions, _currentHead.Value, _viewChangesSequence.Next());
-            }).FileAndForget();
+            DiffFiles.InvokeAndForget(() => DiffFiles.SetDiffsAsync(revisions, _currentHead.Value, _viewChangesSequence.Next()));
         }
 
         private void ShowSelectedFileDiff()

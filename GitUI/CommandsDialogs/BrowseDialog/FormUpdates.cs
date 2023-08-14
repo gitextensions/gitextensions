@@ -173,14 +173,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void btnUpdateNow_Click(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                linkChangeLog.Visible = false;
-                progressBar1.Visible = true;
-                btnUpdateNow.Enabled = false;
-                UpdateLabel.Text = _downloadingUpdate.Text;
-                string fileName = Path.GetFileName(UpdateUrl);
+            linkChangeLog.Visible = false;
+            progressBar1.Visible = true;
+            btnUpdateNow.Enabled = false;
+            UpdateLabel.Text = _downloadingUpdate.Text;
 
+            ThreadHelper.FileAndForget(async () =>
+            {
+                string fileName = Path.GetFileName(UpdateUrl);
                 try
                 {
 #pragma warning disable SYSLIB0014 // 'WebClient' is obsolete
@@ -202,6 +202,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     process.StartInfo.Arguments = string.Format("/i \"{0}\\{1}\" /qb LAUNCH=1", Environment.GetEnvironmentVariable("TEMP"), fileName);
                     process.Start();
 
+                    await this.SwitchToMainThreadAsync();
                     progressBar1.Visible = false;
                     Close();
                     Application.Exit();
@@ -209,7 +210,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 catch (Win32Exception)
                 {
                 }
-            }).FileAndForget();
+            });
         }
 
         private void linkDirectDownload_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

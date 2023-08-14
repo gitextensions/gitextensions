@@ -151,7 +151,7 @@ See the changes in the commit form.");
                 tvGitTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(tvGitTree_AfterSelect);
                 tvGitTree.SelectedNode.EnsureVisible();
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem, line));
+                this.InvokeAndForget(() => ShowGitItemAsync(gitItem, line));
             }
             else
             {
@@ -413,7 +413,9 @@ See the changes in the commit form.");
 
         private void tvGitTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(ViewItem);
+            this.InvokeAndForget(ViewItem);
+
+            return;
 
             Task ViewItem()
             {
@@ -533,7 +535,7 @@ See the changes in the commit form.");
             int? line = FileText.Visible ? FileText.CurrentFileLine : BlameControl.CurrentFileLine;
             blameToolStripMenuItem1.Checked = !blameToolStripMenuItem1.Checked;
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => ShowGitItemAsync(gitItem, line));
+            this.InvokeAndForget(() => ShowGitItemAsync(gitItem, line));
         }
 
         private bool TryGetSelectedName([NotNullWhen(returnValue: true)] out string? name)

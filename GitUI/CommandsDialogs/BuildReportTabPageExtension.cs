@@ -185,8 +185,7 @@ namespace GitUI.CommandsDialogs
 
             if (favIconUrl is not null)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
+                ThreadHelper.FileAndForget(async () =>
                     {
                         using var imageStream = await DownloadRemoteImageFileAsync(favIconUrl);
                         if (imageStream is not null)
