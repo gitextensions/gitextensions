@@ -14,6 +14,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     public class RevisionGraph : IRevisionGraphRowProvider
     {
         internal const int MaxLanes = 40;
+        private const int _loadNodesLookAhead = 1500;
         private const int _straightenLanesLookAhead = 20;
 
         // Some unordered collections with raw data
@@ -61,7 +62,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _loadingCompleted = true;
         }
 
-        public int Count => _nodes.Count;
+        public int Count => _loadingCompleted ? _nodes.Count : Math.Max(0, _nodes.Count - _loadNodesLookAhead);
 
         public bool OnlyFirstParent { get; set; }
         public ObjectId HeadId { get; set; }
@@ -695,7 +696,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     _reorder = false;
 
                     // Use a local variable, because the cached list can be reset.
-                    localOrderedNodesCache = _nodes.ToArray();
+                    localOrderedNodesCache = _loadingCompleted ? _nodes.ToArray() : _nodes.Take(_nodes.Count - _loadNodesLookAhead).ToArray();
                     Array.Sort(localOrderedNodesCache, (x, y) => x.Score.CompareTo(y.Score));
                     _orderedNodesCache = localOrderedNodesCache;
                     if (localOrderedNodesCache.Length > 0)

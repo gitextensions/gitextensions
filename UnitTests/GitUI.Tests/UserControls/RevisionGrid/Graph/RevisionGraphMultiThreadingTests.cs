@@ -14,11 +14,11 @@ namespace GitUITests.UserControls.RevisionGrid
         // It is useful to repeat the threads, because it will make sure all threads are started at the same time.
         // Otherwise, the revision loading is long finished and the rendering is still running
         // Advice: set this number to 50 for thread safety test
-        private const int _numberOfRepeats = 10;
+        private const int _numberOfRepeats = 50;
 
         // Increase this number to create a larger test set.
         // Advice: set this number to 1000 for thread safety test
-        private const int _numberOfRevisionsAddedPerRun = 500;
+        private const int _numberOfRevisionsAddedPerRun = 1000;
         private readonly Random _random = new();
 
         private RevisionGraph _revisionGraph;
@@ -35,7 +35,7 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.Add(revision);
         }
 
-        [Test, Timeout(10 /*min*/ * 60 /*s*/ * 1000 /*ms*/), Repeat(300)]
+        [Test, Timeout(45 /*min*/ * 60 /*s*/ * 1000 /*ms*/), Repeat(25)]
         public void ShouldReorderInTopoOrder()
         {
             for (int i = 0; i < _numberOfRepeats; i++)
@@ -57,7 +57,9 @@ namespace GitUITests.UserControls.RevisionGrid
                 Task.WaitAll(loadRevisionsTask, buildCacheTask, renderTask);
 #pragma warning restore VSTHRD002
 
-                // One last 'cache to', in case the loading of the revisions was finished after building the cache (unlikely)
+                _revisionGraph.LoadingCompleted();
+
+                // One last 'cache to', because the loading of the revisions was finished after building the cache
                 _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
 
                 // Validate topo order
@@ -93,7 +95,7 @@ namespace GitUITests.UserControls.RevisionGrid
             for (int i = 0; i < _numberOfRevisionsAddedPerRun; i++)
             {
                 // Cache in chunks
-                _revisionGraph.CacheTo(_revisionGraph.GetCachedCount() + 30, _revisionGraph.GetCachedCount() + 10);
+                _revisionGraph.CacheTo(_revisionGraph.GetCachedCount() + 30, _revisionGraph.GetCachedCount() + 100);
             }
         }
 
