@@ -258,7 +258,7 @@ namespace GitUI.Editor
             {
                 _encoding = value;
 
-                this.InvokeAsync(() =>
+                this.InvokeAndForget(() =>
                 {
                     if (_encoding is not null)
                     {
@@ -268,7 +268,7 @@ namespace GitUI.Editor
                     {
                         encodingToolStripComboBox.SelectedIndex = -1;
                     }
-                }).FileAndForget();
+                });
             }
         }
 

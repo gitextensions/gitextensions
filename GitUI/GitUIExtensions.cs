@@ -233,35 +233,6 @@ namespace GitUI
             }
         }
 
-        public static async Task InvokeAsync(this Control control, Action action, CancellationToken token = default)
-        {
-            await control.SwitchToMainThreadAsync(token);
-            action();
-        }
-
-        public static async Task InvokeAsync<T>(this Control control, Action<T> action, T state, CancellationToken token = default)
-        {
-            await control.SwitchToMainThreadAsync(token);
-            action(state);
-        }
-
-        public static void InvokeSync(this Control control, Action action)
-        {
-            ThreadHelper.JoinableTaskFactory.Run(
-                async () =>
-                {
-                    try
-                    {
-                        await InvokeAsync(control, action);
-                    }
-                    catch (Exception e)
-                    {
-                        e.Data["StackTrace" + e.Data.Count] = e.StackTrace;
-                        throw;
-                    }
-                });
-        }
-
         public static Control FindFocusedControl(this ContainerControl container)
         {
             while (true)

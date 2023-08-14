@@ -118,7 +118,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 // We have to post this since the thread owns a lock on GraphData that we'll
                 // need in order to re-draw the graph.
-                this.InvokeAsync(() =>
+                this.InvokeAndForget(() =>
                     {
                         Debug.Assert(_rowHeight != 0, "_rowHeight != 0");
 
@@ -129,8 +129,7 @@ namespace GitUI.UserControls.RevisionGrid
                         }
 
                         Invalidate();
-                    })
-                    .FileAndForget();
+                    });
             };
 
             VirtualMode = true;
@@ -704,7 +703,8 @@ namespace GitUI.UserControls.RevisionGrid
                         }
                     }
 
-                    await this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged);
+                    await this.SwitchToMainThreadAsync();
+                    NotifyProvidersVisibleRowRangeChanged();
                 }
             }
 

@@ -97,8 +97,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
             catch (Exception ex)
             {
-                this.InvokeSync(() =>
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
+                        await this.SwitchToMainThreadAsync();
                         if (Visible)
                         {
                             ExceptionUtils.ShowException(this, ex, string.Empty, true);
@@ -130,8 +131,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void Done()
         {
-            this.InvokeSync(() =>
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
+                await this.SwitchToMainThreadAsync();
+
                 progressBar1.Visible = false;
 
                 if (UpdateFound)

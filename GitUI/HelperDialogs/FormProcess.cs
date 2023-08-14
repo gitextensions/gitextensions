@@ -168,7 +168,7 @@ namespace GitUI.HelperDialogs
 
         private void OnExit(int exitcode)
         {
-            this.InvokeAsync(() =>
+            this.InvokeAndForget(() =>
             {
                 bool isError;
                 try
@@ -186,7 +186,7 @@ namespace GitUI.HelperDialogs
                 }
 
                 Done(!isError);
-            }).FileAndForget();
+            });
         }
 
         protected virtual void DataReceived(object sender, TextEventArgs e)

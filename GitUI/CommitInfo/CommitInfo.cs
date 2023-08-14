@@ -92,13 +92,13 @@ namespace GitUI.CommitInfo
 
             UICommandsSourceSet += delegate
             {
-                this.InvokeAsync(() =>
+                this.InvokeAndForget(() =>
                 {
                     UICommandsSource.UICommandsChanged += delegate { RefreshSortedTags(); };
 
                     // call this event handler also now (necessary for "Contained in branches/tags")
                     RefreshSortedTags();
-                }).FileAndForget();
+                });
             };
 
             _commitDataManager = new CommitDataManager(() => Module);

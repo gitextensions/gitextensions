@@ -1212,7 +1212,7 @@ namespace GitUI
                 if (!firstRevisionReceived)
                 {
                     // Wait for refs,CurrentCheckout and stashes as second step
-                    this.InvokeAsync(() => { ShowLoading(showSpinner: false); }).FileAndForget();
+                    this.InvokeAndForget(() => ShowLoading(showSpinner: false));
                     semaphoreUpdateGrid.Wait(cancellationToken);
                     semaphoreUpdateGrid.Wait(cancellationToken);
                     firstRevisionReceived = true;
@@ -1317,13 +1317,11 @@ namespace GitUI
                 _refreshRevisionsSequence.CancelCurrent();
 
                 _gridView.MarkAsDataLoadingComplete();
-                this.InvokeAsync(() => SetPage(new ErrorControl()))
-                    .FileAndForget();
+                this.InvokeAndForget(() => SetPage(new ErrorControl()));
                 _isRefreshingRevisions = false;
 
                 // Rethrow the exception on the UI thread
-                this.InvokeAsync(() => throw exception)
-                    .FileAndForget();
+                ThreadHelper.FileAndForget(() => throw exception);
             }
 
             void OnRevisionReadCompleted()

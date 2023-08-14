@@ -500,7 +500,7 @@ namespace GitUI.CommandsDialogs
                         new WindowsThumbnailToolbarButton(_closeAll.Text, Images.DeleteFile, (s, e) => NativeMethods.PostMessageW(NativeMethods.HWND_BROADCAST, _closeAllMessage))));
             }
 
-            this.InvokeAsync(OnActivate).FileAndForget();
+            this.InvokeAndForget(OnActivate);
             base.OnActivated(e);
         }
 

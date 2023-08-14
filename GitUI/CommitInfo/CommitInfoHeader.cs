@@ -53,7 +53,7 @@ namespace GitUI.CommitInfo
 
         public void ShowCommitInfo(GitRevision revision, IReadOnlyList<ObjectId>? children)
         {
-            this.InvokeAsync(() =>
+            this.InvokeAndForget(() =>
             {
                 var data = _commitDataManager.CreateFromRevision(revision, children);
                 var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClicked is not null);
@@ -69,7 +69,7 @@ namespace GitUI.CommitInfo
                 rtbRevisionHeader.ResumeLayout(true);
 
                 LoadAuthorImage(revision);
-            }).FileAndForget();
+            });
         }
 
         public string GetPlainText()

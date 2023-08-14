@@ -131,7 +131,7 @@ namespace GitUI.UserControls
                 process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
                 process.Exited += delegate
                 {
-                    this.InvokeAsync(
+                    this.InvokeAndForget(
                         () =>
                         {
                             if (_process is null)
@@ -159,7 +159,7 @@ namespace GitUI.UserControls
                             _outputThrottle?.FlushOutput();
                             FireProcessExited();
                             _outputThrottle?.Stop(flush: true);
-                        }).FileAndForget();
+                        });
                 };
 
                 process.Start();

@@ -13,14 +13,10 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.IndexWatcher.Changed += (_, args) =>
             {
                 bool indexChanged = args.IsIndexChanged;
-                this.InvokeAsync(
-                        () =>
-                        {
-                            RefreshButton.Image = indexChanged && AppSettings.ShowGitStatusInBrowseToolbar && Module.IsValidGitWorkingDir()
-                                ? Images.ReloadRevisionsDirty
-                                : Images.ReloadRevisions;
-                        })
-                    .FileAndForget();
+                this.InvokeAndForget(() =>
+                    RefreshButton.Image = indexChanged && AppSettings.ShowGitStatusInBrowseToolbar && Module.IsValidGitWorkingDir()
+                        ? Images.ReloadRevisionsDirty
+                        : Images.ReloadRevisions);
             };
 
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
