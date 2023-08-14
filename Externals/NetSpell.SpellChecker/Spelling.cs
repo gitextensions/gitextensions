@@ -293,9 +293,7 @@ namespace NetSpell.SpellChecker
                 int pos = CurrentWord.IndexOf(key, StringComparison.InvariantCulture);
                 while (pos > -1)
                 {
-                    string tempWord = CurrentWord[..pos];
-                    tempWord += replacement;
-                    tempWord += CurrentWord[(pos + key.Length)..];
+                    string tempWord = $"{CurrentWord[..pos]}{replacement}{CurrentWord[(pos + key.Length)..]}";
 
                     if (FindWord(ref tempWord))
                     {
@@ -747,8 +745,7 @@ namespace NetSpell.SpellChecker
             // if first letter upper case, match case for replacement word
             if (char.IsUpper(_words[replacedIndex].ToString(), 0))
             {
-                _replacementWord = _replacementWord[..1].ToUpper(CultureInfo.CurrentUICulture)
-                    + _replacementWord[1..];
+                _replacementWord = $"{char.ToUpper(_replacementWord[0], CultureInfo.CurrentUICulture)}{_replacementWord[1..]}";
             }
 
             _text.Insert(index, _replacementWord);

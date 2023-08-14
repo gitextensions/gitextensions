@@ -568,16 +568,16 @@ namespace TeamCityIntegration
 
         private static DateTime DecodeJsonDateTime(string dateTimeString)
         {
-            var dateTime = new DateTime(
-                    int.Parse(dateTimeString[..4]),
-                    int.Parse(dateTimeString.Substring(4, 2)),
-                    int.Parse(dateTimeString.Substring(6, 2)),
-                    int.Parse(dateTimeString.Substring(9, 2)),
-                    int.Parse(dateTimeString.Substring(11, 2)),
-                    int.Parse(dateTimeString.Substring(13, 2)),
+            DateTime dateTime = new DateTime(
+                    int.Parse(dateTimeString.AsSpan(0, 4)),
+                    int.Parse(dateTimeString.AsSpan(4, 2)),
+                    int.Parse(dateTimeString.AsSpan(6, 2)),
+                    int.Parse(dateTimeString.AsSpan(9, 2)),
+                    int.Parse(dateTimeString.AsSpan(11, 2)),
+                    int.Parse(dateTimeString.AsSpan(13, 2)),
                     DateTimeKind.Utc)
-                .AddHours(int.Parse(dateTimeString.Substring(15, 3)))
-                .AddMinutes(int.Parse(dateTimeString.Substring(15, 1) + dateTimeString.Substring(18, 2)));
+                .AddHours(int.Parse(dateTimeString.AsSpan(15, 3)))
+                .AddMinutes(int.Parse(string.Concat(dateTimeString.AsSpan(15, 1), dateTimeString.AsSpan(18, 2))));
 
             return dateTime;
         }
