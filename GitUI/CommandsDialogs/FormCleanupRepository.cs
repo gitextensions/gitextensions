@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
 
             if (CleanSubmodules.Checked)
             {
-                ArgumentString cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun, directories: RemoveDirectories.Checked, paths: includePathArgument);
+                ArgumentString cleanSubmodulesCmd = GitCommandHelpers.CleanSubmodules(mode, dryRun, directories: RemoveDirectories.Checked, paths: includePathArgument, excludes: excludePathArguments);
                 cmdOutput = FormProcess.ReadDialog(this, arguments: cleanSubmodulesCmd, Module.WorkingDir, input: null, useDialogSettings: true);
                 PreviewOutput.Text += EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
             }

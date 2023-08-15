@@ -551,7 +551,7 @@ namespace GitCommands.Git.Commands
         /// <param name="dryRun">Only show what would be deleted.</param>
         /// <param name="directories">Delete untracked directories too.</param>
         /// <param name="paths">Limit to specific paths.</param>
-        public static ArgumentString CleanSubmodules(CleanMode mode, bool dryRun, bool directories, string? paths = null)
+        public static ArgumentString CleanSubmodules(CleanMode mode, bool dryRun, bool directories, string? paths = null, string? excludes = null)
         {
             return new GitArgumentBuilder("submodule")
             {
@@ -559,7 +559,8 @@ namespace GitCommands.Git.Commands
                 mode,
                 { directories, "-d" },
                 { dryRun, "--dry-run", "-f" },
-                paths
+                paths,
+                { !string.IsNullOrEmpty(excludes), excludes }
             };
         }
 
