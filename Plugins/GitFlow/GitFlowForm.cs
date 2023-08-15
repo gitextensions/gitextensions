@@ -113,7 +113,7 @@ namespace GitExtensions.Plugins.GitFlow
                 if (currentRef.StartsWith(startRef))
                 {
                     branchType = branch.ToString();
-                    branchName = currentRef.Substring(startRef.Length);
+                    branchName = currentRef[startRef.Length..];
                     return true;
                 }
             }

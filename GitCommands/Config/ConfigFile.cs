@@ -107,8 +107,8 @@ namespace GitCommands.Config
         {
             var keyIndex = FindAndCheckKeyIndex(setting);
 
-            var configSectionName = setting.Substring(0, keyIndex);
-            var keyName = setting.Substring(keyIndex + 1);
+            var configSectionName = setting[..keyIndex];
+            var keyName = setting[(keyIndex + 1)..];
 
             FindOrCreateConfigSection(configSectionName).SetValue(keyName, value);
         }
@@ -149,8 +149,8 @@ namespace GitCommands.Config
 
             var keyIndex = FindAndCheckKeyIndex(setting);
 
-            var configSectionName = setting.Substring(0, keyIndex);
-            var keyName = setting.Substring(keyIndex + 1);
+            var configSectionName = setting[..keyIndex];
+            var keyName = setting[(keyIndex + 1)..];
 
             var configSection = FindConfigSection(configSectionName);
 
@@ -171,8 +171,8 @@ namespace GitCommands.Config
         {
             var keyIndex = FindAndCheckKeyIndex(setting);
 
-            var configSectionName = setting.Substring(0, keyIndex);
-            var keyName = setting.Substring(keyIndex + 1);
+            var configSectionName = setting[..keyIndex];
+            var keyName = setting[(keyIndex + 1)..];
 
             var configSection = FindConfigSection(configSectionName);
 

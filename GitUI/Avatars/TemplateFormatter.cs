@@ -26,7 +26,7 @@ namespace GitUI.Avatars
                 var variableStartIndex = template.IndexOf('{', position);
                 var fixIndex = variableStartIndex < 0 ? template.Length : variableStartIndex;
 
-                var fixValue = template.Substring(position, fixIndex - position);
+                var fixValue = template[position..fixIndex];
                 formatParts.Add((sb, _) => sb.Append(fixValue));
 
                 if (variableStartIndex < 0)

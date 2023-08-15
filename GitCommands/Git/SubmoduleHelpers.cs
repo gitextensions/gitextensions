@@ -94,7 +94,7 @@ namespace GitCommands.Git
                     int pos = line.IndexOf(commitStr);
                     if (pos >= 0)
                     {
-                        hash = line.Substring(pos + commitStr.Length);
+                        hash = line[(pos + commitStr.Length)..];
                     }
 
                     bool endsWithDirty = hash.EndsWith("-dirty");

@@ -690,13 +690,13 @@ namespace GitUI.Editor.RichTextBoxExtension
                 for (int i = 0; i < colFormat.Count; i++)
                 {
                     var (pos, markup) = colFormat[i];
-                    strHTML.Append(WebUtility.HtmlEncode(strT.Substring(nAcum, pos - nAcum)) + markup);
+                    strHTML.Append(WebUtility.HtmlEncode(strT[nAcum..pos]) + markup);
                     nAcum = pos;
                 }
 
                 if (nAcum < strT.Length)
                 {
-                    strHTML.Append(strT.Substring(nAcum));
+                    strHTML.Append(strT[nAcum..]);
                 }
             }
             catch (Exception /*ex*/)
@@ -1157,8 +1157,8 @@ namespace GitUI.Editor.RichTextBoxExtension
 
                 // prior to net47 links were created via hidden text, and had the following format: "text#link"
                 // extract the link portion only
-                string linkOldFormat = text.Substring(from, to - from);
-                return linkOldFormat.Substring(linkOldFormat.IndexOf(LinkSeparator) + LinkSeparator.Length);
+                string linkOldFormat = text[from..to];
+                return linkOldFormat[(linkOldFormat.IndexOf(LinkSeparator) + LinkSeparator.Length)..];
             }
             catch
             {
@@ -1464,7 +1464,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                                 string text = reader.Value;
                                 if (text.StartsWith("#"))
                                 {
-                                    string strCr = text.Substring(1);
+                                    string strCr = text[1..];
                                     int nCr = Convert.ToInt32(strCr, 16);
                                     Color color = Color.FromArgb(nCr);
                                     crFont = GetCOLORREF(color);
@@ -1532,8 +1532,8 @@ namespace GitUI.Editor.RichTextBoxExtension
                             int idx = rtfText.LastIndexOf('}');
                             if (idx != -1)
                             {
-                                string head = rtfText.Substring(0, idx);
-                                string tail = rtfText.Substring(idx);
+                                string head = rtfText[..idx];
+                                string tail = rtfText[idx..];
                                 RtbSetSelectedRtf(rtb, $@"{head}\v {LinkSeparator}{cs.hyperlink}\v0{tail}");
                                 length = rtb.TextLength - cs.hyperlinkStart;
                             }

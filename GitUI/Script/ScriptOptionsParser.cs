@@ -537,7 +537,7 @@ namespace GitUI.Script
             int firstSlashIndex = remoteBranchName.IndexOf('/');
             if (firstSlashIndex >= 0)
             {
-                return remoteBranchName.Substring(firstSlashIndex + 1);
+                return remoteBranchName[(firstSlashIndex + 1)..];
             }
 
             return remoteBranchName;

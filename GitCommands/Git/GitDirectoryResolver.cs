@@ -79,7 +79,7 @@ namespace GitCommands.Git
                 var line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith(gitdir));
                 if (line is not null)
                 {
-                    string path = line.Substring(gitdir.Length).Trim().ToNativePath();
+                    string path = line[gitdir.Length..].Trim().ToNativePath();
                     if (Path.IsPathRooted(path))
                     {
                         return path.EnsureTrailingPathSeparator();

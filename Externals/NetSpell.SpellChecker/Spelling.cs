@@ -287,15 +287,13 @@ namespace NetSpell.SpellChecker
             for (int i = 0; i < replacementChars.Count; i++)
             {
                 int split = replacementChars[i].IndexOf(' ');
-                string key = replacementChars[i].Substring(0, split);
-                string replacement = replacementChars[i].Substring(split + 1);
+                string key = replacementChars[i][..split];
+                string replacement = replacementChars[i][(split + 1)..];
 
                 int pos = CurrentWord.IndexOf(key, StringComparison.InvariantCulture);
                 while (pos > -1)
                 {
-                    string tempWord = CurrentWord.Substring(0, pos);
-                    tempWord += replacement;
-                    tempWord += CurrentWord.Substring(pos + key.Length);
+                    string tempWord = $"{CurrentWord[..pos]}{replacement}{CurrentWord[(pos + key.Length)..]}";
 
                     if (FindWord(ref tempWord))
                     {
@@ -403,8 +401,8 @@ namespace NetSpell.SpellChecker
         {
             for (int i = 1; i < CurrentWord.Length - 1; i++)
             {
-                string firstWord = CurrentWord.Substring(0, i);
-                string secondWord = CurrentWord.Substring(i);
+                string firstWord = CurrentWord[..i];
+                string secondWord = CurrentWord[i..];
 
                 if (FindWord(ref firstWord) && FindWord(ref secondWord))
                 {
@@ -747,8 +745,7 @@ namespace NetSpell.SpellChecker
             // if first letter upper case, match case for replacement word
             if (char.IsUpper(_words[replacedIndex].ToString(), 0))
             {
-                _replacementWord = _replacementWord.Substring(0, 1).ToUpper(CultureInfo.CurrentUICulture)
-                    + _replacementWord.Substring(1);
+                _replacementWord = $"{char.ToUpper(_replacementWord[0], CultureInfo.CurrentUICulture)}{_replacementWord[1..]}";
             }
 
             _text.Insert(index, _replacementWord);

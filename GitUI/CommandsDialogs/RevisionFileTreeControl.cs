@@ -960,7 +960,7 @@ See the changes in the commit form.");
                 return false;
             }
 
-            return _revisionFileTreeController.SelectFileOrFolder(tvGitTree, filePath.Substring(Module.WorkingDir.Length));
+            return _revisionFileTreeController.SelectFileOrFolder(tvGitTree, filePath[Module.WorkingDir.Length..]);
         }
 
         internal void RegisterGitHostingPluginInBlameControl()

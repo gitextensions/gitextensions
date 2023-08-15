@@ -26,7 +26,7 @@ namespace GitCommands.Config
             if (slashIndex != -1)
             {
                 // [section "subsection"] case sensitive
-                SectionName = name.Substring(0, slashIndex).Trim();
+                SectionName = name[..slashIndex].Trim();
                 SubSection = name.Substring(slashIndex + 1, name.LastIndexOf('\"') - slashIndex - 1);
                 SubSectionCaseSensitive = true;
             }
@@ -46,8 +46,8 @@ namespace GitCommands.Config
                     throw new Exception("Invalid section name: " + name);
                 }
 
-                SectionName = name.Substring(0, subSectionIndex).Trim();
-                SubSection = name.Substring(subSectionIndex + 1).Trim();
+                SectionName = name[..subSectionIndex].Trim();
+                SubSection = name[(subSectionIndex + 1)..].Trim();
                 SubSectionCaseSensitive = false;
             }
 

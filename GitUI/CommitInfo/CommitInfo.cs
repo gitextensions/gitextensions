@@ -244,7 +244,7 @@ namespace GitUI.CommitInfo
             int warningPos = tree.IndexOf("warning:");
             if (warningPos >= 0)
             {
-                throw new RefsWarningException(tree.Substring(warningPos).LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).First());
+                throw new RefsWarningException(tree[warningPos..].LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).First());
             }
 
             int i = 0;

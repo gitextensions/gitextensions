@@ -116,7 +116,7 @@ namespace GitCommands
                 // two tabs, then tool name, cmd (if split in 3) in second
                 // cmd is unreliable for diff and not needed but could be used for mergetool special handling
                 string[] delimit = { " ", ".cmd" };
-                var tool = l.Substring(2).Split(delimit, 2, StringSplitOptions.None);
+                var tool = l[2..].Split(delimit, 2, StringSplitOptions.None);
                 if (tool.Length == 0)
                 {
                     continue;

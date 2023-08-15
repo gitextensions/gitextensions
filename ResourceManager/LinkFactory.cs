@@ -156,7 +156,7 @@ namespace ResourceManager
                     break;
                 }
 
-                uriCandidate = uriCandidate.Substring(idx + 1);
+                uriCandidate = uriCandidate[(idx + 1)..];
             }
 
             return false;

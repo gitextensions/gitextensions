@@ -19,7 +19,7 @@ namespace System
         public static string RemovePrefix(this string str, string prefix, StringComparison comparison = StringComparison.Ordinal)
         {
             return str.StartsWith(prefix, comparison)
-                ? str.Substring(prefix.Length)
+                ? str[prefix.Length..]
                 : str;
         }
 
@@ -31,7 +31,7 @@ namespace System
         public static string RemoveSuffix(this string str, string suffix, StringComparison comparison = StringComparison.Ordinal)
         {
             return str.EndsWith(suffix, comparison)
-                ? str.Substring(0, str.Length - suffix.Length)
+                ? str[..^suffix.Length]
                 : str;
         }
 
@@ -46,7 +46,7 @@ namespace System
             var index = str.IndexOf(c);
 
             return index != -1
-                ? str.Substring(0, index)
+                ? str[..index]
                 : str;
         }
 
@@ -61,7 +61,7 @@ namespace System
             var index = str.LastIndexOf(c);
 
             return index != -1
-                ? str.Substring(0, index)
+                ? str[..index]
                 : str;
         }
 
@@ -76,7 +76,7 @@ namespace System
             var index = str.IndexOf(c);
 
             return index != -1
-                ? str.Substring(index + 1)
+                ? str[(index + 1)..]
                 : str;
         }
 
@@ -91,7 +91,7 @@ namespace System
             var index = str.IndexOf(s, comparison);
 
             return index != -1
-                ? str.Substring(index + s.Length)
+                ? str[(index + s.Length)..]
                 : str;
         }
 
@@ -106,7 +106,7 @@ namespace System
             var index = str.LastIndexOf(c);
 
             return index != -1
-                ? str.Substring(index + 1)
+                ? str[(index + 1)..]
                 : str;
         }
 
@@ -121,7 +121,7 @@ namespace System
             var index = str.LastIndexOf(s, comparison);
 
             return index != -1
-                ? str.Substring(index + s.Length)
+                ? str[(index + s.Length)..]
                 : str;
         }
 
@@ -139,7 +139,7 @@ namespace System
             {
                 if (s.Length <= prefixLength || s[prefixLength] != c)
                 {
-                    return s.Substring(0, prefixLength);
+                    return s[..prefixLength];
                 }
 
                 prefixLength++;
@@ -221,7 +221,7 @@ namespace System
 
             if (value[^1] == '\n')
             {
-                value = value.Substring(0, value.Length - 1);
+                value = value[..^1];
             }
 
             StringBuilder sb = new(capacity: value.Length);
@@ -255,10 +255,10 @@ namespace System
 
             if (maxLength < 3)
             {
-                return str.Substring(0, maxLength);
+                return str[..maxLength];
             }
 
-            return str.Substring(0, maxLength - 3) + "...";
+            return str[..(maxLength - 3)] + "...";
         }
 
         /// <summary>

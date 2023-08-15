@@ -175,7 +175,7 @@ namespace ResourceManager.CommitDataRenders
             }
 
             ++ind;
-            return author.Substring(ind, author.LastIndexOf(">", StringComparison.Ordinal) - ind);
+            return author[ind..author.LastIndexOf(">", StringComparison.Ordinal)];
         }
 
         private string RenderObjectIds(IEnumerable<ObjectId> objectIds, bool showRevisionsAsLinks)

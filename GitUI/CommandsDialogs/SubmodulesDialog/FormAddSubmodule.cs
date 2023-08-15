@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
                         .Select(head =>
                         {
                             int branchIndex = head.IndexOf(GitRefName.RefsHeadsPrefix);
-                            return branchIndex == -1 ? null : head.Substring(branchIndex + GitRefName.RefsHeadsPrefix.Length);
+                            return branchIndex == -1 ? null : head[(branchIndex + GitRefName.RefsHeadsPrefix.Length)..];
                         })
                         .WhereNotNull()
                         .ToImmutableList();

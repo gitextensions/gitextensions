@@ -79,7 +79,7 @@ namespace GitUI.Avatars
             // and try to parse it as an AvatarProvider enum.
             if (providerTemplate.StartsWith("<") && providerTemplate.EndsWith(">"))
             {
-                var providerName = providerTemplate.Substring(1, providerTemplate.Length - 2);
+                var providerName = providerTemplate[1..^1];
 
                 if (Enum.TryParse<AvatarProvider>(providerName, true, out var provider)
                     && provider != AvatarProvider.Custom)

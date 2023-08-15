@@ -282,7 +282,7 @@ namespace GitCommandsTests.Git
 
             for (var length = 0; length < ObjectId.Sha1CharCount; length++)
             {
-                Assert.AreEqual(s.Substring(0, length), id.ToShortString(length));
+                Assert.AreEqual(s[..length], id.ToShortString(length));
             }
 
             Assert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(-1));

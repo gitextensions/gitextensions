@@ -38,21 +38,21 @@ namespace GitCommands.Git
                 return (description, string.Empty);
             }
 
-            string commitHash = description.Substring(commitHashPos + 2);
+            string commitHash = description[(commitHashPos + 2)..];
             if (commitHash.Length == 0 || !revision.Equals(commitHash))
             {
                 return (description, string.Empty);
             }
 
-            description = description.Substring(0, commitHashPos);
+            description = description[..commitHashPos];
             int commitCountPos = description.LastIndexOf("-", StringComparison.Ordinal);
             if (commitCountPos == -1)
             {
                 return (description, string.Empty);
             }
 
-            string commitCount = description.Substring(commitCountPos + 1);
-            description = description.Substring(0, commitCountPos);
+            string commitCount = description[(commitCountPos + 1)..];
+            description = description[..commitCountPos];
             return (description, commitCount);
 
             IGitModule GetModule()

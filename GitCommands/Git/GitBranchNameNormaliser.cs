@@ -193,12 +193,12 @@ namespace GitCommands.Git
             branchName = Regex.Replace(branchName, @"(\/{2,})", "/");
             if (branchName.StartsWith("/"))
             {
-                branchName = branchName.Substring(1);
+                branchName = branchName[1..];
             }
 
             if (branchName.EndsWith("/"))
             {
-                branchName = branchName.Substring(0, branchName.Length - 1);
+                branchName = branchName[..^1];
             }
 
             return branchName;

@@ -85,7 +85,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
 
                         int endHtml = int.Parse(val);
 
-                        Context = rawClipboardText.Substring(startHtml, endHtml - startHtml);
+                        Context = rawClipboardText[startHtml..endHtml];
                         break;
 
                     // Byte count from the beginning of the clipboard to the start of the fragment.
@@ -106,7 +106,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator
                         }
 
                         int endFragment = int.Parse(val);
-                        Fragment = rawClipboardText.Substring(startFragment, endFragment - startFragment);
+                        Fragment = rawClipboardText[startFragment..endFragment];
                         break;
 
                     // Optional Source URL, used for resolving relative links.

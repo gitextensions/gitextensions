@@ -21,11 +21,11 @@ namespace GitUI.Theming
         {
             if (url.EndsWith(_themePathProvider.ThemeExtension, StringComparison.OrdinalIgnoreCase))
             {
-                url = url.Substring(0, url.Length - _themePathProvider.ThemeExtension.Length);
+                url = url[..^_themePathProvider.ThemeExtension.Length];
             }
 
             ThemeId id = url.StartsWith(CssVariableUserThemesDirectory)
-                ? new ThemeId(url.Substring(CssVariableUserThemesDirectory.Length), isBuiltin: false)
+                ? new ThemeId(url[CssVariableUserThemesDirectory.Length..], isBuiltin: false)
                 : new ThemeId(url, isBuiltin: true);
 
             try

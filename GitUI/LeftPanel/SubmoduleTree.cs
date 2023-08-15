@@ -219,7 +219,7 @@ namespace GitUI.LeftPanel
                     continue;
                 }
 
-                string localPath = Path.GetDirectoryName(submoduleInfo.Path.Substring(superPath.Length)).ToPosixPath();
+                string localPath = Path.GetDirectoryName(submoduleInfo.Path[superPath.Length..]).ToPosixPath();
 
                 var isCurrent = submoduleInfo.Bold;
 

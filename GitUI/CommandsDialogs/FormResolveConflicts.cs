@@ -667,8 +667,8 @@ namespace GitUI.CommandsDialogs
                     int idx = _mergetoolCmd.IndexOf(executablePattern);
                     if (idx >= 0)
                     {
-                        _mergetoolPath = _mergetoolCmd.Substring(0, idx + executablePattern.Length + 1).Trim('\"', ' ');
-                        _mergetoolCmd = _mergetoolCmd.Substring(idx + executablePattern.Length + 1);
+                        _mergetoolPath = _mergetoolCmd[..(idx + executablePattern.Length + 1)].Trim('\"', ' ');
+                        _mergetoolCmd = _mergetoolCmd[(idx + executablePattern.Length + 1)..];
                     }
                 }
 

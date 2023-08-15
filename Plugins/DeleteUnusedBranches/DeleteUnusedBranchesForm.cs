@@ -193,7 +193,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
                         GitArgumentBuilder args = new("push")
                         {
                             remoteName,
-                            $":{remoteBranch.Name.Substring(remoteBranchNameOffset)}"
+                            $":{remoteBranch.Name[remoteBranchNameOffset..]}"
                         };
                         _gitCommands.GitExecutable.GetOutput(args);
                     }

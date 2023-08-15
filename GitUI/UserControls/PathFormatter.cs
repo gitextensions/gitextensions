@@ -144,7 +144,7 @@ namespace GitUI
 
                 if (truncatePathMethod == TruncatePathMethod.TrimStart)
                 {
-                    return "..." + path.Substring(path.Length - length);
+                    return "..." + path[^length..];
                 }
 
                 return path;
@@ -166,8 +166,8 @@ namespace GitUI
             int slashIndex = name.TrimEnd(PathUtil.PosixDirectorySeparatorChar).LastIndexOf(PathUtil.PosixDirectorySeparatorChar);
             if (slashIndex >= 0 && slashIndex < name.Length)
             {
-                string path = name.Substring(0, slashIndex + 1);
-                string fileName = name.Substring(slashIndex + 1);
+                string path = name[..(slashIndex + 1)];
+                string fileName = name[(slashIndex + 1)..];
                 return (path, fileName);
             }
 

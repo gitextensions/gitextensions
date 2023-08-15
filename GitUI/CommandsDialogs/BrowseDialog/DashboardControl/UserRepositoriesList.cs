@@ -492,7 +492,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     break;
                 }
 
-                text = text.Substring(0, text.Length - 1);
+                text = text[..^1];
             }
 
             return text + ellipsis;

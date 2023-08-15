@@ -1016,7 +1016,7 @@ namespace GitUI.CommandsDialogs
                 return firstTabIdx == 40
                     ? processOutput
                     : firstTabIdx > 40
-                        ? processOutput.Substring(firstTabIdx - 40)
+                        ? processOutput[(firstTabIdx - 40)..]
                         : string.Empty;
             }
 

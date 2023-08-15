@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 var strings = line.Split(' ');
                 if (strings[0] == "worktree")
                 {
-                    currentWorktree = new WorkTree { Path = Module.GetWindowsPath(line.Substring(9)) };
+                    currentWorktree = new WorkTree { Path = Module.GetWindowsPath(line[9..]) };
                     currentWorktree.IsDeleted = !Directory.Exists(currentWorktree.Path);
                     _worktrees.Add(currentWorktree);
                 }
@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                             currentWorktree.Branch = CleanBranchName(strings[1]);
 
                             string? CleanBranchName(string? branch)
-                                => branch != null && branch.StartsWith(GitRefName.RefsHeadsPrefix) ? branch.Substring(GitRefName.RefsHeadsPrefix.Length) : branch;
+                                => branch != null && branch.StartsWith(GitRefName.RefsHeadsPrefix) ? branch[GitRefName.RefsHeadsPrefix.Length..] : branch;
 
                             break;
                         case "detached":

@@ -89,7 +89,7 @@ namespace GitCommands
                 return string.Empty;
             }
 
-            return refName.Substring(1 + startBranch);
+            return refName[(1 + startBranch)..];
         }
 
         [Pure]

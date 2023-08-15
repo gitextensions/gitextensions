@@ -2330,7 +2330,7 @@ namespace GitUI.CommandsDialogs
 
                 if (newlineIndex != -1)
                 {
-                    label = label.Substring(0, newlineIndex);
+                    label = label[..newlineIndex];
                 }
 
                 if (label.Length > maxLabelLength)
@@ -2403,8 +2403,8 @@ namespace GitUI.CommandsDialogs
                 string diff = Module.GitExecutable.GetOutput(args);
                 var lines = diff.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
                 const string subprojectCommit = "Subproject commit ";
-                var from = lines.Single(s => s.StartsWith("-" + subprojectCommit)).Substring(subprojectCommit.Length + 1);
-                var to = lines.Single(s => s.StartsWith("+" + subprojectCommit)).Substring(subprojectCommit.Length + 1);
+                var from = lines.Single(s => s.StartsWith("-" + subprojectCommit))[(subprojectCommit.Length + 1)..];
+                var to = lines.Single(s => s.StartsWith("+" + subprojectCommit))[(subprojectCommit.Length + 1)..];
                 if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                 {
                     sb.AppendLine("Submodule " + path + ":");
@@ -2424,7 +2424,7 @@ namespace GitUI.CommandsDialogs
                     }
                     else
                     {
-                        sb.AppendLine("    * Revision changed to " + to.Substring(0, 7));
+                        sb.AppendLine("    * Revision changed to " + to[..7]);
                     }
 
                     sb.AppendLine();
