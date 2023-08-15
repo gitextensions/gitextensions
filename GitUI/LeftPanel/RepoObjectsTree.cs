@@ -43,7 +43,15 @@ namespace GitUI.LeftPanel
 
         public RepoObjectsTree()
         {
-            Disposed += (s, e) => _selectionCancellationTokenSequence.Dispose();
+            Disposed += (s, e) =>
+                {
+                    _selectionCancellationTokenSequence.Dispose();
+                    _branchesTree.Dispose();
+                    _remotesTree.Dispose();
+                    _tagTree.Dispose();
+                    _stashTree.Dispose();
+                    _submoduleTree.Dispose();
+                };
 
             InitializeComponent();
             InitImageList();

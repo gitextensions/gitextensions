@@ -34,7 +34,7 @@ namespace GitUI.LeftPanel
             };
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Detached();
             _reloadCancellationTokenSequence.Dispose();
@@ -87,22 +87,22 @@ namespace GitUI.LeftPanel
         protected async Task ReloadNodesAsync(Func<CancellationToken, Func<RefsFilter, IReadOnlyList<IGitRef>>, Task<Nodes>> loadNodesTask,
             Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
         {
-            var token = _reloadCancellationTokenSequence.Next();
+            CancellationToken cancellationToken = _reloadCancellationTokenSequence.Next();
 
-            var treeView = TreeViewNode.TreeView;
+            TreeView treeView = TreeViewNode.TreeView;
 
             if (treeView is null || !IsAttached)
             {
                 return;
             }
 
-            await _updateSemaphore.WaitAsync(token);
+            await _updateSemaphore.WaitAsync(cancellationToken);
             try
             {
                 // Module is invalid in Dashboard
-                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(token, getRefs) : new(tree: null);
+                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(cancellationToken, getRefs) : new(tree: null);
 
-                await treeView.SwitchToMainThreadAsync(token);
+                await treeView.SwitchToMainThreadAsync(cancellationToken);
 
                 // remember multi-selected nodes
                 HashSet<int> multiSelected = GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
@@ -145,7 +145,15 @@ namespace GitUI.LeftPanel
             }
             finally
             {
-                _updateSemaphore?.Release();
+                cancellationToken.ThrowIfCancellationRequested();
+                try
+                {
+                    _updateSemaphore.Release();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Ignore
+                }
             }
         }
 

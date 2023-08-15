@@ -19,24 +19,31 @@ namespace GitUI.LeftPanel
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ReloadNodesAsync((token, _) =>
+            ThreadHelper.FileAndForget(() =>
+                ReloadNodesAsync((cancellationToken, _) =>
                 {
                     Task<Nodes>? loadNodesTask = null;
-                    _updateSemaphore.WaitAsync();
+                    _updateSemaphore.WaitAsync(cancellationToken);
                     try
                     {
-                        loadNodesTask = LoadNodesAsync(token, getStashRevs);
+                        loadNodesTask = LoadNodesAsync(cancellationToken, getStashRevs);
                     }
                     finally
                     {
-                        _updateSemaphore.Release();
+                        cancellationToken.ThrowIfCancellationRequested();
+                        try
+                        {
+                            _updateSemaphore.Release();
+                        }
+                        catch (ObjectDisposedException)
+                        {
+                            // Ignore
+                        }
                     }
 
                     return loadNodesTask;
-                }, null).ConfigureAwait(false);
-            });
+                },
+                getRefs: null));
         }
 
         private async Task<Nodes> LoadNodesAsync(CancellationToken token, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs)

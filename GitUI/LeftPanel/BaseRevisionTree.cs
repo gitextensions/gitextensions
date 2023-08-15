@@ -4,6 +4,8 @@ namespace GitUI.LeftPanel
 {
     internal abstract class BaseRevisionTree : Tree
     {
+        private CancellationTokenSequence _updateCancellationTokenSequence = new();
+
         protected readonly ICheckRefs _refsSource;
 
         public BaseRevisionTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
@@ -12,14 +14,44 @@ namespace GitUI.LeftPanel
             _refsSource = refsSource;
         }
 
+        public override void Dispose()
+        {
+            _updateCancellationTokenSequence.Dispose();
+            base.Dispose();
+        }
+
+        protected override void OnDetached()
+        {
+            _updateCancellationTokenSequence.CancelCurrent();
+            base.OnDetached();
+        }
+
         internal virtual void UpdateVisibility()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            CancellationToken cancellationToken = _updateCancellationTokenSequence.Next();
+
+            TreeView treeView = TreeViewNode.TreeView;
+
+            if (treeView is null || !IsAttached)
             {
-                await _updateSemaphore.WaitAsync();
+                return;
+            }
+
+            ThreadHelper.FileAndForget(async () =>
+            {
+                await _updateSemaphore.WaitAsync(cancellationToken);
                 try
                 {
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    await treeView.SwitchToMainThreadAsync(cancellationToken);
+
+                    // Check again after switch to main thread
+                    treeView = TreeViewNode.TreeView;
+
+                    if (treeView is null || !IsAttached)
+                    {
+                        return;
+                    }
+
                     foreach (BaseRevisionNode node in Nodes.DepthEnumerator<BaseRevisionNode>())
                     {
                         if (node.ObjectId is null)
@@ -27,6 +59,7 @@ namespace GitUI.LeftPanel
                             continue;
                         }
 
+                        cancellationToken.ThrowIfCancellationRequested();
                         bool isVisible = _refsSource.Contains(node.ObjectId);
                         if (node.Visible != isVisible)
                         {
@@ -37,9 +70,17 @@ namespace GitUI.LeftPanel
                 }
                 finally
                 {
-                    _updateSemaphore.Release();
+                    cancellationToken.ThrowIfCancellationRequested();
+                    try
+                    {
+                        _updateSemaphore.Release();
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        // Ignore
+                    }
                 }
-            }).FileAndForget();
+            });
         }
     }
 }
