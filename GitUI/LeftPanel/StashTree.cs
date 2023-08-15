@@ -14,44 +14,46 @@ namespace GitUI.LeftPanel
 
         internal void Refresh(Lazy<IReadOnlyCollection<GitRevision>> getStashRevs)
         {
-            if (!IsAttached)
+            TreeView treeView = TreeViewNode.TreeView;
+
+            if (treeView is null || !IsAttached)
             {
                 return;
             }
 
             ThreadHelper.FileAndForget(() =>
-                ReloadNodesAsync((cancellationToken, _) =>
-                {
-                    Task<Nodes>? loadNodesTask = null;
-                    _updateSemaphore.WaitAsync(cancellationToken);
-                    try
-                    {
-                        loadNodesTask = LoadNodesAsync(cancellationToken, getStashRevs);
-                    }
-                    finally
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        try
-                        {
-                            _updateSemaphore.Release();
-                        }
-                        catch (ObjectDisposedException)
-                        {
-                            // Ignore
-                        }
-                    }
-
-                    return loadNodesTask;
-                },
-                getRefs: null));
+                ReloadNodesAsync((cancellationToken, _) => LoadNodesAsync(treeView, cancellationToken, getStashRevs), getRefs: null));
         }
 
-        private async Task<Nodes> LoadNodesAsync(CancellationToken token, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs)
+        private async Task<Nodes> LoadNodesAsync(TreeView treeView, CancellationToken cancellationToken, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs)
         {
-            await TaskScheduler.Default;
-            token.ThrowIfCancellationRequested();
+            await _updateSemaphore.WaitAsync(cancellationToken);
+            try
+            {
+                await treeView.SwitchToMainThreadAsync(cancellationToken);
 
-            return FillStashTree(getStashRevs.Value, token);
+                // Check again after switch to main thread
+                treeView = TreeViewNode.TreeView;
+
+                if (treeView is null || !IsAttached)
+                {
+                    throw new OperationCanceledException();
+                }
+
+                return FillStashTree(getStashRevs.Value, cancellationToken);
+            }
+            finally
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                try
+                {
+                    _updateSemaphore.Release();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // Ignore
+                }
+            }
         }
 
         private Nodes FillStashTree(IReadOnlyCollection<GitRevision> stashes, CancellationToken token)
