@@ -376,7 +376,7 @@ namespace GitUITests.GitUICommandsTests
                 .OrderBy(s => s.Name)
                 .ToArray();
             settings.Should().NotContainNulls();
-
+#if DEBUG
             foreach (var g in settings.GroupBy(s => s.Status))
             {
                 Console.WriteLine(g.Key?.ToString() ?? "NULL");
@@ -385,6 +385,7 @@ namespace GitUITests.GitUICommandsTests
                     Console.WriteLine($"\t{s}");
                 }
             }
+#endif
         }
 
         private static void ClickButton(Form form, string buttonName)
