@@ -52,8 +52,11 @@ namespace GitUI.CommandsDialogs
 
         private void SaveSettings()
         {
-            AppSettings.CommitAutomaticallyAfterCherryPick = cbxAutoCommit.Checked;
-            AppSettings.AddCommitReferenceToCherryPick = cbxAddReference.Checked;
+            if (DialogResult == DialogResult.OK)
+            {
+                AppSettings.CommitAutomaticallyAfterCherryPick = cbxAutoCommit.Checked;
+                AppSettings.AddCommitReferenceToCherryPick = cbxAddReference.Checked;
+            }
         }
 
         private void OnRevisionChanged()
@@ -101,6 +104,11 @@ namespace GitUI.CommandsDialogs
             {
                 tlpnlMain.ResumeLayout(performLayout: true);
             }
+        }
+
+        private void btnAbort_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
         }
 
         private void btnPick_Click(object sender, EventArgs e)

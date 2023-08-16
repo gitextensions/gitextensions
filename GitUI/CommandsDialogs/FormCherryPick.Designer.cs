@@ -45,6 +45,7 @@ namespace GitUI.CommandsDialogs
             commitSummaryUserControl1 = new UserControls.CommitSummaryUserControl();
             tlpnlMain = new TableLayoutPanel();
             flowLayoutPanel1 = new FlowLayoutPanel();
+            btnAbort = new Button();
             label2 = new Label();
             MainPanel.SuspendLayout();
             ControlsPanel.SuspendLayout();
@@ -60,6 +61,7 @@ namespace GitUI.CommandsDialogs
             // 
             // ControlsPanel
             // 
+            ControlsPanel.Controls.Add(btnAbort);
             ControlsPanel.Controls.Add(btnPick);
             ControlsPanel.Location = new Point(0, 379);
             ControlsPanel.Size = new Size(614, 41);
@@ -79,7 +81,7 @@ namespace GitUI.CommandsDialogs
             // btnPick
             // 
             btnPick.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnPick.Location = new Point(515, 8);
+            btnPick.Location = new Point(411, 8);
             btnPick.Name = "btnPick";
             btnPick.Size = new Size(109, 25);
             btnPick.TabIndex = 0;
@@ -227,6 +229,17 @@ namespace GitUI.CommandsDialogs
             flowLayoutPanel1.Size = new Size(584, 30);
             flowLayoutPanel1.TabIndex = 2;
             // 
+            // btnAbort
+            // 
+            btnAbort.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            btnAbort.Location = new Point(526, 8);
+            btnAbort.Name = "btnAbort";
+            btnAbort.Size = new Size(75, 25);
+            btnAbort.TabIndex = 1;
+            btnAbort.Text = "A&bort";
+            btnAbort.UseVisualStyleBackColor = true;
+            btnAbort.Click += btnAbort_Click;
+            // 
             // FormCherryPick
             // 
             AcceptButton = btnPick;
@@ -270,5 +283,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Button btnChooseRevision;
         private System.Windows.Forms.TableLayoutPanel tlpnlMain;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private Button btnAbort;
     }
 }
