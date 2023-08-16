@@ -55,21 +55,21 @@ namespace GitUI.CommandsDialogs
             // MainPanel
             // 
             MainPanel.Controls.Add(tlpnlMain);
-            MainPanel.Size = new Size(637, 390);
+            MainPanel.Size = new Size(614, 379);
             MainPanel.TabIndex = 0;
             // 
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(btnPick);
-            ControlsPanel.Location = new Point(0, 390);
-            ControlsPanel.Size = new Size(637, 41);
+            ControlsPanel.Location = new Point(0, 379);
+            ControlsPanel.Size = new Size(614, 41);
             ControlsPanel.TabIndex = 1;
             // 
             // label2
             // 
             label2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             label2.AutoSize = true;
-            label2.Location = new Point(435, 0);
+            label2.Location = new Point(412, 0);
             label2.Name = "label2";
             label2.Size = new Size(138, 30);
             label2.TabIndex = 0;
@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs
             // 
             btnChooseRevision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnChooseRevision.Image = Properties.Images.SelectRevision;
-            btnChooseRevision.Location = new Point(579, 3);
+            btnChooseRevision.Location = new Point(556, 3);
             btnChooseRevision.Name = "btnChooseRevision";
             btnChooseRevision.Size = new Size(25, 24);
             btnChooseRevision.TabIndex = 1;
@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs
             lblParents.Dock = DockStyle.Fill;
             lblParents.Location = new Point(3, 217);
             lblParents.Name = "lblParents";
-            lblParents.Size = new Size(607, 15);
+            lblParents.Size = new Size(584, 15);
             lblParents.TabIndex = 3;
             lblParents.Text = "This commit is a merge, select &parent:";
             // 
@@ -116,8 +116,8 @@ namespace GitUI.CommandsDialogs
             lvParentsList.Location = new Point(6, 238);
             lvParentsList.Margin = new Padding(6);
             lvParentsList.MultiSelect = false;
-            lvParentsList.Size = new Size(601, 72);
             lvParentsList.Name = "lvParentsList";
+            lvParentsList.Size = new Size(578, 61);
             lvParentsList.TabIndex = 4;
             lvParentsList.UseCompatibleStateImageBehavior = false;
             lvParentsList.View = View.Details;
@@ -146,9 +146,9 @@ namespace GitUI.CommandsDialogs
             // 
             cbxAddReference.AutoSize = true;
             cbxAddReference.Dock = DockStyle.Fill;
-            cbxAddReference.Location = new Point(3, 319);
+            cbxAddReference.Location = new Point(3, 308);
             cbxAddReference.Name = "cbxAddReference";
-            cbxAddReference.Size = new Size(607, 19);
+            cbxAddReference.Size = new Size(584, 19);
             cbxAddReference.TabIndex = 5;
             cbxAddReference.Text = "A&dd commit reference to commit message";
             cbxAddReference.UseVisualStyleBackColor = true;
@@ -157,9 +157,9 @@ namespace GitUI.CommandsDialogs
             // 
             cbxAutoCommit.AutoSize = true;
             cbxAutoCommit.Dock = DockStyle.Fill;
-            cbxAutoCommit.Location = new Point(3, 344);
+            cbxAutoCommit.Location = new Point(3, 333);
             cbxAutoCommit.Name = "cbxAutoCommit";
-            cbxAutoCommit.Size = new Size(607, 19);
+            cbxAutoCommit.Size = new Size(584, 19);
             cbxAutoCommit.TabIndex = 6;
             cbxAutoCommit.Text = "&Automatically create a commit";
             cbxAutoCommit.UseVisualStyleBackColor = true;
@@ -170,7 +170,7 @@ namespace GitUI.CommandsDialogs
             lblBranchInfo.Dock = DockStyle.Fill;
             lblBranchInfo.Location = new Point(3, 0);
             lblBranchInfo.Name = "lblBranchInfo";
-            lblBranchInfo.Size = new Size(607, 15);
+            lblBranchInfo.Size = new Size(584, 15);
             lblBranchInfo.TabIndex = 0;
             lblBranchInfo.Text = "Cherry pick this commit:";
             // 
@@ -184,7 +184,7 @@ namespace GitUI.CommandsDialogs
             commitSummaryUserControl1.MinimumSize = new Size(440, 160);
             commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             commitSummaryUserControl1.Revision = null;
-            commitSummaryUserControl1.Size = new Size(594, 160);
+            commitSummaryUserControl1.Size = new Size(571, 160);
             commitSummaryUserControl1.TabIndex = 1;
             // 
             // tlpnlMain
@@ -211,7 +211,7 @@ namespace GitUI.CommandsDialogs
             tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tlpnlMain.RowStyles.Add(new RowStyle());
             tlpnlMain.RowStyles.Add(new RowStyle());
-            tlpnlMain.Size = new Size(613, 366);
+            tlpnlMain.Size = new Size(590, 355);
             tlpnlMain.TabIndex = 0;
             // 
             // flowLayoutPanel1
@@ -224,7 +224,7 @@ namespace GitUI.CommandsDialogs
             flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
             flowLayoutPanel1.Location = new Point(3, 184);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(607, 30);
+            flowLayoutPanel1.Size = new Size(584, 30);
             flowLayoutPanel1.TabIndex = 2;
             // 
             // FormCherryPick
@@ -233,10 +233,10 @@ namespace GitUI.CommandsDialogs
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
-            ClientSize = new Size(637, 431);
+            ClientSize = new Size(614, 420);
             MaximizeBox = false;
             MinimizeBox = false;
-            MinimumSize = new Size(653, 365);
+            MinimumSize = new Size(630, 370);
             Name = "FormCherryPick";
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
