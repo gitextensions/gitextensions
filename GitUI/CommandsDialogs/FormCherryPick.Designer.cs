@@ -48,6 +48,8 @@ namespace GitUI.CommandsDialogs
             flowLayoutPanel1 = new FlowLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
             panelParentsList = new TableLayoutPanel();
+            MainPanel.SuspendLayout();
+            ControlsPanel.SuspendLayout();
             mainTableLayoutPanel.SuspendLayout();
             commitInformationPanel.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
@@ -55,12 +57,22 @@ namespace GitUI.CommandsDialogs
             panelParentsList.SuspendLayout();
             SuspendLayout();
             // 
+            // MainPanel
+            // 
+            MainPanel.Controls.Add(mainTableLayoutPanel);
+            MainPanel.Size = new Size(623, 323);
+            // 
+            // ControlsPanel
+            // 
+            ControlsPanel.Controls.Add(Pick);
+            ControlsPanel.Location = new Point(0, 323);
+            ControlsPanel.Size = new Size(623, 41);
+            // 
             // Pick
             // 
             Pick.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            Pick.Location = new Point(475, 22);
+            Pick.Location = new Point(501, 8);
             Pick.Name = "Pick";
-            tableLayoutPanel3.SetRowSpan(Pick, 2);
             Pick.Size = new Size(109, 25);
             Pick.TabIndex = 10;
             Pick.Text = "&Cherry pick";
@@ -107,7 +119,7 @@ namespace GitUI.CommandsDialogs
             ParentsList.Margin = new Padding(0);
             ParentsList.MultiSelect = false;
             ParentsList.Name = "ParentsList";
-            ParentsList.Size = new Size(587, 106);
+            ParentsList.Size = new Size(595, 41);
             ParentsList.TabIndex = 13;
             ParentsList.UseCompatibleStateImageBehavior = false;
             ParentsList.View = View.Details;
@@ -173,7 +185,7 @@ namespace GitUI.CommandsDialogs
             commitSummaryUserControl1.MinimumSize = new Size(440, 160);
             commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             commitSummaryUserControl1.Revision = null;
-            commitSummaryUserControl1.Size = new Size(467, 160);
+            commitSummaryUserControl1.Size = new Size(475, 160);
             commitSummaryUserControl1.TabIndex = 15;
             // 
             // mainTableLayoutPanel
@@ -186,15 +198,15 @@ namespace GitUI.CommandsDialogs
             mainTableLayoutPanel.Controls.Add(tableLayoutPanel3, 0, 3);
             mainTableLayoutPanel.Controls.Add(panelParentsList, 0, 2);
             mainTableLayoutPanel.Dock = DockStyle.Fill;
-            mainTableLayoutPanel.Location = new Point(0, 0);
-            mainTableLayoutPanel.Margin = new Padding(2, 2, 2, 2);
+            mainTableLayoutPanel.Location = new Point(12, 12);
+            mainTableLayoutPanel.Margin = new Padding(0);
             mainTableLayoutPanel.Name = "mainTableLayoutPanel";
             mainTableLayoutPanel.RowCount = 4;
             mainTableLayoutPanel.RowStyles.Add(new RowStyle());
             mainTableLayoutPanel.RowStyles.Add(new RowStyle());
             mainTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             mainTableLayoutPanel.RowStyles.Add(new RowStyle());
-            mainTableLayoutPanel.Size = new Size(591, 364);
+            mainTableLayoutPanel.Size = new Size(599, 299);
             mainTableLayoutPanel.TabIndex = 35;
             // 
             // commitInformationPanel
@@ -207,11 +219,11 @@ namespace GitUI.CommandsDialogs
             commitInformationPanel.Controls.Add(flowLayoutPanel1, 1, 0);
             commitInformationPanel.Dock = DockStyle.Fill;
             commitInformationPanel.Location = new Point(2, 17);
-            commitInformationPanel.Margin = new Padding(2, 2, 2, 2);
+            commitInformationPanel.Margin = new Padding(2);
             commitInformationPanel.Name = "commitInformationPanel";
             commitInformationPanel.RowCount = 1;
             commitInformationPanel.RowStyles.Add(new RowStyle());
-            commitInformationPanel.Size = new Size(587, 166);
+            commitInformationPanel.Size = new Size(595, 166);
             commitInformationPanel.TabIndex = 6;
             // 
             // flowLayoutPanel1
@@ -221,8 +233,8 @@ namespace GitUI.CommandsDialogs
             flowLayoutPanel1.Controls.Add(btnChooseRevision);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel1.Location = new Point(488, 2);
-            flowLayoutPanel1.Margin = new Padding(2, 2, 2, 2);
+            flowLayoutPanel1.Location = new Point(496, 2);
+            flowLayoutPanel1.Margin = new Padding(2);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new Size(97, 162);
             flowLayoutPanel1.TabIndex = 16;
@@ -233,18 +245,17 @@ namespace GitUI.CommandsDialogs
             tableLayoutPanel3.ColumnCount = 2;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.Controls.Add(Pick, 1, 0);
             tableLayoutPanel3.Controls.Add(checkAddReference, 0, 1);
             tableLayoutPanel3.Controls.Add(AutoCommit, 0, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(2, 312);
-            tableLayoutPanel3.Margin = new Padding(2, 2, 2, 2);
+            tableLayoutPanel3.Location = new Point(2, 247);
+            tableLayoutPanel3.Margin = new Padding(2);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 16F));
-            tableLayoutPanel3.Size = new Size(587, 50);
+            tableLayoutPanel3.Size = new Size(595, 50);
             tableLayoutPanel3.TabIndex = 17;
             // 
             // panelParentsList
@@ -255,12 +266,12 @@ namespace GitUI.CommandsDialogs
             panelParentsList.Controls.Add(ParentsList, 0, 1);
             panelParentsList.Dock = DockStyle.Fill;
             panelParentsList.Location = new Point(2, 187);
-            panelParentsList.Margin = new Padding(2, 2, 2, 2);
+            panelParentsList.Margin = new Padding(2);
             panelParentsList.Name = "panelParentsList";
             panelParentsList.RowCount = 2;
             panelParentsList.RowStyles.Add(new RowStyle());
             panelParentsList.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            panelParentsList.Size = new Size(587, 121);
+            panelParentsList.Size = new Size(595, 56);
             panelParentsList.TabIndex = 18;
             // 
             // FormCherryPick
@@ -269,17 +280,19 @@ namespace GitUI.CommandsDialogs
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
-            ClientSize = new Size(591, 364);
-            Controls.Add(mainTableLayoutPanel);
+            ClientSize = new Size(623, 364);
             MaximizeBox = false;
             MinimizeBox = false;
-            MinimumSize = new Size(603, 296);
+            MinimumSize = new Size(653, 350);
             Name = "FormCherryPick";
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Cherry pick commit";
             FormClosing += Form_Closing;
             Load += Form_Load;
+            MainPanel.ResumeLayout(false);
+            MainPanel.PerformLayout();
+            ControlsPanel.ResumeLayout(false);
             mainTableLayoutPanel.ResumeLayout(false);
             mainTableLayoutPanel.PerformLayout();
             commitInformationPanel.ResumeLayout(false);

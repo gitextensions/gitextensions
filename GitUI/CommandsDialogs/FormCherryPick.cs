@@ -7,7 +7,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormCherryPick : GitModuleForm
+    public partial class FormCherryPick : GitExtensionsDialog
     {
         #region Translation
         private readonly TranslationString _noneParentSelectedText =
@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCherryPick(GitUICommands commands, GitRevision? revision)
-            : base(commands)
+            : base(commands, enablePositionRestore: false)
         {
             Revision = revision;
             InitializeComponent();
