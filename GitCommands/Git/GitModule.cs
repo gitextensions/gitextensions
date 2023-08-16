@@ -2488,20 +2488,33 @@ namespace GitCommands
                 throw new ExternalOperationException("git config", args.ToString(), WorkingDir, result.ExitCode, new InvalidOperationException("Exit code had no value"));
             }
 
-            string value = result.StandardOutput?.Trim() ?? "" + Delimiters.Null;
+            string standard = result.StandardOutput?.Trim();
+            string value = string.IsNullOrEmpty(standard) ? "\0\0" : standard; // Replace with nulls to still be able to split 3 empty fields.
 
             // Scope, file, value split by null.
-            string[] values = value.Split(Delimiters.Null, StringSplitOptions.RemoveEmptyEntries);
+
+            ReadOnlySpan<char> settingValueSpan = value.AsSpan();
+            ReadOnlySpan<char> delimiter = Delimiters.Null.AsSpan();
+
+            int nullIndex = settingValueSpan.IndexOf(delimiter);
+            ReadOnlySpan<char> scope = settingValueSpan.Slice(0, nullIndex);
+            settingValueSpan = settingValueSpan.Slice(nullIndex + 1);
+
+            nullIndex = settingValueSpan.IndexOf(delimiter);
+            ReadOnlySpan<char> filename = settingValueSpan.Slice(0, nullIndex);
+            settingValueSpan = settingValueSpan.Slice(nullIndex + 1);
+
+            ReadOnlySpan<char> actualValue = settingValueSpan;
 
             int resultCode = result.ExitCode.Value;
 
             GitConfigGetResult output = (
                 Enum.IsDefined(typeof(GitConfigStatus), resultCode) ? (GitConfigStatus)resultCode : (GitConfigStatus?)null,
                 setting,
-                values.Length == 3 ? values[2] : "",
+                settingValueSpan.ToString(),
                 DateTimeOffset.Now,
-                values.Length == 3 ? values[0] : "",
-                values.Length == 3 ? values[1]?.Replace("file:", "").ToNativePath() : "",
+                scope.ToString(),
+                filename.ToString()?.Replace("file:", "").ToNativePath(),
                 result.StandardError?.Trim() ?? "");
 
             switch (output.Status)
