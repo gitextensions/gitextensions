@@ -4,21 +4,28 @@ namespace GitUIPluginInterfaces
     ///  Status of running git config https://git-scm.com/docs/git-config#_description.
     ///  This command will fail with non-zero status upon error.Some exit codes are:
     ///  <code>
-    ///   The section or key is invalid (ret= 1) this is returned when the key is not set also.
-    ///   No section or name was provided (ret= 2).
-    ///   The config file is invalid (ret=3).
-    ///   The config file cannot be written (ret=4).
-    ///   You try to unset an option which does not exist or you try to unset/set an option for which multiple lines match (ret = 5).
-    ///   You try to use an invalid regexp (ret = 6).
-    ///   On success, the command returns the exit code 0.
+    ///   return code 0: success, the command returns the exit code 0.
+    ///   return code 1: The section or key is invalid; this is returned when the key is not set also.
+    ///   return code 2: No section or name was provided.
+    ///   return code 3: The config file is invalid.
+    ///   return code 4: The config file cannot be written.
+    ///   return code 5: You try to unset an option which does not exist or you try to unset/set an option for which multiple lines match.
+    ///   return code 6: You try to use an invalid regexp.
     ///  </code>
     /// </summary>
     /// <remarks>
-    /// See https://github.com/git/git/blob/fac96dfbb1c24369ba7d37a5affd8adfe6c650fd/config.h#L26C1-L36C1 and find latest version in master of those values.
-    /// See https://github.com/git/git/blob/fac96dfbb1c24369ba7d37a5affd8adfe6c650fd/builtin/config.c#L927 for the flow of getting a config value.
-    /// See https://github.com/git/git/blob/fac96dfbb1c24369ba7d37a5affd8adfe6c650fd/builtin/config.c#L893 for the flow of setting a config value.
-    /// Following those flows, 0,1, and 7 are returned from a get call.
-    /// 6 is only returned when doing --get-rexexp
+    ///  <para>
+    ///   See https://github.com/git/git/blob/fac96dfbb1c24369ba7d37a5affd8adfe6c650fd/config.h#L26C1-L36C1 and find latest version in master of those values.
+    ///  </para>
+    ///  <para>
+    ///   See https://github.com/git/git/blob/fac96dfbb1c24369ba7d37a5affd8adfe6c650fd/builtin/config.c#L927 for the flow of getting a config value.
+    ///  </para>
+    ///  <para>
+    ///   See https://github.com/git/git/blob/fac96dfbb1c24369ba7d37a5affd8adfe6c650fd/builtin/config.c#L893 for the flow of setting a config value.
+    ///  </para>
+    ///  <para>
+    ///   Following those flows, 0, 1, and 7 are returned from a get call. 6 is only returned when doing --get-rexexp
+    ///  </para>
     /// </remarks>
     public enum GitConfigStatus
     {
