@@ -56,12 +56,14 @@ namespace GitUI.CommandsDialogs
             // 
             MainPanel.Controls.Add(mainTableLayoutPanel);
             MainPanel.Size = new Size(637, 390);
+            MainPanel.TabIndex = 0;
             // 
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(Pick);
             ControlsPanel.Location = new Point(0, 390);
             ControlsPanel.Size = new Size(637, 41);
+            ControlsPanel.TabIndex = 1;
             // 
             // label2
             // 
@@ -70,7 +72,7 @@ namespace GitUI.CommandsDialogs
             label2.Location = new Point(435, 0);
             label2.Name = "label2";
             label2.Size = new Size(138, 30);
-            label2.TabIndex = 33;
+            label2.TabIndex = 0;
             label2.Text = "C&hoose another revision:";
             label2.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -80,7 +82,7 @@ namespace GitUI.CommandsDialogs
             Pick.Location = new Point(515, 8);
             Pick.Name = "Pick";
             Pick.Size = new Size(109, 25);
-            Pick.TabIndex = 10;
+            Pick.TabIndex = 0;
             Pick.Text = "&Cherry pick";
             Pick.UseVisualStyleBackColor = true;
             Pick.Click += Revert_Click;
@@ -92,7 +94,7 @@ namespace GitUI.CommandsDialogs
             btnChooseRevision.Location = new Point(579, 3);
             btnChooseRevision.Name = "btnChooseRevision";
             btnChooseRevision.Size = new Size(25, 24);
-            btnChooseRevision.TabIndex = 34;
+            btnChooseRevision.TabIndex = 1;
             btnChooseRevision.UseVisualStyleBackColor = true;
             btnChooseRevision.Click += btnChooseRevision_Click;
             // 
@@ -103,7 +105,7 @@ namespace GitUI.CommandsDialogs
             ParentsLabel.Location = new Point(3, 217);
             ParentsLabel.Name = "ParentsLabel";
             ParentsLabel.Size = new Size(607, 15);
-            ParentsLabel.TabIndex = 12;
+            ParentsLabel.TabIndex = 3;
             ParentsLabel.Text = "This commit is a merge, select &parent:";
             // 
             // ParentsList
@@ -116,7 +118,7 @@ namespace GitUI.CommandsDialogs
             ParentsList.MultiSelect = false;
             ParentsList.Name = "ParentsList";
             ParentsList.Size = new Size(601, 72);
-            ParentsList.TabIndex = 13;
+            ParentsList.TabIndex = 4;
             ParentsList.UseCompatibleStateImageBehavior = false;
             ParentsList.View = View.Details;
             // 
@@ -147,7 +149,7 @@ namespace GitUI.CommandsDialogs
             checkAddReference.Location = new Point(3, 319);
             checkAddReference.Name = "checkAddReference";
             checkAddReference.Size = new Size(607, 19);
-            checkAddReference.TabIndex = 14;
+            checkAddReference.TabIndex = 5;
             checkAddReference.Text = "A&dd commit reference to commit message";
             checkAddReference.UseVisualStyleBackColor = true;
             // 
@@ -158,7 +160,7 @@ namespace GitUI.CommandsDialogs
             AutoCommit.Location = new Point(3, 344);
             AutoCommit.Name = "AutoCommit";
             AutoCommit.Size = new Size(607, 19);
-            AutoCommit.TabIndex = 11;
+            AutoCommit.TabIndex = 6;
             AutoCommit.Text = "&Automatically create a commit";
             AutoCommit.UseVisualStyleBackColor = true;
             // 
@@ -169,7 +171,7 @@ namespace GitUI.CommandsDialogs
             BranchInfo.Location = new Point(3, 0);
             BranchInfo.Name = "BranchInfo";
             BranchInfo.Size = new Size(607, 15);
-            BranchInfo.TabIndex = 5;
+            BranchInfo.TabIndex = 0;
             BranchInfo.Text = "Cherry pick this commit:";
             // 
             // commitSummaryUserControl1
@@ -183,7 +185,7 @@ namespace GitUI.CommandsDialogs
             commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             commitSummaryUserControl1.Revision = null;
             commitSummaryUserControl1.Size = new Size(594, 160);
-            commitSummaryUserControl1.TabIndex = 15;
+            commitSummaryUserControl1.TabIndex = 1;
             // 
             // mainTableLayoutPanel
             // 
@@ -210,7 +212,7 @@ namespace GitUI.CommandsDialogs
             mainTableLayoutPanel.RowStyles.Add(new RowStyle());
             mainTableLayoutPanel.RowStyles.Add(new RowStyle());
             mainTableLayoutPanel.Size = new Size(613, 366);
-            mainTableLayoutPanel.TabIndex = 35;
+            mainTableLayoutPanel.TabIndex = 0;
             // 
             // flowLayoutPanel1
             // 
@@ -223,7 +225,7 @@ namespace GitUI.CommandsDialogs
             flowLayoutPanel1.Location = new Point(3, 184);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new Size(607, 30);
-            flowLayoutPanel1.TabIndex = 16;
+            flowLayoutPanel1.TabIndex = 2;
             // 
             // FormCherryPick
             // 
