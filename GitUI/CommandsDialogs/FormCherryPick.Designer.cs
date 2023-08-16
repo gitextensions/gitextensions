@@ -247,6 +247,9 @@ namespace GitUI.CommandsDialogs
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
             ClientSize = new Size(614, 420);
+            HelpButton = true;
+            ManualSectionAnchorName = "cherry-pick-commit";
+            ManualSectionSubfolder = "modify_history";
             MaximizeBox = false;
             MinimizeBox = false;
             MinimumSize = new Size(630, 370);
