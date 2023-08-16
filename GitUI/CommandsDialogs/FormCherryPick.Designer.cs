@@ -30,9 +30,9 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void InitializeComponent()
         {
+            Label label2;
             Pick = new Button();
             btnChooseRevision = new Button();
-            label2 = new Label();
             ParentsLabel = new Label();
             ParentsList = new UserControls.NativeListView();
             columnHeader1 = new ColumnHeader();
@@ -44,34 +44,40 @@ namespace GitUI.CommandsDialogs
             BranchInfo = new Label();
             commitSummaryUserControl1 = new UserControls.CommitSummaryUserControl();
             mainTableLayoutPanel = new TableLayoutPanel();
-            commitInformationPanel = new TableLayoutPanel();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            tableLayoutPanel3 = new TableLayoutPanel();
-            panelParentsList = new TableLayoutPanel();
+            label2 = new Label();
             MainPanel.SuspendLayout();
             ControlsPanel.SuspendLayout();
             mainTableLayoutPanel.SuspendLayout();
-            commitInformationPanel.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
-            tableLayoutPanel3.SuspendLayout();
-            panelParentsList.SuspendLayout();
             SuspendLayout();
             // 
             // MainPanel
             // 
             MainPanel.Controls.Add(mainTableLayoutPanel);
-            MainPanel.Size = new Size(623, 323);
+            MainPanel.Size = new Size(637, 390);
             // 
             // ControlsPanel
             // 
             ControlsPanel.Controls.Add(Pick);
-            ControlsPanel.Location = new Point(0, 323);
-            ControlsPanel.Size = new Size(623, 41);
+            ControlsPanel.Location = new Point(0, 390);
+            ControlsPanel.Size = new Size(637, 41);
+            // 
+            // label2
+            // 
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            label2.AutoSize = true;
+            label2.Location = new Point(435, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(138, 30);
+            label2.TabIndex = 33;
+            label2.Text = "C&hoose another revision:";
+            label2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Pick
             // 
             Pick.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            Pick.Location = new Point(501, 8);
+            Pick.Location = new Point(515, 8);
             Pick.Name = "Pick";
             Pick.Size = new Size(109, 25);
             Pick.TabIndex = 10;
@@ -83,43 +89,33 @@ namespace GitUI.CommandsDialogs
             // 
             btnChooseRevision.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnChooseRevision.Image = Properties.Images.SelectRevision;
-            btnChooseRevision.Location = new Point(69, 33);
+            btnChooseRevision.Location = new Point(579, 3);
             btnChooseRevision.Name = "btnChooseRevision";
             btnChooseRevision.Size = new Size(25, 24);
             btnChooseRevision.TabIndex = 34;
             btnChooseRevision.UseVisualStyleBackColor = true;
             btnChooseRevision.Click += btnChooseRevision_Click;
             // 
-            // label2
-            // 
-            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label2.AutoSize = true;
-            label2.Location = new Point(3, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(91, 30);
-            label2.TabIndex = 33;
-            label2.Text = "C&hoose another\r\nrevision:";
-            // 
             // ParentsLabel
             // 
             ParentsLabel.AutoSize = true;
-            ParentsLabel.Location = new Point(3, 0);
+            ParentsLabel.Dock = DockStyle.Fill;
+            ParentsLabel.Location = new Point(3, 217);
             ParentsLabel.Name = "ParentsLabel";
-            ParentsLabel.Size = new Size(206, 15);
+            ParentsLabel.Size = new Size(607, 15);
             ParentsLabel.TabIndex = 12;
             ParentsLabel.Text = "This commit is a merge, select &parent:";
             // 
             // ParentsList
             // 
-            ParentsList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            ParentsList.BorderStyle = BorderStyle.FixedSingle;
             ParentsList.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4 });
+            ParentsList.Dock = DockStyle.Fill;
             ParentsList.FullRowSelect = true;
-            ParentsList.Location = new Point(0, 15);
-            ParentsList.Margin = new Padding(0);
+            ParentsList.Location = new Point(6, 238);
+            ParentsList.Margin = new Padding(6);
             ParentsList.MultiSelect = false;
             ParentsList.Name = "ParentsList";
-            ParentsList.Size = new Size(595, 41);
+            ParentsList.Size = new Size(601, 72);
             ParentsList.TabIndex = 13;
             ParentsList.UseCompatibleStateImageBehavior = false;
             ParentsList.View = View.Details;
@@ -146,22 +142,22 @@ namespace GitUI.CommandsDialogs
             // 
             // checkAddReference
             // 
-            checkAddReference.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             checkAddReference.AutoSize = true;
-            checkAddReference.Location = new Point(3, 28);
+            checkAddReference.Dock = DockStyle.Fill;
+            checkAddReference.Location = new Point(3, 319);
             checkAddReference.Name = "checkAddReference";
-            checkAddReference.Size = new Size(253, 19);
+            checkAddReference.Size = new Size(607, 19);
             checkAddReference.TabIndex = 14;
             checkAddReference.Text = "A&dd commit reference to commit message";
             checkAddReference.UseVisualStyleBackColor = true;
             // 
             // AutoCommit
             // 
-            AutoCommit.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             AutoCommit.AutoSize = true;
-            AutoCommit.Location = new Point(3, 3);
+            AutoCommit.Dock = DockStyle.Fill;
+            AutoCommit.Location = new Point(3, 344);
             AutoCommit.Name = "AutoCommit";
-            AutoCommit.Size = new Size(189, 19);
+            AutoCommit.Size = new Size(607, 19);
             AutoCommit.TabIndex = 11;
             AutoCommit.Text = "&Automatically create a commit";
             AutoCommit.UseVisualStyleBackColor = true;
@@ -169,23 +165,24 @@ namespace GitUI.CommandsDialogs
             // BranchInfo
             // 
             BranchInfo.AutoSize = true;
+            BranchInfo.Dock = DockStyle.Fill;
             BranchInfo.Location = new Point(3, 0);
             BranchInfo.Name = "BranchInfo";
-            BranchInfo.Size = new Size(137, 15);
+            BranchInfo.Size = new Size(607, 15);
             BranchInfo.TabIndex = 5;
             BranchInfo.Text = "Cherry pick this commit:";
             // 
             // commitSummaryUserControl1
             // 
-            commitSummaryUserControl1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             commitSummaryUserControl1.AutoSize = true;
             commitSummaryUserControl1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            commitSummaryUserControl1.Location = new Point(16, 3);
+            commitSummaryUserControl1.Dock = DockStyle.Fill;
+            commitSummaryUserControl1.Location = new Point(16, 18);
             commitSummaryUserControl1.Margin = new Padding(16, 3, 3, 3);
             commitSummaryUserControl1.MinimumSize = new Size(440, 160);
             commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             commitSummaryUserControl1.Revision = null;
-            commitSummaryUserControl1.Size = new Size(475, 160);
+            commitSummaryUserControl1.Size = new Size(594, 160);
             commitSummaryUserControl1.TabIndex = 15;
             // 
             // mainTableLayoutPanel
@@ -194,85 +191,39 @@ namespace GitUI.CommandsDialogs
             mainTableLayoutPanel.ColumnCount = 1;
             mainTableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             mainTableLayoutPanel.Controls.Add(BranchInfo, 0, 0);
-            mainTableLayoutPanel.Controls.Add(commitInformationPanel, 0, 1);
-            mainTableLayoutPanel.Controls.Add(tableLayoutPanel3, 0, 3);
-            mainTableLayoutPanel.Controls.Add(panelParentsList, 0, 2);
+            mainTableLayoutPanel.Controls.Add(commitSummaryUserControl1, 0, 1);
+            mainTableLayoutPanel.Controls.Add(flowLayoutPanel1, 0, 2);
+            mainTableLayoutPanel.Controls.Add(ParentsLabel, 0, 3);
+            mainTableLayoutPanel.Controls.Add(ParentsList, 0, 4);
+            mainTableLayoutPanel.Controls.Add(checkAddReference, 0, 5);
+            mainTableLayoutPanel.Controls.Add(AutoCommit, 0, 6);
             mainTableLayoutPanel.Dock = DockStyle.Fill;
             mainTableLayoutPanel.Location = new Point(12, 12);
             mainTableLayoutPanel.Margin = new Padding(0);
             mainTableLayoutPanel.Name = "mainTableLayoutPanel";
-            mainTableLayoutPanel.RowCount = 4;
+            mainTableLayoutPanel.RowCount = 5;
+            mainTableLayoutPanel.RowStyles.Add(new RowStyle());
+            mainTableLayoutPanel.RowStyles.Add(new RowStyle());
             mainTableLayoutPanel.RowStyles.Add(new RowStyle());
             mainTableLayoutPanel.RowStyles.Add(new RowStyle());
             mainTableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             mainTableLayoutPanel.RowStyles.Add(new RowStyle());
-            mainTableLayoutPanel.Size = new Size(599, 299);
+            mainTableLayoutPanel.RowStyles.Add(new RowStyle());
+            mainTableLayoutPanel.Size = new Size(613, 366);
             mainTableLayoutPanel.TabIndex = 35;
-            // 
-            // commitInformationPanel
-            // 
-            commitInformationPanel.AutoSize = true;
-            commitInformationPanel.ColumnCount = 2;
-            commitInformationPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            commitInformationPanel.ColumnStyles.Add(new ColumnStyle());
-            commitInformationPanel.Controls.Add(commitSummaryUserControl1, 0, 0);
-            commitInformationPanel.Controls.Add(flowLayoutPanel1, 1, 0);
-            commitInformationPanel.Dock = DockStyle.Fill;
-            commitInformationPanel.Location = new Point(2, 17);
-            commitInformationPanel.Margin = new Padding(2);
-            commitInformationPanel.Name = "commitInformationPanel";
-            commitInformationPanel.RowCount = 1;
-            commitInformationPanel.RowStyles.Add(new RowStyle());
-            commitInformationPanel.Size = new Size(595, 166);
-            commitInformationPanel.TabIndex = 6;
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoSize = true;
-            flowLayoutPanel1.Controls.Add(label2);
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             flowLayoutPanel1.Controls.Add(btnChooseRevision);
+            flowLayoutPanel1.Controls.Add(label2);
             flowLayoutPanel1.Dock = DockStyle.Fill;
-            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel1.Location = new Point(496, 2);
-            flowLayoutPanel1.Margin = new Padding(2);
+            flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
+            flowLayoutPanel1.Location = new Point(3, 184);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(97, 162);
+            flowLayoutPanel1.Size = new Size(607, 30);
             flowLayoutPanel1.TabIndex = 16;
-            // 
-            // tableLayoutPanel3
-            // 
-            tableLayoutPanel3.AutoSize = true;
-            tableLayoutPanel3.ColumnCount = 2;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.Controls.Add(checkAddReference, 0, 1);
-            tableLayoutPanel3.Controls.Add(AutoCommit, 0, 0);
-            tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(2, 247);
-            tableLayoutPanel3.Margin = new Padding(2);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 2;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 16F));
-            tableLayoutPanel3.Size = new Size(595, 50);
-            tableLayoutPanel3.TabIndex = 17;
-            // 
-            // panelParentsList
-            // 
-            panelParentsList.ColumnCount = 1;
-            panelParentsList.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            panelParentsList.Controls.Add(ParentsLabel, 0, 0);
-            panelParentsList.Controls.Add(ParentsList, 0, 1);
-            panelParentsList.Dock = DockStyle.Fill;
-            panelParentsList.Location = new Point(2, 187);
-            panelParentsList.Margin = new Padding(2);
-            panelParentsList.Name = "panelParentsList";
-            panelParentsList.RowCount = 2;
-            panelParentsList.RowStyles.Add(new RowStyle());
-            panelParentsList.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            panelParentsList.Size = new Size(595, 56);
-            panelParentsList.TabIndex = 18;
             // 
             // FormCherryPick
             // 
@@ -280,10 +231,10 @@ namespace GitUI.CommandsDialogs
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
-            ClientSize = new Size(623, 364);
+            ClientSize = new Size(637, 431);
             MaximizeBox = false;
             MinimizeBox = false;
-            MinimumSize = new Size(653, 350);
+            MinimumSize = new Size(653, 365);
             Name = "FormCherryPick";
             SizeGripStyle = SizeGripStyle.Hide;
             StartPosition = FormStartPosition.CenterParent;
@@ -295,14 +246,8 @@ namespace GitUI.CommandsDialogs
             ControlsPanel.ResumeLayout(false);
             mainTableLayoutPanel.ResumeLayout(false);
             mainTableLayoutPanel.PerformLayout();
-            commitInformationPanel.ResumeLayout(false);
-            commitInformationPanel.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
-            tableLayoutPanel3.ResumeLayout(false);
-            tableLayoutPanel3.PerformLayout();
-            panelParentsList.ResumeLayout(false);
-            panelParentsList.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -321,11 +266,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.CheckBox checkAddReference;
         private GitUI.UserControls.CommitSummaryUserControl commitSummaryUserControl1;
         private System.Windows.Forms.Button btnChooseRevision;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TableLayoutPanel mainTableLayoutPanel;
-        private System.Windows.Forms.TableLayoutPanel commitInformationPanel;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.TableLayoutPanel panelParentsList;
     }
 }

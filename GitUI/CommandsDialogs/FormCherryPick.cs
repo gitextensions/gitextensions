@@ -29,6 +29,7 @@ namespace GitUI.CommandsDialogs
         {
             Revision = revision;
             InitializeComponent();
+            Size = MinimumSize;
             InitializeComplete();
         }
 
@@ -57,38 +58,48 @@ namespace GitUI.CommandsDialogs
 
         private void OnRevisionChanged()
         {
-            commitSummaryUserControl1.Revision = Revision;
-
-            ParentsList.Items.Clear();
-
-            if (Revision is not null)
+            try
             {
-                _isMerge = Module.IsMerge(Revision.ObjectId);
-            }
+                mainTableLayoutPanel.SuspendLayout();
 
-            panelParentsList.Visible = _isMerge;
+                commitSummaryUserControl1.Revision = Revision;
 
-            if (_isMerge && Revision is not null)
-            {
-                var parents = Module.GetParentRevisions(Revision.ObjectId);
+                ParentsList.Items.Clear();
 
-                for (int i = 0; i < parents.Count; i++)
+                if (Revision is not null)
                 {
-                    ParentsList.Items.Add(new ListViewItem((i + 1).ToString())
+                    _isMerge = Module.IsMerge(Revision.ObjectId);
+                }
+
+                ParentsLabel.Visible = _isMerge;
+                ParentsList.Visible = _isMerge;
+
+                if (_isMerge && Revision is not null)
+                {
+                    var parents = Module.GetParentRevisions(Revision.ObjectId);
+
+                    for (int i = 0; i < parents.Count; i++)
                     {
-                        SubItems =
+                        ParentsList.Items.Add(new ListViewItem((i + 1).ToString())
+                        {
+                            SubItems =
                         {
                             parents[i].Subject,
                             parents[i].Author,
                             parents[i].CommitDate.ToShortDateString()
                         }
-                    });
-                }
+                        });
+                    }
 
-                ParentsList.TopItem.Selected = true;
-                Size size = MinimumSize;
-                size.Height += 100;
-                MinimumSize = size;
+                    ParentsList.TopItem.Selected = true;
+                    Size size = MinimumSize;
+                    size.Height += 100;
+                    MinimumSize = size;
+                }
+            }
+            finally
+            {
+                mainTableLayoutPanel.ResumeLayout(performLayout: true);
             }
         }
 
