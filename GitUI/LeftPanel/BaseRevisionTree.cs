@@ -4,6 +4,8 @@ namespace GitUI.LeftPanel
 {
     internal abstract class BaseRevisionTree : Tree
     {
+        private readonly ExclusiveTaskRunner _updateTaskRunner = ThreadHelper.CreateExclusiveTaskRunner();
+
         protected readonly ICheckRefs _refsSource;
 
         public BaseRevisionTree(TreeNode treeNode, IGitUICommandsSource uiCommands, ICheckRefs refsSource)
@@ -12,34 +14,55 @@ namespace GitUI.LeftPanel
             _refsSource = refsSource;
         }
 
+        public override void Dispose()
+        {
+            _updateTaskRunner.Dispose();
+            base.Dispose();
+        }
+
+        protected override void OnDetached()
+        {
+            _updateTaskRunner.CancelCurrent();
+            base.OnDetached();
+        }
+
         internal virtual void UpdateVisibility()
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await _updateSemaphore.WaitAsync();
-                try
-                {
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    foreach (BaseRevisionNode node in Nodes.DepthEnumerator<BaseRevisionNode>())
-                    {
-                        if (node.ObjectId is null)
-                        {
-                            continue;
-                        }
+            TreeView treeView = TreeViewNode.TreeView;
 
-                        bool isVisible = _refsSource.Contains(node.ObjectId);
-                        if (node.Visible != isVisible)
-                        {
-                            node.Visible = isVisible;
-                            node.ApplyStyle();
-                        }
+            if (treeView is null || !IsAttached)
+            {
+                return;
+            }
+
+            _updateTaskRunner.RunDetached(async cancellationToken =>
+            {
+                await treeView.SwitchToMainThreadAsync(cancellationToken);
+
+                // Check again after switch to main thread
+                treeView = TreeViewNode.TreeView;
+
+                if (treeView is null || !IsAttached)
+                {
+                    return;
+                }
+
+                foreach (BaseRevisionNode node in Nodes.DepthEnumerator<BaseRevisionNode>())
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (node.ObjectId is null)
+                    {
+                        continue;
+                    }
+
+                    bool isVisible = _refsSource.Contains(node.ObjectId);
+                    if (node.Visible != isVisible)
+                    {
+                        node.Visible = isVisible;
+                        node.ApplyStyle();
                     }
                 }
-                finally
-                {
-                    _updateSemaphore.Release();
-                }
-            }).FileAndForget();
+            });
         }
     }
 }

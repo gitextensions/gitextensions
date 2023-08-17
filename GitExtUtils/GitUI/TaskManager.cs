@@ -85,9 +85,8 @@ namespace GitUI
         /// </summary>
         public void FileAndForget(Task task)
         {
-#pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
-            FileAndForget(async () => await task);
-#pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
+            TimeSpan infiniteTimeout = new(-TimeSpan.TicksPerMillisecond);
+            FileAndForget(() => task.WaitAsync(infiniteTimeout));
         }
 
         public async Task JoinPendingOperationsAsync(CancellationToken cancellationToken)

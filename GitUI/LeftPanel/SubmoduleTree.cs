@@ -81,13 +81,15 @@ namespace GitUI.LeftPanel
 
                 if (_currentNodes is null)
                 {
-                    // Module.GetRefs() is not used for Submodules
-                    await ReloadNodesAsync((token, _) =>
-                    {
-                        cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
-                        loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
-                        return loadNodesTask;
-                    }, null).ConfigureAwait(false);
+                    // Module.GetRefs() is not used for submodules
+                    JoinableTask joinableTask = ReloadNodesDetached((token, _) =>
+                        {
+                            cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
+                            loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
+                            return loadNodesTask;
+                        },
+                        getRefs: null);
+                    await joinableTask.JoinAsync(e.Token);
                 }
 
                 if (cts is not null && loadNodesTask is not null)

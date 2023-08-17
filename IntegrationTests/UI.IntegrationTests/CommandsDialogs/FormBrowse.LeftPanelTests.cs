@@ -121,8 +121,10 @@ namespace GitExtensions.UITests.CommandsDialogs
         private void RunRepoObjectsTreeTest(Action<ContextMenuStrip> testDriver)
         {
             RunFormTest(
-                form =>
+                async form =>
                 {
+                    await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+
                     var ta = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor();
 
                     // We are running several tests one after another to speed up the test execution
@@ -141,8 +143,6 @@ namespace GitExtensions.UITests.CommandsDialogs
                     ta.SelectNode<TagNode>(new[] { TranslatedStrings.Tags, "Branch1" });
                     ta.OpenContextMenu();
                     testDriver(contextMenu);
-
-                    return Task.CompletedTask;
                 });
         }
 
