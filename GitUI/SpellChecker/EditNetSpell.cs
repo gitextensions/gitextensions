@@ -382,6 +382,7 @@ namespace GitUI.SpellChecker
             }
 
             InitializeAutoCompleteWordsTask();
+            CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
 
             Validates.NotNull(_autoCompleteListTask);
             Validates.NotNull(_spelling);
@@ -389,8 +390,8 @@ namespace GitUI.SpellChecker
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    var words = await _autoCompleteListTask.GetValueAsync();
-                    await this.SwitchToMainThreadAsync(_autoCompleteCancellationTokenSource.Token);
+                    IEnumerable<AutoCompleteWord> words = await _autoCompleteListTask.GetValueAsync(cancellationToken);
+                    await this.SwitchToMainThreadAsync(cancellationToken);
 
                     _spelling.AddAutoCompleteWords(words.Select(x => x.Word));
                 });
@@ -887,16 +888,17 @@ namespace GitUI.SpellChecker
         {
             CancelAutoComplete();
             _autoCompleteCancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
             _autoCompleteListTask = new AsyncLazy<IEnumerable<AutoCompleteWord>?>(
                 async () =>
                 {
                     await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                    var subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWordsAsync(_autoCompleteCancellationTokenSource.Token)).ToArray();
+                    Task<IEnumerable<AutoCompleteWord>>[] subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWordsAsync(cancellationToken)).ToArray();
                     try
                     {
-                        var results = await Task.WhenAll(subTasks);
-                        return results.SelectMany(result => result).Distinct().ToList();
+                        IEnumerable<AutoCompleteWord>[] results = await Task.WhenAll(subTasks);
+                        return results.SelectMany(result => result).Distinct();
                     }
                     catch (OperationCanceledException)
                     {
@@ -1016,8 +1018,8 @@ namespace GitUI.SpellChecker
                 return;
             }
 
-            var autoCompleteList = ThreadHelper.JoinableTaskFactory.Run(() => _autoCompleteListTask.GetValueAsync());
-            var list = autoCompleteList.Where(x => x.Matches(word)).Distinct().ToList();
+            IEnumerable<AutoCompleteWord> autoCompleteList = ThreadHelper.JoinableTaskFactory.Run(_autoCompleteListTask.GetValueAsync);
+            IReadOnlyList<AutoCompleteWord> list = autoCompleteList.Where(x => x.Matches(word)).ToList();
 
             if (list.Count == 0)
             {
