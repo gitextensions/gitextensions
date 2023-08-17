@@ -164,9 +164,27 @@ namespace GitUI.CommandsDialogs
 
             if (path is not null)
             {
-                path = path.Replace(Module.WorkingDir, "");
+                path = MakePathRelativeToModule(path);
                 textBoxExcludePaths.Text += path;
             }
+        }
+
+        private string MakePathRelativeToModule(string targetPath)
+        {
+            targetPath = targetPath.Replace(Module.WorkingDir, "").ToPosixPath();
+            List<string> submodulePaths = (List<string>)Module.GetSubmodulesLocalPaths();
+
+            string nearestSubmodule = submodulePaths
+                .Where(submodulePath => targetPath.StartsWith(submodulePath))
+                .OrderByDescending(submodulePath => submodulePath.Length)
+                .FirstOrDefault();
+
+            if (nearestSubmodule is null)
+            {
+                return targetPath;
+            }
+
+            return targetPath.Substring(nearestSubmodule.Length + 1);
         }
 
         private string? RequestUserFolderPath()
