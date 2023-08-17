@@ -513,7 +513,7 @@ namespace GitUI.SpellChecker
         private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
         {
             TextBox.Focus();
-            var pos = SpellCheckContextMenuTrigger == ToolStripMenuTrigger.Keyboard ? this.TextBox.SelectionStart : TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
+            var pos = SpellCheckContextMenuTrigger == ToolStripMenuTrigger.Keyboard ? TextBox.SelectionStart : TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
             if (pos < 0)
             {
                 e.Cancel = true;
