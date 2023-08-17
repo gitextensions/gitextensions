@@ -2801,6 +2801,8 @@ namespace GitUI.CommandsDialogs
                 ExecuteCommitCommand();
                 e.Handled = true;
             }
+
+            Message.SpellCheckContextMenuTrigger = ToolStripMenuTrigger.Keyboard;
         }
 
         private void Message_TextChanged(object sender, EventArgs e)

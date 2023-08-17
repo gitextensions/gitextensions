@@ -56,6 +56,8 @@ namespace GitUI.SpellChecker
 
         public bool IsUndoInProgress;
 
+        public ToolStripMenuTrigger SpellCheckContextMenuTrigger;
+
         public EditNetSpell()
         {
             InitializeComponent();
@@ -511,7 +513,7 @@ namespace GitUI.SpellChecker
         private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
         {
             TextBox.Focus();
-            var pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
+            var pos = SpellCheckContextMenuTrigger == ToolStripMenuTrigger.Keyboard ? this.TextBox.SelectionStart : TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
             if (pos < 0)
             {
                 e.Cancel = true;
@@ -550,6 +552,8 @@ namespace GitUI.SpellChecker
                 ToggleAutoCompletion();
             };
             SpellCheckContextMenu.Items.Add(mi);
+
+            SpellCheckContextMenuTrigger = ToolStripMenuTrigger.RestoreTriggerValue;
         }
 
         private void RemoveWordClick(object sender, EventArgs e)
@@ -1127,5 +1131,11 @@ namespace GitUI.SpellChecker
 
             base.Dispose(disposing);
         }
+    }
+
+    public enum ToolStripMenuTrigger
+    {
+        RestoreTriggerValue,
+        Keyboard
     }
 }
