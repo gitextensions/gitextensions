@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Collections.Generic;
+using GitCommands;
 using GitCommands.Git.Commands;
 using GitCommands.Utils;
 using GitExtUtils;
@@ -172,9 +173,9 @@ namespace GitUI.CommandsDialogs
         private string MakePathRelativeToModule(string targetPath)
         {
             targetPath = targetPath.Replace(Module.WorkingDir, "").ToPosixPath();
-            List<string> submodulePaths = (List<string>)Module.GetSubmodulesLocalPaths();
+            IReadOnlyList<string> submodulePaths = Module.GetSubmodulesLocalPaths();
 
-            string nearestSubmodule = submodulePaths
+            string? nearestSubmodule = submodulePaths
                 .Where(submodulePath => targetPath.StartsWith(submodulePath))
                 .OrderByDescending(submodulePath => submodulePath.Length)
                 .FirstOrDefault();
@@ -184,7 +185,7 @@ namespace GitUI.CommandsDialogs
                 return targetPath;
             }
 
-            return targetPath.Substring(nearestSubmodule.Length + 1);
+            return targetPath[(nearestSubmodule.Length + 1)..];
         }
 
         private string? RequestUserFolderPath()
